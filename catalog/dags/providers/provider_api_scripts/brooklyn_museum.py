@@ -3,7 +3,6 @@ import logging
 import lxml.html as html
 from airflow.models import Variable
 
-from common import constants
 from common.licenses import LicenseInfo, get_license_info
 from common.loader import provider_details as prov
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
@@ -21,9 +20,6 @@ class BrooklynMuseumDataIngester(ProviderDataIngester):
         super().__init__(*args, **kwargs)
         self.api_key = Variable.get("API_KEY_BROOKLYN_MUSEUM")
         self.headers = {"api_key": self.api_key}
-
-    def get_media_type(self, record: dict) -> str:
-        return constants.IMAGE
 
     def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
         if not prev_query_params:

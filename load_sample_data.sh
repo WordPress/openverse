@@ -1,5 +1,6 @@
 #! /usr/bin/env bash
 set -e
+set -o pipefail
 WEB_SERVICE_NAME="${WEB_SERVICE_NAME:-web}"
 CACHE_SERVICE_NAME="${CACHE_SERVICE_NAME:-cache}"
 UPSTREAM_DB_SERVICE_NAME="${UPSTREAM_DB_SERVICE_NAME:-upstream_db}"
@@ -63,16 +64,37 @@ just dc exec -T "$WEB_SERVICE_NAME" python3 manage.py migrate --noinput
 # Create a superuser and a user for integration testing
 echo "
 from django.contrib.auth.models import User
-usernames = ['continuous_integration', 'deploy']
+usernames = ['continuous_integration', 'deploy', 'moderator']
 for username in usernames:
-	if User.objects.filter(username=username).exists():
-		print(f'User {username} already exists')
-		continue
-	if username == 'deploy':
-		user = User.objects.create_superuser(username, f'{username}@example.com', 'deploy')
-	else:
-		user = User.objects.create_user(username, f'{username}@example.com', 'deploy')
-	user.save()
+  if User.objects.filter(username=username).exists():
+    print(f'User {username} already exists')
+    continue
+  if username == 'deploy':
+    user = User.objects.create_superuser(username, f'{username}@example.com', 'deploy')
+  else:
+    is_staff = username == 'moderator'
+    user = User.objects.create_user(username, f'{username}@example.com', 'deploy', is_staff=is_staff)
+  user.save()
+" | just dc exec -T "$WEB_SERVICE_NAME" python3 manage.py shell
+
+# Create the Content Moderator group and add the moderator to it
+# Credit: https://stackoverflow.com/a/53733693
+echo "
+from django.contrib.auth.models import User, Group, Permission
+perms_to_add = ['view', 'add', 'change']
+models_to_affect = ['audio report', 'image report', 'sensitive audio', 'sensitive image']
+
+mod_group, created = Group.objects.get_or_create(name='Content Moderators')
+if created:
+  print('Setting up Content Moderators group')
+  for model in models_to_affect:
+    for perm in perms_to_add:
+      name = f'Can {perm} {model}'
+      print(f'Adding permission to moderators group: {name}')
+      model_add_perm = Permission.objects.get(name=name)
+      mod_group.permissions.add(model_add_perm)
+  mod_group.save()
+  mod_group.user_set.add(User.objects.get(username='moderator'))
 " | just dc exec -T "$WEB_SERVICE_NAME" python3 manage.py shell
 
 # Load content providers
@@ -85,7 +107,8 @@ VALUES
 	(now(), 'stocksnap', 'StockSnap', 'https://stocksnap.io', false, 'image'),
 	(now(), 'freesound', 'Freesound', 'https://freesound.org/', false, 'audio'),
 	(now(), 'jamendo', 'Jamendo', 'https://www.jamendo.com', false, 'audio'),
-	(now(), 'wikimedia_audio', 'Wikimedia', 'https://commons.wikimedia.org', false, 'audio');
+	(now(), 'wikimedia_audio', 'Wikimedia', 'https://commons.wikimedia.org', false, 'audio'),
+	(now(), 'ccmixter', 'CCMixter', 'https://ccmixter.org', false, 'audio');
 "
 
 #############

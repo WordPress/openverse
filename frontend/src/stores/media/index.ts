@@ -2,7 +2,7 @@ import { defineStore } from "pinia"
 
 import { warn } from "~/utils/console"
 import { hash, rand as prng } from "~/utils/prng"
-import { isRetriable, parseFetchingError } from "~/utils/errors"
+import { isRetriable } from "~/utils/errors"
 import type {
   AudioDetail,
   DetailFromMediaType,
@@ -24,6 +24,11 @@ import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { deepFreeze } from "~/utils/deep-freeze"
 
+interface SearchFetchState extends Omit<FetchState, "hasStarted"> {
+  hasStarted: boolean
+}
+import type { SearchTimeEventPayload } from "~/data/media-service"
+
 export type MediaStoreResult = {
   count: number
   pageCount: number
@@ -37,8 +42,8 @@ export interface MediaState {
     image: MediaStoreResult
   }
   mediaFetchState: {
-    audio: FetchState
-    image: FetchState
+    audio: SearchFetchState
+    image: SearchFetchState
   }
   currentPage: number
 }
@@ -143,12 +148,12 @@ export const useMediaStore = defineStore("media", {
      * Search fetching state for selected search type. For 'All content', aggregates
      * the values for supported media types.
      */
-    fetchState(): FetchState {
+    fetchState(): SearchFetchState {
       if (this._searchType === ALL_MEDIA) {
         /**
          * For all_media, we return 'All media fetching error' if all types have some kind of error.
          */
-        const atLeastOne = (property: keyof FetchState) =>
+        const atLeastOne = (property: keyof SearchFetchState) =>
           supportedMediaTypes.some(
             (type) => this.mediaFetchState[type][property]
           )
@@ -286,6 +291,15 @@ export const useMediaStore = defineStore("media", {
           !this.mediaFetchState[type].isFinished
       )
     },
+
+    canLoadMore(): boolean {
+      return (
+        this.fetchState.hasStarted &&
+        !this.fetchState.fetchingError &&
+        !this.fetchState.isFinished &&
+        this.resultCount > 0
+      )
+    },
   },
 
   actions: {
@@ -408,26 +422,23 @@ export const useMediaStore = defineStore("media", {
     async fetchMedia(payload: { shouldPersistMedia?: boolean } = {}) {
       const mediaType = this._searchType
       const shouldPersistMedia = Boolean(payload.shouldPersistMedia)
-      if (!shouldPersistMedia) {
-        this.clearMedia()
-      }
 
       const mediaToFetch = this._fetchableMediaTypes
 
-      const resultCounts = await Promise.all(
+      await Promise.allSettled(
         mediaToFetch.map((mediaType) =>
           this.fetchSingleMediaType({ mediaType, shouldPersistMedia })
         )
       )
-      const resultCount = resultCounts.includes(null)
-        ? null
-        : (resultCounts as number[]).reduce((a, b) => a + b, 0)
 
       this.currentPage =
         mediaType === ALL_MEDIA
           ? this.currentPage + 1
           : this.results[mediaType].page
-      return resultCount
+
+      return mediaType === ALL_MEDIA
+        ? this.allMedia
+        : this.resultItems[mediaType]
     },
 
     clearMedia() {
@@ -436,6 +447,12 @@ export const useMediaStore = defineStore("media", {
         this._resetFetchState()
       })
       this.currentPage = 0
+    },
+
+    recordSearchTime(payload: SearchTimeEventPayload | undefined) {
+      if (payload) {
+        this.$nuxt.$sendCustomEvent("SEARCH_RESPONSE_TIME", payload)
+      }
     },
 
     /**
@@ -460,7 +477,8 @@ export const useMediaStore = defineStore("media", {
       try {
         const accessToken = this.$nuxt.$openverseApiToken
         const service = initServices[mediaType](accessToken)
-        const data = await service.search(queryParams)
+        const { eventPayload, data } = await service.search(queryParams)
+        this.recordSearchTime(eventPayload)
         const mediaCount = data.result_count
         let errorData: FetchingError | undefined
         /**
@@ -489,15 +507,17 @@ export const useMediaStore = defineStore("media", {
         })
         return mediaCount
       } catch (error: unknown) {
-        const errorData = parseFetchingError(error, mediaType, "search", {
-          searchTerm: queryParams.q ?? "",
-        })
+        const errorData = this.$nuxt.$processFetchingError(
+          error,
+          mediaType,
+          "search",
+          {
+            searchTerm: queryParams.q ?? "",
+          }
+        )
 
         this._updateFetchState(mediaType, "end", errorData)
 
-        this.$nuxt.$sentry.captureException(error, {
-          extra: { errorData },
-        })
         return null
       }
     },

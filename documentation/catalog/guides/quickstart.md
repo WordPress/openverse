@@ -39,8 +39,7 @@ For instructions geared specifically towards production deployments, see
 
 ### Requirements
 
-You'll need `docker` and `docker-compose` installed on your machine, with
-versions new enough to use version `3` of Docker Compose `.yml` files.
+You'll need `docker` with Compose V2 installed on your machine.
 
 You will also need the [`just`](https://github.com/casey/just#installation)
 command runner installed.
@@ -85,7 +84,7 @@ The `.env` file is split into four sections:
 3. Connection/Variable info - this will not likely need to be modified for local
    development, though the values will need to be changed in production
 4. Other config - misc. configuration settings, some of which are useful for
-   local dev
+   local development
 
 The `.env` file does not need to be modified if you only want to run the tests.
 
@@ -187,7 +186,7 @@ just recreate
 > **Note**: Any recipes or scripts which output files to the container's mounted
 > volumes will need to be run as the root user. This can be done with the
 > `DC_USER=root` environment variable for `just` recipes. For example, see the
-> [generate-dag-docs recipe](https://github.com/WordPress/openverse-catalog/blob/c9be67e483e49e9eda7cd21b52bcde8857cd3922/justfile#L126).
+> [generate-docs recipe](https://github.com/WordPress/openverse-catalog/blob/c9be67e483e49e9eda7cd21b52bcde8857cd3922/justfile#L124).
 
 [justfile]: https://github.com/WordPress/openverse/blob/main/catalog/justfile
 [dockercompose]:

@@ -35,8 +35,11 @@ extensions = [
     "sphinx_copybutton",
     "notfound.extension",
     "sphinx_reredirects",
+    "sphinx.ext.todo",
 ]
 myst_heading_anchors = 6  # Add anchors to all headers, this is disabled by default.
+
+todo_include_todos = True
 
 source_suffix = {".rst": "restructuredtext", ".md": "markdown"}
 
@@ -73,6 +76,7 @@ html_favicon = (
 )
 
 html_static_path = ["_static"]
+html_extra_path = ["robots.txt", "ai.txt"]
 
 html_show_copyright = False
 

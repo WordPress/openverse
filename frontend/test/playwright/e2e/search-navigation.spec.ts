@@ -1,25 +1,22 @@
-import { expect, Page, test } from "@playwright/test"
+import { expect, test } from "@playwright/test"
 
 import {
-  goToSearchTerm,
   filters,
-  searchFromHeader,
+  goToSearchTerm,
   openFirstResult,
   preparePageForTests,
+  searchFromHeader,
 } from "~~/test/playwright/utils/navigation"
 import { mockProviderApis } from "~~/test/playwright/utils/route"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 
 import { getBackToSearchLink } from "~~/test/playwright/utils/components"
 
-import { AUDIO, IMAGE, SupportedMediaType } from "~/constants/media"
+import { getContentLink } from "~~/test/playwright/utils/search-results"
+
+import { AUDIO, IMAGE } from "~/constants/media"
 
 test.describe.configure({ mode: "parallel" })
-
-const getContentLink = async (page: Page, mediaType: SupportedMediaType) => {
-  const linkName = new RegExp(`See .+${mediaType}.+found for`)
-  return page.getByRole("link", { name: linkName })
-}
 
 test.describe("search history navigation", () => {
   breakpoints.describeMobileAndDesktop(({ breakpoint }) => {

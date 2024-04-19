@@ -10,6 +10,7 @@ from api.models.media import (
     AbstractAltFile,
     AbstractDeletedMedia,
     AbstractMedia,
+    AbstractMediaDecision,
     AbstractMediaList,
     AbstractMediaReport,
     AbstractSensitiveMedia,
@@ -143,6 +144,12 @@ class Audio(AudioFileMixin, AbstractMedia):
     Inherited fields
     ================
     category: eg. music, sound_effect, podcast, news & audiobook
+
+    Properties
+    ==========
+    audioset: >-
+        This is a virtual foreign-key to `AudioSet` built on top of the fields
+        `audio_set_foreign_identifier` and `provider`.
     """
 
     audioset = models.ForeignObject(
@@ -289,8 +296,6 @@ class SensitiveAudio(AbstractSensitiveMedia):
 
 class AudioReport(AbstractMediaReport):
     media_class = Audio
-    sensitive_class = SensitiveAudio
-    deleted_class = DeletedAudio
 
     media_obj = models.ForeignKey(
         to="Audio",
@@ -301,13 +306,28 @@ class AudioReport(AbstractMediaReport):
         related_name="audio_report",
         help_text="The reference to the audio being reported.",
     )
+    decision = models.ForeignKey(
+        to="AudioDecision",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        help_text="The moderation decision for this report.",
+    )
 
     class Meta:
         db_table = "nsfw_reports_audio"
 
-    @property
-    def audio_url(self):
-        return super().url("audio")
+
+class AudioDecision(AbstractMediaDecision):
+    """Represents moderation decisions taken for audio tracks."""
+
+    media_class = Audio
+
+    media_objs = models.ManyToManyField(
+        to="Audio",
+        db_constraint=False,
+        help_text="The audio items being moderated.",
+    )
 
 
 class AudioList(AbstractMediaList):

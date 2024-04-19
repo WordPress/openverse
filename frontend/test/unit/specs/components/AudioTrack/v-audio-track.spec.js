@@ -1,7 +1,6 @@
 import { fireEvent } from "@testing-library/vue"
 
 import { render } from "~~/test/unit/test-utils/render"
-import { i18n } from "~~/test/unit/test-utils/i18n"
 import { getAudioObj } from "~~/test/unit/fixtures/audio"
 
 import { useActiveMediaStore } from "~/stores/active-media"
@@ -29,9 +28,6 @@ describe("AudioTrack", () => {
   let props = null
   let configureVue = null
   let captureExceptionMock = jest.fn()
-  const $nuxt = {
-    context: { i18n, $sentry: { captureException: captureExceptionMock } },
-  }
 
   beforeEach(() => {
     props = {
@@ -47,20 +43,22 @@ describe("AudioTrack", () => {
           state: "paused",
         },
       })
+      activeMediaStore.$nuxt.$sentry = {
+        captureException: captureExceptionMock,
+      }
     }
 
     options = {
       propsData: props,
       stubs,
-      mocks: { $nuxt },
     }
   })
 
   it("should render the full audio track component even without duration", () => {
     options.propsData.layout = "full"
-    const { getByText } = render(VAudioTrack, options, configureVue)
-    const creator = getByText(props.audio.creator)
-    expect(creator).toBeInstanceOf(HTMLAnchorElement)
+    const { getByRole } = render(VAudioTrack, options, configureVue)
+    const creator = getByRole("link", { name: props.audio.creator })
+    expect(creator).toBeVisible()
   })
 
   it("should show audio title as main page title in full layout", () => {
@@ -73,10 +71,13 @@ describe("AudioTrack", () => {
 
   it("should show audio creator in a full layout with link", () => {
     options.propsData.layout = "full"
-    const { getByText } = render(VAudioTrack, options, configureVue)
-    const element = getByText(props.audio.creator)
-    expect(element).toBeInstanceOf(HTMLAnchorElement)
-    expect(element).toHaveAttribute("href", props.audio.creator_url)
+    const { getByRole } = render(VAudioTrack, options, configureVue)
+    const element = getByRole("link", { name: props.audio.creator })
+    expect(element).toBeVisible()
+    expect(element).toHaveAttribute(
+      "href",
+      `/audio/collection?source=jamendo&creator=${props.audio.creator}`
+    )
   })
 
   it("should render the row audio track component even without duration", () => {

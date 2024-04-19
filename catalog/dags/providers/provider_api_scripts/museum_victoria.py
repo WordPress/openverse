@@ -1,7 +1,6 @@
 import logging
 from typing import TypedDict
 
-from common import constants
 from common.licenses import LicenseInfo, get_license_info
 from common.loader import provider_details as prov
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
@@ -113,9 +112,6 @@ class VictoriaDataIngester(ProviderDataIngester):
             }
             images.append(image)
         return images
-
-    def get_media_type(self, record: dict) -> str:
-        return constants.IMAGE
 
     @staticmethod
     def _get_image_data(

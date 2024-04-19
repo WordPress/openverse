@@ -19,14 +19,20 @@ git fetch origin
 # Get new commit hash *one commit ahead* of this one
 new=$(git rev-list --reverse --topo-order HEAD..origin/main | head -1)
 # If there is no new commit hash to move to, nothing has changed, quit early
-[ -z "$new" ] && exit
+if [ -z "$new" ]; then
+  echo "No new commits, nothing has changed, nothing to do."
+  exit
+fi
 
 # Move ahead to this new commit
 git reset --hard "$new"
 # Verify if have /dags/ in the last commit
 have_dag=$(git log -p -1 "$new" --pretty=format: --name-only | grep "catalog/dags/")
 # If there is no files under /dags/ folder, no need to notify, quit early
-[ -z "$have_dag" ] && exit
+if [ -z "$have_dag" ]; then
+  echo "No changes to DAGs, nothing to do."
+  exit
+fi
 
 # Pull out the subject from the new commit
 subject=$(git log -1 --format='%s')

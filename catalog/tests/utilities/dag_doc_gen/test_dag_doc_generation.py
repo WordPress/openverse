@@ -2,13 +2,13 @@ from typing import NamedTuple
 from unittest import mock
 
 import pytest
-
-from catalog.tests.dags.providers.provider_api_scripts.resources.provider_data_ingester.mock_provider_data_ingester import (
+from tests.dags.providers.provider_api_scripts.resources.provider_data_ingester.mock_provider_data_ingester import (
     MockProviderDataIngester,
 )
-from catalog.utilities.dag_doc_gen import dag_doc_generation
-from catalog.utilities.dag_doc_gen.dag_doc_generation import DagInfo
+
 from providers.provider_workflows import ProviderWorkflow
+from utilities.dag_doc_gen import dag_doc_generation
+from utilities.dag_doc_gen.dag_doc_generation import DagInfo
 
 
 class DagMock(NamedTuple):
@@ -24,9 +24,18 @@ DAG_ID = "sample_dag_123"
 SAMPLE_MEDIA_TYPES = ("m1", "m2")
 PROVIDER_WORKFLOW_INSTANCE = mock.MagicMock()
 PROVIDER_WORKFLOW_INSTANCE.media_types = SAMPLE_MEDIA_TYPES
-_MODULE = "catalog.utilities.dag_doc_gen.dag_doc_generation"
+_MODULE = "utilities.dag_doc_gen.dag_doc_generation"
 
 
+@pytest.mark.parametrize(
+    "dag_id, expected_mapped_dag_id",
+    [
+        ("sample_dag_123", "sample_dag_123"),
+        ("sample_dag_audio_123", "sample_dag_{media_type}_123"),
+        ("staging_database_restore", "staging_database_restore"),
+        ("wikimedia_reingestion_workflow", "wikimedia_commons_workflow"),
+    ],
+)
 @pytest.mark.parametrize("schedule", ["@daily", None])
 @pytest.mark.parametrize(
     "doc, expected_doc",
@@ -75,20 +84,30 @@ _MODULE = "catalog.utilities.dag_doc_gen.dag_doc_generation"
     ],
 )
 def test_get_dags_info(
-    schedule, doc, expected_doc, tags, type_, provider_workflow, catchup, expected_dated
+    dag_id,
+    expected_mapped_dag_id,
+    schedule,
+    doc,
+    expected_doc,
+    tags,
+    type_,
+    provider_workflow,
+    catchup,
+    expected_dated,
 ):
     dag = DagMock(schedule_interval=schedule, doc_md=doc, catchup=catchup, tags=tags)
     expected = DagInfo(
-        dag_id=DAG_ID,
+        dag_id=dag_id,
         schedule=schedule,
         doc=expected_doc,
         dated=expected_dated,
         type_=type_,
         provider_workflow=provider_workflow,
+        mapped_dag_id=expected_mapped_dag_id,
     )
     with mock.patch(f"{_MODULE}.get_provider_workflows") as provider_workflow_mock:
         provider_workflow_mock.return_value.get.return_value = provider_workflow
-        actual = dag_doc_generation.get_dags_info({DAG_ID: dag})[0]
+        actual = dag_doc_generation.get_dags_info({dag_id: dag})[0]
         assert actual == expected
 
 
@@ -104,6 +123,7 @@ def test_get_dags_info(
                 type_="",
                 dated=False,
                 provider_workflow=None,
+                mapped_dag_id=DAG_ID,
             ),
             False,
             """
@@ -123,6 +143,7 @@ def test_get_dags_info(
                 type_="",
                 dated=False,
                 provider_workflow=None,
+                mapped_dag_id=DAG_ID,
             ),
             False,
             """
@@ -142,6 +163,7 @@ def test_get_dags_info(
                 type_="",
                 dated=False,
                 provider_workflow=PROVIDER_WORKFLOW_INSTANCE,
+                mapped_dag_id=DAG_ID,
             ),
             True,
             """
@@ -152,11 +174,32 @@ def test_get_dags_info(
 | [`sample_dag_123`](#sample_dag_123) | `@daily` | `False` | m1, m2 |
 """,
         ),
+        # Separate mapped DAG ID
+        (
+            DagInfo(
+                dag_id=DAG_ID,
+                schedule="@daily",
+                doc="A doc does exist here",
+                type_="",
+                dated=False,
+                provider_workflow=None,
+                mapped_dag_id="something_entirely_different",
+            ),
+            False,
+            """
+### Special Name
+
+| DAG ID | Schedule Interval |
+| --- | --- |
+| [`sample_dag_123`](#something_entirely_different) | `@daily` |
+""",
+        ),
     ],
 )
 def test_generate_type_subsection(dag_info, is_provider, expected):
+    dag_by_doc_md = {dag_info.doc: dag_info.mapped_dag_id}
     actual = dag_doc_generation.generate_type_subsection(
-        "Special Name", [dag_info], is_provider
+        "Special Name", [dag_info], is_provider, dag_by_doc_md
     )
     assert actual.strip() == expected.strip()
 
@@ -188,8 +231,8 @@ this one has a doc
     with mock.patch(f"{_MODULE}.get_dags_info") as get_dags_info_mock:
         # Return in reverse order to ensure they show up in the correct order
         get_dags_info_mock.return_value = [
-            DagInfo("b", None, "this one has a doc", "t1", False, None),
-            DagInfo("a", None, None, "t1", False, None),
+            DagInfo("b", None, "this one has a doc", "t1", False, None, "b"),
+            DagInfo("a", None, None, "t1", False, None, "a"),
         ]
         actual = dag_doc_generation.generate_dag_doc()
         assert actual == expected

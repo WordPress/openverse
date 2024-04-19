@@ -44,6 +44,8 @@ import {
 } from "~/types/button"
 import type { ButtonForm } from "~/types/button"
 
+import { skipToContentTargetId } from "~/constants/window"
+
 import VLink from "~/components/VLink.vue"
 
 export type ButtonProps = ProperlyExtractPropTypes<
@@ -68,7 +70,9 @@ const VButton = defineComponent({
   props: {
     /**
      * Passed to `component :is` to allow the button to *appear* as a button but
-     * work like another element (like an `anchor`). May only be either `button` or `a`.
+     * work like another element (like an `anchor`). May only be either `button` or `VLink`.
+     * `anchor` is only supported for the `VSkipToContentButton` component that uses
+     * a hash URL (`skipToContentTargetId`).
      *
      * We do not support other elements because their use cases are marginal, and they
      * add complexity that we can avoid otherwise.
@@ -186,7 +190,7 @@ const VButton = defineComponent({
   },
   setup(props, { attrs }) {
     const typeAttribute = computed<ButtonType | undefined>(() =>
-      props.as === "VLink" ? undefined : props.type
+      ["VLink", "a"].includes(props.as) ? undefined : props.type
     )
 
     const connectionStyles = computed(() =>
@@ -240,7 +244,10 @@ const VButton = defineComponent({
     watch(
       () => props.as,
       (as) => {
-        if (["a", "NuxtLink"].includes(as)) {
+        if (
+          ["a", "NuxtLink"].includes(as) &&
+          attrs.href !== `#${skipToContentTargetId}`
+        ) {
           warn(
             `Please use \`VLink\` with an \`href\` prop instead of ${as} for the button component`
           )

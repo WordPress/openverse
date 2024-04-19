@@ -42,7 +42,10 @@ const searchResults = (mediaType) => ({
 })
 
 const mockImplementation = (mediaType) => () =>
-  Promise.resolve({ ...searchResults(mediaType) })
+  Promise.resolve({
+    searchTimeEvent: undefined,
+    data: { ...searchResults(mediaType) },
+  })
 const mockSearchAudio = jest.fn().mockImplementation(mockImplementation(AUDIO))
 const mockSearchImage = jest.fn().mockImplementation(mockImplementation(IMAGE))
 const mockGetMediaDetail = jest.fn()
@@ -329,7 +332,10 @@ describe("Media Store", () => {
         shouldPersistMedia: true,
         mediaType: IMAGE,
       }
-      const emptyResult = { result_count: 0, page_count: 0, results: [] }
+      const emptyResult = {
+        searchTimeEvent: undefined,
+        data: { result_count: 0, page_count: 0, results: [] },
+      }
       mockSearchImage.mockResolvedValueOnce(emptyResult)
       await mediaStore.fetchSingleMediaType(params)
 

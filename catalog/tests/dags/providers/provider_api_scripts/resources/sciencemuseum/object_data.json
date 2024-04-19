@@ -1,3099 +1,795 @@
 {
+  "type": "objects",
+  "id": "co84905",
   "attributes": {
-    "admin": {
-      "added": 1494271883000,
-      "analytics": {
-        "count": {
-          "last": 103,
-          "total": 5135
-        }
-      },
-      "created": 826588800000,
-      "id": "object-56202",
-      "language": "eng",
-      "modified": 1649770859000,
-      "previous_status": "valid and published",
-      "processed": 1656635149087,
-      "source": "smgc",
-      "stream": "smg-online",
-      "uid": "co56202",
-      "uuid": "4729926e-eeae-3576-b719-12e53ceb0e97",
-      "version": 108
+    "@admin": {
+      "processed": 1712780277089,
+      "sequence": 14551455,
+      "uid": "co84905",
+      "added": 1699635037320,
+      "stream": "collections-online",
+      "id": "object-84905",
+      "source": "Mimsy XG",
+      "uuid": "77141d34-8389-35c9-a2aa-d4bedd67c9b5"
     },
-    "categories": [
+    "category": [
       {
         "museum": "SCM",
-        "name": "Astronomy",
-        "value": "SCM - Astronomy"
+        "name": "Classical & Medieval Medicine",
+        "type": "category1",
+        "value": "SCM - Classical & Medieval Medicine"
       }
     ],
-    "dates": {
-      "DATE1": "2003"
+    "creation": {
+      "date": [
+        {
+          "source": "catalogue",
+          "value": "200BCE-200CE",
+          "primary": true
+        },
+        {
+          "role": [
+            {
+              "value": "made"
+            }
+          ],
+          "from": "-200",
+          "to": "200",
+          "value": "200BCE-200CE"
+        }
+      ],
+      "maker": [
+        {
+          "summary": {
+            "title": "Unknown maker"
+          },
+          "@link": {
+            "source": "catalogue"
+          },
+          "name": [
+            {
+              "value": "Unknown maker"
+            }
+          ],
+          "@entity": "literal"
+        }
+      ],
+      "place": [
+        {
+          "summary": {
+            "title": "Italy"
+          },
+          "@link": {
+            "source": "catalogue"
+          },
+          "name": [
+            {
+              "value": "Italy"
+            }
+          ],
+          "@entity": "literal"
+        },
+        {
+          "summary": {
+            "title": "Italy"
+          },
+          "@link": {
+            "attribution": {
+              "date": [
+                {
+                  "from": "2019",
+                  "to": "2019",
+                  "value": "2019-04-17",
+                  "primary": true
+                }
+              ],
+              "attributor": "ANNE_SHARMAN"
+            }
+          },
+          "@admin": {
+            "uid": "cd159",
+            "id": "place-159",
+            "uuid": "381c3c27-5c3a-317f-8db3-5af8513ed871"
+          },
+          "@entity": "reference"
+        }
+      ],
+      "@entity": "lifecycle"
+    },
+    "cumulation": {
+      "collector": [
+        {
+          "summary": {
+            "title": "Sir Henry Wellcome's Museum Collection"
+          },
+          "@link": {
+            "source": "catalogue"
+          },
+          "name": [
+            {
+              "value": "Sir Henry Wellcome's Museum Collection"
+            }
+          ],
+          "@entity": "literal"
+        }
+      ],
+      "@entity": "lifecycle"
     },
     "description": [
       {
-        "primary": true,
-        "value": "Facsimile of telescope by Galileo with main tube measuring  2-foot, 8 1/2-inches and magnification of 21 times.  Made by Cipriani and purchased from the Museo di Fisica e Storia Naturale, Florence, Italy in 1923."
+        "type": "catalogue description",
+        "value": "Small votive organ of unknown type, built up from coiled strips of terracotta, probably Roman, 200BCE-200BC",
+        "primary": true
       },
       {
-        "type": "web description",
-        "value": "Replica of one of the telescopes made by Galileo Galilei after he learnt of the invention of the telescope in 1608.  The refracting telescope magnifies only 21 times yet gives a very restricted field of view.  As a result Galileo was only able to view about a third of the Moon through his telescopes.  Despite these limitations, Galileo published, 'Sidereus Nuncius' in 1610, which describes the new celestial sights he saw with his new telescope. These included craters on the Moon, the phases of Venus and the moons of Jupiter.  This facsimile was made in 1923 at the Museo di Fisica e Storia Naturale, in Florence, Italy where the original still resides."
+        "type": "accession register",
+        "value": "Small votive organ of unknown type, built up from coiled strips of terraccotta, probably Roman, 200BC-200"
+      },
+      {
+        "type": "description",
+        "value": "Small votive organ of unknown type, built up from coiled strips of terracotta, probably Roman, 200BC-200"
+      },
+      {
+        "type": "description",
+        "value": "Small votive organ of unknown type, built up from coiled strips of terracotta, probably Roman, 200BCE-200BC"
       }
     ],
     "identifier": [
       {
-        "primary": true,
         "type": "accession number",
-        "value": "1923-668"
+        "value": "A659676",
+        "primary": true
+      },
+      {
+        "value": "37567"
       }
     ],
-    "language": ["eng"],
+    "language": [
+      {
+        "value": "eng"
+      }
+    ],
     "legal": {
-      "legal_status": "permanent collection"
+      "credit": "Loan, Wellcome Trust"
     },
-    "lifecycle": {
-      "creation": [
-        {
-          "date": [
-            {
-              "earliest": 1610,
-              "latest": 1610,
-              "primary": true,
-              "value": "1610; 1923"
-            }
-          ],
-          "maker": [
-            {
-              "@link": {
-                "role": [
-                  {
-                    "value": "designer"
-                  }
-                ],
-                "type": "reference"
-              },
-              "admin": {
-                "id": "agent-37297",
-                "uid": "cp37297",
-                "uuid": "3a4bc387-e933-358f-8c86-8e1eaa2168b0"
-              },
-              "summary_title": "Galileo Galilei"
-            },
-            {
-              "@link": {
-                "role": [
-                  {
-                    "value": "maker (original)"
-                  }
-                ],
-                "type": "reference"
-              },
-              "admin": {
-                "id": "agent-37297",
-                "uid": "cp37297",
-                "uuid": "3a4bc387-e933-358f-8c86-8e1eaa2168b0"
-              },
-              "summary_title": "Galileo Galilei"
-            }
-          ],
-          "places": [
-            {
-              "@link": {
-                "role": [
-                  {
-                    "value": "made (original & replica)"
-                  }
-                ],
-                "type": "reference"
-              },
-              "admin": {
-                "id": "place-381",
-                "uid": "cd381",
-                "uuid": "e22589d5-cafb-378f-8ddf-9214a3a2300c"
-              },
-              "sort": 1,
-              "summary_title": "Florence"
-            }
-          ]
-        }
-      ]
-    },
-    "materials": ["card", "complete", "glass", "leather"],
     "measurements": {
+      "display": "overall: 41 mm x 40 mm x 38 mm, .04 kg",
+      "count": "1",
       "dimensions": [
         {
-          "dimension": "diameter",
+          "type": "catalogue dimensions",
+          "value": "overall: 41 mm x 40 mm x 38 mm, 0.04 kg",
+          "primary": true
+        },
+        {
           "units": "in",
-          "value": "2 3/8"
+          "dimension": "depth",
+          "value": "1 1/2"
         },
         {
-          "dimension": "diameter",
           "units": "mm",
-          "value": "60"
+          "dimension": "depth",
+          "value": "38"
         },
         {
-          "dimension": "width",
           "units": "in",
-          "value": "38 3/16"
+          "dimension": "height",
+          "value": "1 5/8"
         },
         {
-          "dimension": "width",
           "units": "mm",
-          "value": "970"
+          "dimension": "height",
+          "value": "41"
         },
         {
           "units": "kg",
-          "value": "0.345"
+          "dimension": "weight",
+          "value": "0.04"
         },
         {
           "units": "lbs",
-          "value": "0.7606"
+          "dimension": "weight",
+          "value": "0.08819"
+        },
+        {
+          "units": "in",
+          "dimension": "width",
+          "value": "1 9/16"
+        },
+        {
+          "units": "mm",
+          "dimension": "width",
+          "value": "40"
+        },
+        {
+          "units": "mm",
+          "value": "43"
         }
-      ],
-      "display": "overall: 970 mm 60 mm, .345kg"
+      ]
     },
     "multimedia": [
       {
-        "@link": {
-          "type": "reference"
-        },
-        "admin": {
-          "id": "media-4453",
+        "@admin": {
+          "uid": "i458349",
+          "id": "media-458349",
           "source": "smgi",
-          "uid": "i4453",
-          "uuid": "ca31c40e-65a9-3f44-88b2-347d496e0292"
+          "uuid": "24b84b80-47a7-376d-aabf-07b838240715"
         },
-        "credit": "Science Museum Group Collection",
-        "enhancement": {
-          "rekognition": [
-            {
-              "labels": [
-                {
-                  "details": {
-                    "confidence": 77.732155
-                  },
-                  "value": "Weapon"
-                },
-                {
-                  "details": {
-                    "confidence": 77.732155
-                  },
-                  "value": "Weaponry"
-                }
-              ],
-              "source": "amazon rekognition"
-            }
-          ]
-        },
-        "for_sale": "0",
-        "identifier": [
-          {
-            "type": "iBase id",
-            "value": "4453"
-          }
-        ],
-        "priority": "0.5",
-        "processed": {
+        "@processed": {
           "large": {
+            "resizable": true,
+            "@type": "image",
             "format": "jpeg",
-            "location": "4/453/large_1923_0668__0002_.jpg",
-            "location_is_relative": true,
+            "modified": 1697087683000,
+            "location": "458/349/large_a659676__0001_.jpg",
             "measurements": {
+              "filesize": {
+                "units": "bytes",
+                "value": 134947
+              },
               "dimensions": [
                 {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 1151
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 1536
-                }
-              ]
-            },
-            "modified": 1472028891000,
-            "resizable": true,
-            "type": "image"
-          },
-          "large_thumbnail": {
-            "format": "jpeg",
-            "location": "https://coimages.sciencemuseumgroup.org.uk/images/4/452/large_thumbnail_1923_0668__0001_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 240
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 320
-                }
-              ]
-            },
-            "modified": 1472028891000,
-            "resizable": true,
-            "type": "image"
-          },
-          "medium": {
-            "format": "jpeg",
-            "location": "4/453/medium_1923_0668__0002_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 576
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 768
-                }
-              ]
-            },
-            "modified": 1472028891000,
-            "resizable": true,
-            "type": "image"
-          },
-          "medium_thumbnail": {
-            "format": "jpeg",
-            "location": "4/453/medium_thumbnail_1923_0668__0002_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 144
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 192
-                }
-              ]
-            },
-            "modified": 1472028891000,
-            "resizable": true,
-            "type": "image"
-          },
-          "small_thumbnail": {
-            "format": "jpeg",
-            "location": "4/453/small_thumbnail_1923_0668__0002_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 48
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 64
-                }
-              ]
-            },
-            "modified": 1472028891000,
-            "resizable": true,
-            "type": "image"
-          },
-          "zoom": {
-            "format": "pyramid tiff",
-            "location": "4/453/1923_0668__0002_.ptif",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 4000
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 5336
-                }
-              ]
-            },
-            "modified": 1472028891000,
-            "resizable": true,
-            "type": "image"
-          }
-        },
-        "public_view": "1",
-        "publish": "1",
-        "sort": "2015-06-06 05:40:37.0",
-        "source": {
-          "legal": {
-            "rights": [
-              {
-                "details": "\u00a9 The Board of Trustees of the Science Museum",
-                "usage_terms": "CC BY-SA 4.0"
-              }
-            ]
-          },
-          "title": [
-            {
-              "type": "caption",
-              "value": "Facsimile of telescope by Galileo with main tube measuring"
-            },
-            {
-              "type": "main title",
-              "value": "Facsimile of telescope by Galileo with main tube measuring  2-foot, 8 1/2-inches and magnification of 21 times. Detail"
-            }
-          ]
-        },
-        "traffic_light": "Green",
-        "type": {
-          "base": "media",
-          "type": "image"
-        }
-      },
-      {
-        "@link": {
-          "type": "reference"
-        },
-        "admin": {
-          "id": "media-29406",
-          "source": "smgi",
-          "uid": "i29406",
-          "uuid": "f6f674fb-3eb3-386f-87f1-06931ccb2d95"
-        },
-        "credit": "Science Museum Group Collection",
-        "enhancement": {
-          "rekognition": [
-            {
-              "labels": [
-                {
-                  "details": {
-                    "confidence": 96.3729,
-                    "instances": [
-                      {
-                        "confidence": "83.33213",
-                        "region": {
-                          "height": 0.83952594,
-                          "left": 0.217989,
-                          "top": 0.05400679,
-                          "type": "bounding box",
-                          "width": 0.7341616
-                        }
-                      }
-                    ]
-                  },
-                  "value": "Person"
-                },
-                {
-                  "details": {
-                    "confidence": 96.3729,
-                    "parents": [
-                      {
-                        "value": "Person"
-                      },
-                      {
-                        "value": "People"
-                      }
-                    ]
-                  },
-                  "value": "Team"
-                },
-                {
-                  "details": {
-                    "confidence": 96.3729,
-                    "parents": [
-                      {
-                        "value": "Person"
-                      }
-                    ]
-                  },
-                  "value": "Sports"
-                },
-                {
-                  "details": {
-                    "confidence": 96.3729
-                  },
-                  "value": "Human"
-                },
-                {
-                  "details": {
-                    "confidence": 96.3729,
-                    "parents": [
-                      {
-                        "value": "Person"
-                      },
-                      {
-                        "value": "Team"
-                      },
-                      {
-                        "value": "Sport"
-                      },
-                      {
-                        "value": "People"
-                      }
-                    ]
-                  },
-                  "value": "Team Sport"
-                },
-                {
-                  "details": {
-                    "confidence": 96.3729,
-                    "instances": [
-                      {
-                        "confidence": "96.3729",
-                        "region": {
-                          "height": 0.6712718,
-                          "left": 0.04924745,
-                          "top": 0.26445633,
-                          "type": "bounding box",
-                          "width": 0.81754345
-                        }
-                      }
-                    ],
-                    "parents": [
-                      {
-                        "value": "Person"
-                      },
-                      {
-                        "value": "Baseball"
-                      },
-                      {
-                        "value": "Team"
-                      },
-                      {
-                        "value": "Team Sport"
-                      },
-                      {
-                        "value": "Sport"
-                      },
-                      {
-                        "value": "People"
-                      }
-                    ]
-                  },
-                  "value": "Baseball Bat"
-                },
-                {
-                  "details": {
-                    "confidence": 96.3729,
-                    "parents": [
-                      {
-                        "value": "Person"
-                      }
-                    ]
-                  },
-                  "value": "Sport"
-                },
-                {
-                  "details": {
-                    "confidence": 96.3729,
-                    "parents": [
-                      {
-                        "value": "Person"
-                      }
-                    ]
-                  },
-                  "value": "People"
-                },
-                {
-                  "details": {
-                    "confidence": 96.3729,
-                    "parents": [
-                      {
-                        "value": "Team Sport"
-                      },
-                      {
-                        "value": "Team"
-                      },
-                      {
-                        "value": "Person"
-                      },
-                      {
-                        "value": "Sport"
-                      },
-                      {
-                        "value": "People"
-                      }
-                    ]
-                  },
-                  "value": "Baseball"
-                },
-                {
-                  "details": {
-                    "confidence": 96.3729,
-                    "parents": [
-                      {
-                        "value": "Team Sport"
-                      },
-                      {
-                        "value": "Team"
-                      },
-                      {
-                        "value": "Person"
-                      },
-                      {
-                        "value": "Sport"
-                      },
-                      {
-                        "value": "People"
-                      }
-                    ]
-                  },
-                  "value": "Softball"
-                }
-              ],
-              "source": "amazon rekognition"
-            }
-          ]
-        },
-        "for_sale": "0",
-        "identifier": [
-          {
-            "type": "iBase id",
-            "value": "29406"
-          }
-        ],
-        "priority": "0.5",
-        "processed": {
-          "large": {
-            "format": "jpeg",
-            "location": "29/406/large_1931_0797__0002_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 1536
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 1151
-                }
-              ]
-            },
-            "modified": 1472029772000,
-            "resizable": true,
-            "type": "image"
-          },
-          "large_thumbnail": {
-            "format": "jpeg",
-            "location": "29/406/large_thumbnail_1931_0797__0002_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 427
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 320
-                }
-              ]
-            },
-            "modified": 1472029772000,
-            "resizable": true,
-            "type": "image"
-          },
-          "medium": {
-            "format": "jpeg",
-            "location": "29/406/medium_1931_0797__0002_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 769
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 576
-                }
-              ]
-            },
-            "modified": 1472029772000,
-            "resizable": true,
-            "type": "image"
-          },
-          "medium_thumbnail": {
-            "format": "jpeg",
-            "location": "29/406/medium_thumbnail_1931_0797__0002_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 256
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 192
-                }
-              ]
-            },
-            "modified": 1472029772000,
-            "resizable": true,
-            "type": "image"
-          },
-          "small_thumbnail": {
-            "format": "jpeg",
-            "location": "29/406/small_thumbnail_1931_0797__0002_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 64
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 48
-                }
-              ]
-            },
-            "modified": 1472029772000,
-            "resizable": true,
-            "type": "image"
-          },
-          "zoom": {
-            "format": "pyramid tiff",
-            "location": "29/406/1931_0797__0002_.ptif",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 4854
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 3636
-                }
-              ]
-            },
-            "modified": 1472029772000,
-            "resizable": true,
-            "type": "image"
-          }
-        },
-        "public_view": "1",
-        "publish": "1",
-        "sort": "2015-06-09 11:13:13.0",
-        "source": {
-          "legal": {
-            "rights": [
-              {
-                "details": "\u00a9 The Board of Trustees of the Science Museum",
-                "usage_terms": "CC BY-SA 4.0"
-              }
-            ]
-          },
-          "title": [
-            {
-              "type": "caption",
-              "value": "Painting. [Galileo Galilei] / by A. Susan Zileri (fl"
-            },
-            {
-              "type": "main title",
-              "value": "Painting. [Galileo Galilei] / by A. Susan Zileri (fl. 1884-1934), 1884. Oil on canvas; 61.5x51cm in curly wood and gilt"
-            }
-          ]
-        },
-        "traffic_light": "Green",
-        "type": {
-          "base": "media",
-          "type": "image"
-        }
-      },
-      {
-        "@link": {
-          "type": "reference"
-        },
-        "admin": {
-          "id": "media-70617",
-          "source": "smgi",
-          "uid": "i70617",
-          "uuid": "dc2b6823-07b3-3f3d-ad5f-7381e1df831e"
-        },
-        "credit": "Science Museum Group Collection",
-        "enhancement": {
-          "rekognition": [
-            {
-              "labels": [
-                {
-                  "details": {
-                    "confidence": 97.66413,
-                    "instances": [
-                      {
-                        "confidence": "97.66413",
-                        "region": {
-                          "height": 0.7730075,
-                          "left": 0.04662897,
-                          "top": 0.1517991,
-                          "type": "bounding box",
-                          "width": 0.80697453
-                        }
-                      }
-                    ],
-                    "parents": [
-                      {
-                        "value": "Tool"
-                      }
-                    ]
-                  },
-                  "value": "Hammer"
-                },
-                {
-                  "details": {
-                    "confidence": 97.66413
-                  },
-                  "value": "Tool"
-                }
-              ],
-              "source": "amazon rekognition"
-            }
-          ]
-        },
-        "for_sale": "0",
-        "identifier": [
-          {
-            "type": "iBase id",
-            "value": "70617"
-          }
-        ],
-        "priority": "0.5",
-        "processed": {
-          "large": {
-            "format": "jpeg",
-            "location": "70/617/large_1924_0209__0004_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 1073
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 1536
-                }
-              ]
-            },
-            "modified": 1472028752000,
-            "resizable": true,
-            "type": "image"
-          },
-          "large_thumbnail": {
-            "format": "jpeg",
-            "location": "70/617/large_thumbnail_1924_0209__0004_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 240
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 343
-                }
-              ]
-            },
-            "modified": 1472028752000,
-            "resizable": true,
-            "type": "image"
-          },
-          "medium": {
-            "format": "jpeg",
-            "location": "70/617/medium_1924_0209__0004_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 576
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 824
-                }
-              ]
-            },
-            "modified": 1472028752000,
-            "resizable": true,
-            "type": "image"
-          },
-          "medium_thumbnail": {
-            "format": "jpeg",
-            "location": "70/617/medium_thumbnail_1924_0209__0004_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 144
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 206
-                }
-              ]
-            },
-            "modified": 1472028752000,
-            "resizable": true,
-            "type": "image"
-          },
-          "small_thumbnail": {
-            "format": "jpeg",
-            "location": "70/617/small_thumbnail_1924_0209__0004_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 48
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 69
-                }
-              ]
-            },
-            "modified": 1472028752000,
-            "resizable": true,
-            "type": "image"
-          },
-          "zoom": {
-            "format": "pyramid tiff",
-            "location": "70/617/1924_0209__0004_.ptif",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 3508
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 5020
-                }
-              ]
-            },
-            "modified": 1472028752000,
-            "resizable": true,
-            "type": "image"
-          }
-        },
-        "public_view": "1",
-        "publish": "1",
-        "sort": "2015-06-11 23:57:26.0",
-        "source": {
-          "legal": {
-            "rights": [
-              {
-                "details": "\u00a9 The Board of Trustees of the Science Museum",
-                "usage_terms": "CC BY-SA 4.0"
-              }
-            ]
-          },
-          "title": [
-            {
-              "type": "caption",
-              "value": "(Left) Facsimile of telescope by Galileo with main tube"
-            },
-            {
-              "type": "main title",
-              "value": "(Left) Facsimile of telescope by Galileo with main tube measuring  2-foot, 8 1/2-inches and magnification of 21 times."
-            }
-          ]
-        },
-        "traffic_light": "Green",
-        "type": {
-          "base": "media",
-          "type": "image"
-        }
-      },
-      {
-        "@link": {
-          "type": "reference"
-        },
-        "admin": {
-          "id": "media-272868",
-          "source": "smgi",
-          "uid": "i272868",
-          "uuid": "1bf5b959-f7ba-3c73-be80-b86261bbaeee"
-        },
-        "credit": "Science Museum Group Collection",
-        "enhancement": {
-          "rekognition": [
-            {
-              "labels": [
-                {
-                  "details": {
-                    "confidence": 89.21109,
-                    "parents": [
-                      {
-                        "value": "Symbol"
-                      }
-                    ]
-                  },
-                  "value": "Arrow"
-                },
-                {
-                  "details": {
-                    "confidence": 89.21109
-                  },
-                  "value": "Symbol"
-                },
-                {
-                  "details": {
-                    "confidence": 80.42816
-                  },
-                  "value": "Leisure Activities"
-                },
-                {
-                  "details": {
-                    "confidence": 80.06794
-                  },
-                  "value": "Tool"
-                },
-                {
-                  "details": {
-                    "confidence": 80.06794,
-                    "instances": [
-                      {
-                        "confidence": "80.06794",
-                        "region": {
-                          "height": 0.7146384,
-                          "left": 0.04211183,
-                          "top": 0.16666844,
-                          "type": "bounding box",
-                          "width": 0.92374575
-                        }
-                      }
-                    ],
-                    "parents": [
-                      {
-                        "value": "Tool"
-                      }
-                    ]
-                  },
-                  "value": "Hammer"
-                }
-              ],
-              "source": "amazon rekognition"
-            }
-          ]
-        },
-        "for_sale": "0",
-        "identifier": [
-          {
-            "type": "iBase id",
-            "value": "272868"
-          }
-        ],
-        "priority": "0.5",
-        "processed": {
-          "large": {
-            "format": "jpeg",
-            "location": "272/868/large_1923_0668__0003_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 1257
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 1536
-                }
-              ]
-            },
-            "modified": 1496851109000,
-            "resizable": true,
-            "type": "image"
-          },
-          "large_thumbnail": {
-            "format": "jpeg",
-            "location": "272/868/large_thumbnail_1923_0668__0003_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 262
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 320
-                }
-              ]
-            },
-            "modified": 1496851109000,
-            "resizable": true,
-            "type": "image"
-          },
-          "medium": {
-            "format": "jpeg",
-            "location": "272/868/medium_1923_0668__0003_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 576
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 704
-                }
-              ]
-            },
-            "modified": 1496851109000,
-            "resizable": true,
-            "type": "image"
-          },
-          "medium_thumbnail": {
-            "format": "jpeg",
-            "location": "272/868/medium_thumbnail_1923_0668__0003_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 157
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 192
-                }
-              ]
-            },
-            "modified": 1496851109000,
-            "resizable": true,
-            "type": "image"
-          },
-          "small_thumbnail": {
-            "format": "jpeg",
-            "location": "272/868/small_thumbnail_1923_0668__0003_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 48
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 59
-                }
-              ]
-            },
-            "modified": 1496851109000,
-            "resizable": true,
-            "type": "image"
-          },
-          "zoom": {
-            "format": "pyramid tiff",
-            "location": "272/868/1923_0668__0003_.ptif",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 3806
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 4650
-                }
-              ]
-            },
-            "modified": 1496851109000,
-            "resizable": true,
-            "type": "image"
-          }
-        },
-        "public_view": "1",
-        "publish": "1",
-        "sort": "2017-06-07 16:58:21.0",
-        "source": {
-          "legal": {
-            "rights": [
-              {
-                "details": "\u00a9 The Board of Trustees of the Science Museum, London",
-                "usage_terms": "CC BY-SA 4.0"
-              }
-            ]
-          },
-          "title": [
-            {
-              "type": "caption",
-              "value": "Facsimile of telescope by Galileo with main tube measuring"
-            },
-            {
-              "type": "main title",
-              "value": "Facsimile of telescope by Galileo with main tube measuring  2-foot, 8 1/2-inches and magnification of 21 times.  Made"
-            }
-          ]
-        },
-        "type": {
-          "base": "media",
-          "type": "image"
-        }
-      },
-      {
-        "@link": {
-          "type": "reference"
-        },
-        "admin": {
-          "id": "media-272869",
-          "source": "smgi",
-          "uid": "i272869",
-          "uuid": "f3c8263f-e896-3e06-963d-95e4a49977c5"
-        },
-        "credit": "Science Museum Group Collection",
-        "enhancement": {
-          "rekognition": [
-            {
-              "labels": [
-                {
-                  "details": {
-                    "confidence": 97.417496,
-                    "instances": [
-                      {
-                        "confidence": "97.417496",
-                        "region": {
-                          "height": 0.83902305,
-                          "left": 0.07827001,
-                          "top": 0.06480961,
-                          "type": "bounding box",
-                          "width": 0.8931307
-                        }
-                      }
-                    ]
-                  },
-                  "value": "Smoke Pipe"
-                },
-                {
-                  "details": {
-                    "confidence": 86.97954
-                  },
-                  "value": "Leisure Activities"
-                }
-              ],
-              "source": "amazon rekognition"
-            }
-          ]
-        },
-        "for_sale": "0",
-        "identifier": [
-          {
-            "type": "iBase id",
-            "value": "272869"
-          }
-        ],
-        "priority": "0.5",
-        "processed": {
-          "large": {
-            "format": "jpeg",
-            "location": "272/869/large_1923_0668__0004_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 1255
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 1536
-                }
-              ]
-            },
-            "modified": 1496851122000,
-            "resizable": true,
-            "type": "image"
-          },
-          "large_thumbnail": {
-            "format": "jpeg",
-            "location": "272/869/large_thumbnail_1923_0668__0004_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 261
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 320
-                }
-              ]
-            },
-            "modified": 1496851122000,
-            "resizable": true,
-            "type": "image"
-          },
-          "medium": {
-            "format": "jpeg",
-            "location": "272/869/medium_1923_0668__0004_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 576
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 705
-                }
-              ]
-            },
-            "modified": 1496851122000,
-            "resizable": true,
-            "type": "image"
-          },
-          "medium_thumbnail": {
-            "format": "jpeg",
-            "location": "272/869/medium_thumbnail_1923_0668__0004_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 157
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 192
-                }
-              ]
-            },
-            "modified": 1496851122000,
-            "resizable": true,
-            "type": "image"
-          },
-          "small_thumbnail": {
-            "format": "jpeg",
-            "location": "272/869/small_thumbnail_1923_0668__0004_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 48
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 59
-                }
-              ]
-            },
-            "modified": 1496851122000,
-            "resizable": true,
-            "type": "image"
-          },
-          "zoom": {
-            "format": "pyramid tiff",
-            "location": "272/869/1923_0668__0004_.ptif",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 3784
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 4632
-                }
-              ]
-            },
-            "modified": 1496851122000,
-            "resizable": true,
-            "type": "image"
-          }
-        },
-        "public_view": "1",
-        "publish": "1",
-        "sort": "2017-06-07 16:58:34.0",
-        "source": {
-          "legal": {
-            "rights": [
-              {
-                "details": "\u00a9 The Board of Trustees of the Science Museum, London",
-                "usage_terms": "CC BY-SA 4.0"
-              }
-            ]
-          },
-          "title": [
-            {
-              "type": "caption",
-              "value": "Facsimile of telescope by Galileo with main tube measuring"
-            },
-            {
-              "type": "main title",
-              "value": "Facsimile of telescope by Galileo with main tube measuring  2-foot, 8 1/2-inches and magnification of 21 times.  Made"
-            }
-          ]
-        },
-        "type": {
-          "base": "media",
-          "type": "image"
-        }
-      },
-      {
-        "@link": {
-          "type": "reference"
-        },
-        "admin": {
-          "id": "media-272918",
-          "source": "smgi",
-          "uid": "i272918",
-          "uuid": "0b98cd45-d760-3988-8c6b-edbb269d8352"
-        },
-        "credit": "Science Museum Group Collection",
-        "enhancement": {
-          "rekognition": [
-            {
-              "labels": [
-                {
-                  "details": {
-                    "confidence": 93.350716
-                  },
-                  "value": "Human"
-                },
-                {
-                  "details": {
-                    "confidence": 93.350716,
-                    "instances": [
-                      {
-                        "confidence": "93.350716",
-                        "region": {
-                          "height": 0.8814689,
-                          "left": 0.13251683,
-                          "top": 0.038410023,
-                          "type": "bounding box",
-                          "width": 0.8445756
-                        }
-                      }
-                    ]
-                  },
-                  "value": "Person"
-                },
-                {
-                  "details": {
-                    "confidence": 78.483116
-                  },
-                  "value": "Art"
-                },
-                {
-                  "details": {
-                    "confidence": 75.07677,
-                    "parents": [
-                      {
-                        "value": "People"
-                      },
-                      {
-                        "value": "Person"
-                      }
-                    ]
-                  },
-                  "value": "Team"
-                },
-                {
-                  "details": {
-                    "confidence": 75.07677,
-                    "parents": [
-                      {
-                        "value": "Person"
-                      }
-                    ]
-                  },
-                  "value": "People"
-                },
-                {
-                  "details": {
-                    "confidence": 75.07677,
-                    "instances": [
-                      {
-                        "confidence": "75.07677",
-                        "region": {
-                          "height": 0.6637023,
-                          "left": 0.035249896,
-                          "top": 0.27812898,
-                          "type": "bounding box",
-                          "width": 0.84739864
-                        }
-                      }
-                    ],
-                    "parents": [
-                      {
-                        "value": "People"
-                      },
-                      {
-                        "value": "Sport"
-                      },
-                      {
-                        "value": "Team"
-                      },
-                      {
-                        "value": "Team Sport"
-                      },
-                      {
-                        "value": "Person"
-                      },
-                      {
-                        "value": "Baseball"
-                      }
-                    ]
-                  },
-                  "value": "Baseball Bat"
-                },
-                {
-                  "details": {
-                    "confidence": 75.07677,
-                    "parents": [
-                      {
-                        "value": "Team"
-                      },
-                      {
-                        "value": "Team Sport"
-                      },
-                      {
-                        "value": "Person"
-                      },
-                      {
-                        "value": "Sport"
-                      },
-                      {
-                        "value": "People"
-                      }
-                    ]
-                  },
-                  "value": "Baseball"
-                },
-                {
-                  "details": {
-                    "confidence": 75.07677,
-                    "parents": [
-                      {
-                        "value": "Team"
-                      },
-                      {
-                        "value": "People"
-                      },
-                      {
-                        "value": "Person"
-                      },
-                      {
-                        "value": "Sport"
-                      }
-                    ]
-                  },
-                  "value": "Team Sport"
-                },
-                {
-                  "details": {
-                    "confidence": 75.07677,
-                    "parents": [
-                      {
-                        "value": "Person"
-                      }
-                    ]
-                  },
-                  "value": "Sport"
-                },
-                {
-                  "details": {
-                    "confidence": 75.07677,
-                    "parents": [
-                      {
-                        "value": "Person"
-                      }
-                    ]
-                  },
-                  "value": "Sports"
-                }
-              ],
-              "source": "amazon rekognition"
-            }
-          ]
-        },
-        "for_sale": "0",
-        "identifier": [
-          {
-            "type": "iBase id",
-            "value": "272918"
-          }
-        ],
-        "priority": "0.5",
-        "processed": {
-          "large": {
-            "format": "jpeg",
-            "location": "272/918/large_B700707.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 1536
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 1177
-                }
-              ]
-            },
-            "modified": 1496851737000,
-            "resizable": true,
-            "type": "image"
-          },
-          "large_thumbnail": {
-            "format": "jpeg",
-            "location": "272/918/large_thumbnail_B700707.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 418
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 320
-                }
-              ]
-            },
-            "modified": 1496851737000,
-            "resizable": true,
-            "type": "image"
-          },
-          "medium": {
-            "format": "jpeg",
-            "location": "272/918/medium_B700707.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 752
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 576
-                }
-              ]
-            },
-            "modified": 1496851737000,
-            "resizable": true,
-            "type": "image"
-          },
-          "medium_thumbnail": {
-            "format": "jpeg",
-            "location": "272/918/medium_thumbnail_B700707.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 251
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 192
-                }
-              ]
-            },
-            "modified": 1496851737000,
-            "resizable": true,
-            "type": "image"
-          },
-          "small_thumbnail": {
-            "format": "jpeg",
-            "location": "272/918/small_thumbnail_B700707.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 63
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 48
-                }
-              ]
-            },
-            "modified": 1496851737000,
-            "resizable": true,
-            "type": "image"
-          },
-          "zoom": {
-            "format": "pyramid tiff",
-            "location": "272/918/B700707.ptif",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 4800
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 3678
-                }
-              ]
-            },
-            "modified": 1496851737000,
-            "resizable": true,
-            "type": "image"
-          }
-        },
-        "public_view": "1",
-        "publish": "1",
-        "sort": "2017-06-07 17:08:49.0",
-        "source": {
-          "legal": {
-            "rights": [
-              {
-                "details": "\u00a9 The Board of Trustees of the Science Museum, London",
-                "usage_terms": "CC BY-SA 4.0"
-              }
-            ]
-          },
-          "title": [
-            {
-              "type": "caption",
-              "value": "Painting. [Galileo Galilei] / by A. Susan Zileri (fl"
-            },
-            {
-              "type": "main title",
-              "value": "Painting. [Galileo Galilei] / by A. Susan Zileri (fl. 1884-1934), 1884. Oil on canvas; 61.5x51cm in curly wood and gilt"
-            }
-          ]
-        },
-        "traffic_light": "Green",
-        "type": {
-          "base": "media",
-          "type": "image"
-        }
-      },
-      {
-        "@link": {
-          "type": "reference"
-        },
-        "admin": {
-          "id": "media-4452",
-          "source": "smgi",
-          "uid": "i4452",
-          "uuid": "424d0042-01dd-3d27-8416-f65179c26640"
-        },
-        "credit": "Science Museum Group Collection",
-        "enhancement": {
-          "rekognition": [
-            {
-              "labels": [
-                {
-                  "details": {
-                    "confidence": 86.64699,
-                    "parents": [
-                      {
-                        "value": "Symbol"
-                      }
-                    ]
-                  },
-                  "value": "Arrow"
-                },
-                {
-                  "details": {
-                    "confidence": 86.64699
-                  },
-                  "value": "Symbol"
-                },
-                {
-                  "details": {
-                    "confidence": 84.71997
-                  },
-                  "value": "Weaponry"
-                },
-                {
-                  "details": {
-                    "confidence": 84.71997
-                  },
-                  "value": "Weapon"
-                }
-              ],
-              "source": "amazon rekognition"
-            }
-          ]
-        },
-        "for_sale": "0",
-        "identifier": [
-          {
-            "type": "iBase id",
-            "value": "4452"
-          }
-        ],
-        "priority": "0.5",
-        "processed": {
-          "large": {
-            "format": "jpeg",
-            "location": "4/452/large_1923_0668__0001_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 1151
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 1536
-                }
-              ]
-            },
-            "modified": 1472028927000,
-            "resizable": true,
-            "type": "image"
-          },
-          "large_thumbnail": {
-            "format": "jpeg",
-            "location": "4/452/large_thumbnail_1923_0668__0001_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 240
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 320
-                }
-              ]
-            },
-            "modified": 1472028927000,
-            "resizable": true,
-            "type": "image"
-          },
-          "medium": {
-            "format": "jpeg",
-            "location": "4/452/medium_1923_0668__0001_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 576
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 768
-                }
-              ]
-            },
-            "modified": 1472028927000,
-            "resizable": true,
-            "type": "image"
-          },
-          "medium_thumbnail": {
-            "format": "jpeg",
-            "location": "4/452/medium_thumbnail_1923_0668__0001_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 144
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 192
-                }
-              ]
-            },
-            "modified": 1472028927000,
-            "resizable": true,
-            "type": "image"
-          },
-          "small_thumbnail": {
-            "format": "jpeg",
-            "location": "4/452/small_thumbnail_1923_0668__0001_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 48
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 64
-                }
-              ]
-            },
-            "modified": 1472028927000,
-            "resizable": true,
-            "type": "image"
-          },
-          "zoom": {
-            "format": "pyramid tiff",
-            "location": "4/452/1923_0668__0001_.ptif",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 4000
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 5336
-                }
-              ]
-            },
-            "modified": 1472028927000,
-            "resizable": true,
-            "type": "image"
-          }
-        },
-        "public_view": "1",
-        "publish": "1",
-        "sort": "2015-06-06 05:40:20.0",
-        "source": {
-          "legal": {
-            "rights": [
-              {
-                "details": "\u00a9 The Board of Trustees of the Science Museum",
-                "usage_terms": "CC BY-SA 4.0"
-              }
-            ]
-          },
-          "title": [
-            {
-              "type": "caption",
-              "value": "Facsimile of telescope by Galileo with main tube measuring"
-            },
-            {
-              "type": "main title",
-              "value": "Facsimile of telescope by Galileo with main tube measuring  2-foot, 8 1/2-inches and magnification of 21 times. Full"
-            }
-          ]
-        },
-        "traffic_light": "Green",
-        "type": {
-          "base": "media",
-          "type": "image"
-        }
-      },
-      {
-        "@link": {
-          "type": "reference"
-        },
-        "admin": {
-          "id": "media-294444",
-          "source": "smgi",
-          "uid": "i294444",
-          "uuid": "e80138a8-6510-3792-9d39-6ee67f0a898e"
-        },
-        "credit": "Science Museum Group Collection",
-        "enhancement": {
-          "rekognition": [
-            {
-              "labels": [
-                {
-                  "details": {
-                    "confidence": 84.457695
-                  },
-                  "value": "Sports"
-                },
-                {
-                  "details": {
-                    "confidence": 84.457695,
-                    "parents": [
-                      {
-                        "value": "Team"
-                      },
-                      {
-                        "value": "Sport"
-                      }
-                    ]
-                  },
-                  "value": "Team Sport"
-                },
-                {
-                  "details": {
-                    "confidence": 84.457695,
-                    "parents": [
-                      {
-                        "value": "Team"
-                      },
-                      {
-                        "value": "Sport"
-                      },
-                      {
-                        "value": "Team Sport"
-                      }
-                    ]
-                  },
-                  "value": "Baseball"
-                },
-                {
-                  "details": {
-                    "confidence": 84.457695,
-                    "parents": [
-                      {
-                        "value": "Team"
-                      },
-                      {
-                        "value": "Sport"
-                      },
-                      {
-                        "value": "Team Sport"
-                      }
-                    ]
-                  },
-                  "value": "Softball"
-                },
-                {
-                  "details": {
-                    "confidence": 84.457695
-                  },
-                  "value": "Team"
-                },
-                {
-                  "details": {
-                    "confidence": 84.457695
-                  },
-                  "value": "Sport"
-                },
-                {
-                  "details": {
-                    "confidence": 84.457695,
-                    "instances": [
-                      {
-                        "confidence": "84.457695",
-                        "region": {
-                          "height": 0.7185915,
-                          "left": 0.048474047,
-                          "top": 0.19960986,
-                          "type": "bounding box",
-                          "width": 0.8919881
-                        }
-                      }
-                    ],
-                    "parents": [
-                      {
-                        "value": "Team Sport"
-                      },
-                      {
-                        "value": "Baseball"
-                      },
-                      {
-                        "value": "Team"
-                      },
-                      {
-                        "value": "Sport"
-                      }
-                    ]
-                  },
-                  "value": "Baseball Bat"
-                }
-              ],
-              "source": "amazon rekognition"
-            }
-          ]
-        },
-        "for_sale": "0",
-        "identifier": [
-          {
-            "type": "iBase id",
-            "value": "294444"
-          }
-        ],
-        "priority": "0.5",
-        "processed": {
-          "large": {
-            "format": "jpeg",
-            "location": "294/444/large_1923_0668__0001_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 1536
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 1322
-                }
-              ]
-            },
-            "modified": 1525953866000,
-            "resizable": true,
-            "type": "image"
-          },
-          "large_thumbnail": {
-            "format": "jpeg",
-            "location": "294/444/large_thumbnail_1923_0668__0001_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 372
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 320
-                }
-              ]
-            },
-            "modified": 1525953866000,
-            "resizable": true,
-            "type": "image"
-          },
-          "medium": {
-            "format": "jpeg",
-            "location": "294/444/medium_1923_0668__0001_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 669
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 576
-                }
-              ]
-            },
-            "modified": 1525953866000,
-            "resizable": true,
-            "type": "image"
-          },
-          "medium_thumbnail": {
-            "format": "jpeg",
-            "location": "294/444/medium_thumbnail_1923_0668__0001_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 223
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 192
-                }
-              ]
-            },
-            "modified": 1525953866000,
-            "resizable": true,
-            "type": "image"
-          },
-          "small_thumbnail": {
-            "format": "jpeg",
-            "location": "294/444/small_thumbnail_1923_0668__0001_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 56
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 48
-                }
-              ]
-            },
-            "modified": 1525953866000,
-            "resizable": true,
-            "type": "image"
-          },
-          "zoom": {
-            "format": "pyramid tiff",
-            "location": "294/444/1923_0668__0001_.ptif",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 5631
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 4848
-                }
-              ]
-            },
-            "modified": 1525953866000,
-            "resizable": true,
-            "type": "image"
-          }
-        },
-        "public_view": "1",
-        "publish": "1",
-        "sort": "2018-05-10 13:04:20.0",
-        "source": {
-          "legal": {
-            "rights": [
-              {
-                "details": "\u00a9 The Board of Trustees of the Science Museum, London",
-                "usage_terms": "CC BY-SA 4.0"
-              }
-            ]
-          },
-          "title": [
-            {
-              "type": "caption",
-              "value": "Replica of one of the telescopes made by Galileo Galilei after"
-            },
-            {
-              "type": "main title",
-              "value": "Replica of one of the telescopes made by Galileo Galilei after he learnt of the invention of the telescope in 1608."
-            }
-          ]
-        },
-        "type": {
-          "base": "media",
-          "type": "image"
-        }
-      },
-      {
-        "@link": {
-          "type": "reference"
-        },
-        "admin": {
-          "id": "media-294445",
-          "source": "smgi",
-          "uid": "i294445",
-          "uuid": "7f288b5d-6687-3881-8d13-9725d693c7f9"
-        },
-        "credit": "Science Museum Group Collection",
-        "enhancement": {
-          "rekognition": [
-            {
-              "labels": [
-                {
-                  "details": {
-                    "confidence": 96.40169
-                  },
-                  "value": "Weapon"
-                },
-                {
-                  "details": {
-                    "confidence": 96.40169
-                  },
-                  "value": "Weaponry"
-                }
-              ],
-              "source": "amazon rekognition"
-            }
-          ]
-        },
-        "for_sale": "0",
-        "identifier": [
-          {
-            "type": "iBase id",
-            "value": "294445"
-          }
-        ],
-        "priority": "0.5",
-        "processed": {
-          "large": {
-            "format": "jpeg",
-            "location": "294/445/large_1923_0668__0003_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 1536
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 1087
-                }
-              ]
-            },
-            "modified": 1525953880000,
-            "resizable": true,
-            "type": "image"
-          },
-          "large_thumbnail": {
-            "format": "jpeg",
-            "location": "294/445/large_thumbnail_1923_0668__0003_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 452
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 320
-                }
-              ]
-            },
-            "modified": 1525953880000,
-            "resizable": true,
-            "type": "image"
-          },
-          "medium": {
-            "format": "jpeg",
-            "location": "294/445/medium_1923_0668__0003_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 814
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 576
-                }
-              ]
-            },
-            "modified": 1525953880000,
-            "resizable": true,
-            "type": "image"
-          },
-          "medium_thumbnail": {
-            "format": "jpeg",
-            "location": "294/445/medium_thumbnail_1923_0668__0003_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 271
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 192
-                }
-              ]
-            },
-            "modified": 1525953880000,
-            "resizable": true,
-            "type": "image"
-          },
-          "small_thumbnail": {
-            "format": "jpeg",
-            "location": "294/445/small_thumbnail_1923_0668__0003_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 68
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 48
-                }
-              ]
-            },
-            "modified": 1525953880000,
-            "resizable": true,
-            "type": "image"
-          },
-          "zoom": {
-            "format": "pyramid tiff",
-            "location": "294/445/1923_0668__0003_.ptif",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 6182
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 4374
-                }
-              ]
-            },
-            "modified": 1525953880000,
-            "resizable": true,
-            "type": "image"
-          }
-        },
-        "public_view": "1",
-        "publish": "1",
-        "sort": "2018-05-10 13:04:32.0",
-        "source": {
-          "legal": {
-            "rights": [
-              {
-                "details": "\u00a9 The Board of Trustees of the Science Museum, London",
-                "usage_terms": "CC BY-SA 4.0"
-              }
-            ]
-          },
-          "title": [
-            {
-              "type": "caption",
-              "value": "Replica of one of the telescopes made by Galileo Galilei after"
-            },
-            {
-              "type": "main title",
-              "value": "Replica of one of the telescopes made by Galileo Galilei after he learnt of the invention of the telescope in 1608."
-            }
-          ]
-        },
-        "type": {
-          "base": "media",
-          "type": "image"
-        }
-      },
-      {
-        "@link": {
-          "type": "reference"
-        },
-        "admin": {
-          "id": "media-294446",
-          "source": "smgi",
-          "uid": "i294446",
-          "uuid": "a7a99a43-402e-3db2-a2a5-924e1d21237e"
-        },
-        "credit": "Science Museum Group Collection",
-        "enhancement": {
-          "rekognition": [
-            {
-              "labels": [
-                {
-                  "details": {
-                    "confidence": 99.78297
-                  },
-                  "value": "Bronze"
-                }
-              ],
-              "source": "amazon rekognition"
-            }
-          ]
-        },
-        "for_sale": "0",
-        "identifier": [
-          {
-            "type": "iBase id",
-            "value": "294446"
-          }
-        ],
-        "priority": "0.5",
-        "processed": {
-          "large": {
-            "format": "jpeg",
-            "location": "294/446/large_1923_0668__0002_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 1143
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 1536
-                }
-              ]
-            },
-            "modified": 1525953895000,
-            "resizable": true,
-            "type": "image"
-          },
-          "large_thumbnail": {
-            "format": "jpeg",
-            "location": "294/446/large_thumbnail_1923_0668__0002_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 240
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 323
-                }
-              ]
-            },
-            "modified": 1525953895000,
-            "resizable": true,
-            "type": "image"
-          },
-          "medium": {
-            "format": "jpeg",
-            "location": "294/446/medium_1923_0668__0002_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 576
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 774
-                }
-              ]
-            },
-            "modified": 1525953895000,
-            "resizable": true,
-            "type": "image"
-          },
-          "medium_thumbnail": {
-            "format": "jpeg",
-            "location": "294/446/medium_thumbnail_1923_0668__0002_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 144
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 194
-                }
-              ]
-            },
-            "modified": 1525953895000,
-            "resizable": true,
-            "type": "image"
-          },
-          "small_thumbnail": {
-            "format": "jpeg",
-            "location": "294/446/small_thumbnail_1923_0668__0002_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 48
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 65
-                }
-              ]
-            },
-            "modified": 1525953895000,
-            "resizable": true,
-            "type": "image"
-          },
-          "zoom": {
-            "format": "pyramid tiff",
-            "location": "294/446/1923_0668__0002_.ptif",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 4902
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 6590
-                }
-              ]
-            },
-            "modified": 1525953895000,
-            "resizable": true,
-            "type": "image"
-          }
-        },
-        "public_view": "1",
-        "publish": "1",
-        "sort": "2018-05-10 13:04:45.0",
-        "source": {
-          "legal": {
-            "rights": [
-              {
-                "details": "\u00a9 The Board of Trustees of the Science Museum, London",
-                "usage_terms": "CC BY-SA 4.0"
-              }
-            ]
-          },
-          "title": [
-            {
-              "type": "caption",
-              "value": "Replica of one of the telescopes made by Galileo Galilei after"
-            },
-            {
-              "type": "main title",
-              "value": "Replica of one of the telescopes made by Galileo Galilei after he learnt of the invention of the telescope in 1608."
-            }
-          ]
-        },
-        "type": {
-          "base": "media",
-          "type": "image"
-        }
-      },
-      {
-        "@link": {
-          "type": "reference"
-        },
-        "admin": {
-          "id": "media-294447",
-          "source": "smgi",
-          "uid": "i294447",
-          "uuid": "e14a4b88-65f9-36c7-a88e-28137c89e555"
-        },
-        "credit": "Science Museum Group Collection",
-        "enhancement": {
-          "rekognition": [
-            {
-              "report": "no enhancements available",
-              "source": "amazon rekognition"
-            }
-          ]
-        },
-        "for_sale": "0",
-        "identifier": [
-          {
-            "type": "iBase id",
-            "value": "294447"
-          }
-        ],
-        "priority": "0.5",
-        "processed": {
-          "large": {
-            "format": "jpeg",
-            "location": "294/447/large_1923_0668__0005_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 1144
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 1536
-                }
-              ]
-            },
-            "modified": 1525953913000,
-            "resizable": true,
-            "type": "image"
-          },
-          "large_thumbnail": {
-            "format": "jpeg",
-            "location": "294/447/large_thumbnail_1923_0668__0005_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 240
-                },
-                {
-                  "dimension": "width",
                   "units": "pixels",
-                  "value": 322
-                }
-              ]
-            },
-            "modified": 1525953913000,
-            "resizable": true,
-            "type": "image"
-          },
-          "medium": {
-            "format": "jpeg",
-            "location": "294/447/medium_1923_0668__0005_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 576
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 773
-                }
-              ]
-            },
-            "modified": 1525953913000,
-            "resizable": true,
-            "type": "image"
-          },
-          "medium_thumbnail": {
-            "format": "jpeg",
-            "location": "294/447/medium_thumbnail_1923_0668__0005_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 144
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 193
-                }
-              ]
-            },
-            "modified": 1525953913000,
-            "resizable": true,
-            "type": "image"
-          },
-          "small_thumbnail": {
-            "format": "jpeg",
-            "location": "294/447/small_thumbnail_1923_0668__0005_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 48
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 64
-                }
-              ]
-            },
-            "modified": 1525953913000,
-            "resizable": true,
-            "type": "image"
-          },
-          "zoom": {
-            "format": "pyramid tiff",
-            "location": "294/447/1923_0668__0005_.ptif",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
                   "dimension": "height",
-                  "units": "pixels",
-                  "value": 5225
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 7015
-                }
-              ]
-            },
-            "modified": 1525953913000,
-            "resizable": true,
-            "type": "image"
-          }
-        },
-        "public_view": "1",
-        "publish": "1",
-        "sort": "2018-05-10 13:05:01.0",
-        "source": {
-          "legal": {
-            "rights": [
-              {
-                "details": "\u00a9 The Board of Trustees of the Science Museum, London",
-                "usage_terms": "CC BY-SA 4.0"
-              }
-            ]
-          },
-          "title": [
-            {
-              "type": "caption",
-              "value": "Replica of one of the telescopes made by Galileo Galilei after"
-            },
-            {
-              "type": "main title",
-              "value": "Replica of one of the telescopes made by Galileo Galilei after he learnt of the invention of the telescope in 1608."
-            }
-          ]
-        },
-        "type": {
-          "base": "media",
-          "type": "image"
-        }
-      },
-      {
-        "@link": {
-          "type": "reference"
-        },
-        "admin": {
-          "id": "media-294448",
-          "source": "smgi",
-          "uid": "i294448",
-          "uuid": "c8626953-8de2-3fc7-b09d-1b1c9158f562"
-        },
-        "credit": "Science Museum Group Collection",
-        "enhancement": {
-          "rekognition": [
-            {
-              "report": "no enhancements available",
-              "source": "amazon rekognition"
-            }
-          ]
-        },
-        "for_sale": "0",
-        "identifier": [
-          {
-            "type": "iBase id",
-            "value": "294448"
-          }
-        ],
-        "priority": "0.5",
-        "processed": {
-          "large": {
-            "format": "jpeg",
-            "location": "294/448/large_1923_0668__0004_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
                   "value": 1150
                 },
                 {
-                  "dimension": "width",
                   "units": "pixels",
+                  "dimension": "width",
                   "value": 1536
                 }
               ]
-            },
-            "modified": 1525953936000,
-            "resizable": true,
-            "type": "image"
-          },
-          "large_thumbnail": {
-            "format": "jpeg",
-            "location": "294/448/large_thumbnail_1923_0668__0004_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 240
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 321
-                }
-              ]
-            },
-            "modified": 1525953936000,
-            "resizable": true,
-            "type": "image"
-          },
-          "medium": {
-            "format": "jpeg",
-            "location": "294/448/medium_1923_0668__0004_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 576
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 769
-                }
-              ]
-            },
-            "modified": 1525953936000,
-            "resizable": true,
-            "type": "image"
-          },
-          "medium_thumbnail": {
-            "format": "jpeg",
-            "location": "294/448/medium_thumbnail_1923_0668__0004_.jpg",
-            "location_is_relative": true,
-            "measurements": {
-              "dimensions": [
-                {
-                  "dimension": "height",
-                  "units": "pixels",
-                  "value": 144
-                },
-                {
-                  "dimension": "width",
-                  "units": "pixels",
-                  "value": 192
-                }
-              ]
-            },
-            "modified": 1525953936000,
-            "resizable": true,
-            "type": "image"
+            }
           },
           "small_thumbnail": {
+            "resizable": true,
+            "@type": "image",
             "format": "jpeg",
-            "location": "294/448/small_thumbnail_1923_0668__0004_.jpg",
-            "location_is_relative": true,
+            "modified": 1697087683000,
+            "location": "458/349/small_thumbnail_a659676__0001_.jpg",
             "measurements": {
+              "filesize": {
+                "units": "bytes",
+                "value": 18125
+              },
               "dimensions": [
                 {
-                  "dimension": "height",
                   "units": "pixels",
+                  "dimension": "height",
                   "value": 48
                 },
                 {
-                  "dimension": "width",
                   "units": "pixels",
+                  "dimension": "width",
                   "value": 64
                 }
               ]
-            },
-            "modified": 1525953936000,
-            "resizable": true,
-            "type": "image"
+            }
           },
           "zoom": {
+            "resizable": true,
+            "@type": "image",
             "format": "pyramid tiff",
-            "location": "294/448/1923_0668__0004_.ptif",
-            "location_is_relative": true,
+            "modified": 1697087683000,
+            "location": "458/349/Small_votive_organ_of_unknown_type.ptif",
             "measurements": {
+              "filesize": {
+                "units": "bytes",
+                "value": 120104992
+              },
               "dimensions": [
                 {
-                  "dimension": "height",
                   "units": "pixels",
+                  "dimension": "height",
                   "value": 5474
                 },
                 {
-                  "dimension": "width",
                   "units": "pixels",
+                  "dimension": "width",
                   "value": 7312
                 }
               ]
-            },
-            "modified": 1525953936000,
+            }
+          },
+          "medium": {
             "resizable": true,
-            "type": "image"
+            "@type": "image",
+            "format": "jpeg",
+            "modified": 1697087683000,
+            "location": "458/349/medium_a659676__0001_.jpg",
+            "measurements": {
+              "filesize": {
+                "units": "bytes",
+                "value": 48013
+              },
+              "dimensions": [
+                {
+                  "units": "pixels",
+                  "dimension": "height",
+                  "value": 576
+                },
+                {
+                  "units": "pixels",
+                  "dimension": "width",
+                  "value": 769
+                }
+              ]
+            }
+          },
+          "large_thumbnail": {
+            "resizable": true,
+            "@type": "image",
+            "format": "jpeg",
+            "modified": 1697087683000,
+            "location": "https://coimages.sciencemuseumgroup.org.uk/458/352/large_thumbnail_a659676__0003_.jpg",
+            "measurements": {
+              "filesize": {
+                "units": "bytes",
+                "value": 23438
+              },
+              "dimensions": [
+                {
+                  "units": "pixels",
+                  "dimension": "height",
+                  "value": 240
+                },
+                {
+                  "units": "pixels",
+                  "dimension": "width",
+                  "value": 321
+                }
+              ]
+            }
+          },
+          "medium_thumbnail": {
+            "resizable": true,
+            "@type": "image",
+            "format": "jpeg",
+            "modified": 1697087683000,
+            "location": "458/349/medium_thumbnail_a659676__0001_.jpg",
+            "measurements": {
+              "filesize": {
+                "units": "bytes",
+                "value": 19924
+              },
+              "dimensions": [
+                {
+                  "units": "pixels",
+                  "dimension": "height",
+                  "value": 144
+                },
+                {
+                  "units": "pixels",
+                  "dimension": "width",
+                  "value": 192
+                }
+              ]
+            }
           }
         },
-        "public_view": "1",
-        "publish": "1",
-        "sort": "2018-05-10 13:05:20.0",
-        "source": {
-          "legal": {
-            "rights": [
-              {
-                "details": "\u00a9 The Board of Trustees of the Science Museum, London",
-                "usage_terms": "CC BY-SA 4.0"
-              }
-            ]
-          },
-          "title": [
+        "@type": "image",
+        "upload_sort": "24/04/2020",
+        "legal": {
+          "rights": [
             {
-              "type": "caption",
-              "value": "Replica of one of the telescopes made by Galileo Galilei after"
-            },
-            {
-              "type": "main title",
-              "value": "Replica of one of the telescopes made by Galileo Galilei after he learnt of the invention of the telescope in 1608."
+              "licence": "CC BY-SA 4.0",
+              "copyright": "© The Board of Trustees of the Science Museum, London"
             }
           ]
         },
-        "type": {
-          "base": "media",
-          "type": "image"
-        }
+        "credit": {
+          "value": "Science Museum Group Collections"
+        },
+        "title": [
+          {
+            "type": "caption",
+            "value": "Small votive organ of unknown type"
+          }
+        ],
+        "@entity": "reference"
+      },
+      {
+        "@admin": {
+          "uid": "i458351",
+          "id": "media-458351",
+          "source": "smgi",
+          "uuid": "afdc103f-10a2-31ee-a870-a004a94053df"
+        },
+        "@processed": {
+          "large": {
+            "resizable": true,
+            "@type": "image",
+            "format": "jpeg",
+            "modified": 1697087687000,
+            "location": "458/351/large_a659676__0002_.jpg",
+            "measurements": {
+              "filesize": {
+                "units": "bytes",
+                "value": 131124
+              },
+              "dimensions": [
+                {
+                  "units": "pixels",
+                  "dimension": "height",
+                  "value": 1150
+                },
+                {
+                  "units": "pixels",
+                  "dimension": "width",
+                  "value": 1536
+                }
+              ]
+            }
+          },
+          "small_thumbnail": {
+            "resizable": true,
+            "@type": "image",
+            "format": "jpeg",
+            "modified": 1697087687000,
+            "location": "458/351/small_thumbnail_a659676__0002_.jpg",
+            "measurements": {
+              "filesize": {
+                "units": "bytes",
+                "value": 18114
+              },
+              "dimensions": [
+                {
+                  "units": "pixels",
+                  "dimension": "height",
+                  "value": 48
+                },
+                {
+                  "units": "pixels",
+                  "dimension": "width",
+                  "value": 64
+                }
+              ]
+            }
+          },
+          "zoom": {
+            "resizable": true,
+            "@type": "image",
+            "format": "pyramid tiff",
+            "modified": 1697087687000,
+            "location": "458/351/Small_votive_organ_of_unknown_type.ptif",
+            "measurements": {
+              "filesize": {
+                "units": "bytes",
+                "value": 120105572
+              },
+              "dimensions": [
+                {
+                  "units": "pixels",
+                  "dimension": "height",
+                  "value": 5474
+                },
+                {
+                  "units": "pixels",
+                  "dimension": "width",
+                  "value": 7312
+                }
+              ]
+            }
+          },
+          "medium": {
+            "resizable": true,
+            "@type": "image",
+            "format": "jpeg",
+            "modified": 1697087687000,
+            "location": "458/351/medium_a659676__0002_.jpg",
+            "measurements": {
+              "filesize": {
+                "units": "bytes",
+                "value": 46593
+              },
+              "dimensions": [
+                {
+                  "units": "pixels",
+                  "dimension": "height",
+                  "value": 576
+                },
+                {
+                  "units": "pixels",
+                  "dimension": "width",
+                  "value": 769
+                }
+              ]
+            }
+          },
+          "large_thumbnail": {
+            "resizable": true,
+            "@type": "image",
+            "format": "jpeg",
+            "modified": 1697087687000,
+            "location": "458/351/large_thumbnail_a659676__0002_.jpg",
+            "measurements": {
+              "filesize": {
+                "units": "bytes",
+                "value": 22983
+              },
+              "dimensions": [
+                {
+                  "units": "pixels",
+                  "dimension": "height",
+                  "value": 240
+                },
+                {
+                  "units": "pixels",
+                  "dimension": "width",
+                  "value": 321
+                }
+              ]
+            }
+          },
+          "medium_thumbnail": {
+            "resizable": true,
+            "@type": "image",
+            "format": "jpeg",
+            "modified": 1697087687000,
+            "location": "458/351/medium_thumbnail_a659676__0002_.jpg",
+            "measurements": {
+              "filesize": {
+                "units": "bytes",
+                "value": 19791
+              },
+              "dimensions": [
+                {
+                  "units": "pixels",
+                  "dimension": "height",
+                  "value": 144
+                },
+                {
+                  "units": "pixels",
+                  "dimension": "width",
+                  "value": 192
+                }
+              ]
+            }
+          }
+        },
+        "@type": "image",
+        "upload_sort": "24/04/2020",
+        "legal": {
+          "rights": [
+            {
+              "licence": "CC BY-SA 4.0",
+              "copyright": "© The Board of Trustees of the Science Museum, London"
+            }
+          ]
+        },
+        "credit": {
+          "value": "Science Museum Group Collections"
+        },
+        "title": [
+          {
+            "type": "caption",
+            "value": "Small votive organ of unknown type"
+          }
+        ],
+        "@entity": "reference"
+      },
+      {
+        "@admin": {
+          "uid": "i458352",
+          "id": "media-458352",
+          "source": "smgi",
+          "uuid": "674f884d-b51b-31f8-860a-4b167f337c67"
+        },
+        "@processed": {
+          "large": {
+            "resizable": true,
+            "@type": "image",
+            "format": "jpeg",
+            "modified": 1697087687000,
+            "location": "458/352/large_a659676__0003_.jpg",
+            "measurements": {
+              "filesize": {
+                "units": "bytes",
+                "value": 128214
+              },
+              "dimensions": [
+                {
+                  "units": "pixels",
+                  "dimension": "height",
+                  "value": 1150
+                },
+                {
+                  "units": "pixels",
+                  "dimension": "width",
+                  "value": 1536
+                }
+              ]
+            }
+          },
+          "small_thumbnail": {
+            "resizable": true,
+            "@type": "image",
+            "format": "jpeg",
+            "modified": 1697087687000,
+            "location": "458/352/small_thumbnail_a659676__0003_.jpg",
+            "measurements": {
+              "filesize": {
+                "units": "bytes",
+                "value": 18124
+              },
+              "dimensions": [
+                {
+                  "units": "pixels",
+                  "dimension": "height",
+                  "value": 48
+                },
+                {
+                  "units": "pixels",
+                  "dimension": "width",
+                  "value": 64
+                }
+              ]
+            }
+          },
+          "zoom": {
+            "resizable": true,
+            "@type": "image",
+            "format": "pyramid tiff",
+            "modified": 1697087687000,
+            "location": "458/352/Small_votive_organ_of_unknown_type.ptif",
+            "measurements": {
+              "filesize": {
+                "units": "bytes",
+                "value": 120105504
+              },
+              "dimensions": [
+                {
+                  "units": "pixels",
+                  "dimension": "height",
+                  "value": 5474
+                },
+                {
+                  "units": "pixels",
+                  "dimension": "width",
+                  "value": 7312
+                }
+              ]
+            }
+          },
+          "medium": {
+            "resizable": true,
+            "@type": "image",
+            "format": "jpeg",
+            "modified": 1697087687000,
+            "location": "458/352/medium_a659676__0003_.jpg",
+            "measurements": {
+              "filesize": {
+                "units": "bytes",
+                "value": 46746
+              },
+              "dimensions": [
+                {
+                  "units": "pixels",
+                  "dimension": "height",
+                  "value": 576
+                },
+                {
+                  "units": "pixels",
+                  "dimension": "width",
+                  "value": 769
+                }
+              ]
+            }
+          },
+          "large_thumbnail": {
+            "resizable": true,
+            "@type": "image",
+            "format": "jpeg",
+            "modified": 1697087687000,
+            "location": "458/352/large_thumbnail_a659676__0003_.jpg",
+            "measurements": {
+              "filesize": {
+                "units": "bytes",
+                "value": 23172
+              },
+              "dimensions": [
+                {
+                  "units": "pixels",
+                  "dimension": "height",
+                  "value": 240
+                },
+                {
+                  "units": "pixels",
+                  "dimension": "width",
+                  "value": 321
+                }
+              ]
+            }
+          },
+          "medium_thumbnail": {
+            "resizable": true,
+            "@type": "image",
+            "format": "jpeg",
+            "modified": 1697087687000,
+            "location": "458/352/medium_thumbnail_a659676__0003_.jpg",
+            "measurements": {
+              "filesize": {
+                "units": "bytes",
+                "value": 19840
+              },
+              "dimensions": [
+                {
+                  "units": "pixels",
+                  "dimension": "height",
+                  "value": 144
+                },
+                {
+                  "units": "pixels",
+                  "dimension": "width",
+                  "value": 192
+                }
+              ]
+            }
+          }
+        },
+        "@type": "image",
+        "upload_sort": "24/04/2020",
+        "legal": {
+          "rights": [
+            {
+              "licence": "CC BY-SA 4.0",
+              "copyright": "© The Board of Trustees of the Science Museum, London"
+            }
+          ]
+        },
+        "credit": {
+          "value": "Science Museum Group Collections"
+        },
+        "title": [
+          {
+            "type": "caption",
+            "value": "Small votive organ of unknown type"
+          }
+        ],
+        "@entity": "reference"
       }
     ],
     "name": [
       {
-        "type": "name",
-        "value": "telescope - refracting"
-      }
-    ],
-    "note": [
+        "type": "catalogue name",
+        "value": "votive viscera",
+        "primary": true
+      },
       {
-        "primary": true,
-        "value": "C&C - DW&S"
+        "type": "object name",
+        "value": "votive viscera"
       }
     ],
-    "numbers": {
-      "NUMBER1": "62",
-      "NUMBER2": "20100224"
+    "summary": {
+      "title": "Small votive organ of unknown type (votive viscera)"
     },
-    "summary_title": "Telescope by Galileo (replica) (telescope - Galilean; telescope - refracting; replica)",
     "title": [
       {
-        "primary": true,
-        "type": "Cosmos Culture_TITLE",
-        "value": "Telescope by Galileo (replica)"
+        "type": "catalogue title",
+        "value": "Small votive organ of unknown type",
+        "primary": true
+      },
+      {
+        "type": "display title",
+        "value": "Small votive organ of unknown type, built up from"
+      },
+      {
+        "type": "display title",
+        "value": "Small votive organ of unknown type"
       }
     ]
   },
-  "id": "co56202",
-  "links": {
-    "self": "https://collection.sciencemuseumgroup.org.uk/objects/co56202/telescope-by-galileo-replica-telescope-galilean-telescope-refracting-replica"
-  },
   "relationships": {
-    "people": {
+    "place": {
       "data": [
         {
-          "id": "cp37297",
-          "type": "people"
-        }
-      ]
-    },
-    "terms": {
-      "data": [
-        {
-          "id": "ct54534",
-          "type": "terms"
-        },
-        {
-          "id": "ct262081",
-          "type": "terms"
-        },
-        {
-          "id": "ct262401",
-          "type": "terms"
-        },
-        {
-          "id": "ct265959",
-          "type": "terms"
-        },
-        {
-          "id": "ct262388",
-          "type": "terms"
+          "type": "place",
+          "id": "undefined"
         }
       ]
     }
   },
-  "type": "objects"
+  "links": {
+    "self": "https://collection.sciencemuseumgroup.org.uk/objects/co84905/small-votive-organ-of-unknown-type-votive-viscera"
+  }
 }

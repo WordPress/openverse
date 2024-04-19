@@ -1,12 +1,9 @@
 from http.client import responses as http_responses
 from textwrap import dedent
-from typing import Literal
 
 from django.conf import settings
 from rest_framework.exceptions import (
-    NotAuthenticated,
     NotFound,
-    ValidationError,
 )
 
 from drf_spectacular.openapi import AutoSchema
@@ -18,12 +15,7 @@ from drf_spectacular.utils import (
 )
 
 from api.constants.media_types import MediaType
-from api.serializers.audio_serializers import (
-    AudioCollectionRequestSerializer,
-    AudioSerializer,
-)
-from api.serializers.image_serializers import ImageSerializer
-from api.serializers.media_serializers import PaginatedRequestSerializer
+from api.constants.parameters import COLLECTION, TAG
 
 
 def fields_to_md(field_names):
@@ -149,109 +141,76 @@ tag_path_parameter = OpenApiParameter(
     description="The tag of the media. Not case-sensitive, matches exactly.",
 )
 
+SEARCH_DESCRIPTION_DEFAULT = """
+Return {media_type} that match the query.
 
-def get_collection_description(media_type, collection):
-    if collection == "tag":
-        return f"""
-Get a collection of {media_type} with a specific tag.
+This endpoint allows you to search within specific fields, or to retrieve
+a collection of all {media_type} from a specific source, creator or tag.
+Results are paginated on the basis of the `page` parameter. The `page_size`
+parameter controls the total number of pages.
 
-This endpoint matches a single tag, exactly and entirely.
+Although there may be millions of relevant records, only the most relevant
+or the most recent several thousand records can be viewed. This is by design:
+the search endpoint should be used to find the top 10,000 most relevant
+results, not for exhaustive search or bulk download of every barely relevant
+result. As such, the caller should not try to access pages beyond `page_count`,
+or else the server will reject the query.
 
-Differences that will cause tags to not match are:
-- upper and lower case letters
-- diacritical marks
-- hyphenation
-- spacing
-- multi-word tags where the query is only one of the words in the tag
-- multi-word tags where the words are in a different order
+### Default search
+The **default search** allows users to find media based on a query string.
+It supports a wide range of optional filters to narrow down search results
+according to specific needs.
 
-Examples of tags that **do not** match:
-- "Low-Quality" and "low-quality"
-- "jalapeño" and "jalapeno"
-- "Saint Pierre des Champs" and "Saint-Pierre-des-Champs"
-- "dog walking" and "dog  walking" (where the latter has two spaces between the
-last two words, as in a typographical error)
-- "runner" and "marathon runner"
-- "exclaiming loudly" and "loudly exclaiming"
+By default, this endpoint performs a full-text search for the value of `q` parameter.
+You can search within the `creator`, `title` or `tags` fields by omitting
+the `q` parameter and using one of these field parameters.
+These results can be filtered by {filter_fields}.
 
-For non-exact or multi-tag matching, using the `search` endpoint's `tags` query
-parameter.
+The default search results are sorted by relevance.
 
-The returned results are ordered based on the time when they were added to Openverse.
-    """
-    elif collection == "source":
-        return f"""
-Get a collection of {media_type} from a specific source.
+### Collection search
+The collection search allows to retrieve a collection of media from a specific source,
+creator or tag. The `{collection_param}` parameter is used to specify the type of collection to retrieve.
 
-This endpoint returns only the exact matches. To search within the source value,
-use the `search` endpoint with `source` query parameter.
+- `{collection_param}=tag&{tag_param}=tagName` will return the media with tag `tagName`.
+- `{collection_param}=source&source=sourceName` will return the media from source `sourceName`.
+- `{collection_param}=creator&creator=creatorName&source=sourceName` will return the media by creator `creatorName` at `sourceName`.
 
-The results in the collection will be sorted by the order in which they
-were added to Openverse.
-    """
-    elif collection == "creator":
-        return f"""
-Get a collection of {media_type} by a specific creator from the specified source.
+Collection results are sorted by the time they were added to Openverse, with the most recent
+additions appearing first. The filters such as `license` are not available for collections.
+"""
 
-This endpoint returns only the exact matches both on the creator and the source.
-Notice that a single creator's media items can be found on several sources, but
-this endpoint only returns the items from the specified source. To search within
-the creator value, use the `search` endpoint with `source` query parameter
-instead of `q`.
+SEARCH_DESCRIPTION_COLLECTIONS_DISABLED = """
+Search {media_type} using a query string.
 
-The items will be sorted by the date when they were added to Openverse.
-    """
+By using this endpoint, you can obtain search results based on specified
+query and optionally filter results by
+{filter_fields}.
 
+Results are ranked in order of relevance and paginated on the basis of the
+`page` param. The `page_size` param controls the total number of pages.
 
-COLLECTION_TO_OPERATION_ID = {
-    ("images", "source"): "images_by_source",
-    ("images", "creator"): "images_by_source_and_creator",
-    ("images", "tag"): "images_by_tag",
-    ("audio", "source"): "audio_by_source",
-    ("audio", "creator"): "audio_by_source_and_creator",
-    ("audio", "tag"): "audio_by_tag",
-}
+Although there may be millions of relevant records, only the most relevant
+several thousand records can be viewed. This is by design: the search
+endpoint should be used to find the top 10,000 most relevant results, not
+for exhaustive search or bulk download of every barely relevant result. As
+such, the caller should not try to access pages beyond `page_count`, or else
+the server will reject the query."""
 
+SEARCH_DESCRIPTION = (
+    SEARCH_DESCRIPTION_DEFAULT
+    if settings.SHOW_COLLECTION_DOCS
+    else SEARCH_DESCRIPTION_COLLECTIONS_DISABLED
+)
 
-def collection_schema(
-    media_type: Literal["images", "audio"],
-    collection: Literal["source", "creator", "tag"],
-):
-    if media_type == "images":
-        request_serializer = PaginatedRequestSerializer
-        serializer = ImageSerializer
-    else:
-        request_serializer = AudioCollectionRequestSerializer
-        serializer = AudioSerializer
-
-    if collection == "tag":
-        responses = {
-            200: serializer(many=True),
-            404: NotFound,
-            400: ValidationError,
-            401: (NotAuthenticated, None),
-        }
-        path_parameters = [tag_path_parameter]
-    else:
-        responses = {
-            200: serializer(many=True),
-            404: source_404_response,
-            400: ValidationError,
-            401: (NotAuthenticated, None),
-        }
-        path_parameters = [build_source_path_parameter(media_type)]
-        if collection == "creator":
-            path_parameters.append(creator_path_parameter)
-    operation_id = COLLECTION_TO_OPERATION_ID[(media_type, collection)]
-    description = get_collection_description(media_type, collection)
-    return extend_schema(
-        operation_id=operation_id,
-        summary=operation_id,
-        auth=[],
-        description=description,
-        responses=responses,
-        parameters=[
-            request_serializer,
-            *path_parameters,
-        ],
-    )
+NON_FILTER_FIELDS = [
+    "q",
+    TAG,
+    COLLECTION,
+    "page",
+    "page_size",
+    "unstable__sort_by",
+    "unstable__sort_dir",
+    "unstable__authority",
+    "unstable__authority_boost",
+]

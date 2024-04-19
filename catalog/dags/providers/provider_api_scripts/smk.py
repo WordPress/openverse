@@ -11,7 +11,6 @@ Notes:                  https://www.smk.dk/en/article/smk-api/
 import logging
 import urllib.parse
 
-from common import constants
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
@@ -26,9 +25,6 @@ class SmkDataIngester(ProviderDataIngester):
     batch_limit = 2000
     headers = {"Accept": "application/json"}
     providers = {"image": prov.SMK_DEFAULT_PROVIDER}
-
-    def get_media_type(self, record: dict) -> str:
-        return constants.IMAGE
 
     def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
         if not prev_query_params:

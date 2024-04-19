@@ -1,11 +1,14 @@
 import type {
   MediaType,
   SearchType,
+  SupportedMediaType,
   SupportedSearchType,
 } from "~/constants/media"
 import type { ReportReason } from "~/constants/content-report"
 import type { FilterCategory } from "~/constants/filters"
 import { ResultKind } from "~/types/result"
+import { RequestKind } from "~/types/fetch-state"
+import { Collection } from "~/types/search"
 
 export type AudioInteraction = "play" | "pause" | "seek"
 export type AudioInteractionData = Exclude<
@@ -18,6 +21,19 @@ export type AudioComponent =
   | "AudioSearch"
   | "AudioDetailPage"
   | "VAllResultsGrid"
+
+/**
+ * Common properties related to searches
+ * on collection pages, added in the
+ * "Additional Search Views" project.
+ */
+type CollectionProperties = {
+  /** If a collection page, the type of collection */
+  collectionType: Collection | null
+  /** A string representing a unique identifier for the collection */
+  collectionValue: string | null
+}
+
 /**
  * Compound type of all custom events sent from the site; Index with `EventName`
  * to get the type of the payload for a specific event.
@@ -99,11 +115,13 @@ export type Events = {
   REACH_RESULT_END: {
     /** The media type being searched */
     searchType: SupportedSearchType
+    /** The kind of search reached (a collection, a standard search view, etc.)  */
+    kind: ResultKind
     /** The search term */
     query: string
     /** The current page of results the user is on. */
     resultPage: number
-  }
+  } & CollectionProperties
   /**
    * Description: The user clicks the CTA button to the external source to use the image
    * Questions:
@@ -267,7 +285,7 @@ export type Events = {
     sensitivities: string
     /** whether the result was blurred or visible when selected by the user */
     isBlurred: boolean | null
-  }
+  } & CollectionProperties
   /**
    * Description: When a user opens the external sources popover.
    * Questions:
@@ -283,7 +301,7 @@ export type Events = {
     /** Pagination depth */
     resultPage: number
   }
-  /*
+  /**
    * Description: Whenever the user clicks the load more button
    * Questions:
    *   - On what page do users typically find a result?
@@ -295,13 +313,15 @@ export type Events = {
   LOAD_MORE_RESULTS: {
     /** The media type being searched */
     searchType: SearchType
+    /** The kind of search (a collection, a standard search view, etc.)  */
+    kind: ResultKind
     /** The search term */
     query: string
     /** The current page of results the user is on,
      * *before* loading more results.. */
     resultPage: number
-  }
-  /*
+  } & CollectionProperties
+  /**
    * Description: Whenever the user sets a filter. Filter category and key are the values used in code, not the user-facing filter labels.
    * Questions:
    *  - Do most users filter their searches?
@@ -352,6 +372,7 @@ export type Events = {
     /** whether the switch was turned on or off */
     checked: boolean
   }
+
   /**
    * Description: The user flips the sidebar toggle to not blur sensitive
    * content in the search results.
@@ -364,6 +385,7 @@ export type Events = {
     /** whether the switch was turned on or off */
     checked: boolean
   }
+
   /**
    * Description: The user proceeds to see the sensitive content from the
    * content safety wall.
@@ -379,6 +401,7 @@ export type Events = {
     /** the reasons for why this result is considered sensitive */
     sensitivities: string
   }
+
   /**
    * Description: The user opts not to see the sensitive content and to go back
    * to the search results from the content safety wall.
@@ -397,6 +420,7 @@ export type Events = {
     /** the reasons for why this result is considered sensitive */
     sensitivities: string
   }
+
   /**
    * Description: The user opts to re-hide the sensitive content that has been
    * unblurred and presented to them.
@@ -411,6 +435,48 @@ export type Events = {
     id: string
     /** the reasons for why this result is considered sensitive */
     sensitivities: string
+  }
+
+  /**
+   * Description: The user expands collapsed tags or collapses the expanded ones.
+   *
+   * Questions:
+   * - Are the extra tags useful to users?
+   * - Do users ever collapse expanded tags?
+   */
+  TOGGLE_TAG_EXPANSION: {
+    /** The state of the tags after the user interaction. */
+    toState: "expanded" | "collapsed"
+  }
+  /**
+   * Description: Recorded when a network error occurs. Recorded in Plausible,
+   * rather than Sentry, because we never have sufficient information in Sentry
+   * to identify patterns that could be relevant, like regional issues.
+   */
+  NETWORK_ERROR: {
+    /** The kind of request the network error occurred during */
+    requestKind: RequestKind
+    /** The search type when the network error occurred */
+    searchType: SupportedSearchType
+  }
+
+  /**
+   * Description: Time client-side search responses. Gives us observability into
+   * real user experience of search timings.
+   * Questions:
+   * - How long does it take for the client to receive a response to search requests?
+   */
+  SEARCH_RESPONSE_TIME: {
+    /** the media type being searched */
+    mediaType: SupportedMediaType
+    /** the Cloudflare cache status, denoting whether the request hit Cloudflare or went all the way to our servers */
+    cfCacheStatus: string
+    /** the IATA location identifier as part of the `cf-ray` header, indicating the data centre the request passed through */
+    cfRayIATA: string
+    /** how many seconds it took to receive a response for the request */
+    elapsedTime: number
+    /** full query string */
+    queryString: string
   }
 }
 

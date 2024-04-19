@@ -23,7 +23,7 @@ from airflow.providers.amazon.aws.hooks.rds import RdsHook
 from airflow.providers.amazon.aws.operators.rds import RdsCreateDbSnapshotOperator
 from airflow.providers.amazon.aws.sensors.rds import RdsSnapshotExistenceSensor
 
-from common.constants import AWS_RDS_CONN_ID
+from common.constants import AWS_RDS_CONN_ID, DAG_DEFAULT_ARGS
 
 
 logger = logging.getLogger(__name__)
@@ -86,6 +86,7 @@ def delete_previous_snapshots(db_identifier: str, snapshots_to_retain: int):
     catchup=False,
     # Use the docstring at the top of the file as md docs in the UI
     doc_md=__doc__,
+    default_args=DAG_DEFAULT_ARGS,
     render_template_as_native_obj=True,
 )
 def rotate_db_snapshots():

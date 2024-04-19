@@ -1,5 +1,9 @@
 {
   "measurements": {
+    "filesize": {
+      "units": "bytes",
+      "value": 58772
+    },
     "dimensions": [
       {
         "dimension": "height",

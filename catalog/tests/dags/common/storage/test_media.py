@@ -9,7 +9,7 @@ from unittest.mock import patch
 import pytest
 
 from common import urls
-from common.licenses import LicenseInfo, get_license_info
+from common.licenses import LicenseInfo
 from common.loader import provider_details as prov
 from common.storage import image, media
 
@@ -511,172 +511,10 @@ def test_MediaStore_add_item_fixes_invalid_license_url():
 
 def test_MediaStore_get_image_enriches_singleton_tags():
     image_store = image.ImageStore("test_provider")
-
-    actual_image = image_store._get_image(
-        license_info=get_license_info(
-            license_="by-sa",
-            license_version="4.0",
-            license_url="https://license/url",
-        ),
-        foreign_landing_url=TEST_FOREIGN_LANDING_URL,
-        url=TEST_IMAGE_URL,
-        thumbnail_url=None,
-        filetype=None,
-        filesize=None,
-        foreign_identifier="02",
-        width=None,
-        height=None,
-        creator=None,
-        creator_url=None,
-        title=None,
-        meta_data=None,
-        raw_tags=["lone"],
-        category=None,
-        watermarked=None,
-        source=None,
-        ingestion_type=None,
-    )
+    image_data = TEST_IMAGE_DICT | TEST_REQUIRED_FIELDS | {"raw_tags": ["lone"]}
+    actual_image = image_store._get_image(**image_data)
 
     assert actual_image.tags == [{"name": "lone", "provider": "test_provider"}]
-
-
-def test_MediaStore_get_image_tag_blacklist():
-    raw_tags = [
-        "cc0",
-        "valid",
-        "garbage:=metacrap",
-        "uploaded:by=flickrmobile",
-        {"name": "uploaded:by=instagram", "provider": "test_provider"},
-    ]
-
-    image_store = image.ImageStore("test_provider")
-
-    actual_image = image_store._get_image(
-        license_info=get_license_info(
-            license_="by",
-            license_version="4.0",
-        ),
-        foreign_landing_url=TEST_FOREIGN_LANDING_URL,
-        url=TEST_IMAGE_URL,
-        meta_data=None,
-        raw_tags=raw_tags,
-        category=None,
-        foreign_identifier="02",
-        thumbnail_url=None,
-        filetype=None,
-        filesize=None,
-        width=None,
-        height=None,
-        creator=None,
-        creator_url=None,
-        title=None,
-        watermarked=None,
-        ingestion_type=None,
-    )
-
-    assert actual_image.tags == [{"name": "valid", "provider": "test_provider"}]
-
-
-def test_MediaStore_get_image_enriches_multiple_tags():
-    image_store = image.ImageStore("test_provider")
-    actual_image = image_store._get_image(
-        license_info=get_license_info(
-            license_url="https://license/url",
-            license_="by",
-            license_version="4.0",
-        ),
-        foreign_landing_url=TEST_FOREIGN_LANDING_URL,
-        url=TEST_IMAGE_URL,
-        thumbnail_url=None,
-        filetype=None,
-        filesize=None,
-        foreign_identifier="02",
-        width=None,
-        height=None,
-        creator=None,
-        creator_url=None,
-        title=None,
-        meta_data=None,
-        raw_tags=["tagone", "tag2", "tag3"],
-        category=None,
-        watermarked=None,
-        source=None,
-        ingestion_type=None,
-    )
-
-    assert actual_image.tags == [
-        {"name": "tagone", "provider": "test_provider"},
-        {"name": "tag2", "provider": "test_provider"},
-        {"name": "tag3", "provider": "test_provider"},
-    ]
-
-
-def test_MediaStore_get_image_leaves_preenriched_tags(setup_env):
-    image_store = image.ImageStore("test_provider")
-    tags = [
-        {"name": "tagone", "provider": "test_provider"},
-        {"name": "tag2", "provider": "test_provider"},
-        {"name": "tag3", "provider": "test_provider"},
-    ]
-
-    actual_image = image_store._get_image(
-        license_info=get_license_info(
-            license_url="https://license/url",
-            license_="by",
-            license_version="4.0",
-        ),
-        foreign_landing_url=TEST_FOREIGN_LANDING_URL,
-        url=TEST_IMAGE_URL,
-        thumbnail_url=None,
-        filetype=None,
-        filesize=None,
-        foreign_identifier="02",
-        width=None,
-        height=None,
-        creator=None,
-        creator_url=None,
-        title=None,
-        meta_data=None,
-        raw_tags=tags,
-        category=None,
-        watermarked=None,
-        source=None,
-        ingestion_type=None,
-    )
-
-    assert actual_image.tags == tags
-
-
-def test_MediaStore_get_image_nones_nonlist_tags():
-    image_store = image.ImageStore("test_provider")
-    tags = "notalist"
-
-    actual_image = image_store._get_image(
-        license_info=get_license_info(
-            license_url="https://license/url",
-            license_="by",
-            license_version="4.0",
-        ),
-        foreign_landing_url=TEST_FOREIGN_LANDING_URL,
-        url=TEST_IMAGE_URL,
-        thumbnail_url=None,
-        filetype=None,
-        filesize=None,
-        foreign_identifier="02",
-        width=None,
-        height=None,
-        creator=None,
-        creator_url=None,
-        title=None,
-        meta_data=None,
-        raw_tags=tags,
-        category=None,
-        watermarked=None,
-        source=None,
-        ingestion_type=None,
-    )
-
-    assert actual_image.tags is None
 
 
 # Extracts `jpg` extension from the url.
@@ -707,6 +545,55 @@ def test_MediaStore_validates_filetype(filetype, url, expected_filetype):
     image_store.add_item(**test_image_args)
     cleaned_data = image_store.clean_media_metadata(**test_image_args)
     assert cleaned_data["filetype"] == expected_filetype
+
+
+@pytest.mark.parametrize(
+    "raw_tags, expected_tags",
+    [
+        pytest.param(
+            ["lone"],
+            [{"name": "lone", "provider": "test_provider"}],
+            id="enriches singleton tag",
+        ),
+        pytest.param(
+            ["tagone", "tag2", "tag3"],
+            [
+                {"name": "tag2", "provider": "test_provider"},
+                {"name": "tag3", "provider": "test_provider"},
+                {"name": "tagone", "provider": "test_provider"},
+            ],
+            id="sort and enriches multiple tags",
+        ),
+        pytest.param(
+            ["cc0", "valid", "garbage:=metacrap", "uploaded:by=flickrmobile"],
+            [{"name": "valid", "provider": "test_provider"}],
+            id="exclude tags by the denylist",
+        ),
+        pytest.param("notalist", None, id="nonlist tags should be None"),
+        pytest.param(
+            {"tag2", "tagone"},
+            [
+                {"name": "tag2", "provider": "test_provider"},
+                {"name": "tagone", "provider": "test_provider"},
+            ],
+            id="accepts set of tags",
+        ),
+        pytest.param(
+            ["tag2", "tagone", "tag2"],
+            [
+                {"name": "tag2", "provider": "test_provider"},
+                {"name": "tagone", "provider": "test_provider"},
+            ],
+            id="remove duplicates",
+        ),
+    ],
+)
+def test_MediaStore_get_image_tag_denylist(raw_tags, expected_tags):
+    image_store = image.ImageStore("test_provider")
+    image_data = TEST_IMAGE_DICT | TEST_REQUIRED_FIELDS | {"raw_tags": raw_tags}
+    actual_image = image_store._get_image(**image_data)
+
+    assert actual_image.tags == expected_tags
 
 
 @INT_MAX_PARAMETERIZATION

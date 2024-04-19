@@ -147,6 +147,7 @@ const config: NuxtConfig = {
     "~/plugins/polyfills.client.ts",
     "~/plugins/sentry.ts",
     "~/plugins/analytics.ts",
+    "~/plugins/errors.ts",
   ],
   css: ["~/assets/fonts.css", "~/styles/tailwind.css", "~/styles/accent.css"],
   head,
@@ -345,6 +346,7 @@ const config: NuxtConfig = {
         environment: process.env.SENTRY_ENVIRONMENT,
       },
     },
+    deploymentEnv: process.env.DEPLOYMENT_ENV ?? "local",
   },
 }
 

@@ -17,7 +17,7 @@
       v-bind="$attrs"
       ref="inputEl"
       :type="type"
-      class="ms-4 h-full w-full appearance-none rounded-none bg-tx text-2xl font-semibold leading-none placeholder-dark-charcoal-70 focus:outline-none md:text-base"
+      class="ms-4 h-full w-full appearance-none rounded-none bg-tx text-2xl font-semibold leading-none placeholder-dark-charcoal-70 focus-visible:outline-none md:text-base"
       :value="modelValue"
       :aria-label="labelText"
       @input="updateModelValue"

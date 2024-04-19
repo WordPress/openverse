@@ -4,72 +4,81 @@ import type { SupportedMediaType, SupportedSearchType } from "~/constants/media"
 import { ALL_MEDIA, AUDIO, IMAGE } from "~/constants/media"
 import { Collection } from "~/types/search"
 
+type KeyCollection = {
+  zero: string
+  count: string
+  countMore: string
+}
+type KeyMapping = Record<SupportedMediaType, KeyCollection> & {
+  all?: KeyCollection
+}
 /**
  * Not using dynamically-generated keys to ensure that
  * correct line is shown in the 'po' locale files
  */
 const searchResultKeys = {
   [ALL_MEDIA]: {
-    noResult: "browsePage.allNoResults",
-    result: "browsePage.allResultCount",
-    more: "browsePage.allResultCountMore",
+    zero: "browsePage.allNoResults",
+    count: "browsePage.allResultCount",
+    countMore: "browsePage.allResultCountMore",
   },
   [IMAGE]: {
-    noResult: "browsePage.contentLink.image.zero",
-    result: "browsePage.contentLink.image.count",
-    more: "browsePage.contentLink.image.countMore",
+    zero: "browsePage.contentLink.image.zero",
+    count: "browsePage.contentLink.image.count",
+    countMore: "browsePage.contentLink.image.countMore",
   },
   [AUDIO]: {
-    noResult: "browsePage.contentLink.audio.zero",
-    result: "browsePage.contentLink.audio.count",
-    more: "browsePage.contentLink.audio.countMore",
+    zero: "browsePage.contentLink.audio.zero",
+    count: "browsePage.contentLink.audio.count",
+    countMore: "browsePage.contentLink.audio.countMore",
   },
-}
+} satisfies KeyMapping
+
 const collectionKeys = {
   source: {
     [IMAGE]: {
-      noResult: "collection.resultCountLabel.source.image.zero",
-      result: "collection.resultCountLabel.source.image.count",
-      more: "collection.resultCountLabel.source.image.countMore",
+      zero: "collection.resultCountLabel.source.image.zero",
+      count: "collection.resultCountLabel.source.image.count",
+      countMore: "collection.resultCountLabel.source.image.countMore",
     },
     [AUDIO]: {
-      noResult: "collection.resultCountLabel.source.audio.zero",
-      result: "collection.resultCountLabel.source.audio.count",
-      more: "collection.resultCountLabel.source.audio.countMore",
+      zero: "collection.resultCountLabel.source.audio.zero",
+      count: "collection.resultCountLabel.source.audio.count",
+      countMore: "collection.resultCountLabel.source.audio.countMore",
     },
   },
   creator: {
     [IMAGE]: {
-      noResult: "collection.resultCountLabel.creator.image.zero",
-      result: "collection.resultCountLabel.creator.image.count",
-      more: "collection.resultCountLabel.creator.image.countMore",
+      zero: "collection.resultCountLabel.creator.image.zero",
+      count: "collection.resultCountLabel.creator.image.count",
+      countMore: "collection.resultCountLabel.creator.image.countMore",
     },
     [AUDIO]: {
-      noResult: "collection.resultCountLabel.creator.audio.zero",
-      result: "collection.resultCountLabel.creator.audio.count",
-      more: "collection.resultCountLabel.creator.audio.countMore",
+      zero: "collection.resultCountLabel.creator.audio.zero",
+      count: "collection.resultCountLabel.creator.audio.count",
+      countMore: "collection.resultCountLabel.creator.audio.countMore",
     },
   },
   tag: {
     [IMAGE]: {
-      noResult: "collection.resultCountLabel.tag.image.zero",
-      result: "collection.resultCountLabel.tag.image.count",
-      more: "collection.resultCountLabel.tag.image.countMore",
+      zero: "collection.resultCountLabel.tag.image.zero",
+      count: "collection.resultCountLabel.tag.image.count",
+      countMore: "collection.resultCountLabel.tag.image.countMore",
     },
     [AUDIO]: {
-      noResult: "collection.resultCountLabel.tag.audio.zero",
-      result: "collection.resultCountLabel.tag.audio.count",
-      more: "collection.resultCountLabel.tag.audio.countMore",
+      zero: "collection.resultCountLabel.tag.audio.zero",
+      count: "collection.resultCountLabel.tag.audio.count",
+      countMore: "collection.resultCountLabel.tag.audio.countMore",
     },
   },
-}
+} satisfies Record<Collection, KeyMapping>
 
-function getCountKey(resultsCount: number) {
+export function getCountKey(resultsCount: number): keyof KeyCollection {
   return resultsCount === 0
-    ? "noResult"
+    ? "zero"
     : resultsCount >= 10000
-      ? "more"
-      : "result"
+      ? "countMore"
+      : "count"
 }
 
 /**

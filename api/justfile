@@ -106,6 +106,35 @@ ipython:
 dbshell:
     just dj dbshell
 
+# Generate the specified kind of documentation
+generate-docs doc="media-props" fail_on_diff="true":
+    #!/bin/bash
+    set -e
+    if [ "{{ doc }}" == "media-props" ]; then
+        FINAL_FILE="documentation/meta/media_properties/api.md"
+        NAME="Media properties"
+        just dj documentmedia
+        mv media_properties.md ../$FINAL_FILE
+        # Take ownership of media properties file.
+        if [ "$(ls -l ../$FINAL_FILE | awk '{print $3}')" != "$(whoami)" ]; then
+          sudo chown $(whoami) ../$FINAL_FILE
+        fi
+    else
+        echo "Invalid documentation type specified, use \`media-props\`. Exiting."
+        exit 1
+    fi
+    echo -n "Running linting..."
+    just ../lint prettier $FINAL_FILE &>/dev/null || true
+    echo "Done!"
+    if {{ fail_on_diff }}; then
+      set +e
+      git diff --exit-code ../$FINAL_FILE
+      if [ $? -ne 0 ]; then
+          printf "\n\n\e[31m!! Changes found in $NAME documentation, please run 'just api/generate-docs {{ doc }}' locally and commit difference !!\n\n"
+          exit 1
+      fi
+    fi
+
 #########
 # Tests #
 #########

@@ -1,664 +1,330 @@
 {
-  "admin": {
-    "added": 1495050770000,
-    "analytics": {
-      "count": {
-        "last": 535,
-        "total": 2832
-      }
-    },
-    "created": 1227519646000,
-    "id": "object-8102855",
-    "language": "eng",
-    "modified": 1573567086000,
-    "previous_status": "valid and published",
-    "processed": 1589926045539,
-    "source": "smgc",
-    "stream": "smg-online",
-    "uid": "co8102855",
-    "uuid": "3eca0f77-363c-3cc5-8774-5d9f47b89fd1",
-    "version": 59
+  "@admin": {
+    "processed": 1712780277089,
+    "sequence": 14504859,
+    "uid": "co82669",
+    "added": 1699636365980,
+    "stream": "collections-online",
+    "id": "object-82669",
+    "source": "Mimsy XG",
+    "uuid": "8ea951d4-6057-3f09-a5b6-3018e9d19010"
   },
-  "categories": [
+  "category": [
     {
       "museum": "SCM",
-      "name": "Smoking",
-      "value": "SCM - Smoking"
+      "name": "Classical & Medieval Medicine",
+      "type": "category1",
+      "value": "SCM - Classical & Medieval Medicine"
     }
   ],
-  "dates": {
-    "DATE1": "2010-03-31"
+  "creation": {
+    "date": [
+      {
+        "source": "catalogue",
+        "value": "200 BCE-200 CE",
+        "primary": true
+      },
+      {
+        "role": [
+          {
+            "value": "made"
+          }
+        ],
+        "from": "-200",
+        "to": "200",
+        "value": "200 BCE-200 CE"
+      }
+    ],
+    "@entity": "lifecycle"
+  },
+  "cumulation": {
+    "collector": [
+      {
+        "summary": {
+          "title": "Sir Henry Wellcome's Museum Collection"
+        },
+        "@link": {
+          "source": "catalogue"
+        },
+        "name": [
+          {
+            "value": "Sir Henry Wellcome's Museum Collection"
+          }
+        ],
+        "@entity": "literal"
+      }
+    ],
+    "@entity": "lifecycle"
   },
   "description": [
     {
-      "date": [
-        {
-          "earliest": 2018,
-          "latest": 2018,
-          "primary": true,
-          "value": "2018-06-15"
-        }
-      ],
-      "primary": true,
-      "type": "description",
-      "value": "Packet of 10 'Gold Flake' cigarettes by W D & HO Wills, England, 1920-1950"
+      "type": "catalogue description",
+      "value": "Small bronze amulet, possibly phallic, or stomach, probably Roman, from Italy, 200BC-200AD",
+      "primary": true
     },
     {
-      "type": "web description",
-      "value": "W D & H O Willis were one of a large number of cigarette and tobacco manufacturers based in England. This is a packet for ten 'Gold Flake' cigarettes, which were popular during the First World War with British soldiers in the trenches. Today, these cigarettes are only available in India."
+      "type": "accession register",
+      "value": "Small bronze amulet, possibly phallic, or stomach, in display box with others, probably Roman, from Italy, 200BC-200"
+    },
+    {
+      "date": [
+        {
+          "from": "2017",
+          "to": "2017",
+          "value": "2017-03-01",
+          "primary": true
+        }
+      ],
+      "type": "description",
+      "value": "Small bronze amulet, possibly phallic, or stomach, in display box with others, probably Roman, from Italy, 200BC-200AD"
+    },
+    {
+      "type": "description",
+      "value": "Small bronze amulet, possibly phallic, or stomach, probably Roman, from Italy, 200BC-200AD"
     }
   ],
   "identifier": [
     {
-      "primary": true,
       "type": "accession number",
-      "value": "1999-299/1"
+      "value": "A67864",
+      "primary": true
     }
   ],
-  "inscription": [
+  "language": [
     {
-      "details": [
-        {
-          "transcription": "\"GOLD FLAKE\"/CIGARETTES/ W D & H O WILLIS"
-        }
-      ],
-      "location": "front",
-      "method": "printed",
-      "type": "inscription"
-    },
-    {
-      "details": [
-        {
-          "transcription": "\"GOLD FLAKE\"/HONEY DEW/ W D & HO WILLIS/BRISTOL & LONDON"
-        }
-      ],
-      "location": "front",
-      "method": "printed",
-      "type": "inscription"
-    },
-    {
-      "details": [
-        {
-          "transcription": "17 PRIZE MEDALS/Every genuine/\"Gold"
-        }
-      ],
-      "type": "inscription"
+      "value": "eng"
     }
   ],
-  "language": ["eng"],
   "legal": {
-    "credit_line": "McPhail, Mary",
-    "legal_status": "permanent collection"
+    "credit": "Arte Antica e Moderna"
   },
-  "lifecycle": {
-    "creation": [
+  "measurements": {
+    "count": "1",
+    "dimensions": [
       {
-        "date": [
-          {
-            "earliest": 1920,
-            "latest": 1950,
-            "primary": true,
-            "value": "1920-1950"
-          }
-        ],
-        "maker": [
-          {
-            "@link": {
-              "role": [
-                {
-                  "value": "maker"
-                }
-              ],
-              "type": "reference"
-            },
-            "admin": {
-              "id": "agent-34354",
-              "uid": "cp34354",
-              "uuid": "20bb6a7c-865d-378d-8811-35a10e96cb31"
-            },
-            "summary_title": "W D and H O Wills Limited"
-          }
-        ],
-        "places": [
-          {
-            "@link": {
-              "role": [
-                {
-                  "value": "made"
-                }
-              ],
-              "type": "reference"
-            },
-            "admin": {
-              "id": "place-139",
-              "uid": "cd139",
-              "uuid": "9660ec71-ab89-3a8d-a4fa-31b90d197dc0"
-            },
-            "summary_title": "England"
-          }
-        ]
+        "type": "catalogue dimensions",
+        "value": "height 23 mm; base: diameter 13 mm",
+        "primary": true
+      },
+      {
+        "units": "mm",
+        "value": "23"
       }
     ]
   },
-  "locations": [
-    {
-      "@link": {
-        "type": "literal"
-      },
-      "admin": {
-        "id": "location-2239646",
-        "uuid": "56974fcc-9fc6-357b-8a5c-a60506065952"
-      },
-      "facilities": [
-        {
-          "@link": {
-            "type": "reference"
-          },
-          "admin": {
-            "id": "facility-62029",
-            "uid": "cf62029",
-            "uuid": "c805d997-7510-3365-80fd-1329304c7aca"
-          },
-          "summary_title": "Science Museum, Medicine: The Wellcome Galleries"
-        }
-      ],
-      "level1": "S",
-      "level2": "G29",
-      "level3": "G2.2",
-      "level4": "G2WN2",
-      "name": [
-        {
-          "primary": true,
-          "value": "Science Museum, Medicine: The Wellcome Galleries"
-        },
-        {
-          "type": "gallery",
-          "value": "Medicine: The Wellcome Galleries"
-        },
-        {
-          "type": "museum",
-          "value": "Science Museum"
-        }
-      ],
-      "purpose": "on display",
-      "summary_title": "Science Museum, Medicine: The Wellcome Galleries",
-      "value": "Science Museum, Medicine: The Wellcome Galleries"
-    }
-  ],
-  "measurements": {
-    "dimensions": [
-      {
-        "dimension": "depth",
-        "units": "in",
-        "value": "1 9/16"
-      },
-      {
-        "dimension": "depth",
-        "units": "mm",
-        "value": "40"
-      },
-      {
-        "dimension": "height",
-        "units": "in",
-        "value": "13/16"
-      },
-      {
-        "dimension": "height",
-        "units": "mm",
-        "value": "20"
-      },
-      {
-        "dimension": "width",
-        "units": "in",
-        "value": "3 1/4"
-      },
-      {
-        "dimension": "width",
-        "units": "mm",
-        "value": "82"
-      }
-    ],
-    "display": "overall: 20 mm x 82 mm x 40 mm,"
-  },
   "multimedia": [
     {
-      "@link": {
-        "type": "reference"
-      },
-      "admin": {
-        "id": "media-3562",
+      "@admin": {
+        "uid": "i375945",
+        "id": "media-375945",
         "source": "smgi",
-        "uid": "i3562",
-        "uuid": "cdce893d-6d92-30b4-b130-087b8401ff8f"
+        "uuid": "8f17b63a-a5dc-3d9a-b903-542c0fb0e6d7"
       },
-      "credit": "Science Museum Group Collection",
-      "enhancement": {
-        "rekognition": [
-          {
-            "labels": [
-              {
-                "details": {
-                  "confidence": 98.589714
-                },
-                "value": "Text"
-              },
-              {
-                "details": {
-                  "confidence": 86.31364,
-                  "instances": [
-                    {
-                      "confidence": "86.31364",
-                      "region": {
-                        "height": 0.90775996,
-                        "left": 0.042312764,
-                        "top": 0.04608006,
-                        "type": "bounding box",
-                        "width": 0.8924173
-                      }
-                    }
-                  ]
-                },
-                "value": "Box"
-              },
-              {
-                "details": {
-                  "confidence": 85.58592
-                },
-                "value": "Paper"
-              }
-            ],
-            "source": "amazon rekognition"
-          }
-        ]
-      },
-      "for_sale": "0",
-      "identifier": [
-        {
-          "type": "iBase id",
-          "value": "3562"
-        }
-      ],
-      "priority": "0.5",
-      "processed": {
+      "@processed": {
         "large": {
+          "resizable": true,
+          "@type": "image",
           "format": "jpeg",
-          "location": "3/562/large_1999_0299_0001__0001_.jpg",
-          "location_is_relative": true,
+          "modified": 1697179492000,
+          "location": "375/945/large_smg00241807.jpg",
           "measurements": {
+            "filesize": {
+              "units": "bytes",
+              "value": 40488
+            },
             "dimensions": [
               {
+                "units": "pixels",
                 "dimension": "height",
-                "units": "pixels",
-                "value": 1022
-              },
-              {
-                "dimension": "width",
-                "units": "pixels",
                 "value": 1536
-              }
-            ]
-          },
-          "modified": 1472014358000,
-          "resizable": true,
-          "type": "image"
-        },
-        "large_thumbnail": {
-          "format": "jpeg",
-          "location": "https://coimages.sciencemuseumgroup.org.uk/images/3/562/large_thumbnail_1999_0299_0001__0001_.jpg",
-          "location_is_relative": true,
-          "measurements": {
-            "dimensions": [
-              {
-                "dimension": "height",
-                "units": "pixels",
-                "value": 240
               },
               {
-                "dimension": "width",
                 "units": "pixels",
-                "value": 361
+                "dimension": "width",
+                "value": 1527
               }
             ]
-          },
-          "modified": 1472014358000,
-          "resizable": true,
-          "type": "image"
-        },
-        "medium": {
-          "format": "jpeg",
-          "location": "3/562/medium_1999_0299_0001__0001_.jpg",
-          "location_is_relative": true,
-          "measurements": {
-            "dimensions": [
-              {
-                "dimension": "height",
-                "units": "pixels",
-                "value": 576
-              },
-              {
-                "dimension": "width",
-                "units": "pixels",
-                "value": 866
-              }
-            ]
-          },
-          "modified": 1472014358000,
-          "resizable": true,
-          "type": "image"
-        },
-        "medium_thumbnail": {
-          "format": "jpeg",
-          "location": "3/562/medium_thumbnail_1999_0299_0001__0001_.jpg",
-          "location_is_relative": true,
-          "measurements": {
-            "dimensions": [
-              {
-                "dimension": "height",
-                "units": "pixels",
-                "value": 144
-              },
-              {
-                "dimension": "width",
-                "units": "pixels",
-                "value": 216
-              }
-            ]
-          },
-          "modified": 1472014358000,
-          "resizable": true,
-          "type": "image"
+          }
         },
         "small_thumbnail": {
+          "resizable": true,
+          "@type": "image",
           "format": "jpeg",
-          "location": "3/562/small_thumbnail_1999_0299_0001__0001_.jpg",
-          "location_is_relative": true,
+          "modified": 1697179492000,
+          "location": "375/945/small_thumbnail_smg00241807.jpg",
           "measurements": {
+            "filesize": {
+              "units": "bytes",
+              "value": 6917
+            },
             "dimensions": [
               {
-                "dimension": "height",
                 "units": "pixels",
+                "dimension": "height",
                 "value": 48
               },
               {
-                "dimension": "width",
                 "units": "pixels",
-                "value": 72
+                "dimension": "width",
+                "value": 48
               }
             ]
-          },
-          "modified": 1472014358000,
-          "resizable": true,
-          "type": "image"
+          }
         },
         "zoom": {
+          "resizable": true,
+          "@type": "image",
           "format": "pyramid tiff",
-          "location": "3/562/1999_0299_0001__0001_.ptif",
-          "location_is_relative": true,
+          "modified": 1697179492000,
+          "location": "375/945/Small_bronze_amulet__possibly_phallic__or_stomach.ptif",
           "measurements": {
+            "filesize": {
+              "units": "bytes",
+              "value": 16783656
+            },
             "dimensions": [
               {
-                "dimension": "height",
                 "units": "pixels",
-                "value": 2832
+                "dimension": "height",
+                "value": 3530
               },
               {
-                "dimension": "width",
                 "units": "pixels",
-                "value": 4256
+                "dimension": "width",
+                "value": 3509
               }
             ]
-          },
-          "modified": 1472014358000,
-          "resizable": true,
-          "type": "image"
-        }
-      },
-      "public_view": "1",
-      "publish": "1",
-      "sort": "2015-06-06 02:25:55.0",
-      "source": {
-        "legal": {
-          "rights": [
-            {
-              "details": "\u00a9 The Board of Trustees of the Science Museum",
-              "usage_terms": "CC-BY-NC-SA 4.0"
-            }
-          ]
-        },
-        "title": [
-          {
-            "type": "caption",
-            "value": "Packet of 10 'Gold Flake' cigarettes by W D & HO Willis"
-          },
-          {
-            "type": "main title",
-            "value": "Packet of 10 'Gold Flake' cigarettes by W D & HO Willis, England, 1920-1950. Three quarter side view, grey background"
           }
-        ]
-      },
-      "traffic_light": "Green",
-      "type": {
-        "base": "media",
-        "type": "image"
-      }
-    },
-    {
-      "@link": {
-        "type": "reference"
-      },
-      "admin": {
-        "id": "media-3563",
-        "source": "smgi",
-        "uid": "i3563",
-        "uuid": "465e1b57-cfd3-3b29-8d33-8a5726d53143"
-      },
-      "credit": "Science Museum Group Collection",
-      "enhancement": {
-        "rekognition": [
-          {
-            "labels": [
-              {
-                "details": {
-                  "confidence": 93.55691
-                },
-                "value": "Text"
-              }
-            ],
-            "source": "amazon rekognition"
-          }
-        ]
-      },
-      "for_sale": "0",
-      "identifier": [
-        {
-          "type": "iBase id",
-          "value": "3563"
-        }
-      ],
-      "priority": "0.5",
-      "processed": {
-        "large": {
-          "format": "jpeg",
-          "location": "3/563/large_1999_0299_0001__0002_.jpg",
-          "location_is_relative": true,
-          "measurements": {
-            "dimensions": [
-              {
-                "dimension": "height",
-                "units": "pixels",
-                "value": 1022
-              },
-              {
-                "dimension": "width",
-                "units": "pixels",
-                "value": 1536
-              }
-            ]
-          },
-          "modified": 1472014477000,
-          "resizable": true,
-          "type": "image"
-        },
-        "large_thumbnail": {
-          "format": "jpeg",
-          "location": "3/563/large_thumbnail_1999_0299_0001__0002_.jpg",
-          "location_is_relative": true,
-          "measurements": {
-            "dimensions": [
-              {
-                "dimension": "height",
-                "units": "pixels",
-                "value": 240
-              },
-              {
-                "dimension": "width",
-                "units": "pixels",
-                "value": 361
-              }
-            ]
-          },
-          "modified": 1472014477000,
-          "resizable": true,
-          "type": "image"
         },
         "medium": {
+          "resizable": true,
+          "@type": "image",
           "format": "jpeg",
-          "location": "3/563/medium_1999_0299_0001__0002_.jpg",
-          "location_is_relative": true,
+          "modified": 1697179492000,
+          "location": "375/945/medium_smg00241807.jpg",
           "measurements": {
+            "filesize": {
+              "units": "bytes",
+              "value": 12269
+            },
             "dimensions": [
               {
-                "dimension": "height",
                 "units": "pixels",
-                "value": 576
+                "dimension": "height",
+                "value": 579
               },
               {
-                "dimension": "width",
                 "units": "pixels",
-                "value": 866
+                "dimension": "width",
+                "value": 576
               }
             ]
-          },
-          "modified": 1472014477000,
+          }
+        },
+        "large_thumbnail": {
           "resizable": true,
-          "type": "image"
+          "@type": "image",
+          "format": "jpeg",
+          "modified": 1697179492000,
+          "location": "https://coimages.sciencemuseumgroup.org.uk/375/945/large_thumbnail_smg00241807.jpg",
+          "measurements": {
+            "filesize": {
+              "units": "bytes",
+              "value": 8777
+            },
+            "dimensions": [
+              {
+                "units": "pixels",
+                "dimension": "height",
+                "value": 322
+              },
+              {
+                "units": "pixels",
+                "dimension": "width",
+                "value": 320
+              }
+            ]
+          }
         },
         "medium_thumbnail": {
+          "resizable": true,
+          "@type": "image",
           "format": "jpeg",
-          "location": "3/563/medium_thumbnail_1999_0299_0001__0002_.jpg",
-          "location_is_relative": true,
+          "modified": 1697179492000,
+          "location": "375/945/medium_thumbnail_smg00241807.jpg",
           "measurements": {
+            "filesize": {
+              "units": "bytes",
+              "value": 7694
+            },
             "dimensions": [
               {
-                "dimension": "height",
                 "units": "pixels",
-                "value": 144
+                "dimension": "height",
+                "value": 193
               },
               {
-                "dimension": "width",
                 "units": "pixels",
-                "value": 216
+                "dimension": "width",
+                "value": 192
               }
             ]
-          },
-          "modified": 1472014477000,
-          "resizable": true,
-          "type": "image"
-        },
-        "small_thumbnail": {
-          "format": "jpeg",
-          "location": "3/563/small_thumbnail_1999_0299_0001__0002_.jpg",
-          "location_is_relative": true,
-          "measurements": {
-            "dimensions": [
-              {
-                "dimension": "height",
-                "units": "pixels",
-                "value": 48
-              },
-              {
-                "dimension": "width",
-                "units": "pixels",
-                "value": 72
-              }
-            ]
-          },
-          "modified": 1472014477000,
-          "resizable": true,
-          "type": "image"
-        },
-        "zoom": {
-          "format": "pyramid tiff",
-          "location": "3/563/1999_0299_0001__0002_.ptif",
-          "location_is_relative": true,
-          "measurements": {
-            "dimensions": [
-              {
-                "dimension": "height",
-                "units": "pixels",
-                "value": 2832
-              },
-              {
-                "dimension": "width",
-                "units": "pixels",
-                "value": 4256
-              }
-            ]
-          },
-          "modified": 1472014477000,
-          "resizable": true,
-          "type": "image"
+          }
         }
       },
-      "public_view": "1",
-      "publish": "1",
-      "sort": "2015-06-06 02:26:07.0",
-      "source": {
-        "legal": {
-          "rights": [
-            {
-              "details": "\u00a9 The Board of Trustees of the Science Museum",
-              "usage_terms": "CC-BY-NC-SA 4.0"
-            }
-          ]
-        },
-        "title": [
+      "@type": "image",
+      "upload_sort": "25/05/2019",
+      "legal": {
+        "rights": [
           {
-            "type": "caption",
-            "value": "Packet of 10 'Gold Flake' cigarettes by W D & HO Willis"
-          },
-          {
-            "type": "main title",
-            "value": "Packet of 10 'Gold Flake' cigarettes by W D & HO Willis, England, 1920-1950. Three quarter side view of back of packet."
+            "licence": "CC BY-NC-SA 4.0",
+            "copyright": "© The Board of Trustees of the Science Museum"
           }
         ]
       },
-      "traffic_light": "Green",
-      "type": {
-        "base": "media",
-        "type": "image"
-      }
+      "credit": {
+        "value": "Science Museum Group"
+      },
+      "title": [
+        {
+          "type": "caption",
+          "value": "Small bronze amulet, possibly phallic, or stomach"
+        }
+      ],
+      "@entity": "reference"
     }
   ],
   "name": [
     {
-      "primary": true,
-      "value": "cigarette packet"
+      "type": "catalogue name",
+      "value": "amulet",
+      "primary": true
+    },
+    {
+      "type": "object name",
+      "value": "amulet"
     }
   ],
-  "numbers": {
-    "NUMBER1": "117"
+  "summary": {
+    "title": "Small bronze amulet (amulet)"
   },
-  "options": {
-    "option1": "W D & H O Willis were one of a large number of cigarette and tobacco manufacturers based in England. This is a packet for ten 'Gold Flake' cigarettes, which were popular during the First World War with British soldiers in the trenches. Today, these cigarettes are only available in India.",
-    "option2": "Brought to Life project",
-    "option3": "Emmens, Stewart"
-  },
-  "summary_title": "Packet of 10 'Gold Flake' cigarettes (cigarette packet)",
   "title": [
     {
-      "primary": true,
-      "value": "Packet of 10 'Gold Flake' cigarettes"
+      "type": "catalogue title",
+      "value": "Small bronze amulet",
+      "primary": true
+    },
+    {
+      "type": "display title",
+      "value": "Small bronze amulet, possibly phallic, or stomach,"
+    },
+    {
+      "type": "display title",
+      "value": "Small bronze amulet, possibly phallic, or stomach"
+    },
+    {
+      "type": "display title",
+      "value": "Small bronze amulet"
     }
   ]
 }

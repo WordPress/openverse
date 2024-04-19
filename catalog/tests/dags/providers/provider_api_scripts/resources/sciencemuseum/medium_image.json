@@ -1,6 +1,9 @@
 {
   "medium": {
+    "resizable": true,
+    "@type": "image",
     "format": "jpeg",
+    "modified": 1472014477000,
     "location": "3/563/medium_1999_0299_0001__0002_.jpg",
     "location_is_relative": true,
     "measurements": {
@@ -16,9 +19,6 @@
           "value": 866
         }
       ]
-    },
-    "modified": 1472014477000,
-    "resizable": true,
-    "type": "image"
+    }
   }
 }

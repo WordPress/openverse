@@ -1,4 +1,5 @@
 import logging
+import mimetypes
 from os.path import splitext
 from urllib.parse import urlparse
 
@@ -9,7 +10,6 @@ from asgiref.sync import sync_to_async
 from redis.exceptions import ConnectionError
 
 from api.utils.aiohttp import get_aiohttp_session
-from api.utils.asyncio import do_not_wait_for
 from api.utils.image_proxy.exception import UpstreamThumbnailException
 
 
@@ -47,7 +47,7 @@ async def get_image_extension(image_url: str, media_identifier) -> str | None:
             else:
                 ext = None
 
-            do_not_wait_for(_cache_extension(cache, key, ext))
+            await _cache_extension(cache, key, ext)
         except Exception as exc:
             sentry_sdk.capture_exception(exc)
             raise UpstreamThumbnailException(
@@ -79,6 +79,10 @@ def _get_file_extension_from_content_type(content_type: str) -> str | None:
     Return the image extension if present in the Response's content type
     header.
     """
-    if content_type and "/" in content_type:
-        return content_type.split("/")[1]
+    if (
+        content_type
+        and "/" in content_type
+        and (ext := mimetypes.guess_extension(content_type.split(";")[0], strict=False))
+    ):
+        return ext.strip(".")
     return None

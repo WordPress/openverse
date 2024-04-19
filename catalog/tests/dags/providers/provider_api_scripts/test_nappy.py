@@ -1,8 +1,8 @@
 import pytest
-
-from catalog.tests.dags.providers.provider_api_scripts.resources.json_load import (
+from tests.dags.providers.provider_api_scripts.resources.json_load import (
     make_resource_json_func,
 )
+
 from common.constants import IMAGE
 from common.licenses import get_license_info
 from providers.provider_api_scripts.nappy import NappyDataIngester

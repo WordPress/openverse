@@ -1,10 +1,16 @@
 // eslint-disable-next-line no-restricted-imports
 import * as pinia from "pinia"
 
+import { normalizeFetchingError } from "~/plugins/errors"
+
 export const createPinia = () =>
   pinia.createPinia().use(() => ({
     $nuxt: {
+      $config: {
+        deploymentEnv: "staging",
+      },
       $openverseApiToken: "",
+      $processFetchingError: jest.fn(normalizeFetchingError),
       $sentry: {
         captureException: jest.fn(),
         captureEvent: jest.fn(),
@@ -22,7 +28,12 @@ export const createPinia = () =>
         },
       },
       error: jest.fn(),
-      localePath: jest.fn(),
+      localePath: jest.fn((val) => {
+        const queryString = Object.keys(val?.query)
+          .map((key) => key + "=" + val?.query[key])
+          .join("&")
+        return `${val?.path ?? "/"}?${queryString}`
+      }),
     },
   }))
 

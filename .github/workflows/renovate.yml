@@ -62,13 +62,15 @@ jobs:
           sudo chown -R runneradmin:root /tmp/renovate/
           ls -R "$cache_dir"
 
-      - uses: renovatebot/github-action@v39.2.4
+      - uses: renovatebot/github-action@v40.1.7
         with:
           configurationFile: .github/renovate.json
           token: ${{ secrets.ACCESS_TOKEN }}
         env:
           # This enables the cache -- if this is set, it's not necessary to add it to renovate.json.
           RENOVATE_REPOSITORY_CACHE: ${{ github.event.inputs.repoCache || 'enabled' }}
+          # Debug logs to figure out why vulnerability updates aren't occurring
+          LOG_LEVEL: debug
 
       # Compression helps performance in the upload step!
       - name: Compress renovate cache

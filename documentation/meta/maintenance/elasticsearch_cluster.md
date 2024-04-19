@@ -301,7 +301,7 @@ editing process.
 1. Run `vim` or `nano` with `sudo` to edit the `docker-compose.yml` and make the
    configuration changes identified in the first step of the overall process.
 1. Save the changes.
-1. Run `docker-compose up -d` to restart the node with the new settings.
+1. Run `docker compose up -d` to restart the node with the new settings.
 1. Mark the node as restarted in the shared document.
 1. Monitor the cluster:
 

@@ -2,18 +2,18 @@ import { expect } from "@playwright/test"
 
 import { LanguageDirection, t } from "~~/test/playwright/utils/i18n"
 
+import type { MediaType, SupportedSearchType } from "~/constants/media"
 import {
   ALL_MEDIA,
   AUDIO,
   IMAGE,
-  MediaType,
   MODEL_3D,
   searchPath,
-  SupportedSearchType,
   VIDEO,
 } from "~/constants/media"
 
 import type { Breakpoint } from "~/constants/screens"
+import { keycodes } from "~/constants/key-codes"
 
 import type { BrowserContext, Locator, Page } from "@playwright/test"
 
@@ -204,30 +204,28 @@ export const preparePageForTests = async (
   }> = {}
 ) => {
   const { dismissBanners = true, dismissFilter = true } = options
-  const defaultFeatures: Record<string, "on" | "off"> = {
-    fetch_sensitive: "off",
-    fake_sensitive: "off",
-    analytics: "on",
-    additional_search_types: "off",
-    additional_search_views: "off",
-  }
-  const features = {
-    ...defaultFeatures,
-    ...options.features,
-  }
-  const featuresCookie: Record<string, "on" | "off"> = {}
-  for (const [feature, status] of Object.entries(features)) {
-    featuresCookie[feature] = status
-  }
 
-  await setCookies(page.context(), {
-    features: featuresCookie,
+  const cookiesToSet: CookieMap = {
     ui: {
       dismissedBanners: dismissBanners ? ALL_TEST_BANNERS : [],
       isFilterDismissed: dismissFilter ?? false,
       breakpoint,
     },
-  })
+  }
+  if (options.features) {
+    const features: Record<string, "on" | "off"> = {
+      fetch_sensitive: "off",
+      fake_sensitive: "off",
+      analytics: "on",
+      additional_search_types: "off",
+      additional_search_views: "on",
+    }
+    for (const [feature, status] of Object.entries(options.features)) {
+      features[feature] = status
+    }
+    cookiesToSet.features = features
+  }
+  await setCookies(page.context(), cookiesToSet)
 }
 
 export const goToSearchTerm = async (
@@ -422,4 +420,11 @@ export const setCookies = async (
     }
   })
   await context.addCookies(cookiesToSet)
+}
+
+export const skipToContent = async (page: Page) => {
+  // Go to skip to content button
+  await page.keyboard.press(keycodes.Tab)
+  // Skip to content
+  await page.keyboard.press(keycodes.Enter)
 }

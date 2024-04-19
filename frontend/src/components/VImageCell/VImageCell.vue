@@ -60,23 +60,49 @@
   </li>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, PropType } from "vue"
+<script setup lang="ts">
+import { computed, withDefaults } from "vue"
+
+import { useContext } from "@nuxtjs/composition-api"
 
 import type { AspectRatio, ImageDetail } from "~/types/media"
 import type { ResultKind } from "~/types/result"
 import { useImageCellSize } from "~/composables/use-image-cell-size"
 import { useI18n } from "~/composables/use-i18n"
-import { useAnalytics } from "~/composables/use-analytics"
 
 import { IMAGE } from "~/constants/media"
 
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 
+import { useSearchStore } from "~/stores/search"
+
 import VLicense from "~/components/VLicense/VLicense.vue"
 import VLink from "~/components/VLink.vue"
 
 import errorImage from "~/assets/image_not_available_placeholder.png"
+
+const props = withDefaults(
+  defineProps<{
+    image: ImageDetail
+    /**
+     * The search term is added to the URL to allow the user to
+     * navigate back/forward to the search results page.
+     */
+    searchTerm: string | null
+    /**
+     * All content view uses the square image cells, Image view
+     * uses the image's intrinsic size.
+     */
+    aspectRatio?: AspectRatio
+    kind?: ResultKind
+    relatedTo?: string | null
+  }>(),
+  {
+    aspectRatio: () => "square",
+    kind: () => "search",
+    relatedTo: () => null,
+  }
+)
 
 const toAbsolutePath = (url: string, prefix = "https://") => {
   if (
@@ -89,144 +115,91 @@ const toAbsolutePath = (url: string, prefix = "https://") => {
   return `${prefix}${url}`
 }
 
-export default defineComponent({
-  name: "VImageCell",
-  components: { VLicense, VLink },
-  props: {
-    image: {
-      type: Object as PropType<ImageDetail>,
-      required: true,
-    },
-    /**
-     * The search term is added to the URL to allow the user to
-     * navigate back/forward to the search results page.
-     */
-    searchTerm: {
-      type: String,
-    },
-    /**
-     * All content view uses the square image cells, Image view
-     * uses the image's intrinsic size.
-     */
-    aspectRatio: {
-      type: String as PropType<AspectRatio>,
-      default: "square",
-    },
-    kind: {
-      type: String as PropType<ResultKind>,
-      default: "search",
-    },
-    relatedTo: {
-      type: [String, null] as PropType<string | null>,
-      default: null,
-    },
-  },
-  setup(props) {
-    const isSquare = computed(() => props.aspectRatio === "square")
-    const { imgHeight, imgWidth, isPanorama, styles } = useImageCellSize({
-      imageSize: { width: props.image.width, height: props.image.height },
-      isSquare,
-    })
-    const i18n = useI18n()
-
-    const imageUrl = computed(() => {
-      // TODO: check if we have blurry panorama thumbnails
-      // Use the main image file and not the thumbnails for panorama images to
-      // fix for blurry panorama thumbnails, introduced in
-      // https://github.com/cc-archive/cccatalog-frontend/commit/4c9bdac5
-      if (isPanorama.value) {
-        return toAbsolutePath(props.image.url)
-      }
-      const url = props.image.thumbnail || props.image.url
-      return toAbsolutePath(url)
-    })
-
-    const imageLink = computed(() => {
-      return `/image/${props.image.id}/${
-        props.searchTerm ? "?q=" + props.searchTerm : ""
-      }`
-    })
-
-    const getImageForeignUrl = () =>
-      toAbsolutePath(props.image.foreign_landing_url)
-
-    /**
-     * If the thumbnail fails to load, try replacing it with the original image URL.
-     * If the original image fails, too, use the error image placeholder.
-     * @param event - the error event.
-     */
-    const onImageLoadError = (event: Event) => {
-      const element = event.target as HTMLImageElement
-      element.src =
-        element.src === props.image.url ? errorImage : props.image.url
-    }
-    /**
-     * If the image is not square, on the image load event, update
-     * the img's height and width with image natural dimensions.
-     * @param event - the load event.
-     */
-    const getImgDimension = (event: Event) => {
-      if (props.aspectRatio === "square") {
-        return
-      }
-      const element = event.target as HTMLImageElement
-      imgHeight.value = element.naturalHeight
-      imgWidth.value = element.naturalWidth
-    }
-
-    const contextSensitiveTitle = computed(() => {
-      return shouldBlur.value
-        ? i18n.t("sensitiveContent.title.image")
-        : i18n.t("browsePage.aria.imageTitle", {
-            title: props.image.title,
-          })
-    })
-
-    const { sendCustomEvent } = useAnalytics()
-
-    /**
-     * If the user left clicks on a search result, send
-     * the SELECT_SEARCH_RESULT custom event
-     * @param event - the mouse click event
-     */
-    const sendSelectSearchResultEvent = (event: MouseEvent) => {
-      if (event.button !== 0) {
-        return
-      }
-
-      sendCustomEvent("SELECT_SEARCH_RESULT", {
-        id: props.image.id,
-        kind: props.kind,
-        mediaType: IMAGE,
-        provider: props.image.provider,
-        query: props.searchTerm || "",
-        relatedTo: props.relatedTo,
-        sensitivities: props.image.sensitivity?.join(",") ?? "",
-        isBlurred: shouldBlur.value,
-      })
-    }
-
-    const { isHidden: shouldBlur } = useSensitiveMedia(props.image)
-
-    return {
-      styles,
-      imgWidth,
-      imgHeight,
-      imageUrl,
-      imageLink,
-      contextSensitiveTitle,
-      shouldBlur,
-
-      getImageForeignUrl,
-      onImageLoadError,
-      getImgDimension,
-
-      isSquare,
-
-      sendSelectSearchResultEvent,
-    }
-  },
+const isSquare = computed(() => props.aspectRatio === "square")
+const { imgHeight, imgWidth, isPanorama, styles } = useImageCellSize({
+  imageSize: { width: props.image.width, height: props.image.height },
+  isSquare,
 })
+const i18n = useI18n()
+
+const imageUrl = computed(() => {
+  // TODO: check if we have blurry panorama thumbnails
+  // Use the main image file and not the thumbnails for panorama images to
+  // fix for blurry panorama thumbnails, introduced in
+  // https://github.com/cc-archive/cccatalog-frontend/commit/4c9bdac5
+  if (isPanorama.value) {
+    return toAbsolutePath(props.image.url)
+  }
+  const url = props.image.thumbnail || props.image.url
+  return toAbsolutePath(url)
+})
+
+const imageLink = computed(() => {
+  return `/image/${props.image.id}/${
+    props.searchTerm ? "?q=" + props.searchTerm : ""
+  }`
+})
+
+/**
+ * If the thumbnail fails to load, try replacing it with the original image URL.
+ * If the original image fails, too, use the error image placeholder.
+ * @param event - the error event.
+ */
+const onImageLoadError = (event: Event) => {
+  const element = event.target as HTMLImageElement
+  element.src = element.src === props.image.url ? errorImage : props.image.url
+}
+/**
+ * If the image is not square, on the image load event, update
+ * the img's height and width with image natural dimensions.
+ * @param event - the load event.
+ */
+const getImgDimension = (event: Event) => {
+  if (props.aspectRatio === "square") {
+    return
+  }
+  const element = event.target as HTMLImageElement
+  imgHeight.value = element.naturalHeight
+  imgWidth.value = element.naturalWidth
+}
+
+const contextSensitiveTitle = computed(() => {
+  return shouldBlur.value
+    ? i18n.t("sensitiveContent.title.image")
+    : i18n.t("browsePage.aria.imageTitle", {
+        title: props.image.title,
+      })
+})
+
+const { $sendCustomEvent } = useContext()
+const searchStore = useSearchStore()
+
+/**
+ * If the user left clicks on a search result, send
+ * the SELECT_SEARCH_RESULT custom event
+ * @param event - the mouse click event
+ */
+const sendSelectSearchResultEvent = (event: MouseEvent) => {
+  if (event.button !== 0) {
+    return
+  }
+
+  $sendCustomEvent("SELECT_SEARCH_RESULT", {
+    id: props.image.id,
+    kind: props.kind,
+    mediaType: IMAGE,
+    provider: props.image.provider,
+    query: props.searchTerm || "",
+    relatedTo: props.relatedTo,
+    sensitivities: props.image.sensitivity?.join(",") ?? "",
+    isBlurred: shouldBlur.value,
+    collectionType:
+      searchStore.strategy !== "default" ? searchStore.strategy : null,
+    collectionValue: searchStore.collectionValue,
+  })
+}
+
+const { isHidden: shouldBlur } = useSensitiveMedia(props.image)
 </script>
 
 <style scoped>

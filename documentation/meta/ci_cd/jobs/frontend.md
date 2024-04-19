@@ -18,11 +18,12 @@ are
 ## `nuxt-checks`
 
 Runs a matrix for various Nuxt checks for the frontend using the following
-Node.js script.
+`just` recipes.
 
-| Name        | Script      |
-| ----------- | ----------- |
-| `unit_test` | `test:unit` |
+| Name               | Script                   |
+| ------------------ | ------------------------ |
+| `unit_test`        | `frontend/run test:unit` |
+| `test_media_props` | `frontend/generate-docs` |
 
 This job is skipped if the frontend codebase has not changed. Its counterpart is
 [`django-checks`](/meta/ci_cd/jobs/api.md#django-checks) for the API.

@@ -136,5 +136,7 @@ test("sends SELECT_SEARCH_RESULT event on related image click", async ({
     query: "",
     sensitivities: "",
     isBlurred: false,
+    collectionType: null,
+    collectionValue: null,
   })
 })

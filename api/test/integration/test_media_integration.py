@@ -6,6 +6,7 @@ from dataclasses import dataclass
 import pytest
 
 from api.constants.licenses import LICENSE_GROUPS
+from api.constants.parameters import COLLECTION, TAG
 
 
 pytestmark = pytest.mark.django_db
@@ -49,7 +50,7 @@ def media_type(request):
         "audio": MediaType(
             name="audio",
             path="audio",
-            providers=["freesound", "jamendo", "wikimedia_audio"],
+            providers=["freesound", "jamendo", "wikimedia_audio", "ccmixter"],
             categories=["music", "pronunciation"],
             tags=["cat"],
             q="love",
@@ -328,6 +329,50 @@ def test_detail_view_for_invalid_uuids_returns_not_found(
     assert res.status_code == 404
 
 
+def test_search_with_only_valid_sources_produces_no_warning(media_type, api_client):
+    search = api_client.get(
+        f"/v1/{media_type.path}/",
+        {"source": ",".join(media_type.providers)},
+    )
+    assert search.status_code == 200
+    assert "warnings" not in search.json()
+
+
+def test_search_with_partially_invalid_sources_produces_warning_but_still_succeeds(
+    media_type: MediaType, api_client
+):
+    invalid_sources = [
+        "surely_neither_this_one",
+        "this_is_sure_not_to_ever_be_a_real_source_name",
+    ]
+
+    search = api_client.get(
+        f"/v1/{media_type.path}/",
+        {"source": ",".join([media_type.providers[0]] + invalid_sources)},
+    )
+    assert search.status_code == 200
+    result = search.json()
+
+    assert {w["code"] for w in result["warnings"]} == {
+        "partially invalid source parameter"
+    }
+    warning = result["warnings"][0]
+    assert set(warning["invalid_sources"]) == set(invalid_sources)
+    assert warning["valid_sources"] == [media_type.providers[0]]
+    assert f"v1/{media_type.path}/stats/" in warning["message"]
+
+
+def test_search_with_all_invalid_sources_fails(media_type, api_client):
+    invalid_sources = [
+        "this_is_sure_not_to_ever_be_a_real_source_name",
+        "surely_neither_this_one",
+    ]
+    search = api_client.get(
+        f"/v1/{media_type.path}/", {"source": ",".join(invalid_sources)}
+    )
+    assert search.status_code == 400
+
+
 def test_detail_view_returns_ok(single_result, api_client):
     media_type, item = single_result
     res = api_client.get(f"/v1/{media_type.path}/{item['id']}/")
@@ -401,14 +446,14 @@ def test_report_is_created(single_result, api_client):
 
 
 ####################
-# Collection views #
+# Collection results #
 ####################
 
 
 def test_collection_by_tag(media_type: MediaType, api_client):
     tags = media_type.tags
     for tag in tags:
-        res = api_client.get(f"/v1/{media_type.path}/tag/{tag}/")
+        res = api_client.get(f"/v1/{media_type.path}/?{COLLECTION}=tag&{TAG}={tag}")
         assert res.status_code == 200
 
         data = res.json()
@@ -421,7 +466,7 @@ def test_collection_by_tag(media_type: MediaType, api_client):
 def test_collection_by_source(media_type: MediaType, api_client):
     source = api_client.get(f"/v1/{media_type.path}/stats/").json()[0]["source_name"]
 
-    res = api_client.get(f"/v1/{media_type.path}/source/{source}/")
+    res = api_client.get(f"/v1/{media_type.path}/?{COLLECTION}=source&source={source}")
     assert res.status_code == 200
 
     data = res.json()
@@ -433,11 +478,15 @@ def test_collection_by_creator(media_type: MediaType, api_client):
     source_res = api_client.get(f"/v1/{media_type.path}/stats/")
     source = source_res.json()[0]["source_name"]
 
-    first_res = api_client.get(f"/v1/{media_type.path}/source/{source}/")
+    first_res = api_client.get(
+        f"/v1/{media_type.path}/?{COLLECTION}=source&source={source}"
+    )
     first = first_res.json()["results"][0]
     assert (creator := first.get("creator"))
 
-    res = api_client.get(f"/v1/{media_type.path}/source/{source}/creator/{creator}/")
+    res = api_client.get(
+        f"/v1/{media_type.path}/?{COLLECTION}=creator&source={source}&creator={creator}"
+    )
     assert res.status_code == 200
 
     data = res.json()

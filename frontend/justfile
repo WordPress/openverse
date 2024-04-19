@@ -69,6 +69,31 @@ init: wait-up
 run *args:
     pnpm run {{ args }}
 
+# Generate the specified kind of documentation
+generate-docs doc="media-props" fail_on_diff="true":
+    #!/bin/bash
+    set -e
+    if [ "{{ doc }}" == "media-props" ]; then
+        FINAL_FILE="documentation/meta/media_properties/frontend.md"
+        NAME="Media properties"
+        just run doc:media-props
+        mv media_properties.md ../$FINAL_FILE
+    else
+        echo "Invalid documentation type specified, use \`media-props\`. Exiting."
+        exit 1
+    fi
+    echo -n "Running linting..."
+    just ../lint prettier $FINAL_FILE &>/dev/null || true
+    echo "Done!"
+    if {{ fail_on_diff }}; then
+      set +e
+      git diff --exit-code ../$FINAL_FILE
+      if [ $? -ne 0 ]; then
+          printf "\n\n\e[31m!! Changes found in $NAME documentation, please run 'just frontend/generate-docs {{ doc }}' locally and commit difference !!\n\n"
+          exit 1
+      fi
+    fi
+
 types:
     cd .. && pnpm exec vue-tsc -p frontend --noEmit
 

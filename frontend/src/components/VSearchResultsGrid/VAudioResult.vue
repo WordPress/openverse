@@ -16,7 +16,8 @@
 <script lang="ts">
 import { defineComponent, PropType, toRefs } from "vue"
 
-import { useAnalytics } from "~/composables/use-analytics"
+import { useContext } from "@nuxtjs/composition-api"
+
 import { useAudioSnackbar } from "~/composables/use-audio-snackbar"
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 import { AUDIO } from "~/constants/media"
@@ -26,6 +27,8 @@ import type { AudioLayout, AudioSize } from "~/constants/audio"
 import type { AudioTrackClickEvent } from "~/types/events"
 import type { AudioDetail } from "~/types/media"
 import type { ResultKind } from "~/types/result"
+
+import { useSearchStore } from "~/stores/search"
 
 import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"
 
@@ -59,7 +62,8 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const { sendCustomEvent } = useAnalytics()
+    const { $sendCustomEvent } = useContext()
+    const searchStore = useSearchStore()
 
     const { audio } = toRefs(props)
     const { isHidden: shouldBlur } = useSensitiveMedia(audio)
@@ -74,7 +78,7 @@ export default defineComponent({
         return
       }
       useAudioSnackbar().hide()
-      sendCustomEvent("SELECT_SEARCH_RESULT", {
+      $sendCustomEvent("SELECT_SEARCH_RESULT", {
         id: audio.id,
         kind: props.kind,
         mediaType: AUDIO,
@@ -83,6 +87,9 @@ export default defineComponent({
         relatedTo: props.relatedTo,
         sensitivities: audio.sensitivity?.join(",") ?? "",
         isBlurred: shouldBlur.value,
+        collectionType:
+          searchStore.strategy !== "default" ? searchStore.strategy : null,
+        collectionValue: searchStore.collectionValue,
       })
     }
     const sendInteractionEvent = (
@@ -94,7 +101,7 @@ export default defineComponent({
           : props.layout === "box"
             ? "VAllResultsGrid"
             : "AudioSearch"
-      sendCustomEvent("AUDIO_INTERACTION", { ...data, component })
+      $sendCustomEvent("AUDIO_INTERACTION", { ...data, component })
     }
 
     return {

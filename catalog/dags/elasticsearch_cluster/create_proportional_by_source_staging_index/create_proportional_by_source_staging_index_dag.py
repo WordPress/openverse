@@ -28,15 +28,10 @@ This DAG is on a `None` schedule and is run manually.
 
 ## Race conditions
 
-Because this DAG runs on the staging ingestion server and staging elasticsearch
-cluster, it does _not_ interfere with the `data_refresh` or
-`create_filtered_index` DAGs.
-
-However, as the DAG operates on the staging API database it will exit
-immediately if any of the following DAGs are running:
-* `staging_database_restore`
-* `recreate_full_staging_index`
-* `create_new_staging_es_index`
+Because this DAG runs on the staging elasticsearch cluster, it does _not_ interfere
+ with the production `data_refresh` or `create_filtered_index` DAGs. However, it will
+ fail immediately if any of the DAGs tagged as part of the `staging-es-concurrency`
+ group are running.
 """
 
 from datetime import datetime, timedelta
@@ -53,18 +48,10 @@ from common.constants import (
     MEDIA_TYPES,
     STAGING,
 )
-from common.sensors.utils import prevent_concurrency_with_dags
-from database.staging_database_restore.constants import (
-    DAG_ID as STAGING_DB_RESTORE_DAG_ID,
-)
-from elasticsearch_cluster.create_new_es_index.create_new_es_index_types import (
-    CREATE_NEW_INDEX_CONFIGS,
-)
+from common.sensors.constants import STAGING_ES_CONCURRENCY_TAG
+from common.sensors.utils import prevent_concurrency_with_dags_with_tag
 from elasticsearch_cluster.create_proportional_by_source_staging_index import (
     create_proportional_by_source_staging_index as create_index,
-)
-from elasticsearch_cluster.recreate_staging_index.recreate_full_staging_index import (
-    DAG_ID as RECREATE_STAGING_INDEX_DAG_ID,
 )
 
 
@@ -76,7 +63,7 @@ DAG_ID = "create_proportional_by_source_staging_index"
     default_args=DAG_DEFAULT_ARGS,
     schedule=None,
     start_date=datetime(2024, 1, 31),
-    tags=["database", "elasticsearch"],
+    tags=["elasticsearch", STAGING_ES_CONCURRENCY_TAG],
     max_active_runs=1,
     catchup=False,
     doc_md=__doc__,
@@ -118,12 +105,8 @@ DAG_ID = "create_proportional_by_source_staging_index"
 )
 def create_proportional_by_source_staging_index():
     # Fail early if any conflicting DAGs are running
-    prevent_concurrency = prevent_concurrency_with_dags(
-        external_dag_ids=[
-            STAGING_DB_RESTORE_DAG_ID,
-            RECREATE_STAGING_INDEX_DAG_ID,
-            CREATE_NEW_INDEX_CONFIGS[STAGING].dag_id,
-        ]
+    prevent_concurrency = prevent_concurrency_with_dags_with_tag(
+        tag=STAGING_ES_CONCURRENCY_TAG,
     )
 
     es_host = es.get_es_host(environment=STAGING)

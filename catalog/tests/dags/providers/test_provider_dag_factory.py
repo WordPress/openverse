@@ -7,13 +7,13 @@ from airflow.exceptions import AirflowSkipException, BackfillUnfinished
 from airflow.executors.debug_executor import DebugExecutor
 from airflow.operators.empty import EmptyOperator
 from pendulum import now
-
-from catalog.tests.conftest import mark_extended
-from catalog.tests.dags.providers.provider_api_scripts.resources.provider_data_ingester.mock_provider_data_ingester import (
+from tests.conftest import mark_extended
+from tests.dags.providers.provider_api_scripts.resources.provider_data_ingester.mock_provider_data_ingester import (
     MockAudioOnlyProviderDataIngester,
     MockImageOnlyProviderDataIngester,
     MockProviderDataIngester,
 )
+
 from providers import provider_dag_factory
 from providers.provider_reingestion_workflows import ProviderReingestionWorkflow
 from providers.provider_workflows import ProviderWorkflow
@@ -36,7 +36,7 @@ from providers.provider_workflows import ProviderWorkflow
 )
 def test_skipped_pull_data_runs_successfully(side_effect, clean_db):
     with mock.patch(
-        "catalog.tests.dags.providers.provider_api_scripts.resources.provider_data_ingester.mock_provider_data_ingester.MockProviderDataIngester.ingest_records"
+        "tests.dags.providers.provider_api_scripts.resources.provider_data_ingester.mock_provider_data_ingester.MockProviderDataIngester.ingest_records"
     ) as ingest_records_mock:
         ingest_records_mock.side_effect = side_effect
         dag = provider_dag_factory.create_provider_api_workflow_dag(
@@ -208,3 +208,37 @@ def test_get_overrides_for_task(task_id, expected_overrides):
         task_id, overrides
     )
     assert actual_task_overrides == expected_overrides
+
+
+def test_create_report_load_completion_for_reingestion_dag():
+    dag_id = "test_provider_reingestion_workflow"
+    media_types = ["image"]
+    ingestion_metrics = {
+        "duration": "1:00:00",
+        "record_counts_by_media_type": {"image": 100},
+    }
+    dated = False
+
+    with mock.patch(
+        "providers.provider_dag_factory.reporting.report_completion"
+    ) as mock_report_completion:
+        report_task = provider_dag_factory.create_report_load_completion(
+            dag_id, media_types, ingestion_metrics, dated
+        )
+
+        assert report_task.task_id == "report_load_completion"
+        assert report_task.python_callable == mock_report_completion
+
+        assert report_task.op_kwargs == {
+            "dag_id": dag_id,
+            "media_types": media_types,
+            "duration": ingestion_metrics["duration"],
+            "record_counts_by_media_type": ingestion_metrics[
+                "record_counts_by_media_type"
+            ],
+            "dated": dated,
+            "is_reingestion_workflow": True,
+        }
+
+        assert "date_range_start" not in report_task.op_kwargs
+        assert "date_range_end" not in report_task.op_kwargs
