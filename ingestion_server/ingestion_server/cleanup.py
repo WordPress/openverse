@@ -254,9 +254,6 @@ def _clean_data_worker(rows, temp_table, sources_config, all_fields: list[str]):
         for field, clean_value in cleaned_data.items():
             update_field_expressions.append(f"{field} = {clean_value}")
             # Save cleaned values for later
-            # (except for tags, which take up too much space)
-            if field == "tags":
-                continue
             cleaned_values[field].append((identifier, clean_value))
 
         if len(update_field_expressions) > 0:
@@ -289,10 +286,24 @@ class CleanDataUploader:
 
     def __init__(self):
         bucket_name = config("AWS_S3_BUCKET", default="openverse-catalog")
-        self.s3 = boto3.resource(
+        self.s3 = self._get_s3_resource()
+        self.s3_bucket = self.s3.Bucket(bucket_name)
+
+    @staticmethod
+    def _get_s3_resource():
+        if config("ENVIRONMENT") == "local":
+            return boto3.resource(
+                "s3",
+                endpoint_url=config("AWS_S3_ENDPOINT", default="http://s3:5000"),
+                aws_access_key_id=config("AWS_ACCESS_KEY_ID", default="test_key"),
+                aws_secret_access_key=config(
+                    "AWS_SECRET_ACCESS_KEY", default="test_secret"
+                ),
+            )
+
+        return boto3.resource(
             "s3", region_name=config("AWS_REGION", default="us-east-1")
         )
-        self.s3_bucket = self.s3.Bucket(bucket_name)
 
     def _save_to_disk(self, field: str, force_upload=False):
         log.info(f"Saving {len(self.buffer[field])} rows of `{field}` to local file.")
