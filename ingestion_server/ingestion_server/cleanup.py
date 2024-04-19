@@ -291,7 +291,7 @@ class CleanDataUploader:
 
     @staticmethod
     def _get_s3_resource():
-        if config("ENVIRONMENT") == "local":
+        if config("ENVIRONMENT", default="local") == "local":
             return boto3.resource(
                 "s3",
                 endpoint_url=config("AWS_S3_ENDPOINT", default="http://s3:5000"),
