@@ -507,7 +507,7 @@
       title: "Source",
     },
     audioCategories: {
-      title: "Audio track category",
+      title: "Audio category",
       audiobook: "Audiobook",
       music: "Music",
       news: "News",
@@ -621,7 +621,7 @@
         countMore: "See over {localeCount} images found for {query}.",
       },
       audio: {
-        zero: "No audio track found for {query}.",
+        zero: "No audio tracks found for {query}.",
         count: "See {localeCount} audio tracks found for {query}.",
         countMore: "See over {localeCount} audio tracks found for {query}.",
       },
@@ -1141,8 +1141,8 @@
     resultCountLabel: {
       creator: {
         audio: {
-          zero: "No audio files by this creator.",
-          count: "{count} audio track file by this creator.|{count} audio track files by this creator.",
+          zero: "No audio tracks by this creator.",
+          count: "{count} audio track by this creator.|{count} audio tracks files by this creator.",
           countMore: "Over {count} audio files by this creator.",
         },
         image: {
@@ -1154,7 +1154,7 @@
       source: {
         audio: {
           zero: "No audio files provided by this source",
-          count: "{count} audio file provided by this source|{count} audio track files provided by this source",
+          count: "{count} audio track provided by this source|{count} audio tracks files provided by this source",
           countMore: "Over {count} audio files provided by this source",
         },
         image: {
@@ -1166,7 +1166,7 @@
       tag: {
         audio: {
           zero: "No audio files with the selected tag",
-          count: "{count} audio file with the selected tag|{count} audio track files with the selected tag",
+          count: "{count} audio track with the selected tag|{count} audio tracks files with the selected tag",
           countMore: "Over {count} audio files with the selected tag",
         },
         image: {
