@@ -98,7 +98,7 @@ as well as a corresponding test file. Complete the TODOs detailed in the
 generated files to implement behavior specific to your API.
 
 You can run the provider script directly from the command line via a just
-reciep. This will open a bash shell inside the docker stack of the catalog
+recipe. This will open a bash shell inside the docker stack of the catalog.
 
 ```
 just catalog/run
