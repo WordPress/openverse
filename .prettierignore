@@ -3,8 +3,9 @@
 .github/CODEOWNERS
 
 # Documentation
-# This file is linted when created, but the hr elements are replaced for correct rendering.
+# These files are linted when created, but the hr elements are replaced for correct rendering.
 documentation/meta/media_properties/catalog.md
+documentation/catalog/reference/DAGs.md
 
 # Frontend
 frontend/test/unit/coverage

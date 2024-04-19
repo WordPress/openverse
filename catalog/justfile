@@ -152,12 +152,11 @@ generate-docs doc="dag" fail_on_diff="false":
     just ../lint prettier $TEMP.md &>/dev/null || true
     echo "Linting done!"
 
-    if [ "{{ doc }}" == "media-props" ]; then
-      echo -n "Replacing linted md <hr> '---' with '----' required by sphinx..."
-      sed 's/^---$/----/' "../$TEMP.md" > "../$TEMP.tmp"
-      mv "../$TEMP.tmp" "../$TEMP.md"
-      echo "Replacements done!"
-    fi
+    echo -n "Replacing linted md <hr> '---' with '----' required by sphinx..."
+    sed 's/^---$/----/' "../$TEMP.md" > "../$TEMP.tmp"
+    mv "../$TEMP.tmp" "../$TEMP.md"
+    echo "Replacements done!"
+
     mv ../$TEMP.md ../$FINAL_FILE
     echo "Moved the generated file to ../$FINAL_FILE"
     if {{ fail_on_diff }}; then

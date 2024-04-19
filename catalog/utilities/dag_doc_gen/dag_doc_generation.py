@@ -286,7 +286,7 @@ def generate_dag_doc(dag_folder: Path = DAG_FOLDER) -> str:
         text += f" 1. [`{dag.dag_id}`](#{dag_by_doc_md[dag.doc]})\n"
         dag_docs.add(generate_single_documentation(dag))
 
-    text += "\n" + "".join(sorted(dag_docs))
+    text += "\n" + "\n----\n\n".join(sorted(dag_docs))
 
     # Normalize the newlines at the end of the file and add one more to make sure
     # our pre-commit checks are happy!
