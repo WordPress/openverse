@@ -1166,7 +1166,7 @@
       tag: {
         audio: {
           zero: "No audio files with the selected tag",
-          count: "{count} audio track with the selected tag|{count} audio tracks files the selected tag",
+          count: "{count} audio track with the selected tag|{count} audio tracks with the selected tag",
           countMore: "Over {count} audio files with the selected tag",
         },
         image: {
