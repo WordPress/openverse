@@ -220,7 +220,7 @@ def _clean_data_worker(rows, temp_table, sources_config, all_fields: list[str]):
     write_cur = worker_conn.cursor(cursor_factory=DictCursor)
     log.info(f"Cleaning {len(rows)} rows")
 
-    start_time = time.time()
+    start_time = time.perf_counter()
     cleaned_values = {field: [] for field in all_fields}
     for row in rows:
         source, _id, identifier = row["source"], row["id"], row["identifier"]
@@ -266,7 +266,7 @@ def _clean_data_worker(rows, temp_table, sources_config, all_fields: list[str]):
     worker_conn.commit()
     write_cur.close()
     worker_conn.close()
-    end_time = time.time()
+    end_time = time.perf_counter()
     total_time = end_time - start_time
     log.info(f"Worker finished batch in {total_time}")
     return cleaned_values
@@ -352,7 +352,7 @@ def clean_image_data(table):
     # Map each table to the fields that need to be cleaned up. Then, map each
     # field to its cleanup function.
     log.info("Cleaning up data...")
-    start_time = time.time()
+    start_time = time.perf_counter()
     table_config = _cleanup_config["tables"][table]
 
     # Pull data from selected sources only.
@@ -390,7 +390,7 @@ def clean_image_data(table):
 
         while batch:
             # Divide updates into jobs for parallel execution.
-            batch_start_time = time.time()
+            batch_start_time = time.perf_counter()
             temp_table = f"temp_import_{table}"
             job_size = int(len(batch) / num_workers)
             last_end = -1
@@ -420,7 +420,7 @@ def clean_image_data(table):
                 pool.join()
 
             num_cleaned += len(batch)
-            batch_end_time = time.time()
+            batch_end_time = time.perf_counter()
             rate = len(batch) / (batch_end_time - batch_start_time)
             log.info(
                 f"Batch finished, records/s: cleanup_rate={rate}, "
@@ -433,7 +433,7 @@ def clean_image_data(table):
     iter_cur.close()
     conn.close()
     data_uploader.flush()
-    end_time = time.time()
+    end_time = time.perf_counter()
     cleanup_time = end_time - start_time
     log.info(
         f"Cleaned all records in {cleanup_time} seconds,"
