@@ -1150,7 +1150,7 @@
           count: "{count} image by this creator.|{count} images by this creator.",
           countMore: "Over {count} images by this creator.",
         },
-      },
+     },
       source: {
         audio: {
           zero: "No audio files provided by this source",
