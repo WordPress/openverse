@@ -928,7 +928,7 @@
   audioThumbnail: {
     alt: 'Cover art for "{title}" by {creator}',
   },
-  audioTrack: { 
+  audioTrack: {
     ariaLabel: "Audio: {title}",
     ariaLabelInteractive: "Audio: {title} - interactive player - press the space bar to play and pause a preview of the audio track",
     ariaLabelInteractiveSeekable: "Audio: {title} - interactive player - press the space bar to play and pause a preview of the audio track; use the left and right arrow keys to seek through the track.",
@@ -1142,7 +1142,7 @@
       creator: {
         audio: {
           zero: "No audio tracks by this creator.",
-          count: "{count} audio track by this creator.|{count} audio tracks files by this creator.",
+          count: "{count} audio track by this creator.|{count} audio tracks by this creator.",
           countMore: "Over {count} audio files by this creator.",
         },
         image: {
@@ -1154,7 +1154,7 @@
       source: {
         audio: {
           zero: "No audio files provided by this source",
-          count: "{count} audio track provided by this source|{count} audio tracks files provided by this source",
+          count: "{count} audio track provided by this source|{count} audio tracks provided by this source",
           countMore: "Over {count} audio files provided by this source",
         },
         image: {
@@ -1166,7 +1166,7 @@
       tag: {
         audio: {
           zero: "No audio files with the selected tag",
-          count: "{count} audio track with the selected tag|{count} audio tracks files with the selected tag",
+          count: "{count} audio track with the selected tag|{count} audio tracks files the selected tag",
           countMore: "Over {count} audio files with the selected tag",
         },
         image: {
