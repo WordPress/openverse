@@ -20,7 +20,7 @@ services:
     env_file:
       - docker/db/env.docker
     healthcheck:
-      test: "pg_isready -U deploy -d openledger"
+      test: "pg_isready"
 
   # Database used by the catalog
   upstream_db:
@@ -43,7 +43,7 @@ services:
     env_file:
       - docker/upstream_db/env.docker
     healthcheck:
-      test: "pg_isready -U deploy -d openledger"
+      test: "pg_isready"
 
   plausible_db:
     profiles:
