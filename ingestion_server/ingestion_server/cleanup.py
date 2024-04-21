@@ -10,6 +10,7 @@ import multiprocessing
 import os
 import time
 import uuid
+from dataclasses import dataclass
 from urllib.parse import urlparse
 
 import boto3
@@ -272,6 +273,12 @@ def _clean_data_worker(rows, temp_table, sources_config, all_fields: list[str]):
     return cleaned_values
 
 
+@dataclass
+class FieldBuffered:
+    part: int
+    rows: list[tuple[str, str]]
+
+
 class CleanDataUploader:
     # Number of records to buffer in memory before writing to disk
     mem_buffer_size = 100
@@ -282,7 +289,7 @@ class CleanDataUploader:
     s3_path = "shared/data-refresh-cleaned-data"
 
     buffer = {
-        field: {"part": 1, "rows": []}
+        field: FieldBuffered(part=1, rows=[])
         for field in _cleanup_config["tables"]["image"]["sources"]["*"]["fields"]
     }
 
@@ -309,29 +316,31 @@ class CleanDataUploader:
         )
 
     def _save_to_disk(self, field: str, force_upload=False):
-        log.info(f"Saving {len(self.buffer[field])} rows of `{field}` to local file.")
+        log.info(
+            f"Saving {len(self.buffer[field].rows)} rows of `{field}` to local file."
+        )
         with open(f"{field}.tsv", "a") as f:
             csv_writer = csv.writer(f, delimiter="\t")
-            csv_writer.writerows(self.buffer[field]["rows"])
+            csv_writer.writerows(self.buffer[field].rows)
             # Clean memory buffer of saved rows
-            self.buffer[field]["rows"] = []
+            self.buffer[field].rows = []
 
         if os.path.getsize(f"{field}.tsv") >= self.disk_buffer_size or force_upload:
             self._upload_to_s3(field)
 
     def _upload_to_s3(self, field: str):
-        part_number = self.buffer[field]["part"]
+        part_number = self.buffer[field].part
         log.info(f"Uploading file part {part_number} of `{field}` to S3...")
         s3_file_name = f"{self.s3_path}/{self.date}_{field}_{part_number}.tsv"
         self.s3_bucket.upload_file(f"{field}.tsv", s3_file_name)
-        self.buffer[field]["part"] += 1
+        self.buffer[field].part += 1
         os.remove(f"{field}.tsv")
 
     def save(self, result: dict) -> dict[str, int]:
         for field, cleaned_items in result.items():
             if cleaned_items:
-                self.buffer[field]["rows"] += cleaned_items
-                if len(self.buffer[field]["rows"]) >= self.mem_buffer_size:
+                self.buffer[field].rows += cleaned_items
+                if len(self.buffer[field].rows) >= self.mem_buffer_size:
                     self._save_to_disk(field)
 
         return {field: len(items) for field, items in result.items()}
@@ -339,7 +348,7 @@ class CleanDataUploader:
     def flush(self):
         log.info("Saving remaining rows and deleting temporary files...")
         for field in self.buffer:
-            if self.buffer[field]["rows"]:
+            if self.buffer[field].rows:
                 self._save_to_disk(field, force_upload=True)
 
 
