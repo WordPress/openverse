@@ -290,6 +290,7 @@ class CleanDataUploader:
         bucket_name = config("AWS_S3_BUCKET", default="openverse-catalog")
         self.s3 = self._get_s3_resource()
         self.s3_bucket = self.s3.Bucket(bucket_name)
+        self.date = time.strftime("%Y-%m-%d")
 
     @staticmethod
     def _get_s3_resource():
@@ -321,7 +322,7 @@ class CleanDataUploader:
     def _upload_to_s3(self, field: str):
         part_number = self.buffer[field]["part"]
         log.info(f"Uploading file part {part_number} of `{field}` to S3...")
-        s3_file_name = f"{self.s3_path}/{field}_{part_number}.tsv"
+        s3_file_name = f"{self.s3_path}/{self.date}_{field}_{part_number}.tsv"
         self.s3_bucket.upload_file(f"{field}.tsv", s3_file_name)
         self.buffer[field]["part"] += 1
         os.remove(f"{field}.tsv")
