@@ -277,7 +277,9 @@ class CleanDataUploader:
     mem_buffer_size = 100
 
     # Size (in MB) of local file buffer before writing to S3
-    disk_buffer_size = 10 * 1024 * 1024
+    disk_buffer_size = 850 * 1024 * 1024
+
+    s3_path = "shared/data-refresh-cleaned-data"
 
     buffer = {
         field: {"part": 1, "rows": []}
@@ -319,7 +321,7 @@ class CleanDataUploader:
     def _upload_to_s3(self, field: str):
         part_number = self.buffer[field]["part"]
         log.info(f"Uploading file part {part_number} of `{field}` to S3...")
-        s3_file_name = f"shared/data-refresh-cleaned-data/{field}_{part_number}.tsv"
+        s3_file_name = f"{self.s3_path}/{field}_{part_number}.tsv"
         self.s3_bucket.upload_file(f"{field}.tsv", s3_file_name)
         self.buffer[field]["part"] += 1
         os.remove(f"{field}.tsv")
