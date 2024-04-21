@@ -8,8 +8,11 @@ import csv
 import logging as log
 import multiprocessing
 import os
+import shutil
 import time
 import uuid
+from dataclasses import dataclass
+from pathlib import Path
 from urllib.parse import urlparse
 
 import boto3
@@ -272,22 +275,39 @@ def _clean_data_worker(rows, temp_table, sources_config, all_fields: list[str]):
     return cleaned_values
 
 
+@dataclass
+class FieldBuffered:
+    part: int
+    rows: list[tuple[str, str]]
+
+
 class CleanDataUploader:
     # Number of records to buffer in memory before writing to disk
     mem_buffer_size = 100
 
     # Size (in MB) of local file buffer before writing to S3
-    disk_buffer_size = 10 * 1024 * 1024
+    disk_buffer_size = 850 * 1024 * 1024
+
+    s3_path = "shared/data-refresh-cleaned-data"
+    local_path = Path("/ingestion_server/cleanup_output")
 
     buffer = {
-        field: {"part": 1, "rows": []}
+        field: FieldBuffered(part=1, rows=[])
         for field in _cleanup_config["tables"]["image"]["sources"]["*"]["fields"]
     }
 
     def __init__(self):
-        bucket_name = config("AWS_S3_BUCKET", default="openverse-catalog")
-        self.s3 = self._get_s3_resource()
-        self.s3_bucket = self.s3.Bucket(bucket_name)
+        bucket_name = config("OPENVERSE_BUCKET", default="openverse-catalog")
+        try:
+            self.s3 = self._get_s3_resource()
+        except Exception as e:
+            log.error(f"Error connecting to S3: {e}")
+            self.s3 = None
+
+        if self.s3:
+            self.s3_bucket = self.s3.Bucket(bucket_name)
+            self.date = time.strftime("%Y-%m-%d")
+            self._recreate_local_dir()
 
     @staticmethod
     def _get_s3_resource():
@@ -305,38 +325,57 @@ class CleanDataUploader:
             "s3", region_name=config("AWS_REGION", default="us-east-1")
         )
 
-    def _save_to_disk(self, field: str, force_upload=False):
-        log.info(f"Saving {len(self.buffer[field])} rows of `{field}` to local file.")
-        with open(f"{field}.tsv", "a") as f:
-            csv_writer = csv.writer(f, delimiter="\t")
-            csv_writer.writerows(self.buffer[field]["rows"])
-            # Clean memory buffer of saved rows
-            self.buffer[field]["rows"] = []
+    def _recreate_local_dir(self):
+        log.info("Recreating local cleanup directory.")
+        shutil.rmtree(self.local_path, ignore_errors=True)
+        self.local_path.mkdir()
 
-        if os.path.getsize(f"{field}.tsv") >= self.disk_buffer_size or force_upload:
-            self._upload_to_s3(field)
+    def _save_to_disk(self, field: str, force_upload=False):
+        if self.s3 is None:
+            log.warning("S3 resource not available. Skipping upload.")
+            return
+
+        log.info(
+            f"Saving {len(self.buffer[field].rows)} rows of `{field}` to local file."
+        )
+        file_path = self.local_path / f"{field}.tsv"
+
+        with open(file_path, "a") as f:
+            csv_writer = csv.writer(f, delimiter="\t")
+            csv_writer.writerows(self.buffer[field].rows)
+            # Clean memory buffer of saved rows
+            self.buffer[field].rows = []
+
+        if os.path.getsize(file_path) >= self.disk_buffer_size or force_upload:
+            try:
+                self._upload_to_s3(field)
+            except Exception as e:
+                log.error(f"Error uploading {field} to S3: {e}")
 
     def _upload_to_s3(self, field: str):
-        part_number = self.buffer[field]["part"]
+        part_number = self.buffer[field].part
         log.info(f"Uploading file part {part_number} of `{field}` to S3...")
-        s3_file_name = f"shared/data-refresh-cleaned-data/{field}_{part_number}.tsv"
-        self.s3_bucket.upload_file(f"{field}.tsv", s3_file_name)
-        self.buffer[field]["part"] += 1
-        os.remove(f"{field}.tsv")
+        s3_file_name = f"{self.s3_path}/{self.date}_{field}_{part_number}.tsv"
+        tsv_file = f"{self.local_path}/{field}.tsv"
+        self.s3_bucket.upload_file(tsv_file, s3_file_name)
+        self.buffer[field].part += 1
+        Path(tsv_file).unlink()
 
     def save(self, result: dict) -> dict[str, int]:
         for field, cleaned_items in result.items():
-            if cleaned_items:
-                self.buffer[field]["rows"] += cleaned_items
-                if len(self.buffer[field]["rows"]) >= self.mem_buffer_size:
-                    self._save_to_disk(field)
+            if not cleaned_items:
+                continue
+
+            self.buffer[field].rows += cleaned_items
+            if len(self.buffer[field].rows) >= self.mem_buffer_size:
+                self._save_to_disk(field)
 
         return {field: len(items) for field, items in result.items()}
 
     def flush(self):
         log.info("Saving remaining rows and deleting temporary files...")
         for field in self.buffer:
-            if self.buffer[field]["rows"]:
+            if self.buffer[field].rows:
                 self._save_to_disk(field, force_upload=True)
 
 
@@ -436,6 +475,6 @@ def clean_image_data(table):
     end_time = time.perf_counter()
     cleanup_time = end_time - start_time
     log.info(
-        f"Cleaned all records in {cleanup_time} seconds,"
+        f"Cleaned all records in {cleanup_time:.3f} seconds,"
         f"counts: {cleaned_counts_by_field}"
     )
