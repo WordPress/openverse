@@ -294,7 +294,7 @@ class CleanDataUploader:
     }
 
     def __init__(self):
-        bucket_name = config("AWS_S3_BUCKET", default="openverse-catalog")
+        bucket_name = config("OPENVERSE_BUCKET", default="openverse-catalog")
         self.s3 = self._get_s3_resource()
         self.s3_bucket = self.s3.Bucket(bucket_name)
         self.date = time.strftime("%Y-%m-%d")
