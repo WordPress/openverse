@@ -66,6 +66,7 @@ https://github.com/creativecommons/cccatalog/issues/334)
 import logging
 import os
 import re
+import urllib.parse
 from string import Template
 
 from airflow import DAG
@@ -572,7 +573,9 @@ def _build_partitioned_ingest_workflows(
 
 @task
 def report_aggregate_reingestion_errors(
-    provider_conf: ProviderReingestionWorkflow, dag_run=None
+    provider_conf: ProviderReingestionWorkflow,
+    dag_run=None,
+    conf=None,
 ):
     """
     Report ingestion errors that occurred during a reingestion workflow in
@@ -586,15 +589,28 @@ def report_aggregate_reingestion_errors(
         if f"pull_{media_type_name}_data" in task.task_id
     ]
 
+    base_url = conf.get("webserver", "BASE_URL")
+    dag_run_url = f"{base_url}/dags/{dag_run.dag_id}/grid?dag_run_id={urllib.parse.quote(dag_run.run_id)}"
+
     if not failed_pull_data_tasks:
         raise AirflowSkipException
 
     message = (
-        f"Ingestion errors were encountered in {len(failed_pull_data_tasks)}"
-        f" ingestion days while running the `{provider_conf.dag_id}` DAG. See the"
-        " logs for details:\n"
-    ) + "\n".join(
-        f"  - <{task.log_url}|{task.task_id}>" for task in failed_pull_data_tasks[:5]
+        (
+            f"Ingestion errors were encountered in {len(failed_pull_data_tasks)}"
+            f" ingestion days while running the `{provider_conf.dag_id}` DAG "
+            f"(<{dag_run_url}|link>). See the"
+            " logs for details"
+        )
+        + (
+            " (showing only the first 5):\n"
+            if len(failed_pull_data_tasks) > 5
+            else ":\n"
+        )
+        + "\n".join(
+            f"  - <{task.log_url}|{task.task_id}>"
+            for task in failed_pull_data_tasks[:5]
+        )
     )
 
     slack.send_alert(message, provider_conf.dag_id, "Aggregate Reingestion Error")
