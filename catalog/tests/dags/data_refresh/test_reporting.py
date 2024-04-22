@@ -19,7 +19,7 @@ from data_refresh.reporting import report_record_difference, report_status
         [
             {"src1": 4, "src2": 21},
             {"src1": 4},
-            ["25 → 4", "-21 (-84.0%", "`src1`:+0", "`src2`:-21"],
+            ["25 → 4", "-21 (-84.0%", "`src2`:-21"],
         ],
         [
             {"src1": 4000, "src2": 20},
