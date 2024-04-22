@@ -43,7 +43,7 @@ export const project: TSESLint.Linter.Config = {
     },
     {
       env: { jest: true },
-      files: ["packages/**/*/test", "frontend/test/unit/**"],
+      files: ["packages/js/**/*/test", "frontend/test/unit/**"],
       plugins: ["jest"],
       extends: ["plugin:jest/recommended"],
       rules: {

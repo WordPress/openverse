@@ -44,7 +44,7 @@ jobs:
       frontend: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'frontend') }}
       documentation: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'documentation') }}
       ci_cd: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'ci_cd') }}
-      packages: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'packages') }}
+      js_packages: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'js_packages') }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -600,10 +600,10 @@ jobs:
       - name: Pass
         run: echo 'Playwright tests are skipped because frontend is unchanged.'
 
-  package-checks:
-    name: Run checks for packages/*
+  js-package-checks:
+    name: Run checks for JS packages/*
     if: |
-      needs.get-changes.outputs.packages == 'true'
+      needs.get-changes.outputs.js_packages == 'true'
     runs-on: ubuntu-latest
     needs:
       - get-changes
@@ -630,19 +630,19 @@ jobs:
           setup_python: false
           install_recipe: node-install
 
-      - name: Run packages checks
-        run: pnpm --filter ./packages/* run --aggregate-output ${{ matrix.script }}
+      - name: Run JS packages checks
+        run: pnpm --filter ./packages/js/* run --aggregate-output ${{ matrix.script }}
 
-  # This job runs when `package-checks` doesn't and always passes, thus allowing
-  # PRs to meet the required checks criteria and be merged.
-  bypass-package-checks:
-    name: Run checks for packages/*
+  # This job runs when `js-package-checks` doesn't and always passes, thus
+  # allowing PRs to meet the required checks criteria and be merged.
+  bypass-js-package-checks:
+    name: Run checks for JS packages/*
     if: |
       !cancelled() &&
-      needs.package-checks.result == 'skipped'
+      needs.js-package-checks.result == 'skipped'
     runs-on: ubuntu-latest
     needs:
-      - package-checks
+      - js-package-checks
     strategy:
       fail-fast: false
       matrix:
@@ -652,7 +652,7 @@ jobs:
 
     steps:
       - name: Pass
-        run: echo 'Checks for packages are skipped because packages are unchanged.'
+        run: echo 'Checks for JS packages are skipped because they are unchanged.'
 
   playwright:
     name: Run Playwright tests

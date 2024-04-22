@@ -82,11 +82,11 @@ export = {
       },
     },
     {
-      files: ["packages/**"],
+      files: ["packages/js/**"],
       settings: {
         "import/resolver": {
           typescript: {
-            project: "packages/*/tsconfig.json",
+            project: "packages/js/*/tsconfig.json",
           },
         },
       },

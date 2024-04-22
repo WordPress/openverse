@@ -36,10 +36,10 @@ The easiest way to create a new package is to copy an existing one and modify
 the details to match the needs. To create a new `@openverse/license-parsing`
 package, for example, we would do the following:
 
-1. Copy `packages/eslint-plugin` to `packages/license-parsing`
-2. Update `packages/license-parsing/package.json` to remove unneeded
+1. Copy `packages/js/eslint-plugin` to `packages/js/license-parsing`
+2. Update `packages/js/license-parsing/package.json` to remove unneeded
    dependencies and update the package name
-3. Delete the code in `packages/license-parsing/src`, update any relevant
+3. Delete the code in `packages/js/license-parsing/src`, update any relevant
    configuration (`babel.config.js`, etc) and write the code for the new package
    🎉
 
