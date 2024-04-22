@@ -337,9 +337,10 @@ class CleanDataUploader:
         part_number = self.buffer[field].part
         log.info(f"Uploading file part {part_number} of `{field}` to S3...")
         s3_file_name = f"{self.s3_path}/{self.date}_{field}_{part_number}.tsv"
-        self.s3_bucket.upload_file(f"{field}.tsv", s3_file_name)
+        tsv_file_name = f"{field}.tsv"
+        self.s3_bucket.upload_file(tsv_file_name, s3_file_name)
         self.buffer[field].part += 1
-        os.remove(f"{field}.tsv")
+        os.remove(tsv_file_name)
 
     def save(self, result: dict) -> dict[str, int]:
         for field, cleaned_items in result.items():
@@ -455,6 +456,6 @@ def clean_image_data(table):
     end_time = time.perf_counter()
     cleanup_time = end_time - start_time
     log.info(
-        f"Cleaned all records in {cleanup_time} seconds,"
+        f"Cleaned all records in {cleanup_time:.3f} seconds,"
         f"counts: {cleaned_counts_by_field}"
     )
