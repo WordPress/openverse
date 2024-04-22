@@ -1,3 +1,6 @@
+import logging
+
+from django.conf import settings
 from django.contrib import admin
 from django.contrib.auth.admin import GroupAdmin, UserAdmin
 from django.contrib.auth.models import Group, User
@@ -5,6 +8,8 @@ from django.http.response import HttpResponseRedirect
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
+from elasticsearch import NotFoundError
+from elasticsearch_dsl import Search
 from oauth2_provider.models import AccessToken
 
 from api.admin.forms import UserPreferencesAdminForm
@@ -57,6 +62,29 @@ class MediaReportAdmin(admin.ModelAdmin):
     autocomplete_fields = ("media_obj",)
     actions = None
     media_type = None
+
+    @admin.display(description="Has sensitive text")
+    def has_sensitive_text(self, obj):
+        """
+        Return `True` if the item cannot be found in the filtered index - which means the item
+        was filtered out due to text sensitivity.
+        """
+        if not self.media_type or not obj:
+            return None
+
+        filtered_index = f"{settings.MEDIA_INDEX_MAPPING[self.media_type]}-filtered"
+        try:
+            search = (
+                Search(index=filtered_index)
+                .query("term", identifier=obj.media_obj.identifier)
+                .execute()
+            )
+            if search.hits:
+                return False
+        except NotFoundError:
+            logging.error(f"Could not resolve index {filtered_index}")
+            return None
+        return True
 
     @admin.display(description="Title and creator")
     def title(self, obj):
@@ -160,6 +188,7 @@ class MediaReportAdmin(admin.ModelAdmin):
                         "decision",
                         "reason",
                         "description",
+                        "has_sensitive_text",
                     ],
                 },
             ),
@@ -187,6 +216,7 @@ class MediaReportAdmin(admin.ModelAdmin):
             "created_at",
             "reason",
             "description",
+            "has_sensitive_text",
             "media_display",
             "title",
             "tags",
