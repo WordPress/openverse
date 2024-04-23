@@ -5,7 +5,7 @@
 groups = ["default", "dev", "overrides", "test"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:59a20e5ea52861d51e07a7ecb65ce616af9f937a1a6f33e2587f233a42bc008f"
+content_hash = "sha256:74b23aaad4e685cc28731311ccfa796682759a06372d4dbe7a4c1f9f5c342037"
 
 [[package]]
 name = "adrf"
@@ -1033,7 +1033,7 @@ name = "openverse-attribution"
 version = "0.1.0"
 requires_python = "==3.11.*"
 editable = true
-path = "../py-packages/openverse-attribution"
+path = "../packages/python/openverse-attribution"
 summary = "Provides utilities related to open licenses, tools, and attribution."
 groups = ["default", "overrides"]
 

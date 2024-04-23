@@ -12,7 +12,7 @@ services:
     build:
       target: api
       additional_contexts:
-        - packages=../py-packages
+        - packages=../packages/python
       args: # Automatically inferred from env vars, unless specified
         - SEMANTIC_VERSION=${SEMANTIC_VERSION:-v1.0.0}
         - API_PY_VERSION
@@ -20,7 +20,7 @@ services:
     image: openverse-api
     volumes:
       - .:/api:z
-      - ../py-packages:/py-packages:z
+      - ../packages/python:/packages/python:z
     ports:
       - "50280:50280"
     depends_on:
@@ -39,7 +39,7 @@ services:
     build:
       target: nginx
       additional_contexts:
-        - packages=../py-packages
+        - packages=../packages/python
       args: # Automatically inferred from env vars, unless specified
         - SEMANTIC_VERSION=${SEMANTIC_VERSION:-v1.0.0}
         - API_PY_VERSION
