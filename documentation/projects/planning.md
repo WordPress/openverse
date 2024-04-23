@@ -528,7 +528,8 @@ Here is a description of each project status.
 - `In Kickoff`: Project proposal is in progress.
 - `In Rfc`: Technical implementation plan is in progress.
 - `In Progress`: Under active development.
-- `On Hold`: Stalled or blocked after work started.
+- `On Hold`: Stalled or blocked after work started, or waiting for
+  implementation after planning.
 - `Shipped`: Launched. Success criteria are under evaluation.
 - `Success`: Completed. Success criteria are met.
 - `Rollback`: Completed. Success criteria are not met. Work is reverted.
