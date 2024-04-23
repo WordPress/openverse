@@ -56,6 +56,7 @@ token = custom_extend_schema(
     request={"application/x-www-form-urlencoded": OAuth2TokenRequestSerializer},
     res={
         200: (OAuth2TokenSerializer, auth_token_200_example),
+        401: (NotAuthenticated, None),
         400: (APIException("Invalid credentials", 400), None),
     },
     eg=[auth_token_curl],
