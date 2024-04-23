@@ -50,11 +50,14 @@ export default function robots(_, res) {
     deployEnv === PRODUCTION
       ? `# Block search result pages
 User-agent: *
+Crawl-delay: 10
 Disallow: /search/audio/
 Disallow: /search/image/
 Disallow: /search/
 Disallow: /image/
 Disallow: /audio/
+
+crawl-delay:
 ${AI_ROBOTS_CONTENT}
       `
       : `# Block everyone from the staging site
