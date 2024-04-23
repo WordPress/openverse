@@ -1,5 +1,5 @@
 [project]
-name = "api"
+name = "openverse-api"
 version = "0.0.0" # redundant for application
 description = "API for the Openverse project"
 readme = "README.md"
