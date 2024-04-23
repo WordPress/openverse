@@ -287,61 +287,44 @@ receive a higher score. This has the following advantages:
 For all the reasons and explanation provided above, we should move forward with
 the
 [approach to keep both sets of tags](#keep-both-tags-and-allow-that-to-affect-the-document-score).
+This means that we do not need to make any changes to the data refresh process
+or the Elasticsearch indices at this time.
 
 ## Dependencies
 
-### Feature flags
-
-<!-- List feature flags/environment variables that will be utilised in the development of this plan. -->
+This project does not have any dependencies and can be worked on immediately.
 
 ### Infrastructure
 
 <!-- Describe any infrastructure that will need to be provisioned or modified. In particular, identify associated potential cost changes. -->
 
-### Tools & packages
-
-<!-- Describe any tools or packages which this work might be dependent on. If multiple options are available, try to list as many as are reasonable with your own recommendation. -->
-
-### Other projects or work
-
-<!-- Note any projects this plan is dependent on. -->
+No infrastructure changes will be necessary, we will only be exposing data which
+is already present in the UI.
 
 ## Alternatives
 
 <!-- Describe any alternatives considered and why they were not chosen or recommended. -->
 
-## Design
-
-<!-- Note any design requirements for this plan. -->
-
-## Blockers
-
-<!-- What hard blockers exist that prevent further work on this project? -->
+Several alternatives are proposed as part of this document, which could be
+pursued if any of the outcomes outlined are decided to be more desirable.
 
 ## API version changes
 
 <!-- Explore or mention any changes to the API versioning scheme. -->
 
-## Accessibility
-
-<!-- Are there specific accessibility concerns relevant to this plan? Do you expect new UI elements that would need particular care to ensure they're implemented in an accessible way? Consider also low-spec device and slow internet accessibility, if relevant. -->
+As outlined in [this section](#expose-provider-in-tags), no API version change
+is necessary at this time.
 
 ## Rollback
 
 <!-- How do we roll back this solution in the event of failure? Are there any steps that can not easily be rolled back? -->
 
-## Privacy
-
-<!-- How does this approach protect users' privacy? -->
-
-## Localization
-
-<!-- Any translation or regional requirements? Any differing legal requirements based on user location? -->
-
-## Risks
-
-<!-- What risks are we taking with this solution? Are there risks that once taken can’t be undone?-->
+Since the data is already present in the API database, only code changes would
+be necessary for rolling back this change.
 
 ## Prior art
 
 <!-- Include links to documents and resources that you used when coming up with your solution. Credit people who have contributed to the solution that you wish to acknowledge. -->
+
+- #751
+- #421
