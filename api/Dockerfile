@@ -41,10 +41,10 @@ COPY --from=packages openverse-attribution ./packages/python/openverse-attributi
 COPY pyproject.toml pdm.lock ./
 
 # Pass additional arguments when installing Python packages with PDM
-ARG PDM_INSTALL_ARGS
+ARG PDM_INSTALL_ARGS='--no-editable'
 
 # Install Python dependencies into a new virtualenv
-RUN pdm install --check --frozen-lockfile ${PDM_INSTALL_ARGS:-'--no-editable'}
+RUN pdm install --check --frozen-lockfile $PDM_INSTALL_ARGS
 
 #######
 # API #
