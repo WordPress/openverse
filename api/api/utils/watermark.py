@@ -9,6 +9,7 @@ from rest_framework import status
 from rest_framework.exceptions import APIException
 
 import requests
+from openverse_attribution.attribution import get_attribution_text
 from PIL import Image, ImageDraw, ImageFont, UnidentifiedImageError
 from sentry_sdk import capture_exception
 
@@ -130,36 +131,6 @@ def _frame_image(image, frame, left_margin, top_margin):
 # Attribution
 
 
-def _full_license(image_info):
-    """
-    Get the full license from the image info.
-
-    :param image_info: the information about a particular image
-    :return: the full license text for the image
-    """
-
-    license_name = image_info["license"].upper()
-    license_version = image_info["license_version"].upper()
-    prefix = "" if license_name == "CC0" else "CC "
-
-    return f"{prefix}{license_name} {license_version}"
-
-
-def _get_attribution_text(image_info):
-    """
-    Generate the attribution text from the image info.
-
-    :param image_info: the info pertaining to the licensing of the image
-    :return: the attribution text
-    """
-
-    title = image_info["title"]
-    creator = image_info["creator"]
-    full_license = _full_license(image_info)
-
-    return f'"{title}" by {creator} is licensed under {full_license}.'
-
-
 def _get_attribution_height(text, font):
     draw = ImageDraw.Draw(Image.new("RGB", (0, 0)))
     _, _, _, height = draw.multiline_textbbox((0, 0), text, font)
@@ -219,7 +190,13 @@ def _print_attribution_on_image(img: Image.Image, image_info):
 
     font = ImageFont.truetype(_get_font_path(), size=font_size)
 
-    text = _get_attribution_text(image_info)
+    text = get_attribution_text(
+        image_info["license"],
+        image_info["title"],
+        image_info["creator"],
+        image_info["license_version"],
+        license_url=False,
+    )
     text = _fit_in_width(text, font, new_width)
     attribution_height = _get_attribution_height(text, font)
 

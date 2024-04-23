@@ -1,4 +1,4 @@
-# Node.js packages
+# Subpackages
 
-This service is documented at
-[docs.openverse.org/packages](https://docs.openverse.org/packages/index.html).
+Learn more about these packages in the
+[documentation](https://docs.openverse.org/packages/index.html).

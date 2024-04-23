@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-# Automatically build image using Python version specified in the `Pipfile`.
+# Automatically build image using Python version specified in `pyproject.toml`
 ARG API_PY_VERSION
 
 ##################
@@ -26,23 +26,25 @@ ENV PYTHONUNBUFFERED=1
 ENV PIP_NO_CACHE_DIR=1
 ENV PIP_NO_COLOR=1
 
-# Activate the virtualenv
-ENV PATH="/venv/bin:$PATH"
-
 # - Install system packages needed for building Python dependencies
 # - Create a virtualenv inside `/venv`
-# - Install Pipenv to install Python dependencies
+# - Install PDM to install Python dependencies
 RUN apt-get update \
   && apt-get install -y python3-dev git \
   && rm -rf /var/lib/apt/lists/* \
-  && python -m venv /venv \
-  && pip install --upgrade pipenv
+  && pip install pdm~=2.14
 
-# Copy the Pipenv files into the container
-COPY Pipfile Pipfile.lock ./
+# Copy subpackages from additional build-context 'packages'
+COPY --from=packages openverse-attribution ./packages/python/openverse-attribution
 
-# Install Python dependencies system-wide (uses the active virtualenv)
-RUN pipenv install --system --deploy --dev
+# Copy the Python project manifest and PDM lockfile into the container
+COPY pyproject.toml pdm.lock ./
+
+# Pass additional arguments when installing Python packages with PDM
+ARG PDM_INSTALL_ARGS='--no-editable'
+
+# Install Python dependencies into a new virtualenv
+RUN pdm install --check --frozen-lockfile $PDM_INSTALL_ARGS
 
 #######
 # API #
@@ -58,14 +60,14 @@ ENV PIP_NO_CACHE_DIR=1
 ENV PIP_NO_COLOR=1
 
 # Activate the virtualenv
-ENV PATH="/venv/bin:$PATH"
+ENV PATH="/.venv/bin:$PATH"
 
 WORKDIR /api
 
 ADD api/utils/fonts/SourceSansPro-Bold.ttf /usr/share/fonts/truetype/SourceSansPro-Bold.ttf
 
 # Copy virtualenv from the builder image
-COPY --from=builder /venv /venv
+COPY --from=builder /.venv /.venv
 
 # Copy `audiowaveform` dependencies. This is unreliable as we use
 # The `latest` version of the audiowaveform image which may introduce
@@ -96,6 +98,7 @@ RUN useradd --create-home opener \
 USER opener
 
 # Copy code into the final image
+COPY --chown=opener --from=packages openverse-attribution /packages/python/openverse-attribution/
 COPY --chown=opener . /api/
 
 # Collect static assets, these are used by the next stage, `nginx`

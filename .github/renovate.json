@@ -51,7 +51,7 @@
       "addLabels": ["🧱 stack: frontend"]
     },
     {
-      "matchFileNames": ["api/**"],
+      "matchFileNames": ["{api,packages/python}/**"],
       "addLabels": ["🧱 stack: api"]
     },
     {
@@ -73,7 +73,8 @@
         "api/**",
         "catalog/**",
         "ingestion_server/**",
-        "documentation/**"
+        "documentation/**",
+        "packages/python/openverse-attribution/**"
       ]
     },
     {

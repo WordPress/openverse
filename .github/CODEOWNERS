@@ -4,6 +4,7 @@ archive/    @WordPress/openverse-catalog
 dag-sync.sh @WordPress/openverse-catalog
 
 api/                @WordPress/openverse-api
+packages/python/    @WordPress/openverse-api
 ingestion_server/   @WordPress/openverse-api
 sample_data/        @WordPress/openverse-api
 load_sample_data.sh @WordPress/openverse-api

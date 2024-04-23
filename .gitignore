@@ -17,6 +17,7 @@ logs/
 # Python environments
 env/
 venv/
+.venv/
 pip-log.txt
 
 # Python
@@ -65,3 +66,7 @@ ingestion_server.log
 *.tsbuildinfo
 
 dist
+
+# PDM
+.pdm-python
+.pdm-build
