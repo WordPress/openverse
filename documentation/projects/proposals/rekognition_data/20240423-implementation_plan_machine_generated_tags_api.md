@@ -29,7 +29,8 @@
 The project proposal linked above endeavors to add a new set of
 machine-generated tags to our catalog database as its end goal, however we
 [already have records in our dataset that include machine-generated tags](https://github.com/WordPress/openverse/pull/3948#discussion_r1552301581).
-Nothing currently exists to distinguish these tags from creator-generated ones.
+Nothing currently exists to distinguish these tags from creator-generated ones,
+except for the presence of an `accuracy` value alongside the tag name.
 
 This implementation plan will describe how we plan on conveying
 machine-generated tags in the API, and also how they will be handled when
@@ -42,9 +43,9 @@ that is the purview of #4040.
 <!-- List any succinct expected products from this implementation plan. -->
 
 When this work is completed, it is expected that we will be able to clearly
-distinguish which tags returned by the API are machine-generated. We will also
-have a clearly documented approach for handling duplicate tags and how this
-affects search results.
+distinguish which tags returned by the API are machine-generated and where those
+tags came from. We will also have a clearly documented approach for handling
+duplicate tags and how this affects search results.
 
 ## Step-by-step plan
 
@@ -75,9 +76,9 @@ For each step description, ensure the heading includes an obvious reference to t
 
 ### Expose provider in tags
 
-This step will be relatively straightforward, as the provider information for
-tags already exists in the API database. In order to have them show up in the
-API results, we would need to modify the
+This step will be straightforward, as the provider information for tags already
+exists in the API database. In order to have them show up in the API results, we
+would need to modify the
 [`TagSerializer`](https://github.com/WordPress/openverse/blob/3ed38fc4b138af2f6ac03fcc065ec633d6905d73/api/api/serializers/media_serializers.py#L442)
 to include the `provider` field as well. This would change the returned `tags`
 entry for a result from:
@@ -167,7 +168,7 @@ distinguish the different tag sources, which will be established in #4039.
 ### Modify Elasticsearch document scoring
 
 We already have records in our dataset that include duplicate tags (one
-creator-generated tag, and one machine-generated tag,
+creator-generated tag, and one machine-generated tag, such as this
 [example with "light" duplicated](https://api.openverse.engineering/v1/images/a487f4eb-ce05-43e1-acae-73c4ab090cc9/)).
 As we grow the number of machine-labeling providers we apply to our data, it's
 possible we will end up with multiple copies of a single tag from different
@@ -213,7 +214,7 @@ taking said approach.
 
 #### Prefer creator-generated tags and exclude machine-generated tags
 
-The easiest way to handle this approach would be to add some logic to the data
+The easiest way to handle this approach would be to add logic to the data
 refresh's [tag processing step][parse_tags_logic] which would exclude any tags
 that did not match the document's provider. However, this would also mean that
 the machine-generated tags would not be able to contribute to a document's
@@ -240,7 +241,7 @@ document's provider. This feels like the wrong approach for a few reasons:
   [GLAM institutions](<https://en.wikipedia.org/wiki/GLAM_(cultural_heritage)>).
   These groups often go to great lengths to appropriately catalog and tag the
   works that we ingest, and excluding those tags from being searched against
-  would go against that effort.
+  would be counter to that effort.
 - Machine-generated labeling is inherently biased, and may be incorrect in some
   cases.
 
@@ -265,7 +266,7 @@ tag for "cat" were present.
 [^rank_feature]:
     We already have a number of `rank_feature` fields, which could be used as a
     basis for this approach:
-    https://github.com/WordPress/openverse/blob/3f3376cfea8a4355229d4fb7d3a69a299de8cba4/ingestion_server/ingestion_server/es_mapping.py#L96-L104
+    <https://github.com/WordPress/openverse/blob/3f3376cfea8a4355229d4fb7d3a69a299de8cba4/ingestion_server/ingestion_server/es_mapping.py#L96-L104>
 
 #### Keep both tags and allow that to affect the document score
 
@@ -273,8 +274,8 @@ This is the current approach, and also the simplest: leave the default
 `similarity` setting for `tags` and allow a result with duplicate tags to
 receive a higher score. This has the following advantages:
 
-- No action on the Elasticsearch index settings is needed (save more
-  documentation).
+- No action on the Elasticsearch index settings is needed (save for
+  documentation making this change explicit).
 - Machine-generated labels can help boost images with content that's relevant
   for searches even if the other fields (`title`/`description`/`tags`) do not
   mention the image content.
