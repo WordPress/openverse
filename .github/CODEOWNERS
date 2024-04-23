@@ -1,6 +1,5 @@
 # Specific assignments for the 'openverse-catalog' group
 catalog/    @WordPress/openverse-catalog
-archive/    @WordPress/openverse-catalog
 dag-sync.sh @WordPress/openverse-catalog
 
 api/                @WordPress/openverse-api
