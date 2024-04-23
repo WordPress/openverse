@@ -27,3 +27,7 @@ src/locales/scripts/wp-locales.json
 /.npmrc
 /.pnpmfile.cjs
 /pnpm-lock.yaml
+
+# To prevent accidentally adding a hardcoded robots.txt, see
+# /src/server-middleware/robots.js for the robots.txt file.
+src/static/robots.txt

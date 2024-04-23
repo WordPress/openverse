@@ -1,5 +1,45 @@
 const { LOCAL, PRODUCTION } = require("../constants/deploy-env")
 
+const AI_ROBOTS_CONTENT = `
+# Block known AI crawlers
+User-agent: GPTBot
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Omgilibot
+Disallow: /
+
+User-agent: Omgili
+Disallow: /
+
+User-agent: FacebookBot
+Disallow: /
+
+User-agent: Diffbot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: ImagesiftBot
+Disallow: /
+
+User-agent: cohere-ai
+Disallow: /
+
+`
+
 /**
  * Send the correct robots.txt information per-environment.
  */
@@ -15,8 +55,9 @@ Disallow: /search/image/
 Disallow: /search/
 Disallow: /image/
 Disallow: /audio/
+${AI_ROBOTS_CONTENT}
       `
-      : `# Block crawlers from the staging site
+      : `# Block everyone from the staging site
 User-agent: *
 Disallow: /
 `
