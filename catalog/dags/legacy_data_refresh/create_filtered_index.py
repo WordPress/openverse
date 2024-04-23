@@ -24,7 +24,7 @@ from airflow.utils.trigger_rule import TriggerRule
 
 from common import ingestion_server
 from common.constants import XCOM_PULL_TEMPLATE
-from data_refresh.data_refresh_types import DataRefresh
+from legacy_data_refresh.data_refresh_types import DataRefresh
 
 
 def create_and_populate_filtered_index(
