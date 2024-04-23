@@ -343,20 +343,27 @@ def create_report_load_completion(
     ingestion_metrics,
     dated,
 ):
+    is_reingestion_workflow = "reingestion" in dag_id
+
+    op_kwargs = {
+        "dag_id": dag_id,
+        "media_types": media_types,
+        "duration": ingestion_metrics["duration"],
+        "record_counts_by_media_type": ingestion_metrics["record_counts_by_media_type"],
+        "dated": dated,
+        "is_reingestion_workflow": is_reingestion_workflow,
+    }
+
+    if not is_reingestion_workflow:
+        op_kwargs = op_kwargs | {
+            "date_range_start": "{{ data_interval_start | ds }}",
+            "date_range_end": "{{ data_interval_end | ds }}",
+        }
+
     return PythonOperator(
         task_id="report_load_completion",
         python_callable=reporting.report_completion,
-        op_kwargs={
-            "dag_id": dag_id,
-            "media_types": media_types,
-            "duration": ingestion_metrics["duration"],
-            "record_counts_by_media_type": ingestion_metrics[
-                "record_counts_by_media_type"
-            ],
-            "dated": dated,
-            "date_range_start": "{{ data_interval_start | ds }}",
-            "date_range_end": "{{ data_interval_end | ds }}",
-        },
+        op_kwargs=op_kwargs,
         trigger_rule=TriggerRule.ALL_DONE,
     )
 

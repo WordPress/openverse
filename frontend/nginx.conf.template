@@ -81,5 +81,20 @@ server {
         proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_set_header X-Forwarded-Host  $host;
+
+        proxy_intercept_errors on;
+        error_page 503 = @custom_424;  # Redirect 503 errors when Plausible is down
+    }
+
+    # Replace 503 Plausible errors when the service is down with a 424 error.
+    location @custom_424 {
+        internal;
+        add_header Content-Type "application/json";
+
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host  $host;
+
+        return 424 '{"error": "Failed Dependency", "message": "Plausible service unavailable."}';
     }
 }

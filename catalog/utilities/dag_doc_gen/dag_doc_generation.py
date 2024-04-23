@@ -57,6 +57,23 @@ MIDAMBLE = """
 The following is documentation associated with each DAG (where available):
 
 """
+# Mapping of terms in DAG IDs to collapse into a single term when displaying
+# the single-documentation section.
+DAG_ID_TERMS_TO_COLLAPSE = {
+    "image": "{media_type}",
+    "audio": "{media_type}",
+    "production": "{environment}",
+    "staging": "{environment}",
+}
+# DAG IDs to ignore when collapsing reference documentation for a mapped term
+DAG_IDS_TO_IGNORE_COLLAPSE = {
+    "recreate_full_staging_index",
+    "staging_database_restore",
+    "create_proportional_by_source_staging_index",
+}
+REINGESTION_SPECIFIC_MAPPING = {
+    "wikimedia_reingestion_workflow": "wikimedia_commons_workflow"
+}
 
 # Typing
 DagMapping = dict[str, DAG]
@@ -69,6 +86,7 @@ class DagInfo(NamedTuple):
     type_: str
     dated: bool
     provider_workflow: ProviderWorkflow | None
+    mapped_dag_id: str
 
 
 def load_dags(dag_folder: str) -> DagMapping:
@@ -112,6 +130,26 @@ def fix_headings(doc: str) -> str:
     return doc
 
 
+def determine_mapped_dag_id(dag_id: str) -> str:
+    """
+    Determine the mapped DAG ID for the provided DAG ID.
+
+    This is used to collapse multiple references to the same DAG documentation into
+    a single definition.
+    """
+    if dag_id in DAG_IDS_TO_IGNORE_COLLAPSE:
+        return dag_id
+    if dag_id in REINGESTION_SPECIFIC_MAPPING:
+        return REINGESTION_SPECIFIC_MAPPING[dag_id]
+    if "_reingestion" in dag_id:
+        return dag_id.replace("_reingestion", "")
+    parts = dag_id.split("_")
+    for idx, part in enumerate(parts):
+        if part in DAG_ID_TERMS_TO_COLLAPSE:
+            parts[idx] = DAG_ID_TERMS_TO_COLLAPSE[part]
+    return "_".join(parts)
+
+
 def get_dags_info(dags: DagMapping) -> list[DagInfo]:
     """
     Convert the provided DAG ID -> DAG mapping into a list of DagInfo instances.
@@ -139,6 +177,7 @@ def get_dags_info(dags: DagMapping) -> list[DagInfo]:
                 type_=type_,
                 dated=dated,
                 provider_workflow=provider_workflow,
+                mapped_dag_id=determine_mapped_dag_id(dag_id),
             )
         )
 
@@ -146,7 +185,10 @@ def get_dags_info(dags: DagMapping) -> list[DagInfo]:
 
 
 def generate_type_subsection(
-    name: str, dags_info: list[DagInfo], is_provider: bool
+    name: str,
+    dags_info: list[DagInfo],
+    is_provider: bool,
+    dag_by_doc_md: dict[str, str],
 ) -> str:
     """Generate the documentation for a "DAGs by type" subsection."""
     log.info(f"Building subsection for '{name}'")
@@ -166,12 +208,12 @@ def generate_type_subsection(
     text += header + "\n"
     text += "| " + " | ".join(["---"] * column_count) + " |"
 
-    for dag in dags_info:
+    for dag in sorted(dags_info, key=lambda d: d.mapped_dag_id):
         dag_id = f"`{dag.dag_id}`"
         # If we have documentation for the DAG, we'll want to link to it within the
         # markdown, so we reference it using the heading text (the DAG ID)
         if dag.doc:
-            dag_id = f"[{dag_id}](#{dag.dag_id})"
+            dag_id = f"[{dag_id}](#{dag_by_doc_md[dag.doc]})"
         text += f"\n| {dag_id} | `{dag.schedule}` |"
         if is_provider:
             text += f" `{dag.dated}` | {', '.join(dag.provider_workflow.media_types)} |"
@@ -184,7 +226,7 @@ def generate_type_subsection(
 def generate_single_documentation(dag: DagInfo) -> str:
     """Generate the documentation for a single DAG."""
     return f"""
-### `{dag.dag_id}`
+### `{dag.mapped_dag_id}`
 
 {dag.doc}
 
@@ -210,7 +252,14 @@ def generate_dag_doc(dag_folder: Path = DAG_FOLDER) -> str:
     for dag in dags_info:
         dags_by_type[dag.type_].append(dag)
 
+    dag_by_doc_md: dict[str, str] = {}
     for type_, dags in sorted(dags_by_type.items()):
+        for dag in dags:
+            if dag.doc not in dag_by_doc_md:
+                # Sphinx removes the brackets from heading references
+                dag_by_doc_md[dag.doc] = dag.mapped_dag_id.replace("{", "").replace(
+                    "}", ""
+                )
         # Create a more human-readable name
         name = type_.replace("_", " ").replace("-", " ").title()
         # Special case for provider tables since they have extra information
@@ -219,23 +268,25 @@ def generate_dag_doc(dag_folder: Path = DAG_FOLDER) -> str:
         # sub-list as part of a table of contents, but defer adding the sub-lists until
         # all are generated.
         text += f" 1. [{name}](#{type_.replace('_', '-')})\n"
-        dag_types.append(generate_type_subsection(name, dags, is_provider))
+        dag_types.append(
+            generate_type_subsection(name, dags, is_provider, dag_by_doc_md)
+        )
 
     text += "\n" + "\n\n".join(dag_types)
 
     text += MIDAMBLE
-    dag_docs = []
-    for dag in sorted(dags_info, key=lambda d: d.dag_id):
+    dag_docs = set()
+    for dag in sorted(dags_info, key=lambda d: d.mapped_dag_id):
         # This section only contains subsections for DAGs where we have documentation
         if not dag.doc:
             continue
         # Similar to the DAGs-by-type section, we add the reference to a table of
         # contents first, and then defer adding all the generated individual docs until
         # the very end.
-        text += f" 1. [`{dag.dag_id}`](#{dag.dag_id})\n"
-        dag_docs.append(generate_single_documentation(dag))
+        text += f" 1. [`{dag.dag_id}`](#{dag_by_doc_md[dag.doc]})\n"
+        dag_docs.add(generate_single_documentation(dag))
 
-    text += "\n" + "".join(dag_docs)
+    text += "\n" + "\n----\n\n".join(sorted(dag_docs))
 
     # Normalize the newlines at the end of the file and add one more to make sure
     # our pre-commit checks are happy!

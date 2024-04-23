@@ -11,7 +11,7 @@ load_sample_data.sh @WordPress/openverse-api
 pyproject.toml      @WordPress/openverse-api
 
 frontend/           @WordPress/openverse-frontend
-packages/           @WordPress/openverse-frontend
+packages/js/        @WordPress/openverse-frontend
 .eslintignore       @WordPress/openverse-frontend
 .eslintrc.js        @WordPress/openverse-frontend
 .npmrc              @WordPress/openverse-frontend

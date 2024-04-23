@@ -97,6 +97,19 @@ in the
 as well as a corresponding test file. Complete the TODOs detailed in the
 generated files to implement behavior specific to your API.
 
+You can run the provider script directly from the command line via a just
+recipe. This will open a bash shell inside the docker stack of the catalog.
+
+```
+just catalog/run
+```
+
+Now you can just run the script like so:
+
+```
+python catalog/dags/providers/provider_api_scripts/<script_you_want_to_run>.py
+```
+
 Some APIs may not fit perfectly into the established `ProviderDataIngester`
 pattern. For advanced use cases and examples of how to modify the ingestion
 flow, see the

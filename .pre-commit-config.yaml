@@ -62,8 +62,8 @@ repos:
         # Versions must be manually kept in sync with those in the pnpm-lock.yaml file to prevent drift.
         additional_dependencies:
           - prettier@3.2.5
-          - prettier-plugin-tailwindcss@0.5.11
-          - typescript@5.4.4
+          - prettier-plugin-tailwindcss@0.5.14
+          - typescript@5.4.5
 
   - repo: https://github.com/koalaman/shellcheck-precommit
     rev: v0.10.0
@@ -118,14 +118,14 @@ repos:
     hooks:
       - id: types
         name: types
-        files: ^(frontend|packages)/.*$
+        files: ^(frontend|packages/js)/.*$
         entry: bash -c 'pnpm run -r types'
         language: system
         pass_filenames: false
 
       - id: eslint
         name: eslint
-        files: (frontend|automations|packages).*?\.(js|ts|vue|json5|json)$
+        files: (frontend|automations|packages/js).*?\.(js|ts|vue|json5|json)$
         "types": [file] # ESLint only accepts [javascript] by default.
         language: system
         pass_filenames: false
@@ -133,7 +133,7 @@ repos:
 
       - id: test:unit
         name: test:unit
-        files: ^(frontend|packages)/.*$
+        files: ^(frontend|packages/js)/.*$
         entry: bash -c 'pnpm run -r test:unit'
         language: system
         pass_filenames: false

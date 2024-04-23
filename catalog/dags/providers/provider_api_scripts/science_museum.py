@@ -115,14 +115,14 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
         ):
             return None
 
-        title = attributes.get("summary_title")
+        title = ScienceMuseumDataIngester._get_first_list_value("title", attributes)
         creator = self._get_creator_info(attributes)
         metadata = self._get_metadata(attributes)
         images = []
         for image_data in multimedia:
-            if not (foreign_identifier := image_data.get("admin", {}).get("uid")):
+            if not (foreign_identifier := image_data.get("@admin", {}).get("uid")):
                 continue
-            processed = image_data.get("processed")
+            processed = image_data.get("@processed")
             if not isinstance(processed, dict):
                 continue
             (
@@ -130,6 +130,7 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
                 height,
                 width,
                 filetype,
+                filesize,
             ) = self._get_image_info(processed)
             if not url:
                 continue
@@ -144,6 +145,7 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
                 "height": height,
                 "width": width,
                 "filetype": filetype,
+                "filesize": filesize,
                 "license_info": license_info,
                 "creator": creator,
                 "title": title,
@@ -154,14 +156,10 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
 
     @staticmethod
     def _get_creator_info(attributes):
-        creator_info = None
-        if (life_cycle := attributes.get("lifecycle")) is not None:
-            creation = life_cycle.get("creation")
-            if isinstance(creation, list):
-                maker = creation[0].get("maker")
-                if isinstance(maker, list):
-                    creator_info = maker[0].get("summary_title")
-        return creator_info
+        if not (maker := attributes.get("creation", {}).get("maker", [])):
+            return None
+
+        return maker[0].get("summary", {}).get("title", None)
 
     @staticmethod
     def check_url(url: str | None) -> str | None:
@@ -169,7 +167,7 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
             return None
         if url.startswith("http"):
             return url
-        return f"https://coimages.sciencemuseumgroup.org.uk/images/{url}"
+        return f"https://coimages.sciencemuseumgroup.org.uk/{url}"
 
     @staticmethod
     def _get_dimensions(image_data: dict) -> tuple[int | None, int | None]:
@@ -191,15 +189,25 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
     @staticmethod
     def _get_image_info(
         processed: dict,
-    ) -> tuple[str | None, int | None, int | None, str | None]:
-        height, width, filetype = None, None, None
+    ) -> tuple[str | None, int | None, int | None, str | None, int | None]:
+        height, width, filetype, filesize = None, None, None, None
         image_data = processed.get("large") or processed.get("medium", {})
 
         url = ScienceMuseumDataIngester.check_url(image_data.get("location"))
         if url:
             filetype = image_data.get("format")
             height, width = ScienceMuseumDataIngester._get_dimensions(image_data)
-        return url, height, width, filetype
+
+            if not (
+                filesize := int(
+                    image_data.get("measurements", {})
+                    .get("filesize", {})
+                    .get("value", 0)
+                )
+            ):
+                filesize = None
+
+        return url, height, width, filetype, filesize
 
     @staticmethod
     def _get_first_list_value(key: str, attributes: dict) -> str | None:
@@ -214,7 +222,7 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
         for attr_key, metadata_key in [
             ("identifier", "accession number"),
             ("name", "name"),
-            ("categories", "category"),
+            ("category", "category"),
             ("description", "description"),
         ]:
             val = ScienceMuseumDataIngester._get_first_list_value(attr_key, attributes)
@@ -223,7 +231,7 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
 
         creditline = attributes.get("legal")
         if isinstance(creditline, dict):
-            line = creditline.get("credit_line")
+            line = creditline.get("credit")
             if line is not None:
                 metadata["creditline"] = line
 
@@ -233,9 +241,9 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
     def _get_license_info(image_data) -> LicenseInfo | None:
         # some items do not return license anywhere, but in the UI
         # they look like CC
-        rights = image_data.get("source", {}).get("legal", {}).get("rights")
+        rights = image_data.get("legal", {}).get("rights")
         if isinstance(rights, list):
-            license_name = rights[0].get("usage_terms")
+            license_name = rights[0].get("licence")
             if not license_name:
                 return None
             license_name = license_name.lower()
