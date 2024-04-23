@@ -118,14 +118,14 @@ repos:
     hooks:
       - id: types
         name: types
-        files: ^(frontend|packages)/.*$
+        files: ^(frontend|packages/js)/.*$
         entry: bash -c 'pnpm run -r types'
         language: system
         pass_filenames: false
 
       - id: eslint
         name: eslint
-        files: (frontend|automations|packages).*?\.(js|ts|vue|json5|json)$
+        files: (frontend|automations|packages/js).*?\.(js|ts|vue|json5|json)$
         "types": [file] # ESLint only accepts [javascript] by default.
         language: system
         pass_filenames: false
@@ -133,7 +133,7 @@ repos:
 
       - id: test:unit
         name: test:unit
-        files: ^(frontend|packages)/.*$
+        files: ^(frontend|packages/js)/.*$
         entry: bash -c 'pnpm run -r test:unit'
         language: system
         pass_filenames: false
