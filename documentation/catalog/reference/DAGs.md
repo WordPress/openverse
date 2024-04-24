@@ -184,13 +184,11 @@ The following is documentation associated with each DAG (where available):
 
 #### Add license URL
 
-Add `license_url` to all rows that have `NULL` in their `meta_data` fields. This
-PR sets the meta_data value to "{license_url: https://... }", where the url is
-constructed from the `license` and `license_version` columns.
+Add `license_url` to rows without one in their `meta_data` fields. This PR
+merges the `meta_data` value with "{license_url: https://... }", where the url
+is constructed from the `license` and `license_version` columns.
 
-This is a maintenance DAG that should be run once. If all the null values in the
-`meta_data` column are updated, the DAG will only run the first and the last
-step, logging the statistics.
+This is a maintenance DAG that should be run once.
 
 ----
 
