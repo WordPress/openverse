@@ -54,20 +54,16 @@ def run_sql(
 
 
 @task
-def get_license_groups(dag_task: AbstractOperator = None) -> list[tuple[str, str]]:
+def get_license_groups(
+    query: str, dag_task: AbstractOperator = None
+) -> list[tuple[str, str]]:
     """
     Get license groups of rows that don't have a `license_url` in their
     `meta_data` field.
 
     :return: List of (license, version) tuples.
     """
-
-    select_query = dedent("""
-        SELECT license, license_version, count(identifier)
-        FROM image WHERE meta_data->>'license_url' IS NULL
-        GROUP BY license, license_version
-    """)
-    license_groups = run_sql(select_query, dag_task=dag_task)
+    license_groups = run_sql(query, dag_task=dag_task)
 
     total_nulls = sum(group[2] for group in license_groups)
     licenses_detailed = "\n".join(
@@ -148,22 +144,30 @@ def update_license_url(
 
 
 @task(trigger_rule=TriggerRule.ALL_DONE)
-def report_completion(updated, dag_task: AbstractOperator = None):
+def report_completion(updated, query: str, dag_task: AbstractOperator = None):
     """
     Check for null in `meta_data` and send a message to Slack with the statistics
     of the DAG run.
 
     :param updated: total number of records updated
+    :param query: SQL query to get the count of records left with `license_url` as NULL
     :param dag_task: automatically passed by Airflow, used to set the execution timeout.
     """
     total_updated = sum(updated) if updated else 0
-    query = "SELECT COUNT(*) from image WHERE meta_data->>'license_url' IS NULL"
-    null_counts = run_sql(query, method="get_first", dag_task=dag_task)[0]
+
+    license_groups = run_sql(query, dag_task=dag_task)
+    total_nulls = sum(group[2] for group in license_groups)
+    licenses_detailed = "\n".join(
+        f"{group[0]} \t{group[1]} \t{group[2]}" for group in license_groups
+    )
 
     message = f"""
     `{DAG_ID}` DAG run completed. Updated {total_updated} record(s) with `license_url` in the
-    `meta_data` field. {null_counts} record(s) left pending.
+    `meta_data` field. Found {len(license_groups)} license groups with {total_nulls} record(s) left pending.
     """
+    if total_nulls != 0:
+        message += f"\nCount per license-version:\n{licenses_detailed}"
+
     slack.send_message(
         message,
         username="Airflow DAG Data Normalization - license_url",
@@ -189,7 +193,7 @@ def report_failed_license_pairs(dag_run=None):
     message = (
         f"""
     One or more license pairs could not be found in the license map while running
-    the `{DAG_ID} DAG. See the logs for more details:
+    the `{DAG_ID}` DAG. See the logs for more details:
     """
     ) + "\n".join(
         f"  - <{dag_task.log_url}|{dag_task.task_id}>" for dag_task in skipped_tasks[:5]
@@ -223,12 +227,17 @@ def report_failed_license_pairs(dag_run=None):
     },
 )
 def add_license_url():
-    license_groups = get_license_groups()
+    query = dedent("""
+        SELECT license, license_version, count(identifier)
+        FROM image WHERE meta_data->>'license_url' IS NULL
+        GROUP BY license, license_version
+    """)
+
+    license_groups = get_license_groups(query)
     updated = update_license_url.partial(batch_size="{{ params.batch_size }}").expand(
         license_group=license_groups
     )
-    # save_to_s3(invalid_items)
-    report_completion(updated)
+    report_completion(updated, query)
     updated >> report_failed_license_pairs()
 
 
