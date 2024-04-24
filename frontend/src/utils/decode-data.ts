@@ -1,3 +1,16 @@
+const double_backslash_escaped_regex = /(\\x)([\da-f]{2})|(\\u)([\da-f]{4})/gi
+const no_backslash_escaped_regex = /(?<!\\)(u)([\da-f]{4})/gi
+
+const encodeGroup = (prefix: string, group: string) => {
+  try {
+    const encoded = String.fromCharCode(parseInt(group, 16))
+    encodeURIComponent(encoded)
+    return decodeURI(encoded)
+  } catch (e) {
+    return prefix + group
+  }
+}
+
 /**
  * Decodes some edge cases where ASCII/Unicode characters with escape sequences
  * have escaped backslashes, which prevents them from rendering. This function
@@ -10,19 +23,16 @@ export const decodeData = (data = ""): string => {
     return ""
   }
 
-  try {
-    const regexes = [
-      /\\x([\da-f]{2})/gi,
-      /\\u([\da-f]{4})/gi,
-      /u([\da-f]{4})/gi,
-    ]
-    regexes.forEach((regex) => {
-      data = data.replace(regex, (_, grp) =>
-        String.fromCharCode(parseInt(grp, 16))
-      )
+  const decodedData = data.replace(
+    double_backslash_escaped_regex,
+    (_match, g1, g2, g3, g4) => {
+      return encodeGroup(g1 || g3, g2 || g4)
+    }
+  )
+  if (decodedData === data) {
+    return data.replace(no_backslash_escaped_regex, (_match, g1, g2) => {
+      return encodeGroup(g1, g2)
     })
-    return decodeURI(data)
-  } catch (e) {
-    return data
   }
+  return decodedData
 }

@@ -42,4 +42,10 @@ describe("decodeData", () => {
 
     expect(decodeData(data)).toBe(data)
   })
+
+  it("shouldn't return non-uri-encodable characters", () => {
+    const data = "ciudaddelasartesylasciencias"
+
+    expect(decodeData(data)).toBe(data)
+  })
 })
