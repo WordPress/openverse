@@ -19,7 +19,8 @@ from data_refresh.reporting import report_record_difference, report_status
         [
             {"src1": 4, "src2": 21},
             {"src1": 4},
-            ["25 → 4", "-21 (-84.0%", "`src1`:+0", "`src2`:-21"],
+            # Unchanged source count shouldn't show up
+            ["25 → 4", "-21 (-84.0%", "`src2`:-21"],
         ],
         [
             {"src1": 4000, "src2": 20},
@@ -36,6 +37,7 @@ from data_refresh.reporting import report_record_difference, report_status
             {},
             ["20 → 0", "-20 (-100.0%", "`src1`:-10", "`src2`:-10"],
         ],
+        [{"src1": 4}, {"src1": 4}, ["Sources not listed had no change in count"]],
         [{}, {}, ["Both indices missing? No breakdown to show"]],
     ],
 )

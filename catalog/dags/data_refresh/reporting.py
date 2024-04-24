@@ -29,8 +29,10 @@ def report_record_difference(before: dict, after: dict, media_type: str, dag_id:
     breakdown_diff = {k: after.get(k, 0) - before.get(k, 0) for k in all_keys}
     if breakdown_diff:
         breakdown_message = "\n".join(
-            f"`{k}`:{v:+,}" for k, v in breakdown_diff.items()
+            f"`{k}`:{v:+,}" for k, v in breakdown_diff.items() if v != 0
         )
+        if any(v == 0 for v in breakdown_diff.values()):
+            breakdown_message += "\n_Sources not listed had no change in count_"
     else:
         breakdown_message = "Both indices missing? No breakdown to show"
 
@@ -40,8 +42,8 @@ _Note: All values are retrieved from elasticsearch_
 *Record count difference for `{media_type}`*: {total_before:,} → {total_after:,}
 *Change*: {count_diff:+,} ({percent_diff:+}% Δ)
 *Breakdown of changes*:
+{breakdown_message}
 """
-    message += breakdown_message
     slack.send_message(
         text=message, dag_id=dag_id, username="Data refresh record difference"
     )
