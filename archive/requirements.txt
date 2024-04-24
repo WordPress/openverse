@@ -1,5 +1,0 @@
-boto3
-warcio
-ujson
-requests
-BeautifulSoup4
