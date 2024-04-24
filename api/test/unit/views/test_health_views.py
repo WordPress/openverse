@@ -1,8 +1,9 @@
 from unittest import mock
 
+from django.db.utils import OperationalError
+
 import pook
 import pytest
-from psycopg import OperationalError
 
 
 def mock_health_response(status="green", timed_out=False):

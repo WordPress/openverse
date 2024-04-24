@@ -1,12 +1,11 @@
 from django.conf import settings
 from django.db import connection
+from django.db.utils import OperationalError
 from rest_framework import status
 from rest_framework.exceptions import APIException
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from psycopg import OperationalError
 
 from api.utils.throttle import ExemptOAuth2IdRateThrottle, HealthcheckAnonRateThrottle
 
@@ -41,7 +40,7 @@ class HealthCheck(APIView):
         try:
             connection.ensure_connection()
         except OperationalError as err:
-            raise DatabaseHealthCheckException(str(err))
+            raise DatabaseHealthCheckException(f"Database unavailable: {err}")
 
     @staticmethod
     def _check_es() -> None:
