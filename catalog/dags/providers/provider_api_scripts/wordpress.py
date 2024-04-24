@@ -5,7 +5,7 @@ ETL Process:            Use the API to identify all openly licensed media.
 
 Output:                 TSV file containing the media metadata.
 
-Notes:                  https://wordpress.org/photos/wp-json/wp/v2
+Notes:                  <https://wordpress.org/photos/wp-json/wp/v2>
                         Provide photos, media, users and more related resources.
                         No rate limit specified.
 """
