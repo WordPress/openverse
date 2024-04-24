@@ -138,7 +138,7 @@ to the following:
   {
     "name": "achievement",
     "accuracy": 0.94971,
-    "provider": "flickr"
+    "provider": "clarifai"
   },
   {
     "name": "box",
