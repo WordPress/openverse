@@ -2,6 +2,7 @@ from unittest import mock
 
 import pook
 import pytest
+from psycopg import OperationalError
 
 
 def mock_health_response(status="green", timed_out=False):
@@ -29,6 +30,16 @@ def test_health_check_calls__check_db(api_client):
         res = api_client.get("/healthcheck/")
         assert res.status_code == 200
         mock_check_db.assert_called_once()
+
+
+def test_health_check_calls__check_db_with_failure(api_client):
+    with mock.patch(
+        "api.views.health_views.connection.ensure_connection"
+    ) as mock_ensure_connection:
+        mock_ensure_connection.side_effect = OperationalError("Database has gone away")
+        res = api_client.get("/healthcheck/")
+        assert res.status_code == 503
+        mock_ensure_connection.assert_called_once()
 
 
 def test_health_check_es_timed_out(api_client):

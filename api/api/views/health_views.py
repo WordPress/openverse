@@ -6,10 +6,16 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from psycopg import OperationalError
+
 from api.utils.throttle import ExemptOAuth2IdRateThrottle, HealthcheckAnonRateThrottle
 
 
 class ElasticsearchHealthcheckException(APIException):
+    status_code = status.HTTP_503_SERVICE_UNAVAILABLE
+
+
+class DatabaseHealthCheckException(APIException):
     status_code = status.HTTP_503_SERVICE_UNAVAILABLE
 
 
@@ -32,7 +38,10 @@ class HealthCheck(APIView):
 
         Returns nothing if everything is OK, throws error otherwise.
         """
-        connection.ensure_connection()
+        try:
+            connection.ensure_connection()
+        except OperationalError as err:
+            raise DatabaseHealthCheckException(str(err))
 
     @staticmethod
     def _check_es() -> None:
