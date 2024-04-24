@@ -6,7 +6,7 @@ ETL Process:            Use the API to identify all CC0 3D Models.
 
 Output:                 TSV file containing the 3D models, their respective images and meta-data.
 
-Notes:                  https://www.thingiverse.com/developers/getting-started
+Notes:                  <https://www.thingiverse.com/developers/getting-started>
                         All API requests require authentication.
                         Rate limiting is 300 per 5 minute window.
 """

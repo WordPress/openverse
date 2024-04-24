@@ -6,22 +6,22 @@ ETL Process:            Use the API to identify all CC0 artworks.
 Output:                 TSV file containing the image, their respective
                         meta-data.
 
-Notes:                  https://metmuseum.github.io/#search
+Notes:                  <https://metmuseum.github.io/#search>
                         "Please limit requests to 80 requests per second." May need to
                         bump up the delay (e.g. to 3 seconds), to avoid of blocking
                         during local development testing.
 
                         Some analysis to improve data quality was conducted using a
-                        separate csv file here: https://github.com/metmuseum/openaccess
+                        separate csv file here: <https://github.com/metmuseum/openaccess>
 
                         Get a list of object IDs:
-                        https://collectionapi.metmuseum.org/public/collection/v1/objects?metadataDate=2022-08-10
+                        <https://collectionapi.metmuseum.org/public/collection/v1/objects?metadataDate=2022-08-10>
                         Get a specific object:
-                        https://collectionapi.metmuseum.org/public/collection/v1/objects/1027
+                        <https://collectionapi.metmuseum.org/public/collection/v1/objects/1027>
                         The search functionality requires a specific query (term search)
                         in addition to date and public domain. It seems like it won't
                         connect with just date and license.
-                        https://collectionapi.metmuseum.org/public/collection/v1/search?isPublicDomain=true&metadataDate=2022-08-07
+                        <https://collectionapi.metmuseum.org/public/collection/v1/search?isPublicDomain=true&metadataDate=2022-08-07>
 
 """
 

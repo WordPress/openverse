@@ -41,7 +41,7 @@ def skip_restore(should_skip: bool = False) -> bool:
     Can be overridden by setting the `SKIP_STAGING_DATABASE_RESTORE` Airflow Variable
     to `true`.
     Should return `True` to have the DAG continue, and `False` to have it skipped.
-    https://docs.astronomer.io/learn/airflow-branch-operator#taskshort_circuit-shortcircuitoperator
+    <https://docs.astronomer.io/learn/airflow-branch-operator#taskshort_circuit-shortcircuitoperator>
     """
     should_continue = not (
         should_skip
@@ -63,7 +63,7 @@ def skip_restore(should_skip: bool = False) -> bool:
 def get_latest_prod_snapshot(rds_hook: RdsHook = None) -> str:
     """
     Get the latest automated snapshot for the production database.
-    https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds/client/describe_db_snapshots.html
+    <https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds/client/describe_db_snapshots.html>
     Status is checked using a sensor in a later step, in case a snapshot creation is
     currently in progress.
     """
@@ -91,7 +91,7 @@ def get_staging_db_details(rds_hook: RdsHook = None) -> dict:
     """
     Retrieve the details of the staging database. Only some details are required (and
     others are actually sensitive) so filter down to only what we need.
-    https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds/client/describe_db_instances.html
+    <https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds/client/describe_db_instances.html>
     """
     # Get staging DB details
     instances = rds_hook.conn.describe_db_instances(
@@ -126,7 +126,7 @@ def restore_staging_from_snapshot(
     Restore the staging database from the latest snapshot.
     Augment the restore operation with the existing details determined from
     a previous step.
-    https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds/client/restore_db_instance_from_db_snapshot.html
+    <https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds/client/restore_db_instance_from_db_snapshot.html>
     """
     log.info(
         f"Creating a new {constants.TEMP_IDENTIFIER} instance from {latest_snapshot} "
@@ -145,7 +145,7 @@ def rename_db_instance(source: str, target: str, rds_hook: RdsHook = None) -> No
     """
     Rename a database instance.
     This can only be run on instances where mutation is allowed.
-    https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds/client/modify_db_instance.html
+    <https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rds/client/modify_db_instance.html>
     """
     log.info("Checking input values")
     ensure_mutate_allowed(source)

@@ -6,7 +6,7 @@ ETL Process:            Use the API to identify all CC licensed images.
 Output:                 TSV file containing the image,
                         their respective meta-data.
 
-Notes:                  http://api-docs.phylopic.org/v2/
+Notes:                  <http://api-docs.phylopic.org/v2/>
                         No rate limit specified.
 """
 

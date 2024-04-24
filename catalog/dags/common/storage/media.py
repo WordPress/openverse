@@ -323,8 +323,8 @@ class MediaStore(metaclass=abc.ABCMeta):
 
         If the value exceeds this maximum, None is returned.
         TODO: Remove this logic once the column has been embiggened
-        https://github.com/WordPress/openverse-catalog/issues/730
-        https://github.com/WordPress/openverse-catalog/issues/873
+        <https://github.com/WordPress/openverse-catalog/issues/730>
+        <https://github.com/WordPress/openverse-catalog/issues/873>
         """
         if value and value >= PG_INTEGER_MAXIMUM:
             logger.warning(f"Value exceeds Postgres maximum integer value: {value}")

@@ -11,7 +11,7 @@ be run. The DAG will then split the rows to be updated into batches, and report 
 when all batches have been updated. It handles all deadlocking and timeout concerns,
 ensuring that the provided SQL is run without interfering with ingestion. For more
 information, see the implementation plan:
-https://docs.openverse.org/projects/proposals/popularity_optimizations/20230420-implementation_plan_popularity_optimizations.html#special-considerations-avoiding-deadlocks-and-timeouts
+<https://docs.openverse.org/projects/proposals/popularity_optimizations/20230420-implementation_plan_popularity_optimizations.html#special-considerations-avoiding-deadlocks-and-timeouts>
 
 By default the DAG will run as a dry_run, logging the generated SQL but not actually
 running it. To actually perform the update, the `dry_run` parameter must be

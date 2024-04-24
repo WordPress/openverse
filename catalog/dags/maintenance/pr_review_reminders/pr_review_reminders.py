@@ -64,7 +64,7 @@ def days_without_weekends(
     Return the number of days between two dates, excluding weekends.
 
     Adapted from:
-    https://stackoverflow.com/a/3615984 CC BY-SA 2.5
+    <https://stackoverflow.com/a/3615984> CC BY-SA 2.5
     """
     if today.weekday() == 0 and (today - updated_at).days < 3:
         # shortcut mondays to 0 if last updated on the weekend

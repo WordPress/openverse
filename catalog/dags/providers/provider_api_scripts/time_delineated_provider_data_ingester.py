@@ -121,7 +121,7 @@ class TimeDelineatedProviderDataIngester(ProviderDataIngester):
         Determine a set of timestamp pairs.
         Some provider APIs can behave unexpectedly when querying large datasets,
         resulting in large numbers of duplicates and eventual DAG timeouts
-        (see https://github.com/WordPress/openverse-catalog/pull/879 for an
+        (see <https://github.com/WordPress/openverse-catalog/pull/879> for an
         example). To avoid this, when we detect that a time period contains a large
         number of records we split it up into multiple smaller time periods and
         run ingestion separately for each.

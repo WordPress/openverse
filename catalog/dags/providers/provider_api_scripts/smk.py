@@ -5,7 +5,7 @@ ETL Process:            Use the API to identify all openly licensed media.
 
 Output:                 TSV file containing the media metadata.
 
-Notes:                  https://www.smk.dk/en/article/smk-api/
+Notes:                  <https://www.smk.dk/en/article/smk-api/>
 """
 
 import logging
