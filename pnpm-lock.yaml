@@ -10,7 +10,7 @@ importers:
     devDependencies:
       '@openverse/eslint-plugin':
         specifier: workspace:0.0.0
-        version: link:packages/eslint-plugin
+        version: link:packages/js/eslint-plugin
       prettier:
         specifier: 3.2.5
         version: 3.2.5
@@ -311,7 +311,7 @@ importers:
         specifier: ^4.46.0
         version: 4.46.0
 
-  packages/eslint-plugin:
+  packages/js/eslint-plugin:
     dependencies:
       '@intlify/eslint-plugin-vue-i18n':
         specifier: ^2.0.0

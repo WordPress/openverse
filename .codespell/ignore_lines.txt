@@ -17,6 +17,6 @@
         "Identificatie Titel(s):  Allegorie op kunstenaar Francesco Mazzoli, "
         "bekend als Parmigianino"
 
-;; packages/eslint-plugin/configs/vue.ts
+;; packages/js/eslint-plugin/configs/vue.ts
 ;; `te` gets matched with `the` and others
 const i18nDestructureRules = ["t", "tc", "te", "td", "d", "n"].map(

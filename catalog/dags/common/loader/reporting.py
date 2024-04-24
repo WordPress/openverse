@@ -110,6 +110,7 @@ def report_completion(
     dated: bool = False,
     date_range_start: str | None = None,
     date_range_end: str | None = None,
+    is_reingestion_workflow: bool = False,
 ) -> str:
     """
     Send a Slack notification when the load_data task has completed.
@@ -168,6 +169,8 @@ def report_completion(
     date_range = "_all_"
     if dated:
         date_range = f"{date_range_start} -> {date_range_end}"
+    if is_reingestion_workflow:
+        date_range = "_multi-time period spread_"
 
     # Collect data into a single message
     message = f"""

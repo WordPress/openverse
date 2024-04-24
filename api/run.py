@@ -12,6 +12,12 @@ if __name__ == "__main__":
         port=port,
         workers=1,
         reload=is_local,
+        # Reload directories are resolved relative to the current working
+        # directory, which is the API project root set by ``Dockerfile``.
+        reload_dirs=[
+            ".",  # default, API directory
+            "../packages/python/",
+        ],
         log_level="debug",
         log_config={
             "version": 1,

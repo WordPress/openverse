@@ -47,11 +47,11 @@
       "addLabels": ["🟨 tech: javascript"]
     },
     {
-      "matchFileNames": ["{frontend,packages}/**"],
+      "matchFileNames": ["{frontend,packages/js}/**"],
       "addLabels": ["🧱 stack: frontend"]
     },
     {
-      "matchFileNames": ["api/**"],
+      "matchFileNames": ["{api,packages/python}/**"],
       "addLabels": ["🧱 stack: api"]
     },
     {
@@ -73,12 +73,13 @@
         "api/**",
         "catalog/**",
         "ingestion_server/**",
-        "documentation/**"
+        "documentation/**",
+        "packages/python/openverse-attribution/**"
       ]
     },
     {
       "groupName": "@openverse/eslint-plugin",
-      "matchFileNames": ["packages/eslint-plugin/**"]
+      "matchFileNames": ["packages/js/eslint-plugin/**"]
     },
     {
       "groupName": "tailwind",

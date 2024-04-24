@@ -208,3 +208,37 @@ def test_get_overrides_for_task(task_id, expected_overrides):
         task_id, overrides
     )
     assert actual_task_overrides == expected_overrides
+
+
+def test_create_report_load_completion_for_reingestion_dag():
+    dag_id = "test_provider_reingestion_workflow"
+    media_types = ["image"]
+    ingestion_metrics = {
+        "duration": "1:00:00",
+        "record_counts_by_media_type": {"image": 100},
+    }
+    dated = False
+
+    with mock.patch(
+        "providers.provider_dag_factory.reporting.report_completion"
+    ) as mock_report_completion:
+        report_task = provider_dag_factory.create_report_load_completion(
+            dag_id, media_types, ingestion_metrics, dated
+        )
+
+        assert report_task.task_id == "report_load_completion"
+        assert report_task.python_callable == mock_report_completion
+
+        assert report_task.op_kwargs == {
+            "dag_id": dag_id,
+            "media_types": media_types,
+            "duration": ingestion_metrics["duration"],
+            "record_counts_by_media_type": ingestion_metrics[
+                "record_counts_by_media_type"
+            ],
+            "dated": dated,
+            "is_reingestion_workflow": True,
+        }
+
+        assert "date_range_start" not in report_task.op_kwargs
+        assert "date_range_end" not in report_task.op_kwargs

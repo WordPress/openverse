@@ -230,7 +230,7 @@ exec +args:
 
 # Execute statement in a new service container using Docker Compose
 run +args:
-    just dc run -u {{ env_var_or_default("DC_USER", "root") }} {{ EXEC_DEFAULTS }} "{{ args }}"
+    just dc run --rm -u {{ env_var_or_default("DC_USER", "root") }} {{ EXEC_DEFAULTS }} "{{ args }}"
 
 # Execute pgcli against one of the database instances
 _pgcli container db_user_pass db_name db_host db_port="5432":

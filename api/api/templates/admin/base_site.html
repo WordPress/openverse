@@ -15,7 +15,7 @@
         <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
     {% endfor %}
         <li class="warning">Next staging database restore will occur in <span id="staging-db-refresh-days"></span> days.
-            <a href="https://airflow.openverse.engineering/dags/staging_database_restore/grid">
+            <a href="https://airflow.openverse.org/dags/staging_database_restore/grid">
                 View the DAG for information on how to skip this process.
             </a>
         </li>

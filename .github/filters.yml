@@ -9,6 +9,7 @@ catalog:
   - docker-compose.yml
 api:
   - api/**
+  - packages/python/**
   - docker/db/**
   - docker/es/**
   - docker/nginx/**
@@ -23,15 +24,15 @@ ingestion_server:
   - load_sample_data.sh
 frontend:
   - frontend/**
-  - packages/**
+  - packages/js/**
   - package.json
   - pnpm-lock.yaml
   - pnpm-workspace.yaml
   - tsconfig.base.json
   - .npmrc
   - .pnpmfile.cjs
-packages:
-  - packages/**
+js_packages:
+  - packages/js/**
   - package.json
   - pnpm-lock.yaml
   - pnpm-workspace.yaml

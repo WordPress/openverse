@@ -1,4 +1,4 @@
 packages:
   - automations/js/
   - frontend/
-  - packages/*
+  - packages/js/*

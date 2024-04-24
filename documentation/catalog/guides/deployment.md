@@ -6,7 +6,7 @@ deployment procedures for both components.
 
 # Airflow
 
-> **URL**: https://airflow.openverse.engineering
+> **URL**: https://airflow.openverse.org
 
 Airflow has two different deployment mechanisms: **service deployments** and
 **DAG deployments**. Service deployments occur when the Airflow service itself

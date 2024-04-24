@@ -1,0 +1,21 @@
+[project]
+name = "openverse-attribution"
+version = "0.0.0"
+description = "Provides utilities related to open licenses, tools, and attribution."
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+  {name = "Openverse", email = "openverse@wordpress.org" },
+]
+
+requires-python = "==3.11.*"
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[tool.pdm.dev-dependencies]
+test = [
+  "pytest >=8.1.1, <9",
+  "pytest-sugar >=1.0.0, <2",
+]
