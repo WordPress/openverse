@@ -1,0 +1,159 @@
+{% extends "admin/change_form.html" %}
+{% load static %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+  audio, .img-container {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+  .img-container {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+  }
+  .img-container img, .img-container p {
+    grid-column: 1 / -1;
+    grid-row: 1 / -1;
+  }
+  .img-container p {
+    border-radius: 4px;
+    padding: 10px;
+    z-index:1;
+    pointer-events: none;
+    color: black;
+    background: rgba(255, 255, 255, 0.5);
+    text-align: center;
+    font-weight: bold;
+  }
+  .blur-image {
+    transition: filter 0.3s;
+    filter: blur(60px);
+  }
+  .no-blur {
+    filter: none;
+  }
+  .no-blur ~ p {
+    display: none;
+  }
+</style>
+{% endblock %}
+
+{% block after_field_sets %}
+{{ block.super }}
+
+{% if not add %}
+<fieldset class="module aligned">
+  <h2>Media details</h2>
+  {% if media_type == 'image' %}
+    {% if thumb_url %}
+    <div class="img-container">
+      <img src="{{ thumb_url }}" alt="Media Image" class="blur-image" height="300"
+           onclick="toggleBlur(this)"
+           onerror="this.onerror=null;this.src='{{ url }}';"
+           style="cursor: pointer;">
+      <p>Show content</p>
+    </div>
+  {% else %}
+  <p>No Image Available</p>
+  {% endif %}
+
+  {% elif media_type == 'audio' %}
+    <audio controls>
+      <source src="{{ url }}" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+  {% endif %}
+
+  <div class="form-row field-created_at">
+      <div class="flex-container">
+        <label>Title and creator</label>
+        <div class="readonly">
+          <p>{{ title }} {% if creator_url %}by <a href="{{creator_url}}">{{creator}}</a> {% else %} {{creator}} {% endif %} </p></div>
+      </div>
+  </div>
+  <div class="form-row field-created_at">
+      <div class="flex-container">
+        <label>Media links</label>
+        <div class="readonly">
+          <p><a href="{{foreign_landing_url}}">Source ({{source}})</a></p>
+          <p><a href="https://openverse.org/{{media_type}}/{{identifier}}">openverse.org</a></p>
+          <p><a href="{% url media_type|add:'-detail' identifier=identifier %}">openverse API</a></p>
+        </div>
+      </div>
+  </div>
+  <div class="form-row field-created_at">
+      <div class="flex-container">
+        <label>Tags</label>
+        <div class="readonly">
+          <p>{{ tags }}</div>
+      </div>
+  </div>
+  <div class="form-row field-created_at">
+      <div class="flex-container">
+        <label>Description</label>
+        <div class="readonly">
+          <p>{{ description }}</div>
+      </div>
+  </div>
+  <div class="form-row field-created_at">
+      <div class="flex-container">
+        <label>From</label>
+        <div class="readonly">
+          <p>provider: {{ provider }}, source: {{ source }}</div>
+      </div>
+  </div>
+</fieldset>
+
+<fieldset class="module aligned">
+  <h2>Other reports</h2>
+  <div class="form-row field-other_reports">
+  {% if other_reports %}
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Report reason</th>
+          <th>Status</th>
+          <th>Report link</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for report in other_reports %}
+        <tr>
+          <td>{{ report.created_at }}</td>
+          <td>{{ report.reason }}</td>
+          <td>{{ report.status }}</td>
+          <td><a href="{% url 'admin:api_imagereport_change' report.id %}">{{ report.id }}</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No other reports for <a href="{{reverse_media_url}}">{{ identifier }}</a> found.</p>
+  {% endif %}
+  </div>
+
+</fieldset>
+{% endif %}
+{% endblock %}
+
+
+{% block admin_change_form_document_ready %}
+{{ block.super }}
+<script>
+  function toggleBlur(img) {
+    if (img.classList.contains('no-blur')) {
+      img.classList.remove('no-blur');
+      img.classList.add('blur-image');
+    } else {
+      img.classList.remove('blur-image');
+      img.classList.add('no-blur');
+    }
+  }
+  function replace(img, url) {
+    img.src = url;
+  }
+</script>
+{% endblock %}
