@@ -72,16 +72,17 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
         year_ranges.extend(
             [(x, min(x + 5, final_year)) for x in range(1925, final_year, 5)]
         )
-        return year_ranges
+        return [{"date[from]": from_, "date[to]": to_} for from_, to_ in year_ranges]
 
-    def ingest_records(self, **kwargs):
+    def get_fixed_query_params(self):
+        """
+        Provide a set of year ranges. Ingestion will be performed for each range,
+        with the dates set as fixed query params.
+        """
         next_year = date.today().year + 1
-        for year_range in self._get_year_ranges(next_year):
-            logger.info(f"==Starting on year range: {year_range}==")
-            super().ingest_records(year_range=year_range)
+        return self._get_year_ranges(next_year)
 
-    def get_next_query_params(self, prev_query_params, **kwargs):
-        from_, to_ = kwargs["year_range"]
+    def get_next_query_params(self, prev_query_params):
         if not prev_query_params:
             # Reset the page number to 0
             self.page_number = 0
@@ -94,8 +95,6 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
             "image_license": "CC",
             "page[size]": LIMIT,
             "page[number]": self.page_number,
-            "date[from]": from_,
-            "date[to]": to_,
         }
 
     def get_batch_data(self, response_json):
