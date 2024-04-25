@@ -10,11 +10,7 @@ from rest_framework.views import APIView
 from api.utils.throttle import ExemptOAuth2IdRateThrottle, HealthcheckAnonRateThrottle
 
 
-class ElasticsearchHealthcheckException(APIException):
-    status_code = status.HTTP_503_SERVICE_UNAVAILABLE
-
-
-class DatabaseHealthCheckException(APIException):
+class HealthCheckException(APIException):
     status_code = status.HTTP_503_SERVICE_UNAVAILABLE
 
 
@@ -40,7 +36,9 @@ class HealthCheck(APIView):
         try:
             connection.ensure_connection()
         except OperationalError as err:
-            raise DatabaseHealthCheckException(f"Database unavailable: {err}")
+            raise HealthCheckException(
+                code="postgres", detail=f"Database unavailable: {err}"
+            )
 
     @staticmethod
     def _check_es() -> None:
@@ -52,10 +50,12 @@ class HealthCheck(APIView):
         es_health = settings.ES.cluster.health(timeout="5s")
 
         if es_health["timed_out"]:
-            raise ElasticsearchHealthcheckException("es_timed_out")
+            raise HealthCheckException(code="elasticsearch", detail="es_timed_out")
 
         if (es_status := es_health["status"]) != "green":
-            raise ElasticsearchHealthcheckException(f"es_status_{es_status}")
+            raise HealthCheckException(
+                code="elasticsearch", detail=f"es_status_{es_status}"
+            )
 
     def get(self, request: Request):
         if "check_es" in request.query_params:

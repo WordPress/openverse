@@ -40,6 +40,7 @@ def test_health_check_calls__check_db_with_failure(api_client):
         mock_ensure_connection.side_effect = OperationalError("Database has gone away")
         res = api_client.get("/healthcheck/")
         assert res.status_code == 503
+        assert res.json() == {"detail": "Database unavailable: Database has gone away"}
         mock_ensure_connection.assert_called_once()
 
 
@@ -49,7 +50,7 @@ def test_health_check_es_timed_out(api_client):
         res = api_client.get("/healthcheck/", data={"check_es": True})
 
     assert res.status_code == 503
-    assert res.json()["detail"] == "es_timed_out"
+    assert res.json() == {"detail": "es_timed_out"}
 
 
 @pytest.mark.parametrize("status", ("yellow", "red"))
@@ -59,7 +60,7 @@ def test_health_check_es_status_bad(status, api_client):
         res = api_client.get("/healthcheck/", data={"check_es": True})
 
     assert res.status_code == 503
-    assert res.json()["detail"] == f"es_status_{status}"
+    assert res.json() == {"detail": f"es_status_{status}"}
 
 
 @pytest.mark.django_db
