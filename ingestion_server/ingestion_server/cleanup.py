@@ -287,6 +287,7 @@ class CleanDataUploader:
     disk_buffer_size = 850 * 1024 * 1024
 
     s3_path = "shared/data-refresh-cleaned-data"
+    local_path = "/ingestion_server/cleanup_output"
 
     buffer = {
         field: FieldBuffered(part=1, rows=[])
@@ -298,6 +299,12 @@ class CleanDataUploader:
         self.s3 = self._get_s3_resource()
         self.s3_bucket = self.s3.Bucket(bucket_name)
         self.date = time.strftime("%Y-%m-%d")
+        self._recreate_local_dir()
+
+    def _recreate_local_dir(self):
+        if os.path.exists(self.local_path):
+            os.system(f"rm -rf {self.local_path}")
+        os.makedirs(self.local_path)
 
     @staticmethod
     def _get_s3_resource():
@@ -319,15 +326,15 @@ class CleanDataUploader:
         log.info(
             f"Saving {len(self.buffer[field].rows)} rows of `{field}` to local file."
         )
-        filename = f"{field}.tsv"
+        file_path = f"{self.local_path}/{field}.tsv"
 
-        with open(filename, "a") as f:
+        with open(file_path, "a") as f:
             csv_writer = csv.writer(f, delimiter="\t")
             csv_writer.writerows(self.buffer[field].rows)
             # Clean memory buffer of saved rows
             self.buffer[field].rows = []
 
-        if os.path.getsize(filename) >= self.disk_buffer_size or force_upload:
+        if os.path.getsize(file_path) >= self.disk_buffer_size or force_upload:
             try:
                 self._upload_to_s3(field)
             except Exception as e:
@@ -337,10 +344,10 @@ class CleanDataUploader:
         part_number = self.buffer[field].part
         log.info(f"Uploading file part {part_number} of `{field}` to S3...")
         s3_file_name = f"{self.s3_path}/{self.date}_{field}_{part_number}.tsv"
-        tsv_file_name = f"{field}.tsv"
-        self.s3_bucket.upload_file(tsv_file_name, s3_file_name)
+        tsv_file = f"{self.local_path}/{field}.tsv"
+        self.s3_bucket.upload_file(tsv_file, s3_file_name)
         self.buffer[field].part += 1
-        os.remove(tsv_file_name)
+        os.remove(tsv_file)
 
     def save(self, result: dict) -> dict[str, int]:
         for field, cleaned_items in result.items():
