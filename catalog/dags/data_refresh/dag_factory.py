@@ -115,6 +115,7 @@ def create_data_refresh_dag(
 
     dag = DAG(
         dag_id=f"{environment}_{data_refresh_config.dag_id}",
+        dagrun_timeout=data_refresh_config.dag_timeout,
         default_args=default_args,
         start_date=data_refresh_config.start_date,
         schedule=data_refresh_config.schedule,
@@ -146,7 +147,7 @@ def create_data_refresh_dag(
 
         copy_data = copy_upstream_table(
             environment=environment,
-            media_type=data_refresh_config.media_type,
+            data_refresh_config=data_refresh_config,
         )
 
         # TODO Cleaning steps
