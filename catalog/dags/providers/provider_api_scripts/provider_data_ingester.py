@@ -173,9 +173,10 @@ class ProviderDataIngester(ABC):
         # An optional list of `query_params`. When provided, ingestion will be run for
         # just these sets of params.
         self.override_query_params = None
-        if query_params_list := conf.get("query_params_list"):
+        self.override_query_params_list = conf.get("query_params_list")
+        if self.override_query_params_list:
             # Create a generator to facilitate fetching the next set of query_params.
-            self.override_query_params = (qp for qp in query_params_list)
+            self.override_query_params = (qp for qp in self.override_query_params_list)
 
         # An optional set of query params to add to all queries
         self.additional_query_params = conf.get("additional_query_params", {})

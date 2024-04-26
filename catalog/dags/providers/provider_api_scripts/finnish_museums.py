@@ -57,7 +57,39 @@ class FinnishMuseumsDataIngester(TimeDelineatedProviderDataIngester):
     min_divisions = 12
     max_divisions = 20
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # The Finnish Museums API expected double quotes in the params (for
+        # example, 'format:"0/Image"'). Since query params supplied through the
+        # DagRun conf advanced options must be supplied as valid json with outer
+        # double quotes, these inner quotes must be escaped in the form
+        # (i.e., "format:\"0/Image\""). For convenience and to prevent the DAG
+        # from breaking if the user inputs single quotes, they are replaced here.
+        self.initial_query_params = self._replace_single_quotes_in_params(
+            self.initial_query_params
+        )
+
+        if self.override_query_params_list:
+            self.override_query_params = (
+                self._replace_single_quotes_in_params(qp)
+                for qp in self.override_query_params_list
+            )
+
+    def _replace_single_quotes_in_params(self, params: dict | None):
+        """Ensure that the values in the "filter[]" param do not contain single quotes."""
+        if params is None:
+            return None
+
+        return {
+            **params,
+            "filter[]": [param.replace("'", '"') for param in params.get("filter[]")],
+        }
+
     def get_fixed_query_params(self):
+        """
+        Get the set of fixed params. Ingestion will be run separately for each of
+        these.
+        """
         fixed_query_params = []
 
         # Build out timestamp pairs for each building.
@@ -73,11 +105,13 @@ class FinnishMuseumsDataIngester(TimeDelineatedProviderDataIngester):
         # records for this ingestion date for any of the buildings), then skip
         if not fixed_query_params:
             raise AirflowSkipException("No data to ingest.")
+
         return fixed_query_params
 
     def get_timestamp_query_params(
         self, start: datetime, end: datetime, **kwargs
     ) -> dict:
+        """Format the timestamp params appropriately."""
         building = kwargs.get("building")
         return {
             "filter[]": [
@@ -88,6 +122,10 @@ class FinnishMuseumsDataIngester(TimeDelineatedProviderDataIngester):
         }
 
     def get_next_query_params(self, prev_query_params: dict | None):
+        """
+        Get the next query params, based on the previous ones. Fixed query params
+        will be merged in by the base class as appropriate.
+        """
         if not prev_query_params:
             return {
                 "field[]": [
