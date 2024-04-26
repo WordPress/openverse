@@ -25,8 +25,6 @@ _get_resource_json = make_resource_json_func("flickr")
 
 def test_get_next_query_params():
     expected_params = {
-        "min_upload_date": "1516060900",
-        "max_upload_date": "1516060800",
         "page": 0,
         "api_key": "not_set",
         "license": "1,2,3,4,5,6,9,10",
@@ -45,16 +43,23 @@ def test_get_next_query_params():
     flickr.api_key = "not_set"
 
     # First request
-    first_params = flickr.get_next_query_params(
-        None, start_ts="1516060900", end_ts="1516060800"
-    )
+    first_params = flickr.get_next_query_params(None)
     assert first_params == expected_params
 
     # Updated page on second request
-    second_params = flickr.get_next_query_params(
-        first_params, start_ts="1516060900", end_ts="1516060800"
-    )
+    second_params = flickr.get_next_query_params(first_params)
     assert second_params == {**expected_params, "page": 1}
+
+
+def test_get_timestamp_query_params():
+    expected_params = {
+        "min_upload_date": "1516060900",
+        "max_upload_date": "1516060800",
+    }
+    actual_params = flickr.get_timestamp_query_params(
+        start="1516060900", end="1516060800"
+    )
+    assert actual_params == expected_params
 
 
 def test_get_media_type():

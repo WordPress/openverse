@@ -48,12 +48,11 @@ class VictoriaDataIngester(ProviderDataIngester):
     def get_fixed_query_params(self):
         return [{"imagelicense": license_} for license_ in self.LICENSE_LIST]
 
-    def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
+    def get_next_query_params(self, prev_query_params: dict | None) -> dict:
         if not prev_query_params:
             return {
                 "hasimages": "yes",
                 "perpage": self.batch_limit,
-                "imagelicense": kwargs["license_"],
                 "page": 0,
             }
         else:

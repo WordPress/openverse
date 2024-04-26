@@ -121,7 +121,7 @@ class SmithsonianDataIngester(ProviderDataIngester):
             for hash_prefix in self._get_hash_prefixes()
         ]
 
-    def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
+    def get_next_query_params(self, prev_query_params: dict | None) -> dict:
         # On the first request, `prev_query_params` will be `None`. We can detect this
         # and return our default params.
 

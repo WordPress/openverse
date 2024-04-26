@@ -62,9 +62,6 @@ class TimeDelineatedProviderDataIngester(ProviderDataIngester):
         # Keep track of our ts pairs
         self.timestamp_pairs = []
 
-        # Keep track of the current ts pair
-        self.current_timestamp_pair = ()
-
     @staticmethod
     def format_ts(timestamp):
         return timestamp.isoformat().replace("+00:00", "Z")
@@ -109,9 +106,11 @@ class TimeDelineatedProviderDataIngester(ProviderDataIngester):
 
     def _get_record_count(self, start: datetime, end: datetime, **kwargs) -> int:
         """Get the number of records returned by the API for a particular interval."""
-        query_params = self.get_next_query_params(
-            prev_query_params=None, start_ts=start, end_ts=end, **kwargs
+        query_params = self._get_query_params(
+            prev_query_params=None,
+            fixed_query_params=self.get_timestamp_query_params(start, end, **kwargs),
         )
+
         response_json = self.get_response_json(query_params)
 
         return self.get_record_count_from_response(response_json)
@@ -195,14 +194,24 @@ class TimeDelineatedProviderDataIngester(ProviderDataIngester):
 
         return pairs_list
 
+    @abstractmethod
+    def get_timestamp_query_params(
+        self, start: datetime, end: datetime, **kwargs
+    ) -> dict:
+        """
+        Given the start and end timestamps, return them in the appropriate shape
+        for query params for this ingester to be consumed by the API.
+        """
+        pass
+
     def get_fixed_query_params(self):
         self.timestamp_pairs = self._get_timestamp_pairs()
+
         if self.timestamp_pairs:
             logger.info(f"{len(self.timestamp_pairs)} timestamp pairs generated.")
-        # Run ingestion for each timestamp pair. Override this method to
-        # change the query param names if needed.
+        # Run ingestion for each timestamp pair.
         return [
-            {"start_ts": start_ts, "end_ts": end_ts}
+            self.get_timestamp_query_params(start_ts, end_ts)
             for start_ts, end_ts in self.timestamp_pairs
         ]
 
@@ -213,13 +222,6 @@ class TimeDelineatedProviderDataIngester(ProviderDataIngester):
         Override _ingest_records, which is called for each set of timestamp pairs,
         to reset the counts before each round.
         """
-        # Update `current_timestamp_pair` to keep track of what we are processing.
-        logger.info(fixed_query_params)
-        self.current_timestamp_pair = (
-            fixed_query_params["start_ts"],
-            fixed_query_params["end_ts"],
-        )
-
         # Reset counts
         self.new_iteration = True
         self.fetched_count = 0

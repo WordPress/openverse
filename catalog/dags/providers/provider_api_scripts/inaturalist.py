@@ -55,7 +55,7 @@ COL_URL = "https://download.checklistbank.org/col/latest_coldp.zip"
 class INaturalistDataIngester(ProviderDataIngester):
     providers = {"image": provider_details.INATURALIST_DEFAULT_PROVIDER}
 
-    def get_next_query_params(self, prev_query_params=None, **kwargs):
+    def get_next_query_params(self, prev_query_params=None):
         raise NotImplementedError(
             "Instead we use get_batches to dynamically create subtasks."
         )

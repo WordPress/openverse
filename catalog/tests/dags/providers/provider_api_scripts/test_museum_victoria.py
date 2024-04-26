@@ -30,14 +30,26 @@ _get_resource_json = make_resource_json_func("museumvictoria")
 
 
 def test_get_query_param_default():
-    actual_param = mv.get_next_query_params(None, **{"license_": mv.LICENSE_LIST[0]})
+    actual_param = mv.get_next_query_params(None)
     expected_param = {
         "hasimages": "yes",
         "perpage": 100,
-        "imagelicense": "public domain",
         "page": 0,
     }
 
+    assert actual_param == expected_param
+
+
+def test_get_fixed_query_params():
+    actual_param = mv.get_fixed_query_params()
+    expected_param = [
+        {"imagelicense": "public domain"},
+        {"imagelicense": "cc by"},
+        {"imagelicense": "cc by-nc"},
+        {"imagelicense": "cc by-nc-sa"},
+        {"imagelicense": "cc by-nc-nd"},
+        {"imagelicense": "cc by-sa"},
+    ]
     assert actual_param == expected_param
 
 

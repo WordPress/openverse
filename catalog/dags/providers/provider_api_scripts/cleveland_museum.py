@@ -16,7 +16,7 @@ class ClevelandDataIngester(ProviderDataIngester):
     batch_limit = 1000
     delay = 5
 
-    def get_next_query_params(self, prev_query_params, **kwargs):
+    def get_next_query_params(self, prev_query_params: dict | None):
         if not prev_query_params:
             # Return default query params on the first request
             return {"cc": "1", "has_image": "1", "limit": self.batch_limit, "skip": 0}

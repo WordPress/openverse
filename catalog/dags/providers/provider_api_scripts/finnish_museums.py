@@ -16,7 +16,10 @@ Notes:                  <https://api.finna.fi/swagger-ui/>
 """
 
 import logging
+from datetime import datetime
 from itertools import chain
+
+from airflow.exceptions import AirflowSkipException
 
 from common.licenses import LicenseInfo, get_license_info
 from common.loader import provider_details as prov
@@ -55,35 +58,38 @@ class FinnishMuseumsDataIngester(TimeDelineatedProviderDataIngester):
     max_divisions = 20
 
     def get_fixed_query_params(self):
-        timestamp_pairs = super().get_fixed_query_params()
         fixed_query_params = []
 
+        # Build out timestamp pairs for each building.
         for building in self.buildings:
+            logger.info(f"Generating timestamp pairs for {building}.")
+            timestamp_pairs = super()._get_timestamp_pairs(building=building)
             fixed_query_params += [
-                {
-                    "filter[]": [
-                        f'format:"{self.format_type}"',
-                        f'building:"{building}"',
-                        f'last_indexed:"[{ts["start_ts"]} TO {ts["end_ts"]}]"',
-                    ]
-                }
-                for ts in timestamp_pairs
+                self.get_timestamp_query_params(start, end, building=building)
+                for start, end in timestamp_pairs
             ]
 
+        # If no fixed_query_params were generated (which happens when there are no
+        # records for this ingestion date for any of the buildings), then skip
+        if not fixed_query_params:
+            raise AirflowSkipException("No data to ingest.")
         return fixed_query_params
 
-    def get_next_query_params(self, prev_query_params, **kwargs):
-        if not prev_query_params:
-            building = kwargs.get("building")
-            start_ts = self.format_ts(kwargs.get("start_ts"))
-            end_ts = self.format_ts(kwargs.get("end_ts"))
+    def get_timestamp_query_params(
+        self, start: datetime, end: datetime, **kwargs
+    ) -> dict:
+        building = kwargs.get("building")
+        return {
+            "filter[]": [
+                f'format:"{self.format_type}"',
+                f'building:"{building}"',
+                f'last_indexed:"[{self.format_ts(start)} TO {self.format_ts(end)}]"',
+            ]
+        }
 
+    def get_next_query_params(self, prev_query_params: dict | None):
+        if not prev_query_params:
             return {
-                "filter[]": [
-                    f'format:"{self.format_type}"',
-                    f'building:"{building}"',
-                    f'last_indexed:"[{start_ts} TO {end_ts}]"',
-                ],
                 "field[]": [
                     "authors",
                     "buildings",

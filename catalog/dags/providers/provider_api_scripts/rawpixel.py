@@ -120,7 +120,7 @@ class RawpixelDataIngester(ProviderDataIngester):
         # Convert back to a string
         return signature.decode("utf-8")
 
-    def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
+    def get_next_query_params(self, prev_query_params: dict | None) -> dict:
         if not prev_query_params:
             params = {
                 "tags": "$publicdomain",

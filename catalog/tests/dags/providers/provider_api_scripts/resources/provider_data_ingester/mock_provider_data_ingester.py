@@ -36,7 +36,7 @@ class MockProviderDataIngesterMixin:
     providers = {"audio": AUDIO_PROVIDER, "image": IMAGE_PROVIDER}
     endpoint = ENDPOINT
 
-    def get_next_query_params(self, prev_query_params, **kwargs):
+    def get_next_query_params(self, prev_query_params):
         return DEFAULT_QUERY_PARAMS
 
     def get_batch_data(self, response_json):
@@ -90,17 +90,16 @@ class MockTimeDelineatedProviderDataIngester(
     min_divisions = MIN_DIVISIONS
     max_divisions = MAX_DIVISIONS
 
-    def get_next_query_params(self, prev_query_params, **kwargs):
-        return {
-            **DEFAULT_QUERY_PARAMS,
-            "start_ts": kwargs.get("start_ts"),
-            "end_ts": kwargs.get("end_ts"),
-        }
+    def get_next_query_params(self, prev_query_params):
+        return DEFAULT_QUERY_PARAMS
 
     def get_record_count_from_response(self, response_json):
         if response_json:
             return response_json.get("count")
         return 0
+
+    def get_timestamp_query_params(self, start, end, **kwargs):
+        return {"start_ts": start, "end_ts": end}
 
 
 # Expected result of calling `get_batch_data` with `response_success.json`

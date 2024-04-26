@@ -441,7 +441,7 @@ class ProviderDataIngester(ABC):
         return []
 
     @abstractmethod
-    def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
+    def get_next_query_params(self, prev_query_params: dict | None) -> dict:
         """
         Get the next set of query parameters.
 
@@ -452,7 +452,6 @@ class ProviderDataIngester(ABC):
         Required arguments:
         prev_query_params: dictionary of query string params used in the previous
                            request. If None, this is the first request.
-        **kwargs:          Optional kwargs passed through from `ingest_records`.
 
         """
         pass

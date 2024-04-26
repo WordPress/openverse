@@ -79,7 +79,7 @@ class PhylopicDataIngester(ProviderDataIngester):
             f"Total pages: {self.total_pages}."
         )
 
-    def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
+    def get_next_query_params(self, prev_query_params: dict | None) -> dict:
         if prev_query_params is not None:
             self.current_page += 1
 

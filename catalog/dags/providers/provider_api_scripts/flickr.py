@@ -85,6 +85,9 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
         # during different stages of the ingestion process.
         self.process_large_batch = False
 
+        # Keep track of the current timestamp pair being processed.
+        self.current_timestamp_pair = ()
+
     def ingest_records(self, **kwargs):
         """
         Ingest records, handling large batches.
@@ -136,29 +139,28 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
         # additional requests when generating timestamp pairs.
         logger.info(f"Made {self.requests_count + 25} requests to the Flickr API.")
 
-    def get_fixed_query_params(self):
-        timestamp_pairs = super().get_fixed_query_params()
-        return [
-            {"min_upload_date": ts["start_ts"], "max_upload_date": ts["end_ts"]}
-            for ts in timestamp_pairs
-        ]
+    def _ingest_records(
+        self, initial_query_params: dict | None, fixed_query_params: dict | None
+    ) -> None:
+        # Update `current_timestamp_pair` to keep track of what we are processing.
+        self.current_timestamp_pair = (
+            fixed_query_params["min_upload_date"],
+            fixed_query_params["max_upload_date"],
+        )
+        return super()._ingest_records(initial_query_params, fixed_query_params)
 
-    def get_next_query_params(self, prev_query_params, **kwargs):
+    def get_timestamp_query_params(
+        self, start: datetime, end: datetime, **kwargs
+    ) -> dict:
+        return {"min_upload_date": start, "max_upload_date": end}
+
+    def get_next_query_params(self, prev_query_params: dict | None):
         if not prev_query_params:
             # Initial request, return default params
-            start_timestamp = kwargs.get("start_ts")
-            end_timestamp = kwargs.get("end_ts")
-
-            # license will be available in the params if we're dealing
-            # with a large batch. If not, fall back to all licenses
-            license_ = kwargs.get("license", self.default_license_param)
-
             return {
-                "min_upload_date": start_timestamp,
-                "max_upload_date": end_timestamp,
                 "page": 0,
                 "api_key": self.api_key,
-                "license": license_,
+                "license": self.default_license_param,
                 "per_page": self.batch_limit,
                 "method": "flickr.photos.search",
                 "media": "photos",
