@@ -8,9 +8,11 @@ import csv
 import logging as log
 import multiprocessing
 import os
+import shutil
 import time
 import uuid
 from dataclasses import dataclass
+from pathlib import Path
 from urllib.parse import urlparse
 
 import boto3
@@ -287,7 +289,7 @@ class CleanDataUploader:
     disk_buffer_size = 850 * 1024 * 1024
 
     s3_path = "shared/data-refresh-cleaned-data"
-    local_path = "/ingestion_server/cleanup_output"
+    local_path = Path("/ingestion_server/cleanup_output")
 
     buffer = {
         field: FieldBuffered(part=1, rows=[])
@@ -300,11 +302,6 @@ class CleanDataUploader:
         self.s3_bucket = self.s3.Bucket(bucket_name)
         self.date = time.strftime("%Y-%m-%d")
         self._recreate_local_dir()
-
-    def _recreate_local_dir(self):
-        if os.path.exists(self.local_path):
-            os.system(f"rm -rf {self.local_path}")
-        os.makedirs(self.local_path)
 
     @staticmethod
     def _get_s3_resource():
@@ -322,11 +319,16 @@ class CleanDataUploader:
             "s3", region_name=config("AWS_REGION", default="us-east-1")
         )
 
+    def _recreate_local_dir(self):
+        log.info("Recreating local cleanup directory.")
+        shutil.rmtree(self.local_path, ignore_errors=False)
+        self.local_path.mkdir()
+
     def _save_to_disk(self, field: str, force_upload=False):
         log.info(
             f"Saving {len(self.buffer[field].rows)} rows of `{field}` to local file."
         )
-        file_path = f"{self.local_path}/{field}.tsv"
+        file_path = self.local_path / f"{field}.tsv"
 
         with open(file_path, "a") as f:
             csv_writer = csv.writer(f, delimiter="\t")
@@ -347,7 +349,7 @@ class CleanDataUploader:
         tsv_file = f"{self.local_path}/{field}.tsv"
         self.s3_bucket.upload_file(tsv_file, s3_file_name)
         self.buffer[field].part += 1
-        os.remove(tsv_file)
+        Path(tsv_file).unlink()
 
     def save(self, result: dict) -> dict[str, int]:
         for field, cleaned_items in result.items():
