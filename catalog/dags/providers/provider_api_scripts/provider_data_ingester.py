@@ -303,10 +303,6 @@ class ProviderDataIngester(ABC):
         # Commit whatever records we were able to process
         self._commit_records()
 
-        # If errors were caught during processing, raise them now
-        if error_summary := self._get_ingestion_errors():
-            raise error_summary
-
     def ingest_records(self) -> None:
         """
         Ingest all records.
@@ -316,47 +312,53 @@ class ProviderDataIngester(ABC):
 
         This is the main ingestion function that is called during the `pull_data` task.
         """
-        # If no fixed params were provided, simply begin ingestion
         if not (fixed_query_params := self.get_fixed_query_params()):
-            return self._ingest_records(self.initial_query_params, {})
-
-        # Else, ingestion should be run separately for each set of fixed_query_params.
-
-        # If initial_query_params were also provided, we should being ingestion
-        # from the first set of fixed_query_params that is included in the
-        # initial_query_params
-        if self.initial_query_params:
-            initial_fixed_params = next(
-                (
-                    qp
-                    for qp in fixed_query_params
-                    if qp.items() <= self.initial_query_params.items()
-                ),
-                fixed_query_params[0],
-            )
-
+            # If no fixed params were provided, simply begin ingestion
+            self._ingest_records(self.initial_query_params, {})
+        else:
+            # Else, ingestion should be run separately for each set of fixed_query_params.
             logger.info(
-                "First fixed query parameter matching the initial_query_params"
-                f" was: {initial_fixed_params}."
+                "Ingestion will be performed for each of the following sets of"
+                f" fixed query parameters: {fixed_query_params}"
             )
 
-            # Run ingestion on the first batch, passing in the initial_query_params
-            self._ingest_records(self.initial_query_params, initial_fixed_params)
+            # If initial_query_params were also provided, we should being ingestion
+            # from the first set of fixed_query_params that is included in the
+            # initial_query_params
+            if self.initial_query_params:
+                initial_fixed_params = next(
+                    (
+                        qp
+                        for qp in fixed_query_params
+                        if qp.items() <= self.initial_query_params.items()
+                    ),
+                    fixed_query_params[0],
+                )
 
-            # Resume from the _next_ set of fixed_query_params
-            fixed_query_params = fixed_query_params[
-                fixed_query_params.index(initial_fixed_params) + 1 :
-            ]
+                logger.info(
+                    "First fixed query parameter matching the initial_query_params"
+                    f" was: {initial_fixed_params}."
+                )
 
-        logger.info(
-            "Ingestion will be performed for each of the following sets of"
-            f" fixed query parameters: {fixed_query_params}"
-        )
+                # Run ingestion on the first batch, passing in the initial_query_params
+                self._ingest_records(self.initial_query_params, initial_fixed_params)
 
-        for fixed_params in fixed_query_params:
-            logger.info(f"==Starting ingestion with fixed params: {fixed_params}==")
-            # Subsequent batches should not start at the initial_query_params
-            self._ingest_records(None, fixed_params)
+                # Resume from the _next_ set of fixed_query_params
+                fixed_query_params = fixed_query_params[
+                    fixed_query_params.index(initial_fixed_params) + 1 :
+                ]
+                logger.info(
+                    f"Only the following fixed query parameters will be used: {fixed_query_params}"
+                )
+
+            for fixed_params in fixed_query_params:
+                logger.info(f"==Starting ingestion with fixed params: {fixed_params}==")
+                # Subsequent batches should not start at the initial_query_params
+                self._ingest_records(None, fixed_params)
+
+        # Finally, raise any errors that were skipped at any point during processing.
+        if error_summary := self._get_ingestion_errors():
+            raise error_summary
 
     def _should_skip_ingestion_error(self, error: Exception) -> bool:
         """Determine whether an error should be skipped."""
