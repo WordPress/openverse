@@ -369,7 +369,7 @@ def test_ingest_records():
             "providers.provider_api_scripts.time_delineated_provider_data_ingester.TimeDelineatedProviderDataIngester.ingest_records"
         ),
         mock.patch(
-            "providers.provider_api_scripts.time_delineated_provider_data_ingester.TimeDelineatedProviderDataIngester.ingest_records_for_timestamp_pair"
+            "providers.provider_api_scripts.time_delineated_provider_data_ingester.TimeDelineatedProviderDataIngester._ingest_records"
         ) as ingest_for_pair_mock,
     ):
         flickr.ingest_records()
@@ -384,7 +384,7 @@ def test_ingest_records_when_large_batches_detected():
             "providers.provider_api_scripts.time_delineated_provider_data_ingester.TimeDelineatedProviderDataIngester.ingest_records"
         ),
         mock.patch(
-            "providers.provider_api_scripts.time_delineated_provider_data_ingester.TimeDelineatedProviderDataIngester.ingest_records_for_timestamp_pair"
+            "providers.provider_api_scripts.time_delineated_provider_data_ingester.TimeDelineatedProviderDataIngester._ingest_records"
         ) as ingest_for_pair_mock,
     ):
         # Set large_batches to include one timestamp pair

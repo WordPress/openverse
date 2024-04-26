@@ -123,9 +123,15 @@ def test_endpoint_increment():
 
 def test_initial_params_respected():
     stocksnap = StockSnapDataIngester(conf={"initial_query_params": {"page": 5}})
-    query_params = stocksnap._get_query_params(None)
-    assert stocksnap._page_counter == 5
-    assert query_params == {"page": 5}
+    with patch.object(stocksnap, "_ingest_records") as _ingest_mock:
+        stocksnap.ingest_records()
+        _ingest_mock.assert_called_with({"page": 5}, {})
+
+        # Assert that the next time _get_query_params is called, the page counter
+        # increments appropriately instead of starting back at the beginning
+        query_params = stocksnap._get_query_params({"page": 5})
+        assert query_params == {"page": 6}
+        assert stocksnap._page_counter == 6
 
 
 def test_get_record_data_returns_none_when_media_data_none():
