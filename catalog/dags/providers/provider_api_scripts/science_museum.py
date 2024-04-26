@@ -72,7 +72,7 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
         year_ranges.extend(
             [(x, min(x + 5, final_year)) for x in range(1925, final_year, 5)]
         )
-        return [{"date[from]": from_, "date[to]": to_} for from_, to_ in year_ranges]
+        return year_ranges
 
     def get_fixed_query_params(self):
         """
@@ -80,7 +80,9 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
         with the dates set as fixed query params.
         """
         next_year = date.today().year + 1
-        return self._get_year_ranges(next_year)
+        year_ranges = self._get_year_ranges(next_year)
+
+        return [{"date[from]": from_, "date[to]": to_} for from_, to_ in year_ranges]
 
     def get_next_query_params(self, prev_query_params):
         if not prev_query_params:

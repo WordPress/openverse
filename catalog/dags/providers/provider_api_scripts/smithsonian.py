@@ -114,17 +114,20 @@ class SmithsonianDataIngester(ProviderDataIngester):
             license_url="https://creativecommons.org/publicdomain/zero/1.0/"
         )
 
+    def get_fixed_query_params(self):
+        base_query_string = "online_media_type:Images AND media_usage:CC0"
+        return [
+            {"q": base_query_string + f" AND hash:{hash_prefix}*"}
+            for hash_prefix in self._get_hash_prefixes()
+        ]
+
     def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
         # On the first request, `prev_query_params` will be `None`. We can detect this
         # and return our default params.
-        query_string = "online_media_type:Images AND media_usage:CC0"
-        if hash_prefix := kwargs.get("hash_prefix"):
-            query_string += f" AND hash:{hash_prefix}*"
 
         if not prev_query_params:
             return {
                 "api_key": self.api_key,
-                "q": query_string,
                 "rows": self.batch_limit,
                 "start": 0,
             }
@@ -407,11 +410,10 @@ class SmithsonianDataIngester(ProviderDataIngester):
         )
         return [tag for tag_list in tag_lists_generator for tag in tag_list if tag]
 
-    def ingest_records(self, **kwargs) -> None:
+    def ingest_records(self) -> None:
+        # Validate unit codes before ingestion
         self.validate_unit_codes_from_api()
-        for hash_prefix in self._get_hash_prefixes():
-            logger.debug(f"Getting records for hash prefix {hash_prefix}")
-            super().ingest_records(hash_prefix=hash_prefix)
+        super().ingest_records()
 
 
 def main():

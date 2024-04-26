@@ -42,12 +42,11 @@ class VictoriaDataIngester(ProviderDataIngester):
         # This set is used to prevent duplicate images of the same items
         self.RECORDS_IDS = set()
 
-    def ingest_records(self, **kwargs):
-        for license_ in self.LICENSE_LIST:
-            super().ingest_records(license_=license_)
-
     def get_batch_data(self, response_json):
         return response_json or None
+
+    def get_fixed_query_params(self):
+        return [{"imagelicense": license_} for license_ in self.LICENSE_LIST]
 
     def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
         if not prev_query_params:
