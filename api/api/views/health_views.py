@@ -36,9 +36,7 @@ class HealthCheck(APIView):
         try:
             connection.ensure_connection()
         except OperationalError as err:
-            raise HealthCheckException(
-                code="postgres", detail=f"Database unavailable: {err}"
-            )
+            raise HealthCheckException(f"postgres: {err}")
 
     @staticmethod
     def _check_es() -> None:
@@ -50,12 +48,10 @@ class HealthCheck(APIView):
         es_health = settings.ES.cluster.health(timeout="5s")
 
         if es_health["timed_out"]:
-            raise HealthCheckException(code="elasticsearch", detail="es_timed_out")
+            raise HealthCheckException("elasticsearch: es_timed_out")
 
         if (es_status := es_health["status"]) != "green":
-            raise HealthCheckException(
-                code="elasticsearch", detail=f"es_status_{es_status}"
-            )
+            raise HealthCheckException(f"elasticsearch: es_status_{es_status}")
 
     def get(self, request: Request):
         if "check_es" in request.query_params:
