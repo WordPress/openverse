@@ -115,6 +115,12 @@ VALUES
 # Ingestion #
 #############
 
+# Remove base indices if they exist
+just docker/es/delete-index audio-init
+just docker/es/delete-index audio-init-filtered
+just docker/es/delete-index image-init
+just docker/es/delete-index image-init-filtered
+
 # Ingest and index the data
 just ingestion_server/ingest-upstream "audio" "init"
 just docker/es/wait-for-index "audio-init"
