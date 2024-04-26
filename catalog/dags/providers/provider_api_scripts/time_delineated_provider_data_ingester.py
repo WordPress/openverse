@@ -195,28 +195,36 @@ class TimeDelineatedProviderDataIngester(ProviderDataIngester):
 
         return pairs_list
 
-    def ingest_records(self, **kwargs) -> None:
-        self.timestamp_pairs = self._get_timestamp_pairs(**kwargs)
+    def get_fixed_query_params(self):
+        self.timestamp_pairs = self._get_timestamp_pairs()
         if self.timestamp_pairs:
             logger.info(f"{len(self.timestamp_pairs)} timestamp pairs generated.")
+        # Run ingestion for each timestamp pair. Override this method to
+        # change the query param names if needed.
+        return [
+            {"start_ts": start_ts, "end_ts": end_ts}
+            for start_ts, end_ts in self.timestamp_pairs
+        ]
 
-        # Run ingestion for each timestamp pair
-        for start_ts, end_ts in self.timestamp_pairs:
-            self.ingest_records_for_timestamp_pair(start_ts, end_ts, **kwargs)
-
-    def ingest_records_for_timestamp_pair(
-        self, start_ts: datetime, end_ts: datetime, **kwargs
-    ):
+    def _ingest_records(
+        self, initial_query_params: dict | None, fixed_query_params: dict | None
+    ) -> None:
+        """
+        Override _ingest_records, which is called for each set of timestamp pairs,
+        to reset the counts before each round.
+        """
         # Update `current_timestamp_pair` to keep track of what we are processing.
-        self.current_timestamp_pair = (start_ts, end_ts)
+        logger.info(fixed_query_params)
+        self.current_timestamp_pair = (
+            fixed_query_params["start_ts"],
+            fixed_query_params["end_ts"],
+        )
 
         # Reset counts
         self.new_iteration = True
         self.fetched_count = 0
 
-        # Run ingestion for the given parameters
-        logger.info(f"Ingesting data for start: {start_ts}, end: {end_ts}")
-        super().ingest_records(start_ts=start_ts, end_ts=end_ts, **kwargs)
+        super()._ingest_records(initial_query_params, fixed_query_params)
 
     def get_should_continue(self, response_json) -> bool:
         """

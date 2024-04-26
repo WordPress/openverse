@@ -402,7 +402,7 @@ class ProviderDataIngester(ABC):
         return None
 
     def _get_query_params(
-        self, prev_query_params: dict | None, fixed_query_params: dict | None
+        self, prev_query_params: dict | None, fixed_query_params: dict | None = None
     ) -> dict | None:
         """
         Return the next set of query_params for the next request.

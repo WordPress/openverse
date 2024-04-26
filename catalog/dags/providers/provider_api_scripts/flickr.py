@@ -105,7 +105,7 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
         all the unique records over this time period. We will process up to the
         max_unique_records count and then move on to the next batch.
         """
-        # Perform ingestion as normal, splitting requests into time-slices of at most
+        # Perform full ingestion as normal, splitting requests into time-slices of at most
         # 5 minutes. When a batch is encountered which contains more than
         # max_unique_records, it is skipped and added to the `large_batches` list for
         # later processing.
@@ -121,8 +121,13 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
             # For each large batch, ingest records for that interval one license
             # type at a time.
             for license_ in LICENSE_INFO.keys():
-                super().ingest_records_for_timestamp_pair(
-                    start_ts=start_ts, end_ts=end_ts, license=license_
+                super()._ingest_records(
+                    initial_query_params=None,
+                    fixed_query_params={
+                        "min_upload_date": start_ts,
+                        "max_upload_date": end_ts,
+                        "license": license_,
+                    },
                 )
         logger.info("Completed large batch processing by license type.")
 
@@ -130,6 +135,13 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
         # large amount of data, we can safely assume that we used the maximum of 25
         # additional requests when generating timestamp pairs.
         logger.info(f"Made {self.requests_count + 25} requests to the Flickr API.")
+
+    def get_fixed_query_params(self):
+        timestamp_pairs = super().get_fixed_query_params()
+        return [
+            {"min_upload_date": ts["start_ts"], "max_upload_date": ts["end_ts"]}
+            for ts in timestamp_pairs
+        ]
 
     def get_next_query_params(self, prev_query_params, **kwargs):
         if not prev_query_params:

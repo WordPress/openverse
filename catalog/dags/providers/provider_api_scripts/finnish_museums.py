@@ -54,10 +54,23 @@ class FinnishMuseumsDataIngester(TimeDelineatedProviderDataIngester):
     min_divisions = 12
     max_divisions = 20
 
-    def ingest_records(self, **kwargs):
+    def get_fixed_query_params(self):
+        timestamp_pairs = super().get_fixed_query_params()
+        fixed_query_params = []
+
         for building in self.buildings:
-            logger.info(f"Obtaining images of building {building}")
-            super().ingest_records(building=building)
+            fixed_query_params += [
+                {
+                    "filter[]": [
+                        f'format:"{self.format_type}"',
+                        f'building:"{building}"',
+                        f'last_indexed:"[{ts["start_ts"]} TO {ts["end_ts"]}]"',
+                    ]
+                }
+                for ts in timestamp_pairs
+            ]
+
+        return fixed_query_params
 
     def get_next_query_params(self, prev_query_params, **kwargs):
         if not prev_query_params:
