@@ -37,7 +37,9 @@ class MockProviderDataIngesterMixin:
     endpoint = ENDPOINT
 
     def get_next_query_params(self, prev_query_params):
-        return DEFAULT_QUERY_PARAMS
+        if prev_query_params is None:
+            return DEFAULT_QUERY_PARAMS
+        return {**prev_query_params, "page": prev_query_params["page"] + 1}
 
     def get_batch_data(self, response_json):
         if response_json:
