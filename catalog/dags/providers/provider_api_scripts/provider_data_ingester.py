@@ -337,8 +337,7 @@ class ProviderDataIngester(ABC):
                 )
 
                 logger.info(
-                    "First fixed query parameter matching the initial_query_params"
-                    f" was: {initial_fixed_params}."
+                    f"==Starting ingestion with fixed params: {initial_fixed_params}=="
                 )
 
                 # Run ingestion on the first batch, passing in the initial_query_params
@@ -348,9 +347,6 @@ class ProviderDataIngester(ABC):
                 fixed_query_params = fixed_query_params[
                     fixed_query_params.index(initial_fixed_params) + 1 :
                 ]
-                logger.info(
-                    f"Only the following fixed query parameters will be used: {fixed_query_params}"
-                )
 
             for fixed_params in fixed_query_params:
                 logger.info(f"==Starting ingestion with fixed params: {fixed_params}==")
