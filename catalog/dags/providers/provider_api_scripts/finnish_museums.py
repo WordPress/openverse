@@ -77,12 +77,14 @@ class FinnishMuseumsDataIngester(TimeDelineatedProviderDataIngester):
 
     def _replace_single_quotes_in_params(self, params: dict | None):
         """Ensure that the values in the "filter[]" param do not contain single quotes."""
-        if params is None:
+        if not params:
             return None
 
         return {
             **params,
-            "filter[]": [param.replace("'", '"') for param in params.get("filter[]")],
+            "filter[]": [
+                param.replace("'", '"') for param in params.get("filter[]", [])
+            ],
         }
 
     def get_fixed_query_params(self):
