@@ -1,3 +1,5 @@
+from textwrap import dedent as d
+
 from django.conf import settings
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
@@ -192,7 +194,16 @@ class Audio(AudioFileMixin, AbstractMedia):
     alt_files = models.JSONField(
         blank=True,
         null=True,
-        help_text="JSON describing alternative files for this audio.",
+        help_text=d("""
+        JSON object containing information on alternative audio files. Each object
+        is expected to contain:
+
+        - `url`: URL reference to the file
+        - `filesize`: File size in bytes
+        - `filetype`: Extension of the file
+        - `bit_rate`: Bitrate of the file in bits/second
+        - `sample_rate`: Sample rate of the file in bits/second
+        """),
     )
 
     @property

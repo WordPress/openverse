@@ -1,4 +1,5 @@
 import mimetypes
+from textwrap import dedent as d
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -64,19 +65,37 @@ class AbstractMedia(
         "Source and provider can be different. Eg: the Google Open "
         "Images dataset is source=openimages, but provider=flickr.",
     )
-    last_synced_with_source = models.DateTimeField(blank=True, null=True, db_index=True)
-    removed_from_source = models.BooleanField(default=False)
-
-    view_count = models.IntegerField(
+    last_synced_with_source = models.DateTimeField(
         blank=True,
         null=True,
-        default=0,
+        db_index=True,
+        help_text="The date the media was last updated from the upstream source.",
+    )
+    removed_from_source = models.BooleanField(
+        default=False,
+        help_text="Whether or not the media has been removed from the upstream source.",
+    )
+
+    view_count = models.IntegerField(
+        blank=True, null=True, default=0, help_text="Vestigial field, purpose unknown."
     )
 
     tags = models.JSONField(
         blank=True,
         null=True,
-        help_text="Tags with detailed metadata, such as accuracy.",
+        help_text=d(
+            """
+        JSON array of objects containing tags for the media. Each tag object
+        is expected to have:
+
+        - `name`: The tag itself (e.g. "dog")
+        - `provider`: The source of the tag
+        - `accuracy`: If the tag was added using a machine-labeler, the confidence
+        for that label expressed as a value between 0 and 1.
+
+        Note that only `name` and `accuracy` are presently surfaced in API results.
+        """
+        ),
     )
 
     category = models.CharField(
@@ -87,7 +106,18 @@ class AbstractMedia(
         help_text="The top-level classification of this media file.",
     )
 
-    meta_data = models.JSONField(blank=True, null=True)
+    meta_data = models.JSONField(
+        blank=True,
+        null=True,
+        help_text=d(
+            """
+        JSON object containing extra data about the media item. No fields are expected,
+        but if the `license_url` field is available, it will be used for determining
+        the license URL for the media item. The `description` field, if available, is
+        also indexed into Elasticsearch and as a search field on queries.
+        """
+        ),
+    )
 
     @property
     def license_url(self) -> str | None:
