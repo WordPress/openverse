@@ -90,7 +90,7 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
             self.page_number = 0
         else:
             # Increment the page number
-            self.page_number += 1
+            self.page_number = prev_query_params["page[number]"] + 1
 
         return {
             "has_image": 1,
