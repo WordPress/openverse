@@ -1,8 +1,6 @@
 import { defineStore } from "pinia"
-import { ssrRef } from "@nuxtjs/composition-api"
 
 import { capitalCase } from "~/utils/case"
-import { env } from "~/utils/env"
 import {
   AUDIO,
   IMAGE,
@@ -13,8 +11,6 @@ import { initProviderServices } from "~/data/media-provider-service"
 
 import type { MediaProvider } from "~/types/media-provider"
 import type { FetchingError, FetchState } from "~/types/fetch-state"
-
-import type { Ref } from "vue"
 
 export interface ProviderState {
   providers: {
@@ -29,6 +25,7 @@ export interface ProviderState {
     audio: string[]
     image: string[]
   }
+  lastUpdated: number
 }
 
 /**
@@ -42,12 +39,6 @@ const sortProviders = (data: MediaProvider[]): MediaProvider[] => {
     return nameA.localeCompare(nameB)
   })
 }
-/**
- * Timestamp is used to limit the update frequency to one every 60 minutes per request.
- */
-const lastUpdated: Ref<Date | null> = ssrRef(null)
-
-const updateFrequency = parseInt(env.providerUpdateFrequency, 10)
 
 export const useProviderStore = defineStore("provider", {
   state: (): ProviderState => ({
@@ -63,6 +54,7 @@ export const useProviderStore = defineStore("provider", {
       [AUDIO]: [],
       [IMAGE]: [],
     },
+    lastUpdated: new Date().getTime(),
   }),
 
   actions: {
@@ -91,7 +83,7 @@ export const useProviderStore = defineStore("provider", {
         : this._endFetching(mediaType, option)
     },
     async getProviders() {
-      await this.fetchMediaProviders()
+      await this.updateProvidersIfNeeded()
       return this.providers
     },
 
@@ -124,14 +116,14 @@ export const useProviderStore = defineStore("provider", {
      * Fetches provider data if no data is available, or if the data is too old.
      * On successful fetch updates lastUpdated value.
      */
-    async fetchMediaProviders() {
+    async updateProvidersIfNeeded() {
       if (this.needsUpdate) {
         await Promise.allSettled(
           supportedMediaTypes.map((mediaType) =>
             this.fetchMediaTypeProviders(mediaType)
           )
         )
-        lastUpdated.value = new Date()
+        this.lastUpdated = new Date().getTime()
       }
     },
 
@@ -181,18 +173,18 @@ export const useProviderStore = defineStore("provider", {
   getters: {
     /**
      * Fetch providers only if there is no data, or if the last update for current request
-     * was more than 1 hour ago.
+     * was more than 1 hour ago (the value in PROVIDER_UPDATE_FREQUENCY env variable).
      */
-    needsUpdate(state) {
+    needsUpdate(): boolean {
       const noData = supportedMediaTypes.some(
-        (mediaType) => !state.providers[mediaType].length
+        (mediaType) => !this.providers[mediaType].length
       )
-      if (noData || !lastUpdated.value) {
+      if (noData || !this.lastUpdated) {
         return true
       }
 
-      const timeSinceLastUpdate =
-        new Date().getTime() - new Date(lastUpdated.value).getTime()
+      const updateFrequency = this.$nuxt.$config.providerUpdateFrequency
+      const timeSinceLastUpdate = new Date().getTime() - this.lastUpdated
       return timeSinceLastUpdate > updateFrequency
     },
   },

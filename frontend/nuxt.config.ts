@@ -112,6 +112,11 @@ const openverseLocales = [
 const port = process.env.PORT || 8443
 const isProdNotPlaywright = isProd && !(process.env.PW === "true")
 
+const getIntEnvVar = (name: string, defaultValue: number) => {
+  const value = parseInt(process.env[name] ?? "", 10)
+  return isNaN(value) ? defaultValue : value
+}
+
 const config: NuxtConfig = {
   // eslint-disable-next-line no-undef
   version: pkg.version, // used to purge cache :)
@@ -148,6 +153,7 @@ const config: NuxtConfig = {
     "~/plugins/sentry.ts",
     "~/plugins/analytics.ts",
     "~/plugins/errors.ts",
+    "~/plugins/init-stores.ts",
   ],
   css: ["~/assets/fonts.css", "~/styles/tailwind.css", "~/styles/accent.css"],
   head,
@@ -314,6 +320,11 @@ const config: NuxtConfig = {
     trackLocalhost: !isProdNotPlaywright,
   },
   publicRuntimeConfig: {
+    deploymentEnv: process.env.DEPLOYMENT_ENV ?? "local",
+    providerUpdateFrequency: getIntEnvVar(
+      "PROVIDER_UPDATE_FREQUENCY",
+      60 * 60 * 1000
+    ), // 1 hour
     plausible: {
       // This is the current domain of the site.
       domain:
@@ -346,7 +357,6 @@ const config: NuxtConfig = {
         environment: process.env.SENTRY_ENVIRONMENT,
       },
     },
-    deploymentEnv: process.env.DEPLOYMENT_ENV ?? "local",
   },
 }
 
