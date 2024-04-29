@@ -47,17 +47,13 @@
 <fieldset class="module aligned">
   <h2>Media details</h2>
   {% if media_type == 'image' %}
-    {% if thumb_url %}
     <div class="img-container">
-      <img src="{{ thumb_url }}" alt="Media Image" class="blur-image" height="300"
+      <img src="{% url media_type|add:'-thumb' identifier=identifier %}" alt="Media Image" class="blur-image" height="300"
            onclick="toggleBlur(this)"
            onerror="this.onerror=null;this.src='{{ url }}';"
            style="cursor: pointer;">
       <p>Show content</p>
     </div>
-  {% else %}
-  <p>No Image Available</p>
-  {% endif %}
 
   {% elif media_type == 'audio' %}
     <audio controls>
@@ -87,7 +83,11 @@
       <div class="flex-container">
         <label>Tags</label>
         <div class="readonly">
-          <p>{{ tags }}</div>
+          {% for provider, provider_tags in tags.items %}
+            <p><em>{{ provider }}</em></p>
+            <p> {% for tag in provider_tags %}{{ tag }}, {% endfor %}</p>
+          {% endfor %}
+        </div>
       </div>
   </div>
   <div class="form-row field-created_at">
@@ -125,7 +125,7 @@
           <td>{{ report.created_at }}</td>
           <td>{{ report.reason }}</td>
           <td>{{ report.status }}</td>
-          <td><a href="{% url 'admin:api_imagereport_change' report.id %}">{{ report.id }}</a></td>
+          <td><a href="{% url 'admin:api_'|add:media_type|add:'report_change' report.id %}">{{ report.id }}</a></td>
         </tr>
         {% endfor %}
       </tbody>

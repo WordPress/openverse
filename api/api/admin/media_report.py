@@ -56,10 +56,6 @@ class MediaReportAdmin(admin.ModelAdmin):
             .exclude(id=obj.id)
             .order_by("created_at")
         )
-        for report in reports:
-            report.href = reverse(
-                f"admin:api_{self.media_type}report_change", args=[report.id]
-            )
         return reports
 
     def get_exclude(self, request, obj=None):
@@ -104,7 +100,7 @@ class MediaReportAdmin(admin.ModelAdmin):
             "creator": obj.media_obj.creator or obj.media_obj.creator_url,
             "creator_url": obj.media_obj.creator_url,
             "url": obj.media_obj.url,
-            "tags": None,
+            "tags": {},
             "reverse_media_url": reverse(
                 f"admin:api_{self.media_type}_change", args=[obj.media_obj.identifier]
             ),
@@ -115,10 +111,6 @@ class MediaReportAdmin(admin.ModelAdmin):
             for tag in obj.media_obj.tags:
                 tags_by_provider.setdefault(tag["provider"], []).append(tag["name"])
             additional_data["tags"] = tags_by_provider
-        if self.media_type == "image":
-            additional_data["thumb_url"] = (
-                f"https://api.openverse.engineering{obj.media_url()}thumb/"
-            )
         return additional_data
 
     def change_view(self, request, object_id, form_url="", extra_context=None):
