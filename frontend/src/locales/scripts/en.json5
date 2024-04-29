@@ -479,7 +479,7 @@
      * Interpolated into error.mediaNotFound:
      * _{mediaType}_ part of "Couldn't find {mediaType} with id {id}"
      */
-    audio: "audio track",
+    audio: "an audio track",
   },
   filters: {
     title: "Filters",
