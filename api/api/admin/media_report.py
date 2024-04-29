@@ -3,16 +3,11 @@ import logging
 from django.conf import settings
 from django.contrib import admin
 from django.urls import reverse
-from django.utils.safestring import mark_safe
 
 from elasticsearch import NotFoundError
 from elasticsearch_dsl import Search
 
 from api.models import PENDING
-
-
-def create_link(url: str, text: str):
-    return mark_safe(f'<a href="{url}">{text}</a>')
 
 
 class MediaReportAdmin(admin.ModelAdmin):
@@ -52,18 +47,6 @@ class MediaReportAdmin(admin.ModelAdmin):
             return None
         return True
 
-    @admin.display(description="URLs")
-    def landing_urls(self, obj):
-        if not self.media_type or not obj:
-            return "N/A"
-        openverse_url = (
-            f"https://openverse.org/{self.media_type}/{obj.media_obj.identifier}"
-        )
-        return mark_safe(
-            f"<p>{create_link(obj.media_obj.foreign_landing_url, obj.media_obj.provider)}, "
-            f'{create_link(openverse_url, "openverse.org")}'
-        )
-
     def get_other_reports(self, obj):
         if not self.media_type or not obj:
             return []
@@ -74,7 +57,9 @@ class MediaReportAdmin(admin.ModelAdmin):
             .order_by("created_at")
         )
         for report in reports:
-            report.href = reverse(f"admin:api_{self.media_type}report_change", args=[report.id])
+            report.href = reverse(
+                f"admin:api_{self.media_type}report_change", args=[report.id]
+            )
         return reports
 
     def get_exclude(self, request, obj=None):
