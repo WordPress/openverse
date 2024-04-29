@@ -1,10 +1,15 @@
-import re
+from __future__ import annotations
 
-from openverse_attribution.license import License
+import re
+from typing import TYPE_CHECKING
+
+
+if TYPE_CHECKING:
+    from openverse_attribution.license import License
 
 
 def get_attribution_text(
-    license_slug: str,
+    lic: License,
     title: str | None = None,
     creator: str | None = None,
     license_version: str | None = None,
@@ -22,15 +27,13 @@ def get_attribution_text(
     To remove the sentence for viewing the legal text, set the ``license_url``
     parameter to ``False``.
 
+    :param lic: the ``License`` enum instance for the work
     :param title: the name of the work, if known
     :param creator: the name of the work's creator, if known
-    :param license_slug:
     :param license_version: the version of the license, if known
     :param license_url: the URL to the license, to override the default
     :return: the plain-text English language attribution
     """
-
-    lic = License(license_slug)
 
     title = f'"{title}"' if title else "This work"
 

@@ -1,5 +1,7 @@
 from enum import StrEnum
 
+from openverse_attribution.attribution import get_attribution_text
+
 
 class License(StrEnum):
     """
@@ -70,6 +72,25 @@ class License(StrEnum):
         else:
             fragment = f"licenses/{self}/{version or '4.0'}"
         return f"https://creativecommons.org/{fragment}/"
+
+    def attribution(
+        self,
+        title: str | None = None,
+        creator: str | None = None,
+        version: str | None = None,
+        url: str | bool | None = None,
+    ):
+        """
+        Get the attribution text for a media item released under this license.
+
+        :param title:  the name of the work, if known
+        :param creator: the name of the work's creator, if known
+        :param version: the version number of the license
+        :param url: the URL to the legal text of this license
+        :return: the plain-text English language attribution
+        """
+
+        return get_attribution_text(self, title, creator, version, url)
 
     @property
     def is_deprecated(self) -> bool:
