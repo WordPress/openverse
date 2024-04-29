@@ -17,14 +17,14 @@ value). Note that relation fields are always nullable.
 
 ### Relations
 
-| Name                                | Type                                                                                             | DB type | Nature       | To               |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------ | ------- | ------------ | ---------------- |
-| `audio_report`                      | [`ForeignKey`](https://docs.djangoproject.com/en/stable/ref/models/fields/#foreignkey)           | `uuid`  | One To Many  | `AudioReport`    |
-| `audiodecision`                     | [`ManyToManyField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#manytomanyfield) |         | Many To Many | `AudioDecision`  |
-| [`audioset`](#Audio-audioset-notes) | `ForeignObject`                                                                                  |         | Many To One  | `AudioSet`       |
-| `deleted_audio`                     | [`OneToOneField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#onetoonefield)     | `uuid`  | One To One   | `DeletedAudio`   |
-| `lists`                             | [`ManyToManyField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#manytomanyfield) |         | Many To Many | `AudioList`      |
-| `sensitive_audio`                   | [`OneToOneField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#onetoonefield)     | `uuid`  | One To One   | `SensitiveAudio` |
+| Name                                              | Type                                                                                             | DB type | Nature       | To               |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ------- | ------------ | ---------------- |
+| [`audio_report`](#Audio-audio_report-notes)       | [`ForeignKey`](https://docs.djangoproject.com/en/stable/ref/models/fields/#foreignkey)           | `uuid`  | One To Many  | `AudioReport`    |
+| [`audiodecision`](#Audio-audiodecision-notes)     | [`ManyToManyField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#manytomanyfield) |         | Many To Many | `AudioDecision`  |
+| [`audioset`](#Audio-audioset-notes)               | `ForeignObject`                                                                                  |         | Many To One  | `AudioSet`       |
+| [`deleted_audio`](#Audio-deleted_audio-notes)     | [`OneToOneField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#onetoonefield)     | `uuid`  | One To One   | `DeletedAudio`   |
+| [`lists`](#Audio-lists-notes)                     | [`ManyToManyField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#manytomanyfield) |         | Many To Many | `AudioList`      |
+| [`sensitive_audio`](#Audio-sensitive_audio-notes) | [`OneToOneField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#onetoonefield)     | `uuid`  | One To One   | `SensitiveAudio` |
 
 ### Values
 
@@ -77,6 +77,15 @@ Each object is expected to contain:
 - `bit_rate`: Bitrate of the file in bits/second
 - `sample_rate`: Sample rate of the file in bits/second
 
+(Audio-audio_report-notes)=
+
+#### `audio_report`
+
+**Model docstring:** Represents audio tracks that have been reported by users.
+
+This contains an `AudioDecision` as well, if moderators have made a decision for
+this report.
+
 (Audio-audio_set_foreign_identifier-notes)=
 
 #### `audio_set_foreign_identifier`
@@ -89,12 +98,26 @@ Each object is expected to contain:
 
 **Help text:** Ordering of the audio in the set.
 
+(Audio-audiodecision-notes)=
+
+#### `audiodecision`
+
+**Model docstring:** Represents moderation decisions taken for audio tracks.
+
 (Audio-audioset-notes)=
 
 #### `audioset`
 
 This is a virtual foreign-key to `AudioSet` built on top of the fields
 `audio_set_foreign_identifier` and `provider`.
+
+**Model docstring:** This is an ordered collection of audio files, such as a
+podcast series or an album.
+
+Not to be confused with `AudioList` which is a many-to-many collection of audio
+files, like a playlist or favourites library.
+
+The FileMixin inherited by this model refers not to audio but album art.
 
 (Audio-bit_rate-notes)=
 
@@ -119,6 +142,16 @@ This is a virtual foreign-key to `AudioSet` built on top of the fields
 #### `creator_url`
 
 **Help text:** A direct link to the media creator.
+
+(Audio-deleted_audio-notes)=
+
+#### `deleted_audio`
+
+**Model docstring:** Represents audio tracks that have been deleted from the
+source.
+
+Do not create instances of this model manually. Create an `AudioReport` instance
+instead.
 
 (Audio-duration-notes)=
 
@@ -188,6 +221,12 @@ explicitly.
 
 **Help text:** The version of the media license.
 
+(Audio-lists-notes)=
+
+#### `lists`
+
+**Model docstring:** Represents a list of audio files. Currently unused.
+
 (Audio-meta_data-notes)=
 
 #### `meta_data`
@@ -215,6 +254,16 @@ source.
 #### `sample_rate`
 
 **Help text:** Number in hertz, eg. 44100.
+
+(Audio-sensitive_audio-notes)=
+
+#### `sensitive_audio`
+
+**Model docstring:** Represents audio tracks that have been flagged and verified
+as 'mature'.
+
+Do not create instances of this model manually. Create an `AudioReport` instance
+instead.
 
 (Audio-source-notes)=
 
@@ -266,13 +315,13 @@ Note that only `name` and `accuracy` are presently surfaced in API results.
 
 ### Relations
 
-| Name              | Type                                                                                             | DB type | Nature       | To               |
-| ----------------- | ------------------------------------------------------------------------------------------------ | ------- | ------------ | ---------------- |
-| `deleted_image`   | [`OneToOneField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#onetoonefield)     | `uuid`  | One To One   | `DeletedImage`   |
-| `image_report`    | [`ForeignKey`](https://docs.djangoproject.com/en/stable/ref/models/fields/#foreignkey)           | `uuid`  | One To Many  | `ImageReport`    |
-| `imagedecision`   | [`ManyToManyField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#manytomanyfield) |         | Many To Many | `ImageDecision`  |
-| `lists`           | [`ManyToManyField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#manytomanyfield) |         | Many To Many | `ImageList`      |
-| `sensitive_image` | [`OneToOneField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#onetoonefield)     | `uuid`  | One To One   | `SensitiveImage` |
+| Name                                              | Type                                                                                             | DB type | Nature       | To               |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ------- | ------------ | ---------------- |
+| [`deleted_image`](#Image-deleted_image-notes)     | [`OneToOneField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#onetoonefield)     | `uuid`  | One To One   | `DeletedImage`   |
+| [`image_report`](#Image-image_report-notes)       | [`ForeignKey`](https://docs.djangoproject.com/en/stable/ref/models/fields/#foreignkey)           | `uuid`  | One To Many  | `ImageReport`    |
+| [`imagedecision`](#Image-imagedecision-notes)     | [`ManyToManyField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#manytomanyfield) |         | Many To Many | `ImageDecision`  |
+| [`lists`](#Image-lists-notes)                     | [`ManyToManyField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#manytomanyfield) |         | Many To Many | `ImageList`      |
+| [`sensitive_image`](#Image-sensitive_image-notes) | [`OneToOneField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#onetoonefield)     | `uuid`  | One To One   | `SensitiveImage` |
 
 ### Values
 
@@ -325,6 +374,15 @@ Note that only `name` and `accuracy` are presently surfaced in API results.
 
 **Help text:** A direct link to the media creator.
 
+(Image-deleted_image-notes)=
+
+#### `deleted_image`
+
+**Model docstring:** Represents images that have been deleted from the source.
+
+Do not create instances of this model manually. Create an `ImageReport` instance
+instead.
+
 (Image-filesize-notes)=
 
 #### `filesize`
@@ -368,6 +426,21 @@ explicitly.
 
 **Help text:** Our unique identifier for an open-licensed work.
 
+(Image-image_report-notes)=
+
+#### `image_report`
+
+**Model docstring:** Represents images that have been reported by users.
+
+This contains an `ImageDecision` as well, if moderators have made a decision for
+this report.
+
+(Image-imagedecision-notes)=
+
+#### `imagedecision`
+
+**Model docstring:** Represents moderation decisions taken for images.
+
 (Image-last_synced_with_source-notes)=
 
 #### `last_synced_with_source`
@@ -385,6 +458,12 @@ explicitly.
 #### `license_version`
 
 **Help text:** The version of the media license.
+
+(Image-lists-notes)=
+
+#### `lists`
+
+**Model docstring:** Represents a list of images. Currently unused.
 
 (Image-meta_data-notes)=
 
@@ -407,6 +486,16 @@ available, is also indexed into Elasticsearch and as a search field on queries.
 
 **Help text:** Whether or not the media has been removed from the upstream
 source.
+
+(Image-sensitive_image-notes)=
+
+#### `sensitive_image`
+
+**Model docstring:** Represents images that have been flagged and verified as
+'mature'.
+
+Do not create instances of this model manually. Create an `ImageReport` instance
+instead.
 
 (Image-source-notes)=
 

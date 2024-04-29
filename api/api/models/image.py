@@ -60,7 +60,7 @@ class Image(ImageFileMixin, AbstractMedia):
 
 class DeletedImage(AbstractDeletedMedia):
     """
-    Stores identifiers of images that have been deleted from the source.
+    Represents images that have been deleted from the source.
 
     Do not create instances of this model manually. Create an ``ImageReport`` instance
     instead.
@@ -83,7 +83,7 @@ class DeletedImage(AbstractDeletedMedia):
 
 class SensitiveImage(AbstractSensitiveMedia):
     """
-    Stores all images that have been flagged as 'mature'.
+    Represents images that have been flagged and verified as 'mature'.
 
     Do not create instances of this model manually. Create an ``ImageReport`` instance
     instead.
@@ -108,6 +108,13 @@ class SensitiveImage(AbstractSensitiveMedia):
 
 
 class ImageReport(AbstractMediaReport):
+    """
+    Represents images that have been reported by users.
+
+    This contains an ``ImageDecision`` as well, if moderators have made a decision
+    for this report.
+    """
+
     media_class = Image
 
     media_obj = models.ForeignKey(
@@ -144,6 +151,8 @@ class ImageDecision(AbstractMediaDecision):
 
 
 class ImageList(AbstractMediaList):
+    """Represents a list of images. Currently unused."""
+
     images = models.ManyToManyField(
         Image,
         related_name="lists",

@@ -48,8 +48,8 @@ class AudioSet(ForeignIdentifierMixin, MediaMixin, FileMixin, OpenLedgerModel):
     """
     This is an ordered collection of audio files, such as a podcast series or an album.
 
-    Not to be confused with AudioList which is a many-to-many collection of audio files,
-    like a playlist or favourites library.
+    Not to be confused with ``AudioList`` which is a many-to-many collection of audio
+    files, like a playlist or favourites library.
 
     The FileMixin inherited by this model refers not to audio but album art.
     """
@@ -254,7 +254,7 @@ class Audio(AudioFileMixin, AbstractMedia):
 
 class DeletedAudio(AbstractDeletedMedia):
     """
-    Stores identifiers of audio tracks that have been deleted from the source.
+    Represents audio tracks that have been deleted from the source.
 
     Do not create instances of this model manually. Create an ``AudioReport`` instance
     instead.
@@ -280,7 +280,7 @@ class DeletedAudio(AbstractDeletedMedia):
 
 class SensitiveAudio(AbstractSensitiveMedia):
     """
-    Stores all audio tracks that have been flagged as 'mature'.
+    Represents audio tracks that have been flagged and verified as 'mature'.
 
     Do not create instances of this model manually. Create an ``AudioReport`` instance
     instead.
@@ -306,6 +306,13 @@ class SensitiveAudio(AbstractSensitiveMedia):
 
 
 class AudioReport(AbstractMediaReport):
+    """
+    Represents audio tracks that have been reported by users.
+
+    This contains an ``AudioDecision`` as well, if moderators have made a decision
+    for this report.
+    """
+
     media_class = Audio
 
     media_obj = models.ForeignKey(
@@ -342,6 +349,8 @@ class AudioDecision(AbstractMediaDecision):
 
 
 class AudioList(AbstractMediaList):
+    """Represents a list of audio files. Currently unused."""
+
     audios = models.ManyToManyField(
         Audio,
         related_name="lists",
