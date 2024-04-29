@@ -8,7 +8,6 @@ from django.urls import reverse
 from django.utils.html import format_html
 
 from elasticsearch import Elasticsearch, NotFoundError
-from openverse_attribution.attribution import get_attribution_text
 from openverse_attribution.license import License
 
 from api.constants.moderation import DecisionAction
@@ -91,20 +90,26 @@ class AbstractMedia(
     meta_data = models.JSONField(blank=True, null=True)
 
     @property
-    def license_url(self) -> str:
+    def license_url(self) -> str | None:
         """A direct link to the license deed or legal terms."""
 
         if self.meta_data and (url := self.meta_data.get("license_url")):
             return url
-        else:
-            return License(self.license.lower()).url(self.license_version)
+        try:
+            lic = License(self.license.lower())
+        except ValueError:
+            return None
+        return lic.url(self.license_version)
 
     @property
-    def attribution(self) -> str:
+    def attribution(self) -> str | None:
         """Legally valid attribution for the media item in plain-text English."""
 
-        return get_attribution_text(
-            self.license.lower(),
+        try:
+            lic = License(self.license)
+        except ValueError:
+            return None
+        return lic.attribution(
             self.title,
             self.creator,
             self.license_version,
