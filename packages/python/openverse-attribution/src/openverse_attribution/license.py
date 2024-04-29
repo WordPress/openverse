@@ -17,6 +17,7 @@ class License(StrEnum):
     BY_NC_ND = "by-nc-nd"
 
     # Deprecated CC licenses
+    SA = "sa"
     SAMPLING = "sampling+"
     NC_SAMPLING = "nc-sampling+"
 
@@ -79,7 +80,7 @@ class License(StrEnum):
         :return: whether this license has been deprecated
         """
 
-        return self in {License.SAMPLING, License.NC_SAMPLING}
+        return self in {License.SAMPLING, License.NC_SAMPLING, License.SA}
 
     @property
     def is_pd(self) -> bool:
