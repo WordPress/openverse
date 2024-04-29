@@ -1,40 +1,38 @@
+<!-- prettier-ignore -->
 ## Fixes
-
 <!-- If PR doesn't fully resolve the issue, replace 'Fixes' below with 'Related to'. -->
 <!-- If there is no issue being resolved, please consider opening one before creating this pull request. -->
 
 Fixes #[issue number] by @[issue author]
 
 ## Description
-
 <!-- Concisely describe what the pull request does. -->
 <!-- Add screenshots, videos, or other media to show the problem and the solution when appropriate. -->
 
-## Testing Instructions
 
+## Testing Instructions
 <!-- Give steps for the reviewer to verify that this PR fixes the problem; or delete this section entirely. -->
 
-## Checklist
 
+## Checklist
 <!-- Replace  the [ ] with [x] to check the boxes. -->
 
-- [ ] My pull request has a descriptive title (not a vague title like
-      `Update index.md`).
-- [ ] My pull request targets the _default_ branch of the repository (`main`) or
-      a parent feature branch.
+- [ ] My pull request has a descriptive title (not a vague title like`Update index.md`).
+- [ ] My pull request targets the _default_ branch of the repository (`main`) or a parent feature branch.
 - [ ] My commit messages follow [best practices][best_practices].
 - [ ] My code follows the established code style of the repository.
 - [ ] I added or updated tests for the changes I made (if applicable).
 - [ ] I added or updated documentation (if applicable).
-- [ ] I tried running the project locally and verified that there are no visible
-      errors.
-- [ ] I ran the DAG documentation generator (only applicable for catalog PRs).
+- [ ] I tried running the project locally and verified that there are no visible errors.
+- [ ] I ran the DAG documentation generator (if applicable).
+- [ ] I ran the DAG documentation generator (`just catalog/generate-docs` for catalog
+      PRs) or the media properties generator (`just catalog/generate-docs media-props`
+      for the catalog or `just api/generate-docs` for the API) where applicable.
 
 [best_practices]:
   https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project#_commit_guidelines
 
 ## Developer Certificate of Origin
-
 <!-- You must read and understand the following attestation. -->
 
 <details>
