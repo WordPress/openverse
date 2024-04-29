@@ -24,6 +24,51 @@ class MediaReportAdmin(admin.ModelAdmin):
     actions = None
     media_type = None
 
+    def get_fieldsets(self, request, obj=None):
+        if obj is None:
+            return [
+                (
+                    "Report details",
+                    {"fields": ["status", "decision", "reason", "description"]},
+                ),
+                ("Media details", {"fields": ["media_obj"]}),
+            ]
+        return [
+            (
+                "Report details",
+                {
+                    "fields": [
+                        "created_at",
+                        "status",
+                        "decision",
+                        "reason",
+                        "description",
+                        "has_sensitive_text",
+                    ],
+                },
+            ),
+        ]
+
+    def get_exclude(self, request, obj=None):
+        # ``identifier`` cannot be edited on an existing report.
+        if request.path.endswith("/change/"):
+            return ["media_obj"]
+
+    def get_readonly_fields(self, request, obj=None):
+        if obj is None:
+            return []
+        readonly_fields = [
+            "created_at",
+            "reason",
+            "description",
+            "has_sensitive_text",
+            "media_obj_id",
+        ]
+        # ``status`` cannot be changed on a finalised report.
+        if obj.status != PENDING:
+            readonly_fields.append("status")
+        return readonly_fields
+
     @admin.display(description="Has sensitive text")
     def has_sensitive_text(self, obj):
         """
@@ -58,37 +103,12 @@ class MediaReportAdmin(admin.ModelAdmin):
         )
         return reports
 
-    def get_exclude(self, request, obj=None):
-        # ``identifier`` cannot be edited on an existing report.
-        if request.path.endswith("/change/"):
-            return ["media_obj"]
-
-    def get_fieldsets(self, request, obj=None):
-        if obj is None:
-            return [
-                (
-                    "Report details",
-                    {"fields": ["status", "decision", "reason", "description"]},
-                ),
-                ("Media details", {"fields": ["media_obj"]}),
-            ]
-        return [
-            (
-                "Report details",
-                {
-                    "fields": [
-                        "created_at",
-                        "status",
-                        "decision",
-                        "reason",
-                        "description",
-                        "has_sensitive_text",
-                    ],
-                },
-            ),
-        ]
-
     def _get_media_obj_data(self, obj):
+        tags_by_provider = {}
+        if obj.media_obj.tags:
+            for tag in obj.media_obj.tags:
+                tags_by_provider.setdefault(tag["provider"], []).append(tag["name"])
+
         additional_data = {
             "other_reports": self.get_other_reports(obj),
             "identifier": obj.media_obj.identifier,
@@ -100,17 +120,11 @@ class MediaReportAdmin(admin.ModelAdmin):
             "creator": obj.media_obj.creator or obj.media_obj.creator_url,
             "creator_url": obj.media_obj.creator_url,
             "url": obj.media_obj.url,
-            "tags": {},
+            "tags": tags_by_provider,
             "reverse_media_url": reverse(
                 f"admin:api_{self.media_type}_change", args=[obj.media_obj.identifier]
             ),
         }
-
-        if obj.media_obj.tags:
-            tags_by_provider = {}
-            for tag in obj.media_obj.tags:
-                tags_by_provider.setdefault(tag["provider"], []).append(tag["name"])
-            additional_data["tags"] = tags_by_provider
         return additional_data
 
     def change_view(self, request, object_id, form_url="", extra_context=None):
@@ -132,30 +146,10 @@ class MediaReportAdmin(admin.ModelAdmin):
     def render_change_form(
         self, request, context, add=False, change=False, form_url="", obj=None
     ):
-        context.update(
-            {
-                "add": add,
-                "change": change,
-            }
-        )
+        context.update({"add": add, "change": change})
         return super().render_change_form(
             request, context, add=add, change=change, form_url=form_url, obj=obj
         )
-
-    def get_readonly_fields(self, request, obj=None):
-        if obj is None:
-            return []
-        readonly_fields = [
-            "created_at",
-            "reason",
-            "description",
-            "has_sensitive_text",
-            "media_obj_id",
-        ]
-        # ``status`` cannot be changed on a finalised report.
-        if obj.status != PENDING:
-            readonly_fields.append("status")
-        return readonly_fields
 
 
 class ImageReportAdmin(MediaReportAdmin):
