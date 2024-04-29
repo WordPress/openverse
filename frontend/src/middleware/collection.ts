@@ -1,6 +1,5 @@
 import { isShallowEqualObjects } from "@wordpress/is-shallow-equal"
 
-import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useProviderStore } from "~/stores/provider"
 import { useSearchStore } from "~/stores/search"
 
@@ -66,14 +65,6 @@ export const collectionMiddleware: Middleware = async ({
   error: nuxtError,
   route,
 }) => {
-  if (!useFeatureFlagStore($pinia).isOn("additional_search_views")) {
-    nuxtError({
-      statusCode: 404,
-      message: "Additional search views are not enabled",
-    })
-    return
-  }
-
   const searchStore = useSearchStore($pinia)
   // Route name has the locale in it, e.g. `audio-collection__en`
   const mediaType = routeNameToMediaType(route)
