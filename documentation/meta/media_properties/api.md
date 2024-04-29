@@ -65,7 +65,7 @@ value). Note that relation fields are always nullable.
 | `updated_on`                                                                | [`DateTimeField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#datetimefield)                                                                                             | `timestamp with time zone` | not null                      |         |
 | [`url`](#Audio-url-notes)                                                   | [`CharField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#charfield)                                                                                                     | `varchar(1000)`            | unique                        |         |
 | [`view_count`](#Audio-view_count-notes)                                     | [`IntegerField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#integerfield)                                                                                               | `integer`                  |                               | `0`     |
-| `watermarked`                                                               | [`BooleanField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#booleanfield)                                                                                               | `boolean`                  |                               |         |
+| [`watermarked`](#Audio-watermarked-notes)                                   | [`BooleanField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#booleanfield)                                                                                               | `boolean`                  |                               |         |
 
 ### Notes
 
@@ -316,6 +316,12 @@ Note that only `name` and `accuracy` are presently surfaced in API results.
 
 **Help text:** Vestigial field, purpose unknown.
 
+(Audio-watermarked-notes)=
+
+#### `watermarked`
+
+**Help text:** Whether the media contains a watermark. Not currently leveraged.
+
 ## Image
 
 ### Relations
@@ -356,7 +362,7 @@ Note that only `name` and `accuracy` are presently surfaced in API results.
 | `updated_on`                                                      | [`DateTimeField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#datetimefield) | `timestamp with time zone` | not null                      |         |
 | [`url`](#Image-url-notes)                                         | [`CharField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#charfield)         | `varchar(1000)`            | unique                        |         |
 | [`view_count`](#Image-view_count-notes)                           | [`IntegerField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#integerfield)   | `integer`                  |                               | `0`     |
-| `watermarked`                                                     | [`BooleanField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#booleanfield)   | `boolean`                  |                               |         |
+| [`watermarked`](#Image-watermarked-notes)                         | [`BooleanField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#booleanfield)   | `boolean`                  |                               |         |
 | [`width`](#Image-width-notes)                                     | [`IntegerField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#integerfield)   | `integer`                  |                               |         |
 
 ### Notes
@@ -547,6 +553,12 @@ Note that only `name` and `accuracy` are presently surfaced in API results.
 #### `view_count`
 
 **Help text:** Vestigial field, purpose unknown.
+
+(Image-watermarked-notes)=
+
+#### `watermarked`
+
+**Help text:** Whether the media contains a watermark. Not currently leveraged.
 
 (Image-width-notes)=
 

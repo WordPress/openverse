@@ -43,7 +43,11 @@ class AbstractMedia(
         define one explicitly.
     """
 
-    watermarked = models.BooleanField(blank=True, null=True)
+    watermarked = models.BooleanField(
+        blank=True,
+        null=True,
+        help_text="Whether the media contains a watermark. Not currently leveraged.",
+    )
 
     license = models.CharField(
         max_length=50,
