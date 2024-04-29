@@ -184,6 +184,9 @@ def generate_docs(props: dict[str, list[FieldInfo]]) -> str:
 
     output += PREAMBLE_PATH.read_text()
     output += "\n"
+    for model in props:
+        output += f"- [{model}](#{model.lower()})\n"
+    output += "\n"
 
     for model, fields in props.items():
         relations, values = [], []
