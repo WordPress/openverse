@@ -3,6 +3,8 @@ set dotenv-load := false
 COLOR := "\\033[0;32m"
 NO_COLOR := "\\033[0m"
 
+ES_LOCALHOST := "localhost:50292"
+
 # Show all available recipes
 @_default:
     printf "\n{{ COLOR }}# ES (path: \`docker/es/\`)\n"
@@ -19,7 +21,7 @@ NO_COLOR := "\\033[0m"
     -curl -s -o /dev/null -w '%{http_code}' 'http://{{ host }}/_cluster/health'
 
 # Wait for the service to be healthy
-@wait host="localhost:50292":
+@wait host=ES_LOCALHOST:
     # The just command on the second line is executed in the context of the
     # root directory and so must be prefixed with `docker/es/`.
     just ../../_loop \
@@ -35,7 +37,7 @@ _curl path:
     -curl \
       -s \
       -H 'Accept: application/json' \
-      'http://localhost:50292/{{ path }}'
+      'http://{{ ES_LOCALHOST }}/{{ path }}'
 
 # Count the number of times the given string appears in the response
 _curl-wc path search:
@@ -68,3 +70,7 @@ _curl-wc path search:
     '"$(just docker/es/check-count {{ index }} {{ count }})" != "1"' \
     "Waiting for index '{{ index }}' to have {{ count }} docs..." \
     "10s"
+
+# Delete an index if it exists, ignoring if it doesn't
+@delete-index index="image":
+    curl -X DELETE "http://{{ ES_LOCALHOST }}/{{ index }}?ignore_unavailable=true"
