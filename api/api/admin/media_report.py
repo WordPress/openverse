@@ -74,7 +74,7 @@ class MediaReportAdmin(admin.ModelAdmin):
             .order_by("created_at")
         )
         for report in reports:
-            report.href = reverse("admin:api_imagereport_change", args=[report.id])
+            report.href = reverse(f"admin:api_{self.media_type}report_change", args=[report.id])
         return reports
 
     def get_exclude(self, request, obj=None):
