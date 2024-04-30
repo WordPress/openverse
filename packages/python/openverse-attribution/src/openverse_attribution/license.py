@@ -28,6 +28,7 @@ class License(StrEnum):
 
     # Public domain mark
     PDM = "pdm"
+    PUBLIC_DOMAIN = "publicdomain"
 
     def name(self, version: str | None = None) -> str:
         """
@@ -40,7 +41,7 @@ class License(StrEnum):
         :return: the full name of the license
         """
 
-        if self is License.PDM:
+        if self in {License.PDM, License.PUBLIC_DOMAIN}:
             name = "Public Domain Mark"
         else:
             name = self.value.upper().replace("SAMPLING", "Sampling")
@@ -65,7 +66,7 @@ class License(StrEnum):
 
         if self is License.CC0:
             fragment = "publicdomain/zero/1.0"
-        elif self is License.PDM:
+        elif self in {License.PUBLIC_DOMAIN, License.PDM}:
             fragment = "publicdomain/mark/1.0"
         elif self.is_deprecated:
             fragment = f"licenses/{self}/1.0"
@@ -112,7 +113,7 @@ class License(StrEnum):
         :return: whether a work with this license is in the public domain
         """
 
-        return self in {License.PDM, License.CC0}
+        return self in {License.PUBLIC_DOMAIN, License.PDM, License.CC0}
 
     @property
     def is_cc(self) -> bool:
@@ -124,4 +125,4 @@ class License(StrEnum):
         """
 
         # Works because other than PDM, we only have CC licenses.
-        return self is not License.PDM
+        return self not in {License.PUBLIC_DOMAIN, License.PDM}
