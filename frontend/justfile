@@ -49,6 +49,13 @@ run-img tag="openverse-frontend:local":
       --publish 8443:8443 \
       {{ tag }}
 
+# Build and push frontend images to `nuxt-preview` tag. Part of temporary utilities for Nuxt 3 iteration. You must `docker login ghcr.io` beforehand.
+push-to-nuxt-preview github_username:
+    just build-img ghcr.io/wordpress/openverse-frontend:nuxt-preview
+    docker build -t ghcr.io/wordpress/openverse-frontend_nginx:nuxt-preview -f ./Dockerfile.nginx .
+    docker push ghcr.io/wordpress/openverse-frontend:nuxt-preview
+    docker push ghcr.io/wordpress/openverse-frontend_nginx:nuxt-preview
+
 ######
 # Up #
 ######
