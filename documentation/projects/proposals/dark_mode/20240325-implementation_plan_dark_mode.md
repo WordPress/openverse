@@ -156,6 +156,25 @@ codebase.
 
 <!-- List any succinct expected products from this implementation plan. -->
 
+- Users can switch between available color schemes in Openverse.
+- Openverse displays the correct color scheme for the user:
+  - Render Dark mode for:
+    - Users with no theme selected from our UI and `prefers-color-scheme: dark`
+    - Users who previously selected "Dark" in our UI and
+      `prefers-color-scheme: dark`
+    - Users who previously selected "Dark" in our UI and
+      `prefers-color-scheme: light`
+  - Render Light mode for:
+    - Users with no theme selected from our UI and `prefers-color-scheme: light`
+    - Users who previously selected "Light in our UI" and
+      `prefers-color-scheme: light`
+    - Users who previously selected "Light in our UI" and
+      `prefers-color-scheme: dark`
+- Opvenverse does not display a
+  ["Flash of inAccurate Color Scheme (FART)"](https://css-tricks.com/flash-of-inaccurate-color-theme-fart/)
+
+Secondarily, there are additional devex outcomes worth mentioning:
+
 - Users writing components will have a "dark mode compatible by default"
   experience. By default, they will not need to think much about dark mode.
 - Color names in the codebase will be replaced with semantic names.
