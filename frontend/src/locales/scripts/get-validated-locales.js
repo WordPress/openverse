@@ -56,7 +56,7 @@ try {
   getValidatedLocales().then((locales) => {
     console.log(`Found ${locales.translated.length} locales with translations.`)
     const fileName = "valid-locales.json"
-    const valid = [...locales.translated, ...locales.untranslated]
+    const valid = locales.translated
     fs.writeFileSync(
       process.cwd() + `/src/locales/scripts/` + fileName,
       JSON.stringify(valid, null, 2) + "\n"
