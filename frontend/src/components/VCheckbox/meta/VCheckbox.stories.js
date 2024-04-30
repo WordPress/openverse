@@ -1,4 +1,4 @@
-import { WithScreenshotArea } from "~~/storybook-decorators/with-screenshot-area"
+import { WithScreenshotArea } from "~~/.storybook/decorators/with-screenshot-area"
 
 import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"
 import VLicense from "~/components/VLicense/VLicense.vue"

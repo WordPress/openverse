@@ -1,4 +1,4 @@
-import { WithScreenshotArea } from "~~/storybook-decorators/with-screenshot-area"
+import { WithScreenshotArea } from "~~/.storybook/decorators/with-screenshot-area"
 
 const GetTemplate = (irrelevantClassNames) => (args) => ({
   template: `
