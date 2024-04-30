@@ -1,7 +1,7 @@
 {
     meta: {
         createdAt: '2023-07-10T13:17:16.682Z',
-        host: 'https://api.openverse.engineering',
+        host: 'https://api.openverse.org',
         resHumanReadable: true,
     },
     req: {

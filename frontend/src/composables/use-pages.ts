@@ -33,7 +33,7 @@ export default function usePages() {
     {
       id: "api",
       name: "navigation.api",
-      link: "https://api.openverse.engineering/v1/",
+      link: "https://api.openverse.org/v1/",
     },
     {
       id: "terms",

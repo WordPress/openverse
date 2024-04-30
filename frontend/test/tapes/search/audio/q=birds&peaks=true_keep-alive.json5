@@ -1,7 +1,7 @@
 {
     meta: {
         createdAt: '2023-03-03T04:49:21.079Z',
-        host: 'https://api.openverse.engineering',
+        host: 'https://api.openverse.org',
         resHumanReadable: true,
         resUncompressed: true,
     },
@@ -154,10 +154,10 @@
                     duration: 206000,
                     bit_rate: null,
                     sample_rate: null,
-                    thumbnail: 'https://api.openverse.engineering/v1/audio/2e38ac1e-830c-4e9c-b13d-2c9a1ad53f95/thumb/',
-                    detail_url: 'https://api.openverse.engineering/v1/audio/2e38ac1e-830c-4e9c-b13d-2c9a1ad53f95/',
-                    related_url: 'https://api.openverse.engineering/v1/audio/2e38ac1e-830c-4e9c-b13d-2c9a1ad53f95/related/',
-                    waveform: 'https://api.openverse.engineering/v1/audio/2e38ac1e-830c-4e9c-b13d-2c9a1ad53f95/waveform/',
+                    thumbnail: 'https://api.openverse.org/v1/audio/2e38ac1e-830c-4e9c-b13d-2c9a1ad53f95/thumb/',
+                    detail_url: 'https://api.openverse.org/v1/audio/2e38ac1e-830c-4e9c-b13d-2c9a1ad53f95/',
+                    related_url: 'https://api.openverse.org/v1/audio/2e38ac1e-830c-4e9c-b13d-2c9a1ad53f95/related/',
+                    waveform: 'https://api.openverse.org/v1/audio/2e38ac1e-830c-4e9c-b13d-2c9a1ad53f95/waveform/',
                     unstable__sensitivity: [],
                 },
                 {

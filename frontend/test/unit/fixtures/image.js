@@ -27,10 +27,10 @@ export const image = {
   height: 681,
   width: 1024,
   thumbnail:
-    "https://api.openverse.engineering/v1/images/f166c4a0-7207-4ea2-8728-15350a60d37f/thumb/",
+    "https://api.openverse.org/v1/images/f166c4a0-7207-4ea2-8728-15350a60d37f/thumb/",
   detail_url:
-    "https://api.openverse.engineering/v1/images/f166c4a0-7207-4ea2-8728-15350a60d37f/",
+    "https://api.openverse.org/v1/images/f166c4a0-7207-4ea2-8728-15350a60d37f/",
   related_url:
-    "https://api.openverse.engineering/v1/images/f166c4a0-7207-4ea2-8728-15350a60d37f/related/",
+    "https://api.openverse.org/v1/images/f166c4a0-7207-4ea2-8728-15350a60d37f/related/",
   unstable__sensitivity: ["sensitive_text"],
 }
