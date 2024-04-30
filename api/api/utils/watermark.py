@@ -199,7 +199,7 @@ def _print_attribution_on_image(img: Image.Image, image_info):
         image_info["title"],
         image_info["creator"],
         image_info["license_version"],
-        license_url=False,
+        False,
     )
     text = _fit_in_width(text, font, new_width)
     attribution_height = _get_attribution_height(text, font)
