@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2024-04-03T04:45:53+00:00\n"
+"POT-Creation-Date: 2024-04-30T15:52:52+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -220,7 +220,7 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/pages/about.vue:11
 msgctxt "about.collection.content.a"
-msgid "###openverse### searches across more than 700 million images and audio from open APIs and the ###commonCrawl### dataset."
+msgid "###openverse### searches across more than 700 million images and audio tracks from open APIs and the ###commonCrawl### dataset."
 msgstr ""
 
 #: src/pages/about.vue:17
@@ -232,7 +232,7 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/pages/about.vue:21
 msgctxt "about.planning.content.a"
-msgid "Currently ###openverse### only searches images and audio, with search for video provided through External Sources."
+msgid "Currently ###openverse### only searches images and audio tracks, with search for video provided through External Sources."
 msgstr ""
 
 #. about.planning.content.a-c are parts of a single statement
@@ -1081,7 +1081,7 @@ msgstr ""
 
 #. Interpolated into error.mediaNotFound: _{mediaType}_ part of "Couldn't find {mediaType} with id {id}"
 msgctxt "error.audio"
-msgid "audio"
+msgid "an audio track"
 msgstr ""
 
 #: src/components/VHeader/VHeaderMobile/VFilterTab.vue:4
@@ -1446,17 +1446,17 @@ msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "browsePage.contentLink.audio.zero"
-msgid "No audio found for ###query###."
+msgid "No audio tracks found for ###query###."
 msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "browsePage.contentLink.audio.count"
-msgid "See ###localeCount### audio found for ###query###."
+msgid "See ###localeCount### audio tracks found for ###query###."
 msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "browsePage.contentLink.audio.countMore"
-msgid "See over ###localeCount### audio found for ###query###."
+msgid "See over ###localeCount### audio tracks found for ###query###."
 msgstr ""
 
 #: src/components/VLoadMore.vue:131
@@ -1502,7 +1502,7 @@ msgstr ""
 
 #. Interpolated into browsePage.searchForm.placeholder: _{type}_ part of "Search all {type}"
 msgctxt "browsePage.searchForm.audio"
-msgid "audio"
+msgid "audio tracks"
 msgstr ""
 
 #. Interpolated into browsePage.searchForm.placeholder: _{type}_ part of "Search all {type}"
@@ -1595,14 +1595,14 @@ msgid "search by creator"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VImageCell/VImageCell.vue:183
+#: src/components/VImageCell/VImageCell.vue:169
 msgctxt "browsePage.aria.imageTitle"
 msgid "Image: ###title###"
 msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "browsePage.aria.audioTitle"
-msgid "Audio: ###title###"
+msgid "Audio track: ###title###"
 msgstr ""
 
 #. "imageResults" and "audioResults" are interpolated from the strings under browsePage.aria.allResultsHeadingCount.
@@ -1730,7 +1730,7 @@ msgid "Public Domain"
 msgstr ""
 
 msgctxt "mediaDetails.reuse.audio"
-msgid "Audio"
+msgid "Audio track"
 msgstr ""
 
 msgctxt "mediaDetails.reuse.image"
@@ -1862,7 +1862,6 @@ msgid "read more about the tool"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/image/_id/index.vue:78
 msgctxt "mediaDetails.aria.creatorUrl"
 msgid "author ###name###"
 msgstr ""
@@ -1872,7 +1871,7 @@ msgid "Image information"
 msgstr ""
 
 msgctxt "mediaDetails.audioInfo"
-msgid "Audio information"
+msgid "Audio track information"
 msgstr ""
 
 #: src/components/VMediaInfo/VMediaTags.vue:5
@@ -2001,7 +2000,6 @@ msgid "Back to results"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/image/_id/index.vue:73
 msgctxt "imageDetails.creator"
 msgid "by ###name###"
 msgstr ""
@@ -2037,7 +2035,7 @@ msgid "Genre"
 msgstr ""
 
 msgctxt "audioDetails.relatedAudios"
-msgid "Related audio"
+msgid "Related audio tracks"
 msgstr ""
 
 msgctxt "audioDetails.table.album"
@@ -2057,7 +2055,7 @@ msgid "Genre"
 msgstr ""
 
 msgctxt "audioDetails.weblink"
-msgid "Get this audio"
+msgid "Get this audio track"
 msgstr ""
 
 #. Do not translate words between ### ###.
@@ -2157,21 +2155,21 @@ msgid "Cover art for \"###title###\" by ###creator###"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAudioTrack/VAudioTrack.vue:546
-#: src/components/VAudioTrack/VGlobalAudioTrack.vue:79
+#: src/components/VAudioTrack/VAudioTrack.vue:518
+#: src/components/VAudioTrack/VGlobalAudioTrack.vue:80
 msgctxt "audioTrack.ariaLabel"
 msgid "Audio: ###title###"
 msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "audioTrack.ariaLabelInteractive"
-msgid "Audio: ###title### - interactive player - press the space bar to play and pause a preview of the audio"
+msgid "Audio: ###title### - interactive player - press the space bar to play and pause a preview of the audio track"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAudioTrack/VAudioTrack.vue:543
+#: src/components/VAudioTrack/VAudioTrack.vue:515
 msgctxt "audioTrack.ariaLabelInteractiveSeekable"
-msgid "Audio: ###title### - interactive player - press the space bar to play and pause a preview of the audio; use the left and right arrow keys to seek through the track."
+msgid "Audio: ###title### - interactive player - press the space bar to play and pause a preview of the audio track; use the left and right arrow keys to seek through the track."
 msgstr ""
 
 msgctxt "audioTrack.messages.err_aborted"
@@ -2183,7 +2181,7 @@ msgid "A network error occurred."
 msgstr ""
 
 msgctxt "audioTrack.messages.err_decode"
-msgid "Could not decode audio."
+msgid "Could not decode audio track."
 msgstr ""
 
 msgctxt "audioTrack.messages.err_unallowed"
@@ -2203,7 +2201,6 @@ msgid "Loading..."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAudioTrack/layouts/VFullLayout.vue:54
 #: src/components/VAudioTrack/layouts/VRowLayout.vue:43
 msgctxt "audioTrack.creator"
 msgid "by ###creator###"
@@ -2393,7 +2390,7 @@ msgid "See all images"
 msgstr ""
 
 msgctxt "searchType.seeAudio"
-msgid "See all audio"
+msgid "See all audio tracks"
 msgstr ""
 
 #. Do not translate words between ### ###.
@@ -2444,7 +2441,7 @@ msgctxt "prefPage.switchable.desc"
 msgid "You can toggle these features on or off as you like and your preferences will be saved in a cookie."
 msgstr ""
 
-#: src/pages/preferences.vue:79
+#: src/pages/preferences.vue:77
 msgctxt "prefPage.storeState"
 msgid "Store state"
 msgstr ""
@@ -2532,7 +2529,7 @@ msgstr ""
 
 #: src/components/VImageCell/VImageCell.vue:30
 #: src/components/VImageCell/VImageCell.vue:49
-#: src/components/VImageCell/VImageCell.vue:182
+#: src/components/VImageCell/VImageCell.vue:168
 msgctxt "sensitiveContent.title.image"
 msgid "This image may contain sensitive content."
 msgstr ""
@@ -2673,13 +2670,13 @@ msgid "Images with the tag ###tag###"
 msgstr ""
 
 msgctxt "collection.resultCountLabel.creator.audio.zero"
-msgid "No audio files by this creator."
+msgid "No audio tracks by this creator."
 msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "collection.resultCountLabel.creator.audio.count"
-msgid "###count### audio file by this creator."
-msgid_plural "###count### audio files by this creator."
+msgid "###count### audio track by this creator."
+msgid_plural "###count### audio tracks by this creator."
 msgstr[0] ""
 msgstr[1] ""
 
@@ -2710,8 +2707,8 @@ msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "collection.resultCountLabel.source.audio.count"
-msgid "###count### audio file provided by this source"
-msgid_plural "###count### audio files provided by this source"
+msgid "###count### audio track provided by this source"
+msgid_plural "###count### audio tracks provided by this source"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -2742,8 +2739,8 @@ msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "collection.resultCountLabel.tag.audio.count"
-msgid "###count### audio file with the selected tag"
-msgid_plural "###count### audio files with the selected tag"
+msgid "###count### audio track with the selected tag"
+msgid_plural "###count### audio tracks with the selected tag"
 msgstr[0] ""
 msgstr[1] ""
 
