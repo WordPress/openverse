@@ -85,9 +85,7 @@ const pages = {
 test.describe("page metadata", () => {
   for (const openversePage of Object.values(pages)) {
     test(`${openversePage.url}`, async ({ page }) => {
-      await preparePageForTests(page, "xl", {
-        features: { additional_search_views: "on" },
-      })
+      await preparePageForTests(page, "xl")
       await page.goto(openversePage.url)
       await expect(page).toHaveTitle(openversePage.title)
       const metaDescription = page.locator('meta[name="description"]')

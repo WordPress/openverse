@@ -40,12 +40,11 @@
     </thead>
     <tbody>
       <tr v-for="provider in sortedProviders" :key="provider.display_name">
-        <td v-if="additionalSearchViews">
+        <td>
           <VLink :href="providerViewUrl(provider)">{{
             provider.display_name
           }}</VLink>
         </td>
-        <td v-else>{{ provider.display_name }}</td>
         <td class="truncate font-semibold">
           <VLink :href="provider.source_url">
             {{ cleanSourceUrlForPresentation(provider.source_url) }}
@@ -68,7 +67,6 @@ import { useGetLocaleFormattedNumber } from "~/composables/use-get-locale-format
 import type { SupportedMediaType } from "~/constants/media"
 import type { MediaProvider } from "~/types/media-provider"
 
-import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useSearchStore } from "~/stores/search"
 
 import TableSortIcon from "~/components/TableSortIcon.vue"
@@ -141,11 +139,6 @@ export default defineComponent({
       return sorting.direction === "asc" ? providers : providers.reverse()
     })
 
-    const featureFlagStore = useFeatureFlagStore()
-    const additionalSearchViews = computed(() => {
-      return featureFlagStore.isOn("additional_search_views")
-    })
-
     const searchStore = useSearchStore()
     const providerViewUrl = (provider: MediaProvider) => {
       return searchStore.getCollectionPath({
@@ -163,7 +156,6 @@ export default defineComponent({
       sortTable,
       cleanSourceUrlForPresentation,
       providerViewUrl,
-      additionalSearchViews,
     }
   },
 })
