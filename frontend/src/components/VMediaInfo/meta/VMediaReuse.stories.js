@@ -1,0 +1,46 @@
+import VMediaReuse from "~/components/VMediaInfo/VMediaReuse.vue"
+import VLanguageSelect from "~/components/VLanguageSelect/VLanguageSelect.vue"
+
+const image = {
+  id: "f9384235-b72e-4f1e-9b05-e1b116262a29",
+  frontendMediaType: "image",
+  title: "Cat",
+  originalTitle: "Cat",
+  foreign_landing_url: "https://www.flickr.com/photos/7788419@N05/15218475961",
+  url: "https://live.staticflickr.com/3903/15218475961_963a4c116e_b.jpg",
+  creator: "strogoscope",
+  creator_url: "https://www.flickr.com/photos/7788419@N05",
+  license: "by",
+  license_version: "2.0",
+  license_url: "https://creativecommons.org/licenses/by/2.0/",
+  provider: "flickr",
+  source: "flickr",
+  detail_url:
+    "http://localhost:49153/v1/images/f9384235-b72e-4f1e-9b05-e1b116262a29/",
+}
+
+const Template = (args) => ({
+  template: `
+<div class="flex flex-col gap-y-2">
+<VLanguageSelect />
+    <VMediaReuse :media="media" />
+</div>
+  `,
+  components: { VMediaReuse, VLanguageSelect },
+  setup() {
+    return { media: args.media }
+  },
+})
+
+export default {
+  title: "Components/VMediaInfo/VMediaReuse",
+  components: VMediaReuse,
+}
+
+export const Default = {
+  render: Template.bind({}),
+  name: "VMediaReuse",
+  args: {
+    media: image,
+  },
+}

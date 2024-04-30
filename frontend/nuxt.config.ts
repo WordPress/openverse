@@ -137,9 +137,6 @@ const config: NuxtConfig = {
   router: {
     middleware: "feature-flags",
   },
-  components: [
-    { path: "~/components", extensions: ["vue"], pathPrefix: false },
-  ],
   plugins: [
     "~/plugins/ua-parse.ts",
     "~/plugins/focus-visible.client.ts",
@@ -281,8 +278,7 @@ const config: NuxtConfig = {
     },
   },
   storybook: {
-    port: 6006, // standard port for Storybook
-    stories: ["~/**/*.stories.@(mdx|js)"],
+    port: 6006,
     addons: [
       {
         name: "@storybook/addon-essentials",

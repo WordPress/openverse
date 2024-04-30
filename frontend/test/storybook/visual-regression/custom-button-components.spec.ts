@@ -9,7 +9,7 @@ test.describe.configure({ mode: "parallel" })
 
 test.describe("VLoadMore button", () => {
   const gotoWithArgs = makeGotoWithArgs(
-    "components-custombuttoncomponents--v-load-more"
+    "components-custombuttoncomponents--default"
   )
   breakpoints.describeMobileAndDesktop(({ expectSnapshot }) => {
     test("resting", async ({ page }) => {
