@@ -2,10 +2,10 @@ import logging
 
 from django.conf import settings
 from django.contrib import admin
-from django.urls import reverse
 
 from elasticsearch import NotFoundError
 from elasticsearch_dsl import Search
+from openverse_attribution.license import License
 
 from api.models import PENDING
 
@@ -108,23 +108,16 @@ class MediaReportAdmin(admin.ModelAdmin):
         if obj.media_obj.tags:
             for tag in obj.media_obj.tags:
                 tags_by_provider.setdefault(tag["provider"], []).append(tag["name"])
-
         additional_data = {
             "other_reports": self.get_other_reports(obj),
-            "identifier": obj.media_obj.identifier,
-            "foreign_landing_url": obj.media_obj.foreign_landing_url,
-            "description": obj.media_obj.meta_data.get("description", ""),
-            "title": obj.media_obj.title,
-            "provider": obj.media_obj.provider,
-            "source": obj.media_obj.source,
-            "creator": obj.media_obj.creator or obj.media_obj.creator_url,
-            "creator_url": obj.media_obj.creator_url,
-            "url": obj.media_obj.url,
-            "tags": tags_by_provider,
-            "reverse_media_url": reverse(
-                f"admin:api_{self.media_type}_change", args=[obj.media_obj.identifier]
+            "media_obj": obj.media_obj,
+            "license": License(obj.media_obj.license).name(
+                obj.media_obj.license_version
             ),
+            "tags": tags_by_provider,
+            "description": obj.media_obj.meta_data.get("description", ""),
         }
+        logging.info(f"Additional data: {additional_data}")
         return additional_data
 
     def change_view(self, request, object_id, form_url="", extra_context=None):

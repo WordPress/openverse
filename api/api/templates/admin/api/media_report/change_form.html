@@ -17,6 +17,9 @@
     grid-column: 1 / -1;
     grid-row: 1 / -1;
   }
+  .img-container img {
+    cursor: pointer;
+  }
   .img-container p {
     border-radius: 4px;
     padding: 10px;
@@ -48,44 +51,39 @@
   <h2>Media details</h2>
   {% if media_type == 'image' %}
     <div class="img-container">
-      <img src="{% url media_type|add:'-thumb' identifier=identifier %}" alt="Media Image" class="blur-image" height="300"
+      <img src="{% url media_type|add:'-thumb' identifier=media_obj.identifier %}" alt="Media Image" class="blur-image" height="300"
            onclick="toggleBlur(this)"
-           onerror="this.onerror=null;this.src='{{ url }}';"
-           style="cursor: pointer;">
+           onerror="this.onerror=null;this.src='{{ media_obj.url }}';">
       <p>Show content</p>
     </div>
 
   {% elif media_type == 'audio' %}
     <audio controls>
-      <source src="{{ url }}" type="audio/mpeg">
+      <source src="{{ media_obj.url }}">
       Your browser does not support the audio element.
     </audio>
   {% endif %}
 
   <div class="form-row field-created_at">
       <div class="flex-container">
-        <label>Title and creator</label>
+        <label>Media details</label>
         <div class="readonly">
-          <p>{{ title }} {% if creator_url %}by <a href="{{creator_url}}">{{creator}}</a> {% else %} {{creator}} {% endif %} </p></div>
-      </div>
-  </div>
-  <div class="form-row field-created_at">
-      <div class="flex-container">
-        <label>Media links</label>
-        <div class="readonly">
-          <p><a href="{{foreign_landing_url}}">Source ({{source}})</a></p>
-          <p><a href="https://openverse.org/{{media_type}}/{{identifier}}">openverse.org</a></p>
-          <p><a href="{% url media_type|add:'-detail' identifier=identifier %}">openverse API</a></p>
+          {% include "admin/api/media_report/attribution.html" with media_obj=media_obj license=license %}
+          <p>View media at <a href="{{media_obj.foreign_landing_url}}">source ({{media_obj.source}})</a>,
+            on <a href="https://openverse.org/{{media_type}}/{{media_obj.identifier}}">openverse.org</a>,
+            on <a href="{% url media_type|add:'-detail' identifier=media_obj.identifier %}">Openverse API</a>.</p>
+          <p>Provider: {{ media_obj.provider }}.</p>
         </div>
       </div>
   </div>
+
   <div class="form-row field-created_at">
       <div class="flex-container">
         <label>Tags</label>
         <div class="readonly">
           {% for provider, provider_tags in tags.items %}
             <p><em>{{ provider }}</em></p>
-            <p> {% for tag in provider_tags %}{{ tag }}, {% endfor %}</p>
+            <p>{{ provider_tags|join:', ' }}</p>
           {% endfor %}
         </div>
       </div>
@@ -95,13 +93,6 @@
         <label>Description</label>
         <div class="readonly">
           <p>{{ description }}</div>
-      </div>
-  </div>
-  <div class="form-row field-created_at">
-      <div class="flex-container">
-        <label>From</label>
-        <div class="readonly">
-          <p>provider: {{ provider }}, source: {{ source }}</div>
       </div>
   </div>
 </fieldset>
@@ -131,7 +122,7 @@
       </tbody>
     </table>
   {% else %}
-    <p>No other reports for <a href="{{reverse_media_url}}">{{ identifier }}</a> found.</p>
+    <p>No other reports for {{ media_obj.identifier }} found.</p>
   {% endif %}
   </div>
 
