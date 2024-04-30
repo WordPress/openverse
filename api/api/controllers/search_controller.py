@@ -11,7 +11,6 @@ import structlog
 from decouple import config
 from elasticsearch.exceptions import NotFoundError
 from elasticsearch_dsl import Q, Search
-from elasticsearch_dsl.query import EMPTY_QUERY
 from elasticsearch_dsl.response import Hit, Response
 from redis.exceptions import ConnectionError
 
@@ -162,9 +161,10 @@ def _post_process_results(
     return results[:page_size]
 
 
-def get_excluded_providers_query() -> Q | None:
+def get_filtered_providers_query() -> Q | None:
     """
-    Hide data sources from the catalog dynamically.
+    Get a query for filtering out items from hidden content providers or without any content provider.
+
     To exclude a provider, set ``filter_content`` to ``True`` in the
     ``ContentProvider`` model in Django admin.
     The list of ``provider_identifier``s is cached in Redis with
@@ -181,7 +181,7 @@ def get_excluded_providers_query() -> Q | None:
 
     if not filtered_providers:
         filtered_providers = list(
-            models.ContentProvider.objects.filter(filter_content=True).values_list(
+            models.ContentProvider.objects.filter(filter_content=False).values_list(
                 "provider_identifier", flat=True
             )
         )
@@ -285,8 +285,8 @@ def build_search_query(
     if not search_params.validated_data["include_sensitive_results"]:
         search_queries["must_not"].append(Q("term", mature=True))
     # Exclude dynamically disabled sources (see Redis cache)
-    if excluded_providers_query := get_excluded_providers_query():
-        search_queries["must_not"].append(excluded_providers_query)
+    if filtered_providers_query := get_filtered_providers_query():
+        search_queries["must"].append(filtered_providers_query)
 
     # Search either by generic multimatch or by "advanced search" with
     # individual field-level queries specified.
@@ -335,12 +335,6 @@ def build_search_query(
     if settings.USE_RANK_FEATURES:
         search_queries["should"].extend(create_ranking_queries(search_params))
 
-    # If there are no `must` query clauses, only the results that match
-    # the `should` clause are returned. To avoid this, we add an empty
-    # query clause to the `must` list.
-    if not search_queries["must"]:
-        search_queries["must"].append(EMPTY_QUERY)
-
     return Q(
         "bool",
         filter=search_queries["filter"],
@@ -375,6 +369,7 @@ def build_collection_query(
     :return: the search client with the query applied.
     """
     search_query = {"filter": [], "must": [], "should": [], "must_not": []}
+
     # Apply the term filters. Each tuple pairs a filter's parameter name in the API
     # with its corresponding field in Elasticsearch. "None" means that the
     # names are identical.
@@ -395,8 +390,8 @@ def build_collection_query(
     if not include_sensitive_by_params:
         search_query["must_not"].append({"term": {"mature": True}})
 
-    if excluded_providers_query := get_excluded_providers_query():
-        search_query["must_not"].append(excluded_providers_query)
+    if filtered_providers_query := get_filtered_providers_query():
+        search_query["must"].append(filtered_providers_query)
 
     return Q("bool", **search_query)
 
