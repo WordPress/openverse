@@ -8,13 +8,14 @@ from django.conf import settings
 from django.core.cache import cache
 from django.core.mail import send_mail
 from django.db import DataError
-from rest_framework.exceptions import APIException, PermissionDenied
+from rest_framework.exceptions import APIException
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
 from drf_spectacular.utils import extend_schema
+from oauth2_provider.contrib.rest_framework.permissions import TokenHasScope
 from oauth2_provider.generators import generate_client_secret
 from oauth2_provider.views import TokenView as BaseTokenView
 from redis.exceptions import ConnectionError
@@ -40,6 +41,8 @@ class InvalidCredentials(APIException):
 @extend_schema(tags=["auth"])
 class Register(APIView):
     throttle_classes = (TenPerDay,)
+    # Registration implicitly does not require authentication
+    authentication_classes = ()
 
     @register
     def post(self, request, format=None):
@@ -150,6 +153,10 @@ class VerifyEmail(APIView):
 
 @extend_schema(tags=["auth"])
 class TokenView(APIView, BaseTokenView):
+    # Token view is pre-authentication
+    authentication_classes = ()
+    permission_classes = ()
+
     @token
     def post(self, request):
         """
@@ -178,6 +185,8 @@ class TokenView(APIView, BaseTokenView):
 @extend_schema(tags=["auth"])
 class CheckRates(APIView):
     throttle_classes = (OnePerSecond,)
+    permission_classes = (TokenHasScope,)
+    required_scopes = ("read",)
 
     @key_info
     def get(self, request: Request, format=None):
@@ -187,20 +196,12 @@ class CheckRates(APIView):
         You can use this endpoint to get information about your API key such as
         `requests_this_minute`, `requests_today`, and `rate_limit_model`.
 
-        > ℹ️ **NOTE:** If you get a 403 Forbidden response, it means your access
-        > token has expired.
+        > ℹ️ **NOTE:** If you get a 401 Unauthorized, it means your token is invalid
+        > (malformed, non-existent, or expired).
         """
-
-        # TODO: Replace 403 responses with DRF `authentication_classes`.
-        if not request.auth or not hasattr(request.auth, "application"):
-            raise PermissionDenied("Forbidden", 403)
-
         application: ThrottledApplication = request.auth.application
 
         client_id = application.client_id
-
-        if not client_id:
-            raise PermissionDenied("Forbidden", 403)
 
         throttle_type = application.rate_limit_model
         throttle_key = "throttle_{scope}_{client_id}"

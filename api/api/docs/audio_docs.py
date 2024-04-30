@@ -1,4 +1,5 @@
 from rest_framework.exceptions import (
+    AuthenticationFailed,
     NotAuthenticated,
     NotFound,
     ValidationError,
@@ -75,7 +76,10 @@ stats = custom_extend_schema(
 
         By using this endpoint, you can obtain info about content providers such
         as {fields_to_md(ProviderSerializer.Meta.fields)}.""",
-    res={200: (ProviderSerializer(many=True), audio_stats_200_example)},
+    res={
+        200: (ProviderSerializer(many=True), audio_stats_200_example),
+        401: (AuthenticationFailed, None),
+    },
     eg=[audio_stats_curl],
 )
 
@@ -87,6 +91,7 @@ detail = custom_extend_schema(
         {fields_to_md(AudioSerializer.Meta.fields)}""",
     res={
         200: (AudioSerializer, audio_detail_200_example),
+        401: (AuthenticationFailed, None),
         404: (NotFound, audio_detail_404_example),
     },
     eg=[audio_detail_curl],
@@ -100,6 +105,7 @@ related = custom_extend_schema(
         {fields_to_md(AudioSerializer.Meta.fields)}.""",
     res={
         200: (AudioSerializer(many=True), audio_related_200_example),
+        401: (AuthenticationFailed, None),
         404: (NotFound, audio_related_404_example),
     },
     eg=[audio_related_curl],
@@ -109,18 +115,23 @@ report = custom_extend_schema(
     res={
         201: (AudioReportRequestSerializer, audio_complain_201_example),
         400: (ValidationError, None),
+        401: (AuthenticationFailed, None),
     },
     eg=[audio_complain_curl],
 )
 
 thumbnail = extend_schema(
     parameters=[MediaThumbnailRequestSerializer],
-    responses={200: OpenApiResponse(description="Thumbnail image")},
+    responses={
+        200: OpenApiResponse(description="Thumbnail image"),
+        401: AuthenticationFailed,
+    },
 )
 
 waveform = custom_extend_schema(
     res={
         200: (AudioWaveformSerializer, audio_waveform_200_example),
+        401: (AuthenticationFailed, None),
         404: (NotFound, audio_waveform_404_example),
     },
     eg=[audio_waveform_curl],

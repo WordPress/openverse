@@ -3,9 +3,12 @@ from textwrap import dedent
 
 from django.conf import settings
 from rest_framework.exceptions import (
+    APIException,
     NotFound,
+    ValidationError,
 )
 
+from drf_spectacular.extensions import OpenApiSerializerExtension
 from drf_spectacular.openapi import AutoSchema
 from drf_spectacular.utils import (
     OpenApiExample,
@@ -31,6 +34,77 @@ def fields_to_md(field_names):
     return f"{all_but_last} and `{last}`"
 
 
+class APIExceptionOpenApiSerializerExtension(OpenApiSerializerExtension):
+    target_class = APIException
+    match_subclasses = True
+
+    @classmethod
+    def _get_detail(cls, target):
+        return getattr(target, "detail", target.default_detail)
+
+    def get_name(self, *args):
+        cls = self.target if isinstance(self.target, type) else self.target.__class__
+        return cls.__name__
+
+    def map_serializer(self, *args):
+        cls = self.target if isinstance(self.target, type) else self.target.__class__
+
+        detail_string = {
+            "type": "string",
+            "description": "A description of what went wrong.",
+        }
+
+        if cls == ValidationError or issubclass(cls, ValidationError):
+            return {
+                "title": "ValidationError",
+                "type": "object",
+                "properties": {
+                    "detail": {
+                        "oneOf": [
+                            detail_string,
+                            {
+                                "type": "object",
+                                "additionalProperties": True,
+                            },
+                        ]
+                    }
+                },
+            }
+
+        return {
+            "title": cls.__name__,
+            "type": "object",
+            "properties": {"detail": detail_string},
+        }
+
+    @classmethod
+    def exception_example(cls, exception):
+        if exception == ValidationError:
+            return {"detail": {"<request parameter>": "<error details>"}}
+
+        return {"detail": cls._get_detail(exception)}
+
+
+def get_examples(code, serializer, example):
+    if (
+        not example
+        and isinstance(serializer, type)
+        and issubclass(serializer, APIException)
+    ):
+        example = APIExceptionOpenApiSerializerExtension.exception_example(serializer)
+    elif example:
+        example = example["application/json"]
+    else:
+        return []
+
+    return [
+        OpenApiExample(
+            http_responses[code],
+            value=example,
+        )
+    ]
+
+
 def custom_extend_schema(**kwargs):
     extend_args = {}
 
@@ -51,13 +125,7 @@ def custom_extend_schema(**kwargs):
             code: OpenApiResponse(
                 serializer,
                 description=http_responses[code],
-                examples=[
-                    OpenApiExample(
-                        http_responses[code], value=example["application/json"]
-                    )
-                ]
-                if example
-                else [],
+                examples=get_examples(code, serializer, example),
             )
             for code, (serializer, example) in responses.items()
         }

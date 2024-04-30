@@ -274,3 +274,11 @@ def test_page_size_limit_authed(api_client, test_auth_token_exchange):
         "/v1/images/", query_params, HTTP_AUTHORIZATION=f"Bearer {token}"
     )
     assert res.status_code == 200
+
+
+@pytest.mark.django_db
+def test_invalid_credentials_401(api_client):
+    res = api_client.get(
+        "/v1/images/", HTTP_AUTHORIZATION="Bearer thisIsNot_ARealToken"
+    )
+    assert res.status_code == 401
