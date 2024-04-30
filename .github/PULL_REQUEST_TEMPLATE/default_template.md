@@ -24,7 +24,6 @@ Fixes #[issue number] by @[issue author]
 - [ ] I added or updated tests for the changes I made (if applicable).
 - [ ] I added or updated documentation (if applicable).
 - [ ] I tried running the project locally and verified that there are no visible errors.
-- [ ] I ran the DAG documentation generator (if applicable).
 - [ ] I ran the DAG documentation generator (`just catalog/generate-docs` for catalog
       PRs) or the media properties generator (`just catalog/generate-docs media-props`
       for the catalog or `just api/generate-docs` for the API) where applicable.
