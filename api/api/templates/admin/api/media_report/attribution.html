@@ -1,0 +1,25 @@
+<p>
+{% if media_obj.title %}
+  "{% if media_obj.url %}<a href="{{ media_obj.url }}">{% endif %}{{ media_obj.title }}{% if media_obj.url %}</a>{% endif %}"
+{% else %}
+  {% if media_obj.url %}<a href="{{ media_obj.url }}">{% endif %}
+  This work
+  {% if media_obj.url %}</a>{% endif %}
+{% endif %}
+  <span> by </span>
+  {% if media_obj.creator %}
+  {% if media_obj.creator_url %}
+  <a href="{{ media_obj.creator_url }}">{{ media_obj.creator }}</a>
+  {% else %}
+  {{ media_obj.creator }}
+  {% endif %}
+  {% endif %}
+{% if media_obj.license %}
+  {% if media_obj.license.is_pd %}
+    is marked with
+  {% else %}
+    is licensed under
+  {% endif %}
+  {{ license }}
+{% endif %}
+</p>

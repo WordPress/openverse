@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import connection
+from django.db.utils import OperationalError
 from rest_framework import status
 from rest_framework.exceptions import APIException
 from rest_framework.request import Request
@@ -9,7 +10,7 @@ from rest_framework.views import APIView
 from api.utils.throttle import ExemptOAuth2IdRateThrottle, HealthcheckAnonRateThrottle
 
 
-class ElasticsearchHealthcheckException(APIException):
+class HealthCheckException(APIException):
     status_code = status.HTTP_503_SERVICE_UNAVAILABLE
 
 
@@ -32,7 +33,10 @@ class HealthCheck(APIView):
 
         Returns nothing if everything is OK, throws error otherwise.
         """
-        connection.ensure_connection()
+        try:
+            connection.ensure_connection()
+        except OperationalError as err:
+            raise HealthCheckException(f"postgres: {err}")
 
     @staticmethod
     def _check_es() -> None:
@@ -44,10 +48,10 @@ class HealthCheck(APIView):
         es_health = settings.ES.cluster.health(timeout="5s")
 
         if es_health["timed_out"]:
-            raise ElasticsearchHealthcheckException("es_timed_out")
+            raise HealthCheckException("elasticsearch: es_timed_out")
 
         if (es_status := es_health["status"]) != "green":
-            raise ElasticsearchHealthcheckException(f"es_status_{es_status}")
+            raise HealthCheckException(f"elasticsearch: es_status_{es_status}")
 
     def get(self, request: Request):
         if "check_es" in request.query_params:

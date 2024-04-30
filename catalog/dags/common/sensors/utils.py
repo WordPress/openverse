@@ -19,7 +19,7 @@ def _get_most_recent_dag_run(dag_id) -> list[datetime] | datetime:
 
     For use as ``execution_date_fn`` argument to ``ExternalTaskSensor``.
 
-    Adapted from https://stackoverflow.com/a/74017474
+    Adapted from <https://stackoverflow.com/a/74017474>
     CC BY-SA 4.0 by Stack Overflow user Nahid O.
     """
     dag_runs = DagRun.find(dag_id=dag_id)

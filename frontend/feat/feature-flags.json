@@ -9,11 +9,6 @@
       "defaultState": "off",
       "storage": "cookie"
     },
-    "additional_search_views": {
-      "status": "enabled",
-      "description": "Toggle additional search views for tag/creator/source.",
-      "storage": "cookie"
-    },
     "additional_search_types": {
       "status": {
         "staging": "switchable",

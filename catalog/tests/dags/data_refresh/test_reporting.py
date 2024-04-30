@@ -1,6 +1,9 @@
 import pytest
 
-from data_refresh.reporting import report_record_difference, report_status
+from data_refresh.reporting import (
+    report_record_difference,
+    report_status,
+)
 
 
 @pytest.mark.parametrize(
@@ -9,22 +12,23 @@ from data_refresh.reporting import report_record_difference, report_status
         [
             {"src1": 1, "src2": 19},
             {"src1": 2, "src2": 38},
-            ["20 → 40", "+20 (+100.0%", "`src1`:+1", "`src2`:+19"],
+            ["20 → 40", "+20 (+100.000000%", "`src1`:+1", "`src2`:+19"],
         ],
         [
             {"src1": 1, "src2": 19},
             {"src1": 3, "src2": 57, "src3": 20},
-            ["20 → 80", "+60 (+300.0%", "`src1`:+2", "`src2`:+38", "`src3`:+20"],
+            ["20 → 80", "+60 (+300.000000%", "`src1`:+2", "`src2`:+38", "`src3`:+20"],
         ],
         [
             {"src1": 4, "src2": 21},
             {"src1": 4},
-            ["25 → 4", "-21 (-84.0%", "`src1`:+0", "`src2`:-21"],
+            # Unchanged source count shouldn't show up
+            ["25 → 4", "-21 (-84.000000%", "`src2`:-21"],
         ],
         [
             {"src1": 4000, "src2": 20},
             {"src1": 2000, "src2": 10},
-            ["4,020 → 2,010", "-2,010 (-50.0%", "`src1`:-2,000", "`src2`:-10"],
+            ["4,020 → 2,010", "-2,010 (-50.000000%", "`src1`:-2,000", "`src2`:-10"],
         ],
         [
             {},
@@ -34,8 +38,14 @@ from data_refresh.reporting import report_record_difference, report_status
         [
             {"src1": 10, "src2": 10},
             {},
-            ["20 → 0", "-20 (-100.0%", "`src1`:-10", "`src2`:-10"],
+            ["20 → 0", "-20 (-100.000000%", "`src1`:-10", "`src2`:-10"],
         ],
+        [
+            {"src1": 5000000000},
+            {"src1": 4938271605},
+            ["5,000,000,000 → 4,938,271,605", "-61,728,395 (-1.234568%"],
+        ],
+        [{"src1": 4}, {"src1": 4}, ["Sources not listed had no change in count"]],
         [{}, {}, ["Both indices missing? No breakdown to show"]],
     ],
 )

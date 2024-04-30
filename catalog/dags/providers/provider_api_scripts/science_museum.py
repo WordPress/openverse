@@ -6,7 +6,7 @@ ETL Process:            Use the API to identify all CC-licensed images.
 Output:                 TSV file containing the image, the respective
                         meta-data.
 
-Notes:                  https://github.com/TheScienceMuseum/collectionsonline/wiki/Collections-Online-API
+Notes:                  <https://github.com/TheScienceMuseum/collectionsonline/wiki/Collections-Online-API>
                         Rate limited, no specific rate given.
 """  # noqa: E501
 
@@ -50,7 +50,7 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
 
         The Science Museum API currently raises a 400 when attempting to access
         any page number higher than 50
-        (https://github.com/TheScienceMuseum/collectionsonline/issues/1470).
+        (<https://github.com/TheScienceMuseum/collectionsonline/issues/1470>).
 
         To avoid this, we ingest data for small ranges of years at a time,
         in order to split the data into batches less than 50 pages each.

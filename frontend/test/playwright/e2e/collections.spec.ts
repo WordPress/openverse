@@ -10,6 +10,7 @@ import { preparePageForTests } from "~~/test/playwright/utils/navigation"
 import {
   getCopyButton,
   getH1,
+  getLoadMoreButton,
   // getLoadMoreButton,
 } from "~~/test/playwright/utils/components"
 import { t } from "~~/test/playwright/utils/i18n"
@@ -22,11 +23,7 @@ test.describe.configure({ mode: "parallel" })
 
 test.describe("collections", () => {
   test.beforeEach(async ({ page }) => {
-    await preparePageForTests(page, "xl", {
-      features: {
-        additional_search_views: "on",
-      },
-    })
+    await preparePageForTests(page, "xl")
     await page.goto("/image/f9384235-b72e-4f1e-9b05-e1b116262a29")
     // Wait for the page to hydrate
     await expect(getCopyButton(page)).toBeEnabled()
@@ -39,8 +36,8 @@ test.describe("collections", () => {
     await page.waitForURL(/image\/collection/)
 
     await expect(getH1(page, /cat/i)).toBeVisible()
-    // await expect(getLoadMoreButton(page)).toBeEnabled()
-    // expect(await page.locator("figure").count()).toEqual(20)
+    await expect(getLoadMoreButton(page)).toBeEnabled()
+    expect(await page.locator("figure").count()).toEqual(20)
   })
 
   test("can open source collection page from image page", async ({ page }) => {
@@ -51,8 +48,8 @@ test.describe("collections", () => {
     await page.waitForURL(/image\/collection/)
 
     await expect(getH1(page, sourcePattern)).toBeVisible()
-    // await expect(getLoadMoreButton(page)).toBeEnabled()
-    // expect(await page.locator("figure").count()).toEqual(20)
+    await expect(getLoadMoreButton(page)).toBeEnabled()
+    expect(await page.locator("figure").count()).toEqual(20)
   })
 
   test("can open creator collection page from image page", async ({ page }) => {
@@ -62,8 +59,8 @@ test.describe("collections", () => {
     await page.waitForURL(/image\/collection/)
 
     await expect(getH1(page, creatorPattern)).toBeVisible()
-    // await expect(getLoadMoreButton(page)).toBeEnabled()
-    // expect(await page.locator("figure").count()).toEqual(20)
+    await expect(getLoadMoreButton(page)).toBeEnabled()
+    expect(await page.locator("figure").count()).toEqual(20)
   })
 })
 
@@ -73,9 +70,7 @@ const EXPAND_BUTTON = (page: Page) =>
   page.getByRole("button", { name: t("mediaDetails.tags.showMore") })
 
 test("some tags are hidden if there are more than 3 rows", async ({ page }) => {
-  await preparePageForTests(page, "xl", {
-    features: { additional_search_views: "on" },
-  })
+  await preparePageForTests(page, "xl")
   await page.goto("/image/2bc7dde0-5aad-4cf7-b91d-7f0e3bd06750")
 
   const tags = page.getByRole("list", { name: t("mediaDetails.tags.title") })
@@ -90,9 +85,7 @@ test("sends analytics events when tags are toggled", async ({
   context,
   page,
 }) => {
-  await preparePageForTests(page, "xl", {
-    features: { additional_search_views: "on" },
-  })
+  await preparePageForTests(page, "xl")
   const analyticsEvents = collectAnalyticsEvents(context)
   await page.goto("/image/2bc7dde0-5aad-4cf7-b91d-7f0e3bd06750")
 

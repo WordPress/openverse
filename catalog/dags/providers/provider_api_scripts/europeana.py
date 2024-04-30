@@ -6,7 +6,7 @@ ETL Process:            Use the API to identify all CC licensed images.
 Output:                 TSV file containing the images and the
                         respective meta-data.
 
-Notes:                  https://pro.europeana.eu/page/search
+Notes:                  <https://pro.europeana.eu/page/search>
 """
 
 import argparse

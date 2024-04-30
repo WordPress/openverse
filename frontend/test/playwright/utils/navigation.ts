@@ -218,12 +218,13 @@ export const preparePageForTests = async (
       fake_sensitive: "off",
       analytics: "on",
       additional_search_types: "off",
-      additional_search_views: "on",
     }
     for (const [feature, status] of Object.entries(options.features)) {
       features[feature] = status
     }
     cookiesToSet.features = features
+  } else {
+    cookiesToSet.features = { fetch_sensitive: "off" }
   }
   await setCookies(page.context(), cookiesToSet)
 }

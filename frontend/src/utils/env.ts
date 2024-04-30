@@ -1,4 +1,4 @@
-const apiUrl = process.env.API_URL ?? "https://api.openverse.engineering/"
+const apiUrl = process.env.API_URL ?? "https://api.openverse.org/"
 
 /**
  * Default environment variables are set on this key. Defaults are fallbacks to existing env vars.

@@ -6,10 +6,10 @@ ETL Process:            Use the API to identify all CC licensed media.
 Output:                 TSV file containing the media and the
                         respective meta-data.
 
-Notes:                  https://api.aucklandmuseum.com/
+Notes:                  <https://api.aucklandmuseum.com/>
 
-Resource:               https://api.aucklandmuseum.com/
-                        https://github.com/AucklandMuseum/API/wiki/Tutorial
+Resource:               <https://api.aucklandmuseum.com/>
+                        <https://github.com/AucklandMuseum/API/wiki/Tutorial>
 
 Resource | Requests per second | Requests per day
 -- | -- | --

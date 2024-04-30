@@ -184,13 +184,11 @@ The following is documentation associated with each DAG (where available):
 
 #### Add license URL
 
-Add `license_url` to all rows that have `NULL` in their `meta_data` fields. This
-PR sets the meta_data value to "{license_url: https://... }", where the url is
-constructed from the `license` and `license_version` columns.
+Add `license_url` to rows without one in their `meta_data` fields. This PR
+merges the `meta_data` value with "{license_url: https://... }", where the url
+is constructed from the `license` and `license_version` columns.
 
-This is a maintenance DAG that should be run once. If all the null values in the
-`meta_data` column are updated, the DAG will only run the first and the last
-step, logging the statistics.
+This is a maintenance DAG that should be run once.
 
 ----
 
@@ -229,10 +227,10 @@ ETL Process: Use the API to identify all CC licensed media.
 
 Output: TSV file containing the media and the respective meta-data.
 
-Notes: https://api.aucklandmuseum.com/
+Notes: <https://api.aucklandmuseum.com/>
 
-Resource: https://api.aucklandmuseum.com/
-https://github.com/AucklandMuseum/API/wiki/Tutorial
+Resource: <https://api.aucklandmuseum.com/>
+<https://github.com/AucklandMuseum/API/wiki/Tutorial>
 
 | Resource     | Requests per second | Requests per day |
 | ------------ | ------------------- | ---------------- |
@@ -255,7 +253,7 @@ commands to be run. The DAG will then split the rows to be updated into batches,
 and report to Slack when all batches have been updated. It handles all
 deadlocking and timeout concerns, ensuring that the provided SQL is run without
 interfering with ingestion. For more information, see the implementation plan:
-https://docs.openverse.org/projects/proposals/popularity_optimizations/20230420-implementation_plan_popularity_optimizations.html#special-considerations-avoiding-deadlocks-and-timeouts
+<https://docs.openverse.org/projects/proposals/popularity_optimizations/20230420-implementation_plan_popularity_optimizations.html#special-considerations-avoiding-deadlocks-and-timeouts>
 
 By default the DAG will run as a dry_run, logging the generated SQL but not
 actually running it. To actually perform the update, the `dry_run` parameter
@@ -328,9 +326,9 @@ ETL Process: Use the API to identify all CC licensed media.
 
 Output: TSV file containing the media and the respective meta-data.
 
-Notes: Documentation: https://ccmixter.org/query-api ccMixter sends bad JSON and
-extremely huge headers, both of which need workarounds that are handled by this
-DAG.
+Notes: Documentation: <https://ccmixter.org/query-api> ccMixter sends bad JSON
+and extremely huge headers, both of which need workarounds that are handled by
+this DAG.
 
 ----
 
@@ -632,7 +630,7 @@ ETL Process: Use the API to identify all CC licensed images.
 
 Output: TSV file containing the images and the respective meta-data.
 
-Notes: https://pro.europeana.eu/page/search
+Notes: <https://pro.europeana.eu/page/search>
 
 ----
 
@@ -644,11 +642,11 @@ ETL Process: Use the API to identify all CC licensed images.
 
 Output: TSV file containing the images and the respective meta-data.
 
-Notes: https://api.finna.fi/swagger-ui/
-https://www.finna.fi/Content/help-syntax?lng=en-gb The Finnish Museums provider
-script is a dated DAG that ingests all records that were last updated in the
-previous day. Because of this, it is not necessary to run a separate reingestion
-DAG, as updated data will be processed during regular ingestion.
+Notes: <https://api.finna.fi/swagger-ui/>
+<https://www.finna.fi/Content/help-syntax?lng=en-gb> The Finnish Museums
+provider script is a dated DAG that ingests all records that were last updated
+in the previous day. Because of this, it is not necessary to run a separate
+reingestion DAG, as updated data will be processed during regular ingestion.
 
 ----
 
@@ -670,7 +668,9 @@ ETL Process: Use the API to identify all CC licensed images.
 
 Output: TSV file containing the images and the respective meta-data.
 
-Notes: https://www.flickr.com/help/terms/api Rate limit: 3600 requests per hour.
+Notes: <https://www.flickr.com/help/terms/api>
+
+Rate limit: 3600 requests per hour.
 
 ----
 
@@ -682,8 +682,10 @@ ETL Process: Use the API to identify all CC-licensed images.
 
 Output: TSV file containing the image, the respective meta-data.
 
-Notes: https://freesound.org/docs/api/ Rate limit: No limit for our API key.
-This script can be run either to ingest the full dataset or as a dated DAG.
+Notes: <https://freesound.org/docs/api/>
+
+Rate limit: No limit for our API key. This script can be run either to ingest
+the full dataset or as a dated DAG.
 
 ----
 
@@ -694,15 +696,15 @@ Provider: iNaturalist
 Output: Records loaded to the image catalog table.
 
 Notes: The iNaturalist API is not intended for data scraping.
-https://api.inaturalist.org/v1/docs/ But there is a full dump intended for
+<https://api.inaturalist.org/v1/docs/> But there is a full dump intended for
 sharing on S3.
-https://github.com/inaturalist/inaturalist-open-data/tree/documentation/Metadata
+<https://github.com/inaturalist/inaturalist-open-data/tree/documentation/Metadata>
 Because these are exceptionally large normalized tables, as opposed to more
 document oriented API responses, we found that bringing the data into postgres
 first was the most effective approach. More detail in slack here:
-https://wordpress.slack.com/archives/C02012JB00N/p1653145643080479?thread_ts=1653082292.714469&cid=C02012JB00N
+<https://wordpress.slack.com/archives/C02012JB00N/p1653145643080479?thread_ts=1653082292.714469&cid=C02012JB00N>
 We use the table structure defined here,
-https://github.com/inaturalist/inaturalist-open-data/blob/main/Metadata/structure.sql
+<https://github.com/inaturalist/inaturalist-open-data/blob/main/Metadata/structure.sql>
 except for adding ancestry tags to the taxa table.
 
 ----
@@ -715,7 +717,7 @@ ETL Process: Use the API to identify all CC-licensed audio.
 
 Output: TSV file containing the audio meta-data.
 
-Notes: https://api.jamendo.com/v3.0/tracks/ 35,000 requests per month for
+Notes: <https://api.jamendo.com/v3.0/tracks/> 35,000 requests per month for
 non-commercial apps Jamendo Music has more than 500,000 tracks shared by 40,000
 artists from over 150 countries all over the world. Audio quality: uploaded as
 WAV/ FLAC/ AIFF bit depth: 16/24 sample rate: 44.1 or 48 kHz channels: 1/2
@@ -730,8 +732,8 @@ ETL Process: Use the API to identify all CC licensed media.
 
 Output: TSV file containing the media and the respective meta-data.
 
-Notes: https://justtakeitfree.com/api/api.php This API requires an API key. For
-more details, see https://github.com/WordPress/openverse/pull/2793
+Notes: <https://justtakeitfree.com/api/api.php> This API requires an API key.
+For more details, see <https://github.com/WordPress/openverse/pull/2793>
 
 ----
 
@@ -743,21 +745,21 @@ ETL Process: Use the API to identify all CC0 artworks.
 
 Output: TSV file containing the image, their respective meta-data.
 
-Notes: https://metmuseum.github.io/#search "Please limit requests to 80 requests
-per second." May need to bump up the delay (e.g. to 3 seconds), to avoid of
-blocking during local development testing.
+Notes: <https://metmuseum.github.io/#search> "Please limit requests to 80
+requests per second." May need to bump up the delay (e.g. to 3 seconds), to
+avoid of blocking during local development testing.
 
                         Some analysis to improve data quality was conducted using a
-                        separate csv file here: https://github.com/metmuseum/openaccess
+                        separate csv file here: <https://github.com/metmuseum/openaccess>
 
                         Get a list of object IDs:
-                        https://collectionapi.metmuseum.org/public/collection/v1/objects?metadataDate=2022-08-10
+                        <https://collectionapi.metmuseum.org/public/collection/v1/objects?metadataDate=2022-08-10>
                         Get a specific object:
-                        https://collectionapi.metmuseum.org/public/collection/v1/objects/1027
+                        <https://collectionapi.metmuseum.org/public/collection/v1/objects/1027>
                         The search functionality requires a specific query (term search)
                         in addition to date and public domain. It seems like it won't
                         connect with just date and license.
-                        https://collectionapi.metmuseum.org/public/collection/v1/search?isPublicDomain=true&metadataDate=2022-08-07
+                        <https://collectionapi.metmuseum.org/public/collection/v1/search?isPublicDomain=true&metadataDate=2022-08-07>
 
 ----
 
@@ -770,7 +772,7 @@ ETL Process: Use the API to identify all CC0-licensed images.
 Output: TSV file containing the image meta-data.
 
 Notes: This api was written specially for Openverse. There are no known limits
-or restrictions. https://nappy.co/
+or restrictions. <https://nappy.co/>
 
 ----
 
@@ -812,7 +814,7 @@ ETL Process: Use the API to identify all CC licensed images.
 
 Output: TSV file containing the image, their respective meta-data.
 
-Notes: http://api-docs.phylopic.org/v2/ No rate limit specified.
+Notes: <http://api-docs.phylopic.org/v2/> No rate limit specified.
 
 ----
 
@@ -878,7 +880,7 @@ Notes: Rawpixel has given Openverse beta access to their API. This API is
 undocumented, and we will need to contact Rawpixel directly if we run into any
 issues. The public API max results range is limited to 100,000 results, although
 the API key we've been given can circumvent this limit.
-https://www.rawpixel.com/api/v1/search?tags=$publicdomain&page=1&pagesize=100
+<https://www.rawpixel.com/api/v1/search?tags=$publicdomain&page=1&pagesize=100>
 
 ----
 
@@ -984,7 +986,7 @@ ETL Process: Use the API to identify all CC-licensed images.
 Output: TSV file containing the image, the respective meta-data.
 
 Notes:
-https://github.com/TheScienceMuseum/collectionsonline/wiki/Collections-Online-API
+<https://github.com/TheScienceMuseum/collectionsonline/wiki/Collections-Online-API>
 Rate limited, no specific rate given.
 
 ----
@@ -997,7 +999,7 @@ ETL Process: Use the API to identify all CC licensed images.
 
 Output: TSV file containing the images and the respective meta-data.
 
-Notes: https://api.si.edu/openaccess/api/v1.0/search
+Notes: <https://api.si.edu/openaccess/api/v1.0/search>
 
 ----
 
@@ -1009,7 +1011,7 @@ ETL Process: Use the API to identify all openly licensed media.
 
 Output: TSV file containing the media metadata.
 
-Notes: https://www.smk.dk/en/article/smk-api/
+Notes: <https://www.smk.dk/en/article/smk-api/>
 
 ----
 
@@ -1021,7 +1023,7 @@ This DAG is responsible for updating the staging database using the most recent
 snapshot of the production database.
 
 For a full explanation of the DAG, see the implementation plan description:
-https://docs.openverse.org/projects/proposals/search_relevancy_sandbox/20230406-implementation_plan_update_staging_database.html#dag
+<https://docs.openverse.org/projects/proposals/search_relevancy_sandbox/20230406-implementation_plan_update_staging_database.html#dag>
 
 This DAG can be skipped by setting the `SKIP_STAGING_DATABASE_RESTORE` Airflow
 Variable to `true`. To change this variable, navigate to Admin > Variables in
@@ -1047,9 +1049,9 @@ ETL Process: Use the API to identify all CC-licensed images.
 
 Output: TSV file containing the image, the respective meta-data.
 
-Notes: https://stocksnap.io/api/load-photos/date/desc/1 https://stocksnap.io/faq
-All images are licensed under CC0. No rate limits or authorization required. API
-is undocumented.
+Notes: <https://stocksnap.io/api/load-photos/date/desc/1>
+<https://stocksnap.io/faq> All images are licensed under CC0. No rate limits or
+authorization required. API is undocumented.
 
 ----
 
@@ -1182,7 +1184,7 @@ ETL Process: Use the API to identify all openly licensed media.
 
 Output: TSV file containing the media metadata.
 
-Notes: https://wordpress.org/photos/wp-json/wp/v2 Provide photos, media, users
+Notes: <https://wordpress.org/photos/wp-json/wp/v2> Provide photos, media, users
 and more related resources. No rate limit specified.
 
 ----

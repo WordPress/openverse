@@ -211,7 +211,7 @@ class AbstractMediaReport(models.Model):
                 f"with identifier '{self.media_obj_id}'."
             )
 
-    def url(self, request=None) -> str:
+    def media_url(self, request=None) -> str:
         """
         Build the URL of the media item. This uses ``reverse`` and
         ``request.build_absolute_uri`` to build the URL without having to worry
@@ -227,6 +227,10 @@ class AbstractMediaReport(models.Model):
         )
         if request is not None:
             url = request.build_absolute_uri(url)
+        return url
+
+    def url(self, request=None) -> str:
+        url = self.media_url(request)
         return format_html(f"<a href={url}>{url}</a>")
 
     @property

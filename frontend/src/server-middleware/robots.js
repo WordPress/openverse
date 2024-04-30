@@ -26,7 +26,7 @@ export default function robots(_, res) {
   const deployEnv = process.env.DEPLOYMENT_ENV ?? LOCAL
 
   const contents =
-    deployEnv !== PRODUCTION
+    deployEnv === PRODUCTION
       ? `# Block search result pages and single result pages
 User-agent: *
 Crawl-delay: 10
@@ -35,6 +35,12 @@ Disallow: /search/image/
 Disallow: /search/
 Disallow: /image/
 Disallow: /audio/
+# Disallow the same for all translated routes
+Disallow: /*/search/audio/
+Disallow: /*/search/image/
+Disallow: /*/search/
+Disallow: /*/image/
+Disallow: /*/audio/
 
 ${aiDisallowRules}
       `

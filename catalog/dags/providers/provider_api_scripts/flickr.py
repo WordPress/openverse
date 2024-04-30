@@ -6,8 +6,9 @@ ETL Process:            Use the API to identify all CC licensed images.
 Output:                 TSV file containing the images and the
                         respective meta-data.
 
-Notes:                  https://www.flickr.com/help/terms/api
-                        Rate limit: 3600 requests per hour.
+Notes:                  <https://www.flickr.com/help/terms/api>
+
+Rate limit:             3600 requests per hour.
 """
 
 import argparse

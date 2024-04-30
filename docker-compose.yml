@@ -1,5 +1,3 @@
-version: "2.4"
-
 include:
   - "catalog/compose.yml"
   - "ingestion_server/compose.yml"

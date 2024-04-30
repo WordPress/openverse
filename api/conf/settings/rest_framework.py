@@ -53,9 +53,7 @@ DEFAULT_THROTTLE_CLASSES = (
 )
 
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "oauth2_provider.contrib.rest_framework.OAuth2Authentication",
-    ),
+    "DEFAULT_AUTHENTICATION_CLASSES": ("conf.oauth2_extensions.OAuth2Authentication",),
     "DEFAULT_VERSIONING_CLASS": "rest_framework.versioning.URLPathVersioning",
     "DEFAULT_RENDERER_CLASSES": (
         "rest_framework.renderers.JSONRenderer",

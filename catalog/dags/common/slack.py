@@ -6,7 +6,7 @@ TODO:
     - attach text, fields
 
 This class is intended to be used with a channel-specific slack webhook.
-More information can be found here: https://app.slack.com/block-kit-builder.
+More information can be found here: <https://app.slack.com/block-kit-builder>.
 
 ## Messages are not configured to send in development
 

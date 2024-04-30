@@ -1,6 +1,6 @@
 """
 CloudwatchWrapper extracted partially from
-https://github.com/awsdocs/aws-doc-sdk-examples/blob/54c3b82d8f9a12a862f9fcec44909829bda849af/python/example_code/cloudwatch/cloudwatch_basics.py
+<https://github.com/awsdocs/aws-doc-sdk-examples/blob/54c3b82d8f9a12a862f9fcec44909829bda849af/python/example_code/cloudwatch/cloudwatch_basics.py>
 
 The CloudwatchWrapper requires the AWS_CLOUDWATCH_CONN_ID, or the `aws_default`
 connection, to be set in the Airflow Connections.
