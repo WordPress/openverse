@@ -80,14 +80,14 @@
     },
     collection: {
       content: {
-        a: "{openverse} searches across more than 700 million images and audio from open APIs and the {commonCrawl} dataset.",
+        a: "{openverse} searches across more than 700 million images and audio tracks from open APIs and the {commonCrawl} dataset.",
         b: "We aggregate works from multiple public repositories, and facilitate reuse through features like one-click attribution.",
       },
     },
     planning: {
       content: {
         /** about.planning.content.a-c are parts of a single statement */
-        a: "Currently {openverse} only searches images and audio, with search for video provided through External Sources.",
+        a: "Currently {openverse} only searches images and audio tracks, with search for video provided through External Sources.",
         /** about.planning.content.a-c are parts of a single statement */
         b: "We plan to add additional media types such as open texts and 3D models, with the ultimate goal of providing access to the estimated 2.5 billion CC licensed and public domain works on the web.",
         /**
@@ -479,7 +479,7 @@
      * Interpolated into error.mediaNotFound:
      * _{mediaType}_ part of "Couldn't find {mediaType} with id {id}"
      */
-    audio: "audio",
+    audio: "an audio track",
   },
   filters: {
     title: "Filters",
@@ -621,9 +621,9 @@
         countMore: "See over {localeCount} images found for {query}.",
       },
       audio: {
-        zero: "No audio found for {query}.",
-        count: "See {localeCount} audio found for {query}.",
-        countMore: "See over {localeCount} audio found for {query}.",
+        zero: "No audio tracks found for {query}.",
+        count: "See {localeCount} audio tracks found for {query}.",
+        countMore: "See over {localeCount} audio tracks found for {query}.",
       },
     },
     load: "Load more results",
@@ -646,7 +646,7 @@
        * Interpolated into browsePage.searchForm.placeholder:
        * _{type}_ part of "Search all {type}"
        */
-      audio: "audio",
+      audio: "audio tracks",
       /**
        * Interpolated into browsePage.searchForm.placeholder:
        * _{type}_ part of "Search all {type}"
@@ -684,7 +684,7 @@
       licenseExplanation: "license explanation",
       creator: "search by creator",
       imageTitle: "Image: {title}",
-      audioTitle: "Audio: {title}",
+      audioTitle: "Audio track: {title}",
       results: {
         /**
          * "imageResults" and "audioResults" are interpolated from the strings under
@@ -738,7 +738,7 @@
       copyrightDisclaimer: "Some photographs might contain copyrighted content, such as paintings, sculptures, or architectural works. Using these photographs may require additional permissions from the copyright holder of the depicted works.",
       licenseHeader: "License",
       toolHeader: "Public Domain",
-      audio: "Audio",
+      audio: "Audio track",
       image: "Image",
       tool: {
         content: "Read more about the tool {link}.",
@@ -807,7 +807,7 @@
       creatorUrl: "author {name}",
     },
     imageInfo: "Image information",
-    audioInfo: "Audio information",
+    audioInfo: "Audio track information",
     tags: {
       title: "Tags",
       showMore: "Show more",
@@ -871,14 +871,14 @@
   },
   audioDetails: {
     genreLabel: "Genre",
-    relatedAudios: "Related audio",
+    relatedAudios: "Related audio tracks",
     table: {
       album: "Album",
       sampleRate: "Sample Rate",
       filetype: "Format",
       genre: "Genre",
     },
-    weblink: "Get this audio",
+    weblink: "Get this audio track",
   },
   allResults: {
     snackbar: {
@@ -930,12 +930,12 @@
   },
   audioTrack: {
     ariaLabel: "Audio: {title}",
-    ariaLabelInteractive: "Audio: {title} - interactive player - press the space bar to play and pause a preview of the audio",
-    ariaLabelInteractiveSeekable: "Audio: {title} - interactive player - press the space bar to play and pause a preview of the audio; use the left and right arrow keys to seek through the track.",
+    ariaLabelInteractive: "Audio: {title} - interactive player - press the space bar to play and pause a preview of the audio track",
+    ariaLabelInteractiveSeekable: "Audio: {title} - interactive player - press the space bar to play and pause a preview of the audio track; use the left and right arrow keys to seek through the track.",
     messages: {
       err_aborted: "You aborted playback.",
       err_network: "A network error occurred.",
-      err_decode: "Could not decode audio.",
+      err_decode: "Could not decode audio track.",
       err_unallowed: "Reproduction not allowed.",
       err_unknown: "An unexpected error has occurred. Try again in a few minutes or report the item if the issue persists.",
       err_unsupported: "This audio format is not supported by your browser.",
@@ -1000,7 +1000,7 @@
     additional: "Coming soon",
     statusBeta: "Beta",
     seeImage: "See all images",
-    seeAudio: "See all audio",
+    seeAudio: "See all audio tracks",
     selectLabel: "Select a content type: {type}",
   },
   skipToContent: "Skip to content",
@@ -1141,8 +1141,8 @@
     resultCountLabel: {
       creator: {
         audio: {
-          zero: "No audio files by this creator.",
-          count: "{count} audio file by this creator.|{count} audio files by this creator.",
+          zero: "No audio tracks by this creator.",
+          count: "{count} audio track by this creator.|{count} audio tracks by this creator.",
           countMore: "Over {count} audio files by this creator.",
         },
         image: {
@@ -1154,7 +1154,7 @@
       source: {
         audio: {
           zero: "No audio files provided by this source",
-          count: "{count} audio file provided by this source|{count} audio files provided by this source",
+          count: "{count} audio track provided by this source|{count} audio tracks provided by this source",
           countMore: "Over {count} audio files provided by this source",
         },
         image: {
@@ -1166,7 +1166,7 @@
       tag: {
         audio: {
           zero: "No audio files with the selected tag",
-          count: "{count} audio file with the selected tag|{count} audio files with the selected tag",
+          count: "{count} audio track with the selected tag|{count} audio tracks with the selected tag",
           countMore: "Over {count} audio files with the selected tag",
         },
         image: {
