@@ -52,32 +52,47 @@ counterparts.
 We will switch our color names defined in the tailwind configuration to use
 semantic names, for example replacing "pink" with "primary" and "yellow" with
 "complementary". Instead of hardcoding these colors in the Tailwind
-configuration, the tailwind configuration will reference CSS variables defined
+configuration, the tailwind configuration will _reference_ CSS variables defined
 in our root css file. The value of the CSS variables will be switched based on a
-dark mode CSS class added to the HTML root when dark mode is enabled.
+dark mode CSS class added to the HTML root when dark mode is enabled and the
+`prefers-color-scheme` media query.
 
 Tailwind's built in `dark:` modifier can be used for any styles which need to
 override the default behavior or add dark-mode specific styles beyond the core
-palette swap.
+palette swap. We will inform tailwind of our dark mode setup using the Tailwind
+configuration's [`darkMode` property](https://tailwindcss.com/docs/dark-mode).
 
-Here are pretend, simplified examples of this setup.
+Here are simplified examples of this setup. All the logic is correct and
+suitable for production but the actual variables are illustrative only.
 
-In our primary CSS file, we setup two lists of CSS variables with different
-values when the `.dark-mode` class is present:
+In our primary CSS file, we define CSS variables and redefine them to use our
+dark mode values in two scenarios:
+
+1. When the `.dark-mode` class is present
+2. when the user's preferred color scheme is dark, and the `.light-mode` class
+   is _not_ present.
 
 ```css
-:root {
+:root,
+:is(.light-mode *) {
   --color-primary: black;
   --color-secondary: white;
 }
 
-.dark-mode {
+:is(.dark-mode *) {
   --color-primary: white;
   --color-secondary: black;
 }
+
+@media (prefers-color-scheme: dark) {
+  :not(.light-mode *) {
+    --color-primary: white;
+    --color-secondary: black;
+  }
+}
 ```
 
-In our Tailwind config, we reference these variables:
+In our Tailwind configuration, we reference these variables like so:
 
 ```js
 const config = {
@@ -109,6 +124,25 @@ example, _always_ black _regardless_ of dark mode:
   <p class="text-primary dark:text-secondary">Hello World</p>
 </template>
 ```
+
+The escape hatch requires the following Tailwind configuration:
+
+```js
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  darkMode: [
+    "variant",
+    [
+      "@media (prefers-color-scheme: dark) { &:not(.light-mode *) }",
+      "&:is(.dark-mode *)", // :is is so the specificity matches and there's not unexpected behavior
+    ],
+  ],
+  // ...
+}
+```
+
+You can learn more about this configuration in the
+[Tailwind docs](https://tailwindcss.com/docs/dark-mode#using-multiple-selectors).
 
 ### Rejected alternative approach
 
@@ -175,7 +209,9 @@ completed in parallel.
          This is also the point of the process where @fcoveram and
          @wordpress/openverse-frontend should review the full dark mode
          appearance for correctness and sufficient color contrast (see the
-         ["Accessibility"](#accessibility) section for more details.**
+         ["Accessibility"](#accessibility) section for more details.** Existing
+         screenshots should be renamed to `<snapshot_name>_light` and the new
+         dark mode screenshots should be named `<snapshot_name>_dark`.
 
 2. **Work Stream B**: Toggling dark mode
 
@@ -186,23 +222,28 @@ completed in parallel.
 
       ```ts
       interface ColorMode {
-        preference: "dark" | "light" | "system" // Defaults to "light"
+        preference: "dark" | "light" | "system" // Defaults to "system"
         systemValue: "light" | "dark" // Readonly representation of the system value
       }
       ```
 
       The color mode should be stored in a cookie so that a previously-selected
       user choice can be used when rendering via SSR and prevent a visual flash
-      of light mode styles for users who have selected dark mode. The system
-      value is read by matching the `'(prefers-color-scheme: dark)'` media
-      query.
+      of the incorrect color mode. The "system" value is the default.
 
    3. Behind the feature flag, add the new user interface element which toggles
       dark mode (exact design TBD, but it will be comprised of existing UI
-      components). Default to "light" mode but support choosing between "dark",
-      "light", and "system".
+      components). Supports choosing between "dark", "light", and "system"
+      modes, with "system" as the default. The "dark" and "light" options will
+      set a `.dark-mode` or `.light-mode` class on the HTML element of the site.
+      The default "system" choice does not add a class to the HTML element. When
+      there is no HTML `.{color}-mode` class present, the site will default to
+      the `prefers-color-scheme` media query value.
       1. Add a `TOGGLE_COLOR_SCHEME` analytics event with a playload including
          the color mode preference chosen by the user.
+      2. Update our Cloudflare static page caching rule for the frontend in with
+         a Cookie bypass rule (in pseudocode, something like `and not
+         http.cookie contains "openverse_color_scheme"))
 
 ### Launch plan
 
@@ -210,11 +251,11 @@ completed in parallel.
 > deployment.
 
 1. Set the `DARK_MODE_UI_TOGGLE` feature flag to "on" in all environments.
-2. Deploy the production frontend.
-3. Test and verify the deploy was successful and that dark mode:
+2. Test and verify the staging deploy was successful and that dark mode:
    1. Looks correct
    2. The toggle works correctly (chosen settings persist, the control works
       with keyboard, etc.)
+3. Deploy the production frontend and verify proper behavior after deployment.
 4. Make a post on make.wordpress.org/openverse announcing the new dark mode.
 5. Create a
    ["Request for Amplification"](https://github.com/WordPress/Marketing-Team/issues/new/choose)
@@ -224,7 +265,9 @@ completed in parallel.
 
 <!-- Describe any infrastructure that will need to be provisioned or modified. In particular, identify associated potential cost changes. -->
 
-This project will not require any infrastructure changes.
+We will need one infrastructure pull request to update our Cloudflare frontend
+caching. Specifically, we need to update our cache rule called "Cache static
+pages" to bypass the cache when the color scheme cookie is present.
 
 ## Accessibility
 
@@ -252,6 +295,7 @@ Finally, in the event of a full rollback we would:
 - Remove the test utility and feature flags
 - Delete the dark mode visual regression test screenshots
 - Delete or revise any marketing content
+- Delete the cookie detection logic from our static page caching rule
 
 ## Risks
 
