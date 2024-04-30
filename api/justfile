@@ -162,7 +162,7 @@ doc-test: wait-up
 #########
 
 # Build and run the NGINX image locally
-nginx upstream_url='api.openverse.engineering':
+nginx upstream_url='api.openverse.org':
     # upstream_url can also be set to 172.17.0.1:50280 for local testing
     docker build --target nginx . -t openverse-api_nginx:latest
     @echo "--> NGINX server will be run at http://localhost:9090, upstream at {{ upstream_url }}"

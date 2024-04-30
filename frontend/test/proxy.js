@@ -23,7 +23,7 @@ const talkback = require("talkback")
 /** @typedef {ReturnType<TalkbackOptions['tapeDecorator']>} Tape */
 
 const port = 49153
-const host = "https://api.openverse.engineering"
+const host = "https://api.openverse.org"
 
 const urlPatterns = {
   search: /\/(?<mediaType>images|audio|video|model-3d)\/*\?(?<query>[\w&=+]+)/,
@@ -143,7 +143,7 @@ const tapeDecorator = (tape) => {
   const responseBody = bodyUtil.read(tape.res.body).toString()
 
   const fixedResponseBody = responseBody.replace(
-    /https?:\/\/api.openverse.engineering/g,
+    /https?:\/\/api.openverse.org/g,
     `http://localhost:${port}`
   )
 
