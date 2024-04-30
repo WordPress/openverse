@@ -1,0 +1,150 @@
+{% extends "admin/change_form.html" %}
+{% load static %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+  audio, .img-container {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+  .img-container {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+  }
+  .img-container img, .img-container p {
+    grid-column: 1 / -1;
+    grid-row: 1 / -1;
+  }
+  .img-container img {
+    cursor: pointer;
+  }
+  .img-container p {
+    border-radius: 4px;
+    padding: 10px;
+    z-index:1;
+    pointer-events: none;
+    color: black;
+    background: rgba(255, 255, 255, 0.5);
+    text-align: center;
+    font-weight: bold;
+  }
+  .blur-image {
+    transition: filter 0.3s;
+    filter: blur(60px);
+  }
+  .no-blur {
+    filter: none;
+  }
+  .no-blur ~ p {
+    display: none;
+  }
+</style>
+{% endblock %}
+
+{% block after_field_sets %}
+{{ block.super }}
+
+{% if not add %}
+<fieldset class="module aligned">
+  <h2>Media details</h2>
+  {% if media_type == 'image' %}
+    <div class="img-container">
+      <img src="{% url media_type|add:'-thumb' identifier=media_obj.identifier %}" alt="Media Image" class="blur-image" height="300"
+           onclick="toggleBlur(this)"
+           onerror="this.onerror=null;this.src='{{ media_obj.url }}';">
+      <p>Show content</p>
+    </div>
+
+  {% elif media_type == 'audio' %}
+    <audio controls>
+      <source src="{{ media_obj.url }}">
+      Your browser does not support the audio element.
+    </audio>
+  {% endif %}
+
+  <div class="form-row field-created_at">
+      <div class="flex-container">
+        <label>Media details</label>
+        <div class="readonly">
+          {% include "admin/api/media_report/attribution.html" with media_obj=media_obj license=license %}
+          <p>View media at <a href="{{media_obj.foreign_landing_url}}">source ({{media_obj.source}})</a>,
+            on <a href="https://openverse.org/{{media_type}}/{{media_obj.identifier}}">openverse.org</a>,
+            on <a href="{% url media_type|add:'-detail' identifier=media_obj.identifier %}">Openverse API</a>.</p>
+          <p>Provider: {{ media_obj.provider }}.</p>
+        </div>
+      </div>
+  </div>
+
+  <div class="form-row field-created_at">
+      <div class="flex-container">
+        <label>Tags</label>
+        <div class="readonly">
+          {% for provider, provider_tags in tags.items %}
+            <p><em>{{ provider }}</em></p>
+            <p>{{ provider_tags|join:', ' }}</p>
+          {% endfor %}
+        </div>
+      </div>
+  </div>
+  <div class="form-row field-created_at">
+      <div class="flex-container">
+        <label>Description</label>
+        <div class="readonly">
+          <p>{{ description }}</div>
+      </div>
+  </div>
+</fieldset>
+
+<fieldset class="module aligned">
+  <h2>Other reports</h2>
+  <div class="form-row field-other_reports">
+  {% if other_reports %}
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Report reason</th>
+          <th>Status</th>
+          <th>Report link</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for report in other_reports %}
+        <tr>
+          <td>{{ report.created_at }}</td>
+          <td>{{ report.reason }}</td>
+          <td>{{ report.status }}</td>
+          <td><a href="{% url 'admin:api_'|add:media_type|add:'report_change' report.id %}">{{ report.id }}</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No other reports for {{ media_obj.identifier }} found.</p>
+  {% endif %}
+  </div>
+
+</fieldset>
+{% endif %}
+{% endblock %}
+
+
+{% block admin_change_form_document_ready %}
+{{ block.super }}
+<script>
+  function toggleBlur(img) {
+    if (img.classList.contains('no-blur')) {
+      img.classList.remove('no-blur');
+      img.classList.add('blur-image');
+    } else {
+      img.classList.remove('blur-image');
+      img.classList.add('no-blur');
+    }
+  }
+  function replace(img, url) {
+    img.src = url;
+  }
+</script>
+{% endblock %}
