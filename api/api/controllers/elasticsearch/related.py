@@ -7,7 +7,7 @@ from elasticsearch_dsl.response import Hit
 from api.controllers.elasticsearch.helpers import get_es_response, get_query_slice
 from api.controllers.search_controller import (
     _post_process_results,
-    get_excluded_providers_query,
+    get_filtered_providers_query,
 )
 
 
@@ -55,8 +55,8 @@ def related_media(uuid: str, index: str, filter_dead: bool) -> list[Hit]:
             related_query["should"].append(Q("terms", tags__name__keyword=tags))
 
     # Exclude the dynamically disabled sources.
-    if excluded_providers_query := get_excluded_providers_query():
-        related_query["must_not"].append(excluded_providers_query)
+    if filtered_providers_query := get_filtered_providers_query():
+        related_query["must"].append(filtered_providers_query)
     # Exclude the current item and mature content.
     related_query["must_not"].extend(
         [Q("term", mature=True), Q("term", identifier=uuid)]

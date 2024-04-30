@@ -840,7 +840,7 @@ def test_excessive_recursion_in_post_process(
     "excluded_count, result",
     [(2, Terms(provider=["provider1", "provider2"])), (0, None)],
 )
-def test_get_excluded_providers_query_returns_excluded(
+def test_get_filtered_providers_query_returns_available_providers(
     excluded_count, result, is_cache_reachable, cache_name, request
 ):
     cache = request.getfixturevalue(cache_name)
@@ -858,11 +858,11 @@ def test_get_excluded_providers_query_returns_excluded(
                 created_on=datetime.datetime.now(),
                 provider_identifier=f"provider{i + 1}",
                 provider_name=f"Provider {i + 1}",
-                filter_content=True,
+                filter_content=False,
             )
 
     with capture_logs() as cap_logs:
-        assert search_controller.get_excluded_providers_query() == result
+        assert search_controller.get_filtered_providers_query() == result
 
     if not is_cache_reachable:
         messages = [record["event"] for record in cap_logs]

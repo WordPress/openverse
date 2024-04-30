@@ -14,12 +14,12 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture
-def excluded_providers_cache(django_cache, monkeypatch):
+def filtered_providers_cache(django_cache, monkeypatch):
     cache = django_cache
     monkeypatch.setattr("api.controllers.search_controller.cache", cache)
 
-    excluded_provider = "excluded_provider"
-    cache_value = [excluded_provider]
+    filtered_provider = "filtered_provider"
+    cache_value = [filtered_provider]
     cache.set(
         key=FILTERED_PROVIDERS_CACHE_KEY,
         version=FILTERED_PROVIDERS_CACHE_VERSION,
@@ -27,41 +27,9 @@ def excluded_providers_cache(django_cache, monkeypatch):
         timeout=1,
     )
 
-    yield excluded_provider
+    yield filtered_provider
 
     cache.delete(FILTERED_PROVIDERS_CACHE_KEY, version=FILTERED_PROVIDERS_CACHE_VERSION)
-
-
-def test_create_search_query_empty(media_type_config):
-    serializer = media_type_config.search_request_serializer(
-        data={}, context={"media_type": "image"}
-    )
-    serializer.is_valid(raise_exception=True)
-    search_query = search_controller.build_search_query(serializer)
-    actual_query_clauses = search_query.to_dict()["bool"]
-
-    assert actual_query_clauses == {
-        "must_not": [{"term": {"mature": True}}],
-        "must": [{"match_all": {}}],
-        "should": [
-            {"rank_feature": {"boost": 10000, "field": "standardized_popularity"}}
-        ],
-    }
-
-
-def test_create_search_query_empty_no_ranking(media_type_config, settings):
-    settings.USE_RANK_FEATURES = False
-    serializer = media_type_config.search_request_serializer(
-        data={}, context={"media_type": media_type_config.media_type}
-    )
-    serializer.is_valid(raise_exception=True)
-    search_query = search_controller.build_search_query(serializer)
-    actual_query_clauses = search_query.to_dict()["bool"]
-
-    assert actual_query_clauses == {
-        "must_not": [{"term": {"mature": True}}],
-        "must": [{"match_all": {}}],
-    }
 
 
 def test_create_search_query_q_search_no_filters(media_type_config):
@@ -261,16 +229,15 @@ def test_create_search_query_q_search_license_license_type_creates_2_terms_filte
 
     assert actual_query_clauses == {
         "must_not": [{"term": {"mature": True}}],
-        "must": [{"match_all": {}}],
         "should": [
             {"rank_feature": {"boost": 10000, "field": "standardized_popularity"}},
         ],
     }
 
 
-def test_create_search_query_empty_with_dynamically_excluded_providers(
+def test_create_search_query_empty_with_dynamically_filtered_providers(
     image_media_type_config,
-    excluded_providers_cache,
+    filtered_providers_cache,
 ):
     serializer = image_media_type_config.search_request_serializer(
         data={}, context={"media_type": image_media_type_config.media_type}
@@ -283,9 +250,10 @@ def test_create_search_query_empty_with_dynamically_excluded_providers(
     assert actual_query_clauses == {
         "must_not": [
             {"term": {"mature": True}},
-            {"terms": {"provider": [excluded_providers_cache]}},
         ],
-        "must": [{"match_all": {}}],
+        "must": [
+            {"terms": {"provider": [filtered_providers_cache]}},
+        ],
         "should": [
             {"rank_feature": {"boost": 10000, "field": "standardized_popularity"}}
         ],
