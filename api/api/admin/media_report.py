@@ -33,6 +33,21 @@ class PredeterminedOrderChangelist(ChangeList):
         return []
 
 
+class PendingRecordCountFilter(admin.SimpleListFilter):
+    title = "pending record count"
+    parameter_name = "pending_record_count"
+
+    def lookups(self, request, model_admin):
+        return (("pending", "Pending"),)
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value == "pending":
+            return queryset.filter(pending_report_count__gt=0)
+
+        return queryset
+
+
 class MediaListAdmin(admin.ModelAdmin):
     list_display = (
         "identifier",
@@ -41,6 +56,7 @@ class MediaListAdmin(admin.ModelAdmin):
         "oldest_report_date",
         "pending_reports_links",
     )
+    list_filter = (PendingRecordCountFilter,)
     search_fields = ("identifier",)
     media_type = None
     # Ordering is not set here, see get_queryset
