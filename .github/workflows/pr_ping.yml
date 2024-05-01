@@ -51,6 +51,6 @@ jobs:
             writeFileSync('/tmp/pr_ping_payload.json', JSON.stringify(payload))
 
       - name: Send Slack notification
-        uses: slackapi/slack-github-action@v1.25.0
+        uses: slackapi/slack-github-action@v1.26.0
         with:
           payload-file-path: /tmp/pr_ping_payload.json
