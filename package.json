@@ -13,7 +13,7 @@
     "preeslint": "pnpm --filter '@openverse/eslint-plugin' run build",
     "eslint": "eslint --ext .js,.ts,.vue,.json,.json5 --ignore-path .gitignore --ignore-path .eslintignore --max-warnings=0 frontend automations/js packages/js .pnpmfile.cjs .eslintrc.js prettier.config.js tsconfig.base.json"
   },
-  "packageManager": "pnpm@8.15.7",
+  "packageManager": "pnpm@8.15.8",
   "engines": {
     "node": ">= 18.0.0 <19",
     "pnpm": ">= 8.15.7"
