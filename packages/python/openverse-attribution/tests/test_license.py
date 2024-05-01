@@ -9,7 +9,6 @@ from openverse_attribution.license_name import LicenseName
     [
         ("zero", "cc0"),
         ("mark", "pdm"),
-        ("publicdomain", "pdm"),
     ],
 )
 def test_license_handles_aliases(slug: str, expected: str):
@@ -106,6 +105,7 @@ def test_license_validation_never_fails_for_just_name(slug: str):
         ("cc0", None, None, "CC0 1.0"),
         ("pdm", None, None, "Public Domain Mark 1.0"),
         ("certification", None, None, "Public Domain Certification 1.0 US"),
+        ("publicdomain", None, None, "Public Domain"),
         ("sa", None, None, "CC SA"),
         ("sa", "2.0", None, "CC SA 2.0 JP"),
         ("sa", "2.0", "jp", "CC SA 2.0 JP"),
@@ -132,6 +132,7 @@ def test_license_generates_name(
         ("cc0", None, None, "publicdomain/zero/1.0/"),
         ("pdm", None, None, "publicdomain/mark/1.0/"),
         ("certification", None, None, "publicdomain/certification/1.0/us/"),
+        ("publicdomain", None, None, "wiki/Public_domain"),
         ("sa", None, None, "licenses/sa/1.0/"),
         ("sa", "2.0", None, "licenses/sa/2.0/jp/"),
         ("sa", "2.0", "jp", "licenses/sa/2.0/jp/"),

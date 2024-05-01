@@ -11,6 +11,7 @@ from openverse_attribution.license_name import LicenseName
         ("cc0", "CC0"),
         ("pdm", "Public Domain Mark"),
         ("certification", "Public Domain Certification"),
+        ("publicdomain", "Public Domain"),
     ],
 )
 def test_gets_display_name(slug: str, display_name: str):
@@ -25,6 +26,7 @@ def test_gets_display_name(slug: str, display_name: str):
         ("by", True),
         ("certification", False),
         ("pdm", False),
+        ("publicdomain", False),
     ],
 )
 def test_identifies_licenses_as_cc(slug: str, is_cc: bool):
@@ -52,6 +54,7 @@ def test_identifies_licenses_as_deprecated(slug: str, is_dep: bool):
         ("cc0", True),
         ("certification", True),
         ("pdm", True),
+        ("publicdomain", True),
         ("by", False),
     ],
 )
@@ -68,6 +71,7 @@ def test_identifies_licenses_as_pd(slug: str, is_pd: bool):
         ("cc0", [("1.0", "")]),
         ("certification", [("1.0", "us")]),
         ("pdm", [("1.0", "")]),
+        ("publicdomain", []),
     ],
 )
 def test_identifies_allowed_versions_and_jurisdictions(

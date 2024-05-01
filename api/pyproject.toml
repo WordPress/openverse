@@ -15,7 +15,7 @@ dependencies = [
   "aws-requests-auth >=0.4.3, <0.5",
   "deepdiff >=6.7.1, <7",
   "django >=4.2.11, <5",
-  "django-asgi-lifespan >=0.2.0, <0.3",
+  "django-asgi-lifespan >=0.3.1, <0.4",
   "django-cors-headers >=4.3.1, <5",
   "django-log-request-id >=2.1.0, <3",
   "django-migrations-git-conflicts >=1.0, <2",
@@ -35,7 +35,7 @@ dependencies = [
   "python-decouple >=3.8, <4",
   "python-xmp-toolkit >=2.0.2, <3",
   "sentry-sdk >=1.40.6, <2",
-  "uvicorn[standard] >=0.27.1, <0.28",
+  "uvicorn[standard] >=0.29, <0.30",
   "openverse-attribution @ file:///${PROJECT_ROOT}/../packages/python/openverse-attribution",
 ]
 

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="normalizedTags.length && additionalSearchViews" class="-my-1.5px">
+  <div v-if="normalizedTags.length" class="-my-1.5px">
     <ul
       ref="tagsContainerRef"
       :aria-label="$t('mediaDetails.tags.title').toString()"
@@ -30,16 +30,6 @@
         :class="{ '-scale-y-100 transform': buttonStatus === 'hide' }"
     /></VButton>
   </div>
-
-  <ul
-    v-else
-    class="flex flex-wrap gap-2"
-    :aria-label="$t('mediaDetails.tags').toString()"
-  >
-    <VMediaTag v-for="(tag, index) in normalizedTags" :key="index" tag="li">{{
-      tag
-    }}</VMediaTag>
-  </ul>
 </template>
 <script lang="ts">
 import {
@@ -56,13 +46,11 @@ import { useResizeObserver, watchDebounced } from "@vueuse/core"
 
 import type { Tag } from "~/types/media"
 import type { SupportedMediaType } from "~/constants/media"
-import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useSearchStore } from "~/stores/search"
 import { useI18n } from "~/composables/use-i18n"
 
 import { focusElement } from "~/utils/focus-management"
 
-import VMediaTag from "~/components/VMediaTag/VMediaTag.vue"
 import VTag from "~/components/VTag/VTag.vue"
 import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
@@ -72,7 +60,7 @@ const ROWS_TO_DISPLAY = 3
 
 export default defineComponent({
   name: "VMediaTags",
-  components: { VIcon, VButton, VMediaTag, VTag },
+  components: { VIcon, VButton, VTag },
   props: {
     tags: {
       type: Array as PropType<Tag[]>,
@@ -87,13 +75,8 @@ export default defineComponent({
     const tagsContainerRef = ref<HTMLElement>()
 
     const searchStore = useSearchStore()
-    const featureFlagStore = useFeatureFlagStore()
     const { $sendCustomEvent } = useContext()
     const i18n = useI18n()
-
-    const additionalSearchViews = computed(() =>
-      featureFlagStore.isOn("additional_search_views")
-    )
 
     const localizedTagPath = (tag: string) => {
       return searchStore.getCollectionPath({
@@ -231,7 +214,6 @@ export default defineComponent({
     return {
       tagsContainerRef,
 
-      additionalSearchViews,
       localizedTagPath,
 
       normalizedTags,

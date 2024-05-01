@@ -8,7 +8,6 @@ from openverse_attribution.license_name import LicenseName
 KNOWN_ALIASES = {
     "zero": "cc0",
     "mark": "pdm",
-    "publicdomain": "pdm",
 }
 
 
@@ -48,6 +47,11 @@ class License:
 
         self.fallback_ver = None
         self.fallback_jur = None
+
+        if self.name is LicenseName.PUBLICDOMAIN:
+            self.ver = None
+            self.jur = None
+            return
 
         # Validate version against known versions.
         if ver:
@@ -186,6 +190,9 @@ class License:
 
         ver = self.ver if self.ver is not None else self.fallback_ver
         jur = self.jur if self.jur is not None else self.fallback_jur
+
+        if self.name is LicenseName.PUBLICDOMAIN:
+            return "https://en.wikipedia.org/wiki/Public_domain"
 
         if self.name is LicenseName.CC0:
             fragment = f"publicdomain/zero/{ver}/{jur}"

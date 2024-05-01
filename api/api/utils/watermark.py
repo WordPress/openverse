@@ -174,6 +174,11 @@ def _print_attribution_on_image(img: Image.Image, image_info):
     :return: return the framed and attributed image
     """
 
+    try:
+        lic = License(image_info["license"], image_info["license_version"])
+    except ValueError:
+        return img
+
     width, height = img.size
     smaller_dimension = _smaller_dimension(width, height)
 
@@ -190,10 +195,7 @@ def _print_attribution_on_image(img: Image.Image, image_info):
 
     font = ImageFont.truetype(_get_font_path(), size=font_size)
 
-    text = License(
-        image_info["license"],
-        image_info["license_version"],
-    ).get_attribution_text(
+    text = lic.get_attribution_text(
         image_info["title"],
         image_info["creator"],
         url=False,

@@ -90,23 +90,31 @@ class AbstractMedia(
     meta_data = models.JSONField(blank=True, null=True)
 
     @property
-    def license_url(self) -> str:
+    def license_url(self) -> str | None:
         """A direct link to the license deed or legal terms."""
 
         if self.meta_data and (url := self.meta_data.get("license_url")):
             return url
-        else:
+        try:
             return License(self.license.lower(), self.license_version).url
+        except ValueError:
+            return None
 
     @property
-    def attribution(self) -> str:
+    def attribution(self) -> str | None:
         """Legally valid attribution for the media item in plain-text English."""
 
-        return License(self.license.lower(), self.license_version).get_attribution_text(
-            self.title,
-            self.creator,
-            self.license_url,
-        )
+        try:
+            return License(
+                self.license.lower(),
+                self.license_version,
+            ).get_attribution_text(
+                self.title,
+                self.creator,
+                self.license_url,
+            )
+        except ValueError:
+            return None
 
     class Meta:
         """

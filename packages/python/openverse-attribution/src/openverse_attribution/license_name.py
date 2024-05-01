@@ -36,6 +36,7 @@ class LicenseName(StrEnum):
     CC0 = "cc0"
     CERTIFICATION = "certification"
     PDM = "pdm"
+    PUBLICDOMAIN = "publicdomain"
 
     @property
     def display_name(self) -> str:
@@ -49,6 +50,8 @@ class LicenseName(StrEnum):
             return "Public Domain Mark"
         if self is LicenseName.CERTIFICATION:
             return "Public Domain Certification"
+        if self is LicenseName.PUBLICDOMAIN:
+            return "Public Domain"
 
         name = self.value.upper()
         if self is LicenseName.CC0:
@@ -67,7 +70,11 @@ class LicenseName(StrEnum):
         """
 
         # Works because other than PDM and PDC, we only have CC licenses.
-        return self not in {LicenseName.PDM, LicenseName.CERTIFICATION}
+        return self not in {
+            LicenseName.PDM,
+            LicenseName.PUBLICDOMAIN,
+            LicenseName.CERTIFICATION,
+        }
 
     @property
     def is_deprecated(self) -> bool:
@@ -101,7 +108,12 @@ class LicenseName(StrEnum):
         :return: whether a work with this license is in the public domain
         """
 
-        return self in {LicenseName.PDM, LicenseName.CERTIFICATION, LicenseName.CC0}
+        return self in {
+            LicenseName.PDM,
+            LicenseName.CERTIFICATION,
+            LicenseName.PUBLICDOMAIN,
+            LicenseName.CC0,
+        }
 
     @property
     def allowed_ver_jur(self) -> list[tuple[str, str]]:
