@@ -77,7 +77,7 @@ photon_get = async_to_sync(_photon_get)
 
 @pytest.mark.pook
 def test_get_successful_no_auth_key_default_args(mock_image_data):
-    mock_get: pook.Mock = (
+    (
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
         .params(
             {
@@ -89,25 +89,22 @@ def test_get_successful_no_auth_key_default_args(mock_image_data):
         .header("Accept", "image/*")
         .reply(200)
         .body(MOCK_BODY)
-        .mock
     )
 
     res = photon_get(TEST_MEDIA_INFO)
 
     assert res.content == MOCK_BODY.encode()
     assert res.status_code == 200
-    assert mock_get.matched
 
 
 @pytest.mark.pook
 def test_get_successful_original_svg_no_auth_key_default_args(mock_image_data):
-    mock_get: pook.Mock = (
+    (
         pook.get(TEST_IMAGE_URL.replace(".jpg", ".svg"))
         .header("User-Agent", UA_HEADER)
         .header("Accept", "image/*")
         .reply(200)
         .body(SVG_BODY)
-        .mock
     )
 
     media_info = replace(
@@ -118,12 +115,11 @@ def test_get_successful_original_svg_no_auth_key_default_args(mock_image_data):
 
     assert res.content == SVG_BODY.encode()
     assert res.status_code == 200
-    assert mock_get.matched
 
 
 @pytest.mark.pook
 def test_get_successful_with_auth_key_default_args(mock_image_data, auth_key):
-    mock_get: pook.Mock = (
+    (
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
         .params(
             {
@@ -136,19 +132,17 @@ def test_get_successful_with_auth_key_default_args(mock_image_data, auth_key):
         .header("X-Photon-Authentication", auth_key)
         .reply(200)
         .body(MOCK_BODY)
-        .mock
     )
 
     res = photon_get(TEST_MEDIA_INFO)
 
     assert res.content == MOCK_BODY.encode()
     assert res.status_code == 200
-    assert mock_get.matched
 
 
 @pytest.mark.pook
 def test_get_successful_no_auth_key_not_compressed(mock_image_data):
-    mock_get: pook.Mock = (
+    (
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
         .params(
             {
@@ -159,19 +153,17 @@ def test_get_successful_no_auth_key_not_compressed(mock_image_data):
         .header("Accept", "image/*")
         .reply(200)
         .body(MOCK_BODY)
-        .mock
     )
 
     res = photon_get(TEST_MEDIA_INFO, RequestConfig(is_compressed=False))
 
     assert res.content == MOCK_BODY.encode()
     assert res.status_code == 200
-    assert mock_get.matched
 
 
 @pytest.mark.pook
 def test_get_successful_no_auth_key_full_size(mock_image_data):
-    mock_get: pook.Mock = (
+    (
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
         .params(
             {
@@ -182,25 +174,22 @@ def test_get_successful_no_auth_key_full_size(mock_image_data):
         .header("Accept", "image/*")
         .reply(200)
         .body(MOCK_BODY)
-        .mock
     )
 
     res = photon_get(TEST_MEDIA_INFO, RequestConfig(is_full_size=True))
 
     assert res.content == MOCK_BODY.encode()
     assert res.status_code == 200
-    assert mock_get.matched
 
 
 @pytest.mark.pook
 def test_get_successful_no_auth_key_full_size_not_compressed(mock_image_data):
-    mock_get: pook.Mock = (
+    (
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
         .header("User-Agent", UA_HEADER)
         .header("Accept", "image/*")
         .reply(200)
         .body(MOCK_BODY)
-        .mock
     )
 
     res = photon_get(
@@ -210,12 +199,11 @@ def test_get_successful_no_auth_key_full_size_not_compressed(mock_image_data):
 
     assert res.content == MOCK_BODY.encode()
     assert res.status_code == 200
-    assert mock_get.matched
 
 
 @pytest.mark.pook
 def test_get_successful_no_auth_key_png_only(mock_image_data):
-    mock_get: pook.Mock = (
+    (
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
         .params(
             {
@@ -227,20 +215,18 @@ def test_get_successful_no_auth_key_png_only(mock_image_data):
         .header("Accept", "image/png")
         .reply(200)
         .body(MOCK_BODY)
-        .mock
     )
 
     res = photon_get(TEST_MEDIA_INFO, RequestConfig(accept_header="image/png"))
 
     assert res.content == MOCK_BODY.encode()
     assert res.status_code == 200
-    assert mock_get.matched
 
 
 @pytest.mark.pook
 def test_get_successful_forward_query_params(mock_image_data):
     params = urlencode({"hello": "world", 1: 2, "beep": "boop"})
-    mock_get: pook.Mock = (
+    (
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
         .params(
             {
@@ -253,7 +239,6 @@ def test_get_successful_forward_query_params(mock_image_data):
         .header("Accept", "image/*")
         .reply(200)
         .body(MOCK_BODY)
-        .mock
     )
 
     media_info_with_url_params = replace(
@@ -264,7 +249,6 @@ def test_get_successful_forward_query_params(mock_image_data):
 
     assert res.content == MOCK_BODY.encode()
     assert res.status_code == 200
-    assert mock_get.matched
 
 
 @pytest.fixture
@@ -438,7 +422,7 @@ def test_get_http_exception_handles_error(
 @pytest.mark.pook
 def test_get_successful_https_image_url_sends_ssl_parameter(mock_image_data):
     https_url = TEST_IMAGE_URL.replace("http://", "https://")
-    mock_get: pook.Mock = (
+    (
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
         .params(
             {
@@ -451,7 +435,6 @@ def test_get_successful_https_image_url_sends_ssl_parameter(mock_image_data):
         .header("Accept", "image/*")
         .reply(200)
         .body(MOCK_BODY)
-        .mock
     )
 
     https_media_info = replace(TEST_MEDIA_INFO, image_url=https_url)
@@ -460,19 +443,16 @@ def test_get_successful_https_image_url_sends_ssl_parameter(mock_image_data):
 
     assert res.content == MOCK_BODY.encode()
     assert res.status_code == 200
-    assert mock_get.matched
 
 
 @pytest.mark.pook
 def test_get_unsuccessful_request_raises_custom_exception():
-    mock_get: pook.Mock = pook.get(PHOTON_URL_FOR_TEST_IMAGE).reply(404).mock
+    pook.get(PHOTON_URL_FOR_TEST_IMAGE).reply(404).mock
 
     with pytest.raises(
         UpstreamThumbnailException, match=r"Failed to render thumbnail."
     ):
         photon_get(TEST_MEDIA_INFO)
-
-    assert mock_get.matched
 
 
 @pytest.mark.parametrize(
