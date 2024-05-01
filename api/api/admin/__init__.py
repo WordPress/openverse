@@ -24,6 +24,8 @@ from api.models import (
     ImageReport,
     UserPreferences,
 )
+from api.models.audio import AudioDecision
+from api.models.image import ImageDecision
 from api.models.media import AbstractDeletedMedia, AbstractSensitiveMedia
 from api.models.oauth import ThrottledApplication
 
@@ -51,6 +53,10 @@ for klass in [
     *AbstractDeletedMedia.__subclasses__(),
 ]:
     admin.site.register(klass, MediaSubreportAdmin)
+
+# Temporary addition of model admin for decisions while this view gets built
+admin.site.register(ImageDecision, admin.ModelAdmin)
+admin.site.register(AudioDecision, admin.ModelAdmin)
 
 
 @admin.register(ContentProvider)
