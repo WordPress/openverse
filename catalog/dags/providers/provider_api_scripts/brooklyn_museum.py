@@ -21,7 +21,7 @@ class BrooklynMuseumDataIngester(ProviderDataIngester):
         self.api_key = Variable.get("API_KEY_BROOKLYN_MUSEUM")
         self.headers = {"api_key": self.api_key}
 
-    def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
+    def get_next_query_params(self, prev_query_params: dict | None) -> dict:
         if not prev_query_params:
             return {
                 "has_images": 1,

@@ -82,11 +82,9 @@ def test_get_year_ranges():
 
 
 def test_get_query_param_default():
-    actual_param = sm.get_next_query_params({}, **{"year_range": (0, 1500)})
+    actual_param = sm.get_next_query_params({})
     expected_param = default_params | {
         "page[number]": 0,
-        "date[from]": 0,
-        "date[to]": 1500,
     }
 
     assert actual_param == expected_param
@@ -95,13 +93,9 @@ def test_get_query_param_default():
 def test_get_query_param_offset_page_number():
     sm = ScienceMuseumDataIngester()
     sm.page_number = 10
-    actual_param = sm.get_next_query_params(
-        default_params | {"page[number]": 10}, **{"year_range": (1500, 2000)}
-    )
+    actual_param = sm.get_next_query_params(default_params | {"page[number]": 10})
     expected_param = default_params | {
         "page[number]": 11,
-        "date[from]": 1500,
-        "date[to]": 2000,
     }
 
     assert actual_param == expected_param

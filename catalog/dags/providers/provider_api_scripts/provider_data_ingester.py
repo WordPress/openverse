@@ -173,11 +173,12 @@ class ProviderDataIngester(ABC):
         # An optional list of `query_params`. When provided, ingestion will be run for
         # just these sets of params.
         self.override_query_params = None
-        if query_params_list := conf.get("query_params_list"):
+        self.override_query_params_list = conf.get("query_params_list")
+        if self.override_query_params_list:
             # Create a generator to facilitate fetching the next set of query_params.
-            self.override_query_params = (qp for qp in query_params_list)
+            self.override_query_params = (qp for qp in self.override_query_params_list)
 
-        # An optional set of query params to add to each query
+        # An optional set of query params to add to all queries
         self.additional_query_params = conf.get("additional_query_params", {})
 
         # A configuration option that is used to skip over ALL errors and continue
@@ -207,17 +208,31 @@ class ProviderDataIngester(ABC):
 
         return media_stores
 
-    def ingest_records(self, **kwargs) -> None:
+    def _ingest_records(
+        self, initial_query_params: dict | None, fixed_query_params: dict | None
+    ) -> None:
         """
-        Ingest all records.
+        Perform ingestion.
 
-        This is the main ingestion function that is called during the `pull_data` task.
+        Required Arguments:
 
         Optional Arguments:
-        **kwargs: Optional arguments to be passed to `get_next_query_params`.
+        initial_query_params:    Optional override for the query params to be used in the
+                                 first batch.
+        fixed_query_params:      Optional, fixed query params which should be passed to
+                                 `get_next_query_params`. These should not change during this
+                                 round of ingestion.
         """
         should_continue = True
-        query_params = None
+        # Use initial_query_params if provided, or get the next set of params.
+        query_params = initial_query_params or self._get_query_params(
+            None, fixed_query_params
+        )
+        if initial_query_params:
+            logger.info(
+                "Using initial_query_params from dag_run conf:"
+                f" {json.dumps(self.initial_query_params)}"
+            )
 
         # If an ingestion limit has been set and we have already ingested records
         # in excess of the limit, exit early. This may happen if `ingest_records`
@@ -228,7 +243,6 @@ class ProviderDataIngester(ABC):
         logger.info(f"Begin ingestion for {self.__class__.__name__}")
 
         while should_continue:
-            query_params = self._get_query_params(query_params, **kwargs)
             if query_params is None:
                 # Break out of ingestion if no query_params are supplied. This can
                 # happen when the final `override_query_params` is processed.
@@ -268,6 +282,11 @@ class ProviderDataIngester(ABC):
                     # Add this to the errors list but continue processing
                     self.ingestion_errors.append(ingestion_error)
                     logger.error(f"Skipping batch due to ingestion error: {error}")
+
+                    # Continue from the next batch
+                    query_params = self._get_query_params(
+                        query_params, fixed_query_params
+                    )
                     continue
 
                 # Commit whatever records we were able to process, and rethrow the
@@ -279,10 +298,62 @@ class ProviderDataIngester(ABC):
                 logger.info(f"Ingestion limit of {self.limit} has been reached.")
                 should_continue = False
 
+            # Get next query params
+            query_params = self._get_query_params(query_params, fixed_query_params)
+
         # Commit whatever records we were able to process
         self._commit_records()
 
-        # If errors were caught during processing, raise them now
+    def ingest_records(self) -> None:
+        """
+        Ingest all records.
+
+        If fixed_query_params are provided, ingestion will be performed separately
+        for each set of fixed_query_params.
+
+        This is the main ingestion function that is called during the `pull_data` task.
+        """
+        if not (fixed_query_params := self.get_fixed_query_params()):
+            # If no fixed params were provided, simply begin ingestion
+            self._ingest_records(self.initial_query_params, {})
+        else:
+            # Else, ingestion should be run separately for each set of fixed_query_params.
+            logger.info(
+                "Ingestion will be performed for each of the following sets of"
+                f" fixed query parameters: {fixed_query_params}"
+            )
+
+            # If initial_query_params were also provided, we should begin ingestion
+            # from the first set of fixed_query_params that is included in the
+            # initial_query_params
+            if self.initial_query_params:
+                initial_fixed_params = next(
+                    (
+                        qp
+                        for qp in fixed_query_params
+                        if qp.items() <= self.initial_query_params.items()
+                    ),
+                    fixed_query_params[0],
+                )
+
+                logger.info(
+                    f"==Starting ingestion with fixed params: {initial_fixed_params}=="
+                )
+
+                # Run ingestion on the first batch, passing in the initial_query_params
+                self._ingest_records(self.initial_query_params, initial_fixed_params)
+
+                # Resume from the _next_ set of fixed_query_params
+                fixed_query_params = fixed_query_params[
+                    fixed_query_params.index(initial_fixed_params) + 1 :
+                ]
+
+            for fixed_params in fixed_query_params:
+                logger.info(f"==Starting ingestion with fixed params: {fixed_params}==")
+                # Subsequent batches should not start at the initial_query_params
+                self._ingest_records(None, fixed_params)
+
+        # Finally, raise any errors that were skipped at any point during processing.
         if error_summary := self._get_ingestion_errors():
             raise error_summary
 
@@ -330,7 +401,7 @@ class ProviderDataIngester(ABC):
         return None
 
     def _get_query_params(
-        self, prev_query_params: dict | None, **kwargs
+        self, prev_query_params: dict | None, fixed_query_params: dict | None = None
     ) -> dict | None:
         """
         Return the next set of query_params for the next request.
@@ -338,15 +409,6 @@ class ProviderDataIngester(ABC):
         This handles optional overrides via the dag_run conf.
         This method should not be overridden; instead override get_next_query_params.
         """
-        # If we are getting query_params for the first batch and initial_query_params
-        # have been set, return them.
-        if prev_query_params is None and self.initial_query_params:
-            logger.info(
-                "Using initial_query_params from dag_run conf:"
-                f" {json.dumps(self.initial_query_params)}"
-            )
-            return self.initial_query_params
-
         # If a list of query_params was provided, return the next value.
         if self.override_query_params:
             next_params = next(self.override_query_params, None)
@@ -356,13 +418,27 @@ class ProviderDataIngester(ABC):
             )
             return next_params
 
-        # Default behavior; build the next set of query params, given the previous,
-        # along with any extra params if additional_query_params were provided
-        next_query_params = self.get_next_query_params(prev_query_params, **kwargs)
-        return next_query_params | self.additional_query_params
+        # Default behavior: build the next set of query params, given the previous.
+        # The final set of query params returned merges:
+        # * the `next_query_params` calculated based on the previous params
+        # * any `fixed_query_params`, which are fixed params that do not change
+        #   depending on the previous params, and are applied to all batches in this
+        #   round of ingestion
+        # * any `additional_query_params`, which are provided via the DagRun conf
+        #   and applied to all batches, in every round of ingestion
+        next_query_params = self.get_next_query_params(prev_query_params)
+        fixed_query_params = fixed_query_params or {}
+        return next_query_params | fixed_query_params | self.additional_query_params
+
+    def get_fixed_query_params(self) -> list[dict] | None:
+        """
+        Return a list of fixed query params, for each of which ingestion will be
+        performed.
+        """
+        return []
 
     @abstractmethod
-    def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
+    def get_next_query_params(self, prev_query_params: dict | None) -> dict:
         """
         Get the next set of query parameters.
 
@@ -373,7 +449,6 @@ class ProviderDataIngester(ABC):
         Required arguments:
         prev_query_params: dictionary of query string params used in the previous
                            request. If None, this is the first request.
-        **kwargs:          Optional kwargs passed through from `ingest_records`.
 
         """
         pass

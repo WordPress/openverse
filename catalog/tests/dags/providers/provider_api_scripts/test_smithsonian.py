@@ -101,14 +101,19 @@ def test_get_hash_prefixes_with_other_len(
     assert actual_list[-1] == expect_last
 
 
-def test_get_next_query_params_first_call():
-    hash_prefix = "ff"
-    actual_params = ingester.get_next_query_params(
-        prev_query_params=None, hash_prefix=hash_prefix
-    )
+def test_get_fixed_query_params():
+    with patch.object(ingester, "_get_hash_prefixes", return_value=["aa", "bb"]):
+        actual_fixed_params = ingester.get_fixed_query_params()
+        assert actual_fixed_params == [
+            {"q": "online_media_type:Images AND media_usage:CC0 AND hash:aa*"},
+            {"q": "online_media_type:Images AND media_usage:CC0 AND hash:bb*"},
+        ]
+
+
+def test_get_query_params_first_call():
+    actual_params = ingester.get_next_query_params(None)
     actual_params.pop("api_key")  # Omitting the API key
     expected_params = {
-        "q": f"online_media_type:Images AND media_usage:CC0 AND hash:{hash_prefix}*",
         "start": 0,
         "rows": 1000,
     }

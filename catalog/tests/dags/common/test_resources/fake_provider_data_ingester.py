@@ -15,7 +15,7 @@ class FakeDataIngester(ProviderDataIngester):
     def endpoint(self):
         return ""
 
-    def get_next_query_params(self, old_query_params: dict | None, **kwargs) -> dict:
+    def get_next_query_params(self, old_query_params: dict | None) -> dict:
         return old_query_params
 
     def get_batch_data(self, response_json):

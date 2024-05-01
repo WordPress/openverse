@@ -183,7 +183,7 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
         self.current_props = self.default_props.copy()
         self.popularity_cache: dict[str, int] = {}
 
-    def get_next_query_params(self, prev_query_params, **kwargs):
+    def get_next_query_params(self, prev_query_params: dict | None):
         # NOTE: If more sub-properties are added here, an additional contingency for
         # iterating over that property's "continue" token will need to be added
         # to the `adjust_parameters_for_next_iteration` function, otherwise the
