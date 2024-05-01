@@ -36,7 +36,7 @@ class PredeterminedOrderChangelist(ChangeList):
 class MediaListAdmin(admin.ModelAdmin):
     list_display = (
         "identifier",
-        "report_count",
+        "total_report_count",
         "pending_report_count",
         "oldest_report_date",
         "pending_reports_links",
@@ -45,8 +45,8 @@ class MediaListAdmin(admin.ModelAdmin):
     media_type = None
     # Ordering is not set here, see get_queryset
 
-    def report_count(self, obj):
-        return obj.report_count
+    def total_report_count(self, obj):
+        return obj.total_report_count
 
     def pending_report_count(self, obj):
         return obj.pending_report_count
@@ -72,15 +72,17 @@ class MediaListAdmin(admin.ModelAdmin):
         # Filter down to only instances with reports
         qs = qs.filter(media_reports__isnull=False)
         # Annotate and order by report count
-        qs = qs.annotate(report_count=Count("media_reports"))
+        qs = qs.annotate(total_report_count=Count("media_reports"))
         # Show total pending reports by subtracting the number of reports
         # from the number of reports that have decisions
         qs = qs.annotate(
-            pending_report_count=F("report_count")
+            pending_report_count=F("total_report_count")
             - Count("media_reports__decision__pk")
         )
         qs = qs.annotate(oldest_report_date=Min("media_reports__created_at"))
-        qs = qs.order_by("-report_count", "-pending_report_count", "oldest_report_date")
+        qs = qs.order_by(
+            "-total_report_count", "-pending_report_count", "oldest_report_date"
+        )
         return qs
 
     def get_changelist(self, request, **kwargs):
