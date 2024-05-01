@@ -14,6 +14,8 @@ def test_raises_value_error_on_invalid_license():
         ("cc0", "2.0", "CC0 1.0"),
         ("pdm", None, "Public Domain Mark 1.0"),
         ("pdm", "2.0", "Public Domain Mark 1.0"),
+        ("sa", None, "CC SA 1.0"),
+        ("sa", "2.0", "CC SA 1.0"),
         ("sampling+", None, "CC Sampling+ 1.0"),
         ("sampling+", "2.0", "CC Sampling+ 1.0"),
         ("by", None, "CC BY"),
@@ -32,6 +34,8 @@ def test_can_get_name_for_license(slug: str, version: str, name: str):
         ("cc0", "2.0", "publicdomain/zero/1.0/"),
         ("pdm", None, "publicdomain/mark/1.0/"),
         ("pdm", "2.0", "publicdomain/mark/1.0/"),
+        ("sa", None, "licenses/sa/1.0/"),
+        ("sa", "2.0", "licenses/sa/1.0/"),
         ("sampling+", None, "licenses/sampling+/1.0/"),
         ("sampling+", "2.0", "licenses/sampling+/1.0/"),
         ("by", None, "licenses/by/4.0/"),
@@ -46,6 +50,7 @@ def test_can_get_url_for_license(slug: str, version: str, path: str):
 @pytest.mark.parametrize(
     "slug, is_dep",
     [
+        ("sa", True),
         ("sampling+", True),
         ("nc-sampling+", True),
         ("by", False),

@@ -741,9 +741,11 @@ class MediaSerializer(BaseModelSerializer):
         output["license"] = output["license"].lower()
 
         if output.get("license_url") is None:
-            output["license_url"] = License(output["license"]).url(
-                output["license_version"]
-            )
+            try:
+                lic = License(output["license"])
+                output["license_url"] = lic.url(output["license_version"])
+            except ValueError:
+                pass
 
         # Ensure URLs have scheme
         url_fields = ["url", "creator_url", "foreign_landing_url"]

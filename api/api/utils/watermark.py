@@ -9,7 +9,7 @@ from rest_framework import status
 from rest_framework.exceptions import APIException
 
 import requests
-from openverse_attribution.attribution import get_attribution_text
+from openverse_attribution.license import License
 from PIL import Image, ImageDraw, ImageFont, UnidentifiedImageError
 from sentry_sdk import capture_exception
 
@@ -174,6 +174,11 @@ def _print_attribution_on_image(img: Image.Image, image_info):
     :return: return the framed and attributed image
     """
 
+    try:
+        lic = License(image_info["license"])
+    except ValueError:
+        return img
+
     width, height = img.size
     smaller_dimension = _smaller_dimension(width, height)
 
@@ -190,12 +195,11 @@ def _print_attribution_on_image(img: Image.Image, image_info):
 
     font = ImageFont.truetype(_get_font_path(), size=font_size)
 
-    text = get_attribution_text(
-        image_info["license"],
+    text = lic.attribution(
         image_info["title"],
         image_info["creator"],
         image_info["license_version"],
-        license_url=False,
+        False,
     )
     text = _fit_in_width(text, font, new_width)
     attribution_height = _get_attribution_height(text, font)

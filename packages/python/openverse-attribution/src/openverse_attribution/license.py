@@ -1,5 +1,7 @@
 from enum import StrEnum
 
+from openverse_attribution.attribution import get_attribution_text
+
 
 class License(StrEnum):
     """
@@ -17,6 +19,7 @@ class License(StrEnum):
     BY_NC_ND = "by-nc-nd"
 
     # Deprecated CC licenses
+    SA = "sa"
     SAMPLING = "sampling+"
     NC_SAMPLING = "nc-sampling+"
 
@@ -25,6 +28,7 @@ class License(StrEnum):
 
     # Public domain mark
     PDM = "pdm"
+    PUBLIC_DOMAIN = "publicdomain"
 
     def name(self, version: str | None = None) -> str:
         """
@@ -37,7 +41,7 @@ class License(StrEnum):
         :return: the full name of the license
         """
 
-        if self is License.PDM:
+        if self in {License.PDM, License.PUBLIC_DOMAIN}:
             name = "Public Domain Mark"
         else:
             name = self.value.upper().replace("SAMPLING", "Sampling")
@@ -62,13 +66,32 @@ class License(StrEnum):
 
         if self is License.CC0:
             fragment = "publicdomain/zero/1.0"
-        elif self is License.PDM:
+        elif self in {License.PUBLIC_DOMAIN, License.PDM}:
             fragment = "publicdomain/mark/1.0"
         elif self.is_deprecated:
             fragment = f"licenses/{self}/1.0"
         else:
             fragment = f"licenses/{self}/{version or '4.0'}"
         return f"https://creativecommons.org/{fragment}/"
+
+    def attribution(
+        self,
+        title: str | None = None,
+        creator: str | None = None,
+        version: str | None = None,
+        url: str | bool | None = None,
+    ):
+        """
+        Get the attribution text for a media item released under this license.
+
+        :param title:  the name of the work, if known
+        :param creator: the name of the work's creator, if known
+        :param version: the version number of the license
+        :param url: the URL to the legal text of this license
+        :return: the plain-text English language attribution
+        """
+
+        return get_attribution_text(self, title, creator, version, url)
 
     @property
     def is_deprecated(self) -> bool:
@@ -79,7 +102,7 @@ class License(StrEnum):
         :return: whether this license has been deprecated
         """
 
-        return self in {License.SAMPLING, License.NC_SAMPLING}
+        return self in {License.SAMPLING, License.NC_SAMPLING, License.SA}
 
     @property
     def is_pd(self) -> bool:
@@ -90,7 +113,7 @@ class License(StrEnum):
         :return: whether a work with this license is in the public domain
         """
 
-        return self in {License.PDM, License.CC0}
+        return self in {License.PUBLIC_DOMAIN, License.PDM, License.CC0}
 
     @property
     def is_cc(self) -> bool:
@@ -102,4 +125,4 @@ class License(StrEnum):
         """
 
         # Works because other than PDM, we only have CC licenses.
-        return self is not License.PDM
+        return self not in {License.PUBLIC_DOMAIN, License.PDM}
