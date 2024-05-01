@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib import admin
 from django.contrib.admin.views.main import ChangeList
-from django.db.models import Count
+from django.db.models import Count, F, Min
 
 import structlog
 from elasticsearch import NotFoundError
@@ -31,12 +31,23 @@ class PredeterminedOrderChangelist(ChangeList):
 
 
 class MediaListAdmin(admin.ModelAdmin):
-    list_display = ("identifier", "report_count")
+    list_display = (
+        "identifier",
+        "report_count",
+        "pending_report_count",
+        "oldest_report_date",
+    )
     search_fields = ("identifier",)
     # Ordering is not set here, see get_queryset
 
     def report_count(self, obj):
         return obj.report_count
+
+    def pending_report_count(self, obj):
+        return obj.pending_report_count
+
+    def oldest_report_date(self, obj):
+        return obj.oldest_report_date
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -47,7 +58,14 @@ class MediaListAdmin(admin.ModelAdmin):
         qs = qs.filter(media_reports__isnull=False)
         # Annotate and order by report count
         qs = qs.annotate(report_count=Count("media_reports"))
-        qs = qs.order_by("-report_count")
+        # Show total pending reports by subtracting the number of reports
+        # from the number of reports that have decisions
+        qs = qs.annotate(
+            pending_report_count=F("report_count")
+            - Count("media_reports__decision__pk")
+        )
+        qs = qs.annotate(oldest_report_date=Min("media_reports__created_at"))
+        qs = qs.order_by("-report_count", "-pending_report_count", "oldest_report_date")
         return qs
 
     def get_changelist(self, request, **kwargs):
