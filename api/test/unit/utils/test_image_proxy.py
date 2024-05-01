@@ -1,5 +1,6 @@
 from dataclasses import replace
 from urllib.parse import urlencode
+from uuid import uuid4
 
 from django.conf import settings
 from rest_framework.exceptions import UnsupportedMediaType
@@ -29,7 +30,7 @@ PHOTON_URL_FOR_TEST_IMAGE = (
     f"{settings.PHOTON_ENDPOINT}{TEST_IMAGE_DOMAIN}/path_part1/part2/image_dot_jpg.jpg"
 )
 TEST_IMAGE_URL = PHOTON_URL_FOR_TEST_IMAGE.replace(settings.PHOTON_ENDPOINT, "http://")
-TEST_MEDIA_IDENTIFIER = "123"
+TEST_MEDIA_IDENTIFIER = uuid4()
 TEST_MEDIA_PROVIDER = "foo"
 
 TEST_MEDIA_INFO = MediaInfo(
@@ -448,7 +449,7 @@ def test_caches_failures_if_cache_surpasses_tolerance(mock_image_data, settings,
         assert (
             redis.ttl(
                 FAILURE_CACHE_KEY_TEMPLATE.format(
-                    ident=TEST_MEDIA_INFO.media_identifier.replace("-", "")
+                    ident=str(TEST_MEDIA_INFO.media_identifier).replace("-", "")
                 )
             )
             is not None

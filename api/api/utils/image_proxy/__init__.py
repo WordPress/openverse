@@ -4,6 +4,7 @@ from datetime import timedelta
 from functools import wraps
 from typing import Literal, Type
 from urllib.parse import urlparse
+from uuid import UUID
 
 from django.conf import settings
 from django.http import HttpResponse
@@ -42,7 +43,7 @@ THUMBNAIL_STRATEGY = Literal["photon_proxy", "original"]
 @dataclass
 class MediaInfo:
     media_provider: str
-    media_identifier: str
+    media_identifier: UUID
     image_url: str
 
 
@@ -143,8 +144,8 @@ def _cache_repeated_failures(_get):
 
     @wraps(_get)
     async def do_cache(*args, **kwargs):
-        media_info = args[0]
-        compressed_ident = media_info.media_identifier.replace("-", "")
+        media_info: MediaInfo = args[0]
+        compressed_ident = str(media_info.media_identifier).replace("-", "")
         redis_key = FAILURE_CACHE_KEY_TEMPLATE.format(ident=compressed_ident)
         tallies: Redis = django_redis.get_redis_connection("tallies")
 
