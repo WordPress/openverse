@@ -16,6 +16,10 @@ build-backend = "pdm.backend"
 
 [tool.pdm.dev-dependencies]
 test = [
-  "pytest >=8.1.1, <9",
-  "pytest-sugar >=1.0.0, <2",
+    "pytest >=8.1.1, <9",
+    "pytest-sugar >=1.0.0, <2",
+    "requests>=2.31.0",
+]
+dev = [
+    "ipython >=8.24.0, <9",
 ]

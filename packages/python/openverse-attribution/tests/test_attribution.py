@@ -1,50 +1,58 @@
 import pytest
-from openverse_attribution.attribution import get_attribution_text
+from openverse_attribution.license import License
 
 
 BLANK = object()
 
 
+# Test blank arguments against both ``None`` and empty string.
 @pytest.mark.parametrize(
     "blank_val",
-    ["", None],  # Test blank arguments against both ``None`` and empty string.
+    [pytest.param("", id="blank"), pytest.param(None, id="none")],
 )
 @pytest.mark.parametrize(
     "args, attribution",
     [
-        (
-            ("by", "Title", "Creator", "0.0", "https://license/url"),  # All known
-            '"Title" by Creator is licensed under CC BY 0.0. '
+        pytest.param(
+            ("4.0", "Title", "Creator", "https://license/url"),
+            '"Title" by Creator is licensed under CC BY 4.0. '
             "To view a copy of this license, visit https://license/url.",
+            id="all_known",
         ),
-        (
-            ("by", BLANK, "Creator", "0.0", "https://license/url"),  # Unknown title
-            "This work by Creator is licensed under CC BY 0.0. "
-            "To view a copy of this license, visit https://license/url.",
-        ),
-        (
-            ("by", "Title", BLANK, "0.0", "https://license/url"),  # Unknown creator
-            '"Title" is licensed under CC BY 0.0. '
-            "To view a copy of this license, visit https://license/url.",
-        ),
-        (
-            ("by", "Title", "Creator", BLANK, "https://license/url"),  # Unknown version
+        pytest.param(
+            (None, "Title", "Creator", "https://license/url"),
             '"Title" by Creator is licensed under CC BY. '
             "To view a copy of this license, visit https://license/url.",
+            id="unknown_version",
         ),
-        (
-            ("by", "Title", "Creator", "0.0", BLANK),  # Unknown license URL
-            '"Title" by Creator is licensed under CC BY 0.0. '
-            "To view a copy of this license, visit https://creativecommons.org/licenses/by/0.0/.",
+        pytest.param(
+            ("4.0", BLANK, "Creator", "https://license/url"),
+            "This work by Creator is licensed under CC BY 4.0. "
+            "To view a copy of this license, visit https://license/url.",
+            id="unknown_title",
         ),
-        (
-            ("by", "Title", "Creator", "0.0", False),  # Removed license URL
-            '"Title" by Creator is licensed under CC BY 0.0.',
+        pytest.param(
+            ("4.0", "Title", BLANK, "https://license/url"),
+            '"Title" is licensed under CC BY 4.0. '
+            "To view a copy of this license, visit https://license/url.",
+            id="unknown_creator",
         ),
-        (
-            ("by", BLANK, BLANK, BLANK, BLANK),  # Almost all unknown
+        pytest.param(
+            ("4.0", "Title", "Creator", BLANK),
+            '"Title" by Creator is licensed under CC BY 4.0. '
+            "To view a copy of this license, visit https://creativecommons.org/licenses/by/4.0/.",
+            id="unknown_license_url",
+        ),
+        pytest.param(
+            ("4.0", "Title", "Creator", False),
+            '"Title" by Creator is licensed under CC BY 4.0.',
+            id="removed_license_url",
+        ),
+        pytest.param(
+            (None, BLANK, BLANK, BLANK),
             "This work is licensed under CC BY. "
             "To view a copy of this license, visit https://creativecommons.org/licenses/by/4.0/.",
+            id="almost_all_unknown",
         ),
     ],
 )
@@ -53,8 +61,9 @@ def test_attribution_text(
     args: tuple[str, str, str, str, str],
     attribution: str,
 ):
-    args = (blank_val if arg is BLANK else arg for arg in args)
-    assert get_attribution_text(*args) == attribution
+    args = [blank_val if arg is BLANK else arg for arg in args]
+    lic = License("by", args[0])
+    assert lic.get_attribution_text(*args[1:]) == attribution
 
 
 @pytest.mark.parametrize(
@@ -76,4 +85,4 @@ def test_attribution_text_differentiates_license_and_other_tools(
     slug: str,
     attribution: str,
 ):
-    assert get_attribution_text(slug) == attribution
+    assert License(slug).get_attribution_text() == attribution

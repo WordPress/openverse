@@ -1,82 +1,154 @@
 import pytest
+import requests
 from openverse_attribution.license import License
-
-
-def test_raises_value_error_on_invalid_license():
-    with pytest.raises(ValueError):
-        License("invalid")
+from openverse_attribution.license_name import LicenseName
 
 
 @pytest.mark.parametrize(
-    "slug, version, name",
+    "slug, version, jurisdiction, attr, val",
     [
-        ("cc0", None, "CC0 1.0"),
-        ("cc0", "2.0", "CC0 1.0"),
-        ("pdm", None, "Public Domain Mark 1.0"),
-        ("pdm", "2.0", "Public Domain Mark 1.0"),
-        ("sampling+", None, "CC Sampling+ 1.0"),
-        ("sampling+", "2.0", "CC Sampling+ 1.0"),
-        ("by", None, "CC BY"),
-        ("by", "2.0", "CC BY 2.0"),
+        ("certification", None, None, "ver", "1.0"),  # infers version with surety
+        ("certification", None, None, "jur", "us"),  # infers jurisdiction with surety
+        (
+            "by",
+            None,
+            None,
+            "fallback_ver",
+            "4.0",
+        ),  # cannot infer version, falls back to latest
+        (
+            "by",
+            None,
+            None,
+            "fallback_jur",
+            "",
+        ),  # cannot infer jurisdiction, falls back to generic
+        ("nc", "2.0", None, "jur", "jp"),  # infers jurisdiction with surety
+        ("by-nc", "4.0", None, "jur", ""),  # infers jurisdiction with surety
+        ("by", None, "pe", "ver", "2.5"),  # infers version with surety
     ],
 )
-def test_can_get_name_for_license(slug: str, version: str, name: str):
-    lic = License(slug)
-    assert lic.name(version) == name
+def test_license_validation_autocompletes_missing_info(
+    slug: str,
+    version: str | None,
+    jurisdiction: str | None,
+    attr: str,
+    val: str,
+):
+    lic = License(slug, version, jurisdiction)
+    assert getattr(lic, attr) == val
 
 
 @pytest.mark.parametrize(
-    "slug, version, path",
+    "slug, version, jurisdiction, msg",
     [
-        ("cc0", None, "publicdomain/zero/1.0/"),
-        ("cc0", "2.0", "publicdomain/zero/1.0/"),
-        ("pdm", None, "publicdomain/mark/1.0/"),
-        ("pdm", "2.0", "publicdomain/mark/1.0/"),
-        ("sampling+", None, "licenses/sampling+/1.0/"),
-        ("sampling+", "2.0", "licenses/sampling+/1.0/"),
-        ("by", None, "licenses/by/4.0/"),
-        ("by", "2.0", "licenses/by/2.0/"),
+        # raised in ``__init__``
+        ("by", "5.0", None, "Version `5.0` does not exist."),
+        ("by", None, "done", "Jurisdiction `done` does not exist."),
+        ("by", "1.0", "jp", "Jurisdiction `jp` does not exist for version `1.0`."),
+        # raised in ``deduce_ver``
+        ("nd", None, "in", "No version matches slug `nd` and jurisdiction `in`."),
+        # raised in ``deduce_jur``
+        (
+            "by",
+            "2.1",
+            None,
+            "Jurisdiction is required for slug `by` and version `2.1`.",
+        ),
+        (
+            "sampling+",
+            "4.0",
+            None,
+            r"No jurisdiction matches slug `sampling\+` and version `4.0`.",
+        ),
+        # raised in ``deduce_ver_jur``
+        (
+            "sampling",
+            "1.0",
+            "fi",
+            "License `sampling` does not accept version `1.0` and jurisdiction `fi`.",
+        ),
     ],
 )
-def test_can_get_url_for_license(slug: str, version: str, path: str):
-    lic = License(slug)
-    assert lic.url(version).endswith(path)
+def test_license_validation_fails_if_contradictory_info(
+    slug: str,
+    version: str | None,
+    jurisdiction: str | None,
+    msg: str,
+):
+    with pytest.raises(ValueError, match=msg):
+        License(slug, version, jurisdiction)
 
 
 @pytest.mark.parametrize(
-    "slug, is_dep",
-    [
-        ("sampling+", True),
-        ("nc-sampling+", True),
-        ("by", False),
-    ],
+    "slug",
+    [lic.value for lic in LicenseName],
 )
-def test_can_identify_licenses_as_deprecated(slug: str, is_dep: bool):
-    lic = License(slug)
-    assert lic.is_deprecated == is_dep
+def test_license_validation_never_fails_for_just_name(slug: str):
+    assert License(slug)
 
 
 @pytest.mark.parametrize(
-    "slug, is_pd",
+    "slug, version, jurisdiction, full_name",
     [
-        ("cc0", True),
-        ("pdm", True),
-        ("by", False),
+        ("cc0", None, None, "CC0 1.0"),
+        ("pdm", None, None, "Public Domain Mark 1.0"),
+        ("certification", None, None, "Public Domain Certification 1.0 US"),
+        ("sa", None, None, "CC SA"),
+        ("sa", "2.0", None, "CC SA 2.0 JP"),
+        ("sa", "2.0", "jp", "CC SA 2.0 JP"),
+        ("sampling+", None, None, "CC Sampling+"),
+        ("by", None, None, "CC BY"),
+        ("by", "2.0", None, "CC BY 2.0"),
+        ("by", "2.5", "scotland", "CC BY 2.5 SCOTLAND"),
+        ("devnations", None, None, "CC DevNations 2.0"),
     ],
 )
-def test_can_identify_licenses_as_pd(slug: str, is_pd: bool):
-    lic = License(slug)
-    assert lic.is_pd == is_pd
+def test_license_generates_name(
+    slug: str,
+    version: str | None,
+    jurisdiction: str | None,
+    full_name: str,
+):
+    lic = License(slug, version, jurisdiction)
+    assert lic.full_name == full_name
 
 
 @pytest.mark.parametrize(
-    "slug, is_cc",
+    "slug, version, jurisdiction, path",
     [
-        ("cc0", True),
-        ("by", True),
-        ("pdm", False),
+        ("cc0", None, None, "publicdomain/zero/1.0/"),
+        ("pdm", None, None, "publicdomain/mark/1.0/"),
+        ("certification", None, None, "publicdomain/certification/1.0/us/"),
+        ("sa", None, None, "licenses/sa/1.0/"),
+        ("sa", "2.0", None, "licenses/sa/2.0/jp/"),
+        ("sa", "2.0", "jp", "licenses/sa/2.0/jp/"),
+        ("sampling+", None, None, "licenses/sampling+/1.0/"),
+        ("by", None, None, "licenses/by/4.0/"),
+        ("by", "2.0", None, "licenses/by/2.0/"),
+        ("by", "2.5", "scotland", "licenses/by/2.5/scotland/"),
+        ("devnations", None, None, "licenses/devnations/2.0/"),
     ],
 )
-def test_can_identify_licenses_as_cc(slug: str, is_cc: bool):
-    lic = License(slug)
-    assert lic.is_cc == is_cc
+def test_license_generates_url(
+    slug: str,
+    version: str | None,
+    jurisdiction: str | None,
+    path: str,
+):
+    lic = License(slug, version, jurisdiction)
+    assert lic.url.endswith(path)
+
+
+@pytest.mark.skip(reason="License URLs are broken on creativecommons.org")  # TODO
+@pytest.mark.parametrize(
+    "lic",
+    [
+        pytest.param(lic := License(name.value, ver, jur), id=lic.url)
+        for name in LicenseName
+        for (ver, jur) in name.allowed_ver_jur
+    ],
+)
+def test_all_urls_are_valid(lic: License):
+    res = requests.head(lic.url)
+    assert res.status_code == 200
