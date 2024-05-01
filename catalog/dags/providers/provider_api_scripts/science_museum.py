@@ -243,7 +243,7 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
         # some items do not return license anywhere, but in the UI
         # they look like CC
         rights = image_data.get("legal", {}).get("rights")
-        if isinstance(rights, list):
+        if rights and isinstance(rights, list):
             license_name = rights[0].get("licence")
             if not license_name:
                 return None
