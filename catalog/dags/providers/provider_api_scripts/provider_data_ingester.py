@@ -323,7 +323,7 @@ class ProviderDataIngester(ABC):
                 f" fixed query parameters: {fixed_query_params}"
             )
 
-            # If initial_query_params were also provided, we should being ingestion
+            # If initial_query_params were also provided, we should begin ingestion
             # from the first set of fixed_query_params that is included in the
             # initial_query_params
             if self.initial_query_params:
