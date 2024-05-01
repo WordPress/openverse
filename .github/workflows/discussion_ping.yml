@@ -21,7 +21,7 @@ jobs:
     steps:
       - name: Send notification for new discussion
         id: slack
-        uses: slackapi/slack-github-action@v1.25.0
+        uses: slackapi/slack-github-action@v1.26.0
         with:
           payload: |
             {
