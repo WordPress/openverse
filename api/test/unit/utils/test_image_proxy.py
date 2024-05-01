@@ -1,4 +1,3 @@
-import asyncio
 from dataclasses import replace
 from urllib.parse import urlencode
 
@@ -10,6 +9,7 @@ import pook
 import pytest
 from aiohttp import client_exceptions
 from aiohttp.client_reqrep import ConnectionKey
+from asgiref.sync import async_to_sync
 
 from api.utils.image_proxy import (
     HEADERS,
@@ -67,24 +67,16 @@ def auth_key():
     settings.PHOTON_AUTH_KEY = None
 
 
-@pytest.fixture
-def photon_get(session_loop):
-    """Run ``image_proxy.get`` and wait for all tasks to finish."""
-
-    def do(*args, **kwargs):
-        try:
-            res = session_loop.run_until_complete(_photon_get(*args, **kwargs))
-            return res
-        finally:
-            tasks = asyncio.all_tasks(session_loop)
-            for task in tasks:
-                session_loop.run_until_complete(task)
-
-    yield do
+# Do not convert tests to async, because of this issue:
+# https://github.com/pytest-dev/pytest-django/issues/580
+# While the transaction workaround technically works, its
+# tedious, easy to forget, and just wrapping tested functions
+# with async_to_sync is much easier
+photon_get = async_to_sync(_photon_get)
 
 
-@pook.on
-def test_get_successful_no_auth_key_default_args(photon_get, mock_image_data):
+@pytest.mark.pook
+def test_get_successful_no_auth_key_default_args(mock_image_data):
     mock_get: pook.Mock = (
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
         .params(
@@ -107,10 +99,8 @@ def test_get_successful_no_auth_key_default_args(photon_get, mock_image_data):
     assert mock_get.matched
 
 
-@pook.on
-def test_get_successful_original_svg_no_auth_key_default_args(
-    photon_get, mock_image_data
-):
+@pytest.mark.pook
+def test_get_successful_original_svg_no_auth_key_default_args(mock_image_data):
     mock_get: pook.Mock = (
         pook.get(TEST_IMAGE_URL.replace(".jpg", ".svg"))
         .header("User-Agent", UA_HEADER)
@@ -131,10 +121,8 @@ def test_get_successful_original_svg_no_auth_key_default_args(
     assert mock_get.matched
 
 
-@pook.on
-def test_get_successful_with_auth_key_default_args(
-    photon_get, mock_image_data, auth_key
-):
+@pytest.mark.pook
+def test_get_successful_with_auth_key_default_args(mock_image_data, auth_key):
     mock_get: pook.Mock = (
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
         .params(
@@ -158,8 +146,8 @@ def test_get_successful_with_auth_key_default_args(
     assert mock_get.matched
 
 
-@pook.on
-def test_get_successful_no_auth_key_not_compressed(photon_get, mock_image_data):
+@pytest.mark.pook
+def test_get_successful_no_auth_key_not_compressed(mock_image_data):
     mock_get: pook.Mock = (
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
         .params(
@@ -181,8 +169,8 @@ def test_get_successful_no_auth_key_not_compressed(photon_get, mock_image_data):
     assert mock_get.matched
 
 
-@pook.on
-def test_get_successful_no_auth_key_full_size(photon_get, mock_image_data):
+@pytest.mark.pook
+def test_get_successful_no_auth_key_full_size(mock_image_data):
     mock_get: pook.Mock = (
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
         .params(
@@ -204,10 +192,8 @@ def test_get_successful_no_auth_key_full_size(photon_get, mock_image_data):
     assert mock_get.matched
 
 
-@pook.on
-def test_get_successful_no_auth_key_full_size_not_compressed(
-    photon_get, mock_image_data
-):
+@pytest.mark.pook
+def test_get_successful_no_auth_key_full_size_not_compressed(mock_image_data):
     mock_get: pook.Mock = (
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
         .header("User-Agent", UA_HEADER)
@@ -227,8 +213,8 @@ def test_get_successful_no_auth_key_full_size_not_compressed(
     assert mock_get.matched
 
 
-@pook.on
-def test_get_successful_no_auth_key_png_only(photon_get, mock_image_data):
+@pytest.mark.pook
+def test_get_successful_no_auth_key_png_only(mock_image_data):
     mock_get: pook.Mock = (
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
         .params(
@@ -251,8 +237,8 @@ def test_get_successful_no_auth_key_png_only(photon_get, mock_image_data):
     assert mock_get.matched
 
 
-@pook.on
-def test_get_successful_forward_query_params(photon_get, mock_image_data):
+@pytest.mark.pook
+def test_get_successful_forward_query_params(mock_image_data):
     params = urlencode({"hello": "world", 1: 2, "beep": "boop"})
     mock_get: pook.Mock = (
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
@@ -292,10 +278,10 @@ def setup_request_exception(monkeypatch):
     yield do
 
 
-@pook.on
+@pytest.mark.pook
 @cache_availability_params
 def test_get_successful_records_response_code(
-    photon_get, mock_image_data, is_cache_reachable, cache_name, request, caplog
+    mock_image_data, is_cache_reachable, cache_name, request, caplog
 ):
     cache = request.getfixturevalue(cache_name)
     (
@@ -369,7 +355,6 @@ MOCK_CONNECTION_KEY = ConnectionKey(
 @cache_availability_params
 @alert_count_params
 def test_get_exception_handles_error(
-    photon_get,
     exc,
     exc_name,
     count_start,
@@ -410,8 +395,8 @@ def test_get_exception_handles_error(
         (500, "Internal Server Error"),
     ],
 )
+@pytest.mark.pook
 def test_get_http_exception_handles_error(
-    photon_get,
     status_code,
     text,
     count_start,
@@ -429,9 +414,8 @@ def test_get_http_exception_handles_error(
         cache.set(key, count_start)
 
     with pytest.raises(UpstreamThumbnailException):
-        with pook.use():
-            pook.get(PHOTON_URL_FOR_TEST_IMAGE).reply(status_code, text)
-            photon_get(TEST_MEDIA_INFO)
+        pook.get(PHOTON_URL_FOR_TEST_IMAGE).reply(status_code, text)
+        photon_get(TEST_MEDIA_INFO)
 
     sentry_capture_exception.assert_not_called()
 
@@ -451,10 +435,8 @@ def test_get_http_exception_handles_error(
         )
 
 
-@pook.on
-def test_get_successful_https_image_url_sends_ssl_parameter(
-    photon_get, mock_image_data
-):
+@pytest.mark.pook
+def test_get_successful_https_image_url_sends_ssl_parameter(mock_image_data):
     https_url = TEST_IMAGE_URL.replace("http://", "https://")
     mock_get: pook.Mock = (
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
@@ -481,8 +463,8 @@ def test_get_successful_https_image_url_sends_ssl_parameter(
     assert mock_get.matched
 
 
-@pook.on
-def test_get_unsuccessful_request_raises_custom_exception(photon_get):
+@pytest.mark.pook
+def test_get_unsuccessful_request_raises_custom_exception():
     mock_get: pook.Mock = pook.get(PHOTON_URL_FOR_TEST_IMAGE).reply(404).mock
 
     with pytest.raises(
@@ -536,7 +518,7 @@ def test_get_extension_from_content_type(content_type, expected_ext):
 
 @pytest.mark.django_db
 @pytest.mark.parametrize("image_type", ["apng", "tiff", "bmp"])
-def test_photon_get_raises_by_not_allowed_types(photon_get, image_type):
+def test_photon_get_raises_by_not_allowed_types(image_type):
     image_url = TEST_IMAGE_URL.replace(".jpg", f".{image_type}")
     image = ImageFactory.create(url=image_url)
     media_info = MediaInfo(
@@ -558,8 +540,8 @@ def test_photon_get_raises_by_not_allowed_types(photon_get, image_type):
     ],
 )
 @cache_availability_params
+@pytest.mark.pook(start_active=False)
 def test_photon_get_saves_image_type_to_cache(
-    photon_get,
     headers,
     expected_cache_val,
     is_cache_reachable,
@@ -576,10 +558,10 @@ def test_photon_get_saves_image_type_to_cache(
         media_provider=image.provider,
         image_url=image_url,
     )
-    with pook.use():
-        pook.head(image_url, reply=200, response_headers=headers)
-        with pytest.raises(UnsupportedMediaType):
-            photon_get(media_info)
+    pook.on()
+    pook.head(image_url, reply=200, response_headers=headers)
+    with pytest.raises(UnsupportedMediaType):
+        photon_get(media_info)
 
     key = f"media:{image.identifier}:thumb_type"
     if is_cache_reachable:
