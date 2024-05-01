@@ -5,7 +5,7 @@
 groups = ["default", "dev", "overrides", "test"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:f77cf4bb500db6a7da4bc51e7987b1510453ffca752368645186d0f07c170718"
+content_hash = "sha256:c489a98705c98c79da029deab97b14edd4fe69f3d23ea3f0f4b1641c052776a7"
 
 [[package]]
 name = "adrf"
@@ -1361,6 +1361,21 @@ dependencies = [
 files = [
     {file = "pytest-django-4.8.0.tar.gz", hash = "sha256:5d054fe011c56f3b10f978f41a8efb2e5adfc7e680ef36fb571ada1f24779d90"},
     {file = "pytest_django-4.8.0-py3-none-any.whl", hash = "sha256:ca1ddd1e0e4c227cf9e3e40a6afc6d106b3e70868fd2ac5798a22501271cd0c7"},
+]
+
+[[package]]
+name = "pytest-pook"
+version = "1.0.0"
+requires_python = ">=3.8"
+summary = "Pytest plugin for pook"
+groups = ["test"]
+dependencies = [
+    "pook",
+    "pytest",
+]
+files = [
+    {file = "pytest_pook-1.0.0-py3-none-any.whl", hash = "sha256:16a8e7391401d818aa79a3ab63aee2450d18764821fd3f8b7ef9d34824090955"},
+    {file = "pytest_pook-1.0.0.tar.gz", hash = "sha256:ee22a4bc133ffc49da569d1ecf76f3a674fccecf7dd394c21a46b704dbe67b47"},
 ]
 
 [[package]]
