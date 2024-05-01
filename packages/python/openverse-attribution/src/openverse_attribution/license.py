@@ -5,6 +5,13 @@ from openverse_attribution.data.all_licenses import all_licenses
 from openverse_attribution.license_name import LicenseName
 
 
+KNOWN_ALIASES = {
+    "zero": "cc0",
+    "mark": "pdm",
+    "publicdomain": "pdm",
+}
+
+
 @dataclass
 class License:
     name: LicenseName
@@ -30,6 +37,9 @@ class License:
         :param ver: the version of the license
         :param jur: the jurisdiction of the license
         """
+
+        # Handle known aliases.
+        slug = KNOWN_ALIASES.get(slug, slug)
 
         self.slug = slug
 

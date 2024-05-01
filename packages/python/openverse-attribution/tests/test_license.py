@@ -5,6 +5,18 @@ from openverse_attribution.license_name import LicenseName
 
 
 @pytest.mark.parametrize(
+    "slug, expected",
+    [
+        ("zero", "cc0"),
+        ("mark", "pdm"),
+        ("publicdomain", "pdm"),
+    ],
+)
+def test_license_handles_aliases(slug: str, expected: str):
+    assert License(slug).slug == expected
+
+
+@pytest.mark.parametrize(
     "slug, version, jurisdiction, attr, val",
     [
         ("certification", None, None, "ver", "1.0"),  # infers version with surety
