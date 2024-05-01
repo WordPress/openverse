@@ -8,9 +8,10 @@ from oauth2_provider.models import AccessToken
 
 from api.admin.forms import UserPreferencesAdminForm
 from api.admin.media_report import (
+    AudioListViewAdmin,
     AudioReportAdmin,
+    ImageListViewAdmin,
     ImageReportAdmin,
-    MediaListAdmin,
     MediaReportAdmin,
     MediaSubreportAdmin,
 )
@@ -36,8 +37,8 @@ admin.site.register(User, UserAdmin)
 admin.site.register(Group, GroupAdmin)
 
 
-admin.site.register(Image, MediaListAdmin)
-admin.site.register(Audio, MediaListAdmin)
+admin.site.register(Image, ImageListViewAdmin)
+admin.site.register(Audio, AudioListViewAdmin)
 
 
 # Register the MediaReportAdmin classes and its subclasses

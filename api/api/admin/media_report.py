@@ -2,6 +2,9 @@ from django.conf import settings
 from django.contrib import admin
 from django.contrib.admin.views.main import ChangeList
 from django.db.models import Count, F, Min
+from django.urls import reverse
+from django.utils.html import format_html
+from django.utils.safestring import mark_safe
 
 import structlog
 from elasticsearch import NotFoundError
@@ -36,8 +39,10 @@ class MediaListAdmin(admin.ModelAdmin):
         "report_count",
         "pending_report_count",
         "oldest_report_date",
+        "pending_reports_links",
     )
     search_fields = ("identifier",)
+    media_type = None
     # Ordering is not set here, see get_queryset
 
     def report_count(self, obj):
@@ -48,6 +53,16 @@ class MediaListAdmin(admin.ModelAdmin):
 
     def oldest_report_date(self, obj):
         return obj.oldest_report_date
+
+    def pending_reports_links(self, obj):
+        pending_reports = obj.media_reports.filter(decision__isnull=True)
+        data = []
+        for report in pending_reports.all():
+            url = reverse(
+                f"admin:api_{self.media_type}report_change", args=(report.id,)
+            )
+            data.append(format_html('<a href="{}">Report {}</a>', url, report.id))
+        return mark_safe(", ".join(data))
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -213,6 +228,14 @@ class ImageReportAdmin(MediaReportAdmin):
 
 
 class AudioReportAdmin(MediaReportAdmin):
+    media_type = "audio"
+
+
+class ImageListViewAdmin(MediaListAdmin):
+    media_type = "image"
+
+
+class AudioListViewAdmin(MediaListAdmin):
     media_type = "audio"
 
 
