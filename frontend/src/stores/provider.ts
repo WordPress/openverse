@@ -82,10 +82,6 @@ export const useProviderStore = defineStore("provider", {
         ? this._startFetching(mediaType)
         : this._endFetching(mediaType, option)
     },
-    async getProviders() {
-      await this.updateProvidersIfNeeded()
-      return this.providers
-    },
 
     _getProvider(providerCode: string, mediaType: SupportedMediaType) {
       return this.providers[mediaType].find(
@@ -100,31 +96,25 @@ export const useProviderStore = defineStore("provider", {
      * @param mediaType - mediaType of the provider
      */
     getProviderName(providerCode: string, mediaType: SupportedMediaType) {
-      const provider = this._getProvider(providerCode, mediaType)
-      return provider?.display_name || capitalCase(providerCode)
+      return (
+        this._getProvider(providerCode, mediaType)?.display_name ||
+        capitalCase(providerCode)
+      )
     },
 
     /**
      * Returns the source URL given the source code and media type.
      */
     getSourceUrl(providerCode: string, mediaType: SupportedMediaType) {
-      const provider = this._getProvider(providerCode, mediaType)
-      return provider?.source_url
+      return this._getProvider(providerCode, mediaType)?.source_url
     },
 
-    /**
-     * Fetches provider data if no data is available, or if the data is too old.
-     * On successful fetch updates lastUpdated value.
-     */
-    async updateProvidersIfNeeded() {
-      if (this.needsUpdate) {
-        await Promise.allSettled(
-          supportedMediaTypes.map((mediaType) =>
-            this.fetchMediaTypeProviders(mediaType)
-          )
+    async fetchProviders() {
+      await Promise.allSettled(
+        supportedMediaTypes.map((mediaType) =>
+          this.fetchMediaTypeProviders(mediaType)
         )
-        this.lastUpdated = new Date().getTime()
-      }
+      )
     },
 
     /**
@@ -167,25 +157,6 @@ export const useProviderStore = defineStore("provider", {
       sourceName: string
     ): boolean {
       return this.sourceNames[mediaType].includes(sourceName)
-    },
-  },
-
-  getters: {
-    /**
-     * Fetch providers only if there is no data, or if the last update for current request
-     * was more than 1 hour ago (the value in PROVIDER_UPDATE_FREQUENCY env variable).
-     */
-    needsUpdate(): boolean {
-      const noData = supportedMediaTypes.some(
-        (mediaType) => !this.providers[mediaType].length
-      )
-      if (noData || !this.lastUpdated) {
-        return true
-      }
-
-      const updateFrequency = this.$nuxt.$config.providerUpdateFrequency
-      const timeSinceLastUpdate = new Date().getTime() - this.lastUpdated
-      return timeSinceLastUpdate > updateFrequency
     },
   },
 })

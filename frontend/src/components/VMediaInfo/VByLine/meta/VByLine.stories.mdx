@@ -6,7 +6,6 @@ import {
   Story,
 } from "@storybook/addon-docs"
 import { supportedMediaTypes } from "~/constants/media"
-import { useProviderStore } from "~/stores/provider"
 
 import VByLine from "~/components/VMediaInfo/VByLine/VByLine.vue"
 
@@ -14,8 +13,6 @@ export const Template = (args) => ({
   template: `<div class="wrapper w-full inline-flex p-4"><VByLine v-bind="args" /></div>`,
   components: { VByLine },
   setup() {
-    const providerStore = useProviderStore()
-    providerStore.getProviders().then(/** */)
     return { args }
   },
 })

@@ -1,11 +1,11 @@
 import { defineNuxtMiddleware } from "@nuxtjs/composition-api"
 
-import { useProviderStore } from "~/stores/provider"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 /**
- * On every page navigation, update the media providers if necessary.
+ * On every page navigation, update the feature flags from query.
  */
-export default defineNuxtMiddleware(async ({ $pinia }) => {
-  const providerStore = useProviderStore($pinia)
-  await providerStore.updateProvidersIfNeeded()
+export default defineNuxtMiddleware(async ({ $pinia, query }) => {
+  const featureFlagStore = useFeatureFlagStore($pinia)
+  featureFlagStore.initFromQuery(query)
 })
