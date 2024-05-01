@@ -5,7 +5,7 @@
 groups = ["default", "dev", "overrides", "test"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:6f1ab08ad6b7d958853793eb783a39eadbce3257070ab404b111c7390ed85cf6"
+content_hash = "sha256:7c8575d7cf154a0fbb86ba3849beb0849abc3648ee690bcda0662e4622969e25"
 
 [[package]]
 name = "adrf"
@@ -384,16 +384,17 @@ files = [
 
 [[package]]
 name = "django-asgi-lifespan"
-version = "0.2.0"
-requires_python = ">=3.10.0,<4.0.0"
+version = "0.3.1"
+requires_python = ">=3.10,<4.0"
 summary = "Django ASGI handler with Lifespan Protocol support."
 groups = ["default"]
 dependencies = [
-    "Django<6,>=4",
+    "Django!=5.0.0,!=5.0.1,!=5.0.2,<6,>=4.2",
+    "asgiref<4,>=3",
 ]
 files = [
-    {file = "django_asgi_lifespan-0.2.0-py3-none-any.whl", hash = "sha256:f62f201eaa2a9d064eb24e3dd227a66a009f2b8cd79ea71ba7edc03cfbbbbd18"},
-    {file = "django_asgi_lifespan-0.2.0.tar.gz", hash = "sha256:6a39fb8ee4ad627fcfb5468c8b0bffe512b1dfe0e660ccb6bb356ae1063e4d62"},
+    {file = "django_asgi_lifespan-0.3.1-py3-none-any.whl", hash = "sha256:e2b27f34ab7773ab33a2a373fd074c0ff444c69a74a3ed146e6b027210eb37ab"},
+    {file = "django_asgi_lifespan-0.3.1.tar.gz", hash = "sha256:edb7ffe87f96d1f20675a7875e00ca114412cb73a292a79c02a234e42f693fac"},
 ]
 
 [[package]]
