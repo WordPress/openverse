@@ -1,6 +1,8 @@
 import logging
 from dataclasses import dataclass
-from typing import Literal
+from datetime import timedelta
+from functools import wraps
+from typing import Literal, Type
 from urllib.parse import urlparse
 
 from django.conf import settings
@@ -11,6 +13,7 @@ import aiohttp
 import django_redis
 from aiohttp.client_exceptions import ClientResponseError
 from asgiref.sync import sync_to_async
+from redis.client import Redis
 from redis.exceptions import ConnectionError
 
 from api.utils.aiohttp import get_aiohttp_session
@@ -120,9 +123,87 @@ def _tally_client_response_errors(tallies, month: str, domain: str, status: int)
         logger.warning("Redis connect failed, thumbnail HTTP errors not tallied.")
 
 
+# thmbfail == THuMBnail FAILures; this key path will exist for every thumbnail requested, so it needs to be space efficient
+FAILURE_CACHE_KEY_TEMPLATE = "thmbfail:{ident}"
+
+
+def _cache_repeated_failures(_get):
+    """
+    Wrap ``image_proxy.get`` to cache repeated upstream failures
+    and avoid re-requesting images likely to fail.
+
+    Do this by storing a count for each media identifier of requested thumbnails.
+    When the upstream request succeeds, increment the key. When it fails, decrement it.
+
+    If the count goes below -2, then the thumbnail has failed twice within cache frame.
+    In those cases, bypass the upstream request and immediately return a 424 without
+    making the request again.
+    """
+    logger = parent_logger.getChild("_cache_repeated_failures")
+
+    @wraps(_get)
+    async def do_cache(*args, **kwargs):
+        media_info = args[0]
+        compressed_ident = media_info.media_identifier.replace("-", "")
+        redis_key = FAILURE_CACHE_KEY_TEMPLATE.format(ident=compressed_ident)
+        tallies: Redis = django_redis.get_redis_connection("tallies")
+
+        try:
+            cached_failure_count = await sync_to_async(tallies.get)(
+                redis_key,
+            )
+            cached_failure_count = (
+                int(cached_failure_count) if cached_failure_count is not None else 0
+            )
+        except ConnectionError:
+            # Ignore the connection error, treat it like it's never been cached
+            cached_failure_count = 0
+
+        if cached_failure_count > settings.THUMBNAIL_FAILURE_CACHE_TOLERANCE:
+            logger.info(
+                "%s thumbnail is too flaky, using cached failure response.",
+                media_info.media_identifier,
+            )
+            raise UpstreamThumbnailException("Thumbnail unavailable from provider.")
+
+        try:
+            response = await _get(*args, **kwargs)
+            if cached_failure_count > 0:
+                # Decrement the key
+                # Do not delete it, because if it isn't 0, then it has failed before
+                # meaning we should continue to monitor it within the cache window
+                # in case the upstream is flaky and eventually goes over the tolerance
+                try:
+                    await sync_to_async(tallies.decr)(redis_key)
+                    await sync_to_async(tallies.expire)(
+                        redis_key, settings.THUMBNAIL_FAILURE_CACHE_WINDOW_SECONDS
+                    )
+                except ConnectionError:
+                    logger.warning(
+                        "Redis connect failed, thumbnail failure not decremented."
+                    )
+            return response
+        except:
+            try:
+                await sync_to_async(tallies.incr)(redis_key)
+                # Call expire each time the key is incremented
+                # This pushes expiration out each time a new failure is cached
+                await sync_to_async(tallies.expire)(
+                    redis_key, settings.THUMBNAIL_FAILURE_CACHE_WINDOW_SECONDS
+                )
+            except ConnectionError:
+                logger.warning(
+                    "Redis connect failed, thumbnail failure not incremented."
+                )
+            raise
+
+    return do_cache
+
+
 _UPSTREAM_TIMEOUT = aiohttp.ClientTimeout(15)
 
 
+@_cache_repeated_failures
 async def get(
     media_info: MediaInfo,
     request_config: RequestConfig = RequestConfig(),

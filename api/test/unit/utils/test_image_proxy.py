@@ -12,6 +12,7 @@ from aiohttp.client_reqrep import ConnectionKey
 from asgiref.sync import async_to_sync
 
 from api.utils.image_proxy import (
+    FAILURE_CACHE_KEY_TEMPLATE,
     HEADERS,
     MediaInfo,
     RequestConfig,
@@ -417,6 +418,89 @@ def test_get_http_exception_handles_error(
                 "Redis connect failed, thumbnail errors not tallied.",
             ]
         )
+
+
+@pytest.mark.pook
+def test_caches_failures_if_cache_surpasses_tolerance(mock_image_data, settings, redis):
+    tolerance = settings.THUMBNAIL_FAILURE_CACHE_TOLERANCE = 2
+
+    (
+        pook.get(PHOTON_URL_FOR_TEST_IMAGE)
+        .params(
+            {
+                "w": settings.THUMBNAIL_WIDTH_PX,
+                "quality": settings.THUMBNAIL_QUALITY,
+            }
+        )
+        .header("User-Agent", UA_HEADER)
+        .header("Accept", "image/*")
+        .times(tolerance)
+        .reply(401)
+        .body(MOCK_BODY)
+    )
+
+    for _ in range(tolerance + 1):
+        with pytest.raises(
+            UpstreamThumbnailException, match="Failed to render thumbnail"
+        ):
+            photon_get(TEST_MEDIA_INFO)
+
+        assert (
+            redis.ttl(
+                FAILURE_CACHE_KEY_TEMPLATE.format(
+                    ident=TEST_MEDIA_INFO.media_identifier.replace("-", "")
+                )
+            )
+            is not None
+        )
+
+    with pytest.raises(
+        UpstreamThumbnailException, match="Thumbnail unavailable from provider"
+    ):
+        photon_get(TEST_MEDIA_INFO)
+
+
+@pytest.mark.pook
+def test_caches_failures_with_successes_extending_tolerance(
+    mock_image_data, settings, redis
+):
+    settings.THUMBNAIL_FAILURE_CACHE_TOLERANCE = 1
+
+    def _make_failed_request():
+        (pook.get(PHOTON_URL_FOR_TEST_IMAGE).reply(401))
+
+        with pytest.raises(
+            UpstreamThumbnailException, match="Failed to render thumbnail"
+        ):
+            photon_get(TEST_MEDIA_INFO)
+
+    def _make_successful_request():
+        (pook.get(PHOTON_URL_FOR_TEST_IMAGE).reply(200).body(MOCK_BODY))
+
+        res = photon_get(TEST_MEDIA_INFO)
+        assert res.content == MOCK_BODY.encode()
+
+    # Before any requests, count = 0, within tolerance
+
+    _make_failed_request()
+    # count = 1, maximum within tolerance
+
+    _make_successful_request()
+    # count = 0, decremented due to successful request, allow additional failures before bypassing
+
+    _make_failed_request()
+    # count = 1 again, maximum within tolerance
+
+    _make_failed_request()
+    # count = 2, over tolerance, next request will fail without requesting upstream
+
+    # "unavailable from provider" indicates the cached failure
+    # we do not add any pook mock for this request, proving it is never made
+    # and therefore bypassed by the cached failure
+    with pytest.raises(
+        UpstreamThumbnailException, match="Thumbnail unavailable from provider"
+    ):
+        photon_get(TEST_MEDIA_INFO)
 
 
 @pytest.mark.pook
