@@ -8,7 +8,6 @@ from django.urls import reverse
 from django.utils.html import format_html
 
 from elasticsearch import Elasticsearch, NotFoundError
-from openverse_attribution.attribution import get_attribution_text
 from openverse_attribution.license import License
 
 from api.constants.moderation import DecisionAction
@@ -97,17 +96,15 @@ class AbstractMedia(
         if self.meta_data and (url := self.meta_data.get("license_url")):
             return url
         else:
-            return License(self.license.lower()).url(self.license_version)
+            return License(self.license.lower(), self.license_version).url
 
     @property
     def attribution(self) -> str:
         """Legally valid attribution for the media item in plain-text English."""
 
-        return get_attribution_text(
-            self.license.lower(),
+        return License(self.license.lower(), self.license_version).get_attribution_text(
             self.title,
             self.creator,
-            self.license_version,
             self.license_url,
         )
 
