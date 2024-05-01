@@ -303,7 +303,7 @@ class AudioReport(AbstractMediaReport):
         on_delete=models.DO_NOTHING,
         db_constraint=False,
         db_column="identifier",
-        related_name="media_report",
+        related_name="media_reports",
         help_text="The reference to the audio being reported.",
     )
     decision = models.ForeignKey(

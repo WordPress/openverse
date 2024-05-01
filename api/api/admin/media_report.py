@@ -40,9 +40,9 @@ class MediaListAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         # Filter down to only instances with reports
-        qs = qs.filter(media_report__isnull=False)
+        qs = qs.filter(media_reports__isnull=False)
         # Annotate and order by report count
-        qs = qs.annotate(report_count=Count("media_report"))
+        qs = qs.annotate(report_count=Count("media_reports"))
         qs = qs.order_by("-report_count")
         return qs
 
