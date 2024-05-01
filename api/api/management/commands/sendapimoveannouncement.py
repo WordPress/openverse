@@ -10,9 +10,19 @@ from api.models.oauth import OAuth2Verification
 
 
 message = """
-FILL ME IN AFTER TEXT REVIEWED
+On 3 June 2024 the Openverse API’s home will be api.openverse.org and api.openverse.engineering will start
+redirecting to api.openverse.org. Existing API credentials and all other aspects of integrations with the
+Openverse API will continue to work without changes, provided requests follow redirects.
 
-https://docs.google.com/document/d/1ESmzbH6vkp8rxJBsy3P0_BLZ01sgKVFAQa3LnPSvBhQ/edit?usp=sharing
+For the best experience, please update code referencing api.openverse.engineering to use api.openverse.org.
+
+To read more about this change, including opportunities to ask questions or give feedback, please read the Make Openverse blog post announcing it:
+
+<LINK TO MAKE POST>
+
+You are receiving this email because you’ve registered and verified with the Openverse API.
+
+This is a critical operational notification. Openverse only sends emails in such cases.
 """
 
 
