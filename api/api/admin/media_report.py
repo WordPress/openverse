@@ -32,6 +32,7 @@ class PredeterminedOrderChangelist(ChangeList):
 
 class MediaListAdmin(admin.ModelAdmin):
     list_display = ("identifier", "report_count")
+    search_fields = ("identifier",)
     # Ordering is not set here, see get_queryset
 
     def report_count(self, obj):
@@ -39,6 +40,9 @@ class MediaListAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
+        # Return all available image if this is for an autocomplete request
+        if "autocomplete" in request.path:
+            return qs
         # Filter down to only instances with reports
         qs = qs.filter(media_reports__isnull=False)
         # Annotate and order by report count
