@@ -1,5 +1,7 @@
 from django.conf import settings
 from django.contrib import admin
+from django.contrib.admin.views.main import ChangeList
+from django.db.models import Count
 
 import structlog
 from elasticsearch import NotFoundError
@@ -10,6 +12,42 @@ from api.models import PENDING
 
 
 logger = structlog.get_logger(__name__)
+
+
+class PredeterminedOrderChangelist(ChangeList):
+    """
+    ChangeList class which does not apply any default ordering to the items.
+
+    This is necessary or lists where the ordering is done on an annotated field, since
+    the changelist attempts to apply the ordering to a QuerySet which is not aware that
+    it has the annotated field available (and thus raises a FieldError).
+
+    The caveat to this is that the ordering *must* be applied in
+    ModelAdmin::get_queryset
+    """
+
+    def _get_default_ordering(self):
+        return []
+
+
+class MediaListAdmin(admin.ModelAdmin):
+    list_display = ("identifier", "report_count")
+    # Ordering is not set here, see get_queryset
+
+    def report_count(self, obj):
+        return obj.report_count
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        # Filter down to only instances with reports
+        qs = qs.filter(media_report__isnull=False)
+        # Annotate and order by report count
+        qs = qs.annotate(report_count=Count("media_report"))
+        qs = qs.order_by("-report_count")
+        return qs
+
+    def get_changelist(self, request, **kwargs):
+        return PredeterminedOrderChangelist
 
 
 class MediaReportAdmin(admin.ModelAdmin):

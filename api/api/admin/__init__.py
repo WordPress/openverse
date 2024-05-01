@@ -10,6 +10,7 @@ from api.admin.forms import UserPreferencesAdminForm
 from api.admin.media_report import (
     AudioReportAdmin,
     ImageReportAdmin,
+    MediaListAdmin,
     MediaReportAdmin,
     MediaSubreportAdmin,
 )
@@ -35,14 +36,8 @@ admin.site.register(User, UserAdmin)
 admin.site.register(Group, GroupAdmin)
 
 
-@admin.register(Image)
-class ImageAdmin(admin.ModelAdmin):
-    search_fields = ("identifier",)
-
-
-@admin.register(Audio)
-class AudioAdmin(admin.ModelAdmin):
-    search_fields = ("identifier",)
+admin.site.register(Image, MediaListAdmin)
+admin.site.register(Audio, MediaListAdmin)
 
 
 # Register the MediaReportAdmin classes and its subclasses
