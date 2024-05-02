@@ -98,7 +98,7 @@ create-and-populate-filtered-index model="image" destination_suffix="init":
 #########
 
 # Run ingestion-server tests locally
-test-local *args:
+test-local *args="--exitfirst":
     # populate the tldextract cache before running tests to prevent unnecessary network requests during tests
     # and from needing to mock essentially unmockable responses
     pipenv run tldextract --update
