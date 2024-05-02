@@ -37,12 +37,18 @@ class PendingRecordCountFilter(admin.SimpleListFilter):
     title = "pending record count"
     parameter_name = "pending_record_count"
 
+    def choices(self, changelist):
+        """Override in order to get the default to be "pending" rather than "all"."""
+        choices = list(super().choices(changelist))
+        choices[0]["display"] = "Pending"
+        return choices
+
     def lookups(self, request, model_admin):
-        return (("pending", "Pending"),)
+        return (("all", "All"),)
 
     def queryset(self, request, queryset):
         value = self.value()
-        if value == "pending":
+        if value != "all":
             return queryset.filter(pending_report_count__gt=0)
 
         return queryset
