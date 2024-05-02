@@ -153,7 +153,6 @@ def test_license_generates_url(
     assert lic.url.endswith(path)
 
 
-@pytest.mark.skip(reason="License URLs are broken on creativecommons.org")  # TODO
 @pytest.mark.parametrize(
     "lic",
     [
