@@ -80,8 +80,8 @@ This step will be straightforward, as the provider information for tags already
 exists in the API database. In order to have them show up in the API results, we
 would need to modify the
 [`TagSerializer`](https://github.com/WordPress/openverse/blob/3ed38fc4b138af2f6ac03fcc065ec633d6905d73/api/api/serializers/media_serializers.py#L442)
-to include the `provider` field as well. This would change the returned `tags`
-entry for a result from:
+to include an `unstable__provider` field as well. This would change the returned
+`tags` entry for a result from:
 
 ```json
 [
@@ -123,46 +123,48 @@ to the following:
   {
     "name": "businesscard",
     "accuracy": null,
-    "provider": "flickr"
+    "unstable__provider": "flickr"
   },
   {
     "name": "design",
     "accuracy": null,
-    "provider": "flickr"
+    "unstable__provider": "flickr"
   },
   {
     "name": "projects",
     "accuracy": null,
-    "provider": "flickr"
+    "unstable__provider": "flickr"
   },
   {
     "name": "achievement",
     "accuracy": 0.94971,
-    "provider": "clarifai"
+    "unstable__provider": "clarifai"
   },
   {
     "name": "box",
     "accuracy": 0.90665,
-    "provider": "clarifai"
+    "unstable__provider": "clarifai"
   },
   {
     "name": "business",
     "accuracy": 0.9916,
-    "provider": "clarifai"
+    "unstable__provider": "clarifai"
   },
   {
     "name": "card",
     "accuracy": 0.94793,
-    "provider": "clarifai"
+    "unstable__provider": "clarifai"
   }
 ]
 ```
 
-Because this is the addition of a new entry in the `tags` object array and not a
-removal or modification of the existing data, we should not need to modify the
-API version at this time.
+The use of the `unstable__` prefix will ensure that we can experiment with this
+addition without locking us into any changes at the moment. Because this is the
+addition of a new entry in the `tags` object array and not a removal or
+modification of the existing data, we should not need to modify the API version
+even when we stabilize the parameter.
 
-The availability of `provider` here will make it possible to visually
+The availability of `unstable__provider` here will make it possible to visually
 distinguish the different tag sources, which will be established in #4039.
 
 ### Modify Elasticsearch document scoring
@@ -281,7 +283,8 @@ receive a higher score. This has the following advantages:
   mention the image content.
 - Records with duplicate machine- and creator-generated tags mean those tags are
   likely quite relevant, and a higher score for them seems appropriate.
-- Records which don't have machine-generated labels are unaffected.
+- Records which don't have machine-generated labels will not receive any
+  boosting, making them less likely to show up in searches.
 
 #### Conclusion
 
