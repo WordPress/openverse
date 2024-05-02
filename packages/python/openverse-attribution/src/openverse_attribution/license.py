@@ -29,6 +29,9 @@ class License:
         This function validates the license, version and jurisdiction. If some
         fields are not provided, it makes an attempt to deduce them.
 
+        The only exception is 'publicdomain' for which the version and
+        jurisdiction fields are ignored.
+
         Use an empty string as ``jur`` to specify a generic, universal or
         unported form of the license.
 
