@@ -79,4 +79,4 @@ def test_identifies_allowed_versions_and_jurisdictions(
     ver_jur: list[tuple[str, str]],
 ):
     lic = LicenseName(slug)
-    assert lic.allowed_ver_jur == ver_jur
+    assert lic.allowed_versions_jurisdictions == ver_jur

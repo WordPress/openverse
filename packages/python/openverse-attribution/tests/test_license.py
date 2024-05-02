@@ -159,7 +159,7 @@ def test_license_generates_url(
     [
         pytest.param(lic := License(name.value, ver, jur), id=lic.url)
         for name in LicenseName
-        for (ver, jur) in name.allowed_ver_jur
+        for (ver, jur) in name.allowed_versions_jurisdictions
     ],
 )
 def test_all_urls_are_valid(lic: License):

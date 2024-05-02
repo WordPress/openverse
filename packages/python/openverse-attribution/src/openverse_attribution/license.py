@@ -81,7 +81,7 @@ class License:
         else:  # ver and jur is not None
             self.ver = ver
             self.jur = jur
-            if (ver, jur) not in self.name.allowed_ver_jur:
+            if (ver, jur) not in self.name.allowed_versions_jurisdictions:
                 raise ValueError(
                     f"License `{slug}` does not accept version `{ver}` and jurisdiction `{jur}`."
                 )
@@ -97,7 +97,7 @@ class License:
         :raise ValueError: if no version matches slug and jurisdiction
         """
 
-        allowed_ver_jur = self.name.allowed_ver_jur
+        allowed_ver_jur = self.name.allowed_versions_jurisdictions
         allowed_vers = [v for v, j in allowed_ver_jur if j == self.jur]
         if len(allowed_vers) > 1:
             self.fallback_ver = allowed_vers[0]  # latest
@@ -120,7 +120,7 @@ class License:
             matches slug and version
         """
 
-        allowed_ver_jur = self.name.allowed_ver_jur
+        allowed_ver_jur = self.name.allowed_versions_jurisdictions
         allowed_jurs = {j for v, j in allowed_ver_jur if v == self.ver}
         if len(allowed_jurs) > 1:
             if "" in allowed_jurs:
@@ -148,7 +148,7 @@ class License:
         :return: the certain values of the version and jurisdiction
         """
 
-        allowed_ver_jur = self.name.allowed_ver_jur
+        allowed_ver_jur = self.name.allowed_versions_jurisdictions
         if len(allowed_ver_jur) == 1:
             return allowed_ver_jur[0]
 

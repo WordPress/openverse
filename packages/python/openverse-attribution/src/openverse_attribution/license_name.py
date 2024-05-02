@@ -111,7 +111,7 @@ class LicenseName(StrEnum):
         return self in PUBLIC_DOMAIN_SLUGS
 
     @property
-    def allowed_ver_jur(self) -> list[tuple[str, str]]:
+    def allowed_versions_jurisdictions(self) -> list[tuple[str, str]]:
         """
         Get a list of versions and jurisdictions where this license is valid.
 
