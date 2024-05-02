@@ -71,13 +71,13 @@ class License:
 
         # Validation (with autocompletion)
         if not ver and jur is None:
-            self.ver, self.jur = self.deduce_ver_jur() or (None, None)
+            self.ver, self.jur = self._deduce_ver_jur() or (None, None)
         elif not ver and jur is not None:
             self.jur = jur
-            self.ver = self.deduce_ver()
+            self.ver = self._deduce_ver()
         elif ver and jur is None:
             self.ver = ver
-            self.jur = self.deduce_jur()
+            self.jur = self._deduce_jur()
         else:  # ver and jur is not None
             self.ver = ver
             self.jur = jur
@@ -86,7 +86,7 @@ class License:
                     f"License `{slug}` does not accept version `{ver}` and jurisdiction `{jur}`."
                 )
 
-    def deduce_ver(self) -> str | None:
+    def _deduce_ver(self) -> str | None:
         """
         Deduce version from slug and jurisdiction.
 
@@ -108,7 +108,7 @@ class License:
                 f"No version matches slug `{self.slug}` and jurisdiction `{self.jur}`."
             )
 
-    def deduce_jur(self) -> str | None:
+    def _deduce_jur(self) -> str | None:
         """
         Deduce jurisdiction from slug and version.
 
@@ -137,7 +137,7 @@ class License:
                 f"No jurisdiction matches slug `{self.slug}` and version `{self.ver}`."
             )
 
-    def deduce_ver_jur(self) -> tuple[str, str] | None:
+    def _deduce_ver_jur(self) -> tuple[str, str] | None:
         """
         Deduce version and jurisdiction from slug.
 

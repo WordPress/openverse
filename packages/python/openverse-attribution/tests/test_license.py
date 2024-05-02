@@ -57,9 +57,9 @@ def test_license_validation_autocompletes_missing_info(
         ("by", "5.0", None, "Version `5.0` does not exist."),
         ("by", None, "done", "Jurisdiction `done` does not exist."),
         ("by", "1.0", "jp", "Jurisdiction `jp` does not exist for version `1.0`."),
-        # raised in ``deduce_ver``
+        # raised in ``_deduce_ver``
         ("nd", None, "in", "No version matches slug `nd` and jurisdiction `in`."),
-        # raised in ``deduce_jur``
+        # raised in ``_deduce_jur``
         (
             "by",
             "2.1",
@@ -72,7 +72,7 @@ def test_license_validation_autocompletes_missing_info(
             None,
             r"No jurisdiction matches slug `sampling\+` and version `4.0`.",
         ),
-        # raised in ``deduce_ver_jur``
+        # raised in ``_deduce_ver_jur``
         (
             "sampling",
             "1.0",
