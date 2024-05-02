@@ -20,8 +20,8 @@ class License:
     def __init__(
         self,
         slug: str,
-        ver: str | None = None,
-        jur: str | None = None,
+        version: str | None = None,
+        jurisdiction: str | None = None,
     ):
         """
         Create an instance of ``License``.
@@ -33,9 +33,13 @@ class License:
         unported form of the license.
 
         :param slug: the slug for the license, from the ``LicenseName`` enum
-        :param ver: the version of the license
-        :param jur: the jurisdiction of the license
+        :param version: the version of the license
+        :param jurisdiction: the jurisdiction of the license
         """
+
+        # Shorten long variable names
+        ver = version
+        jur = jurisdiction
 
         # Handle known aliases.
         slug = KNOWN_ALIASES.get(slug, slug)
