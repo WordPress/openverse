@@ -1,10 +1,10 @@
 <template>
   <VScrollableLine>
     <VSourceCreatorButton
-      v-if="showCreator && creatorHref && media.creator"
-      :href="creatorHref"
+      v-if="creator"
+      :title="creator.name"
+      :href="creator.href"
       icon-name="person"
-      :title="media.creator"
     />
     <VSourceCreatorButton
       :href="sourceHref"
@@ -39,27 +39,21 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const showCreator = computed(() => {
-      return Boolean(
-        props.media.creator &&
-          props.media.creator.toLowerCase() !== "unidentified"
-      )
-    })
-
     const searchStore = useSearchStore()
 
-    const creatorHref = computed(() => {
-      if (!props.media.creator) {
-        return undefined
+    const creator = computed(() => {
+      if (props.media.creator && props.media.creator !== "unidentified") {
+        const href = searchStore.getCollectionPath({
+          type: props.media.frontendMediaType,
+          collectionParams: {
+            collection: "creator",
+            source: props.media.source,
+            creator: props.media.creator,
+          },
+        })
+        return { name: props.media.creator, href }
       }
-      return searchStore.getCollectionPath({
-        type: props.media.frontendMediaType,
-        collectionParams: {
-          collection: "creator",
-          source: props.media.source,
-          creator: props.media.creator,
-        },
-      })
+      return null
     })
 
     const sourceHref = computed(() => {
@@ -73,8 +67,7 @@ export default defineComponent({
     })
 
     return {
-      showCreator,
-      creatorHref,
+      creator,
       sourceHref,
     }
   },
