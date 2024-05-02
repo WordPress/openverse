@@ -174,8 +174,8 @@ creator-generated tag, and one machine-generated tag, such as this
 [example with "light" duplicated](https://api.openverse.engineering/v1/images/a487f4eb-ce05-43e1-acae-73c4ab090cc9/)).
 As we grow the number of machine-labeling providers we apply to our data, it's
 possible we will end up with multiple copies of a single tag from different
-providers. There are four approaches we can take for these cases concerning
-scoring in Elasticsearch:
+providers. There are four approaches we can take which would affect these cases
+concerning scoring in Elasticsearch:
 
 - Prefer creator-generated tags and exclude machine-generated tags
 - Prefer machine-generated tags and exclude creator-generated tags
@@ -204,7 +204,11 @@ does not have an explicit `similarity` defined, and therefore it is already
 using the `BM25` algorithm.
 
 Below is a discussion of each approach, with the advantages & disadvantages for
-taking said approach.
+taking said approach. It should be noted that, since we do not have
+machine-generated labels for _all_ of our data, any approach we take with this
+data will arbitrarily and unevenly affect our results. This is a product of the
+machine-generated labels we do have available, and is unavoidable if we wish to
+incorporate it.
 
 [^bm25_explanation]:
     Note that it does not do this naively, as Okapi BM25 has additional
@@ -225,6 +229,12 @@ for adding the machine-generated labels in general and would only serve to
 provide more context/information for API consumers _once they have the result_.
 If they're unable to find the result in the first place, then the presence of
 the machine-generated labels is irrelevant here.
+
+An altered version of this approach might only exclude machine-generated tags
+that are duplicated by creator-generated tags. This would allow the
+machine-generated tags to help surface documents in searches which previously
+would not have appeared, while also preventing duplicate tags from affecting the
+document's score.
 
 #### Prefer machine-generated tags and exclude creator-generated tags
 
@@ -274,7 +284,7 @@ tag for "cat" were present.
 
 This is the current approach, and also the simplest: leave the default
 `similarity` setting for `tags` and allow a result with duplicate tags to
-receive a higher score. This has the following advantages:
+receive a higher score. This has the following effects:
 
 - No action on the Elasticsearch index settings is needed (save for
   documentation making this change explicit).
@@ -288,11 +298,17 @@ receive a higher score. This has the following advantages:
 
 #### Conclusion
 
-For all the reasons and explanation provided above, we should move forward with
-the
-[approach to keep both sets of tags](#keep-both-tags-and-allow-that-to-affect-the-document-score).
-This means that we do not need to make any changes to the data refresh process
-or the Elasticsearch indices at this time.
+In addition to all the reasons and explanation provided above, we should move
+forward with the
+[approach to keep both sets of tags](#keep-both-tags-and-allow-that-to-affect-the-document-score)
+because:
+
+- It is the easiest and quickest solution at this time, since it means that we
+  do not need to make any changes to the data refresh process or the
+  Elasticsearch indices.
+- It doesn't preclude us from taking a different approach, particularly after
+  #421.
+- It is an entirely reversible decision.
 
 ## Dependencies
 
