@@ -3,6 +3,22 @@ from enum import StrEnum
 from openverse_attribution.data.all_licenses import all_licenses
 
 
+NON_CC_SLUGS = {"pdm", "publicdomain", "certification"}
+DEPRECATED_SLUGS = {
+    "sa",
+    "nc",
+    "nd",
+    "nc-sa",
+    "nd-nc",
+    "sampling",
+    "sampling+",
+    "nc-sampling+",
+    "devnations",
+    "certification",
+}
+PUBLIC_DOMAIN_SLUGS = NON_CC_SLUGS | {"cc0"}
+
+
 class LicenseName(StrEnum):
     """
     Represents all existing CC "licenses".
@@ -69,12 +85,7 @@ class LicenseName(StrEnum):
         :return: whether this license was created by Creative Commons
         """
 
-        # Works because other than PDM and PDC, we only have CC licenses.
-        return self not in {
-            LicenseName.PDM,
-            LicenseName.PUBLICDOMAIN,
-            LicenseName.CERTIFICATION,
-        }
+        return self.value not in NON_CC_SLUGS
 
     @property
     def is_deprecated(self) -> bool:
@@ -86,18 +97,7 @@ class LicenseName(StrEnum):
         :return: whether this license has been deprecated
         """
 
-        return self in {
-            LicenseName.SA,
-            LicenseName.NC,
-            LicenseName.ND,
-            LicenseName.NC_SA,
-            LicenseName.ND_NC,
-            LicenseName.SAMPLING,
-            LicenseName.SAMPLING_PLUS,
-            LicenseName.NC_SAMPLING_PLUS,
-            LicenseName.DEVNATIONS,
-            LicenseName.CERTIFICATION,
-        }
+        return self in DEPRECATED_SLUGS
 
     @property
     def is_pd(self) -> bool:
@@ -108,12 +108,7 @@ class LicenseName(StrEnum):
         :return: whether a work with this license is in the public domain
         """
 
-        return self in {
-            LicenseName.PDM,
-            LicenseName.CERTIFICATION,
-            LicenseName.PUBLICDOMAIN,
-            LicenseName.CC0,
-        }
+        return self in PUBLIC_DOMAIN_SLUGS
 
     @property
     def allowed_ver_jur(self) -> list[tuple[str, str]]:
