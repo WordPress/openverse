@@ -1,7 +1,11 @@
 """
-TODO Update
+# Copy Data TaskGroup
 
-TaskGroup for doing the copy data step
+This module contains the Airflow tasks used for copying upstream (Catalog)
+tables into new temporary tables in the downstream (API) database. This
+is one of the initial steps of the data refresh. These temporary tables
+will later be used to create new Elasticsearch indices, and ultimately
+will be promoted to the live media tables in the API.
 
 """
 
