@@ -116,7 +116,7 @@ class ImageReport(AbstractMediaReport):
         on_delete=models.DO_NOTHING,
         db_constraint=False,
         db_column="identifier",
-        related_name="media_reports",
+        related_name="image_report",
         help_text="The reference to the image being reported.",
     )
     decision = models.ForeignKey(

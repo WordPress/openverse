@@ -80,7 +80,8 @@ class MediaListAdmin(admin.ModelAdmin):
         return obj.oldest_report_date
 
     def pending_reports_links(self, obj):
-        pending_reports = obj.media_reports.filter(decision__isnull=True)
+        reports = getattr(obj, f"{self.media_type}_report")
+        pending_reports = reports.filter(decision__isnull=True)
         data = []
         for report in pending_reports.all():
             url = reverse(
@@ -95,16 +96,18 @@ class MediaListAdmin(admin.ModelAdmin):
         if "autocomplete" in request.path:
             return qs
         # Filter down to only instances with reports
-        qs = qs.filter(media_reports__isnull=False)
+        qs = qs.filter(**{f"{self.media_type}_report__isnull": False})
         # Annotate and order by report count
-        qs = qs.annotate(total_report_count=Count("media_reports"))
+        qs = qs.annotate(total_report_count=Count(f"{self.media_type}_report"))
         # Show total pending reports by subtracting the number of reports
         # from the number of reports that have decisions
         qs = qs.annotate(
             pending_report_count=F("total_report_count")
-            - Count("media_reports__decision__pk")
+            - Count(f"{self.media_type}_report__decision__pk")
         )
-        qs = qs.annotate(oldest_report_date=Min("media_reports__created_at"))
+        qs = qs.annotate(
+            oldest_report_date=Min(f"{self.media_type}_report__created_at")
+        )
         qs = qs.order_by(
             "-total_report_count", "-pending_report_count", "oldest_report_date"
         )
