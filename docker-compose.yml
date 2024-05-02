@@ -86,7 +86,7 @@ services:
     profiles:
       - ingestion_server
       - api
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.8.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.3
     ports:
       - "50292:9200"
     env_file:
