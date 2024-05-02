@@ -11,12 +11,16 @@ CREATE_FDW_QUERY = dedent(
 
     CREATE USER MAPPING IF NOT EXISTS FOR deploy SERVER upstream
         OPTIONS (user '{user}', password '{password}');
+    """
+)
 
-    DROP SCHEMA IF EXISTS upstream_schema CASCADE;
-    CREATE SCHEMA upstream_schema AUTHORIZATION deploy;
+CREATE_SCHEMA_QUERY = dedent(
+    """
+    DROP SCHEMA IF EXISTS {schema_name} CASCADE;
+    CREATE SCHEMA {schema_name} AUTHORIZATION deploy;
 
-    IMPORT FOREIGN SCHEMA public LIMIT TO ({table_name})
-        FROM SERVER upstream INTO upstream_schema;
+    IMPORT FOREIGN SCHEMA public LIMIT TO ({upstream_table_name})
+        FROM SERVER upstream INTO {schema_name};
     """
 )
 
@@ -59,14 +63,14 @@ METRIC_COLUMN_SETUP_QUERY = dedent(
 BASIC_COPY_DATA_QUERY = dedent(
     """
     INSERT INTO {temp_table_name} ({columns})
-    SELECT {columns} FROM {upstream_table_name}
+    SELECT {columns} FROM {schema_name}.{upstream_table_name}
     """
 )
 
 ADVANCED_COPY_DATA_QUERY = dedent(
     """
     INSERT INTO {temp_table_name} ({columns})
-        SELECT {columns} from {upstream_table_name} AS u
+        SELECT {columns} from {schema_name}.{upstream_table_name} AS u
         WHERE NOT EXISTS(
             SELECT FROM {deleted_table_name} WHERE identifier = u.identifier
         )
