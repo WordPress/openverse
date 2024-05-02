@@ -59,7 +59,7 @@ services:
   plausible_ch:
     profiles:
       - frontend
-    image: docker.io/clickhouse/clickhouse-server:23.4-alpine
+    image: docker.io/clickhouse/clickhouse-server:23.12-alpine
     volumes:
       - plausible-clickhouse:/var/lib/clickhouse
       - ./docker/clickhouse/clickhouse-config.xml:/etc/clickhouse-server/config.d/logging.xml:ro,z
