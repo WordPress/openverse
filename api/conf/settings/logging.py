@@ -59,16 +59,10 @@ LOGGING = {
             "class": "logging.StreamHandler",
             "formatter": "console",
         },
-        # Default mailing logger
-        "mail_admins": {
-            "level": "ERROR",
-            "filters": ["request_id", "require_debug_false"],
-            "class": "django.utils.log.AdminEmailHandler",
-        },
     },
     "loggers": {
         "django": {
-            "handlers": ["console", "mail_admins"],
+            "handlers": ["console"],
             # Keep this at info to avoid django internal debug logs;
             # we just want our own debug logs when log level is set to debug
             "level": "INFO",
