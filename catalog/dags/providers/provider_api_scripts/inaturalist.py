@@ -328,7 +328,7 @@ class INaturalistDataIngester(ProviderDataIngester):
                 python_callable=INaturalistDataIngester.load_catalog_of_life_names,
                 doc_md="Load vernacular taxon names from Catalog of Life",
                 op_kwargs={
-                    "remove_api_files": "{{ params.sql_rm_source_data_after_ingesting and var.json.SQL_RM_SOURCE_DATA_AFTER_INGESTION }}",
+                    "remove_api_files": "{{ params.sql_rm_source_data_after_ingesting or var.json.SQL_RM_SOURCE_DATA_AFTER_INGESTION }}",
                 },
                 execution_timeout=timedelta(minutes=15),
             )
