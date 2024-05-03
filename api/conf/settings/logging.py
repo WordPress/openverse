@@ -60,20 +60,6 @@ LOGGING = {
         # Default console logger
         "console": {
             "level": LOG_LEVEL,
-            "filters": ["require_debug_true", "request_id"],
-            "class": "logging.StreamHandler",
-            "formatter": "console",
-        },
-        # Add a clause to log error messages to the console in production
-        "console_prod": {
-            "level": LOG_LEVEL,
-            "filters": ["require_debug_false", "request_id"],
-            "class": "logging.StreamHandler",
-            "formatter": "console",
-        },
-        # Handler for all other logging
-        "general_console": {
-            "level": LOG_LEVEL,
             "filters": ["request_id"],
             "class": "logging.StreamHandler",
             "formatter": "console",
@@ -94,7 +80,7 @@ LOGGING = {
     },
     "loggers": {
         "django": {
-            "handlers": ["console", "console_prod", "mail_admins"],
+            "handlers": ["console", "mail_admins"],
             # Keep this at info to avoid django internal debug logs;
             # we just want our own debug logs when log level is set to debug
             "level": "INFO",
@@ -109,7 +95,7 @@ LOGGING = {
         },
         # Default handler for all other loggers
         "": {
-            "handlers": ["general_console"],
+            "handlers": ["console"],
             "filters": ["request_id"],
             "level": LOG_LEVEL,
         },
@@ -121,7 +107,7 @@ if DJANGO_DB_LOGGING:
     # and it's nice to be able to enable it conditionally within that context
     LOGGING["loggers"]["django.db.backends"] = {
         "level": "DEBUG",
-        "handlers": ["console", "console_prod"],
+        "handlers": ["console"],
         "propagate": False,
     }
 
