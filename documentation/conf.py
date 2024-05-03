@@ -98,3 +98,5 @@ redirects = {
     "meta/github_contribution_practices": "/meta/contribution/github_contribution_practices.html",
     "meta/maintainer_tasks": "/meta/contribution/maintainer_tasks.html",
 }
+
+myst_enable_extensions = ["linkify"]
