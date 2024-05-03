@@ -1,4 +1,5 @@
 import pytest
+
 from legacy_data_refresh.reporting import (
     report_record_difference,
     report_status,

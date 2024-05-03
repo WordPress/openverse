@@ -24,12 +24,12 @@ from airflow.decorators import dag, task
 from airflow.exceptions import AirflowSkipException
 from airflow.providers.elasticsearch.hooks.elasticsearch import ElasticsearchPythonHook
 from elasticsearch import Elasticsearch
-from legacy_data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS
 
 from common.constants import DAG_DEFAULT_ARGS, ENVIRONMENTS, PRODUCTION, Environment
 from common.elasticsearch import get_es_host
 from common.sensors.utils import is_concurrent_with_any
 from common.slack import send_alert, send_message
+from legacy_data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS
 
 
 logger = logging.getLogger(__name__)

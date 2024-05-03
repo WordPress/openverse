@@ -1,9 +1,9 @@
 from datetime import timedelta
 
 from airflow.decorators import task, task_group
-from legacy_data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS
 
 from common import ingestion_server
+from legacy_data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS
 
 
 DAG_ID = "recreate_full_staging_index"
