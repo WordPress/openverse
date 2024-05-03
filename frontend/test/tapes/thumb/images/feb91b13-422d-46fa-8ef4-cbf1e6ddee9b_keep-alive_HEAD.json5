@@ -1,0 +1,80 @@
+{
+    meta: {
+        createdAt: '2024-05-03T03:38:54.005Z',
+        host: 'https://api.openverse.org',
+    },
+    req: {
+        headers: {
+            connection: 'keep-alive',
+        },
+        url: '/v1/images/feb91b13-422d-46fa-8ef4-cbf1e6ddee9b/thumb/',
+        method: 'HEAD',
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            date: [
+                'Fri, 03 May 2024 03:38:54 GMT',
+            ],
+            'content-type': [
+                'image/jpeg',
+            ],
+            'content-length': [
+                '25794',
+            ],
+            connection: [
+                'keep-alive',
+            ],
+            vary: [
+                'Accept, Authorization, origin, Accept-Encoding',
+            ],
+            allow: [
+                'GET, HEAD, OPTIONS',
+            ],
+            'x-ratelimit-limit-anon_thumbnail': [
+                '1000/day',
+            ],
+            'x-ratelimit-available-anon_thumbnail': [
+                '998',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'referrer-policy': [
+                'same-origin',
+            ],
+            'cross-origin-opener-policy': [
+                'same-origin',
+            ],
+            'access-control-allow-origin': [
+                '*',
+            ],
+            'access-control-expose-headers': [
+                'cf-cache-status, cf-ray, date',
+            ],
+            'x-request-id': [
+                '9783a2b22fe94971816f362632c017ea',
+            ],
+            'cf-cache-status': [
+                'MISS',
+            ],
+            'last-modified': [
+                'Fri, 03 May 2024 03:38:54 GMT',
+            ],
+            'accept-ranges': [
+                'bytes',
+            ],
+            server: [
+                'cloudflare',
+            ],
+            'cf-ray': [
+                '87dd38880feb71c5-FRA',
+            ],
+        },
+        body: '',
+    },
+}
