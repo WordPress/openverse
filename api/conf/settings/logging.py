@@ -42,7 +42,8 @@ LOGGING = {
     },
     "formatters": {
         "console": {
-            "format": "[%(asctime)s - %(name)s - %(lineno)3d][%(levelname)s] %(message)s",  # noqa: E501
+            "format": "[{asctime} - {name} - {lineno:>3}][{levelname}] {message}",
+            "style": "{",
         },
         "json": {
             "()": structlog.stdlib.ProcessorFormatter,
