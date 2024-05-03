@@ -1,8 +1,9 @@
 from logging import LogRecord
 
+import structlog
 from decouple import config
 
-from conf.settings.base import INSTALLED_APPS, MIDDLEWARE
+from conf.settings.base import ENVIRONMENT, INSTALLED_APPS, MIDDLEWARE
 from conf.settings.security import DEBUG
 
 
@@ -50,6 +51,10 @@ LOGGING = {
         "console": {
             "format": "[%(asctime)s - %(name)s - %(lineno)3d][%(levelname)s] [%(request_id)s] %(message)s",  # noqa: E501
         },
+        "json": {
+            "()": structlog.stdlib.ProcessorFormatter,
+            "processor": structlog.processors.JSONRenderer(),
+        },
     },
     "handlers": {
         # Default console logger
@@ -59,8 +64,25 @@ LOGGING = {
             "class": "logging.StreamHandler",
             "formatter": "console",
         },
+        "console_json": {
+            "level": LOG_LEVEL,
+            "class": "logging.StreamHandler",
+            "formatter": "json",
+        },
     },
     "loggers": {
+        # Application
+        "django_structlog": {
+            "handlers": ["console_json"],
+            "level": LOG_LEVEL,
+            "propagate": False,
+        },
+        "api": {
+            "handlers": ["console_json"],
+            "level": LOG_LEVEL,
+            "propagate": False,
+        },
+        # External
         "django": {
             "handlers": ["console"],
             # Keep this at info to avoid django internal debug logs;
@@ -81,6 +103,31 @@ LOGGING = {
         },
     },
 }
+
+# https://django-structlog.readthedocs.io/en/latest/getting_started.html
+structlog.configure(
+    processors=[
+        structlog.contextvars.merge_contextvars,
+        structlog.stdlib.filter_by_level,
+        structlog.processors.TimeStamper(fmt="iso"),
+        structlog.stdlib.add_logger_name,
+        structlog.stdlib.add_log_level,
+        structlog.stdlib.PositionalArgumentsFormatter(),
+        structlog.processors.CallsiteParameterAdder(
+            {
+                structlog.processors.CallsiteParameter.FILENAME,
+                structlog.processors.CallsiteParameter.FUNC_NAME,
+                structlog.processors.CallsiteParameter.LINENO,
+            }
+        ),
+        structlog.processors.StackInfoRenderer(),
+        structlog.processors.format_exc_info,
+        structlog.processors.UnicodeDecoder(),
+        structlog.stdlib.ProcessorFormatter.wrap_for_formatter,
+    ],
+    logger_factory=structlog.stdlib.LoggerFactory(),
+    cache_logger_on_first_use=(ENVIRONMENT == "production"),
+)
 
 if DJANGO_DB_LOGGING:
     # Behind a separate flag as it's a very noisy debug logger
