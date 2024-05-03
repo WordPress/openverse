@@ -47,11 +47,6 @@ LOGGING = {
         },
     },
     "formatters": {
-        "django.server": {
-            "()": "django.utils.log.ServerFormatter",
-            "format": "[{server_time}] {message}",
-            "style": "{",
-        },
         "console": {
             "format": "[%(asctime)s - %(name)s - %(lineno)3d][%(levelname)s] [%(request_id)s] %(message)s",  # noqa: E501
         },
@@ -63,13 +58,6 @@ LOGGING = {
             "filters": ["request_id"],
             "class": "logging.StreamHandler",
             "formatter": "console",
-        },
-        # Default server logger
-        "django.server": {
-            "level": LOG_LEVEL,
-            "filters": ["request_id"],
-            "class": "logging.StreamHandler",
-            "formatter": "django.server",
         },
         # Default mailing logger
         "mail_admins": {
@@ -84,13 +72,6 @@ LOGGING = {
             # Keep this at info to avoid django internal debug logs;
             # we just want our own debug logs when log level is set to debug
             "level": "INFO",
-            "propagate": False,
-        },
-        "django.server": {
-            "handlers": ["django.server"],
-            # Filter health check logs
-            "filters": ["health_check", "request_id"],
-            "level": LOG_LEVEL,
             "propagate": False,
         },
         # Default handler for all other loggers
