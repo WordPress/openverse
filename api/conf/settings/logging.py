@@ -68,6 +68,11 @@ LOGGING = {
             "level": "INFO",
             "propagate": False,
         },
+        "uvicorn.error": {  # Using just "uvicorn" will re-enable access logs
+            "handlers": ["console"],
+            "level": LOG_LEVEL,
+            "propagate": False,
+        },
         # Default handler for all other loggers
         "": {
             "handlers": ["console"],
