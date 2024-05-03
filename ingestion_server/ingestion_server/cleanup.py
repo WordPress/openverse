@@ -8,11 +8,9 @@ import csv
 import logging as log
 import multiprocessing
 import os
-import shutil
 import time
 import uuid
 from dataclasses import dataclass
-from pathlib import Path
 from urllib.parse import urlparse
 
 import boto3
@@ -282,14 +280,10 @@ class FieldBuffered:
 
 
 class CleanDataUploader:
-    # Number of records to buffer in memory before writing to disk
-    mem_buffer_size = 100
-
-    # Size (in MB) of local file buffer before writing to S3
-    disk_buffer_size = 850 * 1024 * 1024
+    # Number of lines to keep in memory before writing to S3
+    buffer_size: int
 
     s3_path = "shared/data-refresh-cleaned-data"
-    local_path = Path("/ingestion_server/cleanup_output")
 
     buffer = {
         field: FieldBuffered(part=1, rows=[])
@@ -297,17 +291,16 @@ class CleanDataUploader:
     }
 
     def __init__(self):
+        self.buffer_size = config("CLEANUP_BUFFER_SIZE", default=10_000_000, cast=int)
         bucket_name = config("OPENVERSE_BUCKET", default="openverse-catalog")
         try:
             self.s3 = self._get_s3_resource()
-        except Exception as e:
-            log.error(f"Error connecting to S3: {e}")
-            self.s3 = None
-
-        if self.s3:
             self.s3_bucket = self.s3.Bucket(bucket_name)
             self.date = time.strftime("%Y-%m-%d")
-            self._recreate_local_dir()
+        except Exception as e:
+            log.error(f"Error connecting to S3 or creating bucket: {e}")
+            self.s3 = None
+            self.s3_bucket = None
 
     @staticmethod
     def _get_s3_resource():
@@ -325,58 +318,38 @@ class CleanDataUploader:
             "s3", region_name=config("AWS_REGION", default="us-east-1")
         )
 
-    def _recreate_local_dir(self):
-        log.info("Recreating local cleanup directory.")
-        shutil.rmtree(self.local_path, ignore_errors=True)
-        self.local_path.mkdir()
-
-    def _save_to_disk(self, field: str, force_upload=False):
-        if self.s3 is None:
-            log.warning("S3 resource not available. Skipping upload.")
-            return
-
-        log.info(
-            f"Saving {len(self.buffer[field].rows)} rows of `{field}` to local file."
-        )
-        file_path = self.local_path / f"{field}.tsv"
-
-        with open(file_path, "a") as f:
-            csv_writer = csv.writer(f, delimiter="\t")
-            csv_writer.writerows(self.buffer[field].rows)
-            # Clean memory buffer of saved rows
-            self.buffer[field].rows = []
-
-        if os.path.getsize(file_path) >= self.disk_buffer_size or force_upload:
-            try:
-                self._upload_to_s3(field)
-            except Exception as e:
-                log.error(f"Error uploading {field} to S3: {e}")
-
     def _upload_to_s3(self, field: str):
         part_number = self.buffer[field].part
         log.info(f"Uploading file part {part_number} of `{field}` to S3...")
         s3_file_name = f"{self.s3_path}/{self.date}_{field}_{part_number}.tsv"
-        tsv_file = f"{self.local_path}/{field}.tsv"
-        self.s3_bucket.upload_file(tsv_file, s3_file_name)
+        tsv_file = f"{field}.tsv"
+        with open(tsv_file, "w") as f:
+            csv_writer = csv.writer(f, delimiter="\t")
+            csv_writer.writerows(self.buffer[field].rows)
+        try:
+            self.s3_bucket.upload_file(tsv_file, s3_file_name)
+        except Exception as e:
+            log.error(f"Error uploading {field} to S3: {e}")
+        os.remove(tsv_file)
         self.buffer[field].part += 1
-        Path(tsv_file).unlink()
+        self.buffer[field].rows = []
 
     def save(self, result: dict) -> dict[str, int]:
         for field, cleaned_items in result.items():
-            if not cleaned_items:
+            if not cleaned_items or not self.s3_bucket:
                 continue
 
             self.buffer[field].rows += cleaned_items
-            if len(self.buffer[field].rows) >= self.mem_buffer_size:
-                self._save_to_disk(field)
+            if len(self.buffer[field].rows) >= self.buffer_size:
+                self._upload_to_s3(field)
 
         return {field: len(items) for field, items in result.items()}
 
     def flush(self):
-        log.info("Saving remaining rows and deleting temporary files...")
+        log.info("Clearing buffer.")
         for field in self.buffer:
-            if self.buffer[field].rows:
-                self._save_to_disk(field, force_upload=True)
+            if self.buffer[field].rows and self.s3_bucket is not None:
+                self._upload_to_s3(field)
 
 
 def clean_image_data(table):
