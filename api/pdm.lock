@@ -5,7 +5,7 @@
 groups = ["default", "dev", "overrides", "test"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:e161b6ad2318503cd9f5440307fba3d1ec478d7596cb5b967ab8d50fd1882ae7"
+content_hash = "sha256:0536f09aab62f508f571b4418ee0de30ce4c17acc8c32547f8c6b6618c111010"
 
 [[package]]
 name = "adrf"
@@ -17,10 +17,6 @@ dependencies = [
     "async-property>=0.2.2",
     "django>=4.1",
     "djangorestframework>=3.14.0",
-]
-files = [
-    {file = "adrf-0.1.6-py3-none-any.whl", hash = "sha256:4ed8a07159e97602b27b61cccef5a9f4088d07be6899d62fec1300286a6c500f"},
-    {file = "adrf-0.1.6.tar.gz", hash = "sha256:8057be8ac17e1ed47fbec17de4bf1772d467243422fd5f7dd78e97735d395ed3"},
 ]
 
 [[package]]
@@ -148,10 +144,6 @@ summary = "AWS signature version 4 signing process for the python requests modul
 groups = ["default"]
 dependencies = [
     "requests>=0.14.0",
-]
-files = [
-    {file = "aws-requests-auth-0.4.3.tar.gz", hash = "sha256:33593372018b960a31dbbe236f89421678b885c35f0b6a7abfae35bb77e069b2"},
-    {file = "aws_requests_auth-0.4.3-py2.py3-none-any.whl", hash = "sha256:646bc37d62140ea1c709d20148f5d43197e6bd2d63909eb36fa4bb2345759977"},
 ]
 
 [[package]]
@@ -361,10 +353,6 @@ groups = ["default"]
 dependencies = [
     "ordered-set<4.2.0,>=4.0.2",
 ]
-files = [
-    {file = "deepdiff-6.7.1-py3-none-any.whl", hash = "sha256:58396bb7a863cbb4ed5193f548c56f18218060362311aa1dc36397b2f25108bd"},
-    {file = "deepdiff-6.7.1.tar.gz", hash = "sha256:b367e6fa6caac1c9f500adc79ada1b5b1242c50d5f716a1a4362030197847d30"},
-]
 
 [[package]]
 name = "django"
@@ -424,19 +412,6 @@ dependencies = [
 files = [
     {file = "django-ipware-7.0.1.tar.gz", hash = "sha256:d9ec43d2bf7cdf216fed8d494a084deb5761a54860a53b2e74346a4f384cff47"},
     {file = "django_ipware-7.0.1-py2.py3-none-any.whl", hash = "sha256:db16bbee920f661ae7f678e4270460c85850f03c6761a4eaeb489bdc91f64709"},
-]
-
-[[package]]
-name = "django-log-request-id"
-version = "2.1.0"
-summary = "Django middleware and log filter to attach a unique ID to every log message generated as part of a request"
-groups = ["default"]
-dependencies = [
-    "django>=1.8",
-]
-files = [
-    {file = "django-log-request-id-2.1.0.tar.gz", hash = "sha256:b11fc821774b54b820ef2e732dbaa52304711de8d5c4f9031ca48578f6121ab6"},
-    {file = "django_log_request_id-2.1.0-py3-none-any.whl", hash = "sha256:c0793c030cfe9f673eff3f89667711f65c39509c016d85e436f9d48507ee778c"},
 ]
 
 [[package]]

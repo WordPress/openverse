@@ -17,7 +17,6 @@ dependencies = [
   "django >=4.2.11, <5",
   "django-asgi-lifespan >=0.3.1, <0.4",
   "django-cors-headers >=4.3.1, <5",
-  "django-log-request-id >=2.1.0, <3",
   "django-migrations-git-conflicts >=1.0, <2",
   "django-oauth-toolkit >=2.3.0, <3",
   "django-redis >=5.4.0, <6",
