@@ -349,7 +349,7 @@ class INaturalistDataIngester(ProviderDataIngester):
                 doc_md="Skip post-ingestion if NOT sql_rm_source_data_after_ingesting.",
                 op_args=[
                     "{{ params.sql_rm_source_data_after_ingesting }}",
-                    "{{ var.json.SQL_RM_SOURCE_DATA_AFTER_INGESTION}}",
+                    "{{ var.json.SQL_RM_SOURCE_DATA_AFTER_INGESTION }}",
                 ],
                 python_callable=(lambda *x: any(x)),
                 trigger_rule=TriggerRule.NONE_SKIPPED,
