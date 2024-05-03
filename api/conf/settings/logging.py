@@ -27,19 +27,12 @@ GC_DEBUG_LOGGING = config(
     "GC_DEBUG_LOGGING", cast=lambda x: x.split("|") if x else [], default=""
 )
 
-# https://github.com/dabapps/django-log-request-id#logging-all-requests
-LOG_REQUESTS = True
-
-# https://github.com/dabapps/django-log-request-id
-MIDDLEWARE.insert(0, "log_request_id.middleware.RequestIDMiddleware")
-
 # Logging configuration
 LOGGING = {
     # NOTE: Most of this is inherited from the default configuration
     "version": 1,
     "disable_existing_loggers": False,
     "filters": {
-        "request_id": {"()": "log_request_id.filters.RequestIDFilter"},
         "require_debug_false": {"()": "django.utils.log.RequireDebugFalse"},
         "require_debug_true": {"()": "django.utils.log.RequireDebugTrue"},
         "health_check": {
@@ -49,7 +42,7 @@ LOGGING = {
     },
     "formatters": {
         "console": {
-            "format": "[%(asctime)s - %(name)s - %(lineno)3d][%(levelname)s] [%(request_id)s] %(message)s",  # noqa: E501
+            "format": "[%(asctime)s - %(name)s - %(lineno)3d][%(levelname)s] %(message)s",  # noqa: E501
         },
         "json": {
             "()": structlog.stdlib.ProcessorFormatter,
@@ -60,7 +53,6 @@ LOGGING = {
         # Default console logger
         "console": {
             "level": LOG_LEVEL,
-            "filters": ["request_id"],
             "class": "logging.StreamHandler",
             "formatter": "console",
         },
@@ -98,7 +90,6 @@ LOGGING = {
         # Default handler for all other loggers
         "": {
             "handlers": ["console"],
-            "filters": ["request_id"],
             "level": LOG_LEVEL,
         },
     },
