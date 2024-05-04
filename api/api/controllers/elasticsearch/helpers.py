@@ -32,11 +32,11 @@ def log_timing_info(func):
         else:
             es_time_in_ms = result.get("took")
         logger.info(
-            {
-                "response_time": response_time_in_ms,
-                "es_time": es_time_in_ms,
-                "es_query": es_query,
-            }
+            "Performed ES query",
+            func=func.__name__,
+            response_time=response_time_in_ms,
+            es_time=es_time_in_ms,
+            es_query=es_query,
         )
 
         return result
