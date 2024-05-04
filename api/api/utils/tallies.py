@@ -1,13 +1,13 @@
-import logging
 from collections import defaultdict
 from datetime import datetime, timedelta
 
 import django_redis
+import structlog
 from django_redis.client.default import Redis
 from redis.exceptions import ConnectionError
 
 
-parent_logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 
 def get_weekly_timestamp() -> str:
@@ -45,5 +45,4 @@ def count_provider_occurrences(results: list[dict], index: str) -> None:
         try:
             pipe.execute()
         except ConnectionError:
-            logger = parent_logger.getChild("count_provider_occurrences")
             logger.warning("Redis connect failed, cannot increment provider tallies.")

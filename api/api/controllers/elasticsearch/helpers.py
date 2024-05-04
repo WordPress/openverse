@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import functools
-import logging as log
 import pprint
 import time
 from itertools import accumulate
@@ -9,10 +8,14 @@ from math import ceil
 
 from django.conf import settings
 
+import structlog
 from elasticsearch import BadRequestError, NotFoundError
 from elasticsearch_dsl import Search
 
 from api.utils.dead_link_mask import get_query_hash, get_query_mask
+
+
+logger = structlog.get_logger(__name__)
 
 
 def log_timing_info(func):
@@ -28,7 +31,7 @@ def log_timing_info(func):
             es_time_in_ms = result.took
         else:
             es_time_in_ms = result.get("took")
-        log.info(
+        logger.info(
             {
                 "response_time": response_time_in_ms,
                 "es_time": es_time_in_ms,
@@ -44,13 +47,13 @@ def log_timing_info(func):
 @log_timing_info
 def get_es_response(s, *args, **kwargs):
     if settings.VERBOSE_ES_RESPONSE:
-        log.info(pprint.pprint(s.to_dict()))
+        logger.info(pprint.pprint(s.to_dict()))
 
     try:
         search_response = s.execute()
 
         if settings.VERBOSE_ES_RESPONSE:
-            log.info(pprint.pprint(search_response.to_dict()))
+            logger.info(pprint.pprint(search_response.to_dict()))
     except (BadRequestError, NotFoundError) as e:
         raise ValueError(e)
 

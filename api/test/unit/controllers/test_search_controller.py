@@ -1,5 +1,4 @@
 import datetime
-import logging
 import random
 import re
 from collections.abc import Callable
@@ -13,6 +12,7 @@ import pytest
 from django_redis import get_redis_connection
 from elasticsearch_dsl import Search
 from elasticsearch_dsl.query import Terms
+from structlog.testing import capture_logs
 
 from api.controllers import search_controller
 from api.controllers.elasticsearch import helpers as es_helpers
@@ -820,7 +820,7 @@ def test_excessive_recursion_in_post_process(
     )
     serializer.is_valid()
 
-    with caplog.at_level(logging.INFO):
+    with capture_logs() as cap_logs:
         results, _, _, _ = search_controller.query_media(
             search_params=serializer,
             ip=0,
@@ -830,7 +830,8 @@ def test_excessive_recursion_in_post_process(
             page_size=2,
             filter_dead=True,
         )
-    assert "Nesting threshold breached" in caplog.text
+    messages = [record["event"] for record in cap_logs]
+    assert "Nesting threshold breached" in messages
 
 
 @pytest.mark.django_db
@@ -840,7 +841,7 @@ def test_excessive_recursion_in_post_process(
     [(2, Terms(provider=["provider1", "provider2"])), (0, None)],
 )
 def test_get_excluded_providers_query_returns_excluded(
-    excluded_count, result, is_cache_reachable, cache_name, request, caplog
+    excluded_count, result, is_cache_reachable, cache_name, request
 ):
     cache = request.getfixturevalue(cache_name)
 
@@ -860,11 +861,13 @@ def test_get_excluded_providers_query_returns_excluded(
                 filter_content=True,
             )
 
-    assert search_controller.get_excluded_providers_query() == result
+    with capture_logs() as cap_logs:
+        assert search_controller.get_excluded_providers_query() == result
 
     if not is_cache_reachable:
+        messages = [record["event"] for record in cap_logs]
         assert all(
-            message in caplog.text
+            message in messages
             for message in [
                 "Redis connect failed, cannot get cached filtered providers.",
                 "Redis connect failed, cannot cache filtered providers.",
@@ -881,7 +884,7 @@ def test_get_sources_returns_stats(is_cache_reachable, cache_name, request, capl
             "sources-multimedia", value={"provider_1": "1000", "provider_2": "1000"}
         )
 
-    with patch(
+    with capture_logs() as cap_logs, patch(
         "api.controllers.search_controller.get_raw_es_response",
         return_value={
             "aggregations": {
@@ -900,8 +903,9 @@ def test_get_sources_returns_stats(is_cache_reachable, cache_name, request, capl
         }
 
     if not is_cache_reachable:
+        messages = [record["event"] for record in cap_logs]
         assert all(
-            message in caplog.text
+            message in messages
             for message in [
                 "Redis connect failed, cannot get cached sources.",
                 "Redis connect failed, cannot cache sources.",

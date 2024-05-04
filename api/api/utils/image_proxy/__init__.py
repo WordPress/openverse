@@ -1,4 +1,3 @@
-import logging
 from dataclasses import dataclass
 from typing import Literal
 from urllib.parse import urlparse
@@ -9,6 +8,7 @@ from rest_framework.exceptions import UnsupportedMediaType
 
 import aiohttp
 import django_redis
+import structlog
 from aiohttp.client_exceptions import ClientResponseError
 from asgiref.sync import sync_to_async
 from redis.exceptions import ConnectionError
@@ -20,7 +20,7 @@ from api.utils.image_proxy.photon import get_photon_request_params
 from api.utils.tallies import get_monthly_timestamp
 
 
-parent_logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 HEADERS = {
     "User-Agent": settings.OUTBOUND_USER_AGENT_TEMPLATE.format(
@@ -92,8 +92,6 @@ def _tally_response(
     the `get` function, which is complex enough as is.
     """
 
-    logger = parent_logger.getChild("_tally_response")
-
     with tallies_conn.pipeline() as tallies:
         tallies.incr(f"thumbnail_response_code:{month}:{response.status}")
         tallies.incr(
@@ -113,7 +111,6 @@ def _tally_response(
 
 @sync_to_async
 def _tally_client_response_errors(tallies, month: str, domain: str, status: int):
-    logger = parent_logger.getChild("_tally_client_response_errors")
     try:
         tallies.incr(f"thumbnail_http_error:{domain}:{month}:{status}")
     except ConnectionError:
@@ -136,7 +133,6 @@ async def get(
     image_url = media_info.image_url
     media_identifier = media_info.media_identifier
 
-    logger = parent_logger.getChild("get")
     tallies = django_redis.get_redis_connection("tallies")
     tallies_incr = sync_to_async(tallies.incr)
     month = get_monthly_timestamp()

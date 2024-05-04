@@ -1,13 +1,13 @@
 import asyncio
-import logging
 import weakref
 
 import aiohttp
 import sentry_sdk
+import structlog
 from django_asgi_lifespan.signals import asgi_shutdown
 
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 
 _SESSIONS: weakref.WeakKeyDictionary[

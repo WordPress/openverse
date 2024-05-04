@@ -1,4 +1,3 @@
-import logging
 import mimetypes
 
 from django.conf import settings
@@ -7,6 +6,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils.html import format_html
 
+import structlog
 from elasticsearch import Elasticsearch, NotFoundError
 from openverse_attribution.license import License
 
@@ -24,7 +24,7 @@ MATURE = "mature"
 DMCA = "dmca"
 OTHER = "other"
 
-parent_logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 
 class AbstractMedia(
@@ -314,7 +314,6 @@ class PerformIndexUpdateMixin:
         Automatically handles ``DoesNotExist`` warnings, forces a refresh,
         and calls the method for origin and filtered indexes.
         """
-        logger = parent_logger.getChild("PerformIndexUpdateMixin._perform_index_update")
         es: Elasticsearch = settings.ES
 
         try:

@@ -1,4 +1,3 @@
-import logging
 import os
 from enum import Flag, auto
 from io import BytesIO
@@ -9,12 +8,13 @@ from rest_framework import status
 from rest_framework.exceptions import APIException
 
 import requests
+import structlog
 from openverse_attribution.license import License
 from PIL import Image, ImageDraw, ImageFont, UnidentifiedImageError
 from sentry_sdk import capture_exception
 
 
-parent_logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 
 BREAKPOINT_DIMENSION = 400  # 400px
@@ -147,7 +147,6 @@ def _open_image(url):
     :param url: the URL from where to read the image
     :return: the PIL image object with the EXIF data
     """
-    logger = parent_logger.getChild("_open_image")
     try:
         response = requests.get(url, headers=HEADERS)
         response.raise_for_status()

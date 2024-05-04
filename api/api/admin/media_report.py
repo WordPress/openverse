@@ -1,13 +1,15 @@
-import logging
-
 from django.conf import settings
 from django.contrib import admin
 
+import structlog
 from elasticsearch import NotFoundError
 from elasticsearch_dsl import Search
 from openverse_attribution.license import License
 
 from api.models import PENDING
+
+
+logger = structlog.get_logger(__name__)
 
 
 class MediaReportAdmin(admin.ModelAdmin):
@@ -88,7 +90,7 @@ class MediaReportAdmin(admin.ModelAdmin):
             if search.hits:
                 return False
         except NotFoundError:
-            logging.error(f"Could not resolve index {filtered_index}")
+            logger.error(f"Could not resolve index {filtered_index}")
             return None
         return True
 
@@ -117,7 +119,7 @@ class MediaReportAdmin(admin.ModelAdmin):
             "tags": tags_by_provider,
             "description": obj.media_obj.meta_data.get("description", ""),
         }
-        logging.info(f"Additional data: {additional_data}")
+        logger.info(f"Additional data: {additional_data}")
         return additional_data
 
     def change_view(self, request, object_id, form_url="", extra_context=None):

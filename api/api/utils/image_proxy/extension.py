@@ -1,4 +1,3 @@
-import logging
 import mimetypes
 from os.path import splitext
 from urllib.parse import urlparse
@@ -6,6 +5,7 @@ from urllib.parse import urlparse
 import aiohttp
 import django_redis
 import sentry_sdk
+import structlog
 from asgiref.sync import sync_to_async
 from redis.exceptions import ConnectionError
 
@@ -13,15 +13,13 @@ from api.utils.aiohttp import get_aiohttp_session
 from api.utils.image_proxy.exception import UpstreamThumbnailException
 
 
-parent_logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 
 _HEAD_TIMEOUT = aiohttp.ClientTimeout(10)
 
 
 async def get_image_extension(image_url: str, media_identifier) -> str | None:
-    logger = parent_logger.getChild("get_image_extension")
-
     cache = django_redis.get_redis_connection("default")
     key = f"media:{media_identifier}:thumb_type"
 
@@ -60,7 +58,6 @@ async def get_image_extension(image_url: str, media_identifier) -> str | None:
 
 @sync_to_async
 def _cache_extension(cache, key, ext):
-    logger = parent_logger.getChild("cache_extension")
     try:
         cache.set(key, ext if ext else "unknown")
     except ConnectionError:
