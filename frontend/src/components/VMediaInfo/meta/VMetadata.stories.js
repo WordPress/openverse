@@ -1,9 +1,9 @@
 import { image as testImage } from "~~/test/unit/fixtures/image"
-
 import { getAudioObj } from "~~/test/unit/fixtures/audio"
 
 import { useI18n } from "~/composables/use-i18n"
 import { getMediaMetadata } from "~/utils/metadata"
+import { useProviderStore } from "~/stores/provider"
 
 import VMetadata from "~/components/VMediaInfo/VMetadata.vue"
 import VLanguageSelect from "~/components/VLanguageSelect/VLanguageSelect.vue"
@@ -21,8 +21,6 @@ const Template = (args) => ({
         :metadata="datum.metadata"
         :media="datum.media"
         v-bind="datum"
-        :media="datum.media"
-        :metadata="datum.metadata"
         class="bg-white"/>
       </section>
     </div>
