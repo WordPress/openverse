@@ -18,8 +18,8 @@ export default {
       type: "string",
       control: {
         type: "select",
-        options: ["dark", "light"],
       },
+      options: ["dark", "light"],
     },
   },
 }

@@ -12,6 +12,7 @@ const Template = (args) => ({
   template: `<VMediaLicense v-bind="args"/>`,
   components: { VMediaLicense },
   setup() {
+    args.licenseUrl = `https://creativecommons.org/licenses/${args.license}/${args.licenseVersion}/`
     return { args }
   },
 })

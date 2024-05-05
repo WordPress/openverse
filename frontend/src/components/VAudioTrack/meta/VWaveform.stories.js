@@ -23,7 +23,10 @@ export default {
 
 const timeArgs = { currentTime: 2, duration: 10 }
 const timeArgsWithFeatures = { ...timeArgs, features: audioFeatures }
-const timeArgsWithFeaturesAndPeaks = { ...timeArgsWithFeatures, peaks: [0.5, 1, 0.5, 0, 0.5] }
+const timeArgsWithFeaturesAndPeaks = {
+  ...timeArgsWithFeatures,
+  peaks: [0.5, 1, 0.5, 0, 0.5],
+}
 
 export const Upsampling = {
   render: Template.bind({}),
@@ -36,7 +39,10 @@ export const Upsampling = {
   },
 }
 
-const sineWaveWith1000Points = Array.from({ length: 1000 }, (_, k) => 0.5 * Math.sin((k * 2 * Math.PI) / 500) + 0.5)
+const sineWaveWith1000Points = Array.from(
+  { length: 1000 },
+  (_, k) => 0.5 * Math.sin((k * 2 * Math.PI) / 500) + 0.5
+)
 
 export const Downsampling = {
   render: Template.bind({}),

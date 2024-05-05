@@ -1,11 +1,15 @@
+import { provide, ref } from "vue"
+
+import { IsSidebarVisibleKey } from "~/types/provides"
+
 import VHeaderDesktop from "~/components/VHeader/VHeaderDesktop.vue"
 
-const Template = (args) => ({
-  template: `
-    <VHeaderDesktop v-bind="args" v-on="args" />`,
+const Template = () => ({
+  template: `<VHeaderDesktop />`,
   components: { VHeaderDesktop },
   setup() {
-    return { args }
+    provide(IsSidebarVisibleKey, ref(false))
+    return {}
   },
 })
 

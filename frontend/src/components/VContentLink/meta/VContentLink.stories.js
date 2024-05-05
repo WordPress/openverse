@@ -55,7 +55,7 @@ const TwoVContentLinkStory = () => ({
 export default {
   title: "Components/VContentLink",
   components: VContentLink,
-  argTypes: {},
+  argTypes: contentLinkArgTypes,
 }
 
 export const Default = {
@@ -64,6 +64,7 @@ export const Default = {
 
   args: {
     mediaType: "image",
+    searchTerm: "cat",
     resultsCount: 5708,
     isSelected: false,
   },
@@ -77,6 +78,7 @@ export const Horizontal = {
 
   args: {
     mediaType: "audio",
+    searchTerm: "cat",
     resultsCount: 4561,
     isSelected: false,
     layout: "horizontal",

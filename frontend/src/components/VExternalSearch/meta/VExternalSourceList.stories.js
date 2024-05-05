@@ -1,3 +1,4 @@
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useSearchStore } from "~/stores/search"
 
 import VExternalSourceList from "~/components/VExternalSearch/VExternalSourceList.vue"
@@ -6,6 +7,8 @@ const Template = (args) => ({
   template: `<VExternalSourceList search-term="cat" />`,
   components: { VExternalSourceList },
   setup() {
+    const featureFlagStore = useFeatureFlagStore()
+    featureFlagStore.toggleFeature("additional_search_types", "on")
     const searchStore = useSearchStore()
     searchStore.setSearchType(args.type)
     return { args }

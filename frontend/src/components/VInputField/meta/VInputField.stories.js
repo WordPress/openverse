@@ -8,14 +8,14 @@ const defaultArgs = {
 
 const Template = (args) => ({
   template: `
-    <VInputField :field-id="fieldId" :size="size" v-bind="rest" v-on="rest" label-text="Test label">
+    <VInputField :field-id="fieldId" v-bind="rest" v-on="rest" label-text="Test label">
       <span class="whitespace-nowrap me-2">Extra info</span>
     </VInputField>
   `,
   components: { VInputField },
   setup() {
-    const { fieldId, size, ...rest } = args
-    return { fieldId, size, rest }
+    const { fieldId, ...rest } = args
+    return { fieldId, rest }
   },
 })
 
@@ -61,6 +61,9 @@ export default {
       action: "update:modelValue",
     },
   },
+  args: {
+    ...defaultArgs,
+  },
 }
 
 export const Default = {
@@ -68,7 +71,6 @@ export const Default = {
   name: "Default",
 
   args: {
-    ...defaultArgs,
     value: "Text goes here",
   },
 }
@@ -83,7 +85,6 @@ export const WithPlaceholder = {
   name: "With placeholder",
 
   args: {
-    ...defaultArgs,
     placeholder: "Enter something here",
   },
 }
@@ -93,7 +94,6 @@ export const WithLabelText = {
   name: "With label text",
 
   args: {
-    ...defaultArgs,
     labelText: "Label:",
   },
 }

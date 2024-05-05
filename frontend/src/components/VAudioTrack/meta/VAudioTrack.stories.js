@@ -12,6 +12,8 @@ import wavWaveform from "./wav-waveform.json"
 
 const commonAttrs = () => ({
   id: Math.floor(Math.random() * 1e9).toString(),
+  frontendMediaType: "audio",
+  source: "wikimedia_audio",
   creator: "Wolfgang Amadeus Mozart",
   creator_url: "https://en.wikipedia.org/wiki/Wolfgang_Amadeus_Mozart",
   category: "music",

@@ -3,7 +3,7 @@ import VRadio from "~/components/VRadio/VRadio.vue"
 const Template = (args) => ({
   template: `
     <div>
-      <VRadio :id="args.id" v-bind="$props" v-on="args" :value_="args.value_">Label text</VRadio>
+      <VRadio :id="args.id" v-bind="args" v-on="args" :value_="args.value_">Label text</VRadio>
     </div>
   `,
   components: { VRadio },
@@ -12,12 +12,12 @@ const Template = (args) => ({
   },
 })
 
-const vModelTemplate = (args, { argTypes }) => ({
+const vModelTemplate = (args) => ({
   template: `
     <div>
       <form class="flex flex-col gap-2 mb-2">
-        <VRadio id="a" name="test" own-value="A" v-model="picked">A</VRadio>
-        <VRadio id="b" name="test" own-value="B" v-model="picked">B</VRadio>
+        <VRadio id="a" name="test" value_="A" v-model="picked">A</VRadio>
+        <VRadio id="b" name="test" value_="B" v-model="picked">B</VRadio>
       </form>
       {{ picked ?? 'None' }}
     </div>
@@ -26,7 +26,9 @@ const vModelTemplate = (args, { argTypes }) => ({
     return { picked: null }
   },
   components: { VRadio },
-  props: Object.keys(argTypes),
+  setup() {
+    return { args }
+  },
 })
 
 export default {

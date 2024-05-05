@@ -10,7 +10,7 @@ const Template = (args) => ({
 <VTabPanel id='2'>Page 2 content</VTabPanel>
 <VTabPanel id='3'>Page 3 content</VTabPanel>
 </VTabs>`,
-  component: { VTabs },
+  components: { VTabs, VTabPanel, VTab },
   subcomponents: { VTab, VTabPanel },
   setup() {
     const { label, selectedId, ...rest } = args
@@ -19,7 +19,7 @@ const Template = (args) => ({
 })
 
 export default {
-  components: { VTabs },
+  components: { VTabPanel, VTabs },
   subcomponents: { VTabPanel, VTab },
   title: "Components/VTabs",
   component: VTabs,
