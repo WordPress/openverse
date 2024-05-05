@@ -6,7 +6,10 @@ import {
   Story,
 } from "@storybook/addon-docs"
 
+import { useSearchStore } from "~/stores/search"
+
 import VContentSettingsModalContent from "~/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue"
+import VModalTarget from "~/components/VModal/VModalTarget.vue"
 
 <Meta
   title="Components/VHeader/VHeaderMobile/VContentSettingsModalContent"
@@ -22,12 +25,19 @@ import VContentSettingsModalContent from "~/components/VHeader/VHeaderMobile/VCo
       action: "change",
     },
   }}
+  args={{
+    visible: true,
+  }}
 />
 
 export const Template = (args) => ({
-  template: `<VContentSettingsModalContent v-bind="args" v-on="args" close="" />`,
-  components: { VContentSettingsModalContent },
+  template: `<div><VContentSettingsModalContent :close="args.close" v-bind="args" v-on="args" /><VModalTarget class="modal" /></div>`,
+  components: { VContentSettingsModalContent, VModalTarget },
   setup() {
+    const searchStore = useSearchStore()
+    searchStore.setSearchType("image")
+    searchStore.setSearchTerm("cat")
+    searchStore.toggleFilter({ filterType: "licenses", codeIdx: 0 })
     return { args }
   },
 })

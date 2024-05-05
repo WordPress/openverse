@@ -10,6 +10,17 @@ import { ref } from "vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VSelectField from "~/components/VSelectField/VSelectField.vue"
 
+export const baseArgs = {
+  fieldId: "fruit",
+  blankText: "Fruit",
+  labelText: "Fruit",
+  choices: [
+    { key: "a", text: "Apple" },
+    { key: "b", text: "Banana" },
+    { key: "c", text: "Cantaloupe" },
+  ],
+}
+
 <Meta
   title="Components/VSelectField"
   component={VSelectField}
@@ -17,6 +28,9 @@ import VSelectField from "~/components/VSelectField/VSelectField.vue"
     "update:modelValue": {
       action: "update:modelValue",
     },
+  }}
+  args={{
+    ...baseArgs,
   }}
 />
 
@@ -29,17 +43,6 @@ export const Template = (args) => ({
   },
 })
 
-export const baseArgs = {
-  fieldId: "fruit",
-  blankText: "Fruit",
-  labelText: "Fruit",
-  choices: [
-    { key: "a", text: "Apple" },
-    { key: "b", text: "Banana" },
-    { key: "c", text: "Cantaloupe" },
-  ],
-}
-
 # VSelectField
 
 <Description of={VSelectField} />
@@ -47,9 +50,7 @@ export const baseArgs = {
 <ArgsTable of={VSelectField} />
 
 <Canvas>
-  <Story name="Default" args={baseArgs}>
-    {Template.bind({})}
-  </Story>
+  <Story name="Default">{Template.bind({})}</Story>
 </Canvas>
 
 The recommended way to use it is with `v-model` mapping to a `String`. This
@@ -70,9 +71,7 @@ export const vModelTemplate = (args) => ({
 })
 
 <Canvas>
-  <Story name="v-model" args={baseArgs}>
-    {vModelTemplate.bind({})}
-  </Story>
+  <Story name="v-model">{vModelTemplate.bind({})}</Story>
 </Canvas>
 
 ## With icon
@@ -95,9 +94,7 @@ export const SlotTemplate = (args) => ({
 })
 
 <Canvas>
-  <Story name="With icon" args={baseArgs}>
-    {SlotTemplate.bind({})}
-  </Story>
+  <Story name="With icon">{SlotTemplate.bind({})}</Story>
 </Canvas>
 
 ## With constraints
@@ -109,9 +106,9 @@ once a long option is selected, it will get clipped.
 export const ConstraintTemplate = (args) => ({
   template: `
     <VSelectField class="max-w-[100px]" v-bind="args" />`,
-  components: { VSelectField, VIcon },
+  components: { VSelectField },
   setup() {
-    return { args, radioIcon }
+    return { args }
   },
 })
 

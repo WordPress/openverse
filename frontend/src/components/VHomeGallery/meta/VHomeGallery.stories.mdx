@@ -6,17 +6,19 @@ import {
   Story,
 } from "@storybook/addon-docs"
 
-import VHomeGallery from "@/components/VHomeGallery/VHomeGallery.vue"
+import VHomeGallery from "~/components/VHomeGallery/VHomeGallery.vue"
 
 <Meta
   title="Components/VHomeGallery"
   component={VHomeGallery}
   argTypes={{
     set: {
-      defaultValue: "random",
       options: ["random", "olympics", "pottery", "universe"],
       control: "select",
     },
+  }}
+  args={{
+    set: "random",
   }}
 />
 

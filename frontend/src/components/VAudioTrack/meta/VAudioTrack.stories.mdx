@@ -7,6 +7,7 @@ import {
 } from "@storybook/addon-docs"
 import { computed } from "vue"
 import { audioLayouts, audioSizes } from "~/constants/audio"
+import { useProviderStore } from "~/stores/provider"
 
 import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"
 
@@ -20,23 +21,25 @@ import wavWaveform from "./wav-waveform.json"
   component={VAudioTrack}
   argTypes={{
     format: {
-      defaultValue: "mp3",
       options: ["mp3", "ogg", "flac", "wav"],
       control: "select",
     },
     layout: {
-      defaultValue: "full",
       options: audioLayouts,
       control: "select",
     },
     size: {
-      defaultValue: "m",
       options: audioSizes,
       control: "select",
     },
     audio: {
       control: false,
     },
+  }}
+  args={{
+    format: "mp3",
+    layout: "full",
+    size: "m",
   }}
 />
 
@@ -47,6 +50,8 @@ export const commonAttrs = () => ({
   category: "music",
   thumbnail:
     "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Croce-Mozart-Detail.jpg/370px-Croce-Mozart-Detail.jpg",
+  frontendMediaType: "audio",
+  source: "wikimedia_audio",
 })
 
 export const formatExamples = {
@@ -80,10 +85,19 @@ export const formatExamples = {
   },
 }
 
+export const providerStorePatch = {
+  providers: {
+    audio: [{ source_name: "wikimedia_audio", display_name: "Wikimedia" }],
+  },
+  sourceNames: { audio: ["Wikimedia"] },
+}
+
 export const Template = (args) => ({
   template: `<VAudioTrack v-bind="args" :audio="audioObj"/>`,
   components: { VAudioTrack },
   setup() {
+    const providerStore = useProviderStore()
+    providerStore.$patch(providerStorePatch)
     const audioObj = computed(() => ({
       ...commonAttrs(),
       ...formatExamples[args.format],
@@ -109,37 +123,8 @@ The component can be rendered in a multiple different layouts, by specifying a
 
 ### Full (default)
 
-#### Size M (default)
-
 <Canvas>
-  <Story
-    name="Full (medium)"
-    args={
-      {
-        // layout: 'full', (default)
-        // size: 'm', (default)
-      }
-    }
-  >
-    {Template.bind({})}
-  </Story>
-</Canvas>
-
-#### Size S (mobile)
-
-<Canvas>
-  <Story
-    name="Full (small)"
-    args={{
-      // layout: 'full', (default)
-      size: "s",
-    }}
-    parameters={{
-      viewport: { defaultViewport: "sm" },
-    }}
-  >
-    {Template.bind({})}
-  </Story>
+  <Story name="Full">{Template.bind({})}</Story>
 </Canvas>
 
 ### Row
@@ -191,22 +176,13 @@ The component can be rendered in a multiple different layouts, by specifying a
 
 ### Box
 
-#### Sizes L and M (default)
+#### Size L
 
 There is no M size in box layout.
 
 <Canvas>
   <Story
     name="Box (large)"
-    args={{
-      layout: "box",
-      size: "l",
-    }}
-  >
-    {Template.bind({})}
-  </Story>
-  <Story
-    name="Box (medium)"
     args={{
       layout: "box",
       size: "l",
@@ -277,6 +253,8 @@ export const Multiple = () => ({
   `,
   components: { VAudioTrack },
   setup() {
+    const providerStore = useProviderStore()
+    providerStore.$patch(providerStorePatch)
     const audioObj = (audio) => ({ ...commonAttrs(), ...audio })
     return { formatExamples, audioObj }
   },
