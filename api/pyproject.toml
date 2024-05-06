@@ -5,7 +5,7 @@ description = "API for the Openverse project"
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
-  {name = "Openverse", email = "openverse@wordpress.org" },
+  {name = "Openverse Contributors", email = "openverse@wordpress.org"},
 ]
 
 requires-python = "==3.11.*"
