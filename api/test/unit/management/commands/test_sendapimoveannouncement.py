@@ -85,3 +85,18 @@ def test_should_not_send_to_unverified_emails(captured_emails):
 
     call_cmd(dry_run=False)
     assert len(captured_emails) == 0
+
+
+@pytest.mark.django_db
+def test_should_not_send_to_email_twice(captured_emails):
+    emails = make_emails(10, verified=True)
+    OAuth2VerificationFactory.create(
+        email=emails[0],
+    )
+
+    call_cmd(dry_run=False)
+    # Not 11
+    assert len(captured_emails) == 10
+
+    # Only appears once
+    assert len([email for email in emails if email == emails[0]]) == 1
