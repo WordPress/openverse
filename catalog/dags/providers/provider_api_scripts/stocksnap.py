@@ -40,15 +40,15 @@ class StockSnapDataIngester(ProviderDataIngester):
         super().__init__(*args, **kwargs)
         self._page_counter = 1
 
-    def get_next_query_params(self, prev_query_params, **kwargs):
+    def get_next_query_params(self, prev_query_params: dict | None):
         if prev_query_params:
             return {"page": prev_query_params["page"] + 1}
         return {"page": 1}
 
     def _get_query_params(
-        self, prev_query_params: dict | None, **kwargs
+        self, prev_query_params: dict | None, fixed_query_params: dict | None = None
     ) -> dict | None:
-        query_params = super()._get_query_params(prev_query_params, **kwargs)
+        query_params = super()._get_query_params(prev_query_params, fixed_query_params)
         if query_params:
             # Record the page that we are currently on so that it can be used as part of
             # the endpoint URL.

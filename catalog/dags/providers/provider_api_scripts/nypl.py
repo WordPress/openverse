@@ -58,7 +58,7 @@ class NyplDataIngester(ProviderDataIngester):
         NyplDataIngester.headers = {"Authorization": f"Token token={NYPL_API}"}
         super().__init__(*args, **kwargs)
 
-    def get_next_query_params(self, prev_query_params, **kwargs):
+    def get_next_query_params(self, prev_query_params):
         if not prev_query_params:
             return {
                 "q": "CC_0",

@@ -30,7 +30,7 @@ class JusttakeitfreeDataIngester(ProviderDataIngester):
     creator = "Justtakeitfree Free Photos"
     creator_url = "https://justtakeitfree.com"
 
-    def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
+    def get_next_query_params(self, prev_query_params: dict | None) -> dict:
         if not prev_query_params:
             return {"page": 1, "key": Variable.get("API_KEY_JUSTTAKEITFREE")}
         else:

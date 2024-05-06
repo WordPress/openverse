@@ -112,7 +112,7 @@ class CcMixterDataIngester(ProviderDataIngester):
             delay=self.delay, headers=self.headers
         )
 
-    def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
+    def get_next_query_params(self, prev_query_params: dict | None) -> dict:
         if not prev_query_params:
             # This means this is the first request, so we start with offset 0.
             return {

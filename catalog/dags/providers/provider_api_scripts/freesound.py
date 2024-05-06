@@ -53,7 +53,7 @@ class FreesoundDataIngester(ProviderDataIngester):
 
         super().__init__(*args, **kwargs)
 
-    def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
+    def get_next_query_params(self, prev_query_params: dict | None) -> dict:
         if not prev_query_params:
             start_date = "*"
             # Allow self.date to be undefined, necessary for the first full, successful

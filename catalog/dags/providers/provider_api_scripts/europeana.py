@@ -231,7 +231,7 @@ class EuropeanaDataIngester(ProviderDataIngester):
 
         return f"timestamp_update:[{start_timestamp} TO {end_timestamp}]"
 
-    def get_next_query_params(self, prev_query_params) -> dict:
+    def get_next_query_params(self, prev_query_params: dict | None) -> dict:
         if not prev_query_params:
             return self.base_request_body
 

@@ -70,7 +70,7 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
             }
         }
 
-    def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
+    def get_next_query_params(self, prev_query_params: dict | None) -> dict:
         # Return default query params on the first request
         # primaryRepresentation contain a image url for each data
         # "+" is a query string syntax for must be present

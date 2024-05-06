@@ -45,7 +45,7 @@ class JamendoDataIngester(ProviderDataIngester):
     batch_limit = 200
     headers = {"Accept": "application/json"}
 
-    def get_next_query_params(self, prev_query_params, **kwargs):
+    def get_next_query_params(self, prev_query_params):
         if not prev_query_params:
             # On first request, build default params.
             return {

@@ -53,7 +53,7 @@ class WordPressDataIngester(ProviderDataIngester):
         self.total_pages = None
         self.current_page = 1
 
-    def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
+    def get_next_query_params(self, prev_query_params: dict | None) -> dict:
         if self.total_pages is None:
             # On the first request, make a HEAD request to get the number of pages of
             # results, so we know when to halt ingestion. This prevents errors
