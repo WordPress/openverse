@@ -19,3 +19,7 @@ test = [
   "pytest >=8.1.1, <9",
   "pytest-sugar >=1.0.0, <2",
 ]
+
+[tool.pdm.scripts]
+build = "{pdm} build"
+test = "pytest"
