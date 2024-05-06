@@ -32,8 +32,8 @@ class License:
         The only exception is 'publicdomain' for which the version and
         jurisdiction fields are ignored.
 
-        Use an empty string as ``jur`` to specify a generic, universal or
-        unported form of the license.
+        Use an empty string as ``jurisdiction`` to specify a generic, universal
+        or unported form of the license.
 
         :param slug: the slug for the license, from the ``LicenseName`` enum
         :param version: the version of the license
