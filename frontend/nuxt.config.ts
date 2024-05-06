@@ -135,7 +135,7 @@ const config: NuxtConfig = {
       : undefined,
   },
   router: {
-    middleware: "middleware",
+    middleware: "feature-flags",
   },
   components: [
     { path: "~/components", extensions: ["vue"], pathPrefix: false },

@@ -25,7 +25,6 @@ export interface ProviderState {
     audio: string[]
     image: string[]
   }
-  lastUpdated: number
 }
 
 /**
@@ -54,7 +53,6 @@ export const useProviderStore = defineStore("provider", {
       [AUDIO]: [],
       [IMAGE]: [],
     },
-    lastUpdated: new Date().getTime(),
   }),
 
   actions: {
