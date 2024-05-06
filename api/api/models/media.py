@@ -77,7 +77,7 @@ class AbstractMedia(
     )
     removed_from_source = models.BooleanField(
         default=False,
-        help_text="Whether or not the media has been removed from the upstream source.",
+        help_text="Whether the media has been removed from the upstream source.",
     )
 
     view_count = models.IntegerField(

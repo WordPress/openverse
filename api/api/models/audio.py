@@ -254,7 +254,7 @@ class Audio(AudioFileMixin, AbstractMedia):
 
 class DeletedAudio(AbstractDeletedMedia):
     """
-    Represents audio tracks that have been deleted from the source.
+    Represents audio tracks deleted from the upstream source.
 
     Do not create instances of this model manually. Create an ``AudioReport`` instance
     instead.
@@ -280,7 +280,7 @@ class DeletedAudio(AbstractDeletedMedia):
 
 class SensitiveAudio(AbstractSensitiveMedia):
     """
-    Represents audio tracks that have been flagged and verified as 'mature'.
+    Represents audio tracks with verified sensitivity reports.
 
     Do not create instances of this model manually. Create an ``AudioReport`` instance
     instead.
@@ -307,9 +307,9 @@ class SensitiveAudio(AbstractSensitiveMedia):
 
 class AudioReport(AbstractMediaReport):
     """
-    Represents audio tracks that have been reported by users.
+    Represents user-submitted reports of audio tracks.
 
-    This contains an ``AudioDecision`` as well, if moderators have made a decision
+    ``AudioDecision`` is populated only if moderators have made a decision
     for this report.
     """
 

@@ -60,7 +60,7 @@ class Image(ImageFileMixin, AbstractMedia):
 
 class DeletedImage(AbstractDeletedMedia):
     """
-    Represents images that have been deleted from the source.
+    Represents images deleted from the upstream source.
 
     Do not create instances of this model manually. Create an ``ImageReport`` instance
     instead.
@@ -83,7 +83,7 @@ class DeletedImage(AbstractDeletedMedia):
 
 class SensitiveImage(AbstractSensitiveMedia):
     """
-    Represents images that have been flagged and verified as 'mature'.
+    Represents images with verified sensitivity reports.
 
     Do not create instances of this model manually. Create an ``ImageReport`` instance
     instead.
@@ -109,7 +109,7 @@ class SensitiveImage(AbstractSensitiveMedia):
 
 class ImageReport(AbstractMediaReport):
     """
-    Represents images that have been reported by users.
+    User-submitted report of an image.
 
     This contains an ``ImageDecision`` as well, if moderators have made a decision
     for this report.
