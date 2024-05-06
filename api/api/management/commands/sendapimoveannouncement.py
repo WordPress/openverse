@@ -18,7 +18,7 @@ For the best experience, and to avoid redirects, please update code referencing 
 
 To read more about this change, including opportunities to ask questions or give feedback, please read the Make Openverse blog post announcing it:
 
-<LINK TO MAKE POST>
+https://make.wordpress.org/openverse/2024/05/06/the-openverse-api-is-moving-to-api-openverse-org/
 
 You are receiving this email because you’ve registered and verified with the Openverse API.
 
