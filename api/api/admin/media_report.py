@@ -111,9 +111,10 @@ class MediaReportAdmin(admin.ModelAdmin):
         additional_data = {
             "other_reports": self.get_other_reports(obj),
             "media_obj": obj.media_obj,
-            "license": License(obj.media_obj.license).name(
-                obj.media_obj.license_version
-            ),
+            "license": License(
+                obj.media_obj.license,
+                obj.media_obj.license_version,
+            ).full_name,
             "tags": tags_by_provider,
             "description": obj.media_obj.meta_data.get("description", ""),
         }

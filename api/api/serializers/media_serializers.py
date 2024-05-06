@@ -742,8 +742,8 @@ class MediaSerializer(BaseModelSerializer):
 
         if output.get("license_url") is None:
             try:
-                lic = License(output["license"])
-                output["license_url"] = lic.url(output["license_version"])
+                lic = License(output["license"], output["license_version"])
+                output["license_url"] = lic.url
             except ValueError:
                 pass
 

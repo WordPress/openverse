@@ -1,128 +1,276 @@
-from enum import StrEnum
+import re
+from dataclasses import dataclass
 
-from openverse_attribution.attribution import get_attribution_text
+from openverse_attribution.data.all_licenses import all_licenses
+from openverse_attribution.license_name import LicenseName
 
 
-class License(StrEnum):
-    """
-    Represent all licenses that are handled by Openverse. This uses a very loose
-    interpretation of the term "license" as it includes licenses (both active
-    and deprecated), dedications and marks.
-    """
+KNOWN_ALIASES = {
+    "zero": "cc0",
+    "mark": "pdm",
+}
 
-    # CC licenses
-    BY = "by"
-    BY_SA = "by-sa"
-    BY_NC = "by-nc"
-    BY_ND = "by-nd"
-    BY_NC_SA = "by-nc-sa"
-    BY_NC_ND = "by-nc-nd"
 
-    # Deprecated CC licenses
-    SA = "sa"
-    SAMPLING = "sampling+"
-    NC_SAMPLING = "nc-sampling+"
+@dataclass
+class License:
+    name: LicenseName
+    ver: str | None
+    jur: str | None
 
-    # Public domain dedication
-    CC0 = "cc0"
+    def __init__(
+        self,
+        slug: str,
+        version: str | None = None,
+        jurisdiction: str | None = None,
+    ):
+        """
+        Create an instance of ``License``.
 
-    # Public domain mark
-    PDM = "pdm"
-    PUBLIC_DOMAIN = "publicdomain"
+        This function validates the license, version and jurisdiction. If some
+        fields are not provided, it makes an attempt to deduce them.
 
-    def name(self, version: str | None = None) -> str:
+        The only exception is 'publicdomain' for which the version and
+        jurisdiction fields are ignored.
+
+        Use an empty string as ``jurisdiction`` to specify a generic, universal
+        or unported form of the license.
+
+        :param slug: the slug for the license, from the ``LicenseName`` enum
+        :param version: the version of the license
+        :param jurisdiction: the jurisdiction of the license
+        """
+
+        # Shorten long variable names
+        ver = version
+        jur = jurisdiction
+
+        # Handle known aliases.
+        slug = KNOWN_ALIASES.get(slug, slug)
+
+        self.slug = slug
+
+        # Encapsulates internal enum validation.
+        self.name = LicenseName(slug)
+
+        self.fallback_ver = None
+        self.fallback_jur = None
+
+        if self.name is LicenseName.PUBLICDOMAIN:
+            self.ver = None
+            self.jur = None
+            return
+
+        # Validate version against known versions.
+        if ver and ver not in all_licenses.keys():
+            raise ValueError(f"Version `{ver}` does not exist.")
+
+        # Validate jurisdiction against known jurisdictions.
+        if jur is not None:
+            if all(jur not in item for item in all_licenses.values()):
+                raise ValueError(f"Jurisdiction `{jur}` does not exist.")
+
+            if ver and jur not in all_licenses[ver].keys():
+                raise ValueError(
+                    f"Jurisdiction `{jur}` does not exist for version `{ver}`."
+                )
+
+        # Validation (with autocompletion)
+        if not ver and jur is None:
+            self.ver, self.jur = self._deduce_ver_jur() or (None, None)
+        elif not ver and jur is not None:
+            self.jur = jur
+            self.ver = self._deduce_ver()
+        elif ver and jur is None:
+            self.ver = ver
+            self.jur = self._deduce_jur()
+        else:  # ver and jur is not None
+            self.ver = ver
+            self.jur = jur
+            if (ver, jur) not in self.name.allowed_versions_jurisdictions:
+                raise ValueError(
+                    f"License `{slug}` does not accept version `{ver}` and jurisdiction `{jur}`."
+                )
+
+    def _deduce_ver(self) -> str | None:
+        """
+        Deduce version from slug and jurisdiction.
+
+        This function sets ``fallback_ver`` to latest allowed version if it
+        cannot be determined for certain.
+
+        :return: the certain value of the version
+        :raise ValueError: if no version matches slug and jurisdiction
+        """
+
+        allowed_ver_jur = self.name.allowed_versions_jurisdictions
+        allowed_vers = [v for v, j in allowed_ver_jur if j == self.jur]
+        if len(allowed_vers) > 1:
+            self.fallback_ver = allowed_vers[0]  # latest
+        elif len(allowed_vers) == 1:
+            return allowed_vers.pop()
+        else:
+            raise ValueError(
+                f"No version matches slug `{self.slug}` and jurisdiction `{self.jur}`."
+            )
+
+    def _deduce_jur(self) -> str | None:
+        """
+        Deduce jurisdiction from slug and version.
+
+        This function sets ``fallback_jur`` to generic jurisdiction if it cannot
+        be determined for certain and generic is an option.
+
+        :return: the certain value of the jurisdiction
+        :raise ValueError: if jurisdiction is required or no jurisdiction
+            matches slug and version
+        """
+
+        allowed_ver_jur = self.name.allowed_versions_jurisdictions
+        allowed_jurs = {j for v, j in allowed_ver_jur if v == self.ver}
+        if len(allowed_jurs) > 1:
+            if "" in allowed_jurs:
+                # We can only assume generic jurisdiction as fallback.
+                self.fallback_jur = ""
+            else:
+                raise ValueError(
+                    f"Jurisdiction is required for slug `{self.slug}` and version `{self.ver}`."
+                )
+        elif len(allowed_jurs) == 1:
+            return allowed_jurs.pop()
+        else:
+            raise ValueError(
+                f"No jurisdiction matches slug `{self.slug}` and version `{self.ver}`."
+            )
+
+    def _deduce_ver_jur(self) -> tuple[str, str] | None:
+        """
+        Deduce version and jurisdiction from slug.
+
+        This function sets ``fallback_ver`` and ``fallback_jur`` to the latest
+        allowed version and generic jurisdiction respectively if they cannot be
+        determined for certain.
+
+        :return: the certain values of the version and jurisdiction
+        """
+
+        allowed_ver_jur = self.name.allowed_versions_jurisdictions
+        if len(allowed_ver_jur) == 1:
+            return allowed_ver_jur[0]
+
+        allowed_ver_jur = [(v, j) for (v, j) in allowed_ver_jur if j == ""]
+        if len(allowed_ver_jur) >= 1:
+            # We can only assume generic jurisdiction as fallback.
+            self.fallback_ver, self.fallback_jur = allowed_ver_jur[0]
+        else:
+            raise ValueError(f"No version and jurisdiction match slug `{self.slug}`.")
+
+    @property
+    def full_name(self) -> str:
         """
         Get the full name of the license.
-        The ``version`` parameter is disregarded and the version is always 1.0
-        for CC0, PDM and deprecated licenses. If not provided, the version is
-        omitted for all other licenses.
 
-        :param version: the version number of the license
+        This function does not use the fallback version and jurisdiction because
+        the license name is valid without them.
+
         :return: the full name of the license
         """
 
-        if self in {License.PDM, License.PUBLIC_DOMAIN}:
-            name = "Public Domain Mark"
-        else:
-            name = self.value.upper().replace("SAMPLING", "Sampling")
-        if self.is_cc and self is not License.CC0:
-            name = f"CC {name}"
-        if self.is_pd or self.is_deprecated:
-            version = "1.0"
-        if version:
-            name = f"{name} {version}"
-        return name.strip()
+        name = self.name.display_name
+        if self.ver:
+            name = f"{name} {self.ver}"
+        if self.jur:
+            name = f"{name} {self.jur.upper()}"
+        return name
 
-    def url(self, version: str | None = None) -> str:
+    @property
+    def url(self) -> str:
         """
-        Get the URL to the legal deed of this license.
-        The ``version`` parameter is disregarded and the version is always 1.0
-        for CC0, PDM and deprecated licenses. If not provided, the version is
-        assumed to be 4.0 for all other licenses.
+        Get the URL to the deed of this license.
 
-        :param version: the version number of the license
-        :return: the URL to the legal text of this license
+        This function uses the fallback version and jurisdiction as they are
+        part of the URL and URL cannot be generated without them.
+
+        :return: the URL to the deed of the license
         """
 
-        if self is License.CC0:
-            fragment = "publicdomain/zero/1.0"
-        elif self in {License.PUBLIC_DOMAIN, License.PDM}:
-            fragment = "publicdomain/mark/1.0"
-        elif self.is_deprecated:
-            fragment = f"licenses/{self}/1.0"
-        else:
-            fragment = f"licenses/{self}/{version or '4.0'}"
-        return f"https://creativecommons.org/{fragment}/"
+        ver = self.ver if self.ver is not None else self.fallback_ver
+        jur = self.jur if self.jur is not None else self.fallback_jur
 
-    def attribution(
+        if self.name is LicenseName.PUBLICDOMAIN:
+            return "https://en.wikipedia.org/wiki/Public_domain"
+
+        if self.name is LicenseName.CC0:
+            fragment = f"publicdomain/zero/{ver}/{jur}"
+        elif self.name is LicenseName.PDM:
+            fragment = f"publicdomain/mark/{ver}/{jur}"
+        elif self.name is LicenseName.CERTIFICATION:
+            fragment = f"publicdomain/certification/{ver}/{jur}"
+        else:
+            fragment = f"licenses/{self.name}/{ver}/{jur}"
+
+        if not fragment.endswith("/"):
+            fragment = f"{fragment}/"
+
+        return f"https://creativecommons.org/{fragment}"
+
+    def get_attribution_text(
         self,
         title: str | None = None,
         creator: str | None = None,
-        version: str | None = None,
         url: str | bool | None = None,
     ):
         """
-        Get the attribution text for a media item released under this license.
+        Get the attribution text for a media item. This function only renders
+        the attribution in plain-text format for the English language.
 
-        :param title:  the name of the work, if known
+        Note that this is not a perfect attribution as it does not include
+        hyperlinks for the work or the creator. Also see the CC `wiki`_ to learn
+        best practices for attribution.
+
+        .. _wiki: https://wiki.creativecommons.org/wiki/Best_practices_for_attribution
+
+        To remove the sentence for viewing the legal text, set the ``url``
+        parameter to ``False``.
+
+        :param title: the name of the work, if known
         :param creator: the name of the work's creator, if known
-        :param version: the version number of the license
-        :param url: the URL to the legal text of this license
+        :param url: the URL to the license, to override the default
         :return: the plain-text English language attribution
         """
 
-        return get_attribution_text(self, title, creator, version, url)
+        title = f'"{title}"' if title else "This work"
 
-    @property
-    def is_deprecated(self) -> bool:
-        """
-        Determine if this license has been deprecated. These licenses are no
-        longer maintained as only have a version 1.0.
+        attribution_template = (
+            "{title} {creator} {marked-licensed} {license}. {view-legal}"
+        )
+        attribution_parts = {
+            "title": title,
+            "marked-licensed": "is marked with"
+            if self.name.is_pd
+            else "is licensed under",
+            "license": self.full_name,
+            "view-legal": "",
+            "creator": "",
+        }
 
-        :return: whether this license has been deprecated
-        """
+        if url is not False:
+            license_url = url or self.url
+            view_legal_template = "To view {terms-copy}, visit {url}."
+            view_legal_parts = {
+                "terms-copy": "the terms"
+                if self.name.is_pd
+                else "a copy of this license",
+                "url": license_url,
+            }
+            attribution_parts["view-legal"] = view_legal_template.format(
+                **view_legal_parts
+            )
 
-        return self in {License.SAMPLING, License.NC_SAMPLING, License.SA}
+        if creator:
+            creator_template = "by {creator-name}"
+            creator_parts = {"creator-name": creator}
+            attribution_parts["creator"] = creator_template.format(**creator_parts)
 
-    @property
-    def is_pd(self) -> bool:
-        """
-        Determine whether a work with this license is in the public domain. This
-        function also differentiates a license from a mark or dedication.
+        attribution = attribution_template.format(**attribution_parts)
 
-        :return: whether a work with this license is in the public domain
-        """
-
-        return self in {License.PUBLIC_DOMAIN, License.PDM, License.CC0}
-
-    @property
-    def is_cc(self) -> bool:
-        """
-        Determine whether this license was created by Creative Commons. Note
-        that this includes CC0 which was created by CC.
-
-        :return: whether this license was created by Creative Commons
-        """
-
-        # Works because other than PDM, we only have CC licenses.
-        return self not in {License.PUBLIC_DOMAIN, License.PDM}
+        return re.sub(r"\s{2,}", " ", attribution).strip()
