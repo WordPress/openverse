@@ -61,20 +61,18 @@ class License:
             return
 
         # Validate version against known versions.
-        if ver:
-            if ver not in all_licenses.keys():
-                raise ValueError(f"Version `{ver}` does not exist.")
+        if ver and ver not in all_licenses.keys():
+            raise ValueError(f"Version `{ver}` does not exist.")
 
         # Validate jurisdiction against known jurisdictions.
         if jur is not None:
             if all(jur not in item for item in all_licenses.values()):
                 raise ValueError(f"Jurisdiction `{jur}` does not exist.")
 
-            if ver:
-                if jur not in all_licenses[ver].keys():
-                    raise ValueError(
-                        f"Jurisdiction `{jur}` does not exist for version `{ver}`."
-                    )
+            if ver and jur not in all_licenses[ver].keys():
+                raise ValueError(
+                    f"Jurisdiction `{jur}` does not exist for version `{ver}`."
+                )
 
         # Validation (with autocompletion)
         if not ver and jur is None:
