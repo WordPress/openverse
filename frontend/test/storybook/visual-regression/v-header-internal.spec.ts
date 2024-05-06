@@ -1,4 +1,4 @@
-import { test } from "@playwright/test"
+import { expect, test } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import { languageDirections } from "~~/test/playwright/utils/i18n"
@@ -23,15 +23,26 @@ test.describe("VHeaderInternal", () => {
         )
       })
     })
+
     breakpoints.describeEachMobile(({ expectSnapshot }) => {
       test(`mobile-header-internal-${dir}`, async ({ page }) => {
+        // Ensure svg is loaded before taking the snapshot.
+        const requestPromise = page.waitForRequest((req) =>
+          req.url().endsWith(".svg")
+        )
         await page.goto(pageUrl(dir))
+        await requestPromise
+        await expect(
+          page.locator("button[aria-haspopup='dialog'] svg")
+        ).toBeVisible()
         await page.mouse.move(0, 150)
+
         await expectSnapshot(
           `mobile-header-internal-closed-${dir}`,
           page.locator(headerSelector)
         )
       })
+
       test(`mobile-header-internal-modal-${dir}`, async ({ page }) => {
         await page.goto(pageUrl(dir))
 

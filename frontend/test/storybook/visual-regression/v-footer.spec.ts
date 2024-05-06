@@ -1,8 +1,8 @@
-import { test } from "@playwright/test"
+import { expect, test } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 
-import { languageDirections } from "~~/test/playwright/utils/i18n"
+import { languageDirections, t } from "~~/test/playwright/utils/i18n"
 
 const footerKinds = ["internal", "content"] as const
 
@@ -26,6 +26,13 @@ test.describe("VFooter", () => {
           await page.goto(pageUrl(dir, footerKind))
           if (dir === "rtl") {
             await page.locator("#language").selectOption({ value: "ar" })
+            if (footerKind === "internal") {
+              // The WP svg inside a link. The text with a placeholder is flaky in RTL.
+              await expect(page.locator("a svg")).toBeVisible()
+            } else {
+              const aboutLink = page.getByText(t("navigation.about", "rtl"))
+              await expect(aboutLink).toBeVisible()
+            }
           }
         })
 
