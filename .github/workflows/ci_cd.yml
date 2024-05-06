@@ -543,6 +543,8 @@ jobs:
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
+        with:
+          install_recipe: packages/python/openverse-attribution/install
 
       - name: Run Python packages checks
         run: pdm run -p ${{ matrix.packages }} ${{ matrix.script }}

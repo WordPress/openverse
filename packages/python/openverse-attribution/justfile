@@ -1,0 +1,18 @@
+set dotenv-load := false
+
+COLOR := "\\033[0;31m"
+NO_COLOR := "\\033[0m"
+
+# Show all available recipes
+@_default:
+    printf "\n{{ COLOR }}# Attribution (path: \`packages/python/openverse-attribution/\`)\n"
+    printf "=============================================================={{ NO_COLOR }}\n"
+    just --list --unsorted
+
+###########
+# Install #
+###########
+
+# Install dependencies
+install *args:
+    pdm install {{ args }}
