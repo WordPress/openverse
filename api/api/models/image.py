@@ -43,7 +43,7 @@ class ImageFileMixin(FileMixin):
 
 class Image(ImageFileMixin, AbstractMedia):
     """
-    Represents one image media instance.
+    One image media instance.
 
     Inherited fields
     ================
@@ -60,7 +60,7 @@ class Image(ImageFileMixin, AbstractMedia):
 
 class DeletedImage(AbstractDeletedMedia):
     """
-    Represents images deleted from the upstream source.
+    Images deleted from the upstream source.
 
     Do not create instances of this model manually. Create an ``ImageReport`` instance
     instead.
@@ -83,7 +83,7 @@ class DeletedImage(AbstractDeletedMedia):
 
 class SensitiveImage(AbstractSensitiveMedia):
     """
-    Represents images with verified sensitivity reports.
+    Images with verified sensitivity reports.
 
     Do not create instances of this model manually. Create an ``ImageReport`` instance
     instead.
@@ -139,7 +139,7 @@ class ImageReport(AbstractMediaReport):
 
 
 class ImageDecision(AbstractMediaDecision):
-    """Represents moderation decisions taken for images."""
+    """Moderation decisions taken for images."""
 
     media_class = Image
 
@@ -151,7 +151,7 @@ class ImageDecision(AbstractMediaDecision):
 
 
 class ImageList(AbstractMediaList):
-    """Represents a list of images. Currently unused."""
+    """A list of images. Currently unused."""
 
     images = models.ManyToManyField(
         Image,

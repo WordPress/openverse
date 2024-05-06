@@ -86,10 +86,10 @@ Each object is expected to contain:
 
 #### `audio_report`
 
-**Model docstring:** Represents audio tracks that have been reported by users.
+**Model docstring:** User-submitted reports of audio tracks.
 
-This contains an `AudioDecision` as well, if moderators have made a decision for
-this report.
+`AudioDecision` is populated only if moderators have made a decision for this
+report.
 
 (Audio-audio_set_foreign_identifier-notes)=
 
@@ -107,7 +107,7 @@ this report.
 
 #### `audiodecision`
 
-**Model docstring:** Represents moderation decisions taken for audio tracks.
+**Model docstring:** Moderation decisions taken for audio tracks.
 
 (Audio-audioset-notes)=
 
@@ -152,8 +152,7 @@ The FileMixin inherited by this model refers not to audio but album art.
 
 #### `deleted_audio`
 
-**Model docstring:** Represents audio tracks that have been deleted from the
-source.
+**Model docstring:** Audio tracks deleted from the upstream source.
 
 Do not create instances of this model manually. Create an `AudioReport` instance
 instead.
@@ -230,7 +229,7 @@ explicitly.
 
 #### `lists`
 
-**Model docstring:** Represents a list of audio files. Currently unused.
+**Model docstring:** A list of audio files. Currently unused.
 
 (Audio-meta_data-notes)=
 
@@ -251,8 +250,7 @@ available, is also indexed into Elasticsearch and as a search field on queries.
 
 #### `removed_from_source`
 
-**Help text:** Whether or not the media has been removed from the upstream
-source.
+**Help text:** Whether the media has been removed from the upstream source.
 
 (Audio-sample_rate-notes)=
 
@@ -264,8 +262,7 @@ source.
 
 #### `sensitive_audio`
 
-**Model docstring:** Represents audio tracks that have been flagged and verified
-as 'mature'.
+**Model docstring:** Audio tracks with verified sensitivity reports.
 
 Do not create instances of this model manually. Create an `AudioReport` instance
 instead.
@@ -389,7 +386,7 @@ Note that only `name` and `accuracy` are presently surfaced in API results.
 
 #### `deleted_image`
 
-**Model docstring:** Represents images that have been deleted from the source.
+**Model docstring:** Images deleted from the upstream source.
 
 Do not create instances of this model manually. Create an `ImageReport` instance
 instead.
@@ -441,7 +438,7 @@ explicitly.
 
 #### `image_report`
 
-**Model docstring:** Represents images that have been reported by users.
+**Model docstring:** User-submitted report of an image.
 
 This contains an `ImageDecision` as well, if moderators have made a decision for
 this report.
@@ -450,7 +447,7 @@ this report.
 
 #### `imagedecision`
 
-**Model docstring:** Represents moderation decisions taken for images.
+**Model docstring:** Moderation decisions taken for images.
 
 (Image-last_synced_with_source-notes)=
 
@@ -474,7 +471,7 @@ this report.
 
 #### `lists`
 
-**Model docstring:** Represents a list of images. Currently unused.
+**Model docstring:** A list of images. Currently unused.
 
 (Image-meta_data-notes)=
 
@@ -495,15 +492,13 @@ available, is also indexed into Elasticsearch and as a search field on queries.
 
 #### `removed_from_source`
 
-**Help text:** Whether or not the media has been removed from the upstream
-source.
+**Help text:** Whether the media has been removed from the upstream source.
 
 (Image-sensitive_image-notes)=
 
 #### `sensitive_image`
 
-**Model docstring:** Represents images that have been flagged and verified as
-'mature'.
+**Model docstring:** Images with verified sensitivity reports.
 
 Do not create instances of this model manually. Create an `ImageReport` instance
 instead.

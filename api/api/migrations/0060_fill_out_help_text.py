@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='audio',
             name='removed_from_source',
-            field=models.BooleanField(default=False, help_text='Whether or not the media has been removed from the upstream source.'),
+            field=models.BooleanField(default=False, help_text='Whether the media has been removed from the upstream source.'),
         ),
         migrations.AlterField(
             model_name='audio',
@@ -58,7 +58,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='image',
             name='removed_from_source',
-            field=models.BooleanField(default=False, help_text='Whether or not the media has been removed from the upstream source.'),
+            field=models.BooleanField(default=False, help_text='Whether the media has been removed from the upstream source.'),
         ),
         migrations.AlterField(
             model_name='image',

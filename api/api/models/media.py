@@ -1,5 +1,5 @@
 import mimetypes
-from textwrap import dedent as d
+from textwrap import dedent
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -87,8 +87,7 @@ class AbstractMedia(
     tags = models.JSONField(
         blank=True,
         null=True,
-        help_text=d(
-            """
+        help_text=dedent("""
         JSON array of objects containing tags for the media. Each tag object
         is expected to have:
 
@@ -98,8 +97,7 @@ class AbstractMedia(
         for that label expressed as a value between 0 and 1.
 
         Note that only `name` and `accuracy` are presently surfaced in API results.
-        """
-        ),
+        """),
     )
 
     category = models.CharField(
@@ -113,14 +111,12 @@ class AbstractMedia(
     meta_data = models.JSONField(
         blank=True,
         null=True,
-        help_text=d(
-            """
+        help_text=dedent("""
         JSON object containing extra data about the media item. No fields are expected,
         but if the `license_url` field is available, it will be used for determining
         the license URL for the media item. The `description` field, if available, is
         also indexed into Elasticsearch and as a search field on queries.
-        """
-        ),
+        """),
     )
 
     @property

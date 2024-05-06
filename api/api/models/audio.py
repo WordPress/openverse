@@ -141,7 +141,7 @@ class AudioAddOn(OpenLedgerModel):
 
 class Audio(AudioFileMixin, AbstractMedia):
     """
-    Represents one audio media instance.
+    One audio media instance.
 
     Inherited fields
     ================
@@ -254,7 +254,7 @@ class Audio(AudioFileMixin, AbstractMedia):
 
 class DeletedAudio(AbstractDeletedMedia):
     """
-    Represents audio tracks deleted from the upstream source.
+    Audio tracks deleted from the upstream source.
 
     Do not create instances of this model manually. Create an ``AudioReport`` instance
     instead.
@@ -280,7 +280,7 @@ class DeletedAudio(AbstractDeletedMedia):
 
 class SensitiveAudio(AbstractSensitiveMedia):
     """
-    Represents audio tracks with verified sensitivity reports.
+    Audio tracks with verified sensitivity reports.
 
     Do not create instances of this model manually. Create an ``AudioReport`` instance
     instead.
@@ -307,7 +307,7 @@ class SensitiveAudio(AbstractSensitiveMedia):
 
 class AudioReport(AbstractMediaReport):
     """
-    Represents user-submitted reports of audio tracks.
+    User-submitted reports of audio tracks.
 
     ``AudioDecision`` is populated only if moderators have made a decision
     for this report.
@@ -337,7 +337,7 @@ class AudioReport(AbstractMediaReport):
 
 
 class AudioDecision(AbstractMediaDecision):
-    """Represents moderation decisions taken for audio tracks."""
+    """Moderation decisions taken for audio tracks."""
 
     media_class = Audio
 
@@ -349,7 +349,7 @@ class AudioDecision(AbstractMediaDecision):
 
 
 class AudioList(AbstractMediaList):
-    """Represents a list of audio files. Currently unused."""
+    """A list of audio files. Currently unused."""
 
     audios = models.ManyToManyField(
         Audio,
