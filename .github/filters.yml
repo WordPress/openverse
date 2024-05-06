@@ -31,6 +31,8 @@ frontend:
   - tsconfig.base.json
   - .npmrc
   - .pnpmfile.cjs
+py_packages:
+  - packages/python/**
 js_packages:
   - packages/js/**
   - package.json

@@ -23,3 +23,7 @@ test = [
 dev = [
     "ipython >=8.24.0, <9",
 ]
+
+[tool.pdm.scripts]
+build = "{pdm} build"
+test = "pytest"

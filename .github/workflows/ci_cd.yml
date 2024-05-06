@@ -44,6 +44,7 @@ jobs:
       frontend: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'frontend') }}
       documentation: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'documentation') }}
       ci_cd: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'ci_cd') }}
+      py_packages: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'py_packages') }}
       js_packages: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'js_packages') }}
     steps:
       - name: Checkout repository
@@ -518,6 +519,56 @@ jobs:
     steps:
       - name: Pass
         run: echo 'Django checks are skipped because API is unchanged.'
+
+  py-package-checks:
+    name: Run checks for Python packages/*
+    if: |
+      needs.get-changes.outputs.py_packages == 'true'
+    runs-on: ubuntu-latest
+    needs:
+      - get-changes
+      - lint
+    strategy:
+      fail-fast: false
+      matrix:
+        packages:
+          - packages/python/openverse-attribution
+        script:
+          - build
+          - test
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          install_recipe: packages/python/openverse-attribution/install
+
+      - name: Run Python packages checks
+        run: pdm run -p ${{ matrix.packages }} ${{ matrix.script }}
+
+  # This job runs when `py-package-checks` doesn't and always passes, thus
+  # allowing PRs to meet the required checks criteria and be merged.
+  bypass-py-package-checks:
+    name: Run checks for Python packages/*
+    if: |
+      !cancelled() &&
+      needs.py-package-checks.result == 'skipped'
+    runs-on: ubuntu-latest
+    needs:
+      - py-package-checks
+    strategy:
+      fail-fast: false
+      matrix:
+        name:
+          - build
+          - unit_test
+
+    steps:
+      - name: Pass
+        run: echo 'Checks for Python packages are skipped because they are unchanged.'
 
   ############
   # Frontend #
