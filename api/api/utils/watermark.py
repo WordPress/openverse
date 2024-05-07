@@ -174,7 +174,7 @@ def _print_attribution_on_image(img: Image.Image, image_info):
     """
 
     try:
-        lic = License(image_info["license"])
+        lic = License(image_info["license"], image_info["license_version"])
     except ValueError:
         return img
 
@@ -194,11 +194,10 @@ def _print_attribution_on_image(img: Image.Image, image_info):
 
     font = ImageFont.truetype(_get_font_path(), size=font_size)
 
-    text = lic.attribution(
+    text = lic.get_attribution_text(
         image_info["title"],
         image_info["creator"],
-        image_info["license_version"],
-        False,
+        url=False,
     )
     text = _fit_in_width(text, font, new_width)
     attribution_height = _get_attribution_height(text, font)

@@ -5,7 +5,7 @@
 groups = ["default", "dev", "overrides", "test"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:0536f09aab62f508f571b4418ee0de30ce4c17acc8c32547f8c6b6618c111010"
+content_hash = "sha256:7e9f8e52e78990958b094effb69b7b3500def794137e4d75c5d05de015bb99d4"
 
 [[package]]
 name = "adrf"
@@ -17,6 +17,10 @@ dependencies = [
     "async-property>=0.2.2",
     "django>=4.1",
     "djangorestframework>=3.14.0",
+]
+files = [
+    {file = "adrf-0.1.6-py3-none-any.whl", hash = "sha256:4ed8a07159e97602b27b61cccef5a9f4088d07be6899d62fec1300286a6c500f"},
+    {file = "adrf-0.1.6.tar.gz", hash = "sha256:8057be8ac17e1ed47fbec17de4bf1772d467243422fd5f7dd78e97735d395ed3"},
 ]
 
 [[package]]
@@ -144,6 +148,10 @@ summary = "AWS signature version 4 signing process for the python requests modul
 groups = ["default"]
 dependencies = [
     "requests>=0.14.0",
+]
+files = [
+    {file = "aws-requests-auth-0.4.3.tar.gz", hash = "sha256:33593372018b960a31dbbe236f89421678b885c35f0b6a7abfae35bb77e069b2"},
+    {file = "aws_requests_auth-0.4.3-py2.py3-none-any.whl", hash = "sha256:646bc37d62140ea1c709d20148f5d43197e6bd2d63909eb36fa4bb2345759977"},
 ]
 
 [[package]]
@@ -352,6 +360,10 @@ summary = "Deep Difference and Search of any Python object/data. Recreate object
 groups = ["default"]
 dependencies = [
     "ordered-set<4.2.0,>=4.0.2",
+]
+files = [
+    {file = "deepdiff-6.7.1-py3-none-any.whl", hash = "sha256:58396bb7a863cbb4ed5193f548c56f18218060362311aa1dc36397b2f25108bd"},
+    {file = "deepdiff-6.7.1.tar.gz", hash = "sha256:b367e6fa6caac1c9f500adc79ada1b5b1242c50d5f716a1a4362030197847d30"},
 ]
 
 [[package]]
@@ -1367,6 +1379,21 @@ dependencies = [
 files = [
     {file = "pytest-django-4.8.0.tar.gz", hash = "sha256:5d054fe011c56f3b10f978f41a8efb2e5adfc7e680ef36fb571ada1f24779d90"},
     {file = "pytest_django-4.8.0-py3-none-any.whl", hash = "sha256:ca1ddd1e0e4c227cf9e3e40a6afc6d106b3e70868fd2ac5798a22501271cd0c7"},
+]
+
+[[package]]
+name = "pytest-pook"
+version = "1.0.0"
+requires_python = ">=3.8"
+summary = "Pytest plugin for pook"
+groups = ["test"]
+dependencies = [
+    "pook",
+    "pytest",
+]
+files = [
+    {file = "pytest_pook-1.0.0-py3-none-any.whl", hash = "sha256:16a8e7391401d818aa79a3ab63aee2450d18764821fd3f8b7ef9d34824090955"},
+    {file = "pytest_pook-1.0.0.tar.gz", hash = "sha256:ee22a4bc133ffc49da569d1ecf76f3a674fccecf7dd394c21a46b704dbe67b47"},
 ]
 
 [[package]]

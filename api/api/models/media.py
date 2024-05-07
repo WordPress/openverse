@@ -96,25 +96,25 @@ class AbstractMedia(
         if self.meta_data and (url := self.meta_data.get("license_url")):
             return url
         try:
-            lic = License(self.license.lower())
+            return License(self.license.lower(), self.license_version).url
         except ValueError:
             return None
-        return lic.url(self.license_version)
 
     @property
     def attribution(self) -> str | None:
         """Legally valid attribution for the media item in plain-text English."""
 
         try:
-            lic = License(self.license)
+            return License(
+                self.license.lower(),
+                self.license_version,
+            ).get_attribution_text(
+                self.title,
+                self.creator,
+                self.license_url,
+            )
         except ValueError:
             return None
-        return lic.attribution(
-            self.title,
-            self.creator,
-            self.license_version,
-            self.license_url,
-        )
 
     class Meta:
         """

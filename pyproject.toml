@@ -47,6 +47,7 @@ known-first-party = [
   "data_refresh",
   "database",
   "elasticsearch_cluster",
+  "legacy_data_refresh",
   "maintenance",
   "oauth2",
   "providers",

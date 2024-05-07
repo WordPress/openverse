@@ -36,9 +36,9 @@ from common.constants import (
     PRODUCTION,
 )
 from common.sensors.constants import PRODUCTION_ES_CONCURRENCY_TAG
-from data_refresh.data_refresh_task_factory import create_data_refresh_task_group
-from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS, DataRefresh
-from data_refresh.reporting import report_record_difference
+from legacy_data_refresh.data_refresh_task_factory import create_data_refresh_task_group
+from legacy_data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS, DataRefresh
+from legacy_data_refresh.reporting import report_record_difference
 
 
 logger = logging.getLogger(__name__)

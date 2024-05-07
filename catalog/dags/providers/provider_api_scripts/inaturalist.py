@@ -328,7 +328,7 @@ class INaturalistDataIngester(ProviderDataIngester):
                 python_callable=INaturalistDataIngester.load_catalog_of_life_names,
                 doc_md="Load vernacular taxon names from Catalog of Life",
                 op_kwargs={
-                    "remove_api_files": "{{params.sql_rm_source_data_after_ingesting}}"
+                    "remove_api_files": "{{ params.sql_rm_source_data_after_ingesting or var.json.SQL_RM_SOURCE_DATA_AFTER_INGESTION }}",
                 },
                 execution_timeout=timedelta(minutes=15),
             )
@@ -347,8 +347,11 @@ class INaturalistDataIngester(ProviderDataIngester):
             check_drop_parameter = ShortCircuitOperator(
                 task_id="check_drop_parameter",
                 doc_md="Skip post-ingestion if NOT sql_rm_source_data_after_ingesting.",
-                op_args=["{{ params.sql_rm_source_data_after_ingesting }}"],
-                python_callable=(lambda x: x),
+                op_args=[
+                    "{{ params.sql_rm_source_data_after_ingesting }}",
+                    "{{ var.json.SQL_RM_SOURCE_DATA_AFTER_INGESTION }}",
+                ],
+                python_callable=(lambda *x: any(x)),
                 trigger_rule=TriggerRule.NONE_SKIPPED,
                 # just skip the drop steps, not the final reporting step in the dag
                 ignore_downstream_trigger_rules=False,
