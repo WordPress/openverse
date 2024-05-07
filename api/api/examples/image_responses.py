@@ -41,9 +41,9 @@ base_image = {
         {"accuracy": None, "name": "stump", "unstable__provider": "stocksnap"},
         {"accuracy": None, "name": "closeup", "unstable__provider": "stocksnap"},
         {"accuracy": None, "name": "root", "unstable__provider": "stocksnap"},
-        {"accuracy": 0.8, "name": "tree", "unstable__provider": "machine_example"},
+        {"accuracy": 0.95, "name": "tree", "unstable__provider": "machine_example"},
         {"accuracy": 0.9, "name": "bark", "unstable__provider": "machine_example"},
-        {"accuracy": 0.78, "name": "plant", "unstable__provider": "machine_example"},
+        {"accuracy": 0.98, "name": "plant", "unstable__provider": "machine_example"},
     ],
     "attribution": (
         '"Tree Bark Photo" by Tim Sullivan is marked with '
