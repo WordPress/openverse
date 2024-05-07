@@ -233,14 +233,14 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ${{ matrix.context }}
-          target: ${{ matrix.target || '' }}
+          target: ${{ matrix.target }}
           push: false
           tags: openverse-${{ matrix.image }}
           file: ${{ matrix.file }}
           cache-from: type=gha,scope=${{ matrix.image }}
           cache-to: type=gha,scope=${{ matrix.image }}
           outputs: type=docker,dest=/tmp/${{ matrix.image }}.tar
-          build-contexts: ${{ matrix.build-contexts || '' }}
+          build-contexts: ${{ matrix.build-contexts }}
           build-args: |
             SEMANTIC_VERSION=${{ needs.get-image-tag.outputs.image_tag }}
             CATALOG_PY_VERSION=${{ steps.prepare-build-args.outputs.catalog_py_version }}
