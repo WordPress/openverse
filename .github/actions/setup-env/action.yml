@@ -32,13 +32,11 @@ runs:
         # - `automations/python/Pipfile`
         # - `dead_links/Pipfile`
         python-version: "3.11"
-        cache: pipenv
-        cache-dependency-path: |
-          **/Pipfile.lock
 
     - name: Setup global Python deps
       if: inputs.setup_python == 'true'
       shell: bash
+      # TODO: Try using `pipx` here instead of `pip`.
       run: |
         pip install -U pip
         pip install pipenv pdm
