@@ -71,7 +71,7 @@ def auth_key():
 
 # Do not convert tests to async, because of this issue:
 # https://github.com/pytest-dev/pytest-django/issues/580
-# While the transaction workaround technically works, its
+# While the transaction workaround technically works, it is
 # tedious, easy to forget, and just wrapping tested functions
 # with async_to_sync is much easier
 photon_get = async_to_sync(_photon_get)
