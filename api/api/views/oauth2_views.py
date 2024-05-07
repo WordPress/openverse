@@ -1,5 +1,4 @@
 import json
-import logging as log
 import secrets
 import smtplib
 from textwrap import dedent
@@ -14,6 +13,7 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
+import structlog
 from drf_spectacular.utils import extend_schema
 from oauth2_provider.contrib.rest_framework.permissions import TokenHasScope
 from oauth2_provider.generators import generate_client_secret
@@ -29,7 +29,7 @@ from api.serializers.oauth2_serializers import (
 from api.utils.throttle import OnePerSecond, TenPerDay
 
 
-module_logger = log.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 
 class InvalidCredentials(APIException):
@@ -109,8 +109,8 @@ class Register(APIView):
                 fail_silently=False,
             )
         except smtplib.SMTPException as e:
-            log.error("Failed to send API verification email!")
-            log.error(e)
+            logger.error("Failed to send API verification email!")
+            logger.error(e)
         # Give the user their newly created credentials.
         return Response(
             status=201,
@@ -236,7 +236,6 @@ class CheckRates(APIView):
             burst_requests = len(burst_requests_list) if burst_requests_list else None
             status = 200
         except ConnectionError:
-            logger = module_logger.getChild("CheckRates.get")
             logger.warning("Redis connect failed, cannot get key usage.")
             burst_requests = None
             sustained_requests = None

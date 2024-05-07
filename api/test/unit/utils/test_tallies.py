@@ -2,6 +2,7 @@ from datetime import datetime
 
 import pytest
 from freezegun import freeze_time
+from structlog.testing import capture_logs
 
 from api.utils import tallies
 
@@ -113,7 +114,7 @@ def test_count_provider_occurrences_increments_existing_tallies(redis):
     )
 
 
-def test_writes_error_logs_for_redis_connection_errors(unreachable_redis, caplog):
+def test_writes_error_logs_for_redis_connection_errors(unreachable_redis):
     provider_counts = {"flickr": 4, "stocksnap": 6}
 
     results = [
@@ -122,7 +123,8 @@ def test_writes_error_logs_for_redis_connection_errors(unreachable_redis, caplog
         for _ in range(count)
     ]
     now = datetime(2023, 1, 19)  # 16th is start of week
-    with freeze_time(now):
+    with capture_logs() as cap_logs, freeze_time(now):
         tallies.count_provider_occurrences(results, FAKE_MEDIA_TYPE)
 
-    assert "Redis connect failed, cannot increment provider tallies." in caplog.text
+    messages = [record["event"] for record in cap_logs]
+    assert "Redis connect failed, cannot increment provider tallies." in messages

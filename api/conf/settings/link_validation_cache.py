@@ -1,15 +1,15 @@
 import json
-import logging
 import os
 from collections import defaultdict
 from datetime import timedelta
 
 from django.core.exceptions import ImproperlyConfigured
 
+import structlog
 from decouple import config
 
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 
 class LinkValidationCacheExpiryConfiguration(defaultdict):

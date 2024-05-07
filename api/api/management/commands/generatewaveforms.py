@@ -1,4 +1,3 @@
-import logging
 import subprocess
 
 from django_tqdm import BaseCommand
@@ -86,10 +85,6 @@ class Command(BaseCommand):
         return errored_identifiers
 
     def handle(self, *args, **options):
-        # These logs really muck up the tqdm output and don't give us much helpful
-        # information, so they get silenced
-        logging.getLogger("api.utils.waveform").setLevel(logging.WARNING)
-
         existing_waveform_audio_identifiers_query = AudioAddOn.objects.filter(
             waveform_peaks__isnull=False
         ).values_list("audio_identifier", flat=True)

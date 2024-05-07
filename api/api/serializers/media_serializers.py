@@ -1,4 +1,3 @@
-import logging
 from collections import namedtuple
 from typing import TypedDict
 
@@ -35,8 +34,6 @@ from api.serializers.fields import SchemableHyperlinkedIdentityField
 from api.utils.help_text import make_comma_separated_help_text
 from api.utils.url import add_protocol
 
-
-logger = logging.getLogger(__name__)
 
 #######################
 # Request serializers #

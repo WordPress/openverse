@@ -1,12 +1,12 @@
 import abc
-import logging
 
 from rest_framework.throttling import SimpleRateThrottle as BaseSimpleRateThrottle
 
+import structlog
 from redis.exceptions import ConnectionError
 
 
-parent_logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 
 class SimpleRateThrottle(BaseSimpleRateThrottle, metaclass=abc.ABCMeta):
@@ -19,7 +19,6 @@ class SimpleRateThrottle(BaseSimpleRateThrottle, metaclass=abc.ABCMeta):
         try:
             is_allowed = super().allow_request(request, view)
         except ConnectionError:
-            logger = parent_logger.getChild("allow_request")
             logger.warning("Redis connect failed, allowing request.")
             is_allowed = True
         view.headers |= self.headers()

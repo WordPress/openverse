@@ -11,6 +11,7 @@ import pytest
 from aiohttp import client_exceptions
 from aiohttp.client_reqrep import ConnectionKey
 from asgiref.sync import async_to_sync
+from structlog.testing import capture_logs
 
 from api.utils.image_proxy import (
     FAILURE_CACHE_KEY_TEMPLATE,
@@ -267,7 +268,7 @@ def setup_request_exception(monkeypatch):
 @pytest.mark.pook
 @cache_availability_params
 def test_get_successful_records_response_code(
-    mock_image_data, is_cache_reachable, cache_name, request, caplog
+    mock_image_data, is_cache_reachable, cache_name, request
 ):
     cache = request.getfixturevalue(cache_name)
     (
@@ -284,7 +285,8 @@ def test_get_successful_records_response_code(
         .body(MOCK_BODY)
     )
 
-    photon_get(TEST_MEDIA_INFO)
+    with capture_logs() as cap_logs:
+        photon_get(TEST_MEDIA_INFO)
     month = get_monthly_timestamp()
 
     keys = [
@@ -295,9 +297,8 @@ def test_get_successful_records_response_code(
         for key in keys:
             assert cache.get(key) == b"1"
     else:
-        assert (
-            "Redis connect failed, thumbnail response codes not tallied." in caplog.text
-        )
+        messages = [record["event"] for record in cap_logs]
+        assert "Redis connect failed, thumbnail response codes not tallied." in messages
 
 
 alert_count_params = pytest.mark.parametrize(
@@ -349,7 +350,6 @@ def test_get_exception_handles_error(
     is_cache_reachable,
     cache_name,
     request,
-    caplog,
 ):
     cache = request.getfixturevalue(cache_name)
 
@@ -359,7 +359,7 @@ def test_get_exception_handles_error(
     if is_cache_reachable:
         cache.set(key, count_start)
 
-    with pytest.raises(UpstreamThumbnailException):
+    with capture_logs() as cap_logs, pytest.raises(UpstreamThumbnailException):
         photon_get(TEST_MEDIA_INFO)
 
     sentry_capture_exception.assert_not_called()
@@ -367,7 +367,8 @@ def test_get_exception_handles_error(
     if is_cache_reachable:
         assert cache.get(key) == str(count_start + 1).encode()
     else:
-        assert "Redis connect failed, thumbnail errors not tallied." in caplog.text
+        messages = [record["event"] for record in cap_logs]
+        assert "Redis connect failed, thumbnail errors not tallied." in messages
 
 
 @cache_availability_params
@@ -390,7 +391,6 @@ def test_get_http_exception_handles_error(
     is_cache_reachable,
     cache_name,
     request,
-    caplog,
 ):
     cache = request.getfixturevalue(cache_name)
 
@@ -399,7 +399,7 @@ def test_get_http_exception_handles_error(
     if is_cache_reachable:
         cache.set(key, count_start)
 
-    with pytest.raises(UpstreamThumbnailException):
+    with capture_logs() as cap_logs, pytest.raises(UpstreamThumbnailException):
         pook.get(PHOTON_URL_FOR_TEST_IMAGE).reply(status_code, text)
         photon_get(TEST_MEDIA_INFO)
 
@@ -412,8 +412,9 @@ def test_get_http_exception_handles_error(
             == b"1"
         )
     else:
+        messages = [record["event"] for record in cap_logs]
         assert all(
-            message in caplog.text
+            message in messages
             for message in [
                 "Redis connect failed, thumbnail HTTP errors not tallied.",
                 "Redis connect failed, thumbnail errors not tallied.",
@@ -612,7 +613,6 @@ def test_photon_get_saves_image_type_to_cache(
     is_cache_reachable,
     cache_name,
     request,
-    caplog,
 ):
     cache = request.getfixturevalue(cache_name)
 
@@ -625,15 +625,16 @@ def test_photon_get_saves_image_type_to_cache(
     )
     pook.on()
     pook.head(image_url, reply=200, response_headers=headers)
-    with pytest.raises(UnsupportedMediaType):
+    with capture_logs() as cap_logs, pytest.raises(UnsupportedMediaType):
         photon_get(media_info)
 
     key = f"media:{image.identifier}:thumb_type"
     if is_cache_reachable:
         assert cache.get(key) == expected_cache_val
     else:
+        messages = [record["event"] for record in cap_logs]
         assert all(
-            message in caplog.text
+            message in messages
             for message in [
                 "Redis connect failed, cannot get cached image extension.",
                 "Redis connect failed, cannot cache image extension.",
