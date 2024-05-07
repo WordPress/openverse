@@ -103,10 +103,7 @@ test.describe("Header internal", () => {
       await page.goto("/")
       const homeUrl = page.url()
       await clickMenuButton(page)
-      await Promise.all([
-        page.waitForURL(/about/),
-        page.getByRole("link", { name: t("navigation.about") }).click(),
-      ])
+      await page.getByRole("link", { name: t("navigation.about") }).click()
 
       await getHomeLink(page).click()
       expect(page.url()).toBe(homeUrl)
