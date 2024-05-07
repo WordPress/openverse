@@ -1,28 +1,27 @@
-import { expect, Page, test } from "@playwright/test"
+import { expect, type Page, test } from "@playwright/test"
 
-import { makeGotoWithArgs } from "~~/test/storybook/utils/args"
+import { makeUrlWithArgs } from "~~/test/storybook/utils/args"
+import { waitForResponse } from "~~/test/storybook/utils/response"
 
-const gotoWithArgs = makeGotoWithArgs(
+const urlWithArgs = makeUrlWithArgs(
   "components-vheader-vheadermobile-vfiltertab--default-story"
 )
 
 test.describe.configure({ mode: "parallel" })
 
 const wrapper = "[role='tablist']"
+const filtersTab = "#tab-filters"
+
+const getFiltersTab = async (page: Page) => page.locator(filtersTab)
 
 const focusFiltersTab = async (page: Page) => {
-  await expect(page.locator("#tab-filters")).toBeVisible()
-  await page.keyboard.press("Tab")
-  const focusedTab = await page.evaluate(
-    () => document.activeElement?.textContent ?? ""
-  )
-  if (focusedTab.includes("Tab1")) {
-    await page.keyboard.press("ArrowRight")
-  }
+  const tab = await getFiltersTab(page)
+  await expect(tab).toBeVisible()
+  await tab.focus()
 }
 
 const hoverFiltersTab = async (page: Page) => {
-  await page.locator("#tab-filters").hover()
+  await (await getFiltersTab(page)).hover()
 }
 
 /**
@@ -33,13 +32,12 @@ const goAndWaitForSvg = async (
   page: Page,
   args: Record<string, string | number | boolean>
 ) => {
-  if (args.appliedFilterCount !== 0) {
-    await gotoWithArgs(page, args)
+  const url = urlWithArgs(args)
+  if (args.appliedFilterCount === 0) {
+    await waitForResponse(page, url, /\.svg/)
+    await expect(page.locator(`${filtersTab} svg`)).toBeVisible()
   } else {
-    const response = page.waitForResponse(/\.svg/)
-    await gotoWithArgs(page, args)
-    await response
-    await expect(page.locator("#tab-filters svg")).toBeVisible()
+    await page.goto(url)
   }
 }
 

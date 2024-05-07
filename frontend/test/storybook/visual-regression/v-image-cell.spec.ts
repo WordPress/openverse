@@ -1,8 +1,9 @@
-import { expect, Page, test } from "@playwright/test"
-
-import { makeGotoWithArgs } from "~~/test/storybook/utils/args"
+import { expect, type Page, test } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
+
+import { makeUrlWithArgs } from "~~/test/storybook/utils/args"
+import { waitForResponse } from "~~/test/storybook/utils/response"
 
 import type { AspectRatio } from "~/types/media"
 
@@ -12,21 +13,20 @@ const imageCellImage = `${imageCell} img`
 // exceeds the bounds of the actual component
 const screenshotEl = ".sb-main-padded"
 
-test.describe.configure({ mode: "parallel" })
-
-const gotoWithArgs = makeGotoWithArgs("components-vimagecell--v-image-cell")
+const urlWithArgs = makeUrlWithArgs("components-vimagecell--v-image-cell")
 
 const goAndWaitForImage = async (
   page: Page,
   args: Record<string, string | number | boolean>
 ) => {
-  const responsePromise = page.waitForResponse((resp) =>
-    resp.request().url().endsWith(".jpg")
-  )
-  await gotoWithArgs(page, args)
-  await responsePromise
+  // Block the flickr direct url request so that the image cell immediately
+  // falls back to the local image.
+  await page.route("**flickr**", (route) => route.abort())
+  await waitForResponse(page, urlWithArgs(args), /\.jpg/)
   await expect(page.locator(imageCellImage)).toBeVisible()
 }
+
+test.describe.configure({ mode: "parallel" })
 
 test.describe("VImageCell", () => {
   breakpoints.describeMobileXsAndDesktop(({ expectSnapshot }) => {
@@ -35,9 +35,6 @@ test.describe("VImageCell", () => {
     for (const ratio of aspectRatios) {
       test(`${ratio} loaded`, async ({ page }) => {
         await goAndWaitForImage(page, { aspectRatio: ratio })
-
-        const mainEl = page.locator(imageCell)
-        await expect(mainEl).toBeVisible()
 
         await expectSnapshot(
           `v-image-cell-${ratio}-loaded`,
@@ -49,7 +46,6 @@ test.describe("VImageCell", () => {
         await goAndWaitForImage(page, { aspectRatio: ratio })
 
         await page.focus(imageCell)
-        await page.locator(imageCell).click()
 
         await expectSnapshot(
           `v-image-cell-${ratio}-focused`,
