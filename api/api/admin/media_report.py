@@ -1,5 +1,10 @@
 from django.conf import settings
 from django.contrib import admin
+from django.contrib.admin.views.main import ChangeList
+from django.db.models import Count, F, Min
+from django.urls import reverse
+from django.utils.html import format_html
+from django.utils.safestring import mark_safe
 
 import structlog
 from elasticsearch import NotFoundError
@@ -10,6 +15,108 @@ from api.models import PENDING
 
 
 logger = structlog.get_logger(__name__)
+
+
+class PredeterminedOrderChangelist(ChangeList):
+    """
+    ChangeList class which does not apply any default ordering to the items.
+
+    This is necessary for lists where the ordering is done on an annotated field, since
+    the changelist attempts to apply the ordering to a QuerySet which is not aware that
+    it has the annotated field available (and thus raises a FieldError).
+
+    The caveat to this is that the ordering *must* be applied in
+    ModelAdmin::get_queryset
+    """
+
+    def _get_default_ordering(self):
+        return []
+
+
+class PendingRecordCountFilter(admin.SimpleListFilter):
+    title = "pending record count"
+    parameter_name = "pending_record_count"
+
+    def choices(self, changelist):
+        """Set default to "pending" rather than "all"."""
+        choices = list(super().choices(changelist))
+        choices[0]["display"] = "Pending"
+        return choices
+
+    def lookups(self, request, model_admin):
+        return (("all", "All"),)
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value != "all":
+            return queryset.filter(pending_report_count__gt=0)
+
+        return queryset
+
+
+class MediaListAdmin(admin.ModelAdmin):
+    list_display = (
+        "identifier",
+        "total_report_count",
+        "pending_report_count",
+        "oldest_report_date",
+        "pending_reports_links",
+    )
+    list_filter = (PendingRecordCountFilter,)
+    # Disable link display for images
+    list_display_links = None
+    # Allow autocomplete to work from other referenced fields
+    search_fields = ("identifier",)
+    media_type = None
+    # Ordering is not set here, see get_queryset
+
+    def total_report_count(self, obj):
+        return obj.total_report_count
+
+    def pending_report_count(self, obj):
+        return obj.pending_report_count
+
+    def oldest_report_date(self, obj):
+        return obj.oldest_report_date
+
+    def pending_reports_links(self, obj):
+        reports = getattr(obj, f"{self.media_type}_report")
+        pending_reports = reports.filter(decision__isnull=True)
+        data = []
+        for report in pending_reports.all():
+            url = reverse(
+                f"admin:api_{self.media_type}report_change", args=(report.id,)
+            )
+            data.append(format_html('<a href="{}">Report {}</a>', url, report.id))
+
+        return mark_safe(", ".join(data))
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        # Return all available image if this is for an autocomplete request
+        if "autocomplete" in request.path:
+            return qs
+
+        # Filter down to only instances with reports
+        qs = qs.filter(**{f"{self.media_type}_report__isnull": False})
+        # Annotate and order by report count
+        qs = qs.annotate(total_report_count=Count(f"{self.media_type}_report"))
+        # Show total pending reports by subtracting the number of reports
+        # from the number of reports that have decisions
+        qs = qs.annotate(
+            pending_report_count=F("total_report_count")
+            - Count(f"{self.media_type}_report__decision__pk")
+        )
+        qs = qs.annotate(
+            oldest_report_date=Min(f"{self.media_type}_report__created_at")
+        )
+        qs = qs.order_by(
+            "-total_report_count", "-pending_report_count", "oldest_report_date"
+        )
+        return qs
+
+    def get_changelist(self, request, **kwargs):
+        return PredeterminedOrderChangelist
 
 
 class MediaReportAdmin(admin.ModelAdmin):
@@ -153,6 +260,14 @@ class ImageReportAdmin(MediaReportAdmin):
 
 
 class AudioReportAdmin(MediaReportAdmin):
+    media_type = "audio"
+
+
+class ImageListViewAdmin(MediaListAdmin):
+    media_type = "image"
+
+
+class AudioListViewAdmin(MediaListAdmin):
     media_type = "audio"
 
 
