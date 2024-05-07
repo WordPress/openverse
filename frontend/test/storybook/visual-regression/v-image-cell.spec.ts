@@ -3,6 +3,7 @@ import { expect, type Page, test } from "@playwright/test"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 
 import { makeUrlWithArgs } from "~~/test/storybook/utils/args"
+import { sleep } from "~~/test/playwright/utils/navigation"
 import { waitForResponse } from "~~/test/storybook/utils/response"
 
 import type { AspectRatio } from "~/types/media"
@@ -24,6 +25,7 @@ const goAndWaitForImage = async (
   await page.route("**flickr**", (route) => route.abort())
   await waitForResponse(page, urlWithArgs(args), /\.jpg/)
   await expect(page.locator(imageCellImage)).toBeVisible()
+  await sleep(500)
 }
 
 test.describe.configure({ mode: "parallel" })
