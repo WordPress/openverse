@@ -6,8 +6,41 @@ https://docs.openverse.org/meta/ci_cd/jobs/docker.html#determine-images
 
 import json
 import os
+from dataclasses import asdict, dataclass
 
 from shared.actions import write_to_github_output
+
+
+@dataclass
+class Include:
+    image: str
+    target: str
+
+    context: str
+    file: str
+    build_contexts: str
+    build_args: str
+
+    def __init__(
+        image: str,
+        target: str,
+        context: str | None = None,
+        file: str | None = None,
+        build_contexts: str | None = None,
+        build_args: str | None = None,
+    ):
+        super().__init__(
+            image,
+            target,
+            context or image,
+            file or f"{context or image}/Dockerfile",
+            build_contexts or "",
+            build_args=build_args or "",
+        )
+
+    @property
+    def asdict(self) -> dict[str, str]:
+        return {k.replace("_", "-"): v for k, v in asdict(self).items()}
 
 
 changes = json.loads(os.environ.get("CHANGES"))
@@ -21,32 +54,36 @@ def ser_set(x):
 build_matrix = {"image": set()}
 publish_matrix = {"image": set()}
 
-includes = {
-    "upstream_db": {
-        "image": "upstream_db",
-        "context": "docker/upstream_db",
-        "target": "db",
-    },
-    "catalog": {"image": "catalog", "target": "cat"},
-    "ingestion_server": {"image": "ingestion_server", "target": "ing"},
-    "api": {
-        "image": "api",
-        "target": "api",
-        "build-contexts": "packages=./packages/python",
-    },
-    "api_nginx": {
-        "image": "api_nginx",
-        "context": "api",
-        "target": "nginx",
-        "build-contexts": "packages=./packages/python",
-    },
-    "frontend": {"image": "frontend", "target": "app", "build-contexts": "repo_root=."},
-    "frontend_nginx": {
-        "image": "frontend_nginx",
-        "context": "frontend",
-        "file": "frontend/Dockerfile.nginx",
-        "target": "nginx",
-    },
+includes: dict[str, Include] = {
+    "upstream_db": Include(
+        image="upstream_db",
+        target="db",
+        context="docker/upstream_db",
+    ),
+    "catalog": Include(image="catalog", target="cat"),
+    "ingestion_server": Include(image="ingestion_server", target="ing"),
+    "api": Include(
+        image="api",
+        target="api",
+        build_contexts="packages=./packages/python",
+    ),
+    "api_nginx": Include(
+        image="api_nginx",
+        target="nginx",
+        context="api",
+        build_contexts="packages=./packages/python",
+    ),
+    "frontend": Include(
+        image="frontend",
+        target="app",
+        build_contexts="repo_root=.",
+    ),
+    "frontend_nginx": Include(
+        image="frontend_nginx",
+        target="nginx",
+        context="frontend",
+        file="frontend/Dockerfile.nginx",
+    ),
 }
 
 if "ci_cd" in changes:
@@ -65,7 +102,7 @@ if "frontend" in changes:
     publish_matrix["image"] |= {"frontend", "frontend_nginx"}
 
 
-build_matrix["include"] = [includes[item] for item in build_matrix["image"]]
+build_matrix["include"] = [includes[item].asdict for item in build_matrix["image"]]
 
 for item in build_matrix["include"]:
     if "context" not in item:
