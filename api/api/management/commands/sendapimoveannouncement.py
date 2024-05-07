@@ -27,14 +27,12 @@ Openverse only sends emails for critical operational notifications.
 
 
 class Command(BaseCommand):
-    help = "Resends verification emails for unverified Oauth applications."
+    help = "Send an email announcing the Openverse API moving to api.openverse.org."
     """
-    This command sends a corrected oauth verification email to users who have
-    not yet verified their Openverse oauth applications. A previous version sent
-    an email with an incorrectly formatted link.
+    This command sends an email announcing the API move to api.openverse.org.
 
     It stores a cache of successfully sent emails in Redis, so running it multiple
-    times (in case of failure) should not be an issue.
+    times (in case of failure) will not be an issue.
     """
 
     processed_key = "apimoveannouncement:processed"
