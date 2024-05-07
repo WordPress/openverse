@@ -1023,11 +1023,12 @@ jobs:
 
       - name: Load and tag image `${{ matrix.image }}` (latest & sha)
         run: |
-          docker tag openverse-${{ matrix.image }} \
+          docker image tag openverse-${{ matrix.image }} \
             ghcr.io/wordpress/openverse-${{ matrix.image }}:latest
-          docker tag openverse-${{ matrix.image }} \
+          docker image tag openverse-${{ matrix.image }} \
             ghcr.io/wordpress/openverse-${{ matrix.image }}:${{ needs.get-image-tag.outputs.image_tag }}
-          docker push --all-tags ghcr.io/wordpress/openverse-${{ matrix.image }}
+          docker image push --all-tags \
+            ghcr.io/wordpress/openverse-${{ matrix.image }}
 
   ##############
   # Deployment #
