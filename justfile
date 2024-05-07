@@ -136,6 +136,7 @@ EXEC_DEFAULTS := if IS_CI == "" { "" } else { "-T" }
 export CATALOG_PY_VERSION := `just catalog/py-version`
 export CATALOG_AIRFLOW_VERSION := `just catalog/airflow-version`
 export API_PY_VERSION := `just api/py-version`
+export API_PDM_HASH := `just api/pdm-hash`
 export INGESTION_PY_VERSION := `just ingestion_server/py-version`
 export FRONTEND_NODE_VERSION := `just frontend/node-version`
 export FRONTEND_PNPM_VERSION := `just frontend/pnpm-version`
