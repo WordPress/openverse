@@ -50,7 +50,7 @@ test.describe("VFilterTab", () => {
       await goAndWaitForSvg(page, { appliedFilterCount, isSelected: true })
       await focusFiltersTab(page)
 
-      await expect(page.locator(wrapper)).toHaveScreenshot(
+      expect(await page.locator(wrapper).screenshot()).toMatchSnapshot(
         `filter-tab-focused-${appliedFilterCount}.png`
       )
     })
