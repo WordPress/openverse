@@ -598,6 +598,13 @@ class TagSerializer(serializers.Serializer):
         help_text="The accuracy of a machine-generated tag. Human-generated "
         "tags have a null accuracy field.",
     )
+    unstable__provider = serializers.CharField(
+        label="provider",
+        source="provider",
+        help_text="The source of the tag. When this field matches the provider for the "
+        "record, the tag itself came from the upstream provider. Otherwise, the tag "
+        "was added with an external machine-generated labeling processes.",
+    )
 
 
 @extend_schema_serializer(
