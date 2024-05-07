@@ -52,7 +52,7 @@
           @open="openPageMenu"
         >
           <template #top-bar>
-            <header class="flex h-20 w-full justify-between px-2 py-4">
+            <div class="flex h-20 w-full justify-between px-2 py-4">
               <VHomeLink variant="light" />
               <VIconButton
                 variant="transparent-tx"
@@ -62,7 +62,7 @@
                 :label="$t('modal.closePagesMenu')"
                 @click="closePageMenu"
               />
-            </header>
+            </div>
           </template>
           <template #default>
             <nav>
