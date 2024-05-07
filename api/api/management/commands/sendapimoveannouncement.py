@@ -6,7 +6,7 @@ from django.core.mail import send_mail
 import django_redis
 from django_tqdm import BaseCommand
 
-from api.models.oauth import OAuth2Verification
+from api.models.oauth import OAuth2Registration, ThrottledApplication
 
 
 message = """
@@ -57,14 +57,17 @@ class Command(BaseCommand):
             email.decode("utf-8") for email in redis.smembers(self.processed_key)
         ]
 
-        # Join from verification because it has a reference to both the application and the email
         unsent_email_addresses = (
-            OAuth2Verification.objects.filter(
-                # Only send to verified email addresses to avoid bounce rate increase
-                associated_application__verified=True
-            )
-            .exclude(
+            OAuth2Registration.objects.exclude(
                 email__in=sent_emails,
+            )
+            .filter(
+                # `name` is unique indexed on OAuth2Registration, so should be safe to query
+                name__in=(
+                    ThrottledApplication.objects.filter(verified=True).values_list(
+                        "name", flat=True
+                    )
+                )
             )
             .distinct("email")
             .values_list("email", flat=True)

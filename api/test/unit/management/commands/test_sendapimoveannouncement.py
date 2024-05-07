@@ -6,7 +6,7 @@ from django.core.management import call_command
 import pytest
 
 from test.factory.models.oauth2 import (
-    OAuth2VerificationFactory,
+    OAuth2RegistrationFactory,
 )
 
 
@@ -53,10 +53,11 @@ def call_cmd(**options):
 
 
 def make_emails(count: int, *, verified: bool):
-    verifications = OAuth2VerificationFactory.create_batch(
-        count, associated_application__verified=verified
+    registrations = OAuth2RegistrationFactory.create_batch(
+        count,
+        application__verified=verified,
     )
-    return [v.email for v in verifications]
+    return [r.email for r in registrations]
 
 
 @pytest.mark.django_db
@@ -90,7 +91,7 @@ def test_should_not_send_to_unverified_emails(captured_emails):
 @pytest.mark.django_db
 def test_should_not_send_to_email_twice(captured_emails):
     emails = make_emails(10, verified=True)
-    OAuth2VerificationFactory.create(
+    OAuth2RegistrationFactory.create(
         email=emails[0],
     )
 
