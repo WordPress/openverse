@@ -20,6 +20,10 @@ MIDDLEWARE.insert(0, "django_structlog.middlewares.RequestMiddleware")
 
 LOG_LEVEL = config("LOG_LEVEL", default="INFO").upper()
 DJANGO_DB_LOGGING = config("DJANGO_DB_LOGGING", cast=bool, default=False)
+LOG_PROCESSOR = config(
+    "LOG_PROCESSOR",
+    default="console" if ENVIRONMENT == "local" else "json",
+)
 
 # Set to a pipe-delimited string of gc debugging flags
 # https://docs.python.org/3/library/gc.html#gc.DEBUG_STATS
@@ -45,9 +49,11 @@ LOGGING = {
             "format": "[{asctime} - {name} - {lineno:>3}][{levelname}] {message}",
             "style": "{",
         },
-        "json": {
+        "structured": {
             "()": structlog.stdlib.ProcessorFormatter,
-            "processor": structlog.processors.JSONRenderer(),
+            "processor": structlog.processors.JSONRenderer()
+            if LOG_PROCESSOR == "json"
+            else structlog.dev.ConsoleRenderer(),
         },
     },
     "handlers": {
@@ -57,21 +63,21 @@ LOGGING = {
             "class": "logging.StreamHandler",
             "formatter": "console",
         },
-        "console_json": {
+        "console_structured": {
             "level": LOG_LEVEL,
             "class": "logging.StreamHandler",
-            "formatter": "json",
+            "formatter": "structured",
         },
     },
     "loggers": {
         # Application
         "django_structlog": {
-            "handlers": ["console_json"],
+            "handlers": ["console_structured"],
             "level": LOG_LEVEL,
             "propagate": False,
         },
         "api": {
-            "handlers": ["console_json"],
+            "handlers": ["console_structured"],
             "level": LOG_LEVEL,
             "propagate": False,
         },
