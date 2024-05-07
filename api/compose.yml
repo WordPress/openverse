@@ -17,7 +17,7 @@ services:
         - SEMANTIC_VERSION=${SEMANTIC_VERSION:-v1.0.0}
         - API_PY_VERSION
         - PDM_INSTALL_ARGS=--dev
-    image: openverse-api
+    image: openverse-api:${API_PDM_HASH:-latest}
     volumes:
       - .:/api:z
       - ../packages/python:/packages/python:z
