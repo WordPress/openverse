@@ -21,7 +21,7 @@ class PredeterminedOrderChangelist(ChangeList):
     """
     ChangeList class which does not apply any default ordering to the items.
 
-    This is necessary or lists where the ordering is done on an annotated field, since
+    This is necessary for lists where the ordering is done on an annotated field, since
     the changelist attempts to apply the ordering to a QuerySet which is not aware that
     it has the annotated field available (and thus raises a FieldError).
 
@@ -38,7 +38,7 @@ class PendingRecordCountFilter(admin.SimpleListFilter):
     parameter_name = "pending_record_count"
 
     def choices(self, changelist):
-        """Override in order to get the default to be "pending" rather than "all"."""
+        """Set default to "pending" rather than "all"."""
         choices = list(super().choices(changelist))
         choices[0]["display"] = "Pending"
         return choices
@@ -88,6 +88,7 @@ class MediaListAdmin(admin.ModelAdmin):
                 f"admin:api_{self.media_type}report_change", args=(report.id,)
             )
             data.append(format_html('<a href="{}">Report {}</a>', url, report.id))
+
         return mark_safe(", ".join(data))
 
     def get_queryset(self, request):
@@ -95,6 +96,7 @@ class MediaListAdmin(admin.ModelAdmin):
         # Return all available image if this is for an autocomplete request
         if "autocomplete" in request.path:
             return qs
+
         # Filter down to only instances with reports
         qs = qs.filter(**{f"{self.media_type}_report__isnull": False})
         # Annotate and order by report count
