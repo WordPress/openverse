@@ -22,6 +22,7 @@ class Include:
     build_args: str
 
     def __init__(
+        self,
         image: str,
         target: str,
         context: str | None = None,
@@ -29,14 +30,12 @@ class Include:
         build_contexts: str | None = None,
         build_args: str | None = None,
     ):
-        super().__init__(
-            image,
-            target,
-            context or image,
-            file or f"{context or image}/Dockerfile",
-            build_contexts or "",
-            build_args=build_args or "",
-        )
+        self.image = image
+        self.target = target
+        self.context = context or image
+        self.file = file or f"{self.context}/Dockerfile"
+        self.build_contexts = build_contexts or ""
+        self.build_args = build_args or ""
 
     @property
     def asdict(self) -> dict[str, str]:
