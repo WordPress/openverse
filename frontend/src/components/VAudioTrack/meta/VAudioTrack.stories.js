@@ -13,13 +13,11 @@ import wavWaveform from "./wav-waveform.json"
 const commonAttrs = () => ({
   id: Math.floor(Math.random() * 1e9).toString(),
   frontendMediaType: "audio",
-  source: "wikimedia_audio",
   creator: "Wolfgang Amadeus Mozart",
   creator_url: "https://en.wikipedia.org/wiki/Wolfgang_Amadeus_Mozart",
   category: "music",
   thumbnail:
     "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Croce-Mozart-Detail.jpg/370px-Croce-Mozart-Detail.jpg",
-  frontendMediaType: "audio",
   source: "wikimedia_audio",
   sourceName: "Wikimedia",
 })
@@ -130,27 +128,6 @@ export default {
 export const FullMedium = {
   render: Template.bind({}),
   name: "Full (medium)",
-
-  // layout: 'full', (default)
-  args:
-    // size: 'm', (default)
-    {},
-}
-
-export const FullSmall = {
-  render: Template.bind({}),
-  name: "Full (small)",
-
-  // layout: 'full', (default)
-  args: {
-    size: "s",
-  },
-
-  parameters: {
-    viewport: {
-      defaultViewport: "sm",
-    },
-  },
 }
 
 export const RowLarge = {
@@ -192,16 +169,6 @@ export const RowSmall = {
 export const BoxLarge = {
   render: Template.bind({}),
   name: "Box (large)",
-
-  args: {
-    layout: "box",
-    size: "l",
-  },
-}
-
-export const BoxMedium = {
-  render: Template.bind({}),
-  name: "Box (medium)",
 
   args: {
     layout: "box",
