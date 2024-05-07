@@ -601,6 +601,9 @@ class TagSerializer(serializers.Serializer):
     unstable__provider = serializers.CharField(
         label="provider",
         source="provider",
+        # Provider is present in the database but not in Elasticsearch, so it may
+        # not always be present during serialization
+        allow_null=True,
         help_text="The source of the tag. When this field matches the provider for the "
         "record, the tag itself came from the upstream provider. Otherwise, the tag "
         "was added with an external machine-generated labeling processes.",
