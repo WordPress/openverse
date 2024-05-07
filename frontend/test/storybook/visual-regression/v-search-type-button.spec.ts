@@ -28,14 +28,13 @@ test.describe("VSearchTypeButton", () => {
 
     for (const state of ["non-pressed", "pressed"] as const) {
       const snapshotName = `v-search-type-button-${buttonName}${state === "pressed" ? "-pressed" : ""}`
-      breakpoints.describeMd(({ expectSnapshot }) => {
+      breakpoints.describeMd(({ breakpoint }) => {
         test(`resting ${state} ${buttonName}`, async ({ page }) => {
           const url = urlWithArgs({ showLabel, pressed: state === "pressed" })
           await goAndWaitForSvg(page, url)
 
-          await expectSnapshot(
-            `${snapshotName}-at-rest`,
-            page.locator(searchTypeButtonLocator)
+          await expect(page.locator(searchTypeButtonLocator)).toHaveScreenshot(
+            `${snapshotName}-at-rest-${breakpoint}.png`
           )
         })
 
@@ -44,9 +43,8 @@ test.describe("VSearchTypeButton", () => {
           await goAndWaitForSvg(page, url)
           await page.hover(searchTypeButtonLocator)
 
-          await expectSnapshot(
-            `${snapshotName}-hovered`,
-            page.locator(searchTypeButtonLocator)
+          await expect(page.locator(searchTypeButtonLocator)).toHaveScreenshot(
+            `${snapshotName}-hovered-${breakpoint}.png`
           )
         })
       })
