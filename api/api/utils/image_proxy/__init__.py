@@ -133,12 +133,15 @@ def _cache_repeated_failures(_get):
     Wrap ``image_proxy.get`` to cache repeated upstream failures
     and avoid re-requesting images likely to fail.
 
-    Do this by storing a count for each media identifier of requested thumbnails.
-    When the upstream request succeeds, increment the key. When it fails, decrement it.
+    Do this by incrementing a counter for each media identifier each time the inner request
+    fails. Before making thumbnail requests, check this counter. If it is above the configured
+    threshold, assume the request will fail again, and eagerly return a failed response without
+    sending the request upstream.
 
-    If the count goes below -2, then the thumbnail has failed twice within cache frame.
-    In those cases, bypass the upstream request and immediately return a 424 without
-    making the request again.
+    Additionally, if the request succeeds and the failure count is not 0, decrement the counter
+    to reflect the successful response, accounting for thumbnails that were temporarily flaky,
+    while still allowing them to get temporarily cached as a failure if additional requests fail
+    and push the counter over the threshold.
     """
     logger = parent_logger.getChild("_cache_repeated_failures")
 
