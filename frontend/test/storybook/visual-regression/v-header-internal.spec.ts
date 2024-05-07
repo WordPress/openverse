@@ -4,6 +4,7 @@ import breakpoints from "~~/test/playwright/utils/breakpoints"
 import {
   type LanguageDirection,
   languageDirections,
+  t,
 } from "~~/test/playwright/utils/i18n"
 import { dirParam } from "~~/test/storybook/utils/args"
 
@@ -27,16 +28,29 @@ test.describe("VHeaderInternal", () => {
           )
         })
       })
-      breakpoints.describeEachMobile(({ breakpoint, expectSnapshot }) => {
+
+      breakpoints.describeXs(({ breakpoint }) => {
         test(`mobile header closed`, async ({ page }) => {
           await page.goto(pageUrl(dir))
+
+          // Ensure fonts are loaded before taking the snapshot
+          const responsePromise = page.waitForResponse(/var\.woff2/)
+          await page.locator('button[aria-haspopup="dialog"]').click()
+          await responsePromise
+
+          await page
+            .getByRole("button", { name: t("modal.closePagesMenu") })
+            .click()
+
           await page.mouse.move(0, 150)
 
           await expect(page.locator(headerSelector)).toHaveScreenshot(
             `mobile-header-internal-closed-${dir}-${breakpoint}.png`
           )
         })
+      })
 
+      breakpoints.describeEachMobile(({ expectSnapshot }) => {
         test(`mobil header with open modal`, async ({ page }) => {
           await page.goto(pageUrl(dir))
 
