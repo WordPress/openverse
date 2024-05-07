@@ -59,10 +59,10 @@ from common.constants import XCOM_PULL_TEMPLATE
 from common.sensors.constants import PRODUCTION_ES_CONCURRENCY_TAG
 from common.sensors.single_run_external_dags_sensor import SingleRunExternalDAGsSensor
 from common.sensors.utils import wait_for_external_dags_with_tag
-from data_refresh.create_filtered_index import (
+from legacy_data_refresh.create_filtered_index import (
     create_filtered_index_creation_task_groups,
 )
-from data_refresh.data_refresh_types import DataRefresh
+from legacy_data_refresh.data_refresh_types import DataRefresh
 
 
 logger = logging.getLogger(__name__)

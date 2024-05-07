@@ -22,8 +22,8 @@ DAG_PATHS = [
     "maintenance/rotate_db_snapshots.py",
     "popularity/recreate_popularity_calculation_dag_factory.py",
     "popularity/popularity_refresh_dag_factory.py",
-    "data_refresh/dag_factory.py",
-    "data_refresh/create_filtered_index_dag.py",
+    "legacy_data_refresh/dag_factory.py",
+    "legacy_data_refresh/create_filtered_index_dag.py",
     "elasticsearch_cluster/recreate_staging_index/recreate_full_staging_index_dag.py",
     "elasticsearch_cluster/healthcheck_dag.py",
     "oauth2/authorize_dag.py",
@@ -40,8 +40,8 @@ EXPECTED_COUNT = {
     ),
     "popularity/recreate_popularity_calculation_dag_factory.py": len(MEDIA_TYPES),
     "popularity/popularity_refresh_dag_factory.py": len(MEDIA_TYPES),
-    "data_refresh/dag_factory.py": len(MEDIA_TYPES),
-    "data_refresh/create_filtered_index_dag.py": len(MEDIA_TYPES),
+    "legacy_data_refresh/dag_factory.py": len(MEDIA_TYPES),
+    "legacy_data_refresh/create_filtered_index_dag.py": len(MEDIA_TYPES),
     "elasticsearch_cluster/healthcheck_dag.py": len(ENVIRONMENTS),
 }
 
