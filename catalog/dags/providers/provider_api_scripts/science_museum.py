@@ -17,6 +17,7 @@ from datetime import date
 from common import slack
 from common.licenses import LicenseInfo, get_license_info
 from common.loader import provider_details as prov
+from common.urls import rewrite_redirected_url
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 
 
@@ -166,9 +167,13 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
     def check_url(url: str | None) -> str | None:
         if not url:
             return None
-        if url.startswith("http"):
-            return url
-        return f"https://coimages.sciencemuseumgroup.org.uk/{url}"
+
+        # Will return None if url 403s
+        return rewrite_redirected_url(
+            url
+            if url.startswith("http")
+            else f"https://coimages.sciencemuseumgroup.org.uk/{url}"
+        )
 
     @staticmethod
     def _get_dimensions(image_data: dict) -> tuple[int | None, int | None]:
