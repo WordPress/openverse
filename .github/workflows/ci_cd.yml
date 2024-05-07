@@ -250,6 +250,7 @@ jobs:
             FRONTEND_NODE_VERSION=${{ steps.prepare-build-args.outputs.frontend_node_version }}
             FRONTEND_PNPM_VERSION=${{ steps.prepare-build-args.outputs.frontend_pnpm_version }}
             PGCLI_VERSION=${{ steps.prepare-build-args.outputs.pgcli_version }}
+            ${{ matrix.build-args || '' }}
 
       - name: Upload image `${{ matrix.image }}`
         id: upload-img
@@ -416,7 +417,7 @@ jobs:
         uses: ./.github/actions/load-img
         with:
           run_id: ${{ github.run_id }}
-          setup_images: upstream_db ingestion_server api
+          setup_images: upstream_db ingestion_server api=api_dev
 
       - name: Start API, ingest and index test data
         run: just api/init
