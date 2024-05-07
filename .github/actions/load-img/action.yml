@@ -7,8 +7,9 @@ inputs:
     required: true
 
   setup_images:
-    default: "upstream_db ingestion_server catalog api api_nginx frontend"
     description: Space-separated list of image names
+    required: true
+    # See `set_matrix_images.py` for all possible values
 
 runs:
   using: "composite"
@@ -54,7 +55,17 @@ runs:
     - name: Load images
       shell: bash
       run: |
-        images=(${{ inputs.setup_images }});
+        images=(${{ inputs.setup_images }})
         for image in "${images[@]}"; do
-          docker load --input /tmp/${image}.tar
+          if [[ "$image" == *"="* ]]; then
+            key="${image%%=*}"
+            value="${image##*=}"
+            echo "Loading /tmp/${value}.tar."
+            docker image load --input /tmp/${value}.tar
+            echo "Tagging openverse-${value} as openverse-${key}."
+            docker image tag openverse-${value} openverse-${key}
+          else
+            echo "Loading /tmp/${image}.tar."
+            docker image load --input /tmp/${image}.tar
+          fi
         done
