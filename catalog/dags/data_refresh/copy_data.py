@@ -73,11 +73,6 @@ def initialize_fdw(
     task: AbstractOperator = None,
 ):
     """Create the FDW and prepare it for copying."""
-
-    # Initialize the FDW from the upstream DB to the downstream DB.
-    # The FDW is used when copying data. It creates a new schema named
-    # upstream in the downstream DB through which the upstream table
-    # can be accessed.
     upstream_connection = Connection.get_connection_from_secrets(upstream_conn_id)
 
     _run_sql.function(
@@ -93,7 +88,11 @@ def initialize_fdw(
 
 
 @task
-def create_schema(downstream_conn_id: str, upstream_table_name: str):
+def create_schema(downstream_conn_id: str, upstream_table_name: str) -> str:
+    """
+    Create a new schema in the downstream DB through which the upstream table
+    can be accessed. Returns the schema name.
+    """
     downstream_pg = PostgresHook(
         postgres_conn_id=downstream_conn_id, default_statement_timeout=10.0
     )
@@ -108,7 +107,7 @@ def create_schema(downstream_conn_id: str, upstream_table_name: str):
 
 
 @task
-def get_record_limit():
+def get_record_limit() -> int | None:
     """
     Check and retrieve the limit of records to ingest for the environment in which
     Airflow is running.
