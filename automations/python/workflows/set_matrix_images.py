@@ -66,6 +66,14 @@ includes: dict[str, Include] = {
         image="api",
         target="api",
         build_contexts="packages=./packages/python",
+        build_args="PDM_INSTALL_ARGS=--prod",
+    ),
+    "api_dev": Include(
+        image="api_dev",
+        target="api",
+        context="api",
+        build_contexts="packages=./packages/python",
+        build_args="PDM_INSTALL_ARGS=--dev",
     ),
     "api_nginx": Include(
         image="api_nginx",
@@ -92,10 +100,16 @@ if "catalog" in changes:
     build_matrix["image"] |= {"upstream_db", "catalog"}
     publish_matrix["image"].add("catalog")
 if "ingestion_server" in changes:
-    build_matrix["image"] |= {"upstream_db", "ingestion_server", "api"}
+    build_matrix["image"] |= {"upstream_db", "ingestion_server", "api", "api_dev"}
     publish_matrix["image"].add("ingestion_server")
 if "api" in changes:
-    build_matrix["image"] |= {"upstream_db", "ingestion_server", "api", "api_nginx"}
+    build_matrix["image"] |= {
+        "upstream_db",
+        "ingestion_server",
+        "api",
+        "api_dev",
+        "api_nginx",
+    }
     publish_matrix["image"] |= {"api", "api_nginx"}
 if "frontend" in changes:
     build_matrix["image"] |= {"frontend", "frontend_nginx"}
