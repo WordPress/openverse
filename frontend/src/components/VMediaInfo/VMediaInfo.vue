@@ -1,19 +1,13 @@
 <template>
   <div class="w-full lg:w-auto">
     <h1 class="heading-6 mb-3 sm:mb-1">{{ media.title }}</h1>
-    <VByLine
-      :media-type="media.frontendMediaType"
-      :source-slug="source"
-      :source-name="sourceName"
-      :creator="media.creator"
-    />
+    <VByLine :media="media" />
   </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent } from "vue"
+import { defineComponent } from "vue"
 
-import { Media } from "~/types/media"
-import { useProviderStore } from "~/stores/provider"
+import type { Media } from "~/types/media"
 
 import VByLine from "~/components/VMediaInfo/VByLine/VByLine.vue"
 
@@ -27,20 +21,6 @@ export default defineComponent({
       type: Object as PropType<Media>,
       required: true,
     },
-  },
-  setup(props) {
-    const source = computed(() => {
-      return props.media.source ?? props.media.provider
-    })
-
-    const providerStore = useProviderStore()
-    const sourceName = computed(() => {
-      return providerStore.getProviderName(
-        source.value,
-        props.media.frontendMediaType
-      )
-    })
-    return { source, sourceName }
   },
 })
 </script>

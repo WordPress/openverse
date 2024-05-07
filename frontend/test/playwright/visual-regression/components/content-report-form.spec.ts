@@ -13,7 +13,7 @@ const getReportButton = (page: Page) => {
 }
 
 /**
- * This test was previoiusly known to be flaky:
+ * This test was previously known to be flaky:
  * https://github.com/WordPress/openverse/issues/2020
  *
  * The flake involved an offset of 1-2 pixels in both
@@ -34,6 +34,8 @@ test.describe("content report form", () => {
 
   breakpoints.describeMd(({ expectSnapshot }) => {
     test("unfocused close button", async ({ page }) => {
+      await page.route("**flickr**", (r) => r.abort())
+
       await preparePageForTests(page, "md")
       await page.goto(imageUrl)
 

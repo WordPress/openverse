@@ -1,8 +1,6 @@
 import { defineStore } from "pinia"
-import { ssrRef } from "@nuxtjs/composition-api"
 
 import { capitalCase } from "~/utils/case"
-import { env } from "~/utils/env"
 import {
   AUDIO,
   IMAGE,
@@ -13,8 +11,6 @@ import { initProviderServices } from "~/data/media-provider-service"
 
 import type { MediaProvider } from "~/types/media-provider"
 import type { FetchingError, FetchState } from "~/types/fetch-state"
-
-import type { Ref } from "vue"
 
 export interface ProviderState {
   providers: {
@@ -42,12 +38,6 @@ const sortProviders = (data: MediaProvider[]): MediaProvider[] => {
     return nameA.localeCompare(nameB)
   })
 }
-/**
- * Timestamp is used to limit the update frequency to one every 60 minutes per request.
- */
-const lastUpdated: Ref<Date | null> = ssrRef(null)
-
-const updateFrequency = parseInt(env.providerUpdateFrequency, 10)
 
 export const useProviderStore = defineStore("provider", {
   state: (): ProviderState => ({
@@ -90,10 +80,6 @@ export const useProviderStore = defineStore("provider", {
         ? this._startFetching(mediaType)
         : this._endFetching(mediaType, option)
     },
-    async getProviders() {
-      await this.fetchMediaProviders()
-      return this.providers
-    },
 
     _getProvider(providerCode: string, mediaType: SupportedMediaType) {
       return this.providers[mediaType].find(
@@ -108,31 +94,25 @@ export const useProviderStore = defineStore("provider", {
      * @param mediaType - mediaType of the provider
      */
     getProviderName(providerCode: string, mediaType: SupportedMediaType) {
-      const provider = this._getProvider(providerCode, mediaType)
-      return provider?.display_name || capitalCase(providerCode)
+      return (
+        this._getProvider(providerCode, mediaType)?.display_name ||
+        capitalCase(providerCode)
+      )
     },
 
     /**
      * Returns the source URL given the source code and media type.
      */
     getSourceUrl(providerCode: string, mediaType: SupportedMediaType) {
-      const provider = this._getProvider(providerCode, mediaType)
-      return provider?.source_url
+      return this._getProvider(providerCode, mediaType)?.source_url
     },
 
-    /**
-     * Fetches provider data if no data is available, or if the data is too old.
-     * On successful fetch updates lastUpdated value.
-     */
-    async fetchMediaProviders() {
-      if (this.needsUpdate) {
-        await Promise.allSettled(
-          supportedMediaTypes.map((mediaType) =>
-            this.fetchMediaTypeProviders(mediaType)
-          )
+    async fetchProviders() {
+      await Promise.allSettled(
+        supportedMediaTypes.map((mediaType) =>
+          this.fetchMediaTypeProviders(mediaType)
         )
-        lastUpdated.value = new Date()
-      }
+      )
     },
 
     /**
@@ -175,25 +155,6 @@ export const useProviderStore = defineStore("provider", {
       sourceName: string
     ): boolean {
       return this.sourceNames[mediaType].includes(sourceName)
-    },
-  },
-
-  getters: {
-    /**
-     * Fetch providers only if there is no data, or if the last update for current request
-     * was more than 1 hour ago.
-     */
-    needsUpdate(state) {
-      const noData = supportedMediaTypes.some(
-        (mediaType) => !state.providers[mediaType].length
-      )
-      if (noData || !lastUpdated.value) {
-        return true
-      }
-
-      const timeSinceLastUpdate =
-        new Date().getTime() - new Date(lastUpdated.value).getTime()
-      return timeSinceLastUpdate > updateFrequency
     },
   },
 })
