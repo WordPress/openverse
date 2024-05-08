@@ -5,7 +5,7 @@ import { makeUrlWithArgs } from "~~/test/storybook/utils/args"
 import { waitForResponse } from "~~/test/storybook/utils/response"
 
 const urlWithArgs = makeUrlWithArgs(
-  "components-vcontentswitcher-vsearchtypebutton--default-story"
+  "components-vcontentswitcher-vsearchtypebutton--default"
 )
 
 const searchTypeButtonLocator = 'button[aria-haspopup="dialog"]'

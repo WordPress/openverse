@@ -9,8 +9,8 @@ import {
 import { dirParam } from "~~/test/storybook/utils/args"
 
 const headerSelector = ".main-header"
-const defaultUrl =
-  "/iframe.html?id=components-vheader-vheaderinternal--default-story"
+const defaultUrl = "/iframe.html?id=components-vheader-vheaderinternal--default"
+
 const pageUrl = (dir: LanguageDirection) => `${defaultUrl}${dirParam(dir)}`
 
 test.describe.configure({ mode: "parallel" })

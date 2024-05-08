@@ -14,7 +14,7 @@ const imageCellImage = `${imageCell} img`
 // exceeds the bounds of the actual component
 const screenshotEl = ".sb-main-padded"
 
-const urlWithArgs = makeUrlWithArgs("components-vimagecell--v-image-cell")
+const urlWithArgs = makeUrlWithArgs("components-vimagecell--default")
 
 const goAndWaitForImage = async (
   page: Page,
