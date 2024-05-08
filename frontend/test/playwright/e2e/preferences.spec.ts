@@ -72,8 +72,10 @@ test.describe("switchable features", () => {
 
       // eslint-disable-next-line playwright/no-conditional-in-test
       if (checked) {
+        // eslint-disable-next-line playwright/no-conditional-expect
         await expect(featureFlag).not.toBeChecked()
       } else {
+        // eslint-disable-next-line playwright/no-conditional-expect
         await expect(featureFlag).toBeChecked()
       }
     })

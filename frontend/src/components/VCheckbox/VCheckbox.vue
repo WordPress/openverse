@@ -47,7 +47,7 @@
       <VIcon
         v-else
         v-show="localCheckedState"
-        class="absolute inset-0 transform text-white"
+        class="pointer-events-none absolute inset-0 transform text-white"
         name="check"
         :size="5"
       />

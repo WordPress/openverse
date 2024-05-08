@@ -6,7 +6,7 @@ import type { TSESLint } from "@typescript-eslint/utils"
  * This configuration is split into sub-modules in this directory
  * that are included using `require.resolve`.
  */
-export const project: TSESLint.Linter.Config = {
+export const project: TSESLint.Linter.ConfigType = {
   env: {
     browser: true,
     node: true,
@@ -77,18 +77,22 @@ export const project: TSESLint.Linter.Config = {
       rules: {
         // Superseded by `@openverse/no-unexplained-disabled-test`
         "playwright/no-skipped-test": "off",
-        // Duplicates TypeScript functionality. All our Playwright tests are in TypeScript and type checks will already catch non-string titles.
+
+        // The following duplicate TypeScript functionality. All our Playwright tests are in TypeScript and type checks will already catch non-string titles.
         "playwright/valid-title": "off",
-      },
-      settings: {
-        playwright: {
-          additionalAssertFunctionNames: [
-            // Shared assertion for confirming sent events
-            "expectEventPayloadToMatch",
-            // Shared assertion for visual regression tests
-            "expectSnapshot",
-          ],
-        },
+        "playwright/valid-describe-callback": "off",
+
+        "playwright/expect-expect": [
+          "error",
+          {
+            assertFunctionNames: [
+              // Shared assertion for confirming sent events
+              "expectEventPayloadToMatch",
+              // Shared assertion for visual regression tests
+              "expectSnapshot",
+            ],
+          },
+        ],
       },
     },
     {

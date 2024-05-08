@@ -1,5 +1,3 @@
-/* eslint playwright/expect-expect: ["warn", { "additionalAssertFunctionNames": ["expectSnapshot"] }] */
-
 import { Page, test, expect } from "@playwright/test"
 
 import { makeGotoWithArgs } from "~~/test/storybook/utils/args"
