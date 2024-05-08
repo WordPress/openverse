@@ -324,7 +324,7 @@ class CleanDataUploader:
         s3_file_name = f"{self.s3_path}/{self.date}_{field}_{part_number}.tsv"
         tsv_file = f"{field}.tsv"
         with open(tsv_file, "w") as f:
-            csv_writer = csv.writer(f, delimiter="\t")
+            csv_writer = csv.writer(f, delimiter="\t", quoting=csv.QUOTE_NONE)
             csv_writer.writerows(self.buffer[field].rows)
         try:
             self.s3_bucket.upload_file(tsv_file, s3_file_name)
@@ -334,12 +334,23 @@ class CleanDataUploader:
         self.buffer[field].part += 1
         self.buffer[field].rows = []
 
+    @staticmethod
+    def _trim_quotes(value: str):
+        if value.startswith(("'", '"')) and value.endswith(("'", '"')):
+            log.debug(f"Trimmed quotes from {value} returning {value[1:-1]}")
+            return value[1:-1]
+        return value
+
     def save(self, result: dict) -> dict[str, int]:
         for field, cleaned_items in result.items():
             if not cleaned_items or not self.s3_bucket:
                 continue
 
+            for i, (identifier, value) in enumerate(cleaned_items):
+                cleaned_items[i] = (identifier, self._trim_quotes(value))
+
             self.buffer[field].rows += cleaned_items
+
             if len(self.buffer[field].rows) >= self.buffer_size:
                 self._upload_to_s3(field)
 
