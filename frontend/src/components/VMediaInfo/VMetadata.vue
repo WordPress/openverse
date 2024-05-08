@@ -22,7 +22,7 @@
         v-if="tooltipId(datum)"
         :key="datum.label"
         :described-by="tooltipId(datum)"
-        class="label-regular flex flex-row items-center p-1 sm:py-0 sm:pe-0"
+        class="label-regular -ms-1 flex flex-row items-center p-1 sm:ms-0 sm:py-0 sm:pe-0"
         :datum="datum"
       />
       <dt
