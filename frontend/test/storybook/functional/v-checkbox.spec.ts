@@ -4,7 +4,7 @@ import { makeGotoWithArgs } from "~~/test/storybook/utils/args"
 
 test.describe.configure({ mode: "parallel" })
 ;["default", "switch"].forEach((type) => {
-  const goToStory = makeGotoWithArgs(`components-vcheckbox--${type}-story`)
+  const goToStory = makeGotoWithArgs(`components-vcheckbox--${type}`)
   const goToAndWait = async (
     ...[page, ...args]: Parameters<typeof goToStory>
   ) => {
@@ -17,7 +17,6 @@ test.describe.configure({ mode: "parallel" })
       const name = "loaded with checked state"
       await goToAndWait(page, { checked: true, name })
       const checkboxes = page.getByLabel(name)
-      await checkboxes.waitFor()
       expect(await checkboxes.all()).toHaveLength(1)
       await expect(checkboxes).toBeChecked()
     })
