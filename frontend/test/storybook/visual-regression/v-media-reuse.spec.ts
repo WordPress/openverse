@@ -11,8 +11,7 @@ const tabs = [
   { id: "html", name: "HTML" },
   { id: "plain", name: "Plain text" },
 ]
-const defaultUrl =
-  "/iframe.html?id=components-vmediainfo-vmediareuse--v-media-reuse"
+const defaultUrl = "/iframe.html?id=components-vmediainfo-vmediareuse--default"
 const pageUrl = (dir: (typeof languageDirections)[number]) =>
   dir === "ltr" ? defaultUrl : `${defaultUrl}&globals=languageDirection:rtl`
 

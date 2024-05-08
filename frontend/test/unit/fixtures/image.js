@@ -1,7 +1,9 @@
+/** @type {ImageDetail} */
 export const image = {
   id: "f166c4a0-7207-4ea2-8728-15350a60d37f",
   frontendMediaType: "image",
   title: "Cat cafe in Seoul",
+  originalTitle: "Cat cafe in Seoul",
   indexed_on: "2020-04-22T18:09:32.186574Z",
   foreign_landing_url: "https://www.flickr.com/photos/36703170@N02/5060030894",
   url: "https://live.staticflickr.com/4111/5060030894_96d2b21794_b.jpg",
@@ -13,7 +15,7 @@ export const image = {
   provider: "flickr",
   source: "flickr",
   category: "photograph",
-  filesize: 118813,
+  filesize: "118813",
   filetype: "jpg",
   tags: [
     {

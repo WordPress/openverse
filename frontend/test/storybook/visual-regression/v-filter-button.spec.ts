@@ -5,7 +5,7 @@ import { makeGotoWithArgs } from "~~/test/storybook/utils/args"
 import { sleep } from "~~/test/playwright/utils/navigation"
 
 const gotoWithArgs = makeGotoWithArgs(
-  "components-vheader-vfilterbutton--default-story"
+  "components-vheader-vfilterbutton--default"
 )
 
 test.describe.configure({ mode: "parallel" })

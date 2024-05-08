@@ -20,10 +20,9 @@ const allSlugs = [
   "cc-by-nc-nd",
   "cc-0",
   "pdm",
-  "cc-sampling",
-  "cc-nc-sampling",
+  "sampling",
+  "nc-sampling",
 ]
-
 test.describe.configure({ mode: "parallel" })
 
 test.describe("VMediaLicense", () => {

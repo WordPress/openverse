@@ -4,7 +4,7 @@ import { makeUrlWithArgs } from "~~/test/storybook/utils/args"
 import { waitForResponse } from "~~/test/storybook/utils/response"
 
 const urlWithArgs = makeUrlWithArgs(
-  "components-vheader-vheadermobile-vfiltertab--default-story"
+  "components-vheader-vheadermobile-vfiltertab--default"
 )
 
 test.describe.configure({ mode: "parallel" })

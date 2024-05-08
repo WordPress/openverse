@@ -8,7 +8,7 @@ const expectSnapshot = async (name: string, page: Page) => {
 
 test.describe("VLanguageSelect", () => {
   test("default", async ({ page }) => {
-    await makeGotoWithArgs("components-vlanguageselect--default-story")(page)
+    await makeGotoWithArgs("components-vlanguageselect--default")(page)
     await expectSnapshot("vlanguageselect-default", page)
   })
 })

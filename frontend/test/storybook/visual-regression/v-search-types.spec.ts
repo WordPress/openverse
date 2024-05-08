@@ -3,7 +3,7 @@ import { test } from "@playwright/test"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 
 const defaultUrl =
-  "/iframe.html?id=components-vcontentswitcher-vsearchtypes--default-story"
+  "/iframe.html?id=components-vcontentswitcher-vsearchtypes--default"
 
 const audioButtonLocator = "text=images"
 

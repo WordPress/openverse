@@ -1,0 +1,125 @@
+{
+    meta: {
+        createdAt: '2024-05-03T07:33:15.713Z',
+        host: 'https://api.openverse.org',
+        resHumanReadable: true,
+        resUncompressed: true,
+    },
+    req: {
+        headers: {
+            connection: 'close',
+        },
+        url: '/v1/images/de42d499-d660-47b4-b203-28d5589c31d2/',
+        method: 'GET',
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            date: [
+                'Fri, 03 May 2024 07:33:16 GMT',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            'transfer-encoding': [
+                'chunked',
+            ],
+            connection: [
+                'close',
+            ],
+            vary: [
+                'Accept-Encoding, Accept, Authorization, origin',
+            ],
+            allow: [
+                'GET, HEAD, OPTIONS',
+            ],
+            'x-ratelimit-limit-anon_burst': [
+                '20/min',
+            ],
+            'x-ratelimit-available-anon_burst': [
+                '19',
+            ],
+            'x-ratelimit-limit-anon_sustained': [
+                '200/day',
+            ],
+            'x-ratelimit-available-anon_sustained': [
+                '199',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'referrer-policy': [
+                'same-origin',
+            ],
+            'cross-origin-opener-policy': [
+                'same-origin',
+            ],
+            'x-request-id': [
+                '4d1cb9659fbc4d7ea72de4747573e907',
+            ],
+            'cf-cache-status': [
+                'MISS',
+            ],
+            'last-modified': [
+                'Fri, 03 May 2024 07:33:16 GMT',
+            ],
+            server: [
+                'cloudflare',
+            ],
+            'cf-ray': [
+                '87de8fd68d095d63-FRA',
+            ],
+            'content-encoding': [
+                'br',
+            ],
+        },
+        body: {
+            id: 'de42d499-d660-47b4-b203-28d5589c31d2',
+            title: 'Cat bliss',
+            indexed_on: '2020-04-16T18:12:29.554388Z',
+            foreign_landing_url: 'https://www.flickr.com/photos/29468339@N02/5840168826',
+            url: 'https://live.staticflickr.com/2706/5840168826_486f364c6c_b.jpg',
+            creator: '@Doug88888',
+            creator_url: 'https://www.flickr.com/photos/29468339@N02',
+            license: 'by-nc-sa',
+            license_version: '2.0',
+            license_url: 'https://creativecommons.org/licenses/by-nc-sa/2.0/',
+            provider: 'flickr',
+            source: 'flickr',
+            category: null,
+            filesize: null,
+            filetype: null,
+            tags: [
+                {
+                    name: 'bliss',
+                    accuracy: null,
+                },
+                {
+                    name: 'cat',
+                    accuracy: null,
+                },
+                {
+                    name: 'cating',
+                    accuracy: null,
+                },
+                {
+                    name: 'cats',
+                    accuracy: null,
+                },
+            ],
+            attribution: '"Cat bliss" by @Doug88888 is licensed under CC BY-NC-SA 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/2.0/.',
+            fields_matched: [],
+            mature: false,
+            height: 819,
+            width: 1024,
+            thumbnail: 'http://localhost:49153/v1/images/de42d499-d660-47b4-b203-28d5589c31d2/thumb/',
+            detail_url: 'http://localhost:49153/v1/images/de42d499-d660-47b4-b203-28d5589c31d2/',
+            related_url: 'http://localhost:49153/v1/images/de42d499-d660-47b4-b203-28d5589c31d2/related/',
+            unstable__sensitivity: [],
+        },
+    },
+}

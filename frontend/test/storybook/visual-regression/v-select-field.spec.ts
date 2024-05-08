@@ -10,7 +10,7 @@ const expectSnapshot = async (name: string, page: Page) => {
 
 test.describe("VSelectField", () => {
   test("default", async ({ page }) => {
-    await makeGotoWithArgs("components-vselectfield--default-story")(page)
+    await makeGotoWithArgs("components-vselectfield--default")(page)
     await expectSnapshot("vselectfield-default", page)
   })
 

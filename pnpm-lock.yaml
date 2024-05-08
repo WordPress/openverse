@@ -54,9 +54,6 @@ importers:
       '@floating-ui/dom':
         specifier: ^1.5.3
         version: 1.5.3
-      '@nuxt/components':
-        specifier: ^2.2.1
-        version: 2.2.1
       '@nuxt/vue-app':
         specifier: ^2.17.3
         version: 2.17.3

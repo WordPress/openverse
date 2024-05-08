@@ -58,7 +58,6 @@
   },
   "dependencies": {
     "@floating-ui/dom": "^1.5.3",
-    "@nuxt/components": "^2.2.1",
     "@nuxt/vue-app": "^2.17.3",
     "@nuxtjs/composition-api": "^0.34.0",
     "@nuxtjs/i18n": "^7.3.1",
