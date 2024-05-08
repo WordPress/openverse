@@ -9,6 +9,7 @@ from tests.dags.providers.provider_api_scripts.resources.json_load import (
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from common.storage.image import ImageStore
+from providers.provider_api_scripts import science_museum
 from providers.provider_api_scripts.science_museum import ScienceMuseumDataIngester
 
 
@@ -23,6 +24,14 @@ sm.media_stores = {"image": image_store}
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.DEBUG
 )
+
+
+@pytest.fixture
+def mock_rewrite_redirected_url(monkeypatch):
+    def mock_rewrite(url_string):
+        return url_string
+
+    monkeypatch.setattr(science_museum, "rewrite_redirected_url", mock_rewrite)
 
 
 @pytest.fixture(autouse=True)
@@ -158,7 +167,7 @@ def test_get_record_data_returns_empty_list_for_falsy_image_required_values(reco
     assert actual_record_data == []
 
 
-def test_get_record_data_success(object_data):
+def test_get_record_data_success(object_data, mock_rewrite_redirected_url):
     actual_record_data = sm.get_record_data(object_data)
     actual_image_data = actual_record_data[0]
     assert len(actual_record_data) == 3
@@ -166,7 +175,7 @@ def test_get_record_data_success(object_data):
     expected_image_data = {
         "foreign_identifier": "i458349",
         "foreign_landing_url": "https://collection.sciencemuseumgroup.org.uk/objects/co84905/small-votive-organ-of-unknown-type-votive-viscera",
-        "url": "https://coimages.sciencemuseumgroup.org.uk/458/349/large_a659676__0001_.jpg/",
+        "url": "https://coimages.sciencemuseumgroup.org.uk/458/349/large_a659676__0001_.jpg",
         "height": 1150,
         "width": 1536,
         "filetype": "jpeg",
@@ -209,14 +218,14 @@ def test_creator_info_fail(object_data):
     assert actual_creator is None
 
 
-def test_image_info_large():
+def test_image_info_large(mock_rewrite_redirected_url):
     large_image = _get_resource_json("large_image.json")
     actual_image, actual_height, actual_width, actual_filetype, actual_filesize = (
         sm._get_image_info(large_image)
     )
     expected_image = (
         "https://coimages.sciencemuseumgroup.org.uk/3/563/"
-        "large_1999_0299_0001__0002_.jpg/"
+        "large_1999_0299_0001__0002_.jpg"
     )
     expected_height = 1022
     expected_width = 1536
@@ -230,7 +239,7 @@ def test_image_info_large():
     assert actual_filesize == expected_filesize
 
 
-def test_image_info_medium():
+def test_image_info_medium(mock_rewrite_redirected_url):
     medium_image = _get_resource_json("medium_image.json")
     actual_url, actual_height, actual_width, actual_filetype, actual_filesize = (
         sm._get_image_info(medium_image)
@@ -238,7 +247,7 @@ def test_image_info_medium():
 
     expected_image = (
         "https://coimages.sciencemuseumgroup.org.uk/3/563/"
-        "medium_1999_0299_0001__0002_.jpg/"
+        "medium_1999_0299_0001__0002_.jpg"
     )
     expected_height = 576
     expected_width = 866
@@ -262,21 +271,21 @@ def test_image_info_failure():
     assert actual_filesize is None
 
 
-def test_check_relative_url():
+def test_check_relative_url(mock_rewrite_redirected_url):
     rel_url = "3/563/large_thumbnail_1999_0299_0001__0002_.jpg"
     actual_url = sm.check_url(rel_url)
     expected_url = (
         "https://coimages.sciencemuseumgroup.org.uk/3/563/"
-        "large_thumbnail_1999_0299_0001__0002_.jpg/"
+        "large_thumbnail_1999_0299_0001__0002_.jpg"
     )
 
     assert actual_url == expected_url
 
 
-def test_check_complete_url():
+def test_check_complete_url(mock_rewrite_redirected_url):
     url = (
         "https://coimages.sciencemuseumgroup.org.uk/3/563/"
-        "large_thumbnail_1999_0299_0001__0002_.jpg/"
+        "large_thumbnail_1999_0299_0001__0002_.jpg"
     )
     actual_url = sm.check_url(url)
     expected_url = url
