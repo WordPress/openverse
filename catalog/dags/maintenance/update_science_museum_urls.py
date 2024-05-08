@@ -6,11 +6,12 @@ One-time maintenance DAG to update Science Museum records to have valid URLs. Se
 For each Science Museum record, this DAG:
 
 * updates the url to the new format, excluding `/images/` in the path if it exists
-* validates whether the url . If not, the record ID is added to an `invalid_science_musem_ids` table.
+* validates whether the url is reachable. If not, the record ID is added to an `invalid_science_musem_ids` table.
 
-Once complete, we can use the `invalid_science_museum_ids` to identify records to delete. They are not automatically deleted by this DAG, in order to give us an opportunity to first see how many there are.
+Once complete, we can use the `science_museum_invalid_ids` to identify records to delete. They are not automatically deleted by this DAG, in order to give us an opportunity to first see how many there are.
 """
 
+import itertools
 import logging
 from datetime import timedelta
 from textwrap import dedent
@@ -93,7 +94,7 @@ def process_batch(records):
 @task
 def record_invalid_ids(invalid_ids):
     # Chain together
-    ids_to_record = sum(invalid_ids, [])
+    ids_to_record = itertools.chain.from_iterable(invalid_ids)
 
     if not ids_to_record:
         raise AirflowSkipException("No invalid urls found!")
@@ -120,7 +121,7 @@ def notify_slack(invalid_count: int):
     dag_id=DAG_ID,
     schedule=None,
     catchup=False,
-    tags=["maintenance"],
+    tags=["data_normalization"],
     doc_md=__doc__,
     default_args={
         **DAG_DEFAULT_ARGS,
@@ -156,9 +157,9 @@ def update_science_museum_urls():
     record = record_invalid_ids(process)
 
     # Report the number of invalid records to Slack
-    notify = notify_slack(record)
+    notify_slack(record)
 
-    update >> create_table >> process >> record >> notify
+    update >> create_table >> process
 
 
 update_science_museum_urls()
