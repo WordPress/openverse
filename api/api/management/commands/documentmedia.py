@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from inspect import getdoc
 from pathlib import Path
+from textwrap import dedent
 
 from django.core.management import BaseCommand
 from django.db import connection
@@ -22,6 +23,7 @@ class RelationInfo:
 
     nature: str
     to: str
+    doc: str
 
 
 @dataclass
@@ -140,6 +142,7 @@ def parse_fields(model_class: type[AbstractMedia]) -> list[FieldInfo]:
                     nature for nature in natures if getattr(field, nature, False)
                 ),
                 to=field.related_model.__name__,
+                doc=field.related_model.__doc__,
             )
         else:
             field_info.value_info = ValueInfo(
@@ -180,6 +183,9 @@ def generate_docs(props: dict[str, list[FieldInfo]]) -> str:
     output = ""
 
     output += PREAMBLE_PATH.read_text()
+    output += "\n"
+    for model in props:
+        output += f"- [{model}](#{model.lower()})\n"
     output += "\n"
 
     for model, fields in props.items():
@@ -292,6 +298,12 @@ def generate_notes(model: str, fields: list[FieldInfo]) -> tuple[str, set[str]]:
             record = True
         if not field.is_relation and field.value_info.help_text:
             field_output += f"**Help text:** {field.value_info.help_text}\n\n"
+            record = True
+        if field.is_relation and field.relation_info.doc:
+            field_output += (
+                f"**`{field.relation_info.to}` docstring:** "
+                f"{dedent(field.relation_info.doc)}\n\n"
+            )
             record = True
         if record:
             noted_fields.add(field.name)
