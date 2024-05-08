@@ -399,6 +399,7 @@ jobs:
     needs:
       - get-changes
       - build-images
+      - get-image-tag
 
     steps:
       - name: Checkout repository
@@ -417,7 +418,34 @@ jobs:
         uses: ./.github/actions/load-img
         with:
           run_id: ${{ github.run_id }}
-          setup_images: upstream_db ingestion_server api=api_dev
+          setup_images: upstream_db ingestion_server
+
+      # Sets build args specifying versions needed to build Docker image.
+      - name: Prepare build args
+        id: prepare-build-args
+        run: |
+          just versions | tee "$GITHUB_OUTPUT"
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          install: true
+
+      - name: Build API dev image
+        uses: docker/build-push-action@v5
+        with:
+          context: api
+          target: api
+          push: false
+          load: true
+          tags: openverse-api
+          cache-from: type=gha,scope=api_dev
+          cache-to: type=gha,scope=api_dev
+          build-contexts: packages=./packages/python
+          build-args: |
+            SEMANTIC_VERSION=${{ needs.get-image-tag.outputs.image_tag }}
+            API_PY_VERSION=${{ steps.prepare-build-args.outputs.api_py_version }}
+            PDM_INSTALL_ARGS=--dev
 
       - name: Start API, ingest and index test data
         run: just api/init
