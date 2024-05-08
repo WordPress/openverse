@@ -9,5 +9,4 @@ export const env = {
   apiUrl: apiUrl.endsWith("/") ? apiUrl : `${apiUrl}/`,
   filterStorageKey: "openverse-filter-visibility",
   savedSearchCount: "4",
-  providerUpdateFrequency: `${60 * 60 * 1000}`, // 1 hour
 } as const

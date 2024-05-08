@@ -12,8 +12,8 @@ NO_COLOR := "\\033[0m"
 
 
 # Install dependencies
-install:
-    pipenv install --dev
+install *args:
+    pdm install {{ args }}
 
 ##########
 # Sphinx #
@@ -69,15 +69,15 @@ create-ip project_dirname ip_name:
 
 # Serve a live-reload documentation site
 live port="50230": clean
-    pipenv run sphinx-autobuild -b html . _serve/ --port {{ port }}
+    pdm run sphinx-autobuild -b html . _serve/ --port {{ port }}
 
 # Compile the documentation into a static site
 build *args: clean
-    pipenv run sphinx-build {{ args }} -b html . _build/
+    pdm run sphinx-build {{ args }} -b html . _build/
 
 # Serve the compiled docs using a simple HTTP server
 serve port="50231":
-    pipenv run python -m http.server -d _build/ {{ port }}
+    pdm run python -m http.server -d _build/ {{ port }}
 
 # Delete the live server and build output directories
 clean:

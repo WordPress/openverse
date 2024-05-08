@@ -1,4 +1,3 @@
-import logging
 import os
 from enum import Flag, auto
 from io import BytesIO
@@ -9,12 +8,13 @@ from rest_framework import status
 from rest_framework.exceptions import APIException
 
 import requests
+import structlog
 from openverse_attribution.license import License
 from PIL import Image, ImageDraw, ImageFont, UnidentifiedImageError
 from sentry_sdk import capture_exception
 
 
-parent_logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 
 BREAKPOINT_DIMENSION = 400  # 400px
@@ -147,7 +147,6 @@ def _open_image(url):
     :param url: the URL from where to read the image
     :return: the PIL image object with the EXIF data
     """
-    logger = parent_logger.getChild("_open_image")
     try:
         response = requests.get(url, headers=HEADERS)
         response.raise_for_status()
@@ -175,7 +174,7 @@ def _print_attribution_on_image(img: Image.Image, image_info):
     """
 
     try:
-        lic = License(image_info["license"])
+        lic = License(image_info["license"], image_info["license_version"])
     except ValueError:
         return img
 
@@ -195,11 +194,10 @@ def _print_attribution_on_image(img: Image.Image, image_info):
 
     font = ImageFont.truetype(_get_font_path(), size=font_size)
 
-    text = lic.attribution(
+    text = lic.get_attribution_text(
         image_info["title"],
         image_info["creator"],
-        image_info["license_version"],
-        False,
+        url=False,
     )
     text = _fit_in_width(text, font, new_width)
     attribution_height = _get_attribution_height(text, font)

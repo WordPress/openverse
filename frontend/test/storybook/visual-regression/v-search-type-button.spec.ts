@@ -1,55 +1,53 @@
-import { test } from "@playwright/test"
+import { expect, type Page, test } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
+import { makeUrlWithArgs } from "~~/test/storybook/utils/args"
+import { waitForResponse } from "~~/test/storybook/utils/response"
 
-const defaultUrl = (showLabel: boolean) =>
-  `/iframe.html?id=components-vcontentswitcher-vsearchtypebutton--default-story&args=showLabel:${showLabel}`
-const pressedUrl = (showLabel: boolean) =>
-  `${defaultUrl(showLabel)};pressed:true`
+const urlWithArgs = makeUrlWithArgs(
+  "components-vcontentswitcher-vsearchtypebutton--default-story"
+)
 
 const searchTypeButtonLocator = 'button[aria-haspopup="dialog"]'
+const getIcon = (page: Page) =>
+  page.locator(`${searchTypeButtonLocator} svg`).first()
 
 test.describe.configure({ mode: "parallel" })
 
+const goAndWaitForSvg = async (page: Page, url: string) => {
+  await waitForResponse(page, url, /\.svg/)
+  await expect(getIcon(page)).toBeVisible()
+}
+
 const buttonKinds = ["icon", "withTextLabel"] as const
+
 test.describe("VSearchTypeButton", () => {
   for (const buttonKind of buttonKinds) {
     const showLabel = buttonKind === "withTextLabel"
     const buttonName = `button-${showLabel ? "with" : "without"}-text-label`
-    breakpoints.describeMd(({ expectSnapshot }) => {
-      test(`resting ${buttonName}`, async ({ page }) => {
-        await page.goto(defaultUrl(showLabel))
-        await expectSnapshot(
-          `v-search-type-button-${buttonName}-at-rest`,
-          page.locator(searchTypeButtonLocator)
-        )
-      })
 
-      test(`hovered ${buttonName}`, async ({ page }) => {
-        await page.goto(defaultUrl(showLabel))
-        await page.hover(searchTypeButtonLocator)
-        await expectSnapshot(
-          `v-search-type-button-${buttonName}-hovered `,
-          page.locator(searchTypeButtonLocator)
-        )
-      })
+    for (const state of ["non-pressed", "pressed"] as const) {
+      const snapshotName = `v-search-type-button-${buttonName}${state === "pressed" ? "-pressed" : ""}`
+      breakpoints.describeMd(({ breakpoint }) => {
+        test(`resting ${state} ${buttonName}`, async ({ page }) => {
+          const url = urlWithArgs({ showLabel, pressed: state === "pressed" })
+          await goAndWaitForSvg(page, url)
 
-      test(`pressed ${buttonName}`, async ({ page }) => {
-        await page.goto(pressedUrl(showLabel))
-        await expectSnapshot(
-          `v-search-type-button-${buttonName}-pressed`,
-          page.locator(searchTypeButtonLocator)
-        )
-      })
+          await expect(page.locator(searchTypeButtonLocator)).toHaveScreenshot(
+            `${snapshotName}-at-rest-${breakpoint}.png`
+          )
+        })
 
-      test(`pressed hovered ${buttonName}`, async ({ page }) => {
-        await page.goto(pressedUrl(showLabel))
-        await page.hover(searchTypeButtonLocator)
-        await expectSnapshot(
-          `v-search-type-button-${buttonName}-pressed-hovered `,
-          page.locator(searchTypeButtonLocator)
-        )
+        test(`hovered ${state} ${buttonName}`, async ({ page }) => {
+          const url = urlWithArgs({ showLabel, pressed: state === "pressed" })
+          await goAndWaitForSvg(page, url)
+          await page.hover(searchTypeButtonLocator)
+
+          await expect(page.locator(searchTypeButtonLocator)).toHaveScreenshot(
+            `${snapshotName}-hovered-${breakpoint}.png`
+          )
+        })
       })
-    })
+    }
   }
 })

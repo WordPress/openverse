@@ -135,7 +135,7 @@ const config: NuxtConfig = {
       : undefined,
   },
   router: {
-    middleware: "middleware",
+    middleware: "feature-flags",
   },
   components: [
     { path: "~/components", extensions: ["vue"], pathPrefix: false },
@@ -148,6 +148,7 @@ const config: NuxtConfig = {
     "~/plugins/sentry.ts",
     "~/plugins/analytics.ts",
     "~/plugins/errors.ts",
+    "~/plugins/init-stores.ts",
   ],
   css: ["~/assets/fonts.css", "~/styles/tailwind.css", "~/styles/accent.css"],
   head,
@@ -314,6 +315,7 @@ const config: NuxtConfig = {
     trackLocalhost: !isProdNotPlaywright,
   },
   publicRuntimeConfig: {
+    deploymentEnv: process.env.DEPLOYMENT_ENV ?? "local",
     plausible: {
       // This is the current domain of the site.
       domain:
@@ -346,7 +348,6 @@ const config: NuxtConfig = {
         environment: process.env.SENTRY_ENVIRONMENT,
       },
     },
-    deploymentEnv: process.env.DEPLOYMENT_ENV ?? "local",
   },
 }
 

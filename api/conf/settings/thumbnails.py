@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from decouple import config
 
 
@@ -15,3 +17,15 @@ PHOTON_ENDPOINT = config("PHOTON_ENDPOINT", default="https://i0.wp.com/")
 # to cast them in assertions to match the parsed param types)
 THUMBNAIL_WIDTH_PX = config("THUMBNAIL_WIDTH_PX", default="600")
 THUMBNAIL_QUALITY = config("THUMBNAIL_JPG_QUALITY", default="80")
+
+# The length of time to cache repeated thumbnail failures
+THUMBNAIL_FAILURE_CACHE_WINDOW_SECONDS = config(
+    "THUMBNAIL_FAILURE_CACHE_WINDOW_SECONDS",
+    default=int(timedelta(days=2).total_seconds()),
+    cast=int,
+)
+
+# The number of times to try a thumbnail request before caching a failure
+THUMBNAIL_FAILURE_CACHE_TOLERANCE = config(
+    "THUMBNAIL_FAILURE_CACHE_TOLERANCE", default=2, cast=int
+)

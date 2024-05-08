@@ -3,6 +3,7 @@ import asyncio
 import pook
 import pytest
 from aiohttp.client import ClientSession
+from structlog.testing import capture_logs
 
 from api.utils.check_dead_links import HEADERS, check_dead_links
 
@@ -87,7 +88,7 @@ def test_403_considered_dead(provider):
     "is_cache_reachable, cache_name",
     [(True, "redis"), (False, "unreachable_redis")],
 )
-def test_mset_and_expire_for_responses(is_cache_reachable, cache_name, request, caplog):
+def test_mset_and_expire_for_responses(is_cache_reachable, cache_name, request):
     cache = request.getfixturevalue(cache_name)
 
     query_hash = "test_mset_and_expiry_for_responses"
@@ -102,7 +103,8 @@ def test_mset_and_expire_for_responses(is_cache_reachable, cache_name, request, 
         .reply(200)
     )
 
-    check_dead_links(query_hash, start_slice, results, image_urls)
+    with capture_logs() as cap_logs:
+        check_dead_links(query_hash, start_slice, results, image_urls)
 
     if is_cache_reachable:
         for i in range(len(results)):
@@ -110,8 +112,9 @@ def test_mset_and_expire_for_responses(is_cache_reachable, cache_name, request, 
             # TTL is 30 days for 2xx responses
             assert cache.ttl(f"valid:https://example.org/{i}") == 2592000
     else:
+        messages = [record["event"] for record in cap_logs]
         assert all(
-            message in caplog.text
+            message in messages
             for message in [
                 "Redis connect failed, validating all URLs without cache.",
                 "Redis connect failed, cannot cache link liveness.",

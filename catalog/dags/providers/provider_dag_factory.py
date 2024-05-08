@@ -449,7 +449,7 @@ def create_provider_api_workflow_dag(provider_conf: ProviderWorkflow):
                 ),
             ),
             "sql_rm_source_data_after_ingesting": Param(
-                default=True,
+                default=False,
                 type="boolean",
                 description=(
                     "Whether to delete source data from airflow and DB once ingestion"

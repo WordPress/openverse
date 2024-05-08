@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import logging
-import logging as log
 import re
 from math import ceil
 from typing import TYPE_CHECKING
@@ -9,6 +7,7 @@ from typing import TYPE_CHECKING
 from django.conf import settings
 from django.core.cache import cache
 
+import structlog
 from decouple import config
 from elasticsearch.exceptions import NotFoundError
 from elasticsearch_dsl import Q, Search
@@ -36,7 +35,7 @@ from api.utils.search_context import SearchContext
 if TYPE_CHECKING:
     from api.serializers.media_serializers import MediaSearchRequestSerializer
 
-module_logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 
 NESTING_THRESHOLD = config("POST_PROCESS_NESTING_THRESHOLD", cast=int, default=5)
@@ -91,16 +90,13 @@ def _post_process_results(
     :return: List of results.
     """
 
-    logger = module_logger.getChild("_post_process_results")
     if nesting > NESTING_THRESHOLD:
         logger.info(
-            {
-                "message": "Nesting threshold breached",
-                "nesting": nesting,
-                "start": start,
-                "end": end,
-                "page_size": page_size,
-            }
+            "Nesting threshold breached",
+            nesting=nesting,
+            start=start,
+            end=end,
+            page_size=page_size,
         )
 
     results = list(search_results)
@@ -174,8 +170,6 @@ def get_excluded_providers_query() -> Q | None:
     The list of ``provider_identifier``s is cached in Redis with
     `:FILTERED_PROVIDERS_CACHE_VERSION:FILTERED_PROVIDERS_CACHE_KEY` key.
     """
-
-    logger = module_logger.getChild("get_excluded_providers_query")
 
     try:
         filtered_providers = cache.get(
@@ -362,7 +356,7 @@ def log_query_features(query: str, query_name) -> None:
         if bool(re.search(pattern, query)):
             query_flags.append(flag)
     if query_flags:
-        log.info(
+        logger.info(
             {
                 "log_message": "Special features present in query",
                 "query_name": query_name,
@@ -560,11 +554,11 @@ def get_sources(index):
     except ValueError:
         cache_fetch_failed = True
         sources = None
-        log.warning("Source cache fetch failed due to corruption")
+        logger.warning("Source cache fetch failed due to corruption")
     except ConnectionError:
         cache_fetch_failed = True
         sources = None
-        log.warning("Redis connect failed, cannot get cached sources.")
+        logger.warning("Redis connect failed, cannot get cached sources.")
 
     if isinstance(sources, list) or cache_fetch_failed:
         sources = None
@@ -572,7 +566,7 @@ def get_sources(index):
             # Invalidate old provider format.
             cache.delete(key=source_cache_name)
         except ConnectionError:
-            log.warning("Redis connect failed, cannot invalidate cached sources.")
+            logger.warning("Redis connect failed, cannot invalidate cached sources.")
 
     if not sources:
         # Don't increase `size` without reading this issue first:
@@ -607,7 +601,7 @@ def get_sources(index):
                 key=source_cache_name, timeout=SOURCE_CACHE_TIMEOUT, value=sources
             )
         except ConnectionError:
-            log.warning("Redis connect failed, cannot cache sources.")
+            logger.warning("Redis connect failed, cannot cache sources.")
 
     sources = {source: int(doc_count) for source, doc_count in sources.items()}
     return sources

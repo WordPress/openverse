@@ -1,4 +1,3 @@
-import logging
 from collections import namedtuple
 from typing import TypedDict
 
@@ -35,8 +34,6 @@ from api.serializers.fields import SchemableHyperlinkedIdentityField
 from api.utils.help_text import make_comma_separated_help_text
 from api.utils.url import add_protocol
 
-
-logger = logging.getLogger(__name__)
 
 #######################
 # Request serializers #
@@ -598,6 +595,16 @@ class TagSerializer(serializers.Serializer):
         help_text="The accuracy of a machine-generated tag. Human-generated "
         "tags have a null accuracy field.",
     )
+    unstable__provider = serializers.CharField(
+        label="provider",
+        source="provider",
+        # Provider is present in the database but not in Elasticsearch, so it may
+        # not always be present during serialization
+        allow_null=True,
+        help_text="The source of the tag. When this field matches the provider for the "
+        "record, the tag originated from the upstream provider. Otherwise, the tag "
+        "was added with an external machine-generated labeling processes.",
+    )
 
 
 @extend_schema_serializer(
@@ -742,8 +749,8 @@ class MediaSerializer(BaseModelSerializer):
 
         if output.get("license_url") is None:
             try:
-                lic = License(output["license"])
-                output["license_url"] = lic.url(output["license_version"])
+                lic = License(output["license"], output["license_version"])
+                output["license_url"] = lic.url
             except ValueError:
                 pass
 

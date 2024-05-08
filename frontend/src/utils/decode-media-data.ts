@@ -1,9 +1,10 @@
 import { decodeData as decodeString } from "~/utils/decode-data"
-import type { ApiMedia, Media, Tag } from "~/types/media"
 import { SENSITIVITY_RESPONSE_PARAM } from "~/constants/content-safety"
-import type { MediaType } from "~/constants/media"
 import { AUDIO, IMAGE, MODEL_3D, VIDEO } from "~/constants/media"
+import type { ApiMedia, Media, Tag } from "~/types/media"
+import type { MediaType } from "~/constants/media"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { useProviderStore } from "~/stores/provider"
 import { capitalCase } from "~/utils/case"
 import { getFakeSensitivities } from "~/utils/content-safety"
 
@@ -112,12 +113,18 @@ export const decodeMediaData = <T extends Media>(
   sensitivity.sort()
   const isSensitive = sensitivity.length > 0
 
+  const providerStore = useProviderStore()
+  const sourceName = providerStore.getProviderName(media.source, mediaType)
+  const providerName = providerStore.getProviderName(media.provider, mediaType)
+
   return {
     ...media,
     ...mediaTitle(media, mediaType),
     frontendMediaType: mediaType,
     creator: decodeString(media.creator),
     tags: media.tags ? parseTags(media.tags) : ([] as Tag[]),
+    sourceName,
+    providerName,
     sensitivity,
     isSensitive,
   } as T

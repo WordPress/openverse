@@ -1,11 +1,11 @@
 import asyncio
-import logging
 import time
 
 from django.conf import settings
 
 import aiohttp
 import django_redis
+import structlog
 from asgiref.sync import async_to_sync
 from decouple import config
 from elasticsearch_dsl.response import Hit
@@ -16,7 +16,7 @@ from api.utils.check_dead_links.provider_status_mappings import provider_status_
 from api.utils.dead_link_mask import get_query_mask, save_query_mask
 
 
-parent_logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 
 CACHE_PREFIX = "valid:"
@@ -32,7 +32,6 @@ def _get_cached_statuses(redis, image_urls):
             int(b.decode("utf-8")) if b is not None else None for b in cached_statuses
         ]
     except ConnectionError:
-        logger = parent_logger.getChild("_get_cached_statuses")
         logger.warning("Redis connect failed, validating all URLs without cache.")
         return [None] * len(image_urls)
 
@@ -77,7 +76,6 @@ def check_dead_links(
     Results are cached in redis and shared amongst all API servers in the
     cluster.
     """
-    logger = parent_logger.getChild("check_dead_links")
     if not image_urls:
         logger.info("no image urls to validate")
         return
@@ -177,5 +175,4 @@ def check_dead_links(
 
 
 def _log_validation_failure(exception):
-    logger = parent_logger.getChild("_log_validation_failure")
     logger.warning(f"Failed to validate image! Reason: {exception}")

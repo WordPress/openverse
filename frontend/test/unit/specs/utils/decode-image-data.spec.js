@@ -12,6 +12,7 @@ const requiredFields = {
   attribution: "Attribution",
 
   category: null,
+  source: "source",
   provider: "provider",
 
   detail_url: "url",
@@ -22,6 +23,11 @@ const requiredFields = {
 
   tags: [],
 }
+const expectedFields = {
+  ...requiredFields,
+  sourceName: "Source",
+  providerName: "Provider",
+}
 
 describe("decodeImageData", () => {
   beforeEach(() => {
@@ -30,14 +36,14 @@ describe("decodeImageData", () => {
 
   it("decodes symbols correctly", () => {
     const data = {
-      ...requiredFields,
+      ...expectedFields,
       creator: "S\\xe3",
       title: "S\\xe9",
       tags: [{ name: "ma\\xdf" }],
     }
 
     const expected = {
-      ...requiredFields,
+      ...expectedFields,
       title: "Sé",
       originalTitle: "Sé",
       creator: "Sã",
@@ -50,14 +56,14 @@ describe("decodeImageData", () => {
 
   it("strips the extension if the same as media filetype", () => {
     const data = {
-      ...requiredFields,
+      ...expectedFields,
       creator: "Creator",
       title: "Image.JPEG",
       filetype: "jpg",
     }
 
     const expected = {
-      ...requiredFields,
+      ...expectedFields,
       title: "Image",
       originalTitle: "Image.JPEG",
       creator: "Creator",
@@ -77,7 +83,7 @@ describe("decodeImageData", () => {
     }
 
     const expected = {
-      ...requiredFields,
+      ...expectedFields,
       title: "Image",
       originalTitle: "Image.JPG",
       creator: "Creator",
@@ -96,7 +102,7 @@ describe("decodeImageData", () => {
     }
 
     const expected = {
-      ...requiredFields,
+      ...expectedFields,
       url: "https://example.com/image.png",
       title: "Image.JPG",
       originalTitle: "Image.JPG",

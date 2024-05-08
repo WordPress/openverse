@@ -1,5 +1,4 @@
 import json
-import logging
 import math
 import mimetypes
 import os
@@ -10,9 +9,10 @@ import subprocess
 from django.conf import settings
 
 import requests
+import structlog
 
 
-parent_logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 TMP_DIR = pathlib.Path("/tmp").resolve()
 UA_STRING = settings.OUTBOUND_USER_AGENT_TEMPLATE.format(purpose="Waveform")
@@ -45,7 +45,6 @@ def download_audio(url, identifier):
     :returns: the name of the file on the disk
     """
 
-    logger = parent_logger.getChild("download_audio")
     logger.info(f"downloading file url={url}")
 
     headers = {"User-Agent": UA_STRING}
@@ -74,7 +73,6 @@ def generate_waveform(file_name, duration):
     :param duration: the duration of the audio to determine pixels per second
     """
 
-    logger = parent_logger.getChild("generate_waveform")
     logger.info("Invoking audiowaveform")
 
     pps = math.ceil(1e6 / duration)  # approx 1000 points in total
@@ -105,7 +103,6 @@ def process_waveform_output(json_out):
     :returns: the list of peaks
     """
 
-    logger = parent_logger.getChild("process_waveform_output")
     logger.info("Transforming points")
 
     output = json.loads(json_out)
@@ -135,8 +132,6 @@ def cleanup(file_name):
 
     :param file_name: the name of the file to delete
     """
-
-    logger = parent_logger.getChild("cleanup")
 
     file_path = TMP_DIR.joinpath(file_name)
     logger.debug(f"file_path={file_path}")

@@ -80,21 +80,19 @@ describe("Provider Store", () => {
 
   it.each`
     providerCode     | displayName
-    ${"wikimedia"}   | ${"Wikimedia Commons"}
-    ${"wordpress"}   | ${"WP Photo Directory"}
     ${"test_source"} | ${"Test Source"}
   `(
     "getProviderName returns provider name or capitalizes providerCode",
     async ({ providerCode, displayName }) => {
-      await providerStore.fetchMediaProviders()
+      await providerStore.fetchProviders()
       expect(providerStore.getProviderName(providerCode, IMAGE)).toEqual(
         displayName
       )
     }
   )
 
-  it("fetchMediaProviders on success", async () => {
-    await providerStore.fetchMediaProviders()
+  it("fetchProviders on success", async () => {
+    await providerStore.fetchProviders()
     expect(providerStore.fetchState[IMAGE]).toEqual({
       fetchingError: null,
       hasStarted: true,
@@ -103,7 +101,7 @@ describe("Provider Store", () => {
     expect(providerStore.providers[IMAGE]).toEqual(mockData)
   })
 
-  it("fetchMediaProviders on error", async () => {
+  it("fetchProviders on error", async () => {
     for (const mediaType of supportedMediaTypes) {
       initProviderServices[mediaType] = () => ({
         getProviderStats: jest.fn().mockImplementation(() =>
@@ -126,7 +124,7 @@ describe("Provider Store", () => {
       })
     }
     const searchStore = useSearchStore()
-    await providerStore.fetchMediaProviders()
+    await providerStore.fetchProviders()
     for (const mediaType of supportedMediaTypes) {
       expect(providerStore.fetchState[mediaType].fetchingError).toEqual({
         code: AxiosError.ERR_BAD_REQUEST,

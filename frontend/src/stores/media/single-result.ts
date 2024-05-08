@@ -11,7 +11,6 @@ import type { SupportedMediaType } from "~/constants/media"
 
 import { initServices } from "~/stores/media/services"
 import { useMediaStore } from "~/stores/media/index"
-import { useProviderStore } from "~/stores/provider"
 
 import type { FetchingError, FetchState } from "~/types/fetch-state"
 
@@ -59,23 +58,6 @@ export const useSingleResultStore = defineStore("single-result", {
       action === "start" ? this._startFetching() : this._endFetching(option)
     },
 
-    _addProviderName<T extends SupportedMediaType>(
-      mediaItem: DetailFromMediaType<T>
-    ): DetailFromMediaType<T> {
-      const providerStore = useProviderStore()
-
-      mediaItem.providerName = providerStore.getProviderName(
-        mediaItem.provider,
-        mediaItem.frontendMediaType
-      )
-      if (mediaItem.source) {
-        mediaItem.sourceName = providerStore.getProviderName(
-          mediaItem.source,
-          mediaItem.frontendMediaType
-        )
-      }
-      return mediaItem
-    },
     reset() {
       this.mediaItem = null
       this.mediaType = null
@@ -91,7 +73,7 @@ export const useSingleResultStore = defineStore("single-result", {
      */
     setMediaItem(mediaItem: AudioDetail | ImageDetail | null) {
       if (mediaItem) {
-        this.mediaItem = this._addProviderName(mediaItem)
+        this.mediaItem = mediaItem
         this.mediaType = mediaItem.frontendMediaType
         this.mediaId = mediaItem.id
       } else {
@@ -160,7 +142,7 @@ export const useSingleResultStore = defineStore("single-result", {
         this._updateFetchState("start")
         const accessToken = this.$nuxt.$openverseApiToken
         const service = initServices[type](accessToken)
-        const item = this._addProviderName(await service.getMediaDetail(id))
+        const item = await service.getMediaDetail(id)
 
         this.setMediaItem(item)
         this._updateFetchState("end")

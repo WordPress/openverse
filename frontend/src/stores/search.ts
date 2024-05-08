@@ -432,12 +432,11 @@ export const useSearchStore = defineStore("search", {
 
     async initProviderFilters() {
       const providerStore = useProviderStore()
-      const providers = await providerStore.getProviders()
 
       for (const mediaType of supportedMediaTypes) {
         this.updateProviderFilters({
           mediaType,
-          providers: providers[mediaType],
+          providers: providerStore.providers[mediaType],
         })
       }
     },

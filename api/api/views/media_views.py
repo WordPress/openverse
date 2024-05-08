@@ -1,4 +1,3 @@
-import logging
 from typing import Union
 
 from rest_framework import status
@@ -7,6 +6,7 @@ from rest_framework.exceptions import APIException, NotFound
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
+import structlog
 from adrf.views import APIView as AsyncAPIView
 from adrf.viewsets import ViewSetMixin as AsyncViewSetMixin
 from asgiref.sync import sync_to_async
@@ -28,7 +28,7 @@ from api.utils.throttle import (
 )
 
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 MediaListRequestSerializer = Union[
     media_serializers.PaginatedRequestSerializer,

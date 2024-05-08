@@ -8,7 +8,9 @@ from oauth2_provider.models import AccessToken
 
 from api.admin.forms import UserPreferencesAdminForm
 from api.admin.media_report import (
+    AudioListViewAdmin,
     AudioReportAdmin,
+    ImageListViewAdmin,
     ImageReportAdmin,
     MediaReportAdmin,
     MediaSubreportAdmin,
@@ -22,6 +24,8 @@ from api.models import (
     ImageReport,
     UserPreferences,
 )
+from api.models.audio import AudioDecision
+from api.models.image import ImageDecision
 from api.models.media import AbstractDeletedMedia, AbstractSensitiveMedia
 from api.models.oauth import ThrottledApplication
 
@@ -35,14 +39,8 @@ admin.site.register(User, UserAdmin)
 admin.site.register(Group, GroupAdmin)
 
 
-@admin.register(Image)
-class ImageAdmin(admin.ModelAdmin):
-    search_fields = ("identifier",)
-
-
-@admin.register(Audio)
-class AudioAdmin(admin.ModelAdmin):
-    search_fields = ("identifier",)
+admin.site.register(Image, ImageListViewAdmin)
+admin.site.register(Audio, AudioListViewAdmin)
 
 
 # Register the MediaReportAdmin classes and its subclasses
@@ -55,6 +53,10 @@ for klass in [
     *AbstractDeletedMedia.__subclasses__(),
 ]:
     admin.site.register(klass, MediaSubreportAdmin)
+
+# Temporary addition of model admin for decisions while this view gets built
+admin.site.register(ImageDecision, admin.ModelAdmin)
+admin.site.register(AudioDecision, admin.ModelAdmin)
 
 
 @admin.register(ContentProvider)

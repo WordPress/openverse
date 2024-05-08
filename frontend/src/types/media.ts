@@ -55,9 +55,9 @@ export interface Media {
 
   category: string | null
   provider: string
-  source?: string
-  providerName?: string
-  sourceName?: string
+  source: string
+  providerName: string
+  sourceName: string
   thumbnail?: string
 
   filesize?: string
@@ -137,6 +137,8 @@ export interface ApiMedia
     | "originalTitle"
     | "isSensitive"
     | "sensitivity"
+    | "sourceName"
+    | "providerName"
   > {
   title?: string
   originalTitle?: string

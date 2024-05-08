@@ -29,7 +29,7 @@ from common.constants import DAG_DEFAULT_ARGS, ENVIRONMENTS, PRODUCTION, Environ
 from common.elasticsearch import get_es_host
 from common.sensors.utils import is_concurrent_with_any
 from common.slack import send_alert, send_message
-from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS
+from legacy_data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS
 
 
 logger = logging.getLogger(__name__)

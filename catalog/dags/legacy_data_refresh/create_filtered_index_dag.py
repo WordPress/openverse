@@ -60,10 +60,10 @@ from airflow.models.param import Param
 from common.constants import DAG_DEFAULT_ARGS
 from common.sensors.constants import PRODUCTION_ES_CONCURRENCY_TAG
 from common.sensors.utils import prevent_concurrency_with_dags_with_tag
-from data_refresh.create_filtered_index import (
+from legacy_data_refresh.create_filtered_index import (
     create_filtered_index_creation_task_groups,
 )
-from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS, DataRefresh
+from legacy_data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS, DataRefresh
 
 
 # Note: We can't use the TaskFlow `@dag` DAG factory decorator
