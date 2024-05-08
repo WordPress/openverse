@@ -216,6 +216,7 @@ breakpoints.describeMobileAndDesktop(({ breakpoint }) => {
       const filterButtonText = await page
         .locator('[aria-controls="filters"] span:visible')
         .textContent()
+      // eslint-disable-next-line playwright/no-conditional-expect
       expect(filterButtonText).toContain("Filters")
     } else {
       const filtersAriaLabel =
@@ -223,6 +224,7 @@ breakpoints.describeMobileAndDesktop(({ breakpoint }) => {
         (await page
           .locator('[aria-controls="content-settings-modal"]')
           .getAttribute("aria-label")) ?? ""
+      // eslint-disable-next-line playwright/no-conditional-expect
       expect(filtersAriaLabel.trim()).toEqual("Menu. 1 filter applied")
     }
 
