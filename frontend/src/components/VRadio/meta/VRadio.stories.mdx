@@ -77,8 +77,8 @@ export const vModelTemplate = (args, { argTypes }) => ({
   template: `
     <div>
       <form class="flex flex-col gap-2 mb-2">
-        <VRadio id="a" name="test" own-value="A" v-model="picked">A</VRadio>
-        <VRadio id="b" name="test" own-value="B" v-model="picked">B</VRadio>
+        <VRadio id="a" name="test" value_="A" v-model="picked">A</VRadio>
+        <VRadio id="b" name="test" value_="B" v-model="picked">B</VRadio>
       </form>
       {{ picked ?? 'None' }}
     </div>

@@ -15,18 +15,18 @@ import VHomeLink from "~/components/VHeader/VHomeLink.vue"
       type: "string",
       control: {
         type: "select",
-        options: ["dark", "light"],
       },
+      options: ["dark", "light"],
     },
   }}
 />
 
 export const Template = (args) => ({
-  template: `<div class="flex p-4" :class="args.bg"><VHomeLink v-bind="args" /></div>`,
+  template: `<div class="flex p-4" :class="bg"><VHomeLink v-bind="args" /></div>`,
   components: { VHomeLink },
   setup() {
-    args.bg = args.variant === "dark" ? "bg-white" : "bg-black"
-    return { args }
+    const bg = args.variant === "dark" ? "bg-white" : "bg-black"
+    return { args, bg }
   },
 })
 

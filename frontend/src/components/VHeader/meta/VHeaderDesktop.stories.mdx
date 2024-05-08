@@ -5,16 +5,18 @@ import {
   Meta,
   Story,
 } from "@storybook/addon-docs"
+import { provide, ref } from "vue"
+import { IsSidebarVisibleKey } from "~/types/provides"
 import VHeaderDesktop from "~/components/VHeader/VHeaderDesktop.vue"
 
 <Meta title="Components/VHeader/VHeaderDesktop" component={VHeaderDesktop} />
 
-export const Template = (args) => ({
-  template: `
-    <VHeaderDesktop v-bind="args" v-on="args" />`,
+export const Template = () => ({
+  template: `<VHeaderDesktop />`,
   components: { VHeaderDesktop },
   setup() {
-    return { args }
+    provide(IsSidebarVisibleKey, ref(false))
+    return {}
   },
 })
 

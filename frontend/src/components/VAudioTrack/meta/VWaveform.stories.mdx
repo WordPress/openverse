@@ -16,6 +16,9 @@ import VWaveform from "~/components/VAudioTrack/VWaveform.vue"
       action: "seeked",
     },
   }}
+  args={{
+    audioId: "audioId",
+  }}
 />
 
 export const Template = (args) => ({
@@ -28,9 +31,9 @@ export const Template = (args) => ({
 
 # Waveform
 
-<Description of={Waveform} />
+<Description of={VWaveform} />
 
-<ArgsTable of={Waveform} />
+<ArgsTable of={VWaveform} />
 
 ## Sampling
 
@@ -105,7 +108,7 @@ The waveform always takes the height and width of its container.
 - **Height:** the bars will elongate proportionally to scale vertically
 - **Width:** the number of samples will be adjusted to scale horizontally
 
-Thus the `barWidth` and `barGap` will be maintained even in the case of
+Thus, the `barWidth` and `barGap` will be maintained even in the case of
 horizontal scaling.
 
 ## Usable area
@@ -160,7 +163,6 @@ will animate up to their actual height when the prop is unset.
     name="Message"
     args={{
       message: "Hello, World!",
-      audioId: 123,
     }}
   >
     {Template.bind({})}

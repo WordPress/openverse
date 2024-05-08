@@ -8,7 +8,6 @@
       ref="searchBarRef"
       v-model.trim="searchTerm"
       class="me-4 flex-grow"
-      size="medium"
       @submit="handleSearch"
     >
       <VSearchBarButton

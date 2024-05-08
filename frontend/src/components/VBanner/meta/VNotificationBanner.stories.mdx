@@ -16,6 +16,10 @@ import VNotificationBanner from "~/components/VBanner/VNotificationBanner.vue"
       action: "close",
     },
   }}
+  args={{
+    id: "banner",
+    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec justo eget felis facilisis fermentum.",
+  }}
 />
 
 export const Template = (args) => ({
@@ -36,7 +40,6 @@ export const Template = (args) => ({
   <Story
     name="Default"
     args={{
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec justo eget felis facilisis fermentum.",
       nature: "success",
       variant: "regular",
     }}
@@ -49,7 +52,6 @@ export const Template = (args) => ({
   <Story
     name="Dark"
     args={{
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec justo eget felis facilisis fermentum.",
       nature: "info",
       variant: "dark",
     }}

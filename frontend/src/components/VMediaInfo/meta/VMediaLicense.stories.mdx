@@ -24,15 +24,17 @@ export const Template = (args) => ({
   component={VMediaLicense}
   argTypes={{
     license: {
-      defaultValue: ALL_LICENSES[0],
       options: ALL_LICENSES,
       control: "select",
     },
     licenseVersion: {
-      defaultValue: LICENSE_VERSIONS[0],
       options: LICENSE_VERSIONS,
       control: "select",
     },
+  }}
+  args={{
+    license: ALL_LICENSES[0],
+    licenseVersion: LICENSE_VERSIONS[0],
   }}
 />
 

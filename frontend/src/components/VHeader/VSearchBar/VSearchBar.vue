@@ -97,7 +97,7 @@ export default defineComponent({
     },
     size: {
       type: String as PropType<keyof typeof FIELD_SIZES>,
-      required: true,
+      default: "medium",
     },
     placeholder: {
       type: String,

@@ -15,10 +15,12 @@ import { ALL_LICENSES } from "~/constants/license"
   components={VLicenseExplanation}
   argTypes={{
     license: {
-      defaultValue: ALL_LICENSES[0],
       options: ALL_LICENSES,
       control: "select",
     },
+  }}
+  args={{
+    license: ALL_LICENSES[0],
   }}
 />
 

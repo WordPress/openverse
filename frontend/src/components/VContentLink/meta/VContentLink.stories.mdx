@@ -8,8 +8,6 @@ import {
 
 import VContentLink from "~/components/VContentLink/VContentLink.vue"
 
-<Meta title="Components/VContentLink" components={VContentLink} argTypes={{}} />
-
 export const contentLinkArgTypes = {
   mediaType: { options: ["audio", "image"], control: { type: "radio" } },
   searchTerm: { control: { type: "string" } },
@@ -17,6 +15,13 @@ export const contentLinkArgTypes = {
   isSelected: { control: { type: "boolean" } },
   layout: { options: ["stacked", "horizontal"], control: { type: "radio" } },
 }
+
+<Meta
+  title="Components/VContentLink"
+  components={VContentLink}
+  argTypes={contentLinkArgTypes}
+  args={{ searchTerm: "cat" }}
+/>
 
 export const VContentLinkStory = (args) => ({
   template: `<VContentLink v-bind="args" />`,
@@ -77,6 +82,7 @@ export const TwoVContentLinkStory = (args) => ({
       mediaType: "image",
       resultsCount: 5708,
       isSelected: false,
+      searchTerm: "cat",
     }}
     argTypes={contentLinkArgTypes}
   >

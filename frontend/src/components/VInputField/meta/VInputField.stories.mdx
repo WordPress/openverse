@@ -16,11 +16,16 @@ import VInputField from "~/components/VInputField/VInputField.vue"
       action: "update:modelValue",
     },
   }}
+  args={{
+    fieldId: "input",
+    labelText: "Test label",
+    size: "medium",
+  }}
 />
 
 export const Template = (args) => ({
   template: `
-    <VInputField v-bind="args" v-on="args" label-text="Test label">
+    <VInputField v-bind="args" v-on="args">
       Extra info
     </VInputField>
   `,
@@ -55,7 +60,7 @@ The recommended way to use it is with `v-model` mapping to a `String`.
 export const vModelTemplate = () => ({
   template: `
     <div>
-      <VInputField v-model="text">
+      <VInputField field-id="v-model" size="medium" v-model="text">
         {{ text.length }}
       </VInputField>
       {{ text }}
@@ -104,7 +109,7 @@ via the `labelText` prop.
 </Canvas>
 
 To provide a custom label, skip the `labelText` prop (to remove the SR-only
-label) and set the `id` attribute on the component (which is passed to the
+label) and set the `field-id` attribute on the component (which is passed to the
 `<input>` element). Now use the ID as the `for` attribute of your custom
 `<label>` element.
 
@@ -112,7 +117,7 @@ export const labelTemplate = () => ({
   template: `
     <div>
       <label for="field">Label:</label>
-      <VInputField id="field"/>
+      <VInputField size="medium" field-id="field"/>
     </div>
   `,
   components: { VInputField },

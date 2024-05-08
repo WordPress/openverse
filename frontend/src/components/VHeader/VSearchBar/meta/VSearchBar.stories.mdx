@@ -61,7 +61,7 @@ representing the search query.
 export const vModelTemplate = (args) => ({
   template: `
     <div>
-      <VSearchBar v-model="text" size="standalone" v-on="args">
+      <VSearchBar v-model="text" v-on="args">
         <span class="info text-xs font-semibold text-dark-charcoal-70 mx-4 whitespace-nowrap group-hover:text-dark-charcoal group-focus:text-dark-charcoal">
           {{ text.length }} chars
         </span>
@@ -93,7 +93,6 @@ easy `<input>` attributes like placeholders or HTML validations.
     name="With placeholder"
     args={{
       placeholder: "Search query",
-      size: "large",
     }}
   >
     {Template.bind({})}

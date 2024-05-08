@@ -8,6 +8,7 @@ import {
 
 import { useI18n } from "~/composables/use-i18n"
 import { getMediaMetadata } from "~/utils/metadata"
+import { useProviderStore } from "~/stores/provider"
 
 import { image as testImage } from "~~/test/unit/fixtures/image"
 import { getAudioObj } from "~~/test/unit/fixtures/audio"
@@ -25,17 +26,26 @@ export const Template = (args) => ({
       <VLanguageSelect />
       <section class="wrapper flex flex-col p-2 gap-y-2 bg-dark-charcoal-06">
         <VMetadata
-        v-for="datum in args.data"
+        v-for="datum in data"
         :key="datum.media.id"
-        v-bind="datum"
+        :media="datum.media"
+        :metadata="datum.metadata"
         class="bg-white"/>
       </section>
     </div>
   `,
   components: { VMetadata, VLanguageSelect },
   setup() {
+    const providerStore = useProviderStore()
+    providerStore.$patch({
+      providers: {
+        audio: [{ source_name: testAudio.source }],
+        image: [{ source_name: testImage.source }],
+      },
+      sourceNames: { audio: [testAudio.source], image: [testImage.source] },
+    })
     const i18n = useI18n()
-    args.data = [
+    const data = [
       {
         metadata: getMediaMetadata(testImage, i18n, {
           width: testImage.width,
@@ -49,7 +59,7 @@ export const Template = (args) => ({
         media: testAudio,
       },
     ]
-    return { args }
+    return { args, data }
   },
 })
 
