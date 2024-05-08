@@ -11,7 +11,6 @@ import {
   getCopyButton,
   getH1,
   getLoadMoreButton,
-  // getLoadMoreButton,
 } from "~~/test/playwright/utils/components"
 import { t } from "~~/test/playwright/utils/i18n"
 import {
@@ -73,7 +72,7 @@ test("some tags are hidden if there are more than 3 rows", async ({ page }) => {
   await preparePageForTests(page, "xl")
   await page.goto("/image/2bc7dde0-5aad-4cf7-b91d-7f0e3bd06750")
 
-  const tags = page.getByRole("list", { name: t("mediaDetails.tags.title") })
+  const tags = page.getByRole("list").nth(2)
   await expect(tags).toBeVisible()
   const tagsCount = await tags.locator("li").count()
 
