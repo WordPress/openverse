@@ -86,7 +86,7 @@ Each object is expected to contain:
 
 #### `audio_report`
 
-**Model docstring:** User-submitted reports of audio tracks.
+**`AudioReport` docstring:** User-submitted reports of audio tracks.
 
 `AudioDecision` is populated only if moderators have made a decision for this
 report.
@@ -107,7 +107,7 @@ report.
 
 #### `audiodecision`
 
-**Model docstring:** Moderation decisions taken for audio tracks.
+**`AudioDecision` docstring:** Moderation decisions taken for audio tracks.
 
 (Audio-audioset-notes)=
 
@@ -116,8 +116,8 @@ report.
 This is a virtual foreign-key to `AudioSet` built on top of the fields
 `audio_set_foreign_identifier` and `provider`.
 
-**Model docstring:** This is an ordered collection of audio files, such as a
-podcast series or an album.
+**`AudioSet` docstring:** This is an ordered collection of audio files, such as
+a podcast series or an album.
 
 Not to be confused with `AudioList` which is a many-to-many collection of audio
 files, like a playlist or favourites library.
@@ -152,7 +152,7 @@ The FileMixin inherited by this model refers not to audio but album art.
 
 #### `deleted_audio`
 
-**Model docstring:** Audio tracks deleted from the upstream source.
+**`DeletedAudio` docstring:** Audio tracks deleted from the upstream source.
 
 Do not create instances of this model manually. Create an `AudioReport` instance
 instead.
@@ -229,7 +229,7 @@ explicitly.
 
 #### `lists`
 
-**Model docstring:** A list of audio files. Currently unused.
+**`AudioList` docstring:** A list of audio files. Currently unused.
 
 (Audio-meta_data-notes)=
 
@@ -262,7 +262,7 @@ available, is also indexed into Elasticsearch and as a search field on queries.
 
 #### `sensitive_audio`
 
-**Model docstring:** Audio tracks with verified sensitivity reports.
+**`SensitiveAudio` docstring:** Audio tracks with verified sensitivity reports.
 
 Do not create instances of this model manually. Create an `AudioReport` instance
 instead.
@@ -386,7 +386,7 @@ Note that only `name` and `accuracy` are presently surfaced in API results.
 
 #### `deleted_image`
 
-**Model docstring:** Images deleted from the upstream source.
+**`DeletedImage` docstring:** Images deleted from the upstream source.
 
 Do not create instances of this model manually. Create an `ImageReport` instance
 instead.
@@ -438,7 +438,7 @@ explicitly.
 
 #### `image_report`
 
-**Model docstring:** User-submitted report of an image.
+**`ImageReport` docstring:** User-submitted report of an image.
 
 This contains an `ImageDecision` as well, if moderators have made a decision for
 this report.
@@ -447,7 +447,7 @@ this report.
 
 #### `imagedecision`
 
-**Model docstring:** Moderation decisions taken for images.
+**`ImageDecision` docstring:** Moderation decisions taken for images.
 
 (Image-last_synced_with_source-notes)=
 
@@ -471,7 +471,7 @@ this report.
 
 #### `lists`
 
-**Model docstring:** A list of images. Currently unused.
+**`ImageList` docstring:** A list of images. Currently unused.
 
 (Image-meta_data-notes)=
 
@@ -498,7 +498,7 @@ available, is also indexed into Elasticsearch and as a search field on queries.
 
 #### `sensitive_image`
 
-**Model docstring:** Images with verified sensitivity reports.
+**`SensitiveImage` docstring:** Images with verified sensitivity reports.
 
 Do not create instances of this model manually. Create an `ImageReport` instance
 instead.

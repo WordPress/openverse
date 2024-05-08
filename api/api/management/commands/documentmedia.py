@@ -301,7 +301,8 @@ def generate_notes(model: str, fields: list[FieldInfo]) -> tuple[str, set[str]]:
             record = True
         if field.is_relation and field.relation_info.doc:
             field_output += (
-                f"**Model docstring:** {dedent(field.relation_info.doc)}\n\n"
+                f"**`{field.relation_info.to}` docstring:** "
+                f"{dedent(field.relation_info.doc)}\n\n"
             )
             record = True
         if record:
