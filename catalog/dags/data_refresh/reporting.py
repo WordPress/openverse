@@ -1,4 +1,5 @@
 import logging
+from textwrap import dedent
 
 from common import slack
 
@@ -34,13 +35,15 @@ def report_record_difference(before: dict, after: dict, media_type: str, dag_id:
     else:
         breakdown_message = "Both indices missing? No breakdown to show"
 
-    message = f"""
-Data refresh for {media_type} complete! :tada:
-_Note: All values are retrieved from elasticsearch_
-*Record count difference for `{media_type}`*: {total_before:,} → {total_after:,}
-*Change*: {count_diff:+,} ({percent_diff:+}% Δ)
-*Breakdown of changes*:
-"""
+    message = dedent(
+        f"""
+        Data refresh for {media_type} complete! :tada:
+        _Note: All values are retrieved from elasticsearch_
+        *Record count difference for `{media_type}`*: {total_before:,} → {total_after:,}
+        *Change*: {count_diff:+,} ({percent_diff:+}% Δ)
+        *Breakdown of changes*:
+        """
+    )
     message += breakdown_message
     slack.send_message(
         text=message, dag_id=dag_id, username="Data refresh record difference"

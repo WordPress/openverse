@@ -78,7 +78,7 @@ class DataRefreshConfig:
     table_mappings: list[TableMapping]
     start_date: datetime = datetime(2020, 1, 1)
     schedule: str | None = "0 0 * * 1"  # Mondays 00:00 UTC
-    default_args: dict | None = field(default_factory=dict)
+    default_args: dict = field(default_factory=dict)
     dag_timeout: timedelta = timedelta(days=1)
     copy_data_timeout: timedelta = timedelta(hours=1)
     index_readiness_timeout: timedelta = timedelta(days=1)

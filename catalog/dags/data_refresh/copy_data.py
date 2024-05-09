@@ -87,7 +87,7 @@ def initialize_fdw(
     )
 
 
-@task
+@task(map_index_template="{{ task.op_kwargs['upstream_table_name'] }}")
 def create_schema(downstream_conn_id: str, upstream_table_name: str) -> str:
     """
     Create a new schema in the downstream DB through which the upstream table
@@ -136,7 +136,7 @@ def get_record_limit() -> int | None:
     return DEFAULT_DATA_REFRESH_LIMIT
 
 
-@task
+@task(map_index_template="{{ task.op_kwargs['upstream_table_name'] }}")
 def get_shared_columns(
     upstream_conn_id: str,
     downstream_conn_id: str,
@@ -167,7 +167,8 @@ def get_shared_columns(
 
 @task(
     # Ensure that only one table is being copied at a time.
-    max_active_tis_per_dagrun=1
+    max_active_tis_per_dagrun=1,
+    map_index_template="{{ task.op_kwargs['upstream_table_name'] }}",
 )
 def copy_data(
     postgres_conn_id: str,
@@ -237,20 +238,29 @@ def copy_upstream_table(
         upstream_table_name=upstream_table_name,
     )
 
-    create_temp_table = _run_sql.override(task_id="create_temp_table")(
+    create_temp_table = _run_sql.override(
+        task_id="create_temp_table",
+        map_index_template="{{ task.op_kwargs['temp_table_name'] }}",
+    )(
         postgres_conn_id=downstream_conn_id,
         sql_template=queries.CREATE_TEMP_TABLE_QUERY,
         temp_table_name=temp_table_name,
         downstream_table_name=downstream_table_name,
     )
 
-    setup_id_columns = _run_sql.override(task_id="setup_id_columns")(
+    setup_id_columns = _run_sql.override(
+        task_id="setup_id_columns",
+        map_index_template="{{ task.op_kwargs['temp_table_name'] }}",
+    )(
         postgres_conn_id=downstream_conn_id,
         sql_template=queries.ID_COLUMN_SETUP_QUERY,
         temp_table_name=temp_table_name,
     )
 
-    setup_tertiary_columns = _run_sql.override(task_id="setup_tertiary_columns")(
+    setup_tertiary_columns = _run_sql.override(
+        task_id="setup_tertiary_columns",
+        map_index_template="{{ task.op_kwargs['temp_table_name'] }}",
+    )(
         postgres_conn_id=downstream_conn_id,
         sql_template=tertiary_column_query,
         temp_table_name=temp_table_name,
@@ -267,7 +277,10 @@ def copy_upstream_table(
         columns=shared_cols,
     )
 
-    add_primary_key = _run_sql.override(task_id="add_primary_key")(
+    add_primary_key = _run_sql.override(
+        task_id="add_primary_key",
+        map_index_template="{{ task.op_kwargs['temp_table_name'] }}",
+    )(
         postgres_conn_id=downstream_conn_id,
         sql_template=queries.ADD_PRIMARY_KEY_QUERY,
         temp_table_name=temp_table_name,
