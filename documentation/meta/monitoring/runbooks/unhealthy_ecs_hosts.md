@@ -7,8 +7,8 @@ Status: **Stable**
 Alarm links:
 - [production-api](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/production-api+has+unhealthy+hosts)
 - [staging-api](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/staging-api+has+unhealthy+hosts)
-- [production-nuxt](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/production-nuxt+has+unhealthy+hosts)
-- [staging-nuxt](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/staging-nuxt+has+unhealthy+hosts)
+- [production-frontend](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/production-frontend+has+unhealthy+hosts)
+- [staging-frontend](https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#alarmsV2:alarm/staging-frontend+has+unhealthy+hosts)
 ```
 
 ```{note}
