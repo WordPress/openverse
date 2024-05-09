@@ -26,9 +26,10 @@ The following are DAGs grouped by their primary tag:
 
 ### Data Normalization
 
-| DAG ID                                | Schedule Interval |
-| ------------------------------------- | ----------------- |
-| [`add_license_url`](#add_license_url) | `None`            |
+| DAG ID                                                      | Schedule Interval |
+| ----------------------------------------------------------- | ----------------- |
+| [`add_license_url`](#add_license_url)                       | `None`            |
+| [`update_science_museum_urls`](#update_science_museum_urls) | `None`            |
 
 ### Data Refresh
 
@@ -72,7 +73,6 @@ The following are DAGs grouped by their primary tag:
 | [`flickr_audit_sub_provider_workflow`](#flickr_audit_sub_provider_workflow) | `@monthly`        |
 | [`pr_review_reminders`](#pr_review_reminders)                               | `0 0 * * 1-5`     |
 | [`rotate_db_snapshots`](#rotate_db_snapshots)                               | `0 0 * * 6`       |
-| [`update_science_museum_urls`](#update_science_museum_urls)                 | `None`            |
 
 ### Oauth
 
@@ -1068,10 +1068,10 @@ For each Science Museum record, this DAG:
 
 - updates the url to the new format, excluding `/images/` in the path if it
   exists
-- validates whether the url . If not, the record ID is added to an
+- validates whether the url is reachable. If not, the record ID is added to an
   `invalid_science_musem_ids` table.
 
-Once complete, we can use the `invalid_science_museum_ids` to identify records
+Once complete, we can use the `science_museum_invalid_ids` to identify records
 to delete. They are not automatically deleted by this DAG, in order to give us
 an opportunity to first see how many there are.
 
