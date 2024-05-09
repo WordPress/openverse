@@ -100,7 +100,7 @@ services:
       - ./tests/s3-data:/data:rw,z
       - ../docker/minio/load_to_s3_entrypoint.sh:/opt/minio/load_to_s3_entrypoint.sh:ro,z
     entrypoint: /opt/minio/load_to_s3_entrypoint.sh
-  
+
   catalog_indexer_worker:
     # only start if the catalog webserver and the api are activated
     profiles:
