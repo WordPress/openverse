@@ -100,6 +100,35 @@ services:
       - ./tests/s3-data:/data:rw,z
       - ../docker/minio/load_to_s3_entrypoint.sh:/opt/minio/load_to_s3_entrypoint.sh:ro,z
     entrypoint: /opt/minio/load_to_s3_entrypoint.sh
+  
+  catalog_indexer_worker:
+    # only start if the catalog webserver and the api are activated
+    profiles:
+      - catalog_dependencies
+      - catalog
+      - api
+      # error about db was pulled in as a dependency of service but is not enabled by the active
+      # profiles you can fix this by adding a common profile to db and catalog_indexer_worker
+    # https://docs.docker.com/compose/compose-file/build/
+    build:
+      context: ./dags/data_refresh/indexer_worker/
+      args: # Automatically inferred from env vars, unless specified
+        - CATALOG_PY_VERSION
+    image: openverse-indexer_worker
+    # We shouldn'tg need this bc the dockerfile can just do it now
+    # command: gunicorn indexer_api:api --bind 0.0.0.0:8003
+    ports:
+      - "50282:8003"
+    depends_on:
+      - db
+      - upstream_db
+      - es
+    volumes:
+      - ./dags/data_refresh/indexer_worker:/indexer_worker:z
+    env_file:
+      - dags/data_refresh/indexer_worker/env.docker
+    stdin_open: true
+    tty: true
 
 volumes:
   catalog-cache:

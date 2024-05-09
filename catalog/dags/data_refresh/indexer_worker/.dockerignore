@@ -1,0 +1,5 @@
+# Exclude everything and only include certain files
+*
+!indexer_worker
+!gunicorn*
+!Pipfile*
