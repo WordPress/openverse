@@ -61,4 +61,63 @@ while read -r var_string; do
   # only include Slack airflow connections
 done < <(env | grep "^AIRFLOW_CONN_SLACK*")
 
+# Set up Airflow Variable defaults with descriptions automatically
+# List all existing airflow variables
+output=$(airflow variables list -o plain)
+found_existing_vars=true
+
+# if there are no existing variable, print this notification and continue
+if [[ -z $output || $output == "No data found" ]]; then
+  header "No existing variables found, proceeding to set all variables"
+  found_existing_vars=false
+fi
+
+# Initialize an empty array to store the variables from the output
+existing_variables=()
+
+# Iterate through each variable and add it to $existing_variables
+while IFS= read -r variable; do
+  # skip airflow's default descriptive 'key' output
+  if [[ $variable == "key" ]]; then
+    continue
+  fi
+  # Append the current variable to the array
+  existing_variables+=("$variable")
+done <<<"$output"
+
+if $found_existing_vars; then
+  header "Found the following existing variables(The values of these will not be overwritten):"
+  for variable in "${existing_variables[@]}"; do
+    echo "$variable"
+  done
+fi
+
+# now iterate through each row of variables.tsv and and only
+# run airflow variables set --description <description> <key> <value>
+# if the key doesn't already exist in the database i.e not found in
+# $existing_variables
+while IFS=$'\t' read -r column1 column2 column3; do
+  # skip the first meta row
+  if [[ $column3 == "description" ]] || [[ ${existing_variables[*]} =~ $column1 ]]; then
+    continue
+  fi
+
+  if [ "$column1" != "Key" ]; then
+    airflow variables set --description "$column3" "$column1" "$column2"
+  fi
+done <"variables.tsv"
+
+# Print the new variables list
+new_varibles_list=$(airflow variables list -o plain)
+header "The following variables are now set:"
+echo "$new_varibles_list"
+
+# if the last line in variables.tsv did not correctly terminate
+# with a new line character then this variable would not be empty
+# and this means the last line would not be read correctly.
+if [ -n "$column1" ]; then
+  header "Missing new line character detected!!!"
+  echo -e "Last variable added to variables.tsv might not be picked up,\nensure it ends with a new line character and retry."
+fi
+
 exec /entrypoint "$@"
