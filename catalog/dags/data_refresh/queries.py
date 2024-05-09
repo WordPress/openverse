@@ -36,9 +36,9 @@ ID_COLUMN_SETUP_QUERY = dedent(
     """
     ALTER TABLE {temp_table_name} ADD COLUMN IF NOT EXISTS
         id serial;
-    CREATE SEQUENCE IF NOT EXISTS id_temp_seq;
+    CREATE SEQUENCE IF NOT EXISTS id_{temp_table_name}_seq;
     ALTER TABLE {temp_table_name} ALTER COLUMN
-        id SET DEFAULT nextval('id_temp_seq'::regclass);
+        id SET DEFAULT nextval('id_{temp_table_name}_seq'::regclass);
     """
 )
 
