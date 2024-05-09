@@ -13,8 +13,8 @@ one for
 and one for
 [team members or, more commonly, maintainers](https://make.wordpress.org/openverse/handbook/team-profile-badges/#openverse-team-badge)
 (see this page for a
-[list of current maintainers](/meta/contribution/current_maintainers.md)). There
-exists a third category of contributors between those who have made the
+[list of current maintainers](/general/contribution/current_maintainers.md)).
+There exists a third category of contributors between those who have made the
 requisite contributions to earn the initial badge and those who maintain the
 project: **Openverse Committers**.
 
@@ -38,6 +38,6 @@ committer, the role of committer comes with a few benefits:
 
 ```{tip}
 Interested in becoming a committer? Check out the [contributing guide](/general/contributing.md)
-or reach out to [one of the maintainers](/meta/contribution/current_maintainers.md) to
+or reach out to [one of the maintainers](/general/contribution/current_maintainers.md) to
 see how you can begin contributing to the project.
 ```

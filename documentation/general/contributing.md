@@ -1,9 +1,25 @@
-# Welcome
+# Get started with contributions
 
 Thank you for your interest in Openverse! We're so excited to introduce new
 contributors to Openverse, WordPress and free and open-source software (FOSS) in
 general. This document is a set of guidelines to help you contribute to this
 project.
+
+The documents below provide more exhaustive information about contributing
+beyond the basics.
+
+```{toctree}
+:titlesonly:
+
+contribution/github_contribution_practices
+contribution/dev_flow
+contribution/current_maintainers
+contribution/communication_aliases
+contribution/becoming_a_committer
+contribution/maintainer_tasks
+contribution/codespell
+contribution/good_first_and_help_wanted_issues
+```
 
 ## Code of Conduct
 
@@ -29,8 +45,8 @@ following subfolders.
 The following resources are preferred reading for starting your Openverse
 contribution journey in the code and code-related space.
 
-- [GitHub contribution practices](/meta/contribution/github_contribution_practices.md)
-- [Dev flow](/meta/contribution/dev_flow.md)
+- [GitHub contribution practices](/general/contribution/github_contribution_practices.md)
+- [Dev flow](/general/contribution/dev_flow.md)
 - [General setup guide](/general/general_setup.md)
 - [Quickstart guide](/general/quickstart.md)
 
@@ -204,7 +220,7 @@ Generally speaking, for any scenario where an issue is being closed, it is good
 to ping at least one other maintainer for advice or to corroborate your
 understanding of the situation. If you find issues that don't seem right for any
 reason,
-[ping any of the communication aliases](/meta/contribution/communication_aliases.md)
+[ping any of the communication aliases](/general/contribution/communication_aliases.md)
 and someone will help clear up any doubts.
 
 #### Useful issue query links
@@ -279,8 +295,8 @@ Issues may become invalid for many reasons. The most common are:
 In all of these cases it is important to ping the author of the issue and the
 people discussing it. For clarification on whether an issue is still desired, it
 is especially helpful to ping the
-[communication alias](/meta/contribution/communication_aliases.md) relevant for
-the part of the stack in question.
+[communication alias](/general/contribution/communication_aliases.md) relevant
+for the part of the stack in question.
 
 ```{warning}
 ##### Reproducibility
@@ -324,5 +340,5 @@ should be assigned for the following week or if can continue to be delayed.
 Leave a comment on the issue if you add it to the agenda document.
 Alternatively, if you are unsure whether it makes sense to start working on the
 issue, ping the author or
-[relevant communication alias](/meta/contribution/communication_aliases.md) for
-help making a decision.
+[relevant communication alias](/general/contribution/communication_aliases.md)
+for help making a decision.
