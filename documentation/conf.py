@@ -92,11 +92,19 @@ notfound_urls_prefix = "/"
 redirects = {
     "meta/traffic/index": "/meta/monitoring/traffic/index.html",
     "meta/traffic/runbooks/identifying-and-blocking-traffic-anomalies": "/meta/monitoring/traffic/runbooks/identifying-and-blocking-traffic-anomalies.html",  # noqa: E501
-    "meta/codespell": "/meta/contribution/codespell.html",
-    "meta/communication_aliases": "/meta/contribution/communication_aliases.html",
-    "meta/dev_flow": "/meta/contribution/dev_flow.html",
-    "meta/github_contribution_practices": "/meta/contribution/github_contribution_practices.html",
-    "meta/maintainer_tasks": "/meta/contribution/maintainer_tasks.html",
+    "meta/codespell": "/general/contribution/codespell.html",
+    "meta/communication_aliases": "/general/contribution/communication_aliases.html",
+    "meta/dev_flow": "/general/contribution/dev_flow.html",
+    "meta/github_contribution_practices": "/general/contribution/github_contribution_practices.html",
+    "meta/maintainer_tasks": "/general/contribution/maintainer_tasks.html",
+    "meta/contribution/github_contribution_practices": "/general/contribution/github_contribution_practices.html",
+    "meta/contribution/dev_flow": "/general/contribution/dev_flow.html",
+    "meta/contribution/current_maintainers": "/general/contribution/current_maintainers.html",
+    "meta/contribution/communication_aliases": "/general/contribution/communication_aliases.html",
+    "meta/contribution/becoming_a_committer": "/general/contribution/becoming_a_committer.html",
+    "meta/contribution/maintainer_tasks": "/general/contribution/maintainer_tasks.html",
+    "meta/contribution/codespell": "/general/contribution/codespell.html",
+    "meta/contribution/good_first_and_help_wanted_issues": "/general/contribution/good_first_and_help_wanted_issues.html",
 }
 
 myst_enable_extensions = ["linkify"]
