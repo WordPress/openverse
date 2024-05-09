@@ -26,9 +26,10 @@ The following are DAGs grouped by their primary tag:
 
 ### Data Normalization
 
-| DAG ID                                | Schedule Interval |
-| ------------------------------------- | ----------------- |
-| [`add_license_url`](#add_license_url) | `None`            |
+| DAG ID                                                      | Schedule Interval |
+| ----------------------------------------------------------- | ----------------- |
+| [`add_license_url`](#add_license_url)                       | `None`            |
+| [`update_science_museum_urls`](#update_science_museum_urls) | `None`            |
 
 ### Data Refresh
 
@@ -170,6 +171,7 @@ The following is documentation associated with each DAG (where available):
 1.  [`smk_workflow`](#smk_workflow)
 1.  [`staging_database_restore`](#staging_database_restore)
 1.  [`stocksnap_workflow`](#stocksnap_workflow)
+1.  [`update_science_museum_urls`](#update_science_museum_urls)
 1.  [`wikimedia_commons_workflow`](#wikimedia_commons_workflow)
 1.  [`wikimedia_reingestion_workflow`](#wikimedia_commons_workflow)
 1.  [`wordpress_workflow`](#wordpress_workflow)
@@ -1052,6 +1054,26 @@ Output: TSV file containing the image, the respective meta-data.
 Notes: <https://stocksnap.io/api/load-photos/date/desc/1>
 <https://stocksnap.io/faq> All images are licensed under CC0. No rate limits or
 authorization required. API is undocumented.
+
+----
+
+### `update_science_museum_urls`
+
+#### Update Science Museum URLs
+
+One-time maintenance DAG to update Science Museum records to have valid URLs.
+See https://github.com/WordPress/openverse/issues/4261.
+
+For each Science Museum record, this DAG:
+
+- updates the url to the new format, excluding `/images/` in the path if it
+  exists
+- validates whether the url is reachable. If not, the record ID is added to an
+  `invalid_science_musem_ids` table.
+
+Once complete, we can use the `science_museum_invalid_ids` to identify records
+to delete. They are not automatically deleted by this DAG, in order to give us
+an opportunity to first see how many there are.
 
 ----
 
