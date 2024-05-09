@@ -26,3 +26,7 @@ if not DEBUG and SENTRY_DSN:
     # from pushing un-actionable alerts to Sentry like
     # https://sentry.io/share/issue/9af3cdf8ef74420aa7bbb6697760a82c/
     ignore_logger("django.security.DisallowedHost")
+    # ``django-structlog`` writes ERROR logs when a response has a 5xx response
+    # code, which can be registered by Sentry and obscure the underlying reason
+    # why 5xx response was returned in the first place.
+    ignore_logger("django_structlog.middlewares.request")
