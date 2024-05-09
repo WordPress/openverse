@@ -80,7 +80,7 @@ def get_batches(
     return [records[i : i + batch_size] for i in range(0, len(records), batch_size)]
 
 
-@task
+@task(max_active_tis_per_dagrun=3)
 def process_batch(records):
     invalid_ids = []
     for identifier, url in records:
@@ -131,7 +131,7 @@ def notify_slack(invalid_count: int):
     render_template_as_native_obj=True,
     params={
         "batch_size": Param(
-            default=1_000,
+            default=250,
             type="integer",
             description="The number of records to update per batch.",
         ),
