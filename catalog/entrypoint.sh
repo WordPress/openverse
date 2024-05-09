@@ -97,12 +97,20 @@ fi
 # if the key doesn't already exist in the database i.e not found in
 # $existing_variables
 while IFS=$'\t' read -r column1 column2 column3; do
-  # skip the first meta row
-  if [[ $column3 == "description" ]] || [[ ${existing_variables[*]} =~ $column1 ]]; then
+  # skip the first meta row or a row with empty data
+  if [[ $column3 == "description" ]] || [[ -z $column2 ]]; then
     continue
   fi
 
-  if [ "$column1" != "Key" ]; then
+  # check if current key already exists
+  matched=false
+  for variable in "${existing_variables[@]}"; do
+    if [[ $variable == "$column1" ]]; then
+      matched=true
+    fi
+  done
+
+  if [ "$column1" != "Key" ] && ! $matched; then
     airflow variables set --description "$column3" "$column1" "$column2"
   fi
 done <"variables.tsv"
