@@ -291,12 +291,14 @@ class CleanDataUploader:
     }
 
     def __init__(self):
+        self.date = time.strftime("%Y-%m-%d")
         self.buffer_size = config("CLEANUP_BUFFER_SIZE", default=10_000_000, cast=int)
         bucket_name = config("OPENVERSE_BUCKET", default="openverse-catalog")
         try:
             self.s3 = self._get_s3_resource()
             self.s3_bucket = self.s3.Bucket(bucket_name)
-            self.date = time.strftime("%Y-%m-%d")
+            # Try loading the bucket's attributes to check the connection works.
+            self.s3_bucket.load()
         except Exception as e:
             log.error(f"Error connecting to S3 or creating bucket: {e}")
             self.s3 = None
@@ -319,6 +321,10 @@ class CleanDataUploader:
         )
 
     def _upload_to_s3(self, field: str):
+        if not self.s3_bucket:
+            log.warning("No S3 bucket available, skipping upload.")
+            return
+
         part_number = self.buffer[field].part
         log.info(f"Uploading file part {part_number} of `{field}` to S3...")
         s3_file_name = f"{self.s3_path}/{self.date}_{field}_{part_number}.tsv"
@@ -336,7 +342,7 @@ class CleanDataUploader:
 
     def save(self, result: dict) -> dict[str, int]:
         for field, cleaned_items in result.items():
-            if not cleaned_items or not self.s3_bucket:
+            if not cleaned_items:
                 continue
 
             self.buffer[field].rows += cleaned_items
@@ -348,7 +354,7 @@ class CleanDataUploader:
     def flush(self):
         log.info("Clearing buffer.")
         for field in self.buffer:
-            if self.buffer[field].rows and self.s3_bucket is not None:
+            if self.buffer[field].rows:
                 self._upload_to_s3(field)
 
 
