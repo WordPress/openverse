@@ -61,71 +61,74 @@ while read -r var_string; do
   # only include Slack airflow connections
 done < <(env | grep "^AIRFLOW_CONN_SLACK*")
 
-# Set up Airflow Variable defaults with descriptions automatically
-# List all existing airflow variables
-output=$(airflow variables list -o plain)
-found_existing_vars=true
+if [[ $* == "webserver" ]]; then
+  # Wait for the database to initialize, will time out if not
+  airflow db check-migrations
+  # Set up Airflow Variable defaults with descriptions automatically
+  header "SETTING VARIABLE DEFAULTS"
 
-# if there are no existing variable, print this notification and continue
-if [[ -z $output || $output == "No data found" ]]; then
-  header "No existing variables found, proceeding to set all variables"
-  found_existing_vars=false
-fi
+  # List all existing airflow variables, ignoring the first descriptive "key"
+  output=$(airflow variables list -o plain | tail -n +2)
+  found_existing_vars=true
 
-# Initialize an empty array to store the variables from the output
-existing_variables=()
-
-# Iterate through each variable and add it to $existing_variables
-while IFS= read -r variable; do
-  # skip airflow's default descriptive 'key' output
-  if [[ $variable == "key" ]]; then
-    continue
-  fi
-  # Append the current variable to the array
-  existing_variables+=("$variable")
-done <<<"$output"
-
-if $found_existing_vars; then
-  header "Found the following existing variables(The values of these will not be overwritten):"
-  for variable in "${existing_variables[@]}"; do
-    echo "$variable"
-  done
-fi
-
-# now iterate through each row of variables.tsv and and only
-# run airflow variables set --description <description> <key> <value>
-# if the key doesn't already exist in the database i.e not found in
-# $existing_variables
-while IFS=$'\t' read -r column1 column2 column3; do
-  # skip the first meta row or a row with empty data
-  if [[ $column3 == "description" ]] || [[ -z $column2 ]]; then
-    continue
+  # if there are no existing variable, print this notification and continue
+  if [[ -z $output || $output == "No data found" ]]; then
+    echo "No existing variables found, proceeding to set all variables"
+    found_existing_vars=false
   fi
 
-  # check if current key already exists
-  matched=false
-  for variable in "${existing_variables[@]}"; do
-    if [[ $variable == "$column1" ]]; then
-      matched=true
+  # Initialize an empty array to store the variables from the output
+  existing_variables=()
+
+  # Iterate through each variable and add it to $existing_variables
+  while IFS= read -r variable; do
+    # Append the current variable to the array
+    existing_variables+=("$variable")
+  done <<<"$output"
+
+  if $found_existing_vars; then
+    echo -e "Found the following existing variables(the values of these will not be overwritten):\n"
+    for variable in "${existing_variables[@]}"; do
+      echo "$variable"
+    done
+  fi
+
+  # now iterate through each row of variables.tsv and and only
+  # run airflow variables set --description <description> <key> <value>
+  # if the key doesn't already exist in the database i.e not found in
+  # $existing_variables
+  while IFS=$'\t' read -r column1 column2 column3; do
+    # skip the first meta row or a row with empty data
+    if [[ $column3 == "description" ]] || [[ -z $column2 ]]; then
+      continue
     fi
-  done
 
-  if [ "$column1" != "Key" ] && ! $matched; then
-    airflow variables set --description "$column3" "$column1" "$column2"
+    # check if current key already exists
+    matched=false
+    for variable in "${existing_variables[@]}"; do
+      if [[ $variable == "$column1" ]]; then
+        matched=true
+      fi
+    done
+
+    if ! $matched; then
+      airflow variables set --description "$column3" "$column1" "$column2"
+    fi
+  done <"variables.tsv"
+
+  # Print the new variables list
+  new_varibles_list=$(airflow variables list -o plain | tail -n +2)
+  echo -e "The following variables are now set:\n"
+  echo "$new_varibles_list"
+
+  # if the last line in variables.tsv did not correctly terminate
+  # with a new line character then this variable would not be empty
+  # and this means the last line would not be read correctly.
+  if [ -n "$column1" ]; then
+    echo -e "WARNING: Missing new line character detected!!!\n"
+    echo -e "Last variable added to variables.tsv might not be picked up,\nEnsure it ends with a new line character and retry."
   fi
-done <"variables.tsv"
 
-# Print the new variables list
-new_varibles_list=$(airflow variables list -o plain)
-header "The following variables are now set:"
-echo "$new_varibles_list"
-
-# if the last line in variables.tsv did not correctly terminate
-# with a new line character then this variable would not be empty
-# and this means the last line would not be read correctly.
-if [ -n "$column1" ]; then
-  header "Missing new line character detected!!!"
-  echo -e "Last variable added to variables.tsv might not be picked up,\nensure it ends with a new line character and retry."
 fi
 
 exec /entrypoint "$@"
