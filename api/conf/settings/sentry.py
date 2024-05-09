@@ -26,3 +26,4 @@ if not DEBUG and SENTRY_DSN:
     # from pushing un-actionable alerts to Sentry like
     # https://sentry.io/share/issue/9af3cdf8ef74420aa7bbb6697760a82c/
     ignore_logger("django.security.DisallowedHost")
+    ignore_logger("django_structlog.middlewares.request")
