@@ -685,6 +685,11 @@
       creator: "search by creator",
       imageTitle: "Image: {title}",
       audioTitle: "Audio track: {title}",
+      resultsLabel: {
+        all: "All results for {query}",
+        image: "Image results for {query}",
+        audio: "Audio tracks for {query}",
+      },
       results: {
         /**
          * "imageResults" and "audioResults" are interpolated from the strings under
