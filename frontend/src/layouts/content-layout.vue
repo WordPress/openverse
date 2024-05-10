@@ -34,6 +34,7 @@ import { computed, defineComponent, onMounted, provide, ref, watch } from "vue"
 
 import { useWindowScroll } from "~/composables/use-window-scroll"
 import { useLayout } from "~/composables/use-layout"
+import { useDarkMode } from "~/composables/use-dark-mode"
 
 import { useUiStore } from "~/stores/ui"
 
@@ -63,7 +64,6 @@ export default defineComponent({
   },
   setup() {
     const uiStore = useUiStore()
-
     const { updateBreakpoint } = useLayout()
 
     /**
@@ -100,10 +100,14 @@ export default defineComponent({
     }
   },
   head() {
-    return this.$nuxtI18nHead({
-      addSeoAttributes: true,
-      addDirAttribute: true,
-    })
+    const darkMode = useDarkMode()
+    return {
+      ...this.$nuxtI18nHead({
+        addSeoAttributes: true,
+        addDirAttribute: true,
+      }),
+      bodyAttrs: { class: darkMode.cssClass },
+    }
   },
 })
 </script>

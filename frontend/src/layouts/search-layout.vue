@@ -54,6 +54,7 @@ import { computed, defineComponent, onMounted, provide, ref, watch } from "vue"
 import { useScroll } from "@vueuse/core"
 
 import { useLayout } from "~/composables/use-layout"
+import { useDarkMode } from "~/composables/use-dark-mode"
 
 import { useUiStore } from "~/stores/ui"
 import { useSearchStore } from "~/stores/search"
@@ -165,10 +166,14 @@ export default defineComponent({
     }
   },
   head() {
-    return this.$nuxtI18nHead({
-      addSeoAttributes: true,
-      addDirAttribute: true,
-    })
+    const darkMode = useDarkMode()
+    return {
+      ...this.$nuxtI18nHead({
+        addSeoAttributes: true,
+        addDirAttribute: true,
+      }),
+      bodyAttrs: { class: darkMode.cssClass },
+    }
   },
 })
 </script>

@@ -30,6 +30,15 @@
       "description": "Show results marked as sensitive in the results area.",
       "supportsQuery": false,
       "storage": "session"
+    },
+    "force_dark_mode": {
+      "status": {
+        "staging": "switchable",
+        "production": "disabled"
+      },
+      "defaultState": "off",
+      "description": "Force the site to render in dark mode.",
+      "storage": "session"
     }
   },
   "groups": [

@@ -21,6 +21,7 @@
 import { computed, defineComponent, onMounted } from "vue"
 
 import { useLayout } from "~/composables/use-layout"
+import { useDarkMode } from "~/composables/use-dark-mode"
 
 import { useUiStore } from "~/stores/ui"
 
@@ -65,10 +66,14 @@ export default defineComponent({
     }
   },
   head() {
-    return this.$nuxtI18nHead({
-      addSeoAttributes: true,
-      addDirAttribute: true,
-    })
+    const darkMode = useDarkMode()
+    return {
+      ...this.$nuxtI18nHead({
+        addSeoAttributes: true,
+        addDirAttribute: true,
+      }),
+      bodyAttrs: { class: darkMode.cssClass },
+    }
   },
 })
 </script>
