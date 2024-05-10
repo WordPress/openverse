@@ -163,8 +163,7 @@ class Audio(AudioFileMixin, AbstractMedia):
     )
 
     # Replaces the foreign key to AudioSet
-    audio_set_foreign_identifier = models.CharField(
-        max_length=1000,
+    audio_set_foreign_identifier = models.TextField(
         blank=True,
         null=True,
         help_text="Reference to set of which this track is a part.",
