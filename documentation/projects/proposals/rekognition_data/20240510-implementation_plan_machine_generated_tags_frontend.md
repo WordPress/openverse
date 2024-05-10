@@ -157,7 +157,7 @@ provider headings and the accuracy to the tags.
 
 <!-- What hard blockers exist that prevent further work on this project? -->
 
-There are no blockers for this work.
+Since we already have machine-generated tags available in the API, there are no blockers for this work.
 
 ## Accessibility
 
