@@ -305,7 +305,7 @@ class AbstractMediaDecision(OpenLedgerModel):
 
     media_objs = models.ManyToManyField(
         to="AbstractMedia",
-        db_constraint=False,
+        through="AbstractMediaDecisionThrough",
         help_text="The media items being moderated.",
     )
     """
@@ -330,6 +330,29 @@ class AbstractMediaDecision(OpenLedgerModel):
         abstract = True
 
     # TODO: Implement ``clean`` and ``save``, if needed.
+
+
+class AbstractMediaDecisionThrough(models.Model):
+    """
+    Generic model for the many-to-many reference table between media and decisions.
+
+    This is made explicit (rather than using Django's default) so that the media can
+    be referenced by `identifier` rather than an arbitrary `id`.
+    """
+
+    media_class: type[models.Model] = None
+    """the model class associated with this media type e.g. ``Image`` or ``Audio``"""
+
+    media_obj = models.ForeignKey(
+        AbstractMedia,
+        to_field="identifier",
+        on_delete=models.CASCADE,
+        db_column="identifier",
+    )
+    decision = models.ForeignKey(AbstractMediaDecision, on_delete=models.CASCADE)
+
+    class Meta:
+        abstract = True
 
 
 class PerformIndexUpdateMixin:
