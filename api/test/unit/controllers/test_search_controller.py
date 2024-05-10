@@ -1,7 +1,7 @@
-import datetime
 import random
 import re
 from collections.abc import Callable
+from datetime import datetime, timezone
 from enum import Enum, auto
 from unittest import mock
 from unittest.mock import patch
@@ -855,7 +855,7 @@ def test_get_filtered_providers_query_returns_available_providers(
     else:
         for i in range(excluded_count):
             ContentProviderFactory.create(
-                created_on=datetime.datetime.now(),
+                created_on=datetime.now(tz=timezone.utc),
                 provider_identifier=f"provider{i + 1}",
                 provider_name=f"Provider {i + 1}",
                 filter_content=False,
