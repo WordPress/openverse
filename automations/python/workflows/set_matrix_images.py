@@ -104,13 +104,6 @@ if "frontend" in changes:
 
 build_matrix["include"] = [includes[item].asdict for item in build_matrix["image"]]
 
-for item in build_matrix["include"]:
-    if "context" not in item:
-        item["context"] = item["image"]
-
-    if "file" not in item:
-        item["file"] = f"{item['context']}/Dockerfile"
-
 do_build = "true" if len(build_matrix["image"]) else "false"
 do_publish = "true" if len(publish_matrix["image"]) else "false"
 build_matrix = json.dumps(build_matrix, default=ser_set)
