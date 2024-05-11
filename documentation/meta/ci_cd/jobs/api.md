@@ -15,6 +15,10 @@ Initialises the API using the `api/init` recipe and runs tests for the API using
 the `api/test` recipe. Tests are run inside a Docker container so neither Python
 nor Node.js needs to be installed.
 
+This job creates a special separate API image that includes the dev dependencies
+required for running tests. It does not use the `api` image created in the
+[`build-images`](/meta/ci_cd/jobs/docker.md#build-images) job.
+
 This job is skipped if the API codebase has not changed. Its counterparts are
 
 - [`test-cat`](/meta/ci_cd/jobs/catalog.md#test-cat) for the catalog
