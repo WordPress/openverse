@@ -685,6 +685,11 @@
       creator: "search by creator",
       imageTitle: "Image: {title}",
       audioTitle: "Audio track: {title}",
+      /**
+       * These strings are used as aria-label of the list of the search results.
+       * The number of results is given in `results.mediaType`, so is not
+       * needed here.
+       */
       resultsLabel: {
         all: "All results for {query}",
         image: "Image results for {query}",
