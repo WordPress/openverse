@@ -115,25 +115,20 @@ def get_record_limit() -> int | None:
     If a limit is explicitly configured, it is always used. Otherwise, production
     defaults to no limit, and all other environments default to 100,000.
     """
-    if (
-        configured_limit := Variable.get(
-            "DATA_REFRESH_LIMIT", default_var=None, deserialize_json=True
-        )
-        is not None
-    ):
-        return configured_limit
+    try:
+        # If a limit is explicitly configured, always use it.
+        return Variable.get("DATA_REFRESH_LIMIT", deserialize_json=True)
+    except KeyError:
+        # Defaults when no limit is explicitly configured.
+        # Note `environment` differs from the target env of the data refresh DAG;
+        # instead, it is the environment in which Airflow is running (local testing
+        # vs the production catalog).
+        environment = Variable.get("ENVIRONMENT", default_var="local")
+        if environment == PRODUCTION:
+            # Never limit the record count in production.
+            return None
 
-    # Note this is different from the target environment of the data refresh DAG;
-    # instead, it is the environment in which Airflow is running (local testing
-    # vs the production catalog).
-    environment = Variable.get("ENVIRONMENT", default_var="local")
-    if environment == PRODUCTION:
-        # Never limit the record count in production.
-        return None
-
-    # Default for non-production environments where no limit has explicitly
-    # been set.
-    return DEFAULT_DATA_REFRESH_LIMIT
+        return DEFAULT_DATA_REFRESH_LIMIT
 
 
 @task(map_index_template="{{ task.op_kwargs['upstream_table_name'] }}")
