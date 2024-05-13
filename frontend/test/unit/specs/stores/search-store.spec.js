@@ -491,6 +491,8 @@ describe("Search Store", () => {
     `(
       "changing searchType from $searchType clears all but $expectedFilterCount $nextSearchType filters",
       async ({ searchType, nextSearchType, expectedFilterCount }) => {
+        // We need to switch on the additional_search_types feature flag
+        // to be able to switch to video.
         const featureFlagStore = useFeatureFlagStore()
         featureFlagStore.toggleFeature("additional_search_types", "on")
 
