@@ -58,15 +58,6 @@ def _run_sql(
 
 
 @task
-def create_fdw_extension(downstream_conn_id: str):
-    """Create the FDW extension if it does not exist."""
-    downstream_pg = PostgresHook(
-        postgres_conn_id=downstream_conn_id, default_statement_timeout=10.0
-    )
-    downstream_pg.run(queries.CREATE_FDW_EXTENSION_QUERY)
-
-
-@task
 def initialize_fdw(
     upstream_conn_id: str,
     downstream_conn_id: str,
@@ -302,7 +293,10 @@ def copy_upstream_tables(
     downstream_conn_id = POSTGRES_API_CONN_IDS.get(environment)
     upstream_conn_id = POSTGRES_CONN_ID
 
-    create_fdw = create_fdw_extension(downstream_conn_id=downstream_conn_id)
+    create_fdw = _run_sql.override(task_id="create_fdw")(
+        postgres_conn_id=downstream_conn_id,
+        sql_template=queries.CREATE_FDW_EXTENSION_QUERY,
+    )
 
     init_fdw = initialize_fdw(
         upstream_conn_id=upstream_conn_id,
