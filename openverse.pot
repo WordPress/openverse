@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2024-04-30T15:52:52+00:00\n"
+"POT-Creation-Date: 2024-05-13T15:19:59+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1528,7 +1528,8 @@ msgctxt "browsePage.searchForm.button"
 msgid "Search"
 msgstr ""
 
-#: src/components/VHeader/VHeaderDesktop.vue:17
+#: src/components/VHeader/meta/VSearchBarButton.stories.js:39
+#: src/components/VHeader/VHeaderDesktop.vue:16
 #: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:69
 msgctxt "browsePage.searchForm.clear"
 msgid "Clear"
@@ -1603,6 +1604,21 @@ msgstr ""
 #. Do not translate words between ### ###.
 msgctxt "browsePage.aria.audioTitle"
 msgid "Audio track: ###title###"
+msgstr ""
+
+#. Do not translate words between ### ###.
+msgctxt "browsePage.aria.resultsLabel.all"
+msgid "All results for ###query###"
+msgstr ""
+
+#. Do not translate words between ### ###.
+msgctxt "browsePage.aria.resultsLabel.image"
+msgid "Image results for ###query###"
+msgstr ""
+
+#. Do not translate words between ### ###.
+msgctxt "browsePage.aria.resultsLabel.audio"
+msgid "Audio tracks for ###query###"
 msgstr ""
 
 #. "imageResults" and "audioResults" are interpolated from the strings under browsePage.aria.allResultsHeadingCount.
