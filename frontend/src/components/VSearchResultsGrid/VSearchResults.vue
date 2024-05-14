@@ -102,7 +102,7 @@ export default defineComponent({
 
     const collectionLabel = computed(() => {
       return i18n
-        .t(`browsePage.aria.results.${props.results.type}`, {
+        .t(`browsePage.aria.resultsLabel.${props.results.type}`, {
           query: props.searchTerm,
         })
         .toString()

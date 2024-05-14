@@ -233,14 +233,14 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ${{ matrix.context }}
-          target: ${{ matrix.target || '' }}
+          target: ${{ matrix.target }}
           push: false
           tags: openverse-${{ matrix.image }}
           file: ${{ matrix.file }}
           cache-from: type=gha,scope=${{ matrix.image }}
           cache-to: type=gha,scope=${{ matrix.image }}
           outputs: type=docker,dest=/tmp/${{ matrix.image }}.tar
-          build-contexts: ${{ matrix.build-contexts || '' }}
+          build-contexts: ${{ matrix.build-contexts }}
           build-args: |
             SEMANTIC_VERSION=${{ needs.get-image-tag.outputs.image_tag }}
             CATALOG_PY_VERSION=${{ steps.prepare-build-args.outputs.catalog_py_version }}
@@ -250,6 +250,7 @@ jobs:
             FRONTEND_NODE_VERSION=${{ steps.prepare-build-args.outputs.frontend_node_version }}
             FRONTEND_PNPM_VERSION=${{ steps.prepare-build-args.outputs.frontend_pnpm_version }}
             PGCLI_VERSION=${{ steps.prepare-build-args.outputs.pgcli_version }}
+            ${{ matrix.build-args || '' }}
 
       - name: Upload image `${{ matrix.image }}`
         id: upload-img
@@ -398,6 +399,7 @@ jobs:
     needs:
       - get-changes
       - build-images
+      - get-image-tag
 
     steps:
       - name: Checkout repository
@@ -416,7 +418,34 @@ jobs:
         uses: ./.github/actions/load-img
         with:
           run_id: ${{ github.run_id }}
-          setup_images: upstream_db ingestion_server api
+          setup_images: upstream_db ingestion_server
+
+      # Sets build args specifying versions needed to build Docker image.
+      - name: Prepare build args
+        id: prepare-build-args
+        run: |
+          just versions | tee "$GITHUB_OUTPUT"
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          install: true
+
+      - name: Build API dev image
+        uses: docker/build-push-action@v5
+        with:
+          context: api
+          target: api
+          push: false
+          load: true
+          tags: openverse-api
+          cache-from: type=gha,scope=api_dev
+          cache-to: type=gha,scope=api_dev
+          build-contexts: packages=./packages/python
+          build-args: |
+            SEMANTIC_VERSION=${{ needs.get-image-tag.outputs.image_tag }}
+            API_PY_VERSION=${{ steps.prepare-build-args.outputs.api_py_version }}
+            PDM_INSTALL_ARGS=--dev
 
       - name: Start API, ingest and index test data
         run: just api/init

@@ -269,7 +269,6 @@ export const isMediaDetail = <T extends SupportedMediaType>(
   media: Media | null,
   mediaType: T
 ): media is DetailFromMediaType<T> => {
-  console.log(media)
   return !!media && media.frontendMediaType === mediaType
 }
 
