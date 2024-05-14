@@ -1,0 +1,7 @@
+FROM debian
+
+WORKDIR /app
+
+COPY get-started.sh /app/get-started.sh
+
+CMD ["/app/get-started.sh"]

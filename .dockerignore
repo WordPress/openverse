@@ -5,3 +5,4 @@
 !.pnpmfile.cjs
 !pnpm-lock.yaml
 !tsconfig.base.json
+!get-started.sh
