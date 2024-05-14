@@ -65,7 +65,7 @@ pnpm dev
 ```
 
 For the second, you'll need to follow
-[the instructions to set up an OAuth application](https://api.openverse.engineering/v1/#section/Register-and-Authenticate)
+[the instructions to set up an OAuth application](https://api.openverse.org/v1/#section/Register-and-Authenticate)
 and then fill in the `API_CLIENT_ID` and `API_CLIENT_SECRET` in the `.env` file
 copied from `.env.template`. Be sure to remove the leading `#` to uncomment
 these variables from the copied template.
