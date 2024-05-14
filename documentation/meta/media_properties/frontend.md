@@ -25,14 +25,14 @@ clarity.
 | Name                                                      | Type                          | Optional? |
 | --------------------------------------------------------- | ----------------------------- | --------- |
 | [`attribution`](#Media-attribution-notes)                 | `string`                      |           |
-| `category`                                                | `string \| null`              |           |
+| [`category`](#Media-category-notes)                       | `string \| null`              | ✓         |
 | [`creator`](#Media-creator-notes)                         | `string`                      | ✓         |
 | [`creator_url`](#Media-creator_url-notes)                 | `string`                      | ✓         |
 | [`description`](#Media-description-notes)                 | `string`                      | ✓         |
-| `detail_url`                                              | `string`                      |           |
+| [`detail_url`](#Media-detail_url-notes)                   | `string`                      |           |
 | [`fields_matched`](#Media-fields_matched-notes)           | `string[]`                    | ✓         |
-| `filesize`                                                | `string`                      | ✓         |
-| `filetype`                                                | `string`                      | ✓         |
+| [`filesize`](#Media-filesize-notes)                       | `string`                      | ✓         |
+| [`filetype`](#Media-filetype-notes)                       | `string`                      | ✓         |
 | [`foreign_landing_url`](#Media-foreign_landing_url-notes) | `string`                      |           |
 | `frontendMediaType`                                       | `SupportedMediaType` (custom) |           |
 | [`id`](#Media-id-notes)                                   | `string`                      |           |
@@ -41,13 +41,13 @@ clarity.
 | [`license_url`](#Media-license_url-notes)                 | `string`                      | ✓         |
 | [`license_version`](#Media-license_version-notes)         | `LicenseVersion` (custom)     |           |
 | [`originalTitle`](#Media-originalTitle-notes)             | `string`                      |           |
-| `provider`                                                | `string`                      |           |
-| `providerName`                                            | `string`                      |           |
+| [`provider`](#Media-provider-notes)                       | `string`                      |           |
+| [`providerName`](#Media-providerName-notes)               | `string`                      |           |
 | [`related_url`](#Media-related_url-notes)                 | `string`                      |           |
 | [`sensitivity`](#Media-sensitivity-notes)                 | `Sensitivity[]` (custom)      |           |
-| `source`                                                  | `string`                      |           |
-| `sourceName`                                              | `string`                      |           |
-| `tags`                                                    | `Tag[]` (custom)              |           |
+| [`source`](#Media-source-notes)                           | `string`                      |           |
+| [`sourceName`](#Media-sourceName-notes)                   | `string`                      |           |
+| [`tags`](#Media-tags-notes)                               | `Tag[]` (custom)              |           |
 | [`thumbnail`](#Media-thumbnail-notes)                     | `string`                      | ✓         |
 | [`title`](#Media-title-notes)                             | `string`                      |           |
 | [`url`](#Media-url-notes)                                 | `string`                      |           |
@@ -59,6 +59,12 @@ clarity.
 #### `attribution`
 
 The full text to properly attribute the work to the creator.
+
+(Media-category-notes)=
+
+#### `category`
+
+A list of descriptive categories describing the work.
 
 (Media-creator-notes)=
 
@@ -79,11 +85,30 @@ depending on the provider.
 
 A long test describing the media, from the provider.
 
+(Media-detail_url-notes)=
+
+#### `detail_url`
+
+The API url of the detail view of a media.
+
 (Media-fields_matched-notes)=
 
 #### `fields_matched`
 
 An array of field names that matched the search query.
+
+(Media-filesize-notes)=
+
+#### `filesize`
+
+A number representing the size of the media in bytes.
+
+(Media-filetype-notes)=
+
+#### `filetype`
+
+A string representing the filetype of the media. Please note this is not an
+exact representation of extension or MIME type.
 
 (Media-foreign_landing_url-notes)=
 
@@ -136,6 +161,21 @@ string.
 
 The raw name of the creative work, as returned by the API.
 
+(Media-provider-notes)=
+
+#### `provider`
+
+A snake_cased slug representing the media's provider. Corresponds to the
+`source_name` field of provider results from the API's `/stats/` endpoints.
+
+(Media-providerName-notes)=
+
+#### `providerName`
+
+A presentational string (with capitalization, spaces, punctuation, and so on),
+representing the media's provider. Corresponds to the `display_name` field of
+provider results from the API's `/stats/` endpoints.
+
 (Media-related_url-notes)=
 
 #### `related_url`
@@ -148,6 +188,28 @@ The API URL which provides a list of related media results.
 
 An array of sensitivity markers. These markers indicate various sensitivity or
 content warning categories applicable to the media.
+
+(Media-source-notes)=
+
+#### `source`
+
+A snake_cased slug representing the media's source. Corresponds to the
+`source_name` field of provider results from the API's `/stats/` endpoints.
+
+(Media-sourceName-notes)=
+
+#### `sourceName`
+
+A presentational string (with capitalization, spaces, punctuation, and so on),
+representing the media's source. Corresponds to the `display_name` field of
+provider results from the API's `/stats/` endpoints.
+
+(Media-tags-notes)=
+
+#### `tags`
+
+An array of tags, used to query the media or present on the frontend to find
+related media.
 
 (Media-thumbnail-notes)=
 
