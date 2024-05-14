@@ -60,7 +60,7 @@ You can keep in touch with the project via the following channels:
 ## Documentation
 
 To use the Openverse API, please refer to the
-[API consumer documentation](https://api.openverse.engineering/v1/).
+[API consumer documentation](https://api.openverse.org/v1/).
 
 ## Contributing
 

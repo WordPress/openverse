@@ -158,7 +158,7 @@ provides code examples in Bash.
 image_stats_bash = \
   """
   # Get a list of content providers and their image count
-  curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.engineering/v1/sources
+  curl -H "Authorization: Bearer DLBYIcfnKfolaXKcmMC8RIDCavc2hW" http://api.openverse.org/v1/sources
   """
 
 @swagger_auto_schema(operation_id='image_stats',

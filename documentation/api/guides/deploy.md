@@ -16,9 +16,8 @@ For more information on how deployments work, please see the [general deployment
 
 1. Check for any Sentry errors in the maintainer's `#openverse-alerts` channel,
    or in the Sentry UI.
-1. Visit
-   [https://api.openverse.engineering/v1](https://api.openverse.engineering/v1)
-   and verify the SHA is the same as the value you deployed.
+1. Visit [https://api.openverse.org/v1](https://api.openverse.org/v1) and verify
+   the SHA is the same as the value you deployed.
 1. Review and Approve the automatically-generated changelog pull request in the
    repository.
 1. In the event of errors or problems, rollback the application by running the
