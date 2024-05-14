@@ -22,37 +22,76 @@ clarity.
 
 ### Fields
 
-| Name                                          | Type                          | Optional? |
-| --------------------------------------------- | ----------------------------- | --------- |
-| `attribution`                                 | `string`                      |           |
-| `category`                                    | `string \| null`              |           |
-| `creator`                                     | `string`                      | ✓         |
-| `creator_url`                                 | `string`                      | ✓         |
-| `description`                                 | `string`                      | ✓         |
-| `detail_url`                                  | `string`                      |           |
-| `fields_matched`                              | `string[]`                    | ✓         |
-| `filesize`                                    | `string`                      | ✓         |
-| `filetype`                                    | `string`                      | ✓         |
-| `foreign_landing_url`                         | `string`                      |           |
-| `frontendMediaType`                           | `SupportedMediaType` (custom) |           |
-| [`id`](#Media-id-notes)                       | `string`                      |           |
-| `isSensitive`                                 | `boolean`                     |           |
-| `license`                                     | `License` (custom)            |           |
-| `license_url`                                 | `string`                      | ✓         |
-| `license_version`                             | `LicenseVersion` (custom)     |           |
-| [`originalTitle`](#Media-originalTitle-notes) | `string`                      |           |
-| `provider`                                    | `string`                      |           |
-| `providerName`                                | `string`                      |           |
-| `related_url`                                 | `string`                      |           |
-| `sensitivity`                                 | `Sensitivity[]` (custom)      |           |
-| `source`                                      | `string`                      |           |
-| `sourceName`                                  | `string`                      |           |
-| `tags`                                        | `Tag[]` (custom)              |           |
-| `thumbnail`                                   | `string`                      | ✓         |
-| [`title`](#Media-title-notes)                 | `string`                      |           |
-| `url`                                         | `string`                      |           |
+| Name                                                      | Type                          | Optional? |
+| --------------------------------------------------------- | ----------------------------- | --------- |
+| [`attribution`](#Media-attribution-notes)                 | `string`                      |           |
+| `category`                                                | `string \| null`              |           |
+| [`creator`](#Media-creator-notes)                         | `string`                      | ✓         |
+| [`creator_url`](#Media-creator_url-notes)                 | `string`                      | ✓         |
+| [`description`](#Media-description-notes)                 | `string`                      | ✓         |
+| `detail_url`                                              | `string`                      |           |
+| [`fields_matched`](#Media-fields_matched-notes)           | `string[]`                    | ✓         |
+| `filesize`                                                | `string`                      | ✓         |
+| `filetype`                                                | `string`                      | ✓         |
+| [`foreign_landing_url`](#Media-foreign_landing_url-notes) | `string`                      |           |
+| `frontendMediaType`                                       | `SupportedMediaType` (custom) |           |
+| [`id`](#Media-id-notes)                                   | `string`                      |           |
+| [`isSensitive`](#Media-isSensitive-notes)                 | `boolean`                     |           |
+| [`license`](#Media-license-notes)                         | `License` (custom)            |           |
+| [`license_url`](#Media-license_url-notes)                 | `string`                      | ✓         |
+| [`license_version`](#Media-license_version-notes)         | `LicenseVersion` (custom)     |           |
+| [`originalTitle`](#Media-originalTitle-notes)             | `string`                      |           |
+| `provider`                                                | `string`                      |           |
+| `providerName`                                            | `string`                      |           |
+| [`related_url`](#Media-related_url-notes)                 | `string`                      |           |
+| [`sensitivity`](#Media-sensitivity-notes)                 | `Sensitivity[]` (custom)      |           |
+| `source`                                                  | `string`                      |           |
+| `sourceName`                                              | `string`                      |           |
+| `tags`                                                    | `Tag[]` (custom)              |           |
+| [`thumbnail`](#Media-thumbnail-notes)                     | `string`                      | ✓         |
+| [`title`](#Media-title-notes)                             | `string`                      |           |
+| [`url`](#Media-url-notes)                                 | `string`                      |           |
 
 ### Notes
+
+(Media-attribution-notes)=
+
+#### `attribution`
+
+The full text to properly attribute the work to the creator.
+
+(Media-creator-notes)=
+
+#### `creator`
+
+The text name, handle, or username of the author of the creative work.
+
+(Media-creator_url-notes)=
+
+#### `creator_url`
+
+A URL to the creator's profile on the provider or other personal webpage,
+depending on the provider.
+
+(Media-description-notes)=
+
+#### `description`
+
+A long test describing the media, from the provider.
+
+(Media-fields_matched-notes)=
+
+#### `fields_matched`
+
+An array of field names that matched the search query.
+
+(Media-foreign_landing_url-notes)=
+
+#### `foreign_landing_url`
+
+A URL to the page where the media item is hosted on the foreign provider's site.
+This is often used to give credit to the original source or for users to find
+more information.
 
 (Media-id-notes)=
 
@@ -64,11 +103,58 @@ the UUID4 identifier of the media item
 
 - [UUID4](<https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)>)
 
+(Media-isSensitive-notes)=
+
+#### `isSensitive`
+
+Indicates if the media is marked as sensitive. If true, the media has
+sensitivity markers that might require user discretion or warnings.
+
+(Media-license-notes)=
+
+#### `license`
+
+The code of the open copy-left license assigned to the work.
+
+(Media-license_url-notes)=
+
+#### `license_url`
+
+A link to the landing page of the License, typically the deed or another
+informational page.
+
+(Media-license_version-notes)=
+
+#### `license_version`
+
+The version number of the Creative Commons license as a string, or an empty
+string.
+
 (Media-originalTitle-notes)=
 
 #### `originalTitle`
 
-the raw name of the creative work, as returned by the API
+The raw name of the creative work, as returned by the API.
+
+(Media-related_url-notes)=
+
+#### `related_url`
+
+The API URL which provides a list of related media results.
+
+(Media-sensitivity-notes)=
+
+#### `sensitivity`
+
+An array of sensitivity markers. These markers indicate various sensitivity or
+content warning categories applicable to the media.
+
+(Media-thumbnail-notes)=
+
+#### `thumbnail`
+
+A URL to a thumbnail image of the media. Typically album art for an audio track,
+or a minified thumbnail for image works.
 
 (Media-title-notes)=
 
@@ -80,6 +166,12 @@ the original title:
 - remove the file extension
 - escape HTML
 - handle empty titles
+
+(Media-url-notes)=
+
+#### `url`
+
+A URL pointing to the actual media file on the provider.
 
 ## Interface `ImageDetail`
 
@@ -97,13 +189,13 @@ the original title:
 
 #### `height`
 
-the vertical length of the image in pixels
+the vertical length of the image, in pixels.
 
 (ImageDetail-width-notes)=
 
 #### `width`
 
-the horizontal length of the image in pixels
+The horizontal length of the image, in pixels.
 
 ## Interface `AudioDetail`
 
@@ -111,26 +203,40 @@ the horizontal length of the image in pixels
 
 | Name                                            | Type                                       | Optional? |
 | ----------------------------------------------- | ------------------------------------------ | --------- |
-| `alt_files`                                     | `{ provider: string; filetype: string }[]` | ✓         |
-| `audio_set`                                     | `AudioSet` (custom)                        | ✓         |
+| [`alt_files`](#AudioDetail-alt_files-notes)     | `{ provider: string; filetype: string }[]` | ✓         |
+| [`audio_set`](#AudioDetail-audio_set-notes)     | `AudioSet` (custom)                        | ✓         |
 | [`bit_rate`](#AudioDetail-bit_rate-notes)       | `number`                                   | ✓         |
 | [`duration`](#AudioDetail-duration-notes)       | `number`                                   | ✓         |
 | `frontendMediaType`                             | `"audio"` (literal)                        |           |
-| `genres`                                        | `string[]`                                 | ✓         |
-| `hasLoaded`                                     | `boolean`                                  | ✓         |
+| [`genres`](#AudioDetail-genres-notes)           | `string[]`                                 | ✓         |
+| [`hasLoaded`](#AudioDetail-hasLoaded-notes)     | `boolean`                                  | ✓         |
 | `length`                                        | `string`                                   | ✓         |
-| `peaks`                                         | `number[]`                                 | ✓         |
+| [`peaks`](#AudioDetail-peaks-notes)             | `number[]`                                 | ✓         |
 | [`sample_rate`](#AudioDetail-sample_rate-notes) | `number`                                   | ✓         |
-| `waveform`                                      | `string`                                   | ✓         |
+| [`waveform`](#AudioDetail-waveform-notes)       | `string`                                   | ✓         |
 
 ### Notes
+
+(AudioDetail-alt_files-notes)=
+
+#### `alt_files`
+
+An array of alternative files of different filetypes. This can include different
+formats of the audio track for compatibility and quality options.
+
+(AudioDetail-audio_set-notes)=
+
+#### `audio_set`
+
+An object representing a group of audio tracks this track belongs to, like an
+album or podcast.
 
 (AudioDetail-bit_rate-notes)=
 
 #### `bit_rate`
 
-amount of digital audio data transmitted or processed in unit time; This field
-holds numbers measured in bits per second.
+Amount of digital audio data transmitted or processed in unit time; This field
+holds numbers measured in bits per second (bps).
 
 **See also:**
 
@@ -140,15 +246,44 @@ holds numbers measured in bits per second.
 
 #### `duration`
 
-the time period of the track in milliseconds
+The time period of the track in milliseconds. This provides the duration of the
+audio track in a numerical format.
+
+(AudioDetail-genres-notes)=
+
+#### `genres`
+
+A raw list of strings representing musical genres.
+
+(AudioDetail-hasLoaded-notes)=
+
+#### `hasLoaded`
+
+Set and managed by the frontend client-side to indicate if the audio has been
+fully loaded. Useful for managing UI elements based on the loading state of the
+audio.
+
+(AudioDetail-peaks-notes)=
+
+#### `peaks`
+
+An array of peak amplitude values used to generate a visual representation of
+the audio waveform.
 
 (AudioDetail-sample_rate-notes)=
 
 #### `sample_rate`
 
-number of samples for digital representation taken in unit time; This field
-holds numbers measured in hertz.
+Number of samples for digital representation taken in unit time; This field
+holds numbers measured in hertz (Hz).
 
 **See also:**
 
 - [Wikipedia](<https://en.wikipedia.org/wiki/Sampling_(signal_processing)#Audio_sampling>)
+
+(AudioDetail-waveform-notes)=
+
+#### `waveform`
+
+The URL of the API `/wavepoint` endpoint for the audio track. This endpoint
+provides the full peaks array for the track.
