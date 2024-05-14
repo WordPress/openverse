@@ -336,6 +336,56 @@ etc. The main focus should be understanding the new configuration and
 determining whether it's possible to test it locally. Otherwise, follow the
 steps for deploying a new cluster and switching the live services over to it.
 
+## Node Replacements
+
+Occasionally, the underlying EC2 instance for one of our nodes will undergo a
+scheduled decomission ("retirement") and need to be replaced beforehand.
+
+This procedure describes the process of replacing a single node, but could be
+extrapolated to multiple nodes with relative ease.
+
+If a Data refresh is scheduled during the timeframe of this procedure, it is
+best to pause it for performance reasons.
+
+### Steps
+
+1. Use the Instance ID provided in the retirement notification to find the
+   "Private IPv4 address" of the instance. This value is the "Name" of the
+   ElasticSearch node.
+1. Identify where the node is stored in our Terraform state. This will be useful
+   for manual state changes later in the process. Check each node until you find
+   the matching private IP in the returned state by running
+   `j tf <env> state show "module.<env>-elasticsearch-8-8-2.aws_instance.datanodes[0]"`,
+   `j tf <env> state show "module.<env>-elasticsearch-8-8-2.aws_instance.datanodes[1]"`,
+   and so on for each index. Replace the "<env>" with the correct values. Record
+   the final `module.<env>-elasticsearch-8-8-2.aws_instance.datanodes[x]` index.
+1. In Terraform, increase the `data_node_count` for the relevant Elasticsearch
+   module by one. Here is an
+   [example commit](https://github.com/WordPress/openverse-infrastructure/pull/894/commits/4a827b786b1460aa89931d474db119d835784727)
+   with this change in production. Apply this change and wait for a new instance
+   to be provisioned and connected to the cluster.
+1. Use `just jh es {staging|production}` to connect to the cluster, and send
+   `{ "transient":{ "cluster.routing.allocation.exclude._ip": "<IP_ADDRESS>" } }`
+   to the `/_cluster/settings` endpoint (in a GUI like Elasticvue or via `curl`)
+   to deallocate shards from the bad node. Be sure to replace `<IP_ADDRESS>`
+   with the private IPv4 address identified in step 1.
+1. Let the cluster relocate shards to the new node and from the retired node.
+   Wait for the cluster health to return to green.
+1. Manually terminate the retired instance in the AWS console.
+1. In Terraform:
+   - Decrease the `data_node_count` for the Elasticsearch module down by one. Do
+     not apply this yet.
+   - Remove the retired node from the Terraform state. This is a prerequisite to
+     moving the new node into the retired node’s position in the state. Use the
+     following command, replacing "x" with the index found in step 2.
+     `j tf prod state rm module.elasticsearch.aws_instance.elasticsearch-ec2-datanodes[x]`
+   - Move the newest node added in step 3 to the position of the retired node we
+     just removed. If the newest node was in position 3 and the old node was in
+     position 0, for example:
+     `j tf <env> state mv module.elasticsearch.aws_instance.elasticsearch-ec2-datanodes[3] module.elasticsearch.aws_instance.elasticsearch-ec2-datanodes[0]`
+1. Apply the Terraform changes, which will cleanup the dangling DNS records of
+   the retired node.
+
 ## Potential improvements
 
 - Pass node configuration at the module level rather than generating it inside
