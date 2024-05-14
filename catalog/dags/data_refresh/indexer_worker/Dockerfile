@@ -73,10 +73,7 @@ USER ingestionu
 # Copy code into the final image
 COPY --chown=ingestionu . /indexer_worker/
 
-# Exposes
-# - 8001: Gunicorn server for `ingestion_server` Falcon app
-# - 8002: Gunicorn server for `indexer_worker` Falcon app
-# EXPOSE 8001 8002
+# Expose Gunicorn server to indexer worker Falcon app
 EXPOSE 8003
 
 ARG SEMANTIC_VERSION
