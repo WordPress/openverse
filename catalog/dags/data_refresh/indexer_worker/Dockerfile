@@ -33,7 +33,7 @@ COPY Pipfile Pipfile.lock ./
 RUN pipenv install --system --deploy --dev
 
 ####################
-# Ingestion server #
+# Indexer worker #
 ####################
 
 FROM docker.io/python:${CATALOG_PY_VERSION}-slim as ing
