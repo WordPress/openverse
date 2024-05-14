@@ -20,12 +20,12 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture
-def filtered_providers_cache(django_cache, monkeypatch):
+def enabled_providers_cache(django_cache, monkeypatch):
     cache = django_cache
     monkeypatch.setattr("api.controllers.search_controller.cache", cache)
 
-    filtered_provider = "filtered_provider"
-    cache_value = [filtered_provider]
+    enabled_provider = "enabled_provider"
+    cache_value = [enabled_provider]
     cache.set(
         key=FILTERED_PROVIDERS_CACHE_KEY,
         version=FILTERED_PROVIDERS_CACHE_VERSION,
@@ -33,7 +33,7 @@ def filtered_providers_cache(django_cache, monkeypatch):
         timeout=1,
     )
 
-    yield filtered_provider
+    yield enabled_provider
 
     cache.delete(FILTERED_PROVIDERS_CACHE_KEY, version=FILTERED_PROVIDERS_CACHE_VERSION)
 
@@ -47,7 +47,7 @@ def test_related_media(
     wrapped_related_results,
     image_media_type_config,
     settings,
-    filtered_providers_cache,
+    enabled_providers_cache,
 ):
     image = ImageFactory.create()
 
@@ -82,8 +82,8 @@ def test_related_media(
         "from": 0,
         "query": {
             "bool": {
-                "must": [
-                    {"terms": {"provider": [filtered_providers_cache]}},
+                "filter": [
+                    {"terms": {"provider": [enabled_providers_cache]}},
                 ],
                 "must_not": [
                     {"term": {"mature": True}},

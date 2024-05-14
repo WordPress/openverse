@@ -11,6 +11,7 @@ import structlog
 from decouple import config
 from elasticsearch.exceptions import NotFoundError
 from elasticsearch_dsl import Q, Search
+from elasticsearch_dsl.query import EMPTY_QUERY
 from elasticsearch_dsl.response import Hit, Response
 from redis.exceptions import ConnectionError
 
@@ -161,9 +162,9 @@ def _post_process_results(
     return results[:page_size]
 
 
-def get_filtered_providers_query() -> Q | None:
+def get_enabled_providers_query() -> Q | None:
     """
-    Get a query for filtering out items from hidden content providers or without any content provider.
+    Get a query that only includes enabled providers.
 
     To exclude a provider, set ``filter_content`` to ``True`` in the
     ``ContentProvider`` model in Django admin.
@@ -172,15 +173,15 @@ def get_filtered_providers_query() -> Q | None:
     """
 
     try:
-        filtered_providers = cache.get(
+        enabled_providers = cache.get(
             key=FILTERED_PROVIDERS_CACHE_KEY, version=FILTERED_PROVIDERS_CACHE_VERSION
         )
     except ConnectionError:
         logger.warning("Redis connect failed, cannot get cached filtered providers.")
-        filtered_providers = None
+        enabled_providers = None
 
-    if not filtered_providers:
-        filtered_providers = list(
+    if not enabled_providers:
+        enabled_providers = list(
             models.ContentProvider.objects.filter(filter_content=False).values_list(
                 "provider_identifier", flat=True
             )
@@ -191,13 +192,13 @@ def get_filtered_providers_query() -> Q | None:
                 key=FILTERED_PROVIDERS_CACHE_KEY,
                 version=FILTERED_PROVIDERS_CACHE_VERSION,
                 timeout=FILTER_CACHE_TIMEOUT,
-                value=filtered_providers,
+                value=enabled_providers,
             )
         except ConnectionError:
             logger.warning("Redis connect failed, cannot cache filtered providers.")
 
-    if filtered_providers:
-        return Q("terms", provider=filtered_providers)
+    if enabled_providers:
+        return Q("terms", provider=enabled_providers)
     return None
 
 
@@ -285,8 +286,8 @@ def build_search_query(
     if not search_params.validated_data["include_sensitive_results"]:
         search_queries["must_not"].append(Q("term", mature=True))
     # Exclude dynamically disabled sources (see Redis cache)
-    if filtered_providers_query := get_filtered_providers_query():
-        search_queries["must"].append(filtered_providers_query)
+    if enabled_providers_query := get_enabled_providers_query():
+        search_queries["filter"].append(enabled_providers_query)
 
     # Search either by generic multimatch or by "advanced search" with
     # individual field-level queries specified.
@@ -334,6 +335,12 @@ def build_search_query(
 
     if settings.USE_RANK_FEATURES:
         search_queries["should"].extend(create_ranking_queries(search_params))
+
+    # If there are no `must` query clauses, only the results that match
+    # the `should` clause are returned. To avoid this, we add an empty
+    # query clause to the `must` list.
+    if not search_queries["must"]:
+        search_queries["must"].append(EMPTY_QUERY)
 
     return Q(
         "bool",
@@ -390,8 +397,8 @@ def build_collection_query(
     if not include_sensitive_by_params:
         search_query["must_not"].append({"term": {"mature": True}})
 
-    if filtered_providers_query := get_filtered_providers_query():
-        search_query["must"].append(filtered_providers_query)
+    if enabled_providers_query := get_enabled_providers_query():
+        search_query["filter"].append(enabled_providers_query)
 
     return Q("bool", **search_query)
 
