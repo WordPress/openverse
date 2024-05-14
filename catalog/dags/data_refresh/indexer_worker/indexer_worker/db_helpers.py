@@ -40,8 +40,6 @@ def database_connect(
     """
     Repeatedly try to connect to the downstream (API) database until successful
     (unless otherwise specified).
-
-    :return: A database connection object
     """
     while True:
         try:

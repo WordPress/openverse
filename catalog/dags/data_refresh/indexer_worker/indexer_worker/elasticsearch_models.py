@@ -51,11 +51,7 @@ class SyncableDocType(Document):
 
 
 class Media(SyncableDocType):
-    """
-    Represents a media object in Elasticsearch.
-
-    Note that actual mappings are defined in `ingestion_server.es_mapping`.
-    """
+    """Represents a media object in Elasticsearch."""
 
     class Index:
         name = "media"
@@ -206,11 +202,7 @@ class Media(SyncableDocType):
 
 
 class Image(Media):
-    """
-    Represents an image in Elasticsearch.
-
-    Note that actual mappings are defined in `ingestion_server.es_mapping`.
-    """
+    """Represents an image in Elasticsearch."""
 
     class AspectRatios(Enum):
         """Also defined in ``api/catalog/api/constants/field_values.py``."""
@@ -287,11 +279,7 @@ class Image(Media):
 
 
 class Audio(Media):
-    """
-    Represents an audio in Elasticsearch.
-
-    Note that actual mappings are defined in `ingestion_server.es_mapping`.
-    """
+    """Represents an audio in Elasticsearch."""
 
     class Durations(Enum):
         """

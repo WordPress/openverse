@@ -1,18 +1,9 @@
 import logging as log
 import time
-from typing import NamedTuple
 
 from decouple import config
 from elasticsearch import ConnectionError as EsConnectionError
-from elasticsearch import Elasticsearch, NotFoundError
-
-
-class Stat(NamedTuple):
-    """Contains information about the index or alias identified by its name."""
-
-    exists: bool
-    is_alias: bool | None
-    alt_names: str | list[str] | None
+from elasticsearch import Elasticsearch
 
 
 def elasticsearch_connect(timeout: int = 300) -> Elasticsearch:
@@ -58,32 +49,3 @@ def _elasticsearch_connect() -> Elasticsearch:
     )
     es.info()
     return es
-
-
-def get_stat(es: Elasticsearch, name_or_alias: str) -> Stat:
-    """
-    Get more information about the index name or alias given to the function.
-
-    For any given input, the function offers three bits of information:
-
-    - whether an alias or index of the name exists
-    - whether the name is an alias
-    - the index name that the alias points to/the aliases associated with the index
-
-    :param es: the Elasticsearch connection
-    :param name_or_alias: the name of the index or an alias associated with it
-    :return: a ``Stat`` instance containing the three bits of information
-    """
-
-    try:
-        matches = es.indices.get(index=name_or_alias)
-        real_name = list(matches.keys())[0]
-        aliases = list(matches[real_name]["aliases"].keys())
-        is_alias = real_name != name_or_alias
-        return Stat(
-            exists=True,
-            is_alias=is_alias,
-            alt_names=real_name if is_alias else aliases,
-        )
-    except NotFoundError:
-        return Stat(exists=False, is_alias=None, alt_names=None)

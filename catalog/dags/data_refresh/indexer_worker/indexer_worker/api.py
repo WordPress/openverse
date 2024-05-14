@@ -5,17 +5,15 @@ Accept an HTTP request specifying a range of image IDs to reindex.
 """
 
 import logging as log
-from multiprocessing import Process
+import uuid
+from multiprocessing import Process, Value
+from urllib.parse import urlparse
 
 import boto3
 import falcon
 from decouple import config
-
-# from indexer_worker import slack
-from indexer_worker.es_helpers import elasticsearch_connect
-from indexer_worker.indexer import replicate
-from indexer_worker.queries import get_existence_queries
-from psycopg2.sql import SQL, Identifier, Literal
+from indexer_worker.indexer import launch_reindex
+from indexer_worker.tasks import TaskTracker
 
 
 ec2_client = boto3.client(
@@ -26,71 +24,95 @@ ec2_client = boto3.client(
 )
 
 
-class IndexingJobResource:
-    def on_post(self, req, resp):
-        j = req.media
-        log.info(j)
-        model_name = j["model_name"]
-        table_name = j["table_name"]
-        start_id = j["start_id"]
-        end_id = j["end_id"]
-        target_index = j["target_index"]
-
-        _execute_indexing_task(model_name, table_name, target_index, start_id, end_id)
-        log.info(f"Received indexing request for records {start_id}-{end_id}")
-        resp.status = falcon.HTTP_201
-
-
 class HealthcheckResource:
     def on_get(self, req, resp):
         resp.status = falcon.HTTP_200
 
 
-def _execute_indexing_task(model_name, table_name, target_index, start_id, end_id):
-    elasticsearch = elasticsearch_connect()
+class BaseTaskResource:
+    """Base class for all resource that need access to a task tracker."""
 
-    deleted, mature = get_existence_queries(model_name, table_name)
-    query = SQL(
-        "SELECT *, {deleted}, {mature} "
-        "FROM {table_name} "
-        "WHERE id BETWEEN {start_id} AND {end_id};"
-    ).format(
-        deleted=deleted,
-        mature=mature,
-        table_name=Identifier(table_name),
-        start_id=Literal(start_id),
-        end_id=Literal(end_id),
-    )
-    log.info(f"Querying {query}")
-    # indexer = TableIndexer(elasticsearch)
-    p = Process(
-        target=_launch_reindex,
-        args=(elasticsearch, model_name, table_name, target_index, query),
-    )
-    p.start()
-    log.info("Started indexing task")
+    def __init__(self, tracker: TaskTracker, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.tracker = tracker
 
 
-def _launch_reindex(es, model, table, target_index, query):
-    # worker_error = False
-    try:
-        replicate(es, model, table, target_index, query)
-    except Exception as err:
-        exception_type = f"{err.__class__.__module__}.{err.__class__.__name__}"
-        log.error(
-            f":x_red: Error in worker while reindexing `{target_index}`"
-            f"(`{exception_type}`): \n"
-            f"```\n{err}\n```"
+class IndexingJobResource(BaseTaskResource):
+    @staticmethod
+    def _get_base_url(req):
+        parsed = urlparse(req.url)
+        return parsed.scheme + "://" + parsed.netloc
+
+    def on_post(self, req, resp):
+        body = req.get_media()
+
+        task_id = uuid.uuid4().hex  # no hyphens
+        model_name = body.get("model_name")
+        table_name = body.get("table_name")
+        target_index = body.get("target_index")
+        start_id = body.get("start_id")
+        end_id = body.get("end_id")
+        log.info(f"Received indexing request for records {start_id}-{end_id}")
+
+        # Shared memory
+        progress = Value("d", 0.0)
+        finish_time = Value("d", 0.0)
+
+        task = Process(
+            target=launch_reindex,
+            kwargs={
+                "model_name": model_name,
+                "table_name": table_name,
+                "target_index": target_index,
+                "start_id": start_id,
+                "end_id": end_id,
+                # Task tracking arguments
+                "progress": progress,
+                "finish_time": finish_time,
+            },
         )
-        log.error("Indexing error occurred: ", exc_info=True)
-        # worker_error = True
+        task.start()
 
-    # log.info(f"Notifying {notify_url}")
-    # requests.post(notify_url, json={"error": worker_error})
-    # _self_destruct()
-    return
+        # Begin tracking the task
+        self.tracker.add_task(
+            task_id,
+            task=task,
+            model=model_name,
+            progress=progress,
+            finish_time=finish_time,
+        )
+
+        resp.status = falcon.HTTP_202
+        resp.media = {
+            "message": "Successfully scheduled task.",
+            "task_id": task_id,
+            "status_check": f"{self._get_base_url(req)}/task/{task_id}",
+        }
 
 
-api = falcon.App()
-api.add_route("/indexing_task", IndexingJobResource())
-api.add_route("/healthcheck", HealthcheckResource())
+class TaskStatusResource(BaseTaskResource):
+    def on_get(self, _, resp, task_id):
+        """Handle an incoming GET request and provide information about a single task."""
+
+        try:
+            result = self.tracker.get_task_status(task_id)
+            resp.media = result
+        except KeyError:
+            resp.status = falcon.HTTP_404
+            resp.media = {"message": f"No task found with id {task_id}."}
+
+
+def create_api():
+    """Create an instance of the Falcon API server."""
+    _api = falcon.App()
+
+    task_tracker = TaskTracker()
+
+    _api.add_route("/healthcheck", HealthcheckResource())
+    _api.add_route("/task", IndexingJobResource(task_tracker))
+    _api.add_route("/task/{task_id}", TaskStatusResource(task_tracker))
+
+    return _api
+
+
+api = create_api()
