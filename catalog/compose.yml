@@ -107,16 +107,11 @@ services:
       - catalog_dependencies
       - catalog
       - api
-      # error about db was pulled in as a dependency of service but is not enabled by the active
-      # profiles you can fix this by adding a common profile to db and catalog_indexer_worker
-    # https://docs.docker.com/compose/compose-file/build/
     build:
       context: ./dags/data_refresh/indexer_worker/
       args: # Automatically inferred from env vars, unless specified
         - CATALOG_PY_VERSION
     image: openverse-indexer_worker
-    # We shouldn'tg need this bc the dockerfile can just do it now
-    # command: gunicorn indexer_api:api --bind 0.0.0.0:8003
     ports:
       - "50282:8003"
     depends_on:
