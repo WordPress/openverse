@@ -51,8 +51,14 @@ jest.mock(
 )
 
 describe("Feature flag store", () => {
+  let initialEnv
   beforeEach(() => {
     setActivePinia(createPinia())
+    initialEnv = process.env.DEPLOYMENT_ENV
+  })
+
+  afterEach(() => {
+    process.env.DEPLOYMENT_ENV = initialEnv
   })
 
   it("initialises state from JSON", () => {
@@ -145,7 +151,7 @@ describe("Feature flag store", () => {
   `(
     "returns $featureState for $environment",
     ({ environment, featureState }) => {
-      const initialValue = process.env.DEPLOYMENT_ENV
+      // The value is cleaned up in afterEach
       process.env.DEPLOYMENT_ENV = environment
       const featureFlagStore = useFeatureFlagStore()
 
@@ -155,7 +161,6 @@ describe("Feature flag store", () => {
       expect(featureFlagStore.isOn("feat_env_specific")).toEqual(
         featureState === "on"
       )
-      process.env.DEPLOYMENT_ENV = initialValue
     }
   )
 
@@ -167,13 +172,12 @@ describe("Feature flag store", () => {
   `(
     "handles fallback for missing $environment",
     ({ environment, flagStatus }) => {
-      const initialValue = process.env.DEPLOYMENT_ENV
+      // The value is cleaned up in afterEach
       process.env.DEPLOYMENT_ENV = environment
       const actualStatus = getFlagStatus({
         status: { staging: "switchable" },
       })
       expect(actualStatus).toEqual(flagStatus)
-      process.env.DEPLOYMENT_ENV = initialValue
     }
   )
 
