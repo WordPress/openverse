@@ -1,7 +1,57 @@
-FROM debian
+# Use arch because all these dependencies are available as easy-to-install packages in
+# the default repositories. For testing purposes, it's the easiest way to go and least fussy
+# installation methods.
+FROM archlinux as no-deps
+
+RUN pacman -Syu --noconfirm which
 
 WORKDIR /app
 
 COPY get-started.sh /app/get-started.sh
 
 CMD ["/app/get-started.sh"]
+
+FROM no-deps as with-python
+
+RUN pacman -Syu --noconfirm python
+
+FROM no-deps as with-just
+
+RUN pacman -Syu --noconfirm just
+
+FROM no-deps as with-docker
+
+RUN pacman -Syu --noconfirm docker
+
+FROM with-docker as with-docker-compose
+
+RUN pacman -Syu --noconfirm docker-compose
+
+FROM with-docker as with-docker-buildx
+
+RUN pacman -Syu --noconfirm docker-buildx
+
+FROM no-deps as with-node
+
+# Includes corepack
+RUN pacman -Syu --noconfirm nodejs
+
+FROM with-node as no-corepack
+
+RUN rm /usr/bin/corepack
+
+FROM no-deps as with-pnpm-direct
+
+# pnpm package also installs python via its dependency on the git package
+# pnpm -> git -> python
+RUN pacman -Syu --noconfirm pnpm \
+  && rm /usr/bin/python /usr/bin/python3 /usr/bin/python3.12
+
+FROM no-deps as with-everything
+
+RUN pacman -Syu --noconfirm \
+  nodejs \
+  python \
+  docker \
+  docker-compose \
+  just

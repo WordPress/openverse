@@ -283,3 +283,8 @@ f:
 # alias for `pnpm --filter {package} run {script}`
 p package script +args="":
     pnpm --filter {{ package }} run {{ script }} {{ args }}
+
+
+test-get-started stage:
+    docker build -t get-started-test:{{ stage }} -f Dockerfile.get-started-test --target {{ stage }} .
+    docker run get-started-test:{{ stage }}

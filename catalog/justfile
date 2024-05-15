@@ -38,7 +38,7 @@ venv:
 
 # Check that the active Python version matches the required Python version
 check-py-version:
-    #!/usr/bin/env python
+    #!/usr/bin/env python3
     import os
     import sys
     current = f"{sys.version_info[0]}.{sys.version_info[1]}"
