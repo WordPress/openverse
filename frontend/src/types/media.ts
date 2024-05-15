@@ -72,7 +72,7 @@ export interface Media {
   /** A long test describing the media, from the provider. */
   description?: string
 
-  /** A list of descriptive categories describing the work. */
+  /** The descriptive category describing the work. */
   category?: string | null
 
   /**
@@ -160,7 +160,7 @@ export interface Media {
 
 export interface ImageDetail extends Media {
   frontendMediaType: "image"
-  /** the vertical length of the image, in pixels. */
+  /** The vertical length of the image, in pixels. */
   height?: number
   /** The horizontal length of the image, in pixels. */
   width?: number
@@ -188,13 +188,12 @@ export interface AudioDetail extends Media {
   length?: string
 
   /**
-   * The time period of the track in milliseconds.
-   * This provides the duration of the audio track in a numerical format.
+   * The duration of the track in milliseconds.
    */
   duration?: number
 
   /**
-   * Amount of digital audio data transmitted or processed in unit time;
+   * Amount of digital audio data transmitted or processed in unit time.
    * This field holds numbers measured in bits per second (bps).
    *
    * @see {@link https://en.wikipedia.org/wiki/Bit_rate#Audio|Wikipedia}
@@ -202,7 +201,7 @@ export interface AudioDetail extends Media {
   bit_rate?: number
 
   /**
-   * Number of samples for digital representation taken in unit time;
+   * Number of samples for digital representation taken in unit time.
    * This field holds numbers measured in hertz (Hz).
    *
    * @see {@link https://en.wikipedia.org/wiki/Sampling_(signal_processing)#Audio_sampling|Wikipedia}
