@@ -55,6 +55,26 @@ required.
 The following setup steps are needed to set up a local copy of Openverse and do
 not prepare you to contribute code to the project.
 
+### Get started help script
+
+````{tip}
+If you have at least `git` installed, you can clone the repository, then run
+the `get-started.sh` script:
+
+```shell
+git clone https://github.com/WordPress/openverse
+
+cd openverse
+./get-started.sh
+```
+
+The `get-started.sh` script will check for each of the required development
+dependencies and suggest installation methods appropriate for your system.
+
+You may also refer to the individual sections below for each of the required
+tools.
+````
+
 ### Git
 
 Openverse is Git-tracked. To clone Openverse locally, you will need to install
