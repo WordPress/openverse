@@ -49,8 +49,7 @@
         class="absolute inset-x-0 z-popover lg:flex"
         :class="recentClasses"
         @select="handleSelect"
-        @clear="handleClear"
-        @clear-single="handleClearSingle"
+        @clear="handleClear($event)"
         @keydown.tab.native="hideRecentSearches"
       />
     </ClientOnly>
@@ -160,7 +159,7 @@ export default defineComponent({
      * visual focus is on the input field.
      */
     const selectedIdx = ref<number | undefined>(undefined)
-    const entries = computed(() => searchStore.recentSearches)
+    const entries = computed(() => searchStore.recentSearchEntries)
 
     const handleVerticalArrows = (event: KeyboardEvent) => {
       event.preventDefault() // Prevent the cursor from moving horizontally.
@@ -223,15 +222,11 @@ export default defineComponent({
       selectedIdx.value = undefined // Lose visual focus from entries.
       handleSearch() // Immediately execute the search manually.
     }
-    /* Clear all recent searches from the store. */
-    const handleClear = () => {
-      inputFieldRef.value?.focusInput()
-      searchStore.clearRecentSearches()
-    }
+
     /* Clear a specific recent search from the store. */
-    const handleClearSingle = (idx: number) => {
+    const handleClear = (entry?: string) => {
       inputFieldRef.value?.focusInput()
-      searchStore.clearRecentSearch(idx)
+      searchStore.clearRecentSearches(entry)
     }
 
     return {
@@ -253,7 +248,6 @@ export default defineComponent({
       handleKeydown,
       handleSelect,
       handleClear,
-      handleClearSingle,
     }
   },
 })

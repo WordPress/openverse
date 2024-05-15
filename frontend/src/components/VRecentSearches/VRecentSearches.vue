@@ -18,7 +18,8 @@
         class="label-bold"
         size="small"
         :aria-label="$t('recentSearches.clear.label').toString()"
-        @click="handleClear"
+        @click="handleClear()"
+        @keydown.tab="$emit('last-tab')"
       >
         {{ $t("recentSearches.clear.text") }}
       </VButton>
@@ -35,7 +36,7 @@
       <li
         v-for="(entry, idx) in entries"
         :id="`option-${idx}`"
-        :key="idx"
+        :key="entry"
         role="option"
         class="group/entry label-regular flex h-10 flex-row items-center gap-2 rounded-sm border-1.5 pe-1 ps-2 hover:bg-dark-charcoal-10"
         :class="idx === selectedIdx ? 'border-pink' : 'border-tx'"
@@ -51,7 +52,7 @@
           :label="$t('recentSearches.clearSingle.label', { entry }).toString()"
           class="ms-auto group-hover/entry:flex"
           :class="{ hidden: bordered }"
-          @click.stop="handleClearSingle(idx)"
+          @click.stop="handleClear(entry)"
         />
       </li>
       <!-- eslint-enable -->
@@ -112,24 +113,20 @@ export default defineComponent({
   },
   emits: {
     select: defineEvent<[number]>(),
-    clear: defineEvent(),
-    "clear-single": defineEvent<[number]>(),
+    clear: defineEvent<[string?]>(),
+    "last-tab": defineEvent(),
   },
   setup(_, { emit }) {
     const handleClick = (idx: number) => {
       emit("select", idx)
     }
-    const handleClear = () => {
-      emit("clear")
-    }
-    const handleClearSingle = (idx: number) => {
-      emit("clear-single", idx)
+    const handleClear = (entry?: string) => {
+      emit("clear", entry)
     }
 
     return {
       handleClick,
       handleClear,
-      handleClearSingle,
     }
   },
 })

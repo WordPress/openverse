@@ -148,6 +148,12 @@ export const useSearchStore = defineStore("search", {
     state.recentSearches = useStorage<string[]>("recent-searches", [])
   },
   getters: {
+    /**
+     * Returns the list of recent search terms, excluding the current search term.
+     */
+    recentSearchEntries(state) {
+      return state.recentSearches.filter((entry) => entry !== state.searchTerm)
+    },
     filterCategories(state) {
       return Object.keys(state.filters) as FilterCategory[]
     },
@@ -405,11 +411,12 @@ export const useSearchStore = defineStore("search", {
         ...this.recentSearches.filter((i) => i !== search),
       ].slice(0, parseInt(env.savedSearchCount))
     },
-    clearRecentSearches() {
-      this.recentSearches = []
-    },
-    clearRecentSearch(idx: number) {
-      this.recentSearches.splice(idx, 1)
+    clearRecentSearches(entry?: string) {
+      if (entry) {
+        this.recentSearches = this.recentSearches.filter((i) => i !== entry)
+      } else {
+        this.recentSearches = []
+      }
     },
     /**
      * Initial filters do not include the provider filters. We create the provider filters object
