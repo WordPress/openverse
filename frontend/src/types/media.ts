@@ -185,8 +185,6 @@ export interface AudioDetail extends Media {
   /** A raw list of strings representing musical genres. */
   genres?: string[]
 
-  length?: string
-
   /**
    * The duration of the track in milliseconds.
    */

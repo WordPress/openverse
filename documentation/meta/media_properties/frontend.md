@@ -64,7 +64,7 @@ The full text to properly attribute the work to the creator.
 
 #### `category`
 
-A list of descriptive categories describing the work.
+The descriptive category describing the work.
 
 (Media-creator-notes)=
 
@@ -251,7 +251,7 @@ A URL pointing to the actual media file on the provider.
 
 #### `height`
 
-the vertical length of the image, in pixels.
+The vertical length of the image, in pixels.
 
 (ImageDetail-width-notes)=
 
@@ -272,7 +272,6 @@ The horizontal length of the image, in pixels.
 | `frontendMediaType`                             | `"audio"` (literal)                        |           |
 | [`genres`](#AudioDetail-genres-notes)           | `string[]`                                 | ✓         |
 | [`hasLoaded`](#AudioDetail-hasLoaded-notes)     | `boolean`                                  | ✓         |
-| `length`                                        | `string`                                   | ✓         |
 | [`peaks`](#AudioDetail-peaks-notes)             | `number[]`                                 | ✓         |
 | [`sample_rate`](#AudioDetail-sample_rate-notes) | `number`                                   | ✓         |
 | [`waveform`](#AudioDetail-waveform-notes)       | `string`                                   | ✓         |
@@ -297,7 +296,7 @@ album or podcast.
 
 #### `bit_rate`
 
-Amount of digital audio data transmitted or processed in unit time; This field
+Amount of digital audio data transmitted or processed in unit time. This field
 holds numbers measured in bits per second (bps).
 
 **See also:**
@@ -308,8 +307,7 @@ holds numbers measured in bits per second (bps).
 
 #### `duration`
 
-The time period of the track in milliseconds. This provides the duration of the
-audio track in a numerical format.
+The duration of the track in milliseconds.
 
 (AudioDetail-genres-notes)=
 
@@ -336,7 +334,7 @@ the audio waveform.
 
 #### `sample_rate`
 
-Number of samples for digital representation taken in unit time; This field
+Number of samples for digital representation taken in unit time. This field
 holds numbers measured in hertz (Hz).
 
 **See also:**
