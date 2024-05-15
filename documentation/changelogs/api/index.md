@@ -1,6 +1,6 @@
 # API changelogs
 
-Changelogs for <https://api.openverse.engineering/>.
+Changelogs for <https://api.openverse.org/>.
 
 ```{toctree}
 :glob:

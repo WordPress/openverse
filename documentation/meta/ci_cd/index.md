@@ -40,7 +40,7 @@ of these, "documentation" is also applicable to PRs.
 
 - **API staging:** When a new commit is pushed to `main` which affects the API
   service and the tests for the API pass, a new
-  [staging deployment of the API](https://api-staging.openverse.engineering/) is
+  [staging deployment of the API](https://api-staging.openverse.org/) is
   triggered. The deployment uses the image published above.
 
   See job [`deploy-api`](/meta/ci_cd/jobs/deployment.md#deploy-api).
