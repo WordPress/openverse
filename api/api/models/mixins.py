@@ -2,8 +2,6 @@ import mimetypes
 
 from django.db import models
 
-from api.models import fields
-
 
 class IdentifierMixin(models.Model):
     """
@@ -57,10 +55,10 @@ class MediaMixin(models.Model):
     The mixin adds
 
     - title: TextField
-    - foreign_landing_url: URLTextField
+    - foreign_landing_url: TextField
     - creator: TextField
-    - creator_url: URLTextField
-    - thumbnail: URLTextField
+    - creator_url: TextField
+    - thumbnail: TextField
     - provider: CharField
     """
 
@@ -69,7 +67,7 @@ class MediaMixin(models.Model):
         null=True,
         help_text="The name of the media.",
     )
-    foreign_landing_url = fields.URLTextField(
+    foreign_landing_url = models.TextField(
         blank=True,
         null=True,
         help_text="The landing page of the work.",
@@ -80,7 +78,7 @@ class MediaMixin(models.Model):
         null=True,
         help_text="The name of the media creator.",
     )
-    creator_url = fields.URLTextField(
+    creator_url = models.TextField(
         max_length=2000,
         blank=True,
         null=True,
@@ -90,7 +88,7 @@ class MediaMixin(models.Model):
     # Because all forms of media have a thumbnail for visual representation
     # For images, this field is not used as images are generated using Photon.
     # For audio, this field points to the artwork, or is ``null``.
-    thumbnail = fields.URLTextField(
+    thumbnail = models.TextField(
         blank=True,
         null=True,
         help_text="The thumbnail for the media.",
@@ -117,12 +115,12 @@ class FileMixin(models.Model):
 
     This mixin adds
 
-    - url: URLTextField
+    - url: TextField
     - filesize: IntegerField
     - filetype: CharField
     """
 
-    url = fields.URLTextField(
+    url = models.TextField(
         unique=True,
         max_length=1000,
         help_text="The actual URL to the media file.",
