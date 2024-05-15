@@ -364,8 +364,8 @@ best to pause it for performance reasons.
    [example commit](https://github.com/WordPress/openverse-infrastructure/pull/894/commits/4a827b786b1460aa89931d474db119d835784727)
    with this change in production. Apply this change and wait for a new instance
    to be provisioned and connected to the cluster.
- 2. Initialize and configure the new instance with 
-    `just ansible/playbook <env> elasticsearch/sync_config.yml -e apply=true`.
+1. Initialize and configure the new instance with
+   `just ansible/playbook <env> elasticsearch/sync_config.yml -e apply=true`.
 1. Use `just jh es {staging|production}` to connect to the cluster, and send
    `{ "transient":{ "cluster.routing.allocation.exclude._ip": "<IP_ADDRESS>" } }`
    to the `/_cluster/settings` endpoint (in a GUI like Elasticvue or via `curl`)
