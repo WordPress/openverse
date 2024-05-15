@@ -12,6 +12,13 @@ from decouple import config
 logger = structlog.get_logger(__name__)
 
 
+LINK_VALIDATION_MAX_CONCURRENT_REQUESTS: None | int = config(
+    "LINK_VALIDATION_MAX_CONCURRENT_REQUESTS",
+    default=None,
+    cast=lambda x: int(x) if x else None,
+)
+
+
 class LinkValidationCacheExpiryConfiguration(defaultdict):
     """Link validation cache expiry configuration."""
 

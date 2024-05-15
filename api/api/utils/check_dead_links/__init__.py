@@ -1,5 +1,7 @@
 import asyncio
 import time
+from contextlib import asynccontextmanager
+from functools import wraps
 
 from django.conf import settings
 
@@ -43,22 +45,65 @@ def _get_expiry(status, default):
 _timeout = aiohttp.ClientTimeout(total=2)
 
 
-async def _head(url: str) -> tuple[str, int]:
+# Limits total concurrent dead link requests in the worker
+_head_request_semaphore: None | asyncio.Semaphore = (
+    asyncio.Semaphore(settings.LINK_VALIDATION_MAX_CONCURRENT_REQUESTS)
+    if settings.LINK_VALIDATION_MAX_CONCURRENT_REQUESTS
+    else None
+)
+
+
+def _log_semaphore_event(event: str, *, url: str):
+    logger.info(
+        event,
+        locked=_head_request_semaphore.locked(),
+        url=url,
+        waiters=len(_head_request_semaphore._waiters or []),
+        count=_head_request_semaphore._value,
+    )
+
+
+@asynccontextmanager
+async def _flow_control(url):
+    """Limit the flow of dead link requests"""
+    if not settings.LINK_VALIDATION_MAX_CONCURRENT_REQUESTS:
+        yield
+        return
+
     try:
-        session = await get_aiohttp_session()
-        response = await session.head(
-            url, allow_redirects=False, headers=HEADERS, timeout=_timeout
-        )
-        return url, response.status
+        _log_semaphore_event("request_concurrent_head_request", url=url)
+        await asyncio.wait_for(_head_request_semaphore.acquire(), timeout=2)
+    except TimeoutError:
+        _log_semaphore_event("timeout_acquire_concurrent_head_request", url=url)
+        raise
+    else:
+        _log_semaphore_event("acquired_concurrent_head_request", url=url)
+        yield
+        if (
+            _head_request_semaphore._value
+            < settings.LINK_VALIDATION_MAX_CONCURRENT_REQUESTS
+        ):
+            _head_request_semaphore.release()
+            _log_semaphore_event("released_concurrent_head_request", url=url)
+
+
+async def _head(session: aiohttp.ClientSession, url: str) -> tuple[str, int]:
+    try:
+        async with _flow_control(url):
+            response = await session.head(
+                url, allow_redirects=False, headers=HEADERS, timeout=_timeout
+            )
+            return url, response.status
     except (aiohttp.ClientError, asyncio.TimeoutError) as exception:
-        _log_validation_failure(exception)
+        _log_validation_failure(url, exception)
         return url, -1
 
 
 # https://stackoverflow.com/q/55259755
 @async_to_sync
 async def _make_head_requests(urls: list[str]) -> list[tuple[str, int]]:
-    tasks = [asyncio.ensure_future(_head(url)) for url in urls]
+    session = await get_aiohttp_session()
+    tasks = [asyncio.ensure_future(_head(session, url)) for url in urls]
     responses = asyncio.gather(*tasks)
     await responses
     return responses.result()
@@ -174,5 +219,5 @@ def check_dead_links(
     )
 
 
-def _log_validation_failure(exception):
-    logger.warning(f"Failed to validate image! Reason: {exception}")
+def _log_validation_failure(url, exception):
+    logger.warning("image_validation_failed", exception=str(exception), url=url)
