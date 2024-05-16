@@ -5,8 +5,8 @@ from api.constants.parameters import COLLECTION, TAG
 from api.controllers import search_controller
 from api.controllers.search_controller import (
     DEFAULT_SQS_FLAGS,
-    FILTERED_PROVIDERS_CACHE_KEY,
-    FILTERED_PROVIDERS_CACHE_VERSION,
+    ENABLED_SOURCES_CACHE_KEY,
+    ENABLED_SOURCES_CACHE_VERSION,
 )
 
 
@@ -14,22 +14,22 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture
-def enabled_providers_cache(django_cache, monkeypatch):
+def enabled_sources_cache(django_cache, monkeypatch):
     cache = django_cache
     monkeypatch.setattr("api.controllers.search_controller.cache", cache)
 
-    enabled_provider = "enabled_provider"
-    cache_value = [enabled_provider]
+    enabled_source = "enabled_source"
+    cache_value = [enabled_source]
     cache.set(
-        key=FILTERED_PROVIDERS_CACHE_KEY,
-        version=FILTERED_PROVIDERS_CACHE_VERSION,
+        key=ENABLED_SOURCES_CACHE_KEY,
+        version=ENABLED_SOURCES_CACHE_VERSION,
         value=cache_value,
         timeout=1,
     )
 
-    yield enabled_provider
+    yield enabled_source
 
-    cache.delete(FILTERED_PROVIDERS_CACHE_KEY, version=FILTERED_PROVIDERS_CACHE_VERSION)
+    cache.delete(ENABLED_SOURCES_CACHE_KEY, version=ENABLED_SOURCES_CACHE_VERSION)
 
 
 def test_create_search_query_empty(media_type_config):
@@ -268,9 +268,9 @@ def test_create_search_query_q_search_license_license_type_creates_2_terms_filte
     }
 
 
-def test_create_search_query_empty_with_dynamically_enabled_providers(
+def test_create_search_query_empty_with_dynamically_enabled_sources(
     image_media_type_config,
-    enabled_providers_cache,
+    enabled_sources_cache,
 ):
     serializer = image_media_type_config.search_request_serializer(
         data={}, context={"media_type": image_media_type_config.media_type}
@@ -286,7 +286,7 @@ def test_create_search_query_empty_with_dynamically_enabled_providers(
         ],
         "must": [{"match_all": {}}],
         "filter": [
-            {"terms": {"provider": [enabled_providers_cache]}},
+            {"terms": {"source": [enabled_sources_cache]}},
         ],
         "should": [
             {"rank_feature": {"boost": 10000, "field": "standardized_popularity"}}

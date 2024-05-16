@@ -5,8 +5,8 @@ import pytest
 
 from api.controllers.elasticsearch import related
 from api.controllers.search_controller import (
-    FILTERED_PROVIDERS_CACHE_KEY,
-    FILTERED_PROVIDERS_CACHE_VERSION,
+    ENABLED_SOURCES_CACHE_KEY,
+    ENABLED_SOURCES_CACHE_VERSION,
 )
 from test.factory.es_http import (
     MOCK_LIVE_RESULT_URL_PREFIX,
@@ -20,22 +20,22 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture
-def enabled_providers_cache(django_cache, monkeypatch):
+def enabled_sources_cache(django_cache, monkeypatch):
     cache = django_cache
     monkeypatch.setattr("api.controllers.search_controller.cache", cache)
 
-    enabled_provider = "enabled_provider"
-    cache_value = [enabled_provider]
+    enabled_source = "enabled_source"
+    cache_value = [enabled_source]
     cache.set(
-        key=FILTERED_PROVIDERS_CACHE_KEY,
-        version=FILTERED_PROVIDERS_CACHE_VERSION,
+        key=ENABLED_SOURCES_CACHE_KEY,
+        version=ENABLED_SOURCES_CACHE_VERSION,
         value=cache_value,
         timeout=1,
     )
 
-    yield enabled_provider
+    yield enabled_source
 
-    cache.delete(FILTERED_PROVIDERS_CACHE_KEY, version=FILTERED_PROVIDERS_CACHE_VERSION)
+    cache.delete(ENABLED_SOURCES_CACHE_KEY, version=ENABLED_SOURCES_CACHE_VERSION)
 
 
 @mock.patch(
@@ -47,7 +47,7 @@ def test_related_media(
     wrapped_related_results,
     image_media_type_config,
     settings,
-    enabled_providers_cache,
+    enabled_sources_cache,
 ):
     image = ImageFactory.create()
 
@@ -83,7 +83,7 @@ def test_related_media(
         "query": {
             "bool": {
                 "filter": [
-                    {"terms": {"provider": [enabled_providers_cache]}},
+                    {"terms": {"source": [enabled_sources_cache]}},
                 ],
                 "must_not": [
                     {"term": {"mature": True}},
