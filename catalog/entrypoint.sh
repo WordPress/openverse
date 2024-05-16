@@ -71,7 +71,7 @@ if [[ $* == "webserver" ]]; then
   output=$(airflow variables list -o plain | tail -n +2)
   found_existing_vars=true
 
-  # if there are no existing variable, print this notification and continue
+  # If there are no existing variables, print this notification and continue
   if [[ -z $output || $output == "No data found" ]]; then
     echo "No existing variables found, proceeding to set all variables"
     found_existing_vars=false
@@ -87,15 +87,15 @@ if [[ $* == "webserver" ]]; then
   done <<<"$output"
 
   if $found_existing_vars; then
-    echo -e "Found the following existing variables(the values of these will not be overwritten):\n"
+    echo -e "Found the following existing variables (the values of these will not be overwritten):\n"
     for variable in "${existing_variables[@]}"; do
       echo "$variable"
     done
   fi
 
-  # now iterate through each row of variables.tsv and and only
+  # Now, iterate through each row of variables.tsv and and only
   # run airflow variables set --description <description> <key> <value>
-  # if the key doesn't already exist in the database i.e not found in
+  # if the key doesn't already exist in the database, i.e it is not found in
   # $existing_variables
   while IFS=$'\t' read -r column1 column2 column3; do
     # skip the first meta row or a row with empty data
@@ -121,7 +121,7 @@ if [[ $* == "webserver" ]]; then
   echo -e "The following variables are now set:\n"
   echo "$new_varibles_list"
 
-  # if the last line in variables.tsv did not correctly terminate
+  # If the last line in variables.tsv did not correctly terminate
   # with a new line character then this variable would not be empty
   # and this means the last line would not be read correctly.
   if [ -n "$column1" ]; then
