@@ -33,10 +33,10 @@ def _make_response_body(**kwargs):
 def _missing_node_keys(master_nodes: int, data_nodes: int):
     total_nodes = master_nodes + data_nodes
     return (
-        f"Elasticsearch {_TEST_ENV} cluster node count is **{total_nodes}**",
+        f"Elasticsearch {_TEST_ENV} cluster node count is *{total_nodes}*",
         "Expected 6 total nodes.",
-        f"Master nodes: **{master_nodes}** of expected 3",
-        f"Data nodes: **{data_nodes}** of expected 3",
+        f"Master nodes: *{master_nodes}* of expected 3",
+        f"Data nodes: *{data_nodes}* of expected 3",
     )
 
 
@@ -45,7 +45,7 @@ def _missing_node_keys(master_nodes: int, data_nodes: int):
     (
         pytest.param(
             "alert",
-            (f"Elasticsearch {_TEST_ENV} cluster status is **red**",),
+            (f"Elasticsearch {_TEST_ENV} cluster status is *red*",),
             _make_response_body(status="red"),
             id="red-status",
         ),
@@ -81,7 +81,7 @@ def _missing_node_keys(master_nodes: int, data_nodes: int):
         ),
         pytest.param(
             "notification",
-            (f"Elasticsearch {_TEST_ENV} cluster health is **yellow**.",),
+            (f"Elasticsearch {_TEST_ENV} cluster health is *yellow*.",),
             _make_response_body(
                 status="yellow",
             ),
@@ -127,4 +127,4 @@ def test_production_compose_notification_data_refresh_not_running():
     )
 
     assert message_type == "notification"
-    assert "Elasticsearch production cluster health is **yellow**." in message
+    assert "Elasticsearch production cluster health is *yellow*." in message
