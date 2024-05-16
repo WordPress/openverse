@@ -39,6 +39,11 @@ XCOM_PULL_TEMPLATE = "{{{{ ti.xcom_pull(task_ids='{}', key='{}') }}}}"
 POSTGRES_CONN_ID = "postgres_openledger_upstream"
 OPENLEDGER_API_CONN_ID = "postgres_openledger_api"
 POSTGRES_API_STAGING_CONN_ID = "postgres_openledger_api_staging"
+POSTGRES_API_CONN_IDS = {
+    STAGING: POSTGRES_API_STAGING_CONN_ID,
+    PRODUCTION: OPENLEDGER_API_CONN_ID,
+}
+
 AWS_CONN_ID = "aws_default"
 AWS_CLOUDWATCH_CONN_ID = os.environ.get("AWS_CLOUDWATCH_CONN_ID", AWS_CONN_ID)
 AWS_RDS_CONN_ID = os.environ.get("AWS_RDS_CONN_ID", AWS_CONN_ID)
@@ -49,7 +54,7 @@ REFRESH_POKE_INTERVAL = int(os.getenv("DATA_REFRESH_POKE_INTERVAL", 60 * 30))
 @dataclass
 class SQLInfo:
     """
-    Configuration object for a media type's popularity SQL info.
+    Configuration object for a media type's SQL info.
 
     Required Constructor Arguments:
 
