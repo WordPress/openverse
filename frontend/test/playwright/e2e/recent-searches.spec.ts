@@ -33,7 +33,8 @@ test("shows recent searches in reverse chronological order", async ({
     .locator(`[aria-label="Recent searches"]`)
     .locator('[role="option"]')
     .allTextContents()
-  searches.reverse().forEach((term, idx) => {
+  const searchesWithoutCurrent = searches.slice(0, -1)
+  searchesWithoutCurrent.reverse().forEach((term, idx) => {
     expect(recentList[idx].trim()).toEqual(term)
   })
 })
@@ -45,7 +46,7 @@ test("clicking takes user to that search", async ({ page }) => {
   await page.locator('input[type="search"]').click()
   await page
     .locator(`[aria-label="Recent searches"]`)
-    .locator('[id="option-1"]')
+    .getByRole("option", { name: "honey" })
     .click()
   await expect(getH1(page, /honey/i)).toBeVisible()
   expect(page.url()).toContain("?q=honey")
@@ -66,6 +67,9 @@ test("clicking Clear clears the recent searches", async ({ page }) => {
   // Click on the input to open the Recent searches
   await page.locator('input[type="search"]').click()
   await page.locator('[aria-label="Clear recent searches"]').click()
+  await expect(
+    page.locator('[aria-label="Clear recent searches"]')
+  ).toBeHidden()
   const recentSearchesText = await page
     .locator('[data-testid="recent-searches"]')
     .textContent()
