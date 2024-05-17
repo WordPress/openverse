@@ -482,7 +482,12 @@ class ProviderDataIngester(ABC):
 
         # Build a list of records from the response
         batch = self.get_batch_data(response_json)
-        self._verbose_log("Batch data:", batch)
+
+        self._verbose_log(
+            f"Got batch with {len(batch if batch else [])} items. The first items are:",
+            batch,
+            limit_batch_to=5,
+        )
 
         # Optionally, apply some logic to the response to determine whether
         # ingestion should continue or if should be short-circuited. By default
@@ -603,9 +608,11 @@ class ProviderDataIngester(ABC):
         logger.info(f"Committed {total} records")
         return total
 
-    def _verbose_log(self, msg: str, data: list = None):
-        if self._should_verbose_log:
-            logger.info(msg)
-            if data:
-                for item in data[:5]:
-                    logger.info(f"\t{item}")
+    def _verbose_log(self, msg: str, data: list = None, limit_batch_to: int = None):
+        if not self._should_verbose_log:
+            return
+        if data and not isinstance(data, dict):
+            if limit_batch_to is not None:
+                data = data[:limit_batch_to]
+            msg += "".join(f"\n\t{item}" for item in data)
+        logger.info(msg)
