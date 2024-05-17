@@ -29,12 +29,12 @@ CREATE TABLE public.audio (
     created_on timestamp with time zone NOT NULL,
     updated_on timestamp with time zone NOT NULL,
     identifier uuid NOT NULL,
-    foreign_identifier character varying(1000),
-    title character varying(2000),
-    foreign_landing_url character varying(1000),
-    creator character varying(2000),
-    creator_url character varying(2000),
-    url character varying(1000),
+    foreign_identifier text,
+    title text,
+    foreign_landing_url text,
+    creator text,
+    creator_url text,
+    url text,
     filesize integer,
     watermarked boolean,
     license character varying(50) NOT NULL,
@@ -53,9 +53,9 @@ CREATE TABLE public.audio (
     bit_rate integer,
     sample_rate integer,
     alt_files jsonb,
-    thumbnail character varying(1000),
-    filetype character varying(80),
-    audio_set_foreign_identifier character varying(1000)
+    thumbnail text,
+    filetype text,
+    audio_set_foreign_identifier text
 );
 
 

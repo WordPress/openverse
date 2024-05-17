@@ -21,10 +21,10 @@ CREATE TABLE public.audio (
     ingestion_type character varying(80),
     provider character varying(80),
     source character varying(80),
-    foreign_identifier character varying(3000),
-    foreign_landing_url character varying(1000),
-    url character varying(3000) NOT NULL,
-    thumbnail character varying(3000),
+    foreign_identifier text,
+    foreign_landing_url text,
+    url text NOT NULL,
+    thumbnail text,
     filetype character varying(5),
     duration integer,
     bit_rate integer,
@@ -37,16 +37,16 @@ CREATE TABLE public.audio (
     filesize integer,
     license character varying(50) NOT NULL,
     license_version character varying(25),
-    creator character varying(2000),
-    creator_url character varying(2000),
-    title character varying(5000),
+    creator text,
+    creator_url text,
+    title text,
     meta_data jsonb,
     tags jsonb,
     watermarked boolean,
     last_synced_with_source timestamp with time zone,
     removed_from_source boolean NOT NULL,
     standardized_popularity double precision,
-    audio_set_foreign_identifier character varying(1000)
+    audio_set_foreign_identifier text
 );
 
 
