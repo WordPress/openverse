@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import admin
 from django.contrib.auth.admin import GroupAdmin, UserAdmin
 from django.contrib.auth.models import Group, User
@@ -55,8 +56,9 @@ for klass in [
     admin.site.register(klass, MediaSubreportAdmin)
 
 # Temporary addition of model admin for decisions while this view gets built
-admin.site.register(ImageDecision, admin.ModelAdmin)
-admin.site.register(AudioDecision, admin.ModelAdmin)
+if settings.ENVIRONMENT != "production":
+    admin.site.register(ImageDecision, admin.ModelAdmin)
+    admin.site.register(AudioDecision, admin.ModelAdmin)
 
 
 @admin.register(ContentProvider)
