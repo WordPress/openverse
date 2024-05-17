@@ -13,6 +13,7 @@ from api.models.media import (
     AbstractDeletedMedia,
     AbstractMedia,
     AbstractMediaDecision,
+    AbstractMediaDecisionThrough,
     AbstractMediaList,
     AbstractMediaReport,
     AbstractSensitiveMedia,
@@ -342,9 +343,26 @@ class AudioDecision(AbstractMediaDecision):
 
     media_objs = models.ManyToManyField(
         to="Audio",
-        db_constraint=False,
+        through="AudioDecisionThrough",
         help_text="The audio items being moderated.",
     )
+
+
+class AudioDecisionThrough(AbstractMediaDecisionThrough):
+    """
+    Many-to-many reference table for audio decisions.
+
+    This is made explicit (rather than using Django's default) so that the audio can
+    be referenced by `identifier` rather than an arbitrary `id`.
+    """
+
+    media_obj = models.ForeignKey(
+        Audio,
+        to_field="identifier",
+        on_delete=models.CASCADE,
+        db_column="identifier",
+    )
+    decision = models.ForeignKey(AudioDecision, on_delete=models.CASCADE)
 
 
 class AudioList(AbstractMediaList):

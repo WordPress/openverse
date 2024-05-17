@@ -8,6 +8,7 @@ from api.models.media import (
     AbstractDeletedMedia,
     AbstractMedia,
     AbstractMediaDecision,
+    AbstractMediaDecisionThrough,
     AbstractMediaList,
     AbstractMediaReport,
     AbstractSensitiveMedia,
@@ -145,9 +146,26 @@ class ImageDecision(AbstractMediaDecision):
 
     media_objs = models.ManyToManyField(
         to="Image",
-        db_constraint=False,
+        through="ImageDecisionThrough",
         help_text="The image items being moderated.",
     )
+
+
+class ImageDecisionThrough(AbstractMediaDecisionThrough):
+    """
+    Many-to-many reference table for image decisions.
+
+    This is made explicit (rather than using Django's default) so that the image can
+    be referenced by `identifier` rather than an arbitrary `id`.
+    """
+
+    media_obj = models.ForeignKey(
+        Image,
+        to_field="identifier",
+        on_delete=models.CASCADE,
+        db_column="identifier",
+    )
+    decision = models.ForeignKey(ImageDecision, on_delete=models.CASCADE)
 
 
 class ImageList(AbstractMediaList):
