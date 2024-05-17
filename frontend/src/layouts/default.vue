@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="relative">
     <VSkipToContentButton />
     <div
       class="app h-dyn-screen grid grid-cols-1 grid-rows-[auto,1fr] flex-col bg-yellow"
