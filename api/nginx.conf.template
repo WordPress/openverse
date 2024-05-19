@@ -91,4 +91,12 @@ server {
         default_type "application/json";
         return 200 '{"release": "$DJANGO_NGINX_GIT_REVISION", "environment": "$DJANGO_NGINX_ENVIRONMENT"}';
     }
+
+    location /favicon.ico {
+        alias  /app/static/favicon.ico;
+    }
+
+    location /favicon.svg {
+        alias  /app/static/favicon.svg;
+    }
 }
