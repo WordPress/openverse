@@ -837,11 +837,11 @@ def test_excessive_recursion_in_post_process(
 @pytest.mark.django_db
 @cache_availability_params
 @pytest.mark.parametrize(
-    "excluded_count, result",
+    "enabled_count, result",
     [(2, Terms(source=["source1", "source2"])), (0, None)],
 )
 def test_get_enabled_sources_query_returns_available_sources(
-    excluded_count, result, is_cache_reachable, cache_name, request
+    enabled_count, result, is_cache_reachable, cache_name, request
 ):
     cache = request.getfixturevalue(cache_name)
 
@@ -850,10 +850,10 @@ def test_get_enabled_sources_query_returns_available_sources(
             key=ENABLED_SOURCES_CACHE_KEY,
             version=2,
             timeout=30,
-            value=[f"source{i + 1}" for i in range(excluded_count)],
+            value=[f"source{i + 1}" for i in range(enabled_count)],
         )
     else:
-        for i in range(excluded_count):
+        for i in range(enabled_count):
             ContentProviderFactory.create(
                 created_on=datetime.now(tz=timezone.utc),
                 provider_identifier=f"source{i + 1}",
