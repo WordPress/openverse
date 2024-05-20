@@ -29,7 +29,11 @@ const getValidatedLocales = async () => {
     code: locale.slug,
     dir: locale.textDirection || "ltr",
     file: `${locale.slug}.json`,
-    iso: locale.langCodeIso_639_1 ?? undefined,
+    iso:
+      locale.langCodeIso_639_1 ??
+      locale.langCodeIso_639_2 ??
+      locale.langCodeIso_639_3 ??
+      undefined,
 
     /* Custom fields */
 

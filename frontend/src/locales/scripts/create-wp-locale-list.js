@@ -7,7 +7,6 @@ This script extracts data for locales available in GlotPress and translate.wp.or
 const fs = require("fs")
 
 const axios = require("./axios")
-
 const { addFetchedTranslationStatus } = require("./get-translations-status")
 
 const base_url =
@@ -34,6 +33,8 @@ const createPropertyRePatterns = ({
     "english_name",
     "native_name",
     "lang_code_iso_639_1", // used for HTML lang attribute
+    "lang_code_iso_639_2", // used for HTML lang attribute, fallback from previous
+    "lang_code_iso_639_3", // used for HTML lang attribute, fallback from previous
     "slug", // unique identifier used by Nuxt i18n
     "text_direction",
   ],
@@ -49,12 +50,14 @@ function parseLocaleData(rawData) {
   const wpLocalePattern = /wp_locale *= *'(.*)';/
   const propertyRePatterns = createPropertyRePatterns()
   const wpLocaleMatch = rawData.match(wpLocalePattern)
+
   // ugly check to exclude English from the locales list,
   // so we don't overwrite `en.json` later. See `get-translations.js`
   // to check how `en.json` file is created.
   if (wpLocaleMatch && wpLocaleMatch[1] !== "en_US") {
     const wpLocale = wpLocaleMatch[1]
     const data = {}
+
     Object.keys(propertyRePatterns).forEach((key) => {
       const pattern = propertyRePatterns[key]
       const value = rawData.match(pattern)
@@ -66,6 +69,7 @@ function parseLocaleData(rawData) {
         data[camelCasedPropName] = value[1]
       }
     })
+
     return [wpLocale, data]
   }
 }
