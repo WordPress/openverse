@@ -29,6 +29,9 @@ const getValidatedLocales = async () => {
     code: locale.slug,
     dir: locale.textDirection || "ltr",
     file: `${locale.slug}.json`,
+    // Check for a language in all three versions of the ISO 639 spec,
+    // defaulting to the v1 two-character codes before checking for the
+    // three-character codes in the v2 and v3 specs.
     iso:
       locale.langCodeIso_639_1 ??
       locale.langCodeIso_639_2 ??
