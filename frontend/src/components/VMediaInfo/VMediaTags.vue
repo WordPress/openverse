@@ -10,18 +10,17 @@
       />
     </div>
     <div v-if="tagsByType.generated.length > 0">
-      <h3 id="generated-tags" class="label-regular mb-2 flex flex-row">
-        {{ $t("mediaDetails.tags.generated.heading") }}
-        <VTooltip placement="right" described-by="#generated-tags" class="ms-1">
-          <template #default
-            ><p
-              class="caption-regular rounded-sm bg-dark-charcoal px-2 py-1 text-white"
-            >
-              {{ $t("mediaDetails.tags.generated.tooltip") }}
-            </p>
-          </template>
-        </VTooltip>
-      </h3>
+      <div class="flex gap-2">
+        <h3
+          id="generated-tags"
+          class="label-regular align-start mb-2 flex flex-row"
+        >
+          {{ $t("mediaDetails.tags.generated.heading") }}
+        </h3>
+        <VLink class="label-regular" :href="generatedTagsPath">{{
+          $t("mediaDetails.tags.generated.pageTitle")
+        }}</VLink>
+      </div>
       <VCollapsibleTagSection
         :media-type="mediaType"
         :tags="tagsByType.generated"
@@ -32,16 +31,17 @@
 
 <script lang="ts">
 import { computed, defineComponent, type PropType } from "vue"
+import { useContext } from "@nuxtjs/composition-api"
 
 import type { SupportedMediaType } from "~/constants/media"
 import type { Tag } from "~/types/media"
 
 import VCollapsibleTagSection from "~/components/VMediaInfo/VCollapsibleTagSection.vue"
-import VTooltip from "~/components/VTooltip/VTooltip.vue"
+import VLink from "~/components/VLink.vue"
 
 export default defineComponent({
   name: "VMediaTags",
-  components: { VTooltip, VCollapsibleTagSection },
+  components: { VCollapsibleTagSection, VLink },
   props: {
     tags: {
       type: Array as PropType<Tag[]>,
@@ -73,7 +73,11 @@ export default defineComponent({
       return { generated: generatedTags, source: sourceTags }
     })
 
-    return { tagsByType }
+    const { app } = useContext()
+
+    const generatedTagsPath = computed(() => app.localePath("/generated-tags"))
+
+    return { generatedTagsPath, tagsByType }
   },
 })
 </script>
