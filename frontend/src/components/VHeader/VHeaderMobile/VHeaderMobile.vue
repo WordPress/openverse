@@ -5,7 +5,6 @@
   >
     <VInputModal
       class="flex w-full"
-      variant="recent-searches"
       :is-active="isRecentVisible"
       :aria-label="$t('recentSearches.heading').toString()"
       @close="deactivate"
