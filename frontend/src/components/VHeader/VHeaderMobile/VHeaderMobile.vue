@@ -6,17 +6,17 @@
     <VInputModal
       class="flex w-full"
       variant="recent-searches"
-      :is-active="isRecentSearchesModalOpen"
+      :is-active="isRecentVisible"
       :aria-label="$t('recentSearches.heading').toString()"
       @close="deactivate"
     >
-      <div class="flex w-full" :class="{ 'px-3': isRecentSearchesModalOpen }">
+      <div class="flex w-full" :class="{ 'px-3': isRecentVisible }">
         <!-- Form action is a fallback for when JavaScript is disabled. -->
         <form
           action="/search"
           class="search-bar group flex h-12 w-full flex-row items-center overflow-hidden rounded-sm"
           :class="
-            searchBarIsActive || isInputFocused
+            isSearchBarActive || isInputFocused
               ? 'bg-white ring ring-pink'
               : 'bg-dark-charcoal-06'
           "
@@ -24,12 +24,12 @@
         >
           <slot name="start">
             <VLogoButton
-              v-show="!isRecentSearchesModalOpen"
+              v-show="!isRecentVisible"
               :is-fetching="isFetching"
               class="focus-visible:me-1.5px focus-visible:ms-1.5px focus-visible:!h-[45px] focus-visible:max-w-[45px]"
             />
             <VSearchBarButton
-              v-show="isRecentSearchesModalOpen"
+              v-show="isRecentVisible"
               icon="chevron-back"
               :label="$t('header.backButton')"
               :rtl-flip="true"
@@ -54,21 +54,22 @@
             "
             autocomplete="off"
             role="combobox"
-            aria-autocomplete="none"
-            :aria-expanded="isRecentSearchesModalOpen"
+            aria-autocomplete="list"
+            :aria-expanded="isRecentVisible ? 'true' : 'false'"
+            aria-owns="recent-searches-list"
             aria-controls="recent-searches-list"
             :aria-activedescendant="
-              selectedIdx !== undefined ? `option-${selectedIdx}` : undefined
+              selectedIdx === undefined ? undefined : `option-${selectedIdx}`
             "
             @input="updateSearchText"
-            @focus="handleInputFocus"
             @keydown="handleInputKeydown"
+            @focus="handleInputFocus"
             @focusout="handleInputBlur"
             @click="handleInputClick"
           />
           <slot>
             <VSearchBarButton
-              v-show="isRecentSearchesModalOpen && searchTerm"
+              v-show="isRecentVisible && searchTerm"
               icon="close-small"
               :label="$t('browsePage.searchForm.clear')"
               inner-area-classes="bg-white hover:bg-dark-charcoal-10"
@@ -76,13 +77,13 @@
               @keydown.tab.exact="handleClearButtonTab"
             />
             <span
-              v-show="!searchBarIsActive && searchStatus"
+              v-show="!isSearchBarActive && searchStatus"
               class="info mx-4 hidden whitespace-nowrap text-xs group-hover:text-dark-charcoal group-focus:text-dark-charcoal md:flex"
             >
               {{ searchStatus }}
             </span>
             <VContentSettingsButton
-              v-show="!searchBarIsActive"
+              v-show="!isRecentVisible"
               ref="contentSettingsButtonRef"
               :is-pressed="contentSettingsOpen"
               :applied-filter-count="appliedFilterCount"
@@ -92,7 +93,7 @@
               @keydown.tab.exact="handleTabOut('forward')"
             />
             <VContentSettingsModalContent
-              v-show="!isRecentSearchesModalOpen"
+              v-show="!isRecentVisible"
               variant="two-thirds"
               :visible="contentSettingsOpen"
               :is-fetching="isFetching"
@@ -105,7 +106,7 @@
       </div>
       <ClientOnly>
         <VRecentSearches
-          v-show="isRecentSearchesModalOpen"
+          v-show="isRecentVisible"
           ref="recentSearchesRef"
           :selected-idx="selectedIdx"
           :entries="entries"
@@ -113,7 +114,6 @@
           class="mt-4"
           @select="handleSelect"
           @clear="handleClear"
-          @clear-single="handleClear($event)"
           @last-tab="handleTabOut('forward')"
         />
       </ClientOnly>
@@ -131,17 +131,14 @@ import {
   getAllTabbableIn,
   getFirstTabbableIn,
 } from "~/utils/reakit-utils/focus"
-import { cyclicShift } from "~/utils/math"
-
-import { keycodes } from "~/constants/key-codes"
 
 import { useDialogControl } from "~/composables/use-dialog-control"
 import { useSearch } from "~/composables/use-search"
+import { useHydrating } from "~/composables/use-hydrating"
+import { useRecentSearches } from "~/composables/use-recent-searches"
 
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
-
-import { useHydrating } from "~/composables/use-hydrating"
 
 import { skipToContentTargetId } from "~/constants/window"
 
@@ -183,8 +180,7 @@ export default defineComponent({
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
 
-    const searchBarIsActive = ref(false)
-    const isRecentSearchesModalOpen = ref(false)
+    const isSearchBarActive = ref(false)
     const isInputFocused = ref(false)
     const contentSettingsOpen = ref(false)
 
@@ -197,8 +193,6 @@ export default defineComponent({
      */
     const selection = ref<{ start: number; end: number }>({ start: 0, end: 0 })
 
-    const entries = computed(() => searchStore.recentSearchEntries)
-
     const { $sendCustomEvent } = useContext()
     const { updateSearchState, searchTerm, searchStatus } =
       useSearch($sendCustomEvent)
@@ -210,7 +204,7 @@ export default defineComponent({
       input.selectionEnd = selection.value.end
     }
 
-    const handleSearch = async () => {
+    const handleSearch = () => {
       window.scrollTo({ top: 0, left: 0, behavior: "auto" })
       updateSearchState()
       deactivate()
@@ -221,9 +215,9 @@ export default defineComponent({
      */
     const activate = () => {
       isInputFocused.value = true
-      searchBarIsActive.value = true
-      if (!isRecentSearchesModalOpen.value) {
-        openRecentSearchesModal()
+      isSearchBarActive.value = true
+      if (!recent.isVisible.value) {
+        recent.show()
       }
     }
 
@@ -232,27 +226,8 @@ export default defineComponent({
      */
     const deactivate = () => {
       isInputFocused.value = false
-      searchBarIsActive.value = false
-      closeRecentSearchesModal()
-    }
-
-    /**
-     * Focus the search bar when opening the modal.
-     * `nextTick` is necessary to ensure focus in Firefox
-     */
-    const openRecentSearchesModal = () => {
-      isRecentSearchesModalOpen.value = true
-      nextTick(() => focusInput())
-    }
-
-    /**
-     * Revert the search term to the existing value if the entered value is blank.
-     */
-    const closeRecentSearchesModal = () => {
-      isRecentSearchesModalOpen.value = false
-      if (searchTerm.value === "" && searchStore.searchTerm !== "") {
-        searchTerm.value = searchStore.searchTerm
-      }
+      isSearchBarActive.value = false
+      recent.hide()
     }
 
     /**
@@ -260,7 +235,8 @@ export default defineComponent({
      * This is necessary because when opening the recent search modal,
      * the input field is blurred and focused again.
      */
-    const updateSelection = (inputElement: HTMLInputElement) => {
+    const updateSelection = () => {
+      const inputElement = searchInputRef.value as HTMLInputElement
       const lastPos =
         inputElement.value.length > 0 ? inputElement.value.length - 1 : 0
       selection.value = {
@@ -276,11 +252,10 @@ export default defineComponent({
      * On the `input` event, update the search term and the selection range,
      * and activate the search bar.
      */
-    const updateSearchText = (event: Event) => {
-      const inputElement = event.target as HTMLInputElement
-      searchTerm.value = inputElement.value
-      updateSelection(inputElement)
-      if (isInputFocused.value && !searchBarIsActive.value) {
+    const updateSearchText = () => {
+      searchTerm.value = (searchInputRef.value as HTMLInputElement).value
+      updateSelection()
+      if (isInputFocused.value && !isSearchBarActive.value) {
         activate()
       }
     }
@@ -290,79 +265,22 @@ export default defineComponent({
       focusInput()
     }
 
-    /**
-     * Refers to the current suggestion that has visual focus (not DOM focus)
-     * and is the active descendant. This should be set to `undefined` when the
-     * visual focus is on the input field.
-     */
-    const selectedIdx = ref<number | undefined>(undefined)
-    const handleVerticalArrows = (event: KeyboardEvent) => {
-      event.preventDefault() // Prevent the cursor from moving horizontally.
-      const { key, altKey } = event
-      // Show the recent searches.
-      openRecentSearchesModal()
-      if (altKey) {
-        return
-      }
-      // Shift selection (if Alt was not pressed with arrow keys)
-      let defaultValue: number
-      let offset: number
-      if (key == keycodes.ArrowUp) {
-        defaultValue = 0
-        offset = -1
-      } else {
-        defaultValue = -1
-        offset = 1
-      }
-      selectedIdx.value = cyclicShift(
-        selectedIdx.value ?? defaultValue,
-        offset,
-        0,
-        entries.value.length
-      )
-    }
-    const handleOtherKeys = (event: KeyboardEvent) => {
-      const { key } = event
-      if (key === keycodes.Enter && selectedIdx.value) {
-        // If a recent search is selected, populate its value into the input.
-        searchTerm.value = entries.value[selectedIdx.value]
-      }
-      if (([keycodes.Escape] as string[]).includes(key)) {
-        // Hide the recent searches.
-        closeRecentSearchesModal()
-      }
-      if (key === keycodes.Tab) {
-        // Keep `focused` as true when the user tabs out of the input.
-        isInputFocused.value = false
-      }
-      if (
-        !isRecentSearchesModalOpen.value &&
-        (key === keycodes.ArrowRight || key === keycodes.ArrowLeft)
-      ) {
-        // Open recent searches when the user navigates horizontally.
-        openRecentSearchesModal()
-      }
-
-      selectedIdx.value = undefined // Lose visual focus from entries.
-    }
-
-    const handleInputKeydown = (event: KeyboardEvent) => {
-      const { key } = event
-      return ([keycodes.ArrowUp, keycodes.ArrowDown] as string[]).includes(key)
-        ? handleVerticalArrows(event)
-        : handleOtherKeys(event)
-    }
-    /* Populate the input with the clicked entry and execute the search. */
-    const handleSelect = (idx: number) => {
-      searchTerm.value = entries.value[idx]
-      closeRecentSearchesModal()
-      selectedIdx.value = undefined // Lose visual focus from entries.
-      handleSearch() // Immediately execute the search manually.
-    }
+    const {
+      handleKeydown: handleInputKeydown,
+      handleSelect,
+      handleClear,
+      recent,
+    } = useRecentSearches({
+      handleSearch,
+      focusInput,
+      term: searchTerm,
+      isMobile: true,
+      isInputFocused,
+    })
 
     const handleInputFocus = () => (isInputFocused.value = true)
     const handleInputBlur = () => {
-      if (!isRecentSearchesModalOpen.value && isInputFocused.value) {
+      if (!recent.isVisible.value && isInputFocused.value) {
         deactivate()
       }
     }
@@ -383,20 +301,11 @@ export default defineComponent({
     /**
      * When activating the search bar by clicking, preserve the cursor position.
      */
-    const handleInputClick = (event: Event) => {
-      if (!searchBarIsActive.value) {
-        updateSelection(event.target as HTMLInputElement)
+    const handleInputClick = () => {
+      if (!isSearchBarActive.value) {
+        updateSelection()
         activate()
       }
-    }
-
-    /**
-     * Clear recent searches from the store. Removes a single entry
-     * if entry is provided, otherwise removes all recent searches.
-     */
-    const handleClear = (entry?: string) => {
-      searchStore.clearRecentSearches(entry)
-      focusInput()
     }
 
     /**
@@ -404,7 +313,8 @@ export default defineComponent({
      * (clear button when there are no recent searches).
      */
     const handleClearButtonTab = () => {
-      if (!entries.value.length) {
+      if (!recent.entries.value.length) {
+        console.log("calling handle tab out")
         handleTabOut("forward")
       }
     }
@@ -462,7 +372,7 @@ export default defineComponent({
 
       searchStatus,
       searchTerm,
-      searchBarIsActive,
+      isSearchBarActive,
       deactivate,
       handleInputFocus,
       handleInputBlur,
@@ -473,9 +383,9 @@ export default defineComponent({
       updateSearchText,
       handleSearch,
 
-      isRecentSearchesModalOpen,
-      selectedIdx,
-      entries,
+      isRecentVisible: recent.isVisible,
+      selectedIdx: recent.selectedIdx,
+      entries: recent.entries,
       handleSelect,
       handleClear,
       handleClearButtonTab,

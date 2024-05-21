@@ -93,7 +93,7 @@ export default defineComponent({
         autoFocusOnHideRef: ref(false),
         hideOnClickOutsideRef: ref(false),
         hideOnEscRef: ref(true),
-        trapFocusRef: ref(false),
+        trapFocusRef: ref(true),
       },
       visibleRef: toRef(props, "isActive"),
       hideRef: ref(close),

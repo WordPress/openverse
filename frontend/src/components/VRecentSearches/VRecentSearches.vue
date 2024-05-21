@@ -19,7 +19,6 @@
         size="small"
         :aria-label="$t('recentSearches.clear.label').toString()"
         @click="handleClear()"
-        @keydown.tab="$emit('last-tab')"
       >
         {{ $t("recentSearches.clear.text") }}
       </VButton>
@@ -53,6 +52,7 @@
           class="ms-auto group-hover/entry:flex"
           :class="{ hidden: bordered }"
           @click.stop="handleClear(entry)"
+          @keydown.tab.exact="handleTab(idx)"
         />
       </li>
       <!-- eslint-enable -->
@@ -116,17 +116,23 @@ export default defineComponent({
     clear: defineEvent<[string?]>(),
     "last-tab": defineEvent(),
   },
-  setup(_, { emit }) {
+  setup(props, { emit }) {
     const handleClick = (idx: number) => {
       emit("select", idx)
     }
     const handleClear = (entry?: string) => {
       emit("clear", entry)
     }
+    const handleTab = (idx: number) => {
+      if (idx === props.entries.length - 1) {
+        emit("last-tab")
+      }
+    }
 
     return {
       handleClick,
       handleClear,
+      handleTab,
     }
   },
 })

@@ -148,12 +148,6 @@ export const useSearchStore = defineStore("search", {
     state.recentSearches = useStorage<string[]>("recent-searches", [])
   },
   getters: {
-    /**
-     * Returns the list of recent search terms, excluding the current search term.
-     */
-    recentSearchEntries(state) {
-      return state.recentSearches.filter((entry) => entry !== state.searchTerm)
-    },
     filterCategories(state) {
       return Object.keys(state.filters) as FilterCategory[]
     },
