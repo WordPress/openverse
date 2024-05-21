@@ -17,6 +17,7 @@ logs/
 # Python environments
 env/
 venv/
+.venv/
 pip-log.txt
 
 # Python
