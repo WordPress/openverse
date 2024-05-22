@@ -38,7 +38,7 @@
       <VSearchButton
         type="submit"
         route="search"
-        @keydown.tab="handleSearchBlur"
+        @keydown.tab.exact="handleSearchBlur"
       />
     </form>
     <ClientOnly>
@@ -57,7 +57,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, ref } from "vue"
+import { computed, defineComponent, PropType, ref, watch } from "vue"
 
 import { onClickOutside } from "@vueuse/core"
 
@@ -102,6 +102,7 @@ export default defineComponent({
   emits: {
     input: defineEvent<[string]>(),
     submit: defineEvent(),
+    "recent-hidden": defineEvent(),
   },
   setup(props, { emit }) {
     const searchBarEl = ref<HTMLElement | null>(null)
@@ -141,12 +142,17 @@ export default defineComponent({
 
     const { handleKeydown, handleSelect, handleClear, recent } =
       useRecentSearches({
-        handleSearch,
         focusInput,
         term: modelMedium,
         isMobile: false,
       })
     onClickOutside(searchBarEl, recent.hide)
+
+    watch(recent.isVisible, (isVisible) => {
+      if (!isVisible) {
+        emit("recent-hidden")
+      }
+    })
 
     return {
       searchBarEl,

@@ -7,7 +7,7 @@
       class="flex w-full"
       :is-active="isRecentVisible"
       :aria-label="$t('recentSearches.heading').toString()"
-      @close="deactivate"
+      @close="hideRecentSearches"
     >
       <div class="flex w-full" :class="{ 'px-3': isRecentVisible }">
         <!-- Form action is a fallback for when JavaScript is disabled. -->
@@ -19,7 +19,7 @@
               ? 'bg-white ring ring-pink'
               : 'bg-dark-charcoal-06'
           "
-          @submit.prevent="handleSearch"
+          @submit.prevent="handleFormSubmit"
         >
           <slot name="start">
             <VLogoButton
@@ -33,7 +33,7 @@
               :label="$t('header.backButton')"
               :rtl-flip="true"
               variant="filled-gray"
-              @click="deactivate"
+              @click="hideRecentSearches"
               @keydown.shift.tab="handleTabOut('backward')"
             />
           </slot>
@@ -45,7 +45,7 @@
             :placeholder="$t('hero.search.placeholder').toString()"
             type="search"
             class="search-field ms-1 h-full w-full flex-grow appearance-none rounded-none border-tx bg-tx text-2xl text-dark-charcoal-70 placeholder-dark-charcoal-70 hover:text-dark-charcoal hover:placeholder-dark-charcoal focus-visible:outline-none"
-            :value="searchTerm"
+            :value="localSearchTerm"
             :aria-label="
               $t('search.searchBarLabel', {
                 openverse: 'Openverse',
@@ -68,7 +68,7 @@
           />
           <slot>
             <VSearchBarButton
-              v-show="isRecentVisible && searchTerm"
+              v-show="isRecentVisible && localSearchTerm"
               icon="close-small"
               :label="$t('browsePage.searchForm.clear')"
               inner-area-classes="bg-white hover:bg-dark-charcoal-10"
@@ -121,7 +121,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, nextTick, ref } from "vue"
+import { computed, defineComponent, nextTick, ref, watch } from "vue"
 import { useContext } from "@nuxtjs/composition-api"
 import { onClickOutside } from "@vueuse/core"
 
@@ -195,6 +195,7 @@ export default defineComponent({
     const { $sendCustomEvent } = useContext()
     const { updateSearchState, searchTerm, searchStatus } =
       useSearch($sendCustomEvent)
+    const localSearchTerm = ref(searchTerm.value)
 
     const focusInput = () => {
       const input = searchInputRef.value as HTMLInputElement
@@ -203,10 +204,16 @@ export default defineComponent({
       input.selectionEnd = selection.value.end
     }
 
+    const handleFormSubmit = () => {
+      if (localSearchTerm.value && localSearchTerm.value !== searchTerm.value) {
+        searchTerm.value = localSearchTerm.value
+      }
+      recent.hide()
+      handleSearch()
+    }
     const handleSearch = () => {
       window.scrollTo({ top: 0, left: 0, behavior: "auto" })
       updateSearchState()
-      deactivate()
     }
 
     /**
@@ -220,13 +227,10 @@ export default defineComponent({
       }
     }
 
-    /**
-     * Deactivate the search bar and close the recent searches modal.
-     */
+    /** Deactivate the search bar */
     const deactivate = () => {
       isInputFocused.value = false
       isSearchBarActive.value = false
-      recent.hide()
     }
 
     /**
@@ -252,7 +256,7 @@ export default defineComponent({
      * and activate the search bar.
      */
     const updateSearchText = () => {
-      searchTerm.value = (searchInputRef.value as HTMLInputElement).value
+      localSearchTerm.value = (searchInputRef.value as HTMLInputElement).value
       updateSelection()
       if (isInputFocused.value && !isSearchBarActive.value) {
         activate()
@@ -260,7 +264,7 @@ export default defineComponent({
     }
 
     const clearSearchText = () => {
-      searchTerm.value = ""
+      localSearchTerm.value = ""
       focusInput()
     }
 
@@ -270,11 +274,20 @@ export default defineComponent({
       handleClear,
       recent,
     } = useRecentSearches({
-      handleSearch,
       focusInput,
-      term: searchTerm,
+      term: localSearchTerm,
       isMobile: true,
       isInputFocused,
+    })
+
+    watch(recent.isVisible, (isVisible) => {
+      if (!isVisible) {
+        deactivate()
+        if (localSearchTerm.value !== searchTerm.value) {
+          searchTerm.value = localSearchTerm.value
+          handleSearch()
+        }
+      }
     })
 
     const handleInputFocus = () => (isInputFocused.value = true)
@@ -313,7 +326,6 @@ export default defineComponent({
      */
     const handleClearButtonTab = () => {
       if (!recent.entries.value.length) {
-        console.log("calling handle tab out")
         handleTabOut("forward")
       }
     }
@@ -324,7 +336,7 @@ export default defineComponent({
      * @param direction
      */
     const handleTabOut = (direction: "forward" | "backward") => {
-      deactivate()
+      recent.hide()
       nextTick().then(() => {
         let element =
           direction === "forward"
@@ -370,7 +382,7 @@ export default defineComponent({
       toggleContentSettings,
 
       searchStatus,
-      searchTerm,
+      localSearchTerm,
       isSearchBarActive,
       deactivate,
       handleInputFocus,
@@ -381,10 +393,12 @@ export default defineComponent({
       clearSearchText,
       updateSearchText,
       handleSearch,
+      handleFormSubmit,
 
       isRecentVisible: recent.isVisible,
       selectedIdx: recent.selectedIdx,
       entries: recent.entries,
+      hideRecentSearches: recent.hide,
       handleSelect,
       handleClear,
       handleClearButtonTab,

@@ -24,13 +24,11 @@ export const updateIndexOnVerticalArrow = (
 }
 
 export const useRecentSearches = ({
-  handleSearch,
   focusInput,
   term,
   isMobile,
   isInputFocused,
 }: {
-  handleSearch: () => void
   focusInput: () => void
   term: Ref<string>
   isMobile: boolean
@@ -134,7 +132,6 @@ export const useRecentSearches = ({
     term.value = entries.value[idx]
     hideRecentSearches()
     selectedIdx.value = undefined // Lose visual focus from entries.
-    handleSearch() // Immediately execute the search manually.
   }
 
   /**
