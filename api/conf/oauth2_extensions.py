@@ -1,4 +1,7 @@
-from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.exceptions import (
+    AuthenticationFailed,
+    PermissionDenied,
+)
 
 from drf_spectacular.authentication import TokenScheme
 from oauth2_provider.contrib.rest_framework import (
@@ -11,7 +14,7 @@ class OAuth2Authentication(BaseOAuth2Authentication):
     keyword = "Bearer"
 
     def authenticate(self, request):
-        result = super().authenticate(request)
+        user_auth_tuple = super().authenticate(request)
         if getattr(request, "oauth2_error", None):
             # oauth2_error is only defined on requests that had errors
             # it will be undefined or empty for anonymous requests and
@@ -19,7 +22,16 @@ class OAuth2Authentication(BaseOAuth2Authentication):
             # `request` is mutated by `super().authenticate`
             raise AuthenticationFailed()
 
-        return result
+        # if this is an authed request, check and
+        # deny access if client's access has been
+        # revoked.
+        if user_auth_tuple is not None:
+            user, auth = user_auth_tuple
+            if application := getattr(auth, "application", None):
+                if application.revoked:
+                    raise PermissionDenied()
+
+        return user_auth_tuple
 
 
 class OAuth2OpenApiAuthenticationExtension(TokenScheme):
