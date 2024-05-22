@@ -13,10 +13,38 @@ from elasticsearch import NotFoundError
 from elasticsearch_dsl import Search
 from openverse_attribution.license import License
 
-from api.models import PENDING
+from api.models import (
+    PENDING,
+    Audio,
+    AudioReport,
+    Image,
+    ImageReport,
+)
+from api.models.audio import AudioDecision
+from api.models.image import ImageDecision
+from api.models.media import AbstractDeletedMedia, AbstractSensitiveMedia
 
 
 logger = structlog.get_logger(__name__)
+
+
+def register(site):
+    site.register(Image, ImageListViewAdmin)
+    site.register(Audio, AudioListViewAdmin)
+
+    site.register(AudioReport, AudioReportAdmin)
+    site.register(ImageReport, ImageReportAdmin)
+
+    for klass in [
+        *AbstractSensitiveMedia.__subclasses__(),
+        *AbstractDeletedMedia.__subclasses__(),
+    ]:
+        site.register(klass, MediaSubreportAdmin)
+
+    # Temporary addition of model admin for decisions while this view gets built
+    if settings.ENVIRONMENT != "production":
+        site.register(ImageDecision, admin.ModelAdmin)
+        site.register(AudioDecision, admin.ModelAdmin)
 
 
 def _production_deferred(*values: str) -> Sequence[str]:
