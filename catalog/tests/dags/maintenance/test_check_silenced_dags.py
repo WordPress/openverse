@@ -110,7 +110,7 @@ p = pytest.param
 def test_check_configuration(silenced_dags, dags_to_reenable, should_send_alert):
     with (
         mock.patch(
-            "maintenance.check_silenced_dags.Variable",
+            "maintenance.check_silenced_dags.Variable.get",
             return_value=silenced_dags,
         ),
         mock.patch(
@@ -122,7 +122,12 @@ def test_check_configuration(silenced_dags, dags_to_reenable, should_send_alert)
     ):
         message = check_configuration("not_set", "my_variable")
         assert send_alert_mock.called == should_send_alert
-        assert get_dags_with_closed_issues_mock.called_with("not_set", silenced_dags)
+        (
+            get_dags_with_closed_issues_mock.assert_called_with(
+                "not_set", silenced_dags
+            ),
+            get_dags_with_closed_issues_mock.call_args_list,
+        )
 
         # Called with correct dag_ids
         for dag_id, issue_url, predicate in dags_to_reenable:

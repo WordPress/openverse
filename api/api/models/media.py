@@ -1,5 +1,5 @@
-import logging
 import mimetypes
+from textwrap import dedent
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -7,13 +7,13 @@ from django.db import models
 from django.urls import reverse
 from django.utils.html import format_html
 
+import structlog
 from elasticsearch import Elasticsearch, NotFoundError
+from openverse_attribution.license import License
 
 from api.constants.moderation import DecisionAction
 from api.models.base import OpenLedgerModel
 from api.models.mixins import ForeignIdentifierMixin, IdentifierMixin, MediaMixin
-from api.utils.attribution import get_attribution_text
-from api.utils.licenses import get_license_url
 
 
 PENDING = "pending_review"
@@ -25,7 +25,7 @@ MATURE = "mature"
 DMCA = "dmca"
 OTHER = "other"
 
-parent_logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 
 class AbstractMedia(
@@ -43,7 +43,11 @@ class AbstractMedia(
         define one explicitly.
     """
 
-    watermarked = models.BooleanField(blank=True, null=True)
+    watermarked = models.BooleanField(
+        blank=True,
+        null=True,
+        help_text="Whether the media contains a watermark. Not currently leveraged.",
+    )
 
     license = models.CharField(
         max_length=50,
@@ -65,19 +69,35 @@ class AbstractMedia(
         "Source and provider can be different. Eg: the Google Open "
         "Images dataset is source=openimages, but provider=flickr.",
     )
-    last_synced_with_source = models.DateTimeField(blank=True, null=True, db_index=True)
-    removed_from_source = models.BooleanField(default=False)
-
-    view_count = models.IntegerField(
+    last_synced_with_source = models.DateTimeField(
         blank=True,
         null=True,
-        default=0,
+        db_index=True,
+        help_text="The date the media was last updated from the upstream source.",
+    )
+    removed_from_source = models.BooleanField(
+        default=False,
+        help_text="Whether the media has been removed from the upstream source.",
+    )
+
+    view_count = models.IntegerField(
+        blank=True, null=True, default=0, help_text="Vestigial field, purpose unknown."
     )
 
     tags = models.JSONField(
         blank=True,
         null=True,
-        help_text="Tags with detailed metadata, such as accuracy.",
+        help_text=dedent("""
+        JSON array of objects containing tags for the media. Each tag object
+        is expected to have:
+
+        - `name`: The tag itself (e.g. "dog")
+        - `provider`: The source of the tag
+        - `accuracy`: If the tag was added using a machine-labeler, the confidence
+        for that label expressed as a value between 0 and 1.
+
+        Note that only `name` and `accuracy` are presently surfaced in API results.
+        """),
     )
 
     category = models.CharField(
@@ -88,28 +108,43 @@ class AbstractMedia(
         help_text="The top-level classification of this media file.",
     )
 
-    meta_data = models.JSONField(blank=True, null=True)
+    meta_data = models.JSONField(
+        blank=True,
+        null=True,
+        help_text=dedent("""
+        JSON object containing extra data about the media item. No fields are expected,
+        but if the `license_url` field is available, it will be used for determining
+        the license URL for the media item. The `description` field, if available, is
+        also indexed into Elasticsearch and as a search field on queries.
+        """),
+    )
 
     @property
-    def license_url(self) -> str:
+    def license_url(self) -> str | None:
         """A direct link to the license deed or legal terms."""
 
         if self.meta_data and (url := self.meta_data.get("license_url")):
             return url
-        else:
-            return get_license_url(self.license.lower(), self.license_version)
+        try:
+            return License(self.license.lower(), self.license_version).url
+        except ValueError:
+            return None
 
     @property
-    def attribution(self) -> str:
+    def attribution(self) -> str | None:
         """Legally valid attribution for the media item in plain-text English."""
 
-        return get_attribution_text(
-            self.title,
-            self.creator,
-            self.license.lower(),
-            self.license_version,
-            self.license_url,
-        )
+        try:
+            return License(
+                self.license.lower(),
+                self.license_version,
+            ).get_attribution_text(
+                self.title,
+                self.creator,
+                self.license_url,
+            )
+        except ValueError:
+            return None
 
     class Meta:
         """
@@ -211,7 +246,7 @@ class AbstractMediaReport(models.Model):
                 f"with identifier '{self.media_obj_id}'."
             )
 
-    def url(self, request=None) -> str:
+    def media_url(self, request=None) -> str:
         """
         Build the URL of the media item. This uses ``reverse`` and
         ``request.build_absolute_uri`` to build the URL without having to worry
@@ -227,6 +262,10 @@ class AbstractMediaReport(models.Model):
         )
         if request is not None:
             url = request.build_absolute_uri(url)
+        return url
+
+    def url(self, request=None) -> str:
+        url = self.media_url(request)
         return format_html(f"<a href={url}>{url}</a>")
 
     @property
@@ -266,7 +305,7 @@ class AbstractMediaDecision(OpenLedgerModel):
 
     media_objs = models.ManyToManyField(
         to="AbstractMedia",
-        db_constraint=False,
+        through="AbstractMediaDecisionThrough",
         help_text="The media items being moderated.",
     )
     """
@@ -293,6 +332,29 @@ class AbstractMediaDecision(OpenLedgerModel):
     # TODO: Implement ``clean`` and ``save``, if needed.
 
 
+class AbstractMediaDecisionThrough(models.Model):
+    """
+    Generic model for the many-to-many reference table between media and decisions.
+
+    This is made explicit (rather than using Django's default) so that the media can
+    be referenced by `identifier` rather than an arbitrary `id`.
+    """
+
+    media_class: type[models.Model] = None
+    """the model class associated with this media type e.g. ``Image`` or ``Audio``"""
+
+    media_obj = models.ForeignKey(
+        AbstractMedia,
+        to_field="identifier",
+        on_delete=models.CASCADE,
+        db_column="identifier",
+    )
+    decision = models.ForeignKey(AbstractMediaDecision, on_delete=models.CASCADE)
+
+    class Meta:
+        abstract = True
+
+
 class PerformIndexUpdateMixin:
     @property
     def indexes(self):
@@ -305,7 +367,6 @@ class PerformIndexUpdateMixin:
         Automatically handles ``DoesNotExist`` warnings, forces a refresh,
         and calls the method for origin and filtered indexes.
         """
-        logger = parent_logger.getChild("PerformIndexUpdateMixin._perform_index_update")
         es: Elasticsearch = settings.ES
 
         try:

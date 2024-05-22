@@ -6,7 +6,7 @@ ETL Process:            Use the API to identify all CC licensed media.
 Output:                 TSV file containing the media and the
                         respective meta-data.
 
-Notes:                  Documentation: https://ccmixter.org/query-api
+Notes:                  Documentation: <https://ccmixter.org/query-api>
                         ccMixter sends bad JSON and extremely huge headers, both
                         of which need workarounds that are handled by this DAG.
 """
@@ -112,7 +112,7 @@ class CcMixterDataIngester(ProviderDataIngester):
             delay=self.delay, headers=self.headers
         )
 
-    def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
+    def get_next_query_params(self, prev_query_params: dict | None) -> dict:
         if not prev_query_params:
             # This means this is the first request, so we start with offset 0.
             return {

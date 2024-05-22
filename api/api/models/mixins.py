@@ -32,11 +32,10 @@ class ForeignIdentifierMixin(models.Model):
 
     This mixin adds
 
-    - foreign_identifier: CharField
+    - foreign_identifier: TextField
     """
 
-    foreign_identifier = models.CharField(
-        max_length=1000,
+    foreign_identifier = models.TextField(
         blank=True,
         null=True,
         db_index=True,
@@ -55,34 +54,31 @@ class MediaMixin(models.Model):
 
     The mixin adds
 
-    - title: CharField
-    - foreign_landing_url: CharField
-    - creator: CharField
-    - creator_url: CharField
-    - thumbnail: URLField
+    - title: TextField
+    - foreign_landing_url: TextField
+    - creator: TextField
+    - creator_url: TextField
+    - thumbnail: TextField
     - provider: CharField
     """
 
-    title = models.CharField(
-        max_length=2000,
+    title = models.TextField(
         blank=True,
         null=True,
         help_text="The name of the media.",
     )
-    foreign_landing_url = models.CharField(
-        max_length=1000,
+    foreign_landing_url = models.TextField(
         blank=True,
         null=True,
         help_text="The landing page of the work.",
     )
 
-    creator = models.CharField(
-        max_length=2000,
+    creator = models.TextField(
         blank=True,
         null=True,
         help_text="The name of the media creator.",
     )
-    creator_url = models.URLField(
+    creator_url = models.TextField(
         max_length=2000,
         blank=True,
         null=True,
@@ -92,8 +88,7 @@ class MediaMixin(models.Model):
     # Because all forms of media have a thumbnail for visual representation
     # For images, this field is not used as images are generated using Photon.
     # For audio, this field points to the artwork, or is ``null``.
-    thumbnail = models.URLField(
-        max_length=1000,
+    thumbnail = models.TextField(
         blank=True,
         null=True,
         help_text="The thumbnail for the media.",
@@ -120,12 +115,12 @@ class FileMixin(models.Model):
 
     This mixin adds
 
-    - url: URLField
+    - url: TextField
     - filesize: IntegerField
     - filetype: CharField
     """
 
-    url = models.URLField(
+    url = models.TextField(
         unique=True,
         max_length=1000,
         help_text="The actual URL to the media file.",

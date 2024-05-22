@@ -3,8 +3,8 @@
 ```{toctree}
 :titlesonly:
 
+brand/index
 incidents/index
-contribution/index
 project_boards/index
 ci_cd/index
 decision_making/index

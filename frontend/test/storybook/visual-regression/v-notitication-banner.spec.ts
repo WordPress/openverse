@@ -7,8 +7,7 @@ import breakpoints from "~~/test/playwright/utils/breakpoints"
 const natures = ["info", "warning", "error", "success"] as const
 const variants = ["regular", "dark"] as const
 
-const defaultUrl =
-  "/iframe.html?id=components-vnotificationbanner--default-story"
+const defaultUrl = "/iframe.html?id=components-vnotificationbanner--default"
 
 const pageUrl = (
   nature: (typeof natures)[number],

@@ -22,9 +22,11 @@
   </VSearchBarButton>
 </template>
 <script lang="ts">
+import { defineComponent } from "@nuxtjs/composition-api"
+
 import VSearchBarButton from "~/components/VHeader/VHeaderMobile/VSearchBarButton.vue"
 
-export default {
+export default defineComponent({
   name: "VContentSettingsButton",
   components: { VSearchBarButton },
   props: {
@@ -37,5 +39,5 @@ export default {
       default: 0,
     },
   },
-}
+})
 </script>

@@ -29,7 +29,7 @@ from common.constants import DAG_DEFAULT_ARGS, ENVIRONMENTS, PRODUCTION, Environ
 from common.elasticsearch import get_es_host
 from common.sensors.utils import is_concurrent_with_any
 from common.slack import send_alert, send_message
-from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS
+from legacy_data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS
 
 
 logger = logging.getLogger(__name__)
@@ -63,9 +63,9 @@ def _format_response_body(response_body: dict) -> str:
 
 def _compose_red_status(env: Environment, response_body: dict) -> str:
     message = f"""
-    Elasticsearch {env} cluster status is **red**.
+    Elasticsearch {env} cluster status is *red*.
 
-    This is a critical status change, **investigate ASAP**.
+    This is a critical status change, *investigate ASAP*.
 
     {_format_response_body(response_body)}
     """
@@ -78,13 +78,13 @@ def _compose_unexpected_node_count(env: Environment, response_body: dict) -> str
     master_node_count = node_count - data_node_count
 
     message = f"""
-    Elasticsearch {env} cluster node count is **{node_count}**.
+    Elasticsearch {env} cluster node count is *{node_count}*.
     Expected {EXPECTED_NODE_COUNT} total nodes.
 
-    Master nodes: **{master_node_count}** of expected {EXPECTED_MASTER_NODE_COUNT}
-    Data nodes: **{data_node_count}** of expected {EXPECTED_DATA_NODE_COUNT}
+    Master nodes: *{master_node_count}* of expected {EXPECTED_MASTER_NODE_COUNT}
+    Data nodes: *{data_node_count}* of expected {EXPECTED_DATA_NODE_COUNT}
 
-    This is a critical status change, **investigate ASAP**.
+    This is a critical status change, *investigate ASAP*.
     If this is expected (e.g., during controlled node or cluster changes), acknowledge immediately with explanation.
 
     {_format_response_body(response_body)}
@@ -95,7 +95,7 @@ def _compose_unexpected_node_count(env: Environment, response_body: dict) -> str
 
 def _compose_yellow_cluster_health(env: Environment, response_body: dict) -> str:
     message = f"""
-    Elasticsearch {env} cluster health is **yellow**.
+    Elasticsearch {env} cluster health is *yellow*.
 
     This does not mean something is necessarily wrong, but if this is not expected (e.g., data refresh) then investigate cluster health now.
 

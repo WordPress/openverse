@@ -33,6 +33,18 @@ class OAuth2RegistrationFactory(DjangoModelFactory):
     description = Faker("catch_phrase")
     email = Faker("email")
 
+    @factory.post_generation
+    def application(obj, create, extracted, **kwargs):
+        # Only create the application if creating, and either
+        # `application=True` or some `application__*` kwargs were passed
+        if not (create and (extracted or kwargs)):
+            return
+
+        return ThrottledApplicationFactory.create(
+            name=obj.name,
+            verified=kwargs.get("verified", False),
+        )
+
 
 class OAuth2VerificationFactory(DjangoModelFactory):
     class Meta:

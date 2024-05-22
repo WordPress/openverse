@@ -1,4 +1,4 @@
-const apiUrl = process.env.API_URL ?? "https://api.openverse.engineering/"
+const apiUrl = process.env.API_URL ?? "https://api.openverse.org/"
 
 /**
  * Default environment variables are set on this key. Defaults are fallbacks to existing env vars.
@@ -9,5 +9,4 @@ export const env = {
   apiUrl: apiUrl.endsWith("/") ? apiUrl : `${apiUrl}/`,
   filterStorageKey: "openverse-filter-visibility",
   savedSearchCount: "4",
-  providerUpdateFrequency: `${60 * 60 * 1000}`, // 1 hour
 } as const

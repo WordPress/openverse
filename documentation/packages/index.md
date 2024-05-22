@@ -1,4 +1,6 @@
-# Node.js packages
+# Subpackages
+
+## Node.js packages
 
 Openverse uses `pnpm` workspaces to facilitate collecting multiple Node.js
 projects into a single repository. This section documents the individual
@@ -8,14 +10,14 @@ packages and how to add/maintain them.
 :titlesonly:
 :glob:
 
-*/index
+eslint_plugin/index
 ```
 
 ```{caution}
 Openverse does not currently have any method for publishing packages to NPM.
 ```
 
-## Running package scripts
+### Running package scripts
 
 Run scripts for individual packages using `just p {package} {script}`. For
 example, to run tests for the `eslint-plugin`, run:
@@ -30,16 +32,16 @@ This also works for the Nuxt frontend as an alternative to `just frontend/run`:
 just p frontend dev
 ```
 
-## Adding new packages
+### Adding new packages
 
 The easiest way to create a new package is to copy an existing one and modify
 the details to match the needs. To create a new `@openverse/license-parsing`
 package, for example, we would do the following:
 
-1. Copy `packages/eslint-plugin` to `packages/license-parsing`
-2. Update `packages/license-parsing/package.json` to remove unneeded
+1. Copy `packages/js/eslint-plugin` to `packages/js/license-parsing`
+2. Update `packages/js/license-parsing/package.json` to remove unneeded
    dependencies and update the package name
-3. Delete the code in `packages/license-parsing/src`, update any relevant
+3. Delete the code in `packages/js/license-parsing/src`, update any relevant
    configuration (`babel.config.js`, etc) and write the code for the new package
    🎉
 
@@ -78,3 +80,20 @@ This can be facilitated using `npm-run-all`'s `run-p`. e.g.:
 
 All new packages should name their unit-test script `test:unit`. Our CI
 recursively runs `test:unit` for all pnpm workspaces to ensure tests pass.
+
+## Python packages
+
+Openverse also maintains smaller Python packages for code sharing and reuse
+between the Python stacks. This section documents the individual packages and
+how to add/maintain them.
+
+```{toctree}
+:titlesonly:
+:glob:
+
+openverse_attribution/index
+```
+
+```{caution}
+Openverse does not currently have any method for publishing packages to PyPI.
+```

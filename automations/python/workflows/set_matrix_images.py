@@ -6,8 +6,40 @@ https://docs.openverse.org/meta/ci_cd/jobs/docker.html#determine-images
 
 import json
 import os
+from dataclasses import asdict, dataclass
 
 from shared.actions import write_to_github_output
+
+
+@dataclass
+class Include:
+    image: str
+    target: str
+
+    context: str
+    file: str
+    build_contexts: str
+    build_args: str
+
+    def __init__(
+        self,
+        image: str,
+        target: str,
+        context: str | None = None,
+        file: str | None = None,
+        build_contexts: str | None = None,
+        build_args: str | None = None,
+    ):
+        self.image = image
+        self.target = target
+        self.context = context or image
+        self.file = file or f"{self.context}/Dockerfile"
+        self.build_contexts = build_contexts or ""
+        self.build_args = build_args or ""
+
+    @property
+    def asdict(self) -> dict[str, str]:
+        return {k.replace("_", "-"): v for k, v in asdict(self).items()}
 
 
 changes = json.loads(os.environ.get("CHANGES"))
@@ -21,23 +53,37 @@ def ser_set(x):
 build_matrix = {"image": set()}
 publish_matrix = {"image": set()}
 
-includes = {
-    "upstream_db": {
-        "image": "upstream_db",
-        "context": "docker/upstream_db",
-        "target": "db",
-    },
-    "catalog": {"image": "catalog", "target": "cat"},
-    "ingestion_server": {"image": "ingestion_server", "target": "ing"},
-    "api": {"image": "api", "target": "api"},
-    "api_nginx": {"image": "api_nginx", "context": "api", "target": "nginx"},
-    "frontend": {"image": "frontend", "target": "app", "build-contexts": "repo_root=."},
-    "frontend_nginx": {
-        "image": "frontend_nginx",
-        "context": "frontend",
-        "file": "frontend/Dockerfile.nginx",
-        "target": "nginx",
-    },
+includes: dict[str, Include] = {
+    "upstream_db": Include(
+        image="upstream_db",
+        target="db",
+        context="docker/upstream_db",
+    ),
+    "catalog": Include(image="catalog", target="cat"),
+    "ingestion_server": Include(image="ingestion_server", target="ing"),
+    "api": Include(
+        image="api",
+        target="api",
+        build_contexts="packages=./packages/python",
+        build_args="PDM_INSTALL_ARGS=--prod",
+    ),
+    "api_nginx": Include(
+        image="api_nginx",
+        target="nginx",
+        context="api",
+        build_contexts="packages=./packages/python",
+    ),
+    "frontend": Include(
+        image="frontend",
+        target="app",
+        build_contexts="repo_root=.",
+    ),
+    "frontend_nginx": Include(
+        image="frontend_nginx",
+        target="nginx",
+        context="frontend",
+        file="frontend/Dockerfile.nginx",
+    ),
 }
 
 if "ci_cd" in changes:
@@ -56,14 +102,7 @@ if "frontend" in changes:
     publish_matrix["image"] |= {"frontend", "frontend_nginx"}
 
 
-build_matrix["include"] = [includes[item] for item in build_matrix["image"]]
-
-for item in build_matrix["include"]:
-    if "context" not in item:
-        item["context"] = item["image"]
-
-    if "file" not in item:
-        item["file"] = f"{item['context']}/Dockerfile"
+build_matrix["include"] = [includes[item].asdict for item in build_matrix["image"]]
 
 do_build = "true" if len(build_matrix["image"]) else "false"
 do_publish = "true" if len(publish_matrix["image"]) else "false"

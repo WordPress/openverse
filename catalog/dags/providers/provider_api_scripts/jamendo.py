@@ -5,7 +5,7 @@ ETL Process:            Use the API to identify all CC-licensed audio.
 
 Output:                 TSV file containing the audio meta-data.
 
-Notes:                  https://api.jamendo.com/v3.0/tracks/
+Notes:                  <https://api.jamendo.com/v3.0/tracks/>
                         35,000 requests per month for non-commercial apps
                         Jamendo Music has more than 500,000 tracks shared by
                         40,000 artists from over 150 countries all over
@@ -45,7 +45,7 @@ class JamendoDataIngester(ProviderDataIngester):
     batch_limit = 200
     headers = {"Accept": "application/json"}
 
-    def get_next_query_params(self, prev_query_params, **kwargs):
+    def get_next_query_params(self, prev_query_params):
         if not prev_query_params:
             # On first request, build default params.
             return {
@@ -104,8 +104,8 @@ class JamendoDataIngester(ProviderDataIngester):
         """
         Jamendo image URLs are missing a trailing slash, which when viewed normally in
         the browser get redirected to the correct URL. Example:
-        - https://usercontent.jamendo.com?type=album&id=100007&width=300 (before)
-        - https://usercontent.jamendo.com/?type=album&id=100007&width=300 (after)
+        - <https://usercontent.jamendo.com?type=album&id=100007&width=300> (before)
+        - <https://usercontent.jamendo.com/?type=album&id=100007&width=300> (after)
 
         Due to the way photon processes thumbnails, we need to add this trailing slash
         to the url prior to the query params if it does not have one.
@@ -120,7 +120,7 @@ class JamendoDataIngester(ProviderDataIngester):
 
         Audio URLs have a "from" param which seems to encapsulate information about the
         calling application. Example from the API:
-        https://prod-1.storage.jamendo.com/?trackid=1532771&format=mp31&from=app-devsite
+        <https://prod-1.storage.jamendo.com/?trackid=1532771&format=mp31&from=app-devsite>
         This information looks like an API key or secret when returned, so we remove it
         since it's not necessary for serving the audio files.
         >>> base_url = "https://prod-1.storage.jamendo.com/"

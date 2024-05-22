@@ -6,7 +6,7 @@ ETL Process:            Use the API to identify all CC-licensed images.
 Output:                 TSV file containing the image, the respective
                         meta-data.
 
-Notes:                  https://github.com/TheScienceMuseum/collectionsonline/wiki/Collections-Online-API
+Notes:                  <https://github.com/TheScienceMuseum/collectionsonline/wiki/Collections-Online-API>
                         Rate limited, no specific rate given.
 """  # noqa: E501
 
@@ -17,6 +17,7 @@ from datetime import date
 from common import slack
 from common.licenses import LicenseInfo, get_license_info
 from common.loader import provider_details as prov
+from common.urls import rewrite_redirected_url
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 
 
@@ -50,7 +51,7 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
 
         The Science Museum API currently raises a 400 when attempting to access
         any page number higher than 50
-        (https://github.com/TheScienceMuseum/collectionsonline/issues/1470).
+        (<https://github.com/TheScienceMuseum/collectionsonline/issues/1470>).
 
         To avoid this, we ingest data for small ranges of years at a time,
         in order to split the data into batches less than 50 pages each.
@@ -74,28 +75,29 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
         )
         return year_ranges
 
-    def ingest_records(self, **kwargs):
+    def get_fixed_query_params(self):
+        """
+        Provide a set of year ranges. Ingestion will be performed for each range,
+        with the dates set as fixed query params.
+        """
         next_year = date.today().year + 1
-        for year_range in self._get_year_ranges(next_year):
-            logger.info(f"==Starting on year range: {year_range}==")
-            super().ingest_records(year_range=year_range)
+        year_ranges = self._get_year_ranges(next_year)
 
-    def get_next_query_params(self, prev_query_params, **kwargs):
-        from_, to_ = kwargs["year_range"]
+        return [{"date[from]": from_, "date[to]": to_} for from_, to_ in year_ranges]
+
+    def get_next_query_params(self, prev_query_params):
         if not prev_query_params:
             # Reset the page number to 0
             self.page_number = 0
         else:
             # Increment the page number
-            self.page_number += 1
+            self.page_number = prev_query_params["page[number]"] + 1
 
         return {
             "has_image": 1,
             "image_license": "CC",
             "page[size]": LIMIT,
             "page[number]": self.page_number,
-            "date[from]": from_,
-            "date[to]": to_,
         }
 
     def get_batch_data(self, response_json):
@@ -115,14 +117,14 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
         ):
             return None
 
-        title = attributes.get("summary_title")
+        title = ScienceMuseumDataIngester._get_first_list_value("title", attributes)
         creator = self._get_creator_info(attributes)
         metadata = self._get_metadata(attributes)
         images = []
         for image_data in multimedia:
-            if not (foreign_identifier := image_data.get("admin", {}).get("uid")):
+            if not (foreign_identifier := image_data.get("@admin", {}).get("uid")):
                 continue
-            processed = image_data.get("processed")
+            processed = image_data.get("@processed")
             if not isinstance(processed, dict):
                 continue
             (
@@ -130,6 +132,7 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
                 height,
                 width,
                 filetype,
+                filesize,
             ) = self._get_image_info(processed)
             if not url:
                 continue
@@ -144,6 +147,7 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
                 "height": height,
                 "width": width,
                 "filetype": filetype,
+                "filesize": filesize,
                 "license_info": license_info,
                 "creator": creator,
                 "title": title,
@@ -154,22 +158,22 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
 
     @staticmethod
     def _get_creator_info(attributes):
-        creator_info = None
-        if (life_cycle := attributes.get("lifecycle")) is not None:
-            creation = life_cycle.get("creation")
-            if isinstance(creation, list):
-                maker = creation[0].get("maker")
-                if isinstance(maker, list):
-                    creator_info = maker[0].get("summary_title")
-        return creator_info
+        if not (maker := attributes.get("creation", {}).get("maker", [])):
+            return None
+
+        return maker[0].get("summary", {}).get("title", None)
 
     @staticmethod
     def check_url(url: str | None) -> str | None:
         if not url:
             return None
-        if url.startswith("http"):
-            return url
-        return f"https://coimages.sciencemuseumgroup.org.uk/images/{url}"
+
+        # Will return None if url 403s
+        return rewrite_redirected_url(
+            url
+            if url.startswith("http")
+            else f"https://coimages.sciencemuseumgroup.org.uk/{url}"
+        )
 
     @staticmethod
     def _get_dimensions(image_data: dict) -> tuple[int | None, int | None]:
@@ -191,15 +195,25 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
     @staticmethod
     def _get_image_info(
         processed: dict,
-    ) -> tuple[str | None, int | None, int | None, str | None]:
-        height, width, filetype = None, None, None
+    ) -> tuple[str | None, int | None, int | None, str | None, int | None]:
+        height, width, filetype, filesize = None, None, None, None
         image_data = processed.get("large") or processed.get("medium", {})
 
         url = ScienceMuseumDataIngester.check_url(image_data.get("location"))
         if url:
             filetype = image_data.get("format")
             height, width = ScienceMuseumDataIngester._get_dimensions(image_data)
-        return url, height, width, filetype
+
+            if not (
+                filesize := int(
+                    image_data.get("measurements", {})
+                    .get("filesize", {})
+                    .get("value", 0)
+                )
+            ):
+                filesize = None
+
+        return url, height, width, filetype, filesize
 
     @staticmethod
     def _get_first_list_value(key: str, attributes: dict) -> str | None:
@@ -214,7 +228,7 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
         for attr_key, metadata_key in [
             ("identifier", "accession number"),
             ("name", "name"),
-            ("categories", "category"),
+            ("category", "category"),
             ("description", "description"),
         ]:
             val = ScienceMuseumDataIngester._get_first_list_value(attr_key, attributes)
@@ -223,7 +237,7 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
 
         creditline = attributes.get("legal")
         if isinstance(creditline, dict):
-            line = creditline.get("credit_line")
+            line = creditline.get("credit")
             if line is not None:
                 metadata["creditline"] = line
 
@@ -233,9 +247,9 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
     def _get_license_info(image_data) -> LicenseInfo | None:
         # some items do not return license anywhere, but in the UI
         # they look like CC
-        rights = image_data.get("source", {}).get("legal", {}).get("rights")
-        if isinstance(rights, list):
-            license_name = rights[0].get("usage_terms")
+        rights = image_data.get("legal", {}).get("rights")
+        if rights and isinstance(rights, list):
+            license_name = rights[0].get("licence")
             if not license_name:
                 return None
             license_name = license_name.lower()

@@ -44,7 +44,8 @@ jobs:
       frontend: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'frontend') }}
       documentation: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'documentation') }}
       ci_cd: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'ci_cd') }}
-      packages: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'packages') }}
+      py_packages: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'py_packages') }}
+      js_packages: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'js_packages') }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -232,14 +233,14 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ${{ matrix.context }}
-          target: ${{ matrix.target || '' }}
+          target: ${{ matrix.target }}
           push: false
           tags: openverse-${{ matrix.image }}
           file: ${{ matrix.file }}
           cache-from: type=gha,scope=${{ matrix.image }}
           cache-to: type=gha,scope=${{ matrix.image }}
           outputs: type=docker,dest=/tmp/${{ matrix.image }}.tar
-          build-contexts: ${{ matrix.build-contexts || '' }}
+          build-contexts: ${{ matrix.build-contexts }}
           build-args: |
             SEMANTIC_VERSION=${{ needs.get-image-tag.outputs.image_tag }}
             CATALOG_PY_VERSION=${{ steps.prepare-build-args.outputs.catalog_py_version }}
@@ -249,6 +250,7 @@ jobs:
             FRONTEND_NODE_VERSION=${{ steps.prepare-build-args.outputs.frontend_node_version }}
             FRONTEND_PNPM_VERSION=${{ steps.prepare-build-args.outputs.frontend_pnpm_version }}
             PGCLI_VERSION=${{ steps.prepare-build-args.outputs.pgcli_version }}
+            ${{ matrix.build-args || '' }}
 
       - name: Upload image `${{ matrix.image }}`
         id: upload-img
@@ -397,6 +399,7 @@ jobs:
     needs:
       - get-changes
       - build-images
+      - get-image-tag
 
     steps:
       - name: Checkout repository
@@ -415,7 +418,34 @@ jobs:
         uses: ./.github/actions/load-img
         with:
           run_id: ${{ github.run_id }}
-          setup_images: upstream_db ingestion_server api
+          setup_images: upstream_db ingestion_server
+
+      # Sets build args specifying versions needed to build Docker image.
+      - name: Prepare build args
+        id: prepare-build-args
+        run: |
+          just versions | tee "$GITHUB_OUTPUT"
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          install: true
+
+      - name: Build API dev image
+        uses: docker/build-push-action@v5
+        with:
+          context: api
+          target: api
+          push: false
+          load: true
+          tags: openverse-api
+          cache-from: type=gha,scope=api_dev
+          cache-to: type=gha,scope=api_dev
+          build-contexts: packages=./packages/python
+          build-args: |
+            SEMANTIC_VERSION=${{ needs.get-image-tag.outputs.image_tag }}
+            API_PY_VERSION=${{ steps.prepare-build-args.outputs.api_py_version }}
+            PDM_INSTALL_ARGS=--dev
 
       - name: Start API, ingest and index test data
         run: just api/init
@@ -519,6 +549,56 @@ jobs:
       - name: Pass
         run: echo 'Django checks are skipped because API is unchanged.'
 
+  py-package-checks:
+    name: Run checks for Python packages/*
+    if: |
+      needs.get-changes.outputs.py_packages == 'true'
+    runs-on: ubuntu-latest
+    needs:
+      - get-changes
+      - lint
+    strategy:
+      fail-fast: false
+      matrix:
+        packages:
+          - packages/python/openverse-attribution
+        script:
+          - build
+          - test
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          install_recipe: packages/python/openverse-attribution/install
+
+      - name: Run Python packages checks
+        run: pdm run -p ${{ matrix.packages }} ${{ matrix.script }}
+
+  # This job runs when `py-package-checks` doesn't and always passes, thus
+  # allowing PRs to meet the required checks criteria and be merged.
+  bypass-py-package-checks:
+    name: Run checks for Python packages/*
+    if: |
+      !cancelled() &&
+      needs.py-package-checks.result == 'skipped'
+    runs-on: ubuntu-latest
+    needs:
+      - py-package-checks
+    strategy:
+      fail-fast: false
+      matrix:
+        name:
+          - build
+          - unit_test
+
+    steps:
+      - name: Pass
+        run: echo 'Checks for Python packages are skipped because they are unchanged.'
+
   ############
   # Frontend #
   ############
@@ -600,10 +680,10 @@ jobs:
       - name: Pass
         run: echo 'Playwright tests are skipped because frontend is unchanged.'
 
-  package-checks:
-    name: Run checks for packages/*
+  js-package-checks:
+    name: Run checks for JS packages/*
     if: |
-      needs.get-changes.outputs.packages == 'true'
+      needs.get-changes.outputs.js_packages == 'true'
     runs-on: ubuntu-latest
     needs:
       - get-changes
@@ -630,19 +710,19 @@ jobs:
           setup_python: false
           install_recipe: node-install
 
-      - name: Run packages checks
-        run: pnpm --filter ./packages/* run --aggregate-output ${{ matrix.script }}
+      - name: Run JS packages checks
+        run: pnpm --filter ./packages/js/* run --aggregate-output ${{ matrix.script }}
 
-  # This job runs when `package-checks` doesn't and always passes, thus allowing
-  # PRs to meet the required checks criteria and be merged.
-  bypass-package-checks:
-    name: Run checks for packages/*
+  # This job runs when `js-package-checks` doesn't and always passes, thus
+  # allowing PRs to meet the required checks criteria and be merged.
+  bypass-js-package-checks:
+    name: Run checks for JS packages/*
     if: |
       !cancelled() &&
-      needs.package-checks.result == 'skipped'
+      needs.js-package-checks.result == 'skipped'
     runs-on: ubuntu-latest
     needs:
-      - package-checks
+      - js-package-checks
     strategy:
       fail-fast: false
       matrix:
@@ -652,7 +732,7 @@ jobs:
 
     steps:
       - name: Pass
-        run: echo 'Checks for packages are skipped because packages are unchanged.'
+        run: echo 'Checks for JS packages are skipped because they are unchanged.'
 
   playwright:
     name: Run Playwright tests
@@ -1130,7 +1210,7 @@ jobs:
         run: python generate_report.py
 
       - name: Send report
-        uses: slackapi/slack-github-action@v1.25.0
+        uses: slackapi/slack-github-action@v1.26.0
         with:
           payload: ${{ steps.report.outputs.payload }}
         env:

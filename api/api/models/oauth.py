@@ -38,6 +38,7 @@ class ThrottledApplication(AbstractApplication):
         max_length=20, choices=RATE_LIMIT_MODELS, default="standard"
     )
     verified = models.BooleanField(default=False)
+    revoked = models.BooleanField(default=False)
 
 
 class OAuth2Verification(models.Model):

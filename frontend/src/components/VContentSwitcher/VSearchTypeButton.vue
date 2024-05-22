@@ -9,7 +9,7 @@
     v-bind="$attrs"
     @click="$emit('click')"
   >
-    <VIcon :name="searchType" class="h-6 w-6" />
+    <VIcon :name="searchType" />
     <template v-if="showLabel">
       <span class="label-regular block truncate text-start">{{ label }}</span>
       <VIcon name="caret-down" />

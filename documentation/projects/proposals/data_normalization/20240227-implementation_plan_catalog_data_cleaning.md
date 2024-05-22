@@ -45,7 +45,7 @@ approach entails a problem of wasting resources both in time, which continues to
 increase, and in the machines (CPU) it uses, which could easily be avoided
 making the changes permanent by saving them in the upstream database.
 
-[img-data-refresh]: ./../../../catalog/reference/DAGs.md#image_data_refresh
+[img-data-refresh]: ./../../../catalog/reference/DAGs.md#media_type_data_refresh
 
 ## Expected Outcomes
 

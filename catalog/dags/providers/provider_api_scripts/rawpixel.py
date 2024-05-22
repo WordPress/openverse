@@ -10,7 +10,7 @@ Notes:                  Rawpixel has given Openverse beta access to their API.
                         directly if we run into any issues.
                         The public API max results range is limited to 100,000 results,
                         although the API key we've been given can circumvent this limit.
-                        https://www.rawpixel.com/api/v1/search?tags=$publicdomain&page=1&pagesize=100
+                        <https://www.rawpixel.com/api/v1/search?tags=$publicdomain&page=1&pagesize=100>
 """
 
 import base64
@@ -97,8 +97,8 @@ class RawpixelDataIngester(ProviderDataIngester):
 
         URL encode the ordered parameters in a way that matches Node's
         querystring.stringify as closely as possible
-        See: https://docs.python.org/3.10/library/urllib.parse.html#urllib.parse.urlencode
-        and https://nodejs.org/api/querystring.html#querystringstringifyobj-sep-eq-options
+        See: <https://docs.python.org/3.10/library/urllib.parse.html#urllib.parse.urlencode>
+        and <https://nodejs.org/api/querystring.html#querystringstringifyobj-sep-eq-options>
         """  # noqa: E501
         # Params must be ordered for deterministic computation
         ordered_params = {k: v for k, v in sorted(query_params.items())}
@@ -120,7 +120,7 @@ class RawpixelDataIngester(ProviderDataIngester):
         # Convert back to a string
         return signature.decode("utf-8")
 
-    def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
+    def get_next_query_params(self, prev_query_params: dict | None) -> dict:
         if not prev_query_params:
             params = {
                 "tags": "$publicdomain",

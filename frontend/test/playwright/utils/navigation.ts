@@ -2,6 +2,8 @@ import { expect } from "@playwright/test"
 
 import { LanguageDirection, t } from "~~/test/playwright/utils/i18n"
 
+import featureData from "~~/feat/feature-flags.json"
+
 import type { MediaType, SupportedSearchType } from "~/constants/media"
 import {
   ALL_MEDIA,
@@ -218,12 +220,24 @@ export const preparePageForTests = async (
       fake_sensitive: "off",
       analytics: "on",
       additional_search_types: "off",
-      additional_search_views: "on",
     }
     for (const [feature, status] of Object.entries(options.features)) {
       features[feature] = status
     }
     cookiesToSet.features = features
+  } else {
+    cookiesToSet.features = { fetch_sensitive: "off" }
+  }
+
+  // Split sessionFeatures from cookie features when setting the cookies
+  for (const [name, value] of Object.entries(cookiesToSet.features)) {
+    if (
+      featureData.features[name as keyof typeof featureData.features]
+        .storage === "session"
+    ) {
+      cookiesToSet.sessionFeatures = { [name]: value }
+      delete cookiesToSet.features[name]
+    }
   }
   await setCookies(page.context(), cookiesToSet)
 }

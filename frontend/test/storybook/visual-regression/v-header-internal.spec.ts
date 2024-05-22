@@ -1,51 +1,69 @@
-import { test } from "@playwright/test"
+import { expect, test } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
-import { languageDirections } from "~~/test/playwright/utils/i18n"
+import {
+  type LanguageDirection,
+  languageDirections,
+  t,
+} from "~~/test/playwright/utils/i18n"
+import { dirParam } from "~~/test/storybook/utils/args"
 
 const headerSelector = ".main-header"
-const defaultUrl =
-  "/iframe.html?id=components-vheader-vheaderinternal--default-story"
-const pageUrl = (dir: (typeof languageDirections)[number]) =>
-  dir === "ltr" ? defaultUrl : `${defaultUrl}&globals=languageDirection:rtl`
+const defaultUrl = "/iframe.html?id=components-vheader-vheaderinternal--default"
+
+const pageUrl = (dir: LanguageDirection) => `${defaultUrl}${dirParam(dir)}`
 
 test.describe.configure({ mode: "parallel" })
 
 test.describe("VHeaderInternal", () => {
   for (const dir of languageDirections) {
-    breakpoints.describeEachDesktop(({ expectSnapshot }) => {
-      test(`desktop-header-internal-${dir}`, async ({ page }) => {
-        await page.goto(pageUrl(dir))
-        await page.mouse.move(0, 150)
-        await expectSnapshot(
-          `desktop-header-internal-${dir}`,
-          page.locator(headerSelector)
-        )
+    test.describe(`${dir}`, () => {
+      breakpoints.describeEachDesktop(({ expectSnapshot }) => {
+        test(`desktop header`, async ({ page }) => {
+          await page.goto(pageUrl(dir))
+          await page.mouse.move(0, 150)
+          await expectSnapshot(
+            `desktop-header-internal-${dir}`,
+            page.locator(headerSelector)
+          )
+        })
       })
-    })
-    breakpoints.describeEachMobile(({ expectSnapshot }) => {
-      test(`mobile-header-internal-${dir}`, async ({ page }) => {
-        await page.goto(pageUrl(dir))
-        await page.mouse.move(0, 150)
-        await expectSnapshot(
-          `mobile-header-internal-closed-${dir}`,
-          page.locator(headerSelector)
-        )
+
+      breakpoints.describeXs(({ breakpoint }) => {
+        test(`mobile header closed`, async ({ page }) => {
+          await page.goto(pageUrl(dir))
+
+          // Ensure fonts are loaded before taking the snapshot
+          const responsePromise = page.waitForResponse(/var\.woff2/)
+          await page.locator('button[aria-haspopup="dialog"]').click()
+          await responsePromise
+
+          await page
+            .getByRole("button", { name: t("modal.closePagesMenu") })
+            .click()
+
+          await page.mouse.move(0, 150)
+
+          await expect(page.locator(headerSelector)).toHaveScreenshot(
+            `mobile-header-internal-closed-${dir}-${breakpoint}.png`
+          )
+        })
       })
-      test(`mobile-header-internal-modal-${dir}`, async ({ page }) => {
-        await page.goto(pageUrl(dir))
 
-        // Ensure fonts are loaded before taking the snapshot.
-        const requestPromise = page.waitForRequest((req) =>
-          req.url().includes("var.woff2")
-        )
-        await page.locator('button[aria-haspopup="dialog"]').click()
-        await requestPromise
-        // Mouse stays over the button, so the close button is hovered.
-        // To prevent this, move the mouse away.
-        await page.mouse.move(0, 0)
+      breakpoints.describeEachMobile(({ expectSnapshot }) => {
+        test(`mobil header with open modal`, async ({ page }) => {
+          await page.goto(pageUrl(dir))
 
-        await expectSnapshot(`mobile-header-internal-open-${dir}`, page)
+          // Ensure fonts are loaded before taking the snapshot
+          const responsePromise = page.waitForResponse(/var\.woff2/)
+          await page.locator('button[aria-haspopup="dialog"]').click()
+          await responsePromise
+          // Mouse stays over the button, so the close button is hovered.
+          // To prevent this, move the mouse away.
+          await page.mouse.move(0, 0)
+
+          await expectSnapshot(`mobile-header-internal-open-${dir}`, page)
+        })
       })
     })
   }

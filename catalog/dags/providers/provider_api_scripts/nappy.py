@@ -7,7 +7,7 @@ Output:                 TSV file containing the image meta-data.
 
 Notes:                  This api was written specially for Openverse.
                         There are no known limits or restrictions.
-                        https://nappy.co/
+                        <https://nappy.co/>
 
 """
 
@@ -32,7 +32,7 @@ class NappyDataIngester(ProviderDataIngester):
         "https://creativecommons.org/publicdomain/zero/1.0/"
     )
 
-    def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
+    def get_next_query_params(self, prev_query_params: dict | None) -> dict:
         if not prev_query_params:
             return {
                 "page": 1,

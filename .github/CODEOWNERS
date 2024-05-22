@@ -1,16 +1,16 @@
 # Specific assignments for the 'openverse-catalog' group
 catalog/    @WordPress/openverse-catalog
-archive/    @WordPress/openverse-catalog
 dag-sync.sh @WordPress/openverse-catalog
 
 api/                @WordPress/openverse-api
+packages/python/    @WordPress/openverse-api
 ingestion_server/   @WordPress/openverse-api
 sample_data/        @WordPress/openverse-api
 load_sample_data.sh @WordPress/openverse-api
 pyproject.toml      @WordPress/openverse-api
 
 frontend/           @WordPress/openverse-frontend
-packages/           @WordPress/openverse-frontend
+packages/js/        @WordPress/openverse-frontend
 .eslintignore       @WordPress/openverse-frontend
 .eslintrc.js        @WordPress/openverse-frontend
 .npmrc              @WordPress/openverse-frontend
@@ -29,7 +29,6 @@ tsconfig.base.json  @WordPress/openverse-frontend
 .devcontainer/              @WordPress/openverse-maintainers
 .github/                    @WordPress/openverse-maintainers
 automations/                @WordPress/openverse-maintainers
-brand/                      @WordPress/openverse-maintainers
 docker/                     @WordPress/openverse-maintainers
 documentation/              @WordPress/openverse-maintainers
 readme_assets/              @WordPress/openverse-maintainers

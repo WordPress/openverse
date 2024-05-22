@@ -12,3 +12,5 @@ data.
 The columns are sorted alphabetically and separated into relations (used to
 establish relationships to other models) and values (used to hold some data
 value). Note that relation fields are always nullable.
+
+**Models**:

@@ -1,15 +1,15 @@
 <template>
   <VScrollableLine>
     <VSourceCreatorButton
-      v-if="showCreator && creatorHref && creator"
-      :href="creatorHref"
+      v-if="creator"
+      :title="creator.name"
+      :href="creator.href"
       icon-name="person"
-      :title="creator"
     />
     <VSourceCreatorButton
       :href="sourceHref"
       icon-name="institution"
-      :title="sourceName"
+      :title="media.sourceName"
     />
   </VScrollableLine>
 </template>
@@ -18,7 +18,7 @@
 import { computed, defineComponent, type PropType } from "vue"
 
 import { useSearchStore } from "~/stores/search"
-import type { SupportedMediaType } from "~/constants/media"
+import type { AudioDetail, ImageDetail } from "~/types/media"
 
 import VSourceCreatorButton from "~/components/VMediaInfo/VByLine/VSourceCreatorButton.vue"
 import VScrollableLine from "~/components/VScrollableLine.vue"
@@ -33,58 +33,41 @@ export default defineComponent({
     VSourceCreatorButton,
   },
   props: {
-    creator: {
-      type: String,
-    },
-    sourceName: {
-      type: String,
-      required: true,
-    },
-    sourceSlug: {
-      type: String,
-      required: true,
-    },
-    mediaType: {
-      type: String as PropType<SupportedMediaType>,
+    media: {
+      type: Object as PropType<AudioDetail | ImageDetail>,
       required: true,
     },
   },
   setup(props) {
-    const showCreator = computed(() => {
-      return Boolean(
-        props.creator && props.creator.toLowerCase() !== "unidentified"
-      )
-    })
-
     const searchStore = useSearchStore()
 
-    const creatorHref = computed(() => {
-      if (!props.creator) {
-        return undefined
+    const creator = computed(() => {
+      if (props.media.creator && props.media.creator !== "unidentified") {
+        const href = searchStore.getCollectionPath({
+          type: props.media.frontendMediaType,
+          collectionParams: {
+            collection: "creator",
+            source: props.media.source,
+            creator: props.media.creator,
+          },
+        })
+        return { name: props.media.creator, href }
       }
-      return searchStore.getCollectionPath({
-        type: props.mediaType,
-        collectionParams: {
-          collection: "creator",
-          source: props.sourceSlug,
-          creator: props.creator,
-        },
-      })
+      return null
     })
 
     const sourceHref = computed(() => {
       return searchStore.getCollectionPath({
-        type: props.mediaType,
+        type: props.media.frontendMediaType,
         collectionParams: {
           collection: "source",
-          source: props.sourceSlug,
+          source: props.media.source,
         },
       })
     })
 
     return {
-      showCreator,
-      creatorHref,
+      creator,
       sourceHref,
     }
   },

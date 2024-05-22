@@ -5,7 +5,7 @@ This DAG is responsible for updating the staging database using the most recent
 snapshot of the production database.
 
 For a full explanation of the DAG, see the implementation plan description:
-https://docs.openverse.org/projects/proposals/search_relevancy_sandbox/20230406-implementation_plan_update_staging_database.html#dag
+<https://docs.openverse.org/projects/proposals/search_relevancy_sandbox/20230406-implementation_plan_update_staging_database.html#dag>
 
 This DAG can be skipped by setting the `SKIP_STAGING_DATABASE_RESTORE` Airflow Variable
 to `true`. To change this variable, navigate to Admin > Variables in the Airflow UI,

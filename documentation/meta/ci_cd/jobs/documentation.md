@@ -31,7 +31,7 @@ the <https://docs.openverse.org/> site itself.
 
 ```{caution}
 This job only publishes developer documentation. The API documentation hosted at
-<https://api.openverse.engineering/v1/> is provided by the API service itself.
+<https://api.openverse.org/v1/> is provided by the API service itself.
 ```
 
 This job is skipped if neither the documentation nor the frontend codebase has

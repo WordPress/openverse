@@ -5,8 +5,8 @@ ETL Process:            Use the API to identify all CC-licensed images.
 
 Output:                 TSV file containing the image, the respective meta-data.
 
-Notes:                  https://stocksnap.io/api/load-photos/date/desc/1
-                        https://stocksnap.io/faq
+Notes:                  <https://stocksnap.io/api/load-photos/date/desc/1>
+                        <https://stocksnap.io/faq>
                         All images are licensed under CC0.
                         No rate limits or authorization required.
                         API is undocumented.
@@ -40,15 +40,15 @@ class StockSnapDataIngester(ProviderDataIngester):
         super().__init__(*args, **kwargs)
         self._page_counter = 1
 
-    def get_next_query_params(self, prev_query_params, **kwargs):
+    def get_next_query_params(self, prev_query_params: dict | None):
         if prev_query_params:
             return {"page": prev_query_params["page"] + 1}
         return {"page": 1}
 
     def _get_query_params(
-        self, prev_query_params: dict | None, **kwargs
+        self, prev_query_params: dict | None, fixed_query_params: dict | None = None
     ) -> dict | None:
-        query_params = super()._get_query_params(prev_query_params, **kwargs)
+        query_params = super()._get_query_params(prev_query_params, fixed_query_params)
         if query_params:
             # Record the page that we are currently on so that it can be used as part of
             # the endpoint URL.

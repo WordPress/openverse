@@ -10,7 +10,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 
-from decouple import config
 from split_settings.tools import include
 
 
@@ -27,6 +26,7 @@ include(
     "security.py",
     "auth.py",
     "logging.py",
+    "signals.py",
     "i18n.py",
     "static.py",
     # services

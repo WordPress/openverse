@@ -6,7 +6,7 @@ ETL Process:            Use the API to identify all CC licensed images.
 Output:                 TSV file containing the images and the
                         respective meta-data.
 
-Notes:                  http://api.thewalters.org/
+Notes:                  <http://api.thewalters.org/>
                         Rate limit: 250000 Per Day Per Key
 """
 

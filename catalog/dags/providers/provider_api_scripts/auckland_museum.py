@@ -6,10 +6,10 @@ ETL Process:            Use the API to identify all CC licensed media.
 Output:                 TSV file containing the media and the
                         respective meta-data.
 
-Notes:                  https://api.aucklandmuseum.com/
+Notes:                  <https://api.aucklandmuseum.com/>
 
-Resource:               https://api.aucklandmuseum.com/
-                        https://github.com/AucklandMuseum/API/wiki/Tutorial
+Resource:               <https://api.aucklandmuseum.com/>
+                        <https://github.com/AucklandMuseum/API/wiki/Tutorial>
 
 Resource | Requests per second | Requests per day
 -- | -- | --
@@ -70,7 +70,7 @@ class AucklandMuseumDataIngester(ProviderDataIngester):
             }
         }
 
-    def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
+    def get_next_query_params(self, prev_query_params: dict | None) -> dict:
         # Return default query params on the first request
         # primaryRepresentation contain a image url for each data
         # "+" is a query string syntax for must be present

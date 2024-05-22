@@ -14,13 +14,21 @@ NO_COLOR := "\\033[0m"
 # Version #
 ###########
 
-export API_PY_VERSION := `grep 'python_version' Pipfile | awk -F' = ' '{print $2}' | sed 's/"//g'`
-export PGCLI_VERSION := `grep 'pgcli' Pipfile | awk -F' = ' '{print $2}' | sed 's/\~//g; s/"//g; s/=//g'`
+# These commands use standard GNU tools instead of `pdm` because we do not
+# require PDM on the host machine for API development.
+export API_PDM_HASH := `grep 'content_hash' pdm.lock | awk -F'[:"]' '{print $3}'`
+export API_PY_VERSION := `grep 'requires-python' pyproject.toml | awk -F'"' '{print $2}' | sed 's/^==//g; s/\.\*$//g'`
+export PGCLI_VERSION := `grep -A 1 'name = "pgcli"' pdm.lock | grep 'version' | awk -F'"' '{print $2}'`
 
-# Print the Python version specified in the `Pipfile`
+# Print the PDM content hash as a unique identifier for the current set of packages
+@pdm-hash:
+    echo $API_PDM_HASH
+
+# Print the Python version specified in `pyproject.toml`
 @py-version:
     echo $API_PY_VERSION
 
+# Print the pinned `pgcli` version from the PDM lockfile
 @pgcli-version:
     echo $PGCLI_VERSION
 
@@ -29,8 +37,8 @@ export PGCLI_VERSION := `grep 'pgcli' Pipfile | awk -F' = ' '{print $2}' | sed '
 ###########
 
 # Install dependencies
-install *args="--dev":
-    pipenv install {{ args }}
+install *args:
+    pdm install {{ args }}
 
 ######
 # Up #
@@ -92,7 +100,7 @@ pgcli db_user_pass="deploy" db_name="openledger": up
 
 # Run Django administrative commands locally
 dj-local +args="":
-    pipenv run python manage.py {{ args }}
+    pdm run python manage.py {{ args }}
 
 # Run Django administrative commands inside the Docker container
 dj +args="": wait-up
@@ -145,7 +153,7 @@ test *args: wait-up
 
 # Run API tests locally
 test-local *args:
-    pipenv run pytest {{ args }}
+    pdm run pytest {{ args }}
 
 # Run smoke test for the API docs
 doc-test: wait-up
@@ -159,7 +167,7 @@ doc-test: wait-up
 #########
 
 # Build and run the NGINX image locally
-nginx upstream_url='api.openverse.engineering':
+nginx upstream_url='api.openverse.org':
     # upstream_url can also be set to 172.17.0.1:50280 for local testing
     docker build --target nginx . -t openverse-api_nginx:latest
     @echo "--> NGINX server will be run at http://localhost:9090, upstream at {{ upstream_url }}"

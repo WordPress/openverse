@@ -47,19 +47,25 @@ def test_get_record_count(response_json, expected_count):
         assert actual_count == expected_count
 
 
-def test_build_query_param_default():
-    actual_param_made = fm.get_next_query_params(
-        None,
+def test_get_timestamp_query_params():
+    actual_fixed_params = fm.get_timestamp_query_params(
+        start=FROZEN_UTC_DATE,
+        end=FROZEN_UTC_DATE + timedelta(days=1),
         building="0/Museovirasto/",
-        start_ts=FROZEN_UTC_DATE,
-        end_ts=FROZEN_UTC_DATE + timedelta(days=1),
     )
-    expected_param = {
+    expected_fixed_params = {
         "filter[]": [
             'format:"0/Image/"',
             'building:"0/Museovirasto/"',
             'last_indexed:"[2020-04-01T00:00:00Z TO 2020-04-02T00:00:00Z]"',
         ],
+    }
+    assert actual_fixed_params == expected_fixed_params
+
+
+def test_build_query_param_default():
+    actual_param_made = fm.get_next_query_params(None)
+    expected_param = {
         "field[]": [
             "authors",
             "buildings",

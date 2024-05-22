@@ -1,8 +1,9 @@
 from logging import LogRecord
 
+import structlog
 from decouple import config
 
-from conf.settings.base import MIDDLEWARE
+from conf.settings.base import ENVIRONMENT, INSTALLED_APPS, MIDDLEWARE
 from conf.settings.security import DEBUG
 
 
@@ -11,8 +12,18 @@ def health_check_filter(record: LogRecord) -> bool:
     return not ("GET /healthcheck" in record.getMessage() and record.status_code == 200)
 
 
+# https://django-structlog.readthedocs.io/en/latest/getting_started.html#installation
+if "django_structlog" not in INSTALLED_APPS:
+    INSTALLED_APPS.append("django_structlog")
+
+MIDDLEWARE.insert(0, "django_structlog.middlewares.RequestMiddleware")
+
 LOG_LEVEL = config("LOG_LEVEL", default="INFO").upper()
 DJANGO_DB_LOGGING = config("DJANGO_DB_LOGGING", cast=bool, default=False)
+LOG_PROCESSOR = config(
+    "LOG_PROCESSOR",
+    default="console" if ENVIRONMENT == "local" else "json",
+)
 
 # Set to a pipe-delimited string of gc debugging flags
 # https://docs.python.org/3/library/gc.html#gc.DEBUG_STATS
@@ -20,104 +31,126 @@ GC_DEBUG_LOGGING = config(
     "GC_DEBUG_LOGGING", cast=lambda x: x.split("|") if x else [], default=""
 )
 
-# https://github.com/dabapps/django-log-request-id#logging-all-requests
-LOG_REQUESTS = True
+# This shared_processors approach is modified from structlog's
+# documentation for how to handle non-structured logs in a structured format
+# https://www.structlog.org/en/stable/standard-library.html#rendering-using-structlog-based-formatters-within-logging
+timestamper = structlog.processors.TimeStamper(fmt="iso")
 
-# https://github.com/dabapps/django-log-request-id
-MIDDLEWARE.insert(0, "log_request_id.middleware.RequestIDMiddleware")
-# https://github.com/dabapps/django-log-request-id#installation-and-usage
-REQUEST_ID_RESPONSE_HEADER = "X-Request-Id"
+shared_processors = [
+    structlog.contextvars.merge_contextvars,
+    structlog.stdlib.add_logger_name,
+    structlog.stdlib.add_log_level,
+    structlog.stdlib.PositionalArgumentsFormatter(),
+    structlog.processors.CallsiteParameterAdder(
+        {
+            structlog.processors.CallsiteParameter.FILENAME,
+            structlog.processors.CallsiteParameter.FUNC_NAME,
+            structlog.processors.CallsiteParameter.LINENO,
+        }
+    ),
+    structlog.processors.StackInfoRenderer(),
+    structlog.processors.format_exc_info,
+    structlog.processors.UnicodeDecoder(),
+]
+
+
+# These loggers duplicate django-structlog's request start/finish
+# logs, as well as our nginx request logs. We want to keep only the
+# start/finish logs and the nginx logs for access logging, otherwise
+# we are just duplicating information!
+_UNWANTED_LOGGERS = {
+    "uvicorn.access",
+    "django.request",
+}
+
+
+def suppress_unwanted_logs(record: LogRecord) -> bool:
+    return (
+        record.name not in _UNWANTED_LOGGERS
+        and "GET /healthcheck" not in record.getMessage()
+    )
+
 
 # Logging configuration
 LOGGING = {
-    # NOTE: Most of this is inherited from the default configuration
     "version": 1,
     "disable_existing_loggers": False,
     "filters": {
-        "request_id": {"()": "log_request_id.filters.RequestIDFilter"},
-        "require_debug_false": {"()": "django.utils.log.RequireDebugFalse"},
-        "require_debug_true": {"()": "django.utils.log.RequireDebugTrue"},
-        "health_check": {
+        "suppress_unwanted_logs": {
             "()": "django.utils.log.CallbackFilter",
-            "callback": health_check_filter,
+            "callback": suppress_unwanted_logs,
         },
     },
     "formatters": {
-        "django.server": {
-            "()": "django.utils.log.ServerFormatter",
-            "format": "[{server_time}] {message}",
-            "style": "{",
-        },
-        "console": {
-            "format": "[%(asctime)s - %(name)s - %(lineno)3d][%(levelname)s] [%(request_id)s] %(message)s",  # noqa: E501
+        "structured": {
+            "()": structlog.stdlib.ProcessorFormatter,
+            "processor": (
+                structlog.processors.JSONRenderer()
+                if LOG_PROCESSOR == "json"
+                else structlog.dev.ConsoleRenderer()
+            ),
+            "foreign_pre_chain": [
+                timestamper,
+                # Explanations from https://www.structlog.org/en/stable/standard-library.html#rendering-using-structlog-based-formatters-within-logging
+                # Add the log level and a timestamp to the event_dict if the log entry
+                # is not from structlog.
+                structlog.stdlib.add_log_level,
+                # Add extra attributes of LogRecord objects to the event dictionary
+                # so that values passed in the extra parameter of log methods pass
+                # through to log output.
+                structlog.stdlib.ExtraAdder(),
+            ]
+            + shared_processors,
         },
     },
     "handlers": {
-        # Default console logger
-        "console": {
+        "console_structured": {
             "level": LOG_LEVEL,
-            "filters": ["require_debug_true", "request_id"],
             "class": "logging.StreamHandler",
-            "formatter": "console",
+            "formatter": "structured",
+            "filters": ["suppress_unwanted_logs"],
         },
-        # Add a clause to log error messages to the console in production
-        "console_prod": {
-            "level": LOG_LEVEL,
-            "filters": ["require_debug_false", "request_id"],
-            "class": "logging.StreamHandler",
-            "formatter": "console",
-        },
-        # Handler for all other logging
-        "general_console": {
-            "level": LOG_LEVEL,
-            "filters": ["request_id"],
-            "class": "logging.StreamHandler",
-            "formatter": "console",
-        },
-        # Default server logger
-        "django.server": {
-            "level": LOG_LEVEL,
-            "filters": ["request_id"],
-            "class": "logging.StreamHandler",
-            "formatter": "django.server",
-        },
-        # Default mailing logger
-        "mail_admins": {
-            "level": "ERROR",
-            "filters": ["request_id", "require_debug_false"],
-            "class": "django.utils.log.AdminEmailHandler",
-        },
+    },
+    "root": {
+        "handlers": ["console_structured"],
+        "level": LOG_LEVEL,
+        "propagate": False,
     },
     "loggers": {
         "django": {
-            "handlers": ["console", "console_prod", "mail_admins"],
+            "handlers": ["console_structured"],
             # Keep this at info to avoid django internal debug logs;
             # we just want our own debug logs when log level is set to debug
             "level": "INFO",
             "propagate": False,
         },
-        "django.server": {
-            "handlers": ["django.server"],
-            # Filter health check logs
-            "filters": ["health_check", "request_id"],
-            "level": LOG_LEVEL,
-            "propagate": False,
-        },
-        # Default handler for all other loggers
-        "": {
-            "handlers": ["general_console"],
-            "filters": ["request_id"],
+        "uvicorn": {
+            "handlers": ["console_structured"],
             "level": LOG_LEVEL,
         },
     },
 }
+
+# https://django-structlog.readthedocs.io/en/latest/getting_started.html
+structlog.configure(
+    processors=[
+        timestamper,
+        structlog.stdlib.filter_by_level,
+    ]
+    + shared_processors
+    + [
+        structlog.stdlib.ProcessorFormatter.wrap_for_formatter,
+    ],
+    logger_factory=structlog.stdlib.LoggerFactory(),
+    cache_logger_on_first_use=(ENVIRONMENT == "production"),
+)
 
 if DJANGO_DB_LOGGING:
     # Behind a separate flag as it's a very noisy debug logger
     # and it's nice to be able to enable it conditionally within that context
     LOGGING["loggers"]["django.db.backends"] = {
         "level": "DEBUG",
-        "handlers": ["console", "console_prod"],
+        "handlers": ["console_structured"],
         "propagate": False,
     }
 

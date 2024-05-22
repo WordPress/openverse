@@ -25,10 +25,10 @@ Deployment logs are currently held in a private repository but are linked here f
 
 ### API
 
-| Environment | Deployment Log                                                                                                      | URL                                         | Version Endpoint                                                |
-| ----------- | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- | --------------------------------------------------------------- |
-| Staging     | [Deployment Log](https://github.com/WordPress/openverse-infrastructure/actions/workflows/deploy-staging-api.yml)    | <https://api-staging.openverse.engineering> | [`/version`](https://api-staging.openverse.engineering/version) |
-| Production  | [Deployment Log](https://github.com/WordPress/openverse-infrastructure/actions/workflows/deploy-production-api.yml) | <https://api.openverse.engineering>         | [`/version`](https://api.openverse.engineering/version)         |
+| Environment | Deployment Log                                                                                                      | URL                                 | Version Endpoint                                        |
+| ----------- | ------------------------------------------------------------------------------------------------------------------- | ----------------------------------- | ------------------------------------------------------- |
+| Staging     | [Deployment Log](https://github.com/WordPress/openverse-infrastructure/actions/workflows/deploy-staging-api.yml)    | <https://api-staging.openverse.org> | [`/version`](https://api-staging.openverse.org/version) |
+| Production  | [Deployment Log](https://github.com/WordPress/openverse-infrastructure/actions/workflows/deploy-production-api.yml) | <https://api.openverse.org>         | [`/version`](https://api.openverse.org/version)         |
 
 ## Overview
 

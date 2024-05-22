@@ -66,6 +66,7 @@ https://github.com/creativecommons/cccatalog/issues/334)
 import logging
 import os
 import re
+import urllib.parse
 from string import Template
 
 from airflow import DAG
@@ -343,20 +344,27 @@ def create_report_load_completion(
     ingestion_metrics,
     dated,
 ):
+    is_reingestion_workflow = "reingestion" in dag_id
+
+    op_kwargs = {
+        "dag_id": dag_id,
+        "media_types": media_types,
+        "duration": ingestion_metrics["duration"],
+        "record_counts_by_media_type": ingestion_metrics["record_counts_by_media_type"],
+        "dated": dated,
+        "is_reingestion_workflow": is_reingestion_workflow,
+    }
+
+    if not is_reingestion_workflow:
+        op_kwargs = op_kwargs | {
+            "date_range_start": "{{ data_interval_start | ds }}",
+            "date_range_end": "{{ data_interval_end | ds }}",
+        }
+
     return PythonOperator(
         task_id="report_load_completion",
         python_callable=reporting.report_completion,
-        op_kwargs={
-            "dag_id": dag_id,
-            "media_types": media_types,
-            "duration": ingestion_metrics["duration"],
-            "record_counts_by_media_type": ingestion_metrics[
-                "record_counts_by_media_type"
-            ],
-            "dated": dated,
-            "date_range_start": "{{ data_interval_start | ds }}",
-            "date_range_end": "{{ data_interval_end | ds }}",
-        },
+        op_kwargs=op_kwargs,
         trigger_rule=TriggerRule.ALL_DONE,
     )
 
@@ -441,7 +449,7 @@ def create_provider_api_workflow_dag(provider_conf: ProviderWorkflow):
                 ),
             ),
             "sql_rm_source_data_after_ingesting": Param(
-                default=True,
+                default=False,
                 type="boolean",
                 description=(
                     "Whether to delete source data from airflow and DB once ingestion"
@@ -565,7 +573,9 @@ def _build_partitioned_ingest_workflows(
 
 @task
 def report_aggregate_reingestion_errors(
-    provider_conf: ProviderReingestionWorkflow, dag_run=None
+    provider_conf: ProviderReingestionWorkflow,
+    dag_run=None,
+    conf=None,
 ):
     """
     Report ingestion errors that occurred during a reingestion workflow in
@@ -579,15 +589,28 @@ def report_aggregate_reingestion_errors(
         if f"pull_{media_type_name}_data" in task.task_id
     ]
 
+    base_url = conf.get("webserver", "BASE_URL")
+    dag_run_url = f"{base_url}/dags/{dag_run.dag_id}/grid?dag_run_id={urllib.parse.quote(dag_run.run_id)}"
+
     if not failed_pull_data_tasks:
         raise AirflowSkipException
 
     message = (
-        f"Ingestion errors were encountered in {len(failed_pull_data_tasks)}"
-        f" ingestion days while running the `{provider_conf.dag_id}` DAG. See the"
-        " logs for details:\n"
-    ) + "\n".join(
-        f"  - <{task.log_url}|{task.task_id}>" for task in failed_pull_data_tasks[:5]
+        (
+            f"Ingestion errors were encountered in {len(failed_pull_data_tasks)}"
+            f" ingestion days while running the `{provider_conf.dag_id}` DAG "
+            f"(<{dag_run_url}|link>). See the"
+            " logs for details"
+        )
+        + (
+            " (showing only the first 5):\n"
+            if len(failed_pull_data_tasks) > 5
+            else ":\n"
+        )
+        + "\n".join(
+            f"  - <{task.log_url}|{task.task_id}>"
+            for task in failed_pull_data_tasks[:5]
+        )
     )
 
     slack.send_alert(message, provider_conf.dag_id, "Aggregate Reingestion Error")

@@ -5,7 +5,7 @@ test.describe.configure({ mode: "parallel" })
 test.describe("v-checkbox", () => {
   test.describe("default", () => {
     test.beforeEach(async ({ page }) => {
-      await page.goto("/iframe.html?id=components-vcheckbox--default-story")
+      await page.goto("/iframe.html?id=components-vcheckbox--default")
     })
 
     test("default", async ({ page }) => {

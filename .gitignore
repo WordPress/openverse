@@ -66,3 +66,7 @@ ingestion_server.log
 *.tsbuildinfo
 
 dist
+
+# PDM
+.pdm-python
+.pdm-build

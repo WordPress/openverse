@@ -5,6 +5,7 @@
     :hide="close"
     :visible="visible"
     :variant="variant"
+    :trigger-element="triggerElement"
     class="flex items-center"
   >
     <VTabs
@@ -121,6 +122,10 @@ export default defineComponent({
     VTabs,
   },
   props: {
+    triggerElement: {
+      type: (process.server ? Object : HTMLElement) as PropType<HTMLElement>,
+      default: null,
+    },
     variant: {
       type: String as PropType<"fit-content" | "two-thirds">,
       default: "fit-content",

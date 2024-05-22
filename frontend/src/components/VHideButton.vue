@@ -24,13 +24,23 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { computed, defineComponent } from "@nuxtjs/composition-api"
 
 import { useUiStore } from "~/stores/ui"
 import { defineEvent } from "~/types/emits"
 
+import VButton from "~/components/VButton.vue"
+import VIconButton from "~/components/VIconButton/VIconButton.vue"
+import VIcon from "~/components/VIcon/VIcon.vue"
+
 export default defineComponent({
+  name: "VHideButton",
+  components: {
+    VButton,
+    VIconButton,
+    VIcon,
+  },
   emits: {
     click: defineEvent(),
   },

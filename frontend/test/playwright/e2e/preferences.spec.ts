@@ -4,10 +4,8 @@ import { preparePageForTests } from "~~/test/playwright/utils/navigation"
 
 import featureData from "~~/feat/feature-flags.json"
 
-import { _getFlagStatus, type FlagName } from "~/stores/feature-flag"
-import type { FeatureFlag } from "~/types/feature-flag"
-
-const deployEnv = "staging" as const
+import { getFlagStatus } from "~/stores/feature-flag"
+import type { FeatureFlag, FlagName } from "~/types/feature-flag"
 
 const getFeatureCookies = async (page: Page, cookieName: string) => {
   const cookies = await page.context().cookies()
@@ -30,7 +28,7 @@ const getFeaturesToTest = () => {
   } as const
   for (const [name, state] of Object.entries(testableFeatures)) {
     const flag = featureData.features[name as FlagName] as FeatureFlag
-    if (_getFlagStatus(flag, deployEnv) !== "switchable") {
+    if (getFlagStatus(flag) !== "switchable") {
       throw new Error(`Feature ${name} is not switchable`)
     }
     if (flag.defaultState !== state) {
@@ -72,8 +70,10 @@ test.describe("switchable features", () => {
 
       // eslint-disable-next-line playwright/no-conditional-in-test
       if (checked) {
+        // eslint-disable-next-line playwright/no-conditional-expect
         await expect(featureFlag).not.toBeChecked()
       } else {
+        // eslint-disable-next-line playwright/no-conditional-expect
         await expect(featureFlag).toBeChecked()
       }
     })

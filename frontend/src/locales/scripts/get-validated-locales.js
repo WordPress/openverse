@@ -29,7 +29,14 @@ const getValidatedLocales = async () => {
     code: locale.slug,
     dir: locale.textDirection || "ltr",
     file: `${locale.slug}.json`,
-    iso: locale.langCodeIso_639_1 ?? undefined,
+    // Check for a language in all three versions of the ISO 639 spec,
+    // defaulting to the v1 two-character codes before checking for the
+    // three-character codes in the v2 and v3 specs.
+    iso:
+      locale.langCodeIso_639_1 ??
+      locale.langCodeIso_639_2 ??
+      locale.langCodeIso_639_3 ??
+      undefined,
 
     /* Custom fields */
 
@@ -56,7 +63,7 @@ try {
   getValidatedLocales().then((locales) => {
     console.log(`Found ${locales.translated.length} locales with translations.`)
     const fileName = "valid-locales.json"
-    const valid = [...locales.translated, ...locales.untranslated]
+    const valid = locales.translated
     fs.writeFileSync(
       process.cwd() + `/src/locales/scripts/` + fileName,
       JSON.stringify(valid, null, 2) + "\n"

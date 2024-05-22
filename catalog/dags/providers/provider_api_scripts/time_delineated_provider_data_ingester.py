@@ -62,9 +62,6 @@ class TimeDelineatedProviderDataIngester(ProviderDataIngester):
         # Keep track of our ts pairs
         self.timestamp_pairs = []
 
-        # Keep track of the current ts pair
-        self.current_timestamp_pair = ()
-
     @staticmethod
     def format_ts(timestamp):
         return timestamp.isoformat().replace("+00:00", "Z")
@@ -109,9 +106,11 @@ class TimeDelineatedProviderDataIngester(ProviderDataIngester):
 
     def _get_record_count(self, start: datetime, end: datetime, **kwargs) -> int:
         """Get the number of records returned by the API for a particular interval."""
-        query_params = self.get_next_query_params(
-            prev_query_params=None, start_ts=start, end_ts=end, **kwargs
+        query_params = self._get_query_params(
+            prev_query_params=None,
+            fixed_query_params=self.get_timestamp_query_params(start, end, **kwargs),
         )
+
         response_json = self.get_response_json(query_params)
 
         return self.get_record_count_from_response(response_json)
@@ -121,7 +120,7 @@ class TimeDelineatedProviderDataIngester(ProviderDataIngester):
         Determine a set of timestamp pairs.
         Some provider APIs can behave unexpectedly when querying large datasets,
         resulting in large numbers of duplicates and eventual DAG timeouts
-        (see https://github.com/WordPress/openverse-catalog/pull/879 for an
+        (see <https://github.com/WordPress/openverse-catalog/pull/879> for an
         example). To avoid this, when we detect that a time period contains a large
         number of records we split it up into multiple smaller time periods and
         run ingestion separately for each.
@@ -195,28 +194,39 @@ class TimeDelineatedProviderDataIngester(ProviderDataIngester):
 
         return pairs_list
 
-    def ingest_records(self, **kwargs) -> None:
-        self.timestamp_pairs = self._get_timestamp_pairs(**kwargs)
+    @abstractmethod
+    def get_timestamp_query_params(
+        self, start: datetime, end: datetime, **kwargs
+    ) -> dict:
+        """
+        Given the start and end timestamps, return them in the appropriate shape
+        for query params for this ingester to be consumed by the API.
+        """
+        pass
+
+    def get_fixed_query_params(self):
+        self.timestamp_pairs = self._get_timestamp_pairs()
+
         if self.timestamp_pairs:
             logger.info(f"{len(self.timestamp_pairs)} timestamp pairs generated.")
+        # Run ingestion for each timestamp pair.
+        return [
+            self.get_timestamp_query_params(start_ts, end_ts)
+            for start_ts, end_ts in self.timestamp_pairs
+        ]
 
-        # Run ingestion for each timestamp pair
-        for start_ts, end_ts in self.timestamp_pairs:
-            self.ingest_records_for_timestamp_pair(start_ts, end_ts, **kwargs)
-
-    def ingest_records_for_timestamp_pair(
-        self, start_ts: datetime, end_ts: datetime, **kwargs
-    ):
-        # Update `current_timestamp_pair` to keep track of what we are processing.
-        self.current_timestamp_pair = (start_ts, end_ts)
-
+    def _ingest_records(
+        self, initial_query_params: dict | None, fixed_query_params: dict | None
+    ) -> None:
+        """
+        Override _ingest_records, which is called for each set of timestamp pairs,
+        to reset the counts before each round.
+        """
         # Reset counts
         self.new_iteration = True
         self.fetched_count = 0
 
-        # Run ingestion for the given parameters
-        logger.info(f"Ingesting data for start: {start_ts}, end: {end_ts}")
-        super().ingest_records(start_ts=start_ts, end_ts=end_ts, **kwargs)
+        super()._ingest_records(initial_query_params, fixed_query_params)
 
     def get_should_continue(self, response_json) -> bool:
         """

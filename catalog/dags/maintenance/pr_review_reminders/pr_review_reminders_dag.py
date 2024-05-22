@@ -60,6 +60,6 @@ with dag:
         op_kwargs={
             "github_pat": "{{ var.value.get('GITHUB_API_KEY', 'not_set') }}",
             "dry_run": "{{ var.json.get('PR_REVIEW_REMINDER_DRY_RUN', "
-            "var.value.ENVIRONMENT != 'prod') }}",
+            "var.value.ENVIRONMENT != 'production') }}",
         },
     )

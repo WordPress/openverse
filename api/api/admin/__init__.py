@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import admin
 from django.contrib.auth.admin import GroupAdmin, UserAdmin
 from django.contrib.auth.models import Group, User
@@ -7,9 +8,16 @@ from django.urls import reverse
 from oauth2_provider.models import AccessToken
 
 from api.admin.forms import UserPreferencesAdminForm
+from api.admin.media_report import (
+    AudioListViewAdmin,
+    AudioReportAdmin,
+    ImageListViewAdmin,
+    ImageReportAdmin,
+    MediaReportAdmin,
+    MediaSubreportAdmin,
+)
 from api.admin.site import openverse_admin
 from api.models import (
-    PENDING,
     Audio,
     AudioReport,
     ContentProvider,
@@ -17,6 +25,8 @@ from api.models import (
     ImageReport,
     UserPreferences,
 )
+from api.models.audio import AudioDecision
+from api.models.image import ImageDecision
 from api.models.media import AbstractDeletedMedia, AbstractSensitiveMedia
 from api.models.oauth import ThrottledApplication
 
@@ -30,66 +40,25 @@ admin.site.register(User, UserAdmin)
 admin.site.register(Group, GroupAdmin)
 
 
-@admin.register(Image)
-class ImageAdmin(admin.ModelAdmin):
-    search_fields = ("identifier",)
+admin.site.register(Image, ImageListViewAdmin)
+admin.site.register(Audio, AudioListViewAdmin)
 
 
-@admin.register(Audio)
-class AudioAdmin(admin.ModelAdmin):
-    search_fields = ("identifier",)
+# Register the MediaReportAdmin classes and its subclasses
 
-
-class MediaReportAdmin(admin.ModelAdmin):
-    list_display = ("id", "reason", "is_pending", "description", "created_at", "url")
-    list_filter = (
-        ("decision", admin.EmptyFieldListFilter),  # ~status, i.e. pending or moderated
-        "reason",
-    )
-    list_display_links = ("id",)
-    search_fields = ("description", "media_obj__identifier")
-    autocomplete_fields = ("media_obj",)
-    actions = None
-
-    def get_exclude(self, request, obj=None):
-        # ``identifier`` cannot be edited on an existing report.
-        if request.path.endswith("/change/"):
-            return ["media_obj"]
-
-    def get_readonly_fields(self, request, obj=None):
-        if obj is None:
-            return []
-        readonly_fields = [
-            "reason",
-            "description",
-            "media_obj_id",
-            "created_at",
-        ]
-        # ``status`` cannot be changed on a finalised report.
-        if obj.status != PENDING:
-            readonly_fields.append("status")
-        return readonly_fields
-
-
-admin.site.register(AudioReport, MediaReportAdmin)
-admin.site.register(ImageReport, MediaReportAdmin)
-
-
-class MediaSubreportAdmin(admin.ModelAdmin):
-    exclude = ("media_obj",)
-    search_fields = ("media_obj__identifier",)
-    readonly_fields = ("media_obj_id",)
-
-    def has_add_permission(self, *args, **kwargs):
-        """Create ``_Report`` instances instead."""
-        return False
-
+admin.site.register(AudioReport, AudioReportAdmin)
+admin.site.register(ImageReport, ImageReportAdmin)
 
 for klass in [
     *AbstractSensitiveMedia.__subclasses__(),
     *AbstractDeletedMedia.__subclasses__(),
 ]:
     admin.site.register(klass, MediaSubreportAdmin)
+
+# Temporary addition of model admin for decisions while this view gets built
+if settings.ENVIRONMENT != "production":
+    admin.site.register(ImageDecision, admin.ModelAdmin)
+    admin.site.register(AudioDecision, admin.ModelAdmin)
 
 
 @admin.register(ContentProvider)

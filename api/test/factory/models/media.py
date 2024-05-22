@@ -59,10 +59,11 @@ class MediaFactory(DjangoModelFactory):
     url = Faker("globally_unique_url")
     thumbnail = Faker("image_url")
     title = Faker("sentence", nb_words=4)
-    tags = factory.List(
-        [
+    tags = factory.LazyAttribute(
+        lambda o: [
             {
                 "name": CREATED_BY_FIXTURE_MARKER,
+                "provider": o.provider,
             }
         ]
     )

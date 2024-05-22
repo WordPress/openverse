@@ -46,7 +46,6 @@
         </figure>
 
         <section
-          v-if="isAdditionalSearchView"
           class="grid grid-cols-1 grid-rows-[auto,1fr] sm:grid-cols-[1fr,auto] sm:grid-rows-1 sm:gap-x-6"
         >
           <VMediaInfo :media="image" class="min-w-0 sm:col-start-1" />
@@ -55,39 +54,6 @@
             media-type="image"
             class="row-start-1 mb-4 !w-full flex-initial sm:col-start-2 sm:mb-0 sm:mt-1 sm:!w-auto"
           />
-        </section>
-        <section
-          v-else
-          id="title-button"
-          class="flex flex-row flex-wrap justify-between gap-x-6 md:mt-6 md:flex-row-reverse"
-        >
-          <VGetMediaButton
-            :media="image"
-            media-type="image"
-            class="mb-4 !w-full flex-initial md:mb-0 md:!w-max"
-          />
-          <div class="description-bold flex flex-1 flex-col justify-center">
-            <h1 class="description-bold md:heading-5 line-clamp-2">
-              {{ image.title }}
-            </h1>
-            <i18n v-if="image.creator" path="imageDetails.creator" tag="span">
-              <template #name>
-                <VLink
-                  v-if="image.creator_url"
-                  :aria-label="
-                    $t('mediaDetails.aria.creatorUrl', {
-                      creator: image.creator,
-                    })
-                  "
-                  :href="image.creator_url"
-                  :send-external-link-click-event="false"
-                  @click="sendVisitCreatorLinkEvent"
-                  >{{ image.creator }}</VLink
-                >
-                <span v-else>{{ image.creator }}</span>
-              </template>
-            </i18n>
-          </div>
         </section>
 
         <VMediaReuse :media="image" />
@@ -128,12 +94,10 @@ import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 import { useSingleResultPageMeta } from "~/composables/use-single-result-page-meta"
 
 import { isRetriable } from "~/utils/errors"
-import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useSingleResultStore } from "~/stores/media/single-result"
 import { singleResultMiddleware } from "~/middleware/single-result"
 
 import VBone from "~/components/VSkeleton/VBone.vue"
-import VLink from "~/components/VLink.vue"
 import VMediaReuse from "~/components/VMediaInfo/VMediaReuse.vue"
 import VRelatedMedia from "~/components/VMediaInfo/VRelatedMedia.vue"
 import VSketchFabViewer from "~/components/VSketchFabViewer.vue"
@@ -156,7 +120,6 @@ export default defineComponent({
     VSingleResultControls,
     VSafetyWall,
     VBone,
-    VLink,
     VMediaReuse,
     VRelatedMedia,
     VSketchFabViewer,
@@ -291,17 +254,6 @@ export default defineComponent({
       })
     }
 
-    const sendVisitCreatorLinkEvent = () => {
-      if (!image.value) {
-        return
-      }
-      sendCustomEvent("VISIT_CREATOR_LINK", {
-        id: image.value.id,
-        source: image.value.source ?? image.value.provider,
-        url: image.value.creator_url ?? "",
-      })
-    }
-
     const { reveal, hide, isHidden } = useSensitiveMedia(image.value)
 
     const { pageTitle, detailPageMeta } = useSingleResultPageMeta(image)
@@ -311,14 +263,7 @@ export default defineComponent({
       title: pageTitle.value,
     }))
 
-    const featureFlagStore = useFeatureFlagStore()
-    const isAdditionalSearchView = computed(() => {
-      return featureFlagStore.isOn("additional_search_views")
-    })
-
     return {
-      isAdditionalSearchView,
-
       image,
       fetchingError,
       imageWidth,
@@ -337,7 +282,6 @@ export default defineComponent({
       skipToContentTargetId,
 
       sendGetMediaEvent,
-      sendVisitCreatorLinkEvent,
 
       isHidden,
       reveal,

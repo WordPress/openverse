@@ -6,7 +6,7 @@ ETL Process:            Use the API to identify all CC licensed images.
 Output:                 TSV file containing the images and the
                         respective meta-data.
 
-Notes:                  https://pro.europeana.eu/page/search
+Notes:                  <https://pro.europeana.eu/page/search>
 """
 
 import argparse
@@ -231,7 +231,7 @@ class EuropeanaDataIngester(ProviderDataIngester):
 
         return f"timestamp_update:[{start_timestamp} TO {end_timestamp}]"
 
-    def get_next_query_params(self, prev_query_params) -> dict:
+    def get_next_query_params(self, prev_query_params: dict | None) -> dict:
         if not prev_query_params:
             return self.base_request_body
 

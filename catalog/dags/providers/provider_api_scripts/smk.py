@@ -5,7 +5,7 @@ ETL Process:            Use the API to identify all openly licensed media.
 
 Output:                 TSV file containing the media metadata.
 
-Notes:                  https://www.smk.dk/en/article/smk-api/
+Notes:                  <https://www.smk.dk/en/article/smk-api/>
 """
 
 import logging
@@ -26,7 +26,7 @@ class SmkDataIngester(ProviderDataIngester):
     headers = {"Accept": "application/json"}
     providers = {"image": prov.SMK_DEFAULT_PROVIDER}
 
-    def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
+    def get_next_query_params(self, prev_query_params: dict | None) -> dict:
         if not prev_query_params:
             return {
                 "keys": "*",

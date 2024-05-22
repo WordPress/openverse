@@ -6,7 +6,7 @@ ETL Process:            Use the API to identify all CC licensed images.
 Output:                 TSV file containing the image,
                         their respective meta-data.
 
-Notes:                  http://api-docs.phylopic.org/v2/
+Notes:                  <http://api-docs.phylopic.org/v2/>
                         No rate limit specified.
 """
 
@@ -79,7 +79,7 @@ class PhylopicDataIngester(ProviderDataIngester):
             f"Total pages: {self.total_pages}."
         )
 
-    def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
+    def get_next_query_params(self, prev_query_params: dict | None) -> dict:
         if prev_query_params is not None:
             self.current_page += 1
 

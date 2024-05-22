@@ -4,15 +4,15 @@ Provider:   iNaturalist
 Output:     Records loaded to the image catalog table.
 
 Notes:      The iNaturalist API is not intended for data scraping.
-            https://api.inaturalist.org/v1/docs/
+            <https://api.inaturalist.org/v1/docs/>
             But there is a full dump intended for sharing on S3.
-            https://github.com/inaturalist/inaturalist-open-data/tree/documentation/Metadata
+            <https://github.com/inaturalist/inaturalist-open-data/tree/documentation/Metadata>
             Because these are exceptionally large normalized tables, as opposed to more document
             oriented API responses, we found that bringing the data into postgres first
             was the most effective approach. More detail in slack here:
-            https://wordpress.slack.com/archives/C02012JB00N/p1653145643080479?thread_ts=1653082292.714469&cid=C02012JB00N
+            <https://wordpress.slack.com/archives/C02012JB00N/p1653145643080479?thread_ts=1653082292.714469&cid=C02012JB00N>
             We use the table structure defined here,
-            https://github.com/inaturalist/inaturalist-open-data/blob/main/Metadata/structure.sql
+            <https://github.com/inaturalist/inaturalist-open-data/blob/main/Metadata/structure.sql>
             except for adding ancestry tags to the taxa table.
 """
 
@@ -55,7 +55,7 @@ COL_URL = "https://download.checklistbank.org/col/latest_coldp.zip"
 class INaturalistDataIngester(ProviderDataIngester):
     providers = {"image": provider_details.INATURALIST_DEFAULT_PROVIDER}
 
-    def get_next_query_params(self, prev_query_params=None, **kwargs):
+    def get_next_query_params(self, prev_query_params=None):
         raise NotImplementedError(
             "Instead we use get_batches to dynamically create subtasks."
         )
@@ -328,7 +328,7 @@ class INaturalistDataIngester(ProviderDataIngester):
                 python_callable=INaturalistDataIngester.load_catalog_of_life_names,
                 doc_md="Load vernacular taxon names from Catalog of Life",
                 op_kwargs={
-                    "remove_api_files": "{{params.sql_rm_source_data_after_ingesting}}"
+                    "remove_api_files": "{{ params.sql_rm_source_data_after_ingesting or var.json.SQL_RM_SOURCE_DATA_AFTER_INGESTION }}",
                 },
                 execution_timeout=timedelta(minutes=15),
             )
@@ -347,8 +347,11 @@ class INaturalistDataIngester(ProviderDataIngester):
             check_drop_parameter = ShortCircuitOperator(
                 task_id="check_drop_parameter",
                 doc_md="Skip post-ingestion if NOT sql_rm_source_data_after_ingesting.",
-                op_args=["{{ params.sql_rm_source_data_after_ingesting }}"],
-                python_callable=(lambda x: x),
+                op_args=[
+                    "{{ params.sql_rm_source_data_after_ingesting }}",
+                    "{{ var.json.SQL_RM_SOURCE_DATA_AFTER_INGESTION }}",
+                ],
+                python_callable=(lambda *x: any(x)),
                 trigger_rule=TriggerRule.NONE_SKIPPED,
                 # just skip the drop steps, not the final reporting step in the dag
                 ignore_downstream_trigger_rules=False,

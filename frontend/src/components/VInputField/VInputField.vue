@@ -59,11 +59,12 @@ export default defineComponent({
     },
     /**
      * the textual content of the label associated with this input field; This
-     * label is SR-only.
+     * label is SR-only. If you want to display a visible label, add
+     * `for="fieldId"` to the label element and set the `fieldId` prop to the
+     * same value as the `for` attribute.
      */
     labelText: {
       type: String,
-      required: true,
     },
     /**
      * the ID to assign to the field; This can be used to attach custom labels

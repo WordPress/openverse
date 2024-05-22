@@ -1,0 +1,13 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "noEmit": true,
+    "moduleResolution": "NodeNext",
+    "rootDir": ".",
+    "lib": ["ES2021"],
+    "target": "ES2021"
+  },
+  "include": ["src", "test"],
+  "exclude": ["dist"]
+}

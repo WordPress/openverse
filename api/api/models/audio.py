@@ -1,3 +1,5 @@
+from textwrap import dedent as d
+
 from django.conf import settings
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
@@ -11,6 +13,7 @@ from api.models.media import (
     AbstractDeletedMedia,
     AbstractMedia,
     AbstractMediaDecision,
+    AbstractMediaDecisionThrough,
     AbstractMediaList,
     AbstractMediaReport,
     AbstractSensitiveMedia,
@@ -46,8 +49,8 @@ class AudioSet(ForeignIdentifierMixin, MediaMixin, FileMixin, OpenLedgerModel):
     """
     This is an ordered collection of audio files, such as a podcast series or an album.
 
-    Not to be confused with AudioList which is a many-to-many collection of audio files,
-    like a playlist or favourites library.
+    Not to be confused with ``AudioList`` which is a many-to-many collection of audio
+    files, like a playlist or favourites library.
 
     The FileMixin inherited by this model refers not to audio but album art.
     """
@@ -139,7 +142,7 @@ class AudioAddOn(OpenLedgerModel):
 
 class Audio(AudioFileMixin, AbstractMedia):
     """
-    Represents one audio media instance.
+    One audio media instance.
 
     Inherited fields
     ================
@@ -161,8 +164,7 @@ class Audio(AudioFileMixin, AbstractMedia):
     )
 
     # Replaces the foreign key to AudioSet
-    audio_set_foreign_identifier = models.CharField(
-        max_length=1000,
+    audio_set_foreign_identifier = models.TextField(
         blank=True,
         null=True,
         help_text="Reference to set of which this track is a part.",
@@ -192,7 +194,16 @@ class Audio(AudioFileMixin, AbstractMedia):
     alt_files = models.JSONField(
         blank=True,
         null=True,
-        help_text="JSON describing alternative files for this audio.",
+        help_text=d("""
+        JSON object containing information on alternative audio files. Each object
+        is expected to contain:
+
+        - `url`: URL reference to the file
+        - `filesize`: File size in bytes
+        - `filetype`: Extension of the file
+        - `bit_rate`: Bitrate of the file in bits/second
+        - `sample_rate`: Sample rate of the file in bits/second
+        """),
     )
 
     @property
@@ -243,7 +254,7 @@ class Audio(AudioFileMixin, AbstractMedia):
 
 class DeletedAudio(AbstractDeletedMedia):
     """
-    Stores identifiers of audio tracks that have been deleted from the source.
+    Audio tracks deleted from the upstream source.
 
     Do not create instances of this model manually. Create an ``AudioReport`` instance
     instead.
@@ -269,7 +280,7 @@ class DeletedAudio(AbstractDeletedMedia):
 
 class SensitiveAudio(AbstractSensitiveMedia):
     """
-    Stores all audio tracks that have been flagged as 'mature'.
+    Audio tracks with verified sensitivity reports.
 
     Do not create instances of this model manually. Create an ``AudioReport`` instance
     instead.
@@ -295,6 +306,13 @@ class SensitiveAudio(AbstractSensitiveMedia):
 
 
 class AudioReport(AbstractMediaReport):
+    """
+    User-submitted reports of audio tracks.
+
+    ``AudioDecision`` is populated only if moderators have made a decision
+    for this report.
+    """
+
     media_class = Audio
 
     media_obj = models.ForeignKey(
@@ -319,18 +337,37 @@ class AudioReport(AbstractMediaReport):
 
 
 class AudioDecision(AbstractMediaDecision):
-    """Represents moderation decisions taken for audio tracks."""
+    """Moderation decisions taken for audio tracks."""
 
     media_class = Audio
 
     media_objs = models.ManyToManyField(
         to="Audio",
-        db_constraint=False,
+        through="AudioDecisionThrough",
         help_text="The audio items being moderated.",
     )
 
 
+class AudioDecisionThrough(AbstractMediaDecisionThrough):
+    """
+    Many-to-many reference table for audio decisions.
+
+    This is made explicit (rather than using Django's default) so that the audio can
+    be referenced by `identifier` rather than an arbitrary `id`.
+    """
+
+    media_obj = models.ForeignKey(
+        Audio,
+        to_field="identifier",
+        on_delete=models.CASCADE,
+        db_column="identifier",
+    )
+    decision = models.ForeignKey(AudioDecision, on_delete=models.CASCADE)
+
+
 class AudioList(AbstractMediaList):
+    """A list of audio files. Currently unused."""
+
     audios = models.ManyToManyField(
         Audio,
         related_name="lists",

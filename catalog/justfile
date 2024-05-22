@@ -84,7 +84,6 @@ shell:
 # Launch an IPython shell in a new container under `SERVICE`
 ipython *args: up-deps
     env DC_USER="airflow" just ../run \
-        --rm \
         --workdir /opt/airflow/catalog/dags \
         {{ SERVICE }} \
         bash -c \'ipython {{ args }}\'
@@ -100,7 +99,6 @@ pgcli db_user_pass="deploy" db_name="openledger": up
 # Run a command in a test container under `SERVICE`
 _mount-test command: up-deps
     env DC_USER="airflow" just ../run \
-        --rm \
         -e AIRFLOW_VAR_INGESTION_LIMIT=1000000 \
         -w /opt/airflow/catalog \
         --volume \'{{ justfile_directory() }}/../docker\':/opt/airflow/docker/ \
@@ -152,12 +150,11 @@ generate-docs doc="dag" fail_on_diff="false":
     just ../lint prettier $TEMP.md &>/dev/null || true
     echo "Linting done!"
 
-    if [ "{{ doc }}" == "media-props" ]; then
-      echo -n "Replacing linted md <hr> '---' with '----' required by sphinx..."
-      sed 's/^---$/----/' "../$TEMP.md" > "../$TEMP.tmp"
-      mv "../$TEMP.tmp" "../$TEMP.md"
-      echo "Replacements done!"
-    fi
+    echo -n "Replacing linted md <hr> '---' with '----' required by sphinx..."
+    sed 's/^---$/----/' "../$TEMP.md" > "../$TEMP.tmp"
+    mv "../$TEMP.tmp" "../$TEMP.md"
+    echo "Replacements done!"
+
     mv ../$TEMP.md ../$FINAL_FILE
     echo "Moved the generated file to ../$FINAL_FILE"
     if {{ fail_on_diff }}; then
@@ -172,3 +169,7 @@ generate-docs doc="dag" fail_on_diff="false":
 # Generate files for a new provider
 add-provider provider_name endpoint +media_types="image":
     python3 templates/create_provider_ingester.py "{{ provider_name }}" "{{ endpoint }}" -m {{ media_types }}
+
+# Run bash in the container set in the SERVICE env-var
+run:
+    just ../run {{ SERVICE }} bash

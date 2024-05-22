@@ -14,7 +14,9 @@ export const getAudioObj = (overrides = {}) =>
       license_version: "2.5",
       license_url: "https://creativecommons.org/licenses/by-nc-sa/2.5/",
       provider: "jamendo",
+      providerName: "Jamendo",
       source: "jamendo",
+      sourceName: "Jamendo",
       filetype: "mp32",
       tags: [
         {

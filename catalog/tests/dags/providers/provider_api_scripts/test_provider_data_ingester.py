@@ -372,6 +372,49 @@ def test_ingest_records_uses_initial_query_params_from_dagrun_conf():
         get_batch_mock.assert_called_with({"has_image": 1, "page": 5})
 
 
+def test_ingest_records_starts_from_first_fixed_query_param_in_initial_query_params():
+    """
+    This tests that if a DAG supplies some fixed_query_params, and then
+    initial_query_params are passed in the DagRun conf, that the DAG starts from the
+    first fixed_query_param matching the initial_query_params passed in. E.g., if the
+    DAG's fixed params are [{"fixed_param": 1}, {"fixed_param": 2}, {"fixed_param": 3}]
+    then on a normal run, _ingest_records will be called 3 times, once with each fixed param.
+
+    If the `initial_query_params` are passed in and include {"fixed_param": 2}, then on that
+    DagRun we want _ingest_records to only be called twice (for values 2 and 3 of fixed_param.)
+    """
+    # Initialize the ingester with a conf
+    ingester = MockProviderDataIngester(
+        {"initial_query_params": {"has_image": 1, "page": 5, "fixed_param": 2}}
+    )
+
+    with (
+        patch.object(ingester, "get_batch") as get_batch_mock,
+        patch.object(ingester, "process_batch", return_value=3),
+        patch.object(
+            ingester,
+            "get_fixed_query_params",
+            return_value=[{"fixed_param": 1}, {"fixed_param": 2}, {"fixed_param": 3}],
+        ),
+    ):
+        get_batch_mock.side_effect = [
+            (EXPECTED_BATCH_DATA, True),  # First batch of the first round
+            (EXPECTED_BATCH_DATA, False),  # Second and final batch of the first round
+            (EXPECTED_BATCH_DATA, False),  # First and final batch of the second round
+        ]
+
+        ingester.ingest_records()
+
+        # get_batch was called with the appropriate query_params
+        get_batch_mock.assert_has_calls(
+            [
+                call({"has_image": 1, "page": 5, "fixed_param": 2}),
+                call({"has_image": 1, "page": 6, "fixed_param": 2}),
+                call({"has_image": 1, "page": 1, "fixed_param": 3}),
+            ]
+        )
+
+
 def test_ingest_records_uses_query_params_list_from_dagrun_conf():
     # Initialize the ingester with a conf
     ingester = MockProviderDataIngester(
@@ -428,9 +471,36 @@ def test_ingest_records_uses_additional_query_params_from_dagrun_conf():
         get_batch_mock.assert_has_calls(
             [
                 call({"has_image": 1, "page": 1, "extra_param": 310}),
-                call({"has_image": 1, "page": 1, "extra_param": 310}),
-                call({"has_image": 1, "page": 1, "extra_param": 310}),
-                call({"has_image": 1, "page": 1, "extra_param": 310}),
+                call({"has_image": 1, "page": 2, "extra_param": 310}),
+                call({"has_image": 1, "page": 3, "extra_param": 310}),
+                call({"has_image": 1, "page": 4, "extra_param": 310}),
+            ]
+        )
+
+
+def test_ingest_records_merges_fixed_query_params():
+    # Initialize the ingester with a conf
+    ingester = MockProviderDataIngester()
+
+    with (
+        patch.object(ingester, "get_batch") as get_batch_mock,
+        patch.object(ingester, "process_batch", return_value=3),
+    ):
+        get_batch_mock.side_effect = [
+            (EXPECTED_BATCH_DATA, True),
+            (EXPECTED_BATCH_DATA, True),
+            (EXPECTED_BATCH_DATA, True),
+            (EXPECTED_BATCH_DATA, False),
+        ]
+
+        ingester._ingest_records(None, fixed_query_params={"foo": "bar"})
+
+        get_batch_mock.assert_has_calls(
+            [
+                call({"has_image": 1, "page": 1, "foo": "bar"}),
+                call({"has_image": 1, "page": 2, "foo": "bar"}),
+                call({"has_image": 1, "page": 3, "foo": "bar"}),
+                call({"has_image": 1, "page": 4, "foo": "bar"}),
             ]
         )
 

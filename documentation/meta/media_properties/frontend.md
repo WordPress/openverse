@@ -42,11 +42,11 @@ clarity.
 | `license_version`                             | `LicenseVersion` (custom)     |           |
 | [`originalTitle`](#Media-originalTitle-notes) | `string`                      |           |
 | `provider`                                    | `string`                      |           |
-| `providerName`                                | `string`                      | ✓         |
+| `providerName`                                | `string`                      |           |
 | `related_url`                                 | `string`                      |           |
 | `sensitivity`                                 | `Sensitivity[]` (custom)      |           |
-| `source`                                      | `string`                      | ✓         |
-| `sourceName`                                  | `string`                      | ✓         |
+| `source`                                      | `string`                      |           |
+| `sourceName`                                  | `string`                      |           |
 | `tags`                                        | `Tag[]` (custom)              |           |
 | `thumbnail`                                   | `string`                      | ✓         |
 | [`title`](#Media-title-notes)                 | `string`                      |           |

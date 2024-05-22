@@ -6,8 +6,9 @@ ETL Process:            Use the API to identify all CC licensed images.
 Output:                 TSV file containing the images and the
                         respective meta-data.
 
-Notes:                  https://www.flickr.com/help/terms/api
-                        Rate limit: 3600 requests per hour.
+Notes:                  <https://www.flickr.com/help/terms/api>
+
+Rate limit:             3600 requests per hour.
 """
 
 import argparse
@@ -84,6 +85,9 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
         # during different stages of the ingestion process.
         self.process_large_batch = False
 
+        # Keep track of the current timestamp pair being processed.
+        self.current_timestamp_pair = ()
+
     def ingest_records(self, **kwargs):
         """
         Ingest records, handling large batches.
@@ -104,7 +108,7 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
         all the unique records over this time period. We will process up to the
         max_unique_records count and then move on to the next batch.
         """
-        # Perform ingestion as normal, splitting requests into time-slices of at most
+        # Perform full ingestion as normal, splitting requests into time-slices of at most
         # 5 minutes. When a batch is encountered which contains more than
         # max_unique_records, it is skipped and added to the `large_batches` list for
         # later processing.
@@ -120,8 +124,13 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
             # For each large batch, ingest records for that interval one license
             # type at a time.
             for license_ in LICENSE_INFO.keys():
-                super().ingest_records_for_timestamp_pair(
-                    start_ts=start_ts, end_ts=end_ts, license=license_
+                super()._ingest_records(
+                    initial_query_params=None,
+                    fixed_query_params={
+                        "min_upload_date": start_ts,
+                        "max_upload_date": end_ts,
+                        "license": license_,
+                    },
                 )
         logger.info("Completed large batch processing by license type.")
 
@@ -130,22 +139,28 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
         # additional requests when generating timestamp pairs.
         logger.info(f"Made {self.requests_count + 25} requests to the Flickr API.")
 
-    def get_next_query_params(self, prev_query_params, **kwargs):
+    def _ingest_records(
+        self, initial_query_params: dict | None, fixed_query_params: dict | None
+    ) -> None:
+        # Update `current_timestamp_pair` to keep track of what we are processing.
+        self.current_timestamp_pair = (
+            fixed_query_params["min_upload_date"],
+            fixed_query_params["max_upload_date"],
+        )
+        return super()._ingest_records(initial_query_params, fixed_query_params)
+
+    def get_timestamp_query_params(
+        self, start: datetime, end: datetime, **kwargs
+    ) -> dict:
+        return {"min_upload_date": start, "max_upload_date": end}
+
+    def get_next_query_params(self, prev_query_params: dict | None):
         if not prev_query_params:
             # Initial request, return default params
-            start_timestamp = kwargs.get("start_ts")
-            end_timestamp = kwargs.get("end_ts")
-
-            # license will be available in the params if we're dealing
-            # with a large batch. If not, fall back to all licenses
-            license_ = kwargs.get("license", self.default_license_param)
-
             return {
-                "min_upload_date": start_timestamp,
-                "max_upload_date": end_timestamp,
                 "page": 0,
                 "api_key": self.api_key,
-                "license": license_,
+                "license": self.default_license_param,
                 "per_page": self.batch_limit,
                 "method": "flickr.photos.search",
                 "media": "photos",

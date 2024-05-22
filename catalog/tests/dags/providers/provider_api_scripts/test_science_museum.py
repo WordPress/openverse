@@ -9,6 +9,7 @@ from tests.dags.providers.provider_api_scripts.resources.json_load import (
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
 from common.storage.image import ImageStore
+from providers.provider_api_scripts import science_museum
 from providers.provider_api_scripts.science_museum import ScienceMuseumDataIngester
 
 
@@ -23,6 +24,14 @@ sm.media_stores = {"image": image_store}
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s:  %(message)s", level=logging.DEBUG
 )
+
+
+@pytest.fixture
+def mock_rewrite_redirected_url(monkeypatch):
+    def mock_rewrite(url_string):
+        return url_string
+
+    monkeypatch.setattr(science_museum, "rewrite_redirected_url", mock_rewrite)
 
 
 @pytest.fixture(autouse=True)
@@ -82,11 +91,9 @@ def test_get_year_ranges():
 
 
 def test_get_query_param_default():
-    actual_param = sm.get_next_query_params({}, **{"year_range": (0, 1500)})
+    actual_param = sm.get_next_query_params({})
     expected_param = default_params | {
         "page[number]": 0,
-        "date[from]": 0,
-        "date[to]": 1500,
     }
 
     assert actual_param == expected_param
@@ -95,13 +102,9 @@ def test_get_query_param_default():
 def test_get_query_param_offset_page_number():
     sm = ScienceMuseumDataIngester()
     sm.page_number = 10
-    actual_param = sm.get_next_query_params(
-        default_params | {"page[number]": 10}, **{"year_range": (1500, 2000)}
-    )
+    actual_param = sm.get_next_query_params(default_params | {"page[number]": 10})
     expected_param = default_params | {
         "page[number]": 11,
-        "date[from]": 1500,
-        "date[to]": 2000,
     }
 
     assert actual_param == expected_param
@@ -164,28 +167,28 @@ def test_get_record_data_returns_empty_list_for_falsy_image_required_values(reco
     assert actual_record_data == []
 
 
-def test_get_record_data_success(object_data):
+def test_get_record_data_success(object_data, mock_rewrite_redirected_url):
     actual_record_data = sm.get_record_data(object_data)
     actual_image_data = actual_record_data[0]
-    assert len(actual_record_data) == 12
+    assert len(actual_record_data) == 3
 
     expected_image_data = {
-        "foreign_identifier": "i4453",
-        "foreign_landing_url": "https://collection.sciencemuseumgroup.org.uk/objects/co56202/telescope-by-galileo-replica-telescope-galilean-telescope-refracting-replica",
-        "url": "https://coimages.sciencemuseumgroup.org.uk/images/4/453/large_1923_0668__0002_.jpg",
-        "height": 1151,
+        "foreign_identifier": "i458349",
+        "foreign_landing_url": "https://collection.sciencemuseumgroup.org.uk/objects/co84905/small-votive-organ-of-unknown-type-votive-viscera",
+        "url": "https://coimages.sciencemuseumgroup.org.uk/458/349/large_a659676__0001_.jpg",
+        "height": 1150,
         "width": 1536,
         "filetype": "jpeg",
+        "filesize": 134947,
         "license_info": BY_SA_4_0,
-        "creator": "Galileo Galilei",
-        "title": "Telescope by Galileo (replica) (telescope - Galilean; telescope - refracting; replica)",
+        "creator": "Unknown maker",
+        "title": "Small votive organ of unknown type",
         "meta_data": {
-            "accession number": "1923-668",
-            "category": "SCM - Astronomy",
-            "description": "Facsimile of telescope by Galileo with main tube measuring  2-foot, 8 1/2-inches "
-            "and magnification of 21 times.  Made by Cipriani and purchased from the Museo di "
-            "Fisica e Storia Naturale, Florence, Italy in 1923.",
-            "name": "telescope - refracting",
+            "accession number": "A659676",
+            "category": "SCM - Classical & Medieval Medicine",
+            "description": "Small votive organ of unknown type, built up from coiled strips of terracotta, probably Roman, 200BCE-200BC",
+            "name": "votive viscera",
+            "creditline": "Loan, Wellcome Trust",
         },
     }
     for key, value in expected_image_data.items():
@@ -204,44 +207,46 @@ def test_creator_info_success(object_data):
     attributes = object_data["attributes"]
     actual_creator = sm._get_creator_info(attributes)
 
-    assert actual_creator == "Galileo Galilei"
+    assert actual_creator == "Unknown maker"
 
 
 def test_creator_info_fail(object_data):
     attributes = object_data["attributes"]
-    attributes["lifecycle"]["creation"][0].pop("maker", None)
+    attributes["creation"].pop("maker", None)
     actual_creator = sm._get_creator_info(attributes)
 
     assert actual_creator is None
 
 
-def test_image_info_large():
+def test_image_info_large(mock_rewrite_redirected_url):
     large_image = _get_resource_json("large_image.json")
-    actual_image, actual_height, actual_width, actual_filetype = sm._get_image_info(
-        large_image
+    actual_image, actual_height, actual_width, actual_filetype, actual_filesize = (
+        sm._get_image_info(large_image)
     )
     expected_image = (
-        "https://coimages.sciencemuseumgroup.org.uk/images/3/563/"
+        "https://coimages.sciencemuseumgroup.org.uk/3/563/"
         "large_1999_0299_0001__0002_.jpg"
     )
     expected_height = 1022
     expected_width = 1536
     expected_filetype = "jpeg"
+    expected_filesize = 58772
 
     assert actual_image == expected_image
     assert actual_height == expected_height
     assert actual_width == expected_width
     assert actual_filetype == expected_filetype
+    assert actual_filesize == expected_filesize
 
 
-def test_image_info_medium():
+def test_image_info_medium(mock_rewrite_redirected_url):
     medium_image = _get_resource_json("medium_image.json")
-    actual_url, actual_height, actual_width, actual_filetype = sm._get_image_info(
-        medium_image
+    actual_url, actual_height, actual_width, actual_filetype, actual_filesize = (
+        sm._get_image_info(medium_image)
     )
 
     expected_image = (
-        "https://coimages.sciencemuseumgroup.org.uk/images/3/563/"
+        "https://coimages.sciencemuseumgroup.org.uk/3/563/"
         "medium_1999_0299_0001__0002_.jpg"
     )
     expected_height = 576
@@ -251,31 +256,35 @@ def test_image_info_medium():
     assert actual_height == expected_height
     assert actual_width == expected_width
     assert actual_filetype == "jpeg"
+    assert actual_filesize is None
 
 
 def test_image_info_failure():
-    actual_url, actual_height, actual_width, actual_filetype = sm._get_image_info({})
+    actual_url, actual_height, actual_width, actual_filetype, actual_filesize = (
+        sm._get_image_info({})
+    )
 
     assert actual_url is None
     assert actual_height is None
     assert actual_width is None
     assert actual_filetype is None
+    assert actual_filesize is None
 
 
-def test_check_relative_url():
+def test_check_relative_url(mock_rewrite_redirected_url):
     rel_url = "3/563/large_thumbnail_1999_0299_0001__0002_.jpg"
     actual_url = sm.check_url(rel_url)
     expected_url = (
-        "https://coimages.sciencemuseumgroup.org.uk/images/3/563/"
+        "https://coimages.sciencemuseumgroup.org.uk/3/563/"
         "large_thumbnail_1999_0299_0001__0002_.jpg"
     )
 
     assert actual_url == expected_url
 
 
-def test_check_complete_url():
+def test_check_complete_url(mock_rewrite_redirected_url):
     url = (
-        "https://coimages.sciencemuseumgroup.org.uk/images/3/563/"
+        "https://coimages.sciencemuseumgroup.org.uk/3/563/"
         "large_thumbnail_1999_0299_0001__0002_.jpg"
     )
     actual_url = sm.check_url(url)
@@ -313,30 +322,30 @@ def test_get_dimensions_none():
     [
         # Typical license with dash
         (
-            {"source": {"legal": {"rights": [{"usage_terms": "CC-BY-NC-SA 4.0"}]}}},
+            {"legal": {"rights": [{"licence": "CC-BY-NC-SA 4.0"}]}},
             BY_NC_SA_4_0,
         ),
         (
-            {"source": {"legal": {"rights": [{"usage_terms": "CC-BY-NC-ND 4.0"}]}}},
+            {"legal": {"rights": [{"licence": "CC-BY-NC-ND 4.0"}]}},
             BY_NC_ND_4_0,
         ),
         # Typical license with space
         (
-            {"source": {"legal": {"rights": [{"usage_terms": "CC BY-NC-SA 4.0"}]}}},
+            {"legal": {"rights": [{"licence": "CC BY-NC-SA 4.0"}]}},
             BY_NC_SA_4_0,
         ),
         (
-            {"source": {"legal": {"rights": [{"usage_terms": "CC BY-SA 4.0"}]}}},
+            {"legal": {"rights": [{"licence": "CC BY-SA 4.0"}]}},
             BY_SA_4_0,
         ),
         # No legal section
         (
-            {"source": {}},
+            {},
             None,
         ),
         # No usage terms
         (
-            {"source": {"legal": {"rights": [{"details": "Details!"}]}}},
+            {"legal": {"rights": [{"details": "Details!"}]}},
             None,
         ),
         # Invalid usage terms
