@@ -94,7 +94,7 @@ async def _head(session: aiohttp.ClientSession, url: str) -> tuple[str, int]:
                 url, allow_redirects=False, headers=HEADERS, timeout=_timeout
             )
             return url, response.status
-    except (aiohttp.ClientError, asyncio.TimeoutError) as exception:
+    except (aiohttp.ClientError, TimeoutError) as exception:
         _log_validation_failure(url, exception)
         return url, -1
 
