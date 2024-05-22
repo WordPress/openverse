@@ -1,7 +1,7 @@
 import asyncio
 import time
 from contextlib import asynccontextmanager
-from functools import wraps
+from functools import partial, wraps
 
 from django.conf import settings
 
@@ -45,51 +45,43 @@ def _get_expiry(status, default):
 _timeout = aiohttp.ClientTimeout(total=2)
 
 
-# Limits total concurrent dead link requests in the worker
-_head_request_semaphore: None | asyncio.Semaphore = (
-    asyncio.Semaphore(settings.LINK_VALIDATION_MAX_CONCURRENT_REQUESTS)
-    if settings.LINK_VALIDATION_MAX_CONCURRENT_REQUESTS
-    else None
-)
-
-
-def _log_semaphore_event(event: str, *, url: str):
-    logger.info(
-        event,
-        locked=_head_request_semaphore.locked(),
-        url=url,
-        waiters=len(_head_request_semaphore._waiters or []),
-        count=_head_request_semaphore._value,
-    )
-
-
 @asynccontextmanager
-async def _flow_control(url):
+async def _flow_control(semaphore, url):
     """Limit the flow of dead link requests"""
-    if not settings.LINK_VALIDATION_MAX_CONCURRENT_REQUESTS:
+    if not semaphore:
         yield
         return
 
+    def log_event(event: str):
+        logger.info(
+            event,
+            locked=semaphore.locked(),
+            url=url,
+            waiters=len(semaphore._waiters or []),
+            count=semaphore._value,
+        )
+
     try:
-        _log_semaphore_event("request_concurrent_head_request", url=url)
-        await asyncio.wait_for(_head_request_semaphore.acquire(), timeout=2)
+        log_event("request_concurrent_head_request")
+        await asyncio.wait_for(semaphore.acquire(), timeout=2)
     except TimeoutError:
-        _log_semaphore_event("timeout_acquire_concurrent_head_request", url=url)
+        log_event("timeout_acquire_concurrent_head_request")
         raise
     else:
-        _log_semaphore_event("acquired_concurrent_head_request", url=url)
+        log_event("acquired_concurrent_head_request")
         yield
-        if (
-            _head_request_semaphore._value
-            < settings.LINK_VALIDATION_MAX_CONCURRENT_REQUESTS
-        ):
-            _head_request_semaphore.release()
-            _log_semaphore_event("released_concurrent_head_request", url=url)
+        if semaphore._value < settings.LINK_VALIDATION_MAX_CONCURRENT_REQUESTS:
+            semaphore.release()
+            log_event("released_concurrent_head_request")
 
 
-async def _head(session: aiohttp.ClientSession, url: str) -> tuple[str, int]:
+async def _head(
+    concurrency_semaphore: None | asyncio.Semaphore,
+    session: aiohttp.ClientSession,
+    url: str,
+) -> tuple[str, int]:
     try:
-        async with _flow_control(url):
+        async with _flow_control(concurrency_semaphore, url):
             response = await session.head(
                 url, allow_redirects=False, headers=HEADERS, timeout=_timeout
             )
@@ -102,8 +94,20 @@ async def _head(session: aiohttp.ClientSession, url: str) -> tuple[str, int]:
 # https://stackoverflow.com/q/55259755
 @async_to_sync
 async def _make_head_requests(urls: list[str]) -> list[tuple[str, int]]:
+    # Limits total concurrent dead link requests per search request
+    # Must be created (and therefore bound to loop) within `_make_head_request`
+    # This prevents
+    concurrency_semaphore: None | asyncio.Semaphore = (
+        asyncio.Semaphore(settings.LINK_VALIDATION_MAX_CONCURRENT_REQUESTS)
+        if settings.LINK_VALIDATION_MAX_CONCURRENT_REQUESTS
+        else None
+    )
+
     session = await get_aiohttp_session()
-    tasks = [asyncio.ensure_future(_head(session, url)) for url in urls]
+    tasks = [
+        asyncio.ensure_future(_head(concurrency_semaphore, session, url))
+        for url in urls
+    ]
     responses = asyncio.gather(*tasks)
     await responses
     return responses.result()
