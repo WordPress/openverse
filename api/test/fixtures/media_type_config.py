@@ -85,7 +85,7 @@ MEDIA_TYPE_CONFIGS = {
         sensitive_class=SensitiveImage,
         deleted_class=DeletedImage,
         providers=("flickr", "stocksnap"),
-        categories=("photograph"),
+        categories=("photograph",),
         tags=("cat", "Cat"),
         q="dog",
     ),
@@ -126,6 +126,10 @@ def audio_media_type_config():
     ids=lambda x: f"{x.media_type}_media_type_config",
 )
 def media_type_config(request: pytest.FixtureRequest) -> MediaTypeConfig:
+    assert request.param.providers in {
+        MEDIA_TYPE_CONFIGS["image"].providers,
+        MEDIA_TYPE_CONFIGS["audio"].providers,
+    }
     return request.param
 
 
