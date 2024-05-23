@@ -1,9 +1,11 @@
+from functools import update_wrapper
 from typing import Sequence
 
 from django.conf import settings
 from django.contrib import admin
 from django.contrib.admin.views.main import ChangeList
 from django.db.models import Count, F, Min
+from django.http import JsonResponse
 from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
@@ -14,6 +16,7 @@ from elasticsearch_dsl import Search
 from openverse_attribution.license import License
 
 from api.models import PENDING
+from api.utils.moderation_lock import LockManager
 
 
 logger = structlog.get_logger(__name__)
@@ -148,6 +151,39 @@ class MediaReportAdmin(admin.ModelAdmin):
     actions = None
     media_type = None
 
+    def __init__(self, *args, **kwargs):
+        self.lock_manager = LockManager(self.media_type)
+        super().__init__(*args, **kwargs)
+
+    def get_urls(self):
+        # Code partially copied from django/contrib/admin/options.py
+
+        from django.urls import path
+
+        def wrap(view):
+            def wrapper(*args, **kwargs):
+                return self.admin_site.admin_view(view)(*args, **kwargs)
+
+            wrapper.model_admin = self
+            return update_wrapper(wrapper, view)
+
+        info = self.opts.app_label, self.opts.model_name
+
+        urls = super().get_urls()
+        urls[-1:-1] = [
+            path(
+                "<path:object_id>/lock/",
+                wrap(self.soft_lock_view),
+                name="{:s}_{:s}_lock".format(*info),
+            ),
+            path(
+                "<path:object_id>/unlock/",
+                wrap(self.soft_unlock_view),
+                name="{:s}_{:s}_unlock".format(*info),
+            ),
+        ]
+        return urls
+
     def get_fieldsets(self, request, obj=None):
         if obj is None:
             return [
@@ -244,6 +280,30 @@ class MediaReportAdmin(admin.ModelAdmin):
         }
         logger.info(f"Additional data: {additional_data}")
         return additional_data
+
+    def soft_lock_view(self, request, object_id):
+        """
+        Add soft-locks for the current user and object ID.
+
+        This view is called from the frontend when a user loads the
+        change page. It is also called when the page visibility is
+        restored.
+        """
+
+        self.lock_manager.add_locks(request.user.get_username(), object_id)
+        return JsonResponse({"status": "OK"})
+
+    def soft_unlock_view(self, request, object_id):
+        """
+        Remove soft-locks for the current user and object ID.
+
+        This view is called from the frontend when the change page
+        visibility is lost, including the case where the user unloads
+        the page.
+        """
+
+        self.lock_manager.remove_locks(request.user.get_username(), object_id)
+        return JsonResponse({"status": "OK"})
 
     def change_view(self, request, object_id, form_url="", extra_context=None):
         extra_context = extra_context or {}
