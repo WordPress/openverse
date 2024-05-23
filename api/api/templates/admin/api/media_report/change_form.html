@@ -147,4 +147,42 @@
     img.src = url;
   }
 </script>
+
+<script>
+  // This script tag manages the soft-locking mechanism for the report.
+
+  function toggleLock(url) {
+    // Toggle the soft-lock for the current user-report pair.
+    fetch(url, {
+      method: 'POST',
+      keepalive: true,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+      },
+    })
+      .then(res => console.log(res))
+      .catch(err => console.error(err));
+  }
+
+  function softLock() {
+    toggleLock('{% url "admin:api_"|add:media_type|add:"report_lock" object_id=object_id %}')
+  }
+
+  function softUnlock() {
+    toggleLock('{% url "admin:api_"|add:media_type|add:"report_unlock" object_id=object_id %}')
+  }
+
+  // On first load, set the soft-lock.
+  document.addEventListener("DOMContentLoaded", softLock)
+  // Subsequent visibility changes (including unload and other ways to
+  // close the page) will toggle the soft-lock.
+  document.addEventListener("visibilitychange", function() {
+    if (document.visibilityState === 'visible') {
+      softLock()
+    } else {
+      softUnlock()
+    }
+  })
+</script>
 {% endblock %}
