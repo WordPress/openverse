@@ -7,10 +7,6 @@ import { userAgent } from "~/constants/user-agent"
 import { isServer } from "~/utils/node-env"
 
 const DEFAULT_REQUEST_TIMEOUT = 30000
-/**
- * Openverse Axios request config with adjusted types for our use-case.
- */
-export type OpenverseAxiosRequestConfig = AxiosRequestConfig
 
 /**
  * Returns a slug with trailing slash for a given resource name.
@@ -31,7 +27,7 @@ export const getResourceSlug = (resource: string): string => {
 const validateRequest = (
   errorCondition: boolean,
   message: string,
-  config: OpenverseAxiosRequestConfig
+  config: AxiosRequestConfig
 ): void => {
   if (errorCondition) {
     warn(
@@ -70,22 +66,22 @@ export interface ApiService {
   post<T = unknown>(
     resource: string,
     data: Parameters<AxiosInstance["post"]>[1],
-    headers?: OpenverseAxiosRequestConfig["headers"]
+    headers?: AxiosRequestConfig["headers"]
   ): Promise<AxiosResponse<T>>
   update<T = unknown>(
     resource: string,
     slug: string,
     data: Parameters<AxiosInstance["put"]>[1],
-    headers: OpenverseAxiosRequestConfig["headers"]
+    headers: AxiosRequestConfig["headers"]
   ): Promise<AxiosResponse<T>>
   put<T = unknown>(
     resource: string,
-    params: OpenverseAxiosRequestConfig
+    params: AxiosRequestConfig
   ): Promise<AxiosResponse<T>>
   delete<T = unknown>(
     resource: string,
     slug: string,
-    headers: OpenverseAxiosRequestConfig["headers"]
+    headers: AxiosRequestConfig["headers"]
   ): Promise<AxiosResponse<T>>
 }
 
@@ -94,16 +90,16 @@ export const createApiService = ({
   accessToken = undefined,
   isVersioned = true,
 }: ApiServiceConfig = {}): ApiService => {
-  const headers: OpenverseAxiosRequestConfig["headers"] = {}
-  
+  const headers: AxiosRequestConfig["headers"] = {}
+
   if (isServer) {
-  	headers["User-Agent"] = userAgent
+    headers["User-Agent"] = userAgent
   }
-  
+
   if (accessToken) {
     headers["Authorization"] = `Bearer ${accessToken}`
   }
-  const axiosParams: OpenverseAxiosRequestConfig = {
+  const axiosParams: AxiosRequestConfig = {
     baseURL: isVersioned ? `${baseUrl}v1/` : baseUrl,
     timeout: DEFAULT_REQUEST_TIMEOUT,
     headers,
@@ -114,12 +110,12 @@ export const createApiService = ({
     validateRequest(
       !config.url?.endsWith("/"),
       "API request urls should have a trailing slash",
-      config as OpenverseAxiosRequestConfig
+      config as AxiosRequestConfig
     )
     validateRequest(
       config.url?.includes("//") ?? false,
       "API request urls should not have two slashes",
-      config as OpenverseAxiosRequestConfig
+      config as AxiosRequestConfig
     )
     return config
   })
@@ -187,7 +183,7 @@ export const createApiService = ({
       resource: string,
       slug: string,
       data: Parameters<(typeof client)["put"]>[1],
-      headers: OpenverseAxiosRequestConfig["headers"]
+      headers: AxiosRequestConfig["headers"]
     ): Promise<AxiosResponse<T>> {
       return client.put(`${getResourceSlug(resource)}${slug}`, data, {
         headers,
@@ -201,7 +197,7 @@ export const createApiService = ({
      */
     put<T = unknown>(
       resource: string,
-      params: OpenverseAxiosRequestConfig
+      params: AxiosRequestConfig
     ): Promise<AxiosResponse<T>> {
       return client.put(getResourceSlug(resource), params)
     },
@@ -215,7 +211,7 @@ export const createApiService = ({
     delete<T = unknown>(
       resource: string,
       slug: string,
-      headers: OpenverseAxiosRequestConfig["headers"]
+      headers: AxiosRequestConfig["headers"]
     ): Promise<AxiosResponse<T>> {
       return client.delete(`${getResourceSlug(resource)}${slug}`, { headers })
     },
