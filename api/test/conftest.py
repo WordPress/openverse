@@ -7,6 +7,7 @@ from test.fixtures.cache import (
     unreachable_django_cache,
     unreachable_redis,
 )
+from test.fixtures.media_type_config import __all__ as media_type_config_all
 from test.fixtures.rest_framework import api_client, request_factory
 
 
@@ -20,4 +21,4 @@ __all__ = [
     "unreachable_redis",
     "api_client",
     "request_factory",
-]
+] + media_type_config_all
