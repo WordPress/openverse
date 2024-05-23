@@ -13,10 +13,12 @@ from datetime import timedelta
 from textwrap import dedent
 
 from airflow.decorators import dag, task
+from airflow.exceptions import AirflowSkipException
 from airflow.models.abstractoperator import AbstractOperator
 from airflow.models.param import Param
 from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 from psycopg2._json import Json
+from tabulate import tabulate
 
 from common import slack
 from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
@@ -53,37 +55,68 @@ def run_sql(
 
 
 @task
-def get_license_groups(query: str, ti=None) -> list[tuple[str, str]]:
+def get_licenses(query: str, ti=None) -> list[tuple[str, str, str]]:
     """
     Get license groups of rows that don't have a `license_url` in their
-    `meta_data` field.
+    `meta_data` field and notify the start of the DAG.
 
     :return: List of (license, version) tuples.
     """
     license_groups = run_sql(query, dag_task=ti.task)
 
     total_nulls = sum(group[2] for group in license_groups)
-    licenses_detailed = "\n".join(
-        # License, version, count
-        f"{group[0]} \t{group[1]} \t{group[2]:.0f}"
-        for group in license_groups
+    licenses, invalid = [], []
+    headers = ["license", "version", "count"]
+    tabulate_params = {
+        "headers": headers,
+        "showindex": True,
+        "tablefmt": "rounded_grid",
+        "floatfmt": ".1f",
+        "intfmt": ",",
+    }
+
+    for row in license_groups:
+        license_, license_version, _ = row
+        license_info = get_license_info_from_license_pair(license_, license_version)
+        if license_info is None:
+            invalid.append(row)
+        else:
+            licenses.append(license_info)
+
+    license_groups = [lg for lg in license_groups if lg not in invalid]
+
+    message = (
+        f"""
+Starting `{DAG_ID}` DAG. Found {len(license_groups):.0f} license groups with {total_nulls:.0f}
+records to back fill `license_url` in `meta_data`.\nCount per license-version:
+```
+{tabulate(license_groups, **tabulate_params)}
+```
+"""
+        if license_groups
+        else f"""
+Starting `{DAG_ID}` DAG. Not license groups found with records missing `license_url` in `meta_data`.
+"""
     )
 
-    message = f"""
-Starting `{DAG_ID}` DAG. Found {len(license_groups):.0f} license groups with {total_nulls:.0f}
-records without `license_url` in `meta_data` left.\nCount per license-version:
-{licenses_detailed}
-    """
+    if invalid:
+        message += f"""
+\nThe following *invalid license(s)* were found and will be skipped:
+```
+{tabulate(invalid, **tabulate_params)}
+```
+"""
+
     slack.send_message(
         message,
         username="Airflow DAG Data Normalization - license_url",
         dag_id=DAG_ID,
     )
 
-    return [(group[0], group[1]) for group in license_groups]
+    return licenses
 
 
-def get_license_conf(license_info):
+def get_license_conf(license_info) -> dict:
     license_, license_version, license_url = license_info
     license_url_dict = {"license_url": license_url}
     query_id = f"add_license_url_{license_}_{license_version}"
@@ -107,19 +140,23 @@ def get_license_conf(license_info):
 
 
 @task
-def get_license_groups_confs(license_groups, batch_size: int) -> list[dict]:
-    confs = []
-    for license_, license_version in license_groups:
-        license_info = get_license_info_from_license_pair(license_, license_version)
-        if license_info is None:
-            logger.warning(
-                f"No license pair ({license_}, {license_version}) "
-                f"in the license map. Skipping."
-            )
-            continue
+def get_confs(licenses, batch_size: int) -> list[dict]:
+    if not licenses:
+        raise AirflowSkipException("No config required.")
 
-        confs.append({"batch_size": batch_size} | get_license_conf(license_info))
-    return confs
+    return [
+        {"batch_size": batch_size, **get_license_conf(license_info)}
+        for license_info in licenses
+    ]
+
+
+@task
+def notify_slack():
+    slack.send_message(
+        "Finished processing the groups of licenses.",
+        username=f"Airflow DAG Data Normalization - {DAG_ID}",
+        dag_id=DAG_ID,
+    )
 
 
 @dag(
@@ -149,20 +186,18 @@ def add_license_url():
         GROUP BY license, license_version
     """)
 
-    license_groups = get_license_groups(query)
+    licenses = get_licenses(query)
 
-    TriggerDagRunOperator.partial(
+    trigger = TriggerDagRunOperator.partial(
         task_id="trigger_batched_update",
         trigger_dag_id=BATCHED_UPDATE_DAG_ID,
         wait_for_completion=True,
         execution_timeout=timedelta(hours=5),
         max_active_tis_per_dag=1,
         retries=0,
-    ).expand(
-        conf=get_license_groups_confs(
-            license_groups=license_groups, batch_size="{{ params.batch_size }}"
-        )
-    )
+    ).expand(conf=get_confs(licenses, batch_size="{{ params.batch_size }}"))
+
+    trigger >> notify_slack()
 
 
 add_license_url()
