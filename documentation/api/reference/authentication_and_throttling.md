@@ -7,7 +7,7 @@ OAuth flow and configuration must also be explained.
 This document deals primarily with the server's perspective of the OAuth flow
 and assumes you are familiar with the user's perspective. If you are not
 familiar with the user's perspective, please study the
-[Register and Authenticate](https://api.openverse.engineering/v1/#section/Register-and-Authenticate)
+[Register and Authenticate](https://api.openverse.org/v1/#section/Register-and-Authenticate)
 section of the API documentation.
 
 Furthermore, this section assumes at least a surface level understanding of the

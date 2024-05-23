@@ -151,8 +151,8 @@ By default, items marked "mature" are excluded, but these can also be enabled.
 See the following API documentation links for descriptions and options for each
 field:
 
-- [Audio search](https://api.openverse.engineering/v1/#operation/audio_search)
-- [Image search](https://api.openverse.engineering/v1/#operation/image_search)
+- [Audio search](https://api.openverse.org/v1/#operation/audio_search)
+- [Image search](https://api.openverse.org/v1/#operation/image_search)
 
 For each of these fields, there is a limited and specific set of terms that
 appear for the relevant document fields for each of these query parameters.

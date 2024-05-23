@@ -52,8 +52,8 @@ To set up the local python environment along with the pre-commit hook, run:
 <!-- vale Vale.Repetition = NO -->
 
 ```shell
-python3 -m venv venv
-source venv/bin/activate
+just venv
+source .venv/bin/activate
 just catalog/install
 ```
 

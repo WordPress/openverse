@@ -33,15 +33,6 @@ class DataRefresh:
                                        airflow.dag.DAG __init__ method.
     data_refresh_timeout:              timedelta expressing the amount of time the data
                                        refresh (run by the ingestion server) may take.
-    refresh_metrics_timeout:           timedelta expressing amount of time the
-                                       refresh popularity metrics tasks may take.
-    refresh_matview_timeout:           timedelta expressing amount of time the
-                                       refresh of the popularity matview may take.
-    create_pop_constants_view_timeout: timedelta expressing amount of time the
-                                       creation of the popularity constants view
-                                       may take
-    create_materialized_view_timeout:  timedelta expressing amount of time the
-                                       creation of the matview may take
     index_readiness_timeout:           timedelta expressing amount of time it may take
                                        to await a healthy ES index after reindexing
     doc_md:                            str used for the DAG's documentation markdown
@@ -58,12 +49,8 @@ class DataRefresh:
     media_type: str
     start_date: datetime = datetime(2020, 1, 1)
     schedule: str | None = "0 0 * * 1"  # Mondays 00:00 UTC
-    default_args: dict | None = field(default_factory=dict)
+    default_args: dict = field(default_factory=dict)
     data_refresh_timeout: timedelta = timedelta(days=1)
-    refresh_metrics_timeout: timedelta = timedelta(hours=1)
-    refresh_matview_timeout: timedelta = timedelta(hours=1)
-    create_pop_constants_view_timeout: timedelta = timedelta(hours=1)
-    create_materialized_view_timeout: timedelta = timedelta(hours=1)
     create_filtered_index_timeout: timedelta = timedelta(days=1)
     index_readiness_timeout: timedelta = timedelta(days=1)
     data_refresh_poke_interval: int = REFRESH_POKE_INTERVAL
@@ -78,10 +65,6 @@ DATA_REFRESH_CONFIGS = {
     IMAGE: DataRefresh(
         media_type="image",
         data_refresh_timeout=timedelta(days=4),
-        refresh_metrics_timeout=timedelta(hours=24),
-        refresh_matview_timeout=timedelta(hours=72),
-        create_pop_constants_view_timeout=timedelta(hours=24),
-        create_materialized_view_timeout=timedelta(hours=72),
         data_refresh_poke_interval=int(os.getenv("DATA_REFRESH_POKE_INTERVAL", 60)),
         filtered_index_poke_interval=int(
             os.getenv("DATA_REFRESH_POKE_INTERVAL", 60 * 30)

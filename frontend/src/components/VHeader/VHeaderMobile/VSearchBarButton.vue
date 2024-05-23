@@ -74,6 +74,12 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.button {
+  accent-color: transparent;
+}
+.button:focus {
+  outline: none;
+}
 .transparent-dark {
   @apply border-tx bg-tx text-dark-charcoal hover:text-white group-hover/button:bg-dark-charcoal;
 }

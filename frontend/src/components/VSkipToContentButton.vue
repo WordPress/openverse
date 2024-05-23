@@ -4,7 +4,7 @@
     as="a"
     variant="filled-pink"
     size="medium"
-    class="skip-button z-50 focus:fixed focus:absolute focus:ms-2 focus:mt-2"
+    class="skip-button top-2 z-50 max-w-max focus:absolute focus:left-2 focus:right-2 focus-visible:absolute focus-visible:left-2 focus-visible:right-2"
     >{{ $t("skipToContent") }}
   </VButton>
 </template>
@@ -24,7 +24,7 @@ export default {
 }
 </script>
 <style scoped>
-.skip-button:not(:focus) {
+.skip-button:not(:focus-visible) {
   @apply sr-only;
 }
 </style>

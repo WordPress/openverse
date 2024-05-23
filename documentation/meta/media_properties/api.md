@@ -22,14 +22,15 @@ value). Note that relation fields are always nullable.
 
 ### Relations
 
-| Name                                              | Type                                                                                             | DB type | Nature       | To               |
-| ------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ------- | ------------ | ---------------- |
-| [`audio_report`](#Audio-audio_report-notes)       | [`ForeignKey`](https://docs.djangoproject.com/en/stable/ref/models/fields/#foreignkey)           | `uuid`  | One To Many  | `AudioReport`    |
-| [`audiodecision`](#Audio-audiodecision-notes)     | [`ManyToManyField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#manytomanyfield) |         | Many To Many | `AudioDecision`  |
-| [`audioset`](#Audio-audioset-notes)               | `ForeignObject`                                                                                  |         | Many To One  | `AudioSet`       |
-| [`deleted_audio`](#Audio-deleted_audio-notes)     | [`OneToOneField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#onetoonefield)     | `uuid`  | One To One   | `DeletedAudio`   |
-| [`lists`](#Audio-lists-notes)                     | [`ManyToManyField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#manytomanyfield) |         | Many To Many | `AudioList`      |
-| [`sensitive_audio`](#Audio-sensitive_audio-notes) | [`OneToOneField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#onetoonefield)     | `uuid`  | One To One   | `SensitiveAudio` |
+| Name                                                        | Type                                                                                             | DB type | Nature       | To                     |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ------- | ------------ | ---------------------- |
+| [`audio_report`](#Audio-audio_report-notes)                 | [`ForeignKey`](https://docs.djangoproject.com/en/stable/ref/models/fields/#foreignkey)           | `uuid`  | One To Many  | `AudioReport`          |
+| [`audiodecision`](#Audio-audiodecision-notes)               | [`ManyToManyField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#manytomanyfield) |         | Many To Many | `AudioDecision`        |
+| [`audiodecisionthrough`](#Audio-audiodecisionthrough-notes) | [`ForeignKey`](https://docs.djangoproject.com/en/stable/ref/models/fields/#foreignkey)           | `uuid`  | One To Many  | `AudioDecisionThrough` |
+| [`audioset`](#Audio-audioset-notes)                         | `ForeignObject`                                                                                  |         | Many To One  | `AudioSet`             |
+| [`deleted_audio`](#Audio-deleted_audio-notes)               | [`OneToOneField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#onetoonefield)     | `uuid`  | One To One   | `DeletedAudio`         |
+| [`lists`](#Audio-lists-notes)                               | [`ManyToManyField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#manytomanyfield) |         | Many To Many | `AudioList`            |
+| [`sensitive_audio`](#Audio-sensitive_audio-notes)           | [`OneToOneField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#onetoonefield)     | `uuid`  | One To One   | `SensitiveAudio`       |
 
 ### Values
 
@@ -108,6 +109,16 @@ report.
 #### `audiodecision`
 
 **`AudioDecision` docstring:** Moderation decisions taken for audio tracks.
+
+(Audio-audiodecisionthrough-notes)=
+
+#### `audiodecisionthrough`
+
+**`AudioDecisionThrough` docstring:** Many-to-many reference table for audio
+decisions.
+
+This is made explicit (rather than using Django's default) so that the audio can
+be referenced by `identifier` rather than an arbitrary `id`.
 
 (Audio-audioset-notes)=
 
@@ -323,13 +334,14 @@ Note that only `name` and `accuracy` are presently surfaced in API results.
 
 ### Relations
 
-| Name                                              | Type                                                                                             | DB type | Nature       | To               |
-| ------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ------- | ------------ | ---------------- |
-| [`deleted_image`](#Image-deleted_image-notes)     | [`OneToOneField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#onetoonefield)     | `uuid`  | One To One   | `DeletedImage`   |
-| [`image_report`](#Image-image_report-notes)       | [`ForeignKey`](https://docs.djangoproject.com/en/stable/ref/models/fields/#foreignkey)           | `uuid`  | One To Many  | `ImageReport`    |
-| [`imagedecision`](#Image-imagedecision-notes)     | [`ManyToManyField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#manytomanyfield) |         | Many To Many | `ImageDecision`  |
-| [`lists`](#Image-lists-notes)                     | [`ManyToManyField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#manytomanyfield) |         | Many To Many | `ImageList`      |
-| [`sensitive_image`](#Image-sensitive_image-notes) | [`OneToOneField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#onetoonefield)     | `uuid`  | One To One   | `SensitiveImage` |
+| Name                                                        | Type                                                                                             | DB type | Nature       | To                     |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ------- | ------------ | ---------------------- |
+| [`deleted_image`](#Image-deleted_image-notes)               | [`OneToOneField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#onetoonefield)     | `uuid`  | One To One   | `DeletedImage`         |
+| [`image_report`](#Image-image_report-notes)                 | [`ForeignKey`](https://docs.djangoproject.com/en/stable/ref/models/fields/#foreignkey)           | `uuid`  | One To Many  | `ImageReport`          |
+| [`imagedecision`](#Image-imagedecision-notes)               | [`ManyToManyField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#manytomanyfield) |         | Many To Many | `ImageDecision`        |
+| [`imagedecisionthrough`](#Image-imagedecisionthrough-notes) | [`ForeignKey`](https://docs.djangoproject.com/en/stable/ref/models/fields/#foreignkey)           | `uuid`  | One To Many  | `ImageDecisionThrough` |
+| [`lists`](#Image-lists-notes)                               | [`ManyToManyField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#manytomanyfield) |         | Many To Many | `ImageList`            |
+| [`sensitive_image`](#Image-sensitive_image-notes)           | [`OneToOneField`](https://docs.djangoproject.com/en/stable/ref/models/fields/#onetoonefield)     | `uuid`  | One To One   | `SensitiveImage`       |
 
 ### Values
 
@@ -448,6 +460,16 @@ this report.
 #### `imagedecision`
 
 **`ImageDecision` docstring:** Moderation decisions taken for images.
+
+(Image-imagedecisionthrough-notes)=
+
+#### `imagedecisionthrough`
+
+**`ImageDecisionThrough` docstring:** Many-to-many reference table for image
+decisions.
+
+This is made explicit (rather than using Django's default) so that the image can
+be referenced by `identifier` rather than an arbitrary `id`.
 
 (Image-last_synced_with_source-notes)=
 

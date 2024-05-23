@@ -34,7 +34,7 @@ export CATALOG_AIRFLOW_VERSION := `grep '^apache-airflow' requirements-prod.txt 
 # Create a virtual environment using the project Python version
 venv:
     # Invokes `python<version>`, like `python3.10`
-    bash -c "python$CATALOG_PY_VERSION -m venv venv/"
+    bash -c "python$CATALOG_PY_VERSION -m venv .venv/"
 
 # Check that the active Python version matches the required Python version
 check-py-version:

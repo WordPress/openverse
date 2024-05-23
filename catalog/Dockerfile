@@ -69,5 +69,6 @@ ARG CONSTRAINTS_FILE="https://raw.githubusercontent.com/apache/airflow/constrain
 RUN pip install -r ${REQUIREMENTS_FILE} -c ${CONSTRAINTS_FILE}
 
 COPY entrypoint.sh /opt/airflow/entrypoint.sh
+COPY variables.tsv /opt/airflow/variables.tsv
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--", "/opt/airflow/entrypoint.sh"]

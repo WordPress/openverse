@@ -78,6 +78,7 @@
             </span>
             <VContentSettingsButton
               v-show="!searchBarIsActive"
+              ref="contentSettingsButtonRef"
               :is-pressed="contentSettingsOpen"
               :applied-filter-count="appliedFilterCount"
               v-bind="triggerA11yProps"
@@ -90,6 +91,7 @@
               :visible="contentSettingsOpen"
               :is-fetching="isFetching"
               :close="closeContentSettings"
+              :trigger-element="contentSettingsButton"
               labelledby="content-settings-button"
             />
           </slot>
@@ -153,6 +155,12 @@ export default defineComponent({
   setup(_, { emit }) {
     const searchInputRef = ref<HTMLInputElement | null>(null)
     const headerRef = ref<HTMLElement | null>(null)
+    const contentSettingsButtonRef = ref<InstanceType<
+      typeof VContentSettingsButton
+    > | null>(null)
+    const contentSettingsButton = computed(
+      () => (contentSettingsButtonRef.value?.$el as HTMLElement) ?? undefined
+    )
 
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
@@ -308,6 +316,8 @@ export default defineComponent({
     return {
       searchInputRef,
       headerRef,
+      contentSettingsButtonRef,
+      contentSettingsButton,
 
       isFetching,
 

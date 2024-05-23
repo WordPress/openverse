@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="relative">
     <VSkipToContentButton />
     <div
       class="app h-dyn-screen min-h-dyn-screen grid grid-rows-[auto,1fr] bg-white"

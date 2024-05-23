@@ -12,7 +12,7 @@ Openverse stack locally on your computer, refer to the
 ```{note}
 This documentation is for developers who are building Openverse. If you want to
 use the Openverse API, you should instead refer to the
-[API consumer documentation](https://api.openverse.engineering/).
+[API consumer documentation](https://api.openverse.org/).
 ```
 
 # Related documentation

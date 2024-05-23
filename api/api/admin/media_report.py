@@ -1,3 +1,5 @@
+from typing import Sequence
+
 from django.conf import settings
 from django.contrib import admin
 from django.contrib.admin.views.main import ChangeList
@@ -15,6 +17,20 @@ from api.models import PENDING
 
 
 logger = structlog.get_logger(__name__)
+
+
+def _production_deferred(*values: str) -> Sequence[str]:
+    """
+    Define a sequence in all environment except production.
+
+    The autocomplete/search queries in Django are woefully unoptimized for massive
+    tables, and so enabling certain utility features in production will often incur
+    a significant performance hit or outage. This will return the input values except
+    when the environment is production, in which case it will return an empty sequence.
+    """
+    if settings.ENVIRONMENT == "production":
+        return ()
+    return values
 
 
 class PredeterminedOrderChangelist(ChangeList):
@@ -65,8 +81,7 @@ class MediaListAdmin(admin.ModelAdmin):
     list_filter = (PendingRecordCountFilter,)
     # Disable link display for images
     list_display_links = None
-    # Allow autocomplete to work from other referenced fields
-    search_fields = ("identifier",)
+    search_fields = _production_deferred("identifier")
     media_type = None
     # Ordering is not set here, see get_queryset
 
@@ -128,8 +143,8 @@ class MediaReportAdmin(admin.ModelAdmin):
     )
     list_display_links = ("id",)
     list_select_related = ("media_obj",)
-    search_fields = ("description", "media_obj__identifier")
-    autocomplete_fields = ("media_obj",)
+    search_fields = _production_deferred("description", "media_obj__identifier")
+    autocomplete_fields = _production_deferred("media_obj")
     actions = None
     media_type = None
 

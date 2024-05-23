@@ -122,6 +122,7 @@
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^29.7.0",
     "babel-loader": "8.3.0",
+    "caniuse-lite": "^1.0.30001620",
     "chokidar": "^3.5.3",
     "comment-json": "^4.2.3",
     "css-loader": "^5.2.7",
