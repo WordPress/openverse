@@ -1,5 +1,6 @@
 from collections import namedtuple
 from math import floor
+from typing import TypedDict
 
 from django.conf import settings
 from django.core.exceptions import ValidationError as DjangoValidationError
@@ -7,6 +8,7 @@ from django.core.validators import MaxValueValidator
 from django.urls import reverse
 from rest_framework import serializers
 from rest_framework.exceptions import NotAuthenticated, ValidationError
+from rest_framework.request import Request
 
 from drf_spectacular.utils import extend_schema_serializer
 from elasticsearch_dsl.response import Hit
@@ -20,7 +22,7 @@ from api.constants.search import COLLECTIONS
 from api.constants.sorting import DESCENDING, RELEVANCE, SORT_DIRECTIONS, SORT_FIELDS
 from api.controllers import search_controller
 from api.models.media import AbstractMedia
-from api.serializers.base import BaseModelSerializer, BaseRequestSerializer
+from api.serializers.base import BaseModelSerializer
 from api.serializers.docs import (
     COLLECTION_HELP_TEXT,
     CREATOR_HELP_TEXT,
@@ -39,7 +41,7 @@ from api.utils.url import add_protocol
 #######################
 
 
-class PaginatedRequestSerializer(BaseRequestSerializer):
+class PaginatedRequestSerializer(serializers.Serializer):
     """This serializer passes pagination parameters from the query string."""
 
     _SUBJECT_TO_PAGINATION_LIMITS = (
@@ -68,7 +70,9 @@ class PaginatedRequestSerializer(BaseRequestSerializer):
     )
 
     def validate_page_size(self, value):
-        level, max_value = privilege.PAGE_SIZE.request_level(self.request)
+        level, max_value = privilege.PAGE_SIZE.request_level(
+            self.context.get("request")
+        )
 
         validator = MaxValueValidator(
             max_value,
@@ -91,7 +95,9 @@ class PaginatedRequestSerializer(BaseRequestSerializer):
         return value
 
     def clamp_result_count(self, real_result_count):
-        _, max_depth = privilege.PAGINATION_DEPTH.request_level(self.request)
+        _, max_depth = privilege.PAGINATION_DEPTH.request_level(
+            self.context.get("request")
+        )
 
         if real_result_count > max_depth:
             return max_depth
@@ -99,7 +105,9 @@ class PaginatedRequestSerializer(BaseRequestSerializer):
         return real_result_count
 
     def clamp_page_count(self, real_page_count):
-        _, max_depth = privilege.PAGINATION_DEPTH.request_level(self.request)
+        _, max_depth = privilege.PAGINATION_DEPTH.request_level(
+            self.context.get("request")
+        )
 
         page_size = self.data["page_size"]
         max_possible_page_count = max_depth / page_size
@@ -114,7 +122,9 @@ class PaginatedRequestSerializer(BaseRequestSerializer):
 
         # pagination depth is validated as a combination of page and page size,
         # and so cannot be validated in the individual field validation methods
-        level, max_depth = privilege.PAGINATION_DEPTH.request_level(self.request)
+        level, max_depth = privilege.PAGINATION_DEPTH.request_level(
+            self.context.get("request")
+        )
 
         requested_pagination_depth = data["page"] * data["page_size"]
 
@@ -318,9 +328,10 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
         required=False,
     )
 
-    class Context(BaseRequestSerializer.Context, total=True):
+    class Context(TypedDict, total=True):
         warnings: list[dict]
         media_type: MediaType
+        request: Request
 
     context: Context
 
@@ -443,7 +454,7 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
                     f"Refer to the source list for valid options: {sources_list}."
                 )
             elif invalid_sources := (sources - valid_sources):
-                available_sources_uri = self.request.build_absolute_uri(
+                available_sources_uri = self.context.get("request").build_absolute_uri(
                     reverse(f"{self.media_type}-stats")
                 )
                 self.context["warnings"].append(
