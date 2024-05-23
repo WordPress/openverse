@@ -4,16 +4,13 @@ import { warn } from "~/utils/console"
 import { AUDIO, IMAGE } from "~/constants/media"
 
 import { userAgent } from "~/constants/user-agent"
+import { isServer } from "~/utils/node-env"
 
 const DEFAULT_REQUEST_TIMEOUT = 30000
-
 /**
  * Openverse Axios request config with adjusted types for our use-case.
  */
-export type OpenverseAxiosRequestConfig = Required<
-  Pick<AxiosRequestConfig, "headers">
-> &
-  AxiosRequestConfig
+export type OpenverseAxiosRequestConfig = AxiosRequestConfig
 
 /**
  * Returns a slug with trailing slash for a given resource name.
@@ -97,14 +94,16 @@ export const createApiService = ({
   accessToken = undefined,
   isVersioned = true,
 }: ApiServiceConfig = {}): ApiService => {
+  const headers: OpenverseAxiosRequestConfig["headers"] = isServer
+    ? { "User-Agent": userAgent }
+    : {}
+  if (accessToken) {
+    headers["Authorization"] = `Bearer ${accessToken}`
+  }
   const axiosParams: OpenverseAxiosRequestConfig = {
     baseURL: isVersioned ? `${baseUrl}v1/` : baseUrl,
     timeout: DEFAULT_REQUEST_TIMEOUT,
-    headers: { "User-Agent": userAgent },
-  }
-
-  if (accessToken) {
-    axiosParams.headers["Authorization"] = `Bearer ${accessToken}`
+    headers,
   }
 
   const client = axios.create(axiosParams)
