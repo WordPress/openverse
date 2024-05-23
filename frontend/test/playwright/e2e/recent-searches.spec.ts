@@ -70,6 +70,7 @@ breakpoints.describeMobileXsAndDesktop(({ breakpoint }) => {
   test("recent searches shows message when blank", async ({ page }) => {
     // Click on the input to open the Recent searches
     await page.locator('input[type="search"]').click()
+    await clickClear(page)
 
     const recentSearchesText = await getRecentSearchesText(page)
     expect(recentSearchesText).toContain(noRecentLabel)
