@@ -122,7 +122,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, nextTick, ref, watch } from "vue"
-import { useContext } from "@nuxtjs/composition-api"
+import { useContext, useRoute } from "@nuxtjs/composition-api"
 import { onClickOutside } from "@vueuse/core"
 
 import {
@@ -359,6 +359,15 @@ export default defineComponent({
       nodeRef: headerRef,
       lockBodyScroll: true,
       emit,
+    })
+
+    const route = useRoute()
+    const routeSearchTerm = computed(() => route.value.query.q)
+    watch(routeSearchTerm, (newSearchTerm) => {
+      const term = Array.isArray(newSearchTerm)
+        ? newSearchTerm[0]
+        : newSearchTerm
+      localSearchTerm.value = term ?? ""
     })
 
     const { doneHydrating } = useHydrating()
