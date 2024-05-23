@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Iterable
 
 import pook
 import pytest
@@ -51,13 +52,13 @@ class MediaTypeConfig:
     report_serializer: MediaReportRequestSerializer
     report_factory: MediaReportFactory
     deleted_class: AbstractDeletedMedia
-    providers: list[str]
+    providers: Iterable[str]
     """providers for the media type from the sample data"""
 
-    categories: list[str]
+    categories: Iterable[str]
     """categories for the media type from the sample data"""
 
-    tags: list[str]
+    tags: Iterable[str]
     """tags for the media type from the sample data"""
 
     q: str
@@ -83,9 +84,9 @@ MEDIA_TYPE_CONFIGS = {
         report_factory=model_factories.ImageReportFactory,
         sensitive_class=SensitiveImage,
         deleted_class=DeletedImage,
-        providers=["flickr", "stocksnap"],
-        categories=["photograph"],
-        tags=["cat", "Cat"],
+        providers=("flickr", "stocksnap"),
+        categories=("photograph"),
+        tags=("cat", "Cat"),
         q="dog",
     ),
     "audio": MediaTypeConfig(
@@ -102,9 +103,9 @@ MEDIA_TYPE_CONFIGS = {
         report_factory=model_factories.AudioReportFactory,
         sensitive_class=SensitiveAudio,
         deleted_class=DeletedAudio,
-        providers=["freesound", "jamendo", "wikimedia_audio", "ccmixter"],
-        categories=["music", "pronunciation"],
-        tags=["cat"],
+        providers=("freesound", "jamendo", "wikimedia_audio", "ccmixter"),
+        categories=("music", "pronunciation"),
+        tags=("cat",),
         q="love",
     ),
 }
@@ -154,11 +155,3 @@ def cleanup_elasticsearch_test_documents(request, settings):
         query={"match": {"tags.name": CREATED_BY_FIXTURE_MARKER}},
         refresh=True,
     )
-
-
-__all__ = [
-    "image_media_type_config",
-    "audio_media_type_config",
-    "media_type_config",
-    "cleanup_elasticsearch_test_documents",
-]

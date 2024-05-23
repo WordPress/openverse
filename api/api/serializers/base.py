@@ -1,4 +1,7 @@
+import typing
+
 from rest_framework import serializers
+from rest_framework.request import Request
 
 
 class BaseModelSerializer(serializers.ModelSerializer):
@@ -19,3 +22,14 @@ class BaseModelSerializer(serializers.ModelSerializer):
         if doc := getattr(model_class, field_name).__doc__:
             kwargs.setdefault("help_text", doc)
         return klass, kwargs
+
+
+class BaseRequestSerializer(serializers.Serializer):
+    class Context(typing.TypedDict):
+        request: typing.Required[Request]
+
+    context: Context
+
+    @property
+    def request(self) -> Request | None:
+        return self.context.get("request", None)

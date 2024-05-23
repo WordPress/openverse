@@ -7,8 +7,19 @@ from test.fixtures.cache import (
     unreachable_django_cache,
     unreachable_redis,
 )
-from test.fixtures.media_type_config import __all__ as media_type_config_all
-from test.fixtures.rest_framework import api_client, request_factory
+from test.fixtures.media_type_config import (
+    audio_media_type_config,
+    cleanup_elasticsearch_test_documents,
+    image_media_type_config,
+    media_type_config,
+)
+from test.fixtures.rest_framework import (
+    access_token,
+    anon_request,
+    api_client,
+    authed_request,
+    request_factory,
+)
 
 
 __all__ = [
@@ -21,4 +32,11 @@ __all__ = [
     "unreachable_redis",
     "api_client",
     "request_factory",
-] + media_type_config_all
+    "access_token",
+    "authed_request",
+    "anon_request",
+    "image_media_type_config",
+    "audio_media_type_config",
+    "media_type_config",
+    "cleanup_elasticsearch_test_documents",
+]

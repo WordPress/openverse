@@ -1,8 +1,5 @@
 import uuid
 
-from rest_framework.request import Request
-from rest_framework.test import APIRequestFactory
-
 import pytest
 
 from api.models.audio import Audio
@@ -21,11 +18,8 @@ def audio_fixture():
 
 
 @pytest.mark.django_db
-def test_audio_serializer_omit_peaks_by_default(audio_fixture):
-    factory = APIRequestFactory()
-    request = factory.get(f"audio/{audio_fixture.identifier}")
-    request = Request(request)
-    mock_ctx = {"request": request}
+def test_audio_serializer_omit_peaks_by_default(audio_fixture, anon_request):
+    mock_ctx = {"request": anon_request}
 
     audio_serializer = AudioSerializer(instance=audio_fixture, context=mock_ctx)
     assert "peaks" not in audio_serializer.data
@@ -33,11 +27,8 @@ def test_audio_serializer_omit_peaks_by_default(audio_fixture):
 
 @pytest.mark.django_db
 @pytest.mark.parametrize("include_peaks", [True, False])
-def test_audio_serializer_with_peaks_param(audio_fixture, include_peaks):
-    factory = APIRequestFactory()
-    request = factory.get(f"audio/{audio_fixture.identifier}/?peaks={include_peaks}")
-    request = Request(request)
-    mock_ctx = {"request": request, "validated_data": {"peaks": include_peaks}}
+def test_audio_serializer_with_peaks_param(audio_fixture, anon_request, include_peaks):
+    mock_ctx = {"request": anon_request, "validated_data": {"peaks": include_peaks}}
 
     audio_serializer = AudioSerializer(instance=audio_fixture, context=mock_ctx)
     assert ("peaks" in audio_serializer.data) is include_peaks
@@ -45,7 +36,7 @@ def test_audio_serializer_with_peaks_param(audio_fixture, include_peaks):
 
 # https://github.com/WordPress/openverse/issues/3930
 @pytest.mark.django_db
-def test_audio_serializer_with_non_required_alt_audio_fields_missing():
+def test_audio_serializer_with_non_required_alt_audio_fields_missing(anon_request):
     alt_files = [
         {"bit_rate": 128, "filetype": "mp3", "url": "https://example.com/audio.mp3"}
     ]
@@ -55,10 +46,7 @@ def test_audio_serializer_with_non_required_alt_audio_fields_missing():
         alt_files=alt_files,
     )
     audio.save()
-    factory = APIRequestFactory()
-    request = factory.get(f"audio/{audio.identifier}/?peaks=false")
-    request = Request(request)
-    mock_ctx = {"request": request}
+    mock_ctx = {"request": anon_request}
 
     audio_serializer = AudioSerializer(instance=audio, context=mock_ctx)
 

@@ -1,6 +1,5 @@
 from django.http import HttpResponse
 from rest_framework.settings import api_settings
-from rest_framework.test import force_authenticate
 from rest_framework.views import APIView
 
 import pytest
@@ -8,7 +7,6 @@ import pytest
 from api.utils import throttle
 from api.views.media_views import MediaViewSet
 from test.factory.models.image import ImageFactory
-from test.factory.models.oauth2 import AccessTokenFactory
 
 
 cache_availability_params = pytest.mark.parametrize(
@@ -65,24 +63,6 @@ def enable_throttles(settings):
     api_settings.reload()
     MediaViewSet.throttle_classes = api_settings.DEFAULT_THROTTLE_CLASSES
     throttle.SimpleRateThrottle.THROTTLE_RATES = api_settings.DEFAULT_THROTTLE_RATES
-
-
-@pytest.fixture
-def access_token():
-    token = AccessTokenFactory.create()
-    token.application.verified = True
-    token.application.client_id = 123
-    token.application.save()
-    return token
-
-
-@pytest.fixture
-def authed_request(access_token, request_factory):
-    request = request_factory.get("/")
-
-    force_authenticate(request, token=access_token.token)
-
-    return request
 
 
 @pytest.fixture

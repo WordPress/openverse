@@ -1,6 +1,11 @@
+from textwrap import dedent
+
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
 from oauth2_provider.models import AbstractApplication
+
+from api.constants import privilege
 
 
 class OAuth2Registration(models.Model):
@@ -39,6 +44,14 @@ class ThrottledApplication(AbstractApplication):
     )
     verified = models.BooleanField(default=False)
     revoked = models.BooleanField(default=False)
+
+    privileges = ArrayField(
+        models.CharField(
+            choices=privilege.Privilege.choices,
+        ),
+        default=list,
+        help_text=dedent(privilege.Privilege.__doc__).strip().replace("\n", " "),
+    )
 
 
 class OAuth2Verification(models.Model):
