@@ -94,9 +94,12 @@ export const createApiService = ({
   accessToken = undefined,
   isVersioned = true,
 }: ApiServiceConfig = {}): ApiService => {
-  const headers: OpenverseAxiosRequestConfig["headers"] = isServer
-    ? { "User-Agent": userAgent }
-    : {}
+  const headers: OpenverseAxiosRequestConfig["headers"] = {}
+  
+  if (isServer) {
+  	headers["User-Agent"] = userAgent
+  }
+  
   if (accessToken) {
     headers["Authorization"] = `Bearer ${accessToken}`
   }
