@@ -354,25 +354,36 @@ best to pause it for performance reasons.
    ElasticSearch node.
 1. Identify where the node is stored in our Terraform state. This will be useful
    for manual state changes later in the process. Check each node until you find
-   the matching private IP in the returned state by running
-   `j tf <env> state show "module.<env>-elasticsearch-8-8-2.aws_instance.datanodes[0]"`,
-   `j tf <env> state show "module.<env>-elasticsearch-8-8-2.aws_instance.datanodes[1]"`,
-   and so on for each index. Replace the `<env>` with the correct values. Record
-   the final `module.<env>-elasticsearch-8-8-2.aws_instance.datanodes[x]` index.
+   the matching private IP. In a terminal, navigate to the appropriate
+   environment directory and run:
+
+   ```bash
+   terraform <env> state show "module.<env>-elasticsearch-8-8-2.aws_instance.datanodes[0]
+   terraform <env> state show "module.<env>-elasticsearch-8-8-2.aws_instance.datanodes[1]
+   # ...continue as needed until the correct node is returned
+   ```
+
+   Replace the `<env>` with the correct name for the current environment. Record
+   the final `module.<env>-elasticsearch-8-8-2.aws_instance.datanodes[x]` index
+   for later use.
+
 1. In Terraform, increase the `data_node_count` for the relevant Elasticsearch
    module by one. Here is an
    [example commit](https://github.com/WordPress/openverse-infrastructure/pull/894/commits/4a827b786b1460aa89931d474db119d835784727)
    with this change in production. Apply this change and wait for a new instance
-   to be provisioned and connected to the cluster.
-1. Initialize and configure the new instance with
-   `just ansible/playbook <env> elasticsearch/sync_config.yml -e apply=true`.
-1. Use `just jh es {staging|production}` to connect to the cluster, and send
-   `{ "transient":{ "cluster.routing.allocation.exclude._ip": "<IP_ADDRESS>" } }`
+   to be provisioned and connected to the cluster. Record the "Public IPv4 DNS"
+   record of the instance for use in the next step.
+1. Configure the created instance by running our ansible playbook to sync
+   Elasticsearch nodes. Supply the correct environment name to the command and
+   pass the DNS record from the previous step to the limit flag like so:
+   `just ansible/playbook <env> elasticsearch/sync_config.yml -e apply=true -l <public_ipv4_dns>`
+1. Use `just jh es <env>` to connect to the cluster, and send
+   `{ "transient":{ "cluster.routing.allocation.exclude.name": "<IP_ADDRESS>" } }`
    to the `/_cluster/settings` endpoint (in a GUI like Elasticvue or via `curl`)
    to deallocate shards from the bad node. Be sure to replace `<IP_ADDRESS>`
    with the private IPv4 address identified in step 1.
-1. The cluster will now relocate shards to the new node and from the retired node.
-   Wait for the cluster health to return to green.
+1. The cluster will now relocate shards to the new node and from the retired
+   node. Wait for the cluster health to return to green.
 1. Manually terminate the retired instance in the AWS console.
 1. In Terraform:
    - Decrease the `data_node_count` for the Elasticsearch module down by one. Do
