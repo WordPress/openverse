@@ -103,3 +103,20 @@ class LockManager:
         )
         logger.info("Retrieved moderators", object=object, mods=mods)
         return mods
+
+    def score(self, username, object_id) -> int:
+        """
+        Get the score of a particular moderator on a particular item.
+
+        :param username: the username of the moderator viewing a report
+        :param object_id: the ID of the report being viewed
+        :return: the score of a particular moderator on a particular item
+        """
+
+        if not self.redis:
+            return 0
+
+        object = f"{self.media_type}:{object_id}"
+        score = self.redis.zscore(f"{REPORT_LOCK_PREFIX}:{object}", username)
+        logger.info("Retrieved score", object=object, user=username, score=score)
+        return score
