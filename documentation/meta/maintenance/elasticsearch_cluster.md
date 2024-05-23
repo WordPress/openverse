@@ -344,7 +344,7 @@ scheduled decomission ("retirement") and need to be replaced beforehand.
 This procedure describes the process of replacing a single node, but could be
 extrapolated to multiple nodes with relative ease.
 
-If a Data refresh is scheduled during the timeframe of this procedure, it is
+If a data refresh is scheduled during the timeframe of this procedure, it is
 best to pause it for performance reasons.
 
 ### Steps
@@ -357,7 +357,7 @@ best to pause it for performance reasons.
    the matching private IP in the returned state by running
    `j tf <env> state show "module.<env>-elasticsearch-8-8-2.aws_instance.datanodes[0]"`,
    `j tf <env> state show "module.<env>-elasticsearch-8-8-2.aws_instance.datanodes[1]"`,
-   and so on for each index. Replace the "<env>" with the correct values. Record
+   and so on for each index. Replace the `<env>` with the correct values. Record
    the final `module.<env>-elasticsearch-8-8-2.aws_instance.datanodes[x]` index.
 1. In Terraform, increase the `data_node_count` for the relevant Elasticsearch
    module by one. Here is an
@@ -371,7 +371,7 @@ best to pause it for performance reasons.
    to the `/_cluster/settings` endpoint (in a GUI like Elasticvue or via `curl`)
    to deallocate shards from the bad node. Be sure to replace `<IP_ADDRESS>`
    with the private IPv4 address identified in step 1.
-1. Let the cluster relocate shards to the new node and from the retired node.
+1. The cluster will now relocate shards to the new node and from the retired node.
    Wait for the cluster health to return to green.
 1. Manually terminate the retired instance in the AWS console.
 1. In Terraform:
