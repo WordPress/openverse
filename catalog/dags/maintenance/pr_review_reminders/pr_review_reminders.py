@@ -28,11 +28,16 @@ class Urgency:
 
     CRITICAL = Urgency("critical", 1)
     HIGH = Urgency("high", 2)
+    CONTRIBUTOR = Urgency("contributor", 3)
     MEDIUM = Urgency("medium", 4)
     LOW = Urgency("low", 5)
 
     @classmethod
-    def for_pr(cls, pr: dict) -> Urgency | None:
+    def for_pr(cls, pr: dict, maintainers: set[str]) -> Urgency | None:
+        # All contributor PRs should be treated as a special case
+        if pr["user"]["login"] not in maintainers:
+            return cls.CONTRIBUTOR
+
         priority_labels = [
             label["name"]
             for label in pr["labels"]
@@ -95,7 +100,9 @@ def parse_gh_date(d) -> datetime.datetime:
     return datetime.datetime.fromisoformat(d.rstrip("Z"))
 
 
-def get_urgency_if_urgent(gh: GitHubAPI, pr: dict) -> ReviewDelta | None:
+def get_urgency_if_urgent(
+    gh: GitHubAPI, pr: dict, maintainers: set[str]
+) -> ReviewDelta | None:
     events = gh.get_issue_events(base_repo_name(pr), pr["number"])
     ready_for_review_date = pr["created_at"]
     for event in reversed(events):
@@ -114,7 +121,7 @@ def get_urgency_if_urgent(gh: GitHubAPI, pr: dict) -> ReviewDelta | None:
 
     urgency_base_date = parse_gh_date(ready_for_review_date)
     today = datetime.datetime.now()
-    pr_urgency = Urgency.for_pr(pr)
+    pr_urgency = Urgency.for_pr(pr, maintainers)
     if pr_urgency is None:
         return None
 
@@ -207,7 +214,8 @@ def get_min_required_approvals(gh: GitHubAPI, pr: dict) -> int:
     ]
 
 
-def post_reminders(github_pat: str, dry_run: bool):
+@task(task_id="pr_review_reminder_operator")
+def post_reminders(maintainers: set[str], github_pat: str, dry_run: bool):
     gh = GitHubAPI(github_pat)
 
     open_prs = []
@@ -216,7 +224,7 @@ def post_reminders(github_pat: str, dry_run: bool):
 
     urgent_prs = []
     for pr in open_prs:
-        review_delta = get_urgency_if_urgent(gh, pr)
+        review_delta = get_urgency_if_urgent(gh, pr, maintainers)
         if review_delta:
             urgent_prs.append((pr, review_delta))
 
