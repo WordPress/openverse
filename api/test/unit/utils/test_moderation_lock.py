@@ -54,7 +54,7 @@ def test_lock_manager_handles_missing_redis(is_cache_reachable, cache_name, requ
         assert lm.moderator_set(10) == {"one"}
         assert lm.score("one", 10) is not None
     else:
-        assert lm.prune() == dict()
+        assert lm.prune() is None
         assert lm.moderator_set(10) == set()
         assert lm.score("one", 10) is None
 

@@ -1,6 +1,5 @@
 import functools
 import time
-from typing import Callable
 
 import django_redis
 import structlog
@@ -15,25 +14,22 @@ TTL = 10  # seconds
 logger = structlog.get_logger(__name__)
 
 
-def handle_redis_exception(ret_val=None):
-    def decorator(func):
-        @functools.wraps(func)
-        def wrapper(*args, **kwargs):
-            try:
-                return func(*args, **kwargs)
-            except ConnectionError:
-                return ret_val() if isinstance(ret_val, Callable) else ret_val
+def handle_redis_exception(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except ConnectionError:
+            return None
 
-        return wrapper
-
-    return decorator
+    return wrapper
 
 
 class LockManager:
     def __init__(self, media_type):
         self.media_type = media_type
 
-    @handle_redis_exception(ret_val=dict)
+    @handle_redis_exception
     def prune(self) -> dict[str, set[str]]:
         """
         Delete all expired locks and get a mapping of usernames to
@@ -60,7 +56,7 @@ class LockManager:
 
         return valid_locks
 
-    @handle_redis_exception()
+    @handle_redis_exception
     def add_locks(self, username, object_id):
         """
         Add a soft-lock for a given report to the given moderator.
@@ -77,7 +73,7 @@ class LockManager:
         logger.info("Adding lock", object=object, user=username, expiration=expiration)
         redis.zadd(f"{LOCK_PREFIX}:{username}", {object: expiration})
 
-    @handle_redis_exception()
+    @handle_redis_exception
     def remove_locks(self, username, object_id):
         """
         Remove the soft-lock for a given report from the given moderator.
@@ -101,14 +97,14 @@ class LockManager:
         :return: the list of moderators on a particular item
         """
 
-        valid_locks = self.prune()
+        valid_locks = self.prune() or {}
 
         object = f"{self.media_type}:{object_id}"
         mods = {mod for mod, objects in valid_locks.items() if object in objects}
         logger.info("Retrieved moderators", object=object, mods=mods)
         return mods
 
-    @handle_redis_exception()
+    @handle_redis_exception
     def score(self, username, object_id) -> int:
         """
         Get the score of a particular moderator on a particular item.
