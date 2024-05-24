@@ -280,11 +280,16 @@ class MediaReportAdmin(admin.ModelAdmin):
 
     def soft_lock_view(self, request, object_id):
         """
-        Add soft-locks for the current user and object ID.
+        Soft-lock the provided report to the current user.
 
-        This view is called from the frontend when a user loads the
-        change page. It is also called when the page visibility is
-        restored.
+        This view is polled from the frontend when a user has the report
+        change page open. Not polling this endpoint will automatically
+        release the lock when it expires.
+
+        The endpoint returns the lock expiration timestamp.
+
+        :param request: the incoming request to soft-lock the report
+        :param object_id: the ID of the report to soft-lock
         """
 
         expiration = self.lock_manager.add_locks(request.user.get_username(), object_id)
