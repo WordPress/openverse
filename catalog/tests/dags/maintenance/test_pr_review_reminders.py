@@ -44,6 +44,8 @@ LAST_WEDNESDAY = MONDAY - timedelta(days=5)
 LAST_TUESDAY = MONDAY - timedelta(days=6)
 LAST_MONDAY = MONDAY - timedelta(days=7)
 
+MAINTAINERS = {"helpful-contributor"}
+
 
 @pytest.mark.parametrize(
     "today, against, expected_days",
@@ -269,7 +271,7 @@ def test_pings_past_due(github, urgency, events):
         make_non_urgent_reviewable_events(events)
     )
 
-    post_reminders("not_set", dry_run=False)
+    post_reminders.function(MAINTAINERS, "not_set", dry_run=False)
 
     assert past_due_pull["number"] in github["posted_comments"]
     assert not_due_pull["number"] not in github["posted_comments"]
@@ -311,7 +313,7 @@ def test_does_not_reping_past_due_if_reminder_is_current(github, urgency, events
         make_non_urgent_reviewable_events(events)
     )
 
-    post_reminders("not_set", dry_run=False)
+    post_reminders.function(MAINTAINERS, "not_set", dry_run=False)
 
     assert past_due_pull["number"] not in github["posted_comments"]
     assert not_due_pull["number"] not in github["posted_comments"]
@@ -347,7 +349,7 @@ def test_does_reping_past_due_if_reminder_is_outdated(github, urgency, events):
         make_non_urgent_reviewable_events(events)
     )
 
-    post_reminders("not_set", dry_run=False)
+    post_reminders.function(MAINTAINERS, "not_set", dry_run=False)
 
     assert past_due_pull["number"] in github["posted_comments"]
     assert not_due_pull["number"] not in github["posted_comments"]
@@ -400,7 +402,7 @@ def test_does_ping_if_pr_has_less_than_min_required_approvals(
     github["pull_reviews"][past_due_pull["number"]] = reviews
     github["events"][past_due_pull["number"]] = make_urgent_events(urgency, events)
 
-    post_reminders("not_set", dry_run=False)
+    post_reminders.function(MAINTAINERS, "not_set", dry_run=False)
 
     assert past_due_pull["number"] in github["posted_comments"]
 
@@ -438,7 +440,7 @@ def test_does_not_ping_if_pr_has_min_required_approvals(
     ] * min_required_approvals
     github["events"][past_due_pull["number"]] = make_urgent_events(urgency, events)
 
-    post_reminders("not_set", dry_run=False)
+    post_reminders.function(MAINTAINERS, "not_set", dry_run=False)
 
     assert past_due_pull["number"] not in github["posted_comments"]
 
@@ -466,7 +468,7 @@ def test_does_not_ping_if_no_reviewers(github, urgency, events):
     for pr in [past_due_pull, not_due_pull]:
         _setup_branch_protection(github, pr)
 
-    post_reminders("not_set", dry_run=False)
+    post_reminders.function(MAINTAINERS, "not_set", dry_run=False)
 
     assert past_due_pull["number"] not in github["posted_comments"]
     assert not_due_pull["number"] not in github["posted_comments"]
@@ -545,7 +547,7 @@ def test_ignores_created_at_and_pings_if_urgent_ready_for_review_event_exists(
 
     _setup_branch_protection(github, pull)
 
-    post_reminders("not_set", dry_run=False)
+    post_reminders.function(MAINTAINERS, "not_set", dry_run=False)
 
     assert pull["number"] in github["posted_comments"]
 
@@ -579,6 +581,6 @@ def test_falls_back_to_main_on_multiple_branch_levels(
         Urgency.LOW, ["review_requested"]
     )
 
-    post_reminders("not_set", dry_run=False)
+    post_reminders.function(MAINTAINERS, "not_set", dry_run=False)
 
     assert past_due_pull["number"] not in github["posted_comments"]
