@@ -9,6 +9,7 @@ from api.models.moderation import get_moderators
 
 
 LOCK_PREFIX = "moderation_lock"
+TTL = 10  # seconds
 
 logger = structlog.get_logger(__name__)
 
@@ -61,7 +62,7 @@ class LockManager:
             return
 
         object = f"{self.media_type}:{object_id}"
-        expiration = int(time.time()) + 5 * 60  # 5 minutes from now
+        expiration = int(time.time()) + TTL
 
         logger.info("Adding lock", object=object, user=username, expiration=expiration)
         self.redis.zadd(f"{LOCK_PREFIX}:{username}", {object: expiration})

@@ -6,7 +6,7 @@ import pytest
 from freezegun import freeze_time
 from redis import Redis
 
-from api.utils.moderation_lock import LockManager
+from api.utils.moderation_lock import TTL, LockManager
 
 
 pytestmark = pytest.mark.django_db
@@ -77,11 +77,11 @@ def test_relocking_updates_score(redis):
         lm.add_locks("one", 10)
         init_score = lm.score("one", 10)
 
-    with freeze_time(now + timedelta(minutes=2)):
+    with freeze_time(now + timedelta(seconds=TTL / 2)):
         lm.add_locks("one", 10)
         updated_score = lm.score("one", 10)
 
-    assert updated_score == init_score + 120
+    assert updated_score == init_score + TTL / 2
 
 
 def test_lock_manager_prunes_after_timeout():
@@ -91,10 +91,8 @@ def test_lock_manager_prunes_after_timeout():
     with freeze_time(now):
         lm.add_locks("one", 10)
 
-    with freeze_time(now + timedelta(minutes=2)):
-        lm.prune()
+    with freeze_time(now + timedelta(seconds=TTL - 1)):
         assert lm.moderator_set(10) == {"one"}
 
-    with freeze_time(now + timedelta(minutes=6)):
-        lm.prune()
+    with freeze_time(now + timedelta(seconds=TTL + 1)):
         assert lm.moderator_set(10) == set()
