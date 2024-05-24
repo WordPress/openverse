@@ -32,6 +32,7 @@ from maintenance.pr_review_reminders import pr_review_reminders
 
 DAG_ID = "pr_review_reminders"
 MAX_ACTIVE_TASKS = 1
+DEFERRED_GITHUB_PAT = "{{ var.value.get('GITHUB_API_KEY', 'not_set') }}"
 
 dag = DAG(
     dag_id=DAG_ID,
@@ -54,11 +55,13 @@ dag = DAG(
 )
 
 with dag:
+    pr_review_reminders.get_maintainers(DEFERRED_GITHUB_PAT)
+
     PythonOperator(
         task_id="pr_review_reminder_operator",
         python_callable=pr_review_reminders.post_reminders,
         op_kwargs={
-            "github_pat": "{{ var.value.get('GITHUB_API_KEY', 'not_set') }}",
+            "github_pat": DEFERRED_GITHUB_PAT,
             "dry_run": "{{ var.json.get('PR_REVIEW_REMINDER_DRY_RUN', "
             "var.value.ENVIRONMENT != 'production') }}",
         },

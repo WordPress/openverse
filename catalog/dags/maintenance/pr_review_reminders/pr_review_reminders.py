@@ -3,6 +3,7 @@ import logging
 from collections import defaultdict
 from dataclasses import dataclass
 
+from airflow.decorators import task
 from requests import HTTPError
 
 from common.github import GitHubAPI
@@ -15,6 +16,8 @@ REPOSITORIES = [
     "openverse",
     "openverse-infrastructure",
 ]
+MAINTAINER_TEAM = "openverse-maintainers"
+OPENVERSE_BOT = "openverse-bot"
 
 
 class Urgency:
@@ -55,6 +58,18 @@ class Urgency:
 class ReviewDelta:
     urgency: Urgency.Urgency
     days: int
+
+
+@task
+def get_maintainers(github_pat: str) -> set[str]:
+    gh = GitHubAPI(github_pat)
+    maintainer_info = gh.get_team_members(MAINTAINER_TEAM)
+    maintainers = {
+        member["login"]
+        for member in maintainer_info
+        if member["login"] != "openverse-bot"
+    }
+    return maintainers
 
 
 def days_without_weekends(
@@ -214,7 +229,7 @@ def post_reminders(github_pat: str, dry_run: bool):
             comment
             for comment in previous_comments
             if (
-                comment["user"]["login"] == "openverse-bot"
+                comment["user"]["login"] == OPENVERSE_BOT
                 and COMMENT_MARKER in comment["body"]
             )
         ]
