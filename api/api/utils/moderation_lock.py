@@ -5,6 +5,8 @@ import structlog
 from redis import Redis
 from redis.exceptions import ConnectionError
 
+from api.models.moderation import get_moderators
+
 
 LOCK_PREFIX = "moderation_lock"
 
@@ -22,17 +24,30 @@ class LockManager:
             logger.error("Redis connection failed")
             self.redis = None
 
-    def prune(self):
-        """Delete all expired locks."""
+    def prune(self) -> dict[str, set[str]]:
+        """
+        Delete all expired locks and get a mapping of usernames to
+        reports that have active locks.
+
+        :return: a mapping of moderators to reports they are viewing
+        """
+
+        valid_locks = {}
 
         now = int(time.time())
         pipe = self.redis.pipeline()
-        for key in self.redis.keys(f"{LOCK_PREFIX}:*"):
+        for username in get_moderators().values_list("username", flat=True):
+            key = f"{LOCK_PREFIX}:{username}"
             for value, score in self.redis.zrange(key, 0, -1, withscores=True):
                 if score <= now:
                     logger.info("Deleting expired lock", key=key, value=value)
                     pipe.zrem(key, value)
+                else:
+                    logger.info("Keeping valid lock", key=key, value=value)
+                    valid_locks.setdefault(username, set()).add(value.decode())
         pipe.execute()
+
+        return valid_locks
 
     def add_locks(self, username, object_id):
         """
@@ -78,10 +93,10 @@ class LockManager:
         if not self.redis:
             return set()
 
-        self.prune()
+        valid_locks = self.prune()
 
         object = f"{self.media_type}:{object_id}"
-        mods = set()
+        mods = {mod for mod, objects in valid_locks.items() if object in objects}
         logger.info("Retrieved moderators", object=object, mods=mods)
         return mods
 
