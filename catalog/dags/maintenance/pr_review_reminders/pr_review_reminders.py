@@ -18,6 +18,7 @@ REPOSITORIES = [
 ]
 MAINTAINER_TEAM = "openverse-maintainers"
 OPENVERSE_BOT = "openverse-bot"
+NON_MAINTAINER_IGNORATIONS = {OPENVERSE_BOT, "renovate", "dependabot[bot]"}
 
 
 class Urgency:
@@ -70,10 +71,8 @@ def get_maintainers(github_pat: str) -> set[str]:
     gh = GitHubAPI(github_pat)
     maintainer_info = gh.get_team_members(MAINTAINER_TEAM)
     maintainers = {
-        member["login"]
-        for member in maintainer_info
-        if member["login"] != OPENVERSE_BOT
-    }
+        member["login"] for member in maintainer_info
+    } ^ NON_MAINTAINER_IGNORATIONS
     return maintainers
 
 
