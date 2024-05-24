@@ -173,7 +173,8 @@ def get_copy_data_query(
         select_insert = d(
             """
         INSERT INTO {temp_table} ({columns})
-            SELECT {columns} from {upstream_table} AS u
+            SELECT {columns}
+            FROM {upstream_table} AS u
             WHERE NOT EXISTS(
                 SELECT FROM {deleted_table} WHERE identifier = u.identifier
             )
@@ -182,16 +183,8 @@ def get_copy_data_query(
 
     # If a limit is requested, add the condition onto the select at the very end
     if limit:
-        # The audioset view does not have identifiers associated with it
-        if upstream_table != "audioset_view":
-            select_insert += d(
-                """
-            ORDER BY identifier"""
-            )
-        select_insert += d(
-            """
-        LIMIT {limit}"""
-        )
+        select_insert += "    LIMIT {limit}"
+
     # Always add a semi-colon at the end
     select_insert += ";"
 
