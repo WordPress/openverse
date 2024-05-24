@@ -6,9 +6,7 @@ from redis import Redis
 from redis.exceptions import ConnectionError
 
 
-REPORT_LOCK_PREFIX = "soft_lock_report"
-MODERATOR_LOCK_PREFIX = "soft_lock_moderator"
-PREFIXES = [REPORT_LOCK_PREFIX, MODERATOR_LOCK_PREFIX]
+LOCK_PREFIX = "moderation_lock"
 
 logger = structlog.get_logger(__name__)
 
@@ -27,22 +25,18 @@ class LockManager:
     def prune(self):
         """Delete all expired locks."""
 
-        def _prune(pattern: str):
-            now = int(time.time())
-            pipe = self.redis.pipeline()
-            for key in self.redis.keys(pattern):
-                for value, score in self.redis.zrange(key, 0, -1, withscores=True):
-                    if score <= now:
-                        logger.info("Deleting expired lock", key=key, value=value)
-                        pipe.zrem(key, value)
-            pipe.execute()
-
-        for prefix in PREFIXES:
-            _prune(f"{prefix}:*")
+        now = int(time.time())
+        pipe = self.redis.pipeline()
+        for key in self.redis.keys(f"{LOCK_PREFIX}:*"):
+            for value, score in self.redis.zrange(key, 0, -1, withscores=True):
+                if score <= now:
+                    logger.info("Deleting expired lock", key=key, value=value)
+                    pipe.zrem(key, value)
+        pipe.execute()
 
     def add_locks(self, username, object_id):
         """
-        Add soft-locks for a given username and report pair.
+        Add a soft-lock for a given report to the given moderator.
 
         :param username: the username of the moderator viewing a report
         :param object_id: the ID of the report being viewed
@@ -54,18 +48,15 @@ class LockManager:
         object = f"{self.media_type}:{object_id}"
         expiration = int(time.time()) + 5 * 60  # 5 minutes from now
 
-        pipe = self.redis.pipeline()
         logger.info("Adding lock", object=object, user=username, expiration=expiration)
-        pipe.zadd(f"{REPORT_LOCK_PREFIX}:{object}", {username: expiration})
-        pipe.zadd(f"{MODERATOR_LOCK_PREFIX}:{username}", {object: expiration})
-        pipe.execute()
+        self.redis.zadd(f"{LOCK_PREFIX}:{username}", {object: expiration})
 
     def remove_locks(self, username, object_id):
         """
-        Remove soft-locks for a given username and report pair.
+        Remove the soft-lock for a given report from the given moderator.
 
-        :param username: the username of the moderator viewing a report
-        :param object_id: the ID of the report being viewed
+        :param username: the username of the moderator not viewing a report
+        :param object_id: the ID of the report not being viewed
         """
 
         if not self.redis:
@@ -73,11 +64,8 @@ class LockManager:
 
         object = f"{self.media_type}:{object_id}"
 
-        pipe = self.redis.pipeline()
         logger.info("Removing lock", object=object, user=username)
-        pipe.zrem(f"{REPORT_LOCK_PREFIX}:{object}", username)
-        pipe.zrem(f"{MODERATOR_LOCK_PREFIX}:{username}", object)
-        pipe.execute()
+        self.redis.zrem(f"{LOCK_PREFIX}:{username}", object)
 
     def moderator_set(self, object_id) -> set[str]:
         """
@@ -93,14 +81,7 @@ class LockManager:
         self.prune()
 
         object = f"{self.media_type}:{object_id}"
-        mods = set(
-            item.decode("utf-8")
-            for item in self.redis.zrange(
-                f"{REPORT_LOCK_PREFIX}:{object}",
-                start=0,
-                end=-1,
-            )
-        )
+        mods = set()
         logger.info("Retrieved moderators", object=object, mods=mods)
         return mods
 
@@ -117,6 +98,6 @@ class LockManager:
             return 0
 
         object = f"{self.media_type}:{object_id}"
-        score = self.redis.zscore(f"{REPORT_LOCK_PREFIX}:{object}", username)
+        score = self.redis.zscore(f"{LOCK_PREFIX}:{username}", object)
         logger.info("Retrieved score", object=object, user=username, score=score)
         return score
