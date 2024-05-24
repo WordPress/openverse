@@ -314,14 +314,9 @@ class MediaReportAdmin(admin.ModelAdmin):
         obj = self.get_object(request, object_id)
         if obj and obj.media_obj:
             additional_data = self._get_media_obj_data(obj)
-            extra_context = {**extra_context, **additional_data}
+            extra_context |= additional_data
 
-        return super().change_view(
-            request,
-            object_id,
-            form_url,
-            extra_context=extra_context,
-        )
+        return super().change_view(request, object_id, form_url, extra_context)
 
     def changelist_view(self, request, extra_context=None):
         valid_locks = self.lock_manager.prune()
