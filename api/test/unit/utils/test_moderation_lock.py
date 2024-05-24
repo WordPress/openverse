@@ -4,7 +4,6 @@ from django.contrib.auth.models import Group, Permission
 
 import pytest
 from freezegun import freeze_time
-from redis import Redis
 
 from api.utils.moderation_lock import TTL, LockManager
 
@@ -51,11 +50,13 @@ def test_lock_manager_handles_missing_redis(is_cache_reachable, cache_name, requ
     lm.add_locks("one", 10)
 
     if is_cache_reachable:
-        assert isinstance(lm.redis, Redis)
+        assert lm.prune() == {"one": {"media_type:10"}}
         assert lm.moderator_set(10) == {"one"}
+        assert lm.score("one", 10) is not None
     else:
-        assert lm.redis is None
+        assert lm.prune() == dict()
         assert lm.moderator_set(10) == set()
+        assert lm.score("one", 10) is None
 
 
 def test_lock_manager_adds_and_removes_locks():
