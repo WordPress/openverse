@@ -4,11 +4,7 @@
 {% block extrastyle %}
 {{ block.super }}
 <style>
-  th.column-get_is_soft_locked,td.field-get_is_soft_locked {
-    display: none;
-  }
-
-  tr:has(td.field-get_is_soft_locked>img[alt="True"]) {
+  tr.is-soft-locked {
     background-color: var(--message-warning-bg);
   }
 </style>
@@ -20,4 +16,14 @@
   Reports that are being moderated by another user are highlighted in yellow.
 </p>
 {{ block.super }}
+{% endblock %}
+
+{% block content %}
+{{ block.super }}
+<script>
+  const reports = {{ locked_reports }};
+  for (let report of reports) {
+    document.querySelector(`tr:has(a[href*="/${report}/"])`).classList.add('is-soft-locked')
+  }
+</script>
 {% endblock %}

@@ -147,7 +147,6 @@ class MediaReportAdmin(admin.ModelAdmin):
         "description",
         "created_at",
         "url",
-        "get_is_soft_locked",
     )
     list_filter = (
         ("decision", admin.EmptyFieldListFilter),  # ~status, i.e. pending or moderated
@@ -159,20 +158,6 @@ class MediaReportAdmin(admin.ModelAdmin):
     autocomplete_fields = _production_deferred("media_obj")
     actions = None
     media_type = None
-
-    @admin.display(boolean=True, description="Soft locked")
-    def get_is_soft_locked(self, obj):
-        """
-        Get whether this particular report is soft-locked.
-
-        This field is hidden from the rendered table, but the alt-text
-        the field helps to highlight the soft-locked rows.
-
-        :param obj: the report object
-        :return bool: whether the report is soft-locked
-        """
-
-        return len(self.lock_manager.moderator_set(obj.id)) != 0
 
     def __init__(self, *args, **kwargs):
         self.lock_manager = LockManager(self.media_type)
@@ -337,6 +322,19 @@ class MediaReportAdmin(admin.ModelAdmin):
             form_url,
             extra_context=extra_context,
         )
+
+    def changelist_view(self, request, extra_context=None):
+        valid_locks = self.lock_manager.prune()
+        locked_reports = list(
+            int(item.replace(f"{self.media_type}:", ""))
+            for lock_set in valid_locks.values()
+            for item in lock_set
+        )
+
+        extra_context = extra_context or {}
+        extra_context |= {"locked_reports": locked_reports}
+
+        return super().changelist_view(request, extra_context)
 
     def render_change_form(
         self, request, context, add=False, change=False, form_url="", obj=None
