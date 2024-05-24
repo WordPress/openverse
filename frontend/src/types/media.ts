@@ -26,6 +26,7 @@ export interface Media {
    * @see {@link https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)|UUID4}
    */
   id: string
+
   /**
    * the name of the creative work; This involves the following kinds of
    * changes to the original title:
@@ -35,50 +36,133 @@ export interface Media {
    * - handle empty titles
    */
   title: string
-  /** the raw name of the creative work, as returned by the API */
+
+  /** The raw name of the creative work, as returned by the API. */
   originalTitle: string
 
+  /** The text name, handle, or username of the author of the creative work. */
   creator?: string
+
+  /** A URL to the creator's profile on the provider or other personal webpage, depending on the provider. */
   creator_url?: string
 
+  /** A URL pointing to the actual media file on the provider. */
   url: string
+
+  /**
+   * A URL to the page where the media item is hosted on the foreign provider's site.
+   * This is often used to give credit to the original source or for users to find more information.
+   */
   foreign_landing_url: string
 
+  /** The code of the open copy-left license assigned to the work. */
   license: License
+
+  /** The version number of the Creative Commons license as a string, or an empty string. */
   license_version: LicenseVersion
+
+  /** A link to the landing page of the License, typically the deed or another informational page. */
   license_url?: string
+
+  /** The full text to properly attribute the work to the creator. */
   attribution: string
 
   frontendMediaType: SupportedMediaType
 
+  /** A long test describing the media, from the provider. */
   description?: string
 
-  category: string | null
+  /** The descriptive category describing the work. */
+  category?: string | null
+
+  /**
+   * A snake_cased slug representing the media's provider.
+   *
+   * Corresponds to the `source_name` field of provider results
+   * from the API's `/stats/` endpoints.
+   */
   provider: string
+
+  /**
+   * A snake_cased slug representing the media's source.
+   *
+   * Corresponds to the `source_name` field of provider results
+   * from the API's `/stats/` endpoints.
+   */
   source: string
+
+  /**
+   * A presentational string (with capitalization, spaces, punctuation, and so on),
+   * representing the media's provider.
+   *
+   * Corresponds to the `display_name` field of provider results
+   * from the API's `/stats/` endpoints.
+   */
   providerName: string
+
+  /**
+   * A presentational string (with capitalization, spaces, punctuation, and so on),
+   * representing the media's source.
+   *
+   * Corresponds to the `display_name` field of provider results
+   * from the API's `/stats/` endpoints.
+   */
   sourceName: string
+
+  /**
+   * A URL to a thumbnail image of the media.
+   *
+   * Typically album art for an audio track, or
+   * a minified thumbnail for image works.
+   */
   thumbnail?: string
 
+  /**
+   * A number representing the size of the media in bytes.
+   */
   filesize?: string
+
+  /**
+   * A string representing the filetype of the media.
+   * Please note this is not an exact representation of extension or MIME type.
+   */
   filetype?: string
 
+  /**
+   * The API url of the detail view of a media.
+   */
   detail_url: string
+
+  /** The API URL which provides a list of related media results. */
   related_url: string
 
+  /**
+   * An array of tags, used to query the media or present on the frontend
+   * to find related media.
+   */
   tags: Tag[]
+
+  /** An array of field names that matched the search query. */
   fields_matched?: string[]
 
+  /**
+   * An array of sensitivity markers.
+   * These markers indicate various sensitivity or content warning categories applicable to the media.
+   */
   sensitivity: Sensitivity[]
+
+  /**
+   * Indicates if the media is marked as sensitive.
+   * If true, the media has sensitivity markers that might require user discretion or warnings.
+   */
   isSensitive: boolean
 }
 
 export interface ImageDetail extends Media {
   frontendMediaType: "image"
-
-  /** the vertical length of the image in pixels */
+  /** The vertical length of the image, in pixels. */
   height?: number
-  /** the horizontal length of the image in pixels */
+  /** The horizontal length of the image, in pixels. */
   width?: number
 }
 
@@ -95,30 +179,49 @@ export interface AudioSet {
 export interface AudioDetail extends Media {
   frontendMediaType: "audio"
 
+  /** An object representing a group of audio tracks this track belongs to, like an album or podcast. */
   audio_set?: AudioSet
+
+  /** A raw list of strings representing musical genres. */
   genres?: string[]
-  length?: string
-  /** the time period of the track in milliseconds */
-  duration?: number
+
   /**
-   * amount of digital audio data transmitted or processed in unit time; This
-   * field holds numbers measured in bits per second.
+   * The duration of the track in milliseconds.
+   */
+  duration?: number
+
+  /**
+   * Amount of digital audio data transmitted or processed in unit time.
+   * This field holds numbers measured in bits per second (bps).
    *
    * @see {@link https://en.wikipedia.org/wiki/Bit_rate#Audio|Wikipedia}
    */
   bit_rate?: number
+
   /**
-   * number of samples for digital representation taken in unit time; This field
-   * holds numbers measured in hertz.
+   * Number of samples for digital representation taken in unit time.
+   * This field holds numbers measured in hertz (Hz).
    *
    * @see {@link https://en.wikipedia.org/wiki/Sampling_(signal_processing)#Audio_sampling|Wikipedia}
    */
   sample_rate?: number
+
+  /**
+   * An array of alternative files of different filetypes.
+   * This can include different formats of the audio track for compatibility and quality options.
+   */
   alt_files?: { provider: string; filetype: string }[]
+
+  /** An array of peak amplitude values used to generate a visual representation of the audio waveform. */
   peaks?: number[]
+
+  /** The URL of the API `/wavepoint` endpoint for the audio track. This endpoint provides the full peaks array for the track.  */
   waveform?: string
 
-  // Set and managed by the frontend client-side
+  /**
+   * Set and managed by the frontend client-side to indicate if the audio has been fully loaded.
+   * Useful for managing UI elements based on the loading state of the audio.
+   */
   hasLoaded?: boolean
 }
 

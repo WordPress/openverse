@@ -330,14 +330,6 @@ class MediaReportAdmin(admin.ModelAdmin):
 
         return super().changelist_view(request, extra_context)
 
-    def render_change_form(
-        self, request, context, add=False, change=False, form_url="", obj=None
-    ):
-        context.update({"add": add, "change": change})
-        return super().render_change_form(
-            request, context, add=add, change=change, form_url=form_url, obj=obj
-        )
-
 
 class ImageReportAdmin(MediaReportAdmin):
     media_type = "image"
