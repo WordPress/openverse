@@ -99,7 +99,7 @@
 
 <fieldset class="module aligned">
   <h2>Other reports</h2>
-  <div class="form-row field-other_reports">
+  <div class="form-row">
   {% if other_reports %}
     <table>
       <thead>
@@ -125,7 +125,36 @@
     <p>No other reports for {{ media_obj.identifier }} found.</p>
   {% endif %}
   </div>
+</fieldset>
 
+<fieldset class="module aligned">
+  <h2>Past decisions</h2>
+  <div class="form-row">
+  {% if past_decisions %}
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Moderator</th>
+          <th>Action</th>
+          <th>Decision link</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for decision in past_decisions %}
+        <tr>
+          <td>{{ decision.created_on }}</td>
+          <td>{{ decision.moderator }}</td>
+          <td>{{ decision.action }}</td>
+          <td><a href="{% url 'admin:api_'|add:media_type|add:'decision_change' decision.id %}">{{ decision.id }}</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No other decisions for {{ media_obj.identifier }} found.</p>
+  {% endif %}
+  </div>
 </fieldset>
 {% endif %}
 {% endblock %}

@@ -227,6 +227,15 @@ class MediaReportAdmin(admin.ModelAdmin):
         )
         return reports
 
+    def get_past_decisions(self, obj):
+        if not self.media_type or not obj:
+            return []
+
+        decisions = getattr(obj.media_obj, f"{self.media_type}decision_set").order_by(
+            "created_on"
+        )
+        return decisions
+
     def _get_media_obj_data(self, obj):
         tags_by_provider = {}
         if obj.media_obj.tags:
@@ -234,6 +243,7 @@ class MediaReportAdmin(admin.ModelAdmin):
                 tags_by_provider.setdefault(tag["provider"], []).append(tag["name"])
         additional_data = {
             "other_reports": self.get_other_reports(obj),
+            "past_decisions": self.get_past_decisions(obj),
             "media_obj": obj.media_obj,
             "license": License(
                 obj.media_obj.license,
