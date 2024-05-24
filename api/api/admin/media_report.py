@@ -298,7 +298,8 @@ class MediaReportAdmin(admin.ModelAdmin):
         mods -= {request.user.get_username()}
         if len(mods):
             messages.warning(
-                request, f"Other moderator(s) looking at this report: {', '.join(mods)}"
+                request,
+                f"Other moderator(s) looking at this report: {', '.join(mods)}.",
             )
 
         extra_context = extra_context or {}
