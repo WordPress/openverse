@@ -57,7 +57,7 @@ class LockManager:
         return valid_locks
 
     @handle_redis_exception
-    def add_locks(self, username, object_id):
+    def add_locks(self, username, object_id) -> int:
         """
         Add a soft-lock for a given report to the given moderator.
 
@@ -68,10 +68,11 @@ class LockManager:
         redis = django_redis.get_redis_connection("default")
 
         object = f"{self.media_type}:{object_id}"
-        expiration = int(time.time()) + TTL
 
+        expiration = int(time.time()) + TTL
         logger.info("Adding lock", object=object, user=username, expiration=expiration)
         redis.zadd(f"{LOCK_PREFIX}:{username}", {object: expiration})
+        return expiration
 
     @handle_redis_exception
     def remove_locks(self, username, object_id):

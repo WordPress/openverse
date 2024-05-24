@@ -309,8 +309,11 @@ class MediaReportAdmin(admin.ModelAdmin):
         restored.
         """
 
-        self.lock_manager.add_locks(request.user.get_username(), object_id)
-        return JsonResponse({"status": "OK"})
+        expiration = self.lock_manager.add_locks(request.user.get_username(), object_id)
+        return JsonResponse(
+            data={"expiration": expiration},
+            status=503 if expiration == 0 else 200,
+        )
 
     def change_view(self, request, object_id, form_url="", extra_context=None):
         mods = self.lock_manager.moderator_set(object_id)
