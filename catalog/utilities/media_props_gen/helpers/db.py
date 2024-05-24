@@ -20,6 +20,7 @@ SQL_TYPES = [
     "jsonb",
     "timestamp with time zone",
     "character varying",
+    "text",
 ]
 SQL_TYPE_REGEX = re.compile(f"({'|'.join(SQL_TYPES)})")
 CREATE_TABLE_REGEX = re.compile(r"CREATE\s+TABLE\s+\w+\.(\w+)\s+\(([\s\S]*?)\);")
