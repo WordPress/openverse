@@ -193,18 +193,14 @@ class MediaReportAdmin(admin.ModelAdmin):
         info = self.opts.app_label, self.opts.model_name
 
         urls = super().get_urls()
-        urls[-1:-1] = [
+        urls.insert(
+            -1,
             path(
                 "<path:object_id>/lock/",
                 wrap(self.soft_lock_view),
                 name="{:s}_{:s}_lock".format(*info),
             ),
-            path(
-                "<path:object_id>/unlock/",
-                wrap(self.soft_unlock_view),
-                name="{:s}_{:s}_unlock".format(*info),
-            ),
-        ]
+        )
         return urls
 
     def get_fieldsets(self, request, obj=None):
@@ -314,18 +310,6 @@ class MediaReportAdmin(admin.ModelAdmin):
         """
 
         self.lock_manager.add_locks(request.user.get_username(), object_id)
-        return JsonResponse({"status": "OK"})
-
-    def soft_unlock_view(self, request, object_id):
-        """
-        Remove soft-locks for the current user and object ID.
-
-        This view is called from the frontend when the change page
-        visibility is lost, including the case where the user unloads
-        the page.
-        """
-
-        self.lock_manager.remove_locks(request.user.get_username(), object_id)
         return JsonResponse({"status": "OK"})
 
     def change_view(self, request, object_id, form_url="", extra_context=None):
