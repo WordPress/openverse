@@ -242,6 +242,14 @@ parametrize_possible_pingable_events = pytest.mark.parametrize(
 
 
 @parametrize_urgency
+def test_urgency_respects_contributors(urgency):
+    pull = make_pull(urgency, old=False)
+    # Don't pass maintainers in so any author is considered a "contributor"
+    actual = Urgency.for_pr(pull, set())
+    assert actual == Urgency.CONTRIBUTOR
+
+
+@parametrize_urgency
 @parametrize_possible_pingable_events
 def test_pings_past_due(github, urgency, events):
     past_due_pull = make_pull(urgency, old=True)

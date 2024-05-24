@@ -72,7 +72,7 @@ def get_maintainers(github_pat: str) -> set[str]:
     maintainers = {
         member["login"]
         for member in maintainer_info
-        if member["login"] != "openverse-bot"
+        if member["login"] != OPENVERSE_BOT
     }
     return maintainers
 
