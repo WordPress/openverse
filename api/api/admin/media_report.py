@@ -140,14 +140,7 @@ class MediaListAdmin(admin.ModelAdmin):
 class MediaReportAdmin(admin.ModelAdmin):
     change_list_template = "admin/api/media_report/change_list.html"
     change_form_template = "admin/api/media_report/change_form.html"
-    list_display = (
-        "id",
-        "reason",
-        "is_pending",
-        "description",
-        "created_at",
-        "url",
-    )
+    list_display = ("id", "reason", "is_pending", "description", "created_at", "url")
     list_filter = (
         ("decision", admin.EmptyFieldListFilter),  # ~status, i.e. pending or moderated
         "reason",
