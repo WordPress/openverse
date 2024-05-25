@@ -40,6 +40,13 @@
 </script>
 {% endblock %}
 
+{% block content %}{{ block.super }}
+<!-- Fields for this form are supplied separately in `media_reports.html`. -->
+<form id="decision-create" method="POST" action="{% url 'admin:api_'|add:media_type|add:'_moderate' object_id %}">
+  {% csrf_token %}
+</form>
+{% endblock %}
+
 {% block object-tools-items %}{{ block.super }}
 <li><a href="https://openverse.org/{{media_type}}/{{media_obj.identifier}}" class="viewsitelink">View on openverse.org</a></li>
 {% endblock %}
@@ -47,4 +54,5 @@
 {% block after_field_sets %}
 {% include 'admin/api/components/media_additional.html' with media_type=media_type media_obj=media_obj tags=tags only %}
 {% include 'admin/api/components/media_decisions.html' with media_type=media_type decision_throughs=decision_throughs only %}
+{% include 'admin/api/components/media_reports.html' with media_type=media_type reports=reports mod_form=mod_form only %}
 {% endblock %}

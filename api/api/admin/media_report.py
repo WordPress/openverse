@@ -250,6 +250,12 @@ class MediaListAdmin(admin.ModelAdmin):
         decision_throughs = manager.order_by("decision__created_on")
         extra_context["decision_throughs"] = decision_throughs
 
+        manager = getattr(media_obj, f"{self.media_type}_report")
+        reports = manager.order_by("-created_at")
+        extra_context["reports"] = reports
+
+        extra_context["mod_form"] = MediaDecisionForm(media_type=self.media_type)
+
         return super().change_view(request, object_id, form_url, extra_context)
 
     #############

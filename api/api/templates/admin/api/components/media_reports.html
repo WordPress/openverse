@@ -1,0 +1,99 @@
+{% comment %}
+Props:
+- media_type
+- reports
+- mod_form
+{% endcomment %}
+
+<fieldset class="module aligned">
+  <h2>Reports</h2>
+
+  <p>
+    You can take a decision for the pending reports by selecting one
+    or more of them and creating a decision.
+  </p>
+  <table class="w-full">
+    <thead>
+      <tr>
+        <th class="hidden"></th>
+        <th>Select</th>
+        <th>ID</th>
+        <th>Date</th>
+        <th>Reason</th>
+        <th>Description</th>
+        <th>Is pending?</th>
+        <th>Decision</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for report in reports %}
+      <tr>
+        <td class="hidden"><!-- Hidden inputs etc. --></td>
+        <td>
+          {% if report.is_pending %}
+          <input
+            form="decision-create"
+            type="checkbox"
+            name="report_id"
+            value="{{ report.id }}"
+            class="action-select">
+          {% endif %}
+        </td>
+        <td>
+          <a href="{% url 'admin:api_'|add:media_type|add:'report_change' report.id %}">{{ report.id }}</a>
+        </td>
+        <td>{{ report.created_at }}</td>
+        <td>{{ report.reason }}</td>
+        <td>{{ report.description }}</td>
+        <td>
+          {% if report.is_pending %}
+          <img src="/static/admin/img/icon-yes.svg" alt="False">
+          {% else %}
+          <img src="/static/admin/img/icon-no.svg" alt="False">
+          {% endif %}
+        </td>
+        <td>
+          {% if report.decision %}
+          <a href="{% url 'admin:api_'|add:media_type|add:'decision_change' report.decision.id %}">{{ report.decision.id }}</a>
+          ({{ report.decision.action }})
+          {% else %}
+          -
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <style>
+    .hidden { display: none; }
+    .w-full { width: 100%; }
+  </style>
+  <div class="form-row field-height">
+    <div>
+      <div class="flex-container">
+        <label>Action</label>
+        <div>
+          {{ mod_form.action }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row field-height">
+    <div>
+      <div class="flex-container">
+        <label>Notes</label>
+        <div>{{ mod_form.notes }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="p-10px">
+    <input form="decision-create" type="submit" value="Create decision">
+  </div>
+</fieldset>
+
+<style>
+  .p-10px { padding: 10px; }
+</style>
