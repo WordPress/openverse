@@ -149,6 +149,10 @@ class PendingRecordCountFilter(admin.SimpleListFilter):
 
 
 class MediaListAdmin(admin.ModelAdmin):
+    #############
+    # List view #
+    #############
+
     list_display = (
         "identifier",
         "total_report_count",
@@ -183,6 +187,10 @@ class MediaListAdmin(admin.ModelAdmin):
             data.append(format_html('<a href="{}">Report {}</a>', url, report.id))
 
         return mark_safe(", ".join(data))
+
+    #############
+    # Overrides #
+    #############
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
