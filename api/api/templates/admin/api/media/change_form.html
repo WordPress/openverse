@@ -43,3 +43,7 @@
 {% block object-tools-items %}{{ block.super }}
 <li><a href="https://openverse.org/{{media_type}}/{{media_obj.identifier}}" class="viewsitelink">View on openverse.org</a></li>
 {% endblock %}
+
+{% block after_field_sets %}
+{% include 'admin/api/components/media_additional.html' with media_type=media_type media_obj=media_obj tags=tags only %}
+{% endblock %}

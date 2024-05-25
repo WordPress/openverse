@@ -238,6 +238,14 @@ class MediaListAdmin(admin.ModelAdmin):
         if media_obj:
             extra_context["media_obj"] = media_obj
 
+        tags_by_provider = {}
+        for tag in media_obj.tags:
+            text = tag["name"]
+            if acc := tag.get("accuracy"):
+                text = f"{text} ({acc})"
+            tags_by_provider.setdefault(tag["provider"], []).append(text)
+        extra_context["tags"] = tags_by_provider
+
         return super().change_view(request, object_id, form_url, extra_context)
 
     #############
