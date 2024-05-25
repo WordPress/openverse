@@ -222,6 +222,24 @@ class MediaListAdmin(admin.ModelAdmin):
 
         return mark_safe(", ".join(data))
 
+    ###############
+    # Change view #
+    ###############
+
+    change_form_template = "admin/api/media/change_form.html"
+    readonly_fields = ("attribution",)
+
+    def change_view(self, request, object_id, form_url="", extra_context=None):
+        extra_context = extra_context or {}
+
+        extra_context["media_type"] = self.media_type
+
+        media_obj = self.get_object(request, object_id)
+        if media_obj:
+            extra_context["media_obj"] = media_obj
+
+        return super().change_view(request, object_id, form_url, extra_context)
+
     #############
     # Lock view #
     #############

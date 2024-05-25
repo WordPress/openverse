@@ -1,0 +1,45 @@
+{% extends "admin/change_form.html" %}
+
+{% block extrahead %}{{ block.super }}
+<!--
+  This script make links clickable. Since we've stored URLs in
+  `TextField`s, they are not rendered as links in the Django Admin UI.
+  This script identifies `<div>`s containing links and converts them to
+  `<a>` tags.
+-->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll("div.readonly").forEach(div => {
+      if (div.textContent.match(/https?:\/\/\S+/)) {
+        div.innerHTML = div.textContent.replace(/(https?:\/\/\S+)/g, '<a href="$1">$1</a>');
+      }
+    });
+  });
+</script>
+
+<!--
+  This script polls the soft-lock endpoint at intervals shorter than the
+  lock TTL to keep the lock alive.
+-->
+<script>
+  function softLock() {
+    fetch('{% url "admin:api_"|add:media_type|add:"_lock" object_id=object_id %}', {
+      method: "POST",
+      keepalive: true, // This makes the request equivalent to a beacon.
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": document.querySelector('[name="csrfmiddlewaretoken"]').value
+      },
+    })
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    softLock()
+    setInterval(softLock, 5000)
+  })
+</script>
+{% endblock %}
+
+{% block object-tools-items %}{{ block.super }}
+<li><a href="https://openverse.org/{{media_type}}/{{media_obj.identifier}}" class="viewsitelink">View on openverse.org</a></li>
+{% endblock %}
