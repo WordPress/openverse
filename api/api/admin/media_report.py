@@ -23,6 +23,7 @@ from api.models import (
     ImageDecision,
 )
 from api.models.media import AbstractDeletedMedia, AbstractSensitiveMedia
+from api.utils.moderation_lock import LockManager
 
 
 logger = structlog.get_logger(__name__)
@@ -149,6 +150,13 @@ class PendingRecordCountFilter(admin.SimpleListFilter):
 
 
 class MediaListAdmin(admin.ModelAdmin):
+    media_type = None
+
+    def __init__(self, *args, **kwargs):
+        self.lock_manager = LockManager(self.media_type)
+
+        super().__init__(*args, **kwargs)
+
     #############
     # List view #
     #############
@@ -164,7 +172,6 @@ class MediaListAdmin(admin.ModelAdmin):
     # Disable link display for images
     list_display_links = ("identifier",)
     search_fields = _production_deferred("identifier")
-    media_type = None
     # Ordering is not set here, see get_queryset
 
     def total_report_count(self, obj):
