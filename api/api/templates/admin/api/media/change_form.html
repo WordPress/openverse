@@ -46,4 +46,5 @@
 
 {% block after_field_sets %}
 {% include 'admin/api/components/media_additional.html' with media_type=media_type media_obj=media_obj tags=tags only %}
+{% include 'admin/api/components/media_decisions.html' with media_type=media_type decision_throughs=decision_throughs only %}
 {% endblock %}

@@ -246,6 +246,10 @@ class MediaListAdmin(admin.ModelAdmin):
             tags_by_provider.setdefault(tag["provider"], []).append(text)
         extra_context["tags"] = tags_by_provider
 
+        manager = getattr(media_obj, f"{self.media_type}decisionthrough_set")
+        decision_throughs = manager.order_by("decision__created_on")
+        extra_context["decision_throughs"] = decision_throughs
+
         return super().change_view(request, object_id, form_url, extra_context)
 
     #############
