@@ -108,7 +108,7 @@ class MediaListAdmin(admin.ModelAdmin):
     )
     list_filter = (PendingRecordCountFilter,)
     # Disable link display for images
-    list_display_links = None
+    list_display_links = ("identifier",)
     search_fields = _production_deferred("identifier")
     media_type = None
     # Ordering is not set here, see get_queryset
