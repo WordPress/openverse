@@ -1,0 +1,28 @@
+{% extends "admin/change_list.html" %}
+{% load i18n admin_urls static admin_list %}
+
+{% block extrahead %}{{ block.super }}
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const mediaItems = JSON.parse('{{ locked_media }}');
+    for (let mediaItem of mediaItems) {
+      console.log(`tr:has(a[href*="/{{ media_type }}/${mediaItem}/"])`);
+      document.querySelector(`tr:has(a[href*="/{{ media_type }}/${mediaItem}/"])`).classList.add('bg-warning');
+    }
+  });
+</script>
+{% endblock %}
+
+{% block extrastyle %}{{ block.super }}
+<style>
+  tr.bg-warning { background-color: var(--message-warning-bg); }
+</style>
+{% endblock %}
+
+{% block result_list %}
+<p>
+  <strong>Note:</strong>
+  Media items that are being moderated by another user are highlighted.
+</p>
+{{ block.super }}
+{% endblock %}

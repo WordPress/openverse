@@ -195,6 +195,7 @@ class MediaListAdmin(admin.ModelAdmin):
     # List view #
     #############
 
+    change_list_template = "admin/api/media/change_list.html"
     list_display = (
         "identifier",
         "total_report_count",
@@ -228,6 +229,21 @@ class MediaListAdmin(admin.ModelAdmin):
             data.append(format_html('<a href="{}">Report {}</a>', url, report.id))
 
         return mark_safe(", ".join(data))
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+
+        extra_context["media_type"] = self.media_type
+
+        valid_locks = self.lock_manager.prune()
+        locked_media = list(
+            int(item.replace(f"{self.media_type}:", ""))
+            for lock_set in valid_locks.values()
+            for item in lock_set
+        )
+        extra_context["locked_media"] = locked_media
+
+        return super().changelist_view(request, extra_context)
 
     ###############
     # Change view #
