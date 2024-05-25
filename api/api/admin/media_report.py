@@ -17,11 +17,11 @@ from api.models import (
     PENDING,
     Audio,
     AudioReport,
+    AudioDecision,
     Image,
     ImageReport,
+    ImageDecision,
 )
-from api.models.audio import AudioDecision
-from api.models.image import ImageDecision
 from api.models.media import AbstractDeletedMedia, AbstractSensitiveMedia
 
 
@@ -45,6 +45,56 @@ def register(site):
     if settings.ENVIRONMENT != "production":
         site.register(ImageDecision, admin.ModelAdmin)
         site.register(AudioDecision, admin.ModelAdmin)
+
+
+class MultipleValueField(forms.MultipleChoiceField):
+    """
+    This is a variant of ``MultipleChoiceField`` that does not validate
+    the individual values.
+    """
+
+    def valid_value(self, value):
+        return True
+
+
+class MediaDecisionForm(forms.Form):
+    report_id = MultipleValueField()  # not rendered using its widget
+    action = forms.ChoiceField(
+        choices=DecisionAction.choices,
+        widget=forms.Select(attrs={"form": "decision-create"}),
+    )
+    notes = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={"form": "decision-create"}),
+    )
+
+    def __init__(self, *args, **kwargs):
+        self.media_type = kwargs.pop("media_type")
+        super().__init__(*args, **kwargs)
+
+    def clean_report_id(self):
+        report_ids = self.cleaned_data["report_id"]
+        reports = []
+        for report_id in report_ids:
+            try:
+                report_class = {
+                    "audio": AudioReport,
+                    "image": ImageReport,
+                }[self.media_type]
+                report = report_class.objects.get(id=report_id)
+                if not report.is_pending:
+                    raise forms.ValidationError(
+                        "Report ID %(value)s has already been reviewed.",
+                        params={"value": report_id},
+                    )
+                reports.append(report)
+            except report_class.DoesNotExist:
+                raise forms.ValidationError(
+                    "Report ID %(value)s does not exist.",
+                    params={"value": report_id},
+                )
+        self.cleaned_data["reports"] = reports
+        return report_ids
 
 
 def _production_deferred(*values: str) -> Sequence[str]:
