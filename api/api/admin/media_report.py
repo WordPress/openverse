@@ -21,9 +21,11 @@ from api.models import (
     Audio,
     AudioReport,
     AudioDecision,
+    AudioDecisionThrough,
     Image,
     ImageReport,
     ImageDecision,
+    ImageDecisionThrough,
 )
 from api.models.media import AbstractDeletedMedia, AbstractSensitiveMedia
 from api.utils.moderation_lock import LockManager
@@ -177,6 +179,11 @@ class MediaListAdmin(admin.ModelAdmin):
         urls = super().get_urls()
         urls[-1:-1] = [
             path(
+                "<path:object_id>/moderate/",
+                wrap(self.moderate_view),
+                name=f"{app}_{model}_moderate",
+            ),
+            path(
                 "<path:object_id>/lock/",
                 wrap(self.lock_view),
                 name=f"{app}_{model}_lock",
@@ -276,6 +283,70 @@ class MediaListAdmin(admin.ModelAdmin):
                 data={"expiration": expiration},
                 status=503 if expiration == 0 else 200,
             )
+
+        return redirect(f"admin:api_{self.media_type}_change", object_id)
+
+    #################
+    # Moderate view #
+    #################
+
+    def moderate_view(self, request, object_id):
+        """
+        Create a decision for the media object and associate selected
+        reports complaining about the media with this decision.
+        """
+
+        if request.method == "POST":
+            media_obj = self.get_object(request, object_id)
+
+            form = MediaDecisionForm(request.POST, media_type=self.media_type)
+            if form.is_valid():
+                decision_class, through_class = {
+                    "image": (ImageDecision, ImageDecisionThrough),
+                    "audio": (AudioDecision, AudioDecisionThrough),
+                }[self.media_type]
+
+                action = form.cleaned_data["action"]
+                notes = form.cleaned_data["notes"]
+                moderator = request.user
+                decision = decision_class.objects.create(
+                    action=action,
+                    notes=notes,
+                    moderator=moderator,
+                )
+                logger.info(
+                    "Decision created",
+                    decision=decision.id,
+                    action=action,
+                    notes=notes,
+                    moderator=moderator.username,
+                )
+
+                through = through_class.objects.create(
+                    decision=decision,
+                    media_obj=media_obj,
+                )
+                logger.info(
+                    "Through model created",
+                    through=through.id,
+                    decision=decision.id,
+                    media_obj=media_obj.id,
+                )
+
+                for report in form.cleaned_data["reports"]:
+                    report.decision = decision
+                    report.save()
+                    logger.info(
+                        "Report updated",
+                        report=report.id,
+                        decision=decision.id,
+                    )
+            else:
+                logger.warning(
+                    "Form is invalid",
+                    **form.cleaned_data,
+                    errors=form.errors,
+                )
 
         return redirect(f"admin:api_{self.media_type}_change", object_id)
 
