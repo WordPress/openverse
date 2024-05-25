@@ -1,9 +1,12 @@
+from functools import update_wrapper
 from typing import Sequence
 
 from django.conf import settings
 from django.contrib import admin
 from django.contrib.admin.views.main import ChangeList
 from django.db.models import Count, F, Min
+from django.http import JsonResponse
+from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
@@ -157,6 +160,30 @@ class MediaListAdmin(admin.ModelAdmin):
 
         super().__init__(*args, **kwargs)
 
+    def get_urls(self):
+        # Start of block lifted from Django source.
+        from django.urls import path
+
+        def wrap(view):
+            def wrapper(*args, **kwargs):
+                return self.admin_site.admin_view(view)(*args, **kwargs)
+
+            wrapper.model_admin = self
+            return update_wrapper(wrapper, view)
+
+        app, model = self.opts.app_label, self.opts.model_name
+        # End of block lifted from Django source.
+
+        urls = super().get_urls()
+        urls[-1:-1] = [
+            path(
+                "<path:object_id>/lock/",
+                wrap(self.lock_view),
+                name=f"{app}_{model}_lock",
+            ),
+        ]
+        return urls
+
     #############
     # List view #
     #############
@@ -194,6 +221,27 @@ class MediaListAdmin(admin.ModelAdmin):
             data.append(format_html('<a href="{}">Report {}</a>', url, report.id))
 
         return mark_safe(", ".join(data))
+
+    #############
+    # Lock view #
+    #############
+
+    def lock_view(self, request, object_id):
+        """
+        Softly lock the media object with the current user to notify
+        other moderators about a potential conflict.
+        """
+
+        if request.method == "POST":
+            expiration = self.lock_manager.add_locks(
+                request.user.get_username(), object_id
+            )
+            return JsonResponse(
+                data={"expiration": expiration},
+                status=503 if expiration == 0 else 200,
+            )
+
+        return redirect(f"admin:api_{self.media_type}_change", object_id)
 
     #############
     # Overrides #
