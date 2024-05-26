@@ -207,7 +207,7 @@ class MediaListAdmin(admin.ModelAdmin):
     # Disable link display for images
     list_display_links = ("identifier",)
     search_fields = _production_deferred("identifier")
-    # Ordering is not set here, see get_queryset
+    sortable_by = ()  # Ordering is defined in ``get_queryset``.
 
     def total_report_count(self, obj):
         return obj.total_report_count
