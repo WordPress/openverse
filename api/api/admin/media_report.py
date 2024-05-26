@@ -204,7 +204,6 @@ class MediaListAdmin(admin.ModelAdmin):
         "pending_reports_links",
     )
     list_filter = (PendingRecordCountFilter,)
-    # Disable link display for images
     list_display_links = ("identifier",)
     search_fields = _production_deferred("identifier")
     sortable_by = ()  # Ordering is defined in ``get_queryset``.
