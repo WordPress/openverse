@@ -191,6 +191,34 @@ class MediaListAdmin(admin.ModelAdmin):
         ]
         return urls
 
+    @admin.display(description="Has sensitive text?", boolean=True)
+    def has_sensitive_text(self, obj):
+        """
+        Determine if the item has sensitive text.
+
+        If the item cannot be found in the filtered index, that means it
+        was filtered out due to text sensitivity.
+
+        This is displayed both as a column in the list page as well as a
+        read-only field in the change page.
+
+        :param obj: the item to check for presence of sensitive text
+        :return: whether the item has sensitive text
+        """
+
+        filtered_index = f"{settings.MEDIA_INDEX_MAPPING[self.media_type]}-filtered"
+        try:
+            search = (
+                Search(index=filtered_index)
+                .query("term", identifier=obj.identifier)
+                .execute()
+            )
+            if search.hits:
+                return False
+        except NotFoundError:
+            logger.error("Could not resolve index.", name=filtered_index)
+        return True
+
     #############
     # List view #
     #############
@@ -202,6 +230,7 @@ class MediaListAdmin(admin.ModelAdmin):
         "pending_report_count",
         "oldest_report_date",
         "pending_reports_links",
+        "has_sensitive_text",
     )
     list_filter = (PendingRecordCountFilter,)
     list_display_links = ("identifier",)
@@ -250,7 +279,10 @@ class MediaListAdmin(admin.ModelAdmin):
     ###############
 
     change_form_template = "admin/api/media/change_form.html"
-    readonly_fields = ("attribution",)
+    readonly_fields = (
+        "attribution",
+        "has_sensitive_text",
+    )
 
     def change_view(self, request, object_id, form_url="", extra_context=None):
         # Populate a warning message for locked items.
