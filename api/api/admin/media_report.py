@@ -281,6 +281,7 @@ class MediaListAdmin(admin.ModelAdmin):
     change_form_template = "admin/api/media/change_form.html"
     readonly_fields = (
         "attribution",
+        "license_url",
         "has_sensitive_text",
     )
 
