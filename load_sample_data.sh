@@ -81,15 +81,22 @@ for username in usernames:
 # Credit: https://stackoverflow.com/a/53733693
 echo "
 from django.contrib.auth.models import User, Group, Permission
-perms_to_add = ['view', 'add', 'change']
-models_to_affect = ['audio report', 'image report', 'sensitive audio', 'sensitive image']
+crud_perm_map = {'C': 'add', 'R': 'view', 'U': 'change'}
+model_perms_map = {
+  'image': 'R',
+  'audio': 'R',
+  'image report': 'CRU',
+  'audio report': 'CRU',
+  'sensitive image': 'CRU',
+  'sensitive audio': 'CRU',
+}
 
 mod_group, created = Group.objects.get_or_create(name='Content Moderators')
 if created:
   print('Setting up Content Moderators group')
-  for model in models_to_affect:
-    for perm in perms_to_add:
-      name = f'Can {perm} {model}'
+  for model, perms in model_perms_map.items():
+    for perm in perms:
+      name = f'Can {crud_perm_map[perm]} {model}'
       print(f'Adding permission to moderators group: {name}')
       model_add_perm = Permission.objects.get(name=name)
       mod_group.permissions.add(model_add_perm)
