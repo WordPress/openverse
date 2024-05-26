@@ -2,7 +2,7 @@ from functools import update_wrapper
 from typing import Sequence
 
 from django.conf import settings
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.contrib.admin.views.main import ChangeList
 from django.db.models import Count, F, Min
 from django.http import JsonResponse
@@ -253,6 +253,16 @@ class MediaListAdmin(admin.ModelAdmin):
     readonly_fields = ("attribution",)
 
     def change_view(self, request, object_id, form_url="", extra_context=None):
+        # Populate a warning message for locked items.
+        mods = self.lock_manager.moderator_set(object_id)
+        mods -= {request.user.get_username()}
+        if len(mods):
+            messages.warning(
+                request,
+                f"This {self.media_type} is also being viewed by {', '.join(mods)}.",
+            )
+
+        # Expand the context based on the template's needs.
         extra_context = extra_context or {}
 
         extra_context["media_type"] = self.media_type
