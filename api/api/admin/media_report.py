@@ -240,6 +240,7 @@ class MediaListAdmin(admin.ModelAdmin):
             int(item.replace(f"{self.media_type}:", ""))
             for lock_set in valid_locks.values()
             for item in lock_set
+            if self.media_type in item
         )
         extra_context["locked_media"] = locked_media
 
