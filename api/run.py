@@ -18,6 +18,8 @@ if __name__ == "__main__":
             ".",  # default, API directory
             "../packages/python/",
         ],
+        # Also reload Uvicorn when templates change.
+        reload_includes=["*.py", "*.html"],
         log_level="debug",
         access_log=False,
     )

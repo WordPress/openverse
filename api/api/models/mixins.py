@@ -70,6 +70,7 @@ class MediaMixin(models.Model):
     foreign_landing_url = models.TextField(
         blank=True,
         null=True,
+        verbose_name="foreign landing URL",
         help_text="The landing page of the work.",
     )
 
@@ -82,6 +83,7 @@ class MediaMixin(models.Model):
         max_length=2000,
         blank=True,
         null=True,
+        verbose_name="creator URL",
         help_text="A direct link to the media creator.",
     )
 
@@ -123,9 +125,10 @@ class FileMixin(models.Model):
     url = models.TextField(
         unique=True,
         max_length=1000,
-        help_text="The actual URL to the media file.",
         blank=True,
         null=True,
+        verbose_name="URL",
+        help_text="The actual URL to the media file.",
     )
     filesize = models.IntegerField(
         blank=True,
