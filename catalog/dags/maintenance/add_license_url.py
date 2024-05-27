@@ -95,7 +95,7 @@ records to back fill `license_url` in `meta_data`.\nCount per license-version:
 """
         if license_groups
         else f"""
-Starting `{DAG_ID}` DAG. Not license groups found with records missing `license_url` in `meta_data`.
+No license groups found with records missing `license_url` in `meta_data`. The `{DAG_ID}` DAG is done.
 """
     )
 
