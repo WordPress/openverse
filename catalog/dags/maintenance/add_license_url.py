@@ -194,6 +194,7 @@ def add_license_url():
         wait_for_completion=True,
         execution_timeout=timedelta(hours=5),
         max_active_tis_per_dag=1,
+        map_index_template="""{{ task.conf['query_id'] }}""",
         retries=0,
     ).expand(conf=get_confs(licenses, batch_size="{{ params.batch_size }}"))
 
