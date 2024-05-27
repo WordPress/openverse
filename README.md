@@ -1,5 +1,5 @@
 <a href="https://openverse.org">
-  <img src="brand/banner.svg" width="100%" alt="Visit Openverse.org"/>
+  <img src="documentation/meta/brand/banner.svg" width="100%" alt="Visit Openverse.org"/>
 </a>
 
 <p align="center">
