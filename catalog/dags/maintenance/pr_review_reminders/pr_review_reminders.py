@@ -72,7 +72,7 @@ def get_maintainers(github_pat: str) -> set[str]:
     maintainer_info = gh.get_team_members(MAINTAINER_TEAM)
     maintainers = {
         member["login"] for member in maintainer_info
-    } ^ NON_MAINTAINER_IGNORATIONS
+    } | NON_MAINTAINER_IGNORATIONS
     return maintainers
 
 
