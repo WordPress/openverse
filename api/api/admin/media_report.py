@@ -519,6 +519,83 @@ class MediaDecisionAdmin(admin.ModelAdmin):
     media_type = None
     through_model = None
 
+    #############
+    # List view #
+    #############
+
+    list_display = (
+        "id",
+        "created_on",
+        "moderator",
+        "action",
+        "notes",
+        "media_ids",
+    )
+    list_filter = ("moderator", "action")
+    list_prefetch_related = ("media_objs",)
+    search_fields = ("notes", *_production_deferred("media_objs__identifier"))
+
+    @admin.display(description="Media objs")
+    def media_ids(self, obj):
+        through_objs = getattr(obj, f"{self.media_type}decisionthrough_set").all()
+        text = []
+        for obj in through_objs:
+            path = reverse(
+                f"admin:api_{self.media_type}_change", args=(obj.media_obj.id,)
+            )
+            text.append(f'• <a href="{path}">{obj.media_obj}</a>')
+        return format_html("<br>".join(text))
+
+    ###############
+    # Change view #
+    ###############
+
+    def get_readonly_fields(self, request, obj=None):
+        if obj is None:
+            return ()
+        # These fields only make sense after a decision has been created.
+        # Moderator is set automatically and cannot be changed.
+        return (
+            "created_on",
+            "moderator",
+        )
+
+    def get_exclude(self, request, obj=None):
+        if obj is None:  # Create form
+            # Moderator is set automatically and cannot be changed.
+            return ("moderator",)
+        return ()
+
+    def get_inlines(self, request, obj=None):
+        if obj is None:
+            # New decision, can make changes to the media objects.
+            is_mutable = True
+        else:
+            # Once created, media objects associated with decisions are
+            # immutable.
+            is_mutable = False
+
+        class MediaDecisionThroughAdmin(admin.TabularInline):
+            model = self.through_model
+            extra = 1
+            autocomplete_fields = _production_deferred("media_obj")
+            raw_id_fields = _non_production_deferred("media_obj")
+
+            def has_add_permission(self, request, obj=None):
+                return is_mutable and super().has_change_permission(request, obj)
+
+            def has_change_permission(self, request, obj=None):
+                return is_mutable and super().has_change_permission(request, obj)
+
+            def has_delete_permission(self, request, obj=None):
+                return is_mutable and super().has_delete_permission(request, obj)
+
+        return (MediaDecisionThroughAdmin,)
+
+    def save_model(self, request, obj, form, change):
+        obj.moderator = request.user
+        return super().save_model(request, obj, form, change)
+
 
 class ImageReportAdmin(MediaReportAdmin):
     media_type = "image"
