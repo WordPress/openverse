@@ -40,18 +40,13 @@ STORAGES = {
 
 ROOT_URLCONF = "conf.urls"
 
-loaders = [
-    "django.template.loaders.filesystem.Loader",
-    "django.template.loaders.app_directories.Loader",
-]
-cached_loaders = [("django.template.loaders.cached.Loader", loaders)]
-
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
             BASE_DIR / "api" / "templates",
         ],
+        "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.debug",
@@ -61,7 +56,6 @@ TEMPLATES = [
                 # Make the ENVIRONMENT env var available for all contexts
                 "conf.context_processors.export_environment",
             ],
-            "loaders": loaders if ENVIRONMENT == "local" else cached_loaders,
         },
     },
 ]
