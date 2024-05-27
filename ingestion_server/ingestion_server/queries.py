@@ -1,4 +1,4 @@
-from textwrap import dedent as d
+from textwrap import dedent
 
 from psycopg2.sql import SQL, Identifier
 from psycopg2.sql import Literal as PgLiteral
@@ -118,7 +118,7 @@ def get_copy_data_query(
     :return: the SQL query for copying the data
     """
 
-    table_creation = d(
+    table_creation = dedent(
         """
     DROP TABLE IF EXISTS {temp_table};
     CREATE TABLE {temp_table} (LIKE {downstream_table} INCLUDING DEFAULTS
@@ -126,7 +126,7 @@ def get_copy_data_query(
     """
     )
 
-    id_column_setup = d(
+    id_column_setup = dedent(
         """
     ALTER TABLE {temp_table} ADD COLUMN IF NOT EXISTS
         id serial;
@@ -136,7 +136,7 @@ def get_copy_data_query(
     """
     )
 
-    timestamp_column_setup = d(
+    timestamp_column_setup = dedent(
         """
     ALTER TABLE {temp_table} ALTER COLUMN
         created_on SET DEFAULT CURRENT_TIMESTAMP;
@@ -145,7 +145,7 @@ def get_copy_data_query(
     """
     )
 
-    metric_column_setup = d(
+    metric_column_setup = dedent(
         """
     ALTER TABLE {temp_table} ADD COLUMN IF NOT EXISTS
         standardized_popularity double precision;
@@ -154,7 +154,7 @@ def get_copy_data_query(
     """
     )
 
-    conclusion = d(
+    conclusion = dedent(
         """
     ALTER TABLE {temp_table} ADD PRIMARY KEY (id);
     DROP SERVER upstream CASCADE;
@@ -163,17 +163,18 @@ def get_copy_data_query(
 
     if approach == "basic":
         tertiary_column_setup = timestamp_column_setup
-        select_insert = d(
+        select_insert = dedent(
             """
         INSERT INTO {temp_table} ({columns}) SELECT {columns} FROM {upstream_table}
         """
         )
     else:  # approach == 'advanced'
         tertiary_column_setup = metric_column_setup
-        select_insert = d(
+        select_insert = dedent(
             """
         INSERT INTO {temp_table} ({columns})
-            SELECT {columns} from {upstream_table} AS u
+            SELECT {columns}
+            FROM {upstream_table} AS u
             WHERE NOT EXISTS(
                 SELECT FROM {deleted_table} WHERE identifier = u.identifier
             )
@@ -182,16 +183,8 @@ def get_copy_data_query(
 
     # If a limit is requested, add the condition onto the select at the very end
     if limit:
-        # The audioset view does not have identifiers associated with it
-        if upstream_table != "audioset_view":
-            select_insert += d(
-                """
-            ORDER BY identifier"""
-            )
-        select_insert += d(
-            """
-        LIMIT {limit}"""
-        )
+        select_insert += "    LIMIT {limit}"
+
     # Always add a semi-colon at the end
     select_insert += ";"
 
