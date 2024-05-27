@@ -14,3 +14,11 @@ openapi.json
 
 # Schemathesis
 .hypothesis
+
+# IPython (except startup scripts)
+.ipython/*
+!.ipython/profile_default/
+.ipython/profile_default/*
+!.ipython/profile_default/startup/
+.ipython/profile_default/startup/*
+!.ipython/profile_default/startup/*.py
