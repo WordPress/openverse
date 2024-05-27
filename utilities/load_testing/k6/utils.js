@@ -3,6 +3,9 @@ import http from "k6/http"
 import { randomItem } from "https://jslib.k6.io/k6-utils/1.2.0/index.js"
 
 export const API_URL = __ENV.API_URL || "https://api-staging.openverse.org/v1/"
+export const FRONTEND_URL =
+  __ENV.FRONTEND_URL || "https://nuxt-preview.openverse.org/"
+
 export const SLEEP_DURATION = 0.1
 // Use the random words list available locally, but filter any words that end with apostrophe-s
 const WORDS = open("/usr/share/dict/words")
@@ -32,14 +35,13 @@ export const getUrlBatch = (urls, type = "detail_url") => {
 
 export const makeResponseFailedCheck = (param, page) => {
   return (response, action) => {
+    const requestDetail = `${param ? `for param "${param} "` : ""}at page ${page} for ${action}`
     if (check(response, { "status was 200": (r) => r.status === 200 })) {
-      console.log(
-        `Checked status 200 ✓ for param "${param}" at page ${page} for ${action}.`
-      )
+      console.log(`Checked status 200 ✓ ${requestDetail}.`)
       return false
     } else {
       console.error(
-        `Request failed ⨯ for param "${param}" at page ${page} for ${action}: ${response.body}`
+        `Request failed ⨯ ${requestDetail}: ${response.status}\n${response.body}`
       )
       return true
     }
