@@ -81,7 +81,7 @@ for username in usernames:
 # Credit: https://stackoverflow.com/a/53733693
 echo "
 from django.contrib.auth.models import User, Group, Permission
-crud_perm_map = {'C': 'add', 'R': 'view', 'U': 'change'}
+crud_perm_map = {'C': 'add', 'R': 'view', 'U': 'change', 'D': 'delete'}
 model_perms_map = {
   'image': 'R',
   'audio': 'R',
@@ -89,6 +89,10 @@ model_perms_map = {
   'audio report': 'CRU',
   'sensitive image': 'CRU',
   'sensitive audio': 'CRU',
+  'image decision': 'CRU',
+  'audio decision': 'CRU',
+  'image decision through': 'CRUD',
+  'audio decision through': 'CRUD',
 }
 
 mod_group, created = Group.objects.get_or_create(name='Content Moderators')
