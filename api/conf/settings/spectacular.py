@@ -41,7 +41,7 @@ SPECTACULAR_SETTINGS = {
     "SORT_OPERATION_PARAMETERS": False,
     "EXTENSIONS_INFO": {
         "x-logo": {
-            "url": "https://raw.githubusercontent.com/WordPress/openverse/HEAD/brand/logo.svg",
+            "url": "https://raw.githubusercontent.com/WordPress/openverse/HEAD/documentation/meta/brand/logo.svg",
             "backgroundColor": "#fafafa",
         }
     },
