@@ -8,7 +8,7 @@
         : $t('header.contentSettingsButton.simple')
     "
     aria-haspopup="dialog"
-    :aria-expanded="isPressed"
+    :aria-expanded="isPressed ? 'true' : 'false'"
     aria-controls="content-settings-modal"
     variant="filled-white"
     v-on="$listeners"

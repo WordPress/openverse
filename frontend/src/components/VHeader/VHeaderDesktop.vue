@@ -9,6 +9,7 @@
       v-model.trim="searchTerm"
       class="me-4 flex-grow"
       @submit="handleSearch"
+      @recent-hidden="handleSearch"
     >
       <VSearchBarButton
         v-show="searchTerm !== ''"

@@ -13,6 +13,7 @@
         'border-tx bg-pink text-white hover:!bg-dark-pink': route === 'home',
       },
     ]"
+    v-on="$listeners"
   >
     <VIcon name="search" />
   </VButton>

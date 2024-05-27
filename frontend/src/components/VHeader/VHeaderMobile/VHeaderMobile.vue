@@ -5,35 +5,36 @@
   >
     <VInputModal
       class="flex w-full"
-      variant="recent-searches"
-      :is-active="isRecentSearchesModalOpen"
-      aria-label="inputmodal"
-      @close="deactivate"
+      :is-active="isRecentVisible"
+      :aria-label="$t('recentSearches.heading').toString()"
+      @close="hideRecentSearches"
     >
-      <div class="flex w-full" :class="{ 'px-3': isRecentSearchesModalOpen }">
+      <div class="flex w-full" :class="{ 'px-3': isRecentVisible }">
         <!-- Form action is a fallback for when JavaScript is disabled. -->
         <form
           action="/search"
           class="search-bar group flex h-12 w-full flex-row items-center overflow-hidden rounded-sm"
           :class="
-            searchBarIsActive
+            isSearchBarActive || isInputFocused
               ? 'bg-white ring ring-pink'
               : 'bg-dark-charcoal-06'
           "
-          @submit.prevent="handleSearch"
+          @submit.prevent="handleFormSubmit"
         >
           <slot name="start">
             <VLogoButton
-              v-show="!searchBarIsActive"
+              v-show="!isRecentVisible"
               :is-fetching="isFetching"
+              class="focus-visible:me-1.5px focus-visible:ms-1.5px focus-visible:!h-[45px] focus-visible:max-w-[45px]"
             />
             <VSearchBarButton
-              v-show="searchBarIsActive"
+              v-show="isRecentVisible"
               icon="chevron-back"
               :label="$t('header.backButton')"
               :rtl-flip="true"
               variant="filled-gray"
-              @click="handleBack"
+              @click="hideRecentSearches"
+              @keydown.shift.tab="handleTabOut('backward')"
             />
           </slot>
 
@@ -44,7 +45,7 @@
             :placeholder="$t('hero.search.placeholder').toString()"
             type="search"
             class="search-field ms-1 h-full w-full flex-grow appearance-none rounded-none border-tx bg-tx text-2xl text-dark-charcoal-70 placeholder-dark-charcoal-70 hover:text-dark-charcoal hover:placeholder-dark-charcoal focus-visible:outline-none"
-            :value="searchTerm"
+            :value="localSearchTerm"
             :aria-label="
               $t('search.searchBarLabel', {
                 openverse: 'Openverse',
@@ -52,41 +53,46 @@
             "
             autocomplete="off"
             role="combobox"
-            aria-autocomplete="none"
-            :aria-expanded="showRecentSearches"
+            aria-autocomplete="list"
+            :aria-expanded="isRecentVisible ? 'true' : 'false'"
+            aria-owns="recent-searches-list"
             aria-controls="recent-searches-list"
             :aria-activedescendant="
-              selectedIdx !== undefined ? `option-${selectedIdx}` : undefined
+              selectedIdx === undefined ? undefined : `option-${selectedIdx}`
             "
             @input="updateSearchText"
-            @focus="activate"
-            @keydown="handleKeydown"
+            @keydown="handleInputKeydown"
+            @focus="handleInputFocus"
+            @focusout="handleInputBlur"
+            @click="handleInputClick"
           />
           <slot>
             <VSearchBarButton
-              v-show="searchBarIsActive && searchTerm"
+              v-show="isRecentVisible && localSearchTerm"
               icon="close-small"
               :label="$t('browsePage.searchForm.clear')"
               inner-area-classes="bg-white hover:bg-dark-charcoal-10"
               @click="clearSearchText"
+              @keydown.tab.exact="handleClearButtonTab"
             />
             <span
-              v-show="!searchBarIsActive && searchStatus"
+              v-show="!isSearchBarActive && searchStatus"
               class="info mx-4 hidden whitespace-nowrap text-xs group-hover:text-dark-charcoal group-focus:text-dark-charcoal md:flex"
             >
               {{ searchStatus }}
             </span>
             <VContentSettingsButton
-              v-show="!searchBarIsActive"
+              v-show="!isRecentVisible"
               ref="contentSettingsButtonRef"
               :is-pressed="contentSettingsOpen"
               :applied-filter-count="appliedFilterCount"
               v-bind="triggerA11yProps"
               :disabled="!doneHydrating"
               @click="toggleContentSettings"
+              @keydown.tab.exact="handleTabOut('forward')"
             />
             <VContentSettingsModalContent
-              v-show="!searchBarIsActive"
+              v-show="!isRecentVisible"
               variant="two-thirds"
               :visible="contentSettingsOpen"
               :is-fetching="isFetching"
@@ -99,14 +105,15 @@
       </div>
       <ClientOnly>
         <VRecentSearches
-          v-show="showRecentSearches"
+          v-show="isRecentVisible"
+          ref="recentSearchesRef"
           :selected-idx="selectedIdx"
           :entries="entries"
           :bordered="false"
           class="mt-4"
           @select="handleSelect"
           @clear="handleClear"
-          @clear-single="handleClearSingle"
+          @last-tab="handleTabOut('forward')"
         />
       </ClientOnly>
     </VInputModal>
@@ -115,20 +122,24 @@
 
 <script lang="ts">
 import { computed, defineComponent, nextTick, ref, watch } from "vue"
+import { useContext, useRoute } from "@nuxtjs/composition-api"
+import { onClickOutside } from "@vueuse/core"
 
-import { ensureFocus } from "~/utils/reakit-utils/focus"
-import { cyclicShift } from "~/utils/math"
-
-import { keycodes } from "~/constants/key-codes"
+import {
+  ensureFocus,
+  getAllTabbableIn,
+  getFirstTabbableIn,
+} from "~/utils/reakit-utils/focus"
 
 import { useDialogControl } from "~/composables/use-dialog-control"
 import { useSearch } from "~/composables/use-search"
+import { useHydrating } from "~/composables/use-hydrating"
+import { useRecentSearches } from "~/composables/use-recent-searches"
 
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 
-import { useHydrating } from "~/composables/use-hydrating"
-import { useAnalytics } from "~/composables/use-analytics"
+import { skipToContentTargetId } from "~/constants/window"
 
 import VLogoButton from "~/components/VHeader/VLogoButton.vue"
 import VInputModal from "~/components/VModal/VInputModal.vue"
@@ -155,6 +166,9 @@ export default defineComponent({
   setup(_, { emit }) {
     const searchInputRef = ref<HTMLInputElement | null>(null)
     const headerRef = ref<HTMLElement | null>(null)
+    const recentSearchesRef = ref<InstanceType<typeof VRecentSearches> | null>(
+      null
+    )
     const contentSettingsButtonRef = ref<InstanceType<
       typeof VContentSettingsButton
     > | null>(null)
@@ -165,139 +179,175 @@ export default defineComponent({
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
 
-    const searchBarIsActive = ref(false)
+    const isSearchBarActive = ref(false)
+    const isInputFocused = ref(false)
     const contentSettingsOpen = ref(false)
 
+    const appliedFilterCount = computed(() => searchStore.appliedFilterCount)
     const isFetching = computed(() => mediaStore.fetchState.isFetching)
 
-    const { sendCustomEvent } = useAnalytics()
+    /**
+     * The selection range of the input field. Used to make sure that the cursor
+     * is at the correct position when the search bar is clicked on.
+     */
+    const selection = ref<{ start: number; end: number }>({ start: 0, end: 0 })
 
+    const { $sendCustomEvent } = useContext()
     const { updateSearchState, searchTerm, searchStatus } =
-      useSearch(sendCustomEvent)
+      useSearch($sendCustomEvent)
+    const localSearchTerm = ref(searchTerm.value)
 
-    const handleSearch = async () => {
+    const focusInput = () => {
+      const input = searchInputRef.value as HTMLInputElement
+      ensureFocus(input)
+      input.selectionStart = selection.value.start
+      input.selectionEnd = selection.value.end
+    }
+
+    const handleFormSubmit = () => {
+      if (localSearchTerm.value && localSearchTerm.value !== searchTerm.value) {
+        searchTerm.value = localSearchTerm.value
+      }
+      recent.hide()
+      handleSearch()
+    }
+    const handleSearch = () => {
       window.scrollTo({ top: 0, left: 0, behavior: "auto" })
       updateSearchState()
-      deactivate()
-    }
-
-    const isRecentSearchesModalOpen = ref(false)
-
-    const activate = () => (searchBarIsActive.value = true)
-    const deactivate = () => {
-      searchBarIsActive.value = false
-    }
-
-    watch(searchBarIsActive, (active) => {
-      if (active) {
-        isRecentSearchesModalOpen.value = true
-        /**
-         * Without `nextTick`, the search bar is not focused on click in Firefox
-         */
-        nextTick(() => {
-          if (searchInputRef.value) {
-            ensureFocus(searchInputRef.value)
-          }
-        })
-      } else {
-        isRecentSearchesModalOpen.value = false
-        if (searchTerm.value === "" && searchStore.searchTerm !== "") {
-          searchTerm.value = searchStore.searchTerm
-        }
-      }
-    })
-    const appliedFilterCount = computed(() => searchStore.appliedFilterCount)
-
-    const updateSearchText = (event: Event) => {
-      searchTerm.value = (event.target as HTMLInputElement).value
-    }
-
-    const clearSearchText = () => {
-      searchTerm.value = ""
-      if (searchInputRef.value) {
-        ensureFocus(searchInputRef.value)
-      }
-    }
-
-    const handleBack = () => {
-      deactivate()
     }
 
     /**
-     * Refers to the current suggestion that has visual focus (not DOM focus)
-     * and is the active descendant. This should be set to `undefined` when the
-     * visual focus is on the input field.
+     * Activate the search bar and open the recent searches modal.
      */
-    const selectedIdx = ref<number | undefined>(undefined)
-    const entries = computed(() => searchStore.recentSearches)
-    const handleVerticalArrows = (event: KeyboardEvent) => {
-      event.preventDefault() // Prevent the cursor from moving horizontally.
-      const { key, altKey } = event
-      // Show the recent searches.
-      isRecentSearchesModalOpen.value = true
-      if (altKey) {
-        return
-      }
-      // Shift selection (if Alt was not pressed with arrow keys)
-      let defaultValue: number
-      let offset: number
-      if (key == keycodes.ArrowUp) {
-        defaultValue = 0
-        offset = -1
-      } else {
-        defaultValue = -1
-        offset = 1
-      }
-      selectedIdx.value = cyclicShift(
-        selectedIdx.value ?? defaultValue,
-        offset,
-        0,
-        entries.value.length
-      )
-    }
-    const handleOtherKeys = (event: KeyboardEvent) => {
-      const { key } = event
-      if (key === keycodes.Enter && selectedIdx.value) {
-        // If a recent search is selected, populate its value into the input.
-        searchTerm.value = entries.value[selectedIdx.value]
-      }
-      if (([keycodes.Escape] as string[]).includes(key)) {
-        // Hide the recent searches.
-        isRecentSearchesModalOpen.value = false
-      }
-      selectedIdx.value = undefined // Lose visual focus from entries.
-    }
-    const handleKeydown = (event: KeyboardEvent) => {
-      const { key } = event
-      return ([keycodes.ArrowUp, keycodes.ArrowDown] as string[]).includes(key)
-        ? handleVerticalArrows(event)
-        : handleOtherKeys(event)
-    }
-    /* Populate the input with the clicked entry and execute the search. */
-    const handleSelect = (idx: number) => {
-      searchTerm.value = entries.value[idx]
-      isRecentSearchesModalOpen.value = false
-      selectedIdx.value = undefined // Lose visual focus from entries.
-      handleSearch() // Immediately execute the search manually.
-    }
-    /* Clear all recent searches from the store. */
-    const handleClear = () => {
-      searchStore.clearRecentSearches()
-      if (searchInputRef.value) {
-        ensureFocus(searchInputRef.value)
-      }
-    }
-    /* Clear a specific recent search from the store. */
-    const handleClearSingle = (idx: number) => {
-      searchStore.clearRecentSearch(idx)
-      if (searchInputRef.value) {
-        ensureFocus(searchInputRef.value)
+    const activate = () => {
+      isInputFocused.value = true
+      isSearchBarActive.value = true
+      if (!recent.isVisible.value) {
+        recent.show()
       }
     }
 
-    const showRecentSearches = computed(
-      () => isRecentSearchesModalOpen.value && entries.value.length > 0
-    )
+    /** Deactivate the search bar */
+    const deactivate = () => {
+      isInputFocused.value = false
+      isSearchBarActive.value = false
+    }
+
+    /**
+     * Set the selection range of the input field to the saved value.
+     * This is necessary because when opening the recent search modal,
+     * the input field is blurred and focused again.
+     */
+    const updateSelection = () => {
+      const inputElement = searchInputRef.value as HTMLInputElement
+      const lastPos =
+        inputElement.value.length > 0 ? inputElement.value.length - 1 : 0
+      selection.value = {
+        start: inputElement.selectionStart ?? lastPos,
+        end: inputElement.selectionEnd ?? lastPos,
+      }
+    }
+
+    /**
+     * When the user tabs into the input field, the `isInputFocused` is set to true,
+     * but the search bar is not activated until the user types something.
+     *
+     * On the `input` event, update the search term and the selection range,
+     * and activate the search bar.
+     */
+    const updateSearchText = () => {
+      localSearchTerm.value = (searchInputRef.value as HTMLInputElement).value
+      updateSelection()
+      if (isInputFocused.value && !isSearchBarActive.value) {
+        activate()
+      }
+    }
+
+    const clearSearchText = () => {
+      localSearchTerm.value = ""
+      focusInput()
+    }
+
+    const {
+      handleKeydown: handleInputKeydown,
+      handleSelect,
+      handleClear,
+      recent,
+    } = useRecentSearches({
+      focusInput,
+      term: localSearchTerm,
+      isMobile: true,
+      isInputFocused,
+    })
+
+    watch(recent.isVisible, (isVisible) => {
+      if (!isVisible) {
+        deactivate()
+        if (localSearchTerm.value !== searchTerm.value) {
+          searchTerm.value = localSearchTerm.value
+          handleSearch()
+        }
+      }
+    })
+
+    const handleInputFocus = () => (isInputFocused.value = true)
+    const handleInputBlur = () => {
+      if (!recent.isVisible.value && isInputFocused.value) {
+        deactivate()
+      }
+    }
+
+    /**
+     * Deactivate the search bar when the user clicks outside the header,
+     * but not when the click is inside the recent searches modal.
+     */
+    onClickOutside(headerRef, (event) => {
+      const clickInsideModal = recentSearchesRef.value?.$el?.contains(
+        event.target as Node
+      )
+      if (!clickInsideModal) {
+        isInputFocused.value = false
+      }
+    })
+
+    /**
+     * When activating the search bar by clicking, preserve the cursor position.
+     */
+    const handleInputClick = () => {
+      if (!isSearchBarActive.value) {
+        updateSelection()
+        activate()
+      }
+    }
+
+    /**
+     * Close the modal when the last clickable element is clicked
+     * (clear button when there are no recent searches).
+     */
+    const handleClearButtonTab = () => {
+      if (!recent.entries.value.length) {
+        handleTabOut("forward")
+      }
+    }
+
+    /**
+     * Special handling of focus order after leaving the search bar because
+     * the input modal is inserted into the page and change the HTML elements order.
+     * @param direction
+     */
+    const handleTabOut = (direction: "forward" | "backward") => {
+      recent.hide()
+      nextTick().then(() => {
+        let element =
+          direction === "forward"
+            ? document.getElementById(skipToContentTargetId)
+            : getAllTabbableIn(document.body)[1]
+        if (!element) {
+          element = getFirstTabbableIn(document.body)
+        }
+        ensureFocus(element as HTMLElement)
+      })
+    }
 
     const {
       close: closeContentSettings,
@@ -311,44 +361,57 @@ export default defineComponent({
       emit,
     })
 
+    const route = useRoute()
+    const routeSearchTerm = computed(() => route.value.query.q)
+    watch(routeSearchTerm, (newSearchTerm) => {
+      const term = Array.isArray(newSearchTerm)
+        ? newSearchTerm[0]
+        : newSearchTerm
+      localSearchTerm.value = term ?? ""
+    })
+
     const { doneHydrating } = useHydrating()
 
     return {
+      isInputFocused,
       searchInputRef,
       headerRef,
+      recentSearchesRef,
       contentSettingsButtonRef,
       contentSettingsButton,
 
       isFetching,
-
       appliedFilterCount,
-
       doneHydrating,
+
       contentSettingsOpen,
+      triggerA11yProps,
       openContentSettings,
       closeContentSettings,
       toggleContentSettings,
-      triggerA11yProps,
-
-      isRecentSearchesModalOpen,
-      showRecentSearches,
-      searchBarIsActive,
-      activate,
-      deactivate,
 
       searchStatus,
-      searchTerm,
+      localSearchTerm,
+      isSearchBarActive,
+      deactivate,
+      handleInputFocus,
+      handleInputBlur,
+      handleInputClick,
+      handleInputKeydown,
+
       clearSearchText,
       updateSearchText,
       handleSearch,
+      handleFormSubmit,
 
-      handleBack,
-      selectedIdx,
-      entries,
-      handleKeydown,
+      isRecentVisible: recent.isVisible,
+      selectedIdx: recent.selectedIdx,
+      entries: recent.entries,
+      hideRecentSearches: recent.hide,
       handleSelect,
       handleClear,
-      handleClearSingle,
+      handleClearButtonTab,
+      handleTabOut,
     }
   },
 })

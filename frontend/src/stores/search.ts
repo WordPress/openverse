@@ -143,9 +143,18 @@ export const useSearchStore = defineStore("search", {
     recentSearches: useStorage<string[]>("recent-searches", []),
     filters: deepClone(filterData as DeepWriteable<typeof filterData>),
   }),
+  /**
+   * If the server set the search term, add it to the top of the recent searches stack saved in the local storage.
+   */
   hydrate(state) {
-    // @ts-expect-error https://github.com/microsoft/TypeScript/issues/43826
-    state.recentSearches = useStorage<string[]>("recent-searches", [])
+    const entriesStored = useStorage<string[]>("recent-searches", [])
+    if (state.searchTerm) {
+      entriesStored.value = [
+        state.searchTerm,
+        ...entriesStored.value.filter((i) => i !== state.searchTerm),
+      ].slice(0, parseInt(env.savedSearchCount))
+    }
+    state.recentSearches = entriesStored.value
   },
   getters: {
     filterCategories(state) {
@@ -381,18 +390,14 @@ export const useSearchStore = defineStore("search", {
       })
       this.replaceFilters(newFilterData)
     },
-    /**
-     * This method need not exist and is only used to fix an odd
-     * hydration bug in the search route. After navigating from
-     * the homepage, the watcher in useStorage doesn't work.
-     */
-    refreshRecentSearches() {
-      // @ts-expect-error https://github.com/microsoft/TypeScript/issues/43826
-      this.recentSearches = useStorage<string[]>("recent-searches", [])
+    updateRecentSearches(entries: string[]) {
+      useStorage("recent-searches", entries).value = entries
+      this.recentSearches = entries
     },
     /** Add a new term to the list of recent search terms */
     addRecentSearch(
-      search: string /** A search term to add to the saved list.*/
+      /** A search term to add to the saved list.*/
+      search: string
     ) {
       /**
        * Add the latest search to the top of the stack,
@@ -400,16 +405,18 @@ export const useSearchStore = defineStore("search", {
        * the max count, and removing existing occurrences of the
        * latest search term, if there are any.
        */
-      this.recentSearches = [
+      const entries = [
         search,
         ...this.recentSearches.filter((i) => i !== search),
       ].slice(0, parseInt(env.savedSearchCount))
+      // directly setting value to this.recentSearches does not update the storage and watchers
+      this.updateRecentSearches(entries)
     },
-    clearRecentSearches() {
-      this.recentSearches = []
-    },
-    clearRecentSearch(idx: number) {
-      this.recentSearches.splice(idx, 1)
+    clearRecentSearches(entry?: string) {
+      const entries = entry
+        ? this.recentSearches.filter((s) => s !== entry)
+        : []
+      this.updateRecentSearches(entries)
     },
     /**
      * Initial filters do not include the provider filters. We create the provider filters object

@@ -3,9 +3,9 @@
     <div v-if="!isActive" class="flex w-full"><slot /></div>
     <VTeleport v-else to="modal">
       <div
-        class="fixed inset-0 z-40 flex h-[100dvh] h-screen w-full justify-center overflow-y-auto bg-white"
+        class="h-dyn-screen fixed inset-0 z-40 flex w-full justify-center overflow-y-auto bg-white"
       >
-        <!-- re: disabled static element interactions rule https://github.com/WordPress/openverse/issues/2906 -->
+        <!-- rule disabled because we need to handle the events from children -->
         <!-- eslint-disable-next-line vuejs-accessibility/no-static-element-interactions -->
         <div
           ref="dialogRef"
