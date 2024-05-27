@@ -115,6 +115,20 @@ def _production_deferred(*values: str) -> Sequence[str]:
     return values
 
 
+def _non_production_deferred(*values: str) -> Sequence[str]:
+    """
+    Define a sequence in only the production environment.
+
+    The raw ID field is perfectly suited for massive tables, and so enabling
+    that in production will often prevent performance hits or outages. This will
+    return the input values only the environment is production, and in all other
+    cases it will return an empty sequence.
+    """
+    if settings.ENVIRONMENT != "production":
+        return ()
+    return values
+
+
 class PredeterminedOrderChangelist(ChangeList):
     """
     ChangeList class which does not apply any default ordering to the items.
