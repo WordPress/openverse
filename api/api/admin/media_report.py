@@ -47,10 +47,8 @@ def register(site):
     ]:
         site.register(klass, MediaSubreportAdmin)
 
-    # Temporary addition of model admin for decisions while this view gets built
-    if settings.ENVIRONMENT != "production":
-        site.register(ImageDecision, admin.ModelAdmin)
-        site.register(AudioDecision, admin.ModelAdmin)
+    site.register(ImageDecision, ImageDecisionAdmin)
+    site.register(AudioDecision, AudioDecisionAdmin)
 
 
 class MultipleValueField(forms.MultipleChoiceField):
@@ -570,6 +568,11 @@ class MediaReportAdmin(admin.ModelAdmin):
         )
 
 
+class MediaDecisionAdmin(admin.ModelAdmin):
+    media_type = None
+    through_model = None
+
+
 class ImageReportAdmin(MediaReportAdmin):
     media_type = "image"
 
@@ -584,6 +587,16 @@ class ImageListViewAdmin(MediaListAdmin):
 
 class AudioListViewAdmin(MediaListAdmin):
     media_type = "audio"
+
+
+class ImageDecisionAdmin(MediaDecisionAdmin):
+    media_type = "image"
+    through_model = ImageDecisionThrough
+
+
+class AudioDecisionAdmin(MediaDecisionAdmin):
+    media_type = "audio"
+    through_model = AudioDecisionThrough
 
 
 class MediaSubreportAdmin(admin.ModelAdmin):
