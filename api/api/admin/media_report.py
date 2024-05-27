@@ -425,6 +425,9 @@ class MediaListAdmin(admin.ModelAdmin):
     # Overrides #
     #############
 
+    # TODO: This construct breaks down if a decision is associated with
+    #   a media item that does not have any reports. Such an item cannot
+    #   be reached at the URL ``admin/api/{media_type}/{id}/change/``.
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         # Return all available image if this is for an autocomplete request
