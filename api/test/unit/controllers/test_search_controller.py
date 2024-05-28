@@ -1,7 +1,7 @@
+import datetime
 import random
 import re
 from collections.abc import Callable
-from datetime import datetime, timezone
 from enum import Enum, auto
 from unittest import mock
 from unittest.mock import patch
@@ -16,7 +16,7 @@ from structlog.testing import capture_logs
 
 from api.controllers import search_controller
 from api.controllers.elasticsearch import helpers as es_helpers
-from api.controllers.search_controller import ENABLED_SOURCES_CACHE_KEY
+from api.controllers.search_controller import FILTERED_PROVIDERS_CACHE_KEY
 from api.utils import tallies
 from api.utils.dead_link_mask import get_query_hash, save_query_mask
 from api.utils.search_context import SearchContext
@@ -837,40 +837,40 @@ def test_excessive_recursion_in_post_process(
 @pytest.mark.django_db
 @cache_availability_params
 @pytest.mark.parametrize(
-    "enabled_count, result",
-    [(2, Terms(source=["source1", "source2"])), (0, None)],
+    "excluded_count, result",
+    [(2, Terms(provider=["provider1", "provider2"])), (0, None)],
 )
-def test_get_enabled_sources_query_returns_available_sources(
-    enabled_count, result, is_cache_reachable, cache_name, request
+def test_get_excluded_providers_query_returns_excluded(
+    excluded_count, result, is_cache_reachable, cache_name, request
 ):
     cache = request.getfixturevalue(cache_name)
 
     if is_cache_reachable:
         cache.set(
-            key=ENABLED_SOURCES_CACHE_KEY,
+            key=FILTERED_PROVIDERS_CACHE_KEY,
             version=2,
             timeout=30,
-            value=[f"source{i + 1}" for i in range(enabled_count)],
+            value=[f"provider{i + 1}" for i in range(excluded_count)],
         )
     else:
-        for i in range(enabled_count):
+        for i in range(excluded_count):
             ContentProviderFactory.create(
-                created_on=datetime.now(tz=timezone.utc),
-                provider_identifier=f"source{i + 1}",
-                provider_name=f"Source {i + 1}",
-                filter_content=False,
+                created_on=datetime.datetime.now(),
+                provider_identifier=f"provider{i + 1}",
+                provider_name=f"Provider {i + 1}",
+                filter_content=True,
             )
 
     with capture_logs() as cap_logs:
-        assert search_controller.get_enabled_sources_query() == result
+        assert search_controller.get_excluded_providers_query() == result
 
     if not is_cache_reachable:
         messages = [record["event"] for record in cap_logs]
         assert all(
             message in messages
             for message in [
-                "Redis connect failed, cannot get cached enabled sources.",
-                "Redis connect failed, cannot cache enabled sources.",
+                "Redis connect failed, cannot get cached filtered providers.",
+                "Redis connect failed, cannot cache filtered providers.",
             ]
         )
 
