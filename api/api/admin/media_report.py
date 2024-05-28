@@ -390,7 +390,7 @@ class MediaListAdmin(admin.ModelAdmin):
                     decision=decision.id,
                     action=action,
                     notes=notes,
-                    moderator=moderator.username,
+                    moderator=moderator.get_username(),
                 )
 
                 through = through_class.objects.create(

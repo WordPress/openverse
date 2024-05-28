@@ -11,7 +11,7 @@ class UserPreferences(models.Model):
     preferences = models.JSONField(default=dict)
 
     def __str__(self):
-        return f"{self.user.username}'s preferences"
+        return f"{self.user.get_username()}'s preferences"
 
     @property
     def moderator(self):

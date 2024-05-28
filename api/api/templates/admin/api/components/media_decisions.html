@@ -30,7 +30,7 @@ Props:
           <a href="{% url 'admin:api_'|add:media_type|add:'decision_change' decision.id %}">{{ decision.id }}</a>
         </td>
         <td>{{ decision.created_on }}</td>
-        <td>{{ decision.moderator.username }}</td>
+        <td>{{ decision.moderator }}</td>
         <td>{{ decision.action }}</td>
         <td>{{ decision.notes }}</td>
         <td>
