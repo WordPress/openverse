@@ -66,7 +66,7 @@ install:
 precommit:
     #!/usr/bin/env bash
     set -eo pipefail
-    if [ -z "$SKIP_PRE_COMMIT" ] && [ ! -f ./pre-commit.pyz ]; then
+    if [ -z "$SKIP__COMMIT" ] && [ ! -f ./pre-commit.pyz ]; then
       echo "Getting latest release"
       curl \
         ${GITHUB_TOKEN:+ --header "Authorization: Bearer ${GITHUB_TOKEN}"} \
@@ -237,6 +237,22 @@ run +args:
 # Execute pgcli against one of the database instances
 _pgcli container db_user_pass db_name db_host db_port="5432":
     just exec {{ container }} pgcli postgresql://{{ db_user_pass }}:{{ db_user_pass }}@{{ db_host }}:{{ db_port }}/{{ db_name }}
+
+###########
+# Cleanup #
+###########
+
+# Recursively list, and delete, all specified dirs from the repo
+_prune pattern delete="false":
+    find . -name '{{ pattern }}' -type d -prune {{ if delete == "true" { "-exec rm -rf '{}' +" } else { "" } }}
+
+# Recursively list, and delete, all `node_modules/` from the repo
+prune_node delete="false":
+    @just _prune node_modules {{ delete }}
+
+# Recursively list, and  delete, all `.venv/` from the repo
+prune_venv delete="false":
+    @just _prune .venv {{ delete }}
 
 ########
 # Misc #
