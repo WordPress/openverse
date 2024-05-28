@@ -26,6 +26,12 @@ def handle_redis_exception(func):
 
 
 class LockManager:
+    """
+    Kudos to this Google Group discussion for the solution using a
+    ranked-set:
+    https://web.archive.org/web/20211205091916/https://groups.google.com/g/redis-db/c/rXXMCLNkNSs
+    """
+
     def __init__(self, media_type):
         self.media_type = media_type
 
