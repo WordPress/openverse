@@ -277,9 +277,9 @@ class MediaListAdmin(admin.ModelAdmin):
         valid_locks = self.lock_manager.prune()
         locked_media = list(
             int(item.replace(f"{self.media_type}:", ""))
-            for lock_set in valid_locks.values()
+            for moderator, lock_set in valid_locks.items()
             for item in lock_set
-            if self.media_type in item
+            if self.media_type in item and moderator != request.user.get_username()
         )
         extra_context["locked_media"] = locked_media
 
