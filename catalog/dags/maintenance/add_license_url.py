@@ -55,13 +55,18 @@ def run_sql(
 
 
 @task
-def get_licenses(query: str, ti=None) -> list[tuple[str, str, str]]:
+def get_licenses(ti=None) -> list[tuple[str, str, str]]:
     """
     Get license groups of rows that don't have a `license_url` in their
     `meta_data` field and notify the start of the DAG.
 
-    :return: List of (license, version) tuples.
+    :return: List of license_info tuples.
     """
+    query = dedent("""
+            SELECT license, license_version, count(identifier)
+            FROM image WHERE meta_data->>'license_url' IS NULL
+            GROUP BY license, license_version
+        """)
     license_groups = run_sql(query, dag_task=ti.task)
 
     total_nulls = sum(group[2] for group in license_groups)
@@ -142,7 +147,9 @@ def get_license_conf(license_info) -> dict:
 @task
 def get_confs(licenses, batch_size: int) -> list[dict]:
     if not licenses:
-        raise AirflowSkipException("No config required.")
+        raise AirflowSkipException(
+            "Found no licenses to backfill. No DAG config is required."
+        )
 
     return [
         {"batch_size": batch_size, **get_license_conf(license_info)}
@@ -180,13 +187,7 @@ def notify_slack():
     },
 )
 def add_license_url():
-    query = dedent("""
-        SELECT license, license_version, count(identifier)
-        FROM image WHERE meta_data->>'license_url' IS NULL
-        GROUP BY license, license_version
-    """)
-
-    licenses = get_licenses(query)
+    licenses = get_licenses()
 
     trigger = TriggerDagRunOperator.partial(
         task_id="trigger_batched_update",
