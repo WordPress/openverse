@@ -6,9 +6,11 @@
 describes how to run or test out these DAGs locally during development.
 
 Additionally, it is worth noting that not all DAGs can be run locally in
-development as some of them require API keys from the provider. However, some
-other DAGs like the ones for SMK or Finnish Museums can be run locally without
-any additional keys.
+development right away as some of them require API keys from the provider.
+However, some other DAGs like the ones for SMK or Finnish Museums can be run
+locally without any additional keys. In order to run some DAGs locally, you
+might need to get the API keys from the provider and add them to the
+`catalog/.env` file.
 
 ## Getting started
 
