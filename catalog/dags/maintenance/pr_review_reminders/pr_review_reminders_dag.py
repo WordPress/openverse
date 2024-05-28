@@ -10,8 +10,13 @@ This DAG runs daily and pings on the following schedule based on priority label:
 | --- | --- |
 | critical | 1 day |
 | high | >2 days |
+| contributor | >3 days |
 | medium | >4 days |
 | low | >7 days |
+
+Special consideration is made for non-maintainer PRs so that we ensure contributors
+are responded to in a timely manner
+[per this documentation](https://docs.openverse.org/general/contribution/good_first_and_help_wanted_issues.html#timing-and-process).
 
 The DAG does not ping on Saturday and Sunday and accounts for weekend days
 when determining how much time has passed since the review.
@@ -24,7 +29,6 @@ is unavailable for the time period during which the PR should be reviewed.
 from datetime import datetime, timedelta
 
 from airflow.models import DAG
-from airflow.operators.python import PythonOperator
 
 from common.constants import DAG_DEFAULT_ARGS
 from maintenance.pr_review_reminders import pr_review_reminders
@@ -32,6 +36,7 @@ from maintenance.pr_review_reminders import pr_review_reminders
 
 DAG_ID = "pr_review_reminders"
 MAX_ACTIVE_TASKS = 1
+DEFERRED_GITHUB_PAT = "{{ var.value.get('GITHUB_API_KEY', 'not_set') }}"
 
 dag = DAG(
     dag_id=DAG_ID,
@@ -54,12 +59,10 @@ dag = DAG(
 )
 
 with dag:
-    PythonOperator(
-        task_id="pr_review_reminder_operator",
-        python_callable=pr_review_reminders.post_reminders,
-        op_kwargs={
-            "github_pat": "{{ var.value.get('GITHUB_API_KEY', 'not_set') }}",
-            "dry_run": "{{ var.json.get('PR_REVIEW_REMINDER_DRY_RUN', "
-            "var.value.ENVIRONMENT != 'production') }}",
-        },
+    maintainers = pr_review_reminders.get_maintainers(DEFERRED_GITHUB_PAT)
+    pr_review_reminders.post_reminders(
+        maintainers,
+        github_pat=DEFERRED_GITHUB_PAT,
+        dry_run="{{ var.json.get('PR_REVIEW_REMINDER_DRY_RUN', "
+        "var.value.ENVIRONMENT != 'production') }}",
     )

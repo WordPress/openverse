@@ -860,12 +860,17 @@ have not yet approved the PR or explicitly requested changes.
 
 This DAG runs daily and pings on the following schedule based on priority label:
 
-| priority | days    |
-| -------- | ------- |
-| critical | 1 day   |
-| high     | >2 days |
-| medium   | >4 days |
-| low      | >7 days |
+| priority    | days    |
+| ----------- | ------- |
+| critical    | 1 day   |
+| high        | >2 days |
+| contributor | >3 days |
+| medium      | >4 days |
+| low         | >7 days |
+
+Special consideration is made for non-maintainer PRs so that we ensure
+contributors are responded to in a timely manner
+[per this documentation](https://docs.openverse.org/general/contribution/good_first_and_help_wanted_issues.html#timing-and-process).
 
 The DAG does not ping on Saturday and Sunday and accounts for weekend days when
 determining how much time has passed since the review.

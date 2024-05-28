@@ -1,0 +1,22 @@
+[
+  {
+    "login": "helpful-contributor",
+    "id": 0,
+    "node_id": "MDQ6VXNlcjg5NTgxO222",
+    "avatar_url": "https://avatars.githubusercontent.com/u/0?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/helpful-contributor",
+    "html_url": "https://github.com/helpful-contributor",
+    "followers_url": "https://api.github.com/users/helpful-contributor/followers",
+    "following_url": "https://api.github.com/users/helpful-contributor/following{/other_user}",
+    "gists_url": "https://api.github.com/users/helpful-contributor/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/helpful-contributor/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/helpful-contributor/subscriptions",
+    "organizations_url": "https://api.github.com/users/helpful-contributor/orgs",
+    "repos_url": "https://api.github.com/users/helpful-contributor/repos",
+    "events_url": "https://api.github.com/users/helpful-contributor/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/helpful-contributor/received_events",
+    "type": "User",
+    "site_admin": false
+  }
+]

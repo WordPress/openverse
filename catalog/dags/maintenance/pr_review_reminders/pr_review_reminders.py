@@ -3,6 +3,7 @@ import logging
 from collections import defaultdict
 from dataclasses import dataclass
 
+from airflow.decorators import task
 from requests import HTTPError
 
 from common.github import GitHubAPI
@@ -15,6 +16,9 @@ REPOSITORIES = [
     "openverse",
     "openverse-infrastructure",
 ]
+MAINTAINER_TEAM = "openverse-maintainers"
+OPENVERSE_BOT = "openverse-bot"
+BOT_ACCOUNTS = {OPENVERSE_BOT, "renovate", "dependabot[bot]"}
 
 
 class Urgency:
@@ -25,11 +29,16 @@ class Urgency:
 
     CRITICAL = Urgency("critical", 1)
     HIGH = Urgency("high", 2)
+    CONTRIBUTOR = Urgency("contributor", 3)
     MEDIUM = Urgency("medium", 4)
     LOW = Urgency("low", 5)
 
     @classmethod
-    def for_pr(cls, pr: dict) -> Urgency | None:
+    def for_pr(cls, pr: dict, maintainers: set[str]) -> Urgency | None:
+        # All contributor PRs should be treated as a special case
+        if pr["user"]["login"] not in maintainers:
+            return cls.CONTRIBUTOR
+
         priority_labels = [
             label["name"]
             for label in pr["labels"]
@@ -57,6 +66,14 @@ class ReviewDelta:
     days: int
 
 
+@task
+def get_maintainers(github_pat: str) -> set[str]:
+    gh = GitHubAPI(github_pat)
+    maintainer_info = gh.get_team_members(MAINTAINER_TEAM)
+    maintainers = {member["login"] for member in maintainer_info} | BOT_ACCOUNTS
+    return maintainers
+
+
 def days_without_weekends(
     today: datetime.datetime, updated_at: datetime.datetime
 ) -> int:
@@ -80,7 +97,9 @@ def parse_gh_date(d) -> datetime.datetime:
     return datetime.datetime.fromisoformat(d.rstrip("Z"))
 
 
-def get_urgency_if_urgent(gh: GitHubAPI, pr: dict) -> ReviewDelta | None:
+def get_urgency_if_urgent(
+    gh: GitHubAPI, pr: dict, maintainers: set[str]
+) -> ReviewDelta | None:
     events = gh.get_issue_events(base_repo_name(pr), pr["number"])
     ready_for_review_date = pr["created_at"]
     for event in reversed(events):
@@ -99,7 +118,7 @@ def get_urgency_if_urgent(gh: GitHubAPI, pr: dict) -> ReviewDelta | None:
 
     urgency_base_date = parse_gh_date(ready_for_review_date)
     today = datetime.datetime.now()
-    pr_urgency = Urgency.for_pr(pr)
+    pr_urgency = Urgency.for_pr(pr, maintainers)
     if pr_urgency is None:
         return None
 
@@ -192,7 +211,8 @@ def get_min_required_approvals(gh: GitHubAPI, pr: dict) -> int:
     ]
 
 
-def post_reminders(github_pat: str, dry_run: bool):
+@task(task_id="pr_review_reminder_operator")
+def post_reminders(maintainers: set[str], github_pat: str, dry_run: bool):
     gh = GitHubAPI(github_pat)
 
     open_prs = []
@@ -201,7 +221,7 @@ def post_reminders(github_pat: str, dry_run: bool):
 
     urgent_prs = []
     for pr in open_prs:
-        review_delta = get_urgency_if_urgent(gh, pr)
+        review_delta = get_urgency_if_urgent(gh, pr, maintainers)
         if review_delta:
             urgent_prs.append((pr, review_delta))
 
@@ -214,7 +234,7 @@ def post_reminders(github_pat: str, dry_run: bool):
             comment
             for comment in previous_comments
             if (
-                comment["user"]["login"] == "openverse-bot"
+                comment["user"]["login"] == OPENVERSE_BOT
                 and COMMENT_MARKER in comment["body"]
             )
         ]

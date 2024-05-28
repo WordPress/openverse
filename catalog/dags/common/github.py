@@ -107,3 +107,9 @@ class GitHubAPI:
             f"repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches",
             json={"inputs": inputs or {}, "ref": ref},
         )
+
+    def get_team_members(self, team: str, owner: str = "WordPress"):
+        return self._make_request(
+            "GET",
+            f"orgs/{owner}/teams/{team}/members",
+        )
