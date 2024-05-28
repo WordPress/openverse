@@ -52,7 +52,7 @@
     loading: "Loading...",
     filterButton: {
       simple: "Filters",
-      withCount: "{count} Filter|{count} Filters",
+      withCount: "Filter ({count})|Filters ({count})",
     },
     seeResults: "See results",
     backButton: "Go back",
