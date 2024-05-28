@@ -46,5 +46,7 @@ any additional keys.
 6. To get a summary of the DAG, click on the "DAG Docs" accordion and you should
    see an overview of the DAG displayed.
 
-> **Note**: For more info about how Airflow works in general, check out their
-> [documentation on the UI](https://airflow.apache.org/docs/apache-airflow/stable/ui.html).
+```{note}
+For more info about how Airflow works in general, check out their
+[documentation on the UI](https://airflow.apache.org/docs/apache-airflow/stable/ui.html).
+```
