@@ -17,17 +17,21 @@ ENV PRE_COMMIT_HOME="/opt/pre-commit"
 # Add tooling installed in custom locations to `PATH`.
 ENV PATH="${N_PREFIX}/bin:${PDM_PYTHONS}:${PIPX_BIN_DIR}:${PATH}"
 
-# Dependency explanations
+# Dependency explanations:
 # - git: required by some python package; contributors should use git on their host
 # - perl: used in linting
 # - gcc: required by some pre-commit hooks for node-gyp
 # - just: command runner
 # - which: locate a program file in `PATH`
-# - python3.12, pipx: language runtime and CLI app installer
-# - nodejs, npm: language runtime and dependency manager (system npm required by node-based pre-commit hooks)
-# - docker*: used to interact with host docker socket
+# - pipx: Python CLI app installer
+# - nodejs: language runtime (includes npm but not Corepack)
+# - docker*: used to interact with host Docker socket
+#
+# pipx dependencies:
 # - pdm, pipenv: Python package managers
-# - pre-commit: pre-commit hook manager
+# - pre-commit: Git pre-commit and pre-push hook manager
+#
+# Node dependencies:
 # - n: Node.js distribution manager
 # - corepack: Node.js package-manager-manager
 RUN dnf -y install dnf-plugins-core \
@@ -38,8 +42,8 @@ RUN dnf -y install dnf-plugins-core \
     gcc \
     just \
     which \
-    python3.12 pipx \
-    nodejs npm \
+    pipx \
+    nodejs \
     docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin \
   && pipx install \
     pdm pipenv  \
