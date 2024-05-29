@@ -1,4 +1,5 @@
 from collections import namedtuple
+from math import floor
 from typing import TypedDict
 
 from django.conf import settings
@@ -13,7 +14,7 @@ from drf_spectacular.utils import extend_schema_serializer
 from elasticsearch_dsl.response import Hit
 from openverse_attribution.license import License
 
-from api.constants import sensitivity
+from api.constants import restricted_features, sensitivity
 from api.constants.licenses import LICENSE_GROUPS
 from api.constants.media_types import MediaType
 from api.constants.parameters import COLLECTION, TAG
@@ -43,36 +44,34 @@ from api.utils.url import add_protocol
 class PaginatedRequestSerializer(serializers.Serializer):
     """This serializer passes pagination parameters from the query string."""
 
+    _SUBJECT_TO_PAGINATION_LIMITS = (
+        "This parameter is subject to limitations based on authentication "
+        "and access level. For details, refer to [the authentication "
+        "documentation](#tag/auth)."
+    )
+
     field_names = [
         "page_size",
         "page",
     ]
     page_size = serializers.IntegerField(
         label="page_size",
-        help_text=f"Number of results to return per page. "
-        f"Maximum is {settings.MAX_AUTHED_PAGE_SIZE} for authenticated "
-        f"requests, and {settings.MAX_ANONYMOUS_PAGE_SIZE} for "
-        f"unauthenticated requests.",
+        help_text=f"Number of results to return per page. {_SUBJECT_TO_PAGINATION_LIMITS}",
         required=False,
-        default=settings.MAX_ANONYMOUS_PAGE_SIZE,
+        default=restricted_features.MAX_PAGE_SIZE.anonymous,
         min_value=1,
     )
     page = serializers.IntegerField(
         label="page",
-        help_text="The page of results to retrieve.",
+        help_text=f"The page of results to retrieve. {_SUBJECT_TO_PAGINATION_LIMITS}",
         required=False,
         default=1,
-        max_value=settings.MAX_PAGINATION_DEPTH,
         min_value=1,
     )
 
     def validate_page_size(self, value):
-        request = self.context.get("request")
-        is_anonymous = getattr(request, "auth", None) is None
-        max_value = (
-            settings.MAX_ANONYMOUS_PAGE_SIZE
-            if is_anonymous
-            else settings.MAX_AUTHED_PAGE_SIZE
+        level, max_value = restricted_features.MAX_PAGE_SIZE.request_level(
+            self.context.get("request")
         )
 
         validator = MaxValueValidator(
@@ -82,18 +81,72 @@ class PaginatedRequestSerializer(serializers.Serializer):
             ),
         )
 
-        if is_anonymous:
-            try:
-                validator(value)
-            except (ValidationError, DjangoValidationError) as e:
-                raise NotAuthenticated(
-                    detail=e.message,
-                    code=e.code,
-                )
-        else:
+        try:
             validator(value)
+        except (ValidationError, DjangoValidationError) as e:
+            if level == restricted_features.PRIVILEGED:
+                raise
+
+            raise NotAuthenticated(
+                detail=f"page_size may not exceed {max_value} for {level} requests",
+                code=e.code,
+            )
 
         return value
+
+    def clamp_result_count(self, real_result_count):
+        _, max_depth = restricted_features.MAX_RESULT_COUNT.request_level(
+            self.context.get("request")
+        )
+
+        if real_result_count > max_depth:
+            return max_depth
+
+        return real_result_count
+
+    def clamp_page_count(self, real_page_count):
+        _, max_depth = restricted_features.MAX_RESULT_COUNT.request_level(
+            self.context.get("request")
+        )
+
+        page_size = self.data["page_size"]
+        max_possible_page_count = max_depth / page_size
+
+        if real_page_count > max_possible_page_count:
+            return floor(max_possible_page_count)
+
+        return real_page_count
+
+    def validate(self, data):
+        data = super().validate(data)
+
+        # pagination depth is validated as a combination of page and page size,
+        # and so cannot be validated in the individual field validation methods
+        level, max_depth = restricted_features.MAX_RESULT_COUNT.request_level(
+            self.context.get("request")
+        )
+
+        requested_result_depth = data["page"] * data["page_size"]
+
+        result_depth_validator = MaxValueValidator(
+            max_depth,
+            message=serializers.IntegerField.default_error_messages["max_value"].format(
+                max_value=max_depth
+            ),
+        )
+
+        try:
+            result_depth_validator(requested_result_depth)
+        except (ValidationError, DjangoValidationError) as e:
+            if level == restricted_features.PRIVILEGED:
+                raise
+
+            raise NotAuthenticated(
+                detail=f"pagination depth may not exceed {max_depth} for {level} requests",
+                code=e.code,
+            )
+
+        return data
 
 
 @extend_schema_serializer(
@@ -401,7 +454,7 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
                     f"Refer to the source list for valid options: {sources_list}."
                 )
             elif invalid_sources := (sources - valid_sources):
-                available_sources_uri = self.context["request"].build_absolute_uri(
+                available_sources_uri = self.context.get("request").build_absolute_uri(
                     reverse(f"{self.media_type}-stats")
                 )
                 self.context["warnings"].append(

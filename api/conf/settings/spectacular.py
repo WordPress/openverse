@@ -50,19 +50,17 @@ SPECTACULAR_SETTINGS = {
             "name": "auth",
             "description": dedent(
                 """
-                The API has rate-limiting and throttling in place to prevent
-                abuse. In the response for each request that is subject to
-                rate-limits, you can see the `X-RateLimit-` headers for info
-                about your permitted and available usage. Exceeding the limit
-                will result in '429: Too Many Requests' responses.
+                Openverse provides free and open access to the Openverse API to
+                anonymous and registered users. [Refer to the API documentation
+                site for information on how to register](https://api.openverse.org/v1/#tag/auth).
 
-                - Anonymous clients are limited to make 5 req/hour and
-                  100 req/day. Therefore we recommend registering for
-                  authenticated usage.
-
-                - Authenticated clients can make 100 req/minute and 10,000
-                  req/day. Additionally, you can request a higher limit to fit
-                  your application's needs.
+                All Openverse API users are subject to rate limits and restrictions
+                on how much of Openverse's dataset can be accessed through the API.
+                [Individuals should contact Openverse to request expanded access to
+                the API](https://github.com/WordPress/openverse#keep-in-touch).
+                Requests are considered on a case-by-case basis and are subject to
+                evaluation in light of [Openverse's Terms of Service](https://docs.openverse.org/terms_of_service.html).
+                Escalated access may be revoked at any time.
 
                 To authenticate yourself, you must sign up for an API key using
                 the `register` endpoint and then get an access token using the
@@ -74,6 +72,35 @@ SPECTACULAR_SETTINGS = {
                 ```
                 Authorization: Bearer <access_token>
                 ```
+
+                ### Rate limits
+
+                Openverse endpoints are rate limited. Anonymous requests should be
+                sufficient for most users. Indeed, https://openverse.org itself
+                operates using anonymous requests from the browser.
+
+                Registered users are automatically granted slightly higher limits.
+                Further increases to rate limits are available upon request (see above).
+
+                Every Openverse API response that was subject to rate-limits includes
+                headers outlining the permitted and available usage. Exceeding the limit
+                will result in '429: Too Many Requests' responses.
+
+                ### Pagination
+
+                Openverse's dataset is valuable, and the
+                [Terms of Service](https://docs.openverse.org/terms_of_service.html)
+                disallow scraping under all circumstances. As such, pagination
+                for anonymous users is limited, accommodating only the typical
+                usage on https://openverse.org. Pagination is limited in terms
+                of the size of individual pages and the total number of works
+                visible for a query (pagination depth).
+
+                Authenticated users are subject to the same limit of total works
+                available for a query, but may request larger individual pages.
+
+                Increases to pagination limits on page size and total depth are
+                available upon request (see above).
                 """
             ),
         },

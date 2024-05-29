@@ -32,7 +32,3 @@ OUTBOUND_USER_AGENT_TEMPLATE = config(
     "OUTBOUND_USER_AGENT_TEMPLATE",
     default=f"Openverse{{purpose}}/{API_VERSION} (https://wordpress.org/openverse)",
 )
-
-MAX_ANONYMOUS_PAGE_SIZE = 20
-MAX_AUTHED_PAGE_SIZE = 500
-MAX_PAGINATION_DEPTH = 20

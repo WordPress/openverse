@@ -1,6 +1,9 @@
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
 from oauth2_provider.models import AbstractApplication
+
+from api.constants.restricted_features import RestrictedFeature
 
 
 class OAuth2Registration(models.Model):
@@ -39,6 +42,17 @@ class ThrottledApplication(AbstractApplication):
     )
     verified = models.BooleanField(default=False)
     revoked = models.BooleanField(default=False)
+
+    privileges = ArrayField(
+        models.CharField(
+            choices=RestrictedFeature.choices,
+        ),
+        default=list,
+        help_text=(
+            "Restricted features to which this application has been granted "
+            "privileged access"
+        ),
+    )
 
 
 class OAuth2Verification(models.Model):

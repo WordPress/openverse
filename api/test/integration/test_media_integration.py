@@ -1,25 +1,15 @@
 """This test suite covers common operations for all media types."""
 
 import re
-from dataclasses import dataclass
 
 import pytest
 
 from api.constants.licenses import LICENSE_GROUPS
 from api.constants.parameters import COLLECTION, TAG
+from test.fixtures.media_type_config import MediaTypeConfig
 
 
 pytestmark = pytest.mark.django_db
-
-
-@dataclass
-class MediaType:
-    name: str  # the name of the media type
-    path: str  # the version of the media type in the URL paths
-    providers: list[str]  # providers for the media type from the sample data
-    categories: list[str]  # categories for the media type from the sample data
-    tags: list[str]  # tags for the media type from the sample data
-    q: str  # a search query for this media type that yields some results
 
 
 def _check_non_es_fields_are_present(results: list[dict]):
@@ -32,71 +22,43 @@ def _check_non_es_fields_are_present(results: list[dict]):
         assert result["foreign_landing_url"] is not None
 
 
-############
-# Fixtures #
-############
-
-
-@pytest.fixture(params=["audio", "image"])
-def media_type(request):
-    """
-    Get a ``MediaType`` object associated with each media type supported by
-    Openverse. This fixture is used to parametrize tests and other dependent
-    fixtures so that the overall test suite covers all supported media types.
-    """
-
-    name = request.param
-    return {
-        "audio": MediaType(
-            name="audio",
-            path="audio",
-            providers=["freesound", "jamendo", "wikimedia_audio", "ccmixter"],
-            categories=["music", "pronunciation"],
-            tags=["cat"],
-            q="love",
-        ),
-        "image": MediaType(
-            name="image",
-            path="images",
-            providers=["flickr", "stocksnap"],
-            categories=["photograph"],
-            tags=["cat", "Cat"],
-            q="dog",
-        ),
-    }[name]
-
-
 @pytest.fixture
-def search_results(media_type: MediaType, api_client) -> tuple[MediaType, dict]:
-    res = api_client.get(f"/v1/{media_type.path}/", {"q": media_type.q})
-    assert res.status_code == 200
-
-    data = res.json()
-    return media_type, data
-
-
-@pytest.fixture
-def single_result(search_results) -> tuple[MediaType, dict]:
-    media_type, data = search_results
-    item = data["results"][0]
-    return media_type, item
-
-
-@pytest.fixture
-def related_results(single_result, api_client) -> tuple[MediaType, dict, dict]:
-    media_type, item = single_result
-    res = api_client.get(f"/v1/{media_type.path}/{item['id']}/related/")
-    assert res.status_code == 200
-
-    data = res.json()
-    return media_type, item, data
-
-
-@pytest.fixture
-def sensitive_result(media_type: MediaType, api_client) -> tuple[MediaType, dict]:
-    q = "bird"  # Not using the default ``q`` from ``media_type``.
+def search_results(
+    media_type_config: MediaTypeConfig, api_client
+) -> tuple[MediaTypeConfig, dict]:
     res = api_client.get(
-        f"/v1/{media_type.path}/",
+        f"/v1/{media_type_config.url_prefix}/", {"q": media_type_config.q}
+    )
+    assert res.status_code == 200
+
+    data = res.json()
+    return media_type_config, data
+
+
+@pytest.fixture
+def single_result(search_results) -> tuple[MediaTypeConfig, dict]:
+    media_type_config, data = search_results
+    item = data["results"][0]
+    return media_type_config, item
+
+
+@pytest.fixture
+def related_results(single_result, api_client) -> tuple[MediaTypeConfig, dict, dict]:
+    media_type_config, item = single_result
+    res = api_client.get(f"/v1/{media_type_config.url_prefix}/{item['id']}/related/")
+    assert res.status_code == 200
+
+    data = res.json()
+    return media_type_config, item, data
+
+
+@pytest.fixture
+def sensitive_result(
+    media_type_config: MediaTypeConfig, api_client
+) -> tuple[MediaTypeConfig, dict]:
+    q = "bird"  # Not using the default ``q`` from ``media_type_config``.
+    res = api_client.get(
+        f"/v1/{media_type_config.url_prefix}/",
         {"q": q, "unstable__include_sensitive_results": True},
     )
     assert res.status_code == 200
@@ -107,7 +69,7 @@ def sensitive_result(media_type: MediaType, api_client) -> tuple[MediaType, dict
         result for result in data["results"] if result["unstable__sensitivity"]
     )
 
-    return media_type, sensitive_result
+    return media_type_config, sensitive_result
 
 
 ##############
@@ -115,8 +77,8 @@ def sensitive_result(media_type: MediaType, api_client) -> tuple[MediaType, dict
 ##############
 
 
-def test_stats(media_type: MediaType, api_client):
-    res = api_client.get(f"/v1/{media_type.path}/stats/")
+def test_stats(media_type_config: MediaTypeConfig, api_client):
+    res = api_client.get(f"/v1/{media_type_config.url_prefix}/stats/")
     data = res.json()
     num_media = 0
     provider_count = 0
@@ -137,16 +99,24 @@ def test_search_returns_non_zero_results(search_results):
     assert data["result_count"] > 0
 
 
-def test_search_handles_unbalanced_quotes_with_ok(media_type: MediaType, api_client):
-    res = api_client.get(f"/v1/{media_type.path}/", {"q": f'"{media_type.q}'})
+def test_search_handles_unbalanced_quotes_with_ok(
+    media_type_config: MediaTypeConfig, api_client
+):
+    res = api_client.get(
+        f"/v1/{media_type_config.url_prefix}/", {"q": f'"{media_type_config.q}'}
+    )
     assert res.status_code == 200
 
     data = res.json()
     assert data["result_count"] > 0
 
 
-def test_search_handles_special_chars_with_ok(media_type: MediaType, api_client):
-    res = api_client.get(f"/v1/{media_type.path}/", {"q": f"{media_type.q}!"})
+def test_search_handles_special_chars_with_ok(
+    media_type_config: MediaTypeConfig, api_client
+):
+    res = api_client.get(
+        f"/v1/{media_type_config.url_prefix}/", {"q": f"{media_type_config.q}!"}
+    )
     assert res.status_code == 200
 
     data = res.json()
@@ -158,7 +128,9 @@ def test_search_results_have_non_es_fields(search_results):
     _check_non_es_fields_are_present(data["results"])
 
 
-def test_search_removes_dupes_from_initial_pages(media_type: MediaType, api_client):
+def test_search_removes_dupes_from_initial_pages(
+    media_type_config: MediaTypeConfig, api_client
+):
     """
     Return consistent, non-duplicate results in the first n pages.
 
@@ -171,7 +143,7 @@ def test_search_removes_dupes_from_initial_pages(media_type: MediaType, api_clie
     num_pages = 5
 
     searches = {
-        api_client.get(f"/v1/{media_type.path}/", {"page": page})
+        api_client.get(f"/v1/{media_type_config.url_prefix}/", {"page": page})
         for page in range(1, num_pages)
     }
 
@@ -188,16 +160,20 @@ def test_search_removes_dupes_from_initial_pages(media_type: MediaType, api_clie
     "search_field, match_field", [("q", "title"), ("creator", "creator")]
 )
 def test_search_quotes_matches_only_exact(
-    media_type: MediaType, search_field, match_field, api_client
+    media_type_config: MediaTypeConfig, search_field, match_field, api_client
 ):
     # We want a query containing more than one word.
     if match_field == "title":
         q = "dancing penguins"
     else:
-        q = "The League" if media_type.name == "audio" else "Steve Wedgwood"
+        q = (
+            "The League"
+            if media_type_config.media_type == "audio"
+            else "Steve Wedgwood"
+        )
 
     base_params = {"unstable__include_sensitive_results": True}
-    path = f"/v1/{media_type.path}/"
+    path = f"/v1/{media_type_config.url_prefix}/"
 
     unquoted_res = api_client.get(path, base_params | {search_field: q})
     assert unquoted_res.status_code == 200
@@ -226,11 +202,11 @@ def test_search_quotes_matches_only_exact(
     assert quoted_result_count < unquoted_result_count
 
 
-def test_search_filters_by_source(media_type: MediaType, api_client):
-    provider = media_type.providers[0]
+def test_search_filters_by_source(media_type_config: MediaTypeConfig, api_client):
+    provider = media_type_config.providers[0]
     res = api_client.get(
-        f"/v1/{media_type.path}/",
-        {"q": media_type.q, "source": provider},
+        f"/v1/{media_type_config.url_prefix}/",
+        {"q": media_type_config.q, "source": provider},
     )
     assert res.status_code == 200
 
@@ -240,11 +216,14 @@ def test_search_filters_by_source(media_type: MediaType, api_client):
 
 
 def test_search_returns_zero_results_when_all_excluded(
-    media_type: MediaType, api_client
+    media_type_config: MediaTypeConfig, api_client
 ):
     res = api_client.get(
-        f"/v1/{media_type.path}/",
-        {"q": media_type.q, "excluded_source": ",".join(media_type.providers)},
+        f"/v1/{media_type_config.url_prefix}/",
+        {
+            "q": media_type_config.q,
+            "excluded_source": ",".join(media_type_config.providers),
+        },
     )
     assert res.status_code == 200
 
@@ -252,10 +231,12 @@ def test_search_returns_zero_results_when_all_excluded(
     assert data["result_count"] == 0
 
 
-def test_search_refuses_both_sources_and_excluded(media_type: MediaType, api_client):
+def test_search_refuses_both_sources_and_excluded(
+    media_type_config: MediaTypeConfig, api_client
+):
     res = api_client.get(
-        f"/v1/{media_type.path}/",
-        {"q": media_type.q, "source": "x", "excluded_source": "y"},
+        f"/v1/{media_type_config.url_prefix}/",
+        {"q": media_type_config.q, "source": "x", "excluded_source": "y"},
     )
     assert res.status_code == 400
 
@@ -274,9 +255,9 @@ def test_search_refuses_both_sources_and_excluded(media_type: MediaType, api_cli
     ],
 )
 def test_search_filters_by_license(
-    media_type: MediaType, filter_rule, exp_licenses, api_client
+    media_type_config: MediaTypeConfig, filter_rule, exp_licenses, api_client
 ):
-    res = api_client.get(f"/v1/{media_type.path}/", filter_rule)
+    res = api_client.get(f"/v1/{media_type_config.url_prefix}/", filter_rule)
     assert res.status_code == 200
 
     data = res.json()
@@ -284,9 +265,9 @@ def test_search_filters_by_license(
     assert all(result["license"] in exp_licenses for result in data["results"])
 
 
-def test_search_filters_by_extension(media_type: MediaType, api_client):
-    ext = "mp3" if media_type.name == "audio" else "jpg"
-    res = api_client.get(f"/v1/{media_type.path}/", {"extension": ext})
+def test_search_filters_by_extension(media_type_config: MediaTypeConfig, api_client):
+    ext = "mp3" if media_type_config.media_type == "audio" else "jpg"
+    res = api_client.get(f"/v1/{media_type_config.url_prefix}/", {"extension": ext})
     assert res.status_code == 200
 
     data = res.json()
@@ -294,9 +275,11 @@ def test_search_filters_by_extension(media_type: MediaType, api_client):
     assert all(result["filetype"] == ext for result in data["results"])
 
 
-def test_search_filters_by_category(media_type: MediaType, api_client):
-    for category in media_type.categories:
-        res = api_client.get(f"/v1/{media_type.path}/", {"category": category})
+def test_search_filters_by_category(media_type_config: MediaTypeConfig, api_client):
+    for category in media_type_config.categories:
+        res = api_client.get(
+            f"/v1/{media_type_config.url_prefix}/", {"category": category}
+        )
         assert res.status_code == 200
 
         data = res.json()
@@ -304,8 +287,12 @@ def test_search_filters_by_category(media_type: MediaType, api_client):
         assert all(result["category"] == category for result in data["results"])
 
 
-def test_search_refuses_invalid_categories(media_type: MediaType, api_client):
-    res = api_client.get(f"/v1/{media_type.path}/", {"category": "invalid_category"})
+def test_search_refuses_invalid_categories(
+    media_type_config: MediaTypeConfig, api_client
+):
+    res = api_client.get(
+        f"/v1/{media_type_config.url_prefix}/", {"category": "invalid_category"}
+    )
     assert res.status_code == 400
 
 
@@ -323,23 +310,25 @@ def test_search_refuses_invalid_categories(media_type: MediaType, api_client):
     ],
 )
 def test_detail_view_for_invalid_uuids_returns_not_found(
-    media_type: MediaType, bad_uuid: str, api_client
+    media_type_config: MediaTypeConfig, bad_uuid: str, api_client
 ):
-    res = api_client.get(f"/v1/{media_type.path}/{bad_uuid}/")
+    res = api_client.get(f"/v1/{media_type_config.url_prefix}/{bad_uuid}/")
     assert res.status_code == 404
 
 
-def test_search_with_only_valid_sources_produces_no_warning(media_type, api_client):
+def test_search_with_only_valid_sources_produces_no_warning(
+    media_type_config, api_client
+):
     search = api_client.get(
-        f"/v1/{media_type.path}/",
-        {"source": ",".join(media_type.providers)},
+        f"/v1/{media_type_config.url_prefix}/",
+        {"source": ",".join(media_type_config.providers)},
     )
     assert search.status_code == 200
     assert "warnings" not in search.json()
 
 
 def test_search_with_partially_invalid_sources_produces_warning_but_still_succeeds(
-    media_type: MediaType, api_client
+    media_type_config: MediaTypeConfig, api_client
 ):
     invalid_sources = [
         "surely_neither_this_one",
@@ -347,8 +336,8 @@ def test_search_with_partially_invalid_sources_produces_warning_but_still_succee
     ]
 
     search = api_client.get(
-        f"/v1/{media_type.path}/",
-        {"source": ",".join([media_type.providers[0]] + invalid_sources)},
+        f"/v1/{media_type_config.url_prefix}/",
+        {"source": ",".join([media_type_config.providers[0]] + invalid_sources)},
     )
     assert search.status_code == 200
     result = search.json()
@@ -358,30 +347,30 @@ def test_search_with_partially_invalid_sources_produces_warning_but_still_succee
     }
     warning = result["warnings"][0]
     assert set(warning["invalid_sources"]) == set(invalid_sources)
-    assert warning["valid_sources"] == [media_type.providers[0]]
-    assert f"v1/{media_type.path}/stats/" in warning["message"]
+    assert warning["valid_sources"] == [media_type_config.providers[0]]
+    assert f"v1/{media_type_config.url_prefix}/stats/" in warning["message"]
 
 
-def test_search_with_all_invalid_sources_fails(media_type, api_client):
+def test_search_with_all_invalid_sources_fails(media_type_config, api_client):
     invalid_sources = [
         "this_is_sure_not_to_ever_be_a_real_source_name",
         "surely_neither_this_one",
     ]
     search = api_client.get(
-        f"/v1/{media_type.path}/", {"source": ",".join(invalid_sources)}
+        f"/v1/{media_type_config.url_prefix}/", {"source": ",".join(invalid_sources)}
     )
     assert search.status_code == 400
 
 
 def test_detail_view_returns_ok(single_result, api_client):
-    media_type, item = single_result
-    res = api_client.get(f"/v1/{media_type.path}/{item['id']}/")
+    media_type_config, item = single_result
+    res = api_client.get(f"/v1/{media_type_config.url_prefix}/{item['id']}/")
     assert res.status_code == 200
 
 
 def test_detail_view_contains_sensitivity_info(sensitive_result, api_client):
-    media_type, item = sensitive_result
-    res = api_client.get(f"/v1/{media_type.path}/{item['id']}/")
+    media_type_config, item = sensitive_result
+    res = api_client.get(f"/v1/{media_type_config.url_prefix}/{item['id']}/")
     assert res.status_code == 200
 
     data = res.json()
@@ -430,9 +419,9 @@ def test_related_results_have_non_es_fields(related_results):
 
 
 def test_report_is_created(single_result, api_client):
-    media_type, item = single_result
+    media_type_config, item = single_result
     res = api_client.post(
-        f"/v1/{media_type.path}/{item['id']}/report/",
+        f"/v1/{media_type_config.url_prefix}/{item['id']}/report/",
         {
             "reason": "mature",
             "description": "This item contains sensitive content",
@@ -450,10 +439,12 @@ def test_report_is_created(single_result, api_client):
 ####################
 
 
-def test_collection_by_tag(media_type: MediaType, api_client):
-    tags = media_type.tags
+def test_collection_by_tag(media_type_config: MediaTypeConfig, api_client):
+    tags = media_type_config.tags
     for tag in tags:
-        res = api_client.get(f"/v1/{media_type.path}/?{COLLECTION}=tag&{TAG}={tag}")
+        res = api_client.get(
+            f"/v1/{media_type_config.url_prefix}/?{COLLECTION}=tag&{TAG}={tag}"
+        )
         assert res.status_code == 200
 
         data = res.json()
@@ -463,10 +454,14 @@ def test_collection_by_tag(media_type: MediaType, api_client):
             assert tag in tag_names
 
 
-def test_collection_by_source(media_type: MediaType, api_client):
-    source = api_client.get(f"/v1/{media_type.path}/stats/").json()[0]["source_name"]
+def test_collection_by_source(media_type_config: MediaTypeConfig, api_client):
+    source = api_client.get(f"/v1/{media_type_config.url_prefix}/stats/").json()[0][
+        "source_name"
+    ]
 
-    res = api_client.get(f"/v1/{media_type.path}/?{COLLECTION}=source&source={source}")
+    res = api_client.get(
+        f"/v1/{media_type_config.url_prefix}/?{COLLECTION}=source&source={source}"
+    )
     assert res.status_code == 200
 
     data = res.json()
@@ -474,18 +469,18 @@ def test_collection_by_source(media_type: MediaType, api_client):
     assert all(result["source"] == source for result in data["results"])
 
 
-def test_collection_by_creator(media_type: MediaType, api_client):
-    source_res = api_client.get(f"/v1/{media_type.path}/stats/")
+def test_collection_by_creator(media_type_config: MediaTypeConfig, api_client):
+    source_res = api_client.get(f"/v1/{media_type_config.url_prefix}/stats/")
     source = source_res.json()[0]["source_name"]
 
     first_res = api_client.get(
-        f"/v1/{media_type.path}/?{COLLECTION}=source&source={source}"
+        f"/v1/{media_type_config.url_prefix}/?{COLLECTION}=source&source={source}"
     )
     first = first_res.json()["results"][0]
     assert (creator := first.get("creator"))
 
     res = api_client.get(
-        f"/v1/{media_type.path}/?{COLLECTION}=creator&source={source}&creator={creator}"
+        f"/v1/{media_type_config.url_prefix}/?{COLLECTION}=creator&source={source}&creator={creator}"
     )
     assert res.status_code == 200
 

@@ -1,10 +1,9 @@
 from unittest.mock import patch
 from uuid import uuid4
 
-from django.conf import settings
-
 import pytest
 
+from api.constants import restricted_features
 from api.controllers.elasticsearch.helpers import DEAD_LINK_RATIO
 
 
@@ -179,8 +178,8 @@ def test_page_size_removing_dead_links(search_without_dead_links):
 def test_page_consistency_removing_dead_links(search_without_dead_links):
     """Test that results in consecutive pages don't repeat when filtering dead links."""
 
-    total_pages = settings.MAX_PAGINATION_DEPTH
     page_size = 5
+    total_pages = int(restricted_features.MAX_RESULT_COUNT.anonymous / page_size)
 
     page_results = []
     for page in range(1, total_pages + 1):
@@ -198,11 +197,3 @@ def test_page_consistency_removing_dead_links(search_without_dead_links):
     ids = list(map(lambda x: x["id"], page_results))
     # No results should be repeated so we should have no duplicate ids
     assert no_duplicates(ids)
-
-
-@pytest.mark.django_db
-def test_max_page_count(api_client):
-    response = api_client.get(
-        "/v1/images/", {"page": settings.MAX_PAGINATION_DEPTH + 1}
-    )
-    assert response.status_code == 400

@@ -1,6 +1,6 @@
 import pytest
 
-from api.admin.forms import UserPreferencesAdminForm
+from api.admin.user import UserPreferencesAdminForm
 from api.models import UserPreferences
 
 

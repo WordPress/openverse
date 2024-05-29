@@ -7,6 +7,7 @@ from django.urls import reverse
 import pytest
 from oauth2_provider.models import AccessToken
 
+from api.constants import restricted_features
 from api.models import OAuth2Verification, ThrottledApplication
 
 
@@ -250,34 +251,6 @@ def test_authority_authed(
 
 
 @pytest.mark.django_db
-def test_page_size_limit_unauthed(api_client):
-    query_params = {"page_size": 20}
-    res = api_client.get("/v1/images/", query_params)
-    assert res.status_code == 200
-    query_params["page_size"] = 21
-    res = api_client.get("/v1/images/", query_params)
-    assert res.status_code == 401
-
-
-@pytest.mark.django_db
-def test_page_size_limit_authed(api_client, test_auth_token_exchange):
-    time.sleep(1)
-    token = test_auth_token_exchange["access_token"]
-    query_params = {"page_size": 21}
-    res = api_client.get(
-        "/v1/images/", query_params, HTTP_AUTHORIZATION=f"Bearer {token}"
-    )
-
-    assert res.status_code == 200
-
-    query_params = {"page_size": 500}
-    res = api_client.get(
-        "/v1/images/", query_params, HTTP_AUTHORIZATION=f"Bearer {token}"
-    )
-    assert res.status_code == 200
-
-
-@pytest.mark.django_db
 def test_invalid_credentials_401(api_client):
     res = api_client.get(
         "/v1/images/", HTTP_AUTHORIZATION="Bearer thisIsNot_ARealToken"
@@ -302,3 +275,102 @@ def test_revoked_application_access(api_client, test_auth_token_exchange):
     res = api_client.get("/v1/images/", HTTP_AUTHORIZATION=f"Bearer {token}")
 
     assert res.status_code == 403
+
+
+@pytest.mark.parametrize(
+    "level, page_size_modification, allowed",
+    (
+        config
+        for level in restricted_features.ACCESS_LEVELS
+        for config in (
+            (level, -1, True),
+            (level, 0, True),
+            (level, +1, False),
+        )
+    ),
+)
+@pytest.mark.django_db
+def test_page_size_privileges(
+    api_client, test_auth_token_exchange, level, page_size_modification, allowed
+):
+    if level == restricted_features.ANONYMOUS:
+        authorization = ""
+    else:
+        token = test_auth_token_exchange["access_token"]
+        application = AccessToken.objects.get(token=token).application
+
+        if level == restricted_features.PRIVILEGED:
+            application.privileges.append(restricted_features.MAX_PAGE_SIZE.slug)
+
+        application.save()
+        authorization = f"Bearer {token}"
+
+    limit = getattr(restricted_features.MAX_PAGE_SIZE, level)
+
+    res = api_client.get(
+        "/v1/images/",
+        {"page_size": limit + page_size_modification},
+        HTTP_AUTHORIZATION=authorization,
+    )
+
+    if allowed:
+        assert res.status_code == 200
+    elif level != restricted_features.PRIVILEGED:
+        assert res.status_code == 401
+    else:
+        # When privileged, the request errors on bad request, rather than unauthorized
+        # maybe we should just always use bad request instead?
+        assert res.status_code == 400
+
+
+@pytest.mark.parametrize(
+    "level, pagination_depth_modification, allowed",
+    (
+        config
+        for level in restricted_features.ACCESS_LEVELS
+        for config in (
+            (level, -1, True),
+            (level, 0, True),
+            (level, +1, False),
+        )
+    ),
+)
+@pytest.mark.django_db
+def test_pagination_depth_privileges(
+    api_client, test_auth_token_exchange, level, pagination_depth_modification, allowed
+):
+    if level == restricted_features.ANONYMOUS:
+        authorization = ""
+    else:
+        token = test_auth_token_exchange["access_token"]
+        application = AccessToken.objects.get(token=token).application
+
+        if level == restricted_features.PRIVILEGED:
+            application.privileges.append(restricted_features.MAX_RESULT_COUNT.slug)
+
+        application.save()
+        authorization = f"Bearer {token}"
+
+    depth_limit = getattr(restricted_features.MAX_RESULT_COUNT, level)
+
+    page_size_limit = restricted_features.MAX_PAGE_SIZE.anonymous
+
+    last_page = int(depth_limit / page_size_limit)
+
+    res = api_client.get(
+        "/v1/images/",
+        {
+            "page_size": page_size_limit,
+            "page": last_page + pagination_depth_modification,
+        },
+        HTTP_AUTHORIZATION=authorization,
+    )
+
+    if allowed:
+        assert res.status_code == 200
+    elif level != restricted_features.PRIVILEGED:
+        assert res.status_code == 401
+    else:
+        # When privileged, the request errors on bad request, rather than unauthorized
+        # maybe we should just always use bad request instead?
+        assert res.status_code == 400

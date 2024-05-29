@@ -1,3 +1,5 @@
+from django.core.cache import caches
+
 import pytest
 from django_redis.cache import RedisCache
 from fakeredis import FakeRedis, FakeServer
@@ -41,18 +43,20 @@ def unreachable_redis(monkeypatch) -> FakeRedis:
 
 
 @pytest.fixture(autouse=True)
-def django_cache(redis, monkeypatch) -> RedisCache:
+def django_cache(redis) -> RedisCache:
     """Use the fake Redis fixture ``redis`` as Django's default cache."""
 
+    original_default_cache = caches["default"]
     cache = RedisCache(" ", {})
     client = cache.client
     client._clients = [redis]
-    monkeypatch.setattr("django.core.cache.cache", cache)
+    caches["default"] = cache
     yield cache
+    caches["default"] = original_default_cache
 
 
 @pytest.fixture
-def unreachable_django_cache(unreachable_redis, monkeypatch) -> RedisCache:
+def unreachable_django_cache(unreachable_redis) -> RedisCache:
     """
     Use the fake Redis fixture ``unreachable_redis`` as Django's default cache.
 
@@ -61,8 +65,10 @@ def unreachable_django_cache(unreachable_redis, monkeypatch) -> RedisCache:
     ``ConnectionError``.
     """
 
+    original_default_cache = caches["default"]
     cache = RedisCache(" ", {})
     client = cache.client
     client._clients = [unreachable_redis]
-    monkeypatch.setattr("django.core.cache.cache", cache)
+    caches["default"] = unreachable_redis
     yield cache
+    caches["default"] = original_default_cache

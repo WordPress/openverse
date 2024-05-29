@@ -189,8 +189,8 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
                 filter_dead,
                 page,
             )
-            self.paginator.page_count = num_pages
-            self.paginator.result_count = num_results
+            self.paginator.page_count = params.clamp_page_count(num_pages)
+            self.paginator.result_count = params.clamp_result_count(num_results)
         except ValueError as e:
             raise APIException(getattr(e, "message", str(e)))
 
