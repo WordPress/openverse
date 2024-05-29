@@ -300,12 +300,12 @@ def test_page_size_privileges(
         application = AccessToken.objects.get(token=token).application
 
         if level == restricted_features.PRIVILEGED:
-            application.privileges.append(restricted_features.PAGE_SIZE.slug)
+            application.privileges.append(restricted_features.MAX_PAGE_SIZE.slug)
 
         application.save()
         authorization = f"Bearer {token}"
 
-    limit = getattr(restricted_features.PAGE_SIZE, level)
+    limit = getattr(restricted_features.MAX_PAGE_SIZE, level)
 
     res = api_client.get(
         "/v1/images/",
@@ -346,14 +346,14 @@ def test_pagination_depth_privileges(
         application = AccessToken.objects.get(token=token).application
 
         if level == restricted_features.PRIVILEGED:
-            application.privileges.append(restricted_features.QUERY_DEPTH.slug)
+            application.privileges.append(restricted_features.MAX_RESULT_COUNT.slug)
 
         application.save()
         authorization = f"Bearer {token}"
 
-    depth_limit = getattr(restricted_features.QUERY_DEPTH, level)
+    depth_limit = getattr(restricted_features.MAX_RESULT_COUNT, level)
 
-    page_size_limit = restricted_features.PAGE_SIZE.anonymous
+    page_size_limit = restricted_features.MAX_PAGE_SIZE.anonymous
 
     last_page = int(depth_limit / page_size_limit)
 

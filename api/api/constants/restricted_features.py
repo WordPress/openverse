@@ -51,8 +51,8 @@ class RestrictedFeature(typing.Generic[T]):
         return ((slug,) * 2 for slug in _RESTRICTED_FEATURES)
 
 
-PAGE_SIZE: RestrictedFeature[int] = RestrictedFeature(
-    "page_size",
+MAX_PAGE_SIZE: RestrictedFeature[int] = RestrictedFeature(
+    "max_page_size",
     anonymous=20,
     authenticated=50,
     # Max out privileged page size at the maximum authenticated
@@ -61,14 +61,14 @@ PAGE_SIZE: RestrictedFeature[int] = RestrictedFeature(
     privileged=240,
 )
 
-QUERY_DEPTH: RestrictedFeature[int] = RestrictedFeature(
-    "query_depth",
+MAX_RESULT_COUNT: RestrictedFeature[int] = RestrictedFeature(
+    "max_result_count",
     # 12 pages of 20 results
     # Both anon and authed are limited to the same depth
     # authed users can request bigger pages, but still only the same
     # overall number of results available
-    anonymous=12 * PAGE_SIZE.anonymous,
-    authenticated=12 * PAGE_SIZE.anonymous,
+    anonymous=12 * MAX_PAGE_SIZE.anonymous,
+    authenticated=12 * MAX_PAGE_SIZE.anonymous,
     # 20 pages of maxed out page sizes for privileged apps
-    privileged=20 * PAGE_SIZE.privileged,
+    privileged=20 * MAX_PAGE_SIZE.privileged,
 )

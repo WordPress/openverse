@@ -58,7 +58,7 @@ class PaginatedRequestSerializer(serializers.Serializer):
         label="page_size",
         help_text=f"Number of results to return per page. {_SUBJECT_TO_PAGINATION_LIMITS}",
         required=False,
-        default=restricted_features.PAGE_SIZE.anonymous,
+        default=restricted_features.MAX_PAGE_SIZE.anonymous,
         min_value=1,
     )
     page = serializers.IntegerField(
@@ -70,7 +70,7 @@ class PaginatedRequestSerializer(serializers.Serializer):
     )
 
     def validate_page_size(self, value):
-        level, max_value = restricted_features.PAGE_SIZE.request_level(
+        level, max_value = restricted_features.MAX_PAGE_SIZE.request_level(
             self.context.get("request")
         )
 
@@ -95,7 +95,7 @@ class PaginatedRequestSerializer(serializers.Serializer):
         return value
 
     def clamp_result_count(self, real_result_count):
-        _, max_depth = restricted_features.QUERY_DEPTH.request_level(
+        _, max_depth = restricted_features.MAX_RESULT_COUNT.request_level(
             self.context.get("request")
         )
 
@@ -105,7 +105,7 @@ class PaginatedRequestSerializer(serializers.Serializer):
         return real_result_count
 
     def clamp_page_count(self, real_page_count):
-        _, max_depth = restricted_features.QUERY_DEPTH.request_level(
+        _, max_depth = restricted_features.MAX_RESULT_COUNT.request_level(
             self.context.get("request")
         )
 
@@ -122,13 +122,13 @@ class PaginatedRequestSerializer(serializers.Serializer):
 
         # pagination depth is validated as a combination of page and page size,
         # and so cannot be validated in the individual field validation methods
-        level, max_depth = restricted_features.QUERY_DEPTH.request_level(
+        level, max_depth = restricted_features.MAX_RESULT_COUNT.request_level(
             self.context.get("request")
         )
 
-        requested_query_depth = data["page"] * data["page_size"]
+        requested_result_depth = data["page"] * data["page_size"]
 
-        query_depth_validator = MaxValueValidator(
+        result_depth_validator = MaxValueValidator(
             max_depth,
             message=serializers.IntegerField.default_error_messages["max_value"].format(
                 max_value=max_depth
@@ -136,7 +136,7 @@ class PaginatedRequestSerializer(serializers.Serializer):
         )
 
         try:
-            query_depth_validator(requested_query_depth)
+            result_depth_validator(requested_result_depth)
         except (ValidationError, DjangoValidationError) as e:
             if level == restricted_features.PRIVILEGED:
                 raise
