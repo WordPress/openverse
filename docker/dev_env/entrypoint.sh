@@ -2,11 +2,6 @@
 
 set -e
 
-if [ "$UID" = "0" ]; then
-  printf "Do not run this container with the root user! Use the 'run.sh' script or pass --user to docker run.\n"
-  exit 1
-fi
-
 if [ ! -d "$OPENVERSE_PROJECT"/.git ]; then
   printf "Repository not mounted to container!\n"
   exit 1

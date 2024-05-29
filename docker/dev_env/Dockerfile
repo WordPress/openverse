@@ -44,13 +44,10 @@ RUN dnf -y install dnf-plugins-core \
   && pipx install \
     pdm pipenv  \
     pre-commit \
-  && useradd -m opener -G docker \
   && npm install -g \
     n \
     corepack \
   && corepack enable
-
-USER opener
 
 # Avoid overwriting `.venv`'s from the host
 ENV PDM_VENV_IN_PROJECT="False"

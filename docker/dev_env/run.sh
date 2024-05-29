@@ -2,22 +2,6 @@
 
 set -e
 
-# Kudos https://stackoverflow.com/a/10910180 for macOS group ID reading
-case "$OSTYPE" in
-linux*)
-  host_docker_gid="$(getent group docker | cut -d: -f3)"
-  ;;
-
-darwin*)
-  host_docker_gid="$(dscl . -read /Groups/docker | awk '($1 == "PrimaryGroupID:") { print $2 }')"
-  ;;
-
-*)
-  printf "'%s' is not supported for Openverse development. Only Linux and macOS are supported. Use WSL if on Windows." "$OSTYPE" >>/dev/stderr
-  exit 1
-  ;;
-esac
-
 suppress_output() {
   "$@" 2>/dev/null 1>/dev/null
 }
@@ -28,7 +12,6 @@ run_args=(
   --name openverse-dev-env
   --env "OPENVERSE_PROJECT=$OPENVERSE_PROJECT"
   --env "TERM=xterm-256color"
-  --user "$UID:$host_docker_gid"
   --network host
   # Bind the repo to the same exact location inside the container so that pre-commit
   # and others don't get confused about where files are supposed to be
