@@ -61,8 +61,8 @@ PAGE_SIZE: RestrictedFeature[int] = RestrictedFeature(
     privileged=240,
 )
 
-PAGINATION_DEPTH: RestrictedFeature[int] = RestrictedFeature(
-    "pagination_depth",
+QUERY_DEPTH: RestrictedFeature[int] = RestrictedFeature(
+    "query_depth",
     # 12 pages of 20 results
     # Both anon and authed are limited to the same depth
     # authed users can request bigger pages, but still only the same

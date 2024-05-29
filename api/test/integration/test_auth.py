@@ -346,12 +346,12 @@ def test_pagination_depth_privileges(
         application = AccessToken.objects.get(token=token).application
 
         if level == restricted_features.PRIVILEGED:
-            application.privileges.append(restricted_features.PAGINATION_DEPTH.slug)
+            application.privileges.append(restricted_features.QUERY_DEPTH.slug)
 
         application.save()
         authorization = f"Bearer {token}"
 
-    depth_limit = getattr(restricted_features.PAGINATION_DEPTH, level)
+    depth_limit = getattr(restricted_features.QUERY_DEPTH, level)
 
     page_size_limit = restricted_features.PAGE_SIZE.anonymous
 

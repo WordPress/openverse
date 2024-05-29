@@ -179,7 +179,7 @@ def test_page_consistency_removing_dead_links(search_without_dead_links):
     """Test that results in consecutive pages don't repeat when filtering dead links."""
 
     page_size = 5
-    total_pages = int(restricted_features.PAGINATION_DEPTH.anonymous / page_size)
+    total_pages = int(restricted_features.QUERY_DEPTH.anonymous / page_size)
 
     page_results = []
     for page in range(1, total_pages + 1):
