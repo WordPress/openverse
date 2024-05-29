@@ -125,10 +125,12 @@ _Media Types_: `audio`, `image`
 
 #### Description
 
-The way the media item was ingested into the Openverse catalog. `common_crawl`:
-data extracted from the Common Crawl dataset, when the Creative Commons search
-API was first created. `provider_api` data is extracted from various CC media
-provider APIs. `sql_bulk_load` data is extracted from the SQL data dumps.
+The way the media item was ingested into the Openverse catalog.
+
+- `common_crawl`: data extracted from the Common Crawl dataset, when the
+  Creative Commons search API was first created.
+- `provider_api` data is extracted from various CC media provider APIs.
+- `sql_bulk_load` data is extracted from the SQL data dumps.
 
 ----
 
@@ -153,7 +155,7 @@ _Media Types_: `audio`, `image`
 
 #### Description
 
-The name of the source of the media item.It can be a collection on a provider
+The name of the source of the media item. It can be a collection on a provider
 site, or the provider itself.
 
 #### Object Shape
@@ -170,11 +172,6 @@ _Media Types_: `audio`, `image`
 
 The unique identifier for the media item on the source site.
 
-#### Selection Criteria
-
-Ideally, this identifier should be usable to generate the URL to the media item
-on the source site.
-
 ----
 
 ### foreign_landing_url
@@ -184,7 +181,9 @@ _Media Types_: `audio`, `image`
 #### Description
 
 The URL of the landing page for the media item (not a direct link to the media
-file). This should be unique for each media item.
+file). This should be unique for each media item. This value will be used on the
+frontend as the URL to direct users to for downloading a media item from the
+upstream provider.
 
 ----
 
@@ -209,8 +208,8 @@ The URL of a smaller, thumbnail, image for the media item.
 
 #### Selection Criteria
 
-The smallest acceptable size for a thumbnail is 600px at the longest edge (see
-https://github.com/WordPress/openverse/issues/675#issuecomment-1472399310)
+The smallest acceptable size for a thumbnail is 600px at the longest edge. See
+[comment in issue #675](https://github.com/WordPress/openverse/issues/675#issuecomment-1472399310).
 
 ----
 
@@ -258,7 +257,7 @@ _Media Types_: `audio`, `image`
 
 The slug of the license under which the media item is licensed. For the list of
 available license slugs, see
-[openverse-attribution package](https://github.com/WordPress/openverse/blob/3329d307f5cdce0cbe1f1c13dbe17106970abdaa/packages/python/openverse-attribution/src/openverse_attribution/license_name.py)
+[openverse-attribution package](https://github.com/WordPress/openverse/tree/main/packages/python/openverse-attribution/src/openverse_attribution/license_name.py)
 
 ----
 
@@ -309,9 +308,9 @@ Provider scripts may include html tags in record titles, see
 [issue #1441](https://github.com/WordPress/openverse/issues/1441) Some Wikimedia
 titles in the database still include "FILE:" prefix, and unnecessary file
 extension, which is
-[hot-fixed](https://github.com/WordPress/openverse/blob/3329d307f5cdce0cbe1f1c13dbe17106970abdaa/frontend/src/utils/decode-media-data.ts#L50)
+[hot-fixed](https://github.com/WordPress/openverse/tree/main/frontend/src/utils/decode-media-data.ts#L50)
 in the frontend. Some titles were incorrectly decoded, for which there is a
-hot-fix in the frontend
+[hot-fix in the frontend](https://github.com/WordPress/openverse/blob/70d57a91318a5b368fc0f1a244847bc27becefbd/frontend/src/utils/decode-media-data.ts#L73).
 
 ----
 
@@ -321,7 +320,7 @@ _Media Types_: `audio`, `image`
 
 #### Description
 
-A JSON object containing additional metadata about the media item. This must
+A JSONB object containing additional metadata about the media item. This must
 contain the `license_url` (automatically added by the `MediaStore` class from
 the `License` object).
 
@@ -343,8 +342,8 @@ The list of tags associated with the media item.
 
 #### Object Shape
 
-jsonb array of dictionaries: `{"name": "tag1", "provider": "wordpress"}`. Some
-tags are provider-generated, and include an `accuracy` field with a float value.
+A JSONB array of dictionaries: `{"name": "tag1", "provider": "wordpress"}`. Some
+tags are machine-generated, and include an `accuracy` field with a float value.
 If there are no tags, the field should be set to null, not an empty array or
 empty object.
 
@@ -371,7 +370,7 @@ The cleanup process in data refresh fixes the following tag inconsistencies:
   [issue #1927](https://github.com/WordPress/openverse/issues/1927). This can
   result in duplicate tags when the frontend decodes the tags.
 - Tags with leading or trailing spaces, see
-  [issue 4199](https://github.com/WordPress/openverse/issues/4199) Identical,
+  [issue #4199](https://github.com/WordPress/openverse/issues/4199) Identical,
   duplicate tags were filtered out in
   [#1556](https://github.com/WordPress/openverse/issues/1566)
 
@@ -413,7 +412,7 @@ index during the data refresh process.
 
 #### Selection Criteria
 
-[`expire_old_images`](https://github.com/WordPress/openverse/blob/main/catalog/dags/retired/common/loader/sql.py)
+[`expire_old_images`](https://github.com/WordPress/openverse/tree/main/catalog/dags/retired/common/loader/sql.py)
 DAG added in
 [Expiration of outdated images in the database](https://github.com/cc-archive/cccatalog/pull/483)
 was used to set `removed_from_source` to `True` for images that were updated
@@ -433,7 +432,7 @@ from the HEAD response from the media direct URL.
 
 #### Object Shape
 
-String, the file type (extension) of the audio file. Maximum length: 5
+String, the file type (extension) of the media file. Maximum length: 5
 characters.
 
 #### Normalization and Validation
@@ -452,9 +451,9 @@ _Media Types_: `audio`, `image`
 #### Description
 
 One of the media category Enum values:
-[`ImageCategory`](https://github.com/WordPress/openverse/blob/48e300d10286506454a8bea17d46740dbffc5c87/catalog/dags/common/loader/provider_details.py#L137-L141)
+[`ImageCategory`](https://github.com/WordPress/openverse/tree/main/catalog/dags/common/loader/provider_details.py#L137-L141)
 and
-[`AudioCategory`](https://github.com/WordPress/openverse/blob/48e300d10286506454a8bea17d46740dbffc5c87/catalog/dags/common/loader/provider_details.py#L144-L151).
+[`AudioCategory`](https://github.com/WordPress/openverse/tree/main/catalog/dags/common/loader/provider_details.py#L144-L151).
 
 #### Selection Criteria
 
@@ -528,7 +527,7 @@ The list of alternative file details for the audio (different formats/ quality).
 
 #### Object Shape
 
-JSONb array of dictionaries:
+JSONB array of dictionaries:
 `[{"url": "http://example.com/audio.mp3", "filesize": 123456, "bit_rate": 128, "sample_rate": 44100}]`
 
 - `url` (string): the direct URL of the alternative file.
@@ -552,16 +551,16 @@ to.
 
 #### Object Shape
 
-JSON object:
+JSONB object:
 `{"title": "Audio Set Title", "foreign_landing_url": "http://example.com", "thumbnail": "http://example.com/thumbnail.jpg", "creator": "Creator Name", "creator_url": "http://example.com/creator", "foreign_identifier": "123456"}`
 
-- title (string): the title of the audio set.
-- foreign_landing_url (string): the URL of the audio set on the source site.
-- thumbnail (string): the URL of the thumbnail image for the audio set.
-- creator (string): the name of the creator of the audio set.
-- creator_url (string): the URL of the creator's page, usually on the source
+- `title` (string): the title of the audio set.
+- `foreign_landing_url` (string): the URL of the audio set on the source site.
+- `thumbnail` (string): the URL of the thumbnail image for the audio set.
+- `creator` (string): the name of the creator of the audio set.
+- `creator_url` (string): the URL of the creator's page, usually on the source
   site.
-- foreign_identifier (string): the unique identifier for the audio set on the
+- `foreign_identifier` (string): the unique identifier for the audio set on the
   source site. This identifier is saved in the `audio_set_foreign_identifier`
   field of the TSV and catalog audio table.
 

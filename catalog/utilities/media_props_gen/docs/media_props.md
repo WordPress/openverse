@@ -70,7 +70,9 @@ The unique identifier for the media item on the source site.
 ## Description
 
 The URL of the landing page for the media item (not a direct link to the media
-file). This should be unique for each media item.
+file). This should be unique for each media item. This value will be used on the
+frontend as the URL to direct users to for downloading a media item from the
+upstream provider.
 
 # url
 
@@ -164,7 +166,7 @@ in the frontend. Some titles were incorrectly decoded, for which there is a
 
 ## Description
 
-A JSON object containing additional metadata about the media item. This must
+A JSONB object containing additional metadata about the media item. This must
 contain the `license_url` (automatically added by the `MediaStore` class from
 the `License` object).
 
@@ -182,7 +184,7 @@ The list of tags associated with the media item.
 
 ## Object Shape
 
-jsonb array of dictionaries: `{"name": "tag1", "provider": "wordpress"}`. Some
+A JSONB array of dictionaries: `{"name": "tag1", "provider": "wordpress"}`. Some
 tags are machine-generated, and include an `accuracy` field with a float value.
 
 If there are no tags, the field should be set to null, not an empty array or
@@ -327,7 +329,7 @@ The list of alternative file details for the audio (different formats/ quality).
 
 ## Object Shape
 
-JSONb array of dictionaries:
+JSONB array of dictionaries:
 
 `[{"url": "http://example.com/audio.mp3", "filesize": 123456, "bit_rate": 128, "sample_rate": 44100}]`
 
@@ -348,16 +350,16 @@ to.
 
 ## Object Shape
 
-JSON object:
+JSONB object:
 `{"title": "Audio Set Title", "foreign_landing_url": "http://example.com", "thumbnail": "http://example.com/thumbnail.jpg", "creator": "Creator Name", "creator_url": "http://example.com/creator", "foreign_identifier": "123456"}`
 
-- title (string): the title of the audio set.
-- foreign_landing_url (string): the URL of the audio set on the source site.
-- thumbnail (string): the URL of the thumbnail image for the audio set.
-- creator (string): the name of the creator of the audio set.
-- creator_url (string): the URL of the creator's page, usually on the source
+- `title` (string): the title of the audio set.
+- `foreign_landing_url` (string): the URL of the audio set on the source site.
+- `thumbnail` (string): the URL of the thumbnail image for the audio set.
+- `creator` (string): the name of the creator of the audio set.
+- `creator_url` (string): the URL of the creator's page, usually on the source
   site.
-- foreign_identifier (string): the unique identifier for the audio set on the
+- `foreign_identifier` (string): the unique identifier for the audio set on the
   source site. This identifier is saved in the `audio_set_foreign_identifier`
   field of the TSV and catalog audio table.
 
