@@ -30,10 +30,12 @@ The timestamp of when the media item was last updated in Openverse catalog.
 
 ## Description
 
-The way the media item was ingested into the Openverse catalog. `common_crawl`:
-data extracted from the Common Crawl dataset, when the Creative Commons search
-API was first created. `provider_api` data is extracted from various CC media
-provider APIs. `sql_bulk_load` data is extracted from the SQL data dumps.
+The way the media item was ingested into the Openverse catalog.
+
+- `common_crawl`: data extracted from the Common Crawl dataset, when the
+  Creative Commons search API was first created.
+- `provider_api` data is extracted from various CC media provider APIs.
+- `sql_bulk_load` data is extracted from the SQL data dumps.
 
 # provider
 
@@ -50,7 +52,7 @@ This is a keyword for the provider, a string in a "snake_case" form.
 
 ## Description
 
-The name of the source of the media item.It can be a collection on a provider
+The name of the source of the media item. It can be a collection on a provider
 site, or the provider itself.
 
 ## Object Shape
@@ -62,11 +64,6 @@ This is a keyword for the source, a string in a "snake_case" form.
 ## Description
 
 The unique identifier for the media item on the source site.
-
-## Selection Criteria
-
-Ideally, this identifier should be usable to generate the URL to the media item
-on the source site.
 
 # foreign_landing_url
 
@@ -90,8 +87,8 @@ The URL of a smaller, thumbnail, image for the media item.
 
 ## Selection Criteria
 
-The smallest acceptable size for a thumbnail is 600px at the longest edge (see
-https://github.com/WordPress/openverse/issues/675#issuecomment-1472399310)
+The smallest acceptable size for a thumbnail is 600px at the longest edge. See
+[comment in issue #675](https://github.com/WordPress/openverse/issues/675#issuecomment-1472399310).
 
 # width
 
@@ -123,7 +120,7 @@ it can be extracted from a head request response to the media file URL.
 
 The slug of the license under which the media item is licensed. For the list of
 available license slugs, see
-[openverse-attribution package](https://github.com/WordPress/openverse/blob/3329d307f5cdce0cbe1f1c13dbe17106970abdaa/packages/python/openverse-attribution/src/openverse_attribution/license_name.py)
+[openverse-attribution package](https://github.com/WordPress/openverse/tree/main/packages/python/openverse-attribution/src/openverse_attribution/license_name.py)
 
 # license_version
 
@@ -159,9 +156,9 @@ Provider scripts may include html tags in record titles, see
 
 Some Wikimedia titles in the database still include "FILE:" prefix, and
 unnecessary file extension, which is
-[hot-fixed](https://github.com/WordPress/openverse/blob/3329d307f5cdce0cbe1f1c13dbe17106970abdaa/frontend/src/utils/decode-media-data.ts#L50)
+[hot-fixed](https://github.com/WordPress/openverse/tree/main/frontend/src/utils/decode-media-data.ts#L50)
 in the frontend. Some titles were incorrectly decoded, for which there is a
-hot-fix in the frontend
+[hot-fix in the frontend](https://github.com/WordPress/openverse/blob/70d57a91318a5b368fc0f1a244847bc27becefbd/frontend/src/utils/decode-media-data.ts#L73).
 
 # meta_data
 
@@ -186,7 +183,7 @@ The list of tags associated with the media item.
 ## Object Shape
 
 jsonb array of dictionaries: `{"name": "tag1", "provider": "wordpress"}`. Some
-tags are provider-generated, and include an `accuracy` field with a float value.
+tags are machine-generated, and include an `accuracy` field with a float value.
 
 If there are no tags, the field should be set to null, not an empty array or
 empty object.
@@ -216,7 +213,7 @@ Some inconsistencies are not fixed by the cleanup process:
   [issue #1927](https://github.com/WordPress/openverse/issues/1927). This can
   result in duplicate tags when the frontend decodes the tags.
 - Tags with leading or trailing spaces, see
-  [issue 4199](https://github.com/WordPress/openverse/issues/4199)
+  [issue #4199](https://github.com/WordPress/openverse/issues/4199)
 
 Identical, duplicate tags were filtered out in
 [#1556](https://github.com/WordPress/openverse/issues/1566)
@@ -247,7 +244,7 @@ index during the data refresh process.
 
 ## Selection Criteria
 
-[`expire_old_images`](https://github.com/WordPress/openverse/blob/main/catalog/dags/retired/common/loader/sql.py)
+[`expire_old_images`](https://github.com/WordPress/openverse/tree/main/catalog/dags/retired/common/loader/sql.py)
 DAG added in
 [Expiration of outdated images in the database](https://github.com/cc-archive/cccatalog/pull/483)
 was used to set `removed_from_source` to `True` for images that were updated
@@ -263,7 +260,7 @@ from the HEAD response from the media direct URL.
 
 ## Object Shape
 
-String, the file type (extension) of the audio file. Maximum length: 5
+String, the file type (extension) of the media file. Maximum length: 5
 characters.
 
 ## Normalization and Validation
@@ -278,9 +275,9 @@ lowercase. Equivalent image file types are normalized to a single file type, see
 ## Description
 
 One of the media category Enum values:
-[`ImageCategory`](https://github.com/WordPress/openverse/blob/48e300d10286506454a8bea17d46740dbffc5c87/catalog/dags/common/loader/provider_details.py#L137-L141)
+[`ImageCategory`](https://github.com/WordPress/openverse/tree/main/catalog/dags/common/loader/provider_details.py#L137-L141)
 and
-[`AudioCategory`](https://github.com/WordPress/openverse/blob/48e300d10286506454a8bea17d46740dbffc5c87/catalog/dags/common/loader/provider_details.py#L144-L151).
+[`AudioCategory`](https://github.com/WordPress/openverse/tree/main/catalog/dags/common/loader/provider_details.py#L144-L151).
 
 ## Selection Criteria
 
