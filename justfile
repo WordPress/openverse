@@ -66,7 +66,7 @@ install:
 precommit:
     #!/usr/bin/env bash
     set -eo pipefail
-    if [ -z "$SKIP__COMMIT" ] && [ ! -f ./pre-commit.pyz ]; then
+    if [ -z "$SKIP_PRE_COMMIT" ] && [ ! -f ./pre-commit.pyz ]; then
       echo "Getting latest release"
       curl \
         ${GITHUB_TOKEN:+ --header "Authorization: Bearer ${GITHUB_TOKEN}"} \
@@ -250,9 +250,14 @@ _prune pattern delete="false":
 prune_node delete="false":
     @just _prune node_modules {{ delete }}
 
-# Recursively list, and  delete, all `.venv/` from the repo
+# Recursively list, and delete, all `.venv/` from the repo
 prune_venv delete="false":
     @just _prune .venv {{ delete }}
+
+# Recursively list, and delete, all `node_modules/` and `.venv/` from the repo
+prune delete="false":
+    @just prune_node {{ delete }}
+    @just prune_venv {{ delete }}
 
 ########
 # Misc #
