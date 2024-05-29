@@ -461,7 +461,14 @@ class MediaReportAdmin(admin.ModelAdmin):
 
     @admin.display(description="Is pending?", boolean=True)
     def is_pending(self, obj):
-        """Shadow the ``is_pending`` property but render as icon in Django admin."""
+        """
+        Set an explicit display type for the ``is_pending`` property.
+
+        This is required so that the property, which otherwise renders
+        "True" or "False" strings, now renders as check/cross icons in
+        Django Admin.
+        """
+
         return obj.is_pending
 
     #############
