@@ -2,15 +2,23 @@ from api.models.base import OpenLedgerModel  # isort:skip
 from api.models.audio import (
     AltAudioFile,
     Audio,
+    AudioDecision,
+    AudioDecisionThrough,
     AudioList,
     AudioReport,
     AudioSet,
     DeletedAudio,
     SensitiveAudio,
-    AudioDecision,
-    AudioDecisionThrough,
 )
-from api.models.image import DeletedImage, Image, ImageList, ImageReport, SensitiveImage, ImageDecision, ImageDecisionThrough
+from api.models.image import (
+    DeletedImage,
+    Image,
+    ImageDecision,
+    ImageDecisionThrough,
+    ImageList,
+    ImageReport,
+    SensitiveImage,
+)
 from api.models.media import (
     DEINDEXED,
     DMCA,
