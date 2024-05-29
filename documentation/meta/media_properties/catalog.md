@@ -83,7 +83,7 @@ noted otherwise in the Python column's name property.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `image`: `uuid, nullable`, `audio`: `uuid, nullable`
+_DB Column Types_: `audio`: `uuid, nullable`, `image`: `uuid, nullable`
 
 #### Description
 
@@ -100,7 +100,7 @@ when the item is first inserted into the main table.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `audio`: `timestamp with time zone, non-nullable`, `image`:
+_DB Column Types_: `image`: `timestamp with time zone, non-nullable`, `audio`:
 `timestamp with time zone, non-nullable`
 
 #### Description
@@ -118,7 +118,7 @@ This is _not_ the date when the item was first published on the source site.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `audio`: `timestamp with time zone, non-nullable`, `image`:
+_DB Column Types_: `image`: `timestamp with time zone, non-nullable`, `audio`:
 `timestamp with time zone, non-nullable`
 
 #### Description
@@ -212,7 +212,7 @@ upstream provider.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `audio`: `text, non-nullable`, `image`: `text, non-nullable`
+_DB Column Types_: `image`: `text, non-nullable`, `audio`: `text, non-nullable`
 
 #### Description
 
@@ -398,8 +398,8 @@ empty object.
 
 Tags are cleaned in the `MediaStore` class. The tags that contain license slugs
 are removed because they are often misleading, using a different license than
-the media item itself (see
-https://github.com/cc-archive/cccatalog-api/issues/253).
+the media item itself. See
+[cc-archive issue #253](https://github.com/cc-archive/cccatalog-api/issues/253).
 
 #### Existing Data Inconsistencies
 
@@ -407,8 +407,7 @@ The cleanup process in data refresh fixes the following tag inconsistencies:
 
 - Empty tags (`{}`) are filtered out, see
   [cc-archive issue](https://github.com/cc-archive/cccatalog-api/issues/130)
-- Tags with license slugs are removed because they often don't match the media
-  item license. These tags, as well as some other deny-listed tags are filtered
+- Tags with license slugs, as well as some other deny-listed tags, are filtered
   out.
 - Some machine-generated tags have accuracy lower than 90% and are unreliable.
   These tags are filtered out. Some inconsistencies are not fixed by the cleanup
@@ -427,7 +426,7 @@ The cleanup process in data refresh fixes the following tag inconsistencies:
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `audio`: `boolean, nullable`, `image`: `boolean, nullable`
+_DB Column Types_: `image`: `boolean, nullable`, `audio`: `boolean, nullable`
 
 #### Description
 
@@ -479,7 +478,7 @@ more than `OLDEST_PER_PROVIDER` value.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `audio`: `character varying (5), nullable`, `image`:
+_DB Column Types_: `image`: `character varying (5), nullable`, `audio`:
 `character varying (5), nullable`
 
 #### Description
@@ -495,10 +494,12 @@ characters.
 
 #### Normalization and Validation
 
-`catalog/dags/common/extensions.py` The `get_file_extension` function is used to
-get the file extension from a URL. The function returns the file extension in
-lowercase. Equivalent image file types are normalized to a single file type, see
-`FILETYPE_EQUIVALENTS`.
+The
+[`extract_filetype` function in `catalog/dags/common/extensions.py`](https://github.com/WordPress/openverse/tree/main/catalog/dags/common/extensions.py#L7C5-L7C21)
+is used to get the file extension from a URL. The function returns the file
+extension in lowercase. Equivalent image file types are normalized to a single
+file type, see
+[`FILETYPE_EQUIVALENTS`](https://github.com/WordPress/openverse/tree/main/catalog/dags/common/storage/media.py#L42).
 
 ----
 
@@ -527,7 +528,7 @@ per provider.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `audio`: `double precision, nullable`, `image`:
+_DB Column Types_: `image`: `double precision, nullable`, `audio`:
 `double precision, nullable`
 
 #### Description
