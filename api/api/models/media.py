@@ -125,6 +125,11 @@ class AbstractMedia(
 
         if self.meta_data and (url := self.meta_data.get("license_url")):
             return url
+
+        logger.warning(
+            f"The {self.__class__.__name__.lower()} with identifier={self.identifier} "
+            f"has no `license_url` in `meta_data`."
+        )
         try:
             return License(self.license.lower(), self.license_version).url
         except ValueError:
