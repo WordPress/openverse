@@ -62,6 +62,33 @@ install:
     just node-install
     just py-install
 
+@install-hooks:
+    bash -c "cp ./docker/dev_env/hooks/* ./.git/hooks"
+
+init-ovprofile:
+    #! /usr/bin/env bash
+    [[ -f ./.ovprofile ]] && echo '.ovprofile already exists! No changes made.' && exit 0 || cat <<-'EOPROFILE' > ./.ovprofile
+    #! /usr/bin/env bash
+
+    # Personal modifications to the ov dev environment go here
+    # Use bash functions to define aliases of your common workflow
+    # Shared aliases are available in docker/dev_env/bash_profile
+
+    # This is just an example bash function for demonstration. Feel free to delete it.
+    # ASCII art courtesy of http://patorjk.com/software/taag/#p=display&f=Big&t=Openverse
+    welcome_to_openverse() {
+        cat <<OPENVERSE
+      ___   ____   ___  ____   __ __    ___  ____    _____   ___
+     /   \ |    \ /  _]|    \ |  |  |  /  _]|    \  / ___/  /  _]
+    |     ||  o  )  [_ |  _  ||  |  | /  [_ |  D  )(   \_  /  [_
+    |  O  ||   _/    _]|  |  ||  |  ||    _]|    /  \__  ||    _]
+    |     ||  | |   [_ |  |  ||  :  ||   [_ |    \  /  \ ||   [_
+    |     ||  | |     ||  |  | \   / |     ||  .  \ \    ||     |
+     \___/ |__| |_____||__|__|  \_/  |_____||__|\_|  \___||_____|
+    OPENVERSE
+    }
+    EOPROFILE
+
 # Setup pre-commit as a Git hook
 precommit:
     #!/usr/bin/env bash
