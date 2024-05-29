@@ -62,9 +62,11 @@ install:
     just node-install
     just py-install
 
+# Install `ov`-based git hooks
 @install-hooks:
     bash -c "cp ./docker/dev_env/hooks/* ./.git/hooks"
 
+# Create an `.ovprofile` as a starting point for development environment customisation. Does not make changes if the file already exists.
 init-ovprofile:
     #! /usr/bin/env bash
     [[ -f ./.ovprofile ]] && echo '.ovprofile already exists! No changes made.' && exit 0 || cat <<-'EOPROFILE' > ./.ovprofile
