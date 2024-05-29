@@ -75,7 +75,7 @@ clean)
 
 link)
   # Assumes XDG-like bin directory... there's probably a better way? :thinking:
-  ln -s "$_self" "${2:$HOME/.local/bin/ov}"
+  ln -s "$_self" "${2:-$HOME/.local/bin/ov}"
   ;;
 
 hook)
