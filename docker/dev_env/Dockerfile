@@ -1,11 +1,8 @@
-# Use arch. Alpine is nice and small, but permissions and user management
-# are obscure, easy to break, and way too tedious to maintain for a development
-# environment that will inevitably have continuously changing requirements
-FROM docker.io/library/archlinux:latest
+FROM docker.io/library/fedora:latest
 
 # Dependency explanations
 # - git: required by some python package; contributors should use git on their host
-# - make: required by some pre-commit hooks for node-gyp
+# - gcc, make: required by some pre-commit hooks for node-gyp
 # - perl: used in linting
 # - bash: used for scripts
 # - python: language runtime
@@ -16,15 +13,16 @@ FROM docker.io/library/archlinux:latest
 # - n: nodejs distribution manager
 # - pdm, pipenv: Python package managers
 # - pre-commit: pre-commit hook manager
-RUN pacman -Syyu --needed --noconfirm \
-  git bash perl curl base-devel \
-  python python-pipx \
-  docker docker-compose docker-buildx \
+RUN dnf -y install dnf-plugins-core \
+  && dnf -y config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo \
+  && dnf -y install \
+  git bash perl curl gcc just \
+  python3.12 pipx \
   nodejs npm \
-  just \
-  && corepack enable \
+  docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin \
   && useradd -m opener -G docker \
-  && npm install -g n
+  && npm install -g n corepack \
+  && corepack enable
 
 USER opener
 
