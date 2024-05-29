@@ -14,7 +14,7 @@ from drf_spectacular.utils import extend_schema_serializer
 from elasticsearch_dsl.response import Hit
 from openverse_attribution.license import License
 
-from api.constants import privilege, sensitivity
+from api.constants import restricted_features, sensitivity
 from api.constants.licenses import LICENSE_GROUPS
 from api.constants.media_types import MediaType
 from api.constants.parameters import COLLECTION, TAG
@@ -58,7 +58,7 @@ class PaginatedRequestSerializer(serializers.Serializer):
         label="page_size",
         help_text=f"Number of results to return per page. {_SUBJECT_TO_PAGINATION_LIMITS}",
         required=False,
-        default=privilege.PAGE_SIZE.anonymous,
+        default=restricted_features.PAGE_SIZE.anonymous,
         min_value=1,
     )
     page = serializers.IntegerField(
@@ -70,7 +70,7 @@ class PaginatedRequestSerializer(serializers.Serializer):
     )
 
     def validate_page_size(self, value):
-        level, max_value = privilege.PAGE_SIZE.request_level(
+        level, max_value = restricted_features.PAGE_SIZE.request_level(
             self.context.get("request")
         )
 
@@ -84,7 +84,7 @@ class PaginatedRequestSerializer(serializers.Serializer):
         try:
             validator(value)
         except (ValidationError, DjangoValidationError) as e:
-            if level == privilege.PRIVILEGED:
+            if level == restricted_features.PRIVILEGED:
                 raise
 
             raise NotAuthenticated(
@@ -95,7 +95,7 @@ class PaginatedRequestSerializer(serializers.Serializer):
         return value
 
     def clamp_result_count(self, real_result_count):
-        _, max_depth = privilege.PAGINATION_DEPTH.request_level(
+        _, max_depth = restricted_features.PAGINATION_DEPTH.request_level(
             self.context.get("request")
         )
 
@@ -105,7 +105,7 @@ class PaginatedRequestSerializer(serializers.Serializer):
         return real_result_count
 
     def clamp_page_count(self, real_page_count):
-        _, max_depth = privilege.PAGINATION_DEPTH.request_level(
+        _, max_depth = restricted_features.PAGINATION_DEPTH.request_level(
             self.context.get("request")
         )
 
@@ -122,7 +122,7 @@ class PaginatedRequestSerializer(serializers.Serializer):
 
         # pagination depth is validated as a combination of page and page size,
         # and so cannot be validated in the individual field validation methods
-        level, max_depth = privilege.PAGINATION_DEPTH.request_level(
+        level, max_depth = restricted_features.PAGINATION_DEPTH.request_level(
             self.context.get("request")
         )
 
@@ -138,7 +138,7 @@ class PaginatedRequestSerializer(serializers.Serializer):
         try:
             pagination_depth_validator(requested_pagination_depth)
         except (ValidationError, DjangoValidationError) as e:
-            if level == privilege.PRIVILEGED:
+            if level == restricted_features.PRIVILEGED:
                 raise
 
             raise NotAuthenticated(

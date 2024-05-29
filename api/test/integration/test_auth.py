@@ -7,7 +7,7 @@ from django.urls import reverse
 import pytest
 from oauth2_provider.models import AccessToken
 
-from api.constants import privilege
+from api.constants import restricted_features
 from api.models import OAuth2Verification, ThrottledApplication
 
 
@@ -281,7 +281,7 @@ def test_revoked_application_access(api_client, test_auth_token_exchange):
     "level, page_size_modification, allowed",
     (
         config
-        for level in privilege.LEVELS
+        for level in restricted_features.ACCESS_LEVELS
         for config in (
             (level, -1, True),
             (level, 0, True),
@@ -293,19 +293,19 @@ def test_revoked_application_access(api_client, test_auth_token_exchange):
 def test_page_size_privileges(
     api_client, test_auth_token_exchange, level, page_size_modification, allowed
 ):
-    if level == privilege.ANONYMOUS:
+    if level == restricted_features.ANONYMOUS:
         authorization = ""
     else:
         token = test_auth_token_exchange["access_token"]
         application = AccessToken.objects.get(token=token).application
 
-        if level == privilege.PRIVILEGED:
-            application.privileges.append(privilege.PAGE_SIZE.slug)
+        if level == restricted_features.PRIVILEGED:
+            application.privileges.append(restricted_features.PAGE_SIZE.slug)
 
         application.save()
         authorization = f"Bearer {token}"
 
-    limit = getattr(privilege.PAGE_SIZE, level)
+    limit = getattr(restricted_features.PAGE_SIZE, level)
 
     res = api_client.get(
         "/v1/images/",
@@ -315,7 +315,7 @@ def test_page_size_privileges(
 
     if allowed:
         assert res.status_code == 200
-    elif level != privilege.PRIVILEGED:
+    elif level != restricted_features.PRIVILEGED:
         assert res.status_code == 401
     else:
         # When privileged, the request errors on bad request, rather than unauthorized
@@ -327,7 +327,7 @@ def test_page_size_privileges(
     "level, pagination_depth_modification, allowed",
     (
         config
-        for level in privilege.LEVELS
+        for level in restricted_features.ACCESS_LEVELS
         for config in (
             (level, -1, True),
             (level, 0, True),
@@ -339,21 +339,21 @@ def test_page_size_privileges(
 def test_pagination_depth_privileges(
     api_client, test_auth_token_exchange, level, pagination_depth_modification, allowed
 ):
-    if level == privilege.ANONYMOUS:
+    if level == restricted_features.ANONYMOUS:
         authorization = ""
     else:
         token = test_auth_token_exchange["access_token"]
         application = AccessToken.objects.get(token=token).application
 
-        if level == privilege.PRIVILEGED:
-            application.privileges.append(privilege.PAGINATION_DEPTH.slug)
+        if level == restricted_features.PRIVILEGED:
+            application.privileges.append(restricted_features.PAGINATION_DEPTH.slug)
 
         application.save()
         authorization = f"Bearer {token}"
 
-    depth_limit = getattr(privilege.PAGINATION_DEPTH, level)
+    depth_limit = getattr(restricted_features.PAGINATION_DEPTH, level)
 
-    page_size_limit = privilege.PAGE_SIZE.anonymous
+    page_size_limit = restricted_features.PAGE_SIZE.anonymous
 
     last_page = int(depth_limit / page_size_limit)
 
@@ -368,7 +368,7 @@ def test_pagination_depth_privileges(
 
     if allowed:
         assert res.status_code == 200
-    elif level != privilege.PRIVILEGED:
+    elif level != restricted_features.PRIVILEGED:
         assert res.status_code == 401
     else:
         # When privileged, the request errors on bad request, rather than unauthorized

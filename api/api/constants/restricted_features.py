@@ -8,32 +8,34 @@ ANONYMOUS: typing.Literal["anonymous"] = "anonymous"
 AUTHENTICATED: typing.Literal["authenticated"] = "authenticated"
 PRIVILEGED: typing.Literal["privileged"] = "privileged"
 
-Level = typing.Literal[ANONYMOUS, AUTHENTICATED, PRIVILEGED]
-LEVELS = typing.get_args(Level)
+AccessLevel = typing.Literal[ANONYMOUS, AUTHENTICATED, PRIVILEGED]
+ACCESS_LEVELS = typing.get_args(AccessLevel)
 
 
-_PRIVILEGES = {}
+_RESTRICTED_FEATURES = {}
+
+T = typing.TypeVar("T")
 
 
 @dataclass
-class Privilege:
+class RestrictedFeature(typing.Generic[T]):
     """
-    Privileges granted to applications upon approved request to Openverse maintainers.
+    Feature with gradient levels of access granted to applications upon approved request to Openverse maintainers.
 
-    Maintainers review requests for increased privileges on a per-case basis.
+    Maintainers review requests for increased access to restricted features on a per-case basis.
 
-    Distinct from ``rate_limit_model`` which only affects access rates rather than privileges.
+    Distinct from ``rate_limit_model`` which only affects access rates rather than level of access to certain features.
     """
 
     slug: str
-    anonymous: typing.Any
-    authenticated: typing.Any
-    privileged: typing.Any
+    anonymous: T
+    authenticated: T
+    privileged: T
 
     def __post_init__(self):
-        _PRIVILEGES[self.slug] = self
+        _RESTRICTED_FEATURES[self.slug] = self
 
-    def request_level(self, request: None | Request) -> tuple[Level, typing.Any]:
+    def request_level(self, request: None | Request) -> tuple[AccessLevel, T]:
         """Retrieve the level of any request in relation to the privilege."""
         if request is None or request.auth is None:
             return ANONYMOUS, self.anonymous
@@ -46,10 +48,10 @@ class Privilege:
     @classmethod
     @property
     def choices(cls):
-        return ((slug,) * 2 for slug in _PRIVILEGES)
+        return ((slug,) * 2 for slug in _RESTRICTED_FEATURES)
 
 
-PAGE_SIZE = Privilege(
+PAGE_SIZE: RestrictedFeature[int] = RestrictedFeature(
     "page_size",
     anonymous=20,
     authenticated=50,
@@ -59,7 +61,7 @@ PAGE_SIZE = Privilege(
     privileged=240,
 )
 
-PAGINATION_DEPTH = Privilege(
+PAGINATION_DEPTH: RestrictedFeature[int] = RestrictedFeature(
     "pagination_depth",
     # 12 pages of 20 results
     # Both anon and authed are limited to the same depth

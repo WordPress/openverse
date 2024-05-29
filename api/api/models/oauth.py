@@ -1,11 +1,9 @@
-from textwrap import dedent
-
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
 from oauth2_provider.models import AbstractApplication
 
-from api.constants import privilege
+from api.constants.restricted_features import RestrictedFeature
 
 
 class OAuth2Registration(models.Model):
@@ -47,10 +45,13 @@ class ThrottledApplication(AbstractApplication):
 
     privileges = ArrayField(
         models.CharField(
-            choices=privilege.Privilege.choices,
+            choices=RestrictedFeature.choices,
         ),
         default=list,
-        help_text=dedent(privilege.Privilege.__doc__).strip().replace("\n", " "),
+        help_text=(
+            "Restricted features to which this application has been granted "
+            "privileged access"
+        ),
     )
 
 

@@ -3,7 +3,7 @@ from django.contrib import admin
 
 from oauth2_provider.models import AccessToken
 
-from api.constants.privilege import Privilege
+from api.constants.restricted_features import RestrictedFeature
 from api.models.oauth import ThrottledApplication
 
 
@@ -28,7 +28,7 @@ class ThrottledApplicationAdminForm(forms.ModelForm):
     # override default widget of multi-<select>, which is much more annoying to use
     # and easy to accidentally un-select an option. The multi-checkbox is much easier to use
     privileges = forms.MultipleChoiceField(
-        choices=Privilege.choices,
+        choices=RestrictedFeature.choices,
         required=False,
         widget=forms.CheckboxSelectMultiple,
     )
