@@ -49,11 +49,18 @@ export const searchTypeNames = {
  */
 export const openContentSettingsTab = async (
   page: Page,
-  tab: "searchTypes" | "filters" = "searchTypes"
+  tab: "searchTypes" | "filters" = "searchTypes",
+  dir: LanguageDirection = "ltr"
 ) => {
-  const tabId = tab === "searchTypes" ? "content-settings" : "filters"
+  // Use a hard-coded Regex to match the dynamic Filters tab name
+  const tabName =
+    tab === "searchTypes"
+      ? t("searchType.heading", dir)
+      : dir === "ltr"
+        ? /filter/i
+        : /مرش/
 
-  await page.locator(`#tab-${tabId}`).click()
+  await page.getByRole("tab", { name: tabName }).click()
 }
 
 /**
@@ -104,7 +111,7 @@ export const setContentSwitcherState = async (
       await buttonLocator.isEnabled()
       await buttonLocator.click()
     }
-    return openContentSettingsTab(page, contentSwitcherKind)
+    return openContentSettingsTab(page, contentSwitcherKind, dir)
   } else if (isPressed) {
     await closeContentSettingsModal(page, dir)
   }
