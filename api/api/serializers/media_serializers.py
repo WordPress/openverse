@@ -46,7 +46,7 @@ class PaginatedRequestSerializer(serializers.Serializer):
 
     _SUBJECT_TO_PAGINATION_LIMITS = (
         "This parameter is subject to limitations based on authentication "
-        "and special privileges. For details, refer to [the authentication "
+        "and access level. For details, refer to [the authentication "
         "documentation](#tag/auth)."
     )
 
