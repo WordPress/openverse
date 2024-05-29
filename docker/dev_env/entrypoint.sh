@@ -73,4 +73,4 @@ for profile in "${_profiles[@]}"; do
   fi
 done
 
-"$@"
+exec "$@"

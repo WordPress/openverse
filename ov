@@ -24,7 +24,7 @@ COMMANDS
     Initialise the Openverse development toolkit for the first time
     Alias for:
 
-        ov build && ov just install-hooks
+        ov build && ov just install-hooks && ov just init-ovprofile
 
   ov build
     Build the Openverse development toolkit Docker image
