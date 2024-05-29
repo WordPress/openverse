@@ -28,7 +28,7 @@ from api.models.media import (
     OTHER,
     PENDING,
 )
-from api.models.models import ContentProvider, Tag
+from api.models.models import ContentSource, Tag
 from api.models.moderation import UserPreferences
 from api.models.oauth import (
     OAuth2Registration,

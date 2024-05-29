@@ -5,8 +5,8 @@ from api.constants.parameters import COLLECTION, TAG
 from api.controllers import search_controller
 from api.controllers.search_controller import (
     DEFAULT_SQS_FLAGS,
-    FILTERED_PROVIDERS_CACHE_KEY,
-    FILTERED_PROVIDERS_CACHE_VERSION,
+    FILTERED_SOURCES_CACHE_KEY,
+    FILTERED_SOURCES_CACHE_VERSION,
 )
 
 
@@ -14,22 +14,22 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture
-def excluded_providers_cache(django_cache, monkeypatch):
+def excluded_sources_cache(django_cache, monkeypatch):
     cache = django_cache
     monkeypatch.setattr("api.controllers.search_controller.cache", cache)
 
-    excluded_provider = "excluded_provider"
-    cache_value = [excluded_provider]
+    excluded_source = "excluded_source"
+    cache_value = [excluded_source]
     cache.set(
-        key=FILTERED_PROVIDERS_CACHE_KEY,
-        version=FILTERED_PROVIDERS_CACHE_VERSION,
+        key=FILTERED_SOURCES_CACHE_KEY,
+        version=FILTERED_SOURCES_CACHE_VERSION,
         value=cache_value,
         timeout=1,
     )
 
-    yield excluded_provider
+    yield excluded_source
 
-    cache.delete(FILTERED_PROVIDERS_CACHE_KEY, version=FILTERED_PROVIDERS_CACHE_VERSION)
+    cache.delete(FILTERED_SOURCES_CACHE_KEY, version=FILTERED_SOURCES_CACHE_VERSION)
 
 
 def test_create_search_query_empty(media_type_config, anon_request):
@@ -287,9 +287,9 @@ def test_create_search_query_q_search_license_license_type_creates_2_terms_filte
     }
 
 
-def test_create_search_query_empty_with_dynamically_excluded_providers(
+def test_create_search_query_empty_with_dynamically_excluded_sources(
     image_media_type_config,
-    excluded_providers_cache,
+    excluded_sources_cache,
     anon_request,
 ):
     serializer = image_media_type_config.search_request_serializer(
@@ -307,7 +307,7 @@ def test_create_search_query_empty_with_dynamically_excluded_providers(
     assert actual_query_clauses == {
         "must_not": [
             {"term": {"mature": True}},
-            {"terms": {"provider": [excluded_providers_cache]}},
+            {"terms": {"source": [excluded_sources_cache]}},
         ],
         "must": [{"match_all": {}}],
         "should": [

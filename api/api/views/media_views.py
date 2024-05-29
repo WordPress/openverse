@@ -14,10 +14,10 @@ from asgiref.sync import sync_to_async
 from api.constants.media_types import MediaType
 from api.controllers import search_controller
 from api.controllers.elasticsearch.related import related_media
-from api.models import ContentProvider
+from api.models import ContentSource
 from api.models.media import AbstractMedia
 from api.serializers import media_serializers
-from api.serializers.provider_serializers import ProviderSerializer
+from api.serializers.source_serializers import SourceSerializer
 from api.utils import image_proxy
 from api.utils.pagination import StandardPagination
 from api.utils.search_context import SearchContext
@@ -73,18 +73,18 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
 
     def get_queryset(self):
         # The alternative to a sub-query would be using `extra` to do a join
-        # to the content provider table and filtering `filter_content`. However,
-        # that assumes that a content provider entry exists, which is not necessarily
-        # the case. We often don't add a content provider until after works from
-        # new providers are available in the API, and sometimes not even then.
-        # Search returns results with providers that do not have a ContentProvider
+        # to the content source table and filtering `filter_content`. However,
+        # that assumes that a content source entry exists, which is not necessarily
+        # the case. We often don't add a content source until after works from
+        # new source are available in the API, and sometimes not even then.
+        # Search returns results with sources that do not have a ContentSource
         # table entry. Therefore, to maintain that assumption, a subquery is the only
         # workable approach, as Django's `extra` does not provide any facility for
         # handling null relations on the join.
         return self.model_class.objects.exclude(
-            provider__in=ContentProvider.objects.filter(
-                filter_content=True
-            ).values_list("provider_identifier")
+            source__in=ContentSource.objects.filter(filter_content=True).values_list(
+                "source_identifier"
+            )
         )
 
     aget_object = sync_to_async(ReadOnlyModelViewSet.get_object)
@@ -203,17 +203,17 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
 
     # Extra actions
 
-    @action(detail=False, serializer_class=ProviderSerializer, pagination_class=None)
+    @action(detail=False, serializer_class=SourceSerializer, pagination_class=None)
     def stats(self, *_, **__):
         source_counts = search_controller.get_sources(self.default_index)
         context = self.get_serializer_context() | {
             "source_counts": source_counts,
         }
 
-        providers = ContentProvider.objects.filter(
+        sources = ContentSource.objects.filter(
             media_type=self.default_index, filter_content=False
         )
-        serializer = self.get_serializer(providers, many=True, context=context)
+        serializer = self.get_serializer(sources, many=True, context=context)
         return Response(serializer.data)
 
     @action(detail=True)

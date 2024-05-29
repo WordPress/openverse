@@ -41,11 +41,8 @@ logger = structlog.get_logger(__name__)
 NESTING_THRESHOLD = config("POST_PROCESS_NESTING_THRESHOLD", cast=int, default=5)
 SOURCE_CACHE_TIMEOUT = 60 * 60 * 4  # 4 hours
 FILTER_CACHE_TIMEOUT = 30
-FILTERED_PROVIDERS_CACHE_KEY = "filtered_providers"
-FILTERED_PROVIDERS_CACHE_VERSION = 2
-THUMBNAIL = "thumbnail"
-URL = "url"
-PROVIDER = "provider"
+FILTERED_SOURCES_CACHE_KEY = "filtered_sources"
+FILTERED_SOURCES_CACHE_VERSION = 1
 QUERY_SPECIAL_CHARACTER_ERROR = "Unescaped special characters are not allowed."
 DEFAULT_BOOST = 10000
 DEFAULT_SEARCH_FIELDS = ["title", "description", "tags.name"]
@@ -162,42 +159,43 @@ def _post_process_results(
     return results[:page_size]
 
 
-def get_excluded_providers_query() -> Q | None:
+def get_excluded_sources_query() -> Q | None:
     """
     Hide data sources from the catalog dynamically.
-    To exclude a provider, set ``filter_content`` to ``True`` in the
-    ``ContentProvider`` model in Django admin.
-    The list of ``provider_identifier``s is cached in Redis with
-    `:FILTERED_PROVIDERS_CACHE_VERSION:FILTERED_PROVIDERS_CACHE_KEY` key.
+    To exclude a source, set ``filter_content`` to ``True`` in the
+    ``ContentSource`` model in Django admin.
+    The list of ``source_identifier``s is cached in Redis with
+    `:FILTERED_SOURCES_CACHE_VERSION:FILTERED_SOURCES_CACHE_KEY` key.
     """
 
     try:
-        filtered_providers = cache.get(
-            key=FILTERED_PROVIDERS_CACHE_KEY, version=FILTERED_PROVIDERS_CACHE_VERSION
+        filtered_sources = cache.get(
+            key=FILTERED_SOURCES_CACHE_KEY, version=FILTERED_SOURCES_CACHE_VERSION
         )
+        logger.info(f"Filtered sources from cache: {filtered_sources}")
     except ConnectionError:
-        logger.warning("Redis connect failed, cannot get cached filtered providers.")
-        filtered_providers = None
+        logger.warning("Redis connect failed, cannot get cached filtered sources.")
+        filtered_sources = None
 
-    if not filtered_providers:
-        filtered_providers = list(
-            models.ContentProvider.objects.filter(filter_content=True).values_list(
-                "provider_identifier", flat=True
+    if not filtered_sources:
+        filtered_sources = list(
+            models.ContentSource.objects.filter(filter_content=True).values_list(
+                "source_identifier", flat=True
             )
         )
 
         try:
             cache.set(
-                key=FILTERED_PROVIDERS_CACHE_KEY,
-                version=FILTERED_PROVIDERS_CACHE_VERSION,
+                key=FILTERED_SOURCES_CACHE_KEY,
+                version=FILTERED_SOURCES_CACHE_VERSION,
                 timeout=FILTER_CACHE_TIMEOUT,
-                value=filtered_providers,
+                value=filtered_sources,
             )
         except ConnectionError:
-            logger.warning("Redis connect failed, cannot cache filtered providers.")
+            logger.warning("Redis connect failed, cannot cache filtered sources.")
 
-    if filtered_providers:
-        return Q("terms", provider=filtered_providers)
+    if filtered_sources:
+        return Q("terms", source=filtered_sources)
     return None
 
 
@@ -285,8 +283,8 @@ def build_search_query(
     if not search_params.validated_data["include_sensitive_results"]:
         search_queries["must_not"].append(Q("term", mature=True))
     # Exclude dynamically disabled sources (see Redis cache)
-    if excluded_providers_query := get_excluded_providers_query():
-        search_queries["must_not"].append(excluded_providers_query)
+    if excluded_sources_query := get_excluded_sources_query():
+        search_queries["must_not"].append(excluded_sources_query)
 
     # Search either by generic multimatch or by "advanced search" with
     # individual field-level queries specified.
@@ -395,8 +393,8 @@ def build_collection_query(
     if not include_sensitive_by_params:
         search_query["must_not"].append({"term": {"mature": True}})
 
-    if excluded_providers_query := get_excluded_providers_query():
-        search_query["must_not"].append(excluded_providers_query)
+    if excluded_sources_query := get_excluded_sources_query():
+        search_query["must_not"].append(excluded_sources_query)
 
     return Q("bool", **search_query)
 
@@ -563,7 +561,7 @@ def get_sources(index):
     if isinstance(sources, list) or cache_fetch_failed:
         sources = None
         try:
-            # Invalidate old provider format.
+            # Invalidate old source format.
             cache.delete(key=source_cache_name)
         except ConnectionError:
             logger.warning("Redis connect failed, cannot invalidate cached sources.")
