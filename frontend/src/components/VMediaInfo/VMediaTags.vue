@@ -10,14 +10,9 @@
       />
     </div>
     <div v-if="tagsByType.generated.length > 0">
-      <div class="flex gap-2">
-        <h3
-          id="generated-tags"
-          class="label-regular align-start mb-2 flex flex-row"
-        >
-          {{ $t("mediaDetails.tags.generated.heading") }}
-        </h3>
-        <VLink class="label-regular" :href="generatedTagsPath">{{
+      <div class="label-regular mb-2 flex gap-2">
+        <h3>{{ $t("mediaDetails.tags.generated.heading") }}</h3>
+        <VLink :href="generatedTagsPath">{{
           $t("mediaDetails.tags.generated.pageTitle")
         }}</VLink>
       </div>
