@@ -2,7 +2,21 @@
 
 set -e
 
-host_docker_gid="$(getent group docker | cut -d: -f3)"
+# Kudos https://stackoverflow.com/a/10910180 for macOS group ID reading
+case "$OSTYPE" in
+linux*)
+  host_docker_gid="$(getent group docker | cut -d: -f3)"
+  ;;
+
+darwin*)
+  host_docker_gid="$(dscl . -read /Groups/docker | awk '($1 == "PrimaryGroupID:") { print $2 }')"
+  ;;
+
+*)
+  printf "'%s' is not supported for Openverse development. Only Linux and macOS are supported. Use WSL if on Windows." "$OSTYPE" >>/dev/stderr
+  exit 1
+  ;;
+esac
 
 suppress_output() {
   "$@" 2>/dev/null 1>/dev/null
