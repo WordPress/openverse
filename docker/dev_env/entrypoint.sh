@@ -29,19 +29,23 @@ if [ -n "$PNPM_HOME" ]; then
   export PATH="$PNPM_HOME:$PATH"
 fi
 
-_python3s=("$HOME"/.local/share/pdm/python/cpython@3.11.*/bin/python3)
+pdm config python.install_root "/opt/pdm/python"
+
+_python3s=(/opt/pdm/python/cpython@3.11.*/bin/python3)
 
 if [ ! -x "${_python3s[0]}" ]; then
   printf "Installing the specific Python version required for pipenv environments; this is only necessary the first time the toolkit runs\n"
   pdm python install 3.11
-  _python3s=("$HOME"/.local/share/pdm/python/cpython@3.11.*/bin/python3)
+  _python3s=(/opt/pdm/python/cpython@3.11.*/bin/python3)
 fi
 
 PYTHON_311=${_python3s[0]}
 export PYTHON_311
 
-if [ ! -x "$HOME"/.local/bin/python3.11 ]; then
-  ln -s "$PYTHON_311" "$HOME"/.local/bin/python3.11
+mkdir -p "$PDM_PYTHONS"
+
+if [ ! -x "$PDM_PYTHONS"/python3.11 ]; then
+  ln -s "$PYTHON_311" "$PDM_PYTHONS"/python3.11
 fi
 
 if [ -z "$(command -v pipenv)" ]; then

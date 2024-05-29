@@ -22,8 +22,6 @@ suppress_output() {
   "$@" 2>/dev/null 1>/dev/null
 }
 
-opener_home="/home/opener"
-
 run_args=(
   -i
   --rm
@@ -36,8 +34,8 @@ run_args=(
   # and others don't get confused about where files are supposed to be
   -v "$OPENVERSE_PROJECT:$OPENVERSE_PROJECT:rw,z"
   --workdir "$OPENVERSE_PROJECT"
-  # Save the home directory of the container so we can reuse it each time
-  --mount "type=volume,src=openverse-dev-env,target=$opener_home"
+  # Save the /opt directory of the container so we can reuse it each time
+  --mount "type=volume,src=openverse-dev-env,target=/opt"
   # Expose the host's docker socket to the container so the container can run docker/compose etc
   -v /var/run/docker.sock:/var/run/docker.sock
 )
