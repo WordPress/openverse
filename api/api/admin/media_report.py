@@ -1,6 +1,7 @@
 from functools import update_wrapper
 from typing import Sequence
 
+from django import forms
 from django.conf import settings
 from django.contrib import admin, messages
 from django.contrib.admin.views.main import ChangeList
@@ -15,16 +16,16 @@ import structlog
 from elasticsearch import NotFoundError
 from elasticsearch_dsl import Search
 
+from api.constants.moderation import DecisionAction
 from api.models import (
-    PENDING,
     Audio,
-    AudioReport,
     AudioDecision,
     AudioDecisionThrough,
+    AudioReport,
     Image,
-    ImageReport,
     ImageDecision,
     ImageDecisionThrough,
+    ImageReport,
 )
 from api.models.media import AbstractDeletedMedia, AbstractSensitiveMedia
 from api.utils.moderation_lock import LockManager
