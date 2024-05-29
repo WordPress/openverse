@@ -333,6 +333,9 @@ class MediaListAdmin(admin.ModelAdmin):
         reports = manager.order_by("-created_at")
         extra_context["reports"] = reports
 
+        pending_report_count = reports.filter(decision_id=None).count()
+        extra_context["pending_report_count"] = pending_report_count
+
         extra_context["mod_form"] = MediaDecisionForm(media_type=self.media_type)
 
         return super().change_view(request, object_id, form_url, extra_context)

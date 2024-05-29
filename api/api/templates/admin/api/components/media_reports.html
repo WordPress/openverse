@@ -2,21 +2,24 @@
 Props:
 - media_type
 - reports
+- pending_report_count
 - mod_form
 {% endcomment %}
 
 <fieldset class="module aligned">
   <h2>Reports</h2>
 
+  {% if pending_report_count %}
   <p>
     You can take a decision for the pending reports by selecting one
     or more of them and creating a decision.
   </p>
+  {% endif %}
   <table class="w-full">
     <thead>
       <tr>
         <th class="hidden"></th>
-        <th>Select</th>
+        {% if pending_report_count %}<th>Select</th>{% endif %}
         <th>ID</th>
         <th>Date</th>
         <th>Reason</th>
@@ -29,6 +32,7 @@ Props:
       {% for report in reports %}
       <tr>
         <td class="hidden"><!-- Hidden inputs etc. --></td>
+        {% if pending_report_count %}
         <td>
           {% if report.is_pending %}
           <input
@@ -39,6 +43,7 @@ Props:
             class="action-select">
           {% endif %}
         </td>
+        {% endif %}
         <td>
           <a href="{% url 'admin:api_'|add:media_type|add:'report_change' report.id %}">{{ report.id }}</a>
         </td>
@@ -69,6 +74,7 @@ Props:
     .hidden { display: none; }
     .w-full { width: 100%; }
   </style>
+  {% if pending_report_count %}
   <div class="form-row field-height">
     <div>
       <div class="flex-container">
@@ -92,6 +98,7 @@ Props:
   <div class="p-10px">
     <input form="decision-create" type="submit" value="Create decision">
   </div>
+  {% endif %}
 </fieldset>
 
 <style>
