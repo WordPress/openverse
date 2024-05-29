@@ -826,6 +826,7 @@
     imageInfo: "Image information",
     audioInfo: "Audio track information",
     tags: {
+      title: "Tags",
       generated: {
         heading: "Generated tags",
         pageTitle: "What is this?",

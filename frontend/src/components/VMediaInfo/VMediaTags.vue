@@ -1,15 +1,16 @@
 <template>
   <div class="flex flex-col gap-6 sm:gap-8">
-    <div v-if="tagsByType.source.length > 0">
-      <h3 class="label-regular mb-2">
+    <div v-if="hasSourceTags">
+      <h3 v-if="hasGeneratedTags" class="label-regular mb-2">
         {{ $t("mediaDetails.tags.source.heading") }}
       </h3>
+      <h3 v-else class="sr-only">{{ $t("mediaDetails.tags.title") }}</h3>
       <VCollapsibleTagSection
         :media-type="mediaType"
         :tags="tagsByType.source"
       />
     </div>
-    <div v-if="tagsByType.generated.length > 0">
+    <div v-if="hasGeneratedTags">
       <div class="label-regular mb-2 flex gap-2">
         <h3>{{ $t("mediaDetails.tags.generated.heading") }}</h3>
         <VLink :href="generatedTagsPath">{{
@@ -68,11 +69,16 @@ export default defineComponent({
       return { generated: generatedTags, source: sourceTags }
     })
 
+    const hasSourceTags = computed(() => tagsByType.value.source.length > 0)
+    const hasGeneratedTags = computed(
+      () => tagsByType.value.generated.length > 0
+    )
+
     const { app } = useContext()
 
     const generatedTagsPath = computed(() => app.localePath("/generated-tags"))
 
-    return { generatedTagsPath, tagsByType }
+    return { generatedTagsPath, tagsByType, hasSourceTags, hasGeneratedTags }
   },
 })
 </script>
