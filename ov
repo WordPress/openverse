@@ -36,10 +36,6 @@ COMMANDS
 
         ov clean && ov init
 
-  ov link [path]
-    Create a symlink from the path arg to the ov script. Path defaults
-    to the XDG-like ~/.local/bin/ov
-
   ov hook HOOK
     Run git hooks through pre-commit inside the development toolkit container
 
@@ -70,11 +66,6 @@ build)
 
 clean)
   docker volume rm openverse-dev-env
-  ;;
-
-link)
-  # Assumes XDG-like bin directory... there's probably a better way? :thinking:
-  ln -s "$_self" "${2:-$HOME/.local/bin/ov}"
   ;;
 
 hook)
