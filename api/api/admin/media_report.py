@@ -16,7 +16,6 @@ import structlog
 from elasticsearch import NotFoundError
 from elasticsearch_dsl import Search
 
-from api.constants.moderation import DecisionAction
 from api.models import (
     Audio,
     AudioDecision,
@@ -61,44 +60,45 @@ class MultipleValueField(forms.MultipleChoiceField):
         return True
 
 
-class MediaDecisionForm(forms.Form):
-    report_id = MultipleValueField()  # not rendered using its widget
-    action = forms.ChoiceField(
-        choices=DecisionAction.choices,
-        widget=forms.Select(attrs={"form": "decision-create"}),
-    )
-    notes = forms.CharField(
-        required=False,
-        widget=forms.Textarea(attrs={"form": "decision-create"}),
-    )
+def get_decision_form(media_type: str):
+    decision_class, report_class = {
+        "image": (ImageDecision, ImageReport),
+        "audio": (AudioDecision, AudioReport),
+    }[media_type]
 
-    def __init__(self, *args, **kwargs):
-        self.media_type = kwargs.pop("media_type")
-        super().__init__(*args, **kwargs)
+    class MediaDecisionForm(forms.ModelForm):
+        report_id = MultipleValueField()  # not rendered using its widget
 
-    def clean_report_id(self):
-        report_ids = self.cleaned_data["report_id"]
-        reports = []
-        for report_id in report_ids:
-            try:
-                report_class = {
-                    "audio": AudioReport,
-                    "image": ImageReport,
-                }[self.media_type]
-                report = report_class.objects.get(id=report_id)
-                if not report.is_pending:
+        class Meta:
+            model = decision_class
+            fields = ["action", "notes"]
+
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            for field in self.fields.values():
+                field.widget.attrs.update({"form": "decision-create"})
+
+        def clean_report_id(self):
+            report_ids = self.cleaned_data["report_id"]
+            reports = []
+            for report_id in report_ids:
+                try:
+                    report = report_class.objects.get(id=report_id)
+                    if not report.is_pending:
+                        raise forms.ValidationError(
+                            "Report ID %(value)s has already been reviewed.",
+                            params={"value": report_id},
+                        )
+                    reports.append(report)
+                except report_class.DoesNotExist:
                     raise forms.ValidationError(
-                        "Report ID %(value)s has already been reviewed.",
+                        "Report ID %(value)s does not exist.",
                         params={"value": report_id},
                     )
-                reports.append(report)
-            except report_class.DoesNotExist:
-                raise forms.ValidationError(
-                    "Report ID %(value)s does not exist.",
-                    params={"value": report_id},
-                )
-        self.cleaned_data["reports"] = reports
-        return report_ids
+            self.cleaned_data["reports"] = reports
+            return report_ids
+
+    return MediaDecisionForm
 
 
 def _production_deferred(*values: str) -> Sequence[str]:
@@ -336,7 +336,7 @@ class MediaListAdmin(admin.ModelAdmin):
         pending_report_count = reports.filter(decision_id=None).count()
         extra_context["pending_report_count"] = pending_report_count
 
-        extra_context["mod_form"] = MediaDecisionForm(media_type=self.media_type)
+        extra_context["mod_form"] = get_decision_form(self.media_type)()
 
         return super().change_view(request, object_id, form_url, extra_context)
 
@@ -374,36 +374,23 @@ class MediaListAdmin(admin.ModelAdmin):
         if request.method == "POST":
             media_obj = self.get_object(request, object_id)
 
-            form = MediaDecisionForm(request.POST, media_type=self.media_type)
+            form = get_decision_form(self.media_type)(request.POST)
             if form.is_valid():
-                decision_class, through_class = {
-                    "image": (ImageDecision, ImageDecisionThrough),
-                    "audio": (AudioDecision, AudioDecisionThrough),
-                }[self.media_type]
+                decision = form.save(commit=False)
+                decision.moderator = request.user
+                decision.save()
 
-                action = form.cleaned_data["action"]
-                notes = form.cleaned_data["notes"]
-                moderator = request.user
-                decision = decision_class.objects.create(
-                    action=action,
-                    notes=notes,
-                    moderator=moderator,
-                )
                 logger.info(
                     "Decision created",
                     decision=decision.id,
-                    action=action,
-                    notes=notes,
-                    moderator=moderator.get_username(),
+                    action=decision.action,
+                    notes=decision.notes,
+                    moderator=request.user.get_username(),
                 )
 
-                through = through_class.objects.create(
-                    decision=decision,
-                    media_obj=media_obj,
-                )
+                decision.media_objs.add(media_obj)
                 logger.info(
-                    "Through model created",
-                    through=through.id,
+                    "Media linked to decision",
                     decision=decision.id,
                     media_obj=media_obj.id,
                 )
@@ -412,7 +399,7 @@ class MediaListAdmin(admin.ModelAdmin):
                     report.decision = decision
                     report.save()
                     logger.info(
-                        "Report updated",
+                        "Decision recorded in report",
                         report=report.id,
                         decision=decision.id,
                     )
