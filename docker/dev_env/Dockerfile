@@ -23,7 +23,7 @@ ENV PATH="${N_PREFIX}/bin:${PDM_PYTHONS}:${HOME}/.local/bin:${PATH}"
 # Dependency explanations:
 # - git: required by some python package; contributors should use git on their host
 # - perl: used in linting
-# - gcc: required by some pre-commit hooks for node-gyp
+# - gcc, g++: required by some pre-commit hooks for node-gyp
 # - just: command runner
 # - which: locate a program file in `PATH`
 # - pipx: Python CLI app installer
@@ -41,7 +41,7 @@ RUN dnf -y install dnf-plugins-core \
   && dnf -y config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo \
   && dnf -y install \
     git \
-    gcc \
+    gcc g++ \
     just \
     which \
     nodejs npm \
