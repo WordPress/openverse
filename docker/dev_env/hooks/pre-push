@@ -2,4 +2,4 @@
 
 export TERM=xterm
 
-ov hook pre-commit "$@"
+ov hook pre-push "$@"
