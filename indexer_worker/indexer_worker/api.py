@@ -12,6 +12,7 @@ from urllib.parse import urlparse
 import boto3
 import falcon
 from decouple import config
+
 from indexer_worker.indexer import launch_reindex
 from indexer_worker.tasks import TaskTracker
 
@@ -78,6 +79,7 @@ class IndexingJobResource(BaseTaskResource):
             task_id,
             task=task,
             model=model_name,
+            target_index=target_index,
             progress=progress,
             finish_time=finish_time,
         )

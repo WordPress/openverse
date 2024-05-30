@@ -5,8 +5,11 @@ from collections import deque
 import elasticsearch
 from decouple import config
 from elasticsearch import helpers
+
 from indexer_worker.db_helpers import database_connect
-from indexer_worker.elasticsearch_models import media_type_to_elasticsearch_model
+from indexer_worker.elasticsearch_models import (
+    media_type_to_elasticsearch_model,
+)
 from indexer_worker.es_helpers import elasticsearch_connect
 from indexer_worker.queries import get_reindex_query
 

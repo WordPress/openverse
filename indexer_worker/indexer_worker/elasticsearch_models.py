@@ -8,6 +8,7 @@ low-level changes to the index must be represented there as well.
 from enum import Enum, auto
 
 from elasticsearch_dsl import Document, Field, Integer
+
 from indexer_worker.authority import get_authority_boost
 
 

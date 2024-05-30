@@ -41,6 +41,7 @@ class TaskTracker:
         task_info = self.tasks[task_id]
         active = task_info["task"].is_alive()
         model = task_info["model"]
+        target_index = task_info["target_index"]
         start_time = task_info["start_time"]
         finish_time = task_info["finish_time"].value
         progress = task_info["progress"].value
@@ -49,6 +50,7 @@ class TaskTracker:
             "task_id": task_id,
             "active": active,
             "model": model,
+            "target_index": target_index,
             "progress": progress,
             "start_time": _time_fmt(start_time),
             "finish_time": _time_fmt(finish_time),

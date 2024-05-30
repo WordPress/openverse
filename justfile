@@ -20,6 +20,7 @@ DC_USER := env_var_or_default("DC_USER", "opener")
     cd catalog && just
     cd api && just
     cd ingestion_server && just
+    cd indexer_worker && just
     cd frontend && just
     cd automations/python && just
     cd automations/js && just
@@ -144,6 +145,7 @@ lint-codeowners checks="stable":
     # First-party services
     ([ ! -f catalog/.env ] && cp catalog/env.template catalog/.env) || true
     ([ ! -f ingestion_server/.env ] && cp ingestion_server/env.template ingestion_server/.env) || true
+    ([ ! -f indexer_worker/.env ] && cp indexer_worker/env.template indexer_worker/.env)   || true
     ([ ! -f api/.env ] && cp api/env.template api/.env) || true
 
 ##########

@@ -1,0 +1,23 @@
+services:
+  catalog_indexer_worker:
+    # only start if the catalog webserver and the api are activated
+    profiles:
+      - catalog
+      - api
+    build:
+      context: ./
+      args: # Automatically inferred from env vars, unless specified
+        - CATALOG_PY_VERSION
+    image: openverse-indexer_worker
+    ports:
+      - "50282:8003"
+    depends_on:
+      - db
+      - upstream_db
+      - es
+    volumes:
+      - .:/indexer_worker:z
+    env_file:
+      - env.docker
+    stdin_open: true
+    tty: true

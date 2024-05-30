@@ -3,6 +3,7 @@ include:
   - "ingestion_server/compose.yml"
   - "api/compose.yml"
   - "frontend/compose.yml"
+  - "indexer_worker/compose.yml"
 
 services:
   # Database used by the API
