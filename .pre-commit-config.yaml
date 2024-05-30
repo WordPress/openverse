@@ -16,10 +16,7 @@ repos:
       - id: fix-console-code-block
         name: Ensure "bash" code block is used over "console"
         files: ^documentation/.*\.md$
-        # -i: edit in place (no argument means no backup)
-        # -p: loop over all files provided, print error message if file cannot be opened
-        # -e: use the code provided inline
-        entry: perl -i -pe 's/```console/```bash/g'
+        entry: python ./utilities/fix_console_code_block.py
         language: system
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
