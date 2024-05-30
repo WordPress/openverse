@@ -1,4 +1,4 @@
-FROM docker.io/library/fedora:latest AS base-system
+FROM docker.io/library/fedora:latest
 
 # We want to keep all important things in `/opt` as we will preserve the
 # `/opt` directory as a volume.
@@ -51,7 +51,7 @@ RUN dnf -y install dnf-plugins-core \
   && pipx install \
     pdm pipenv  \
     pre-commit \
-    && npm install -g \
+  && npm install -g \
     n \
     corepack \
     && corepack enable
