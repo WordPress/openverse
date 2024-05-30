@@ -37,7 +37,7 @@ COMMANDS
         ov clean && ov init
 
   ov hook HOOK
-    Run git hooks through pre-commit inside the development toolkit container
+    Run Git hooks through pre-commit inside the development toolkit container
 
   ov COMMAND
     Run COMMAND inside the development toolkit container
