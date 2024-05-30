@@ -83,7 +83,7 @@ noted otherwise in the Python column's name property.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `uuid, nullable`
+_DB Column Type_: `uuid, nullable`
 
 #### Description
 
@@ -100,7 +100,7 @@ when the item is first inserted into the main table.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `timestamp with time zone, non-nullable`
+_DB Column Type_: `timestamp with time zone, non-nullable`
 
 #### Description
 
@@ -117,7 +117,7 @@ This is _not_ the date when the item was first published on the source site.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `timestamp with time zone, non-nullable`
+_DB Column Type_: `timestamp with time zone, non-nullable`
 
 #### Description
 
@@ -129,7 +129,7 @@ The timestamp of when the media item was last updated in Openverse catalog.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `character varying (80), nullable`
+_DB Column Type_: `character varying (80), nullable`
 
 #### Description
 
@@ -146,7 +146,7 @@ The way the media item was ingested into the Openverse catalog.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `character varying (80), nullable`
+_DB Column Type_: `character varying (80), nullable`
 
 #### Description
 
@@ -163,7 +163,7 @@ This is a keyword for the provider, a string in a "snake_case" form.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `character varying (80), nullable`
+_DB Column Type_: `character varying (80), nullable`
 
 #### Description
 
@@ -180,7 +180,7 @@ This is a keyword for the source, a string in a "snake_case" form.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `text, nullable`
+_DB Column Type_: `text, nullable`
 
 #### Description
 
@@ -192,7 +192,7 @@ The unique identifier for the media item on the source site.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `text, nullable`
+_DB Column Type_: `text, nullable`
 
 #### Description
 
@@ -207,7 +207,7 @@ upstream provider.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `text, non-nullable`
+_DB Column Type_: `text, non-nullable`
 
 #### Description
 
@@ -220,7 +220,7 @@ This should be unique for each media item.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `text, nullable`
+_DB Column Type_: `text, nullable`
 
 #### Description
 
@@ -237,7 +237,7 @@ The smallest acceptable size for a thumbnail is 600px at the longest edge. See
 
 _Media Types_: `image`
 
-_DB Column Types_: `integer, nullable`
+_DB Column Type_: `integer, nullable`
 
 #### Description
 
@@ -249,7 +249,7 @@ The width of the main image in pixels.
 
 _Media Types_: `image`
 
-_DB Column Types_: `integer, nullable`
+_DB Column Type_: `integer, nullable`
 
 #### Description
 
@@ -266,7 +266,7 @@ possible to send a head request to the direct url to extract this dat.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `integer, nullable`
+_DB Column Type_: `integer, nullable`
 
 #### Description
 
@@ -279,13 +279,13 @@ it can be extracted from a head request response to the media file URL.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `character varying (50), non-nullable`
+_DB Column Type_: `character varying (50), non-nullable`
 
 #### Description
 
 The slug of the license under which the media item is licensed. For the list of
 available license slugs, see
-[openverse-attribution package](https://github.com/WordPress/openverse/tree/main/packages/python/openverse-attribution/src/openverse_attribution/license_name.py)
+[openverse-attribution package](https://github.com/WordPress/openverse/tree/main/packages/python/openverse-attribution/src/openverse_attribution/license_name.py).
 
 ----
 
@@ -293,7 +293,7 @@ available license slugs, see
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `character varying (25), nullable`
+_DB Column Type_: `character varying (25), nullable`
 
 #### Description
 
@@ -306,7 +306,7 @@ which is denoted as "N/A".
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `text, nullable`
+_DB Column Type_: `text, nullable`
 
 #### Description
 
@@ -320,7 +320,7 @@ similar for unknown creators, see
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `text, nullable`
+_DB Column Type_: `text, nullable`
 
 #### Description
 
@@ -332,7 +332,7 @@ The URL of the creator's page, usually on the source site.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `text, nullable`
+_DB Column Type_: `text, nullable`
 
 #### Description
 
@@ -341,9 +341,9 @@ The title of the media item.
 #### Existing Data Inconsistencies
 
 Provider scripts may include html tags in record titles, see
-[issue #1441](https://github.com/WordPress/openverse/issues/1441) Some Wikimedia
-titles in the database still include "FILE:" prefix, and unnecessary file
-extension, which is
+[issue #1441](https://github.com/WordPress/openverse/issues/1441). Some
+Wikimedia titles in the database still include "FILE:" prefix, and unnecessary
+file extension, which is
 [hot-fixed](https://github.com/WordPress/openverse/tree/main/frontend/src/utils/decode-media-data.ts#L50)
 in the frontend. Some titles were incorrectly decoded, for which there is a
 [hot-fix in the frontend](https://github.com/WordPress/openverse/blob/70d57a91318a5b368fc0f1a244847bc27becefbd/frontend/src/utils/decode-media-data.ts#L73).
@@ -354,7 +354,7 @@ in the frontend. Some titles were incorrectly decoded, for which there is a
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `jsonb, nullable`
+_DB Column Type_: `jsonb, nullable`
 
 #### Description
 
@@ -374,7 +374,7 @@ data, descriptions, and popularity data.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `jsonb, nullable`
+_DB Column Type_: `jsonb, nullable`
 
 #### Description
 
@@ -399,7 +399,7 @@ the media item itself. See
 The cleanup process in data refresh fixes the following tag inconsistencies:
 
 - Empty tags (`{}`) are filtered out, see
-  [cc-archive issue](https://github.com/cc-archive/cccatalog-api/issues/130)
+  [cc-archive issue #130](https://github.com/cc-archive/cccatalog-api/issues/130).
 - Tags with license slugs, as well as some other deny-listed tags, are filtered
   out.
 - Some machine-generated tags have accuracy lower than 90% and are unreliable.
@@ -409,9 +409,9 @@ The cleanup process in data refresh fixes the following tag inconsistencies:
   [issue #1927](https://github.com/WordPress/openverse/issues/1927). This can
   result in duplicate tags when the frontend decodes the tags.
 - Tags with leading or trailing spaces, see
-  [issue #4199](https://github.com/WordPress/openverse/issues/4199) Identical,
-  duplicate tags were filtered out in
-  [#1556](https://github.com/WordPress/openverse/issues/1566)
+  [issue #4199](https://github.com/WordPress/openverse/issues/4199) Previously
+  existing, but now fixed, inconsistencies: Identical duplicate tags were
+  filtered out in [#1556](https://github.com/WordPress/openverse/issues/1566)
 
 ----
 
@@ -419,7 +419,7 @@ The cleanup process in data refresh fixes the following tag inconsistencies:
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `boolean, nullable`
+_DB Column Type_: `boolean, nullable`
 
 #### Description
 
@@ -434,7 +434,7 @@ no provider script or SQL ingestion sets this field value.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `timestamp with time zone, nullable`
+_DB Column Type_: `timestamp with time zone, nullable`
 
 #### Description
 
@@ -447,7 +447,7 @@ that were updated during re-ingestion, the timestamp of re-ingestion.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `boolean, non-nullable`
+_DB Column Type_: `boolean, non-nullable`
 
 #### Description
 
@@ -469,18 +469,13 @@ more than `OLDEST_PER_PROVIDER` value.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `character varying (5), nullable`
+_DB Column Type_: `character varying (5), nullable`
 
 #### Description
 
-The filetype of the media item (not the MIME type). If the filetype is not
-available in the API response, it can be extracted from the URL extension or
-from the HEAD response from the media direct URL.
-
-#### Object Shape
-
-String, the file type (extension) of the media file. Maximum length: 5
-characters.
+The filetype (extension) of the main media file (not the MIME type). If the
+filetype is not available in the API response, it can be extracted from the URL
+extension or from the HEAD response from the media direct URL.
 
 #### Normalization and Validation
 
@@ -497,7 +492,7 @@ file type, see
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `character varying (80), nullable`
+_DB Column Type_: `character varying (80), nullable`
 
 #### Description
 
@@ -508,8 +503,8 @@ and
 
 #### Selection Criteria
 
-Category is assigned heuristically based on the extension and default categories
-per provider.
+Category is assigned heuristically based on the extension and
+[default categories per provider](https://github.com/WordPress/openverse/tree/main/catalog/dags/common/loader/provider_details.py#L155).
 
 ----
 
@@ -517,7 +512,7 @@ per provider.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `double precision, nullable`
+_DB Column Type_: `double precision, nullable`
 
 #### Description
 
@@ -534,7 +529,7 @@ The value is updated monthly during the data refresh process.
 
 _Media Types_: `audio`
 
-_DB Column Types_: `integer, nullable`
+_DB Column Type_: `integer, nullable`
 
 #### Description
 
@@ -546,7 +541,7 @@ The duration of the main audio file in milliseconds.
 
 _Media Types_: `audio`
 
-_DB Column Types_: `integer, nullable`
+_DB Column Type_: `integer, nullable`
 
 #### Description
 
@@ -558,7 +553,7 @@ The bit rate of the main audio file.
 
 _Media Types_: `audio`
 
-_DB Column Types_: `integer, nullable`
+_DB Column Type_: `integer, nullable`
 
 #### Description
 
@@ -570,7 +565,7 @@ The sample rate of the main audio file.
 
 _Media Types_: `audio`
 
-_DB Column Types_: `array of character varying (80), nullable`
+_DB Column Type_: `array of character varying (80), nullable`
 
 #### Description
 
@@ -582,7 +577,7 @@ List of genres associated with the audio.
 
 _Media Types_: `audio`
 
-_DB Column Types_: `jsonb, nullable`
+_DB Column Type_: `jsonb, nullable`
 
 #### Description
 
@@ -591,7 +586,10 @@ The list of alternative file details for the audio (different formats/ quality).
 #### Object Shape
 
 JSONB array of dictionaries:
-`[{"url": "http://example.com/audio.mp3", "filesize": 123456, "bit_rate": 128, "sample_rate": 44100}]`
+
+```
+[{"url": "http://example.com/audio.mp3", "filesize": 123456, "bit_rate": 128, "sample_rate": 44100}]
+```
 
 - `url` (string): the direct URL of the alternative file.
 - `filesize` (integer): the size of the alternative file in bytes.
@@ -607,7 +605,7 @@ JSONB array of dictionaries:
 
 _Media Types_: `audio`
 
-_DB Column Types_: `jsonb, nullable`
+_DB Column Type_: `jsonb, nullable`
 
 #### Description
 
@@ -617,7 +615,10 @@ to.
 #### Object Shape
 
 JSONB object:
-`{"title": "Audio Set Title", "foreign_landing_url": "http://example.com", "thumbnail": "http://example.com/thumbnail.jpg", "creator": "Creator Name", "creator_url": "http://example.com/creator", "foreign_identifier": "123456"}`
+
+```
+{"title": "Audio Set Title", "foreign_landing_url": "http://example.com", "thumbnail": "http://example.com/thumbnail.jpg", "creator": "Creator Name", "creator_url": "http://example.com/creator", "foreign_identifier": "123456"}
+```
 
 - `title` (string): the title of the audio set.
 - `foreign_landing_url` (string): the URL of the audio set on the source site.
@@ -635,7 +636,7 @@ JSONB object:
 
 _Media Types_: `audio`
 
-_DB Column Types_: `text, nullable`
+_DB Column Type_: `text, nullable`
 
 #### Description
 
@@ -647,7 +648,7 @@ Unique identifier for the audio set on the source site.
 
 _Media Types_: `audio`
 
-_DB Column Types_: `integer, nullable`
+_DB Column Type_: `integer, nullable`
 
 #### Description
 
