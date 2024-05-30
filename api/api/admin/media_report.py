@@ -368,7 +368,7 @@ class MediaListAdmin(admin.ModelAdmin):
     def moderate_view(self, request, object_id):
         """
         Create a decision for the media object and associate selected
-        reports complaining about the media with this decision.
+        reports referencing the media with this decision.
         """
 
         if request.method == "POST":
