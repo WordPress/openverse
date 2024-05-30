@@ -1,21 +1,24 @@
-FROM docker.io/library/fedora:latest
+FROM docker.io/library/fedora:latest AS base-system
 
 # We want to keep all important things in `/opt` as we will preserve the
 # `/opt` directory as a volume.
 
-# location where pipx installs its tools
-ENV PIPX_HOME="/opt/pipx"
-# location where pipx symlinks the binaries, must be on the path
-ENV PIPX_BIN_DIR="/opt/pipx/bin"
+# Set HOME to /opt so XDG-respecting utilities automatically use it
+# without additional configuration
+# This gets chmodded with wide open permissions, so that
+# on Linux hosts, the explicitly passed user (with docker group)
+# is able to read/write from here, as well as the root user used by
+# macOS hosts (who don't have Docker permissions or host filesystem
+# permissions issues to contend with and as such run the container as root)
+ENV HOME="/opt"
+
 # location where PDM installs Python interpreters
-ENV PDM_PYTHONS="/opt/pdm/bin"
+ENV PDM_PYTHONS="${HOME}/pdm/bin"
 # location where `n` installs Node.js versions
-ENV N_PREFIX="/opt/n"
-# location where pre-commit stores environments
-ENV PRE_COMMIT_HOME="/opt/pre-commit"
+ENV N_PREFIX="${HOME}/n"
 
 # Add tooling installed in custom locations to `PATH`.
-ENV PATH="${N_PREFIX}/bin:${PDM_PYTHONS}:${PIPX_BIN_DIR}:${PATH}"
+ENV PATH="${N_PREFIX}/bin:${PDM_PYTHONS}:${HOME}/.local/bin:${PATH}"
 
 # Dependency explanations:
 # - git: required by some python package; contributors should use git on their host
@@ -42,16 +45,18 @@ RUN dnf -y install dnf-plugins-core \
     gcc \
     just \
     which \
-    pipx \
-    nodejs \
+    nodejs npm \
+    python3.12 pipx \
     docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin \
   && pipx install \
     pdm pipenv  \
     pre-commit \
-  && npm install -g \
+    && npm install -g \
     n \
     corepack \
-  && corepack enable
+    && corepack enable
+
+RUN bash -c 'chmod -Rv 0777 /opt'
 
 # Avoid overwriting `.venv`'s from the host
 ENV PDM_VENV_IN_PROJECT="False"

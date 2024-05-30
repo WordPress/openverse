@@ -9,11 +9,7 @@ fi
 
 cd "$OPENVERSE_PROJECT" || exit 1
 
-suppress_output() {
-  "$@" 2>/dev/null 1>/dev/null
-}
-
-suppress_output corepack install
+corepack install 1>/dev/null
 
 if [ -z "$(n ls 2>/dev/null)" ]; then
   printf "Installing the specific Node JS version required by Openverse frontend; this is only necessary the first time the toolkit runs\n"
@@ -53,23 +49,4 @@ if [ -n "$PDM_CACHE_DIR" ]; then
   pdm config install.cache on
 fi
 
-_profiles=(
-  "$OPENVERSE_PROJECT"/.ovprofile
-  "$OPENVERSE_PROJECT"/docker/dev_env/bash_profile.sh
-)
-
-for profile in "${_profiles[@]}"; do
-  if [ -f "$profile" ]; then
-    if grep -q '^alias ' "$profile"; then
-      printf "Aliases in %s will not work. Use functions instead." "$profile" >>/dev/stderr
-      exit 1
-    fi
-
-    # SC1090 cannot be disabled directly
-    # Workaround from https://github.com/koalaman/shellcheck/issues/2038#issuecomment-680513830
-    # shellcheck source=/dev/null
-    source "$profile"
-  fi
-done
-
-exec "$@"
+bash -c "$@"

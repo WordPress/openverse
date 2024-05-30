@@ -2,10 +2,6 @@
 
 set -e
 
-suppress_output() {
-  "$@" 2>/dev/null 1>/dev/null
-}
-
 run_args=(
   -i
   --rm
@@ -35,6 +31,19 @@ if [ -t 0 ]; then
   run_args+=(-t)
 fi
 
+case "$OSTYPE" in
+linux*)
+  run_args+=(--user "$UID:$(getent group docker | cut -d: -f3)")
+  ;;
+darwin*)
+  # noop, just catching them to avoid the fall-through error case
+  ;;
+*)
+  printf "Openverse development is only supported on Linux and macOS hosts. Please use WSL to run the Openverse development environment under Linux on Windows computers." >/dev/stderr
+  exit 1
+  ;;
+esac
+
 host_pnpm_store="$(pnpm store path 2>/dev/null || echo)"
 
 # Share the pnpm cache with the container, if it's available locally
@@ -57,4 +66,4 @@ if [ "$(pdm config --quiet install.cache)" == "True" ]; then
   )
 fi
 
-docker run "${run_args[@]}" openverse-dev-env:latest "$@"
+docker run "${run_args[@]}" openverse-dev-env:latest "$*"

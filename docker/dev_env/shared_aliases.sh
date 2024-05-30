@@ -8,6 +8,9 @@
 
 # Personal aliases and utilities should go in an .ovprofile file at the monorepo root
 
-j() {
-  just "$@"
-}
+declare -A shared_aliases
+export shared_aliases
+
+shared_aliases=(
+  [j]="just"
+)

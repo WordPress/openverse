@@ -73,13 +73,22 @@ init-ovprofile:
     #! /usr/bin/env bash
 
     # Personal modifications to the ov dev environment go here
-    # Use bash functions to define aliases of your common workflow
-    # Shared aliases are available in docker/dev_env/bash_profile
+    # Use additional entries in the associative bash array to define aliases
+    # Shared aliases (and more examples) are in docker/dev_env/shared_aliases.sh
 
-    # This is just an example bash function for demonstration. Feel free to delete it.
+    declare -A personal_aliases
+    export personal_aliases
+
+    personal_aliases=(
+        [welcome]="just welcome-to-openverse"
+    )
+    EOPROFILE
+
+# Recipe used as example alias in default .ovprofile (see init-ovprofile)
+welcome-to-openverse:
+    #! /usr/bin/env bash
     # ASCII art courtesy of http://patorjk.com/software/taag/#p=display&f=Big&t=Openverse
-    welcome_to_openverse() {
-        cat <<OPENVERSE
+    cat <<OPENVERSE
       ___   ____   ___  ____   __ __    ___  ____    _____   ___
      /   \ |    \ /  _]|    \ |  |  |  /  _]|    \  / ___/  /  _]
     |     ||  o  )  [_ |  _  ||  |  | /  [_ |  D  )(   \_  /  [_
@@ -88,8 +97,6 @@ init-ovprofile:
     |     ||  | |     ||  |  | \   / |     ||  .  \ \    ||     |
      \___/ |__| |_____||__|__|  \_/  |_____||__|\_|  \___||_____|
     OPENVERSE
-    }
-    EOPROFILE
 
 # Setup pre-commit as a Git hook
 precommit:

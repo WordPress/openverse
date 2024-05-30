@@ -12,6 +12,14 @@ _cmd="$1"
 
 dev_env="$OPENVERSE_PROJECT"/docker/dev_env
 
+# shellcheck source=./docker/dev_env/shared_aliases.sh
+source "$dev_env/shared_aliases.sh"
+
+if [ -f "$OPENVERSE_PROJECT/.ovprofile" ]; then
+  # shellcheck source=/dev/null
+  source "$OPENVERSE_PROJECT/.ovprofile"
+fi
+
 if [[ $_cmd == "help" || -z $_cmd ]]; then
   cat <<-'EOF'
 Openverse development toolkit
@@ -89,7 +97,16 @@ hook)
   ;;
 
 *)
-  "$dev_env"/run.sh "$@"
+  declare -a rest
+  if [ -n "${personal_aliases[$_cmd]}" ]; then
+    rest=("${personal_aliases[$_cmd]}" "${@:2}")
+  elif [ -n "${shared_aliases[$_cmd]}" ]; then
+    rest=("${shared_aliases[$_cmd]}" "${@:2}")
+  else
+    rest=("$@")
+  fi
+
+  "$dev_env"/run.sh "${rest[@]}"
   ;;
 
 esac
