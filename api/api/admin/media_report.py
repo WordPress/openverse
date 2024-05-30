@@ -186,6 +186,11 @@ class MediaListAdmin(admin.ModelAdmin):
         # End of block lifted from Django source.
 
         urls = super().get_urls()
+
+        # Using slice assignment (docs:
+        # https://docs.python.org/3/tutorial/introduction.html#lists),
+        # insert custom URLs at the penultimate position so that they
+        # appear just before the catch-all view.
         urls[-1:-1] = [
             path(
                 "<path:object_id>/moderate/",
