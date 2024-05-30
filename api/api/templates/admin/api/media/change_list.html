@@ -2,6 +2,10 @@
 {% load i18n admin_urls static admin_list %}
 
 {% block extrahead %}{{ block.super }}
+<!--
+  This script highlights rows which are open in another moderator's
+   session using the warning color.
+-->
 <script>
   document.addEventListener("DOMContentLoaded", function() {
     const mediaItems = JSON.parse('{{ locked_media }}');
