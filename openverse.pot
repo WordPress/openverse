@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2024-05-13T15:19:59+00:00\n"
+"POT-Creation-Date: 2024-05-30T16:29:34+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -33,7 +33,7 @@ msgctxt "hero.description"
 msgid "An extensive library of free stock photos, images, and audio, available for free use."
 msgstr ""
 
-#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:44
+#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:45
 #: src/components/VHeader/VSearchBar/VSearchBar.vue:14
 #: src/components/VHeader/VSearchBar/VStandaloneSearchBar.vue:21
 msgctxt "hero.search.placeholder"
@@ -133,13 +133,13 @@ msgctxt "header.filterButton.simple"
 msgid "Filters"
 msgstr ""
 
+#. Used as the accessible label for the button or tab that opens the filters sidebar. Count refers the number of filters the user has enabled, not the number of available filters
 #. Do not translate words between ### ###.
 #: src/components/VHeader/VFilterButton.vue:58
+#: src/components/VHeader/VHeaderMobile/VFilterTab.vue:6
 msgctxt "header.filterButton.withCount"
-msgid "###count### Filter"
-msgid_plural "###count### Filters"
-msgstr[0] ""
-msgstr[1] ""
+msgid "Filters (###count###)"
+msgstr ""
 
 #: src/components/VHeader/VHeaderMobile/VShowResultsButton.vue:40
 msgctxt "header.seeResults"
@@ -1084,7 +1084,7 @@ msgctxt "error.audio"
 msgid "an audio track"
 msgstr ""
 
-#: src/components/VHeader/VHeaderMobile/VFilterTab.vue:4
+#: src/components/VHeader/VHeaderMobile/VFilterTab.vue:9
 msgctxt "filters.title"
 msgid "Filters"
 msgstr ""
@@ -1392,7 +1392,7 @@ msgid "Hide filters"
 msgstr ""
 
 #: src/components/VFilters/VSearchGridFilter.vue:18
-#: src/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue:75
+#: src/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue:76
 msgctxt "filterList.clear"
 msgid "Clear filters"
 msgstr ""
@@ -1529,8 +1529,8 @@ msgid "Search"
 msgstr ""
 
 #: src/components/VHeader/meta/VSearchBarButton.stories.js:39
-#: src/components/VHeader/VHeaderDesktop.vue:16
-#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:69
+#: src/components/VHeader/VHeaderDesktop.vue:17
+#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:73
 msgctxt "browsePage.searchForm.clear"
 msgid "Clear"
 msgstr ""
@@ -2249,7 +2249,7 @@ msgid "Search"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:49
+#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:50
 #: src/components/VHeader/VSearchBar/VSearchBar.vue:17
 #: src/components/VHeader/VSearchBar/VStandaloneSearchBar.vue:24
 msgctxt "search.searchBarLabel"
@@ -2317,7 +2317,7 @@ msgctxt "modal.closeNamed"
 msgid "Close ###name###"
 msgstr ""
 
-#: src/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue:39
+#: src/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue:40
 msgctxt "modal.closeContentSettings"
 msgid "Close the content settings menu"
 msgstr ""
@@ -2386,8 +2386,8 @@ msgctxt "searchType.label"
 msgid "Type of content to search"
 msgstr ""
 
-#: src/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue:25
-#: src/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue:32
+#: src/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue:26
+#: src/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue:33
 msgctxt "searchType.heading"
 msgid "Content type"
 msgstr ""
@@ -2506,6 +2506,7 @@ msgctxt "language.language"
 msgid "Language"
 msgstr ""
 
+#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:9
 #: src/components/VRecentSearches/VRecentSearches.vue:13
 #: src/components/VRecentSearches/VRecentSearches.vue:31
 msgctxt "recentSearches.heading"
@@ -2528,12 +2529,12 @@ msgctxt "recentSearches.clearSingle.label"
 msgid "Clear recent search '###entry###'"
 msgstr ""
 
-#: src/components/VRecentSearches/VRecentSearches.vue:64
+#: src/components/VRecentSearches/VRecentSearches.vue:65
 msgctxt "recentSearches.none"
 msgid "No recent searches to show."
 msgstr ""
 
-#: src/components/VRecentSearches/VRecentSearches.vue:70
+#: src/components/VRecentSearches/VRecentSearches.vue:71
 msgctxt "recentSearches.disclaimer"
 msgid "Openverse does not store your recent searches, this information is kept locally in your browser."
 msgstr ""
