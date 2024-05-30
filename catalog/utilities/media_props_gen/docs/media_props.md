@@ -122,7 +122,7 @@ it can be extracted from a head request response to the media file URL.
 
 The slug of the license under which the media item is licensed. For the list of
 available license slugs, see
-[openverse-attribution package](https://github.com/WordPress/openverse/tree/main/packages/python/openverse-attribution/src/openverse_attribution/license_name.py)
+[openverse-attribution package](https://github.com/WordPress/openverse/tree/main/packages/python/openverse-attribution/src/openverse_attribution/license_name.py).
 
 # license_version
 
@@ -154,7 +154,7 @@ The title of the media item.
 ## Existing Data Inconsistencies
 
 Provider scripts may include html tags in record titles, see
-[issue #1441](https://github.com/WordPress/openverse/issues/1441)
+[issue #1441](https://github.com/WordPress/openverse/issues/1441).
 
 Some Wikimedia titles in the database still include "FILE:" prefix, and
 unnecessary file extension, which is
@@ -202,7 +202,7 @@ the media item itself. See
 The cleanup process in data refresh fixes the following tag inconsistencies:
 
 - Empty tags (`{}`) are filtered out, see
-  [cc-archive issue](https://github.com/cc-archive/cccatalog-api/issues/130)
+  [cc-archive issue #130](https://github.com/cc-archive/cccatalog-api/issues/130).
 - Tags with license slugs, as well as some other deny-listed tags, are filtered
   out.
 - Some machine-generated tags have accuracy lower than 90% and are unreliable.
@@ -216,8 +216,8 @@ Some inconsistencies are not fixed by the cleanup process:
 - Tags with leading or trailing spaces, see
   [issue #4199](https://github.com/WordPress/openverse/issues/4199)
 
-Identical, duplicate tags were filtered out in
-[#1556](https://github.com/WordPress/openverse/issues/1566)
+Previously existing, but now fixed, inconsistencies: Identical duplicate tags
+were filtered out in [#1556](https://github.com/WordPress/openverse/issues/1566)
 
 # watermarked
 
@@ -255,14 +255,9 @@ more than `OLDEST_PER_PROVIDER` value.
 
 ## Description
 
-The filetype of the media item (not the MIME type). If the filetype is not
-available in the API response, it can be extracted from the URL extension or
-from the HEAD response from the media direct URL.
-
-## Object Shape
-
-String, the file type (extension) of the media file. Maximum length: 5
-characters.
+The filetype (extension) of the main media file (not the MIME type). If the
+filetype is not available in the API response, it can be extracted from the URL
+extension or from the HEAD response from the media direct URL.
 
 ## Normalization and Validation
 
@@ -284,8 +279,8 @@ and
 
 ## Selection Criteria
 
-Category is assigned heuristically based on the extension and default categories
-per provider.
+Category is assigned heuristically based on the extension and
+[default categories per provider](https://github.com/WordPress/openverse/tree/main/catalog/dags/common/loader/provider_details.py#L155).
 
 # standardized_popularity
 
@@ -332,7 +327,9 @@ The list of alternative file details for the audio (different formats/ quality).
 
 JSONB array of dictionaries:
 
-`[{"url": "http://example.com/audio.mp3", "filesize": 123456, "bit_rate": 128, "sample_rate": 44100}]`
+```
+[{"url": "http://example.com/audio.mp3", "filesize": 123456, "bit_rate": 128, "sample_rate": 44100}]
+```
 
 - `url` (string): the direct URL of the alternative file.
 - `filesize` (integer): the size of the alternative file in bytes.
@@ -352,7 +349,10 @@ to.
 ## Object Shape
 
 JSONB object:
-`{"title": "Audio Set Title", "foreign_landing_url": "http://example.com", "thumbnail": "http://example.com/thumbnail.jpg", "creator": "Creator Name", "creator_url": "http://example.com/creator", "foreign_identifier": "123456"}`
+
+```
+{"title": "Audio Set Title", "foreign_landing_url": "http://example.com", "thumbnail": "http://example.com/thumbnail.jpg", "creator": "Creator Name", "creator_url": "http://example.com/creator", "foreign_identifier": "123456"}
+```
 
 - `title` (string): the title of the audio set.
 - `foreign_landing_url` (string): the URL of the audio set on the source site.

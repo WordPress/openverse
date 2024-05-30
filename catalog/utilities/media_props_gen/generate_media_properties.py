@@ -108,7 +108,7 @@ def generate_long_form_doc(markdown_descriptions: dict, media_properties: dict) 
                     f"{media_type}: {sql_type}"
                     for media_type, sql_type in zip(MEDIA_TYPES, sql_types)
                 ]
-            prop_heading += f"_DB Column Types_: {', '.join(sql_types)}\n\n"
+            prop_heading += f"_DB Column Type_: {', '.join(sql_types)}\n\n"
 
         prop_doc = "".join(
             [f"{Md.heading(4, k)}{Md.line(v)}" for k, v in description.items() if v]
