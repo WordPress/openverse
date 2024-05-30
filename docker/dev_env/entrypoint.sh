@@ -21,6 +21,7 @@ if [ -n "$PNPM_HOME" ]; then
 fi
 
 pdm config python.install_root "/opt/pdm/python"
+pdm config venv.location "/opt/pdm/venvs"
 
 _python3s=(/opt/pdm/python/cpython@3.11.*/bin/python3)
 
