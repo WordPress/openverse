@@ -41,7 +41,6 @@ RUN dnf -y install dnf-plugins-core \
   && dnf -y config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo \
   && dnf -y install \
     git \
-    perl \
     gcc \
     just \
     which \
