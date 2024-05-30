@@ -66,6 +66,41 @@ install:
 @install-hooks:
     bash -c "cp ./docker/dev_env/hooks/* ./.git/hooks"
 
+# Create an `.ovprofile` as a starting point for development environment customisation. Does not make changes if the file already exists.
+init-ovprofile:
+    #! /usr/bin/env bash
+    [[ -f ./.ovprofile ]] && echo '.ovprofile already exists! No changes made.' && exit 0 || cat <<-'EOPROFILE' > ./.ovprofile
+    #! /usr/bin/env bash
+
+    # Personal modifications to the ov dev environment go here
+    # Use additional entries in the bash array to create aliases
+    # odd-or-0 index entries are the aliases, and even indexes are the expansion
+    # for the previous index
+    # Shared aliases (and more examples) are in docker/dev_env/shared_aliases.sh
+    # Run 'ov welcome' to try the included example personal alias
+
+    declare -a personal_aliases
+    export personal_aliases
+
+    personal_aliases+=(
+        welcome "just welcome-to-openverse"
+    )
+    EOPROFILE
+
+# Recipe used as example alias in default .ovprofile (see init-ovprofile)
+welcome-to-openverse:
+    #! /usr/bin/env bash
+    # ASCII art courtesy of http://patorjk.com/software/taag/#p=display&f=Big&t=Openverse
+    cat <<OPENVERSE
+      ___   ____   ___  ____   __ __    ___  ____    _____   ___
+     /   \ |    \ /  _]|    \ |  |  |  /  _]|    \  / ___/  /  _]
+    |     ||  o  )  [_ |  _  ||  |  | /  [_ |  D  )(   \_  /  [_
+    |  O  ||   _/    _]|  |  ||  |  ||    _]|    /  \__  ||    _]
+    |     ||  | |   [_ |  |  ||  :  ||   [_ |    \  /  \ ||   [_
+    |     ||  | |     ||  |  | \   / |     ||  .  \ \    ||     |
+     \___/ |__| |_____||__|__|  \_/  |_____||__|\_|  \___||_____|
+    OPENVERSE
+
 # Setup pre-commit as a Git hook
 precommit:
     #!/usr/bin/env bash

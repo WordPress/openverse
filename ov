@@ -12,6 +12,16 @@ _cmd="$1"
 
 dev_env="$OPENVERSE_PROJECT"/docker/dev_env
 
+# shellcheck source=/dev/null
+source "$dev_env"/shared_aliases.sh
+
+if [ -f "$OPENVERSE_PROJECT"/.ovprofile ]; then
+  # shellcheck source=/dev/null
+  source "$OPENVERSE_PROJECT"/.ovprofile
+else
+  declare -a personal_aliases
+fi
+
 if [[ $_cmd == "help" || -z $_cmd ]]; then
   cat <<-'EOF'
 Openverse development toolkit
@@ -57,7 +67,7 @@ fi
 case "$_cmd" in
 init)
   "$_self" build
-  "$_self" just install-hooks
+  "$_self" 'just install-hooks && just init-ovprofile'
   ;;
 
 build)
@@ -79,7 +89,21 @@ hook)
   ;;
 
 *)
-  "$dev_env"/run.sh "$@"
+  args=("$@")
+
+  # Iterate through personal aliases first to allow overriding the shared aliases
+  aliases=("${personal_aliases[@]}" "${shared_aliases[@]}")
+  while (("${#aliases[@]}")); do
+    _alias="${aliases[0]}"
+    _expansion="${aliases[1]}"
+    if [ "$_cmd" = "$_alias" ]; then
+      args=("$_expansion" "${@:2}")
+      break
+    fi
+    aliases=("${aliases[@]:2}")
+  done
+
+  "$dev_env"/run.sh "${args[@]}"
   ;;
 
 esac
