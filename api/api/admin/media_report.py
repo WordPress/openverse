@@ -50,6 +50,25 @@ def register(site):
     site.register(AudioDecision, AudioDecisionAdmin)
 
 
+def get_report_form(media_type: str):
+    report_class = {
+        "image": ImageReport,
+        "audio": AudioReport,
+    }[media_type]
+
+    class MediaReportForm(forms.ModelForm):
+        class Meta:
+            fields = ["media_obj", "reason", "description"]
+            model = report_class
+
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            for field in self.fields.values():
+                field.widget.attrs.update({"form": "report-create"})
+
+    return MediaReportForm
+
+
 class MultipleValueField(forms.MultipleChoiceField):
     """
     This is a variant of ``MultipleChoiceField`` that does not validate
@@ -192,6 +211,11 @@ class MediaListAdmin(admin.ModelAdmin):
         # insert custom URLs at the penultimate position so that they
         # appear just before the catch-all view.
         urls[-1:-1] = [
+            path(
+                "<path:object_id>/complain/",
+                wrap(self.complain_view),
+                name=f"{app}_{model}_complain",
+            ),
             path(
                 "<path:object_id>/moderate/",
                 wrap(self.moderate_view),
@@ -340,6 +364,8 @@ class MediaListAdmin(admin.ModelAdmin):
 
         extra_context["mod_form"] = get_decision_form(self.media_type)()
 
+        extra_context["report_form"] = get_report_form(self.media_type)()
+
         return super().change_view(request, object_id, form_url, extra_context)
 
     #############
@@ -403,6 +429,38 @@ class MediaListAdmin(admin.ModelAdmin):
                     "Decision recorded in reports",
                     report_count=count,
                     decision=decision.id,
+                )
+            else:
+                logger.warning(
+                    "Form is invalid",
+                    **form.cleaned_data,
+                    errors=form.errors,
+                )
+
+        return redirect(f"admin:api_{self.media_type}_change", object_id)
+
+    #################
+    # Complain view #
+    #################
+
+    def complain_view(self, request, object_id):
+        """Create a report for the media object."""
+
+        if request.method == "POST":
+            media_obj = self.get_object(request, object_id)
+
+            form = get_report_form(self.media_type)(request.POST)
+            if form.is_valid():
+                report = form.save(commit=False)
+                report.media_obj = media_obj
+                report.save()
+
+                logger.info(
+                    "Report created",
+                    report=report.id,
+                    reason=report.reason,
+                    description=report.description,
+                    media_obj=media_obj.id,
                 )
             else:
                 logger.warning(

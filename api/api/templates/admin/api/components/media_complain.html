@@ -1,0 +1,38 @@
+{% comment %}
+Props:
+- media_type
+- media_obj
+- report_form
+{% endcomment %}
+
+<fieldset class="module aligned">
+  <h2>Create report</h2>
+
+  <div class="form-row field-height">
+    <div>
+      <div class="flex-container">
+        {{ report_form.reason.label_tag }}
+        {{ report_form.reason }}
+      </div>
+      <div class="help">{{ report_form.reason.help_text }}</div>
+    </div>
+  </div>
+
+  <div class="form-row field-height">
+    <div>
+      <div class="flex-container">
+        {{ report_form.description.label_tag }}
+        {{ report_form.description }}
+      </div>
+      <div class="help">{{ report_form.description.help_text }}</div>
+    </div>
+  </div>
+
+  <div class="p-10px">
+    <input type="submit" form="report-create" value="Create report">
+  </div>
+
+  <style>
+    .p-10px { padding: 10px; }
+  </style>
+</fieldset>
