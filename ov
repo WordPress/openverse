@@ -12,7 +12,7 @@ _cmd="$1"
 
 dev_env="$OPENVERSE_PROJECT"/docker/dev_env
 
-# shellcheck source=./docker/dev_env/shared_aliases.sh
+# shellcheck source=/dev/null
 source "$dev_env/shared_aliases.sh"
 
 if [ -f "$OPENVERSE_PROJECT/.ovprofile" ]; then
