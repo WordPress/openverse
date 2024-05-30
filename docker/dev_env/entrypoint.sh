@@ -49,4 +49,4 @@ if [ -n "$PDM_CACHE_DIR" ]; then
   pdm config install.cache on
 fi
 
-bash -c "$@"
+bash -c "$*"

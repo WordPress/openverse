@@ -66,4 +66,4 @@ if [ "$(pdm config --quiet install.cache)" == "True" ]; then
   )
 fi
 
-docker run "${run_args[@]}" openverse-dev-env:latest "$*"
+docker run "${run_args[@]}" openverse-dev-env:latest "$@"
