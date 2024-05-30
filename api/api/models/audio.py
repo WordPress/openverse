@@ -256,7 +256,7 @@ class Audio(AudioFileMixin, AbstractMedia):
 
         from django.urls import reverse
 
-        return reverse("image-detail", args=[str(self.identifier)])
+        return reverse("audio-detail", args=[str(self.identifier)])
 
 
 class DeletedAudio(AbstractDeletedMedia):
