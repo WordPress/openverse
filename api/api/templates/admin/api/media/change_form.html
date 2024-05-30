@@ -41,8 +41,8 @@
 {% endblock %}
 
 {% block content %}{{ block.super }}
-<!-- Fields for this form are supplied separately in `media_reports.html`. -->
 {% if pending_report_count %}
+<!-- Fields for this form are supplied separately in `media_reports.html`. -->
 <form id="decision-create" method="POST" action="{% url 'admin:api_'|add:media_type|add:'_moderate' object_id %}">
   {% csrf_token %}
 </form>
