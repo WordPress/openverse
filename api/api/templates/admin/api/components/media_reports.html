@@ -78,29 +78,29 @@ Props:
   <div class="form-row field-height">
     <div>
       <div class="flex-container">
-        <label>Action</label>
-        <div>
-          {{ mod_form.action }}
-        </div>
+        {{ mod_form.action.label_tag }}
+        {{ mod_form.action }}
       </div>
+      <div class="help">{{ mod_form.action.help_text }}</div>
     </div>
   </div>
 
   <div class="form-row field-height">
     <div>
       <div class="flex-container">
-        <label>Notes</label>
-        <div>{{ mod_form.notes }}</div>
+        {{ mod_form.notes.label_tag }}
+        {{ mod_form.notes }}
       </div>
+      <div class="help">{{ mod_form.notes.help_text }}</div>
     </div>
   </div>
 
   <div class="p-10px">
     <input form="decision-create" type="submit" value="Create decision">
   </div>
+
+  <style>
+    .p-10px { padding: 10px; }
+  </style>
   {% endif %}
 </fieldset>
-
-<style>
-  .p-10px { padding: 10px; }
-</style>
