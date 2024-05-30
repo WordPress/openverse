@@ -17,6 +17,8 @@ Props:
     or more of them and creating a decision.
   </p>
   {% endif %}
+
+  {% if reports %}
   <table class="w-full">
     <thead>
       <tr>
@@ -75,6 +77,13 @@ Props:
     .hidden { display: none; }
     .w-full { width: 100%; }
   </style>
+  {% else %}
+  <p>
+    There are no reports. You can file a report using the form "Create
+    report" above.
+  </p>
+  {% endif %}
+
   {% if pending_report_count %}
   <div class="form-row field-height">
     <div>

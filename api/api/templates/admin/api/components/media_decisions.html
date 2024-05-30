@@ -9,6 +9,7 @@ Props:
 <fieldset class="module">
   <h2>Decisions</h2>
 
+  {% if decision_throughs %}
   <table class="w-full">
     <thead>
       <tr>
@@ -52,4 +53,10 @@ Props:
     .hidden { display: none; }
     .w-full { width: 100%; }
   </style>
+  {% else %}
+  <p>
+    There are no decisions. You can take a decision using the form
+    "Create decision" above.
+  </p>
+  {% endif %}
 </fieldset>
