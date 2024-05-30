@@ -2,27 +2,9 @@
 
 set -e
 
-# Kudos https://stackoverflow.com/a/10910180 for macOS group ID reading
-case "$OSTYPE" in
-linux*)
-  host_docker_gid="$(getent group docker | cut -d: -f3)"
-  ;;
-
-darwin*)
-  host_docker_gid="$(dscl . -read /Groups/docker | awk '($1 == "PrimaryGroupID:") { print $2 }')"
-  ;;
-
-*)
-  printf "'%s' is not supported for Openverse development. Only Linux and macOS are supported. Use WSL if on Windows." "$OSTYPE" >>/dev/stderr
-  exit 1
-  ;;
-esac
-
 suppress_output() {
   "$@" 2>/dev/null 1>/dev/null
 }
-
-opener_home="/home/opener"
 
 run_args=(
   -i
@@ -30,14 +12,13 @@ run_args=(
   --name openverse-dev-env
   --env "OPENVERSE_PROJECT=$OPENVERSE_PROJECT"
   --env "TERM=xterm-256color"
-  --user "$UID:$host_docker_gid"
   --network host
   # Bind the repo to the same exact location inside the container so that pre-commit
   # and others don't get confused about where files are supposed to be
   -v "$OPENVERSE_PROJECT:$OPENVERSE_PROJECT:rw,z"
   --workdir "$OPENVERSE_PROJECT"
-  # Save the home directory of the container so we can reuse it each time
-  --mount "type=volume,src=openverse-dev-env,target=$opener_home"
+  # Save the /opt directory of the container so we can reuse it each time
+  --mount "type=volume,src=openverse-dev-env,target=/opt"
   # Expose the host's docker socket to the container so the container can run docker/compose etc
   -v /var/run/docker.sock:/var/run/docker.sock
 )
