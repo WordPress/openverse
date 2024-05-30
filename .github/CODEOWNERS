@@ -46,3 +46,4 @@ README.md                   @WordPress/openverse-maintainers
 docker-compose.yml          @WordPress/openverse-maintainers
 env.template                @WordPress/openverse-maintainers
 justfile                    @WordPress/openverse-maintainers
+ov                          @WordPress/openverse-maintainers

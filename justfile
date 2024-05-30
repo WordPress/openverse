@@ -62,6 +62,10 @@ install:
     just node-install
     just py-install
 
+# Install `ov`-based git hooks
+@install-hooks:
+    bash -c "cp ./docker/dev_env/hooks/* ./.git/hooks"
+
 # Setup pre-commit as a Git hook
 precommit:
     #!/usr/bin/env bash
