@@ -41,7 +41,7 @@ RUN dnf -y install dnf-plugins-core \
   && dnf -y config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo \
   && dnf -y install \
     git \
-    gcc g++ \
+    g++ \
     just \
     which \
     nodejs npm \
@@ -53,7 +53,7 @@ RUN dnf -y install dnf-plugins-core \
   && npm install -g \
     n \
     corepack \
-    && corepack enable
+  && corepack enable
 
 RUN bash -c 'chmod -Rv 0777 /opt'
 

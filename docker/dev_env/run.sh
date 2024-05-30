@@ -2,10 +2,15 @@
 
 set -e
 
+volume_name="openverse-dev-env"
+
+if ! docker volume inspect openverse-dev-env 1>/dev/null; then
+  docker volume create "$volume_name" 1>/dev/null
+fi
+
 run_args=(
   -i
   --rm
-  --name openverse-dev-env
   --env "OPENVERSE_PROJECT=$OPENVERSE_PROJECT"
   --env "TERM=xterm-256color"
   --network host
@@ -14,7 +19,7 @@ run_args=(
   -v "$OPENVERSE_PROJECT:$OPENVERSE_PROJECT:rw,z"
   --workdir "$OPENVERSE_PROJECT"
   # Save the /opt directory of the container so we can reuse it each time
-  --mount "type=volume,src=openverse-dev-env,target=/opt"
+  --mount "type=volume,src=$volume_name,target=/opt"
   # Expose the host's docker socket to the container so the container can run docker/compose etc
   -v /var/run/docker.sock:/var/run/docker.sock
 )
