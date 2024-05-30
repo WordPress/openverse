@@ -83,7 +83,7 @@ noted otherwise in the Python column's name property.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `audio`: `uuid, nullable`, `image`: `uuid, nullable`
+_DB Column Types_: `uuid, nullable`
 
 #### Description
 
@@ -100,8 +100,7 @@ when the item is first inserted into the main table.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `image`: `timestamp with time zone, non-nullable`, `audio`:
-`timestamp with time zone, non-nullable`
+_DB Column Types_: `timestamp with time zone, non-nullable`
 
 #### Description
 
@@ -118,8 +117,7 @@ This is _not_ the date when the item was first published on the source site.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `image`: `timestamp with time zone, non-nullable`, `audio`:
-`timestamp with time zone, non-nullable`
+_DB Column Types_: `timestamp with time zone, non-nullable`
 
 #### Description
 
@@ -131,8 +129,7 @@ The timestamp of when the media item was last updated in Openverse catalog.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `audio`: `character varying (80), nullable`, `image`:
-`character varying (80), nullable`
+_DB Column Types_: `character varying (80), nullable`
 
 #### Description
 
@@ -149,8 +146,7 @@ The way the media item was ingested into the Openverse catalog.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `audio`: `character varying (80), nullable`, `image`:
-`character varying (80), nullable`
+_DB Column Types_: `character varying (80), nullable`
 
 #### Description
 
@@ -167,8 +163,7 @@ This is a keyword for the provider, a string in a "snake_case" form.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `audio`: `character varying (80), nullable`, `image`:
-`character varying (80), nullable`
+_DB Column Types_: `character varying (80), nullable`
 
 #### Description
 
@@ -185,7 +180,7 @@ This is a keyword for the source, a string in a "snake_case" form.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `audio`: `text, nullable`, `image`: `text, nullable`
+_DB Column Types_: `text, nullable`
 
 #### Description
 
@@ -197,7 +192,7 @@ The unique identifier for the media item on the source site.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `audio`: `text, nullable`, `image`: `text, nullable`
+_DB Column Types_: `text, nullable`
 
 #### Description
 
@@ -212,7 +207,7 @@ upstream provider.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `image`: `text, non-nullable`, `audio`: `text, non-nullable`
+_DB Column Types_: `text, non-nullable`
 
 #### Description
 
@@ -225,7 +220,7 @@ This should be unique for each media item.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `audio`: `text, nullable`, `image`: `text, nullable`
+_DB Column Types_: `text, nullable`
 
 #### Description
 
@@ -242,7 +237,7 @@ The smallest acceptable size for a thumbnail is 600px at the longest edge. See
 
 _Media Types_: `image`
 
-_DB Column Types_: `image`: `integer, nullable`
+_DB Column Types_: `integer, nullable`
 
 #### Description
 
@@ -254,7 +249,7 @@ The width of the main image in pixels.
 
 _Media Types_: `image`
 
-_DB Column Types_: `image`: `integer, nullable`
+_DB Column Types_: `integer, nullable`
 
 #### Description
 
@@ -271,7 +266,7 @@ possible to send a head request to the direct url to extract this dat.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `image`: `integer, nullable`, `audio`: `integer, nullable`
+_DB Column Types_: `integer, nullable`
 
 #### Description
 
@@ -284,8 +279,7 @@ it can be extracted from a head request response to the media file URL.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `image`: `character varying (50), non-nullable`, `audio`:
-`character varying (50), non-nullable`
+_DB Column Types_: `character varying (50), non-nullable`
 
 #### Description
 
@@ -299,8 +293,7 @@ available license slugs, see
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `image`: `character varying (25), nullable`, `audio`:
-`character varying (25), nullable`
+_DB Column Types_: `character varying (25), nullable`
 
 #### Description
 
@@ -313,7 +306,7 @@ which is denoted as "N/A".
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `audio`: `text, nullable`, `image`: `text, nullable`
+_DB Column Types_: `text, nullable`
 
 #### Description
 
@@ -327,7 +320,7 @@ similar for unknown creators, see
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `audio`: `text, nullable`, `image`: `text, nullable`
+_DB Column Types_: `text, nullable`
 
 #### Description
 
@@ -339,7 +332,7 @@ The URL of the creator's page, usually on the source site.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `audio`: `text, nullable`, `image`: `text, nullable`
+_DB Column Types_: `text, nullable`
 
 #### Description
 
@@ -361,7 +354,7 @@ in the frontend. Some titles were incorrectly decoded, for which there is a
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `image`: `jsonb, nullable`, `audio`: `jsonb, nullable`
+_DB Column Types_: `jsonb, nullable`
 
 #### Description
 
@@ -381,7 +374,7 @@ data, descriptions, and popularity data.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `image`: `jsonb, nullable`, `audio`: `jsonb, nullable`
+_DB Column Types_: `jsonb, nullable`
 
 #### Description
 
@@ -426,7 +419,7 @@ The cleanup process in data refresh fixes the following tag inconsistencies:
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `image`: `boolean, nullable`, `audio`: `boolean, nullable`
+_DB Column Types_: `boolean, nullable`
 
 #### Description
 
@@ -441,8 +434,7 @@ no provider script or SQL ingestion sets this field value.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `image`: `timestamp with time zone, nullable`, `audio`:
-`timestamp with time zone, nullable`
+_DB Column Types_: `timestamp with time zone, nullable`
 
 #### Description
 
@@ -455,8 +447,7 @@ that were updated during re-ingestion, the timestamp of re-ingestion.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `audio`: `boolean, non-nullable`, `image`:
-`boolean, non-nullable`
+_DB Column Types_: `boolean, non-nullable`
 
 #### Description
 
@@ -478,8 +469,7 @@ more than `OLDEST_PER_PROVIDER` value.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `image`: `character varying (5), nullable`, `audio`:
-`character varying (5), nullable`
+_DB Column Types_: `character varying (5), nullable`
 
 #### Description
 
@@ -507,8 +497,7 @@ file type, see
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `audio`: `character varying (80), nullable`, `image`:
-`character varying (80), nullable`
+_DB Column Types_: `character varying (80), nullable`
 
 #### Description
 
@@ -528,8 +517,7 @@ per provider.
 
 _Media Types_: `audio`, `image`
 
-_DB Column Types_: `image`: `double precision, nullable`, `audio`:
-`double precision, nullable`
+_DB Column Types_: `double precision, nullable`
 
 #### Description
 
@@ -546,7 +534,7 @@ The value is updated monthly during the data refresh process.
 
 _Media Types_: `audio`
 
-_DB Column Types_: `audio`: `integer, nullable`
+_DB Column Types_: `integer, nullable`
 
 #### Description
 
@@ -558,7 +546,7 @@ The duration of the main audio file in milliseconds.
 
 _Media Types_: `audio`
 
-_DB Column Types_: `audio`: `integer, nullable`
+_DB Column Types_: `integer, nullable`
 
 #### Description
 
@@ -570,7 +558,7 @@ The bit rate of the main audio file.
 
 _Media Types_: `audio`
 
-_DB Column Types_: `audio`: `integer, nullable`
+_DB Column Types_: `integer, nullable`
 
 #### Description
 
@@ -582,7 +570,7 @@ The sample rate of the main audio file.
 
 _Media Types_: `audio`
 
-_DB Column Types_: `audio`: `array of character varying (80), nullable`
+_DB Column Types_: `array of character varying (80), nullable`
 
 #### Description
 
@@ -594,7 +582,7 @@ List of genres associated with the audio.
 
 _Media Types_: `audio`
 
-_DB Column Types_: `audio`: `jsonb, nullable`
+_DB Column Types_: `jsonb, nullable`
 
 #### Description
 
@@ -619,7 +607,7 @@ JSONB array of dictionaries:
 
 _Media Types_: `audio`
 
-_DB Column Types_: `audio`: `jsonb, nullable`
+_DB Column Types_: `jsonb, nullable`
 
 #### Description
 
@@ -647,7 +635,7 @@ JSONB object:
 
 _Media Types_: `audio`
 
-_DB Column Types_: `audio`: `text, nullable`
+_DB Column Types_: `text, nullable`
 
 #### Description
 
@@ -659,7 +647,7 @@ Unique identifier for the audio set on the source site.
 
 _Media Types_: `audio`
 
-_DB Column Types_: `audio`: `integer, nullable`
+_DB Column Types_: `integer, nullable`
 
 #### Description
 

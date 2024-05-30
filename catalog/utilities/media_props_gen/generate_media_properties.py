@@ -87,17 +87,28 @@ def generate_long_form_doc(markdown_descriptions: dict, media_properties: dict) 
         prop_heading = f"{Md.heading(3, prop)}"
 
         media_types = [
-            f"`{media_type}`"
+            media_type
             for media_type, value in media_properties.items()
             if prop in value.keys()
         ]
-        sql_types = {
-            f"`{media_type}`: `{generate_db_props_string(media_properties[media_type][prop]['sql'])[1]}`"
-            for media_type in media_properties
+        if media_types:
+            media_type_string = ", ".join([f"`{t}`" for t in media_types])
+            prop_heading += f"_Media Types_: {media_type_string}\n\n"
+
+        sql_types = [
+            f"`{generate_db_props_string(media_properties[media_type][prop]['sql'])[1]}`"
+            for media_type in media_types
             if prop in media_properties[media_type]
-        }
-        prop_heading += f"_Media Types_: {', '.join(media_types)}\n\n"
-        prop_heading += f"_DB Column Types_: {', '.join(sql_types)}\n\n"
+        ]
+        if sql_types:
+            if all(sql_types[0] == sql_type for sql_type in sql_types):
+                sql_types = [sql_types[0]]
+            else:
+                sql_types = [
+                    f"{media_type}: {sql_type}"
+                    for media_type, sql_type in zip(MEDIA_TYPES, sql_types)
+                ]
+            prop_heading += f"_DB Column Types_: {', '.join(sql_types)}\n\n"
 
         prop_doc = "".join(
             [f"{Md.heading(4, k)}{Md.line(v)}" for k, v in description.items() if v]
