@@ -1,0 +1,69 @@
+{% comment %}
+Props:
+- media_type
+- media_obj
+- tags
+{% endcomment %}
+
+<fieldset class="module aligned">
+  <h2>Additional information</h2>
+
+  <div class="form-row field-height">
+    <div>
+      <div class="flex-container">
+        <label>Preview:</label>
+        {% if media_type == 'image' %}
+        <div class="overflow-hidden">
+          <img
+            src="{% url media_type|add:'-thumb' identifier=media_obj.identifier %}"
+            alt="Media Image"
+            class="transition-filter blur-60px"
+            height="300"
+            onclick="toggleBlur(this)"
+            onerror="this.onerror=null;this.src='{{ media_obj.url }}';">
+        </div>
+        <style>
+          .overflow-hidden { overflow: hidden; }
+          .transition-filter { transition: filter 0.3s; }
+          .blur-60px { filter: blur(60px); }
+        </style>
+        <script>
+          function toggleBlur(img) {
+            img.classList.toggle('blur-60px');
+          }
+        </script>
+
+        {% elif media_type == 'audio' %}
+        <audio controls>
+          <source src="{{ media_obj.url }}">
+          Your browser does not support the audio element.
+        </audio>
+        {% endif %}
+      </div>
+      <div class="help">
+        {% if media_type == 'image' %}
+        <div>Click to show/hide content.</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row field-height">
+    <div>
+      <div class="flex-container">
+        <label>Tags:</label>
+        <div>
+          <dl class="pl-0">
+            {% for provider, provider_tags in tags.items %}
+            <dt>{{ provider }}:</dt>
+            <dd>{{ provider_tags|join:', ' }}</dd>
+            {% endfor %}
+          </dl>
+          <style>
+            dl.pl-0 { padding-left: 0; }
+          </style>
+        </div>
+      </div>
+    </div>
+  </div>
+</fieldset>

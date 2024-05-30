@@ -1,9 +1,13 @@
+from functools import update_wrapper
 from typing import Sequence
 
+from django import forms
 from django.conf import settings
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.contrib.admin.views.main import ChangeList
 from django.db.models import Count, F, Min
+from django.http import JsonResponse
+from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
@@ -11,18 +15,19 @@ from django.utils.safestring import mark_safe
 import structlog
 from elasticsearch import NotFoundError
 from elasticsearch_dsl import Search
-from openverse_attribution.license import License
 
 from api.models import (
-    PENDING,
     Audio,
+    AudioDecision,
+    AudioDecisionThrough,
     AudioReport,
     Image,
+    ImageDecision,
+    ImageDecisionThrough,
     ImageReport,
 )
-from api.models.audio import AudioDecision
-from api.models.image import ImageDecision
 from api.models.media import AbstractDeletedMedia, AbstractSensitiveMedia
+from api.utils.moderation_lock import LockManager
 
 
 logger = structlog.get_logger(__name__)
@@ -41,10 +46,56 @@ def register(site):
     ]:
         site.register(klass, MediaSubreportAdmin)
 
-    # Temporary addition of model admin for decisions while this view gets built
-    if settings.ENVIRONMENT != "production":
-        site.register(ImageDecision, admin.ModelAdmin)
-        site.register(AudioDecision, admin.ModelAdmin)
+    site.register(ImageDecision, ImageDecisionAdmin)
+    site.register(AudioDecision, AudioDecisionAdmin)
+
+
+class MultipleValueField(forms.MultipleChoiceField):
+    """
+    This is a variant of ``MultipleChoiceField`` that does not validate
+    the individual values.
+    """
+
+    def valid_value(self, value):
+        return True
+
+
+def get_decision_form(media_type: str):
+    decision_class, report_class = {
+        "image": (ImageDecision, ImageReport),
+        "audio": (AudioDecision, AudioReport),
+    }[media_type]
+
+    class MediaDecisionForm(forms.ModelForm):
+        report_id = MultipleValueField()  # not rendered using its widget
+
+        class Meta:
+            model = decision_class
+            fields = ["action", "notes"]
+
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            for field in self.fields.values():
+                field.widget.attrs.update({"form": "decision-create"})
+
+        def clean_report_id(self):
+            report_ids = set(self.cleaned_data["report_id"])
+            report_qs = report_class.objects.filter(
+                decision=None,
+                id__in=report_ids,
+            )
+            retrieved_report_ids = set(
+                str(val) for val in report_qs.values_list("id", flat=True)
+            )
+            if diff := (report_ids - retrieved_report_ids):
+                raise forms.ValidationError(
+                    "No pending reports found for IDs %(value)s.",
+                    params={"value": ", ".join(diff)},
+                )
+            self.cleaned_data["reports"] = report_qs
+            return report_ids
+
+    return MediaDecisionForm
 
 
 def _production_deferred(*values: str) -> Sequence[str]:
@@ -57,6 +108,20 @@ def _production_deferred(*values: str) -> Sequence[str]:
     when the environment is production, in which case it will return an empty sequence.
     """
     if settings.ENVIRONMENT == "production":
+        return ()
+    return values
+
+
+def _non_production_deferred(*values: str) -> Sequence[str]:
+    """
+    Define a sequence in only the production environment.
+
+    The raw ID field is perfectly suited for massive tables, and so enabling
+    that in production will often prevent performance hits or outages. This will
+    return the input values only the environment is production, and in all other
+    cases it will return an empty sequence.
+    """
+    if settings.ENVIRONMENT != "production":
         return ()
     return values
 
@@ -99,19 +164,92 @@ class PendingRecordCountFilter(admin.SimpleListFilter):
 
 
 class MediaListAdmin(admin.ModelAdmin):
+    media_type = None
+
+    def __init__(self, *args, **kwargs):
+        self.lock_manager = LockManager(self.media_type)
+
+        super().__init__(*args, **kwargs)
+
+    def get_urls(self):
+        # Start of block lifted from Django source.
+        from django.urls import path
+
+        def wrap(view):
+            def wrapper(*args, **kwargs):
+                return self.admin_site.admin_view(view)(*args, **kwargs)
+
+            wrapper.model_admin = self
+            return update_wrapper(wrapper, view)
+
+        app, model = self.opts.app_label, self.opts.model_name
+        # End of block lifted from Django source.
+
+        urls = super().get_urls()
+
+        # Using slice assignment (docs:
+        # https://docs.python.org/3/tutorial/introduction.html#lists),
+        # insert custom URLs at the penultimate position so that they
+        # appear just before the catch-all view.
+        urls[-1:-1] = [
+            path(
+                "<path:object_id>/moderate/",
+                wrap(self.moderate_view),
+                name=f"{app}_{model}_moderate",
+            ),
+            path(
+                "<path:object_id>/lock/",
+                wrap(self.lock_view),
+                name=f"{app}_{model}_lock",
+            ),
+        ]
+        return urls
+
+    @admin.display(description="Has sensitive text?", boolean=True)
+    def has_sensitive_text(self, obj):
+        """
+        Determine if the item has sensitive text.
+
+        If the item cannot be found in the filtered index, that means it
+        was filtered out due to text sensitivity.
+
+        This is displayed both as a column in the list page as well as a
+        read-only field in the change page.
+
+        :param obj: the item to check for presence of sensitive text
+        :return: whether the item has sensitive text
+        """
+
+        filtered_index = f"{settings.MEDIA_INDEX_MAPPING[self.media_type]}-filtered"
+        try:
+            search = (
+                Search(index=filtered_index)
+                .query("term", identifier=obj.identifier)
+                .execute()
+            )
+            if search.hits:
+                return False
+        except NotFoundError:
+            logger.error("Could not resolve index.", name=filtered_index)
+        return True
+
+    #############
+    # List view #
+    #############
+
+    change_list_template = "admin/api/media/change_list.html"
     list_display = (
         "identifier",
         "total_report_count",
         "pending_report_count",
         "oldest_report_date",
         "pending_reports_links",
+        "has_sensitive_text",
     )
     list_filter = (PendingRecordCountFilter,)
-    # Disable link display for images
-    list_display_links = None
+    list_display_links = ("identifier",)
     search_fields = _production_deferred("identifier")
-    media_type = None
-    # Ordering is not set here, see get_queryset
+    sortable_by = ()  # Ordering is defined in ``get_queryset``.
 
     def total_report_count(self, obj):
         return obj.total_report_count
@@ -134,6 +272,154 @@ class MediaListAdmin(admin.ModelAdmin):
 
         return mark_safe(", ".join(data))
 
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+
+        extra_context["media_type"] = self.media_type
+
+        valid_locks = self.lock_manager.prune()
+        locked_media = list(
+            int(item.replace(f"{self.media_type}:", ""))
+            for moderator, lock_set in valid_locks.items()
+            for item in lock_set
+            if self.media_type in item and moderator != request.user.get_username()
+        )
+        extra_context["locked_media"] = locked_media
+
+        return super().changelist_view(request, extra_context)
+
+    ###############
+    # Change view #
+    ###############
+
+    change_form_template = "admin/api/media/change_form.html"
+    readonly_fields = (
+        "attribution",
+        "license_url",
+        "has_sensitive_text",
+    )
+
+    def change_view(self, request, object_id, form_url="", extra_context=None):
+        # Populate a warning message for locked items.
+        mods = self.lock_manager.moderator_set(object_id)
+        mods -= {request.user.get_username()}
+        if len(mods):
+            messages.warning(
+                request,
+                f"This {self.media_type} is also being viewed by {', '.join(mods)}.",
+            )
+
+        # Expand the context based on the template's needs.
+        extra_context = extra_context or {}
+
+        extra_context["media_type"] = self.media_type
+
+        media_obj = self.get_object(request, object_id)
+        if media_obj:
+            extra_context["media_obj"] = media_obj
+
+        tags_by_provider = {}
+        if tags := media_obj.tags:
+            for tag in tags:
+                text = tag["name"]
+                if acc := tag.get("accuracy"):
+                    text = f"{text} ({acc})"
+                tags_by_provider.setdefault(tag["provider"], []).append(text)
+        extra_context["tags"] = tags_by_provider
+
+        manager = getattr(media_obj, f"{self.media_type}decisionthrough_set")
+        decision_throughs = manager.order_by("decision__created_on")
+        extra_context["decision_throughs"] = decision_throughs
+
+        manager = getattr(media_obj, f"{self.media_type}_report")
+        reports = manager.order_by("-created_at")
+        extra_context["reports"] = reports
+
+        pending_report_count = reports.filter(decision_id=None).count()
+        extra_context["pending_report_count"] = pending_report_count
+
+        extra_context["mod_form"] = get_decision_form(self.media_type)()
+
+        return super().change_view(request, object_id, form_url, extra_context)
+
+    #############
+    # Lock view #
+    #############
+
+    def lock_view(self, request, object_id):
+        """
+        Softly lock the media object with the current user to notify
+        other moderators about a potential conflict.
+        """
+
+        if request.method == "POST":
+            expiration = self.lock_manager.add_locks(
+                request.user.get_username(), object_id
+            )
+            return JsonResponse(
+                data={"expiration": expiration},
+                status=503 if expiration == 0 else 200,
+            )
+
+        return redirect(f"admin:api_{self.media_type}_change", object_id)
+
+    #################
+    # Moderate view #
+    #################
+
+    def moderate_view(self, request, object_id):
+        """
+        Create a decision for the media object and associate selected
+        reports referencing the media with this decision.
+        """
+
+        if request.method == "POST":
+            media_obj = self.get_object(request, object_id)
+
+            form = get_decision_form(self.media_type)(request.POST)
+            if form.is_valid():
+                decision = form.save(commit=False)
+                decision.moderator = request.user
+                decision.save()
+
+                logger.info(
+                    "Decision created",
+                    decision=decision.id,
+                    action=decision.action,
+                    notes=decision.notes,
+                    moderator=request.user.get_username(),
+                )
+
+                decision.media_objs.add(media_obj)
+                logger.info(
+                    "Media linked to decision",
+                    decision=decision.id,
+                    media_obj=media_obj.id,
+                )
+
+                reports = form.cleaned_data["reports"]
+                count = reports.update(decision=decision)
+                logger.info(
+                    "Decision recorded in reports",
+                    report_count=count,
+                    decision=decision.id,
+                )
+            else:
+                logger.warning(
+                    "Form is invalid",
+                    **form.cleaned_data,
+                    errors=form.errors,
+                )
+
+        return redirect(f"admin:api_{self.media_type}_change", object_id)
+
+    #############
+    # Overrides #
+    #############
+
+    # TODO: This construct breaks down if a decision is associated with
+    #   a media item that does not have any reports. Such an item cannot
+    #   be reached at the URL ``admin/api/{media_type}/{id}/change/``.
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         # Return all available image if this is for an autocomplete request
@@ -163,131 +449,154 @@ class MediaListAdmin(admin.ModelAdmin):
 
 
 class MediaReportAdmin(admin.ModelAdmin):
-    change_form_template = "admin/api/media_report/change_form.html"
-    list_display = ("id", "reason", "is_pending", "description", "created_at", "url")
-    list_filter = (
-        ("decision", admin.EmptyFieldListFilter),  # ~status, i.e. pending or moderated
-        "reason",
-    )
-    list_display_links = ("id",)
-    list_select_related = ("media_obj",)
-    search_fields = _production_deferred("description", "media_obj__identifier")
-    autocomplete_fields = _production_deferred("media_obj")
-    actions = None
     media_type = None
 
-    def get_fieldsets(self, request, obj=None):
-        if obj is None:
-            return [
-                (
-                    "Report details",
-                    {"fields": ["status", "decision", "reason", "description"]},
-                ),
-                ("Media details", {"fields": ["media_obj"]}),
-            ]
-        return [
-            (
-                "Report details",
-                {
-                    "fields": [
-                        "created_at",
-                        "status",
-                        "decision",
-                        "reason",
-                        "description",
-                        "has_sensitive_text",
-                    ],
-                },
-            ),
-        ]
+    @admin.display(description="Is pending?", boolean=True)
+    def is_pending(self, obj):
+        """
+        Set an explicit display type for the ``is_pending`` property.
+
+        This is required so that the property, which otherwise renders
+        "True" or "False" strings, now renders as check/cross icons in
+        Django Admin.
+        """
+
+        return obj.is_pending
+
+    #############
+    # List view #
+    #############
+
+    list_display = (
+        "id",
+        "created_at",
+        "reason",
+        "description",
+        "is_pending",
+        "media_id",  # used because ``media_obj`` does not render a link
+    )
+    list_filter = (
+        "reason",
+        ("decision", admin.EmptyFieldListFilter),  # ~is_pending
+    )
+    list_select_related = ("media_obj",)
+    search_fields = ("description", *_production_deferred("media_obj__identifier"))
+
+    @admin.display(description="Media obj")
+    def media_id(self, obj):
+        path = reverse(f"admin:api_{self.media_type}_change", args=(obj.media_obj.id,))
+        return format_html(f'<a href="{path}">{obj.media_obj}</a>')
+
+    ###############
+    # Change view #
+    ###############
+
+    autocomplete_fields = ("decision", *_production_deferred("media_obj"))
+    raw_id_fields = _non_production_deferred("media_obj")
+    actions = None
+
+    def get_readonly_fields(self, request, obj=None):
+        if obj is None:  # Create form
+            return ()
+        # These fields only make sense after a report has been created.
+        # Hence they are only shown in the change form.
+        return (
+            "created_at",
+            "is_pending",
+            "media_obj",
+        )
 
     def get_exclude(self, request, obj=None):
-        # ``identifier`` cannot be edited on an existing report.
-        if request.path.endswith("/change/"):
-            return ["media_obj"]
+        if obj is None:  # Create form
+            # The decision will be linked to the report after it has
+            # been created, not during.
+            return ("decision",)
+        else:  # Change form
+            # In the change form, we do not want to allow the media
+            # object to be changed.
+            return ("media_obj",)
+
+
+class MediaDecisionAdmin(admin.ModelAdmin):
+    media_type = None
+    through_model = None
+
+    #############
+    # List view #
+    #############
+
+    list_display = (
+        "id",
+        "created_on",
+        "moderator",
+        "action",
+        "notes",
+        "media_ids",
+    )
+    list_filter = ("moderator", "action")
+    list_prefetch_related = ("media_objs",)
+    search_fields = ("notes", *_production_deferred("media_objs__identifier"))
+
+    @admin.display(description="Media objs")
+    def media_ids(self, obj):
+        through_objs = getattr(obj, f"{self.media_type}decisionthrough_set").all()
+        text = []
+        for obj in through_objs:
+            path = reverse(
+                f"admin:api_{self.media_type}_change", args=(obj.media_obj.id,)
+            )
+            text.append(f'• <a href="{path}">{obj.media_obj}</a>')
+        return format_html("<br>".join(text))
+
+    ###############
+    # Change view #
+    ###############
 
     def get_readonly_fields(self, request, obj=None):
         if obj is None:
-            return []
-        readonly_fields = [
-            "created_at",
-            "reason",
-            "description",
-            "has_sensitive_text",
-            "media_obj_id",
-        ]
-        # ``status`` cannot be changed on a finalised report.
-        if obj.status != PENDING:
-            readonly_fields.append("status")
-        return readonly_fields
-
-    @admin.display(description="Has sensitive text")
-    def has_sensitive_text(self, obj):
-        """
-        Return `True` if the item cannot be found in the filtered index - which means the item
-        was filtered out due to text sensitivity.
-        """
-        if not self.media_type or not obj:
-            return None
-
-        filtered_index = f"{settings.MEDIA_INDEX_MAPPING[self.media_type]}-filtered"
-        try:
-            search = (
-                Search(index=filtered_index)
-                .query("term", identifier=obj.media_obj.identifier)
-                .execute()
-            )
-            if search.hits:
-                return False
-        except NotFoundError:
-            logger.error(f"Could not resolve index {filtered_index}")
-            return None
-        return True
-
-    def get_other_reports(self, obj):
-        if not self.media_type or not obj:
-            return []
-
-        reports = (
-            self.model.objects.filter(media_obj__identifier=obj.media_obj.identifier)
-            .exclude(id=obj.id)
-            .order_by("created_at")
+            return ()
+        # These fields only make sense after a decision has been created.
+        # Moderator is set automatically and cannot be changed.
+        return (
+            "created_on",
+            "moderator",
         )
-        return reports
 
-    def _get_media_obj_data(self, obj):
-        tags_by_provider = {}
-        if obj.media_obj.tags:
-            for tag in obj.media_obj.tags:
-                tags_by_provider.setdefault(tag["provider"], []).append(tag["name"])
-        additional_data = {
-            "other_reports": self.get_other_reports(obj),
-            "media_obj": obj.media_obj,
-            "license": License(
-                obj.media_obj.license,
-                obj.media_obj.license_version,
-            ).full_name,
-            "tags": tags_by_provider,
-            "description": obj.media_obj.meta_data.get("description", ""),
-        }
-        logger.info(f"Additional data: {additional_data}")
-        return additional_data
+    def get_exclude(self, request, obj=None):
+        if obj is None:  # Create form
+            # Moderator is set automatically and cannot be changed.
+            return ("moderator",)
+        return ()
 
-    def change_view(self, request, object_id, form_url="", extra_context=None):
-        extra_context = extra_context or {}
-        extra_context["media_type"] = self.media_type
+    def get_inlines(self, request, obj=None):
+        if obj is None:
+            # New decision, can make changes to the media objects.
+            is_mutable = True
+        else:
+            # Once created, media objects associated with decisions are
+            # immutable.
+            is_mutable = False
 
-        obj = self.get_object(request, object_id)
-        if obj and obj.media_obj:
-            additional_data = self._get_media_obj_data(obj)
-            extra_context = {**extra_context, **additional_data}
+        class MediaDecisionThroughAdmin(admin.TabularInline):
+            model = self.through_model
+            extra = 1
+            autocomplete_fields = _production_deferred("media_obj")
+            raw_id_fields = _non_production_deferred("media_obj")
 
-        return super().change_view(
-            request,
-            object_id,
-            form_url,
-            extra_context=extra_context,
-        )
+            def has_add_permission(self, request, obj=None):
+                return is_mutable and super().has_change_permission(request, obj)
+
+            def has_change_permission(self, request, obj=None):
+                return is_mutable and super().has_change_permission(request, obj)
+
+            def has_delete_permission(self, request, obj=None):
+                return is_mutable and super().has_delete_permission(request, obj)
+
+        return (MediaDecisionThroughAdmin,)
+
+    def save_model(self, request, obj, form, change):
+        obj.moderator = request.user
+        return super().save_model(request, obj, form, change)
 
 
 class ImageReportAdmin(MediaReportAdmin):
@@ -304,6 +613,16 @@ class ImageListViewAdmin(MediaListAdmin):
 
 class AudioListViewAdmin(MediaListAdmin):
     media_type = "audio"
+
+
+class ImageDecisionAdmin(MediaDecisionAdmin):
+    media_type = "image"
+    through_model = ImageDecisionThrough
+
+
+class AudioDecisionAdmin(MediaDecisionAdmin):
+    media_type = "audio"
+    through_model = AudioDecisionThrough
 
 
 class MediaSubreportAdmin(admin.ModelAdmin):

@@ -1,0 +1,55 @@
+{% comment %}
+Props:
+- media_type
+- decision_throughs
+{% endcomment %}
+
+{% load get_attr %}
+
+<fieldset class="module">
+  <h2>Decisions</h2>
+
+  <table class="w-full">
+    <thead>
+      <tr>
+        <th class="hidden"></th>
+        <th>ID</th>
+        <th>Date</th>
+        <th>Moderator</th>
+        <th>Action</th>
+        <th>Notes</th>
+        <th>Reports</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for decision_through in decision_throughs %}
+      {% with decision_through.decision as decision %}
+      <tr>
+        <td class="hidden"><!-- Hidden inputs etc. --></td>
+        <td>
+          <a href="{% url 'admin:api_'|add:media_type|add:'decision_change' decision.id %}">{{ decision.id }}</a>
+        </td>
+        <td>{{ decision.created_on }}</td>
+        <td>{{ decision.moderator }}</td>
+        <td>{{ decision.action }}</td>
+        <td>{{ decision.notes }}</td>
+        <td>
+          {% with media_type|add:'report_set' as attr_name %}
+          {% with decision|get_attr:attr_name as reports %}
+          {% for report in reports.all %}
+            <a href="{% url 'admin:api_'|add:media_type|add:'report_change' report.id %}">{{ report.id }}</a> ({{report.reason}})<br/>
+          {% endfor %}
+          {% endwith %}
+          {% endwith %}
+        </td>
+      </tr>
+      {% endwith %}
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <style>
+    .hidden { display: none; }
+    .w-full { width: 100%; }
+  </style>
+</fieldset>

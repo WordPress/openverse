@@ -54,6 +54,13 @@ class Image(ImageFileMixin, AbstractMedia):
     class Meta(AbstractMedia.Meta):
         db_table = "image"
 
+    def get_absolute_url(self):
+        """Enable the "View on site" link in the Django Admin."""
+
+        from django.urls import reverse
+
+        return reverse("image-detail", args=[str(self.identifier)])
+
     @property
     def sensitive(self) -> bool:
         return hasattr(self, "sensitive_image")

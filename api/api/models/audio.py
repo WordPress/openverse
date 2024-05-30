@@ -251,6 +251,13 @@ class Audio(AudioFileMixin, AbstractMedia):
     class Meta(AbstractMedia.Meta):
         db_table = "audio"
 
+    def get_absolute_url(self):
+        """Enable the "View on site" link in the Django Admin."""
+
+        from django.urls import reverse
+
+        return reverse("audio-detail", args=[str(self.identifier)])
+
 
 class DeletedAudio(AbstractDeletedMedia):
     """

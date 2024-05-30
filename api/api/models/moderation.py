@@ -1,5 +1,7 @@
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.db import models
+from django.db.models import Q
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -9,7 +11,7 @@ class UserPreferences(models.Model):
     preferences = models.JSONField(default=dict)
 
     def __str__(self):
-        return f"{self.user.username}'s preferences"
+        return f"{self.user.get_username()}'s preferences"
 
     @property
     def moderator(self):
@@ -36,3 +38,17 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
         UserPreferences.objects.create(user=instance)
     instance.userpreferences.save()
+
+
+def get_moderators() -> models.QuerySet:
+    """
+    Get all users who either are members of the "Content Moderators"
+    group or have superuser privileges.
+
+    :return: a ``QuerySet`` of ``User``s who can perform moderation
+    """
+
+    User = get_user_model()
+    return User.objects.filter(
+        Q(groups__name="Content Moderators") | Q(is_superuser=True)
+    )
