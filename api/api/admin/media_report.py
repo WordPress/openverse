@@ -161,25 +161,51 @@ class PredeterminedOrderChangelist(ChangeList):
         return []
 
 
-class PendingRecordCountFilter(admin.SimpleListFilter):
-    title = "pending record count"
-    parameter_name = "pending_record_count"
+def get_pending_record_filter(media_type: str):
+    class PendingRecordCountFilter(admin.SimpleListFilter):
+        title = "pending record count"
+        parameter_name = "pending_record_count"
 
-    def choices(self, changelist):
-        """Set default to "pending" rather than "all"."""
-        choices = list(super().choices(changelist))
-        choices[0]["display"] = "Pending"
-        return choices
+        def choices(self, changelist):
+            for lookup, title in self.lookup_choices:
+                yield {
+                    "selected": self.value() == lookup,
+                    "query_string": changelist.get_query_string(
+                        {self.parameter_name: lookup}, []
+                    ),
+                    "display": title,
+                }
 
-    def lookups(self, request, model_admin):
-        return (("all", "All"),)
+        def lookups(self, request, model_admin):
+            return [
+                (None, "Moderation queue"),
+                ("all", "All"),
+            ]
 
-    def queryset(self, request, queryset):
-        value = self.value()
-        if value != "all":
-            return queryset.filter(pending_report_count__gt=0)
+        def queryset(self, request, qs):
+            value = self.value()
+            if value is None:
+                # Filter down to only instances with reports
+                qs = qs.filter(**{f"{media_type}_report__isnull": False})
 
-        return queryset
+                # Annotate and order by report count
+                qs = qs.annotate(total_report_count=Count(f"{media_type}_report"))
+                # Show total pending reports by subtracting the number of reports
+                # from the number of reports that have decisions
+                qs = qs.annotate(
+                    pending_report_count=F("total_report_count")
+                    - Count(f"{media_type}_report__decision__pk")
+                )
+                qs = qs.annotate(
+                    oldest_report_date=Min(f"{media_type}_report__created_at")
+                )
+                qs = qs.order_by(
+                    "-total_report_count", "-pending_report_count", "oldest_report_date"
+                )
+
+            return qs
+
+    return PendingRecordCountFilter
 
 
 class MediaListAdmin(admin.ModelAdmin):
@@ -264,16 +290,24 @@ class MediaListAdmin(admin.ModelAdmin):
     change_list_template = "admin/api/media/change_list.html"
     list_display = (
         "identifier",
-        "total_report_count",
-        "pending_report_count",
-        "oldest_report_date",
-        "pending_reports_links",
         "has_sensitive_text",
     )
-    list_filter = (PendingRecordCountFilter,)
     list_display_links = ("identifier",)
     search_fields = _production_deferred("identifier")
     sortable_by = ()  # Ordering is defined in ``get_queryset``.
+
+    def get_list_filter(self, request):
+        return (get_pending_record_filter(self.media_type),)
+
+    def get_list_display(self, request):
+        if request.GET.get("pending_record_count") != "all":
+            return self.list_display + (
+                "total_report_count",
+                "pending_report_count",
+                "oldest_report_date",
+                "pending_reports_links",
+            )
+        return self.list_display
 
     def total_report_count(self, obj):
         return obj.total_report_count
@@ -474,33 +508,6 @@ class MediaListAdmin(admin.ModelAdmin):
     #############
     # Overrides #
     #############
-
-    # TODO: This construct breaks down if a decision is associated with
-    #   a media item that does not have any reports. Such an item cannot
-    #   be reached at the URL ``admin/api/{media_type}/{id}/change/``.
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        # Return all available image if this is for an autocomplete request
-        if "autocomplete" in request.path:
-            return qs
-
-        # Filter down to only instances with reports
-        qs = qs.filter(**{f"{self.media_type}_report__isnull": False})
-        # Annotate and order by report count
-        qs = qs.annotate(total_report_count=Count(f"{self.media_type}_report"))
-        # Show total pending reports by subtracting the number of reports
-        # from the number of reports that have decisions
-        qs = qs.annotate(
-            pending_report_count=F("total_report_count")
-            - Count(f"{self.media_type}_report__decision__pk")
-        )
-        qs = qs.annotate(
-            oldest_report_date=Min(f"{self.media_type}_report__created_at")
-        )
-        qs = qs.order_by(
-            "-total_report_count", "-pending_report_count", "oldest_report_date"
-        )
-        return qs
 
     def get_changelist(self, request, **kwargs):
         return PredeterminedOrderChangelist
