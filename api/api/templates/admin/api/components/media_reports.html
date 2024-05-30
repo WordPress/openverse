@@ -6,6 +6,8 @@ Props:
 - mod_form
 {% endcomment %}
 
+{% load static %}
+
 <fieldset class="module aligned">
   <h2>Reports/Create decision</h2>
 
@@ -51,9 +53,9 @@ Props:
         <td>{{ report.description }}</td>
         <td>
           {% if report.is_pending %}
-          <img src="/static/admin/img/icon-yes.svg" alt="False">
+          <img src="{% static 'admin/img/icon-yes.svg' %}" alt="False">
           {% else %}
-          <img src="/static/admin/img/icon-no.svg" alt="False">
+          <img src="{% static 'admin/img/icon-no.svg' %}" alt="False">
           {% endif %}
         </td>
         <td>
