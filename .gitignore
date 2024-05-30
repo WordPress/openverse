@@ -13,7 +13,7 @@ logs/
 
 # Environment
 .env
-.ovprofile
+.ov_aliases.json
 
 # Python environments
 env/
