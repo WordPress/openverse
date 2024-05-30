@@ -52,7 +52,7 @@
     "loading": "جار التحميل...",
     "filterButton": {
       "simple": "مرشحات",
-      "withCount": "{count} عامل التصفية | {count} عوامل التصفية"
+      "withCount": "({count}) مرشح"
     },
     "seeResults": "انظر النتائج",
     "backButton": "عُد",

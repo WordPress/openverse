@@ -13,6 +13,7 @@ logs/
 
 # Environment
 .env
+.ovprofile
 
 # Python environments
 env/
@@ -70,3 +71,6 @@ dist
 # PDM
 .pdm-python
 .pdm-build
+
+# ov development environment
+v8-compile-cache*

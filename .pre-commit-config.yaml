@@ -19,7 +19,7 @@ repos:
         # -i: edit in place (no argument means no backup)
         # -p: loop over all files provided, print error message if file cannot be opened
         # -e: use the code provided inline
-        entry: perl -i -pe 's/```console/```bash/g'
+        entry: python3 -c 'import fileinput; [print(line.replace("```console", "```bash"), end="") for line in fileinput.input(inplace=True)]'
         language: system
 
   - repo: https://github.com/pre-commit/pre-commit-hooks

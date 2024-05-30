@@ -52,9 +52,15 @@ export const openContentSettingsTab = async (
   tab: "searchTypes" | "filters" = "searchTypes",
   dir: LanguageDirection = "ltr"
 ) => {
-  const tabKey = tab === "searchTypes" ? "searchType.heading" : "filters.title"
+  // Use a hard-coded Regex to match the dynamic Filters tab name
+  const tabName =
+    tab === "searchTypes"
+      ? t("searchType.heading", dir)
+      : dir === "ltr"
+        ? /filter/i
+        : /مرش/
 
-  await page.getByRole("tab", { name: t(tabKey, dir) }).click()
+  await page.getByRole("tab", { name: tabName }).click()
 }
 
 /**

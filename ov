@@ -1,0 +1,85 @@
+#! /usr/bin/env bash
+
+set -e
+
+# https://stackoverflow.com/a/1482133
+OPENVERSE_PROJECT="$(dirname "$(readlink -f -- "$0")")"
+export OPENVERSE_PROJECT
+
+_self="$OPENVERSE_PROJECT/ov"
+
+_cmd="$1"
+
+dev_env="$OPENVERSE_PROJECT"/docker/dev_env
+
+if [[ $_cmd == "help" || -z $_cmd ]]; then
+  cat <<-'EOF'
+Openverse development toolkit
+
+USAGE
+  ov <subcommand> [args]
+
+COMMANDS
+  ov init
+    Initialise the Openverse development toolkit for the first time
+    Alias for:
+
+        ov build && ov just install-hooks
+
+  ov build
+    Build the Openverse development toolkit Docker image
+
+  ov clean
+    Remove the Openverse development toolkit Docker image and volume
+    Use in conjunction with `ov init` to recreate the environment from
+    scratch:
+
+        ov clean && ov init
+
+  ov hook HOOK
+    Run Git hooks through pre-commit inside the development toolkit container
+
+  ov COMMAND
+    Run COMMAND inside the development toolkit container
+    Hints: The toolkit comes loaded with many tools for working with Openverse! Try
+    some of the following:
+
+      - ov just
+      - ov pdm
+      - ov pnpm
+      - ov python
+      - ov bash
+EOF
+
+  exit 0
+fi
+
+case "$_cmd" in
+init)
+  "$_self" build
+  "$_self" just install-hooks
+  ;;
+
+build)
+  docker build -t openverse-dev-env:latest "$dev_env"
+  ;;
+
+clean)
+  docker volume rm openverse-dev-env
+  ;;
+
+hook)
+  # Arguments match the implementation of hooks installed by pre-commit
+  "$_self" pre-commit hook-impl \
+    --config=.pre-commit-config.yaml \
+    --hook-type="$2" \
+    --hook-dir "$OPENVERSE_PROJECT"/.git/hooks \
+    --color=always \
+    -- "${@:3}"
+  ;;
+
+*)
+  "$dev_env"/run.sh "$@"
+  ;;
+
+esac

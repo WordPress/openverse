@@ -1,5 +1,10 @@
 <template>
-  <VTab id="filters" size="medium" class="gap-x-2">
+  <VTab
+    id="filters"
+    size="medium"
+    class="gap-x-2"
+    :aria-label="$tc('header.filterButton.withCount', appliedFilterCount)"
+  >
     <VFilterIconOrCounter :applied-filter-count="appliedFilterCount" />
     <h2 class="label-regular">{{ $t("filters.title") }}</h2>
   </VTab>

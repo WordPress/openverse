@@ -62,6 +62,10 @@ install:
     just node-install
     just py-install
 
+# Install `ov`-based git hooks
+@install-hooks:
+    bash -c "cp ./docker/dev_env/hooks/* ./.git/hooks"
+
 # Setup pre-commit as a Git hook
 precommit:
     #!/usr/bin/env bash
@@ -237,6 +241,27 @@ run +args:
 # Execute pgcli against one of the database instances
 _pgcli container db_user_pass db_name db_host db_port="5432":
     just exec {{ container }} pgcli postgresql://{{ db_user_pass }}:{{ db_user_pass }}@{{ db_host }}:{{ db_port }}/{{ db_name }}
+
+###########
+# Cleanup #
+###########
+
+# Recursively list, and delete, all specified dirs from the repo
+_prune pattern delete="false":
+    find . -name '{{ pattern }}' -type d -prune {{ if delete == "true" { "-exec rm -rf '{}' +" } else { "" } }}
+
+# Recursively list, and delete, all `node_modules/` from the repo
+prune_node delete="false":
+    @just _prune node_modules {{ delete }}
+
+# Recursively list, and delete, all `.venv/` from the repo
+prune_venv delete="false":
+    @just _prune .venv {{ delete }}
+
+# Recursively list, and delete, all `node_modules/` and `.venv/` from the repo
+prune delete="false":
+    @just prune_node {{ delete }}
+    @just prune_venv {{ delete }}
 
 ########
 # Misc #

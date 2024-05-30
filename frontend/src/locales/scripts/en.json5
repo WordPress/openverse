@@ -52,7 +52,8 @@
     loading: "Loading...",
     filterButton: {
       simple: "Filters",
-      withCount: "{count} Filter|{count} Filters",
+      /** Used as the accessible label for the button or tab that opens the filters sidebar. Count refers the number of filters the user has enabled, not the number of available filters */
+      withCount: "Filters ({count})",
     },
     seeResults: "See results",
     backButton: "Go back",
