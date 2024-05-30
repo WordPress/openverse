@@ -79,23 +79,20 @@ def get_decision_form(media_type: str):
                 field.widget.attrs.update({"form": "decision-create"})
 
         def clean_report_id(self):
-            report_ids = self.cleaned_data["report_id"]
-            reports = []
-            for report_id in report_ids:
-                try:
-                    report = report_class.objects.get(id=report_id)
-                    if not report.is_pending:
-                        raise forms.ValidationError(
-                            "Report ID %(value)s has already been reviewed.",
-                            params={"value": report_id},
-                        )
-                    reports.append(report)
-                except report_class.DoesNotExist:
-                    raise forms.ValidationError(
-                        "Report ID %(value)s does not exist.",
-                        params={"value": report_id},
-                    )
-            self.cleaned_data["reports"] = reports
+            report_ids = set(self.cleaned_data["report_id"])
+            report_qs = report_class.objects.filter(
+                decision=None,
+                id__in=report_ids,
+            )
+            retrieved_report_ids = set(
+                str(val) for val in report_qs.values_list("id", flat=True)
+            )
+            if diff := (report_ids - retrieved_report_ids):
+                raise forms.ValidationError(
+                    "No pending reports found for IDs %(value)s.",
+                    params={"value": ", ".join(diff)},
+                )
+            self.cleaned_data["reports"] = report_qs
             return report_ids
 
     return MediaDecisionForm
@@ -395,14 +392,13 @@ class MediaListAdmin(admin.ModelAdmin):
                     media_obj=media_obj.id,
                 )
 
-                for report in form.cleaned_data["reports"]:
-                    report.decision = decision
-                    report.save()
-                    logger.info(
-                        "Decision recorded in report",
-                        report=report.id,
-                        decision=decision.id,
-                    )
+                reports = form.cleaned_data["reports"]
+                count = reports.update(decision=decision)
+                logger.info(
+                    "Decision recorded in reports",
+                    report_count=count,
+                    decision=decision.id,
+                )
             else:
                 logger.warning(
                     "Form is invalid",
