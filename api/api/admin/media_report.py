@@ -238,14 +238,14 @@ class MediaListAdmin(admin.ModelAdmin):
         # appear just before the catch-all view.
         urls[-1:-1] = [
             path(
-                "<path:object_id>/complain/",
-                wrap(self.complain_view),
-                name=f"{app}_{model}_complain",
+                "<path:object_id>/report_create/",
+                wrap(self.report_create_view),
+                name=f"{app}_{model}_report_create",
             ),
             path(
-                "<path:object_id>/moderate/",
-                wrap(self.moderate_view),
-                name=f"{app}_{model}_moderate",
+                "<path:object_id>/decision_create/",
+                wrap(self.decision_create_view),
+                name=f"{app}_{model}_decision_create",
             ),
             path(
                 "<path:object_id>/lock/",
@@ -425,11 +425,11 @@ class MediaListAdmin(admin.ModelAdmin):
 
         return redirect(f"admin:api_{self.media_type}_change", object_id)
 
-    #################
-    # Moderate view #
-    #################
+    ########################
+    # Decision create view #
+    ########################
 
-    def moderate_view(self, request, object_id):
+    def decision_create_view(self, request, object_id):
         """
         Create a decision for the media object and associate selected
         reports referencing the media with this decision.
@@ -475,11 +475,11 @@ class MediaListAdmin(admin.ModelAdmin):
 
         return redirect(f"admin:api_{self.media_type}_change", object_id)
 
-    #################
-    # Complain view #
-    #################
+    ######################
+    # Report create view #
+    ######################
 
-    def complain_view(self, request, object_id):
+    def report_create_view(self, request, object_id):
         """Create a report for the media object."""
 
         if request.method == "POST":
