@@ -2,6 +2,7 @@ services:
   cache:
     profiles:
       - api
+      - api_extra
     image: docker.io/redis:7.2.4
     ports:
       - "50263:6379"
@@ -9,6 +10,7 @@ services:
   web:
     profiles:
       - api
+      - api_extra
     build:
       target: api
       additional_contexts:
@@ -35,7 +37,7 @@ services:
 
   nginx:
     profiles:
-      - api
+      - api_extra
     build:
       target: nginx
       additional_contexts:
@@ -53,7 +55,7 @@ services:
 
   proxy:
     profiles:
-      - api
+      - api_extra
     image: docker.io/nginx:alpine
     ports:
       - "50200:9080"
