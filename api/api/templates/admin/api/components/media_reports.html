@@ -12,10 +12,13 @@ Props:
   <h2>Reports/Create decision</h2>
 
   {% if pending_report_count %}
-  <p>
+  <div class="description mb-5px">
     You can take a decision for the pending reports by selecting one
     or more of them and creating a decision.
-  </p>
+  </div>
+  <style>
+    .mb-5px { margin-bottom: 5px; }
+  </style>
   {% endif %}
 
   {% if reports %}
@@ -78,10 +81,10 @@ Props:
     .w-full { width: 100%; }
   </style>
   {% else %}
-  <p>
+  <div class="description">
     There are no reports. You can file a report using the form "Create
     report" above.
-  </p>
+  </div>
   {% endif %}
 
   {% if pending_report_count %}
