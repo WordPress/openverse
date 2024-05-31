@@ -3,7 +3,11 @@ from factory.django import DjangoModelFactory
 
 from api.models.audio import Audio, AudioAddOn, AudioReport, SensitiveAudio
 from test.factory.faker import Faker
-from test.factory.models.media import IdentifierFactory, MediaFactory, MediaReportFactory
+from test.factory.models.media import (
+    IdentifierFactory,
+    MediaFactory,
+    MediaReportFactory,
+)
 
 
 class SensitiveAudioFactory(DjangoModelFactory):

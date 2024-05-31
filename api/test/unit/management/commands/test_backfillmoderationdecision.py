@@ -1,10 +1,19 @@
 from io import StringIO
-import pytest
 
 from django.core.management import call_command
 
-from api.models import AudioDecision, ImageDecision
-from api.models import DMCA, MATURE, OTHER, MATURE_FILTERED, NO_ACTION, DEINDEXED
+import pytest
+
+from api.models import (
+    DEINDEXED,
+    DMCA,
+    MATURE,
+    MATURE_FILTERED,
+    NO_ACTION,
+    OTHER,
+    AudioDecision,
+    ImageDecision,
+)
 from test.factory.models.audio import AudioReportFactory
 from test.factory.models.image import ImageReportFactory
 from test.factory.models.oauth2 import UserFactory
@@ -31,6 +40,7 @@ def make_reports(media_type, reason: str, status: str, count: int = 1):
     else:
         ImageReportFactory.create_batch(count, status=status, reason=reason)
 
+
 @pytest.mark.parametrize(
     ("reason", "status", "expected_action"),
     (
@@ -43,17 +53,19 @@ def make_reports(media_type, reason: str, status: str, count: int = 1):
         (MATURE, DEINDEXED, "deindexed_sensitive"),
         (DMCA, DEINDEXED, "deindexed_copyright"),
         (OTHER, DEINDEXED, "deindexed_sensitive"),
-    )
+    ),
 )
 @pytest.mark.parametrize(("media_type"), ("image", "audio"))
 @pytest.mark.django_db
-def test_create_moderation_decision_for_reports(media_type, reason, status, expected_action):
+def test_create_moderation_decision_for_reports(
+    media_type, reason, status, expected_action
+):
     username = "opener"
     UserFactory.create(username=username)
 
     make_reports(media_type=media_type, reason=reason, status=status)
 
-    out , err = call_cmd(dry_run=False, media_type=media_type, moderator=username)
+    out, err = call_cmd(dry_run=False, media_type=media_type, moderator=username)
 
     MediaDecision = ImageDecision if media_type == "image" else AudioDecision
     assert MediaDecision.objects.count() == 1

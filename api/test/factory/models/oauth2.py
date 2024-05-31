@@ -1,5 +1,5 @@
-from django.utils import timezone
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 
 import factory
 from factory.django import DjangoModelFactory
