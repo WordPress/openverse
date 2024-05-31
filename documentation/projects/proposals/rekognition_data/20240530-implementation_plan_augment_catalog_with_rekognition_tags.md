@@ -9,7 +9,7 @@
 
 <!-- Choose two people at your discretion who make sense to review this based on their existing expertise. Check in to make sure folks aren't currently reviewing more than one other proposal or RFC. -->
 
-- [ ] @obulat
+- [ ] @sarayourfriend
 - [ ] @stacimc
 
 ## Project links
@@ -31,7 +31,7 @@
     https://github.com/WordPress/openverse/issues/1566#issuecomment-2038338095
 
 [^rekognition_data]:
-    s3://migrated-cccatalog-archives/kafka/image_analysis_labels-2020-12-17.txt
+    `s3://migrated-cccatalog-archives/kafka/image_analysis_labels-2020-12-17.txt`
 
 ## Overview
 
@@ -48,9 +48,9 @@ The terms "tags" and "labels" are often used interchangeably in this document. B
 data available in the catalog database which include those labels.
 ```
 
-This implementation plan describes the criteria with which we will select which
-tags from the Rekognition data to include into the catalog database. This
-includes defining criteria for the following:
+This implementation plan describes the criteria we will use to select which tags
+from the Rekognition data to include into the catalog database. This includes
+defining criteria for the following:
 
 - Which tags should be included/excluded
 - What minimum accuracy value is required for inclusion
@@ -96,10 +96,10 @@ minimum accuracy cutoff for those tags should be.
 [^4]:
     [I. D. Raji and J. Buolamwini, “Actionable Auditing,” _MIT Media Lab_, Jan. 2019, doi: 10.1145/3306618.3314244.](https://www.aies-conference.com/2019/wp-content/uploads/2019/01/AIES-19_paper_223.pdf)
 
-[^4]:
+[^5]:
     [Bass, D. (2019, April 3). Amazon Schooled on AI Facial Technology By Turing Award Winner. _Bloomberg_.](https://www.bloomberg.com/news/articles/2019-04-03/amazon-schooled-on-ai-facial-technology-by-turing-award-winner)
 
-[^5]:
+[^6]:
     [Buolamwini, J. (2019, January 25). Response: Racial and Gender bias in Amazon Rekognition — Commercial AI System for Analyzing Faces. _Medium_.](https://medium.com/@Joy.Buolamwini/response-racial-and-gender-bias-in-amazon-rekognition-commercial-ai-system-for-analyzing-faces-a289222eeced)
 
 Machine-generated tags that are the product of AI image labeling models have
@@ -108,8 +108,10 @@ structural, and institutional biases[^1][^2][^3]. This includes analysis done on
 [AWS Rekognition](https://docs.aws.amazon.com/rekognition/),
 specifically[^4][^5][^6].
 
-For the reasons described in the above cited works, we should exclude labels
-that have a demographic context in the following categories:
+Certain demographic axes seem the most likely to result in an incorrect or
+insensitive label (e.g. gender assumption of an individual in a photo). For the
+reasons described in the above cited works, we should **exclude** labels that
+have a demographic context in the following categories:
 
 - Age
 - Gender
@@ -117,10 +119,9 @@ that have a demographic context in the following categories:
 - Nationality
 - Race
 
-These seem the most likely to result in an incorrect or insensitive label (e.g.
-gender assumption of an individual in a photo). There are other categories which
-might be useful for search relevancy and are less likely to be applied in an
-insensitive manner. Some examples include:
+There are other categories which might be useful for search relevancy and are
+less likely to be applied in an insensitive manner. These labels **should not**
+be excluded. Some examples include:
 
 - Occupation
 - Marital status
@@ -136,9 +137,9 @@ We already filter out existing tags from the catalog when copying data into the
 API database during the data refresh's
 [cleanup step](https://github.com/WordPress/openverse/blob/3747f9aa40ed03899becb98ecae2abf926c8875f/ingestion_server/ingestion_server/cleanup.py#L119-L150)[^removal].
 The minimum accuracy value used for this step is
-[0.9](https://github.com/WordPress/openverse/blob/3747f9aa40ed03899becb98ecae2abf926c8875f/ingestion_server/ingestion_server/cleanup.py#L57-L56),
-or 90%. AWS's own advice on what value to use is essentially that
-[it depends on the use case of the application](https://aws.amazon.com/rekognition/faqs/#Label_Detection).
+[0.9 (or 90%)](https://github.com/WordPress/openverse/blob/3747f9aa40ed03899becb98ecae2abf926c8875f/ingestion_server/ingestion_server/cleanup.py#L57-L56)
+. AWS's own advice on what value to use is that
+[it depends entirely on the use case of the application](https://aws.amazon.com/rekognition/faqs/#Label_Detection).
 
 I took a small sample of the labels we have available (~100MB out of the 196GB
 dataset, about 45k images with labels) and performed some exploratory analysis
@@ -150,24 +151,24 @@ on the data. I found the following pieces of information:
 - **Median confidence across all labels**: 81.379463
 - **Average confidence per image**: 81.073921
 - **Median confidence per image**: 82.564148
-- **Number of labels with confidence higher than 90**: 210341
+- **Number of labels with confidence higher than 90**: 210,341
 - **Percentage of labels with confidence higher than 90**: 37.85031%
 - **Average number of labels per image higher than 90**: 4.6629
 
+_For a full explanation on this exploration, see:
+[Analysis explanation](#analysis-explanation)_
+
 Based on the number of labels we would still be receiving with a confidence
-higher than 90, and that 90 is already our existing minimum standard, we should
-retain 0.9 or 90% as our minimum label accuracy value for inclusion in the
-catalog.
+higher than 90, and that 0.9 is already our existing minimum standard, **we
+should retain 0.9 or 90% as our minimum label accuracy value** for inclusion in
+the catalog.
 
 This necessarily means that we will not be including a projected 62% of the
 labels which are available in the Rekognition dataset. Accuracy, as it directly
 relates to search relevancy, is more desirable here than completeness. We will
 retain the original Rekognition source data after ingesting the high-accuracy
 tags, and so if we decide to allow a lower accuracy threshold, we can always
-re-add the lower confidence values.
-
-(Note: need to consider clarifai deletions, which would happen anyway with the
-data normalization)
+re-add the lower confidence values at a later time.
 
 ## Step-by-step plan
 
@@ -197,7 +198,7 @@ For each step description, ensure the heading includes an obvious reference to t
 "step-by-step plan" section above.
 -->
 
-```{warning}
+```{note}
 Some of the steps listed below have some cross-over with functionality defined
 in/required by the
 [data normalization project](/projects/proposals/data_normalization/20240227-implementation_plan_catalog_data_cleaning.md)
@@ -217,7 +218,7 @@ the accuracy of the exclusion list prior to publishing.
 
 ### Filter Clarifai tags
 
-```{note}
+```{attention}
 A snapshot of the catalog database should be created prior to running this step
 in production.
 ```
@@ -227,9 +228,9 @@ already have
 [around 10 million records](https://github.com/WordPress/openverse/pull/3948#discussion_r1552301581)
 which include labels from the
 [Clarifai image labeling service](https://www.clarifai.com/products/scribe-data-labeling-platform).
-It is unclear how these labels were applied, or what the full label set is.
-Given how comprehensive Rekognition's label list is, I feel confident that the
-exclusions we identify from that list will be sufficient for filtering out
+It is unclear how these labels were applied, or what the exhaustive label set
+is. Given how comprehensive Rekognition's label list is, I feel confident that
+the exclusions we identify from that list will be sufficient for filtering out
 unwanted demographic labels that Clarifai has used as well.
 
 Once the excluded labels are determined, we will need to filter those values
@@ -250,11 +251,11 @@ excluded label list.
 The below steps describe a thorough, testable, and reproducible way to generate
 and incorporate the new Rekognition tags. It would be possible to short-cut many
 of these steps by running them as one-off commands or scripts locally (see
-[Alternatives](#alternatives)). Since it's possible that we may need to
-incorporate machine-labels in bulk in a similar manner in the future, having a
-clear and repeatable process for doing so will make those operations easier down
-the line. It also allows us to test the insertion process locally, which feels
-crucial for such a significant addition of data.
+[Alternatives](#alternatives)). Since we may need to incorporate machine-labels
+in bulk in a similar manner in the future, having a clear and repeatable process
+for doing so will make those operations easier down the line. It also allows us
+to test the insertion process locally, which feels crucial for such a
+significant addition of data.
 
 #### Context
 
@@ -470,7 +471,7 @@ This file is about 200GB in total. For more information about the data, see
 
 #### DAG
 
-```{note}
+```{attention}
 A snapshot of the catalog database should be created prior to running this step
 in production.
 ```
@@ -493,7 +494,7 @@ steps:
    3. Construct a `tags` JSON object similar to the existing tags data for that
       image, including accuracy and provider. Ensure that the labels are lower
       case and that the confidence value is between 0.0 and 1.0 (e.g.
-      `{"name": "cat", "accuracy": 0.9983, "provider": "rekognition"}`).
+      `[{"name": "cat", "accuracy": 0.9983, "provider": "rekognition"}, ...]`).
    4. At regular intervals, insert batches of constructed `identifier`/`tags`
       pairs into the temporary table.
 3. Launch a [batched update run][batched_update] which merges the existing tags
@@ -501,7 +502,7 @@ steps:
    identifier[^batch_tag_example]. **Note**: the batched update DAG may need to
    be augmented in order to reference data from an existing table, similar to
    #3415.
-4. Delete the temporary table
+4. Delete the temporary table.
 
 For local testing, a small sample of the Rekognition data could be made
 available in the local S3 server
@@ -527,7 +528,7 @@ within Airflow, in order for it to be available for this DAG.
 <!-- Note any projects this plan is dependent on. -->
 
 This project is related to, but not necessarily dependent on, the data
-normalization project. See the warning in [Step Details](#step-details).
+normalization project. See the note in [Step Details](#step-details).
 
 ## Alternatives
 
@@ -541,14 +542,14 @@ part of figuring out the exact commands necessary. The entire Rekognition
 file[^rekognition_data] could be downloaded by a maintainer locally and all data
 manipulation could be performed on their machine. A new TSV could be generated
 matching the table pattern described in [DAG step 1](#dag), the file could be
-uploaded to S3, and a table could be created directly from it. The final batched
-update step would then be kicked off by hand.
+uploaded to S3, and a table in Postgres could be created from it directly. The
+final batched update step would then be kicked off by hand.
 
 While I would personally prefer to take these actions by hand to get the data in
 quicker, I think it's prudent for us to have a more formal process for
-accomplishing this. It's possible that we might receive more labels down the
-line, and having a rubric for how to add them will serve us much better than a
-handful of scripts and instructions.
+accomplishing this. It's possible that we might receive more machine-generated
+labels down the line, and having a rubric for how to add them will serve us much
+better than a handful of scripts and instructions.
 
 We could also skip processing the Rekognition file in Python and insert it
 directly into Postgres. We'd then need to perform the label extraction and
@@ -564,7 +565,7 @@ would not be as much of a benefit as the time it might take to craft it.
 <!-- What hard blockers exist that prevent further work on this project? -->
 
 No blockers, this work can begin immediately (though some may conflict with the
-data normalization project, see the warning in [Step Details](#step-details)).
+data normalization project, see the note in [Step Details](#step-details)).
 
 ## Rollback
 
@@ -588,6 +589,10 @@ The [Clarifai filtering step](#filter-clarifai-tags) is necessarily (and mostly
 irreversibly, depending on how long we keep the snapshot prior to executing that
 step) removing data from the catalog database. Most of this data are tags that
 are already not exposed due to the [accuracy threshold](#accuracy-selection).
+
+Adding this new data will affect search relevancy. Discussion around that risk
+can be found
+[in the project proposal](20240320-project_proposal_rekognition_data.md#success).
 
 ## Prior art
 
