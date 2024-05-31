@@ -288,10 +288,7 @@ class MediaListAdmin(admin.ModelAdmin):
     #############
 
     change_list_template = "admin/api/media/change_list.html"
-    list_display = (
-        "identifier",
-        "has_sensitive_text",
-    )
+    list_display = ("identifier",)
     list_display_links = ("identifier",)
     search_fields = _production_deferred("identifier")
     sortable_by = ()  # Ordering is defined in ``get_queryset``.
@@ -306,8 +303,13 @@ class MediaListAdmin(admin.ModelAdmin):
                 "pending_report_count",
                 "oldest_report_date",
                 "pending_reports_links",
+                "has_sensitive_text",
             )
-        return self.list_display
+        else:
+            return self.list_display + (
+                "source",
+                "provider",
+            )
 
     def total_report_count(self, obj):
         return obj.total_report_count
