@@ -6,15 +6,22 @@ Props:
 - mod_form
 {% endcomment %}
 
+{% load static %}
+
 <fieldset class="module aligned">
-  <h2>Reports</h2>
+  <h2>Reports/Create decision</h2>
 
   {% if pending_report_count %}
-  <p>
+  <div class="description mb-5px">
     You can take a decision for the pending reports by selecting one
     or more of them and creating a decision.
-  </p>
+  </div>
+  <style>
+    .mb-5px { margin-bottom: 5px; }
+  </style>
   {% endif %}
+
+  {% if reports %}
   <table class="w-full">
     <thead>
       <tr>
@@ -51,9 +58,9 @@ Props:
         <td>{{ report.description }}</td>
         <td>
           {% if report.is_pending %}
-          <img src="/static/admin/img/icon-yes.svg" alt="False">
+          <img src="{% static 'admin/img/icon-yes.svg' %}" alt="False">
           {% else %}
-          <img src="/static/admin/img/icon-no.svg" alt="False">
+          <img src="{% static 'admin/img/icon-no.svg' %}" alt="False">
           {% endif %}
         </td>
         <td>
@@ -73,6 +80,13 @@ Props:
     .hidden { display: none; }
     .w-full { width: 100%; }
   </style>
+  {% else %}
+  <div class="description">
+    There are no reports. You can file a report using the form "Create
+    report" above.
+  </div>
+  {% endif %}
+
   {% if pending_report_count %}
   <div class="form-row field-height">
     <div>

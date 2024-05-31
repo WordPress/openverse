@@ -41,9 +41,18 @@
 {% endblock %}
 
 {% block content %}{{ block.super }}
-<!-- Fields for this form are supplied separately in `media_reports.html`. -->
+<!-- Fields for this form are supplied separately in `media_complain.html`. -->
+<form id="report-create" method="POST" action="{% url 'admin:api_'|add:media_type|add:'_report_create' object_id %}">
+  {% csrf_token %}
+  <input
+    type="hidden"
+    name="media_obj"
+    value="{{ media_obj.identifier }}">
+</form>
+
 {% if pending_report_count %}
-<form id="decision-create" method="POST" action="{% url 'admin:api_'|add:media_type|add:'_moderate' object_id %}">
+<!-- Fields for this form are supplied separately in `media_reports.html`. -->
+<form id="decision-create" method="POST" action="{% url 'admin:api_'|add:media_type|add:'_decision_create' object_id %}">
   {% csrf_token %}
 </form>
 {% endif %}
@@ -55,6 +64,7 @@
 
 {% block after_field_sets %}
 {% include 'admin/api/components/media_additional.html' with media_type=media_type media_obj=media_obj tags=tags only %}
+{% include 'admin/api/components/media_complain.html' with media_type=media_type media_obj=media_obj report_form=report_form only %}
 {% include 'admin/api/components/media_reports.html' with media_type=media_type reports=reports pending_report_count=pending_report_count mod_form=mod_form only %}
 {% include 'admin/api/components/media_decisions.html' with media_type=media_type decision_throughs=decision_throughs only %}
 {% endblock %}
