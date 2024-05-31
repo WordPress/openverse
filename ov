@@ -57,7 +57,7 @@ fi
 case "$_cmd" in
 init)
   "$_self" build
-  "$_self" just install-hooks
+  "$_self" 'just install-hooks && just init-ov-aliases'
   ;;
 
 build)
