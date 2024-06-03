@@ -268,7 +268,7 @@ def resolve_issue_reference(
 
 def init_cache(app: Sphinx) -> None:
     if not hasattr(app.env, "issuetracker_cache"):
-        app.env.issuetracker_cache: "IssueTrackerCache" = {}  # type: ignore
+        app.env.issuetracker_cache: IssueTrackerCache = {}
     return None
 
 

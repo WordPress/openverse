@@ -46,7 +46,7 @@ repos:
       - id: requirements-txt-fixer
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.4.2
+    rev: v0.4.7
     hooks:
       - id: ruff # replaces Flake8, isort, pydocstyle, pyupgrade
         args:
@@ -76,12 +76,12 @@ repos:
       - id: shfmt-docker
 
   - repo: https://github.com/rhysd/actionlint
-    rev: v1.6.27
+    rev: v1.7.1
     hooks:
       - id: actionlint-docker
 
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.2.6
+    rev: v2.3.0
     hooks:
       - id: codespell
         args: [
@@ -155,7 +155,7 @@ repos:
         files: (.vale/.*|.mdx?)$
 
   - repo: https://github.com/renovatebot/pre-commit-hooks
-    rev: 37.330.1
+    rev: 37.384.0
     hooks:
       - id: renovate-config-validator
         args:

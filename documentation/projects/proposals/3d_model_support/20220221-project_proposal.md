@@ -241,7 +241,7 @@ where they render a 3D model on hover of the search results, when on desktop.
   base feature branch needed. Meta search support for 3D models does not need to
   be feature flagged.
 - e2e tests should be added for any new routes; and updated for existing routes
-  that are modified. PRs will be blocked in the abcense of these tests.
+  that are modified. PRs will be blocked in the absence of these tests.
 - New content types should always launch in `beta` until we reach a certain
   number of results and/or are confident in our UI components (this metric(s)
   need to be determined).
