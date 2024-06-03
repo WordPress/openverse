@@ -1,6 +1,4 @@
 """
-# Trim and Deduplicate Tags
-
 See the issue for context and motivation: https://github.com/WordPress/openverse/issues/4199
 
 This DAG triggers a run of the batched update DAG. It generates a new list of tags by
@@ -25,6 +23,7 @@ DAG_ID = "trim_and_deduplicate_tags"
     schedule=None,
     start_date=datetime(2024, 6, 3),
     tags=["database"],
+    doc_md=__doc__,
     max_active_runs=1,
     default_args=DAG_DEFAULT_ARGS,
 )

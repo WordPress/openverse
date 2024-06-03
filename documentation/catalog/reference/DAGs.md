@@ -54,6 +54,7 @@ The following are DAGs grouped by their primary tag:
 | [`recreate_image_popularity_calculation`](#recreate_media_type_popularity_calculation) | `None`            |
 | [`report_pending_reported_media`](#report_pending_reported_media)                      | `@weekly`         |
 | [`staging_database_restore`](#staging_database_restore)                                | `@monthly`        |
+| [`trim_and_deduplicate_tags`](#trim_and_deduplicate_tags)                              | `None`            |
 
 ### Elasticsearch
 
@@ -174,6 +175,7 @@ The following is documentation associated with each DAG (where available):
 1.  [`smk_workflow`](#smk_workflow)
 1.  [`staging_database_restore`](#staging_database_restore)
 1.  [`stocksnap_workflow`](#stocksnap_workflow)
+1.  [`trim_and_deduplicate_tags`](#trim_and_deduplicate_tags)
 1.  [`wikimedia_commons_workflow`](#wikimedia_commons_workflow)
 1.  [`wikimedia_reingestion_workflow`](#wikimedia_commons_workflow)
 1.  [`wordpress_workflow`](#wordpress_workflow)
@@ -1065,6 +1067,17 @@ Output: TSV file containing the image, the respective meta-data.
 Notes: <https://stocksnap.io/api/load-photos/date/desc/1>
 <https://stocksnap.io/faq> All images are licensed under CC0. No rate limits or
 authorization required. API is undocumented.
+
+----
+
+### `trim_and_deduplicate_tags`
+
+See the issue for context and motivation:
+https://github.com/WordPress/openverse/issues/4199
+
+This DAG triggers a run of the batched update DAG. It generates a new list of
+tags by trimming all existing tags and re-inserting only the distinct tags of
+the resulting list of tags.
 
 ----
 
