@@ -55,7 +55,7 @@ def trim_and_deduplicate_tags():
                                 )
                             )
                         FROM (
-                            SELECT DISTINCT ON (tag->>'name')
+                            SELECT DISTINCT ON (tag->>'name', tag->'provider')
                                 trim(tag->>'name') trimmed_name,
                                 tag
                             FROM jsonb_array_elements(tags || '[]'::jsonb) tag
