@@ -2,21 +2,21 @@ from rest_framework import serializers
 
 from drf_spectacular.utils import extend_schema_serializer
 
-from api.models import ContentProvider
+from api.models import ContentSource
 
 
 @extend_schema_serializer(
     many=True,
     deprecate_fields=["logo_url"],
 )
-class ProviderSerializer(serializers.ModelSerializer):
+class SourceSerializer(serializers.ModelSerializer):
     source_name = serializers.CharField(
-        source="provider_identifier",
+        source="source_identifier",
         help_text="The source of the media, e.g. flickr",
     )
     display_name = serializers.CharField(
-        source="provider_name",
-        help_text="The name of content provider, e.g. Flickr",
+        source="source_name",
+        help_text="The name of content source, e.g. Flickr",
     )
     source_url = serializers.URLField(
         source="domain_name",
@@ -34,7 +34,7 @@ class ProviderSerializer(serializers.ModelSerializer):
         return None
 
     class Meta:
-        model = ContentProvider
+        model = ContentSource
         fields = [
             "source_name",
             "display_name",
@@ -45,4 +45,4 @@ class ProviderSerializer(serializers.ModelSerializer):
 
     def get_media_count(self, obj) -> int:
         source_counts = self.context.get("source_counts")
-        return source_counts.get(obj.provider_identifier)
+        return source_counts.get(obj.source_identifier)

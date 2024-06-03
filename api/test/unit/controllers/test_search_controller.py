@@ -16,7 +16,10 @@ from structlog.testing import capture_logs
 
 from api.controllers import search_controller
 from api.controllers.elasticsearch import helpers as es_helpers
-from api.controllers.search_controller import FILTERED_PROVIDERS_CACHE_KEY
+from api.controllers.search_controller import (
+    FILTERED_SOURCES_CACHE_KEY,
+    FILTERED_SOURCES_CACHE_VERSION,
+)
 from api.utils import tallies
 from api.utils.dead_link_mask import get_query_hash, save_query_mask
 from api.utils.search_context import SearchContext
@@ -25,7 +28,7 @@ from test.factory.es_http import (
     MOCK_LIVE_RESULT_URL_PREFIX,
     create_mock_es_http_image_search_response,
 )
-from test.factory.models.content_provider import ContentProviderFactory
+from test.factory.models.content_source import ContentSourceFactory
 
 
 pytestmark = pytest.mark.django_db
@@ -838,39 +841,39 @@ def test_excessive_recursion_in_post_process(
 @cache_availability_params
 @pytest.mark.parametrize(
     "excluded_count, result",
-    [(2, Terms(provider=["provider1", "provider2"])), (0, None)],
+    [(2, Terms(source=["source1", "source2"])), (0, None)],
 )
-def test_get_excluded_providers_query_returns_excluded(
+def test_get_excluded_sources_query_returns_excluded(
     excluded_count, result, is_cache_reachable, cache_name, request
 ):
     cache = request.getfixturevalue(cache_name)
 
     if is_cache_reachable:
         cache.set(
-            key=FILTERED_PROVIDERS_CACHE_KEY,
-            version=2,
+            key=FILTERED_SOURCES_CACHE_KEY,
+            version=FILTERED_SOURCES_CACHE_VERSION,
             timeout=30,
-            value=[f"provider{i + 1}" for i in range(excluded_count)],
+            value=[f"source{i + 1}" for i in range(excluded_count)],
         )
     else:
         for i in range(excluded_count):
-            ContentProviderFactory.create(
+            ContentSourceFactory.create(
                 created_on=datetime.datetime.now(),
-                provider_identifier=f"provider{i + 1}",
-                provider_name=f"Provider {i + 1}",
+                source_identifier=f"source{i + 1}",
+                source_name=f"Source {i + 1}",
                 filter_content=True,
             )
 
     with capture_logs() as cap_logs:
-        assert search_controller.get_excluded_providers_query() == result
+        assert search_controller.get_excluded_sources_query() == result
 
     if not is_cache_reachable:
         messages = [record["event"] for record in cap_logs]
         assert all(
             message in messages
             for message in [
-                "Redis connect failed, cannot get cached filtered providers.",
-                "Redis connect failed, cannot cache filtered providers.",
+                "Redis connect failed, cannot get cached filtered sources.",
+                "Redis connect failed, cannot cache filtered sources.",
             ]
         )
 
@@ -880,9 +883,7 @@ def test_get_sources_returns_stats(is_cache_reachable, cache_name, request, capl
     cache = request.getfixturevalue(cache_name)
 
     if is_cache_reachable:
-        cache.set(
-            "sources-multimedia", value={"provider_1": "1000", "provider_2": "1000"}
-        )
+        cache.set("sources-multimedia", value={"source_1": "1000", "source_2": "1000"})
 
     with capture_logs() as cap_logs, patch(
         "api.controllers.search_controller.get_raw_es_response",
@@ -890,16 +891,16 @@ def test_get_sources_returns_stats(is_cache_reachable, cache_name, request, capl
             "aggregations": {
                 "unique_sources": {
                     "buckets": [
-                        {"key": "provider_1", "doc_count": 1000},
-                        {"key": "provider_2", "doc_count": 1000},
+                        {"key": "source_1", "doc_count": 1000},
+                        {"key": "source_2", "doc_count": 1000},
                     ]
                 }
             }
         },
     ):
         assert search_controller.get_sources("multimedia") == {
-            "provider_1": 1000,
-            "provider_2": 1000,
+            "source_1": 1000,
+            "source_2": 1000,
         }
 
     if not is_cache_reachable:

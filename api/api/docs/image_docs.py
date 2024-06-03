@@ -41,7 +41,7 @@ from api.serializers.image_serializers import (
     OembedSerializer,
 )
 from api.serializers.media_serializers import MediaThumbnailRequestSerializer
-from api.serializers.provider_serializers import ProviderSerializer
+from api.serializers.source_serializers import SourceSerializer
 
 
 serializer = ImageSearchRequestSerializer(context={"media_type": "image"})
@@ -74,13 +74,13 @@ search = custom_extend_schema(
 
 stats = custom_extend_schema(
     desc=f"""
-        Get a list of all content providers and their respective number of
+        Get a list of all content sources and their respective number of
         images in the Openverse catalog.
 
-        By using this endpoint, you can obtain info about content providers such
-        as {fields_to_md(ProviderSerializer.Meta.fields)}.""",
+        By using this endpoint, you can obtain info about content sources such
+        as {fields_to_md(SourceSerializer.Meta.fields)}.""",
     res={
-        200: (ProviderSerializer(many=True), image_stats_200_example),
+        200: (SourceSerializer(many=True), image_stats_200_example),
         401: (AuthenticationFailed, None),
     },
     eg=[image_stats_curl],
