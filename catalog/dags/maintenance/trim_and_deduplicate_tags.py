@@ -47,15 +47,19 @@ def trim_and_deduplicate_tags():
                 "update_query": dedent(
                     """SET tags = (
                         SELECT
-                            jsonb_strip_nulls(jsonb_agg(trimed_and_deduped))
+                            jsonb_agg(
+                                jsonb_set(
+                                    deduped.tag,
+                                    '{name}',
+                                    to_jsonb(deduped.trimmed_name)
+                                )
+                            )
                         FROM (
-                            SELECT DISTINCT ON (trim("name"))
-                                trim("name") "name",
-                                provider,
-                                accuracy
-                            FROM
-                                jsonb_to_recordset(tags || '[]'::jsonb) as x("name" text, provider text, accuracy float)
-                        ) trimed_and_deduped
+                            SELECT DISTINCT ON (tag->>'name')
+                                trim(tag->>'name') trimmed_name,
+                                tag
+                            FROM jsonb_array_elements(tags || '[]'::jsonb) tag
+                        ) deduped
                     )"""
                 ),
                 "dry_run": False,
