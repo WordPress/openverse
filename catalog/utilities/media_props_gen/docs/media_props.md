@@ -24,7 +24,10 @@ This is _not_ the date when the item was first published on the source site.
 
 ## Description
 
-The timestamp of when the media item was last updated in Openverse catalog.
+The timestamp of the last time any change was made to the media item. Unlike
+`last_synced_with_source`, this can also be a change from a data cleaning step,
+e.g. updating license URL in the `meta_data`, or fixing the URL using the
+`batched_update` DAG.
 
 # ingestion_type
 
