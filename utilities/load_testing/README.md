@@ -32,14 +32,13 @@ variable.
 
 #### Frontend
 
-The frontend load tests by default run against
-`https://nuxt-preview.openverse.org`. It is important to disable the Cloudflare
-cache and WAF security settings for the duration of the test to test the actual
-performance of the application instead of testing Cloudflare cache or getting
-blocked by WAF. By default, the tests request only the English static pages. You
-can specify other scenarios to run, with `just k6 all` being the most
-comprehensive test that requests static and search pages in English. The
-`locales` tests request pages in 3 other locales.
+The frontend load tests by default run against `https://openverse.org`. It is
+important to disable the Cloudflare cache and WAF security settings for the
+duration of the test to test the actual performance of the application instead
+of testing Cloudflare cache or getting blocked by WAF. By default, the tests
+request only the English static pages. You can specify other scenarios to run,
+with `just k6 all` being the most comprehensive test that requests static and
+search pages in English. The `locales` tests request pages in 3 other locales.
 
 ### Running
 
@@ -53,7 +52,7 @@ staging API.
 
 To run the frontend load tests, use `just k6-frontend`. You can optionally
 specify the scenarios to run, for example, `just k6-frontend all`. To specify a
-host (the default is to point to the `nuxt-preview.openverse.org`), set the
-`FRONTEND_URL` environment variable. For example,
-`FRONTEND_URL=https://openverse.org just k6-frontend` will run the load tests
-against the production frontend.
+host (the default is to point to the `openverse.org`), set the `FRONTEND_URL`
+environment variable. For example,
+`FRONTEND_URL=https://nuxt-preview.openverse.org just k6-frontend` will run the
+load tests against the production frontend.

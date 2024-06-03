@@ -21,7 +21,7 @@ const localePrefix = (locale) => {
 }
 
 const visitUrl = (url, locale, action) => {
-  const response = http.get(url, { headers: { "Cache-Control": "no-cache" } })
+  const response = http.get(url, { headers: { "cache-control": "no-cache" } })
   const checkResponseFailed = makeResponseFailedCheck("", url)
   if (checkResponseFailed(response, action)) {
     console.error(`Failed URL: ${url}`)
