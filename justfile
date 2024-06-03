@@ -204,7 +204,7 @@ up *flags: env && ps
     #!/usr/bin/env bash
     set -eo pipefail
     while true; do
-      if just dc up -d {{ flags }} ; then
+      if just dc up {{ if IS_CI != "" { "--quiet-pull" } else { "" } }} -d {{ flags }} ; then
         break
       fi
       ((c++)) && ((c==3)) && break

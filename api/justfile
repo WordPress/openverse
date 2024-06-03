@@ -48,6 +48,10 @@ install *args:
 up *flags:
     env COMPOSE_PROFILES="api" just ../up {{ flags }}
 
+# Bring up services specific to the API profile, in addition to the API server
+up-extra *flags:
+    env COMPOSE_PROFILES="api_extra" just ../up {{ flags }}
+
 # Wait for all profile services to be up
 wait-up: up
     just ../ingestion_server/wait # API profile includes ingestion server
