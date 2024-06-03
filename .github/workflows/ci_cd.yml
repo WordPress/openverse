@@ -641,11 +641,14 @@ jobs:
         name:
           - unit_test
           - test_media_props
+          - frontend_init
         include:
           - name: unit_test
             recipe: frontend/run test:unit
           - name: test_media_props
             recipe: frontend/generate-docs
+          - name: frontend_init
+            recipe: frontend/init
 
     steps:
       - name: Checkout repository
