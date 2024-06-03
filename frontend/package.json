@@ -104,7 +104,7 @@
     "@nuxt/typescript-build": "^3.0.2",
     "@nuxtjs/storybook": "^4.3.2",
     "@pinia/testing": "^0.1.0",
-    "@playwright/test": "1.43.1",
+    "@playwright/test": "1.44.1",
     "@tailwindcss/typography": "^0.5.10",
     "@testing-library/dom": "^9.3.4",
     "@testing-library/jest-dom": "^6.4.2",
