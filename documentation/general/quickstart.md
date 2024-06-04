@@ -34,17 +34,23 @@ prerequisites.
 2. Clone the repository to your computer. Then switch to the cloned directory.
    If you're planning to contribute, fork the repo and clone your fork instead.
 
+   ```{note}
+   We recommend cloning with the `--filter=blob:none` flag as it dramatically
+   reduces the filesize and download time by creating a "blobless clone".
+   You can learn more about these [here](https://gist.github.com/leereilly/1f4ea46a01618b6e34ead76f75d0784b).
+   ```
+
    ```bash
-   git clone https://github.com/WordPress/openverse.git # or your fork
+   git clone --filter=blob:none https://github.com/WordPress/openverse.git # or your fork
    cd openverse/
    ```
 
-   If you followed the setup guide and installed
+   If you followed the general setup guide and installed
    [GitHub CLI](/general/general_setup.md#github-cli), you can clone more simply
    using the `gh` command.
 
    ```bash
-   gh repo clone WordPress/openverse # or your fork
+   gh repo clone WordPress/openverse -- --filter=blob:none  # or your fork
    cd openverse/
    ```
 
