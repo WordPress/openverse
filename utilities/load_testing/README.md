@@ -32,7 +32,7 @@ variable.
 
 #### Frontend
 
-The frontend load tests by default run against `https://openverse.org`. It is
+By default, the frontend load tests run against `https://openverse.org`. It is
 important to disable the Cloudflare cache and WAF security settings for the
 duration of the test to test the actual performance of the application instead
 of testing Cloudflare cache or getting blocked by WAF. By default, the tests
@@ -54,5 +54,5 @@ To run the frontend load tests, use `just k6-frontend`. You can optionally
 specify the scenarios to run, for example, `just k6-frontend all`. To specify a
 host (the default is to point to the `openverse.org`), set the `FRONTEND_URL`
 environment variable. For example,
-`FRONTEND_URL=https://staging.openverse.org just k6-frontend` will run the
-load tests against the staging frontend.
+`FRONTEND_URL=https://staging.openverse.org just k6-frontend` will run the load
+tests against the staging frontend.
