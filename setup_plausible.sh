@@ -15,7 +15,8 @@ docker compose exec -T "$PLAUSIBLE_SERVICE_NAME" \
 source docker/plausible/env.docker
 
 docker compose exec -T "$PLAUSIBLE_DB_SERVICE_NAME" /bin/bash -c "psql -U deploy -d plausible <<-EOF
-	INSERT INTO api_keys
+  CREATE EXTENSION IF NOT EXISTS pgcrypto;
+  INSERT INTO api_keys
 	  (id, user_id, name, key_prefix, key_hash, inserted_at, updated_at, scopes, hourly_request_limit)
 	VALUES
 	  (1, 1, 'Development', 'aaaaaa', encode(digest('$SECRET_KEY_BASE$API_KEY', 'sha256'), 'hex'), now(), now(), '{sites:provision:*}', 1000)
