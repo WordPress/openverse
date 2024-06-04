@@ -348,7 +348,8 @@ Provider scripts may include html tags in record titles, see
 Wikimedia titles in the database still include "FILE:" prefix, and unnecessary
 file extension, which is
 [hot-fixed](https://github.com/WordPress/openverse/tree/main/frontend/src/utils/decode-media-data.ts#L50)
-in the frontend. Some titles were incorrectly decoded, for which there is a
+in the frontend. Some titles were [incorrectly encoded](#encoding_problems), for
+which there is a
 [hot-fix in the frontend](https://github.com/WordPress/openverse/blob/70d57a91318a5b368fc0f1a244847bc27becefbd/frontend/src/utils/decode-media-data.ts#L73).
 
 ----
@@ -408,7 +409,7 @@ The cleanup process in data refresh fixes the following tag inconsistencies:
 - Some machine-generated tags have accuracy lower than 90% and are unreliable.
   These tags are filtered out. Some inconsistencies are not fixed by the cleanup
   process:
-- Incorrectly encoded tags, see
+- Incorrectly [encoded tags](#encoding_problems), see
   [issue #1927](https://github.com/WordPress/openverse/issues/1927). This can
   result in duplicate tags when the frontend decodes the tags.
 - Tags with leading or trailing spaces, see
@@ -656,3 +657,26 @@ _DB Column Type_: `integer, nullable`
 #### Description
 
 The position of the audio in the audio set.
+
+----
+
+## Encoding problems
+
+In the beginning of the project, some items were saved to the database with
+encoding problems. There are 3 ways that non-ASCII symbols were incorrectly
+saved:
+
+- escaped with double backslashes instead of the single backslash, e.g. `ä` ->
+  `\\u00e4`
+- escaped without a backslash, e.g. `ä` -> `u00e4`
+- x-escaped with double backslashes, e.g. `ä` -> `\\x61`
+
+With subsequent data re-ingestions, most titles were fixed. This problem still
+exists for titles of items that were not re-ingested, and for fields that are
+not simply replaced during re-ingestion, such as `tags` and
+`meta_data.description`. The frontend uses a hotfix to replace these encoding
+problems with the correct characters in
+[title](https://github.com/WordPress/openverse/tree/main/frontend/src/utils/decode-media-data.ts#L73),
+[tags](https://github.com/WordPress/openverse/tree/main/frontend/src/utils/decode-media-data.ts#L86)
+and
+[creator](https://github.com/WordPress/openverse/tree/main/frontend/src/utils/decode-media-data.ts#L124).

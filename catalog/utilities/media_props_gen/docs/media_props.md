@@ -162,7 +162,8 @@ Provider scripts may include html tags in record titles, see
 Some Wikimedia titles in the database still include "FILE:" prefix, and
 unnecessary file extension, which is
 [hot-fixed](https://github.com/WordPress/openverse/tree/main/frontend/src/utils/decode-media-data.ts#L50)
-in the frontend. Some titles were incorrectly decoded, for which there is a
+in the frontend. Some titles were [incorrectly encoded](#encoding_problems), for
+which there is a
 [hot-fix in the frontend](https://github.com/WordPress/openverse/blob/70d57a91318a5b368fc0f1a244847bc27becefbd/frontend/src/utils/decode-media-data.ts#L73).
 
 # meta_data
@@ -213,7 +214,7 @@ The cleanup process in data refresh fixes the following tag inconsistencies:
 
 Some inconsistencies are not fixed by the cleanup process:
 
-- Incorrectly encoded tags, see
+- Incorrectly [encoded tags](#encoding_problems), see
   [issue #1927](https://github.com/WordPress/openverse/issues/1927). This can
   result in duplicate tags when the frontend decodes the tags.
 - Tags with leading or trailing spaces, see
