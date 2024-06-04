@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/WordPress/openverse/main/brand/banner.svg" width="100%" alt="Openverse"/>
+<img src="https://raw.githubusercontent.com/WordPress/openverse/main/documentation/meta/brand/banner.svg" width="100%" alt="Openverse"/>
 
 [Openverse](https://openverse.org) is a search engine for openly licensed media.
 
