@@ -3,8 +3,35 @@ import { PullRequest } from './utils/pr.mjs'
 import { IdSet } from './utils/id_set.mjs'
 
 const exactlyOne = ['priority', 'goal']
-const atleastOne = ['aspect']
-const atleastOneCheckOnly = ['stack']
+const atleastOne = ['aspect', 'stack']
+
+const pathLabels = {
+  migrations: 'migrations',
+  project_proposal: '🧭 project: proposal',
+  project_ip: '🧭 project: implementation plan',
+}
+
+/**
+ * Get the list of labels that are applicable to a PR based on the changes.
+ *
+ * @param allLabels  {import('./utils/pr.mjs').Label[]} list of all labels in the repo
+ * @param changes {string[]} the list of groups that are changed by the PR
+ * @returns {import('./utils/pr.mjs').Label[]} the labels for the PR based on changes
+ */
+function getLabelsFromChanges(allLabels, changes) {
+  const applicableLabels = allLabels
+    .filter((label) => label.name.startsWith('🧱 stack:'))
+    .filter((label) => {
+      const [, stackName] = label.name.split(': ')
+      return changes.includes(stackName)
+    })
+  Object.entries(pathLabels).forEach(([group, labelName]) => {
+    if (changes.includes(group)) {
+      applicableLabels.push(allLabels.find((label) => label.name === labelName))
+    }
+  })
+  return applicableLabels
+}
 
 /**
  * Check if the list of labels covers all requirements.
@@ -18,7 +45,7 @@ function getIsFullyLabeled(labels) {
       return false
     }
   }
-  for (let req of atleastOne + atleastOneCheckOnly) {
+  for (let req of atleastOne) {
     if (labels.filter((label) => label.name.includes(req)).length < 1) {
       return false
     }
@@ -49,9 +76,6 @@ async function getAllLabels(octokit, repository) {
 /**
  * Apply labels to a PR based on the PR's linked issues.
  *
- * Note that this function does not concern itself with the management of stack
- * labels as that is performed by a job in the CI + CD workflow.
- *
  * @param octokit {import('@octokit/rest').Octokit} the Octokit instance to use
  * @param core {import('@actions/core')} GitHub Actions toolkit, for logging
  */
@@ -60,6 +84,7 @@ export const main = async (octokit, core) => {
   const { eventName, eventAction, prNodeId } = JSON.parse(
     readFileSync('/tmp/event.json', 'utf-8')
   )
+  const changes = JSON.parse(readFileSync('/tmp/change.json', 'utf-8'))
 
   const allLabels = await getAllLabels(octokit, GITHUB_REPOSITORY)
 
@@ -77,9 +102,9 @@ export const main = async (octokit, core) => {
   await pr.init()
 
   let isTriaged = false
-  if (pr.labels && pr.labels.some((label) => !label.name.includes('stack'))) {
-    // If a PR already has non-stack labels, it is considered triaged.
-    core.info('The PR already has non-stack labels.')
+  if (pr.labels.length) {
+    // If a PR already has some labels, it is considered triaged.
+    core.info('The PR already has some labels.')
     isTriaged = true
   }
 
@@ -90,6 +115,13 @@ export const main = async (octokit, core) => {
   // set as they could be the work of a maintainer.
   pr.labels.forEach((label) => {
     core.debug(`Retaining label "${label.name}" from PR.`)
+    finalLabels.add(label)
+  })
+
+  // Here we determine the labels from the groups changed by the PR. This
+  // consists of stack labels and some very specific labels based on file paths.
+  getLabelsFromChanges(allLabels, changes).forEach((label) => {
+    core.info(`Adding change-based label "${label.name}" to PR.`)
     finalLabels.add(label)
   })
 
