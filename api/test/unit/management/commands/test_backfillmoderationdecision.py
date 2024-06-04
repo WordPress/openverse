@@ -4,6 +4,7 @@ from django.core.management import call_command
 
 import pytest
 
+from api.constants.moderation import DecisionAction
 from api.models import (
     DEINDEXED,
     DMCA,
@@ -44,15 +45,15 @@ def make_reports(media_type, reason: str, status: str, count: int = 1):
 @pytest.mark.parametrize(
     ("reason", "status", "expected_action"),
     (
-        (MATURE, MATURE_FILTERED, "confirmed_sensitive"),
-        (DMCA, MATURE_FILTERED, "confirmed_sensitive"),
-        (OTHER, MATURE_FILTERED, "confirmed_sensitive"),
-        (MATURE, NO_ACTION, "rejected_reports"),
-        (DMCA, NO_ACTION, "rejected_reports"),
-        (OTHER, NO_ACTION, "rejected_reports"),
-        (MATURE, DEINDEXED, "deindexed_sensitive"),
-        (DMCA, DEINDEXED, "deindexed_copyright"),
-        (OTHER, DEINDEXED, "deindexed_sensitive"),
+        (MATURE, MATURE_FILTERED, DecisionAction.MARKED_SENSITIVE),
+        (DMCA, MATURE_FILTERED, DecisionAction.MARKED_SENSITIVE),
+        (OTHER, MATURE_FILTERED, DecisionAction.MARKED_SENSITIVE),
+        (MATURE, NO_ACTION, DecisionAction.REJECTED_REPORTS),
+        (DMCA, NO_ACTION, DecisionAction.REJECTED_REPORTS),
+        (OTHER, NO_ACTION, DecisionAction.REJECTED_REPORTS),
+        (MATURE, DEINDEXED, DecisionAction.DEINDEXED_SENSITIVE),
+        (DMCA, DEINDEXED, DecisionAction.DEINDEXED_COPYRIGHT),
+        (OTHER, DEINDEXED, DecisionAction.DEINDEXED_SENSITIVE),
     ),
 )
 @pytest.mark.parametrize(("media_type"), ("image", "audio"))

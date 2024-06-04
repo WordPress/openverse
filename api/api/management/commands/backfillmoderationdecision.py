@@ -4,13 +4,14 @@ from django.contrib.auth import get_user_model
 
 from django_tqdm import BaseCommand
 
+from api.constants.moderation import DecisionAction
 from api.models import AudioDecision, AudioReport, ImageDecision, ImageReport
 from api.models.media import DMCA, MATURE_FILTERED, NO_ACTION, PENDING
 
 
 class Command(BaseCommand):
     help = "Back-fill the moderation decision table for a given media type."
-    batch_size = 100
+    batch_size = 3
 
     @staticmethod
     def add_arguments(parser):
@@ -93,13 +94,13 @@ class Command(BaseCommand):
     @staticmethod
     def get_action(report):
         if report.status == MATURE_FILTERED:
-            return "confirmed_sensitive"
+            return DecisionAction.MARKED_SENSITIVE
 
         if report.status == NO_ACTION:
-            return "rejected_reports"
+            return DecisionAction.REJECTED_REPORTS
 
         # Cases with status = DEINDEXED
         if report.reason == DMCA:
-            return "deindexed_copyright"
+            return DecisionAction.DEINDEXED_COPYRIGHT
 
-        return "deindexed_sensitive"  # For reasons MATURE and OTHER
+        return DecisionAction.DEINDEXED_SENSITIVE  # For reasons MATURE and OTHER
