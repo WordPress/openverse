@@ -35,4 +35,4 @@ k6 script="main.js" +extra_args="": build
 
 # Run the frontend script for one of the scenarios (static-en, static-locales, search-en, search-locales, all)
 k6-frontend scenarios="static-en":
-    @just k6 frontend.js --env SCENARIOS=scenarios
+    @just k6 frontend.js --env SCENARIOS={{scenarios}}
