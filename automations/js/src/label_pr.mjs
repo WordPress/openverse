@@ -27,20 +27,23 @@ function getIsFullyLabeled(labels) {
 }
 
 /**
- * Get the `Label` instance from a label's name.
+ * Get all `Label` instances for a repository.
  *
  * @param octokit {import('@octokit/rest').Octokit} the Octokit instance to use
  * @param repository {string} the full name of the repository, including owner
- * @param name {string} the name of the label for which to get node ID
- * @returns {Label} the label with the `id` and `name` fields
+ * @returns {import('./utils/pr.mjs').Label[]} the label with the `id` and `name` fields
  */
-async function getLabel(octokit, repository, name) {
+async function getAllLabels(octokit, repository) {
   const [owner, repo] = repository.split('/')
-  const res = await octokit.rest.issues.getLabel({ owner, repo, name })
-  return {
-    id: res.data.node_id,
-    name,
-  }
+  const res = await octokit.rest.issues.listLabelsForRepo({
+    owner,
+    repo,
+    per_page: 100,
+  })
+  return res.data.map((item) => ({
+    id: item.node_id,
+    name: item.name,
+  }))
 }
 
 /**
@@ -57,6 +60,8 @@ export const main = async (octokit, core) => {
   const { eventName, eventAction, prNodeId } = JSON.parse(
     readFileSync('/tmp/event.json', 'utf-8')
   )
+
+  const allLabels = await getAllLabels(octokit, GITHUB_REPOSITORY)
 
   if (
     eventName !== 'pull_request' ||
@@ -131,8 +136,8 @@ export const main = async (octokit, core) => {
     } else {
       attnLabel = '🚦 status: awaiting triage'
     }
-    core.info(`Pull not fully labelled so adding "${attnLabel}".`)
-    attnLabel = await getLabel(octokit, GITHUB_REPOSITORY, attnLabel)
+    core.info(`PR not fully labelled so adding "${attnLabel}".`)
+    attnLabel = allLabels.filter((item) => item.name === attnLabel)[0]
     finalLabels.add(attnLabel)
   }
 
