@@ -139,50 +139,6 @@ jobs:
           checks: "files,duppatterns,syntax"
           experimental_checks: "notowned,avoid-shadowing"
 
-  add-stack-label:
-    name: Add stack label
-    if: |
-      github.event_name == 'pull_request' &&
-      github.event.pull_request.head.repo.owner.login == 'WordPress' &&
-      github.actor != 'dependabot[bot]'
-    runs-on: ubuntu-latest
-    needs:
-      - get-changes
-
-    steps:
-      - name: Apply stack labels
-        uses: actions/github-script@v7
-        with:
-          # Also see
-          # - list of stack filters: `.github/filters.yml`
-          # - list of stack labels: https://github.com/WordPress/openverse/labels?q=stack
-          script: |
-            const labels = await github.rest.issues.listLabelsOnIssue({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-            })
-            console.log(labels.data)
-            if (labels.data.some(label => label.name.startsWith("🧱 stack: "))) {
-              console.log("Stack label already applied, skipping.")
-            } else {
-              const stacks = ["catalog", "api", "ingestion_server", "frontend", "documentation", "mgmt"]
-              const labels = JSON
-                .parse('${{ needs.get-changes.outputs.changes }}')
-                .filter(change => stacks.includes(change))
-                .map(change => `🧱 stack: ${change.replace("_", " ")}`)
-              if (!labels.length) {
-                console.log("Couldn't determine stack, applying triage labels.")
-                labels.push("🚦 status: awaiting triage", "🏷 status: label work required")
-              }
-              await github.rest.issues.addLabels({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                labels,
-              })
-            }
-
   build-images:
     name: Build Docker images
     if: needs.determine-images.outputs.do_build == 'true'
