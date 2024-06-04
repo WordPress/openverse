@@ -72,3 +72,9 @@ mgmt:
 ci_cd:
   - .github/actions/**
   - .github/workflows/ci_cd.yml
+migrations:
+  - api/api/migrations/**
+project_proposal:
+  - documentation/projects/**/*project_proposal*
+project_ip:
+  - documentation/projects/**/*implementation_plan*
