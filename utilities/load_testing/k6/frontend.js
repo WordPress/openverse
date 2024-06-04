@@ -1,4 +1,5 @@
 import { group } from "k6"
+import exec from "k6/execution"
 import http from "k6/http"
 import {
   FRONTEND_URL,
@@ -35,7 +36,9 @@ const parseEnvLocales = (locales) => {
 
 export function visitStaticPages() {
   const locales = parseEnvLocales(__ENV.LOCALES)
-  console.log(`VU: ${__VU}  -  ITER: ${__ITER}`)
+  console.log(
+    `VU: ${exec.vu.idInTest}  -  ITER: ${exec.vu.iterationInInstance}`
+  )
   for (let locale of locales) {
     group(`visit static pages for locale ${locale}`, () => {
       for (let page of STATIC_PAGES) {
@@ -53,7 +56,9 @@ export function visitSearchPages() {
   let locales = parseEnvLocales(__ENV.LOCALES)
   let params = __ENV.PARAMS
   const paramsString = params ? ` with params ${params}` : ""
-  console.log(`VU: ${__VU}  -  ITER: ${__ITER}`)
+  console.log(
+    `VU: ${exec.vu.idInTest}  -  ITER: ${exec.vu.iterationInInstance}`
+  )
   for (let MEDIA_TYPE of ["image", "audio"]) {
     for (let locale of locales) {
       let q = getRandomWord()
@@ -76,8 +81,8 @@ const createScenario = (env, funcName) => {
     executor: "per-vu-iterations",
     env,
     exec: funcName,
-    vus: 5,
-    iterations: 5,
+    vus: 10,
+    iterations: 10,
   }
 }
 
