@@ -3,7 +3,7 @@ services:
     profiles:
       - api
       - api_extra
-    image: docker.io/redis:7.2.4
+    image: docker.io/redis:7.2.5
     ports:
       - "50263:6379"
 
