@@ -71,9 +71,7 @@ html_theme_options = {
     ],
 }
 
-html_favicon = (
-    "https://raw.githubusercontent.com/WordPress/openverse/master/brand/icon.svg"
-)
+html_favicon = "_static/favicon.ico"
 
 html_static_path = ["_static"]
 html_extra_path = ["robots.txt", "ai.txt"]
