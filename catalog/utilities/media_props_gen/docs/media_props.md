@@ -162,7 +162,7 @@ Provider scripts may include html tags in record titles, see
 Some Wikimedia titles in the database still include "FILE:" prefix, and
 unnecessary file extension, which is
 [hot-fixed](https://github.com/WordPress/openverse/tree/main/frontend/src/utils/decode-media-data.ts#L50)
-in the frontend. Some titles were [incorrectly encoded](#encoding_problems), for
+in the frontend. Some titles were [incorrectly encoded](#encoding-problems), for
 which there is a
 [hot-fix in the frontend](https://github.com/WordPress/openverse/blob/70d57a91318a5b368fc0f1a244847bc27becefbd/frontend/src/utils/decode-media-data.ts#L73).
 
@@ -188,8 +188,17 @@ The list of tags associated with the media item.
 
 ## Object Shape
 
-A JSONB array of dictionaries: `{"name": "tag1", "provider": "wordpress"}`. Some
-tags are machine-generated, and include an `accuracy` field with a float value.
+A JSONB array of dictionaries:
+
+```
+{
+"name": "tag1",
+"provider": "wordpress",
+"accuracy": 0.95}
+```
+
+`accuracy` field with a float value is only available for machine-generated
+tags.
 
 If there are no tags, the field should be set to null, not an empty array or
 empty object.
@@ -214,7 +223,7 @@ The cleanup process in data refresh fixes the following tag inconsistencies:
 
 Some inconsistencies are not fixed by the cleanup process:
 
-- Incorrectly [encoded tags](#encoding_problems), see
+- Incorrectly [encoded tags](#encoding-problems), see
   [issue #1927](https://github.com/WordPress/openverse/issues/1927). This can
   result in duplicate tags when the frontend decodes the tags.
 - Tags with leading or trailing spaces, see
@@ -332,7 +341,14 @@ The list of alternative file details for the audio (different formats/ quality).
 JSONB array of dictionaries:
 
 ```
-[{"url": "http://example.com/audio.mp3", "filesize": 123456, "bit_rate": 128, "sample_rate": 44100}]
+[
+    {
+        "url": "http://example.com/audio.mp3",
+        "filesize": 123456,
+        "bit_rate": 128,
+        "sample_rate": 44100
+    }
+]
 ```
 
 - `url` (string): the direct URL of the alternative file.
@@ -355,7 +371,14 @@ to.
 JSONB object:
 
 ```
-{"title": "Audio Set Title", "foreign_landing_url": "http://example.com", "thumbnail": "http://example.com/thumbnail.jpg", "creator": "Creator Name", "creator_url": "http://example.com/creator", "foreign_identifier": "123456"}
+{
+    "title": "Audio Set Title",
+    "foreign_landing_url": "http://example.com",
+    "thumbnail": "http://example.com/thumbnail.jpg",
+    "creator": "Creator Name",
+    "creator_url": "http://example.com/creator",
+    "foreign_identifier": "123456"
+}
 ```
 
 - `title` (string): the title of the audio set.
