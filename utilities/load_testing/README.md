@@ -54,5 +54,5 @@ To run the frontend load tests, use `just k6-frontend`. You can optionally
 specify the scenarios to run, for example, `just k6-frontend all`. To specify a
 host (the default is to point to the `openverse.org`), set the `FRONTEND_URL`
 environment variable. For example,
-`FRONTEND_URL=https://nuxt-preview.openverse.org just k6-frontend` will run the
-load tests against the production frontend.
+`FRONTEND_URL=https://staging.openverse.org just k6-frontend` will run the
+load tests against the staging frontend.
