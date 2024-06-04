@@ -26,7 +26,13 @@ k6 script="main.js" +extra_args="": build
       --rm \
       ${ACCESS_TOKEN:+ --env ACCESS_TOKEN=$ACCESS_TOKEN} \
       ${API_URL:+ --env API_URL=$API_URL} \
+      ${FRONTEND_URL:+ --env FRONTEND_URL=$FRONTEND_URL} \
       --volume {{ invocation_directory() }}/k6:/app \
       {{ extra_args }} \
       openverse-load_testing:latest \
       run {{ script }}
+
+
+# Run the frontend script for one of the scenarios (static-en, static-locales, search-en, search-locales, all)
+k6-frontend scenarios="static-en":
+    @just k6 frontend.js --env SCENARIOS={{scenarios}}
