@@ -78,7 +78,7 @@ export const main = async (octokit, core) => {
 
   let isTriaged = false
   if (pr.labels && pr.labels.some((label) => !label.name.includes('stack'))) {
-    // If a PR has non-stack labels, it has likely been triaged by a maintainer.
+    // If a PR already has non-stack labels, it is considered triaged.
     core.info('The PR already has non-stack labels.')
     isTriaged = true
   }
@@ -87,9 +87,9 @@ export const main = async (octokit, core) => {
   const finalLabels = new IdSet()
 
   // We start with the PRs current labels. We do not remove any labels already
-  // set as they could be the work of the CI labeller job or a maintainer.
+  // set as they could be the work of a maintainer.
   pr.labels.forEach((label) => {
-    core.debug(`Adding label "${label.name}" from PR.`)
+    core.debug(`Retaining label "${label.name}" from PR.`)
     finalLabels.add(label)
   })
 
