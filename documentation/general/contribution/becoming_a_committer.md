@@ -36,6 +36,9 @@ committer, the role of committer comes with a few benefits:
 - Self-assign issues as desired (rather than asking to be assigned)
 - Perform review for open pull requests
 
+Each new committer also receives a
+[welcome and announcement post on our Make WP blog](https://make.wordpress.org/openverse/tag/openverse-committers/).
+
 ```{tip}
 Interested in becoming a committer? Check out the [contributing guide](/general/contributing.md)
 or reach out to [one of the maintainers](/general/contribution/current_maintainers.md) to
