@@ -10,6 +10,7 @@ from api.models.media import DMCA, MATURE_FILTERED, NO_ACTION, PENDING
 
 class Command(BaseCommand):
     help = "Back-fill the moderation decision table for a given media type."
+    batch_size = 100
 
     @staticmethod
     def add_arguments(parser):
@@ -61,8 +62,7 @@ class Command(BaseCommand):
             self.info("No reports to process.")
             return
 
-        t = self.tqdm(total=count_to_process)
-
+        t = self.tqdm(total=count_to_process // self.batch_size)
         User = get_user_model()
         try:
             moderator = User.objects.get(username=username)
@@ -70,14 +70,18 @@ class Command(BaseCommand):
             t.error(f"User '{username}' not found.")
             return
 
-        for report in non_pending_reports:
-            decision = MediaDecision.objects.create(
-                action=self.get_action(report),
-                moderator=moderator,
-                notes="__backfilled_from_report_status",
+        while reports_chunk := non_pending_reports[: self.batch_size]:
+            decisions = MediaDecision.objects.bulk_create(
+                MediaDecision(
+                    action=self.get_action(report),
+                    moderator=moderator,
+                    notes="__backfilled_from_report_status",
+                )
+                for report in reports_chunk
             )
-            report.decision = decision
-            report.save()
+            for report, decision in zip(reports_chunk, decisions):
+                report.decision = decision
+            MediaReport.objects.bulk_update(reports_chunk, ["decision"])
             t.update(1)
 
         t.info(
