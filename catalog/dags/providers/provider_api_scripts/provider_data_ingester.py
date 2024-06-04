@@ -250,7 +250,7 @@ class ProviderDataIngester(ABC):
         logger.info(f"Begin ingestion for {self.__class__.__name__}")
 
         while should_continue:
-            self._verbose_log(f"Next set of query params: {query_params}")
+            self._verbose_log(f"Next set of query params: {json.dumps(query_params)}")
 
             if query_params is None:
                 # Break out of ingestion if no query_params are supplied. This can
@@ -617,5 +617,5 @@ class ProviderDataIngester(ABC):
         if data and not isinstance(data, dict):
             if limit_batch_to is not None:
                 data = data[:limit_batch_to]
-            msg += "".join(f"\n\t{item}" for item in data)
+            msg += "".join(f"\n\t{json.dumps(item)}" for item in data)
         logger.info(msg)
