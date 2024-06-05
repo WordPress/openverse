@@ -13,7 +13,9 @@ from api.models import (
     NO_ACTION,
     OTHER,
     AudioDecision,
+    AudioDecisionThrough,
     ImageDecision,
+    ImageDecisionThrough,
 )
 from test.factory.models.audio import AudioReportFactory
 from test.factory.models.image import ImageReportFactory
@@ -37,9 +39,9 @@ def call_cmd(**options):
 
 def make_reports(media_type, reason: str, status: str, count: int = 1):
     if media_type == "audio":
-        AudioReportFactory.create_batch(count, status=status, reason=reason)
+        return AudioReportFactory.create_batch(count, status=status, reason=reason)
     else:
-        ImageReportFactory.create_batch(count, status=status, reason=reason)
+        return ImageReportFactory.create_batch(count, status=status, reason=reason)
 
 
 @pytest.mark.parametrize(
@@ -64,17 +66,25 @@ def test_create_moderation_decision_for_reports(
     username = "opener"
     UserFactory.create(username=username)
 
-    make_reports(media_type=media_type, reason=reason, status=status)
+    report = make_reports(media_type=media_type, reason=reason, status=status)[0]
 
     out, err = call_cmd(dry_run=False, media_type=media_type, moderator=username)
 
     MediaDecision = ImageDecision if media_type == "image" else AudioDecision
+    MediaDecisionThrough = (
+        ImageDecisionThrough if media_type == "image" else AudioDecisionThrough
+    )
     assert MediaDecision.objects.count() == 1
     assert f"Created 1 {media_type} moderation decisions from existing reports." in out
 
     decision = MediaDecision.objects.first()
+    assert decision.media_objs.count() == 1
     assert decision.action == expected_action
     assert decision.moderator.username == username
+
+    decision_through = MediaDecisionThrough.objects.first()
+    assert decision_through.media_obj == report.media_obj
+    assert decision_through.decision == decision
 
 
 @pytest.mark.django_db

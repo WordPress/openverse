@@ -5,7 +5,14 @@ from django.contrib.auth import get_user_model
 from django_tqdm import BaseCommand
 
 from api.constants.moderation import DecisionAction
-from api.models import AudioDecision, AudioReport, ImageDecision, ImageReport
+from api.models import (
+    AudioDecision,
+    AudioDecisionThrough,
+    AudioReport,
+    ImageDecision,
+    ImageDecisionThrough,
+    ImageReport,
+)
 from api.models.media import DMCA, MATURE_FILTERED, NO_ACTION, PENDING
 
 
@@ -43,9 +50,11 @@ class Command(BaseCommand):
 
         MediaReport = ImageReport
         MediaDecision = ImageDecision
+        MediaDecisionThrough = ImageDecisionThrough
         if media_type == "audio":
             MediaReport = AudioReport
             MediaDecision = AudioDecision
+            MediaDecisionThrough = AudioDecisionThrough
 
         non_pending_reports = MediaReport.objects.filter(decision=None).exclude(
             status=PENDING
@@ -83,6 +92,12 @@ class Command(BaseCommand):
             for report, decision in zip(reports_chunk, decisions):
                 report.decision = decision
             MediaReport.objects.bulk_update(reports_chunk, ["decision"])
+            MediaDecisionThrough.objects.bulk_create(
+                [
+                    MediaDecisionThrough(media_obj=report.media_obj, decision=decision)
+                    for report, decision in zip(reports_chunk, decisions)
+                ]
+            )
             t.update(1)
 
         t.info(
