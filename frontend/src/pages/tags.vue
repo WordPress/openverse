@@ -1,7 +1,13 @@
 <template>
   <VContentPage>
-    <h1>{{ $t("generatedTags.title") }}</h1>
-    <p>{{ $t("generatedTags.intro.content") }}</p>
+    <h1>{{ $t("tags.title", { openverse: "Openverse" }) }}</h1>
+    <p>{{ $t("tags.intro.a", { openverse: "Openverse" }) }}</p>
+    <p>{{ $t("tags.intro.b") }}</p>
+    <h2>{{ $t("tags.sourceTags.title") }}</h2>
+    <p>{{ $t("tags.sourceTags.content") }}</p>
+    <h2>{{ $t("tags.generatedTags.title") }}</h2>
+    <p>{{ $t("tags.generatedTags.content.a") }}</p>
+    <p>{{ $t("tags.generatedTags.content.b") }}</p>
   </VContentPage>
 </template>
 
@@ -13,14 +19,14 @@ import { useI18n } from "~/composables/use-i18n"
 import VContentPage from "~/components/VContentPage.vue"
 
 export default defineComponent({
-  name: "VGeneratedTagsPage",
+  name: "VTagsPage",
   components: { VContentPage },
   layout: "content-layout",
   setup() {
     const i18n = useI18n()
 
     useMeta({
-      title: `${i18n.t("generatedTags.title")} | Openverse`,
+      title: `${i18n.t("tags.title")} | Openverse`,
       meta: [{ hid: "robots", name: "robots", content: "all" }],
     })
 
