@@ -384,7 +384,9 @@ class MediaListAdmin(admin.ModelAdmin):
                 text = tag["name"]
                 if acc := tag.get("accuracy"):
                     text = f"{text} ({acc})"
-                tags_by_provider.setdefault(tag["provider"], []).append(text)
+                tags_by_provider.setdefault(
+                    tag.get("provider", "No provider"), []
+                ).append(text)
         extra_context["tags"] = tags_by_provider
 
         manager = getattr(media_obj, f"{self.media_type}decisionthrough_set")
