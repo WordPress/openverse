@@ -32,7 +32,7 @@ from ingestion_server import slack
     "environment",
     [
         # Default environment
-        "local",
+        None,
         # Different, explicit environment
         "staging",
     ],
