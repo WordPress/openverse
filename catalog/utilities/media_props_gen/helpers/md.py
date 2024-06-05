@@ -39,6 +39,6 @@ class Md:
                 value[prop] = f"{value[prop]}{line}".strip()
                 properties[current_field] = value
             else:
-                value[prop] += line
+                value[prop] += f"{line}\n"
 
         return properties

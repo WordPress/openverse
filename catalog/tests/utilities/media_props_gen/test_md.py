@@ -21,7 +21,7 @@ from utilities.media_props_gen.helpers.md import Md
         ),
         pytest.param(
             "# Title\n## Prop\nLine 1\nLine 2",
-            {"Title": {"Prop": "Line 1Line 2"}},
+            {"Title": {"Prop": "Line 1\nLine 2"}},
             id="Multiple Lines per Property",
         ),
         pytest.param(
