@@ -41,25 +41,42 @@ def trim_and_deduplicate_tags():
             {
                 "query_id": f"{DAG_ID}_{media_type}",
                 "table_name": media_type,
-                # Just iterate through all the rows, don't bother sub-selecting as it's impossible to reasonably do so for trimming
-                "select_query": "WHERE true",
-                "update_query": dedent(
-                    """SET tags = (
-                        SELECT
-                            jsonb_agg(
-                                jsonb_set(
-                                    deduped.tag,
-                                    '{name}',
-                                    to_jsonb(deduped.trimmed_name)
+                "select_query": (
+                    "WHERE "
+                    + (
+                        ""
+                        if media_type == "audio"
+                        # We've identified these image providers in particular definitely have tags that need trimming, so we can narrow the query starting there at least
+                        else (
+                            "provider IN ('flickr', 'geographorguk', 'thingiverse', 'animaldiversity', 'clevelandmuseum', 'digitaltmuseum') AND "
+                        )
+                    )
+                    + (
+                        f"""EXISTS (SELECT 1 FROM jsonb_array_elements({media_type}.tags) AS t WHERE t->>'name' ILIKE ' %' OR t->>'name' ILIKE '% ')"""
+                    )
+                ),
+                "update_query": (
+                    "SET updated_on = now(), "
+                    + dedent(
+                        f"""
+                        tags = (
+                            SELECT
+                                jsonb_agg(
+                                    jsonb_set(
+                                        deduped.tag,
+                                        '{{name}}',
+                                        to_jsonb(deduped.trimmed_name)
+                                    )
                                 )
-                            )
-                        FROM (
-                            SELECT DISTINCT ON (tag->>'name', tag->'provider')
-                                trim(tag->>'name') trimmed_name,
-                                tag
-                            FROM jsonb_array_elements(tags || '[]'::jsonb) tag
-                        ) deduped
-                    )"""
+                            FROM (
+                                SELECT DISTINCT ON (tag->>'name', tag->'provider')
+                                    trim(tag->>'name') trimmed_name,
+                                    tag
+                                FROM jsonb_array_elements({media_type}.tags || '[]'::jsonb) tag
+                            ) deduped
+                        )
+                        """
+                    )
                 ),
                 "dry_run": False,
             }
