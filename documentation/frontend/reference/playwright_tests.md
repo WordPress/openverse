@@ -212,7 +212,7 @@ Don't be alarmed if you notice this.
 ## Generating new tests
 
 When writing end-to-end tests, it can be helpful to use Playwright
-[codegen](https://playwright.dev/docs/cli#generate-code) to generate the tests
+[codegen](https://playwright.dev/docs/codegen#running-codegen) to generate the tests
 by performing actions in the browser:
 
 ```bash
