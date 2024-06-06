@@ -54,7 +54,7 @@ jobs:
             let matchArtifacts = allArtifacts.data.artifacts.filter((artifact) => {
               return ["event_info", "change_info"].includes(artifact.name)
             });
-            for (let matchArtifact of matchArtifacts)
+            for (let matchArtifact of matchArtifacts) {
               let download = await github.rest.actions.downloadArtifact({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -65,7 +65,7 @@ jobs:
                 `${process.env.GITHUB_WORKSPACE}/{matchArtifact.name}.zip`,
                 Buffer.from(download.data)
               );
-            );
+            }
 
       - name: Unzip artifacts
         run: |
