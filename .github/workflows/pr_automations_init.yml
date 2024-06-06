@@ -37,7 +37,34 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.node_id }}
 
 jobs:
-  run:
+  change-info:
+    name: Save change info
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    # Prevent running this workflow on forks, it's unnecessary for external contributors
+    if: github.repository_owner == 'WordPress'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get changes
+        id: paths-filter
+        uses: ./.github/actions/get-changes
+
+      - name: Save change info
+        run: |
+          echo "$CHANGES" > /tmp/change.json
+        env:
+          CHANGES: ${{ steps.paths-filter.outputs.changes }}
+
+      - name: Upload change info as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: change_info
+          path: /tmp/change.json
+
+  event-info:
     name: Save event info
     runs-on: ubuntu-latest
     # Prevent running this workflow on forks, it's unnecessary for external contributors

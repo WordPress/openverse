@@ -45,27 +45,36 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
+            let fs = require('fs');
             let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
                owner: context.repo.owner,
                repo: context.repo.repo,
                run_id: context.payload.workflow_run.id,
             });
-            let matchArtifact = allArtifacts.data.artifacts.filter((artifact) => {
-              return artifact.name == "event_info"
-            })[0];
-            let download = await github.rest.actions.downloadArtifact({
-               owner: context.repo.owner,
-               repo: context.repo.repo,
-               artifact_id: matchArtifact.id,
-               archive_format: 'zip',
+            let matchArtifacts = allArtifacts.data.artifacts.filter((artifact) => {
+              return ["event_info", "change_info"].includes(artifact.name)
             });
-            let fs = require('fs');
-            fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/event_info.zip`, Buffer.from(download.data));
+            for (let matchArtifact of matchArtifacts)
+              let download = await github.rest.actions.downloadArtifact({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                artifact_id: matchArtifact.id,
+                archive_format: 'zip',
+              });
+              fs.writeFileSync(
+                `${process.env.GITHUB_WORKSPACE}/{matchArtifact.name}.zip`,
+                Buffer.from(download.data)
+              );
+            );
 
-      - name: Unzip artifact
+      - name: Unzip artifacts
         run: |
           unzip event_info.zip
           mv event.json /tmp/event.json
+          cat /tmp/event.json
+          unzip change_info.zip
+          mv change.json /tmp/change.json
+          cat /tmp/change.json
 
       - name: Perform PR labelling
         uses: actions/github-script@v7
