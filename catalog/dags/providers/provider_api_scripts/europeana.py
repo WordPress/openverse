@@ -71,6 +71,7 @@ class EuropeanaRecordBuilder:
                 "license_info": self._get_license_info(data),
                 "filetype": self._get_filetype(item_data),
                 "filesize": self._get_filesize(item_data),
+                "thumbnail_url": self._get_thumbnail(data),
             } | self._get_image_dimensions(item_data)
 
             data_providers = set(record["meta_data"]["dataProvider"])
@@ -180,6 +181,14 @@ class EuropeanaRecordBuilder:
             return description[0].strip()
 
         return ""
+
+    def _get_thumbnail(self, data: dict) -> str | None:
+        # looks like edmPreview can either be a list or string
+        # this was inferred from observing the difference
+        # between sample data in item_full.json and europeana_example.json
+        # so it's best to handle both cases.
+        if preview := data.get("edmPreview", None):
+            return preview[0] if isinstance(preview, list) else preview
 
 
 class EuropeanaDataIngester(ProviderDataIngester):
