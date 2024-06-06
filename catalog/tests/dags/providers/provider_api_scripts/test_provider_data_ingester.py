@@ -109,6 +109,7 @@ def test_batch_limit_is_capped_to_ingestion_limit():
         MockVariable.get.side_effect = [
             20,  # ingestion_limit
             {},  # skipped_ingestion_errors
+            "local",  # environment
             [],  # should_verbose_log
         ]
 
@@ -301,6 +302,7 @@ def test_ingest_records_stops_after_reaching_limit():
         MockVariable.get.side_effect = [
             3,  # ingestion_limit
             {},  # skipped_ingestion_errors
+            "local",  # environment
             [],  # should_verbose_log
         ]
 
@@ -667,6 +669,7 @@ def test_should_skip_ingestion_error(
         MockVariable.get.side_effect = [
             None,  # ingestion_limit
             {"my_dag_id": skipped_ingestion_errors},  # skipped_ingestion_errors
+            "local",  # environment
             [],  # should_verbose_log
         ]
 
@@ -690,6 +693,7 @@ def test_ingest_records_exits_immediately_if_limit_already_reached():
         MockVariable.get.side_effect = [
             5,  # ingestion_limit
             {},  # skipped_ingestion_errors
+            "local",  # environment
             [],  # should_verbose_log
         ]
 
