@@ -62,7 +62,7 @@ jobs:
                 archive_format: 'zip',
               });
               fs.writeFileSync(
-                `${process.env.GITHUB_WORKSPACE}/{matchArtifact.name}.zip`,
+                `${process.env.GITHUB_WORKSPACE}/${matchArtifact.name}.zip`,
                 Buffer.from(download.data)
               );
             }
