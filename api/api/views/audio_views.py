@@ -1,6 +1,6 @@
 from django.conf import settings
 from rest_framework.decorators import action
-from rest_framework.exceptions import APIException, NotFound
+from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 
 from drf_spectacular.utils import extend_schema, extend_schema_view
@@ -92,13 +92,10 @@ class AudioViewSet(MediaViewSet):
 
         audio = self.get_object()
 
-        try:
-            obj = {"points": audio.get_or_create_waveform()}
-            serializer = self.get_serializer(obj)
+        obj = {"points": audio.get_or_create_waveform()}
+        serializer = self.get_serializer(obj)
 
-            return Response(status=200, data=serializer.data)
-        except Exception as e:
-            raise APIException(getattr(e, "message", str(e)))
+        return Response(status=200, data=serializer.data)
 
     @report
     @action(

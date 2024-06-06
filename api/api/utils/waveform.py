@@ -7,8 +7,11 @@ import shutil
 import subprocess
 
 from django.conf import settings
+from rest_framework import status
+from rest_framework.exceptions import APIException
 
 import requests
+import sentry_sdk
 import structlog
 
 
@@ -16,6 +19,20 @@ logger = structlog.get_logger(__name__)
 
 TMP_DIR = pathlib.Path("/tmp").resolve()
 UA_STRING = settings.OUTBOUND_USER_AGENT_TEMPLATE.format(purpose="Waveform")
+
+
+class WaveformGenerationFailure(APIException):
+    status_code = status.HTTP_424_FAILED_DEPENDENCY
+    default_detail = "Could not generate the waveform."
+    default_code = "waveform_generation_failure"
+
+
+class UpstreamWaveformException(APIException):
+    status_code = status.HTTP_424_FAILED_DEPENDENCY
+    default_detail = (
+        "Could not generate the waveform due to a problem connecting to the provider."
+    )
+    default_code = "upstream_waveform_exception"
 
 
 def ext_from_url(url):
@@ -45,20 +62,30 @@ def download_audio(url, identifier):
     :returns: the name of the file on the disk
     """
 
-    logger.info(f"downloading file url={url}")
+    logger.debug("waveform_audio_download_start", url=url, identifier=identifier)
 
     headers = {"User-Agent": UA_STRING}
-    with requests.get(url, stream=True, headers=headers) as res:
-        logger.debug(f"res.status_code={res.status_code}")
-        mimetype = res.headers["content-type"]
-        logger.debug(f"mimetype={mimetype}")
-        ext = ext_from_url(url) or mimetypes.guess_extension(mimetype)
-        if ext is None:
-            raise ValueError("Could not identify media extension")
-        file_name = f"audio-{identifier}{ext}"
-        logger.debug(f"file name={file_name}")
-        with open(TMP_DIR.joinpath(file_name), "wb") as file:
-            shutil.copyfileobj(res.raw, file)
+    try:
+        with requests.get(url, stream=True, headers=headers) as res:
+            logger.debug(f"res.status_code={res.status_code}")
+            res.raise_for_status()
+            mimetype = res.headers["content-type"]
+            logger.debug(f"mimetype={mimetype}")
+            ext = ext_from_url(url) or mimetypes.guess_extension(mimetype)
+            if ext is None:
+                raise ValueError("Could not identify media extension")
+            file_name = f"audio-{identifier}{ext}"
+            logger.debug(f"file name={file_name}")
+            with open(TMP_DIR.joinpath(file_name), "wb") as file:
+                shutil.copyfileobj(res.raw, file)
+    except (requests.RequestException, ValueError) as e:
+        logger.error("waveform_audio_download_failed", e=e)
+        if isinstance(e, requests.RequestException):
+            raise UpstreamWaveformException()
+        else:
+            sentry_sdk.capture_exception(e)
+            raise WaveformGenerationFailure("Unknown file extension")
+
     return file_name
 
 
@@ -73,7 +100,7 @@ def generate_waveform(file_name, duration):
     :param duration: the duration of the audio to determine pixels per second
     """
 
-    logger.info("Invoking audiowaveform")
+    logger.debug("waveform_generation_started")
 
     pps = math.ceil(1e6 / duration)  # approx 1000 points in total
     args = [
@@ -85,9 +112,18 @@ def generate_waveform(file_name, duration):
         "--pixels-per-second",
         str(pps),
     ]
-    logger.debug(f'executing subprocess command={" ".join(args)}')
-    proc = subprocess.run(args, cwd=TMP_DIR, check=True, capture_output=True)
-    logger.debug(f"finished subprocess proc.returncode={proc.returncode}")
+    logger.debug("waveform_generation_subprocess", args=args)
+
+    try:
+        proc = subprocess.run(args, cwd=TMP_DIR, check=True, capture_output=True)
+    except subprocess.CalledProcessError as e:
+        logger.error("waveform_generation_failed", file_name=file_name, e=e)
+        sentry_sdk.capture_exception(e)
+        # Do not return details of the exception; we're calling directly to a system binary, and
+        # the command output could be sensitive. Folks debugging can find details in the logs
+        raise WaveformGenerationFailure()
+
+    logger.debug("waveform_generation_finished", returncode=proc.returncode)
     return proc.stdout
 
 
@@ -137,7 +173,14 @@ def cleanup(file_name):
     logger.debug(f"file_path={file_path}")
     if file_path.exists():
         logger.debug("deleting file")
-        os.remove(file_path)
+        try:
+            os.remove(file_path)
+        except (OSError, FileNotFoundError) as e:
+            # Do not raise a further exception, because this actually doesn't necessarily mean the request needs to fail
+            sentry_sdk.capture_exception(e)
+            logger.error("waveform_cleanup_failed", e=e, file_name=file_name)
+            return
+
         logger.debug("file deleted")
     else:
         logger.debug("file not found, nothing deleted")
