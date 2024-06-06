@@ -3,22 +3,19 @@ import Vue from "vue"
 
 import { render } from "~~/test/unit/test-utils/render"
 
-import { useAnalytics } from "~/composables/use-analytics"
-
 import VLink from "~/components/VLink.vue"
 
-jest.mock("~/composables/use-analytics", () => ({
-  useAnalytics: jest.fn(),
+jest.mock("@nuxtjs/composition-api", () => ({
+  useContext: () => ({
+    $sendCustomEvent: jest.fn(),
+  }),
 }))
 
 describe("VLink", () => {
-  useAnalytics.mockImplementation(() => ({
-    sendCustomEvent: jest.fn(),
-  }))
   it.each`
-    href                        | target      | rel
-    ${"/about"}                 | ${null}     | ${null}
-    ${"http://localhost:8443/"} | ${"_blank"} | ${"noopener noreferrer"}
+    href                        | target  | rel
+    ${"/about"}                 | ${null} | ${null}
+    ${"http://localhost:8443/"} | ${null} | ${"noopener noreferrer"}
   `(
     "Creates a correct link component based on href",
     ({ href, target, rel }) => {

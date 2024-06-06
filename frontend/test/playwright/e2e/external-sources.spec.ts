@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test"
 
 import {
   goToSearchTerm,
+  openAndCloseExternalLink,
   preparePageForTests,
 } from "~~/test/playwright/utils/navigation"
 
@@ -44,8 +45,6 @@ test.describe("analytics", () => {
     page,
     context,
   }) => {
-    const pagePromise = page.context().waitForEvent("page")
-
     const events = collectAnalyticsEvents(context)
 
     await goToSearchTerm(page, "cat", { searchType: "image", mode: "SSR" })
@@ -55,10 +54,7 @@ test.describe("analytics", () => {
         name: new RegExp(t("externalSources.form.supportedTitleSm"), "i"),
       })
       .click()
-    await page.getByRole("link", { name: "Centre for Ageing Better" }).click()
-
-    const newPage = await pagePromise
-    await newPage.close()
+    await openAndCloseExternalLink(page, { name: "Centre for Ageing Better" })
 
     const selectEvent = events.find(
       (event) => event.n === "SELECT_EXTERNAL_SOURCE"
