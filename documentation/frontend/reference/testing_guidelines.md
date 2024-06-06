@@ -198,7 +198,7 @@ to learning what to look out for when testing.
 
 Openverse uses
 [Vue Testing Library](https://testing-library.com/docs/vue-testing-library/intro/)
-for unit testing with [Jest](https://jestjs.io/docs/), and
+for unit testing with [Jest](https://jestjs.io/docs/getting-started), and
 [Playwright](https://playwright.dev) for end-to-end and visual-regression
 testing.
 
