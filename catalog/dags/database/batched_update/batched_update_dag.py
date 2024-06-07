@@ -131,13 +131,13 @@ logger = logging.getLogger(__name__)
             pattern="^WHERE",
         ),
         "update_query": Param(
-            default="SET...",
+            default="SET updated_on = NOW(), ...",
             type="string",
             description=(
                 "The part of the SQL `UPDATE` command, beginning with `SET`, that"
                 " will be run for each batch."
             ),
-            pattern="^SET",
+            pattern="^SET updated_on = NOW()",
         ),
         "batch_size": Param(
             default=constants.DEFAULT_BATCH_SIZE,
