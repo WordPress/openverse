@@ -171,7 +171,7 @@ found in the
 The projects #430, #431, and #3925 all intent to modify the above process. Below
 is the diagram of what this process might look like after all steps are taken.
 Most blocks reference the same sections above, with the exception being
-[Deleted media & tag filtering](#deleted-media-tag-filtering).
+[Deleted media & tag filtering](#deleted-media--tag-filtering).
 
 ```{mermaid}
 flowchart TD
