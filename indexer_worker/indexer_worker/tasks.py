@@ -59,3 +59,7 @@ class TaskTracker:
             # of records fails to upload to ES.
             "error": progress < 100 and not active,
         }
+
+    def get_task_list(self):
+        """Get all listed tasks."""
+        return [self.get_task_status(task_id) for task_id in self.tasks.keys()]

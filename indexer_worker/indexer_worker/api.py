@@ -44,6 +44,9 @@ class IndexingJobResource(BaseTaskResource):
         parsed = urlparse(req.url)
         return parsed.scheme + "://" + parsed.netloc
 
+    def on_get(self, _, resp):
+        resp.media = self.tracker.get_task_list()
+
     def on_post(self, req, resp):
         body = req.get_media()
 

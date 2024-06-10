@@ -11,6 +11,8 @@ services:
     profiles:
       - ingestion_server
       - api
+      - indexer_worker
+      - catalog_indexer_worker
     image: docker.io/postgres:13.10-alpine
     ports:
       - "50254:5432"
@@ -27,6 +29,8 @@ services:
       - catalog
       - catalog_dependencies
       - ingestion_server
+      - indexer_worker
+      - catalog_indexer_worker
       - api
     build:
       context: ./docker/upstream_db/
@@ -86,6 +90,8 @@ services:
   es:
     profiles:
       - ingestion_server
+      - indexer_worker
+      - catalog_indexer_worker
       - api
     image: docker.elastic.co/elasticsearch/elasticsearch:8.8.2
     ports:

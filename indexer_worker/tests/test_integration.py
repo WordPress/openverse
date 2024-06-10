@@ -20,13 +20,15 @@ import requests
 from bottle import Bottle
 from elasticsearch import Elasticsearch
 
+from indexer_worker.es_mapping import index_settings
+
+from .constants import service_ports
 from .gen_integration_compose import gen_integration_compose
-from .test_constants import service_ports
 
 
 this_dir = pathlib.Path(__file__).resolve().parent
 
-indexer_worker = f"http://localhost:{service_ports['indexer_worker']}"
+indexer_worker = f"http://localhost:{service_ports['catalog_indexer_worker']}"
 
 
 #################
@@ -45,6 +47,7 @@ bottle_url = f"http://{host_address}:{bottle_port}{bottle_path}"
 
 
 def start_bottle(queue):
+    logging.info("starting bottle")
     bottle = Bottle()
 
     @bottle.route(bottle_path, method="post")
@@ -53,6 +56,7 @@ def start_bottle(queue):
         return {"message": "OK"}
 
     bottle.run(host="0.0.0.0", port=bottle_port, quiet=False)
+    logging.info("running")
 
 
 #####################
@@ -63,14 +67,13 @@ def start_bottle(queue):
 compose_path = None
 
 
-def _wait_for_dbs():
+def _wait_for_db():
     """
-    Wait for databases to come up and establish connections to both.
+    Wait for database to come up and establish connection.
 
-    :return: the connections to the upstream and downstream databases
+    :return: the connection to the downstream database
     """
-
-    upstream_db = None
+    logging.info("connecting to db")
     downstream_db = None
 
     retries = 3
@@ -82,11 +85,9 @@ def _wait_for_dbs():
                 "user": "deploy",
                 "password": "deploy",
                 "host": "localhost",
+                "port": service_ports["db"],
             }
-            upstream_db = psycopg2.connect(
-                **db_args | {"port": service_ports["upstream_db"]}
-            )
-            downstream_db = psycopg2.connect(**db_args | {"port": service_ports["db"]})
+            downstream_db = psycopg2.connect(**db_args)
             break
         except psycopg2.OperationalError as e:
             logging.debug(e)
@@ -95,11 +96,11 @@ def _wait_for_dbs():
             retries -= 1
             continue
 
-    if upstream_db is not None and downstream_db is not None:
-        logging.info("Connected to databases")
-        return upstream_db, downstream_db
+    if downstream_db is not None:
+        logging.info("Connected to database")
+        return downstream_db
     else:
-        raise ValueError("Could not connect to databases")
+        raise ValueError("Could not connect to database")
 
 
 def _wait(compose_path, cmd):
@@ -108,6 +109,7 @@ def _wait(compose_path, cmd):
 
     :param cmd: the long-running command to execute in a subprocess
     """
+    logging.info(f"waiting for {cmd}")
 
     subprocess.run(
         cmd,
@@ -127,11 +129,11 @@ def _wait_for_es(compose_path) -> None:
     logging.info("Connected to ES")
 
 
-def _wait_for_ing(compose_path) -> None:
-    """Wait for ingestion-server to come up."""
+def _wait_for_indexer_worker(compose_path) -> None:
+    """Wait for indexer-worker to come up."""
 
-    logging.info("Waiting for ingestion-server to be ready...")
-    port = service_ports["indexer_worker"]
+    logging.info("Waiting for indexer-worker to be ready...")
+    port = service_ports["catalog_indexer_worker"]
     # Automatically resolves to the nearest `justfile`.
     _wait(compose_path, ["just", "wait", f"localhost:{port}"])
     logging.info("Connected to ingestion-server")
@@ -147,17 +149,42 @@ def _load_schemas(conn, schema_names):
     cur.close()
 
 
-def _load_data(conn, table_names):
+def _load_data(conn, schema_names, table_names):
     cur = conn.cursor()
+    logging.warning("LOADING DATA")
+    for schema_name in schema_names:
+        schema_path = this_dir.joinpath("mock_schemas", f"{schema_name}.sql")
+        logging.warning(schema_path)
+        with open(schema_path) as schema:
+            cur.execute(schema.read())
+    # conn.commit()
+
     for table_name in table_names:
         data_path = this_dir.joinpath("../../sample_data", f"sample_{table_name}.csv")
         with open(data_path) as data:
             cur.copy_expert(
-                f"COPY {table_name} FROM STDIN WITH (FORMAT csv, HEADER true)",
+                f"COPY public.{table_name} FROM STDIN WITH (FORMAT csv, HEADER true)",  # DELIMITER ',' CSV HEADER",,
                 data,
             )
+
+        # ISSUE: sample data is in the format needed for the catalog, but we're trying to load into the API. To really
+        # do this we need to copy the data over using the catalog copy step. Similarly there's an issue rn where the
+        # es_mappings in order to set up the test indices in Elasticsearch needed to be taken from the _catalog_ module.
     conn.commit()
     cur.close()
+
+
+def _load_index(media_type):
+    es = Elasticsearch(
+        f"http://localhost:{service_ports['es']}",
+        request_timeout=10,
+        max_retries=10,
+        retry_on_timeout=True,
+    )
+    settings = index_settings(media_type)
+    settings["settings"].pop("index")
+
+    es.indices.create(index=f"{media_type}-integration", **settings)
 
 
 def _compose_cmd(compose_path, cmd: list[str], **kwargs):
@@ -167,7 +194,7 @@ def _compose_cmd(compose_path, cmd: list[str], **kwargs):
         "docker",
         "compose",
         "--profile",
-        "indexer_worker",
+        "catalog_indexer_worker",
         "-f",
         compose_path,
         *cmd,
@@ -229,22 +256,34 @@ def _get_indices(conn, table) -> dict[str, str]:
         return idx_mapping
 
 
-def _ingest_upstream(cb_queue, downstream_db, model, suffix="integration"):
-    """Check that INGEST_UPSTREAM task succeeds and responds with a callback."""
+def _launch_reindex(cb_queue, downstream_db, model):
+    """Check that reindexing task succeeds and responds with a callback."""
 
     before_indices = _get_indices(downstream_db, model)
     before_constraints = _get_constraints(downstream_db, model)
     req = {
-        "model": model,
-        "action": "INGEST_UPSTREAM",
-        "index_suffix": suffix,
-        "callback_url": bottle_url,
+        "model_name": model,
+        "table_name": model,
+        "target_index": f"{model}-integration",
+        "start_id": 0,
+        "end_id": 5000,
     }
     res = requests.post(f"{indexer_worker}/task", json=req)
     stat_msg = "The job should launch successfully and return 202 ACCEPTED."
     assert res.status_code == 202, stat_msg
 
-    logging.info(f"Waiting for the task to send us a callback {cb_queue}")
+    logging.info("Waiting for the task to complete.")
+
+    attempts = 5
+    status_check = res.json()["status_check"]
+    while attempts > 0:
+        status = requests.get(status_check)
+        logging.warning(status.json())
+        if not status.json()["progress"] == 100:
+            attempts -= 1
+            time.sleep(5)
+
+    assert attempts > 0, "Timed out waiting for task to complete successfully."
 
     # Wait for the task to send us a callback.
     assert cb_queue.get(timeout=240) == "CALLBACK!"
@@ -270,6 +309,7 @@ def sample_es():
         retry_on_timeout=True,
     )
     es.cluster.health(wait_for_status="yellow")
+
     return es
 
 
@@ -281,6 +321,7 @@ def check_index_exists(index_name, sample_es):
 @pytest.fixture(scope="module", autouse=True)
 def setup_fixture():
     # Launch a Bottle server to receive and handle callbacks
+    logging.info("setting up fixture")
     cb_queue = Queue()
     cb_process = Process(target=start_bottle, args=(cb_queue,))
     cb_process.start()
@@ -291,12 +332,12 @@ def setup_fixture():
     _compose_cmd(compose_path, ["up", "-d"])
 
     # Wait for services to be ready
-    upstream_db, downstream_db = _wait_for_dbs()
+    downstream_db = _wait_for_db()
     _wait_for_es(compose_path)
-    _wait_for_ing(compose_path)
+    _wait_for_indexer_worker(compose_path)
 
     # Set up the base scenario for the tests
-    _load_schemas(
+    _load_data(
         downstream_db,
         [
             "api_deletedaudio",
@@ -307,26 +348,28 @@ def setup_fixture():
             "audioset",
             "image",
         ],
+        ["audio", "image"],
     )
-    _load_data(upstream_db, ["audio", "image"])
+    # _load_data(downstream_db, ["audio", "image"])
+    for media_type in ["image", "audio"]:
+        _load_index(media_type)
     setup = {}
     setup["cb_queue"] = cb_queue
     setup["cb_process"] = cb_process
     setup["compose_path"] = compose_path
-    setup["upstream_db"] = upstream_db
     setup["downstream_db"] = downstream_db
     yield setup
 
     # Teardown: Clean up resources (if any) after the test
     cb_process.terminate()
 
-    # Close connections with databases
-    for conn in [upstream_db, downstream_db]:
-        if conn:
-            conn.close()
+    # Close connections with database
+    if downstream_db:
+        downstream_db.close()
 
 
 def test_list_tasks_empty():
+    logging.info("test list tasks empty")
     res = requests.get(f"{indexer_worker}/task")
     res_json = res.json()
     msg = "There should be no tasks in the task list"
@@ -334,16 +377,15 @@ def test_list_tasks_empty():
 
 
 @pytest.mark.order(after="test_list_tasks_empty")
-def test_image_ingestion_succeeds(setup_fixture):
-    _ingest_upstream(
+def test_image_reindex_succeeds(setup_fixture):
+    _launch_reindex(
         setup_fixture["cb_queue"],
         setup_fixture["downstream_db"],
         "image",
-        "integration",
     )
 
 
-@pytest.mark.order(after="test_image_ingestion_succeeds")
+@pytest.mark.order(after="test_image_reindex_succeeds")
 def test_task_count_after_one():
     res = requests.get(f"{indexer_worker}/task")
     res_json = res.json()
@@ -352,16 +394,15 @@ def test_task_count_after_one():
 
 
 @pytest.mark.order(after="test_task_count_after_one")
-def test_audio_ingestion_succeeds(setup_fixture):
-    _ingest_upstream(
+def test_audio_reindex_succeeds(setup_fixture):
+    _launch_reindex(
         setup_fixture["cb_queue"],
         setup_fixture["downstream_db"],
         "audio",
-        "integration",
     )
 
 
-@pytest.mark.order(after="test_audio_ingestion_succeeds")
+@pytest.mark.order(after="test_audio_reindex_succeeds")
 def test_task_count_after_two():
     res = requests.get(f"{indexer_worker}/task")
     res_json = res.json()
@@ -369,7 +410,7 @@ def test_task_count_after_two():
     assert 2 == len(res_json), msg
 
 
-@pytest.mark.order(after="test_promote_audio")
+@pytest.mark.order(after="test_task_count_after_two")
 def test_upstream_indexed_images(sample_es):
     """
     Check that the image data has been successfully indexed in Elasticsearch.

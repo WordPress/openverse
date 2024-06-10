@@ -42,16 +42,16 @@ up *flags:
 ##########
 
 # Check the health of the service
-@health host="localhost:50281":
-    -curl -s -o /dev/null -w '%{http_code}' 'http://{{ host }}/'
+@health host="localhost:50282":
+    -curl -s -o /dev/null -w '%{http_code}' 'http://{{ host }}/healthcheck'
 
 # Wait for the service to be healthy
-@wait host="localhost:50281":
+@wait host="localhost:50282":
     # The just command on the second line is executed in the context of the
     # parent directory and so must be prefixed with `ingestion_server/`.
     just ../_loop \
-    '"$(just ingestion_server/health {{ host }})" != "200"' \
-    "Waiting for the ingestion-server to be healthy..."
+    '"$(just indexer_worker/health {{ host }})" != "200"' \
+    "Waiting for the indexer-worker to be healthy..."
 
 ########
 # cURL #
@@ -80,12 +80,12 @@ test-local *args:
     # populate the tldextract cache before running tests to prevent unnecessary network requests during tests
     # and from needing to mock essentially unmockable responses
     pipenv run tldextract --update
-    pipenv run pytest tests/ {{ args }}
-    {{ if IS_CI == "" { "just test-logs > test/ingestion_logs.txt && just test-clean-dc" } else { "" } }}
+    pipenv run pytest {{ args }}
+    {{ if IS_CI == "" { "just test-logs > tests/ingestion_logs.txt && just test-clean-dc" } else { "" } }}
 
 test-logs:
-    docker compose --profile=indexer_worker -f test/integration-docker-compose.yml logs --no-color
+    docker compose --profile=indexer_worker -f tests/integration-docker-compose.yml logs --no-color
 
 # Clean integration test docker-compose stack. Is run after tests are finished locally.
 test-clean-dc:
-    docker compose --profile=indexer_worker -f test/integration-docker-compose.yml down -v
+    docker compose --profile=indexer_worker -f tests/integration-docker-compose.yml down -v

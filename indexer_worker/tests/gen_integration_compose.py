@@ -15,7 +15,7 @@ import subprocess
 
 import yaml
 
-from .test_constants import service_ports
+from .constants import service_ports
 
 
 this_dir = pathlib.Path(__file__).resolve().parent
@@ -43,17 +43,15 @@ def _map_ports(conf: dict):
 def _fixup_env(conf: dict):
     """
     Map environment variables that reference other services to the new service
-    names that are just prefixed with 'integration_'.
+    name that is just prefixed with 'integration_'.
 
     :param conf: the Docker Compose configuration
     """
-
-    for service in {"catalog", "indexer_worker"}:
-        env = conf["services"][service]["environment"]
-        conf["services"][service]["environment"] = {
-            key: f"integration_{value}" if value in conf["services"] else value
-            for key, value in env.items()
-        }
+    env = conf["services"]["catalog_indexer_worker"]["environment"]
+    conf["services"]["catalog_indexer_worker"]["environment"] = {
+        key: f"integration_{value}" if value in conf["services"] else value
+        for key, value in env.items()
+    }
 
 
 def _remove_volumes(conf: dict):
@@ -84,18 +82,17 @@ def _rename_services(conf: dict):
         conf["services"][f"integration_{service_name}"] = service
         del conf["services"][service_name]
 
-    for service in {"catalog", "indexer_worker"}:
-        conf["services"][f"integration_{service}"]["depends_on"] = [
-            "integration_db",
-            "integration_es",
-        ]
+    conf["services"]["integration_catalog_indexer_worker"]["depends_on"] = [
+        "integration_db",
+        "integration_es",
+    ]
 
 
 def gen_integration_compose():
     print("Generating Docker Compose configuration for integration tests...")
 
     proc = subprocess.run(
-        args=["docker", "compose", "--profile", "indexer_worker", "config"],
+        args=["docker", "compose", "--profile", "catalog_indexer_worker", "config"],
         capture_output=True,
         cwd=this_dir.parents[1],
     )
