@@ -33,7 +33,7 @@ def trim_and_deduplicate_tags():
         trigger_dag_id=BATCHED_UPDATE_DAG_ID,
         wait_for_completion=True,
         execution_timeout=timedelta(hours=5),
-        max_active_tis_per_dag=1,
+        max_active_tis_per_dag=2,
         map_index_template="""{{ task.conf['table_name'] }}""",
         retries=0,
     ).expand(
