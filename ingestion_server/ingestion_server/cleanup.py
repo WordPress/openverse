@@ -7,6 +7,7 @@ This includes cleaning up malformed URLs and filtering out undesirable tags.
 import csv
 import logging as log
 import multiprocessing
+import pathlib
 import time
 import uuid
 from urllib.parse import urlparse
@@ -64,6 +65,8 @@ TLS_CACHE = {
     "collections.musee-mccord.qc.ca": False,
 }
 
+TMP_DIR = pathlib.Path("/tmp/cleaned_data").resolve()
+
 
 def _tag_denylisted(tag):
     """Check if a tag is banned or contains a banned substring."""
@@ -106,9 +109,9 @@ class CleanupFunctions:
                 log.debug(f"Tested domain {_tld}")
 
             if tls_supported:
-                return f"'https://{url}'"
+                return f"https://{url}"
             else:
-                return f"'http://{url}'"
+                return f"http://{url}"
         else:
             return None
 
@@ -141,6 +144,7 @@ class CleanupFunctions:
 
         if update_required:
             fragment = Json(tag_output)
+            log.debug(f"Tags fragment: {fragment}")
             return fragment
         else:
             return None
@@ -200,7 +204,7 @@ class TlsTest:
             https = url.replace("http://", "https://")
             try:
                 res = re.get(https, timeout=2)
-                log.info(f"{https}:{res.status_code}")
+                log.info(f"tls_test - {https}:{res.status_code}")
                 return 200 <= res.status_code < 400
             except re.RequestException:
                 return False
@@ -243,23 +247,25 @@ def _clean_data_worker(rows, temp_table, sources_config, all_fields: list[str]):
             if clean:
                 cleaned_data[update_field] = clean
                 log.debug(
-                    f"Updated {update_field} for {identifier} "
-                    f"from '{dirty_value}' to '{clean}'"
+                    f"Updated {update_field} for {identifier}\n\t"
+                    f"from '{dirty_value}' \n\tto '{clean}'"
                 )
         # Generate SQL update for all the fields we just cleaned
         update_field_expressions = []
         for field, clean_value in cleaned_data.items():
-            update_field_expressions.append(f"{field} = {clean_value}")
+            if field == "tags":
+                update_field_expressions.append(f"{field} = {clean_value}")
+                continue
+            update_field_expressions.append(f"{field} = '{clean_value}'")
             # Save cleaned values for later
             # (except for tags, which take up too much space)
-            if field == "tags":
-                continue
             cleaned_values[field].append((identifier, clean_value))
 
         if len(update_field_expressions) > 0:
             update_query = f"""UPDATE {temp_table} SET
             {', '.join(update_field_expressions)} WHERE id = {_id}
             """
+            log.debug(f"Executing update query: \n\t{update_query}")
             write_cur.execute(update_query)
     log.info(f"TLS cache: {TLS_CACHE}")
     log.info("Worker committing changes...")
@@ -273,18 +279,17 @@ def _clean_data_worker(rows, temp_table, sources_config, all_fields: list[str]):
 
 
 def save_cleaned_data(result: dict) -> dict[str, int]:
-    log.info("Saving cleaned data...")
     start_time = time.perf_counter()
 
     cleanup_counts = {field: len(items) for field, items in result.items()}
     for field, cleaned_items in result.items():
         # Skip the tag field because the file is too large and fills up the disk
-        if field == "tag":
+        if field == "tag" or not cleaned_items:
             continue
-        if cleaned_items:
-            with open(f"{field}.tsv", "a") as f:
-                csv_writer = csv.writer(f, delimiter="\t")
-                csv_writer.writerows(cleaned_items)
+
+        with open(TMP_DIR.joinpath(f"{field}.tsv"), "a", encoding="utf-8") as f:
+            csv_writer = csv.writer(f, delimiter="\t")
+            csv_writer.writerows(cleaned_items)
 
     end_time = time.perf_counter()
     total_time = end_time - start_time
@@ -299,6 +304,9 @@ def clean_image_data(table):
     :param table: The staging table for the new data
     :return: None
     """
+
+    # Create directory to store cleaned data temporarily
+    TMP_DIR.mkdir(parents=True, exist_ok=True)
 
     # Map each table to the fields that need to be cleaned up. Then, map each
     # field to its cleanup function.
