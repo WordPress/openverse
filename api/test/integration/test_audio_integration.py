@@ -44,6 +44,7 @@ def test_audio_generation_failure(monkeypatch, api_client):
     resp = api_client.get("/v1/audio/44540200-91eb-483d-9e99-38ce86a52fb6/waveform/")
     assert resp.status_code == 424
     mock_subprocess_run.assert_called_once()
+    assert "Could not generate the waveform." == resp.json()["detail"]
 
 
 def test_audio_waveform_cleanup_failure_does_not_fail_request(monkeypatch, api_client):
@@ -65,3 +66,4 @@ def test_audio_waveform_upstream_failure(api_client):
 
     resp = api_client.get("/v1/audio/44540200-91eb-483d-9e99-38ce86a52fb6/waveform/")
     assert resp.status_code == 424
+    assert "problem connecting to the provider" in resp.json()["detail"]
