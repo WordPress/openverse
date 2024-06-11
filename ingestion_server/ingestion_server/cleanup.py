@@ -64,6 +64,8 @@ TLS_CACHE = {
     "www.eol.org": True,
     ".digitaltmuseum.org": True,
     "collections.musee-mccord.qc.ca": False,
+    ".stocksnap.io": True,
+    "cdn.stocksnap.io": True,
 }
 
 TMP_DIR = pathlib.Path("/tmp/cleaned_data").resolve()
