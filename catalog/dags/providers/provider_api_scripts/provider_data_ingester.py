@@ -196,6 +196,13 @@ class ProviderDataIngester(ABC):
 
         self.ingestion_errors: list[IngestionError] = []  # Keep track of skipped errors
 
+        environment = Variable.get("ENVIRONMENT", default_var="local")
+        self._should_verbose_log = (
+            self.dag_id
+            in Variable.get("SHOULD_VERBOSE_LOG", default_var=[], deserialize_json=True)
+            or environment == "local"
+        )
+
     def _init_media_stores(self, day_shift: int = None) -> dict[str, MediaStore]:
         """Initialize a media store for each media type supported by this provider."""
 
@@ -243,6 +250,8 @@ class ProviderDataIngester(ABC):
         logger.info(f"Begin ingestion for {self.__class__.__name__}")
 
         while should_continue:
+            self._verbose_log(f"Next set of query params: {query_params}")
+
             if query_params is None:
                 # Break out of ingestion if no query_params are supplied. This can
                 # happen when the final `override_query_params` is processed.
@@ -477,6 +486,12 @@ class ProviderDataIngester(ABC):
         # Build a list of records from the response
         batch = self.get_batch_data(response_json)
 
+        self._verbose_log(
+            f"Got batch with {len(batch if batch else [])} items. The first items are:",
+            batch,
+            limit_batch_to=5,
+        )
+
         # Optionally, apply some logic to the response to determine whether
         # ingestion should continue or if should be short-circuited. By default
         # this will return True and ingestion continues.
@@ -528,6 +543,7 @@ class ProviderDataIngester(ABC):
 
         for data in media_batch:
             if not (record_data := self.get_record_data(data)):
+                self._verbose_log("No data could be processed from this batch item.")
                 continue
 
             record_data = (
@@ -537,6 +553,11 @@ class ProviderDataIngester(ABC):
                     record_data,
                 ]
             )
+
+            if len(record_data) > 1:
+                self._verbose_log(
+                    f"{len(record_data)} records were processed from this batch item."
+                )
 
             for record in record_data:
                 # We need to know what type of record we're handling in
@@ -551,6 +572,8 @@ class ProviderDataIngester(ABC):
                 if self.limit and (self.record_count + processed_count) >= self.limit:
                     logger.info("Ingestion limit has been reached. Halting processing.")
                     return processed_count
+
+        self._verbose_log(f"{processed_count} records where processed in this batch.")
 
         return processed_count
 
@@ -587,3 +610,12 @@ class ProviderDataIngester(ABC):
             total += store.commit()
         logger.info(f"Committed {total} records")
         return total
+
+    def _verbose_log(self, msg: str, data: list = None, limit_batch_to: int = None):
+        if not self._should_verbose_log:
+            return
+        if data and not isinstance(data, dict):
+            if limit_batch_to is not None:
+                data = data[:limit_batch_to]
+            msg += "".join(f"\n\t{json.dumps(item)}" for item in data)
+        logger.info(msg)
