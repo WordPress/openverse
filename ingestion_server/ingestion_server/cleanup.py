@@ -8,6 +8,7 @@ import csv
 import logging as log
 import multiprocessing
 import pathlib
+import shutil
 import time
 import uuid
 from urllib.parse import urlparse
@@ -307,8 +308,9 @@ def clean_image_data(table):
     :return: None
     """
 
-    # Create directory to store cleaned data temporarily
-    TMP_DIR.mkdir(parents=True, exist_ok=True)
+    # Recreate directory where cleaned data is stored
+    shutil.rmtree(TMP_DIR, ignore_errors=True)
+    TMP_DIR.mkdir(parents=True)
 
     # Map each table to the fields that need to be cleaned up. Then, map each
     # field to its cleanup function.
