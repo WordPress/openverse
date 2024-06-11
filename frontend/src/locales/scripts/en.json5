@@ -471,19 +471,25 @@
     title: "Understanding Tags in {openverse}",
     /** generatedTags.intro.a-b are parts of a single section explaining how tags work in Openverse. */
     intro: {
-      a: "Each creative work in {openverse} includes tags, an optional set of keywords used to describe the work and make it easier for users to find what they are looking for.",
+      a: "Each creative work in {openverse} may have tags, an optional set of keywords used to describe the work and make it easier for users to find relevant media for their searches.",
       b: "These tags fall into two main categories: source tags and generated tags. Understanding the difference between them can enhance your search experience and improve the accuracy of your results.",
     },
     sourceTags: {
       title: "Source Tags",
-      content: "Source tags are tags that originate from the original source of the creative work. These tags may be added by different contributors, for example a photographer who uploaded their image to Flickr and added descriptive tags. Additionally, the source platform itself may assign additional tags from community members, or automation.",
+      /** sourceTags.content.a-b are parts of a single section explaining how source tags work in Openverse. */
+      content: {
+        a: "Source tags are tags that originate from the original source of the creative work. These tags may be added by different contributors, for example a photographer who uploaded their image to Flickr and added descriptive tags.",
+        b: "The original platform itself may assign additional tags from community members, automation, or other sources.",
+      },
     },
     generatedTags: {
       title: "Generated Tags",
-      /** generatedTags.content.a-b are parts of a single section explaining how generated tags work in Openverse. */
+      /** generatedTags.content.a-d are parts of a single section explaining how generated tags work in Openverse. */
       content: {
-        a: "Generated tags are created through automated machine analysis of creative works, most commonly images. This process involves advanced technologies like AWS Rekognition, Clarifai, and other image recognition services that analyze the content and generate descriptive tags. While generally reliable, automated systems can sometimes misinterpret or miss elements in an image.",
-        b: 'Openverse makes efforts to exclude any generated tags that make inferences about the identities or affiliations of human subjects. If you encounter any images with generated tags making assumptions about, for example, gender, religion, or political affiliation, please report the images using the "Report" button on our single result pages.',
+        a: "Generated tags are created through automated machine analysis of creative works, most commonly images. This process involves advanced technologies like AWS Rekognition, Clarifai, and other image recognition services that analyze the content and generate descriptive tags. ",
+        b: "While generally reliable, automated systems can sometimes misinterpret or miss elements in an image.",
+        c: "Openverse makes efforts to exclude any generated tags that make inferences about the identities or affiliations of human subjects. ",
+        d: 'If you encounter any images with generated tags making assumptions about, for example, gender, religion, or political affiliation, please report the images using the "Report" button on our single result pages.',
       },
     },
   },

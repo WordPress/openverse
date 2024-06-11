@@ -4,10 +4,18 @@
     <p>{{ $t("tags.intro.a", { openverse: "Openverse" }) }}</p>
     <p>{{ $t("tags.intro.b") }}</p>
     <h2>{{ $t("tags.sourceTags.title") }}</h2>
-    <p>{{ $t("tags.sourceTags.content") }}</p>
+    <p>
+      {{ $t("tags.sourceTags.content.a") }}{{ $t("tags.sourceTags.content.b") }}
+    </p>
     <h2>{{ $t("tags.generatedTags.title") }}</h2>
-    <p>{{ $t("tags.generatedTags.content.a") }}</p>
-    <p>{{ $t("tags.generatedTags.content.b") }}</p>
+    <p>
+      {{ $t("tags.generatedTags.content.a")
+      }}{{ $t("tags.generatedTags.content.b") }}
+    </p>
+    <p>
+      {{ $t("tags.generatedTags.content.c")
+      }}{{ $t("tags.generatedTags.content.bd") }}
+    </p>
   </VContentPage>
 </template>
 
