@@ -206,6 +206,7 @@ def test_record_builder_get_record_data(ingester, record_builder):
         "width": 381,
         "filesize": 36272,
         "filetype": "jpeg",
+        "thumbnail_url": "https://api.europeana.eu/api/v2/thumbnail-by-url.json?uri=http%3A%2F%2Fbibliotecadigital.jcyl.es%2Fi18n%2Fcatalogo_imagenes%2Fimagen_id.cmd%3FidImagen%3D102620362&type=IMAGE",
     }
 
 
@@ -416,6 +417,7 @@ def test_process_image_data_with_sub_provider(record_builder):
         ),
         "meta_data": expect_meta_data,
         "source": "wellcome_collection",
+        "thumbnail_url": "https://api.europeana.eu/thumbnail/v2/url.json?uri=https%3A%2F%2Fiiif.wellcomecollection.org%2Fimage%2FV0013398.jpg%2Ffull%2F500%2C%2F0%2Fdefault.jpg&type=IMAGE",
     }
 
 
@@ -460,3 +462,24 @@ def test_record_builder_returns_None_if_missing_required_field(
         image_data[field_name] = value
 
     assert record_builder.get_record_data(image_data) is None
+
+
+@pytest.mark.parametrize(
+    "data, expected",
+    [
+        pytest.param({}, None, id="empty_object"),
+        pytest.param(
+            {"edmPreview": ["preview_is_list", "preview_is_list_2"]},
+            "preview_is_list",
+            id="preview_is_list",
+        ),
+        pytest.param(
+            {"edmPreview": "preview_is_string"},
+            "preview_is_string",
+            id="preview_is_string",
+        ),
+        pytest.param({"no": "thumbnail"}, None, id="no_thumbnail"),
+    ],
+)
+def test_get_thumbnail(data, expected, record_builder):
+    assert record_builder._get_thumbnail(data) == expected
