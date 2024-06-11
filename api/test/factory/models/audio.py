@@ -3,7 +3,11 @@ from factory.django import DjangoModelFactory
 
 from api.models.audio import Audio, AudioAddOn, AudioReport, SensitiveAudio
 from test.factory.faker import Faker
-from test.factory.models.media import IdentifierFactory, MediaFactory
+from test.factory.models.media import (
+    IdentifierFactory,
+    MediaFactory,
+    MediaReportFactory,
+)
 
 
 class SensitiveAudioFactory(DjangoModelFactory):
@@ -29,7 +33,7 @@ class AudioAddOnFactory(DjangoModelFactory):
     waveform_peaks = Faker("waveform")
 
 
-class AudioReportFactory(DjangoModelFactory):
+class AudioReportFactory(MediaReportFactory):
     class Meta:
         model = AudioReport
 

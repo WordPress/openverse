@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.utils import timezone
 
 import factory
@@ -67,3 +68,8 @@ class AccessTokenFactory(DjangoModelFactory):
         tzinfo=timezone.get_current_timezone(),
     )
     application = factory.SubFactory(ThrottledApplicationFactory)
+
+
+class UserFactory(DjangoModelFactory):
+    class Meta:
+        model = get_user_model()
