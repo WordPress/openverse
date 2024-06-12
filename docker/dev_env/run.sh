@@ -49,26 +49,30 @@ darwin*)
   ;;
 esac
 
-host_pnpm_store="$(pnpm store path 2>/dev/null || echo)"
+if command -v pnpm &>/dev/null; then
+  host_pnpm_store="$(pnpm store path)"
 
-# Share the pnpm cache with the container, if it's available locally
-if [ "$host_pnpm_store" != "" ]; then
-  pnpm_home="$(dirname "$host_pnpm_store")"
-  run_args+=(
-    --env PNPM_HOME="$pnpm_home"
-    -v "$pnpm_home:$pnpm_home:rw,z"
-  )
+  # Share the pnpm cache with the container, if it's available locally
+  if [ "$host_pnpm_store" != "" ]; then
+    pnpm_home="$(dirname "$host_pnpm_store")"
+    run_args+=(
+      --env PNPM_HOME="$pnpm_home"
+      -v "$pnpm_home:$pnpm_home:rw,z"
+    )
+  fi
 fi
 
-# Share the PDM cache with the container, if it's available locally
-# --quiet so PDM doesn't repeatedly fill the console with update messages
-# if they're enabled
-if [ "$(pdm config --quiet install.cache)" == "True" ]; then
-  host_pdm_cache="$(pdm config --quiet cache_dir)"
-  run_args+=(
-    --env "PDM_CACHE_DIR=$host_pdm_cache"
-    -v "$host_pdm_cache:$host_pdm_cache:rw,z"
-  )
+if command -v pdm &>/dev/null; then
+  # Share the PDM cache with the container, if it's available locally
+  # --quiet so PDM doesn't repeatedly fill the console with update messages
+  # if they're enabled
+  if [ "$(pdm config --quiet install.cache)" == "True" ]; then
+    host_pdm_cache="$(pdm config --quiet cache_dir)"
+    run_args+=(
+      --env "PDM_CACHE_DIR=$host_pdm_cache"
+      -v "$host_pdm_cache:$host_pdm_cache:rw,z"
+    )
+  fi
 fi
 
 docker run "${run_args[@]}" openverse-dev-env:latest "$@"
