@@ -52,9 +52,9 @@ To set up the local python environment along with the pre-commit hook, run:
 <!-- vale Vale.Repetition = NO -->
 
 ```shell
-just venv
+./ov just venv
 source .venv/bin/activate
-just catalog/install
+./ov just catalog/install
 ```
 
 <!-- vale Vale.Repetition = YES -->
@@ -63,7 +63,7 @@ The containers will be built when starting the stack up for the first time. If
 you'd like to build them prior to that, run:
 
 ```shell
-just build
+./ov just build
 ```
 
 ### Environment
@@ -71,7 +71,7 @@ just build
 To set up environment variables run:
 
 ```shell
-just env
+./ov just env
 ```
 
 This will generate a `.env` file which is used by the containers.
@@ -94,7 +94,7 @@ There is a [`docker-compose.yml`][dockercompose] provided in the
 [`catalog`][cc_airflow] directory, so from that directory, run
 
 ```shell
-just catalog/up
+./ov just catalog/up
 ```
 
 This results, among other things, in the following running containers:
@@ -126,10 +126,10 @@ The various services can be accessed using these links:
 At this stage, you can run the tests via:
 
 ```shell
-just catalog/test
+./ov just catalog/test
 
 # Alternatively, run all tests including longer-running ones
-just catalog/test --extended
+./ov just catalog/test --extended
 ```
 
 Edits to the source files or tests can be made on your local machine, then tests
@@ -138,39 +138,39 @@ can be run in the container via the above command to see the effects.
 If you'd like, it's possible to login to the webserver container via:
 
 ```shell
-just catalog/shell
+./ov just catalog/shell
 ```
 
 If you just need to run an airflow command, you can use the `airflow` recipe.
 Arguments passed to airflow must be quoted:
 
 ```shell
-just run scheduler airflow config list
+./ov just run scheduler airflow config list
 ```
 
 To follow the logs of the running container:
 
 ```shell
-just logs
+./ov just logs
 ```
 
 To begin an interactive [`pgcli` shell](https://www.pgcli.com/) on the database
 container, run:
 
 ```shell
-just catalog/pgcli
+./ov just catalog/pgcli
 ```
 
 If you'd like to bring down the containers, run
 
 ```shell
-just down
+./ov just down
 ```
 
 To reset the test DB (wiping out all databases, schemata, and tables), run
 
 ```shell
-just down -v
+./ov just down -v
 ```
 
 `docker volume prune` can also be useful if you've already stopped the running
@@ -180,7 +180,7 @@ stopped containers, not just catalog ones.
 To fully recreate everything from the ground up, you can use:
 
 ```shell
-just recreate
+./ov just recreate
 ```
 
 > **Note**: Any recipes or scripts which output files to the container's mounted

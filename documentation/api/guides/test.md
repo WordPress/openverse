@@ -10,7 +10,7 @@ Once you've made some changes to the codebase, it is important to run tests.
 2. Run the tests.
 
    ```bash
-   just api/test
+   ./ov just api/test
    ```
 
    ```{note}

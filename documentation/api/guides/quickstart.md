@@ -41,7 +41,7 @@ you need to run this.
    services.
 
    ```bash
-   just api/up
+   ./ov just api/up
    ```
 
    The `api/up` recipe orchestrates the following services: `cache`, `db`,
@@ -56,15 +56,15 @@ you need to run this.
 4. Load the sample data. This step can take a few minutes to complete.
 
    ```bash
-   just api/init
+   ./ov just api/init
    ```
 
    ````{admonition} Troubleshooting
    If this step fails, cleaning up and restarting usually fixes it.
 
    ```bash
-   just down -v
-   just api/init
+   ./ov just down -v
+   ./ov just api/init
    ```
    ````
 
@@ -72,8 +72,8 @@ you need to run this.
    requests.
 
    ```bash
-   just api/stats
-   just _curl-get "images/stats/" http://localhost:50280
+   ./ov just api/stats
+   ./ov just _curl-get "images/stats/" http://localhost:50280
    curl "http://localhost:50280/v1/images/stats/"
    [{"source_name":"flickr","display_name":"Flickr","source_url":"https://www.flickr.com","logo_url":null,"media_count":2500},{"source_name":"stocksnap","display_name":"StockSnap","source_url":"https://stocksnap.io","logo_url":null,"media_count":2500}]%
    ```
@@ -84,7 +84,7 @@ you need to run this.
    transform it.
 
    ```bash
-   just api/stats | jq '.[0]'
+   ./ov just api/stats | jq '.[0]'
    {
      "source_name": "flickr",
      "display_name": "Flickr",
@@ -93,7 +93,7 @@ you need to run this.
      "media_count": 2500
    }
 
-   just api/stats 'audio' | jq '[.[] | .source_name]'
+   ./ov just api/stats 'audio' | jq '[.[] | .source_name]'
    [
      "freesound",
      "jamendo",

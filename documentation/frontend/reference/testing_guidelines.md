@@ -84,7 +84,7 @@ Once the `.env` file is set up, you may run the development build the typical
 way:
 
 ```shell
-just frontend/run dev
+./ov just frontend/run dev
 ```
 
 ## Browsers

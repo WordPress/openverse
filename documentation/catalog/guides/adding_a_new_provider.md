@@ -62,18 +62,18 @@ that can be used to generate the files you'll need and get you started:
 # MEDIA: Optionally, a space-delineated list of media types ingested by this provider
 #        (and supported by Openverse). If not provided, defaults to "image".
 
-> just catalog/add-provider <PROVIDER_NAME> <ENDPOINT> <MEDIA>
+> ./ov just catalog/add-provider <PROVIDER_NAME> <ENDPOINT> <MEDIA>
 
 # Example usages:
 
 # Creates a provider that supports just audio
-> just catalog/add-provider TestProvider https://test.test/search audio
+> ./ov just catalog/add-provider TestProvider https://test.test/search audio
 
 # Creates a provider that supports images and audio
-> just catalog/add-provider "Foobar Museum" https://foobar.museum.org/api/v1 image audio
+> ./ov just catalog/add-provider "Foobar Museum" https://foobar.museum.org/api/v1 image audio
 
 # Creates a provider that supports the default, just image
-> just catalog/add-provider TestProvider https://test.test/search
+> ./ov just catalog/add-provider TestProvider https://test.test/search
 ```
 
 You should see output similar to this:
@@ -173,14 +173,14 @@ manually turn the DAG on in production.
    selecting only the tests associated with the provider.
 
    ```bash
-   just catalog/test-session
+   ./ov just catalog/test-session
    pytest -k <provider_name>
    ```
 
    Alternatively, the test selection can be run in Docker directly with:
 
    ```bash
-   just catalog/test -k <provider_name>
+   ./ov just catalog/test -k <provider_name>
    ```
 
 ```{note}

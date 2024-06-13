@@ -41,14 +41,14 @@ you need to run this.
    dependencies to run the frontend.
 
    ```bash
-   just node-install
+   ./ov just node-install
    ```
 
 4. To bring up the frontend, we have another `just` recipe. We have `just`
    recipes for almost everything.
 
    ```bash
-   just frontend/run dev
+   ./ov just frontend/run dev
    ```
 
    If you want your frontend to use a different API instance, you can set the
@@ -57,7 +57,7 @@ you need to run this.
    use the local API with the frontend.
 
    ```bash
-   env API_URL="http://localhost:50280" just frontend/run dev
+   env API_URL="http://localhost:50280" ./ov just frontend/run dev
    ```
 
    Now you should be able to access the following endpoints:
