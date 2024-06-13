@@ -27,7 +27,7 @@ Run Python automation scripts using the `automations/python/run` just recipe.
 Ex.:
 
 ```bash
-just automations/python/run print_labels.py
+./ov just automations/python/run print_labels.py
 ```
 
 The recipe is an alias for running `pipenv run <script>` inside the
@@ -39,7 +39,7 @@ configuration as expected by many scripts.
 Run Node.js automation scripts using the `automations/js/run` just recipe. Ex.:
 
 ```bash
-just automations/js/run render-jinja.js
+./ov just automations/js/run render-jinja.js
 ```
 
 The recipe is an alias for running `pnpm exec <script>` inside the

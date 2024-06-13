@@ -56,7 +56,7 @@ It is still possible to run this hook locally, assuming the docker image works
 on your computer's architecture, by invoking the `lint-codeowners` just recipe:
 
 ```bash
-just lint-codeowners
+./ov just lint-codeowners
 ```
 
 ````{tip}
@@ -65,7 +65,7 @@ in the just recipe because they fail if there are uncommitted changes.
 To run precisely the check that CI uses, enable experimental checks:
 
 ```bash
-just lint-codeowners all
+./ov just lint-codeowners all
 ```
 
 ````

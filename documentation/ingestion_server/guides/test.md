@@ -34,7 +34,7 @@ Once you've made some changes to the codebase, it is important to run tests.
 To make cURL requests to the local server:
 
 ```bash
-just ingestion_server/curl-post '{"model": <model>, "action": <action>}'
+./ov just ingestion_server/curl-post '{"model": <model>, "action": <action>}'
 ```
 
 Replace `<model>` and `<action>` with the correct values. For example, to

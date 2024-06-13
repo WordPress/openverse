@@ -101,7 +101,7 @@ You can run the provider script directly from the command line via a just
 recipe. This will open a bash shell inside the docker stack of the catalog.
 
 ```
-just catalog/run
+./ov just catalog/run
 ```
 
 Now you can just run the script like so:
