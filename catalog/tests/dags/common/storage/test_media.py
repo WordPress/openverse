@@ -565,8 +565,11 @@ def test_MediaStore_validates_filetype(filetype, url, expected_filetype):
             id="sort and enriches multiple tags",
         ),
         pytest.param(
-            ["cc0", "valid", "garbage:=metacrap", "uploaded:by=flickrmobile"],
-            [{"name": "valid", "provider": "test_provider"}],
+            ["cc0", "valid", "garbage:=metacrap", "uploaded:by=flickrmobile", "frisby"],
+            [
+                {"name": "frisby", "provider": "test_provider"},
+                {"name": "valid", "provider": "test_provider"},
+            ],
             id="exclude tags by the denylist",
         ),
         pytest.param("notalist", None, id="nonlist tags should be None"),

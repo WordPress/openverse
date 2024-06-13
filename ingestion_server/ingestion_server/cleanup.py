@@ -29,6 +29,7 @@ TAG_DENYLIST = {
     "uploaded:by=flickrmobile",
     "uploaded:by=instagram",
     "flickriosapp:filter=flamingo",
+    "by",
 }
 
 # Filter out tags that contain the following terms. All entrees should be
@@ -39,7 +40,6 @@ TAG_CONTAINS_DENYLIST = {
     ":",
     "=",
     "cc0",
-    "by",
     "by-nc",
     "by-nd",
     "by-sa",
