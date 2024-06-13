@@ -30,7 +30,7 @@ export FRONTEND_PNPM_VERSION := `grep 'packageManager' ../package.json | awk -F'
 ##########
 
 # This section exists because the frontend is not a part of the Docker-based setup
-# and cannot be built easily like `./ov just dc build <service>`.
+# and cannot be built easily like `just dc build <service>`.
 
 # Build the frontend Docker image
 build-img tag="openverse-frontend:local" target="app":

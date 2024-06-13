@@ -376,8 +376,8 @@ best to pause it for performance reasons.
 1. Configure the created instance by running our ansible playbook to sync
    Elasticsearch nodes. Supply the correct environment name to the command and
    pass the DNS record from the previous step to the limit flag like so:
-   `./ov just ansible/playbook <env> elasticsearch/sync_config.yml -e apply=true -l <public_ipv4_dns>`
-1. Use `./ov just jh es <env>` to connect to the cluster, and send
+   `just ansible/playbook <env> elasticsearch/sync_config.yml -e apply=true -l <public_ipv4_dns>`
+1. Use `just jh es <env>` to connect to the cluster, and send
    `{ "transient":{ "cluster.routing.allocation.exclude.name": "<IP_ADDRESS>" } }`
    to the `/_cluster/settings` endpoint (in a GUI like Elasticvue or via `curl`)
    to deallocate shards from the bad node. Be sure to replace `<IP_ADDRESS>`
