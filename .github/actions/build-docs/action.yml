@@ -26,6 +26,7 @@ runs:
       shell: bash
       run: |
         just frontend/run storybook:build-for-docs
+        mv frontend/storybook-static/favicon_storybook.ico frontend/storybook-static/favicon.ico
 
     # Storybook will be available at `/storybook`
     - name: Merge all docs
