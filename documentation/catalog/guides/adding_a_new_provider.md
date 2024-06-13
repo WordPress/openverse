@@ -151,8 +151,8 @@ These are documented in the definition of the `ProviderWorkflow` dataclass.
 
 <!--TODO: add docs for other options.-->
 
-After adding your configuration, run `just up` and you should now have a fully
-functioning provider DAG!
+After adding your configuration, run `./ov just up` and you should now have a
+fully functioning provider DAG!
 
 <!--TODO: add and link to docs for how to run provider DAGs locally, preferably with images.-->
 
@@ -184,10 +184,10 @@ manually turn the DAG on in production.
    ```
 
 ```{note}
-Using `just catalog/test-session` opens Docker to access a shell which is set up to run
+Using `./ov just catalog/test-session` opens Docker to access a shell which is set up to run
 tests. This allows one to run tests repeatedly while potentially modifying the code,
 without having to start the Docker container up each time the tests need to be run.
-Running the tests on Docker directly (e.g. using `just catalog/test`) will spin up the
+Running the tests on Docker directly (e.g. using `./ov just catalog/test`) will spin up the
 container, run the selected tests if any are provided (or all by default) and then stop
 and remove the container. That can be useful for ensuring that all tests pass if one
 does not need to iterate and check the test failures repeatedly.

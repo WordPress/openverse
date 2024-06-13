@@ -15,13 +15,15 @@
    1. Checkout the
       [infrastructure repository](https://github.com/wordpress/openverse-infrastructure)
       and bump the ingestion server version with the
-      `just bump dev ingestion-server` command.
-   1. `just apply dev ingestion-server` and verify the plan before deploying.
+      `./ov just bump dev ingestion-server` command.
+   1. `./ov just apply dev ingestion-server` and verify the plan before
+      deploying.
 1. Deploy production:
    1. Update the value of `data_refresh_cleared` to `true` in the
       [production module declaration](https://github.com/WordPress/openverse-infrastructure/blob/main/environments/prod/ingestion-server.tf#L9).
-   1. `just bump prod ingestion-server` command.
-   1. `just apply prod ingestion-server` and verify the plan before deploying.
+   1. `./ov just bump prod ingestion-server` command.
+   1. `./ov just apply prod ingestion-server` and verify the plan before
+      deploying.
    1. Restore the value of `data_refresh_cleared` back to `false`.
 
 ## Post-deployment steps

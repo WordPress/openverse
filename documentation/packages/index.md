@@ -19,14 +19,15 @@ Openverse does not currently have any method for publishing packages to NPM.
 
 ### Running package scripts
 
-Run scripts for individual packages using `just p {package} {script}`. For
+Run scripts for individual packages using `./ov just p {package} {script}`. For
 example, to run tests for the `eslint-plugin`, run:
 
 ```
 just p eslint-plugin test:unit
 ```
 
-This also works for the Nuxt frontend as an alternative to `just frontend/run`:
+This also works for the Nuxt frontend as an alternative to
+`./ov just frontend/run`:
 
 ```
 just p frontend dev

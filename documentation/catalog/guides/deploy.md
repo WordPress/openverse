@@ -24,12 +24,13 @@ the app is built and tagged, deploy production:
 
 1. Checkout the
    [infrastructure repository](https://github.com/wordpress/openverse-infrastructure)
-   and bump the catalog version with the `just bump production airflow` command.
-1. `just ansible/playbook production airflow.yml -t airflow` and verify the plan
-   before deploying. Unless configuration variables are changing along with the
-   docker image version, the only change should be to the docker image tag in
-   the compose file. Run the playbook with `-e airflow_apply=true` to instruct
-   the playbook to actually apply any changes.
+   and bump the catalog version with the `./ov just bump production airflow`
+   command.
+1. `./ov just ansible/playbook production airflow.yml -t airflow` and verify the
+   plan before deploying. Unless configuration variables are changing along with
+   the docker image version, the only change should be to the docker image tag
+   in the compose file. Run the playbook with `-e airflow_apply=true` to
+   instruct the playbook to actually apply any changes.
 
 - If _any_ DAGs are running, the playbook will not apply the changes and will
   let you know that. If this happens, visit Airflow and confirm the list of

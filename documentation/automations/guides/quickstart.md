@@ -12,7 +12,7 @@ you need to run this.
 
 ## Installation
 
-`just install` in the repository root directory will install all Python and
+`./ov just install` in the repository root directory will install all Python and
 Node.js dependencies for automations as well as other parts of the repository.
 If you wish to install only dependencies for automations, run the following:
 

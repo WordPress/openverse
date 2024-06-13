@@ -17,18 +17,18 @@ just frontend/up
 
 # Sets up Plausible with a default user and the localhost testing site
 # Only necessary the first time you run Plausible locally, when adding
-# new custom events, or any time after you run `just down -v`
+# new custom events, or any time after you run `./ov just down -v`
 just frontend/init
 ```
 
-If you have already run `just up` and `just init` at the root of the repository,
-then Plausible is already set up and running the commands above is not
-necessary.
+If you have already run `./ov just up` and `./ov just init` at the root of the
+repository, then Plausible is already set up and running the commands above is
+not necessary.
 
 > **Note**
 >
-> `just frontend/up` may take some time on first run as it will need to download
-> various docker images required for the Plausible stack.
+> `./ov just frontend/up` may take some time on first run as it will need to
+> download various docker images required for the Plausible stack.
 
 ## Access Plausible
 
@@ -57,8 +57,8 @@ Custom events must be added to Plausible for it to record them. You may do this
 one of two ways:
 
 - Automatically:
-  1.  Run `just frontend/init`, which automatically extracts the events name
-      from the `Events` type
+  1.  Run `./ov just frontend/init`, which automatically extracts the events
+      name from the `Events` type
 - Manually:
   1.  Visit <http://0.0.0.0:50288/localhost/settings/goals> and click the "+ Add
       goal" button
@@ -67,8 +67,8 @@ one of two ways:
   3.  Click "add goal" to save the new custom event
 
 **If you are testing custom events added by others, you must also follow this
-process for them to appear in your local environment. `just frontend/init` will
-be the simplest way to do so in those cases, provided the change request
+process for them to appear in your local environment. `./ov just frontend/init`
+will be the simplest way to do so in those cases, provided the change request
 includes the necessary changes to the `Events` type.**
 
 After adding the custom event, upon receiving at least one instance of the

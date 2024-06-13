@@ -75,7 +75,7 @@ API_CLIENT_ID=""
 API_CLIENT_SECRET=""
 ```
 
-Then run the API as usual using `just api/up` & `just api/init`. Nuxt
+Then run the API as usual using `./ov just api/up` & `./ov just api/init`. Nuxt
 automatically loads `.env` files into the environment. With these variables in
 the environment, all requests made by your server will be made using an access
 token retrieved by the `~/plugins/api-token.server.ts` plugin.

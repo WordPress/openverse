@@ -82,7 +82,7 @@ prerequisites.
    `plausible`.
 
    The `up` recipe also prints out services that have ports exposed to the host
-   (this can also be seen by running `just ps`):
+   (this can also be seen by running `./ov just ps`):
 
    ```
    ================================================================================

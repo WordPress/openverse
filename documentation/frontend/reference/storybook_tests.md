@@ -52,8 +52,8 @@ See
 ### Codegen
 
 You can use Playwright's `codegen` tool to generate tests. For this you will
-need to run Storybook locally on your own using `just frontend/run storybook`.
-Then run:
+need to run Storybook locally on your own using
+`./ov just frontend/run storybook`. Then run:
 
 ```bash
 just frontend/run test:storybook:gen
