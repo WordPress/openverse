@@ -318,7 +318,8 @@ def format_update_standardized_popularity_query(
     by a `batched_update` DagRun.
     """
     return (
-        f"SET {col.STANDARDIZED_POPULARITY.db_name} ="
+        f"SET {col.UPDATED_ON.db_name} = NOW(),"
+        f" {col.STANDARDIZED_POPULARITY.db_name} ="
         f" {sql_info.standardized_popularity_fn}({sql_info.media_table}.{PARTITION},"
         f" {sql_info.media_table}.{METADATA_COLUMN})"
     )
