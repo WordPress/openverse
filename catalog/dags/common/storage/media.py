@@ -16,13 +16,13 @@ TAG_DENYLIST = {
     "no person",
     "squareformat",
     "undefined",
+    "by",
 }
 
 # Filter out tags that contain the following terms. All entrées should be lowercase.
 TAG_CONTAINS_DENYLIST = {
     ":",
     "=",
-    "by",
     "by-nc",
     "by-nc-nd",
     "by-nc-sa",
