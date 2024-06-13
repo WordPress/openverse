@@ -4,7 +4,7 @@
     "main": "انتقل إلى {link} أو ابحث عن شيء مشابه من الحقل أدناه."
   },
   "hero": {
-    "subtitle": "استكشف أكثر من 700 مليون عمل إبداعي",
+    "subtitle": "استكشف أكثر من 800 مليون عمل إبداعي",
     "description": "مكتبة واسعة من الصور المجانية ، والصور ، والصوت ، متاحة للاستخدام المجاني.",
     "search": {
       "placeholder": "البحث عن محتوى"
@@ -80,7 +80,7 @@
     },
     "collection": {
       "content": {
-        "a": "{openverse} searches across more than 700 million images and audio from open APIs and the {commonCrawl} dataset.",
+        "a": "{openverse} searches across more than 800 million images and audio from open APIs and the {commonCrawl} dataset.",
         "b": "نحن نجمع العمل من عدة مستودعات عامة، ونسهل إعادة الاستخدام من خلال سمات مثل العزو البقعة الواحدة."
       }
     },

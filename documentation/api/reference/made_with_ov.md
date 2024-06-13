@@ -1,7 +1,7 @@
 # Made with Openverse
 
 The Openverse API provides access to the world's largest library of
-openly-licensed creative works, containing over 700 million images and audio
+openly-licensed creative works, containing over 800 million images and audio
 tracks. All Openverse content is under a
 [Creative Commons license](https://creativecommons.org/licenses/) or is in the
 public domain.

@@ -4,7 +4,7 @@ import { preparePageForTests } from "~~/test/playwright/utils/navigation"
 
 test.describe.configure({ mode: "parallel" })
 const DESCRIPTION =
-  "Search over 700 million free and openly licensed images, photos, audio, and other media types for reuse and remixing."
+  "Search over 800 million free and openly licensed images, photos, audio, and other media types for reuse and remixing."
 
 const pages = {
   home: {
