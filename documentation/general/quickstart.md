@@ -14,9 +14,10 @@ stack. In such cases, you might find it more beneficial to go through one of
 these stack-specific quickstart guides.
 
 - [API](/api/guides/quickstart.md)
+- [Catalog](/catalog/guides/quickstart.md)
+- [Documentation](/meta/documentation/quickstart.md)
 - [Frontend](/frontend/guides/quickstart.md)
 - [Ingestion server](/ingestion_server/guides/quickstart.md)
-- [Documentation](/meta/documentation/quickstart.md)
 
 That said, there is something useful and appealing about running the full stack
 locally, which this guide is all about.
