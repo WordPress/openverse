@@ -1,6 +1,7 @@
 # Specific assignments for the 'openverse-catalog' group
-catalog/    @WordPress/openverse-catalog
-dag-sync.sh @WordPress/openverse-catalog
+catalog/        @WordPress/openverse-catalog
+indexer_worker/ @WordPress/openverse-catalog
+dag-sync.sh     @WordPress/openverse-catalog
 
 api/                @WordPress/openverse-api
 packages/python/    @WordPress/openverse-api
