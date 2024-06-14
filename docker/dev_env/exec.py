@@ -26,4 +26,7 @@ def expand_aliases(args: list[str]):
 
 if __name__ == "__main__":
     args = expand_aliases(sys.argv[1:])
-    os.execvp(args[0], args)
+    try:
+        os.execvp(args[0], args)
+    except FileNotFoundError:
+        sys.stdout.buffer.write(args[0].encode() + b": command not found\n")

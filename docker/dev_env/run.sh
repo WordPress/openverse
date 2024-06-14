@@ -41,17 +41,35 @@ if [ -t 0 ]; then
   shared_args+=(-t)
 fi
 
+_cmd=("$@")
+
+if [ "$1" == "sudo" ]; then
+  # Remove sudo
+  # Linux hosts will run the command as root instead in the user check below.
+  # macOS hosts don't need to bother, they're always running as root in the container anyway
+  _cmd=("${@:2}")
+fi
+
 case "$OSTYPE" in
 linux*)
-  shared_args+=(--user "$UID:$(getent group docker | cut -d: -f3)")
+  docker_group=$(getent group docker | cut -d: -f3)
+  if [ "$1" == "sudo" ]; then
+    user_id="0"
+  else
+    user_id="$UID"
+  fi
+  shared_args+=(--user "$user_id:$docker_group")
   ;;
+
 darwin*)
   # noop, just catching them to avoid the fall-through error case
   ;;
+
 *)
   printf "Openverse development is only supported on Linux and macOS hosts. Please use WSL to run the Openverse development environment under Linux on Windows computers." >/dev/stderr
   exit 1
   ;;
+
 esac
 
 if command -v pnpm &>/dev/null; then
@@ -86,4 +104,4 @@ else
   docker start "$existing_container_id" 1>/dev/null
 fi
 
-docker exec "${shared_args[@]}" "$container_name" python3 docker/dev_env/exec.py "$@"
+docker exec "${shared_args[@]}" "$container_name" python3 docker/dev_env/exec.py "${_cmd[@]}"
