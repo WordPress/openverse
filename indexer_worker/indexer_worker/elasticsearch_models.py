@@ -1,8 +1,8 @@
 """
 Provides an ORM-like experience for accessing data in Elasticsearch.
 
-Note the actual schema for Elasticsearch is defined in es_mapping.py; any
-low-level changes to the index must be represented there as well.
+Note the any low-level changes to the index here, such as changing the order
+of fields, must be reflected in the actual schema defined in the catalog.
 """
 
 from enum import Enum, auto
@@ -96,7 +96,7 @@ class Media(SyncableDocType):
         provider = row[schema["provider"]]
         authority_boost = Media.get_authority_boost(meta, provider)
 
-        # This matches the order of fields defined in ``es_mapping.py``.
+        # This matches the order of fields defined in the schema.
         return {
             "_id": row[schema["id"]],
             "id": row[schema["id"]],
@@ -203,7 +203,11 @@ class Media(SyncableDocType):
 
 
 class Image(Media):
-    """Represents an image in Elasticsearch."""
+    """
+    Represents an image in Elasticsearch.
+
+    Note that actual mappings are defined in the schema.
+    """
 
     class AspectRatios(Enum):
         """Also defined in ``api/catalog/api/constants/field_values.py``."""
@@ -280,7 +284,11 @@ class Image(Media):
 
 
 class Audio(Media):
-    """Represents an audio in Elasticsearch."""
+    """
+    Represents an audio in Elasticsearch.
+
+    Note that actual mappings are defined in the schema.
+    """
 
     class Durations(Enum):
         """

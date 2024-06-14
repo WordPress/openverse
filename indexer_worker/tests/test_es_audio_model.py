@@ -1,4 +1,4 @@
-from tests.conftest import create_mock_audio
+from tests.utils import create_mock_audio
 
 
 class TestAudio:

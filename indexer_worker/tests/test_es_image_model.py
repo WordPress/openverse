@@ -1,19 +1,19 @@
 from indexer_worker.elasticsearch_models import Image
-from tests.conftest import create_mock_image
+from tests.utils import create_mock_image
 
 
 class TestImage:
     @staticmethod
     def test_size():
         small = create_mock_image({"height": 600, "width": 300})
-        assert small.size == Image.ImageSizes.SMALL.name.lower()
+        assert small.size == "small"
         huge = create_mock_image({"height": 4096, "width": 4096})
-        assert huge.size == Image.ImageSizes.LARGE.name.lower()
+        assert huge.size == "large"
 
     @staticmethod
     def test_aspect_ratio():
         square = create_mock_image({"height": 300, "width": 300})
-        assert square.aspect_ratio == Image.AspectRatios.SQUARE.name.lower()
+        assert square.aspect_ratio == "square"
         tall = create_mock_image({"height": 500, "width": 200})
         assert tall.aspect_ratio == Image.AspectRatios.TALL.name.lower()
         wide = create_mock_image({"height": 200, "width": 500})
