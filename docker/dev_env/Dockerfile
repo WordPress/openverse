@@ -60,8 +60,8 @@ RUN bash -c 'chmod -Rv 0777 /opt'
 # Avoid overwriting `.venv`'s from the host
 ENV PDM_VENV_IN_PROJECT="False"
 
-COPY entrypoint.sh /entrypoint.sh
+# Infinite sleep loop so that we create a persistent environment
+# Everything runs in the same container, rather than new one-off containers for each command
+ENTRYPOINT /bin/bash -c 'while true; do sleep 1; done;'
 
-ENTRYPOINT ["/entrypoint.sh"]
-
-CMD ["/bin/sh"]
+CMD ["/bin/bash"]

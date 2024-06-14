@@ -9,10 +9,10 @@ fi
 
 cd "$OPENVERSE_PROJECT" || exit 1
 
-corepack install 1>/dev/null
+corepack install
 
 if [ -z "$(n ls 2>/dev/null)" ]; then
-  printf "Installing the specific Node JS version required by Openverse frontend; this is only necessary the first time the toolkit runs\n"
+  printf "Installing the specific Node JS version required by Openverse frontend\n"
   n install auto
 fi
 
@@ -26,7 +26,7 @@ pdm config venv.location "/opt/pdm/venvs"
 _python3s=(/opt/pdm/python/cpython@3.11.*/bin/python3)
 
 if [ ! -x "${_python3s[0]}" ]; then
-  printf "Installing the specific Python version required for pipenv environments; this is only necessary the first time the toolkit runs\n"
+  printf "Installing the specific Python version required for pipenv environments\n"
   pdm python install 3.11
   _python3s=(/opt/pdm/python/cpython@3.11.*/bin/python3)
 fi
@@ -50,5 +50,5 @@ if [ -n "$PDM_CACHE_DIR" ]; then
   pdm config install.cache on
 fi
 
-expanded_args=$(python3 "$OPENVERSE_PROJECT"/docker/dev_env/expand_aliases.py "$@")
-bash -c "$expanded_args"
+# expanded_args=$(python3 "$OPENVERSE_PROJECT"/docker/dev_env/expand_aliases.py "$@")
+# bash -c "$expanded_args"

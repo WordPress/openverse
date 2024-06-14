@@ -17,17 +17,18 @@ if [[ $_cmd == "help" || -z $_cmd ]]; then
 Openverse development toolkit
 
 USAGE
-  ov <subcommand> [args]
+  ov <subcommand> [...ARGS]
 
 COMMANDS
   ov init
     Initialise the Openverse development toolkit for the first time
     Alias for:
 
-        ov build && ov just install-hooks
+        ov build && ov setup-env && ov just install-hooks
 
-  ov build
-    Build the Openverse development toolkit Docker image
+  ov build [...ARGS]
+    Build the Openverse development toolkit Docker image.
+    ARGS are passed to `docker build`. See `docker build --help` for options.
 
   ov clean
     Remove the Openverse development toolkit Docker image and volume
@@ -39,7 +40,7 @@ COMMANDS
   ov hook HOOK
     Run Git hooks through pre-commit inside the development toolkit container
 
-  ov COMMAND
+  ov COMMAND [...ARGS]
     Run COMMAND inside the development toolkit container
     Hints: The toolkit comes loaded with many tools for working with Openverse! Try
     some of the following:
@@ -57,14 +58,23 @@ fi
 case "$_cmd" in
 init)
   "$_self" build
-  "$_self" 'just install-hooks && just init-ov-aliases'
+  "$_self" setup-env
+  "$_self" just install-hooks
+  "$_self" just init-ov-aliases
   ;;
 
 build)
-  docker build -t openverse-dev-env:latest "$dev_env"
+  docker build "${@:2}" -t openverse-dev-env:latest "$dev_env"
+  ;;
+
+setup-env)
+  "$_self" bash "$dev_env"/setup_env.sh
   ;;
 
 clean)
+  docker kill openverse-dev-env
+  docker rm openverse-dev-env
+  docker rmi openverse-dev-env
   docker volume rm openverse-dev-env
   ;;
 
