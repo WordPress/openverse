@@ -66,12 +66,6 @@ def reindex(
     es_conn = elasticsearch_connect()
 
     query = get_reindex_query(model_name, table_name, start_id, end_id)
-    log.info(query)
-
-    cur = pg_conn.cursor()
-    cur.execute("SELECT COUNT(*) FROM image;")
-    rows = cur.fetchall()
-    log.warning(rows)
 
     total_indexed_so_far = 0
     with pg_conn.cursor(name=f"{table_name}_indexing_cursor") as server_cur:

@@ -1,7 +1,6 @@
 services:
   catalog_indexer_worker:
     profiles:
-      - catalog_indexer_worker
       - api
     build:
       context: ./

@@ -40,7 +40,6 @@ def _elasticsearch_connect() -> Elasticsearch:
     es_port = config("ELASTICSEARCH_PORT", default=9200, cast=int)
 
     es_endpoint = f"{es_scheme}{es_url}:{es_port}"
-    log.info(es_endpoint)
 
     timeout = 12  # hours
 

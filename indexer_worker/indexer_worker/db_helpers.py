@@ -41,7 +41,6 @@ def database_connect(
     Repeatedly try to connect to the downstream (API) database until successful
     (unless otherwise specified).
     """
-    log.info(dbconfig)
     while True:
         try:
             conn = psycopg2.connect(**dbconfig._asdict(), connect_timeout=timeout)

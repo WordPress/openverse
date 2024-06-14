@@ -96,7 +96,7 @@ stats media="images" origin="http://localhost:50280":
 
 # Launch a `pgcli` shell in the web container
 pgcli db_user_pass="deploy" db_name="openledger": up
-    env DC_USER="opener" just ../_pgcli web {{ db_user_pass }} {{ db_name }} integration_db
+    env DC_USER="opener" just ../_pgcli web {{ db_user_pass }} {{ db_name }} db
 
 #########################
 # Django administration #

@@ -89,8 +89,7 @@ class Media(SyncableDocType):
             popularity = Media.get_popularity(row[schema["standardized_popularity"]])
         else:
             popularity = None
-        # Extracted for compatibility with the old image schema to pass the
-        # cleanup tests in CI: test/unit_tests/test_cleanup.py
+        # Extracted for compatibility with the old image schema
         category = row[schema["category"]] if "category" in schema else None
 
         provider = row[schema["provider"]]
@@ -210,7 +209,7 @@ class Image(Media):
     """
 
     class AspectRatios(Enum):
-        """Also defined in ``api/catalog/api/constants/field_values.py``."""
+        """Also defined in ``api/api/constants/field_values.py``."""
 
         TALL = auto()
         WIDE = auto()
