@@ -1,4 +1,4 @@
-const NUMBER_OF_RECORDS = "700 million"
+const NUMBER_OF_RECORDS = "800 million"
 const DESCRIPTION = `Search over ${NUMBER_OF_RECORDS} free and openly licensed images, photos, audio, and other media types for reuse and remixing.`
 
 /**
