@@ -43,7 +43,7 @@ of the last commit.
 
 Runs the linting steps defined in the repository's
 [pre-commit configuration](https://github.com/WordPress/openverse/blob/main/.pre-commit-config.yaml).
-This is executed via `./ov just lint`.
+This is executed via `just lint`.
 
 ## `validate-codeowners`
 

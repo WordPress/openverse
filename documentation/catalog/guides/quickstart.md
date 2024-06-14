@@ -52,9 +52,11 @@ To set up the local python environment along with the pre-commit hook, run:
 <!-- vale Vale.Repetition = NO -->
 
 ```shell
-./ov just venv
-source .venv/bin/activate
-./ov just catalog/install
+./ov just catalog/venv
+./ov bash
+source catalog/.venv/bin/activate
+just catalog/install
+exit
 ```
 
 <!-- vale Vale.Repetition = YES -->

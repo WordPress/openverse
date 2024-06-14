@@ -37,23 +37,25 @@ important to disable the Cloudflare cache and WAF security settings for the
 duration of the test to test the actual performance of the application instead
 of testing Cloudflare cache or getting blocked by WAF. By default, the tests
 request only the English static pages. You can specify other scenarios to run,
-with `./ov just k6 all` being the most comprehensive test that requests static
-and search pages in English. The `locales` tests request pages in 3 other
-locales.
+with `./ov just load_testing/k6 all` being the most comprehensive test that
+requests static and search pages in English. The `locales` tests request pages
+in 3 other locales.
 
 ### Running
 
 All load tests are accessible through `just` scripts in this directory's
 `justfile`.
 
-To run API load tests against a local API instance, use `./ov just api`. You can
-optionally specify a host (the default is to point to local). For example
-`./ov just api https://api-staging.openverse.org` will run the load tests
-against the staging API.
+To run API load tests against a local API instance, use
+`./ov just load_testing/api`. You can optionally specify a host (the default is
+to point to local). For example
+`./ov just load_testing/api https://api-staging.openverse.org` will run the load
+tests against the staging API.
 
-To run the frontend load tests, use `./ov just k6-frontend`. You can optionally
-specify the scenarios to run, for example, `./ov just k6-frontend all`. To
-specify a host (the default is to point to the `openverse.org`), set the
-`FRONTEND_URL` environment variable. For example,
-`FRONTEND_URL=https://staging.openverse.org just k6-frontend` will run the load
-tests against the staging frontend.
+To run the frontend load tests, use `./ov just load_testing/k6-frontend`. You
+can optionally specify the scenarios to run, for example,
+`./ov just load_testing/k6-frontend all`. To specify a host (the default is to
+point to the `openverse.org`), set the `FRONTEND_URL` environment variable. For
+example,
+`./ov env FRONTEND_URL=https://staging.openverse.org just load_testing/k6-frontend`
+will run the load tests against the staging frontend.

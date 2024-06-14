@@ -172,7 +172,7 @@ prerequisites.
    recipes for almost everything.
 
    ```bash
-   env API_URL="http://localhost:50280" ./ov just frontend/run dev
+   ./ov env API_URL="http://localhost:50280" just frontend/run dev
    ```
 
    Now you should be able to access the following endpoints:

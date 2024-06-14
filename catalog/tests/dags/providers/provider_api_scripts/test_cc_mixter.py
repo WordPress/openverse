@@ -1,4 +1,4 @@
-"""Run these tests locally with `./ov just test -k cc_mixter`"""
+"""Run these tests locally with `./ov just catalog/test -k cc_mixter`"""
 
 import json
 from pathlib import Path
