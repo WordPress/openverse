@@ -49,6 +49,3 @@ fi
 if [ -n "$PDM_CACHE_DIR" ]; then
   pdm config install.cache on
 fi
-
-# expanded_args=$(python3 "$OPENVERSE_PROJECT"/docker/dev_env/expand_aliases.py "$@")
-# bash -c "$expanded_args"

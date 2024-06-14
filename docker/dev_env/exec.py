@@ -21,8 +21,9 @@ def expand_aliases(args: list[str]):
     while args[0] in aliases:
         args = aliases.pop(args[0]) + args[1:]
 
-    print(*args)
+    return args
 
 
 if __name__ == "__main__":
-    expand_aliases(sys.argv[1:])
+    args = expand_aliases(sys.argv[1:])
+    os.execvp(args[0], args)

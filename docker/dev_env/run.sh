@@ -86,4 +86,4 @@ else
   docker start "$existing_container_id" 1>/dev/null
 fi
 
-docker exec "${shared_args[@]}" "$container_name" "$@"
+docker exec "${shared_args[@]}" "$container_name" python3 docker/dev_env/exec.py "$@"
