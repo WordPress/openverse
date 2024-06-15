@@ -8,7 +8,7 @@
 # More info here: https://stackoverflow.com/questions/72867045
 set -euxo pipefail
 
-/usr/bin/mc config host add s3 http://s3:5000 "${AWS_ACCESS_KEY}" "${AWS_SECRET_KEY}"
+/usr/bin/mc config host add s3 http://s3:5000 "${MINIO_ROOT_USER}" "${MINIO_ROOT_PASSWORD}"
 cd /data
 for b in */; do
   echo "Loading bucket $b"
