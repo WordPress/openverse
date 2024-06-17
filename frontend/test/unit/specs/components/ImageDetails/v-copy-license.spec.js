@@ -31,6 +31,6 @@ describe("VCopyLicense", () => {
 
   it("should contain the correct contents", () => {
     const { queryAllByText } = render(VCopyLicense, options)
-    expect(queryAllByText(/Copy text/i)).toHaveLength(3)
+    expect(queryAllByText(/Copy text/i)).toHaveLength(4)
   })
 })

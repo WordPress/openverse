@@ -36,7 +36,7 @@ export default defineComponent({
      * The kind of attribution shown in the tab.
      */
     tab: {
-      type: String as PropType<"rich" | "html" | "plain">,
+      type: String as PropType<"rich" | "html" | "plain" | "xml">,
       required: true,
     },
     /**

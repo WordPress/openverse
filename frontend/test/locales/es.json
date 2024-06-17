@@ -556,7 +556,8 @@
         "html": "HTML",
         "plain": "Texto sin formato",
         "copyText": "Copiar el texto",
-        "copied": "¡Copiado!"
+        "copied": "¡Copiado!",
+        "xml": "XML"
       },
       "attribution": "Esta imagen se ha marcado con una licencia {link}:"
     },

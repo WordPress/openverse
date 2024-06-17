@@ -145,7 +145,7 @@ export type Events = {
     /** The unique ID of the media */
     id: string
     /** The format of the copied attribution */
-    format: "plain" | "rich" | "html"
+    format: "plain" | "rich" | "html" | "xml"
     /** The media type being searched */
     mediaType: MediaType
   }
