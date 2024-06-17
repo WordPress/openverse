@@ -1,0 +1,40 @@
+[tool.pdm]
+[[tool.pdm.source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "ipython~=8.16",
+    "pytest~=7.4",
+    "pytest-order~=1.1",
+    "pytest-sugar~=0.9",
+    "remote-pdb~=2.1",
+    "pook~=1.0",
+]
+
+[project]
+# PEP 621 project metadata
+# See https://www.python.org/dev/peps/pep-0621/
+requires-python = ">=3.11"
+dependencies = [
+    "aws-requests-auth~=0.4",
+    "boto3~=1.28",
+    "bottle~=0.12",
+    "elasticsearch==8.13.0",
+    "elasticsearch-dsl~=8.9",
+    "falcon~=3.1",
+    "filelock~=3.13",
+    "gunicorn~=22.0",
+    "jsonschema~=4.19",
+    "psycopg2~=2.9",
+    "python-decouple~=3.8",
+    "PyYAML~=6.0",
+    "tldextract~=5.0",
+    "sentry-sdk[falcon]",
+]
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
