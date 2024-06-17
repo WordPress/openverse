@@ -5,10 +5,11 @@ on:
     branches:
       - main
 
+# Prevent concurrency with other workflows in the "Release workflow group"
+# See https://github.com/WordPress/openverse/issues/4505 for context
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  # Freely interrupt release drafting workflows, they do not depend on each other and always generate the full release based on the previous one
-  cancel-in-progress: true
+  group: operates_on_github_releases
+  cancel-in-progress: false
 
 jobs:
   draft-release:
