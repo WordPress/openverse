@@ -41,6 +41,7 @@ jobs:
     name: Save change info
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       pull-requests: read
     # Prevent running this workflow on forks, it's unnecessary for external contributors
     if: github.repository_owner == 'WordPress'
