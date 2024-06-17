@@ -807,6 +807,7 @@
         plain: "Plain text",
         copyText: "Copy text",
         copied: "Copied!",
+        xml: "XML",
       },
       attribution: "This image was marked with a {link} license:",
     },

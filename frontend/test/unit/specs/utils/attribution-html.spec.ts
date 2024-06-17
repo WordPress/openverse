@@ -18,6 +18,9 @@ const mediaItem: AttributableMedia = {
   license: "pdm",
   license_version: "1.0",
   license_url: "https://license/url",
+  frontendMediaType: "image",
+  attribution:
+    '"Title" by Creator is marked with Public Domain Mark 1.0 . To view a copy of this license, visit https://creativecommons.org/publicdomain/zero/1.0/?ref=openverse.',
 }
 
 describe("getAttribution", () => {

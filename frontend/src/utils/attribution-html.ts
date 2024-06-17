@@ -124,6 +124,21 @@ const licenseElementImg = (licenseElement: LicenseElement): string => {
 const extLink = (href: string, text: string) =>
   h("a", { rel: "noopener noreferrer", href }, [text])
 
+/**
+ * Generate a Dublin Core conforming XML attribution snippet.
+ *
+ * @param mediaItem - the media item being attributed
+ * @returns the XML markup of the attribution
+ */
+const xmlAttribution = (mediaItem: Record<string, string>) =>
+  `<attribution xmlns:dc="http://purl.org/dc/elements/1.1/">
+	<dc:creator>${mediaItem.creator}</dc:creator>
+	<dc:title>${mediaItem.title}</dc:title>
+	<dc:rights>${mediaItem.attribution}</dc:rights>
+	<dc:identifier>${mediaItem.foreign_landing_url}</dc:identifier>
+	<dc:type>${mediaItem.type}</dc:type>
+</attribution>`
+
 /* Interfaces */
 
 /**
@@ -139,6 +154,8 @@ export type AttributableMedia = Pick<
   | "license"
   | "license_version"
   | "license_url"
+  | "frontendMediaType"
+  | "attribution"
 >
 
 /**
@@ -148,6 +165,7 @@ export type AttributableMedia = Pick<
 export interface AttributionOptions {
   includeIcons?: boolean
   isPlaintext?: boolean
+  isXml?: boolean
 }
 
 /* Actual util */
@@ -163,13 +181,18 @@ export interface AttributionOptions {
 export const getAttribution = (
   mediaItem: AttributableMedia,
   i18n: VueI18n | null = null,
-  { includeIcons, isPlaintext }: AttributionOptions = {
+  { includeIcons, isPlaintext, isXml }: AttributionOptions = {
     isPlaintext: false,
     includeIcons: true,
+    isXml: false,
   }
 ): string => {
   if (!mediaItem) {
     return ""
+  }
+
+  if (isXml) {
+    isPlaintext = true
   }
 
   const isPd = isPublicDomain(mediaItem.license)
@@ -248,7 +271,18 @@ export const getAttribution = (
     .replace(/\s{2}/g, " ")
     .trim()
 
-  return isPlaintext
-    ? attribution
-    : h("p", { class: "attribution" }, [attribution])
+  if (isXml) {
+    const { frontendMediaType, ...restMediaItem } = mediaItem
+
+    const xmlAttributionParts = {
+      ...restMediaItem,
+      type: frontendMediaType === "audio" ? "Sound" : "StillImage",
+    }
+
+    return xmlAttribution(xmlAttributionParts)
+  } else if (isPlaintext) {
+    return attribution
+  } else {
+    return h("p", { class: "attribution" }, [attribution])
+  }
 }
