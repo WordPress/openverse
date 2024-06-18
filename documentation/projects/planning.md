@@ -47,7 +47,7 @@ accepts one argument as the project name, followed optionally by any number of
 implementation plans.
 
 ```bash
-just documentation/create-project 'Project name' 'First IP' 'Second IP'
+./ov just documentation/create-project 'Project name' 'First IP' 'Second IP'
 ```
 
 This will create the directory structure for your project with the specified
@@ -67,7 +67,7 @@ plan, you can use the `just` recipe `create-ip`. It accepts the directory name
 (not full path) of the project and the plan name as arguments.
 
 ```bash
-just documentation/create-ip project_name 'New IP'
+./ov just documentation/create-ip project_name 'New IP'
 ```
 ````
 

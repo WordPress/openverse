@@ -61,20 +61,20 @@ prerequisites.
    using Docker containers.
 
    ```bash
-   just install
+   ./ov just install
    ```
 
    To be more specific with your install, you can run either of the following.
 
    ```bash
-   just node-install # only frontend and Node.js automations
-   just py-install # only documentation and Python automations
+   ./ov just node-install # only frontend and Node.js automations
+   ./ov just py-install # only documentation and Python automations
    ```
 
 4. Spin up and orchestrate all Docker services.
 
    ```bash
-   just up
+   ./ov just up
    ```
 
    The `up` recipe orchestrates the following services: `cache`, `db`,
@@ -83,7 +83,7 @@ prerequisites.
    `plausible`.
 
    The `up` recipe also prints out services that have ports exposed to the host
-   (this can also be seen by running `just ps`):
+   (this can also be seen by running `./ov just ps`):
 
    ```
    ================================================================================
@@ -120,15 +120,15 @@ prerequisites.
 5. Load the sample data. This step can take a few minutes to complete.
 
    ```bash
-   just init
+   ./ov just init
    ```
 
    ````{admonition} Troubleshooting
    If this step fails, cleaning up and restarting usually fixes it.
 
    ```bash
-   just down -v
-   just api/init
+   ./ov just down -v
+   ./ov just api/init
    ```
    ````
 
@@ -136,8 +136,8 @@ prerequisites.
    requests.
 
    ```bash
-   just api/stats
-   just _curl-get "images/stats/" http://localhost:50280
+   ./ov just api/stats
+   ./ov just _curl-get "images/stats/" http://localhost:50280
    curl "http://localhost:50280/v1/images/stats/"
    [{"source_name":"flickr","display_name":"Flickr","source_url":"https://www.flickr.com","logo_url":null,"media_count":2500},{"source_name":"stocksnap","display_name":"StockSnap","source_url":"https://stocksnap.io","logo_url":null,"media_count":2500}]%
    ```
@@ -148,7 +148,7 @@ prerequisites.
    transform it.
 
    ```bash
-   just api/stats | jq '.[0]'
+   ./ov just api/stats | jq '.[0]'
    {
      "source_name": "flickr",
      "display_name": "Flickr",
@@ -157,7 +157,7 @@ prerequisites.
      "media_count": 2500
    }
 
-   just api/stats 'audio' | jq '[.[] | .source_name]'
+   ./ov just api/stats 'audio' | jq '[.[] | .source_name]'
    [
      "freesound",
      "jamendo",
@@ -173,7 +173,7 @@ prerequisites.
    recipes for almost everything.
 
    ```bash
-   env API_URL="http://localhost:50280" just frontend/run dev
+   ./ov env API_URL="http://localhost:50280" just frontend/run dev
    ```
 
    Now you should be able to access the following endpoints:
@@ -189,7 +189,7 @@ prerequisites.
    Plausible, use another `just` recipe to bring them down.
 
    ```bash
-   just down
+   ./ov just down
    ```
 
    ````{tip}
@@ -197,6 +197,6 @@ prerequisites.
    be deleted too, which is useful in case you want a fresh start.
 
    ```bash
-   just down -v
+   ./ov just down -v
    ```
    ````

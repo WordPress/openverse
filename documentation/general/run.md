@@ -18,18 +18,18 @@ To run the API inside Docker, follow the instructions in the
 1. Create environment variables from the stencil file.
 
    ```bash
-   just env
+   ./ov just env
    ```
 
 2. Install Python dependencies.
 
    ```bash
-   just install
+   ./ov just install
    ```
 
 3. Start the Django dev server.
    ```bash
-   just api/dj runserver
+   ./ov just api/dj runserver
    ```
 
 ## Django admin
