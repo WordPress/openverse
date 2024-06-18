@@ -4,7 +4,7 @@
     main: "Go to {link} or search for something similar from the field below.",
   },
   hero: {
-    subtitle: "Explore more than 700 million creative works",
+    subtitle: "Explore more than 800 million creative works",
     description: "An extensive library of free stock photos, images, and audio, available for free use.",
     search: {
       placeholder: "Search for content",
@@ -81,7 +81,7 @@
     },
     collection: {
       content: {
-        a: "{openverse} searches across more than 700 million images and audio tracks from open APIs and the {commonCrawl} dataset.",
+        a: "{openverse} searches across more than 800 million images and audio tracks from open APIs and the {commonCrawl} dataset.",
         b: "We aggregate works from multiple public repositories, and facilitate reuse through features like one-click attribution.",
       },
     },
