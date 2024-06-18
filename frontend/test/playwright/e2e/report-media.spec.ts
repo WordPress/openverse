@@ -13,7 +13,7 @@ import {
 } from "~~/test/playwright/utils/analytics"
 
 import { supportedMediaTypes } from "~/constants/media"
-import { ReportReason } from "~/constants/content-report"
+import type { ReportReason } from "~/constants/content-report"
 
 test.describe.configure({ mode: "parallel" })
 
@@ -57,13 +57,12 @@ const submitDmcaReport = async (page: Page, context: BrowserContext) => {
     })
   })
   await page.click('text="Infringes copyright"')
-  const [newPage] = await Promise.all([
-    context.waitForEvent("page"),
-    await page.click('text="Open form"'), // Opens a new tab
-  ])
-  await newPage.waitForLoadState()
+
+  await page.click('text="Open form"')
+  await page.waitForURL(/forms/)
+
   // Return the beginning of the url, without parameters
-  return newPage.url().split("/forms/")[0] + "/forms/"
+  return page.url().split("/forms/")[0] + "/forms/"
 }
 
 // todo: Test a sensitive report with the optional description field

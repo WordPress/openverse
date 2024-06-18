@@ -2,6 +2,7 @@ import { expect, Page, test } from "@playwright/test"
 
 import {
   isDialogOpen,
+  openAndCloseExternalLink,
   preparePageForTests,
   scrollToBottom,
 } from "~~/test/playwright/utils/navigation"
@@ -63,21 +64,17 @@ test.describe("Header internal", () => {
       expect(scrollPosition).toBeGreaterThan(100)
     })
 
-    test("the modal opens an external link in a new window and it closes the modal", async ({
+    test("the modal opens an external link in the same window and the modal is closed on back click", async ({
       page,
     }) => {
       await page.goto("/about")
       await scrollToBottom(page)
       await clickMenuButton(page)
 
-      // Open the external link in a new tab, close the tab
-      const [popup] = await Promise.all([
-        page.waitForEvent("popup"),
-        page.locator('div[role="dialog"] >> text=API').click(),
-      ])
-      await popup.close()
-      // If we want the modal to stay open, we'll need to change this to `true`,
-      // and implement the change
+      await openAndCloseExternalLink(page, {
+        locator: page.locator('div[role="dialog"] >> text=API'),
+      })
+
       expect(await isDialogOpen(page)).toBe(false)
     })
 

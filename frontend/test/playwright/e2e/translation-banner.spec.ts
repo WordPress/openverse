@@ -15,11 +15,8 @@ test.describe("translation banner", () => {
     await page.goto(localeSearchPath)
     await expect(page.locator("text= 100")).toBeVisible({ timeout: 500 })
 
-    const [page1] = await Promise.all([
-      page.waitForEvent("popup"),
-      page.click("text=contributing a translation"),
-    ])
-    await expect(page1).toHaveURL(
+    await page.click("text=contributing a translation")
+    await expect(page).toHaveURL(
       `https://translate.wordpress.org/projects/meta/openverse/${locale}/default/`
     )
   })

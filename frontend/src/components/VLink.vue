@@ -40,20 +40,17 @@
  * Links with `href` starting with `/` are treated as internal links.
  *
  * Internal links use `NuxtLink` component with `to` attribute set to `localePath(href)`
- * External links use `a` element. If `href` does not start with `#`, they are set to
- * open in a new tab.
+ * External links use `a` element, and open in the same tab.
  */
 import { computed, defineComponent } from "vue"
 import { useContext } from "@nuxtjs/composition-api"
-
-import { useAnalytics } from "~/composables/use-analytics"
 
 import { defineEvent } from "~/types/emits"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 
 type InternalLinkProps = { to: string }
-type ExternalLinkProps = { target: string; rel: string }
+type ExternalLinkProps = { rel: string }
 type DisabledLinkProps = { role: string }
 type LinkProps =
   | InternalLinkProps
@@ -128,20 +125,20 @@ export default defineComponent({
           return null
         } else {
           // External link should open in a new tab
-          return { target: "_blank", rel: "noopener noreferrer" }
+          return { rel: "noopener noreferrer" }
         }
       }
       // if href is undefined, return props that make the link disabled
       return { role: "link" }
     })
 
-    const { sendCustomEvent } = useAnalytics()
+    const { $sendCustomEvent } = useContext()
 
     const handleExternalClick = () => {
       if (!checkHref(props) || !props.sendExternalLinkClickEvent) {
         return
       }
-      sendCustomEvent("EXTERNAL_LINK_CLICK", {
+      $sendCustomEvent("EXTERNAL_LINK_CLICK", {
         url: props.href,
       })
     }

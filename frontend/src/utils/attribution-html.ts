@@ -122,7 +122,7 @@ const licenseElementImg = (licenseElement: LicenseElement): string => {
  * @returns the HTML markup of the `<a>` tag
  */
 const extLink = (href: string, text: string) =>
-  h("a", { target: "_blank", rel: "noopener noreferrer", href }, [text])
+  h("a", { rel: "noopener noreferrer", href }, [text])
 
 /* Interfaces */
 

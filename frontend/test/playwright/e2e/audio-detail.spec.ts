@@ -4,7 +4,10 @@ import {
   collectAnalyticsEvents,
   expectEventPayloadToMatch,
 } from "~~/test/playwright/utils/analytics"
-import { preparePageForTests } from "~~/test/playwright/utils/navigation"
+import {
+  openAndCloseExternalLink,
+  preparePageForTests,
+} from "~~/test/playwright/utils/navigation"
 import { t } from "~~/test/playwright/utils/i18n"
 import { getH1 } from "~~/test/playwright/utils/components"
 
@@ -42,12 +45,9 @@ test("sends GET_MEDIA event on CTA button click", async ({ context, page }) => {
   const analyticsEvents = collectAnalyticsEvents(context)
 
   await goToCustomAudioPage(page)
-
-  const pagePromise = context.waitForEvent("page")
-  await page.getByRole("link", { name: /get this audio/i }).click()
-
-  const newPage = await pagePromise
-  newPage.close()
+  await openAndCloseExternalLink(page, {
+    name: new RegExp(t("audioDetails.weblink"), "i"),
+  })
 
   const getMediaEvent = analyticsEvents.find((event) => event.n === "GET_MEDIA")
 

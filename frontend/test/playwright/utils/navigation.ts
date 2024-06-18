@@ -448,3 +448,20 @@ export const skipToContent = async (page: Page) => {
   // Skip to content
   await page.keyboard.press(keycodes.Enter)
 }
+
+export const openAndCloseExternalLink = async (
+  page: Page,
+  { name, locator }: { name?: string | RegExp | undefined; locator?: Locator }
+) => {
+  if (!name && !locator) {
+    throw new Error("Either name or locator must be provided")
+  }
+  const externalLink: Locator = locator ?? page.getByRole("link", { name })
+  const externalLinkUrl = await externalLink.getAttribute("href")
+  if (!externalLinkUrl) {
+    throw new Error("External link URL not found")
+  }
+  await externalLink.click()
+
+  await page.goBack()
+}
