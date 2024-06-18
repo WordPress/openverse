@@ -69,7 +69,7 @@ def trim_and_deduplicate_tags():
                                     )
                                 )
                             FROM (
-                                SELECT DISTINCT ON (tag->>'name', tag->'provider')
+                                SELECT DISTINCT ON (trimmed_name, tag->'provider')
                                     trim(tag->>'name') trimmed_name,
                                     tag
                                 FROM jsonb_array_elements({media_type}.tags || '[]'::jsonb) tag
