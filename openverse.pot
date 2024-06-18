@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2024-05-30T16:29:34+00:00\n"
+"POT-Creation-Date: 2024-06-18T10:23:26+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -25,7 +25,7 @@ msgstr ""
 
 #: src/components/VHomepageContent.vue:6
 msgctxt "hero.subtitle"
-msgid "Explore more than 700 million creative works"
+msgid "Explore more than 800 million creative works"
 msgstr ""
 
 #: src/components/VHomepageContent.vue:10
@@ -220,7 +220,7 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/pages/about.vue:11
 msgctxt "about.collection.content.a"
-msgid "###openverse### searches across more than 700 million images and audio tracks from open APIs and the ###commonCrawl### dataset."
+msgid "###openverse### searches across more than 800 million images and audio tracks from open APIs and the ###commonCrawl### dataset."
 msgstr ""
 
 #: src/pages/about.vue:17
