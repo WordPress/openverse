@@ -44,14 +44,26 @@ _timeout = aiohttp.ClientTimeout(total=2)
 
 
 async def _head(url: str, session: aiohttp.ClientSession) -> tuple[str, int]:
+    start_time = time.time()
+
     try:
         response = await session.head(
             url, allow_redirects=False, headers=HEADERS, timeout=_timeout
         )
-        return url, response.status
+        status = response.status
     except (aiohttp.ClientError, asyncio.TimeoutError) as exception:
         _log_validation_failure(exception)
-        return url, -1
+        status = -1
+
+    end_time = time.time()
+    logger.info(
+        "dead_link_validation_timing",
+        url=url,
+        status=status,
+        time=end_time - start_time,
+    )
+
+    return url, status
 
 
 # https://stackoverflow.com/q/55259755
