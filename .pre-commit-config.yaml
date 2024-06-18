@@ -107,6 +107,8 @@ repos:
             "frontend/test/locales/*.json",
             "-S",
             "pnpm-lock.yaml",
+            "-S",
+            "**/pdm.lock",
             # Write changes in place
             "-w",
           ]

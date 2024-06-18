@@ -13,9 +13,9 @@ x-airflow-common: &airflow-common
   build:
     target: cat
     args: # Automatically inferred from env vars, unless specified
-      - REQUIREMENTS_FILE=requirements-dev.txt
       - CATALOG_PY_VERSION
       - CATALOG_AIRFLOW_VERSION
+      - PDM_EXPORT_ARGS=--dev
   volumes:
     - .:/opt/airflow/catalog:z
     - catalog-cache:/home/airflow/.cache

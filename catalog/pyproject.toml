@@ -1,0 +1,97 @@
+
+[project]
+name = "openverse-catalog"
+version = "0.0.0" # redundant for application
+description = "Airflow DAGs for Openverse's data catalog"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+  {name = "Openverse Contributors", email = "openverse@wordpress.org"},
+]
+
+requires-python = "==3.12.*"
+
+# Unpinned packages have their versions determined by `apache-airflow`
+# locked and resolved by PDM
+dependencies = [
+    "apache-airflow[amazon,postgres,http,elasticsearch]==2.9.1",
+    "lxml",
+    "psycopg2-binary",
+    "requests-file==2.0.*",
+    "requests-oauthlib",
+    "retry==0.9.2",
+    "tabulate==0.9.0",
+    "tldextract==5.1.2",
+]
+
+[tool.pdm]
+distribution = false
+
+[tool.pdm.dev-dependencies]
+# See on `project.dependencies` regarding unpinned dependencies
+dev = [
+    "flaky==3.8.1",
+    "ipython",
+    "pook==1.4.3",
+    "pytest-env",
+    "pytest-mock",
+    "pytest-raises==0.11",
+    "pytest-socket==0.7.0",
+    "pytest-sugar==0.9.7",
+    "pytest-xdist",
+]
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[tool.pytest.ini_options]
+#### Descriptions ####
+# FLAKY
+#   https://github.com/box/flaky#shorter-flaky-report
+#   no-success-flaky-report: Suppress successful flaky tests
+# XDIST
+#   https://pypi.org/project/pytest-xdist/#running-tests-across-multiple-cpus
+#   numprocesses: number of test workers to spin up
+#   dist: how to distribute tests across workers
+# SOCKET
+#   https://github.com/miketheman/pytest-socket#usage
+#   disable-socket: turn off socket access by default to prevent HTTP requests during tests
+#   allow-unix-socket: allow system sockets (e.g. async) to be used
+addopts = [
+    "--no-success-flaky-report",
+    "--numprocesses", "auto",
+    "--dist", "loadscope",
+    "--disable-socket",
+    "--allow-unix-socket"
+]
+
+
+filterwarnings = [
+    # https://docs.sqlalchemy.org/en/20/errors.html#error-b8d9
+    # Warning in dependency, nothing we can do
+    # "removed"/"remoevd" is due to https://github.com/pallets/flask
+    "ignore:.*is deprecated and will be (remoevd|removed) in Flask 2.3.:DeprecationWarning",
+
+    # Warning in dependency, nothing we can do
+    "ignore:distutils Version classes are deprecated. Use packaging.version instead:DeprecationWarning",
+]
+
+# Change the pytest cache location since Docker cannot write within the module file
+# structure due to permissions issues
+# https://stackoverflow.com/a/56493748/3277713
+cache_dir = "/home/airflow/.cache/pytest"
+
+env = [
+    "AIRFLOW_VAR_API_KEY_BROOKLYN_MUSEUM=apikey",
+    "AIRFLOW_VAR_API_KEY_DATA_GOV=apikey",
+    "AIRFLOW_VAR_API_KEY_EUROPEANA=apikey",
+    "AIRFLOW_VAR_API_KEY_FLICKR=apikey",
+    "AIRFLOW_VAR_API_KEY_FREESOUND=apikey",
+    "AIRFLOW_VAR_API_KEY_JAMENDO=apikey",
+    "AIRFLOW_VAR_API_KEY_JUSTTAKEITFREE=apikey",
+    "AIRFLOW_VAR_API_KEY_NYPL=apikey",
+    "AIRFLOW_VAR_API_KEY_RAWPIXEL=apikey",
+    "AIRFLOW_VAR_API_KEY_THINGIVERSE=apikey",
+    "AIRFLOW_VAR_API_KEY_WALTERS_ART_MUSEUM=apikey",
+]

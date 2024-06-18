@@ -16,8 +16,8 @@ SERVICE := env_var_or_default("SERVICE", "scheduler")
 # Version #
 ###########
 
-export CATALOG_PY_VERSION := `grep '# PYTHON' requirements-prod.txt | awk -F= '{print $2}'`
-export CATALOG_AIRFLOW_VERSION := `grep '^apache-airflow' requirements-prod.txt | awk -F= '{print $3}'`
+export CATALOG_PY_VERSION := `grep 'requires-python' pyproject.toml | awk -F'"' '{print $2}' | sed 's/^==//g; s/\.\*$//g'`
+export CATALOG_AIRFLOW_VERSION := `grep '^    "apache-airflow' pyproject.toml | awk -F= '{print $3}' | sed 's/",//g;'`
 
 # Print the required Python version
 @py-version:

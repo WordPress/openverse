@@ -5,12 +5,24 @@
 ARG CATALOG_PY_VERSION
 ARG CATALOG_AIRFLOW_VERSION
 
+FROM docker.io/python:${CATALOG_PY_VERSION}-slim as requirements-exporter
+
+RUN pip install pdm
+
+COPY pyproject.toml pdm.lock ./
+
+# Pass additional arguments when installing Python packages with PDM
+ARG PDM_EXPORT_ARGS='--prod'
+
+RUN pdm export $PDM_EXPORT_ARGS > /requirements.txt
+
+# args go out of scope when a new build stage starts so it must be redeclared here
+ARG CATALOG_PY_VERSION
+ARG CATALOG_AIRFLOW_VERSION
+
 FROM apache/airflow:slim-${CATALOG_AIRFLOW_VERSION}-python${CATALOG_PY_VERSION} as cat
 
 LABEL org.opencontainers.image.source = "https://github.com/WordPress/openverse"
-
-# Build-time arguments, with sensible defaults
-ARG REQUIREMENTS_FILE=requirements-prod.txt
 
 # Path configurations
 ENV AIRFLOW_HOME=/opt/airflow
@@ -56,17 +68,14 @@ RUN mkdir -p ${OUTPUT_DIR} /home/airflow/.cache && \
 USER airflow
 
 WORKDIR  ${AIRFLOW_HOME}
-# Always add the prod req because the dev reqs depend on it for deduplication
-COPY ${REQUIREMENTS_FILE} requirements-prod.txt ${AIRFLOW_HOME}/
 
 # args go out of scope when a new build stage starts so it must be redeclared here
 ARG CATALOG_PY_VERSION
 ARG CATALOG_AIRFLOW_VERSION
 
-# https://airflow.apache.org/docs/apache-airflow/stable/installation/installing-from-pypi.html#constraints-files
-ARG CONSTRAINTS_FILE="https://raw.githubusercontent.com/apache/airflow/constraints-${CATALOG_AIRFLOW_VERSION}/constraints-${CATALOG_PY_VERSION}.txt"
+COPY --from=requirements-exporter /requirements.txt ./
 
-RUN pip install -r ${REQUIREMENTS_FILE} -c ${CONSTRAINTS_FILE}
+RUN pip install -r ./requirements.txt
 
 COPY entrypoint.sh /opt/airflow/entrypoint.sh
 COPY variables.tsv /opt/airflow/variables.tsv
