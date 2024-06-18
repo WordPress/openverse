@@ -76,7 +76,7 @@ const collectionKeys = {
 export function getCountKey(resultsCount: number): keyof KeyCollection {
   return resultsCount === 0
     ? "zero"
-    : resultsCount >= 10000
+    : resultsCount >= 240
       ? "countMore"
       : "count"
 }
@@ -130,7 +130,7 @@ export function useI18nResultsCount() {
   /**
    * Returns the localized text for the number of search results, using corresponding
    * pluralization rules and decimal separators.
-   * E.g. "No results", "3,567 results", "Over 10,000 results".
+   * E.g. "No results", "132 results", "Top 240 results".
    */
   const getI18nCount = (resultsCount: number) => {
     return i18n.tc(getI18nKey(resultsCount, ALL_MEDIA), resultsCount, {

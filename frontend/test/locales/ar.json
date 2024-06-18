@@ -897,24 +897,24 @@
         "audio": {
           "zero": "No audio files provided by this source",
           "count": "{count} audio file provided by this source. {count}",
-          "countMore": "Over {count} audio files provided by this source"
+          "countMore": "Top {count} audio files provided by this source"
         },
         "image": {
           "zero": "No images provided by this source",
           "count": "{count} image provided by this source. {count} images provided by this source",
-          "countMore": "Over {count} images provided by this source"
+          "countMore": "Top {count} images provided by this source"
         }
       },
       "tag": {
         "audio": {
           "zero": "لا ملفات صوتية مع علامة مختارة",
           "count": "{count} {count}",
-          "countMore": "Over {count} audio files with the selected tag"
+          "countMore": "Top {count} audio files with the selected tag"
         },
         "image": {
           "zero": "لا صور مع العلامة المختارة",
           "count": "{count} {count} الصور مع علامة مختارة",
-          "countMore": "Over {count} images with the selected tag"
+          "countMore": "Top {count} images with the selected tag"
         }
       }
     }
