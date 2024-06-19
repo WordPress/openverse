@@ -40,7 +40,6 @@ ES[(Elasticsearch)]
 
     TT --> A
     ESF --> ES
-    ING --> A
     A --> IC2 --> A
     A --> ESF
     subgraph DJA [DjangoAPI]
