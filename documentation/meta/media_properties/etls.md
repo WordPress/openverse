@@ -81,6 +81,7 @@ ES[(Elasticsearch)]
     click IC2 "#index-constraints-api"
     click ESF "#es-index-creation-filtering"
     click DL "#dead-link-filtering"
+    click AS "#api-serializers"
     click ATG "#attribution-generation"
 ```
 
@@ -193,11 +194,28 @@ which includes:
 When records are retrieved from Elasticsearch, they also go through a process
 called "dead link filtering". This operation attempts to remove links to media
 which the API may have trouble accessing in order to prevent dead or invalid
-links from being surfaced in API results. The full set of dead link logic can be
-found in the
+links from being surfaced in API results. This process both reads from and
+writes to Redis, where information about valid/invalid URLs is cached.
+
+The full set of dead link logic can be found in the
 [`check_dead_link` module](https://github.com/WordPress/openverse/tree/main/api/api/utils/check_dead_links/__init__.py).
 
+### API serializers
+
+An additional transformation occurs after a record is retrieved from the
+database (and once it has been validated by the dead link filtering). This step
+includes any transformations that required in hydrating the database record and
+converting it into a JSON object which is sent to the requester.
+
+Serializations can be found
+[in the codebase under `api/api/serializers`](https://github.com/WordPress/openverse/tree/main/api/api/serializers).
+
 ### Attribution generation
+
+The frontend also modifies results before displaying them to a user. This
+includes generating attributions in multiple formats. The full attribution
+generation code
+[can be found in `attribution-html.ts`](https://github.com/WordPress/openverse/tree/main/frontend/src/utils/attribution-html.ts).
 
 ## Proposed
 
@@ -268,10 +286,11 @@ ES[(Elasticsearch)]
     click M "#mediastore-transformations"
     click IC1 "#index-constraints-catalog"
     click B "#batched-update"
-    click ING "#cleanup-filtering-deleted-media-removal"
+    click ING "#deleted-media-tag-filtering"
     click IC2 "#index-constraints-api"
     click ESF "#es-index-creation-filtering"
     click DL "#dead-link-filtering"
+    click AS "#api-serializers"
     click ATG "#attribution-generation"
 ```
 
