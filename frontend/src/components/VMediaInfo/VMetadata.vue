@@ -86,7 +86,7 @@ export default defineComponent({
         return
       }
       sendCustomEvent("VISIT_SOURCE_LINK", {
-        id: route.value.params.id,
+        id: route.value?.params?.id,
         source,
       })
     }

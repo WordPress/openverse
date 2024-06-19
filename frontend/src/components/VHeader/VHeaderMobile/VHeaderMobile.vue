@@ -362,7 +362,7 @@ export default defineComponent({
     })
 
     const route = useRoute()
-    const routeSearchTerm = computed(() => route.value.query.q)
+    const routeSearchTerm = computed(() => route.value?.query?.q)
     watch(routeSearchTerm, (newSearchTerm) => {
       const term = Array.isArray(newSearchTerm)
         ? newSearchTerm[0]
