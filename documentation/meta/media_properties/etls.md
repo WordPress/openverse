@@ -14,6 +14,10 @@ transformation steps that might happen at each stage.
 ```{mermaid}
 flowchart TD
 
+%% DBs
+A[(API DB)]
+ES[(Elasticsearch)]
+
 %% Graph definitions
     subgraph AF [Airflow]
     P{{Provider}} --> M(MediaStore):::ETL
@@ -24,23 +28,49 @@ flowchart TD
     end
 
     subgraph IS [Ingestion Server]
-    C --> ING(Deleted media removal):::ETL
+    %% ETLs
+    ING(Deleted media removal):::ETL
+    IC2(Index constraints):::ETL
+    ESF(Index creation & deleted media filtering):::ETL
+
+    C --> ING
     ING --> TT[(Temp Table)]
     TT --> CF(Cleaning & filtering):::ETL --> TT
-    TT --> A[(API DB)]
-    A --> IC2(Index constraints):::ETL --> A
-    A --> ESF(Index creation & deleted media filtering):::ETL
-    ESF --> ES[(Elasticsearch)]
     end
 
-    A --> DL(Dead link filtering):::ETL
-    DL --> CL[Client]
-    CL --> F[Frontend]
+    TT --> A
+    ESF --> ES
+    ING --> A
+    A --> IC2 --> A
+    A --> ESF
+    subgraph DJA [DjangoAPI]
+    %% ETLs
+    DL(Dead link filtering):::ETL
+    AS(API seralizers):::ETL
+    R[(Redis)] --> DL --> R
+    end
+
+    %% Connections for the API
+    ES --> DL
+    DL --> A
+    A --> AS
+
+    subgraph F [Frontend]
+    ATG(Attribution generation):::ETL
+    end
+
+    %% External connections
+    AS --> ATG
+    AS --> CL[External Client]
+    ATG --> CL
 
 %% Style definitions
+    style AF fill:#00c7d4
     style IS fill:#ffc83d
-    style AF fill:#00c7d4,margin-left:12em
+    style DJA fill:orange
+    style F fill:lightgreen
     classDef ETL fill:#fa7def
+
 
 %% Reference definitions
     click M "#mediastore-transformations"
@@ -51,6 +81,7 @@ flowchart TD
     click IC2 "#index-constraints-api"
     click ESF "#es-index-creation-filtering"
     click DL "#dead-link-filtering"
+    click ATG "#attribution-generation"
 ```
 
 ### MediaStore transformations
@@ -166,6 +197,8 @@ links from being surfaced in API results. The full set of dead link logic can be
 found in the
 [`check_dead_link` module](https://github.com/WordPress/openverse/tree/main/api/api/utils/check_dead_links/__init__.py).
 
+### Attribution generation
+
 ## Proposed
 
 The projects #430, #431, and #3925 all intent to modify the above process. Below
@@ -176,36 +209,70 @@ Most blocks reference the same sections above, with the exception being
 ```{mermaid}
 flowchart TD
 
+%% DBs
+A[(API DB)]
+ES[(Elasticsearch)]
+
 %% Graph definitions
     subgraph AF [Airflow]
-    P{{Provider}} --> M(MediaStore):::ETL
+    %% ETLs
+    M(MediaStore):::ETL
+    IC1(Index constraints):::ETL
+    B(Batched update):::ETL
+    ING(Deleted media & tag filtering):::ETL
+    IC2(Index constraints):::ETL
+    ESF(Index creation & deleted media filtering):::ETL
+
+    P{{Provider}} --> M
     M --> T{{TSV}}
-    T --> IC1(Index constraints):::ETL
+    T --> IC1
     IC1 --> C[(Catalog DB)]
-    C --> B(Batched update):::ETL --> C
-    C --> ING(Deleted media & tag filtering):::ETL
-    ING --> A[(API DB)]
-    A --> IC2(Index constraints):::ETL --> A
-    A --> ESF(Index creation & deleted media filtering):::ETL
-    ESF --> ES[(Elasticsearch)]
+    C --> B --> C
+    C --> ING
     end
 
-    A --> DL(Dead link filtering):::ETL
-    DL --> CL[Client]
-    CL --> F[Frontend]
+    %% Connections for the data refresh
+    ESF --> ES
+    ING --> A
+    A --> IC2 --> A
+    A --> ESF
+
+    subgraph DJA [DjangoAPI]
+    %% ETLs
+    DL(Dead link filtering):::ETL
+    AS(API seralizers):::ETL
+    R[(Redis)] --> DL --> R
+    end
+
+    %% Connections for the API
+    ES --> DL
+    DL --> A
+    A --> AS
+
+    subgraph F [Frontend]
+    ATG(Attribution generation):::ETL
+    end
+
+    %% External connections
+    AS --> ATG
+    AS --> CL[External Client]
+    ATG --> CL
 
 %% Style definitions
     style AF fill:#00c7d4,margin-left:12em
+    style DJA fill:orange
+    style F fill:lightgreen
     classDef ETL fill:#fa7def
 
 %% Reference definitions
     click M "#mediastore-transformations"
     click IC1 "#index-constraints-catalog"
     click B "#batched-update"
-    click ING "#deleted-media-tag-filtering"
+    click ING "#cleanup-filtering-deleted-media-removal"
     click IC2 "#index-constraints-api"
     click ESF "#es-index-creation-filtering"
     click DL "#dead-link-filtering"
+    click ATG "#attribution-generation"
 ```
 
 ### Deleted media & tag filtering
