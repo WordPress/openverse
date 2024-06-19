@@ -14,3 +14,4 @@ and are the primary shepherds for the Openverse project.
 - @obulat
 - @sarayourfriend
 - @stacimc
+- @zackkrida
