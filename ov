@@ -89,10 +89,12 @@ stop)
   ;;
 
 clean)
-  docker kill openverse-dev-env
-  docker rm openverse-dev-env
-  docker rmi openverse-dev-env
-  docker volume rm openverse-dev-env
+  # Using `|| true` allows these commands to be skipped if the
+  # container, image or volume does not exist.
+  docker container stop openverse-dev-env || true
+  docker container rm openverse-dev-env || true
+  docker image rm openverse-dev-env || true
+  docker volume rm openverse-dev-env || true
   ;;
 
 hook)
