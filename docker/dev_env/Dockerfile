@@ -60,8 +60,6 @@ RUN bash -c 'chmod -Rv 0777 /opt'
 # Avoid overwriting `.venv`'s from the host
 ENV PDM_VENV_IN_PROJECT="False"
 
-COPY entrypoint.sh /entrypoint.sh
-
-ENTRYPOINT ["/entrypoint.sh"]
-
-CMD ["/bin/sh"]
+# The fedora container's default entrypoint + command behaviour is to keep running
+# so we do not need to modify entrypoint and command to use the container as a
+# persistent environment.

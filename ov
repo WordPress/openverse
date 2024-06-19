@@ -17,29 +17,43 @@ if [[ $_cmd == "help" || -z $_cmd ]]; then
 Openverse development toolkit
 
 USAGE
-  ov <subcommand> [args]
+  ov <subcommand> [...ARGS]
 
 COMMANDS
   ov init
     Initialise the Openverse development toolkit for the first time
     Alias for:
 
-        ov build && ov just install-hooks
+        ov build && ov setup-env && ov just install-hooks && ov just init-ov-aliases
 
-  ov build
-    Build the Openverse development toolkit Docker image
+  ov build [...ARGS]
+    Build the Openverse development toolkit Docker image.
+    ARGS are passed to `docker build`. See `docker build --help` for options.
+
+  ov setup-env
+    Setup the environment inside the container. `ov init` automatically runs this,
+    and in most cases you should not need to run this manually. However, you may
+    occasionally need to run it manually if tool requirements inside the container
+    change. This can also be a helpful debugging step if tools in the container are
+    not working as expected.
+
+  ov stop
+    Stop the persistent `ov` Docker container.
 
   ov clean
-    Remove the Openverse development toolkit Docker image and volume
+    Remove the Openverse development toolkit Docker container, image and volume.
     Use in conjunction with `ov init` to recreate the environment from
     scratch:
 
         ov clean && ov init
 
+    Warning: running `ov clean` will result in needing to fully rebuild the environment
+    including downloading tools handled by `ov setup-env` and pre-commit environments.
+
   ov hook HOOK
     Run Git hooks through pre-commit inside the development toolkit container
 
-  ov COMMAND
+  ov COMMAND [...ARGS]
     Run COMMAND inside the development toolkit container
     Hints: The toolkit comes loaded with many tools for working with Openverse! Try
     some of the following:
@@ -57,14 +71,27 @@ fi
 case "$_cmd" in
 init)
   "$_self" build
-  "$_self" 'just install-hooks && just init-ov-aliases'
+  "$_self" setup-env
+  "$_self" just install-hooks
+  "$_self" just init-ov-aliases
   ;;
 
 build)
-  docker build -t openverse-dev-env:latest "$dev_env"
+  docker build "${@:2}" -t openverse-dev-env:latest "$dev_env"
+  ;;
+
+setup-env)
+  "$_self" bash "$dev_env"/setup_env.sh
+  ;;
+
+stop)
+  docker stop openverse-dev-env
   ;;
 
 clean)
+  docker kill openverse-dev-env
+  docker rm openverse-dev-env
+  docker rmi openverse-dev-env
   docker volume rm openverse-dev-env
   ;;
 
