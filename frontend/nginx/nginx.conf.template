@@ -21,7 +21,7 @@ log_format json_combined escape=json
     '"request_time":"$request_time",'
     '"http_referrer":"$http_referer",'
     '"http_user_agent":"$http_user_agent",'
-    '"upstream_response_time":$upstream_response_time,'
+    '"upstream_response_time":"$upstream_response_time",'
     '"upstream_cache_status":"$upstream_cache_status",'
     '"http_x_forwarded_for":"$http_x_forwarded_for"'
     '}';
