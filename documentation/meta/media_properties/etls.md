@@ -42,7 +42,7 @@ ES[(Elasticsearch)]
     ESF --> ES
     A --> IC2 --> A
     A --> ESF
-    subgraph DJA [DjangoAPI]
+    subgraph DJA [Django API]
     %% ETLs
     DL(Dead link filtering):::ETL
     AS(API seralizers):::ETL
@@ -218,7 +218,7 @@ generation code
 
 ## Proposed
 
-The projects #430, #431, and #3925 all intent to modify the above process. Below
+The projects #430, #431, and #3925 all intend to modify the above process. Below
 is the diagram of what this process might look like after all steps are taken.
 Most blocks reference the same sections above, with the exception being
 [Deleted media & tag filtering](#deleted-media--tag-filtering).
@@ -254,7 +254,7 @@ ES[(Elasticsearch)]
     A --> IC2 --> A
     A --> ESF
 
-    subgraph DJA [DjangoAPI]
+    subgraph DJA [Django API]
     %% ETLs
     DL(Dead link filtering):::ETL
     AS(API seralizers):::ETL
