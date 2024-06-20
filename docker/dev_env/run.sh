@@ -13,7 +13,7 @@ shared_args=(
   -i
   --env "OPENVERSE_PROJECT=$OPENVERSE_PROJECT"
   --env "TERM=xterm-256color"
-  --workdir "$CWD"
+  --workdir "$(pwd)"
 )
 
 run_args=(
@@ -104,4 +104,4 @@ else
   docker start "$existing_container_id" 1>/dev/null
 fi
 
-docker exec "${shared_args[@]}" "$container_name" python3 docker/dev_env/exec.py "${_cmd[@]}"
+docker exec "${shared_args[@]}" "$container_name" python3 "$OPENVERSE_PROJECT"/docker/dev_env/exec.py "${_cmd[@]}"
