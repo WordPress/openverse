@@ -13,7 +13,7 @@ shared_args=(
   -i
   --env "OPENVERSE_PROJECT=$OPENVERSE_PROJECT"
   --env "TERM=xterm-256color"
-  --workdir "$OPENVERSE_PROJECT"
+  --workdir "$CWD"
 )
 
 run_args=(
