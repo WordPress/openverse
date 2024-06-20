@@ -3,6 +3,19 @@
 import datetime
 
 
+def _time_fmt(timestamp: int) -> str | None:
+    """
+    Format the timestamp into a human-readable date and time notation.
+
+    :param timestamp: the timestamp to format
+    :return: the human-readable form of the timestamp
+    """
+
+    if timestamp == 0:
+        return None
+    return str(datetime.datetime.utcfromtimestamp(timestamp))
+
+
 class TaskTracker:
     def __init__(self):
         self.tasks = {}
@@ -25,19 +38,6 @@ class TaskTracker:
         :param task_id: the ID of the task to get the status for
         :return: response dictionary containing all relevant info about the task
         """
-
-        def _time_fmt(timestamp: int) -> str | None:
-            """
-            Format the timestamp into a human-readable date and time notation.
-
-            :param timestamp: the timestamp to format
-            :return: the human-readable form of the timestamp
-            """
-
-            if timestamp == 0:
-                return None
-            return str(datetime.datetime.utcfromtimestamp(timestamp))
-
         task_info = self.tasks[task_id]
         active = task_info["task"].is_alive()
         model = task_info["model"]
