@@ -354,6 +354,7 @@ class AbstractMediaDecisionThrough(models.Model):
         to_field="identifier",
         on_delete=models.CASCADE,
         db_column="identifier",
+        db_constraint=False,
     )
     decision = models.ForeignKey(AbstractMediaDecision, on_delete=models.CASCADE)
 
