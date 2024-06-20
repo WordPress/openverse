@@ -68,7 +68,8 @@ point, reporting the incident is complete.
       alarm. Search the
       [runbook documentation](/meta/monitoring/runbooks/index.md) for useful
       information.
-      1. Understanding [service deployment mechanisms](/general/deployment.md)
+      1. Understanding
+         [service deployment mechanisms](/meta/release_and_deployment/index.md)
          will likely be useful.
       2. Traffic anomalies? See
          [this guide](/meta/monitoring/traffic/runbooks/identifying-and-blocking-traffic-anomalies.md)

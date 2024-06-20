@@ -18,7 +18,8 @@ the previous version if necessary.
 
 [traffic_runbook]:
   /meta/monitoring/traffic/runbooks/identifying-and-blocking-traffic-anomalies.md
-[rollback_docs]: /general/deployment.md#rollbacks
+[rollback_docs]:
+  /meta/release_and_deployment/index.md#force-a-deployment-to-a-specific-version-roll-back-redeploy-re-run-etc
 
 ## Historical false positives
 

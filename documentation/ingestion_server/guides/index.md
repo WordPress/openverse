@@ -7,7 +7,6 @@ quickstart
 config
 mapping
 test
-deploy
 migrate
 upgrade
 troubleshoot

@@ -1,5 +1,9 @@
 # Deployment runbook
 
+```{tip}
+For more information on how deployments work, please see the [general deployment guide](/meta/release_and_deployment/index.md).
+```
+
 ## Setup
 
 1. Check [Airflow](https://airflow.openverse.org/home?tags=data_refresh) to make

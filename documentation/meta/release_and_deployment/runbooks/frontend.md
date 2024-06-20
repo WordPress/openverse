@@ -1,16 +1,18 @@
 # Deployment runbook
 
 ```{tip}
-For more information on how deployments work, please see the [general deployment guide](/general/deployment.md).
+For more information on how deployments work, please see the [general deployment guide](/meta/release_and_deployment/index.md).
 ```
 
-1. [Publish the drafted frontend release in the GitHub release page of the monorepo](https://github.com/WordPress/openverse/releases?q=frontend-)
-   - Here you can preview the changes included in the frontend release and
-     decide whether a release is necessary and adjust monitoring during the
-     deployment accordingly.
-1. That's it. The frontend will be deployed. You can monitor the deployment in
-   the maintainers `#openverse-notifications` channel and in the
-   [infrastructure repository's workflow listing](https://github.com/WordPress/openverse-infrastructure/actions).
+## Publish the release
+
+[Publish the drafted frontend release in the GitHub release page of the monorepo](/meta/release_and_deployment/index.md#how-to-publish-a-release).
+
+## Deployment
+
+Publishing the release will automatically trigger a deployment. You can monitor
+the deployment in the maintainers `#openverse-notifications` channel and in the
+[infrastructure repository's workflow listing](https://github.com/WordPress/openverse-infrastructure/actions).
 
 ## Post-deployment steps
 
@@ -21,12 +23,8 @@ For more information on how deployments work, please see the [general deployment
    verify the SHA is the same as the value you deployed.
 1. Review and Approve the automatically-generated changelog pull request in the
    repository.
-1. rollback the application by running the appropriate deployment workflow from
-   the WordPress/openverse-infrastructure repository using the tag of the latest
-   stable version. You can find the release version number in the
-   [changelogs](/changelogs/index), and then the tag to pass to the action is
-   the version number prefixed with "rel-", for example
-   "rel-2023.07.03.17.52.00".
+1. In the event of errors or problems,
+   [roll back the application](/meta/release_and_deployment/index.md#force-a-deployment-to-a-specific-version-roll-back-redeploy-re-run-etc).
 1. Add any new analytics events to Plausible:
 
    1. Visit
