@@ -1,0 +1,22 @@
+services:
+  catalog_indexer_worker:
+    profiles:
+      - api
+    build:
+      context: ./
+      args: # Automatically inferred from env vars, unless specified
+        - CATALOG_PY_VERSION
+    image: openverse-catalog_indexer_worker
+    ports:
+      - "50282:8003"
+    depends_on:
+      - db
+      - upstream_db
+      - es
+    volumes:
+      - .:/indexer_worker:z
+    env_file:
+      - env.docker
+      - .env
+    stdin_open: true
+    tty: true
