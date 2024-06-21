@@ -24,6 +24,10 @@ group:
         dest: .github/workflows/pr_automations.yml
       - source: .github/workflows/pr_automations_init.yml
         dest: .github/workflows/pr_automations_init.yml
+      - source: .github/actions/get-changes/action.yml
+        dest: .github/actions/get-changes/action.yml
+      - source: .github/filters.yml
+        dest: .github/filters.yml
       - source: .github/workflows/pr_label_check.yml
         dest: .github/workflows/pr_label_check.yml
       - source: .github/workflows/pr_ping.yml
