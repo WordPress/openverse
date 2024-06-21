@@ -84,6 +84,12 @@ ES[(Elasticsearch)]
     click ATG "#attribution-generation"
 ```
 
+```{note}
+The `Temp Table` referenced above is actually a table within the API database that
+gets swapped for the live production table once the processing steps on it are
+complete. This prevents us from having to operate on live data.
+```
+
 ### MediaStore transformations
 
 These transformations occur as part of the provider ingestion scripts as records
