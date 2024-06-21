@@ -251,7 +251,33 @@ jobs:
         uses: ./.github/actions/load-img
         with:
           run_id: ${{ github.run_id }}
-          setup_images: upstream_db catalog
+          setup_images: upstream_db
+
+      # Sets build args specifying versions needed to build Docker image.
+      - name: Prepare build args
+        id: prepare-build-args
+        run: |
+          just versions | tee "$GITHUB_OUTPUT"
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          install: true
+
+      - name: Build catalog dev image
+        uses: docker/build-push-action@v5
+        with:
+          context: catalog
+          target: cat
+          push: false
+          load: true
+          tags: openverse-catalog
+          cache-from: type=gha,scope=catalog_dev
+          cache-to: type=gha,scope=catalog_dev
+          build-args: |
+            CATALOG_PY_VERSION=${{ steps.prepare-build-args.outputs.catalog_py_version }}
+            CATALOG_AIRFLOW_VERSION=${{ steps.prepare-build-args.outputs.catalog_airflow_version }}
+            REQUIREMENTS_FILE=requirements-dev.txt
 
       - name: Run tests
         run: |
