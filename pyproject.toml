@@ -43,6 +43,7 @@ known-first-party = [
   "conf",
   "api",
   "ingestion_server",
+  "indexer_worker",
   "common",
   "data_refresh",
   "database",

@@ -1,0 +1,80 @@
+set dotenv-load := false
+
+COLOR := "\\033[0;34m"
+NO_COLOR := "\\033[0m"
+IS_CI := env_var_or_default("CI", "")
+
+# Show all available recipes
+@_default:
+    printf "\n{{ COLOR }}# Indexer Worker (path: \`indexer_worker/\`)\n"
+    printf "============================{{ NO_COLOR }}\n"
+    just --list --unsorted
+
+###########
+# Version #
+###########
+
+export CATALOG_PY_VERSION := `grep '# PYTHON' requirements-prod.txt | awk -F= '{print $2}'`
+export CATALOG_AIRFLOW_VERSION := `grep '^apache-airflow' requirements-prod.txt | awk -F= '{print $3}'`
+
+# Print the required Python version
+@py-version:
+    echo $CATALOG_PY_VERSION
+
+###########
+# Install #
+###########
+
+# Install dependencies
+install *args="--dev":
+    pipenv install {{ args }}
+
+######
+# Up #
+######
+
+# Bring up services specific to the indexer worker profile
+up *flags:
+    env COMPOSE_PROFILES="indexer_worker" just ../up {{ flags }}
+
+##########
+# Health #
+##########
+
+# Check the health of the service
+@health host="localhost:50282":
+    -curl -s -o /dev/null -w '%{http_code}' 'http://{{ host }}/healthcheck'
+
+# Wait for the service to be healthy
+@wait host="localhost:50282":
+    # The just command on the second line is executed in the context of the
+    # parent directory and so must be prefixed with `ingestion_server/`.
+    just ../_loop \
+    '"$(just indexer_worker/health {{ host }})" != "200"' \
+    "Waiting for the indexer-worker to be healthy..."
+
+########
+# cURL #
+########
+
+# Make a cURL POST request to the service with the given data
+curl-post data host="localhost:50281":
+    STATUS_CODE=$(curl \
+      -X POST \
+      -H 'Content-Type: application/json' \
+      -d '{{ data }}' \
+      -o /dev/stderr \
+      -w "%{http_code}" \
+      'http://{{ host }}/task'); \
+    if [ $STATUS_CODE -lt 200 ] || [ $STATUS_CODE -ge 300 ]; then \
+      echo "Status: $STATUS_CODE"; \
+      exit 1; \
+    fi
+
+#########
+# Tests #
+#########
+
+# Run indexer-worker tests locally
+test-local *args:
+    pipenv run pytest {{ args }}
