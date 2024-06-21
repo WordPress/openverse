@@ -77,7 +77,7 @@ init)
   ;;
 
 build)
-  docker build "${@:2}" -t openverse-dev-env:latest "$dev_env"
+  docker build "${@:2}" -t openverse-dev_env:latest "$dev_env"
   ;;
 
 setup-env)
@@ -85,14 +85,14 @@ setup-env)
   ;;
 
 stop)
-  docker stop openverse-dev-env
+  docker stop openverse-dev_env
   ;;
 
 clean)
-  docker kill openverse-dev-env
-  docker rm openverse-dev-env
-  docker rmi openverse-dev-env
-  docker volume rm openverse-dev-env
+  docker kill openverse-dev_env
+  docker rm openverse-dev_env
+  docker rmi openverse-dev_env
+  docker volume rm openverse-dev_env
   ;;
 
 hook)
