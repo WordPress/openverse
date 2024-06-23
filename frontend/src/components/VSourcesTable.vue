@@ -1,8 +1,8 @@
 <template>
   <table
-    :aria-label="$t('sources.aria.table').toString()"
+    :aria-label="$t('sources.aria.source-table').toString()"
     role="region"
-    class="not-prose table w-full table-fixed text-base"
+    class="not-prose source-table w-full table-fixed text-base"
   >
     <thead>
       <tr>
@@ -41,16 +41,19 @@
     <tbody>
       <tr v-for="provider in sortedProviders" :key="provider.display_name">
         <td>
+          <span>{{ $t("sources.providers.source") }}</span>
           <VLink :href="providerViewUrl(provider)">{{
             provider.display_name
           }}</VLink>
         </td>
         <td class="truncate font-semibold">
+          <span>{{ $t("sources.providers.domain") }}</span>
           <VLink :href="provider.source_url">
             {{ cleanSourceUrlForPresentation(provider.source_url) }}
           </VLink>
         </td>
-        <td class="text-right">
+        <td class="md:text-right">
+          <span>{{ $t("sources.providers.item") }}</span>
           {{ getLocaleFormattedNumber(provider.media_count || 0) }}
         </td>
       </tr>
@@ -166,38 +169,55 @@ export default defineComponent({
 @tailwind components;
 @tailwind utilities;
 
+.display-initial {
+  display: initial;
+}
+
 @layer components {
-  .table {
-    @apply rounded-sm border-0 border-dark-charcoal-20;
+  .source-table {
+    @apply block md:table rounded-sm border-0 border-dark-charcoal-20;
   }
-  .table th,
-  .table td {
-    @apply border-dark-charcoal-20;
+  .source-table thead {
+    @apply hidden md:table-header-group;
   }
-  .table a {
+  .source-table tbody {
+    @apply block md:table-row-group;
+  }
+  .source-table th,
+  .source-table td {
+    @apply md:border-dark-charcoal-20;
+  }
+  .source-table a {
     @apply text-pink hover:underline;
   }
-  .table th {
+  .source-table th {
     @apply cursor-pointer border-t bg-dark-charcoal-10;
   }
-  .table th,
-  .table td {
-    @apply border-r p-4 first:border-l;
-  }
-  .table td {
-    @apply break-normal border-y-0;
+  .source-table th,
+  .source-table td {
+    @apply md:border-r p-4 md:first:border-l;
   }
 
-  .table tr {
-    @apply even:bg-dark-charcoal-06;
+  .source-table td {
+    @apply flex md:table-cell break-normal border-y-0;
   }
 
-  .table th {
+  .source-table td span {
+    @apply block md:hidden font-bold;
+    width: 10ch;
+    min-width: 10ch;
+  }
+
+  .source-table tr {
+    @apply flex flex-col md:table-row border-r border-l first:border-t last:border-b md:border-none even:bg-dark-charcoal-06 border-dark-charcoal-20;
+  }
+
+  .source-table th {
     @apply first:rounded-ss-sm last:rounded-se-sm;
   }
 
-  .table tr:last-child td {
-    @apply border-b first:rounded-es-sm last:rounded-ee-sm;
+  .source-table tr:last-child td {
+    @apply md:border-b first:rounded-es-sm last:rounded-ee-sm;
   }
 }
 </style>
