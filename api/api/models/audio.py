@@ -371,8 +371,8 @@ class AudioDecisionThrough(AbstractMediaDecisionThrough):
         Audio,
         to_field="identifier",
         on_delete=models.DO_NOTHING,
-        db_constraint=False,
         db_column="identifier",
+        db_constraint=False,
     )
     decision = models.ForeignKey(AudioDecision, on_delete=models.CASCADE)
 
