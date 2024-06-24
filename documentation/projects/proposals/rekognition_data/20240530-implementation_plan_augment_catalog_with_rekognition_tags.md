@@ -24,6 +24,8 @@
 [batched_update]: /catalog/reference/DAGs.md#batched-update-dag
 [smart_open]: https://github.com/piskvorky/smart_open
 [json_lines]: https://jsonlines.org/
+[tag_filtering]:
+  https://github.com/WordPress/openverse/blob/3747f9aa40ed03899becb98ecae2abf926c8875f/ingestion_server/ingestion_server/cleanup.py#L119-L150
 
 [^batch_tag_example]:
     This issue provides an example of how to manipulate the tags object within
@@ -39,7 +41,7 @@
 
 ```{note}
 References throughout this document to "the database" refer exclusively
-to the catalog database.
+to the catalog database. The API database is named explicitly where referenced.
 ```
 
 ```{note}
@@ -48,17 +50,23 @@ The terms "tags" and "labels" are often used interchangeably in this document. B
 data available in the catalog database which include those labels.
 ```
 
-This implementation plan describes the criteria we will use to select which tags
-from the Rekognition data to include into the catalog database. This includes
-defining criteria for the following:
+This implementation plan describes the technical process we intend to use for
+incorporating Rekognition data in the catalog database, and the criteria we will
+use when filtering tags as they make their way into the API database. This
+includes defining criteria for the following:
 
-- Which tags should be included/excluded
+- Which tags should be included/excluded in the API
 - What minimum accuracy value is required for inclusion
 
-It also describes the technical process which will be necessary for performing
-the insertion of the Rekognition tags. Since there already exist
-machine-generated tags which may not conform to the above criteria, a plan is
-provided for removing those existing tags as well.
+Since there already exist machine-generated tags which may not conform to the
+above criteria, a plan is provided for handling those existing tags as well.
+
+```{note}
+This document operates under the understanding that the catalog database is Openverse's
+data warehouse and should store as much as possible. It's the responsibility of the data
+refresh process to dictate what data should be _surfaced_ in the API, and filter where
+necessary (see #4541 and #4524 for more details).
+```
 
 ## Expected Outcomes
 
@@ -66,13 +74,13 @@ provided for removing those existing tags as well.
 
 At the end of the implementation of this project, we should have the following:
 
-- Clear criteria for the kinds of tags we will exclude when inserting
-  machine-generated tags
+- Clear criteria for the kinds of tags we will filter when presenting
+  machine-generated tags in the API
 - A clear minimum accuracy value for machine generated tags
-- Existing Clarifai tags which do not match the above criteria will be removed
-  from the database
-- New Rekognition tags which do match the above criteria will be added to the
-  database
+- All available Rekognition tags will be added to the catalog
+- An approach for filtering the new Rekognition tags based on the above criteria
+- An approach for filtering the existing Clarifai tags until further analysis
+  can be performed on the kinds of tags it provides
 
 ## Label criteria
 
@@ -118,24 +126,26 @@ have a demographic context in the following categories:
 - Sexual orientation
 - Nationality
 - Race
+- Marital status
 
 There are other categories which might be useful for search relevancy and are
 less likely to be applied in an insensitive manner. These labels **should not**
-be excluded. Some examples include:
+be excluded, unless they are otherwise gendered (e.g. "stewardess", "actress",
+etc.). Some examples include:
 
 - Occupation
-- Marital status
 - Health and disability status
 - Political affiliation or preference
 - Religious affiliation or preference
 
 ### Accuracy selection
 
-[^removal]: Note that this step will be going away as part of #430
+[^removal]:
+    Note that this step will be moved to a separate filtering step as part of
+    #4541
 
 We already filter out existing tags from the catalog when copying data into the
-API database during the data refresh's
-[cleanup step](https://github.com/WordPress/openverse/blob/3747f9aa40ed03899becb98ecae2abf926c8875f/ingestion_server/ingestion_server/cleanup.py#L119-L150)[^removal].
+API database during the data refresh's [cleanup step][tag_filtering][^removal].
 The minimum accuracy value used for this step is
 [0.9 (or 90%)](https://github.com/WordPress/openverse/blob/3747f9aa40ed03899becb98ecae2abf926c8875f/ingestion_server/ingestion_server/cleanup.py#L57-L56)
 . AWS's own advice on what value to use is that
@@ -161,14 +171,14 @@ _For a full explanation on this exploration, see:
 Based on the number of labels we would still be receiving with a confidence
 higher than 90, and that 0.9 is already our existing minimum standard, **we
 should retain 0.9 or 90% as our minimum label accuracy value** for inclusion in
-the catalog.
+the API.
 
-This necessarily means that we will not be including a projected 62% of the
+This necessarily means that we will not be surfacing a projected 62% of the
 labels which are available in the Rekognition dataset. Accuracy, as it directly
 relates to search relevancy, is more desirable here than completeness. We will
-retain the original Rekognition source data after ingesting the high-accuracy
-tags, and so if we decide to allow a lower accuracy threshold, we can always
-re-add the lower confidence values at a later time.
+retain all Rekognition tags in the catalog regardless, and so if we decide to
+allow a lower accuracy threshold, we can always adjust the threshold value and
+run a new data refresh to surface those tags.
 
 ## Step-by-step plan
 
@@ -186,8 +196,9 @@ In order to incorporate accomplish the goals of this plan, the following steps
 will need to be performed:
 
 1. [Determine which labels to exclude from Rekognition's label set](#determine-excluded-labels)
-2. [Remove the above excluded labels and tags below threshold from existing Clarifai tags](#filter-clarifai-tags)
+2. [Preemptively filter the Rekognition tags](#preemptively-filter-rekognition-tags)
 3. [Generate and insert the new Rekognition tags](#insert-new-rekognition-tags)
+4. [Filter and assess the existing Clarifai tags](#filter-clarifai-tags)
 
 ## Step details
 
@@ -202,7 +213,9 @@ For each step description, ensure the heading includes an obvious reference to t
 Some of the steps listed below have some cross-over with functionality defined
 in/required by the
 [data normalization project](/projects/proposals/data_normalization/20240227-implementation_plan_catalog_data_cleaning.md)
-(#430). Where possible, existing issues will be referenced and possible duplicated
+(#430) and the
+[ingestion server removal project](/projects/proposals/ingestion_server_removal/20240328-implementation_plan_ingestion_server_removal.md)
+(#3925). Where possible, existing issues will be referenced and possible duplicated
 effort will be identified.
 ```
 
@@ -210,41 +223,27 @@ effort will be identified.
 
 This will involve a manual process of looking through each of the [available
 labels for Rekognition][aws_rekognition_labels] and seeing if they match any of
-the criteria to be filtered. The excluded labels should then be saved in an
-accessible location, either on S3 or within the
+the criteria to be filtered. This process should be completed by two
+maintainers, and their list of exclusions discussed & combined. The excluded
+labels should then be saved in an accessible location, either on S3 or within
+the
 [sensitive terms repository](https://github.com/WordPress/openverse-sensitive-terms)
 as a new file. Consent & approval should be sought from two other maintainers on
 the accuracy of the exclusion list prior to publishing.
 
-### Filter Clarifai tags
+### Preemptively filter Rekognition tags
 
-```{attention}
-A snapshot of the catalog database should be created prior to running this step
-in production.
-```
+Before inserting the Rekognition tags, we want to make sure they are
+appropriately filtered during the data refresh. This filtering can either be the
+more complete set of exclusions described above for both the labels themselves
+and their accuracy. This, however, depends on the completion of #4541 and the
+ingestion server removal project in general (#3925).
 
-While this project seeks to add new magine-generated labels to the database, we
-already have
-[around 10 million records](https://github.com/WordPress/openverse/pull/3948#discussion_r1552301581)
-which include labels from the
-[Clarifai image labeling service](https://www.clarifai.com/products/scribe-data-labeling-platform).
-It is unclear how these labels were applied, or what the exhaustive label set
-is. Given how comprehensive Rekognition's label list is, I feel confident that
-the exclusions we identify from that list will be sufficient for filtering out
-unwanted demographic labels that Clarifai has used as well.
-
-Once the excluded labels are determined, we will need to filter those values
-from the existing Clarifai tags. The existing tags also include Clarifai labels
-that are below our [accuracy threshold](#accuracy-selection). These will be
-removed by the data normalization project (#430) and do not need to be
-considered at this time.
-
-The easiest way to accomplish this with existing tooling would be to leverage
-the [`batched_update` DAG][batched_update]. This update would select records
-that include Clarifai tags, then (in SQL) remove any tags from the `jsonb` blob
-that match the list of labels to exclude[^batch_tag_example]. Special care may
-need to be taken for matching the casing of the label between Clarifai and the
-excluded label list.
+In order to work on this effort in parallel with #3925, we can add a check to
+the [existing tag filtering step][tag_filtering] which will exclude _all_ tags
+with the provider `rekognition`. That way we can add all of the tags to the
+catalog with impunity, and allow those tags to be exposed when #3925 is finished
+and turned on.
 
 ### Insert new Rekognition tags
 
@@ -488,14 +487,11 @@ steps:
    so larger chunks can be read into memory.
    1. For each line, read in the JSON object and pull out the top-level labels &
       confidence values. **Note**: some records may not have any labels.
-   2. Filter out any labels that are below the
-      [accuracy threshold](#accuracy-selection) and that don't match the
-      [excluded labels](#determine-excluded-labels).
-   3. Construct a `tags` JSON object similar to the existing tags data for that
+   2. Construct a `tags` JSON object similar to the existing tags data for that
       image, including accuracy and provider. Ensure that the labels are lower
       case and that the confidence value is between 0.0 and 1.0 (e.g.
       `[{"name": "cat", "accuracy": 0.9983, "provider": "rekognition"}, ...]`).
-   4. At regular intervals, insert batches of constructed `identifier`/`tags`
+   3. At regular intervals, insert batches of constructed `identifier`/`tags`
       pairs into the temporary table.
 3. Launch a [batched update run][batched_update] which merges the existing tags
    and the new tags from the temporary table for each
@@ -507,6 +503,38 @@ steps:
 For local testing, a small sample of the Rekognition data could be made
 available in the local S3 server
 [similar to the iNaturalist sample data](https://github.com/WordPress/openverse/blob/82282a00abdaed21e8381052a874d8ab9a4f7e0a/catalog/compose.yml#L98-L101).
+
+### Filter Clarifai tags
+
+While this project seeks to add new magine-generated labels to the database, we
+already have
+[around 10 million records](https://github.com/WordPress/openverse/pull/3948#discussion_r1552301581)
+which include labels from the
+[Clarifai image labeling service](https://www.clarifai.com/products/scribe-data-labeling-platform).
+It is unclear how these labels were applied, or what the exhaustive label set
+is. Thus, it's prudent for us to perform some analysis on these tags to
+determine which labels from this dataset should also be filtered from the API.
+
+```{note}
+We will **not** be removing any existing tags from the catalog.
+```
+
+Similar to the
+[preemptive Rekognition filtering](#preemptively-filter-rekognition-tags), we
+will want to filter the existing Clarifai tags until we can perform the same
+analysis on the set of available tags
+[as will be done for the Rekognition ones](#determine-excluded-labels). This can
+be done using the same steps described for the Rekognition filtering, based on
+the status of this project and #3925.
+
+Once the filtering is in place, we can construct an exhaustive set of Clarifai
+labels and determine exclusions for that provider using the approach
+[described above](#label-criteria). Then the Clarifai label exclusions can be
+added to #4541 in the same way Rekognition's are added and the blanked exclusion
+for all tags from that provider can be lifted. These exclusion lists could be
+combined into a single filtering step, or we could have individual filter lists
+based on the label provider. My preference is former, since that way the single
+list serves as a more exhaustive exclusion list.
 
 ## Dependencies
 
@@ -527,7 +555,12 @@ within Airflow, in order for it to be available for this DAG.
 
 <!-- Note any projects this plan is dependent on. -->
 
-This project is related to, but not necessarily dependent on, the data
+This project intersects with the ingestion server removal project (#3925), but
+steps can be taken to circumvent this dependency for the time being. See
+[preemptively filter Rekognition tags](#preemptively-filter-rekognition-tags)
+for more details.
+
+This project is also related to, but not necessarily dependent on, the data
 normalization project. See the note in [Step Details](#step-details).
 
 ## Alternatives
@@ -565,7 +598,8 @@ would not be as much of a benefit as the time it might take to craft it.
 <!-- What hard blockers exist that prevent further work on this project? -->
 
 No blockers, this work can begin immediately (though some may conflict with the
-data normalization project, see the note in [Step Details](#step-details)).
+data normalization and ingestion server removal projects, see the note in
+[dependencies](#other-projects-or-work)).
 
 ## Rollback
 
@@ -573,22 +607,25 @@ data normalization project, see the note in [Step Details](#step-details)).
 
 Rollback for this project looks different for each label source:
 
-- [**Clarifai**](#filter-clarifai-tags): If we wanted to retrieve the excluded
-  labels, we would need to spin up the snapshot acquired right before the
-  batched update was run. We could then pull out the Clarifai tags and merge
-  them back into the existing data.
-- [**Rekognition**](#insert-new-rekognition-tags): Removing the added labels
-  would likely involve another batched update which would remove any of the tags
-  with the provider `rekognition` in them.
+- [**Clarifai**](#filter-clarifai-tags): If we decide to roll back any filters
+  for Clarifai that we instated, we could simply remove those filters and
+  re-surface the data in the API. We're not removing any data from the catalog
+  as part of this project, so this would return the Clarifai tags to their
+  currently fully-visible state.
+- [**Rekognition**](#insert-new-rekognition-tags): If we decide not to surface
+  _any_ Rekognition tags in the API, we could simply retain the
+  [blanket provider-wide filter for all Rekognition tags](#preemptively-filter-rekognition-tags).
 
 ## Risks
 
 <!-- What risks are we taking with this solution? Are there risks that once taken can’t be undone?-->
 
-The [Clarifai filtering step](#filter-clarifai-tags) is necessarily (and mostly
-irreversibly, depending on how long we keep the snapshot prior to executing that
-step) removing data from the catalog database. Most of this data are tags that
-are already not exposed due to the [accuracy threshold](#accuracy-selection).
+We are only adding new data to the catalog as part of this effort; we do not
+intend to remove any existing data. We have full control over what data we
+filter when constructing the API database during the data refresh, and so we
+could opt to filter out all of the machine-generated labels that exist in the
+database even after the new ones are inserted. As such, this project poses
+little risk beyond increased database storage size.
 
 Adding this new data will affect search relevancy. Discussion around that risk
 can be found
