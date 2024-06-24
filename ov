@@ -94,7 +94,7 @@ clean)
   docker container stop openverse-dev_env || true
   docker container rm openverse-dev_env || true
   docker image rm openverse-dev_env || true
-  docker volume rm openverse-dev_env || true
+  docker volume rm openverse_dev-env || true
   ;;
 
 hook)

@@ -3,7 +3,7 @@
 set -e
 
 container_name="openverse-dev_env"
-volume_name="$container_name"
+volume_name="openverse_dev-env"
 
 if ! docker volume inspect openverse-dev_env &>/dev/null; then
   docker volume create "$volume_name" 1>/dev/null
