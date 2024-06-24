@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2024-06-18T10:23:26+00:00\n"
+"POT-Creation-Date: 2024-06-24T15:17:47+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1059,6 +1059,17 @@ msgctxt "sensitive.faq.three.answer.c"
 msgid "As when adding a new designation, ###openverse### reserves the right to respectfully decline the request to remove a confirmed user sensitivity designation."
 msgstr ""
 
+#: src/pages/generated-tags.vue:3
+#: src/pages/generated-tags.vue:23
+msgctxt "generatedTags.title"
+msgid "About Generated Tags"
+msgstr ""
+
+#: src/pages/generated-tags.vue:4
+msgctxt "generatedTags.intro.content"
+msgid "Generated tags are automatically assigned to media items based on the content of the media item itself. These tags are generated using machine learning models trained on a large dataset of images and audio tracks."
+msgstr ""
+
 msgctxt "error.occurred"
 msgid "An error occurred"
 msgstr ""
@@ -1890,9 +1901,24 @@ msgctxt "mediaDetails.audioInfo"
 msgid "Audio track information"
 msgstr ""
 
-#: src/components/VMediaInfo/VMediaTags.vue:5
+#: src/components/VMediaInfo/VMediaTags.vue:7
 msgctxt "mediaDetails.tags.title"
 msgid "Tags"
+msgstr ""
+
+#: src/components/VMediaInfo/VMediaTags.vue:15
+msgctxt "mediaDetails.tags.generated.heading"
+msgid "Generated tags"
+msgstr ""
+
+#: src/components/VMediaInfo/VMediaTags.vue:17
+msgctxt "mediaDetails.tags.generated.pageTitle"
+msgid "Learn more"
+msgstr ""
+
+#: src/components/VMediaInfo/VMediaTags.vue:5
+msgctxt "mediaDetails.tags.source.heading"
+msgid "Source tags"
 msgstr ""
 
 msgctxt "mediaDetails.tags.showMore"
