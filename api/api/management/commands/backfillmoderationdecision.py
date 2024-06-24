@@ -92,12 +92,16 @@ class Command(BaseCommand):
             for report, decision in zip(reports_chunk, decisions):
                 report.decision = decision
             MediaReport.objects.bulk_update(reports_chunk, ["decision"])
-            MediaDecisionThrough.objects.bulk_create(
+            throughs = MediaDecisionThrough.objects.bulk_create(
                 [
                     MediaDecisionThrough(media_obj=report.media_obj, decision=decision)
                     for report, decision in zip(reports_chunk, decisions)
                 ]
             )
+            # Bulk create does not call ``save()`` so the mark-sensitive/deindex
+            # actions will not be undertaken.
+            for through in throughs:
+                through.perform_action()
             t.update(1)
 
         t.info(
