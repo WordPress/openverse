@@ -169,7 +169,7 @@ class ImageDecisionThrough(AbstractMediaDecisionThrough):
     media_obj = models.ForeignKey(
         Image,
         to_field="identifier",
-        on_delete=models.CASCADE,
+        on_delete=models.DO_NOTHING,
         db_column="identifier",
         db_constraint=False,
     )
