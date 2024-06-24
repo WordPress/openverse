@@ -94,7 +94,9 @@ class Command(BaseCommand):
             MediaReport.objects.bulk_update(reports_chunk, ["decision"])
             MediaDecisionThrough.objects.bulk_create(
                 [
-                    MediaDecisionThrough(media_obj=report.media_obj, decision=decision)
+                    MediaDecisionThrough(
+                        media_obj_id=report.media_obj_id, decision=decision
+                    )
                     for report, decision in zip(reports_chunk, decisions)
                 ]
             )
