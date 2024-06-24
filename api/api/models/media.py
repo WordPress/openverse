@@ -335,8 +335,6 @@ class AbstractMediaDecision(OpenLedgerModel):
     class Meta:
         abstract = True
 
-    # TODO: Implement ``clean`` and ``save``, if needed.
-
 
 class AbstractMediaDecisionThrough(models.Model):
     """
@@ -363,6 +361,22 @@ class AbstractMediaDecisionThrough(models.Model):
 
     class Meta:
         abstract = True
+
+    def perform_action(self):
+        """Perform the action specified in the decision."""
+
+        if self.decision.action in {
+            DecisionAction.DEINDEXED_SENSITIVE,
+            DecisionAction.DEINDEXED_COPYRIGHT,
+        }:
+            self.deleted_media_class.objects.create(media_obj=self.media_obj)
+
+        if self.decision.action == DecisionAction.MARKED_SENSITIVE:
+            self.sensitive_media_class.objects.create(media_obj=self.media_obj)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.perform_action()
 
 
 class PerformIndexUpdateMixin:
