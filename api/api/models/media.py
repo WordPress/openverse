@@ -348,6 +348,10 @@ class AbstractMediaDecisionThrough(models.Model):
 
     media_class: type[models.Model] = None
     """the model class associated with this media type e.g. ``Image`` or ``Audio``"""
+    sensitive_media_class: type[models.Model] = None
+    """the model class associated with this media type e.g. ``SensitiveImage`` or ``SensitiveAudio``"""
+    deleted_media_class: type[models.Model] = None
+    """the model class associated with this media type e.g. ``DeletedImage`` or ``DeletedAudio``"""
 
     media_obj = models.ForeignKey(
         AbstractMedia,

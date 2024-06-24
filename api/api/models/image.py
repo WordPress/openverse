@@ -166,6 +166,10 @@ class ImageDecisionThrough(AbstractMediaDecisionThrough):
     be referenced by `identifier` rather than an arbitrary `id`.
     """
 
+    media_class = Image
+    sensitive_media_class = SensitiveImage
+    deleted_media_class = DeletedImage
+
     media_obj = models.ForeignKey(
         Image,
         to_field="identifier",
