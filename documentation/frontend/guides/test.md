@@ -3,12 +3,9 @@
 Once you've made some changes to the codebase, it is important to run tests.
 Openverse uses unit tests, Playwright tests for end-to-end, and visual
 regression testing of the app and Storybook components. This guide will help you
-run the tests. To learn more about how to test PRs, read the
-[testing guidelines](/frontend/reference/testing_guidelines.md). To learn more
-about the Playwright tests, read
-[this guide](/frontend/reference/playwright_tests.md). To learn more about the
-Storybook visual regression tests, read
-[this guide](/frontend/reference/storybook_tests.md).
+run the tests. To learn more about how to test PRs, Playwright tests and
+Storybook visual regression tests read the
+[testing guidelines](/frontend/reference/testing_guidelines.md).
 
 ## Steps
 
@@ -43,6 +40,19 @@ Storybook visual regression tests, read
    ```bash
    ./ov just frontend/run test:storybook
    ```
+
+   ````{note}
+   This will run the Storybook visual regression tests inside a docker container. Should you wish to run the
+   tests locally, you can use the command below. However, please note that unless
+   you are running the same operating system (down to the distro, in some cases)
+   there are likely to be visual rendering differences that will cause snapshot
+   tests to fail on false-positives.
+
+   ```bash
+   ./ov just frontend/run test:storybook:local
+   ```
+
+   ````
 
 ## Updating snapshots
 
