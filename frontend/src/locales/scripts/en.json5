@@ -467,6 +467,12 @@
       },
     },
   },
+  generatedTags: {
+    title: "About Generated Tags",
+    intro: {
+      content: "Generated tags are automatically assigned to media items based on the content of the media item itself. These tags are generated using machine learning models trained on a large dataset of images and audio tracks.",
+    },
+  },
   error: {
     occurred: "An error occurred",
     imageNotFound: "Couldn't find image with id {id}",
@@ -821,6 +827,13 @@
     audioInfo: "Audio track information",
     tags: {
       title: "Tags",
+      generated: {
+        heading: "Generated tags",
+        pageTitle: "Learn more",
+      },
+      source: {
+        heading: "Source tags",
+      },
       showMore: "Show more",
       showLess: "Show less",
     },
