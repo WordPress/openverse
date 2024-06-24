@@ -440,6 +440,10 @@ class MediaListAdmin(admin.ModelAdmin):
         if request.method == "POST":
             media_obj = self.get_object(request, object_id)
 
+            through_model = {
+                "image": ImageDecisionThrough,
+                "audio": AudioDecisionThrough,
+            }[self.media_type]
             form = get_decision_form(self.media_type)(request.POST)
             if form.is_valid():
                 decision = form.save(commit=False)
@@ -454,9 +458,13 @@ class MediaListAdmin(admin.ModelAdmin):
                     moderator=request.user.get_username(),
                 )
 
-                decision.media_objs.add(media_obj)
+                through = through_model.objects.create(
+                    decision=decision,
+                    media_obj=media_obj,
+                )
                 logger.info(
-                    "Media linked to decision",
+                    "Through model created",
+                    through=through.id,
                     decision=decision.id,
                     media_obj=media_obj.id,
                 )
