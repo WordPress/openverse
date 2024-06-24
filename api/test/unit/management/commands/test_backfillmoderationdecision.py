@@ -78,12 +78,13 @@ def test_create_moderation_decision_for_reports(
     assert f"Created 1 {media_type} moderation decisions from existing reports." in out
 
     decision = MediaDecision.objects.first()
-    assert decision.media_objs.count() == 1
     assert decision.action == expected_action
     assert decision.moderator.username == username
 
+    assert MediaDecisionThrough.objects.filter(decision=decision).count() == 1
+
     decision_through = MediaDecisionThrough.objects.first()
-    assert decision_through.media_obj == report.media_obj
+    assert str(decision_through.media_obj_id) == report.media_obj_id
     assert decision_through.decision == decision
 
 
