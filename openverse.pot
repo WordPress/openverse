@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2024-06-24T15:17:47+00:00\n"
+"POT-Creation-Date: 2024-06-25T22:58:12+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1435,7 +1435,7 @@ msgstr[1] ""
 
 #. Do not translate words between ### ###.
 msgctxt "browsePage.allResultCountMore"
-msgid "Over ###localeCount### results"
+msgid "Top ###localeCount### results"
 msgstr ""
 
 #. Do not translate words between ### ###.
@@ -1452,7 +1452,7 @@ msgstr[1] ""
 
 #. Do not translate words between ### ###.
 msgctxt "browsePage.contentLink.image.countMore"
-msgid "See over ###localeCount### images found for ###query###."
+msgid "See the top ###localeCount### images found for ###query###."
 msgstr ""
 
 #. Do not translate words between ### ###.
@@ -1467,7 +1467,7 @@ msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "browsePage.contentLink.audio.countMore"
-msgid "See over ###localeCount### audio tracks found for ###query###."
+msgid "See the top ###localeCount### audio tracks found for ###query###."
 msgstr ""
 
 #: src/components/VLoadMore.vue:131
@@ -1653,7 +1653,7 @@ msgstr[1] ""
 
 #. Do not translate words between ### ###.
 msgctxt "browsePage.aria.results.image.countMore"
-msgid "Over ###localeCount### image results for \"###query###\"."
+msgid "Top ###localeCount### image results for \"###query###\"."
 msgstr ""
 
 #. Do not translate words between ### ###.
@@ -1670,7 +1670,7 @@ msgstr[1] ""
 
 #. Do not translate words between ### ###.
 msgctxt "browsePage.aria.results.audio.countMore"
-msgid "Over ###localeCount### audio tracks for \"###query###\"."
+msgid "Top ###localeCount### audio tracks for \"###query###\"."
 msgstr ""
 
 #. Interpolated into browsePage.aria.results.all
@@ -1689,7 +1689,7 @@ msgstr[1] ""
 #. Interpolated into browsePage.aria.results.all
 #. Do not translate words between ### ###.
 msgctxt "browsePage.aria.allResultsHeadingCount.image.countMore"
-msgid "over ###localeCount### images"
+msgid "top ###localeCount### images"
 msgstr ""
 
 #. Interpolated into browsePage.aria.results.all
@@ -1708,7 +1708,7 @@ msgstr[1] ""
 #. Interpolated into browsePage.aria.results.all
 #. Do not translate words between ### ###.
 msgctxt "browsePage.aria.allResultsHeadingCount.audio.countMore"
-msgid "over ###localeCount### audio tracks"
+msgid "top ###localeCount### audio tracks"
 msgstr ""
 
 msgctxt "mediaDetails.information.type"
@@ -2684,7 +2684,7 @@ msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "collection.ariaLabel.creator.audio"
-msgid "Audio files by ###creator### in ###source###"
+msgid "Audio tracks by ###creator### in ###source###"
 msgstr ""
 
 #. Do not translate words between ### ###.
@@ -2694,7 +2694,7 @@ msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "collection.ariaLabel.source.audio"
-msgid "Audio files from ###source###"
+msgid "Audio tracks from ###source###"
 msgstr ""
 
 #. Do not translate words between ### ###.
@@ -2704,7 +2704,7 @@ msgstr ""
 
 #. Do not translate words between ### ###.
 msgctxt "collection.ariaLabel.tag.audio"
-msgid "Audio files with the tag ###tag###"
+msgid "Audio tracks with the tag ###tag###"
 msgstr ""
 
 #. Do not translate words between ### ###.
@@ -2725,7 +2725,7 @@ msgstr[1] ""
 
 #. Do not translate words between ### ###.
 msgctxt "collection.resultCountLabel.creator.audio.countMore"
-msgid "Over ###count### audio files by this creator."
+msgid "Top ###count### audio tracks by this creator."
 msgstr ""
 
 msgctxt "collection.resultCountLabel.creator.image.zero"
@@ -2741,11 +2741,11 @@ msgstr[1] ""
 
 #. Do not translate words between ### ###.
 msgctxt "collection.resultCountLabel.creator.image.countMore"
-msgid "Over ###count### images by this creator."
+msgid "Top ###count### images by this creator."
 msgstr ""
 
 msgctxt "collection.resultCountLabel.source.audio.zero"
-msgid "No audio files provided by this source"
+msgid "No audio tracks provided by this source"
 msgstr ""
 
 #. Do not translate words between ### ###.
@@ -2757,7 +2757,7 @@ msgstr[1] ""
 
 #. Do not translate words between ### ###.
 msgctxt "collection.resultCountLabel.source.audio.countMore"
-msgid "Over ###count### audio files provided by this source"
+msgid "Top ###count### audio tracks provided by this source"
 msgstr ""
 
 msgctxt "collection.resultCountLabel.source.image.zero"
@@ -2773,11 +2773,11 @@ msgstr[1] ""
 
 #. Do not translate words between ### ###.
 msgctxt "collection.resultCountLabel.source.image.countMore"
-msgid "Over ###count### images provided by this source"
+msgid "Top ###count### images provided by this source"
 msgstr ""
 
 msgctxt "collection.resultCountLabel.tag.audio.zero"
-msgid "No audio files with the selected tag"
+msgid "No audio tracks with the selected tag"
 msgstr ""
 
 #. Do not translate words between ### ###.
@@ -2789,7 +2789,7 @@ msgstr[1] ""
 
 #. Do not translate words between ### ###.
 msgctxt "collection.resultCountLabel.tag.audio.countMore"
-msgid "Over ###count### audio files with the selected tag"
+msgid "Top ###count### audio tracks with the selected tag"
 msgstr ""
 
 msgctxt "collection.resultCountLabel.tag.image.zero"
@@ -2805,5 +2805,5 @@ msgstr[1] ""
 
 #. Do not translate words between ### ###.
 msgctxt "collection.resultCountLabel.tag.image.countMore"
-msgid "Over ###count### images with the selected tag"
+msgid "Top ###count### images with the selected tag"
 msgstr ""
