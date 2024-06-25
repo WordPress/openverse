@@ -105,8 +105,11 @@ RUN useradd --create-home opener \
   && chown -R opener /static
 USER opener
 
-# Copy code into the final image
+# Copy subpackages from additional build-context 'packages'
+# hadolint ignore=DL3022
 COPY --chown=opener --from=packages openverse-attribution /packages/python/openverse-attribution/
+
+# Copy code into the final image
 COPY --chown=opener . /api/
 
 # Collect static assets, these are used by the next stage, `nginx`
