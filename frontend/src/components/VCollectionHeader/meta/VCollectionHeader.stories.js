@@ -48,7 +48,7 @@ const AllCollectionsTemplate = (args) => ({
     })
     const mediaStore = useMediaStore()
     mediaStore.$patch({
-      results: { image: { count: 10000 } },
+      results: { image: { count: 240 } },
     })
     return { args }
   },

@@ -29,7 +29,7 @@ const testResultItems = (mediaType) =>
   }, {})
 
 const testResult = (mediaType) => ({
-  count: 10001,
+  count: 240,
   items: testResultItems(mediaType),
   page: 2,
   pageCount: 20,
@@ -160,9 +160,9 @@ describe("Media Store", () => {
 
     it.each`
       searchType   | count
-      ${ALL_MEDIA} | ${10000}
+      ${ALL_MEDIA} | ${240}
       ${AUDIO}     | ${0}
-      ${IMAGE}     | ${10000}
+      ${IMAGE}     | ${240}
     `("resultCount for $searchType returns $count", ({ searchType, count }) => {
       const mediaStore = useMediaStore()
       const searchStore = useSearchStore()

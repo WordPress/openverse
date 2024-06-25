@@ -40,7 +40,7 @@ const imageConfig = {
   name: "Images",
   url: "/search/image?q=birds",
   canLoadMore: true,
-  results: /Over 10,000 results/,
+  results: /Top 240 results/,
 } as const
 
 const audioConfig = {
@@ -48,7 +48,7 @@ const audioConfig = {
   name: "Audio",
   url: "/search/audio?q=birds",
   canLoadMore: true,
-  results: /Over 10,000 results/,
+  results: /Top 240 results/,
 } as const
 
 const searchTypes = [allContentConfig, imageConfig, audioConfig] as const

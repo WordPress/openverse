@@ -620,17 +620,17 @@
   browsePage: {
     allNoResults: "No results",
     allResultCount: "{localeCount} result|{localeCount} results",
-    allResultCountMore: "Over {localeCount} results",
+    allResultCountMore: "Top {localeCount} results",
     contentLink: {
       image: {
         zero: "No images found for {query}.",
         count: "See {localeCount} image found for {query}.|See {localeCount} images found for {query}.",
-        countMore: "See over {localeCount} images found for {query}.",
+        countMore: "See the top {localeCount} images found for {query}.",
       },
       audio: {
         zero: "No audio tracks found for {query}.",
         count: "See {localeCount} audio tracks found for {query}.",
-        countMore: "See over {localeCount} audio tracks found for {query}.",
+        countMore: "See the top {localeCount} audio tracks found for {query}.",
       },
     },
     load: "Load more results",
@@ -711,12 +711,12 @@
         image: {
           zero: 'No image results for "{query}"',
           count: '{localeCount} image result for "{query}".|{localeCount} image results for "{query}".',
-          countMore: 'Over {localeCount} image results for "{query}".',
+          countMore: 'Top {localeCount} image results for "{query}".',
         },
         audio: {
           zero: 'No audio tracks for "{query}"',
           count: '{localeCount} audio track for "{query}".|{localeCount} audio tracks for "{query}".',
-          countMore: 'Over {localeCount} audio tracks for "{query}".',
+          countMore: 'Top {localeCount} audio tracks for "{query}".',
         },
       },
       allResultsHeadingCount: {
@@ -726,7 +726,7 @@
           /* Interpolated into browsePage.aria.results.all */
           count: "{localeCount} image|{localeCount} images",
           /* Interpolated into browsePage.aria.results.all */
-          countMore: "over {localeCount} images",
+          countMore: "top {localeCount} images",
         },
         audio: {
           /* Interpolated into browsePage.aria.results.all */
@@ -734,7 +734,7 @@
           /* Interpolated into browsePage.aria.results.all */
           count: "{localeCount} audio track|{localeCount} audio tracks",
           /* Interpolated into browsePage.aria.results.all */
-          countMore: "over {localeCount} audio tracks",
+          countMore: "top {localeCount} audio tracks",
         },
       },
     },
@@ -1150,15 +1150,15 @@
     },
     ariaLabel: {
       creator: {
-        audio: "Audio files by {creator} in {source}",
+        audio: "Audio tracks by {creator} in {source}",
         image: "Images by {creator} in {source}",
       },
       source: {
-        audio: "Audio files from {source}",
+        audio: "Audio tracks from {source}",
         image: "Images from {source}",
       },
       tag: {
-        audio: "Audio files with the tag {tag}",
+        audio: "Audio tracks with the tag {tag}",
         image: "Images with the tag {tag}",
       },
     },
@@ -1167,36 +1167,36 @@
         audio: {
           zero: "No audio tracks by this creator.",
           count: "{count} audio track by this creator.|{count} audio tracks by this creator.",
-          countMore: "Over {count} audio files by this creator.",
+          countMore: "Top {count} audio tracks by this creator.",
         },
         image: {
           zero: "No images by this creator.",
           count: "{count} image by this creator.|{count} images by this creator.",
-          countMore: "Over {count} images by this creator.",
+          countMore: "Top {count} images by this creator.",
         },
       },
       source: {
         audio: {
-          zero: "No audio files provided by this source",
+          zero: "No audio tracks provided by this source",
           count: "{count} audio track provided by this source|{count} audio tracks provided by this source",
-          countMore: "Over {count} audio files provided by this source",
+          countMore: "Top {count} audio tracks provided by this source",
         },
         image: {
           zero: "No images provided by this source",
           count: "{count} image provided by this source|{count} images provided by this source",
-          countMore: "Over {count} images provided by this source",
+          countMore: "Top {count} images provided by this source",
         },
       },
       tag: {
         audio: {
-          zero: "No audio files with the selected tag",
+          zero: "No audio tracks with the selected tag",
           count: "{count} audio track with the selected tag|{count} audio tracks with the selected tag",
-          countMore: "Over {count} audio files with the selected tag",
+          countMore: "Top {count} audio tracks with the selected tag",
         },
         image: {
           zero: "No images with the selected tag",
           count: "{count} image with the selected tag|{count} images with the selected tag",
-          countMore: "Over {count} images with the selected tag",
+          countMore: "Top {count} images with the selected tag",
         },
       },
     },
