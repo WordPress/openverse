@@ -134,7 +134,7 @@ const xmlAttribution = (mediaItem: Record<string, string>) =>
   `<attribution xmlns:dc="http://purl.org/dc/elements/1.1/">
 	<dc:creator>${mediaItem.creator}</dc:creator>
 	<dc:title>${mediaItem.title}</dc:title>
-	<dc:rights>${mediaItem.attribution}</dc:rights>
+	<dc:rights>${mediaItem.license_url}</dc:rights>
 	<dc:identifier>${mediaItem.foreign_landing_url}</dc:identifier>
 	<dc:type>${mediaItem.type}</dc:type>
 </attribution>`
