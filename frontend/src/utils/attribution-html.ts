@@ -191,10 +191,6 @@ export const getAttribution = (
     return ""
   }
 
-  if (isXml) {
-    isPlaintext = true
-  }
-
   const isPd = isPublicDomain(mediaItem.license)
 
   const i18nBase = "mediaDetails.reuse.credit"
