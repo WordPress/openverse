@@ -47,6 +47,7 @@ RUN dnf -y install dnf-plugins-core \
     nodejs npm \
     python3.12 pipx \
     docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin \
+  && dnf clean all \
   && pipx install \
     pdm pipenv  \
     pre-commit \
