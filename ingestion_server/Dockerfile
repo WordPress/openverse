@@ -71,8 +71,9 @@ RUN apt-get update \
     && mkdir /worker_state
 
 # Create a non-root user
-RUN useradd ingestionu
-RUN chown ingestionu /worker_state
+RUN useradd ingestionu \
+    && chown ingestionu /worker_state
+
 USER ingestionu
 
 # Copy code into the final image
