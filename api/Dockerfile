@@ -30,7 +30,10 @@ ENV PIP_NO_COLOR=1
 # - Create a virtualenv inside `/venv`
 # - Install PDM to install Python dependencies
 RUN apt-get update \
-  && apt-get install -y python3-dev git \
+  && apt-get install -yqq --no-install-recommends \
+    python3-dev \
+    git \
+  && apt-get autoremove -y \
   && rm -rf /var/lib/apt/lists/* \
   && pip install pdm~=2.14
 
@@ -85,7 +88,11 @@ COPY --from=awf /usr/local/bin/audiowaveform /usr/local/bin
 #   - libexempi8: required for watermarking
 # - Create directory for dumping API logs
 RUN apt-get update \
-  && apt-get install -y curl libexempi8 postgresql-client \
+  && apt-get install -yqq --no-install-recommends \
+    curl \
+    libexempi8 \
+    postgresql-client \
+  && apt-get autoremove -y \
   && rm -rf /var/lib/apt/lists/* \
   && mkdir -p /var/log/openverse_api/openverse_api.log
 
