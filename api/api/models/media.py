@@ -363,17 +363,19 @@ class AbstractMediaDecisionThrough(models.Model):
     class Meta:
         abstract = True
 
-    def perform_action(self):
+    def perform_action(self, action=None):
         """Perform the action specified in the decision."""
 
-        if self.decision.action in {
+        action = self.decision.action if action is None else action
+
+        if action in {
             DecisionAction.DEINDEXED_SENSITIVE,
             DecisionAction.DEINDEXED_COPYRIGHT,
         }:
-            self.deleted_media_class.objects.create(media_obj=self.media_obj)
+            self.deleted_media_class.objects.create(media_obj_id=self.media_obj_id)
 
-        if self.decision.action == DecisionAction.MARKED_SENSITIVE:
-            self.sensitive_media_class.objects.create(media_obj=self.media_obj)
+        if action == DecisionAction.MARKED_SENSITIVE:
+            self.sensitive_media_class.objects.create(media_obj_id=self.media_obj_id)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
