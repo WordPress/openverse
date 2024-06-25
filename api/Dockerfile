@@ -38,10 +38,11 @@ RUN apt-get update \
   && pip install pdm~=2.14
 
 # Copy subpackages from additional build-context 'packages'
-COPY --from=packages openverse-attribution ./packages/python/openverse-attribution
+# hadolint ignore=DL3022
+COPY --from=packages openverse-attribution /packages/python/openverse-attribution
 
 # Copy the Python project manifest and PDM lockfile into the container
-COPY pyproject.toml pdm.lock ./
+COPY pyproject.toml pdm.lock /
 
 # Pass additional arguments when installing Python packages with PDM
 ARG PDM_INSTALL_ARGS='--no-editable'

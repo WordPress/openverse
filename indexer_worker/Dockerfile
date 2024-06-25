@@ -29,7 +29,7 @@ RUN apt-get update \
     && pip install --upgrade pipenv
 
 # Copy the Pipenv files into the container
-COPY Pipfile Pipfile.lock ./
+COPY Pipfile Pipfile.lock /
 
 # Install Python dependencies system-wide (uses the active virtualenv)
 RUN pipenv install --system --deploy --dev
