@@ -1,4 +1,4 @@
-FROM docker.io/library/fedora:latest
+FROM docker.io/library/fedora:40
 
 # We want to keep all important things in `/opt` as we will preserve the
 # `/opt` directory as a volume.
