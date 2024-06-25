@@ -12,8 +12,15 @@ FROM docker.io/realies/audiowaveform:1.10.1 AS awf
 
 # Identify dependencies of the `audiowaveform` binary and move them to `/deps`,
 # while retaining their folder structure
-RUN ldd /usr/local/bin/audiowaveform | tr -s '[:blank:]' '\n' | grep '^/' | \
-  xargs -I % sh -c 'mkdir -p $(dirname deps%); cp % deps%;'
+
+# Enable pipefail before `RUN` that contains pipes
+SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
+
+# hadolint ignore=SC2016
+RUN ldd /usr/local/bin/audiowaveform \
+    | tr -s '[:blank:]' '\n' \
+    | grep '^/' \
+    | xargs -I % sh -c 'mkdir -p $(dirname deps%); cp % deps%;'
 
 ##################
 # Python builder #
