@@ -16,6 +16,7 @@ import structlog
 from elasticsearch import NotFoundError
 from elasticsearch_dsl import Search
 
+from api.constants.moderation import DecisionAction
 from api.models import (
     Audio,
     AudioDecision,
@@ -377,6 +378,9 @@ class MediaListAdmin(admin.ModelAdmin):
         media_obj = self.get_object(request, object_id)
         if media_obj:
             extra_context["media_obj"] = media_obj
+        else:
+            messages.warning(request, f"No media object found with ID {object_id}.")
+            return redirect(f"admin:api_{self.media_type}_changelist")
 
         tags_by_provider = {}
         if tags := media_obj.tags:
@@ -476,6 +480,22 @@ class MediaListAdmin(admin.ModelAdmin):
                     report_count=count,
                     decision=decision.id,
                 )
+
+                if decision.action in {
+                    DecisionAction.DEINDEXED_COPYRIGHT,
+                    DecisionAction.DEINDEXED_SENSITIVE,
+                }:
+                    messages.info(
+                        request,
+                        "The media object has been deindexed from ES and deleted from DB.",
+                    )
+                    return redirect(f"admin:api_{self.media_type}_changelist")
+
+                if decision.action == DecisionAction.MARKED_SENSITIVE:
+                    messages.info(
+                        request,
+                        "The media object has been marked as sensitive.",
+                    )
             else:
                 logger.warning(
                     "Form is invalid",
