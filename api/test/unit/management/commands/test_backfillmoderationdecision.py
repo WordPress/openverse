@@ -1,5 +1,4 @@
 from io import StringIO
-from unittest.mock import patch
 
 from django.core.management import call_command
 
@@ -45,7 +44,6 @@ def make_reports(media_type, reason: str, status: str, count: int = 1):
         return ImageReportFactory.create_batch(count, status=status, reason=reason)
 
 
-@patch("django.conf.settings.ES")
 @pytest.mark.parametrize(
     ("reason", "status", "expected_action"),
     (
@@ -63,7 +61,7 @@ def make_reports(media_type, reason: str, status: str, count: int = 1):
 @pytest.mark.parametrize(("media_type"), ("image", "audio"))
 @pytest.mark.django_db
 def test_create_moderation_decision_for_reports(
-    mock_es, media_type, reason, status, expected_action
+    media_type, reason, status, expected_action
 ):
     username = "opener"
     UserFactory.create(username=username)
@@ -80,13 +78,12 @@ def test_create_moderation_decision_for_reports(
     assert f"Created 1 {media_type} moderation decisions from existing reports." in out
 
     decision = MediaDecision.objects.first()
+    assert decision.media_objs.count() == 1
     assert decision.action == expected_action
     assert decision.moderator.username == username
 
-    assert MediaDecisionThrough.objects.filter(decision=decision).count() == 1
-
     decision_through = MediaDecisionThrough.objects.first()
-    assert str(decision_through.media_obj_id) == report.media_obj_id
+    assert decision_through.media_obj == report.media_obj
     assert decision_through.decision == decision
 
 
