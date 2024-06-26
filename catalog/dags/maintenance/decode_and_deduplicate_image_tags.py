@@ -74,7 +74,6 @@ def decode_and_deduplicate_image_tags():
         task_id="trigger_batched_update",
         trigger_dag_id=BATCHED_UPDATE_DAG_ID,
         wait_for_completion=True,
-        execution_timeout=timedelta(hours=5),
         retries=0,
         conf={
             "query_id": DAG_ID,
@@ -91,8 +90,7 @@ def decode_and_deduplicate_image_tags():
             ).strip(),
             "update_query": dedent(
                 f"""
-                SET
-                    updated_on = now(),
+                SET updated_on = NOW(),
                     tags = (
                         SELECT jsonb_agg(deduplicated.tag) FROM (
                             SELECT DISTINCT ON (all_tags.tag->'name', all_tags.tag->'provider')
@@ -120,6 +118,7 @@ def decode_and_deduplicate_image_tags():
                     )
                 """
             ).strip(),
+            "update_timeout": int(timedelta(hours=10).total_seconds()),
             "dry_run": False,
         },
     )
