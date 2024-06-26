@@ -31,6 +31,20 @@ Installation instructions for WSL on Windows 10 and 11 can be found in
 Microsoft's
 [official documentation](https://docs.microsoft.com/en-us/windows/wsl/install).
 
+## `ov` development environment
+
+Openverse maintainers are currently working on a tool `ov` to make setting up
+and maintaining the Openverse development environment easier for everyone
+involved, but especially new contributors. You may see references to `ov` in
+issues or pull requests for this reason. For now, `ov` is not documented or
+recommended for use by inexperienced contributors. Once the Openverse
+maintainers have decided `ov` is stable enough to recommend for new
+contributors, we will update this documentation to exclusively use an `ov` based
+approach to setting up the environment.
+
+For now, if you'd like to try `ov`, run `./ov help` from the repository root to
+view the command's built-in documentation.
+
 ## Requirement matrix
 
 Based on which part of the Openverse stack you are contributing to, you might
