@@ -50,6 +50,8 @@ def ensure_ov_unistr(
     return postgres.run(
         dedent(
             """
+            CREATE EXTENSION IF NOT EXISTS plpython3u;
+
             CREATE OR REPLACE FUNCTION ov_unistr (string text)
                 RETURNS text
             AS $$
