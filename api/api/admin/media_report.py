@@ -16,6 +16,7 @@ import structlog
 from elasticsearch import NotFoundError
 from elasticsearch_dsl import Search
 
+from api.constants.moderation import DecisionAction
 from api.models import (
     Audio,
     AudioDecision,
@@ -377,6 +378,9 @@ class MediaListAdmin(admin.ModelAdmin):
         media_obj = self.get_object(request, object_id)
         if media_obj:
             extra_context["media_obj"] = media_obj
+        else:
+            messages.warning(request, f"No media object found with ID {object_id}.")
+            return redirect(f"admin:api_{self.media_type}_changelist")
 
         tags_by_provider = {}
         if tags := media_obj.tags:
@@ -440,6 +444,10 @@ class MediaListAdmin(admin.ModelAdmin):
         if request.method == "POST":
             media_obj = self.get_object(request, object_id)
 
+            through_model = {
+                "image": ImageDecisionThrough,
+                "audio": AudioDecisionThrough,
+            }[self.media_type]
             form = get_decision_form(self.media_type)(request.POST)
             if form.is_valid():
                 decision = form.save(commit=False)
@@ -454,9 +462,13 @@ class MediaListAdmin(admin.ModelAdmin):
                     moderator=request.user.get_username(),
                 )
 
-                decision.media_objs.add(media_obj)
+                through = through_model.objects.create(
+                    decision=decision,
+                    media_obj=media_obj,
+                )
                 logger.info(
-                    "Media linked to decision",
+                    "Through model created",
+                    through=through.id,
                     decision=decision.id,
                     media_obj=media_obj.id,
                 )
@@ -468,6 +480,22 @@ class MediaListAdmin(admin.ModelAdmin):
                     report_count=count,
                     decision=decision.id,
                 )
+
+                if decision.action in {
+                    DecisionAction.DEINDEXED_COPYRIGHT,
+                    DecisionAction.DEINDEXED_SENSITIVE,
+                }:
+                    messages.info(
+                        request,
+                        "The media object has been deindexed from ES and deleted from DB.",
+                    )
+                    return redirect(f"admin:api_{self.media_type}_changelist")
+
+                if decision.action == DecisionAction.MARKED_SENSITIVE:
+                    messages.info(
+                        request,
+                        "The media object has been marked as sensitive.",
+                    )
             else:
                 logger.warning(
                     "Form is invalid",

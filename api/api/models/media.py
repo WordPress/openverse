@@ -335,8 +335,6 @@ class AbstractMediaDecision(OpenLedgerModel):
     class Meta:
         abstract = True
 
-    # TODO: Implement ``clean`` and ``save``, if needed.
-
 
 class AbstractMediaDecisionThrough(models.Model):
     """
@@ -348,6 +346,10 @@ class AbstractMediaDecisionThrough(models.Model):
 
     media_class: type[models.Model] = None
     """the model class associated with this media type e.g. ``Image`` or ``Audio``"""
+    sensitive_media_class: type[models.Model] = None
+    """the model class associated with this media type e.g. ``SensitiveImage`` or ``SensitiveAudio``"""
+    deleted_media_class: type[models.Model] = None
+    """the model class associated with this media type e.g. ``DeletedImage`` or ``DeletedAudio``"""
 
     media_obj = models.ForeignKey(
         AbstractMedia,
@@ -360,6 +362,24 @@ class AbstractMediaDecisionThrough(models.Model):
 
     class Meta:
         abstract = True
+
+    def perform_action(self, action=None):
+        """Perform the action specified in the decision."""
+
+        action = self.decision.action if action is None else action
+
+        if action in {
+            DecisionAction.DEINDEXED_SENSITIVE,
+            DecisionAction.DEINDEXED_COPYRIGHT,
+        }:
+            self.deleted_media_class.objects.create(media_obj_id=self.media_obj_id)
+
+        if action == DecisionAction.MARKED_SENSITIVE:
+            self.sensitive_media_class.objects.create(media_obj_id=self.media_obj_id)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.perform_action()
 
 
 class PerformIndexUpdateMixin:
