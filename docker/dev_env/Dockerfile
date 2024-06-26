@@ -17,8 +17,12 @@ ENV PDM_PYTHONS="${HOME}/pdm/bin"
 # location where `n` installs Node.js versions
 ENV N_PREFIX="${HOME}/n"
 
+ENV PIPX_HOME=/pipx
+ENV PIPX_BIN_DIR="${PIPX_HOME}/bin"
+ENV PIPX_MAN_DIR="${PIPX_HOME}/man"
+
 # Add tooling installed in custom locations to `PATH`.
-ENV PATH="${N_PREFIX}/bin:${PDM_PYTHONS}:${HOME}/.local/bin:${PATH}"
+ENV PATH="${PIPX_BIN_DIR}:${N_PREFIX}/bin:${PDM_PYTHONS}:${HOME}/.local/bin:${PATH}"
 
 # Dependency explanations:
 # - git: required by some python package; contributors should use git on their host
@@ -39,7 +43,8 @@ ENV PATH="${N_PREFIX}/bin:${PDM_PYTHONS}:${HOME}/.local/bin:${PATH}"
 # Node dependencies:
 # - n: Node.js distribution manager
 # - corepack: Node.js package-manager-manager
-RUN dnf -y install dnf-plugins-core \
+RUN mkdir /pipx \
+  && dnf -y install dnf-plugins-core \
   && dnf -y config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo \
   && dnf -y install \
     git \
@@ -59,7 +64,7 @@ RUN dnf -y install dnf-plugins-core \
     corepack \
   && corepack enable
 
-RUN bash -c 'chmod -Rv 0777 /opt'
+RUN bash -c 'chmod -Rv 0777 /opt /pipx'
 
 # Avoid overwriting `.venv`'s from the host
 ENV PDM_VENV_IN_PROJECT="False"
