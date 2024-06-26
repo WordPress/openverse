@@ -3,9 +3,10 @@
 set -e
 
 container_name="openverse-dev_env"
+image_name="$container_name"
 volume_name="openverse_dev-env"
 
-if ! docker volume inspect openverse-dev_env &>/dev/null; then
+if ! docker volume inspect "$container_name" &>/dev/null; then
   docker volume create "$volume_name" 1>/dev/null
 fi
 
@@ -13,6 +14,12 @@ shared_args=(
   -i
   --env "OPENVERSE_PROJECT=$OPENVERSE_PROJECT"
   --env "TERM=xterm-256color"
+  # Avoid overwriting `.venv`'s from the host
+  --env "PDM_VENV_IN_PROJECT=False"
+  # Install global pipx packages separate from user packages
+  # Prevents permissions issue with packages installed as root
+  # when running packages.sh
+  --env "PIPX_GLOBAL_HOME=/pipx"
   --workdir "$(pwd)"
 )
 
@@ -95,9 +102,21 @@ if command -v pdm &>/dev/null; then
 fi
 
 existing_container_id=$(docker ps -a --filter name="$container_name" -q)
+existing_container_image_id=$(docker ps -a --format="{{ .Image }}" -f name="$container_name")
+
+run_container() {
+  docker run "${shared_args[@]}" "${run_args[@]}" "$image_name":latest 1>/dev/null
+}
 
 if [ -z "$existing_container_id" ]; then
-  docker run "${shared_args[@]}" "${run_args[@]}" openverse-dev_env:latest
+  run_container
+elif [ "$existing_container_image_id" != "$image_name":latest ]; then
+  # If the existing container is running the latest image, it will be referred to as the ":latest" tag
+  # Otherwise, $existing_container_image_id will be the actual image ID hash, in which case we aren't running the latest available image
+  printf "Detected a new version of the base image. Stopping the existing container and starting a new one with the latest base image.\n"
+  docker stop "$existing_container_id" 1>2
+  docker rm "$existing_container_id" 1>2
+  run_container
 else
   # Do not need to bother checking if the container is already running, docker start
   # is a noop in that case with no adverse effects

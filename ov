@@ -81,7 +81,7 @@ build)
   ;;
 
 setup-env)
-  "$_self" bash "$dev_env"/setup_env.sh
+  "$_self" sudo bash "$dev_env"/setup_env.sh
   ;;
 
 stop)

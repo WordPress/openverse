@@ -2,6 +2,10 @@
 
 set -e
 
+# Script must run as root inside the container (only relevant for linux hosts)
+
+source "$OPENVERSE_PROJECT"/docker/dev_env/packages.sh
+
 if [ ! -d "$OPENVERSE_PROJECT"/.git ]; then
   printf "Repository not mounted to container!\n"
   exit 1
@@ -34,10 +38,8 @@ fi
 PYTHON_311=${_python3s[0]}
 export PYTHON_311
 
-mkdir -p "$PDM_PYTHONS"
-
-if [ ! -x "$PDM_PYTHONS"/python3.11 ]; then
-  ln -s "$PYTHON_311" "$PDM_PYTHONS"/python3.11
+if [ ! -x /usr/local/bin/python3.11 ]; then
+  ln -s "$PYTHON_311" /usr/local/bin/python3.11
 fi
 
 if [ -z "$(command -v pipenv)" ]; then
