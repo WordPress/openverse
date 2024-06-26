@@ -13,7 +13,7 @@
     <div v-if="hasGeneratedTags">
       <div class="label-regular mb-2 flex gap-2">
         <h3>{{ $t("mediaDetails.tags.generated.heading") }}</h3>
-        <VLink :href="generatedTagsPath">{{
+        <VLink :href="tagsPagePath">{{
           $t("mediaDetails.tags.generated.pageTitle")
         }}</VLink>
       </div>
@@ -76,9 +76,9 @@ export default defineComponent({
 
     const { app } = useContext()
 
-    const generatedTagsPath = computed(() => app.localePath("/generated-tags"))
+    const tagsPagePath = computed(() => app.localePath("/tags"))
 
-    return { generatedTagsPath, tagsByType, hasSourceTags, hasGeneratedTags }
+    return { tagsPagePath, tagsByType, hasSourceTags, hasGeneratedTags }
   },
 })
 </script>
