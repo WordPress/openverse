@@ -50,6 +50,7 @@ LOADER_ARGS = {
 }
 OUTPUT_DIR = Path(os.getenv("OUTPUT_DIR", "/tmp/"))
 COL_URL = "https://download.checklistbank.org/col/latest_coldp.zip"
+INATURALIST_BUCKET = "inaturalist-open-data"
 
 
 class INaturalistDataIngester(ProviderDataIngester):
@@ -202,9 +203,9 @@ class INaturalistDataIngester(ProviderDataIngester):
         for key in s3_keys:
             # this will error out if the files don't exist, and bubble up as an
             # informative failure
-            last_modified = s3_client.head_object(
-                Bucket="inaturalist-open-data", Key=key
-            )["LastModified"]
+            last_modified = s3_client.head_object(Bucket=INATURALIST_BUCKET, Key=key)[
+                "LastModified"
+            ]
             logger.info(
                 f"{key} was last modified on s3 on "
                 f"{last_modified.strftime('%Y-%m-%d %H:%M:%S')}."

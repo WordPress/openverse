@@ -13,6 +13,7 @@ import { AUDIO, IMAGE } from "~/constants/media"
 
 export interface Tag {
   name: string
+  unstable__provider?: string
 }
 
 /**

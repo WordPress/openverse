@@ -2,10 +2,16 @@ from ast import literal_eval
 from pathlib import Path
 from unittest import mock
 
+import boto3
 import pendulum
 import pytest
 from airflow.exceptions import AirflowSkipException
 from airflow.models import TaskInstance
+from tests.dags.common.loader.test_s3 import (
+    ACCESS_KEY,
+    S3_LOCAL_ENDPOINT,
+    SECRET_KEY,
+)
 
 from common.constants import IMAGE
 from common.loader.reporting import RecordMetrics
@@ -232,3 +238,14 @@ def test_compare_update_dates(last_success, s3_dir, expected_msgs, caplog):
         assert actual is None
         for msg in expected_msgs:
             assert msg in caplog.text
+
+
+def test_bucket_exists():
+    bucket = boto3.resource(
+        "s3",
+        aws_access_key_id=ACCESS_KEY,
+        aws_secret_access_key=SECRET_KEY,
+        endpoint_url=S3_LOCAL_ENDPOINT,
+    ).Bucket(inaturalist.INATURALIST_BUCKET)
+
+    assert bucket.creation_date is not None

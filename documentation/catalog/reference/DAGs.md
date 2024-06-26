@@ -48,6 +48,7 @@ The following are DAGs grouped by their primary tag:
 | DAG ID                                                                                 | Schedule Interval |
 | -------------------------------------------------------------------------------------- | ----------------- |
 | [`batched_update`](#batched_update)                                                    | `None`            |
+| [`decode_and_deduplicate_image_tags`](#decode_and_deduplicate_media_type_tags)         | `None`            |
 | [`delete_records`](#delete_records)                                                    | `None`            |
 | [`recreate_full_staging_index`](#recreate_full_staging_index)                          | `None`            |
 | [`recreate_audio_popularity_calculation`](#recreate_media_type_popularity_calculation) | `None`            |
@@ -144,6 +145,7 @@ The following is documentation associated with each DAG (where available):
 1.  [`create_new_production_es_index`](#create_new_environment_es_index)
 1.  [`create_new_staging_es_index`](#create_new_environment_es_index)
 1.  [`create_proportional_by_source_staging_index`](#create_proportional_by_source_staging_index)
+1.  [`decode_and_deduplicate_image_tags`](#decode_and_deduplicate_media_type_tags)
 1.  [`delete_records`](#delete_records)
 1.  [`europeana_workflow`](#europeana_workflow)
 1.  [`finnish_museums_workflow`](#finnish_museums_workflow)
@@ -572,6 +574,21 @@ Because this DAG runs on the staging elasticsearch cluster, it does _not_
 interfere with the production `data_refresh` or `create_filtered_index` DAGs.
 However, it will fail immediately if any of the DAGs tagged as part of the
 `staging-es-concurrency` group are running.
+
+----
+
+### `decode_and_deduplicate_{media_type}_tags`
+
+See the issue for context and motivation:
+https://github.com/WordPress/openverse/issues/4452
+
+This DAG triggers a run of the batched update DAG. It generates a new list of
+tags by trimming all existing tags and re-inserting only the distinct tags of
+the resulting list of tags.
+
+Only records before the CC Search -> Openverse transition are affected. As such,
+because all audio records are dated after that transition, we only need to scan
+images.
 
 ----
 

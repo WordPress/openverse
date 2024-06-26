@@ -78,7 +78,7 @@
             ],
         },
         body: {
-            result_count: 10000,
+            result_count: 240,
             page_count: 20,
             page_size: 20,
             page: 1,
