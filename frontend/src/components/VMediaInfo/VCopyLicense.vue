@@ -39,6 +39,18 @@
       >
         <p>{{ getAttributionMarkup({ isPlaintext: true }) }}</p>
       </VLicenseTabPanel>
+      <VLicenseTabPanel
+        :tab="tabs[3]"
+        :media-id="media.id"
+        :media-type="media.frontendMediaType"
+      >
+        <pre
+          id="attribution-xml"
+          class="whitespace-pre-wrap break-all"
+          dir="ltr"
+          >{{ getAttributionMarkup({ isXml: true }) }}</pre
+        >
+      </VLicenseTabPanel>
     </VTabs>
   </div>
 </template>
@@ -55,7 +67,7 @@ import VTabs from "~/components/VTabs/VTabs.vue"
 import VTab from "~/components/VTabs/VTab.vue"
 import VLicenseTabPanel from "~/components/VMediaInfo/VLicenseTabPanel.vue"
 
-const tabs = ["rich", "html", "plain"] as const
+const tabs = ["rich", "html", "plain", "xml"] as const
 
 export default defineComponent({
   name: "VCopyLicense",
