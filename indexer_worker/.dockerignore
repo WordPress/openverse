@@ -2,4 +2,5 @@
 *
 !indexer_worker
 !gunicorn*
-!Pipfile*
+!pyproject.toml
+!pdm.lock

@@ -22,6 +22,13 @@ ingestion_server:
   - docker/upstream_db/**
   - docker-compose.yml
   - load_sample_data.sh
+indexer_worker:
+  - indexer_worker/**
+  - docker/db/**
+  - docker/es/**
+  - docker/upstream_db/**
+  - docker-compose.yml
+  - load_sample_data.sh
 frontend:
   - frontend/**
   - packages/js/**
