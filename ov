@@ -20,6 +20,9 @@ USAGE
   ov <subcommand> [...ARGS]
 
 COMMANDS
+  ov [help|--help|-h]
+    Show this documentation and exit.
+
   ov init
     Initialise the Openverse development toolkit for the first time
     Alias for:
