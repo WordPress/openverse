@@ -1,0 +1,55 @@
+[project]
+name = "openverse-catalog_indexer_worker"
+version = "0.0.0"
+description = "Indexer worker used by Openverse's data refresh process"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+  {name = "Openverse Contributors", email = "openverse@wordpress.org"},
+]
+
+requires-python = "==3.12.*"
+dependencies = [
+    "aws-requests-auth ~= 0.4",
+    "boto3 ~= 1.28",
+    "bottle ~= 0.12",
+    "elasticsearch == 8.13.0",
+    "elasticsearch-dsl ~= 8.9",
+    "falcon ~= 3.1",
+    "filelock ~= 3.13",
+    "gunicorn ~= 22.0",
+    "jsonschema ~= 4.19",
+    "psycopg2 ~= 2.9",
+    "python-decouple ~= 3.8",
+    "PyYAML ~= 6.0",
+    "tldextract ~= 5.0",
+    "sentry-sdk[falcon] ~= 1.44",
+]
+
+[tool.pdm]
+distribution = false
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "ipython~=8.16",
+    "pytest~=7.4",
+    "pytest-order~=1.1",
+    "pytest-sugar~=0.9",
+    "remote-pdb~=2.1",
+    "pook~=1.0",
+]
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[tool.pytest.ini_options]
+pythonpath = "."
+
+filterwarnings= [
+  # Ignore warnings related to unverified HTTPS requests.
+  # Reason: This warning is suppressed to avoid raising warnings when making HTTP requests
+  # to servers with invalid or self-signed SSL certificates. It allows the tests to proceed
+  # without being interrupted by these warnings.
+  "ignore:Unverified HTTPS request",
+]

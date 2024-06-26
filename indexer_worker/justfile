@@ -14,12 +14,11 @@ IS_CI := env_var_or_default("CI", "")
 # Version #
 ###########
 
-export CATALOG_PY_VERSION := `grep '# PYTHON' requirements-prod.txt | awk -F= '{print $2}'`
-export CATALOG_AIRFLOW_VERSION := `grep '^apache-airflow' requirements-prod.txt | awk -F= '{print $3}'`
+export INDEXER_WORKER_PY_VERSION := `grep 'requires-python' pyproject.toml | awk -F'"' '{print $2}' | sed 's/^==//g; s/\.\*$//g'`
 
 # Print the required Python version
 @py-version:
-    echo $CATALOG_PY_VERSION
+    echo $INDEXER_WORKER_PY_VERSION
 
 ###########
 # Install #
@@ -27,7 +26,7 @@ export CATALOG_AIRFLOW_VERSION := `grep '^apache-airflow' requirements-prod.txt 
 
 # Install dependencies
 install *args="--dev":
-    pipenv install {{ args }}
+    pdm install {{ args }}
 
 ######
 # Up #
@@ -35,7 +34,10 @@ install *args="--dev":
 
 # Bring up services specific to the indexer worker profile
 up *flags:
-    env COMPOSE_PROFILES="indexer_worker" just ../up {{ flags }}
+    env COMPOSE_PROFILES="catalog_indexer_worker" just ../up {{ flags }}
+
+wait-up: up
+    just wait
 
 ##########
 # Health #
@@ -75,6 +77,9 @@ curl-post data host="localhost:50281":
 # Tests #
 #########
 
+test *args: wait-up
+    just ../exec catalog_indexer_worker pytest {{ args }}
+
 # Run indexer-worker tests locally
 test-local *args:
-    pipenv run pytest {{ args }}
+    pdm run pytest {{ args }}

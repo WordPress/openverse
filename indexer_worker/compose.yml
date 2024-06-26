@@ -2,11 +2,13 @@ services:
   catalog_indexer_worker:
     profiles:
       - api
+      - catalog_indexer_worker
     build:
       context: ./
+      target: indexer_worker
       args: # Automatically inferred from env vars, unless specified
-        - CATALOG_PY_VERSION
-    image: openverse-catalog_indexer_worker
+        - INDEXER_WORKER_PY_VERSION
+        - PDM_INSTALL_ARGS=--dev
     ports:
       - "50282:8003"
     depends_on:
