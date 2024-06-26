@@ -436,7 +436,7 @@ def test_caches_failures_if_cache_surpasses_tolerance(mock_image_data, settings,
         )
         .header("User-Agent", UA_HEADER)
         .header("Accept", "image/*")
-        .times(tolerance)
+        .times(tolerance + 1)
         .reply(401)
         .body(MOCK_BODY)
     )

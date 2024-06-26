@@ -23,7 +23,6 @@ import imageInfo from "~/assets/error_images.json"
 interface ErrorImage extends AttributableMedia {
   src: string
   alt: string
-  attribution?: string
 }
 
 /**
@@ -54,6 +53,7 @@ export default defineComponent({
           alt: `errorImages.${image.id}`,
           license: image.license as License,
           license_version: image.license_version as LicenseVersion,
+          frontendMediaType: "image",
         }
         errorImage.attribution = getAttribution(errorImage, i18n)
         return [errorItem.error, errorImage]

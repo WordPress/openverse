@@ -34,7 +34,7 @@ RES=$(curl \
   -F 'timezone="UTC"' \
   "$local_plausible/api/v1/sites")
 
-if [[ $RES == *"\"error\":\"domain This domain has already been taken"* ]]; then
+if [[ $RES == *"This domain cannot be registered. Perhaps one of your colleagues registered it"* ]]; then
   echo "Domain already exists."
 elif [[ $RES == *"\"domain\":\"localhost\""* ]]; then
   echo "Domain created."

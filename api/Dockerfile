@@ -41,7 +41,6 @@ ENV PIP_NO_COLOR=1
 RUN apt-get update \
   && apt-get install -yqq --no-install-recommends \
     python3-dev \
-    git \
   && apt-get autoremove -y \
   && rm -rf /var/lib/apt/lists/* \
   && pip install pdm~=2.14
