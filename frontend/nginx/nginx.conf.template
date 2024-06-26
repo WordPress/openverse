@@ -21,7 +21,8 @@ log_format json_combined escape=json
     '"request_time":"$request_time",'
     '"http_referrer":"$http_referer",'
     '"http_user_agent":"$http_user_agent",'
-    '"upstream_response_time":$upstream_response_time,'
+    '"upstream_response_time":"$upstream_response_time",'
+    '"upstream_cache_status":"$upstream_cache_status",'
     '"http_x_forwarded_for":"$http_x_forwarded_for"'
     '}';
 
@@ -43,6 +44,8 @@ upstream ov_service {
     server          $OPENVERSE_NGINX_UPSTREAM_URL;
 }
 
+proxy_cache_path  /data/nginx/cache levels=1:2 keys_zone=nuxt-cache:25m max_size=1g inactive=7d use_temp_path=off;
+
 server {
     access_log  /var/log/nginx/access.log  json_combined;
 
@@ -54,12 +57,26 @@ server {
     absolute_redirect off;
 
     location / {
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_set_header Host $http_host;
-        proxy_redirect off;
-        proxy_pass http://ov_service;
+        include snippets/nuxt_location.conf;
         error_page 500 /500.json;
+    }
+
+    location /_nuxt {
+        include snippets/cached_location.conf;
+    }
+
+    location /homepage_images {
+        include snippets/cached_location.conf;
+    }
+
+    location /error_images {
+        include snippets/cached_location.conf;
+    }
+
+    # Refers to the nested src/static/static directory
+    # See README in that directory for details
+    location /static {
+        include snippets/cached_location.conf;
     }
 
     location /version {

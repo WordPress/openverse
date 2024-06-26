@@ -32,7 +32,6 @@ def trim_and_deduplicate_tags():
         task_id=DAG_ID,
         trigger_dag_id=BATCHED_UPDATE_DAG_ID,
         wait_for_completion=True,
-        execution_timeout=timedelta(hours=5),
         max_active_tis_per_dag=2,
         map_index_template="""{{ task.conf['table_name'] }}""",
         retries=0,
@@ -56,7 +55,7 @@ def trim_and_deduplicate_tags():
                     )
                 ),
                 "update_query": (
-                    "SET updated_on = now(), "
+                    "SET updated_on = NOW(), "
                     + dedent(
                         f"""
                         tags = (
@@ -78,6 +77,7 @@ def trim_and_deduplicate_tags():
                         """
                     )
                 ),
+                "update_timeout": int(timedelta(hours=5).total_seconds()),
                 "dry_run": False,
             }
             for media_type in MEDIA_TYPES
