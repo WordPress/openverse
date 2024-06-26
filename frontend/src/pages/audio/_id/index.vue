@@ -94,7 +94,7 @@ export default defineComponent({
 
     const audio = ref<AudioDetail | null>(
       singleResultStore.audio?.id &&
-        singleResultStore.audio.id === route.value.params.id
+        singleResultStore.audio.id === route.value?.params?.id
         ? singleResultStore.audio
         : null
     )
@@ -105,7 +105,7 @@ export default defineComponent({
     const { error: nuxtError } = useContext()
 
     useFetch(async () => {
-      const audioId = route.value.params.id
+      const audioId = route.value?.params?.id
       await singleResultStore.fetch(AUDIO, audioId)
 
       const fetchedAudio = singleResultStore.audio
