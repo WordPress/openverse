@@ -52,7 +52,7 @@ you need to run this.
    - The list of ingestion jobs on
      [http://localhost:50281/task](http://localhost:50281/task)
 
-   You can view logs for the service using `./ov just logs ingestion_server`.
+   You can view logs for the service using `just logs ingestion_server`.
 
 ## Shutting down
 

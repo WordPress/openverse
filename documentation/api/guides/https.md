@@ -19,7 +19,7 @@ Additionally, you will need to install
 1. Create certificates for NGINX to use.
 
    ```bash
-   ./ov just docker/nginx/cert
+   just docker/nginx/cert
    ```
 
    This will create a certificate file `openversse.crt` and a key file
@@ -29,7 +29,7 @@ Additionally, you will need to install
    services.
 
    ```bash
-   ./ov just api/up
+   just api/up
    ```
 
    The `api/up` recipe orchestrates the following services: `cache`, `db`,
@@ -41,8 +41,8 @@ Additionally, you will need to install
 3. Make an API call over HTTPS.
 
    ```bash
-   ./ov just api/stats images https://localhost:50243
-   ./ov just _curl-get "images/stats/" https://localhost:50243
+   just api/stats images https://localhost:50243
+   just _curl-get "images/stats/" https://localhost:50243
    curl "https://localhost:50243/v1/images/stats/"
    [{"source_name":"flickr","display_name":"Flickr","source_url":"https://www.flickr.com","logo_url":null,"media_count":2500},{"source_name":"stocksnap","display_name":"StockSnap","source_url":"https://stocksnap.io","logo_url":null,"media_count":2500}]%
    ```

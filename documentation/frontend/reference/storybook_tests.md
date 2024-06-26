@@ -28,7 +28,7 @@ Our Nuxt playwright tests are described by the
 To run the tests:
 
 ```bash
-./ov just frontend/run test:storybook
+just frontend/run test:storybook
 ```
 
 This will run the tests inside a docker container. Should you wish to run the
@@ -38,7 +38,7 @@ there are likely to be visual rendering differences that will cause snapshot
 tests to fail on false-positives.
 
 ```bash
-./ov just frontend/run test:storybook:local
+just frontend/run test:storybook:local
 ```
 
 ## Writing tests
@@ -52,11 +52,11 @@ See
 ### Codegen
 
 You can use Playwright's `codegen` tool to generate tests. For this you will
-need to run Storybook locally on your own using
-`./ov just frontend/run storybook`. Then run:
+need to run Storybook locally on your own using `just frontend/run storybook`.
+Then run:
 
 ```bash
-./ov just frontend/run test:storybook:gen
+just frontend/run test:storybook:gen
 ```
 
 Please note that the codegen script automatically runs against the non-iframed

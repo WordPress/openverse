@@ -54,14 +54,14 @@ codebase.
 To run the end-to-end tests, after having installed docker, run the following:
 
 ```bash
-./ov just frontend/run test:playwright
+just frontend/run test:playwright
 ```
 
 You may pass arguments to playwright directly, for example `-u` to update
 snapshots or a filter.
 
 ```bash
-./ov just frontend/run test:playwright visual-regression -u
+just frontend/run test:playwright visual-regression -u
 ```
 
 The above will run only test files with `visual-regression` in the path and will
@@ -150,7 +150,7 @@ If you've added new tests or updated existing ones, you may get errors about API
 responses not being found. To remedy this, you'll need to update the tapes:
 
 ```bash
-./ov just frontend/run test:playwright:update-tapes
+just frontend/run test:playwright:update-tapes
 ```
 
 If for some reason you find yourself needing to completely recreate the tapes,
@@ -189,7 +189,7 @@ renders the page compared to the docker container.
 To run the debug tests:
 
 ```bash
-./ov just frontend/run test:playwright:debug
+just frontend/run test:playwright:debug
 ```
 
 Note that this still runs the talkback proxy and the Nuxt server for you. If
@@ -216,7 +216,7 @@ When writing end-to-end tests, it can be helpful to use Playwright
 tests by performing actions in the browser:
 
 ```bash
-./ov just frontend/run test:playwright:gen
+just frontend/run test:playwright:gen
 ```
 
 This will open the app in a new browser window, and record any actions you take
@@ -229,5 +229,5 @@ To generate tests for a non-default breakpoint, set the viewport size using the
 `--viewport-size` flag. For example, to test the `xs` breakpoint, run:
 
 ```bash
-./ov just frontend/run test:playwright:gen --viewport-size=340,600"
+just frontend/run test:playwright:gen --viewport-size=340,600"
 ```

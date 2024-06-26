@@ -5,14 +5,14 @@
 1. Before running the tests, make sure to initialise the system with data.
 
    ```bash
-   ./ov just init
+   just init
    ```
 
    This step is a part of the {doc}`"Quickstart" <./quickstart>` process.
 
 2. Run the tests in an interactive TTY connected to a `web` container.
    ```bash
-   ./ov just api/test
+   just api/test
    ```
 
 ## Flaky tests

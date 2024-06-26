@@ -62,18 +62,18 @@ that can be used to generate the files you'll need and get you started:
 # MEDIA: Optionally, a space-delineated list of media types ingested by this provider
 #        (and supported by Openverse). If not provided, defaults to "image".
 
-> ./ov just catalog/add-provider <PROVIDER_NAME> <ENDPOINT> <MEDIA>
+> just catalog/add-provider <PROVIDER_NAME> <ENDPOINT> <MEDIA>
 
 # Example usages:
 
 # Creates a provider that supports just audio
-> ./ov just catalog/add-provider TestProvider https://test.test/search audio
+> just catalog/add-provider TestProvider https://test.test/search audio
 
 # Creates a provider that supports images and audio
-> ./ov just catalog/add-provider "Foobar Museum" https://foobar.museum.org/api/v1 image audio
+> just catalog/add-provider "Foobar Museum" https://foobar.museum.org/api/v1 image audio
 
 # Creates a provider that supports the default, just image
-> ./ov just catalog/add-provider TestProvider https://test.test/search
+> just catalog/add-provider TestProvider https://test.test/search
 ```
 
 You should see output similar to this:
@@ -101,7 +101,7 @@ You can run the provider script directly from the command line via a just
 recipe. This will open a bash shell inside the docker stack of the catalog.
 
 ```
-./ov just catalog/run
+just catalog/run
 ```
 
 Now you can just run the script like so:
@@ -151,8 +151,8 @@ These are documented in the definition of the `ProviderWorkflow` dataclass.
 
 <!--TODO: add docs for other options.-->
 
-After adding your configuration, run `./ov just up` and you should now have a
-fully functioning provider DAG!
+After adding your configuration, run `just up` and you should now have a fully
+functioning provider DAG!
 
 <!--TODO: add and link to docs for how to run provider DAGs locally, preferably with images.-->
 
@@ -173,21 +173,21 @@ manually turn the DAG on in production.
    selecting only the tests associated with the provider.
 
    ```bash
-   ./ov just catalog/test-session
+   just catalog/test-session
    pytest -k <provider_name>
    ```
 
    Alternatively, the test selection can be run in Docker directly with:
 
    ```bash
-   ./ov just catalog/test -k <provider_name>
+   just catalog/test -k <provider_name>
    ```
 
 ```{note}
-Using `./ov just catalog/test-session` opens Docker to access a shell which is set up to run
+Using `just catalog/test-session` opens Docker to access a shell which is set up to run
 tests. This allows one to run tests repeatedly while potentially modifying the code,
 without having to start the Docker container up each time the tests need to be run.
-Running the tests on Docker directly (e.g. using `./ov just catalog/test`) will spin up the
+Running the tests on Docker directly (e.g. using `just catalog/test`) will spin up the
 container, run the selected tests if any are provided (or all by default) and then stop
 and remove the container. That can be useful for ensuring that all tests pass if one
 does not need to iterate and check the test failures repeatedly.

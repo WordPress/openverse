@@ -11,7 +11,7 @@ Once you've made some changes to the codebase, it is important to run tests.
 2. Install the Python dependencies, including dev-dependencies.
 
    ```bash
-   ./ov just ingestion_server/install
+   just ingestion_server/install
    ```
 
    ```{caution}
@@ -22,7 +22,7 @@ Once you've made some changes to the codebase, it is important to run tests.
 3. Run the integration tests.
 
    ```bash
-   ./ov just ingestion_server/test-local
+   just ingestion_server/test-local
    ```
 
    Note that if an `.env` file exists in the folder you're running `just` from,
@@ -34,7 +34,7 @@ Once you've made some changes to the codebase, it is important to run tests.
 To make cURL requests to the local server:
 
 ```bash
-./ov just ingestion_server/curl-post '{"model": <model>, "action": <action>}'
+just ingestion_server/curl-post '{"model": <model>, "action": <action>}'
 ```
 
 Replace `<model>` and `<action>` with the correct values. For example, to

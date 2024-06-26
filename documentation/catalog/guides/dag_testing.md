@@ -17,7 +17,7 @@ might need to get the API keys from the provider and add them to the
 1. Refer to and follow the instructions at [Quickstart](./quickstart.md) to
    setup and make sure the catalog service is up and running. If you have
    successfully completed the general setup then this can be started by running
-   `./ov just catalog/up`.
+   `just catalog/up`.
 
 2. Navigate to http://localhost:9090
 

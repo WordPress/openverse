@@ -12,7 +12,7 @@ you need to run this.
 
 ## Installation
 
-`./ov just install` in the repository root directory will install all Python and
+`just install` in the repository root directory will install all Python and
 Node.js dependencies for automations as well as other parts of the repository.
 If you wish to install only dependencies for automations, run the following:
 
@@ -27,7 +27,7 @@ Run Python automation scripts using the `automations/python/run` just recipe.
 Ex.:
 
 ```bash
-./ov just automations/python/run print_labels.py
+just automations/python/run print_labels.py
 ```
 
 The recipe is an alias for running `pipenv run <script>` inside the
@@ -39,7 +39,7 @@ configuration as expected by many scripts.
 Run Node.js automation scripts using the `automations/js/run` just recipe. Ex.:
 
 ```bash
-./ov just automations/js/run render-jinja.js
+just automations/js/run render-jinja.js
 ```
 
 The recipe is an alias for running `pnpm exec <script>` inside the

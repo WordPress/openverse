@@ -11,8 +11,8 @@ the Openverse monorepo, refer to the README at
 
 To run Vale with Openverse's configuration, use the just recipe:
 
-```bash
-./ov just .vale/run
+```
+$ just .vale/run
 ```
 
 This recipe _always_ builds Vale. The Openverse Vale docker image is fast to

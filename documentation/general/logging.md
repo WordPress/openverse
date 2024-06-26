@@ -33,7 +33,7 @@ searchable and filterable. For example, to see all the logs for a method and
 only that method, one can pipe the logs through `grep` like so.
 
 ```bash
-./ov just logs web | grep 'func_name=<function name>'
+just logs web | grep 'func_name=<function name>'
 ```
 
 ## Request IDs
@@ -46,7 +46,7 @@ codebase and understand what specific parts of the code are causing problems
 with these particular requests.
 
 ```bash
-./ov just logs web | grep 'request_id=<request ID>'
+just logs web | grep 'request_id=<request ID>'
 ```
 
 ## Future improvements

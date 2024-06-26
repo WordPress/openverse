@@ -31,7 +31,7 @@ The following demonstrates the process of adding a new documentation page.
 
 3. Write the document using [MyST flavored Markdown](https://mystmd.org/guide).
 
-4. Run `./ov just lint` to properly format the document.
+4. Run `just lint` to properly format the document.
 
-5. Run `./ov just documentation/live` locally (following the quick start guide)
-   and navigate to the new page to make sure it looks okay!
+5. Run `just documentation/live` locally (following the quick start guide) and
+   navigate to the new page to make sure it looks okay!

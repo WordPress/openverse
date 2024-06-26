@@ -41,14 +41,14 @@ you need to run this.
    dependencies to run the documentation.
 
    ```bash
-   ./ov just documentation/install
+   just documentation/install
    ```
 
 4. Run the documentation live server. Once this is done, you should be able to
    see the documentation on [http://127.0.0.1:50230](http://127.0.0.1:50230).
 
    ```bash
-   ./ov just documentation/live
+   just documentation/live
    ```
 
    ````{admonition} Troubleshooting
@@ -57,8 +57,8 @@ you need to run this.
    caches and restart the live server.
 
    ```bash
-   ./ov just documentation/clean
-   ./ov just documentation/live
+   just documentation/clean
+   just documentation/live
    ```
    ````
 
