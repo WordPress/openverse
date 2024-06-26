@@ -12,7 +12,7 @@ _cmd="$1"
 
 dev_env="$OPENVERSE_PROJECT"/docker/dev_env
 
-if [[ $_cmd == "help" || -z $_cmd ]]; then
+if [[ $_cmd == "help" || $_cmd == "--help" || $_cmd == "-h" || -z $_cmd ]]; then
   cat <<-'EOF'
 Openverse development toolkit
 
