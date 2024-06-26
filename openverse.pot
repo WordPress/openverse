@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2024-06-26T04:15:18+00:00\n"
+"POT-Creation-Date: 2024-06-26T07:08:07+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1059,15 +1059,62 @@ msgctxt "sensitive.faq.three.answer.c"
 msgid "As when adding a new designation, ###openverse### reserves the right to respectfully decline the request to remove a confirmed user sensitivity designation."
 msgstr ""
 
-#: src/pages/generated-tags.vue:3
-#: src/pages/generated-tags.vue:23
-msgctxt "generatedTags.title"
-msgid "About Generated Tags"
+#. Do not translate words between ### ###.
+#: src/pages/tags.vue:3
+#: src/pages/tags.vue:37
+msgctxt "tags.title"
+msgid "Understanding Tags in ###openverse###"
 msgstr ""
 
-#: src/pages/generated-tags.vue:4
-msgctxt "generatedTags.intro.content"
-msgid "Generated tags are automatically assigned to media items based on the content of the media item itself. These tags are generated using machine learning models trained on a large dataset of images and audio tracks."
+#. Do not translate words between ### ###.
+#: src/pages/tags.vue:4
+msgctxt "tags.intro.a"
+msgid "Each creative work in ###openverse### may have tags, an optional set of keywords used to describe the work and make it easier for users to find relevant media for their searches."
+msgstr ""
+
+#: src/pages/tags.vue:5
+msgctxt "tags.intro.b"
+msgid "These tags fall into two main categories: source tags and generated tags. Understanding the difference between them can enhance your search experience and improve the accuracy of your results."
+msgstr ""
+
+#: src/pages/tags.vue:6
+msgctxt "tags.sourceTags.title"
+msgid "Source Tags"
+msgstr ""
+
+#: src/pages/tags.vue:8
+msgctxt "tags.sourceTags.content.a"
+msgid "Source tags are tags that originate from the original source of the creative work. These tags may be added by different contributors, for example a photographer who uploaded their image to Flickr and added descriptive tags."
+msgstr ""
+
+#: src/pages/tags.vue:8
+msgctxt "tags.sourceTags.content.b"
+msgid "The original platform itself may assign additional tags from community members, automation, or other sources."
+msgstr ""
+
+#: src/pages/tags.vue:10
+msgctxt "tags.generatedTags.title"
+msgid "Generated Tags"
+msgstr ""
+
+#: src/pages/tags.vue:12
+msgctxt "tags.generatedTags.content.a"
+msgid "Generated tags are created through automated machine analysis of creative works, most commonly images. This process involves advanced technologies like AWS Rekognition, Clarifai, and other image recognition services that analyze the content and generate descriptive tags. "
+msgstr ""
+
+#: src/pages/tags.vue:13
+msgctxt "tags.generatedTags.content.b"
+msgid "While generally reliable, automated systems can sometimes misinterpret or miss elements in an image."
+msgstr ""
+
+#: src/pages/tags.vue:16
+msgctxt "tags.generatedTags.content.c"
+msgid "Openverse makes efforts to exclude any generated tags that make inferences about the identities or affiliations of human subjects. "
+msgstr ""
+
+#: src/pages/tags.vue:17
+msgctxt "tags.generatedTags.content.d"
+msgid "If you encounter any images with generated tags making assumptions about, for example, gender, religion, or political affiliation, please report the images using the \"Report\" button on our single result pages."
 msgstr ""
 
 msgctxt "error.occurred"
