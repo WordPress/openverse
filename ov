@@ -77,7 +77,7 @@ init)
   ;;
 
 build)
-  docker build "${@:2}" -t openverse-dev-env:latest "$dev_env"
+  docker build "${@:2}" -t openverse-dev_env:latest "$dev_env"
   ;;
 
 setup-env)
@@ -85,16 +85,16 @@ setup-env)
   ;;
 
 stop)
-  docker stop openverse-dev-env
+  docker stop openverse-dev_env
   ;;
 
 clean)
   # Using `|| true` allows these commands to be skipped if the
   # container, image or volume does not exist.
-  docker container stop openverse-dev-env || true
-  docker container rm openverse-dev-env || true
-  docker image rm openverse-dev-env || true
-  docker volume rm openverse-dev-env || true
+  docker container stop openverse-dev_env || true
+  docker container rm openverse-dev_env || true
+  docker image rm openverse-dev_env || true
+  docker volume rm openverse_dev-env || true
   ;;
 
 hook)
