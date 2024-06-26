@@ -16,6 +16,8 @@ FROM docker.io/realies/audiowaveform:1.10.1 AS awf
 # Enable pipefail before `RUN` that contains pipes
 SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
 
+# The script is intentionally single quoted below so that it is not
+# expanded too eagerly and in the wrong context.
 # hadolint ignore=SC2016
 RUN ldd /usr/local/bin/audiowaveform \
     | tr -s '[:blank:]' '\n' \
