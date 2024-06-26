@@ -103,6 +103,8 @@ redirects = {
     "meta/contribution/maintainer_tasks": "/general/contribution/maintainer_tasks.html",
     "meta/contribution/codespell": "/general/contribution/codespell.html",
     "meta/contribution/good_first_and_help_wanted_issues": "/general/contribution/good_first_and_help_wanted_issues.html",
+    "frontend/reference/playwright_tests.html": "/frontend/reference/testing_guidelines.html#playwright-tests",
+    "frontend/reference/storybook_tests.html": "/frontend/reference/testing_guidelines.html#storybook-tests",
 }
 
 myst_enable_extensions = ["linkify"]
