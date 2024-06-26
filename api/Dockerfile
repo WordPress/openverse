@@ -30,7 +30,7 @@ ENV PIP_NO_COLOR=1
 # - Create a virtualenv inside `/venv`
 # - Install PDM to install Python dependencies
 RUN apt-get update \
-  && apt-get install -y python3-dev git \
+  && apt-get install -y python3-dev \
   && rm -rf /var/lib/apt/lists/* \
   && pip install pdm~=2.14
 
