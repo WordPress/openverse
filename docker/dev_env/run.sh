@@ -2,10 +2,10 @@
 
 set -e
 
-container_name="openverse-dev-env"
-volume_name="$container_name"
+container_name="openverse-dev_env"
+volume_name="openverse_dev-env"
 
-if ! docker volume inspect openverse-dev-env &>/dev/null; then
+if ! docker volume inspect openverse-dev_env &>/dev/null; then
   docker volume create "$volume_name" 1>/dev/null
 fi
 
@@ -97,7 +97,7 @@ fi
 existing_container_id=$(docker ps -a --filter name="$container_name" -q)
 
 if [ -z "$existing_container_id" ]; then
-  docker run "${shared_args[@]}" "${run_args[@]}" openverse-dev-env:latest
+  docker run "${shared_args[@]}" "${run_args[@]}" openverse-dev_env:latest
 else
   # Do not need to bother checking if the container is already running, docker start
   # is a noop in that case with no adverse effects

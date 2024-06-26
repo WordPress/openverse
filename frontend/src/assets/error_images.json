@@ -10,7 +10,9 @@
         "creator": "The British Library",
         "license": "cc0",
         "license_version": "1.0",
-        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/"
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "frontendMediaType": "image",
+        "attribution": "\"Depressed musician vintage drawing\" by The British Library is marked with CC0 1.0. To view a copy of this license, visit https://creativecommons.org/publicdomain/zero/1.0/?ref=openverse."
       }
     },
     {
@@ -23,7 +25,9 @@
         "creator": "Edward Lagarde, American, 19th century",
         "license": "cc0",
         "license_version": "1.0",
-        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/"
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "frontendMediaType": "image",
+        "attribution": "\"Depressed musician vintage drawing\" by The British Library is marked with CC0 1.0. To view a copy of this license, visit https://creativecommons.org/publicdomain/zero/1.0/?ref=openverse."
       }
     }
   ]

@@ -10,6 +10,7 @@ const tabs = [
   { id: "rich", name: "Rich Text" },
   { id: "html", name: "HTML" },
   { id: "plain", name: "Plain text" },
+  { id: "xml", name: "XML" },
 ]
 const defaultUrl = "/iframe.html?id=components-vmediainfo-vmediareuse--default"
 const pageUrl = (dir: (typeof languageDirections)[number]) =>

@@ -7,7 +7,7 @@ x-airflow-common: &airflow-common
   depends_on:
     - postgres
     - s3
-  image: openverse_catalog
+  image: openverse-catalog
   env_file:
     - .env
   build:

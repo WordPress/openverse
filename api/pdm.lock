@@ -5,7 +5,7 @@
 groups = ["default", "dev", "overrides", "test"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:7e9f8e52e78990958b094effb69b7b3500def794137e4d75c5d05de015bb99d4"
+content_hash = "sha256:91e8af4c323c960f6fa1eac0dd89ffaba079b5e4696f4e58a39b01943a021986"
 
 [[package]]
 name = "adrf"
@@ -1255,15 +1255,16 @@ files = [
 name = "pook"
 version = "1.4.3"
 requires_python = ">=3.8"
-git = "https://github.com/h2non/pook.git"
-ref = "master"
-revision = "a790994e5b0528210ea39d69878de38136d61628"
 summary = "HTTP traffic mocking and expectations made easy"
 groups = ["test"]
 dependencies = [
     "furl>=0.5.6",
     "jsonschema>=2.5.1",
     "xmltodict>=0.11.0",
+]
+files = [
+    {file = "pook-1.4.3-py3-none-any.whl", hash = "sha256:4683a8a9d11fb56901ae15001a5bfb76a1bb960b1a841de1f0ca11c8c2d9eef8"},
+    {file = "pook-1.4.3.tar.gz", hash = "sha256:61dbd9f6f9bf4d0bbab4abdf382bf7e8fbaae8561c5de3cd444e7c4be67df651"},
 ]
 
 [[package]]
