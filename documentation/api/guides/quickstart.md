@@ -72,4 +72,4 @@ Follow the [general setup guide](/general/general_setup.md) to set up `ov`.
 
 ## Shutting down
 
-Refer to the [common instructions](/general/quickstart.md#shutting-down).
+Refer to the [common instructions](/general/general_setup.md#shutting-down).

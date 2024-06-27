@@ -139,8 +139,8 @@ assigned this issue to you. If you have any questions, you may leave them here.
 
 Please check out our
 [welcome](https://docs.openverse.org/general/contributing.html) and
-[quickstart](https://docs.openverse.org/general/quickstart.html) documentation
-pages for getting started with setting up your local environment.
+[general setup](https://docs.openverse.org/general/general_setup.html)
+documentation pages for getting started with setting up your local environment.
 ```
 
 #### Follow up

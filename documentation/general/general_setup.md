@@ -240,3 +240,25 @@ different editor if you have a preference.
   package system.
 - [vim](https://www.vim.org/) and [emacs](https://www.gnu.org/software/emacs/)
   are ubiquitous terminal-based options.
+
+## Shutting down
+
+1. You can <kbd>Ctrl</kbd> + <kbd>C</kbd> to terminate the frontend process.
+
+2. For services running inside Docker, like the API, ingestion server and
+   Plausible, use another `just` recipe to bring them down.
+
+   ```bash
+   ov just down
+   ```
+
+   ````{tip}
+   If you include the `-v` flag, all Docker volumes (including their data) will
+   be deleted too, which is useful in case you want a fresh start.
+
+   ```bash
+   ov just down -v
+   ```
+   ````
+
+3. For `ov` itself, use `ov stop`.

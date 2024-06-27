@@ -27,4 +27,4 @@ You can view logs for the service using `ov just logs ingestion_server`.
 
 ## Shutting down
 
-Refer to the [common instructions](/general/quickstart.md#shutting-down).
+Refer to the [common instructions](/general/general_setup.md#shutting-down).
