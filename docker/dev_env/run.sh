@@ -44,7 +44,10 @@ run_args=(
 # environment doesn't have one to attach.
 # In other words, only tell Docker to attach a TTY to the container when
 # there's one to attach in the first place.
-if [ -t 0 ]; then
+# Additionally, we only want to attach a TTY if the command is actually interactive
+# and not, instead, as part of a pipe.
+# -t 1 is false if 1 is not stdout (it's something else! a file, a pipe, etc)
+if [[ -t 0 && -t 1 ]]; then
   shared_args+=(-t)
 fi
 
