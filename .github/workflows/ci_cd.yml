@@ -40,6 +40,7 @@ jobs:
       changes: ${{ steps.paths-filter.outputs.changes }}
       catalog: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'catalog') }}
       ingestion_server: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'ingestion_server') }}
+      indexer_worker: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'indexer_worker') }}
       api: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'api') }}
       frontend: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'frontend') }}
       documentation: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'documentation') }}
@@ -201,6 +202,7 @@ jobs:
             SEMANTIC_VERSION=${{ needs.get-image-tag.outputs.image_tag }}
             CATALOG_PY_VERSION=${{ steps.prepare-build-args.outputs.catalog_py_version }}
             CATALOG_AIRFLOW_VERSION=${{ steps.prepare-build-args.outputs.catalog_airflow_version }}
+            INDEXER_WORKER_PY_VERSION=${{ steps.prepare-build-args.outputs.indexer_worker_py_version }}
             API_PY_VERSION=${{ steps.prepare-build-args.outputs.api_py_version }}
             INGESTION_PY_VERSION=${{ steps.prepare-build-args.outputs.ingestion_py_version }}
             FRONTEND_NODE_VERSION=${{ steps.prepare-build-args.outputs.frontend_node_version }}
@@ -251,7 +253,33 @@ jobs:
         uses: ./.github/actions/load-img
         with:
           run_id: ${{ github.run_id }}
-          setup_images: upstream_db catalog
+          setup_images: upstream_db
+
+      # Sets build args specifying versions needed to build Docker image.
+      - name: Prepare build args
+        id: prepare-build-args
+        run: |
+          just versions | tee "$GITHUB_OUTPUT"
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          install: true
+
+      - name: Build catalog dev image
+        uses: docker/build-push-action@v5
+        with:
+          context: catalog
+          target: cat
+          push: false
+          load: true
+          tags: openverse-catalog
+          cache-from: type=gha,scope=catalog_dev
+          cache-to: type=gha,scope=catalog_dev
+          build-args: |
+            CATALOG_PY_VERSION=${{ steps.prepare-build-args.outputs.catalog_py_version }}
+            CATALOG_AIRFLOW_VERSION=${{ steps.prepare-build-args.outputs.catalog_airflow_version }}
+            REQUIREMENTS_FILE=requirements-dev.txt
 
       - name: Run tests
         run: |
@@ -289,6 +317,69 @@ jobs:
         run: |
           just catalog/generate-docs dag true
           just catalog/generate-docs media-props true
+
+  ##################
+  # Indexer worker #
+  ##################
+
+  test-indexer-worker:
+    name: Run tests for indexer worker
+    if: |
+      needs.get-changes.outputs.indexer_worker == 'true' ||
+      needs.get-changes.outputs.ci_cd == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs:
+      - get-changes
+      - build-images
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          setup_python: false
+          # Python is not needed to run the tests.
+          setup_nodejs: false
+          # Node.js is not needed to run the tests.
+          install_recipe: ""
+
+      - name: Load Docker images
+        uses: ./.github/actions/load-img
+        with:
+          run_id: ${{ github.run_id }}
+          setup_images: upstream_db
+
+      # Sets build args specifying versions needed to build Docker image.
+      - name: Prepare build args
+        id: prepare-build-args
+        run: |
+          just versions | tee "$GITHUB_OUTPUT"
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          install: true
+
+      - name: Build indexer worker dev image
+        uses: docker/build-push-action@v5
+        with:
+          context: indexer_worker
+          target: indexer_worker
+          push: false
+          load: true
+          tags: openverse-catalog_indexer_worker
+          cache-from: type=gha,scope=indexer_worker_dev
+          cache-to: type=gha,scope=indexer_worker_dev
+          build-args: |
+            INDEXER_WORKER_PY_VERSION=${{ steps.prepare-build-args.outputs.indexer_worker_py_version }}
+            PDM_INSTALL_ARGS=--dev
+
+      - name: Run tests
+        run: |
+          just indexer_worker/test
 
   ####################
   # Ingestion server #
@@ -799,7 +890,9 @@ jobs:
 
           It looks like some of the Playwright tests failed. You can download the trace output and image diffs for the failed tests under the "Artifacts" section in the above page.
 
-          You can read the [docs on how to use this artifact](https://docs.openverse.org/frontend/reference/playwright_tests.html#debugging).
+          You can read the [docs on how to use this artifact](https://docs.openverse.org/frontend/reference/testing_guidelines.html#debugging).
+
+          Additionally, if you made changes to the frontend UI, you may need to [update relevant playwright test snapshots](https://docs.openverse.org/frontend/guides/test.html#updating-snapshots).
 
           If the test is flaky, follow the [flaky test triage procedure](https://docs.openverse.org/general/test.html#flaky-tests).
           $EOF

@@ -76,9 +76,9 @@ export default defineComponent({
     )
 
     const searchTerm = computed(() => {
-      const q = Array.isArray(route.value.query.q)
-        ? route.value.query.q[0]
-        : route.value.query.q
+      const q = Array.isArray(route.value?.query?.q)
+        ? route.value?.query?.q[0]
+        : route.value?.query?.q
       return q ?? ""
     })
 

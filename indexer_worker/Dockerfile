@@ -1,44 +1,42 @@
 # syntax=docker/dockerfile:1
 
 # Automatically build image using Python version specified in the `Pipfile`.
-ARG CATALOG_PY_VERSION
+ARG INDEXER_WORKER_PY_VERSION
 
 ##################
 # Python builder #
 ##################
 
-FROM docker.io/python:${CATALOG_PY_VERSION} as builder
+FROM docker.io/python:${INDEXER_WORKER_PY_VERSION} as builder
 
 # Container optimizations
 ENV PYTHONUNBUFFERED=1
 ENV PIP_NO_CACHE_DIR=1
 ENV PIP_NO_COLOR=1
 
-# Activate the virtualenv
-ENV PATH="/venv/bin:$PATH"
-
 # - Install system packages needed for building Python dependencies
-# - Create a virtualenv inside `/venv`
-# - Install Pipenv to install Python dependencies
+# - Install PDM to install Python dependencies
 RUN apt-get update \
     && apt-get install -yqq --no-install-recommends \
       python3-dev \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/* \
-    && python -m venv /venv \
-    && pip install --upgrade pipenv
+    && pip install pdm~=2.14
 
 # Copy the Pipenv files into the container
-COPY Pipfile Pipfile.lock /
+COPY pyproject.toml pdm.lock /
 
-# Install Python dependencies system-wide (uses the active virtualenv)
-RUN pipenv install --system --deploy --dev
+# Pass additional arguments when installing Python packages with PDM
+ARG PDM_INSTALL_ARGS='--no-editable'
+
+# Install Python dependencies into a new virtualenv
+RUN pdm install --check --frozen-lockfile $PDM_INSTALL_ARGS
 
 ####################
 # Indexer worker #
 ####################
 
-FROM docker.io/python:${CATALOG_PY_VERSION}-slim as ing
+FROM docker.io/python:${INDEXER_WORKER_PY_VERSION}-slim as indexer_worker
 
 LABEL org.opencontainers.image.source="https://github.com/WordPress/openverse"
 
@@ -48,7 +46,7 @@ ENV PIP_NO_CACHE_DIR=1
 ENV PIP_NO_COLOR=1
 
 # Activate the virtualenv
-ENV PATH="/venv/bin:$PATH"
+ENV PATH="/.venv/bin:$PATH"
 
 ENV PYTHONPATH="$PYTHONPATH:/indexer_worker/"
 # TLDEXTRACT fails to cache in /home/supervisord, set its cache to /tmp instead
@@ -57,7 +55,7 @@ ENV TLDEXTRACT_CACHE="/tmp/python-tldextract"
 WORKDIR /indexer_worker
 
 # Copy virtualenv from the builder image
-COPY --from=builder /venv /venv
+COPY --from=builder /.venv /.venv
 
 # - Install system packages needed for running Python dependencies
 #   - libpq-dev: required by `psycopg2`

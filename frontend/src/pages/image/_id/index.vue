@@ -133,7 +133,7 @@ export default defineComponent({
 
     const image = ref<ImageDetail | null>(
       singleResultStore.image?.id &&
-        singleResultStore.image.id === route.value.params.id
+        singleResultStore.image.id === route.value?.params?.id
         ? singleResultStore.image
         : null
     )
@@ -158,7 +158,7 @@ export default defineComponent({
     const { error: nuxtError } = useContext()
 
     useFetch(async () => {
-      const imageId = route.value.params.id
+      const imageId = route.value?.params?.id
       const fetchedImage = await singleResultStore.fetch(IMAGE, imageId)
       if (!fetchedImage) {
         if (fetchingError.value && !isRetriable(fetchingError.value)) {
