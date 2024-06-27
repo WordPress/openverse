@@ -13,7 +13,7 @@ _cmd="$1"
 dev_env="$OPENVERSE_PROJECT"/docker/dev_env
 export DEV_ENV="$dev_env"
 
-if [[ $_cmd == "help" || -z $_cmd ]]; then
+if [[ $_cmd == "help" || $_cmd == "-h" || $_cmd == "--help" || -z $_cmd ]]; then
   cat <<-'EOF'
 Openverse development toolkit
 
@@ -25,7 +25,7 @@ COMMANDS
     Initialise the Openverse development toolkit for the first time
     Alias for:
 
-        ov build && ov setup-env && ov just install-hooks && ov just init-ov-aliases
+        ov build && ov setup-env && ov just install-hooks && ov just init-ov-profile
 
   ov build [...ARGS]
     Build the Openverse development toolkit Docker image.
@@ -52,10 +52,15 @@ COMMANDS
     including downloading tools handled by `ov setup-env` and pre-commit environments.
 
   ov hook HOOK
-    Run Git hooks through pre-commit inside the development toolkit container
+    Run Git hooks through pre-commit inside the development toolkit container.
+
+  ov aliases [--help|-h]
+    Display information about ov aliases. By default, lists all available aliases.
+    Passing --help will print documentation about how to use and configure aliases.
 
   ov COMMAND [...ARGS]
-    Run COMMAND inside the development toolkit container
+    Run COMMAND inside the development toolkit container. COMMAND will be processed
+    through ov aliases (see `ov aliases --help` for details).
     Hints: The toolkit comes loaded with many tools for working with Openverse! Try
     some of the following:
 
@@ -74,7 +79,7 @@ init)
   "$_self" build
   "$_self" setup-env
   "$_self" just install-hooks
-  "$_self" just init-ov-aliases
+  "$_self" just init-ov-profile
   ;;
 
 build)
