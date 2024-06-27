@@ -1,4 +1,4 @@
-FROM docker.io/library/fedora:latest
+FROM docker.io/library/fedora:40
 
 # We want to keep all important things in `/opt` as we will preserve the
 # `/opt` directory as a volume.
@@ -25,12 +25,14 @@ ENV PATH="${N_PREFIX}/bin:${PDM_PYTHONS}:${HOME}/.local/bin:${PATH}"
 # - perl: used in linting
 # - gcc, g++: required by some pre-commit hooks for node-gyp
 # - just: command runner
+# - jq: JSON processor
 # - which: locate a program file in `PATH`
 # - pipx: Python CLI app installer
 # - nodejs: language runtime (includes npm but not Corepack)
 # - docker*: used to interact with host Docker socket
 #
 # pipx dependencies:
+# - httpie: CLI HTTP client
 # - pdm, pipenv: Python package managers
 # - pre-commit: Git pre-commit and pre-push hook manager
 #
@@ -43,11 +45,14 @@ RUN dnf -y install dnf-plugins-core \
     git \
     g++ \
     just \
+    jq \
     which \
     nodejs npm \
     python3.12 pipx \
     docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin \
+  && dnf clean all \
   && pipx install \
+    httpie \
     pdm pipenv  \
     pre-commit \
   && npm install -g \

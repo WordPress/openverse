@@ -57,7 +57,7 @@ test = [
   "factory-boy >=3.3.0, <4",
   "fakeredis >=2.21.3, <3",
   "freezegun >=1.4.0, <2",
-  "pook @ git+https://github.com/h2non/pook.git@master",
+  "pook >=1.4.3, <2",
   "pytest >=7.4.4, <8",
   "pytest-django >=4.8.0, <5",
   "pytest-pook>=1.0.0",

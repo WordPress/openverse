@@ -51,7 +51,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for "zack", no images and 4,300 audio tracks.
+      All results for "zack", no images and top 4,300 audio tracks.
     </span>
   </h1>
 </div>
@@ -70,7 +70,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for "zack", no images and over 10,000 audio tracks.
+      All results for "zack", no images and top 10,000 audio tracks.
     </span>
   </h1>
 </div>
@@ -89,7 +89,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for "zack", no images and over 10,001 audio tracks.
+      All results for "zack", no images and top 10,001 audio tracks.
     </span>
   </h1>
 </div>
@@ -146,7 +146,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for "zack", 10 images and 4,300 audio tracks.
+      All results for "zack", 10 images and top 4,300 audio tracks.
     </span>
   </h1>
 </div>
@@ -165,7 +165,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for "zack", 10 images and over 10,000 audio tracks.
+      All results for "zack", 10 images and top 10,000 audio tracks.
     </span>
   </h1>
 </div>
@@ -184,7 +184,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for "zack", 10 images and over 10,001 audio tracks.
+      All results for "zack", 10 images and top 10,001 audio tracks.
     </span>
   </h1>
 </div>
@@ -203,7 +203,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for "zack", 4,300 images and no audio tracks.
+      All results for "zack", top 4,300 images and no audio tracks.
     </span>
   </h1>
 </div>
@@ -222,7 +222,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for "zack", 4,300 images and 10 audio tracks.
+      All results for "zack", top 4,300 images and 10 audio tracks.
     </span>
   </h1>
 </div>
@@ -241,7 +241,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for "zack", 4,300 images and 4,300 audio tracks.
+      All results for "zack", top 4,300 images and top 4,300 audio tracks.
     </span>
   </h1>
 </div>
@@ -260,7 +260,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for "zack", 4,300 images and over 10,000 audio tracks.
+      All results for "zack", top 4,300 images and top 10,000 audio tracks.
     </span>
   </h1>
 </div>
@@ -279,7 +279,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for "zack", 4,300 images and over 10,001 audio tracks.
+      All results for "zack", top 4,300 images and top 10,001 audio tracks.
     </span>
   </h1>
 </div>
@@ -298,7 +298,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for "zack", over 10,000 images and no audio tracks.
+      All results for "zack", top 10,000 images and no audio tracks.
     </span>
   </h1>
 </div>
@@ -317,7 +317,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for "zack", over 10,000 images and 10 audio tracks.
+      All results for "zack", top 10,000 images and 10 audio tracks.
     </span>
   </h1>
 </div>
@@ -336,7 +336,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for "zack", over 10,000 images and 4,300 audio tracks.
+      All results for "zack", top 10,000 images and top 4,300 audio tracks.
     </span>
   </h1>
 </div>
@@ -355,7 +355,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for "zack", over 10,000 images and over 10,000 audio tracks.
+      All results for "zack", top 10,000 images and top 10,000 audio tracks.
     </span>
   </h1>
 </div>
@@ -374,7 +374,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for "zack", over 10,000 images and over 10,001 audio tracks.
+      All results for "zack", top 10,000 images and top 10,001 audio tracks.
     </span>
   </h1>
 </div>
@@ -393,7 +393,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for "zack", over 10,001 images and no audio tracks.
+      All results for "zack", top 10,001 images and no audio tracks.
     </span>
   </h1>
 </div>
@@ -412,7 +412,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for "zack", over 10,001 images and 10 audio tracks.
+      All results for "zack", top 10,001 images and 10 audio tracks.
     </span>
   </h1>
 </div>
@@ -431,7 +431,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for "zack", over 10,001 images and 4,300 audio tracks.
+      All results for "zack", top 10,001 images and top 4,300 audio tracks.
     </span>
   </h1>
 </div>
@@ -450,7 +450,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for "zack", over 10,001 images and over 10,000 audio tracks.
+      All results for "zack", top 10,001 images and top 10,000 audio tracks.
     </span>
   </h1>
 </div>
@@ -469,7 +469,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"all","resultCount
     <span
       class="sr-only"
     >
-      All results for "zack", over 10,001 images and over 10,001 audio tracks.
+      All results for "zack", top 10,001 images and top 10,001 audio tracks.
     </span>
   </h1>
 </div>
@@ -526,7 +526,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"audio","resultCou
     <span
       class="sr-only"
     >
-      4,300 audio tracks for "zack".
+      Top 4,300 audio tracks for "zack".
     </span>
   </h1>
 </div>
@@ -545,7 +545,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"audio","resultCou
     <span
       class="sr-only"
     >
-      Over 10,000 audio tracks for "zack".
+      Top 10,000 audio tracks for "zack".
     </span>
   </h1>
 </div>
@@ -564,7 +564,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"audio","resultCou
     <span
       class="sr-only"
     >
-      Over 10,001 audio tracks for "zack".
+      Top 10,001 audio tracks for "zack".
     </span>
   </h1>
 </div>
@@ -621,7 +621,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"image","resultCou
     <span
       class="sr-only"
     >
-      4,300 image results for "zack".
+      Top 4,300 image results for "zack".
     </span>
   </h1>
 </div>
@@ -640,7 +640,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"image","resultCou
     <span
       class="sr-only"
     >
-      Over 10,000 image results for "zack".
+      Top 10,000 image results for "zack".
     </span>
   </h1>
 </div>
@@ -659,7 +659,7 @@ exports[`VSearchResultsTitle accessible heading {"searchType":"image","resultCou
     <span
       class="sr-only"
     >
-      Over 10,001 image results for "zack".
+      Top 10,001 image results for "zack".
     </span>
   </h1>
 </div>

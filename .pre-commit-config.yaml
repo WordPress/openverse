@@ -160,3 +160,8 @@ repos:
       - id: renovate-config-validator
         args:
           - --strict
+
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.12.0
+    hooks:
+      - id: hadolint-docker

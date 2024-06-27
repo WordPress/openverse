@@ -259,11 +259,13 @@ def _clean_data_worker(rows, temp_table, sources_config, all_fields: list[str]):
         update_field_expressions = []
         for field, clean_value in cleaned_data.items():
             if field == "tags":
+                # The `clean_value` for tags already includes the single quotes,
+                # so it's not necessary to add them, and they're omitted in
+                # `cleaned_values` to save in files later because they take up
+                # too much disk space.
                 update_field_expressions.append(f"{field} = {clean_value}")
                 continue
             update_field_expressions.append(f"{field} = '{clean_value}'")
-            # Save cleaned values for later
-            # (except for tags, which take up too much space)
             cleaned_values[field].append((identifier, clean_value))
 
         if len(update_field_expressions) > 0:

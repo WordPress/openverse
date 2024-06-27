@@ -363,11 +363,16 @@ class AudioDecisionThrough(AbstractMediaDecisionThrough):
     be referenced by `identifier` rather than an arbitrary `id`.
     """
 
+    media_class = Audio
+    sensitive_media_class = SensitiveAudio
+    deleted_media_class = DeletedAudio
+
     media_obj = models.ForeignKey(
         Audio,
         to_field="identifier",
-        on_delete=models.CASCADE,
+        on_delete=models.DO_NOTHING,
         db_column="identifier",
+        db_constraint=False,
     )
     decision = models.ForeignKey(AudioDecision, on_delete=models.CASCADE)
 

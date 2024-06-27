@@ -7,7 +7,7 @@ inputs:
     required: true
 
   setup_images:
-    default: "upstream_db ingestion_server catalog api api_nginx frontend"
+    default: "upstream_db ingestion_server catalog_indexer_worker catalog api api_nginx frontend"
     description: Space-separated list of image names
 
 runs:

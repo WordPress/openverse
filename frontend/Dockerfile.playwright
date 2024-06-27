@@ -6,7 +6,7 @@ FROM mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-jammy
 
 ARG PACKAGE_MANAGER
 
-COPY package.json .
+COPY package.json /
 
 # Requires `packageManager` field to be present in `frontend/package.json`.
 RUN npm install -g $PACKAGE_MANAGER

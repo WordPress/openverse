@@ -467,6 +467,32 @@
       },
     },
   },
+  tags: {
+    title: "Understanding Tags in {openverse}",
+    /** generatedTags.intro.a-b are parts of a single section explaining how tags work in Openverse. */
+    intro: {
+      a: "Each creative work in {openverse} may have tags, an optional set of keywords used to describe the work and make it easier for users to find relevant media for their searches.",
+      b: "These tags fall into two main categories: source tags and generated tags. Understanding the difference between them can enhance your search experience and improve the accuracy of your results.",
+    },
+    sourceTags: {
+      title: "Source Tags",
+      /** sourceTags.content.a-b are parts of a single section explaining how source tags work in Openverse. */
+      content: {
+        a: "Source tags are tags that originate from the original source of the creative work. These tags may be added by different contributors, for example a photographer who uploaded their image to Flickr and added descriptive tags.",
+        b: "The original platform itself may assign additional tags from community members, automation, or other sources.",
+      },
+    },
+    generatedTags: {
+      title: "Generated Tags",
+      /** generatedTags.content.a-d are parts of a single section explaining how generated tags work in Openverse. */
+      content: {
+        a: "Generated tags are created through automated machine analysis of creative works, most commonly images. This process involves advanced technologies like AWS Rekognition, Clarifai, and other image recognition services that analyze the content and generate descriptive tags. ",
+        b: "While generally reliable, automated systems can sometimes misinterpret or miss elements in an image.",
+        c: "Openverse makes efforts to exclude any generated tags that make inferences about the identities or affiliations of human subjects. ",
+        d: 'If you encounter any images with generated tags making assumptions about, for example, gender, religion, or political affiliation, please report the images using the "Report" button on our single result pages.',
+      },
+    },
+  },
   error: {
     occurred: "An error occurred",
     imageNotFound: "Couldn't find image with id {id}",
@@ -614,17 +640,17 @@
   browsePage: {
     allNoResults: "No results",
     allResultCount: "{localeCount} result|{localeCount} results",
-    allResultCountMore: "Over {localeCount} results",
+    allResultCountMore: "Top {localeCount} results",
     contentLink: {
       image: {
         zero: "No images found for {query}.",
         count: "See {localeCount} image found for {query}.|See {localeCount} images found for {query}.",
-        countMore: "See over {localeCount} images found for {query}.",
+        countMore: "See the top {localeCount} images found for {query}.",
       },
       audio: {
         zero: "No audio tracks found for {query}.",
         count: "See {localeCount} audio tracks found for {query}.",
-        countMore: "See over {localeCount} audio tracks found for {query}.",
+        countMore: "See the top {localeCount} audio tracks found for {query}.",
       },
     },
     load: "Load more results",
@@ -705,12 +731,12 @@
         image: {
           zero: 'No image results for "{query}"',
           count: '{localeCount} image result for "{query}".|{localeCount} image results for "{query}".',
-          countMore: 'Over {localeCount} image results for "{query}".',
+          countMore: 'Top {localeCount} image results for "{query}".',
         },
         audio: {
           zero: 'No audio tracks for "{query}"',
           count: '{localeCount} audio track for "{query}".|{localeCount} audio tracks for "{query}".',
-          countMore: 'Over {localeCount} audio tracks for "{query}".',
+          countMore: 'Top {localeCount} audio tracks for "{query}".',
         },
       },
       allResultsHeadingCount: {
@@ -720,7 +746,7 @@
           /* Interpolated into browsePage.aria.results.all */
           count: "{localeCount} image|{localeCount} images",
           /* Interpolated into browsePage.aria.results.all */
-          countMore: "over {localeCount} images",
+          countMore: "top {localeCount} images",
         },
         audio: {
           /* Interpolated into browsePage.aria.results.all */
@@ -728,7 +754,7 @@
           /* Interpolated into browsePage.aria.results.all */
           count: "{localeCount} audio track|{localeCount} audio tracks",
           /* Interpolated into browsePage.aria.results.all */
-          countMore: "over {localeCount} audio tracks",
+          countMore: "top {localeCount} audio tracks",
         },
       },
     },
@@ -801,6 +827,7 @@
         plain: "Plain text",
         copyText: "Copy text",
         copied: "Copied!",
+        xml: "XML",
       },
       attribution: "This image was marked with a {link} license:",
     },
@@ -821,6 +848,13 @@
     audioInfo: "Audio track information",
     tags: {
       title: "Tags",
+      generated: {
+        heading: "Generated tags",
+        pageTitle: "Learn more",
+      },
+      source: {
+        heading: "Source tags",
+      },
       showMore: "Show more",
       showLess: "Show less",
     },
@@ -1137,15 +1171,15 @@
     },
     ariaLabel: {
       creator: {
-        audio: "Audio files by {creator} in {source}",
+        audio: "Audio tracks by {creator} in {source}",
         image: "Images by {creator} in {source}",
       },
       source: {
-        audio: "Audio files from {source}",
+        audio: "Audio tracks from {source}",
         image: "Images from {source}",
       },
       tag: {
-        audio: "Audio files with the tag {tag}",
+        audio: "Audio tracks with the tag {tag}",
         image: "Images with the tag {tag}",
       },
     },
@@ -1154,36 +1188,36 @@
         audio: {
           zero: "No audio tracks by this creator.",
           count: "{count} audio track by this creator.|{count} audio tracks by this creator.",
-          countMore: "Over {count} audio files by this creator.",
+          countMore: "Top {count} audio tracks by this creator.",
         },
         image: {
           zero: "No images by this creator.",
           count: "{count} image by this creator.|{count} images by this creator.",
-          countMore: "Over {count} images by this creator.",
+          countMore: "Top {count} images by this creator.",
         },
       },
       source: {
         audio: {
-          zero: "No audio files provided by this source",
+          zero: "No audio tracks provided by this source",
           count: "{count} audio track provided by this source|{count} audio tracks provided by this source",
-          countMore: "Over {count} audio files provided by this source",
+          countMore: "Top {count} audio tracks provided by this source",
         },
         image: {
           zero: "No images provided by this source",
           count: "{count} image provided by this source|{count} images provided by this source",
-          countMore: "Over {count} images provided by this source",
+          countMore: "Top {count} images provided by this source",
         },
       },
       tag: {
         audio: {
-          zero: "No audio files with the selected tag",
+          zero: "No audio tracks with the selected tag",
           count: "{count} audio track with the selected tag|{count} audio tracks with the selected tag",
-          countMore: "Over {count} audio files with the selected tag",
+          countMore: "Top {count} audio tracks with the selected tag",
         },
         image: {
           zero: "No images with the selected tag",
           count: "{count} image with the selected tag|{count} images with the selected tag",
-          countMore: "Over {count} images with the selected tag",
+          countMore: "Top {count} images with the selected tag",
         },
       },
     },

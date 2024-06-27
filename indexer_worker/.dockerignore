@@ -1,0 +1,6 @@
+# Exclude everything and only include certain files
+*
+!indexer_worker
+!gunicorn*
+!pyproject.toml
+!pdm.lock

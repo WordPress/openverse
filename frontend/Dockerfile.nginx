@@ -19,7 +19,10 @@ LABEL org.opencontainers.image.source = "https://github.com/WordPress/openverse"
 
 WORKDIR /app
 
-COPY nginx.conf.template /etc/nginx/templates/openverse-frontend.conf.template
+RUN mkdir -p /data/nginx/cache
+
+COPY nginx/nginx.conf.template /etc/nginx/templates/openverse-frontend.conf.template
+COPY nginx/snippets /etc/nginx/snippets
 
 # Only environment variables with this prefix will be available in the template
 ENV NGINX_ENVSUBST_FILTER="OPENVERSE_NGINX_"
