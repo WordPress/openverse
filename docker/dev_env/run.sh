@@ -144,4 +144,8 @@ else
   docker start "$existing_container_id" 1>/dev/null
 fi
 
-docker exec "${shared_args[@]}" "$container_name" python3 "$OPENVERSE_PROJECT"/docker/dev_env/exec.py "${_cmd[@]}"
+# `sed` pipe to prevent docker -T from mangling returns
+# kudos https://stackoverflow.com/a/71042161
+# Modified to pipe separately because we need to process both stderr and stdout through
+# but keep the processed stderr piped back to stderr instead of translated as stdout
+docker exec "${shared_args[@]}" "$container_name" python3 "$OPENVERSE_PROJECT"/docker/dev_env/exec.py "${_cmd[@]}" > >(sed 's/$/\r/') 2> >(sed 's/$/\r/' >/dev/stderr)
