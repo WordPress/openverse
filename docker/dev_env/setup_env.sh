@@ -2,10 +2,6 @@
 
 set -e
 
-# Script must run as root inside the container (only relevant for linux hosts)
-
-source "$OPENVERSE_PROJECT"/docker/dev_env/packages.sh
-
 if [ ! -d "$OPENVERSE_PROJECT"/.git ]; then
   printf "Repository not mounted to container!\n"
   exit 1
@@ -20,8 +16,8 @@ if [ -z "$(n ls 2>/dev/null)" ]; then
   n install auto
 fi
 
-if [ -n "$PNPM_HOME" ]; then
-  export PATH="$PNPM_HOME:$PATH"
+if [[ -n $PNPM_HOME && ! -L $PNPM_BIN ]]; then
+  ln -s "$PNPM_HOME" "$PNPM_BIN"
 fi
 
 pdm config python.install_root "/opt/pdm/python"

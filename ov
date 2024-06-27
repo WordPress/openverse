@@ -11,6 +11,7 @@ _self="$OPENVERSE_PROJECT/ov"
 _cmd="$1"
 
 dev_env="$OPENVERSE_PROJECT"/docker/dev_env
+export DEV_ENV="$dev_env"
 
 if [[ $_cmd == "help" || -z $_cmd ]]; then
   cat <<-'EOF'
@@ -95,6 +96,7 @@ clean)
   docker container rm openverse-dev_env || true
   docker image rm openverse-dev_env || true
   docker volume rm openverse_dev-env || true
+  rm -rf "$dev_env"/.cache
   ;;
 
 hook)
