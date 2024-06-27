@@ -1,4 +1,4 @@
-# Quickstart
+# Catalog quickstart guide
 
 This repository contains the methods used to identify over 1.4 billion Creative
 Commons licensed works. The challenge is that these works are dispersed
@@ -52,11 +52,11 @@ To set up the local python environment along with the pre-commit hook, run:
 <!-- vale Vale.Repetition = NO -->
 
 ```shell
-./ov just catalog/venv
-./ov bash
+ov just catalog/venv
+ov bash -c '
 source catalog/.venv/bin/activate
 just catalog/install
-exit
+'
 ```
 
 <!-- vale Vale.Repetition = YES -->
@@ -65,7 +65,7 @@ The containers will be built when starting the stack up for the first time. If
 you'd like to build them prior to that, run:
 
 ```shell
-./ov just build
+ov just build
 ```
 
 ### Environment
@@ -73,7 +73,7 @@ you'd like to build them prior to that, run:
 To set up environment variables run:
 
 ```shell
-./ov just env
+ov just env
 ```
 
 This will generate a `.env` file which is used by the containers.
@@ -92,11 +92,10 @@ The `.env` file does not need to be modified if you only want to run the tests.
 
 ### Running & Testing
 
-There is a [`docker-compose.yml`][dockercompose] provided in the
-[`catalog`][cc_airflow] directory, so from that directory, run
+Use the `catalog/up` recipe to start the catalog's Docker compose stack:
 
 ```shell
-./ov just catalog/up
+ov just catalog/up
 ```
 
 This results, among other things, in the following running containers:
@@ -117,21 +116,16 @@ and some networking setup so that they can communicate. Note:
   container `openverse_catalog_webserver_1`. On production, only the DAGs folder
   will be mounted, e.g. `/opt/airflow/openverse/dags`.
 
-The various services can be accessed using these links:
-
-- Airflow: `localhost:9090` (The default username and password are both
-  `airflow`.)
-- Minio Console: `localhost:5011` (The default username and password are
-  `test_key` and `test_secret`)
-- Postgres: `localhost:5434` (using a database connector)
+Run `ov just ps` to see the list of running services and the localhost URLs for
+interacting with them.
 
 At this stage, you can run the tests via:
 
 ```shell
-./ov just catalog/test
+ov just catalog/test
 
 # Alternatively, run all tests including longer-running ones
-./ov just catalog/test --extended
+ov just catalog/test --extended
 ```
 
 Edits to the source files or tests can be made on your local machine, then tests
@@ -140,39 +134,39 @@ can be run in the container via the above command to see the effects.
 If you'd like, it's possible to login to the webserver container via:
 
 ```shell
-./ov just catalog/shell
+ov just catalog/shell
 ```
 
 If you just need to run an airflow command, you can use the `airflow` recipe.
 Arguments passed to airflow must be quoted:
 
 ```shell
-./ov just run scheduler airflow config list
+ov just run scheduler airflow config list
 ```
 
 To follow the logs of the running container:
 
 ```shell
-./ov just logs
+ov just logs
 ```
 
 To begin an interactive [`pgcli` shell](https://www.pgcli.com/) on the database
 container, run:
 
 ```shell
-./ov just catalog/pgcli
+ov just catalog/pgcli
 ```
 
 If you'd like to bring down the containers, run
 
 ```shell
-./ov just down
+ov just down
 ```
 
 To reset the test DB (wiping out all databases, schemata, and tables), run
 
 ```shell
-./ov just down -v
+ov just down -v
 ```
 
 `docker volume prune` can also be useful if you've already stopped the running
@@ -182,7 +176,7 @@ stopped containers, not just catalog ones.
 To fully recreate everything from the ground up, you can use:
 
 ```shell
-./ov just recreate
+ov just recreate
 ```
 
 > **Note**: Any recipes or scripts which output files to the container's mounted

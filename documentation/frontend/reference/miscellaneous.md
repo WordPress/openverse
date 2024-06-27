@@ -4,7 +4,7 @@
 
 The code in this repository is formatted using `prettier`. If you have prettier
 setup in your code editor it should work out of the box; otherwise you can use
-the `./ov just frontend/run lint` script to format and fix lint errors in your
+the `ov just frontend/run lint` script to format and fix lint errors in your
 code. Checks are run to lint your code and validate the formatting on git
 precommit.
 

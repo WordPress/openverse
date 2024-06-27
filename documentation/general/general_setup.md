@@ -1,263 +1,230 @@
 # General setup guide
 
-This is an exhaustive list for new developers. Feel free to skip the steps that
-you have already done on your own.
+Openverse maintains a containerised development environment named `ov`, and it
+is the only supported method of working with Openverse. `ov` is included in the
+repository, and its only dependencies are git, bash, and Docker (or a compatible
+container runtime).
 
-If you already have a development environment set up and want to set up
-Openverse on your computer, you can move on to the
-[quickstart guide](/general/quickstart.md).
-
-## Operating system
-
-```{caution}
+```{admonition} Openverse and Windows
+:class: caution
 Openverse development is currently supported only for UNIX-type environments
-(Linux and macOS). Windows is not supported natively, but PRs that enable
-Openverse development on Windows, or improve the experience, are welcome.
-```
-
-```{tip}
-We recommend Windows Subsystem for Linux (WSL) as a viable option.
-```
-
-Windows Subsystem for Linux can be a much more versatile and familiar
-environment for software development on Windows. Everything from installing
-`git` and other dependencies to using command line tools that will be familiar
-to the wider community of software developers are more likely to be easier under
-WSL. While some parts of some Openverse projects may be able to be developed
-under native Windows, you will have a much smoother time with WSL as our command
-runners (`just` and `pnpm`) assume a UNIX-type environment (Linux and macOS).
+(Linux and macOS). Windows is not directly supported, but development may be
+possible using Windows Subsystem for Linux (WSL).
 
 Installation instructions for WSL on Windows 10 and 11 can be found in
 Microsoft's
 [official documentation](https://docs.microsoft.com/en-us/windows/wsl/install).
-
-## Requirement matrix
-
-Based on which part of the Openverse stack you are contributing to, you might
-not need everything mentioned on this page. Refer to this chart to see which
-prerequisites are required to get started with your contributions.
-
-| Requirement        | Docs | Ingestion server | API | Frontend       | Management |
-| ------------------ | ---- | ---------------- | --- | -------------- | ---------- |
-| [Git](#git)        | ✅   | ✅               | ✅  | ✅             | ✅         |
-| [`just`](#just)    | ✅   | ✅               | ✅  | ✅             | ✅         |
-| [Python](#python)  | ✅   | ➖               | ➖  | ➖             | ✅         |
-| [Node.js](#nodejs) | ➖   | ➖               | ➖  | ✅             | ✅         |
-| [Docker](#docker)  | ➖   | ✅               | ✅  | ❔[^analytics] | ➖         |
-
-Here ✅ means required, ➖ means not required and ❔ means conditionally
-required.
-
-[^analytics]: This is required to run analytics, not required otherwise.
-
-## Required setup
-
-The following setup steps are needed to set up a local copy of Openverse and do
-not prepare you to contribute code to the project.
-
-### Git
-
-Openverse is Git-tracked. To clone Openverse locally, you will need to install
-`git`. Most Linux distributions and macOS will already have this installed, even
-if it's not always the latest version. To know if you have Git installed, run
-the following command.
-
-```bash
-git --version
 ```
 
-If you see `git version x.y.z`, you have Git installed. If you see an error, you
-need to install it by following the
-[official instructions](https://git-scm.com/downloads).
+## Dependencies
 
-### `just`
+You must have available on your computer (referred to as the "host system") the
+following:
 
-We use `just` as our command runner. It makes it easier to run cumbersome
-commands that are generally needed a lot during development, like bringing up
-our backend services or linting the codebase.
+- bash
+- git
+- Docker (or a compatible container runtime)
 
-`just` can be [installed](https://github.com/casey/just#installation) for a host
-of operating systems via their respective
-[package managers](https://github.com/casey/just#packages) or using
-[pre-built binaries](https://github.com/casey/just#pre-built-binaries) available
-for some operating systems.
+On macOS and most popular Linux distributions, bash and git are installed by
+default. Most contributors will only need to install Docker or a compatible
+container runtime to use `ov`.
 
-````{tip}
-If you run `just` inside the Openverse root repo without a recipe name, you can
-see a huge list of all the different recipes present in the project.
+[Follow Docker's instructions to install Docker on your host system](https://docs.docker.com/engine/install/).
 
-```bash
-cd openverse/
-just
+```{tip}
+For Openverse, you'll only need the container runtime, and do not necessarily
+need to install additional tools like Docker compose, buildx, and so forth.
+
+While Openverse relies on these tools, they are all installed in the `ov` container,
+and therefore do not need to be available on your host system if you won't use
+them otherwise.
 ```
+
+## Up and running
+
+1. Clone the GitHub repository:
+
+```shell
+git clone --filter=blob:none https://github.com/WordPress/openverse.git # or your fork
+cd ./openverse
+```
+
+2. Initialise the `ov` development environment:
+
+```shell
+./ov init
+```
+
+3. It is strongly recommended to add `ov` to your
+   [`PATH`](https://en.wikipedia.org/wiki/PATH_%28variable%29) so that you can
+   run it from anywhere without needing to reference it relative to the
+   repository root.
+
+   You can do so using a symbolic link, for example:
+
+   ```shell
+   ln -s $(git rev-parse --show-toplevel)/ov ~/.local/bin/ov
+   ```
+
+   Add `~/.local/bin` to your `PATH` or replace it in the command above with a
+   directory on your `PATH`, and _voilà_, you can run `ov` from anywhere without
+   needing to reference it relative to the repository.
+
+   ```{caution}
+   Throughout the Openverse documentation, we assume `ov` is available for use directly.
+   If you cannot add `ov` to your `PATH`, then use a relative reference to it anytime you
+   invoke the command (i.e., as in `ov init` above).
+   ```
+
+You're done! Run `ov help` to see a list of useful tools, and visit the
+quickstart guides for each part of the Openverse project in the list below:
+
+```{toctree}
+:maxdepth: 1
+:glob:
+
+/frontend/guides/quickstart.md
+/api/guides/quickstart.md
+/catalog/guides/quickstart.md
+/ingestion_server/guides/quickstart.md
+```
+
+## `ov` usage
+
+Run `ov help` to read basic documentation for how to use and interact with `ov`.
+
+### Aliases
+
+`ov` has a number of built-in aliases, which are documented and discoverable by
+running `ov aliases`.
+
+You may configure your own aliases. Run `ov aliases --help` for documentation.
+`ov init` includes an example alias in the generated `.ov_profile.json` to help
+you get started.
+
+### Included tools
+
+The containerised `ov` environment includes a host of excellent general and
+specific tools to interact with Openverse's development environment. Some of
+them are listed here for visibility and awareness.
+
+- [`just`](https://github.com/casey/just) is a command runner. Like `make` but
+  with loads of features for writing scripts `make` was never made for. Try
+  `ov just` to see all available recipes.
+- [`jq`](https://stedolan.github.io/jq/) is a tool for parsing and manipulating
+  JSON data. Openverse loves `jq`! Try `ov jq --help` for information.
+- [`pdm`](https://pdm-project.org/en/stable/) is a Python package manager. You
+  can use it in any Openverse directory to interact with `pyproject.toml` and
+  different virtual environments. Try `ov pdm --help` for info.
+- [`httpie`](https://httpie.io/docs/cli) is a command line HTTP client. Like
+  cURL but with a lot of conveniences and easier to remember. Try `http --help`
+  for info.
+
+````{admonition} Bring your own tools
+:class: tip
+
+Generally speaking, you should be able to rely on any tools you have on your host system.
+You can pipe output to and from `ov` and it should "just work". For example, the following
+will pipe the output of running `ov just api/stats` to your host machine's `less` command.
+
+```shell
+ov just api/stats | less
+```
+
+It works the other way, too!
+
+```shell
+printf '{"hello": "world"}' | ov jq '.hello'
+```
+
+You can even pipe from `ov` to `ov`:
+
+```shell
+ov just api/stats | ov jq '.[0]'
+```
+
+🎉
 ````
 
-If for some reason, you are unable to install `just`, you can refer to the
-`justfile` to see the commands that make up a recipe, and then run those
-commands individually in a terminal. It won't be the best user experience, but
-it will work just the same.
+````{admonition} Dive into bash
+:class: tip
 
-We also recommend setting up
-[shell completions](https://github.com/casey/just#shell-completion-scripts) for
-`just` to make it faster to find and run recipes. On macOS with the default Z
-shell, Homebrew installs completions for `just` by default.
+`ov` includes `bash`, and if you prefer to interact directly with the development environment,
+rather than going through `ov` for each command, you can enter into `ov`'s `bash` prompt
+like so:
 
-## Conditional setup
+```shell
+ov bash
+```
 
-A subset of the following requirements will be required depending on the extent
-of your contribution to the project. To see which of these you need, refer to
-the [requirement matrix](#requirement-matrix) above.
+Be aware, however, that `ov` aliases **will not work** inside `ov bash`!
+````
 
-### Python
+### Troubleshooting
+
+While `ov` works well to simplify the development environment, you may sometimes
+run into problems that you can't figure out.
+
+The first thing to try in these circumstances is to restart `ov` from scratch,
+using `ov clean && ov init`.
+
+If the problem persists, please open an issue in GitHub so maintainers can
+assist in debugging the problem.
+
+### How it works
+
+`ov` itself lives at the repository root, and is just a bash script. Almost all
+functionality is implemented through support scripts in `/docker/dev_env`.
+
+`ov` containerises the Openverse development environment by running a persistent
+Fedora container and running all development environment tools within this
+container. `ov` builds the container from a custom Dockerfile
+(`/docker/dev_env/Dockerfile`) that installs the basic tools required for the
+Openverse development environment. New tools required for working with Openverse
+should be installed using `RUN` in the Dockerfile, along with existing
+dependencies.
+
+While `ov` depends on the Docker, Docker compose, and Docker buildx CLI tools,
+it is not a docker-in-docker solution. Instead, it relies on the host system's
+container runtime to operate. This means the Openverse services, images,
+volumes, and so forth, are operating on your host system's container runtime,
+which is merely interacted with by the Docker tools within `ov`.
 
 ```{note}
-This is only needed if you are working with the following:
-
-- documentation
-- Python automations
-- API (outside Docker, for debugging purposes)
-- ingestion server (outside Docker, for debugging purposes)
+Kudos to [distrobox](https://distrobox.it/) for introducing us to the concept
+of mapping the host's docker socket into a container.
 ```
 
-We use Python 3 in the backend of our stack. So to work with that part of the
-codebase, you will need Python installed. Most Linux distributions and macOS
-will already have this installed, even if it's not always the latest version. To
-know if you have Python (specifically version 3) installed, run the following
-command.
+`ov` also runs the container with host networking. This ensures access to things
+like the frontend or documentation live site which do not run within the
+Openverse docker compose stack, and instead run directly in the `ov` container.
 
-```bash
-python3 --version
-```
-
-If you see `Python x.y.z`, you have Python installed. If you see an error, you
-need to install it using [pyenv](https://github.com/pyenv/pyenv) or by following
-the [official instructions](https://www.python.org/downloads/).
-
-#### Pipenv
-
-Pipenv helps us provision dependencies for our Python packages and automatically
-set up a virtualenv, provided you have the version of Python mentioned in the
-`Pipfile` installed and accessible locally.
-
-You can install Pipenv by following the
-[official instructions](https://pipenv.pypa.io/en/latest/installation.html#installing-pipenv).
-
-### Node.js
+On top of this, in order to ensure messages (especially error messages)
+referring to specific files use understandable paths, `ov` maps the Openverse
+repository itself to the same path on the container as it is on the host. For
+example, if you cloned Openverse to `/home/sara/projects/openverse`, it will be
+available at the exact same path inside the container.
 
 ```{note}
-This is only needed if you are working with the following:
-
-- frontend
-- Node.js automations
+A similar practice is done with PNPM to share the host cache to the container.
+That means if you use PNPM for other projects, you'll still get to benefit from
+its speedy install times and disk-space efficiency when working on Openverse.
 ```
 
-We use Node.js in the frontend of our stack. So to work with that part of the
-codebase, you will need Node.js installed. To know if you have Node.js
-installed, run the following command.
+When trying to understand how something works in `ov`, keep in mind that there
+are three separate layers of execution:
 
-```bash
-node --version
-```
+1. Directly on the host system, which is generally the `ov` script itself, and
+   the `/docker/dev_env/run.sh` support script
+2. Inside the `ov` container
+3. Inside containers from Openverse's Docker compose stack, which still run on
+   the host system's container runtime
 
-If you see `vx.y.z`, you have Node.js installed. If you see an error, you need
-to install it using [nvm](https://github.com/nvm-sh/nvm) or by following the
-[official instructions](https://nodejs.org/en/download/).
+Note that despite there being three layers, they are not three _nested_ layers.
+Rather, they are distinct layers, with the caveat that the second and third
+layer are containerised and as such have the container runtime to contend with.
 
-#### Corepack
-
-Corepack helps manage package managers for a project. In any Node.js workspace,
-like the [`WordPress/openverse`](https://github.com/WordPress/openverse/)
-monorepo for example, Corepack will automatically invoke the right version of
-the specified package manager, also installing it if needed and not present.
-
-It's a part of Node.js and present in Node.js versions v14.19.0 and v16.9.0
-onwards. So no installation is needed.
-
-Enable Corepack in the monorepo root. Then, check if Corepack can discover the
-right package manager, pnpm, by running the following commands.
-
-```bash
-corepack enable
-pnpm --version
-```
-
-You should see a version number and no error message.
-
-### Docker
-
-```{note}
-This is only needed if you are working with the following:
-
-- API
-- ingestion server
-- frontend
-```
-
-Our Python packages are published as Docker images to make it easier to work
-with them locally during development and also make it easier to deploy new
-versions in production.
-
-If you run WSL on Windows, you can
-[set up Docker Desktop](https://docs.microsoft.com/en-us/windows/wsl/tutorials/wsl-containers#install-docker-desktop).
-If not, you can use one of the many
-[installation methods](https://docs.docker.com/engine/install/) officially
-supported by Docker.
-
-Note that the building images for the frontend needs an advanced build feature,
-namely additional build contexts, that is provided by the
-[Buildx plugin](https://docs.docker.com/build/architecture/#buildx). The Buildx
-plugin is included in Docker Desktop and all
-[installation methods](https://docs.docker.com/engine/install/) for Docker
-Engine include steps to also install the Buildx plugin.
-
-To know if your Docker setup is using Buildx, run the following command.
-
-```bash
-docker build --help
-```
-
-If you see `docker buildx build` under 'Aliases', you have Buildx set up as the
-build client.
-
-#### Docker Compose
-
-Docker Compose makes it easy to orchestrate multiple services which we put to
-use by orchestrating the external services and also the API, ingestion server
-and indexer workers locally during development.
-
-Docker Compose is a part of the Docker Desktop installation. To know if you have
-Docker Compose installed, run the following command.
-
-```bash
-docker compose version
-```
-
-If you see `Docker Compose version vx.y.z`, you have Docker Compose installed.
-If you see an error, you need to install it by following the
-[official instructions](https://docs.docker.com/compose/install/).
-
-### GitHub
-
-```{note}
-This is only needed if you want to contribute code to Openverse. The codebase
-can be read, accessed and downloaded without an account.
-```
-
-The source code for Openverse is hosted on GitHub. To contribute to Openverse,
-you will also need to [sign up](https://github.com/signup) for a GitHub account.
-It's free, and considering how much OSS development happens on GitHub, almost
-essential.
-
-#### GitHub CLI
-
-It's not necessary, but we recommended to install the GitHub CLI in your
-development environment because it makes it convenient to work with GitHub
-workflows like filing issues and opening PRs.
-
-You can install the CLI by following the
-[official instructions](https://github.com/cli/cli#installation).
-
-### Text editors/IDEs
+## Text editors/IDEs
 
 A good editor or IDE (integrated development environment) makes a lot of
 difference when working with software source code. We recommend VS Code or a
@@ -269,54 +236,7 @@ different editor if you have a preference.
 - [PyCharm and WebStorm](https://www.jetbrains.com/) are other popular options
   with lots of bells and whistles.
 - [Sublime Text](https://www.sublimetext.com/) is a minimalistic option that can
-  get you off the ground quickly with lots of room for expansion through it's
+  get you off the ground quickly with lots of room for expansion through its
   package system.
 - [vim](https://www.vim.org/) and [emacs](https://www.gnu.org/software/emacs/)
   are ubiquitous terminal-based options.
-
-## Optional development setup
-
-The following setup steps are only needed in a narrow set of scenarios.
-
-### coreutils
-
-```{note}
-This is only needed on macOS.
-```
-
-`coreutils` adds GNU utils to macOS. `timeout` from the package is required. You
-can install the
-[`coreutils` formula](https://formulae.brew.sh/formula/coreutils) using
-[Homebrew](https://brew.sh), which is a package manager for macOS.
-
-### mkcert
-
-```{note}
-This is only needed to test SSL locally.
-```
-
-To test SSL locally, install `mkcert` (and the corresponding
-[NSS](https://firefox-source-docs.mozilla.org/security/nss/index.html) tools) by
-following the
-[official instruction](https://github.com/FiloSottile/mkcert#installation). You
-can run `mkcert -install` to verify your installation.
-
-### `psycopg2` build prerequisites
-
-```{note}
-This is only needed if the `psycopg2` installation fails when running parts of the project outside of Docker.
-```
-
-Openverse uses `psycopg2` built from source on the client for compatibility
-reasons. You must ensure that
-[`psycopg2`'s build prerequisites are fulfilled for the library to install correctly](https://www.psycopg.org/docs/install.html#build-prerequisites).
-The linked documentation includes common troubleshooting instrustions for issues
-building the library.
-
-#### macOS
-
-The `psycopg2` package can fail to install on Apple Silicon Macs with the
-`ld: library not found for -lssl` error. To rectify this, install the
-[`openssl` formula](https://formulae.brew.sh/formula/openssl@3) using
-[Homebrew](https://brew.sh/) and set `LDFLAGS` and `CPPFLAGS` as per the
-instructions in the output of the Homebrew installation.

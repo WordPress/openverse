@@ -26,6 +26,8 @@ shared_args=(
 run_args=(
   -d
   --name "$container_name"
+  # Use host network so things like Sphinx and the frontend that run directly in `ov`
+  # will have ports available on the host (and this way we don't have to manually map each one)
   --network host
   # Bind the repo to the same exact location inside the container so that pre-commit
   # and others don't get confused about where files are supposed to be

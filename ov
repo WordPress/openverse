@@ -60,8 +60,11 @@ COMMANDS
 
   ov COMMAND [...ARGS]
     Run COMMAND inside the development toolkit container. COMMAND will be processed
-    through ov aliases (see `ov aliases --help` for details).
-    Hints: The toolkit comes loaded with many tools for working with Openverse! Try
+    through ov aliases (see `ov aliases --help` for details). ov is aware of your
+    current working directory and will execute the command relative to your current directory
+    inside the repository.
+
+    Tip: The toolkit comes loaded with many tools for working with Openverse! Try
     some of the following:
 
       - ov just
@@ -69,6 +72,8 @@ COMMANDS
       - ov pnpm
       - ov python
       - ov bash
+      - ov jq
+      - ov http
 EOF
 
   exit 0

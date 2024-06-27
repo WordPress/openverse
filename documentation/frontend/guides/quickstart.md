@@ -1,54 +1,25 @@
-# Quickstart guide
+# Frontend quickstart guide
 
 This is the quick start guide for setting up and running the frontend locally.
 
 ## Prerequisites
 
-Refer to the [general setup guide](/general/general_setup.md) for setting up the
-prerequisites. Refer to the 'Frontend' column in the
-[requirement matrix](/general/general_setup.md#requirement-matrix) to know what
-you need to run this.
+Follow the [general setup guide](/general/general_setup.md) to set up `ov`.
 
 ## Starting up
 
-1. Ensure you download, install and set up all prerequisites. Ensure that the
-   Docker daemon is running.
-
-2. Clone the repository to your computer. Then switch to the cloned directory.
-   If you're planning to contribute, fork the repo and clone your fork instead.
-
-   ```{note}
-   We recommend cloning with the `--filter=blob:none` flag as it dramatically
-   reduces the filesize and download time by creating a "blobless clone".
-   You can learn more about these [here](https://gist.github.com/leereilly/1f4ea46a01618b6e34ead76f75d0784b).
-   ```
+1. Install additional Node.js dependencies. You do not need to install any
+   Python dependencies to run the frontend.
 
    ```bash
-   git clone --filter=blob:none https://github.com/WordPress/openverse.git # or your fork
-   cd openverse/
+   ov just node-install
    ```
 
-   If you followed the general setup guide and installed
-   [GitHub CLI](/general/general_setup.md#github-cli), you can clone more simply
-   using the `gh` command.
-
-   ```bash
-   gh repo clone WordPress/openverse -- --filter=blob:none  # or your fork
-   cd openverse/
-   ```
-
-3. Install only the Node.js dependencies. You do not need to install any Python
-   dependencies to run the frontend.
-
-   ```bash
-   ./ov just node-install
-   ```
-
-4. To bring up the frontend, we have another `just` recipe. We have `just`
+2. To bring up the frontend, we have another `just` recipe. We have `just`
    recipes for almost everything.
 
    ```bash
-   ./ov just frontend/run dev
+   ov just frontend/run dev
    ```
 
    If you want your frontend to use a different API instance, you can set the
@@ -57,7 +28,7 @@ you need to run this.
    use the local API with the frontend.
 
    ```bash
-   ./ov env API_URL="http://localhost:50280" just frontend/run dev
+   ov env API_URL="http://localhost:50280" just frontend/run dev
    ```
 
    Now you should be able to access the following endpoints:
