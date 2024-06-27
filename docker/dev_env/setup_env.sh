@@ -2,6 +2,8 @@
 
 set -e
 
+chmod -R 0777 /opt /pipx
+
 if [ ! -d "$OPENVERSE_PROJECT"/.git ]; then
   printf "Repository not mounted to container!\n"
   exit 1

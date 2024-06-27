@@ -65,8 +65,6 @@ RUN mkdir /pipx \
     corepack \
   && corepack enable
 
-RUN bash -c 'chmod -Rv 0777 /opt /pipx'
-
 # Avoid overwriting `.venv`'s from the host
 ENV PDM_VENV_IN_PROJECT="False"
 
