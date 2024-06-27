@@ -331,6 +331,9 @@ def _upload_to_s3(fields):
     for field in fields:
         file_path = TMP_DIR.joinpath(f"{field}.tsv")
         if not file_path.exists():
+            # Once the data has been cleaned in `upstream,` the cleaning process will
+            # not generate these files. Also, tags never generate any (refer to the
+            # `_clean_data_worker` function).
             continue
 
         try:
