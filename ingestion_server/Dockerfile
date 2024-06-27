@@ -21,13 +21,15 @@ ENV PATH="/venv/bin:$PATH"
 # - Create a virtualenv inside `/venv`
 # - Install Pipenv to install Python dependencies
 RUN apt-get update \
-      && apt-get install -y python3-dev \
-      && rm -rf /var/lib/apt/lists/* \
+    && apt-get install -yqq --no-install-recommends \
+      python3-dev \
+    && apt-get autoremove -y \
+    && rm -rf /var/lib/apt/lists/* \
     && python -m venv /venv \
     && pip install --upgrade pipenv
 
 # Copy the Pipenv files into the container
-COPY Pipfile Pipfile.lock ./
+COPY Pipfile Pipfile.lock /
 
 # Install Python dependencies system-wide (uses the active virtualenv)
 RUN pipenv install --system --deploy --dev
@@ -61,13 +63,17 @@ COPY --from=builder /venv /venv
 #   - libpq-dev: required by `psycopg2`
 # - Create directory for holding worker state
 RUN apt-get update \
-      && apt-get install -y curl libpq-dev \
-      && rm -rf /var/lib/apt/lists/* \
-      && mkdir /worker_state
+    && apt-get install -yqq --no-install-recommends \
+      curl \
+      libpq-dev \
+    && apt-get autoremove -y \
+    && rm -rf /var/lib/apt/lists/* \
+    && mkdir /worker_state
 
 # Create a non-root user
-RUN useradd ingestionu
-RUN chown ingestionu /worker_state
+RUN useradd ingestionu \
+    && chown ingestionu /worker_state
+
 USER ingestionu
 
 # Copy code into the final image

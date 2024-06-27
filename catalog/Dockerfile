@@ -40,7 +40,7 @@ ENV AIRFLOW__LOGGING__REMOTE_BASE_LOG_FOLDER=s3://openverse-airflow-logs
 
 USER root
 RUN apt-get update \
-    && apt-get -yqq install \
+    && apt-get install -yqq --no-install-recommends \
       build-essential \
       libpq-dev \
       libffi-dev \

@@ -1,4 +1,4 @@
-FROM docker.io/library/fedora:latest
+FROM docker.io/library/fedora:40
 
 # We want to keep all important things in `/opt` as we will preserve the
 # `/opt` directory as a volume.
@@ -50,6 +50,7 @@ RUN dnf -y install dnf-plugins-core \
     nodejs npm \
     python3.12 pipx \
     docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin \
+  && dnf clean all \
   && pipx install \
     httpie \
     pdm pipenv  \

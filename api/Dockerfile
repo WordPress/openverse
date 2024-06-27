@@ -12,8 +12,17 @@ FROM docker.io/realies/audiowaveform:1.10.1 AS awf
 
 # Identify dependencies of the `audiowaveform` binary and move them to `/deps`,
 # while retaining their folder structure
-RUN ldd /usr/local/bin/audiowaveform | tr -s '[:blank:]' '\n' | grep '^/' | \
-  xargs -I % sh -c 'mkdir -p $(dirname deps%); cp % deps%;'
+
+# Enable pipefail before `RUN` that contains pipes
+SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
+
+# The script is intentionally single quoted below so that it is not
+# expanded too eagerly and in the wrong context.
+# hadolint ignore=SC2016
+RUN ldd /usr/local/bin/audiowaveform \
+    | tr -s '[:blank:]' '\n' \
+    | grep '^/' \
+    | xargs -I % sh -c 'mkdir -p $(dirname deps%); cp % deps%;'
 
 ##################
 # Python builder #
@@ -30,15 +39,18 @@ ENV PIP_NO_COLOR=1
 # - Create a virtualenv inside `/venv`
 # - Install PDM to install Python dependencies
 RUN apt-get update \
-  && apt-get install -y python3-dev \
+  && apt-get install -yqq --no-install-recommends \
+    python3-dev \
+  && apt-get autoremove -y \
   && rm -rf /var/lib/apt/lists/* \
   && pip install pdm~=2.14
 
 # Copy subpackages from additional build-context 'packages'
-COPY --from=packages openverse-attribution ./packages/python/openverse-attribution
+# hadolint ignore=DL3022
+COPY --from=packages openverse-attribution /packages/python/openverse-attribution
 
 # Copy the Python project manifest and PDM lockfile into the container
-COPY pyproject.toml pdm.lock ./
+COPY pyproject.toml pdm.lock /
 
 # Pass additional arguments when installing Python packages with PDM
 ARG PDM_INSTALL_ARGS='--no-editable'
@@ -64,7 +76,7 @@ ENV PATH="/.venv/bin:$PATH"
 
 WORKDIR /api
 
-ADD api/utils/fonts/SourceSansPro-Bold.ttf /usr/share/fonts/truetype/SourceSansPro-Bold.ttf
+COPY api/utils/fonts/SourceSansPro-Bold.ttf /usr/share/fonts/truetype/SourceSansPro-Bold.ttf
 
 # Copy virtualenv from the builder image
 COPY --from=builder /.venv /.venv
@@ -85,7 +97,11 @@ COPY --from=awf /usr/local/bin/audiowaveform /usr/local/bin
 #   - libexempi8: required for watermarking
 # - Create directory for dumping API logs
 RUN apt-get update \
-  && apt-get install -y curl libexempi8 postgresql-client \
+  && apt-get install -yqq --no-install-recommends \
+    curl \
+    libexempi8 \
+    postgresql-client \
+  && apt-get autoremove -y \
   && rm -rf /var/lib/apt/lists/* \
   && mkdir -p /var/log/openverse_api/openverse_api.log
 
@@ -97,8 +113,11 @@ RUN useradd --create-home opener \
   && chown -R opener /static
 USER opener
 
-# Copy code into the final image
+# Copy subpackages from additional build-context 'packages'
+# hadolint ignore=DL3022
 COPY --chown=opener --from=packages openverse-attribution /packages/python/openverse-attribution/
+
+# Copy code into the final image
 COPY --chown=opener . /api/
 
 # Collect static assets, these are used by the next stage, `nginx`
