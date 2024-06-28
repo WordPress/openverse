@@ -9,6 +9,7 @@ x-ingestion-server-common: &ingestion-server-common
     args: # Automatically inferred from env vars, unless specified
       - INGESTION_PY_VERSION
   image: openverse-ingestion_server
+  pull_policy: never
   env_file:
     - env.docker
     - .env
