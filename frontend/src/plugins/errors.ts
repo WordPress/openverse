@@ -2,11 +2,11 @@ import { defineNuxtPlugin } from "#imports"
 
 import axios from "axios"
 
-import { logger } from "~~/server/utils/logger"
-
 import { ERR_UNKNOWN, ErrorCode, errorCodes } from "~/constants/errors"
 import type { FetchingError, RequestKind } from "~/types/fetch-state"
 import type { SupportedSearchType } from "~/constants/media"
+
+import { debug } from "~/utils/console"
 
 import type { NuxtApp } from "#app"
 
@@ -83,7 +83,7 @@ export function recordError(
   fetchingError: FetchingError,
   nuxtApp: NuxtApp
 ) {
-  logger.debug("Recording fetching error", fetchingError)
+  debug("Recording fetching error", fetchingError)
   if (fetchingError.statusCode === 429) {
     // These are more readily monitored via the Cloudflare dashboard.
     return
