@@ -8,6 +8,7 @@ x-airflow-common: &airflow-common
     - postgres
     - s3
   image: openverse-catalog
+  pull_policy: never
   env_file:
     - .env
   build:

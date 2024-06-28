@@ -20,6 +20,7 @@ services:
         - API_PY_VERSION
         - PDM_INSTALL_ARGS=--dev
     image: openverse-api:${API_PDM_HASH:-latest}
+    pull_policy: never
     volumes:
       - .:/api:z
       - ../packages/python:/packages/python:z

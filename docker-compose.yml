@@ -36,6 +36,7 @@ services:
       args: # Automatically inferred from env vars, unless specified
         - PGCLI_VERSION
     image: openverse-upstream_db
+    pull_policy: never
     ports:
       - "50255:5432"
     volumes:
