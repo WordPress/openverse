@@ -7,12 +7,16 @@ This includes cleaning up malformed URLs and filtering out undesirable tags.
 import csv
 import logging as log
 import multiprocessing
+import pathlib
+import shutil
 import time
 import uuid
 from urllib.parse import urlparse
 
+import boto3
 import requests as re
 import tldextract
+from decouple import config
 from psycopg2.extras import DictCursor, Json
 
 from ingestion_server.db_helpers import database_connect
@@ -62,7 +66,11 @@ TLS_CACHE = {
     "www.eol.org": True,
     ".digitaltmuseum.org": True,
     "collections.musee-mccord.qc.ca": False,
+    ".stocksnap.io": True,
+    "cdn.stocksnap.io": True,
 }
+
+TMP_DIR = pathlib.Path("/tmp/cleaned_data").resolve()
 
 
 def _tag_denylisted(tag):
@@ -106,9 +114,9 @@ class CleanupFunctions:
                 log.debug(f"Tested domain {_tld}")
 
             if tls_supported:
-                return f"'https://{url}'"
+                return f"https://{url}"
             else:
-                return f"'http://{url}'"
+                return f"http://{url}"
         else:
             return None
 
@@ -141,6 +149,7 @@ class CleanupFunctions:
 
         if update_required:
             fragment = Json(tag_output)
+            log.debug(f"Tags fragment: {fragment}")
             return fragment
         else:
             return None
@@ -200,7 +209,7 @@ class TlsTest:
             https = url.replace("http://", "https://")
             try:
                 res = re.get(https, timeout=2)
-                log.info(f"{https}:{res.status_code}")
+                log.info(f"tls_test - {https}:{res.status_code}")
                 return 200 <= res.status_code < 400
             except re.RequestException:
                 return False
@@ -243,23 +252,27 @@ def _clean_data_worker(rows, temp_table, sources_config, all_fields: list[str]):
             if clean:
                 cleaned_data[update_field] = clean
                 log.debug(
-                    f"Updated {update_field} for {identifier} "
-                    f"from '{dirty_value}' to '{clean}'"
+                    f"Updated {update_field} for {identifier}\n\t"
+                    f"from '{dirty_value}' \n\tto '{clean}'"
                 )
         # Generate SQL update for all the fields we just cleaned
         update_field_expressions = []
         for field, clean_value in cleaned_data.items():
-            update_field_expressions.append(f"{field} = {clean_value}")
-            # Save cleaned values for later
-            # (except for tags, which take up too much space)
             if field == "tags":
+                # The `clean_value` for tags already includes the single quotes,
+                # so it's not necessary to add them, and they're omitted in
+                # `cleaned_values` to save in files later because they take up
+                # too much disk space.
+                update_field_expressions.append(f"{field} = {clean_value}")
                 continue
+            update_field_expressions.append(f"{field} = '{clean_value}'")
             cleaned_values[field].append((identifier, clean_value))
 
         if len(update_field_expressions) > 0:
             update_query = f"""UPDATE {temp_table} SET
             {', '.join(update_field_expressions)} WHERE id = {_id}
             """
+            log.debug(f"Executing update query: \n\t{update_query}")
             write_cur.execute(update_query)
     log.info(f"TLS cache: {TLS_CACHE}")
     log.info("Worker committing changes...")
@@ -273,23 +286,62 @@ def _clean_data_worker(rows, temp_table, sources_config, all_fields: list[str]):
 
 
 def save_cleaned_data(result: dict) -> dict[str, int]:
-    log.info("Saving cleaned data...")
     start_time = time.perf_counter()
 
     cleanup_counts = {field: len(items) for field, items in result.items()}
     for field, cleaned_items in result.items():
         # Skip the tag field because the file is too large and fills up the disk
-        if field == "tag":
+        if field == "tag" or not cleaned_items:
             continue
-        if cleaned_items:
-            with open(f"{field}.tsv", "a") as f:
-                csv_writer = csv.writer(f, delimiter="\t")
-                csv_writer.writerows(cleaned_items)
+
+        with open(TMP_DIR.joinpath(f"{field}.tsv"), "a", encoding="utf-8") as f:
+            csv_writer = csv.writer(f, delimiter="\t")
+            csv_writer.writerows(cleaned_items)
 
     end_time = time.perf_counter()
     total_time = end_time - start_time
     log.info(f"Finished saving cleaned data in {total_time:.3f},\n{cleanup_counts}")
     return cleanup_counts
+
+
+def _upload_to_s3(fields):
+    """
+    Upload cleaned data to S3. It assumes that the bucket already exists.
+
+    Locally, it connects to a MinIO instance through its endpoint and test credentials.
+    On live environments, the connection is allowed via IAM roles.
+    """
+    bucket_name = config("OPENVERSE_BUCKET", default="openverse-catalog")
+    s3_path = "shared/data-refresh-cleaned-data"
+    try:
+        s3 = boto3.resource(
+            "s3",
+            endpoint_url=config("AWS_S3_ENDPOINT", default=None),
+            aws_access_key_id=config("AWS_ACCESS_KEY_ID", default=None),
+            aws_secret_access_key=config("AWS_SECRET_ACCESS_KEY", default=None),
+            region_name=config("AWS_REGION", default=None),
+        )
+        s3.meta.client.head_bucket(Bucket=bucket_name)
+        bucket = s3.Bucket(bucket_name)
+        log.info(f"Connected to S3 and '{bucket_name}' bucket loaded.")
+    except Exception as e:
+        log.error(f"Files upload failed. Error connecting to S3.\n{e}")
+        return
+
+    for field in fields:
+        file_path = TMP_DIR.joinpath(f"{field}.tsv")
+        if not file_path.exists():
+            # Once the data has been cleaned in `upstream,` the cleaning process will
+            # not generate these files. Also, tags never generate any (refer to the
+            # `_clean_data_worker` function).
+            continue
+
+        try:
+            bucket.upload_file(file_path, f"{s3_path}/{field}.tsv")
+            log.info(f"Uploaded '{field}.tsv' to S3.")
+            file_path.unlink()
+        except Exception as e:
+            log.error(f"Error uploading '{field}.tsv' to S3: {e}")
 
 
 def clean_image_data(table):
@@ -299,6 +351,10 @@ def clean_image_data(table):
     :param table: The staging table for the new data
     :return: None
     """
+
+    # Recreate directory where cleaned data is stored
+    shutil.rmtree(TMP_DIR, ignore_errors=True)
+    TMP_DIR.mkdir(parents=True)
 
     # Map each table to the fields that need to be cleaned up. Then, map each
     # field to its cleanup function.
@@ -383,6 +439,7 @@ def clean_image_data(table):
     conn.commit()
     iter_cur.close()
     conn.close()
+    _upload_to_s3(cleanable_fields_for_table)
     end_time = time.perf_counter()
     cleanup_time = end_time - start_time
     log.info(

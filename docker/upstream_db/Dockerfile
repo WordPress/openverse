@@ -15,7 +15,7 @@ ENV PIP_NO_COLOR=1
 RUN echo "\set ON_ERROR_STOP on" >> /root/.psqlrc
 
 RUN apt-get update \
-    && apt-get -yqq install \
+    && apt-get install -yqq --no-install-recommends \
       python3-boto3 \
       postgresql-plpython3-13 \
       python3-pip \

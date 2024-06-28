@@ -17,12 +17,14 @@ ENV PIP_NO_COLOR=1
 # - Install system packages needed for building Python dependencies
 # - Install PDM to install Python dependencies
 RUN apt-get update \
-      && apt-get install -y python3-dev \
-      && rm -rf /var/lib/apt/lists/* \
+    && apt-get install -yqq --no-install-recommends \
+      python3-dev \
+    && apt-get autoremove -y \
+    && rm -rf /var/lib/apt/lists/* \
     && pip install pdm~=2.14
 
 # Copy the Pipenv files into the container
-COPY pyproject.toml pdm.lock ./
+COPY pyproject.toml pdm.lock /
 
 # Pass additional arguments when installing Python packages with PDM
 ARG PDM_INSTALL_ARGS='--no-editable'
@@ -59,13 +61,17 @@ COPY --from=builder /.venv /.venv
 #   - libpq-dev: required by `psycopg2`
 # - Create directory for holding worker state
 RUN apt-get update \
-      && apt-get install -y curl libpq-dev \
-      && rm -rf /var/lib/apt/lists/* \
-      && mkdir /worker_state
+    && apt-get install -yqq --no-install-recommends \
+      curl \
+      libpq-dev \
+    && apt-get autoremove -y \
+    && rm -rf /var/lib/apt/lists/* \
+    && mkdir /worker_state
 
 # Create a non-root user
-RUN useradd ingestionu
-RUN chown ingestionu /worker_state
+RUN useradd ingestionu \
+    && chown ingestionu /worker_state
+
 USER ingestionu
 
 # Copy code into the final image
