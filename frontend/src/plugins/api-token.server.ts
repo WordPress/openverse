@@ -4,7 +4,7 @@ import { Mutex, MutexInterface } from "async-mutex"
 
 import axios from "axios"
 
-import { logger } from "~~/server/utils/logger"
+import { debug, warn } from "~/utils/console"
 
 import type { AxiosError } from "axios"
 import type { NuxtApp } from "#app"
@@ -99,7 +99,7 @@ const refreshApiAccessToken = async (
     ;(e as AxiosError).message = `Unable to retrieve API token. ${
       (e as AxiosError).message
     }`
-    logger.warn((e as AxiosError).message)
+    warn((e as AxiosError).message)
     throw e
   }
 }
@@ -131,9 +131,9 @@ export const getApiAccessToken = async (): Promise<string | undefined> => {
   // not already another request making the request (represented
   // by the locked mutex).
   if (isNewTokenNeeded() && !process.fetchingMutex.isLocked()) {
-    logger.debug("acquiring mutex lock")
+    debug("acquiring mutex lock")
     release = await process.fetchingMutex.acquire()
-    logger.debug("mutex lock acquired, preparing token refresh request")
+    debug("mutex lock acquired, preparing token refresh request")
     process.tokenFetching = refreshApiAccessToken(
       apiClientId,
       apiClientSecret,
@@ -142,9 +142,9 @@ export const getApiAccessToken = async (): Promise<string | undefined> => {
   }
 
   try {
-    logger.debug("awaiting the fetching of the api token to resolve")
+    debug("awaiting the fetching of the api token to resolve")
     await process.tokenFetching
-    logger.debug("done waiting for the token, moving on now...")
+    debug("done waiting for the token, moving on now...")
   } finally {
     /**
      * Releasing must be in a `finally` block otherwise if the
@@ -153,9 +153,9 @@ export const getApiAccessToken = async (): Promise<string | undefined> => {
      * refresh.
      */
     if (release) {
-      logger.debug("releasing mutex")
+      debug("releasing mutex")
       release()
-      logger.debug("mutex released")
+      debug("mutex released")
     }
   }
 
