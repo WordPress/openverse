@@ -191,13 +191,6 @@ class AbstractMediaReport(models.Model):
 
     REPORT_CHOICES = [(MATURE, MATURE), (DMCA, DMCA), (OTHER, OTHER)]
 
-    STATUS_CHOICES = [
-        (PENDING, PENDING),
-        (MATURE_FILTERED, MATURE_FILTERED),
-        (DEINDEXED, DEINDEXED),
-        (NO_ACTION, NO_ACTION),
-    ]
-
     created_at = models.DateTimeField(auto_now_add=True)
 
     media_obj = models.ForeignKey(
@@ -226,12 +219,6 @@ class AbstractMediaReport(models.Model):
         null=True,
         help_text="The explanation on why media is being reported.",
     )
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=PENDING)
-    """
-    All statuses except ``PENDING`` are deprecated. Instead refer to the
-    property ``is_pending``.
-    """
-
     decision = models.ForeignKey(
         to="AbstractMediaDecision",
         on_delete=models.SET_NULL,

@@ -13,7 +13,6 @@ from api.models.media import (
     MATURE,
     MATURE_FILTERED,
     OTHER,
-    PENDING,
     AbstractDeletedMedia,
     AbstractSensitiveMedia,
 )
@@ -41,7 +40,7 @@ def test_pending_reports_have_no_subreport_models(
     media = media_type_config.model_factory.create()
     report = media_type_config.report_factory.create(media_obj=media, reason=reason)
 
-    assert report.status == PENDING
+    assert report.decision is None
     assert not media_type_config.sensitive_class.objects.filter(
         media_obj=media
     ).exists()
