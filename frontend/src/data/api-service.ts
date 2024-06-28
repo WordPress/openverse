@@ -2,9 +2,7 @@ import { decodeMediaData, useRuntimeConfig } from "#imports"
 
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios"
 
-import { logger } from "~~/server/utils/logger"
-
-import { warn } from "~/utils/console"
+import { debug, warn } from "~/utils/console"
 
 import { mediaSlug } from "~/utils/query-utils"
 import { AUDIO, SupportedMediaType } from "~/constants/media"
@@ -171,7 +169,7 @@ export const createApiClient = ({
   })
   client.interceptors.response.use(
     (response) => {
-      logger.debug(
+      debug(
         ">>>",
         response.request.res?.responseUrl ?? response.request.responseURL,
         response.status
@@ -184,7 +182,7 @@ export const createApiClient = ({
           DEFAULT_REQUEST_TIMEOUT / 1000
         } seconds exceeded`
       }
-      logger.debug(">>> error:", error.message)
+      debug(">>> error:", error.message)
       return Promise.reject(error)
     }
   )

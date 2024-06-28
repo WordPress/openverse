@@ -25,7 +25,7 @@ const aiDisallowRules = deniedUserAgents
  * Send the correct robots.txt information per-environment.
  */
 export default defineEventHandler(() => {
-  const deployEnv = process.env.DEPLOYMENT_ENV ?? LOCAL
+  const deployEnv = import.meta.env.DEPLOYMENT_ENV ?? LOCAL
 
   const contents =
     deployEnv === PRODUCTION
