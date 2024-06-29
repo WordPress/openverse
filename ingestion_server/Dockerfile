@@ -50,7 +50,7 @@ ENV PIP_NO_COLOR=1
 # Activate the virtualenv
 ENV PATH="/venv/bin:$PATH"
 
-ENV PYTHONPATH="$PYTHONPATH:/ingestion_server/"
+ENV PYTHONPATH="/ingestion_server/"
 # TLDEXTRACT fails to cache in /home/supervisord, set its cache to /tmp instead
 ENV TLDEXTRACT_CACHE="/tmp/python-tldextract"
 

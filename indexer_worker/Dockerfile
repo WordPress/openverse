@@ -48,7 +48,7 @@ ENV PIP_NO_COLOR=1
 # Activate the virtualenv
 ENV PATH="/.venv/bin:$PATH"
 
-ENV PYTHONPATH="$PYTHONPATH:/indexer_worker/"
+ENV PYTHONPATH="/indexer_worker/"
 # TLDEXTRACT fails to cache in /home/supervisord, set its cache to /tmp instead
 ENV TLDEXTRACT_CACHE="/tmp/python-tldextract"
 
