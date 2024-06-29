@@ -5,7 +5,7 @@
 ARG CATALOG_PY_VERSION
 ARG CATALOG_AIRFLOW_VERSION
 
-FROM apache/airflow:slim-${CATALOG_AIRFLOW_VERSION}-python${CATALOG_PY_VERSION} as cat
+FROM apache/airflow:slim-${CATALOG_AIRFLOW_VERSION}-python${CATALOG_PY_VERSION} AS cat
 
 LABEL org.opencontainers.image.source = "https://github.com/WordPress/openverse"
 
