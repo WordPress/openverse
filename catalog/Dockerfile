@@ -7,7 +7,7 @@ ARG CATALOG_AIRFLOW_VERSION
 
 FROM apache/airflow:slim-${CATALOG_AIRFLOW_VERSION}-python${CATALOG_PY_VERSION} AS cat
 
-LABEL org.opencontainers.image.source = "https://github.com/WordPress/openverse"
+LABEL org.opencontainers.image.source="https://github.com/WordPress/openverse"
 
 # Build-time arguments, with sensible defaults
 ARG REQUIREMENTS_FILE=requirements-prod.txt
