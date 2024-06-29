@@ -48,9 +48,10 @@ class DataRefreshConfig:
 
     Required Constructor Arguments:
 
-    media_type:     str describing the media type to be refreshed.
-    table_mappings: list of TableMapping information for all tables that should be
-                    refreshed as part of a data refresh for this media type.
+    media_type:              str describing the media type to be refreshed.
+    table_mappings:          list of TableMapping information for all tables that should
+                             be refreshed as part of a data refresh for this media type.
+
 
     Optional Constructor Arguments:
 
@@ -65,6 +66,9 @@ class DataRefreshConfig:
                                        data refresh may take.
     copy_data_timeout:                 timedelta expressing the amount of time it may take to
                                        copy the upstream table into the downstream DB
+    indexer_worker_timeout:            timedelta expressing the amount of time it may take for
+                                       any individual indexer worker to perform its portion of
+                                       the distributed reindex
     index_readiness_timeout:           timedelta expressing amount of time it may take
                                        to await a healthy ES index after reindexing
     data_refresh_poke_interval:        int number of seconds to wait between
@@ -81,6 +85,7 @@ class DataRefreshConfig:
     default_args: dict = field(default_factory=dict)
     dag_timeout: timedelta = timedelta(days=1)
     copy_data_timeout: timedelta = timedelta(hours=1)
+    indexer_worker_timeout: timedelta = timedelta(hours=6)  # TODO
     index_readiness_timeout: timedelta = timedelta(days=1)
     data_refresh_poke_interval: int = REFRESH_POKE_INTERVAL
 
