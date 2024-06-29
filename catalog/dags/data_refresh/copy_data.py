@@ -198,7 +198,7 @@ def copy_data(
 def copy_upstream_table(
     upstream_conn_id: str,
     downstream_conn_id: str,
-    environment: Environment,
+    target_environment: Environment,
     timeout: timedelta,
     limit: int,
     upstream_table_name: str,
@@ -275,12 +275,13 @@ def copy_upstream_table(
     create_temp_table >> setup_id_columns >> setup_tertiary_columns
     setup_tertiary_columns >> copy
     copy >> add_primary_key
+
     return
 
 
 @task_group(group_id="copy_upstream_tables")
 def copy_upstream_tables(
-    environment: Environment, data_refresh_config: DataRefreshConfig
+    target_environment: Environment, data_refresh_config: DataRefreshConfig
 ):
     """
     For each upstream table associated with the given media type, create a new
@@ -290,7 +291,7 @@ def copy_upstream_tables(
     This task does _not_ apply all indices and constraints, merely copies
     the data.
     """
-    downstream_conn_id = POSTGRES_API_CONN_IDS.get(environment)
+    downstream_conn_id = POSTGRES_API_CONN_IDS.get(target_environment)
     upstream_conn_id = POSTGRES_CONN_ID
 
     create_fdw = _run_sql.override(task_id="create_fdw")(
@@ -309,7 +310,7 @@ def copy_upstream_tables(
     copy_tables = copy_upstream_table.partial(
         upstream_conn_id=upstream_conn_id,
         downstream_conn_id=downstream_conn_id,
-        environment=environment,
+        target_environment=target_environment,
         timeout=data_refresh_config.copy_data_timeout,
         limit=limit,
     ).expand_kwargs([asdict(tm) for tm in data_refresh_config.table_mappings])

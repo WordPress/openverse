@@ -28,11 +28,12 @@ https://github.com/WordPress/openverse-catalog/issues/453)
 
 import logging
 import os
+import uuid
 from collections.abc import Sequence
 from itertools import product
 
 from airflow import DAG
-from airflow.decorators import task_group
+from airflow.decorators import task, task_group
 from airflow.operators.python import PythonOperator
 from airflow.utils.trigger_rule import TriggerRule
 
@@ -44,6 +45,7 @@ from common.sensors.single_run_external_dags_sensor import SingleRunExternalDAGs
 from common.sensors.utils import wait_for_external_dags_with_tag
 from data_refresh.copy_data import copy_upstream_tables
 from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS, DataRefreshConfig
+from data_refresh.distributed_reindex import perform_distributed_reindex
 from data_refresh.reporting import report_record_difference
 
 
@@ -83,9 +85,14 @@ def wait_for_conflicting_dags(
     )
 
 
+@task
+def generate_index_name(media_type: str) -> str:
+    return f"{media_type}-{uuid.uuid4().hex}"
+
+
 def create_data_refresh_dag(
     data_refresh_config: DataRefreshConfig,
-    environment: Environment,
+    target_environment: Environment,
     external_dag_ids: Sequence[str],
 ):
     """
@@ -95,22 +102,22 @@ def create_data_refresh_dag(
 
     Required Arguments:
 
-    data_refresh:     dataclass containing configuration information for the
-                      DAG
-    environment:      the environment in which the data refresh is performed
-    external_dag_ids: list of ids of the other data refresh DAGs. The data refresh step
-                      of this DAG will not run concurrently with the corresponding step
-                      of any dependent DAG.
+    data_refresh:       dataclass containing configuration information for the
+                        DAG
+    target_environment: the environment in which the data refresh is performed
+    external_dag_ids:   list of ids of the other data refresh DAGs. The data refresh step
+                        of this DAG will not run concurrently with the corresponding step
+                        of any dependent DAG.
     """
     default_args = {
         **DAG_DEFAULT_ARGS,
         **data_refresh_config.default_args,
     }
 
-    concurrency_tag = ES_CONCURRENCY_TAGS.get(environment)
+    concurrency_tag = ES_CONCURRENCY_TAGS.get(target_environment)
 
     dag = DAG(
-        dag_id=f"{environment}_{data_refresh_config.dag_id}",
+        dag_id=f"{target_environment}_{data_refresh_config.dag_id}",
         dagrun_timeout=data_refresh_config.dag_timeout,
         default_args=default_args,
         start_date=data_refresh_config.start_date,
@@ -120,14 +127,14 @@ def create_data_refresh_dag(
         doc_md=__doc__,
         tags=[
             "data_refresh",
-            f"{environment}_data_refresh",
+            f"{target_environment}_data_refresh",
             concurrency_tag,
         ],
     )
 
     with dag:
         # Connect to the appropriate Elasticsearch cluster
-        es_host = es.get_es_host(environment=environment)
+        es_host = es.get_es_host(environment=target_environment)
 
         # Get the current number of records in the target API table
         before_record_count = es.get_record_count_group_by_sources.override(
@@ -142,10 +149,28 @@ def create_data_refresh_dag(
         )
 
         copy_data = copy_upstream_tables(
-            environment=environment, data_refresh_config=data_refresh_config
+            target_environment=target_environment,
+            data_refresh_config=data_refresh_config,
         )
 
         # TODO Cleaning steps
+
+        # TODO: Move temp_index_name >> index_config >> target_index into a `create_index` task group
+
+        # Generate a UUID suffix that will be used by the newly created index.
+        temp_index_name = generate_index_name(media_type=data_refresh_config.media_type)
+
+        # Get the configuration for the new Elasticsearch index, based off the existing index.
+        index_config = es.get_index_configuration_copy.override(
+            task_id="get_index_configuration"
+        )(
+            source_index=data_refresh_config.media_type,
+            target_index_name=temp_index_name,
+            es_host=es_host,
+        )
+
+        # Create a new index matching the existing configuration
+        target_index = es.create_index(index_config=index_config, es_host=es_host)
 
         # Disable Cloudwatch alarms that are noisy during the reindexing steps of a
         # data refresh.
@@ -157,8 +182,13 @@ def create_data_refresh_dag(
             },
         )
 
-        # TODO create_and_populate_index
         # (TaskGroup that creates index, triggers and waits for reindexing)
+        reindex = perform_distributed_reindex(
+            environment="{{ var.value.ENVIRONMENT }}",
+            target_environment=target_environment,
+            target_index=temp_index_name,
+            data_refresh_config=data_refresh_config,
+        )
 
         # TODO create_and_populate_filtered_index
 
@@ -198,9 +228,9 @@ def create_data_refresh_dag(
         )
 
         # Set up task dependencies
-        before_record_count >> wait_for_dags >> copy_data >> disable_alarms
-        # TODO: this will include reindex/etc once added
-        disable_alarms >> [enable_alarms, after_record_count]
+        before_record_count >> wait_for_dags >> copy_data >> temp_index_name
+        temp_index_name >> index_config >> target_index >> disable_alarms
+        disable_alarms >> reindex >> [enable_alarms, after_record_count]
         after_record_count >> report_counts
 
     return dag
@@ -209,7 +239,7 @@ def create_data_refresh_dag(
 # Generate data refresh DAGs for each DATA_REFRESH_CONFIG, per environment.
 all_data_refresh_dag_ids = {refresh.dag_id for refresh in DATA_REFRESH_CONFIGS.values()}
 
-for data_refresh_config, environment in product(
+for data_refresh_config, target_environment in product(
     DATA_REFRESH_CONFIGS.values(), ENVIRONMENTS
 ):
     # Construct a set of all data refresh DAG ids other than the current DAG
@@ -217,6 +247,6 @@ for data_refresh_config, environment in product(
 
     globals()[data_refresh_config.dag_id] = create_data_refresh_dag(
         data_refresh_config,
-        environment,
-        [f"{environment}_{dag_id}" for dag_id in other_dag_ids],
+        target_environment,
+        [f"{target_environment}_{dag_id}" for dag_id in other_dag_ids],
     )
