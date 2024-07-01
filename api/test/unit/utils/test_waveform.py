@@ -20,7 +20,7 @@ def mock_request():
             .header("User-Agent", UA_STRING)
             .reply(200)
             .headers({"Content-Type": _MOCK_AUDIO_INFO["headers"]["Content-Type"]})
-            .body(_MOCK_AUDIO_BYTES, binary=True)
+            .body(_MOCK_AUDIO_BYTES)
             .mock
         )
         yield mock
