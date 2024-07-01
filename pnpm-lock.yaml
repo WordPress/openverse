@@ -4,6 +4,8 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+pnpmfileChecksum: ugk6vame5phdvj3z7an37uzqxm
+
 importers:
 
   .:
@@ -365,7 +367,7 @@ importers:
         specifier: ^2.4.0
         version: 2.4.0
       typescript:
-        specifier: ^5.2.2
+        specifier: ^5.4.5
         version: 5.4.5
       vue-eslint-parser:
         specifier: ^9.4.2
@@ -13299,7 +13301,7 @@ snapshots:
       cssnano: 6.1.2(postcss@8.4.38)
       eventsource-polyfill: 0.9.6
       extract-css-chunks-webpack-plugin: 4.10.0(webpack@4.47.0)
-      file-loader: 6.2.0(webpack@4.46.0)
+      file-loader: 6.2.0(webpack@4.47.0)
       glob: 8.1.0
       hard-source-webpack-plugin: 0.13.1(webpack@4.47.0)
       hash-sum: 2.0.0
@@ -18264,6 +18266,12 @@ snapshots:
       loader-utils: 2.0.4
       schema-utils: 3.3.0
       webpack: 4.46.0
+
+  file-loader@6.2.0(webpack@4.47.0):
+    dependencies:
+      loader-utils: 2.0.4
+      schema-utils: 3.3.0
+      webpack: 4.47.0
 
   file-system-cache@1.0.5:
     dependencies:
@@ -24197,7 +24205,7 @@ snapshots:
       schema-utils: 3.3.0
       webpack: 4.47.0
     optionalDependencies:
-      file-loader: 6.2.0(webpack@4.46.0)
+      file-loader: 6.2.0(webpack@4.47.0)
 
   url-parse@1.5.10:
     dependencies:
