@@ -4,7 +4,7 @@
 # K6 #
 ######
 
-FROM docker.io/grafana/k6:v0.51.0 as k6
+FROM docker.io/grafana/k6:v0.51.0 AS k6
 
 ###############
 # Observation #
