@@ -4,8 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-pnpmfileChecksum: ugk6vame5phdvj3z7an37uzqxm
-
 importers:
 
   .:
@@ -17,8 +15,8 @@ importers:
         specifier: 3.3.2
         version: 3.3.2
       prettier-plugin-tailwindcss:
-        specifier: 0.6.1
-        version: 0.6.1(prettier@3.3.2)
+        specifier: 0.6.5
+        version: 0.6.5(prettier@3.3.2)
       typescript:
         specifier: 5.4.5
         version: 5.4.5
@@ -367,7 +365,7 @@ importers:
         specifier: ^2.4.0
         version: 2.4.0
       typescript:
-        specifier: ^5.4.5
+        specifier: ^5.2.2
         version: 5.4.5
       vue-eslint-parser:
         specifier: ^9.4.2
@@ -8698,8 +8696,8 @@ packages:
     resolution: {integrity: sha512-PhmXi5XmoyKw1Un4E+opM2KcsJInDvKyuOumcjjw3waw86ZNjHwVUOOWLc4bCzLdcKNaWBH9e99sbWzDQsVaYg==}
     engines: {node: '>=0.10.0'}
 
-  prettier-plugin-tailwindcss@0.6.1:
-    resolution: {integrity: sha512-AnbeYZu0WGj+QgKciUgdMnRxrqcxltleZPgdwfA5104BHM3siBLONN/HLW1yS2HvzSNkzpQ/JAj+LN0jcJO+0w==}
+  prettier-plugin-tailwindcss@0.6.5:
+    resolution: {integrity: sha512-axfeOArc/RiGHjOIy9HytehlC0ZLeMaqY09mm8YCkMzznKiDkwFzOpBvtuhuv3xG5qB73+Mj7OCe2j/L1ryfuQ==}
     engines: {node: '>=14.21.3'}
     peerDependencies:
       '@ianvs/prettier-plugin-sort-imports': '*'
@@ -22286,7 +22284,7 @@ snapshots:
 
   prepend-http@1.0.4: {}
 
-  prettier-plugin-tailwindcss@0.6.1(prettier@3.3.2):
+  prettier-plugin-tailwindcss@0.6.5(prettier@3.3.2):
     dependencies:
       prettier: 3.3.2
 
