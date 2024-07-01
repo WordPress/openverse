@@ -26,6 +26,10 @@ def test_all_default_values(status, td):
     assert config[status] == int(td.total_seconds())
 
 
+@pytest.mark.filterwarnings(
+    # Due to expected exceptions raised by the tests
+    "ignore:A plugin raised an exception during an old-style hookwrapper teardown"
+)
 @pytest.mark.parametrize(
     ("overrides", "expecteds"),
     (
