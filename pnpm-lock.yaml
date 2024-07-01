@@ -4,6 +4,8 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+pnpmfileChecksum: ugk6vame5phdvj3z7an37uzqxm
+
 importers:
 
   .:
@@ -365,7 +367,7 @@ importers:
         specifier: ^2.4.0
         version: 2.4.0
       typescript:
-        specifier: ^5.2.2
+        specifier: ^5.4.5
         version: 5.4.5
       vue-eslint-parser:
         specifier: ^9.4.2
