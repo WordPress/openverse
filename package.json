@@ -25,7 +25,7 @@
     "@openverse/eslint-plugin": "workspace:*",
     "prettier": "3.2.5",
     "prettier-plugin-tailwindcss": "0.6.1",
-    "typescript": "5.4.5",
+    "typescript": "5.5.2",
     "vue-tsc": "1.8.27"
   },
   "pnpm": {
