@@ -14,11 +14,11 @@ importers:
         specifier: workspace:*
         version: link:packages/js/eslint-plugin
       prettier:
-        specifier: 3.2.5
-        version: 3.2.5
+        specifier: 3.3.2
+        version: 3.3.2
       prettier-plugin-tailwindcss:
         specifier: 0.6.1
-        version: 0.6.1(prettier@3.2.5)
+        version: 0.6.1(prettier@3.3.2)
       typescript:
         specifier: 5.4.5
         version: 5.4.5
@@ -61,7 +61,7 @@ importers:
         version: 2.17.3
       '@nuxtjs/composition-api':
         specifier: ^0.34.0
-        version: 0.34.0(nuxt@2.17.3(@vue/compiler-sfc@3.3.4)(acorn@8.11.3)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(consola@3.2.3)(handlebars@4.7.7)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.2.5)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(typescript@5.4.5)(vue@2.7.16))(vue@2.7.16)
+        version: 0.34.0(nuxt@2.17.3(@vue/compiler-sfc@3.3.4)(acorn@8.11.3)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(consola@3.2.3)(handlebars@4.7.7)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.3.2)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(typescript@5.4.5)(vue@2.7.16))(vue@2.7.16)
       '@nuxtjs/i18n':
         specifier: ^7.3.1
         version: 7.3.1(vue@2.7.16)
@@ -127,7 +127,7 @@ importers:
         version: 6.1.11
       nuxt:
         specifier: ^2.17.3
-        version: 2.17.3(@vue/compiler-sfc@3.3.4)(acorn@8.11.3)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(consola@3.2.3)(handlebars@4.7.7)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.2.5)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(typescript@5.4.5)(vue@2.7.16)
+        version: 2.17.3(@vue/compiler-sfc@3.3.4)(acorn@8.11.3)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(consola@3.2.3)(handlebars@4.7.7)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.3.2)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(typescript@5.4.5)(vue@2.7.16)
       pinia:
         specifier: ^2.1.7
         version: 2.1.7(typescript@5.4.5)(vue@2.7.16)
@@ -185,7 +185,7 @@ importers:
         version: 3.0.2(@nuxt/types@2.17.3)(eslint@8.57.0)(typescript@5.4.5)(vue-template-compiler@2.7.16)(webpack@4.46.0)
       '@nuxtjs/storybook':
         specifier: ^4.3.2
-        version: 4.3.2(@babel/core@7.24.4)(@vue/compiler-sfc@3.3.4)(acorn@8.11.3)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(babel-loader@8.3.0(@babel/core@7.24.4)(webpack@4.46.0))(eslint@8.57.0)(handlebars@4.7.7)(lodash@4.17.21)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.2.5)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(typescript@5.4.5)(vue-template-compiler@2.7.16)(vue@2.7.16)(webpack@4.46.0)
+        version: 4.3.2(@babel/core@7.24.4)(@vue/compiler-sfc@3.3.4)(acorn@8.11.3)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(babel-loader@8.3.0(@babel/core@7.24.4)(webpack@4.46.0))(eslint@8.57.0)(handlebars@4.7.7)(lodash@4.17.21)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.3.2)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(typescript@5.4.5)(vue-template-compiler@2.7.16)(vue@2.7.16)(webpack@4.46.0)
       '@pinia/testing':
         specifier: ^0.1.0
         version: 0.1.3(pinia@2.1.7(typescript@5.4.5)(vue@2.7.16))(vue@2.7.16)
@@ -299,7 +299,7 @@ importers:
         version: 2.0.7
       vue-loader:
         specifier: ^15.11.1
-        version: 15.11.1(@vue/compiler-sfc@3.3.4)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(css-loader@5.2.7(webpack@4.46.0))(handlebars@4.7.7)(lodash@4.17.21)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.2.5)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(vue-template-compiler@2.7.16)(webpack@4.46.0)
+        version: 15.11.1(@vue/compiler-sfc@3.3.4)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(css-loader@5.2.7(webpack@4.46.0))(handlebars@4.7.7)(lodash@4.17.21)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.3.2)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(vue-template-compiler@2.7.16)(webpack@4.46.0)
       vue-server-renderer:
         specifier: ^2.7.16
         version: 2.7.16
@@ -1668,6 +1668,7 @@ packages:
   '@humanwhocodes/config-array@0.11.14':
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
     engines: {node: '>=10.10.0'}
+    deprecated: Use @eslint/config-array instead
 
   '@humanwhocodes/module-importer@1.0.1':
     resolution: {integrity: sha512-bxveV4V8v5Yb4ncFTT3rPSgZBOpCkjfK0y4oVVVJwIuDVBRMDXrPyXRL988i5ap9m9bnyEEjWfm5WkBmtffLfA==}
@@ -1675,6 +1676,7 @@ packages:
 
   '@humanwhocodes/object-schema@2.0.3':
     resolution: {integrity: sha512-93zYdMES/c1D69yZiKDBj0V24vqNzB/koF26KPaagAfd3P/4gUlh3Dys5ogAK+Exi9QyzlD8x/08Zt7wIKcDcA==}
+    deprecated: Use @eslint/object-schema instead
 
   '@intlify/core-base@9.13.1':
     resolution: {integrity: sha512-+bcQRkJO9pcX8d0gel9ZNfrzU22sZFSA0WVhfXrf5jdJOS24a+Bp8pozuS9sBI9Hk/tGz83pgKfmqcn/Ci7/8w==}
@@ -8758,8 +8760,8 @@ packages:
     engines: {node: '>=10.13.0'}
     hasBin: true
 
-  prettier@3.2.5:
-    resolution: {integrity: sha512-3/GWa9aOC0YeD7LUfvOG2NiDyhOWRvt1k+rcKhOuYnMY24iiCphgneUfJDyFXd6rZCAnuLBv6UeAULtrhT/F4A==}
+  prettier@3.3.2:
+    resolution: {integrity: sha512-rAVeHYMcv8ATV5d508CFdn+8/pHPpXeIid1DdrPwXnaAdH7cqjVbpJaT5eq4yRAFU/lsbwYwSF/n5iNrdJHPQA==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -8927,6 +8929,10 @@ packages:
   q@1.5.1:
     resolution: {integrity: sha512-kV/CThkXo6xyFEZUugw/+pIOywXcDbFYgSct5cT3gqlbkBE1SJdwy6UQoZvodiWF/ckQLZyDE/Bu1M6gVu5lVw==}
     engines: {node: '>=0.6.0', teleport: '>=0.2.0'}
+    deprecated: |-
+      You or someone you depend on is using Q, the JavaScript Promise library that gave JavaScript developers strong feelings about promises. They can almost certainly migrate to the native JavaScript promise now. Thank you literally everyone for joining me in this bet against the odds. Be excellent to each other.
+
+      (For a CapTP with native promises, see @endo/eventual-send and @endo/captp)
 
   qs@6.11.0:
     resolution: {integrity: sha512-MvjoMCJwEarSbUYk5O+nmoSzSutSsTwF85zcHPQ9OrlFoZOYIjaqBAJIqIXjptyD5vThxGq52Xu/MaJzRkIk4Q==}
@@ -12949,12 +12955,12 @@ snapshots:
       - supports-color
       - vue
 
-  '@nuxt/builder@2.17.3(@vue/compiler-sfc@3.3.4)(acorn@8.11.3)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(handlebars@4.7.7)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.2.5)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(typescript@5.4.5)(vue@2.7.16)':
+  '@nuxt/builder@2.17.3(@vue/compiler-sfc@3.3.4)(acorn@8.11.3)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(handlebars@4.7.7)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.3.2)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(typescript@5.4.5)(vue@2.7.16)':
     dependencies:
       '@nuxt/devalue': 2.0.2
       '@nuxt/utils': 2.17.3
       '@nuxt/vue-app': 2.17.3
-      '@nuxt/webpack': 2.17.3(@vue/compiler-sfc@3.3.4)(acorn@8.11.3)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(handlebars@4.7.7)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.2.5)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(typescript@5.4.5)(vue@2.7.16)
+      '@nuxt/webpack': 2.17.3(@vue/compiler-sfc@3.3.4)(acorn@8.11.3)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(handlebars@4.7.7)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.3.2)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(typescript@5.4.5)(vue@2.7.16)
       chalk: 4.1.2
       chokidar: 3.5.3
       consola: 3.2.3
@@ -13281,7 +13287,7 @@ snapshots:
       vue-meta: 2.4.0
       vue-server-renderer: 2.7.16
 
-  '@nuxt/webpack@2.17.3(@vue/compiler-sfc@3.3.4)(acorn@8.11.3)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(handlebars@4.7.7)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.2.5)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(typescript@5.4.5)(vue@2.7.16)':
+  '@nuxt/webpack@2.17.3(@vue/compiler-sfc@3.3.4)(acorn@8.11.3)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(handlebars@4.7.7)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.3.2)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(typescript@5.4.5)(vue@2.7.16)':
     dependencies:
       '@babel/core': 7.24.4
       '@nuxt/babel-preset-app': 2.17.3(vue@2.7.16)
@@ -13320,7 +13326,7 @@ snapshots:
       ufo: 1.5.3
       upath: 2.0.1
       url-loader: 4.1.1(file-loader@6.2.0(webpack@4.47.0))(webpack@4.47.0)
-      vue-loader: 15.11.1(@vue/compiler-sfc@3.3.4)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(cache-loader@4.1.0(webpack@4.47.0))(css-loader@5.2.7(webpack@4.47.0))(handlebars@4.7.7)(lodash@4.17.21)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.2.5)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(vue-template-compiler@2.7.16)(webpack@4.47.0)
+      vue-loader: 15.11.1(@vue/compiler-sfc@3.3.4)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(cache-loader@4.1.0(webpack@4.47.0))(css-loader@5.2.7(webpack@4.47.0))(handlebars@4.7.7)(lodash@4.17.21)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.3.2)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(vue-template-compiler@2.7.16)(webpack@4.47.0)
       vue-style-loader: 4.1.3
       vue-template-compiler: 2.7.16
       watchpack: 2.4.0
@@ -13395,13 +13401,13 @@ snapshots:
       - webpack-command
       - whiskers
 
-  '@nuxtjs/composition-api@0.34.0(nuxt@2.17.3(@vue/compiler-sfc@3.3.4)(acorn@8.11.3)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(consola@3.2.3)(handlebars@4.7.7)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.2.5)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(typescript@5.4.5)(vue@2.7.16))(vue@2.7.16)':
+  '@nuxtjs/composition-api@0.34.0(nuxt@2.17.3(@vue/compiler-sfc@3.3.4)(acorn@8.11.3)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(consola@3.2.3)(handlebars@4.7.7)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.3.2)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(typescript@5.4.5)(vue@2.7.16))(vue@2.7.16)':
     dependencies:
       defu: 6.1.4
       estree-walker: 2.0.2
       fs-extra: 11.2.0
       magic-string: 0.30.9
-      nuxt: 2.17.3(@vue/compiler-sfc@3.3.4)(acorn@8.11.3)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(consola@3.2.3)(handlebars@4.7.7)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.2.5)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(typescript@5.4.5)(vue@2.7.16)
+      nuxt: 2.17.3(@vue/compiler-sfc@3.3.4)(acorn@8.11.3)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(consola@3.2.3)(handlebars@4.7.7)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.3.2)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(typescript@5.4.5)(vue@2.7.16)
       pathe: 1.1.2
       ufo: 1.5.3
       vue: 2.7.16
@@ -13462,13 +13468,13 @@ snapshots:
       minimatch: 3.1.2
       sitemap: 4.1.1
 
-  '@nuxtjs/storybook@4.3.2(@babel/core@7.24.4)(@vue/compiler-sfc@3.3.4)(acorn@8.11.3)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(babel-loader@8.3.0(@babel/core@7.24.4)(webpack@4.46.0))(eslint@8.57.0)(handlebars@4.7.7)(lodash@4.17.21)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.2.5)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(typescript@5.4.5)(vue-template-compiler@2.7.16)(vue@2.7.16)(webpack@4.46.0)':
+  '@nuxtjs/storybook@4.3.2(@babel/core@7.24.4)(@vue/compiler-sfc@3.3.4)(acorn@8.11.3)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(babel-loader@8.3.0(@babel/core@7.24.4)(webpack@4.46.0))(eslint@8.57.0)(handlebars@4.7.7)(lodash@4.17.21)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.3.2)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(typescript@5.4.5)(vue-template-compiler@2.7.16)(vue@2.7.16)(webpack@4.46.0)':
     dependencies:
       '@nuxt/postcss8': 1.1.3(webpack@4.46.0)
-      '@storybook/addon-essentials': 6.5.10(@babel/core@7.24.4)(@storybook/vue@6.5.10(@babel/core@7.24.4)(acorn@8.11.3)(babel-loader@8.3.0(@babel/core@7.24.4)(webpack@4.46.0))(css-loader@5.2.7(webpack@4.46.0))(eslint@8.57.0)(typescript@5.4.5)(vue-loader@15.11.1(@vue/compiler-sfc@3.3.4)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(css-loader@5.2.7(webpack@4.46.0))(handlebars@4.7.7)(lodash@4.17.21)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.2.5)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(vue-template-compiler@2.7.16)(webpack@4.46.0))(vue-template-compiler@2.7.16)(vue@2.7.16))(eslint@8.57.0)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(typescript@5.4.5)(vue-template-compiler@2.7.16)(vue@2.7.16)(webpack@4.46.0)
+      '@storybook/addon-essentials': 6.5.10(@babel/core@7.24.4)(@storybook/vue@6.5.10(@babel/core@7.24.4)(acorn@8.11.3)(babel-loader@8.3.0(@babel/core@7.24.4)(webpack@4.46.0))(css-loader@5.2.7(webpack@4.46.0))(eslint@8.57.0)(typescript@5.4.5)(vue-loader@15.11.1(@vue/compiler-sfc@3.3.4)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(css-loader@5.2.7(webpack@4.46.0))(handlebars@4.7.7)(lodash@4.17.21)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.3.2)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(vue-template-compiler@2.7.16)(webpack@4.46.0))(vue-template-compiler@2.7.16)(vue@2.7.16))(eslint@8.57.0)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(typescript@5.4.5)(vue-template-compiler@2.7.16)(vue@2.7.16)(webpack@4.46.0)
       '@storybook/addon-postcss': 2.0.0(webpack@4.46.0)
       '@storybook/react-docgen-typescript-plugin': 1.0.1(typescript@5.4.5)(webpack@4.46.0)
-      '@storybook/vue': 6.5.10(@babel/core@7.24.4)(acorn@8.11.3)(babel-loader@8.3.0(@babel/core@7.24.4)(webpack@4.46.0))(css-loader@5.2.7(webpack@4.46.0))(eslint@8.57.0)(typescript@5.4.5)(vue-loader@15.11.1(@vue/compiler-sfc@3.3.4)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(css-loader@5.2.7(webpack@4.46.0))(handlebars@4.7.7)(lodash@4.17.21)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.2.5)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(vue-template-compiler@2.7.16)(webpack@4.46.0))(vue-template-compiler@2.7.16)(vue@2.7.16)
+      '@storybook/vue': 6.5.10(@babel/core@7.24.4)(acorn@8.11.3)(babel-loader@8.3.0(@babel/core@7.24.4)(webpack@4.46.0))(css-loader@5.2.7(webpack@4.46.0))(eslint@8.57.0)(typescript@5.4.5)(vue-loader@15.11.1(@vue/compiler-sfc@3.3.4)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(css-loader@5.2.7(webpack@4.46.0))(handlebars@4.7.7)(lodash@4.17.21)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.3.2)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(vue-template-compiler@2.7.16)(webpack@4.46.0))(vue-template-compiler@2.7.16)(vue@2.7.16)
       arg: 5.0.2
       consola: 2.15.3
       create-require: 1.1.1
@@ -13477,7 +13483,7 @@ snapshots:
       lodash.template: 4.5.0
       pathe: 0.3.5
       postcss: 8.4.31
-      vue-loader: 15.11.1(@vue/compiler-sfc@3.3.4)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(css-loader@5.2.7(webpack@4.46.0))(handlebars@4.7.7)(lodash@4.17.21)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.2.5)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(vue-template-compiler@2.7.16)(webpack@4.46.0)
+      vue-loader: 15.11.1(@vue/compiler-sfc@3.3.4)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(css-loader@5.2.7(webpack@4.46.0))(handlebars@4.7.7)(lodash@4.17.21)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.3.2)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(vue-template-compiler@2.7.16)(webpack@4.46.0)
     transitivePeerDependencies:
       - '@babel/core'
       - '@storybook/angular'
@@ -13939,7 +13945,7 @@ snapshots:
       - webpack-cli
       - webpack-command
 
-  '@storybook/addon-essentials@6.5.10(@babel/core@7.24.4)(@storybook/vue@6.5.10(@babel/core@7.24.4)(acorn@8.11.3)(babel-loader@8.3.0(@babel/core@7.24.4)(webpack@4.46.0))(css-loader@5.2.7(webpack@4.46.0))(eslint@8.57.0)(typescript@5.4.5)(vue-loader@15.11.1(@vue/compiler-sfc@3.3.4)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(css-loader@5.2.7(webpack@4.46.0))(handlebars@4.7.7)(lodash@4.17.21)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.2.5)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(vue-template-compiler@2.7.16)(webpack@4.46.0))(vue-template-compiler@2.7.16)(vue@2.7.16))(eslint@8.57.0)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(typescript@5.4.5)(vue-template-compiler@2.7.16)(vue@2.7.16)(webpack@4.46.0)':
+  '@storybook/addon-essentials@6.5.10(@babel/core@7.24.4)(@storybook/vue@6.5.10(@babel/core@7.24.4)(acorn@8.11.3)(babel-loader@8.3.0(@babel/core@7.24.4)(webpack@4.46.0))(css-loader@5.2.7(webpack@4.46.0))(eslint@8.57.0)(typescript@5.4.5)(vue-loader@15.11.1(@vue/compiler-sfc@3.3.4)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(css-loader@5.2.7(webpack@4.46.0))(handlebars@4.7.7)(lodash@4.17.21)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.3.2)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(vue-template-compiler@2.7.16)(webpack@4.46.0))(vue-template-compiler@2.7.16)(vue@2.7.16))(eslint@8.57.0)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(typescript@5.4.5)(vue-template-compiler@2.7.16)(vue@2.7.16)(webpack@4.46.0)':
     dependencies:
       '@babel/core': 7.24.4
       '@storybook/addon-actions': 6.5.10(react-dom@16.14.0(react@16.14.0))(react@16.14.0)
@@ -13958,7 +13964,7 @@ snapshots:
       regenerator-runtime: 0.13.11
       ts-dedent: 2.2.0
     optionalDependencies:
-      '@storybook/vue': 6.5.10(@babel/core@7.24.4)(acorn@8.11.3)(babel-loader@8.3.0(@babel/core@7.24.4)(webpack@4.46.0))(css-loader@5.2.7(webpack@4.46.0))(eslint@8.57.0)(typescript@5.4.5)(vue-loader@15.11.1(@vue/compiler-sfc@3.3.4)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(css-loader@5.2.7(webpack@4.46.0))(handlebars@4.7.7)(lodash@4.17.21)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.2.5)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(vue-template-compiler@2.7.16)(webpack@4.46.0))(vue-template-compiler@2.7.16)(vue@2.7.16)
+      '@storybook/vue': 6.5.10(@babel/core@7.24.4)(acorn@8.11.3)(babel-loader@8.3.0(@babel/core@7.24.4)(webpack@4.46.0))(css-loader@5.2.7(webpack@4.46.0))(eslint@8.57.0)(typescript@5.4.5)(vue-loader@15.11.1(@vue/compiler-sfc@3.3.4)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(css-loader@5.2.7(webpack@4.46.0))(handlebars@4.7.7)(lodash@4.17.21)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.3.2)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(vue-template-compiler@2.7.16)(webpack@4.46.0))(vue-template-compiler@2.7.16)(vue@2.7.16)
       react: 16.14.0
       react-dom: 16.14.0(react@16.14.0)
       vue: 2.7.16
@@ -14645,7 +14651,7 @@ snapshots:
       regenerator-runtime: 0.13.11
       resolve-from: 5.0.0
 
-  '@storybook/vue@6.5.10(@babel/core@7.24.4)(acorn@8.11.3)(babel-loader@8.3.0(@babel/core@7.24.4)(webpack@4.46.0))(css-loader@5.2.7(webpack@4.46.0))(eslint@8.57.0)(typescript@5.4.5)(vue-loader@15.11.1(@vue/compiler-sfc@3.3.4)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(css-loader@5.2.7(webpack@4.46.0))(handlebars@4.7.7)(lodash@4.17.21)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.2.5)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(vue-template-compiler@2.7.16)(webpack@4.46.0))(vue-template-compiler@2.7.16)(vue@2.7.16)':
+  '@storybook/vue@6.5.10(@babel/core@7.24.4)(acorn@8.11.3)(babel-loader@8.3.0(@babel/core@7.24.4)(webpack@4.46.0))(css-loader@5.2.7(webpack@4.46.0))(eslint@8.57.0)(typescript@5.4.5)(vue-loader@15.11.1(@vue/compiler-sfc@3.3.4)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(css-loader@5.2.7(webpack@4.46.0))(handlebars@4.7.7)(lodash@4.17.21)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.3.2)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(vue-template-compiler@2.7.16)(webpack@4.46.0))(vue-template-compiler@2.7.16)(vue@2.7.16)':
     dependencies:
       '@babel/core': 7.24.4
       '@storybook/addons': 6.5.10(react-dom@16.14.0(react@16.14.0))(react@16.14.0)
@@ -14670,7 +14676,7 @@ snapshots:
       vue: 2.7.16
       vue-docgen-api: 4.44.18(vue@2.7.16)
       vue-docgen-loader: 1.5.0(vue-docgen-api@4.44.18(vue@2.7.16))(webpack@4.46.0)
-      vue-loader: 15.11.1(@vue/compiler-sfc@3.3.4)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(css-loader@5.2.7(webpack@4.46.0))(handlebars@4.7.7)(lodash@4.17.21)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.2.5)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(vue-template-compiler@2.7.16)(webpack@4.46.0)
+      vue-loader: 15.11.1(@vue/compiler-sfc@3.3.4)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(css-loader@5.2.7(webpack@4.46.0))(handlebars@4.7.7)(lodash@4.17.21)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.3.2)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(vue-template-compiler@2.7.16)(webpack@4.46.0)
       vue-template-compiler: 2.7.16
       webpack: 4.46.0
     transitivePeerDependencies:
@@ -21075,10 +21081,10 @@ snapshots:
     optionalDependencies:
       chokidar: 3.5.3
 
-  nuxt@2.17.3(@vue/compiler-sfc@3.3.4)(acorn@8.11.3)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(consola@3.2.3)(handlebars@4.7.7)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.2.5)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(typescript@5.4.5)(vue@2.7.16):
+  nuxt@2.17.3(@vue/compiler-sfc@3.3.4)(acorn@8.11.3)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(consola@3.2.3)(handlebars@4.7.7)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.3.2)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(typescript@5.4.5)(vue@2.7.16):
     dependencies:
       '@nuxt/babel-preset-app': 2.17.3(vue@2.7.16)
-      '@nuxt/builder': 2.17.3(@vue/compiler-sfc@3.3.4)(acorn@8.11.3)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(handlebars@4.7.7)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.2.5)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(typescript@5.4.5)(vue@2.7.16)
+      '@nuxt/builder': 2.17.3(@vue/compiler-sfc@3.3.4)(acorn@8.11.3)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(handlebars@4.7.7)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.3.2)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(typescript@5.4.5)(vue@2.7.16)
       '@nuxt/cli': 2.17.3
       '@nuxt/components': 2.2.1(consola@3.2.3)
       '@nuxt/config': 2.17.3
@@ -21091,7 +21097,7 @@ snapshots:
       '@nuxt/utils': 2.17.3
       '@nuxt/vue-app': 2.17.3
       '@nuxt/vue-renderer': 2.17.3
-      '@nuxt/webpack': 2.17.3(@vue/compiler-sfc@3.3.4)(acorn@8.11.3)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(handlebars@4.7.7)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.2.5)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(typescript@5.4.5)(vue@2.7.16)
+      '@nuxt/webpack': 2.17.3(@vue/compiler-sfc@3.3.4)(acorn@8.11.3)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(handlebars@4.7.7)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.3.2)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(typescript@5.4.5)(vue@2.7.16)
     transitivePeerDependencies:
       - '@vue/compiler-sfc'
       - acorn
@@ -22280,16 +22286,16 @@ snapshots:
 
   prepend-http@1.0.4: {}
 
-  prettier-plugin-tailwindcss@0.6.1(prettier@3.2.5):
+  prettier-plugin-tailwindcss@0.6.1(prettier@3.3.2):
     dependencies:
-      prettier: 3.2.5
+      prettier: 3.3.2
 
   prettier@2.3.0: {}
 
   prettier@2.8.8:
     optional: true
 
-  prettier@3.2.5: {}
+  prettier@3.3.2: {}
 
   pretty-bytes@5.6.0: {}
 
@@ -24353,7 +24359,7 @@ snapshots:
       camelcase: 5.3.1
       vue: 2.7.16
 
-  vue-loader@15.11.1(@vue/compiler-sfc@3.3.4)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(cache-loader@4.1.0(webpack@4.47.0))(css-loader@5.2.7(webpack@4.47.0))(handlebars@4.7.7)(lodash@4.17.21)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.2.5)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(vue-template-compiler@2.7.16)(webpack@4.47.0):
+  vue-loader@15.11.1(@vue/compiler-sfc@3.3.4)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(cache-loader@4.1.0(webpack@4.47.0))(css-loader@5.2.7(webpack@4.47.0))(handlebars@4.7.7)(lodash@4.17.21)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.3.2)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(vue-template-compiler@2.7.16)(webpack@4.47.0):
     dependencies:
       '@vue/component-compiler-utils': 3.3.0(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(handlebars@4.7.7)(lodash@4.17.21)(nunjucks@3.2.4(chokidar@3.5.3))(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)
       css-loader: 5.2.7(webpack@4.47.0)
@@ -24365,7 +24371,7 @@ snapshots:
     optionalDependencies:
       '@vue/compiler-sfc': 3.3.4
       cache-loader: 4.1.0(webpack@4.47.0)
-      prettier: 3.2.5
+      prettier: 3.3.2
       vue-template-compiler: 2.7.16
     transitivePeerDependencies:
       - arc-templates
@@ -24422,7 +24428,7 @@ snapshots:
       - walrus
       - whiskers
 
-  vue-loader@15.11.1(@vue/compiler-sfc@3.3.4)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(css-loader@5.2.7(webpack@4.46.0))(handlebars@4.7.7)(lodash@4.17.21)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.2.5)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(vue-template-compiler@2.7.16)(webpack@4.46.0):
+  vue-loader@15.11.1(@vue/compiler-sfc@3.3.4)(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(css-loader@5.2.7(webpack@4.46.0))(handlebars@4.7.7)(lodash@4.17.21)(nunjucks@3.2.4(chokidar@3.5.3))(prettier@3.3.2)(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)(vue-template-compiler@2.7.16)(webpack@4.46.0):
     dependencies:
       '@vue/component-compiler-utils': 3.3.0(babel-core@7.0.0-bridge.0(@babel/core@7.24.4))(handlebars@4.7.7)(lodash@4.17.21)(nunjucks@3.2.4(chokidar@3.5.3))(pug@3.0.2)(react-dom@16.14.0(react@16.14.0))(react@16.14.0)
       css-loader: 5.2.7(webpack@4.46.0)
@@ -24433,7 +24439,7 @@ snapshots:
       webpack: 4.46.0
     optionalDependencies:
       '@vue/compiler-sfc': 3.3.4
-      prettier: 3.2.5
+      prettier: 3.3.2
       vue-template-compiler: 2.7.16
     transitivePeerDependencies:
       - arc-templates
