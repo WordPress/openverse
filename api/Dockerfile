@@ -145,9 +145,9 @@ CMD ["python", "run.py"]
 # NGINX #
 #########
 
-FROM docker.io/nginx:1.26.0-alpine as nginx
+FROM docker.io/nginx:1.26.0-alpine AS nginx
 
-LABEL org.opencontainers.image.source = "https://github.com/WordPress/openverse"
+LABEL org.opencontainers.image.source="https://github.com/WordPress/openverse"
 
 WORKDIR /app
 
