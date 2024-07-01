@@ -34,6 +34,7 @@ npm-debug.log*
 
 # Nuxt
 .nuxt
+node-jiti/
 
 # Airflow
 airflow.cfg

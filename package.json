@@ -15,15 +15,11 @@
   },
   "packageManager": "pnpm@9.2.0",
   "engines": {
-    "node": ">= 20.0.0 <21",
-    "pnpm": ">= 9.1.4"
-  },
-  "volta": {
-    "node": "20.14.0"
+    "node": ">= 20.0.0 <21"
   },
   "devDependencies": {
     "@openverse/eslint-plugin": "workspace:*",
-    "prettier": "3.2.5",
+    "prettier": "3.3.2",
     "prettier-plugin-tailwindcss": "0.6.1",
     "typescript": "5.5.2",
     "vue-tsc": "2.0.24"

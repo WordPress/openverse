@@ -7,7 +7,7 @@ ARG INGESTION_PY_VERSION
 # Python builder #
 ##################
 
-FROM docker.io/python:${INGESTION_PY_VERSION} as builder
+FROM docker.io/python:${INGESTION_PY_VERSION} AS builder
 
 # Container optimizations
 ENV PYTHONUNBUFFERED=1
@@ -38,7 +38,7 @@ RUN pipenv install --system --deploy --dev
 # Ingestion server #
 ####################
 
-FROM docker.io/python:${INGESTION_PY_VERSION}-slim as ing
+FROM docker.io/python:${INGESTION_PY_VERSION}-slim AS ing
 
 LABEL org.opencontainers.image.source="https://github.com/WordPress/openverse"
 
@@ -50,7 +50,7 @@ ENV PIP_NO_COLOR=1
 # Activate the virtualenv
 ENV PATH="/venv/bin:$PATH"
 
-ENV PYTHONPATH="$PYTHONPATH:/ingestion_server/"
+ENV PYTHONPATH="/ingestion_server/"
 # TLDEXTRACT fails to cache in /home/supervisord, set its cache to /tmp instead
 ENV TLDEXTRACT_CACHE="/tmp/python-tldextract"
 
