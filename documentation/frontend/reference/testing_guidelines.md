@@ -357,15 +357,34 @@ output of failed tests by finding the `trace.zip` for the relevant test in the
 [Playwright Trace Viewer](https://playwright.dev/docs/trace-viewer) to inspect
 these (or open the zip yourself and poke around the files on your own).
 
-For Playwright tests failing in CI, a GitHub comment will appear with a link to
-download an artifact of the `test-results` folder.
+Playwright tests in CI are run with `-u` option by default, this means that
+snapshots will automatically be updated for modified parts of the UI if
+Playwright detects that. See
+[Updating snapshots](/frontend/guides/test.md#updating-snapshots) for more
+reading about this.
+
+When this happens, a GitHub comment will appear with a link to download
+artifacts named in the form `*_snapshot_diff`. The resulting artifacts would
+each contain a gzipped patch of the snapshot changes named
+`snapshot_diff.patch.gz`, once downloaded, they can be decompressed and applied
+to your working branch by running:
+
+`cat snapshot_diff.patch.gz | ov gunzip -kc - | git apply`
+
+```{note}
+You might need to replace `ov` in the above command with a relative path `./ov` if you do not have `ov` added to your PATH yet.
+```
+
+After successfully applying the changes, push the latest changes to your branch
+upstream and you should most likely have Playwright CI tests pass.
 
 Visual regression tests that fail to match the existing snapshots will also have
 `expected`, `actual` and `diff` files generated that are helpful for
 understanding why intermittent failures are happening. These are generated
 automatically by Playwright and will be placed in the `test-results` folder
 under the fully qualified name of the test that failed (with every parent
-describe block included).
+describe block included). This is also available for download in the Artifacts
+section after every failed Playwright test in the CI.
 
 Additionally, you can run the tests in debug mode. This will run the tests with
 a headed browser as opposed to a headless (invisible) one and allow you to watch
