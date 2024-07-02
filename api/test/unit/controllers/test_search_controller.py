@@ -58,6 +58,10 @@ def unreachable_search_con_cache(unreachable_django_cache, monkeypatch):
     yield cache
 
 
+@pytest.mark.filterwarnings(
+    # Due to expected `ZeroDivisionError` in the test cases
+    "ignore:A plugin raised an exception during an old-style hookwrapper teardown"
+)
 @pytest.mark.parametrize(
     "total_hits, real_result_count, page_size, page, expected",
     [
