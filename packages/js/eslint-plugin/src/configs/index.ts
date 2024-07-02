@@ -42,13 +42,13 @@ export const project: TSESLint.Linter.ConfigType = {
       parser: "jsonc-eslint-parser",
     },
     {
-      env: { jest: true },
+      env: { "vitest/env": true },
       files: ["packages/js/**/*/test"],
-      plugins: ["jest"],
-      extends: ["plugin:jest/recommended"],
+      plugins: ["vitest"],
+      extends: ["plugin:vitest/recommended"],
       rules: {
         // Superseded by `@openverse/no-unexplained-disabled-test`
-        "jest/no-disabled-test": "off",
+        "vitest/no-disabled-test": "off",
       },
     },
     {
