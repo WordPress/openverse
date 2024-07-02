@@ -28,12 +28,11 @@ https://github.com/WordPress/openverse-catalog/issues/453)
 
 import logging
 import os
-import uuid
 from collections.abc import Sequence
 from itertools import product
 
 from airflow import DAG
-from airflow.decorators import task, task_group
+from airflow.decorators import task_group
 from airflow.operators.python import PythonOperator
 from airflow.utils.trigger_rule import TriggerRule
 
@@ -44,6 +43,7 @@ from common.sensors.constants import ES_CONCURRENCY_TAGS
 from common.sensors.single_run_external_dags_sensor import SingleRunExternalDAGsSensor
 from common.sensors.utils import wait_for_external_dags_with_tag
 from data_refresh.copy_data import copy_upstream_tables
+from data_refresh.create_and_promote_index import create_index
 from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS, DataRefreshConfig
 from data_refresh.distributed_reindex import perform_distributed_reindex
 from data_refresh.reporting import report_record_difference
@@ -83,11 +83,6 @@ def wait_for_conflicting_dags(
         # was handled in the previous task.
         excluded_dag_ids=external_dag_ids,
     )
-
-
-@task
-def generate_index_name(media_type: str) -> str:
-    return f"{media_type}-{uuid.uuid4().hex}"
 
 
 def create_data_refresh_dag(
@@ -155,22 +150,11 @@ def create_data_refresh_dag(
 
         # TODO Cleaning steps
 
-        # TODO: Move temp_index_name >> index_config >> target_index into a `create_index` task group
-
-        # Generate a UUID suffix that will be used by the newly created index.
-        temp_index_name = generate_index_name(media_type=data_refresh_config.media_type)
-
-        # Get the configuration for the new Elasticsearch index, based off the existing index.
-        index_config = es.get_index_configuration_copy.override(
-            task_id="get_index_configuration"
-        )(
-            source_index=data_refresh_config.media_type,
-            target_index_name=temp_index_name,
-            es_host=es_host,
+        # Create a new temporary index based off the configuration of the existing media index.
+        # This will later replace the live index.
+        target_index = create_index(
+            data_refresh_config=data_refresh_config, es_host=es_host
         )
-
-        # Create a new index matching the existing configuration
-        target_index = es.create_index(index_config=index_config, es_host=es_host)
 
         # Disable Cloudwatch alarms that are noisy during the reindexing steps of a
         # data refresh.
@@ -182,11 +166,11 @@ def create_data_refresh_dag(
             },
         )
 
-        # (TaskGroup that creates index, triggers and waits for reindexing)
+        # Populate the Elasticsearch index.
         reindex = perform_distributed_reindex(
             environment="{{ var.value.ENVIRONMENT }}",
             target_environment=target_environment,
-            target_index=temp_index_name,
+            target_index=target_index,
             data_refresh_config=data_refresh_config,
         )
 
@@ -228,8 +212,13 @@ def create_data_refresh_dag(
         )
 
         # Set up task dependencies
-        before_record_count >> wait_for_dags >> copy_data >> temp_index_name
-        temp_index_name >> index_config >> target_index >> disable_alarms
+        (
+            before_record_count
+            >> wait_for_dags
+            >> copy_data
+            >> create_index
+            >> disable_alarms
+        )
         disable_alarms >> reindex >> [enable_alarms, after_record_count]
         after_record_count >> report_counts
 
