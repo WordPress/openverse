@@ -8,10 +8,8 @@ from elasticsearch import BadRequestError, NotFoundError
 
 from api.models import DeletedAudio, DeletedImage, SensitiveAudio, SensitiveImage
 from api.models.media import (
-    DEINDEXED,
     DMCA,
     MATURE,
-    MATURE_FILTERED,
     OTHER,
     AbstractDeletedMedia,
     AbstractSensitiveMedia,
@@ -41,6 +39,7 @@ def test_pending_reports_have_no_subreport_models(
     report = media_type_config.report_factory.create(media_obj=media, reason=reason)
 
     assert report.decision is None
+    # assert report.is_pending
     assert not media_type_config.sensitive_class.objects.filter(
         media_obj=media
     ).exists()
@@ -51,9 +50,7 @@ def test_pending_reports_have_no_subreport_models(
 def test_mature_filtering_creates_sensitive_media_instance(media_type_config, settings):
     media = media_type_config.model_factory.create()
 
-    media_type_config.report_factory.create(
-        media_obj=media, reason=MATURE, status=MATURE_FILTERED
-    )
+    media_type_config.report_factory.create(media_obj=media, reason=MATURE)
 
     assert media_type_config.sensitive_class.objects.filter(media_obj=media).exists()
 
@@ -78,9 +75,7 @@ def test_deleting_sensitive_media_instance_resets_mature_flag(
 ):
     media = media_type_config.model_factory.create()
     # Mark as mature.
-    media_type_config.report_factory.create(
-        media_obj=media, reason=MATURE, status=MATURE_FILTERED
-    )
+    media_type_config.report_factory.create(media_obj=media, reason=MATURE)
     # Delete sensitive instance.
     media_type_config.sensitive_class.objects.get(media_obj=media).delete()
 
@@ -111,9 +106,7 @@ def test_deindexing_creates_deleted_media_instance(media_type_config, settings):
     image_id = media.id
     identifier = media.identifier
 
-    media_type_config.report_factory.create(
-        media_obj=media, reason=DMCA, status=DEINDEXED
-    )
+    media_type_config.report_factory.create(media_obj=media, reason=DMCA)
 
     assert media_type_config.deleted_class.objects.filter(media_obj=media).exists()
     assert not media_type_config.model_class.objects.filter(

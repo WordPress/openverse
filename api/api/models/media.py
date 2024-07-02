@@ -16,11 +16,6 @@ from api.models.base import OpenLedgerModel
 from api.models.mixins import ForeignIdentifierMixin, IdentifierMixin, MediaMixin
 
 
-PENDING = "pending_review"
-MATURE_FILTERED = "mature_filtered"
-DEINDEXED = "deindexed"
-NO_ACTION = "no_action"
-
 MATURE = "mature"
 DMCA = "dmca"
 OTHER = "other"
