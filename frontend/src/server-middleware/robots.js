@@ -13,6 +13,7 @@ const deniedUserAgents = [
   "Bytespider",
   "ImagesiftBot",
   "cohere-ai",
+  "ia_archiver", // Internet Archive for the Wayback Machine. Not malicious, but we don't want to allow single and search results to be indexed at the risk of preserving deindexed works.
 ]
 
 const aiDisallowRules = deniedUserAgents
