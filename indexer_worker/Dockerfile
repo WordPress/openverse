@@ -7,7 +7,7 @@ ARG INDEXER_WORKER_PY_VERSION
 # Python builder #
 ##################
 
-FROM docker.io/python:${INDEXER_WORKER_PY_VERSION} as builder
+FROM docker.io/python:${INDEXER_WORKER_PY_VERSION} AS builder
 
 # Container optimizations
 ENV PYTHONUNBUFFERED=1
@@ -36,7 +36,7 @@ RUN pdm install --check --frozen-lockfile $PDM_INSTALL_ARGS
 # Indexer worker #
 ####################
 
-FROM docker.io/python:${INDEXER_WORKER_PY_VERSION}-slim as indexer_worker
+FROM docker.io/python:${INDEXER_WORKER_PY_VERSION}-slim AS indexer_worker
 
 LABEL org.opencontainers.image.source="https://github.com/WordPress/openverse"
 
@@ -48,7 +48,7 @@ ENV PIP_NO_COLOR=1
 # Activate the virtualenv
 ENV PATH="/.venv/bin:$PATH"
 
-ENV PYTHONPATH="$PYTHONPATH:/indexer_worker/"
+ENV PYTHONPATH="/indexer_worker/"
 # TLDEXTRACT fails to cache in /home/supervisord, set its cache to /tmp instead
 ENV TLDEXTRACT_CACHE="/tmp/python-tldextract"
 

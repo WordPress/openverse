@@ -62,9 +62,11 @@ jobs:
           sudo chown -R runneradmin:root /tmp/renovate/
           ls -R "$cache_dir"
 
-      - uses: renovatebot/github-action@v40.1.11
+      - uses: renovatebot/github-action@v40.1.12
         with:
-          configurationFile: .github/renovate.json
+          # Renovate recommends _not_ to use any of
+          # [these names](https://docs.renovatebot.com/configuration-options/).
+          configurationFile: .github/global-renovate.json5
           token: ${{ secrets.ACCESS_TOKEN }}
         env:
           # This enables the cache -- if this is set, it's not necessary to add it to renovate.json.

@@ -440,7 +440,7 @@ class JSONColumn(Column):
             return value
         elif input_type not in [dict, list] or recursion_limit <= 0:
             return self._Column__sanitize_string(value)
-        elif input_type == list:
+        elif input_type is list:
             return [
                 self._sanitize_json_values(item, recursion_limit=recursion_limit - 1)
                 for item in value
@@ -637,7 +637,7 @@ class ArrayColumn(Column):
 
         if value is None:
             return value
-        elif input_type != list:
+        elif input_type is not list:
             arr_str = self.base_column.prepare_string(value)
             return "{" + arr_str + "}" if arr_str else None
 

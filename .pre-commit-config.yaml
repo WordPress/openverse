@@ -46,7 +46,7 @@ repos:
       - id: requirements-txt-fixer
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.4.7
+    rev: v0.5.0
     hooks:
       - id: ruff # replaces Flake8, isort, pydocstyle, pyupgrade
         args:
@@ -63,7 +63,7 @@ repos:
         additional_dependencies:
           - prettier@3.2.5
           - prettier-plugin-tailwindcss@0.5.14
-          - typescript@5.4.5
+          - typescript@5.5.2
 
   - repo: https://github.com/koalaman/shellcheck-precommit
     rev: v0.10.0
@@ -155,11 +155,13 @@ repos:
         files: (.vale/.*|.mdx?)$
 
   - repo: https://github.com/renovatebot/pre-commit-hooks
-    rev: 37.384.0
+    rev: 37.421.5
     hooks:
       - id: renovate-config-validator
         args:
           - --strict
+          - .github/global-renovate.json5
+          - .github/renovate.json5
 
   - repo: https://github.com/hadolint/hadolint
     rev: v2.12.0

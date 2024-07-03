@@ -7,7 +7,7 @@ ARG FRONTEND_NODE_VERSION
 # Node.js builder #
 ###################
 
-FROM docker.io/node:${FRONTEND_NODE_VERSION}-alpine as builder
+FROM docker.io/node:${FRONTEND_NODE_VERSION}-alpine AS builder
 
 # Automatically use the right version of pnpm.
 ARG FRONTEND_PNPM_VERSION
@@ -53,7 +53,7 @@ RUN pnpm build:only
 # Nuxt app #
 ############
 
-FROM docker.io/node:${FRONTEND_NODE_VERSION}-alpine as app
+FROM docker.io/node:${FRONTEND_NODE_VERSION}-alpine AS app
 
 LABEL org.opencontainers.image.source="https://github.com/WordPress/openverse"
 
