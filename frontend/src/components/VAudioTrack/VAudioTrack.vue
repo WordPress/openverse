@@ -1,48 +1,19 @@
 <template>
   <!-- eslint-disable vue/use-v-on-exact -->
-  <Component
-    :is="isComposite ? 'VLink' : 'VWarningSuppressor'"
-    v-bind="containerAttributes"
-    class="audio-track group block overflow-hidden rounded-sm ring-pink hover:no-underline"
-    :aria-label="ariaLabel"
-    :role="isComposite ? 'application' : undefined"
-    @keydown.native.shift.tab.exact="$emit('shift-tab', $event)"
-    @keydown="handleKeydown"
-    @blur="handleBlur"
-    @mousedown="handleMousedown"
-    @focus="handleFocus"
-  >
-    <Component
-      :is="layoutComponent"
-      :audio="audio"
-      :size="layoutSize"
-      :status="status"
-      :current-time="currentTime"
-    >
+  <Component :is="isComposite ? 'VLink' : 'VWarningSuppressor'" v-bind="containerAttributes"
+    class="audio-track group block overflow-hidden rounded-sm ring-pink hover:no-underline" :aria-label="ariaLabel"
+    :role="isComposite ? 'application' : undefined" @keydown.native.shift.tab.exact="$emit('shift-tab', $event)"
+    @keydown="handleKeydown" @blur="handleBlur" @mousedown="handleMousedown" @focus="handleFocus">
+    <Component :is="layoutComponent" :audio="audio" :size="layoutSize" :status="status" :current-time="currentTime">
       <template #controller="waveformProps">
-        <VWaveform
-          ref="waveformRef"
-          v-bind="waveformProps"
-          :is-parent-seeking="isSeeking"
-          :peaks="audio.peaks"
-          :audio-id="audio.id"
-          :current-time="currentTime"
-          :duration="duration"
-          :message="message"
-          @seeked="handleSeeked"
-          @toggle-playback="handleToggle"
-          @blur="handleWaveformBlur"
-          @focus="handleWaveformFocus"
-        />
+        <VWaveform ref="waveformRef" v-bind="waveformProps" :is-parent-seeking="isSeeking" :peaks="audio.peaks"
+          :audio-id="audio.id" :current-time="currentTime" :duration="duration" :message="message"
+          @seeked="handleSeeked" @toggle-playback="handleToggle" @blur="handleWaveformBlur"
+          @focus="handleWaveformFocus" />
       </template>
 
       <template #audio-control="audioControlProps">
-        <VAudioControl
-          ref="audioControlRef"
-          :status="status"
-          v-bind="audioControlProps"
-          @toggle="handleToggle"
-        />
+        <VAudioControl ref="audioControlRef" :status="status" v-bind="audioControlProps" @toggle="handleToggle" />
       </template>
     </Component>
   </Component>
@@ -450,13 +421,13 @@ export default defineComponent({
        * runtime checks.
        */
       if (localAudio) {
-        if(Number.isFinite(duration.value)){
+        if (Number.isFinite(duration.value)) {
           localAudio.currentTime = frac * duration.value
         }
-        else if(Number.isFinite(localAudio.duration)){
+        else if (Number.isFinite(localAudio.duration)) {
           localAudio.currentTime = frac * localAudio.duration
         }
-        else{
+        else {
           console.warn('Duration is not finite. Skipping seek.')
         }
       }
@@ -505,24 +476,23 @@ export default defineComponent({
     const layoutBasedProps = computed(() =>
       isComposite.value
         ? {
-            href: `/audio/${props.audio.id}/${
-              props.searchTerm ? "?q=" + props.searchTerm : ""
+          href: `/audio/${props.audio.id}/${props.searchTerm ? "?q=" + props.searchTerm : ""
             }`,
-            class: [
-              "cursor-pointer",
-              {
-                "focus-bold-filled": props.layout === "box",
-                "focus-slim-tx": props.layout === "row",
-              },
-            ],
-          }
+          class: [
+            "cursor-pointer",
+            {
+              "focus-bold-filled": props.layout === "box",
+              "focus-slim-tx": props.layout === "row",
+            },
+          ],
+        }
         : {}
     )
     const ariaLabel = computed(() =>
       isComposite.value
         ? i18n.t("audioTrack.ariaLabelInteractiveSeekable", {
-            title: props.audio.title,
-          })
+          title: props.audio.title,
+        })
         : i18n.t("audioTrack.ariaLabel", { title: props.audio.title })
     )
 
