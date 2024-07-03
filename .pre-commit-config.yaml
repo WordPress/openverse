@@ -160,6 +160,8 @@ repos:
       - id: renovate-config-validator
         args:
           - --strict
+          - .github/global-renovate.json5
+          - .github/renovate.json5
 
   - repo: https://github.com/hadolint/hadolint
     rev: v2.12.0
