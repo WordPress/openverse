@@ -824,6 +824,7 @@ jobs:
 
       - name: Check for changes after running tests with -u
         id: check_snapshots_changed
+        if: success() || failure()
         run: |
           if [ -n "$(git diff --binary --name-only)" ]; then
             git add . && git diff --staged --binary | gzip -f > /tmp/snapshot_diff.patch.gz
@@ -842,7 +843,7 @@ jobs:
 
       # This step only runs if there was a failure and snapshots indeed changed.
       - uses: actions/upload-artifact@v4
-        if: failure() && steps.check_snapshots_changed.outputs.snapshots_changed == 'true'
+        if: steps.check_snapshots_changed.outputs.snapshots_changed == 'true'
         id: snapshot-patch
         with:
           name: ${{ matrix.name }}_snapshot_diff
