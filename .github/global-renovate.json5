@@ -1,0 +1,46 @@
+{
+  // Global Renovate configuration, used to configure self-hosted Renovate itself
+  // See .github/renovate.json5 for repository-specific configuration
+  // See https://docs.renovatebot.com/config-overview/#types-of-config for further reading
+  branchPrefix: "gha-renovate",
+  username: "openverse-bot",
+  gitAuthor: "Openverse Bot <openverse@wordpress.org>",
+  onboarding: false,
+  platform: "github",
+  repositories: ["WordPress/openverse", "WordPress/openverse-infrastructure"],
+  extends: [
+    "config:recommended",
+    ":preserveSemverRanges",
+    ":automergeMinor",
+    ":automergePr",
+    "schedule:monthly",
+    "group:monorepos",
+  ],
+  vulnerabilityAlerts: {
+    schedule: ["at any time"],
+  },
+  prCommitsPerRunLimit: 3,
+  labels: [
+    "dependencies",
+    "💻 aspect: code",
+    "🧰 goal: internal improvement",
+    "🟩 priority: low",
+  ],
+  forkProcessing: "disabled",
+  allowScripts: true,
+  "pre-commit": { enabled: true },
+  packageRules: [
+    {
+      matchDatasources: ["pypi"],
+      addLabels: ["🐍 tech: python"],
+    },
+    {
+      matchDatasources: ["npm"],
+      addLabels: ["🟨 tech: javascript"],
+    },
+    {
+      matchDatasources: ["docker"],
+      addLabels: ["🐳 tech: docker"],
+    },
+  ],
+}
