@@ -64,10 +64,8 @@ jobs:
 
       - uses: renovatebot/github-action@v40.1.12
         with:
-          # Renovate recommends _not_ to name this one of the repository configuration file names:
-          # > It is recommended to not name it one of the repository configuration filenames listed in the Renovate Docs for Configuration Options.
-          # >
-          # > — https://github.com/renovatebot/github-action?tab=readme-ov-file#configurationfile
+          # Renovate recommends _not_ to use any of
+          # [these names](https://docs.renovatebot.com/configuration-options/).
           configurationFile: .github/global-renovate.json5
           token: ${{ secrets.ACCESS_TOKEN }}
         env:
