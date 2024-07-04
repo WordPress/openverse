@@ -25,15 +25,15 @@ HEADERS = {
 }
 
 
-def _get_cached_statuses(redis, image_urls):
+def _get_cached_statuses(redis, urls):
     try:
-        cached_statuses = redis.mget([CACHE_PREFIX + url for url in image_urls])
+        cached_statuses = redis.mget([CACHE_PREFIX + url for url in urls])
         return [
             int(b.decode("utf-8")) if b is not None else None for b in cached_statuses
         ]
     except ConnectionError:
         logger.warning("Redis connect failed, validating all URLs without cache.")
-        return [None] * len(image_urls)
+        return [None] * len(urls)
 
 
 def _get_expiry(status, default):
@@ -41,9 +41,13 @@ def _get_expiry(status, default):
 
 
 _timeout = aiohttp.ClientTimeout(total=settings.LINK_VALIDATION_TIMEOUT_SECONDS)
+_TIMEOUT_STATUS = -2
+_ERROR_STATUS = -1
 
 
-async def _head(url: str, session: aiohttp.ClientSession) -> tuple[str, int]:
+async def _head(
+    url: str, session: aiohttp.ClientSession, provider: str
+) -> tuple[str, int]:
     start_time = time.perf_counter()
 
     try:
@@ -52,8 +56,11 @@ async def _head(url: str, session: aiohttp.ClientSession) -> tuple[str, int]:
         )
         status = response.status
     except (aiohttp.ClientError, asyncio.TimeoutError) as exception:
-        _log_validation_failure(exception)
-        status = -1
+        if not isinstance(exception, asyncio.TimeoutError):
+            logger.error("dead_link_validation_error", e=exception)
+            status = _ERROR_STATUS
+        else:
+            status = _TIMEOUT_STATUS
 
     end_time = time.perf_counter()
     logger.info(
@@ -61,6 +68,7 @@ async def _head(url: str, session: aiohttp.ClientSession) -> tuple[str, int]:
         url=url,
         status=status,
         time=end_time - start_time,
+        provider=provider,
     )
 
     return url, status
@@ -68,17 +76,28 @@ async def _head(url: str, session: aiohttp.ClientSession) -> tuple[str, int]:
 
 # https://stackoverflow.com/q/55259755
 @async_to_sync
-async def _make_head_requests(urls: list[str]) -> list[tuple[str, int]]:
+async def _make_head_requests(
+    urls: dict[str, int], results: list[Hit]
+) -> list[tuple[str, int]]:
+    """
+    Concurrently HEAD request the urls.
+
+    ``urls`` must map to the index of the corresponding result in ``results``.
+
+    :param urls: A dictionary with keys of the URLs to request, mapped to the index of that url in ``results``
+    :param results: The ordered list of results, including ones not being validated.
+    """
     session = await get_aiohttp_session()
-    tasks = [asyncio.ensure_future(_head(url, session)) for url in urls]
+    tasks = [
+        asyncio.ensure_future(_head(url, session, results[idx].provider))
+        for url, idx in urls.items()
+    ]
     responses = asyncio.gather(*tasks)
     await responses
     return responses.result()
 
 
-def check_dead_links(
-    query_hash: str, start_slice: int, results: list[Hit], image_urls: list[str]
-) -> None:
+def check_dead_links(query_hash: str, start_slice: int, results: list[Hit]) -> None:
     """
     Make sure images exist before we display them.
 
@@ -88,26 +107,28 @@ def check_dead_links(
     Results are cached in redis and shared amongst all API servers in the
     cluster.
     """
-    if not image_urls:
-        logger.info("no image urls to validate")
+    if not results:
+        logger.info("link_validation_empty_results")
         return
+
+    urls = [result.url for result in results]
 
     logger.debug("starting validation")
     start_time = time.time()
 
     # Pull matching images from the cache.
     redis = django_redis.get_redis_connection("default")
-    cached_statuses = _get_cached_statuses(redis, image_urls)
+    cached_statuses = _get_cached_statuses(redis, urls)
     logger.debug(f"len(cached_statuses)={len(cached_statuses)}")
 
     # Anything that isn't in the cache needs to be validated via HEAD request.
     to_verify = {}
-    for idx, url in enumerate(image_urls):
+    for idx, url in enumerate(urls):
         if cached_statuses[idx] is None:
             to_verify[url] = idx
     logger.debug(f"len(to_verify)={len(to_verify)}")
 
-    verified = _make_head_requests(to_verify.keys())
+    verified = _make_head_requests(to_verify, results)
 
     # Cache newly verified image statuses.
     to_cache = {CACHE_PREFIX + url: status for url, status in verified}
@@ -119,7 +140,7 @@ def check_dead_links(
     for key, status in to_cache.items():
         if status == 200:
             logger.debug(f"healthy link key={key}")
-        elif status == -1:
+        elif status == _TIMEOUT_STATUS or status == _ERROR_STATUS:
             logger.debug(f"no response from provider key={key}")
         else:
             logger.debug(f"broken link key={key}")
@@ -152,7 +173,7 @@ def check_dead_links(
         if status in status_mapping.unknown:
             logger.warning(
                 "Image validation failed due to rate limiting or blocking. "
-                f"url={image_urls[idx]} "
+                f"url={urls[idx]} "
                 f"status={status} "
                 f"provider={provider} "
             )
@@ -184,7 +205,3 @@ def check_dead_links(
         f"start_time={start_time} "
         f"delta={end_time - start_time} "
     )
-
-
-def _log_validation_failure(exception):
-    logger.warning(f"Failed to validate image! Reason: {exception}")

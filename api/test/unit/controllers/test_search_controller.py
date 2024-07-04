@@ -810,7 +810,8 @@ def test_excessive_recursion_in_post_process(
     redis,
     caplog,
 ):
-    def _delete_all_results_but_first(_, __, results, ___):
+    def _delete_all_results_but_first(*args):
+        results = args[2]
         results[1:] = []
 
     mock_check_dead_links.side_effect = _delete_all_results_but_first
