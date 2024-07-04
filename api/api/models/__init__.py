@@ -20,13 +20,9 @@ from api.models.image import (
     SensitiveImage,
 )
 from api.models.media import (
-    DEINDEXED,
     DMCA,
     MATURE,
-    MATURE_FILTERED,
-    NO_ACTION,
     OTHER,
-    PENDING,
 )
 from api.models.models import ContentSource, Tag
 from api.models.moderation import UserPreferences
