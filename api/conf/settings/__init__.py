@@ -42,7 +42,7 @@ include(
     "spectacular.py",
     "thumbnails.py",
     # Openverse-specific settings
-    "link_validation_cache.py",
+    "link_validation.py",
     "misc.py",
     "openverse.py",
 )

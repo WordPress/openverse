@@ -40,7 +40,7 @@ def _get_expiry(status, default):
     return config(f"LINK_VALIDATION_CACHE_EXPIRY__{status}", default=default, cast=int)
 
 
-_timeout = aiohttp.ClientTimeout(total=2)
+_timeout = aiohttp.ClientTimeout(total=settings.LINK_VALIDATION_TIMEOUT_SECONDS)
 
 
 async def _head(url: str, session: aiohttp.ClientSession) -> tuple[str, int]:
