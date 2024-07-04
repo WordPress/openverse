@@ -1,7 +1,8 @@
 """Simple in-memory tracking of executed tasks."""
 
 import datetime
-
+from dataclasses import dataclass
+from typing import Any
 
 def _time_fmt(timestamp: int) -> str | None:
     """
@@ -15,6 +16,14 @@ def _time_fmt(timestamp: int) -> str | None:
         return None
     return str(datetime.datetime.utcfromtimestamp(timestamp))
 
+@dataclass
+class TaskInfo:
+    task: Any
+    start_time: Any
+    model: str
+    target_index: str
+    finish_time: Any
+    progress: Any
 
 class TaskTracker:
     def __init__(self):
@@ -27,10 +36,13 @@ class TaskTracker:
         :param task: the task being performed
         :param task_id: the UUID of the task
         """
-        self.tasks[task_id] = {
-            "start_time": datetime.datetime.utcnow().timestamp(),
-        } | kwargs
+        task_info = TaskInfo(
+            start_time=datetime.datetime.utcnow().timestamp(),
+            **kwargs
+        )
 
+        self.tasks[task_id] = task_info
+   
     def get_task_status(self, task_id: str) -> dict:
         """
         Get the status of a single task with the given task ID.
@@ -39,12 +51,12 @@ class TaskTracker:
         :return: response dictionary containing all relevant info about the task
         """
         task_info = self.tasks[task_id]
-        active = task_info["task"].is_alive()
-        model = task_info["model"]
-        target_index = task_info["target_index"]
-        start_time = task_info["start_time"]
-        finish_time = task_info["finish_time"].value
-        progress = task_info["progress"].value
+        active = task_info.task.is_alive()
+        model = task_info.model
+        target_index = task_info.target_index
+        start_time = task_info.start_time
+        finish_time = task_info.finish_time.value
+        progress = task_info.progress.value
 
         return {
             "task_id": task_id,
