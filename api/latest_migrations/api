@@ -2,4 +2,4 @@
 # If you have a merge conflict in this file, it means you need to run:
 #     manage.py makemigrations --merge
 # in order to resolve the conflict between migrations.
-0068_remove_audioreport_status_remove_imagereport_status
+0069_alter_audiodecision_options_and_more

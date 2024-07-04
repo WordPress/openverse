@@ -45,7 +45,7 @@ class AudioViewSet(MediaViewSet):
     serializer_class = AudioSerializer
 
     def get_queryset(self):
-        return super().get_queryset().select_related("sensitive_audio", "audioset")
+        return super().get_queryset().select_related("sensitive_media", "audioset")
 
     # Extra actions
 

@@ -12,6 +12,7 @@ from api.models.media import (
     AbstractMediaList,
     AbstractMediaReport,
     AbstractSensitiveMedia,
+    MediaModeratorForeignKey,
 )
 from api.models.mixins import FileMixin
 
@@ -51,6 +52,8 @@ class Image(ImageFileMixin, AbstractMedia):
     category: eg. photograph, digitized_artwork & illustration
     """
 
+    media_type = "image"
+
     class Meta(AbstractMedia.Meta):
         db_table = "image"
 
@@ -60,10 +63,6 @@ class Image(ImageFileMixin, AbstractMedia):
         from django.urls import reverse
 
         return reverse("image-detail", args=[str(self.identifier)])
-
-    @property
-    def sensitive(self) -> bool:
-        return hasattr(self, "sensitive_image")
 
 
 class DeletedImage(AbstractDeletedMedia):
@@ -84,7 +83,7 @@ class DeletedImage(AbstractDeletedMedia):
         primary_key=True,
         db_constraint=False,
         db_column="identifier",
-        related_name="deleted_image",
+        related_name="deleted_media",
         help_text="The reference to the deleted image.",
     )
 
@@ -107,7 +106,7 @@ class SensitiveImage(AbstractSensitiveMedia):
         primary_key=True,
         db_constraint=False,
         db_column="identifier",
-        related_name="sensitive_image",
+        related_name="sensitive_media",
         help_text="The reference to the sensitive image.",
     )
 
@@ -131,7 +130,7 @@ class ImageReport(AbstractMediaReport):
         on_delete=models.DO_NOTHING,
         db_constraint=False,
         db_column="identifier",
-        related_name="image_report",
+        related_name="report",
         help_text="The reference to the image being reported.",
     )
     decision = models.ForeignKey(
@@ -151,10 +150,13 @@ class ImageDecision(AbstractMediaDecision):
 
     media_class = Image
 
+    moderator = MediaModeratorForeignKey(related_name="image_decision")
+
     media_objs = models.ManyToManyField(
         to="Image",
         through="ImageDecisionThrough",
         help_text="The image items being moderated.",
+        related_name="decision",
     )
 
 
@@ -167,8 +169,6 @@ class ImageDecisionThrough(AbstractMediaDecisionThrough):
     """
 
     media_class = Image
-    sensitive_media_class = SensitiveImage
-    deleted_media_class = DeletedImage
 
     media_obj = models.ForeignKey(
         Image,
@@ -176,7 +176,9 @@ class ImageDecisionThrough(AbstractMediaDecisionThrough):
         on_delete=models.DO_NOTHING,
         db_column="identifier",
         db_constraint=False,
+        related_name="decision_through",
     )
+
     decision = models.ForeignKey(ImageDecision, on_delete=models.CASCADE)
 
 

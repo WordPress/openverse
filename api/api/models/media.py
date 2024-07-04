@@ -12,7 +12,7 @@ from elasticsearch import Elasticsearch, NotFoundError
 from openverse_attribution.license import License
 
 from api.constants.moderation import DecisionAction
-from api.models.base import OpenLedgerModel
+from api.models.base import MediaRelatedBase, OpenLedgerModel
 from api.models.mixins import ForeignIdentifierMixin, IdentifierMixin, MediaMixin
 
 
@@ -147,6 +147,18 @@ class AbstractMedia(
         except ValueError:
             return None
 
+    @property
+    def index(self) -> str:
+        return settings.MEDIA_INDEX_MAPPING[self.media_type]
+
+    @property
+    def filtered_index(self) -> str:
+        return f"{self.index}-filtered"
+
+    @property
+    def sensitive(self) -> bool:
+        return hasattr(self, "sensitive_media")
+
     class Meta:
         """
         Meta class for all media types indexed by Openverse.
@@ -173,7 +185,9 @@ class AbstractMedia(
         return f"{self.__class__.__name__}: {self.identifier}"
 
 
-class AbstractMediaReport(models.Model):
+class AbstractMediaReport(
+    models.Model, metaclass=MediaRelatedBase, related_name="report"
+):
     """
     Generic model from which to inherit all reported media classes.
 
@@ -275,17 +289,29 @@ class AbstractMediaReport(models.Model):
         super().save(*args, **kwargs)
 
 
-class AbstractMediaDecision(OpenLedgerModel):
+# Do not subclass or it will cause an unnecessary migration due to the change in class name
+def MediaModeratorForeignKey(related_name: str):
+    return models.ForeignKey(
+        to="auth.User",
+        on_delete=models.DO_NOTHING,
+        help_text="The moderator who undertook this decision.",
+        related_name=related_name,
+    )
+
+
+class AbstractMediaDecision(
+    OpenLedgerModel, metaclass=MediaRelatedBase, related_name="decision"
+):
     """Generic model from which to inherit all moderation decision classes."""
 
     media_class: type[models.Model] = None
     """the model class associated with this media type e.g. ``Image`` or ``Audio``"""
 
-    moderator = models.ForeignKey(
-        to="auth.User",
-        on_delete=models.DO_NOTHING,
-        help_text="The moderator who undertook this decision.",
-    )
+    # Must be implemented by base class to avoid related name clash on user model
+    # which references all media decisions regardless of type. As such, the generic
+    # related name, "decision", would clash on the user model's back references
+    # to the decisions.
+    moderator: models.ForeignKey = None
     """
     The ``User`` referenced by this field must be a part of the moderators'
     group.
@@ -318,7 +344,9 @@ class AbstractMediaDecision(OpenLedgerModel):
         abstract = True
 
 
-class AbstractMediaDecisionThrough(models.Model):
+class AbstractMediaDecisionThrough(
+    models.Model, metaclass=MediaRelatedBase, related_name="decision_through"
+):
     """
     Generic model for the many-to-many reference table between media and decisions.
 
@@ -328,10 +356,6 @@ class AbstractMediaDecisionThrough(models.Model):
 
     media_class: type[models.Model] = None
     """the model class associated with this media type e.g. ``Image`` or ``Audio``"""
-    sensitive_media_class: type[models.Model] = None
-    """the model class associated with this media type e.g. ``SensitiveImage`` or ``SensitiveAudio``"""
-    deleted_media_class: type[models.Model] = None
-    """the model class associated with this media type e.g. ``DeletedImage`` or ``DeletedAudio``"""
 
     media_obj = models.ForeignKey(
         AbstractMedia,
@@ -354,10 +378,14 @@ class AbstractMediaDecisionThrough(models.Model):
             DecisionAction.DEINDEXED_SENSITIVE,
             DecisionAction.DEINDEXED_COPYRIGHT,
         }:
-            self.deleted_media_class.objects.create(media_obj_id=self.media_obj_id)
+            self.media_class.deleted_media_class.objects.create(
+                media_obj_id=self.media_obj_id
+            )
 
         if action == DecisionAction.MARKED_SENSITIVE:
-            self.sensitive_media_class.objects.create(media_obj_id=self.media_obj_id)
+            self.media_class.sensitive_media_class.objects.create(
+                media_obj_id=self.media_obj_id
+            )
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -405,7 +433,12 @@ class PerformIndexUpdateMixin:
                 continue
 
 
-class AbstractDeletedMedia(PerformIndexUpdateMixin, OpenLedgerModel):
+class AbstractDeletedMedia(
+    PerformIndexUpdateMixin,
+    OpenLedgerModel,
+    metaclass=MediaRelatedBase,
+    related_name="deleted_media",
+):
     """
     Generic model from which to inherit all deleted media classes.
 
@@ -449,7 +482,12 @@ class AbstractDeletedMedia(PerformIndexUpdateMixin, OpenLedgerModel):
         self.media_obj.delete()  # remove the actual model instance
 
 
-class AbstractSensitiveMedia(PerformIndexUpdateMixin, models.Model):
+class AbstractSensitiveMedia(
+    PerformIndexUpdateMixin,
+    models.Model,
+    metaclass=MediaRelatedBase,
+    related_name="sensitive_media",
+):
     """
     Generic model from which to inherit all sensitive media classes.
 

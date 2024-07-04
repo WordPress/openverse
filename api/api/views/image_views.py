@@ -58,7 +58,7 @@ class ImageViewSet(MediaViewSet):
     }
 
     def get_queryset(self):
-        return super().get_queryset().select_related("sensitive_image")
+        return super().get_queryset().select_related("sensitive_media")
 
     # Extra actions
 
