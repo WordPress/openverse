@@ -81,29 +81,18 @@ for username in usernames:
 # Credit: https://stackoverflow.com/a/53733693
 echo "
 from django.contrib.auth.models import User, Group, Permission
-crud_perm_map = {'C': 'add', 'R': 'view', 'U': 'change', 'D': 'delete'}
-model_perms_map = {
-  'image': 'R',
-  'audio': 'R',
-  'image report': 'CRU',
-  'audio report': 'CRU',
-  'sensitive image': 'CRU',
-  'sensitive audio': 'CRU',
-  'image decision': 'CRU',
-  'audio decision': 'CRU',
-  'image decision through': 'CRUD',
-  'audio decision through': 'CRUD',
-}
 
 mod_group, created = Group.objects.get_or_create(name='Content Moderators')
 if created:
   print('Setting up Content Moderators group')
-  for model, perms in model_perms_map.items():
-    for perm in perms:
-      name = f'Can {crud_perm_map[perm]} {model}'
-      print(f'Adding permission to moderators group: {name}')
-      model_add_perm = Permission.objects.get(name=name)
-      mod_group.permissions.add(model_add_perm)
+  for model in [
+    'image', 'sensitive image', 'deleted image', 'image report', 'image decision',
+    'audio', 'sensitive audio', 'deleted audio', 'audio report', 'audio decision',
+  ]:
+    name = f'Can view {model}'
+    print(f'Adding permission to moderators group: {name}')
+    model_add_perm = Permission.objects.get(name=name)
+    mod_group.permissions.add(model_add_perm)
   mod_group.save()
   mod_group.user_set.add(User.objects.get(username='moderator'))
 " | just dc exec -T "$WEB_SERVICE_NAME" python3 manage.py shell
