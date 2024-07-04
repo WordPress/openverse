@@ -1,7 +1,7 @@
 <template>
   <div :id="skipToContentTargetId" tabindex="-1">
     <h1
-      class="mb-2 mt-auto text-[40px] font-light leading-tight lg:text-[63px]"
+      class="mb-2 mt-auto text-[30px] font-light leading-tight lg:text-[50px]"
     >
       {{ $t("hero.subtitle") }}
     </h1>
