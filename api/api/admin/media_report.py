@@ -441,7 +441,16 @@ class MediaListAdmin(admin.ModelAdmin):
         reports referencing the media with this decision.
         """
 
-        if request.method == "POST":
+        is_allowed = (
+            request.user.is_superuser
+            or request.user.groups.filter(name="Content Moderators").exists()
+        )
+        if not is_allowed:
+            messages.error(
+                request,
+                "You do not have permission to create decisions.",
+            )
+        elif request.method == "POST":
             media_obj = self.get_object(request, object_id)
 
             through_model = {
