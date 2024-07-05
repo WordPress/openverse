@@ -1,7 +1,7 @@
-import datetime
 import random
 import re
 from collections.abc import Callable
+from datetime import datetime, timezone
 from enum import Enum, auto
 from unittest import mock
 from unittest.mock import patch
@@ -858,7 +858,7 @@ def test_get_excluded_sources_query_returns_excluded(
     else:
         for i in range(excluded_count):
             ContentSourceFactory.create(
-                created_on=datetime.datetime.now(),
+                created_on=datetime.now(tz=timezone.utc),
                 source_identifier=f"source{i + 1}",
                 source_name=f"Source {i + 1}",
                 filter_content=True,
