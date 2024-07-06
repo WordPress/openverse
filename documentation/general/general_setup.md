@@ -289,18 +289,6 @@ can install the
 [`coreutils` formula](https://formulae.brew.sh/formula/coreutils) using
 [Homebrew](https://brew.sh), which is a package manager for macOS.
 
-### mkcert
-
-```{note}
-This is only needed to test SSL locally.
-```
-
-To test SSL locally, install `mkcert` (and the corresponding
-[NSS](https://firefox-source-docs.mozilla.org/security/nss/index.html) tools) by
-following the
-[official instruction](https://github.com/FiloSottile/mkcert#installation). You
-can run `mkcert -install` to verify your installation.
-
 ### `psycopg2` build prerequisites
 
 ```{note}

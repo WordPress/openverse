@@ -53,18 +53,3 @@ services:
       DJANGO_NGINX_UPSTREAM_URL: web:50280
     depends_on:
       - web
-
-  proxy:
-    profiles:
-      - api_extra
-    image: docker.io/nginx:alpine
-    ports:
-      - "50200:9080"
-      - "50243:9443"
-    environment:
-      HTTPS_PORT: 50243 # See `ports` mapping above.
-    depends_on:
-      - web
-    volumes:
-      - ../docker/nginx/templates:/etc/nginx/templates:z
-      - ../docker/nginx/certs:/etc/nginx/certs:z
