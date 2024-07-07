@@ -1,61 +1,70 @@
 <template>
-  <table
-    :aria-label="$t('sources.aria.table').toString()"
-    role="region"
-    class="not-prose table w-full table-fixed text-base"
-  >
-    <thead>
-      <tr>
-        <th
-          tabindex="0"
-          @click="sortTable('display_name')"
-          @keypress.enter="sortTable('display_name')"
-        >
-          <span class="flex w-full flex-row items-center justify-between">
-            {{ $t("sources.providers.source") }}
-            <TableSortIcon :active="sorting.field === 'display_name'" />
-          </span>
-        </th>
-        <th
-          tabindex="0"
-          @click="sortTable('source_url')"
-          @keypress.enter="sortTable('source_url')"
-        >
-          <span class="flex w-full flex-row items-center justify-between">
-            {{ $t("sources.providers.domain") }}
-            <TableSortIcon :active="sorting.field === 'source_url'" />
-          </span>
-        </th>
-        <th
-          tabindex="0"
-          @click="sortTable('media_count')"
-          @keypress.enter="sortTable('media_count')"
-        >
-          <span class="flex w-full flex-row items-center justify-between">
-            {{ $t("sources.providers.item") }}
-            <TableSortIcon :active="sorting.field === 'media_count'" />
-          </span>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="provider in sortedProviders" :key="provider.display_name">
-        <td>
+  <div>
+    <table :aria-label="$t('sources.aria.table').toString()" role="region"
+      class="not-prose source-table w-full table-fixed text-base">
+      <thead>
+        <tr>
+          <th tabindex="0" @click="sortTable('display_name')" @keypress.enter="sortTable('display_name')">
+            <span class="flex w-full flex-row items-center justify-between">
+              {{ $t("sources.providers.source") }}
+              <TableSortIcon :active="sorting.field === 'display_name'" />
+            </span>
+          </th>
+          <th tabindex="0" @click="sortTable('source_url')" @keypress.enter="sortTable('source_url')">
+            <span class="flex w-full flex-row items-center justify-between">
+              {{ $t("sources.providers.domain") }}
+              <TableSortIcon :active="sorting.field === 'source_url'" />
+            </span>
+          </th>
+          <th tabindex="0" @click="sortTable('media_count')" @keypress.enter="sortTable('media_count')">
+            <span class="flex w-full flex-row items-center justify-between">
+              {{ $t("sources.providers.item") }}
+              <TableSortIcon :active="sorting.field === 'media_count'" />
+            </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="provider in sortedProviders" :key="provider.display_name">
+          <td>
+            <VLink :href="providerViewUrl(provider)">{{
+              provider.display_name
+              }}</VLink>
+          </td>
+          <td class="truncate font-semibold">
+            <VLink :href="provider.source_url">
+              {{ cleanSourceUrlForPresentation(provider.source_url) }}
+            </VLink>
+          </td>
+          <td class="text-right">
+            {{ getLocaleFormattedNumber(provider.media_count || 0) }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <section role="region" class="mobile-source-table">
+      <article v-for="provider in sortedProviders" :key="provider.display_name">
+          <p>{{ $t("sources.providers.source") }}</p>
+
           <VLink :href="providerViewUrl(provider)">{{
             provider.display_name
           }}</VLink>
-        </td>
-        <td class="truncate font-semibold">
+
+          <p>{{ $t("sources.providers.domain") }}</p>
+
           <VLink :href="provider.source_url">
             {{ cleanSourceUrlForPresentation(provider.source_url) }}
           </VLink>
-        </td>
-        <td class="text-right">
-          {{ getLocaleFormattedNumber(provider.media_count || 0) }}
-        </td>
-      </tr>
-    </tbody>
-  </table>
+
+          <p>{{ $t("sources.providers.item") }}</p>
+
+          <span>
+            {{ getLocaleFormattedNumber(provider.media_count || 0) }}
+          </span>
+      </article>
+    </section>
+  </div>
 </template>
 
 <script lang="ts">
@@ -167,37 +176,79 @@ export default defineComponent({
 @tailwind utilities;
 
 @layer components {
-  .table {
-    @apply rounded-sm border-0 border-dark-charcoal-20;
+  .source-table {
+    @apply hidden md:table rounded-sm border-0 border-dark-charcoal-20;
   }
-  .table th,
-  .table td {
+
+  .source-table th,
+  .source-table td {
     @apply border-dark-charcoal-20;
   }
-  .table a {
+
+  .source-table a {
     @apply text-pink hover:underline;
   }
-  .table th {
+
+  .source-table th {
     @apply cursor-pointer border-t bg-dark-charcoal-10;
   }
-  .table th,
-  .table td {
+
+  .source-table th,
+  .source-table td {
     @apply border-r p-4 first:border-l;
   }
-  .table td {
+
+  .source-table td {
     @apply break-normal border-y-0;
   }
 
-  .table tr {
+  .source-table tr {
     @apply even:bg-dark-charcoal-06;
   }
 
-  .table th {
+  .source-table th {
     @apply first:rounded-ss-sm last:rounded-se-sm;
   }
 
-  .table tr:last-child td {
+  .source-table tr:last-child td {
     @apply border-b first:rounded-es-sm last:rounded-ee-sm;
+  }
+
+  .mobile-source-table {
+    @apply md:hidden;
+  }
+
+  .mobile-source-table article {
+    @apply grid md:hidden sm:grid-cols-4 border-l border-r border-dark-charcoal-20 p-4;
+  }
+
+  .mobile-source-table article:first-child {
+    @apply border-t;
+  }
+  
+  .mobile-source-table article:last-child {
+    @apply border-b;
+  }
+  
+  .mobile-source-table article:nth-child(odd) {
+    @apply bg-dark-charcoal-10;
+  }
+
+  .mobile-source-table article p {
+    @apply col-span-1 font-bold pt-2;
+  }
+
+  .mobile-source-table article p:first-child {
+    @apply pt-0;
+  }
+
+  .mobile-source-table article a,
+  .mobile-source-table article span {
+    @apply col-span-3;
+  }
+
+  .mobile-source-table article a {
+    @apply text-pink hover:underline font-bold;
   }
 }
 </style>
