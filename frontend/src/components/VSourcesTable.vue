@@ -1,22 +1,37 @@
 <template>
   <div>
-    <table :aria-label="$t('sources.aria.table').toString()" role="region"
-      class="not-prose source-table w-full table-fixed text-base">
+    <table
+      :aria-label="$t('sources.aria.table').toString()"
+      role="region"
+      class="not-prose source-table w-full table-fixed text-base"
+    >
       <thead>
         <tr>
-          <th tabindex="0" @click="sortTable('display_name')" @keypress.enter="sortTable('display_name')">
+          <th
+            tabindex="0"
+            @click="sortTable('display_name')"
+            @keypress.enter="sortTable('display_name')"
+          >
             <span class="flex w-full flex-row items-center justify-between">
               {{ $t("sources.providers.source") }}
               <TableSortIcon :active="sorting.field === 'display_name'" />
             </span>
           </th>
-          <th tabindex="0" @click="sortTable('source_url')" @keypress.enter="sortTable('source_url')">
+          <th
+            tabindex="0"
+            @click="sortTable('source_url')"
+            @keypress.enter="sortTable('source_url')"
+          >
             <span class="flex w-full flex-row items-center justify-between">
               {{ $t("sources.providers.domain") }}
               <TableSortIcon :active="sorting.field === 'source_url'" />
             </span>
           </th>
-          <th tabindex="0" @click="sortTable('media_count')" @keypress.enter="sortTable('media_count')">
+          <th
+            tabindex="0"
+            @click="sortTable('media_count')"
+            @keypress.enter="sortTable('media_count')"
+          >
             <span class="flex w-full flex-row items-center justify-between">
               {{ $t("sources.providers.item") }}
               <TableSortIcon :active="sorting.field === 'media_count'" />
@@ -29,7 +44,7 @@
           <td>
             <VLink :href="providerViewUrl(provider)">{{
               provider.display_name
-              }}</VLink>
+            }}</VLink>
           </td>
           <td class="truncate font-semibold">
             <VLink :href="provider.source_url">
@@ -45,23 +60,23 @@
 
     <section role="region" class="mobile-source-table">
       <article v-for="provider in sortedProviders" :key="provider.display_name">
-          <p>{{ $t("sources.providers.source") }}</p>
+        <p>{{ $t("sources.providers.source") }}</p>
 
-          <VLink :href="providerViewUrl(provider)">{{
-            provider.display_name
-          }}</VLink>
+        <VLink :href="providerViewUrl(provider)">{{
+          provider.display_name
+        }}</VLink>
 
-          <p>{{ $t("sources.providers.domain") }}</p>
+        <p>{{ $t("sources.providers.domain") }}</p>
 
-          <VLink :href="provider.source_url">
-            {{ cleanSourceUrlForPresentation(provider.source_url) }}
-          </VLink>
+        <VLink :href="provider.source_url">
+          {{ cleanSourceUrlForPresentation(provider.source_url) }}
+        </VLink>
 
-          <p>{{ $t("sources.providers.item") }}</p>
+        <p>{{ $t("sources.providers.item") }}</p>
 
-          <span>
-            {{ getLocaleFormattedNumber(provider.media_count || 0) }}
-          </span>
+        <span>
+          {{ getLocaleFormattedNumber(provider.media_count || 0) }}
+        </span>
       </article>
     </section>
   </div>
@@ -177,7 +192,7 @@ export default defineComponent({
 
 @layer components {
   .source-table {
-    @apply hidden md:table rounded-sm border-0 border-dark-charcoal-20;
+    @apply hidden rounded-sm border-0 border-dark-charcoal-20 md:table;
   }
 
   .source-table th,
@@ -219,23 +234,23 @@ export default defineComponent({
   }
 
   .mobile-source-table article {
-    @apply grid md:hidden sm:grid-cols-4 border-l border-r border-dark-charcoal-20 p-4;
+    @apply grid border-l border-r border-dark-charcoal-20 p-4 sm:grid-cols-4 md:hidden;
   }
 
   .mobile-source-table article:first-child {
     @apply border-t;
   }
-  
+
   .mobile-source-table article:last-child {
     @apply border-b;
   }
-  
+
   .mobile-source-table article:nth-child(odd) {
     @apply bg-dark-charcoal-10;
   }
 
   .mobile-source-table article p {
-    @apply col-span-1 font-bold pt-2;
+    @apply col-span-1 pt-2 font-bold;
   }
 
   .mobile-source-table article p:first-child {
@@ -248,7 +263,7 @@ export default defineComponent({
   }
 
   .mobile-source-table article a {
-    @apply text-pink hover:underline font-bold;
+    @apply font-bold text-pink hover:underline;
   }
 }
 </style>
