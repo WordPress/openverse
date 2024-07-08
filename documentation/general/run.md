@@ -5,7 +5,7 @@
 ### Docker
 
 To run the API inside Docker, follow the instructions in the
-{doc}`"Quickstart" <./quickstart>` document.
+[general setup guide](/general/general_setup.md).
 
 ### On the host
 
