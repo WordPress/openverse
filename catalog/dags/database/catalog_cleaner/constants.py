@@ -14,3 +14,15 @@ SELECT aws_s3.table_import_from_s3(
     '{bucket}', '{s3_path_to_file}', '{aws_region}'
 );
 """
+
+UPDATE_SQL = """
+UPDATE image SET {column} = tmp.{column}, updated_on = NOW()
+FROM {temp_table_name} AS tmp
+WHERE image.identifier = tmp.identifier AND image.identifier IN (
+    SELECT identifier FROM {temp_table_name}
+    WHERE row_id > {batch_start} AND row_id <= {batch_end}
+    FOR UPDATE SKIP LOCKED
+);
+"""
+
+DROP_SQL = "DROP TABLE {temp_table_name};"

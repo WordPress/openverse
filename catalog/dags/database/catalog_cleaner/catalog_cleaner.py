@@ -12,10 +12,15 @@ from airflow.decorators import dag, task
 from airflow.models import Variable
 from airflow.models.abstractoperator import AbstractOperator
 from airflow.models.param import Param
-from airflow.utils.trigger_rule import TriggerRule
+from airflow.operators.python import get_current_context
 
 from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
-from common.sql import PGExecuteQueryOperator, single_value
+from common.sql import (
+    RETURN_ROW_COUNT,
+    PGExecuteQueryOperator,
+    PostgresHook,
+    single_value,
+)
 from database.batched_update.batched_update import run_sql
 from database.catalog_cleaner import constants
 
@@ -38,6 +43,47 @@ def count_dirty_rows(temp_table_name: str, task: AbstractOperator = None):
     return count
 
 
+@task
+def get_batches(total_row_count: int, batch_size: int) -> list[tuple[int, int]]:
+    # batch_list = []
+    # batch_start = 0
+    # while batch_start <= total_row_count:
+    #     batch_end = min(batch_start + batch_size, total_row_count)
+    #     batch_list.append({
+    #         "batch_start": batch_start,
+    #         "batch_end": batch_end
+    #     })
+    #     batch_start += batch_size
+    # return batch_list
+    return [(i, i + batch_size) for i in range(0, total_row_count, batch_size)]
+
+
+@task(map_index_template="{{ index_template }}")
+def update_batch(
+    batch: tuple[int, int],
+    temp_table_name: str,
+    column: str,
+    task: AbstractOperator = None,
+):
+    batch_start, batch_end = batch
+    logger.info(f"Going through row_id {batch_start:,} to {batch_end:,}.")
+    context = get_current_context()
+    context["index_template"] = f"{batch_start}__{batch_end}"
+
+    pg = PostgresHook(
+        postgres_conn_id=POSTGRES_CONN_ID,
+        default_statement_timeout=PostgresHook.get_execution_timeout(task),
+    )
+    query = constants.UPDATE_SQL.format(
+        column=column,
+        temp_table_name=temp_table_name,
+        batch_start=batch_start,
+        batch_end=batch_end,
+    )
+    count = pg.run(query, handler=RETURN_ROW_COUNT)
+    return count
+
+
 @dag(
     dag_id=DAG_ID,
     default_args={
@@ -49,6 +95,7 @@ def count_dirty_rows(temp_table_name: str, task: AbstractOperator = None):
     catchup=False,
     tags=["database"],
     doc_md=__doc__,
+    render_template_as_native_obj=True,
     params={
         "s3_bucket": Param(
             default="openverse-catalog",
@@ -61,7 +108,9 @@ def count_dirty_rows(temp_table_name: str, task: AbstractOperator = None):
             description="The S3 path to the TSV file within the bucket.",
         ),
         "column": Param(
-            type="string", description="The column of the table to apply the updates."
+            type="string",
+            enum=["url", "creator_url", "foreign_landing_url"],
+            description="The column of the table to apply the updates.",
         ),
         # "table": Param(type="str", description="The media table to update."),
         "batch_size": Param(
@@ -96,26 +145,22 @@ def catalog_cleaner():
         execution_timeout=timedelta(hours=1),
     )
 
-    count = count_dirty_rows.override(
-        trigger_rule=TriggerRule.NONE_FAILED,
-    )(temp_table_name)
+    count = count_dirty_rows(temp_table_name)
 
-    # update = PythonOperator(
-    #     task_id="update_from_temporary_tables",
-    #     python_callable=update_from_temp_tables,
-    #     op_kwargs={"columns": columns.keys(), "batch_size": "{{ params.batch_size }}"},
-    #     execution_timeout=timedelta(hours=1),
-    # )
+    batches = get_batches(total_row_count=count, batch_size="{{ params.batch_size }}")
 
-    # drop = PGExecuteQueryOperator(
-    #     task_id="drop_temp_tables",
-    #     postgres_conn_id=POSTGRES_CONN_ID,
-    #     sql="\n".join(f"DROP TABLE cleaned_image_{column};" for column in columns.keys()),
-    #     execution_timeout=timedelta(minutes=1)
-    # )
+    updates = update_batch.partial(
+        temp_table_name=temp_table_name, column=column
+    ).expand(batch=batches)
 
-    create >> load >> count  # >> update
-    # update >> drop
+    drop = PGExecuteQueryOperator(
+        task_id="drop_temp_tables",
+        postgres_conn_id=POSTGRES_CONN_ID,
+        sql=constants.DROP_SQL.format(temp_table_name=temp_table_name),
+        execution_timeout=timedelta(minutes=1),
+    )
+
+    create >> load >> count >> updates >> drop
 
 
 catalog_cleaner()
