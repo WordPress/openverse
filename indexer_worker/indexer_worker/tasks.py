@@ -4,6 +4,7 @@ import datetime
 from dataclasses import dataclass
 from typing import Any
 
+
 def _time_fmt(timestamp: int) -> str | None:
     """
     Format the timestamp into a human-readable date and time notation.
@@ -16,14 +17,16 @@ def _time_fmt(timestamp: int) -> str | None:
         return None
     return str(datetime.datetime.utcfromtimestamp(timestamp))
 
+
 @dataclass
 class TaskInfo:
     task: Any
-    start_time: Any
+    start_time: int
     model: str
     target_index: str
-    finish_time: Any
-    progress: Any
+    finish_time: int
+    progress: float
+
 
 class TaskTracker:
     def __init__(self):
@@ -37,12 +40,11 @@ class TaskTracker:
         :param task_id: the UUID of the task
         """
         task_info = TaskInfo(
-            start_time=datetime.datetime.utcnow().timestamp(),
-            **kwargs
+            start_time=datetime.datetime.utcnow().timestamp(), **kwargs
         )
 
         self.tasks[task_id] = task_info
-   
+
     def get_task_status(self, task_id: str) -> dict:
         """
         Get the status of a single task with the given task ID.
