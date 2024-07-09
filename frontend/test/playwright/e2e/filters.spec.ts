@@ -83,7 +83,7 @@ breakpoints.describeMobileAndDesktop(({ breakpoint }) => {
   test("common filters are retained when media type changes from all media to single type", async ({
     page,
   }) => {
-    await page.goto("/search?q=cat&license_type=commercial&license=cc0")
+    await page.goto("/search/?q=cat&license_type=commercial&license=cc0")
     await filters.open(page)
     // Creator filter was removed from the UI
     const expectedFilters = ["Zero", "Use commercially"]

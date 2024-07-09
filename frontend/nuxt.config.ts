@@ -152,6 +152,7 @@ export default defineNuxtConfig({
      * - [Browser language detection info](https://i18n.nuxtjs.org/docs/guide/browser-language-detection)
      * */
     detectBrowserLanguage: false,
+    trailingSlash: false,
     vueI18n: "./src/vue-i18n",
   },
   plausible: {

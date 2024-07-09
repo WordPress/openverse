@@ -32,6 +32,10 @@ const firstFilterCheckbox = (page: Page, dir: LanguageDirection) => {
 
 test.describe.configure({ mode: "parallel" })
 
+const getFilterButton = async (page: Page) => {
+  return page.locator("#filter-button")
+}
+
 for (const dir of languageDirections) {
   test.describe(`search header keyboard accessibility test in ${dir}`, () => {
     test.beforeEach(async ({ page }) => {
@@ -48,7 +52,7 @@ for (const dir of languageDirections) {
       await walkToFilterButton(page)
 
       // Check that the filters sidebar is open
-      await expect(page.locator("#filter-button")).toHaveAttribute(
+      await expect(await getFilterButton(page)).toHaveAttribute(
         "aria-expanded",
         "true"
       )

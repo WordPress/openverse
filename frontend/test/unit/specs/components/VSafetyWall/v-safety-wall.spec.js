@@ -53,11 +53,12 @@ describe("VSafetyWall.vue", () => {
 
   it("backToSearchPath gets the value from the store", async () => {
     const searchStore = useSearchStore()
-    searchStore.setBackToSearchPath("/search")
+    const backToSearchPath = "/search"
+    searchStore.setBackToSearchPath(backToSearchPath)
     const { findByText } = await render(VSafetyWall, options)
 
     const backToSearchButton = await findByText("Back to results")
     expect(backToSearchButton).toBeInTheDocument()
-    expect(backToSearchButton.getAttribute("href")).toEqual("/search")
+    expect(backToSearchButton.getAttribute("href")).toEqual(backToSearchPath)
   })
 })
