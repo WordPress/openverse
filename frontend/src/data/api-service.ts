@@ -113,8 +113,8 @@ const buildEventPayload = (
   const url = new URL(responseUrl)
 
   return {
-    cfCacheStatus: String(responseHeaders["cf-cache-status"]),
-    cfRayIATA: String(cfRayIATA),
+    cfCacheStatus: responseHeaders["cf-cache-status"].toString(),
+    cfRayIATA: cfRayIATA.toString(),
     elapsedTime: elapsedSeconds,
     queryString: url.search,
     mediaType: mediaType,

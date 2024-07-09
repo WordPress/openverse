@@ -32,6 +32,8 @@ import { useUiStore } from "~/stores/ui"
 
 import type { AudioDetail } from "~/types/media"
 
+import { getRouteNameString } from "~/utils/route-utils"
+
 import VIconButton from "~/components/VIconButton/VIconButton.vue"
 import VGlobalAudioTrack from "~/components/VAudioTrack/VGlobalAudioTrack.vue"
 
@@ -137,8 +139,8 @@ export default defineComponent({
     watch(
       () => route,
       (newRouteVal, oldRouteVal) => {
-        const oldName = oldRouteVal.name ? String(oldRouteVal.name) : ""
-        const newName = newRouteVal.name ? String(newRouteVal.name) : ""
+        const oldName = getRouteNameString(oldRouteVal)
+        const newName = getRouteNameString(newRouteVal)
         if (
           (oldName.includes("audio") && !newName.includes("audio")) ||
           (uiStore.isDesktopLayout &&

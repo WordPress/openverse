@@ -18,6 +18,8 @@ import type {
   TagCollection,
 } from "~/types/search"
 
+import { getRouteNameString } from "~/utils/route-utils"
+
 import type { RouteLocationNormalized } from "vue-router"
 
 const queryToCollectionParams = (
@@ -51,7 +53,7 @@ const queryToCollectionParams = (
 const routeNameToMediaType = (
   route: RouteLocationNormalized
 ): SupportedMediaType | null => {
-  const firstPart = route.name ? String(route.name).split("-")[0] : null
+  const firstPart = getRouteNameString(route).split("-")[0]
   return firstPart && isSupportedMediaType(firstPart) ? firstPart : null
 }
 

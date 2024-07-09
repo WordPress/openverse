@@ -2,6 +2,8 @@ import { useLocalePath, useRoute } from "#imports"
 
 import { computed } from "vue"
 
+import { getRouteNameString } from "~/utils/route-utils"
+
 export default function usePages() {
   const localePath = useLocalePath()
 
@@ -59,7 +61,7 @@ export default function usePages() {
    * We need to remove the locale suffix to match the page id.
    */
   const currentPageId = computed<string>(
-    () => String(route.name)?.split("__")[0] ?? ""
+    () => getRouteNameString(route).split("__")[0] ?? ""
   )
 
   return { all: pages, current: currentPageId }

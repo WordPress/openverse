@@ -6,19 +6,22 @@ import {
   showError,
 } from "#imports"
 
+import { RouteLocationNormalized } from "vue-router"
+
 import { useSingleResultStore } from "~/stores/media/single-result"
 import { useSearchStore } from "~/stores/search"
 
 import { AUDIO, IMAGE, supportedMediaTypes } from "~/constants/media"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
+import { getRouteNameString } from "~/utils/route-utils"
 
 const searchPaths = [
   ...supportedMediaTypes.map((type) => `search-${type}`),
   "search",
 ]
 
-const isSearchPath = (name: string | symbol | null | undefined) => {
-  return name ? searchPaths.includes(String(name).split("__")[0]) : false
+const isSearchPath = (route: RouteLocationNormalized) => {
+  return searchPaths.includes(getRouteNameString(route).split("__")[0])
 }
 const isCollectionPath = (path: string) => path.includes("/collection")
 
@@ -46,11 +49,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     ) {
       showError(createError(fetchingError))
     }
-  } else if (from && (isSearchPath(from.name) || isCollectionPath(from.path))) {
+  } else if (from && (isSearchPath(from) || isCollectionPath(from.path))) {
     const searchStore = useSearchStore()
     searchStore.setBackToSearchPath(from.fullPath)
 
-    if (isSearchPath(from.name)) {
+    if (isSearchPath(from)) {
       const searchTerm = firstParam(to?.query.q) ?? ""
       if (searchTerm) {
         searchStore.setSearchTerm(searchTerm)
