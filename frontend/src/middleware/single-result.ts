@@ -1,4 +1,10 @@
-import { defineNuxtRouteMiddleware, firstParam } from "#imports"
+import {
+  createError,
+  defineNuxtRouteMiddleware,
+  firstParam,
+  handledClientSide,
+  showError,
+} from "#imports"
 
 import { useSingleResultStore } from "~/stores/media/single-result"
 import { useSearchStore } from "~/stores/search"
@@ -31,6 +37,15 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       singleResultStore.fetch(mediaType, mediaId),
       relatedMediaStore.fetchMedia(mediaType, mediaId),
     ])
+
+    const fetchingError = singleResultStore.fetchState.fetchingError
+    if (
+      !singleResultStore.mediaItem &&
+      fetchingError &&
+      !handledClientSide(fetchingError)
+    ) {
+      showError(createError(fetchingError))
+    }
   } else if (from && (isSearchPath(from.name) || isCollectionPath(from.path))) {
     const searchStore = useSearchStore()
     searchStore.setBackToSearchPath(from.fullPath)

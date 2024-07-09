@@ -465,6 +465,8 @@ export const useMediaStore = defineStore("media", {
       }
 
       this._updateFetchState(mediaType, "start")
+
+      const { $processFetchingError } = useNuxtApp()
       try {
         const { $openverseApiToken: accessToken, $sendCustomEvent } =
           useNuxtApp()
@@ -507,7 +509,6 @@ export const useMediaStore = defineStore("media", {
         })
         return mediaCount
       } catch (error: unknown) {
-        const { $processFetchingError } = useNuxtApp()
         const errorData = $processFetchingError(error, mediaType, "search", {
           searchTerm: queryParams.q ?? "",
         })

@@ -140,6 +140,10 @@ export const useSingleResultStore = defineStore("single-result", {
 
       this._updateFetchState("start")
 
+      // When fetch is called by the middleware, the app context is not available during the error handling,
+      // so we need to use the `useNuxtApp` here, outside the catch clause, to access the app context.
+      const { $processFetchingError } = useNuxtApp()
+
       try {
         const { $openverseApiToken: accessToken } = useNuxtApp()
         const client = createApiClient({ accessToken })
@@ -151,12 +155,10 @@ export const useSingleResultStore = defineStore("single-result", {
 
         return item as DetailFromMediaType<typeof type>
       } catch (error) {
-        const { $processFetchingError } = useNuxtApp()
         const errorData = $processFetchingError(error, type, "single-result", {
           id,
         })
         this._updateFetchState("end", errorData)
-
         return null
       }
     },
