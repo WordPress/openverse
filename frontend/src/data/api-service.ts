@@ -170,7 +170,6 @@ export const createApiClient = ({
   client.interceptors.response.use(
     (response) => {
       debug(
-        ">>>",
         response.request.res?.responseUrl ?? response.request.responseURL,
         response.status
       )
@@ -182,7 +181,7 @@ export const createApiClient = ({
           DEFAULT_REQUEST_TIMEOUT / 1000
         } seconds exceeded`
       }
-      debug(">>> error:", error.message)
+      debug("error:", error.message)
       return Promise.reject(error)
     }
   )
