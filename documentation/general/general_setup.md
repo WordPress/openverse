@@ -49,6 +49,12 @@ git clone --filter=blob:none https://github.com/WordPress/openverse.git # or you
 cd ./openverse
 ```
 
+```{note}
+We recommend cloning with the `--filter=blob:none` flag as it dramatically
+reduces the filesize and download time by creating a "blobless clone".
+You can learn more about these [here](https://gist.github.com/leereilly/1f4ea46a01618b6e34ead76f75d0784b).
+```
+
 2. Initialise the `ov` development environment:
 
 ```shell
