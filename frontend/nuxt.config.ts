@@ -103,13 +103,13 @@ export default defineNuxtConfig({
           ? "https://b6466b74788a4a2f8a7912eea912beb7@o787041.ingest.sentry.io/5799642"
           : "",
         environment: isProd ? "production" : "local",
-        release: "",
+        release: import.meta.env.SEMANTIC_VERSION,
       },
       isPlaywright,
     },
   },
   site: {
-    trailingSlash: true,
+    trailingSlash: false,
   },
   /**
    * Disable debug mode to prevent excessive timing logs.
