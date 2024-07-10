@@ -110,9 +110,9 @@ you get started.
 
 ### Included tools
 
-The containerised `ov` environment includes a host of excellent general and
-specific tools to interact with Openverse's development environment. Some of
-them are listed here for visibility and awareness.
+The containerised `ov` environment includes some excellent general purpose tools
+to interact with Openverse's development environment. Here are some important
+ones you might see used throughout the documentation:
 
 - [`just`](https://github.com/casey/just) is a command runner. Like `make` but
   with loads of features for writing scripts `make` was never made for. Try
@@ -130,7 +130,7 @@ them are listed here for visibility and awareness.
 :class: tip
 
 Generally speaking, you should be able to rely on any tools you have on your host system.
-You can pipe output to and from `ov` and it should "just work". For example, the following
+You can pipe output to and from `ov` and it should work. For example, the following
 will pipe the output of running `ov just api/stats` to your host machine's `less` command.
 
 ```shell

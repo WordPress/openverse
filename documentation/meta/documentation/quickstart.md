@@ -9,8 +9,7 @@ Follow the [general setup guide](/general/general_setup.md) to set up `ov`.
 
 ## Starting up
 
-1. Install only the Python dependencies. You do not need to install any Node.js
-   dependencies to run the documentation.
+1. Install dependencies used by the documentation site:
 
    ```bash
    ov just documentation/install
