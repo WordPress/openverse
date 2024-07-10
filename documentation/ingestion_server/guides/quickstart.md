@@ -9,7 +9,7 @@ Follow the [general setup guide](/general/general_setup.md) to set up `ov`.
 
 ## Starting up
 
-Bring the ingestion server up, along with all their dependent services.
+Start the ingestion server along with its dependencies:
 
 ```bash
 just ingestion_server/up

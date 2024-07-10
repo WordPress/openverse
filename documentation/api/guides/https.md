@@ -34,8 +34,7 @@ on your host system for it to work.
    This will create a certificate file `openversse.crt` and a key file
    `openverse.key` in the `docker/nginx/certs/` directory.
 
-2. Bring the ingestion server and API up, along with all their dependent
-   services.
+2. Start the API along with its dependencies:
 
    ```bash
    ov just api/up

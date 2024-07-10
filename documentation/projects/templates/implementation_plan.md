@@ -64,11 +64,11 @@ For each step description, ensure the heading includes an obvious reference to t
 
 ### Tools & packages
 
-<!-- Describe any tools or packages which this work might be dependent on. If multiple options are available, try to list as many as are reasonable with your own recommendation. -->
+<!-- Describe any tools or packages which this work might depend on. If multiple options are available, try to list as many as are reasonable with your own recommendation. -->
 
 ### Other projects or work
 
-<!-- Note any projects this plan is dependent on. -->
+<!-- Note any projects this plan depends on. -->
 
 ## Alternatives
 

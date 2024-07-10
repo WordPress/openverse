@@ -8,8 +8,7 @@ Follow the [general setup guide](/general/general_setup.md) to set up `ov`.
 
 ## Starting up
 
-1. Bring the ingestion server and API up, along with all of their dependent
-   services.
+1. Start the API along with its dependencies:
 
    ```bash
    ov just api/up
