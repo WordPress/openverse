@@ -1,3 +1,7 @@
+/**
+ * Vendored from SVG Sprite Module https://github.com/nuxt-modules/svg-sprite
+ * The module had problem with handling the source code that is inside `/src` directory.
+ */
 import icons from "~/assets/svg/sprite/icons.svg"
 import images from "~/assets/svg/sprite/images.svg"
 import licenses from "~/assets/svg/sprite/licenses.svg"

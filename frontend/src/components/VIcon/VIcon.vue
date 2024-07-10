@@ -15,9 +15,15 @@ import { ref, watch } from "vue"
 
 import { useSprite } from "~/composables/use-sprite"
 /**
+ * Vendored from SVG Sprite Module https://github.com/nuxt-modules/svg-sprite
+ * The module had problem with handling the source code that is inside `/src` directory.
  * Displays the given icon in a 24px × 24px square.
  */
 export type IconProps = {
+  /**
+   * The name of the icon. For options, @see "~/assets/svg/sprite/icons.svg"
+   * and "~/assets/svg/sprite/licenses.svg".
+   */
   name: string
   viewBox?: string
   gId?: string

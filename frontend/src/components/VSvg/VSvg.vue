@@ -15,11 +15,15 @@ import { ref, watch } from "vue"
 
 import { useSprite } from "~/composables/use-sprite"
 
+/**
+ * Vendored from SVG Sprite Module https://github.com/nuxt-modules/svg-sprite
+ * The module had problem with handling the source code that is inside `/src` directory.
+ */
+
 const props = withDefaults(
   defineProps<{
     /**
-     * the path to the icon SVG; In a bundled application like Openverse,
-     * importing an SVG should give us the path to the file.
+     * The name of the svg. For options, @see "~/assets/svg/sprite/images.svg"
      */
     name: string
     viewBox?: string
