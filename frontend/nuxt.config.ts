@@ -28,14 +28,13 @@ const favicons = [
   },
 ]
 
-const isProd = import.meta.env.NODE_ENV === "production"
+const isProductionBuild = import.meta.env.NODE_ENV === "production"
 const isPlaywright = import.meta.env.PW === "true"
-const isProdNotPlaywright = isProd && !isPlaywright
+const isProdNotPlaywright = isProductionBuild && !isPlaywright
 const isTest = import.meta.env.TEST === "true"
 
 const apiUrl =
   import.meta.env.NUXT_PUBLIC_API_URL || "https://api.openverse.org/"
-const plausibleSiteDomain = import.meta.env.SITE_DOMAIN
 
 const openverseLocales = [
   {
@@ -93,23 +92,21 @@ export default defineNuxtConfig({
     apiClientId: "",
     apiClientSecret: "",
     public: {
-      deploymentEnv: process.env.DEPLOYMENT_ENV ?? "local",
-      // Can be overwritten by NUXT_PUBLIC_API_URL env variable
+      // These values can be overridden by the NUXT_PUBLIC_* env variables
+      deploymentEnv: "local",
       apiUrl,
       providerUpdateFrequency: 3600000,
       savedSearchCount: 4,
       sentry: {
-        dsn: isProdNotPlaywright
-          ? "https://b6466b74788a4a2f8a7912eea912beb7@o787041.ingest.sentry.io/5799642"
-          : "",
-        environment: isProd ? "production" : "local",
-        release: "",
+        dsn: "",
+        environment: import.meta.env.DEPLOYMENT_ENV ?? "local",
+        release: import.meta.env.SEMANTIC_VERSION,
       },
       isPlaywright,
     },
   },
   site: {
-    trailingSlash: true,
+    trailingSlash: false,
   },
   /**
    * Disable debug mode to prevent excessive timing logs.
@@ -138,7 +135,7 @@ export default defineNuxtConfig({
     cssPath: "~/styles/tailwind.css",
   },
   i18n: {
-    baseUrl: "https://openverse.org",
+    baseUrl: import.meta.env.SITE_URL,
     locales: openverseLocales,
     lazy: true,
     langDir: "locales",
@@ -157,28 +154,10 @@ export default defineNuxtConfig({
   },
   plausible: {
     enabled: !isTest,
-    logIgnoredEvents: !isProd,
+    logIgnoredEvents: !isProductionBuild,
     trackLocalhost: !isProdNotPlaywright,
     autoPageviews: isProdNotPlaywright,
-    // This is the current domain of the site.
-    domain:
-      plausibleSiteDomain ??
-      (isProdNotPlaywright ? "openverse.org" : "localhost"),
-    apiHost:
-      plausibleSiteDomain ??
-      (isProdNotPlaywright
-        ? "https://openverse.org"
-        : /**
-           * We rely on the Nginx container running as `frontend_nginx`
-           * in the local compose stack to proxy requests. Therefore, the
-           * URL here is not for the Plausible container in the local stack,
-           * but the Nginx service, which then itself forwards the requests
-           * to the local Plausible instance.
-           *
-           * In production, the Nginx container is handling all requests
-           * made to the root URL (openverse.org), and is configured to
-           * forward Plausible requests to upstream Plausible.
-           */
-          "http://localhost:50290"),
+    domain: import.meta.env.SITE_DOMAIN,
+    apiHost: import.meta.env.PLAUSIBLE_SITE_URL,
   },
 })
