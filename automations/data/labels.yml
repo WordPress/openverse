@@ -189,8 +189,8 @@ groups:
       - name: pytest
         description: Involves pytest
         emoji: "🐍"
-      - name: jest
-        description: Involves Jest
+      - name: vitest
+        description: Involves vitest
         emoji: "🟨"
       - name: playwright
         description: Involves Playwright
