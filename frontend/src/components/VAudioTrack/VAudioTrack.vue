@@ -450,7 +450,13 @@ export default defineComponent({
        * runtime checks.
        */
       if (localAudio) {
-        localAudio.currentTime = frac * duration.value
+        if (Number.isFinite(duration.value)) {
+          localAudio.currentTime = frac * duration.value
+        } else if (Number.isFinite(localAudio.duration)) {
+          localAudio.currentTime = frac * localAudio.duration
+        } else {
+          console.warn("Duration is not finite. Skipping seek.")
+        }
       }
       emitInteracted("seek")
     }
