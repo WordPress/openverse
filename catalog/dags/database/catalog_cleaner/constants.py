@@ -1,3 +1,5 @@
+DAG_ID = "catalog_cleaner"
+
 CREATE_SQL = """
 DROP TABLE IF EXISTS {temp_table_name};
 CREATE UNLOGGED TABLE {temp_table_name} (

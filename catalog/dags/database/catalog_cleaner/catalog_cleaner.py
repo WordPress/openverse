@@ -27,8 +27,6 @@ from database.catalog_cleaner import constants
 
 logger = logging.getLogger(__name__)
 
-DAG_ID = "catalog_cleaner"
-
 
 @task
 def count_dirty_rows(temp_table_name: str, task: AbstractOperator = None):
@@ -45,16 +43,6 @@ def count_dirty_rows(temp_table_name: str, task: AbstractOperator = None):
 
 @task
 def get_batches(total_row_count: int, batch_size: int) -> list[tuple[int, int]]:
-    # batch_list = []
-    # batch_start = 0
-    # while batch_start <= total_row_count:
-    #     batch_end = min(batch_start + batch_size, total_row_count)
-    #     batch_list.append({
-    #         "batch_start": batch_start,
-    #         "batch_end": batch_end
-    #     })
-    #     batch_start += batch_size
-    # return batch_list
     return [(i, i + batch_size) for i in range(0, total_row_count, batch_size)]
 
 
@@ -85,7 +73,7 @@ def update_batch(
 
 
 @dag(
-    dag_id=DAG_ID,
+    dag_id=constants.DAG_ID,
     default_args={
         **DAG_DEFAULT_ARGS,
         "retries": 0,
