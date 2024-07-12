@@ -49,6 +49,7 @@ The following are DAGs grouped by their primary tag:
 | -------------------------------------------------------------------------------------- | ----------------- |
 | [`automated_batched_update`](#batched_update)                                          | `None`            |
 | [`batched_update`](#batched_update)                                                    | `None`            |
+| [`catalog_cleaner`](#catalog_cleaner)                                                  | `None`            |
 | [`decode_and_deduplicate_image_tags`](#decode_and_deduplicate_media_type_tags)         | `None`            |
 | [`delete_records`](#delete_records)                                                    | `None`            |
 | [`recreate_full_staging_index`](#recreate_full_staging_index)                          | `None`            |
@@ -203,7 +204,7 @@ is constructed from the `license` and `license_version` columns.
 
 This is a maintenance DAG that should be run once.
 
----
+----
 
 ### `airflow_log_cleanup`
 
@@ -230,7 +231,7 @@ airflow dags trigger --conf
 - maxLogAgeInDays:<INT> - Optional
 - enableDelete:<BOOLEAN> - Optional
 
----
+----
 
 ### `auckland_museum_workflow`
 
@@ -250,7 +251,7 @@ Resource: <https://api.aucklandmuseum.com/>
 | /search, /id | 10                  | 1000             |
 | /id/media    | 10                  | 1000             |
 
----
+----
 
 ### `batched_update`
 
@@ -329,7 +330,27 @@ already created: for example, if there was a problem with the `update_query`
 which caused DAG failures during the `update_batches` step. In this case, verify
 that the `BATCH_START` var is set appropriately for your needs.
 
----
+----
+
+### `catalog_cleaner`
+
+Catalog Data Cleaner DAG
+
+Use the TSV files created during the cleaning step of the ingestion process to
+bring the changes into the catalog database and make the updates permanent.
+
+The DAG has a structure similar to the batched_update DAG, but with a few key
+differences:
+
+1. Given the structure of the TSV, it updates a single column at a time.
+2. The batch updates are parallelized to speed up the process. The maximum
+   number of active tasks is limited to 3 (at first to try it out and) to avoid
+   overwhelming the database.
+3. It needs slightly different SQL queries to update the data. One change for
+   example, is that it only works with the `image` table given that is the only
+   one where the cleaning steps are applied to in the ingestion server.
+
+----
 
 ### `cc_mixter_workflow`
 
@@ -343,7 +364,7 @@ Notes: Documentation: <https://ccmixter.org/query-api> ccMixter sends bad JSON
 and extremely huge headers, both of which need workarounds that are handled by
 this DAG.
 
----
+----
 
 ### `check_silenced_dags`
 
@@ -370,7 +391,7 @@ issue has been resolved.
 
 The DAG runs weekly.
 
----
+----
 
 ### `create_filtered_{media_type}_index`
 
@@ -428,7 +449,7 @@ There are two mechanisms that prevent this from happening:
 This ensures that neither are depending on or modifying the origin indexes
 critical for the creation of the filtered indexes.
 
----
+----
 
 ### `create_new_{environment}_es_index`
 
@@ -541,7 +562,7 @@ es-concurrency group for the DAG's environment is running. (E.g., the
 `create_new_staging_es_index` DAG fails immediately if any DAGs tagged with
 `staging-es-concurrency` are running.)
 
----
+----
 
 ### `create_proportional_by_source_staging_index`
 
@@ -576,7 +597,7 @@ interfere with the production `data_refresh` or `create_filtered_index` DAGs.
 However, it will fail immediately if any of the DAGs tagged as part of the
 `staging-es-concurrency` group are running.
 
----
+----
 
 ### `decode_and_deduplicate_{media_type}_tags`
 
@@ -648,7 +669,7 @@ that records selected for deletion in this DAG are not also being written to by
 a provider DAG, for instance. The simplest way to do this is to ensure that any
 affected provider DAGs are not currently running.
 
----
+----
 
 ### `europeana_workflow`
 
@@ -660,7 +681,7 @@ Output: TSV file containing the images and the respective meta-data.
 
 Notes: <https://pro.europeana.eu/page/search>
 
----
+----
 
 ### `finnish_museums_workflow`
 
@@ -676,7 +697,7 @@ provider script is a dated DAG that ingests all records that were last updated
 in the previous day. Because of this, it is not necessary to run a separate
 reingestion DAG, as updated data will be processed during regular ingestion.
 
----
+----
 
 ### `flickr_audit_sub_provider_workflow`
 
@@ -686,7 +707,7 @@ Check the list of member institutions of the Flickr Commons for institutions
 that have cc-licensed images and are not already configured as sub-providers for
 the Flickr DAG. Report suggestions for new sub-providers to Slack.
 
----
+----
 
 ### `flickr_workflow`
 
@@ -700,7 +721,7 @@ Notes: <https://www.flickr.com/help/terms/api>
 
 Rate limit: 3600 requests per hour.
 
----
+----
 
 ### `freesound_workflow`
 
@@ -715,7 +736,7 @@ Notes: <https://freesound.org/docs/api/>
 Rate limit: No limit for our API key. This script can be run either to ingest
 the full dataset or as a dated DAG.
 
----
+----
 
 ### `inaturalist_workflow`
 
@@ -735,7 +756,7 @@ We use the table structure defined here,
 <https://github.com/inaturalist/inaturalist-open-data/blob/main/Metadata/structure.sql>
 except for adding ancestry tags to the taxa table.
 
----
+----
 
 ### `jamendo_workflow`
 
@@ -750,7 +771,7 @@ non-commercial apps Jamendo Music has more than 500,000 tracks shared by 40,000
 artists from over 150 countries all over the world. Audio quality: uploaded as
 WAV/ FLAC/ AIFF bit depth: 16/24 sample rate: 44.1 or 48 kHz channels: 1/2
 
----
+----
 
 ### `justtakeitfree_workflow`
 
@@ -763,7 +784,7 @@ Output: TSV file containing the media and the respective meta-data.
 Notes: <https://justtakeitfree.com/api/api.php> This API requires an API key.
 For more details, see <https://github.com/WordPress/openverse/pull/2793>
 
----
+----
 
 ### `metropolitan_museum_workflow`
 
@@ -789,7 +810,7 @@ avoid of blocking during local development testing.
                         connect with just date and license.
                         <https://collectionapi.metmuseum.org/public/collection/v1/search?isPublicDomain=true&metadataDate=2022-08-07>
 
----
+----
 
 ### `nappy_workflow`
 
@@ -802,7 +823,7 @@ Output: TSV file containing the image meta-data.
 Notes: This api was written specially for Openverse. There are no known limits
 or restrictions. <https://nappy.co/>
 
----
+----
 
 ### `oauth2_authorization`
 
@@ -818,7 +839,7 @@ authorization will create an access/refresh token pair in the
 
 - Freesound
 
----
+----
 
 ### `oauth2_token_refresh`
 
@@ -832,7 +853,7 @@ will update the tokens stored in the Variable upon successful refresh.
 
 - Freesound
 
----
+----
 
 ### `phylopic_workflow`
 
@@ -844,7 +865,7 @@ Output: TSV file containing the image, their respective meta-data.
 
 Notes: <http://api-docs.phylopic.org/v2/> No rate limit specified.
 
----
+----
 
 ### `point_{environment}_es_alias`
 
@@ -869,7 +890,7 @@ es-concurrency group for the DAG's environment is running. (E.g., the
 `point_staging_alias` DAG fails immediately if any DAGs tagged with
 `staging-es-concurrency` are running.)
 
----
+----
 
 ### `pr_review_reminders`
 
@@ -899,7 +920,7 @@ Unfortunately the DAG does not know when someone is on vacation. It is up to the
 author of the PR to re-assign review if one of the randomly selected reviewers
 is unavailable for the time period during which the PR should be reviewed.
 
----
+----
 
 ### `rawpixel_workflow`
 
@@ -915,7 +936,7 @@ issues. The public API max results range is limited to 100,000 results, although
 the API key we've been given can circumvent this limit.
 <https://www.rawpixel.com/api/v1/search?tags=$publicdomain&page=1&pagesize=100>
 
----
+----
 
 ### `recreate_full_staging_index`
 
@@ -958,7 +979,7 @@ However, as the DAG operates on the staging API database and ES cluster it will
 exit immediately if any of the DAGs tagged as part of the
 `staging_es_concurrency` group are already running.
 
----
+----
 
 ### `recreate_{media_type}_popularity_calculation`
 
@@ -974,7 +995,7 @@ popularity constants and standardized popularity scores using the new functions.
 These DAGs are not on a schedule, and should only be run manually when new SQL
 code is deployed for the calculation.
 
----
+----
 
 ### `report_pending_reported_media`
 
@@ -989,7 +1010,7 @@ whether further action (such as deindexing the record) needs to be taken. If a
 record has been reported multiple times, it only needs to be reviewed once and
 so is only counted once in the reporting by this DAG.
 
----
+----
 
 ### `rotate_db_snapshots`
 
@@ -1008,7 +1029,7 @@ Requires two variables:
 `CATALOG_RDS_DB_IDENTIFIER`: The "DBIdentifier" of the RDS DB instance.
 `CATALOG_RDS_SNAPSHOTS_TO_RETAIN`: How many historical snapshots to retain.
 
----
+----
 
 ### `science_museum_workflow`
 
@@ -1022,7 +1043,7 @@ Notes:
 <https://github.com/TheScienceMuseum/collectionsonline/wiki/Collections-Online-API>
 Rate limited, no specific rate given.
 
----
+----
 
 ### `smithsonian_workflow`
 
@@ -1034,7 +1055,7 @@ Output: TSV file containing the images and the respective meta-data.
 
 Notes: <https://api.si.edu/openaccess/api/v1.0/search>
 
----
+----
 
 ### `smk_workflow`
 
@@ -1046,7 +1067,7 @@ Output: TSV file containing the media metadata.
 
 Notes: <https://www.smk.dk/en/article/smk-api/>
 
----
+----
 
 ### `staging_database_restore`
 
@@ -1072,7 +1093,7 @@ the RDS operations run using a different hook:
 - `AIRFLOW_CONN_<ID>`: The connection string to use for RDS operations (per the
   above example, it might be `AIRFLOW_CONN_AWS_RDS`)
 
----
+----
 
 ### `stocksnap_workflow`
 
@@ -1086,7 +1107,7 @@ Notes: <https://stocksnap.io/api/load-photos/date/desc/1>
 <https://stocksnap.io/faq> All images are licensed under CC0. No rate limits or
 authorization required. API is undocumented.
 
----
+----
 
 ### `wikimedia_commons_workflow`
 
@@ -1207,7 +1228,7 @@ parameter to avoid this issue on subsequent iterations.
 For these requests, we can remove the `globalusage` property from the `prop`
 parameter entirely and eschew the popularity data for these items.
 
----
+----
 
 ### `wordpress_workflow`
 
@@ -1220,7 +1241,7 @@ Output: TSV file containing the media metadata.
 Notes: <https://wordpress.org/photos/wp-json/wp/v2> Provide photos, media, users
 and more related resources. No rate limit specified.
 
----
+----
 
 ### `{environment}_elasticsearch_cluster_healthcheck`
 
@@ -1239,7 +1260,7 @@ it is expected, and occurs whenever shards and replicas are being relocated
 assurance, but we could choose to add logic that ignores yellow cluster health
 during data refresh or other similar operations.
 
----
+----
 
 ### `{environment}_{media_type}_data_refresh`
 
@@ -1284,7 +1305,7 @@ and related PRs:
 - [[Implementation Plan] Ingestion Server Removal](https://docs.openverse.org/projects/proposals/ingestion_server_removal/20240328-implementation_plan_ingestion_server_removal.html)
 - [[Feature] Merge popularity calculations and data refresh into a single DAG](https://github.com/WordPress/openverse-catalog/issues/453)
 
----
+----
 
 ### `{media_type}_data_refresh`
 
@@ -1310,7 +1331,7 @@ and related PRs:
 - [[Feature] Data refresh orchestration DAG](https://github.com/WordPress/openverse-catalog/issues/353)
 - [[Feature] Merge popularity calculations and data refresh into a single DAG](https://github.com/WordPress/openverse-catalog/issues/453)
 
----
+----
 
 ### `{media_type}_popularity_refresh`
 
