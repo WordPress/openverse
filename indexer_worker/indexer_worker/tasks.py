@@ -2,10 +2,11 @@
 
 import datetime
 from dataclasses import dataclass
+from multiprocessing.sharedctypes import Synchronized
 from typing import Any
 
 
-def _time_fmt(timestamp: int) -> str | None:
+def _time_fmt(timestamp: float) -> str | None:
     """
     Format the timestamp into a human-readable date and time notation.
 
@@ -21,11 +22,11 @@ def _time_fmt(timestamp: int) -> str | None:
 @dataclass
 class TaskInfo:
     task: Any
-    start_time: int
+    start_time: float
     model: str
     target_index: str
-    finish_time: int
-    progress: float
+    finish_time: Synchronized
+    progress: Synchronized
 
 
 class TaskTracker:
