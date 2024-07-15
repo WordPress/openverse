@@ -32,7 +32,7 @@ _MAKE_HEAD_REQUESTS_MODULE_PATH = "api.utils.check_dead_links._make_head_request
 
 
 def _patch_make_head_requests():
-    def _make_head_requests(urls):
+    def _make_head_requests(urls, *args, **kwargs):
         responses = []
         for idx, url in enumerate(urls):
             status_code = 200 if idx % 10 != 0 else 404
@@ -45,7 +45,7 @@ def _patch_make_head_requests():
 def patch_link_validation_dead_for_count(count):
     total_res_count = 0
 
-    def _make_head_requests(urls):
+    def _make_head_requests(urls, *args, **kwargs):
         nonlocal total_res_count
         responses = []
         for idx, url in enumerate(urls):
