@@ -141,6 +141,10 @@ def notify_slack(text):
 )
 def catalog_cleaner():
     aws_region = Variable.get("AWS_DEFAULT_REGION", default_var="us-east-1")
+    max_concurrent_tasks = Variable.get(
+        "CLEANER_MAX_CONCURRENT_DB_UPDATE_TASKS", default_var=3, deserialize_json=True
+    )
+
     column = "{{ params.column }}"
     temp_table_name = f"temp_cleaned_image_{column}"
 
@@ -176,7 +180,7 @@ def catalog_cleaner():
 
     updates = (
         update_batch.override(
-            max_active_tis_per_dag=3,
+            max_active_tis_per_dag=max_concurrent_tasks,
             retries=0,
         )
         .partial(temp_table_name=temp_table_name, column=column)
