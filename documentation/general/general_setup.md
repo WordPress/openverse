@@ -171,10 +171,13 @@ Be aware, however, that `ov` aliases **will not work** inside `ov bash`!
 While `ov` works well to simplify the development environment, you may sometimes
 run into problems that you can't figure out.
 
-The first thing to try in these circumstances is to restart `ov` from scratch,
-using `ov clean && ov init`.
+The first thing to try in these circumstances is `ov doctor`, which attempts
+some basic automated troubleshooting steps to fix common issues.
 
-If the problem persists, please open an issue in GitHub so maintainers can
+If that does not resolve the problem, the next step is to restart `ov` from
+scratch, using `ov clean && ov init`.
+
+If the problem persists, please open an issue in GitHub so that maintainers can
 assist in debugging the problem.
 
 ### How it works

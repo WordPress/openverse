@@ -41,6 +41,9 @@ COMMANDS
   ov stop
     Stop the persistent `ov` Docker container.
 
+  ov doctor
+    Try some basic automated troubleshooting steps for common issues.
+
   ov clean
     Remove the Openverse development toolkit Docker container, image and volume.
     Use in conjunction with `ov init` to recreate the environment from
@@ -97,6 +100,23 @@ setup-env)
 
 stop)
   docker stop openverse-dev_env
+  ;;
+
+doctor)
+  # Expand these checks/fixes as needed
+  # Log a message for each fix so it's clear what is happening
+
+  printf "🩺 The Openverse Doctor is here to help... I will try to apply some basic fixes that might help.\n"
+
+  case "$OSTYPE" in
+  linux*)
+    # For some reason permissions can get mixed up in `/opt` and PDM will fail to create venvs
+    # This is only relevant to Linux hosts because macOS hosts run the container as root regardless
+    printf "   - Fixing file permissions in container's /opt\n"
+    "$_self" sudo chmod -R 0777 /opt
+    ;;
+
+  esac
   ;;
 
 clean)
