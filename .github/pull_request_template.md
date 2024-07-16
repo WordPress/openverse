@@ -24,9 +24,9 @@ Fixes #[issue number] by @[issue author]
 - [ ] I added or updated tests for the changes I made (if applicable).
 - [ ] I added or updated documentation (if applicable).
 - [ ] I tried running the project locally and verified that there are no visible errors.
-- [ ] I ran the DAG documentation generator (`./ov just catalog/generate-docs` for catalog
-      PRs) or the media properties generator (`./ov just catalog/generate-docs media-props`
-      for the catalog or `./ov just api/generate-docs` for the API) where applicable.
+- [ ] I ran the DAG documentation generator (`ov just catalog/generate-docs` for catalog
+      PRs) or the media properties generator (`ov just catalog/generate-docs media-props`
+      for the catalog or `ov just api/generate-docs` for the API) where applicable.
 
 [best_practices]:
   https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project#_commit_guidelines

@@ -58,7 +58,7 @@ const extractZip = async (zipPath) => {
   const issue = "https://github.com/WordPress/openverse/issues/2438"
   if (deprecatedKeys.count > 0) {
     let warning = `${deprecatedKeys.count} deprecated kebab-case keys replaced in locale files. `
-    warning += `To see the keys, run \`./ov just frontend/run i18n:get-translations --verbose\`. For more details, see ${issue}.`
+    warning += `To see the keys, run \`ov just frontend/run i18n:get-translations --verbose\`. For more details, see ${issue}.`
     if (process.argv.includes("--verbose")) {
       warning += `\n${JSON.stringify(deprecatedKeys.keys, null, 2)}`
     }

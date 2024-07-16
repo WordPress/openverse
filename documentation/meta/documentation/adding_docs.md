@@ -5,10 +5,7 @@ documentation locally.
 
 ## Prerequisites
 
-Refer to the [general setup guide](/general/general_setup.md) for setting up the
-prerequisites. Refer to the 'Docs' column in the
-[requirement matrix](/general/general_setup.md#requirement-matrix) to know what
-you need to run this.
+Follow the [general setup guide](/general/general_setup.md) to set up `ov`.
 
 ## Starting up
 
@@ -31,7 +28,7 @@ The following demonstrates the process of adding a new documentation page.
 
 3. Write the document using [MyST flavored Markdown](https://mystmd.org/guide).
 
-4. Run `./ov just lint` to properly format the document.
+4. Run `ov just lint` to properly format the document.
 
-5. Run `./ov just documentation/live` locally (following the quick start guide)
+5. Run `ov just documentation/live` locally (following the quick start guide)
    and navigate to the new page to make sure it looks okay!

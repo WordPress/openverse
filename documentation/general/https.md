@@ -5,7 +5,7 @@ that serves the API over `https` by proxying to the Gunicorn server which serves
 over `http`.
 
 This proxy uses certificates from the `nginx/certs/` directory. These
-certificates can be generated using `mkcert` with the `./ov just nginx/cert`
+certificates can be generated using `mkcert` with the `ov just nginx/cert`
 command.
 
 Additionally, to test with the dev hostname `dev.openverse.test`, add the

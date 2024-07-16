@@ -57,7 +57,7 @@ checked by the healthcheck are failing:
 
 For example, if the Postgres database is failing to serve connections to the
 API, the Django API service healthcheck will fail, causing the task to restart,
-even though the core issue is with a dependent service.
+even though the core issue is with an upstream service.
 
 If the persistent unhealthy hosts are caused by a related service, fix the
 related service. Do not roll back the service with the unhealthy hosts until

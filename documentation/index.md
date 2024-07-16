@@ -4,10 +4,8 @@
 
 # Documentation
 
-To setup your computer and install pre-requisites for developing Openverse,
-refer to the [general setup guide](./general/general_setup.md). To run the
-Openverse stack locally on your computer, refer to the
-[quickstart guide](./general/quickstart.md).
+Refer to the [general setup guide](./general/general_setup.md) to get started
+setting up your computer for Openverse development.
 
 ```{note}
 This documentation is for developers who are building Openverse. If you want to

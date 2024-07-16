@@ -67,12 +67,17 @@ install:
 @install-hooks:
     bash -c "cp ./docker/dev_env/hooks/* ./.git/hooks"
 
-# Create an `.ov_aliases.json` as a starting point for development environment customisation. Does not make changes if the file already exists.
-init-ov-aliases:
+# Create an `.ov_profile.json` as a starting point for development environment customisation. Does not make changes if the file already exists.
+init-ov-profile:
     #! /usr/bin/env bash
-    [[ -f ./.ov_aliases.json ]] && echo '.ov_aliases.json already exists! No changes made.' && exit 0 || cat <<-'EOALIASES' > ./.ov_aliases.json
+    [[ -f ./.ov_profile.json ]] && echo '.ov_profile.json already exists! No changes made.' && exit 0 || cat <<-'EOALIASES' > ./.ov_profile.json
     {
-      "welcome": ["just", "welcome-to-openverse"]
+      "aliases": {
+        "welcome": {
+          "cmd": ["just", "welcome-to-openverse"],
+          "doc": "Warmly welcome Openverse contributors (and provide an example for how aliases work)."
+        }
+      }
     }
     EOALIASES
 
