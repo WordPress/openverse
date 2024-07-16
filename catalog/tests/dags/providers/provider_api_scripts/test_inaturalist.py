@@ -37,7 +37,7 @@ from providers.provider_api_scripts import inaturalist
 #    to pull a sample of records without breaking referential integrity.
 #  - Putting your final zipped test files in /tests/s3-data/inaturalist-open-data
 #    so that they will be synced over to minio.
-#  - Run `./ov just down -v` and then `./ov just recreate` to make sure that the test data gets to
+#  - Run `ov just down -v` and then `ov just recreate` to make sure that the test data gets to
 #    the test s3 instance. That process may take on the order of 15 minutes for the full
 #    dataset. You'll know that it's done when the s3-load container in docker exits.
 #  - Then, in airflow, trigger the dag possibly with configuration

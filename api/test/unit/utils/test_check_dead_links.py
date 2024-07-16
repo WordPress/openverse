@@ -1,34 +1,46 @@
 import asyncio
+from collections.abc import Callable
+from typing import Any
 
 import pook
 import pytest
 from aiohttp.client import ClientSession
+from elasticsearch_dsl.response import Hit
 from structlog.testing import capture_logs
 
 from api.utils.check_dead_links import HEADERS, check_dead_links
+from test.factory.es_http import create_mock_es_http_image_hit
+
+
+def _make_hits(
+    count: int, gen_fields: Callable[[int], dict[str, Any]] = lambda _: dict()
+):
+    return [
+        Hit(create_mock_es_http_image_hit(_id, "image", live=True, **gen_fields(_id)))
+        for _id in range(40)
+    ]
 
 
 @pook.on
 def test_sends_user_agent():
     query_hash = "test_sends_user_agent"
-    results = [{"provider": "best_provider_ever"} for _ in range(40)]
-    image_urls = [f"https://example.org/{i}" for i in range(len(results))]
+    results = _make_hits(40)
     start_slice = 0
 
     head_mock = (
-        pook.head(pook.regex(r"https://example.org/\d"))
+        pook.head(pook.regex(r"https://example.com/openverse-live-image-result-url/\d"))
         .headers(HEADERS)
         .times(len(results))
         .reply(200)
         .mock
     )
 
-    check_dead_links(query_hash, start_slice, results, image_urls)
+    check_dead_links(query_hash, start_slice, results)
 
     assert head_mock.calls == len(results)
     requested_urls = [req.rawurl for req in head_mock.matches]
-    for url in image_urls:
-        assert url in requested_urls
+    for result in results:
+        assert result.url in requested_urls
 
 
 def test_handles_timeout(monkeypatch):
@@ -39,15 +51,14 @@ def test_handles_timeout(monkeypatch):
     3 seconds.
     """
     query_hash = "test_handles_timeout"
-    results = [{"identifier": i, "provider": "best_provider_ever"} for i in range(1)]
-    image_urls = [f"https://example.org/{i}" for i in range(len(results))]
+    results = _make_hits(1)
     start_slice = 0
 
     async def raise_timeout_error(*args, **kwargs):
         raise asyncio.TimeoutError()
 
     monkeypatch.setattr(ClientSession, "_request", raise_timeout_error)
-    check_dead_links(query_hash, start_slice, results, image_urls)
+    check_dead_links(query_hash, start_slice, results)
 
     # `check_dead_links` directly modifies the results list
     # if the results are timing out then they're considered dead and discarded
@@ -60,22 +71,20 @@ def test_handles_timeout(monkeypatch):
 def test_403_considered_dead(provider):
     query_hash = f"test_{provider}_403_considered_dead"
     other_provider = "fake_other_provider"
-    results = [
-        {"identifier": i, "provider": provider if i % 2 else other_provider}
-        for i in range(4)
-    ]
+    results = _make_hits(
+        4, lambda i: {"provider": provider if i % 2 else other_provider}
+    )
     len_results = len(results)
-    image_urls = [f"https://example.org/{i}" for i in range(len(results))]
     start_slice = 0
 
     head_mock = (
-        pook.head(pook.regex(r"https://example.org/\d"))
+        pook.head(pook.regex(r"https://example.com/openverse-live-image-result-url/\d"))
         .times(len(results))
         .reply(403)
         .mock
     )
 
-    check_dead_links(query_hash, start_slice, results, image_urls)
+    check_dead_links(query_hash, start_slice, results)
 
     assert head_mock.calls == len_results
 
@@ -92,25 +101,24 @@ def test_mset_and_expire_for_responses(is_cache_reachable, cache_name, request):
     cache = request.getfixturevalue(cache_name)
 
     query_hash = "test_mset_and_expiry_for_responses"
-    results = [{"identifier": i, "provider": "best_provider_ever"} for i in range(40)]
-    image_urls = [f"https://example.org/{i}" for i in range(len(results))]
+    results = _make_hits(40)
     start_slice = 0
 
     (
-        pook.head(pook.regex(r"https://example.org/\d"))
+        pook.head(pook.regex(r"https://example.com/openverse-live-image-result-url/\d"))
         .headers(HEADERS)
         .times(len(results))
         .reply(200)
     )
 
     with capture_logs() as cap_logs:
-        check_dead_links(query_hash, start_slice, results, image_urls)
+        check_dead_links(query_hash, start_slice, results)
 
     if is_cache_reachable:
-        for i in range(len(results)):
-            assert cache.get(f"valid:https://example.org/{i}") == b"200"
+        for result in results:
+            assert cache.get(f"valid:{result.url}") == b"200"
             # TTL is 30 days for 2xx responses
-            assert cache.ttl(f"valid:https://example.org/{i}") == 2592000
+            assert cache.ttl(f"valid:{result.url}") == 2592000
     else:
         messages = [record["event"] for record in cap_logs]
         assert all(

@@ -98,9 +98,8 @@ def _post_process_results(
     results = list(search_results)
 
     if filter_dead:
-        to_validate = [res.url for res in search_results]
         query_hash = get_query_hash(s)
-        check_dead_links(query_hash, start, results, to_validate)
+        check_dead_links(query_hash, start, results)
 
         if len(results) == 0:
             # first page is all dead links

@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.2"
-content_hash = "sha256:e06cea3d5a964ee0ab5c99e846456c4d897d5495318f5967270fe44bee0b7204"
+content_hash = "sha256:1319df2858ab19f749afe3bf93994b90185523c61b047e5b9eb7615e20a5ea33"
 
 [[package]]
 name = "asttokens"
@@ -432,7 +432,7 @@ files = [
 
 [[package]]
 name = "pook"
-version = "1.4.3"
+version = "2.0.0"
 requires_python = ">=3.8"
 summary = "HTTP traffic mocking and expectations made easy"
 groups = ["dev"]
@@ -442,8 +442,8 @@ dependencies = [
     "xmltodict>=0.11.0",
 ]
 files = [
-    {file = "pook-1.4.3-py3-none-any.whl", hash = "sha256:4683a8a9d11fb56901ae15001a5bfb76a1bb960b1a841de1f0ca11c8c2d9eef8"},
-    {file = "pook-1.4.3.tar.gz", hash = "sha256:61dbd9f6f9bf4d0bbab4abdf382bf7e8fbaae8561c5de3cd444e7c4be67df651"},
+    {file = "pook-2.0.0-py3-none-any.whl", hash = "sha256:b3993cf00b8335f19b407fca39febd048c97749eb7c06eaddd9fbaff3b0a1ac3"},
+    {file = "pook-2.0.0.tar.gz", hash = "sha256:b106ebc088417fa7b68d1f6ee21a9720fd171ea96d4b86ef308eaffac1e5c4f8"},
 ]
 
 [[package]]

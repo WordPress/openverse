@@ -18,10 +18,10 @@ Deployment logs are currently held in a private repository but are linked here f
 
 ### Frontend
 
-| Environment | Deployment Log                                                                                                       | URL                                | Version Endpoint                                                 |
-| ----------- | -------------------------------------------------------------------------------------------------------------------- | ---------------------------------- | ---------------------------------------------------------------- |
-| Staging     | [Deployment Log](https://github.com/WordPress/openverse-infrastructure/actions/workflows/deploy-staging-nuxt.yml)    | <https://staging.openverse.org>    | [`/version.json`](https://staging.openverse.org/version.json)    |
-| Production  | [Deployment Log](https://github.com/WordPress/openverse-infrastructure/actions/workflows/deploy-production-nuxt.yml) | <https://production.openverse.org> | [`/version.json`](https://production.openverse.org/version.json) |
+| Environment | Deployment Log                                                                                                       | URL                             | Version Endpoint                                              |
+| ----------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------- | ------------------------------------------------------------- |
+| Staging     | [Deployment Log](https://github.com/WordPress/openverse-infrastructure/actions/workflows/deploy-staging-nuxt.yml)    | <https://staging.openverse.org> | [`/version.json`](https://staging.openverse.org/version.json) |
+| Production  | [Deployment Log](https://github.com/WordPress/openverse-infrastructure/actions/workflows/deploy-production-nuxt.yml) | <https://openverse.org>         | [`/version.json`](https://openverse.org/version.json)         |
 
 ### API
 

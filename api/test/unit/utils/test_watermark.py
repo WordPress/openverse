@@ -19,7 +19,7 @@ def mock_request():
             pook.get("http://example.com/")
             .header("User-Agent", HEADERS["User-Agent"])
             .reply(200)
-            .body(_MOCK_IMAGE_BYTES, binary=True)
+            .body(_MOCK_IMAGE_BYTES)
             .mock
         )
         yield mock

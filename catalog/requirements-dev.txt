@@ -4,7 +4,7 @@
 
 flaky==3.8.1
 ipython
-pook==1.4.3
+pook==2.0.0
 pytest-env
 pytest-mock
 pytest-raises==0.11

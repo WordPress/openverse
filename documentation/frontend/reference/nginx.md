@@ -16,7 +16,7 @@ Additionally, the reverse proxy may be used in the future for the following:
 
 ## Testing
 
-To test the frontend reverse proxy locally, run `./ov just frontend/up`. To test
+To test the frontend reverse proxy locally, run `ov just frontend/up`. To test
 the integration with your local Plausible container, follow the existing
 instructions in [the frontend analytics documentation][analytics_docs].
 Everything should "just work".

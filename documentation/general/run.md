@@ -5,7 +5,7 @@
 ### Docker
 
 To run the API inside Docker, follow the instructions in the
-{doc}`"Quickstart" <./quickstart>` document.
+[general setup guide](/general/general_setup.md).
 
 ### On the host
 
@@ -18,18 +18,18 @@ To run the API inside Docker, follow the instructions in the
 1. Create environment variables from the stencil file.
 
    ```bash
-   ./ov just env
+   ov just env
    ```
 
 2. Install Python dependencies.
 
    ```bash
-   ./ov just install
+   ov just install
    ```
 
 3. Start the Django dev server.
    ```bash
-   ./ov just api/dj runserver
+   ov just api/dj runserver
    ```
 
 ## Django admin

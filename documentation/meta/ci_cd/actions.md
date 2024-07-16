@@ -24,8 +24,8 @@ speed and to avoid wasteful consumption of resources.
 ## `setup-env`
 
 Sets up the runtime environment for a job. It sets up our task runner of choice,
-[`just`](/general/general_setup.md#just) and also the specified languages and
-their respective package managers.
+[`just`](/general/general_setup.md#included-tools) and also the specified
+languages and their respective package managers.
 
 - Python (and Pipenv)
 - Node.js (and pnpm)

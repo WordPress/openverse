@@ -83,11 +83,11 @@ contain the following block of requirements:
 - Have I filled out the PR template correctly?
   - Did I include testing instructions?
 - Does my PR pass linting? (Test either via precommit or by running
-  `./ov just lint` manually)
+  `ov just lint` manually)
 - Do all the tests still pass?
   - If JavaScript changes, run `pnpm -r run test`
-  - If API changes, run `./ov just api/test`
-  - If catalog changes, run `./ov just catalog/test`
+  - If API changes, run `ov just api/test`
+  - If catalog changes, run `ov just catalog/test`
 ```
 
 ## On "help wanted" issues
@@ -139,8 +139,8 @@ assigned this issue to you. If you have any questions, you may leave them here.
 
 Please check out our
 [welcome](https://docs.openverse.org/general/contributing.html) and
-[quickstart](https://docs.openverse.org/general/quickstart.html) documentation
-pages for getting started with setting up your local environment.
+[general setup](https://docs.openverse.org/general/general_setup.html)
+documentation pages for getting started with setting up your local environment.
 ```
 
 #### Follow up
