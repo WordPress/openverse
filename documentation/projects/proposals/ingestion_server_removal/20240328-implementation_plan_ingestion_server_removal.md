@@ -230,10 +230,7 @@ The EC2 approach uses EC2 operators to achieve a similar result. Because we will
 actually terminate (rather than stop) the instances when their work is complete
 and create entirely _new_ instances for each data refresh, we can update the
 launch template to use the latest Docker image each time an instance is created,
-so that the latest code is pulled each time a data refresh starts. By using AWS
-Systems Manager parameters instead of AMI IDs in the launch template, we can
-even ensure that we automatically use new AMI IDs without needing to deploy a
-new launch template each time a system dependency is updated.
+so that the latest code is pulled each time a data refresh starts.
 
 ### Conclusion
 
