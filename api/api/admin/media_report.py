@@ -469,7 +469,7 @@ class MediaListAdmin(admin.ModelAdmin):
             decision.moderator = request.user
             decision.save()
 
-            logger.info(
+            logger.debug(
                 "Decision created",
                 decision=decision.id,
                 action=decision.action,
@@ -481,7 +481,7 @@ class MediaListAdmin(admin.ModelAdmin):
                 decision=decision,
                 media_obj=media_obj,
             )
-            logger.info(
+            logger.debug(
                 "Through model created",
                 through=through.id,
                 decision=decision.id,
@@ -490,7 +490,7 @@ class MediaListAdmin(admin.ModelAdmin):
 
             reports = form.cleaned_data["reports"]
             count = reports.update(decision=decision)
-            logger.info(
+            logger.debug(
                 "Decision recorded in reports",
                 report_count=count,
                 decision=decision.id,
@@ -500,14 +500,14 @@ class MediaListAdmin(admin.ModelAdmin):
                 DecisionAction.DEINDEXED_COPYRIGHT,
                 DecisionAction.DEINDEXED_SENSITIVE,
             }:
-                messages.info(
+                messages.debug(
                     request,
                     "The media object has been deindexed from ES and deleted from DB.",
                 )
                 return redirect(f"admin:api_{self.media_type}_changelist")
 
             if decision.action == DecisionAction.MARKED_SENSITIVE:
-                messages.info(
+                messages.debug(
                     request,
                     "The media object has been marked as sensitive.",
                 )
@@ -536,7 +536,7 @@ class MediaListAdmin(admin.ModelAdmin):
                 report.media_obj = media_obj
                 report.save()
 
-                logger.info(
+                logger.debug(
                     "Report created",
                     report=report.id,
                     reason=report.reason,
