@@ -26,7 +26,7 @@ def test_oembed_sends_ua_header(api_client):
             pook.get(image.url)
             .header("User-Agent", ImageViewSet.OEMBED_HEADERS["User-Agent"])
             .reply(200)
-            .body(_MOCK_IMAGE_BYTES, binary=True)
+            .body(_MOCK_IMAGE_BYTES)
         )
         res = api_client.get("/v1/images/oembed/", data={"url": image.url})
 
