@@ -6,7 +6,11 @@ MOCK_DEAD_RESULT_URL_PREFIX = "https://example.com/openverse-dead-image-result-u
 
 
 def create_mock_es_http_image_hit(
-    _id: str, index: str, live: bool = True, identifier: str | None = None
+    _id: str,
+    index: str,
+    live: bool = True,
+    identifier: str | None = None,
+    **additional_fields,
 ):
     return {
         "_index": index,
@@ -39,7 +43,8 @@ def create_mock_es_http_image_hit(
             "created_on": "2022-02-26T08:48:33+00:00",
             "tags": [{"name": "bird"}],
             "mature": False,
-        },
+        }
+        | additional_fields,
     }
 
 

@@ -5,7 +5,6 @@
 
 contributing
 general_setup
-quickstart
 run
 test
 zero_downtime_database_management

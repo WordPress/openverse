@@ -13,7 +13,7 @@ when planning which projects will be worked on in the next calendar year.
 Some of the steps below reference resources that may only be accessible by maintainers.
 The purpose of this document is primarily to share our process in a way that might be
 useful for other projects, teams, or organizations. If you're interested in becoming a
-maintainer, please check out our [welcome page](/general/quickstart.md)
+maintainer, please check out our [welcome page](/general/contributing.md)
 for how to begin getting involved.
 ```
 

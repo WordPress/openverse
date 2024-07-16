@@ -4,7 +4,7 @@ from django.core.exceptions import ImproperlyConfigured
 
 import pytest
 
-from conf.settings.link_validation_cache import LinkValidationCacheExpiryConfiguration
+from conf.settings.link_validation import LinkValidationCacheExpiryConfiguration
 
 
 @pytest.mark.parametrize(

@@ -47,7 +47,7 @@ Openverse uses
 [svg-sprite-module](https://github.com/nuxt-community/svg-sprite-module) to
 automatically generate the SVG sprite when you add an SVG file to
 `frontend/src/assets/icons/raw/`. It runs when you run
-`./ov just frontend/run dev` or `./ov just frontend/run build`. The module also
+`ov just frontend/run dev` or `ov just frontend/run build`. The module also
 watches the content of the `frontend/src/assets/icons/raw` directory, and
 re-generates the sprite if you add an icon there, so you don't need to re-run
 the app.

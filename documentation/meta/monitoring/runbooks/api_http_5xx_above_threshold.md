@@ -19,7 +19,7 @@ the spike is related to one of these events and the alarms stabilizes in the
 short time then the severity is low.
 
 If the issue is not related to known recurrent events and persists, the severity
-is critical. Check if dependent services –DB, Redis, Elasticsearch– are
+is critical. Check if API service dependencies –DB, Redis, Elasticsearch– are
 available to the API or if the problem is intrinsic to itself. To gather more
 information check the [log group][log_group], use the "Logs Insights" view to
 query for requests that failed using a CloudWatch query similar to the following

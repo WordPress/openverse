@@ -3,7 +3,7 @@ TODO: Add additional tests for any methods you added in your subclass.
 Try to test edge cases (missing keys, different data types returned, Nones, etc).
 You may also need to update the given test names to be more specific.
 
-Run your tests locally with `./ov just catalog/test -k {provider_underscore}`
+Run your tests locally with `ov just catalog/test -k {provider_underscore}`
 """
 
 import json

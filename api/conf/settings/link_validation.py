@@ -12,6 +12,11 @@ from decouple import config
 logger = structlog.get_logger(__name__)
 
 
+LINK_VALIDATION_TIMEOUT_SECONDS = config(
+    "LINK_VALIDATION_TIMEOUT_SECONDS", default=0.8, cast=float
+)
+
+
 class LinkValidationCacheExpiryConfiguration(defaultdict):
     """Link validation cache expiry configuration."""
 

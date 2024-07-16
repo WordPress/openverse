@@ -75,7 +75,7 @@ API_CLIENT_ID=""
 API_CLIENT_SECRET=""
 ```
 
-Then run the API as usual using `./ov just api/up` & `./ov just api/init`. Nuxt
+Then run the API as usual using `ov just api/up` & `ov just api/init`. Nuxt
 automatically loads `.env` files into the environment. With these variables in
 the environment, all requests made by your server will be made using an access
 token retrieved by the `~/plugins/api-token.server.ts` plugin.
@@ -84,7 +84,7 @@ Once the `.env` file is set up, you may run the development build the typical
 way:
 
 ```shell
-./ov just frontend/run dev
+ov just frontend/run dev
 ```
 
 ## Browsers
@@ -311,7 +311,7 @@ When writing end-to-end tests, it can be helpful to use Playwright
 tests by performing actions in the browser:
 
 ```bash
-./ov just frontend/run test:playwright:gen
+ov just frontend/run test:playwright:gen
 ```
 
 This will open the app in a new browser window, and record any actions you take
@@ -324,7 +324,7 @@ To generate tests for a non-default breakpoint, set the viewport size using the
 `--viewport-size` flag. For example, to test the `xs` breakpoint, run:
 
 ```bash
-./ov just frontend/run test:playwright:gen --viewport-size=340,600"
+ov just frontend/run test:playwright:gen --viewport-size=340,600"
 ```
 
 #### Storybook
@@ -338,10 +338,10 @@ See
 You can use Playwright's
 [codegen](https://playwright.dev/docs/codegen#running-codegen) tool to generate
 tests. For this you will need to run Storybook locally on your own using
-`./ov just frontend/run storybook`. Then run:
+`ov just frontend/run storybook`. Then run:
 
 ```bash
-./ov just frontend/run test:storybook:gen
+ov just frontend/run test:storybook:gen
 ```
 
 Please note that the codegen script automatically runs against the non-iframed
@@ -378,7 +378,7 @@ renders the page compared to the docker container.
 To run the debug tests:
 
 ```bash
-./ov just frontend/run test:playwright:debug
+ov just frontend/run test:playwright:debug
 ```
 
 Note that this still runs the talkback proxy and the Nuxt server for you. If
@@ -442,7 +442,7 @@ If you've added new tests or updated existing ones, you may get errors about API
 responses not being found. To remedy this, you'll need to update the tapes:
 
 ```bash
-./ov just frontend/run test:playwright:update-tapes
+ov just frontend/run test:playwright:update-tapes
 ```
 
 If for some reason you find yourself needing to completely recreate the tapes,

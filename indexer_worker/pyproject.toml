@@ -36,7 +36,7 @@ dev = [
     "pytest-order~=1.1",
     "pytest-sugar~=0.9",
     "remote-pdb~=2.1",
-    "pook~=1.0",
+    "pook~=2.0",
 ]
 
 [build-system]

@@ -87,11 +87,11 @@ recreate:
 ########
 
 # Make a cURL GET request to service at the given path
-_curl-get path origin="http://localhost:50280":
+@_curl-get path origin="http://localhost:50280":
     curl "{{ origin }}/v1/{{ path }}"
 
 # Make a test cURL GET request to the API
-stats media="images" origin="http://localhost:50280":
+@stats media="images" origin="http://localhost:50280":
     just _curl-get "{{ media }}/stats/" {{ origin }}
 
 # Launch a `pgcli` shell in the web container

@@ -2,6 +2,8 @@
 
 set -e
 
+chmod -R 0777 /opt /pipx
+
 if [ ! -d "$OPENVERSE_PROJECT"/.git ]; then
   printf "Repository not mounted to container!\n"
   exit 1
@@ -16,8 +18,8 @@ if [ -z "$(n ls 2>/dev/null)" ]; then
   n install auto
 fi
 
-if [ -n "$PNPM_HOME" ]; then
-  export PATH="$PNPM_HOME:$PATH"
+if [[ -n $PNPM_HOME && ! -L $PNPM_BIN ]]; then
+  ln -s "$PNPM_HOME" "$PNPM_BIN"
 fi
 
 pdm config python.install_root "/opt/pdm/python"
@@ -34,10 +36,8 @@ fi
 PYTHON_311=${_python3s[0]}
 export PYTHON_311
 
-mkdir -p "$PDM_PYTHONS"
-
-if [ ! -x "$PDM_PYTHONS"/python3.11 ]; then
-  ln -s "$PYTHON_311" "$PDM_PYTHONS"/python3.11
+if [ ! -x /usr/local/bin/python3.11 ]; then
+  ln -s "$PYTHON_311" /usr/local/bin/python3.11
 fi
 
 if [ -z "$(command -v pipenv)" ]; then

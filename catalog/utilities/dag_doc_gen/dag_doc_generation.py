@@ -64,6 +64,7 @@ DAG_ID_TERMS_TO_COLLAPSE = {
     "audio": "{media_type}",
     "production": "{environment}",
     "staging": "{environment}",
+    "automated": "",
 }
 # DAG IDs to ignore when collapsing reference documentation for a mapped term
 DAG_IDS_TO_IGNORE_COLLAPSE = {
@@ -147,6 +148,9 @@ def determine_mapped_dag_id(dag_id: str) -> str:
     for idx, part in enumerate(parts):
         if part in DAG_ID_TERMS_TO_COLLAPSE:
             parts[idx] = DAG_ID_TERMS_TO_COLLAPSE[part]
+            if not parts[idx]:
+                # If there's no replacement, remove the section entirely
+                parts.pop(idx)
     return "_".join(parts)
 
 

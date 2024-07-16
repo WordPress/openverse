@@ -47,6 +47,7 @@ The following are DAGs grouped by their primary tag:
 
 | DAG ID                                                                                 | Schedule Interval |
 | -------------------------------------------------------------------------------------- | ----------------- |
+| [`automated_batched_update`](#batched_update)                                          | `None`            |
 | [`batched_update`](#batched_update)                                                    | `None`            |
 | [`decode_and_deduplicate_image_tags`](#decode_and_deduplicate_media_type_tags)         | `None`            |
 | [`delete_records`](#delete_records)                                                    | `None`            |
@@ -136,6 +137,7 @@ The following is documentation associated with each DAG (where available):
 1.  [`add_license_url`](#add_license_url)
 1.  [`airflow_log_cleanup`](#airflow_log_cleanup)
 1.  [`auckland_museum_workflow`](#auckland_museum_workflow)
+1.  [`automated_batched_update`](#batched_update)
 1.  [`batched_update`](#batched_update)
 1.  [`cc_mixter_workflow`](#cc_mixter_workflow)
 1.  [`check_silenced_dags`](#check_silenced_dags)

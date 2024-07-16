@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 
 
 DAG_ID = "batched_update"
+AUTOMATED_DAG_ID = f"automated_{DAG_ID}"
 START_DATE = datetime(2023, 5, 1)
 SLACK_USERNAME = "Upstream Batched Update"
 SLACK_ICON = ":database:"

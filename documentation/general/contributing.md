@@ -48,7 +48,6 @@ contribution journey in the code and code-related space.
 - [GitHub contribution practices](/general/contribution/github_contribution_practices.md)
 - [Dev flow](/general/contribution/dev_flow.md)
 - [General setup guide](/general/general_setup.md)
-- [Quickstart guide](/general/quickstart.md)
 
 #### Friendly notes
 

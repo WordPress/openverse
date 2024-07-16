@@ -94,9 +94,7 @@ from database.batched_update.batched_update import (
 
 logger = logging.getLogger(__name__)
 
-
-@dag(
-    dag_id=constants.DAG_ID,
+DAG_CONFIG = dict(
     schedule=None,
     start_date=constants.START_DATE,
     tags=["database"],
@@ -170,6 +168,8 @@ logger = logging.getLogger(__name__)
         ),
     },
 )
+
+
 def batched_update():
     # Unique Airflow variable name for tracking the batch_start for this query
     BATCH_START_VAR = "batched_update_start_{{ params.query_id }}"
@@ -269,4 +269,5 @@ def batched_update():
     ]
 
 
-batched_update()
+for dag_id in [constants.DAG_ID, constants.AUTOMATED_DAG_ID]:
+    dag(dag_id, **DAG_CONFIG)(batched_update)()
