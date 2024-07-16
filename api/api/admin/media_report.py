@@ -1,3 +1,4 @@
+import json
 from functools import update_wrapper
 from typing import Sequence
 
@@ -512,10 +513,9 @@ class MediaListAdmin(admin.ModelAdmin):
                     "The media object has been marked as sensitive.",
                 )
         else:
-            logger.warning(
-                "Form is invalid",
-                **form.cleaned_data,
-                errors=form.errors,
+            messages.warning(
+                request,
+                f"Form is invalid: {json.dumps(form.errors)}",
             )
 
         return redir
@@ -544,10 +544,9 @@ class MediaListAdmin(admin.ModelAdmin):
                     media_obj=media_obj.id,
                 )
             else:
-                logger.warning(
-                    "Form is invalid",
-                    **form.cleaned_data,
-                    errors=form.errors,
+                messages.warning(
+                    request,
+                    f"Form is invalid: {json.dumps(form.errors)}",
                 )
 
         return redirect(f"admin:api_{self.media_type}_change", object_id)
