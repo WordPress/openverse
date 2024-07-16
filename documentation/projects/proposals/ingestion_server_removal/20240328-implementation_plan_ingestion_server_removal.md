@@ -452,12 +452,12 @@ distributed reindex _locally_. The following code can all be refactored from
     `end_index` it should handle, triggering the reindexing.
   - Use a Sensor to ping the worker's `task/{task_id}` endpoint until the task
     is complete, logging the progress as it goes
-- Finally, use the
-  [`EC2TerminateInstanceOperator`](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/_api/airflow/providers/amazon/aws/operators/ec2/index.html#airflow.providers.amazon.aws.operators.ec2.EC2TerminateInstanceOperator)
-  to terminate the instance. Make sure to use the
-  [`NONE_SKIPPED` TriggerRule](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dags.html#trigger-rules)
-  to ensure that the instances are terminated, even if there are upstream
-  failures. (Skips in local env.)
+  - Finally, use the
+    [`EC2TerminateInstanceOperator`](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/_api/airflow/providers/amazon/aws/operators/ec2/index.html#airflow.providers.amazon.aws.operators.ec2.EC2TerminateInstanceOperator)
+    to terminate the instance. Make sure to use the
+    [`NONE_SKIPPED` TriggerRule](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dags.html#trigger-rules)
+    to ensure that the instances are terminated, even if there are upstream
+    failures. (Skips in local env.)
 
 ### Create the Terraform and Ansible resources needed to deploy the new indexer workers
 
