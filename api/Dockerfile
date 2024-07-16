@@ -151,7 +151,8 @@ LABEL org.opencontainers.image.source="https://github.com/WordPress/openverse"
 
 WORKDIR /app
 
-COPY nginx.conf.template /etc/nginx/templates/openverse-api.conf.template
+COPY nginx/nginx.conf.template /etc/nginx/templates/openverse-api.conf.template
+COPY nginx/snippets /etc/nginx/snippets
 
 # Copy static files from `api` target
 COPY --from=api /static /app/static

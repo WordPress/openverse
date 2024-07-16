@@ -2,7 +2,6 @@ services:
   cache:
     profiles:
       - api
-      - api_extra
     image: docker.io/redis:7.2.5
     ports:
       - "50263:6379"
@@ -10,7 +9,6 @@ services:
   web:
     profiles:
       - api
-      - api_extra
     build:
       target: api
       additional_contexts:
@@ -47,24 +45,11 @@ services:
         - SEMANTIC_VERSION=${SEMANTIC_VERSION:-v1.0.0}
         - API_PY_VERSION
         - PDM_INSTALL_ARGS=--dev
+    image: openverse-api_nginx:${API_PDM_HASH:-latest}
+    pull_policy: never
     ports:
       - "50270:8080"
     environment:
       DJANGO_NGINX_UPSTREAM_URL: web:50280
     depends_on:
       - web
-
-  proxy:
-    profiles:
-      - api_extra
-    image: docker.io/nginx:alpine
-    ports:
-      - "50200:9080"
-      - "50243:9443"
-    environment:
-      HTTPS_PORT: 50243 # See `ports` mapping above.
-    depends_on:
-      - web
-    volumes:
-      - ../docker/nginx/templates:/etc/nginx/templates:z
-      - ../docker/nginx/certs:/etc/nginx/certs:z

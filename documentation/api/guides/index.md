@@ -7,5 +7,4 @@ quickstart
 test
 deploy
 documentation
-https
 ```
