@@ -1,5 +1,7 @@
 """Simple in-memory tracking of executed tasks."""
 
+from __future__ import annotations
+
 import datetime
 from dataclasses import dataclass
 from multiprocessing.sharedctypes import Synchronized
@@ -25,8 +27,8 @@ class TaskInfo:
     start_time: float
     model: str
     target_index: str
-    finish_time: Synchronized
-    progress: Synchronized
+    finish_time: Synchronized[float]
+    progress: Synchronized[float]
 
 
 class TaskTracker:
