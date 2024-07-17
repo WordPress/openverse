@@ -1,0 +1,16 @@
+[project]
+name = "dead_links"
+version = "0.0.0"
+description = "Retrieves dead link tallies from Openverse API Redis"
+authors = [
+  {name = "Openverse Contributors", email = "openverse@wordpress.org"},
+]
+dependencies = [
+    "redis >= 5.0",
+    "tqdm >= 4.66",
+    "click >=8.1.7",
+]
+requires-python = "==3.12.*"
+
+[tool.pdm]
+distribution = false

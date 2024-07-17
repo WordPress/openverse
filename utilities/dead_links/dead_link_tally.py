@@ -14,7 +14,7 @@ from redis import Redis
 from tqdm import tqdm
 
 
-redis = Redis("localhost", decode_responses=True)
+redis = Redis("localhost", port=6399, decode_responses=True)
 
 cursor = 0
 
@@ -60,8 +60,9 @@ with tqdm(total=total_to_process, miniters=10) as pbar:
         iter_count += 1
         if iter_count % 10 == 0:
             # only print each 10 iterations to ease I/O time spent
-            pprint.pprint(dict(cursor=cursor, **tallies), compact=True)
-
+            tqdm.write(
+                pprint.pformat(dict(cursor=cursor, **tallies), compact=True) + "\n"
+            )
 
 print("\n\n\n\n============= FINAL RESULTS ============= \n\n")
 pprint.pprint(tallies)
