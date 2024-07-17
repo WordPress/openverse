@@ -17,11 +17,6 @@ runs:
         # Pass -W to fail CI if warnings exist
         just documentation/build -W
 
-    - name: Install translations
-      shell: bash
-      run: |
-        just frontend/run i18n
-
     - name: Build Storybook
       shell: bash
       run: |

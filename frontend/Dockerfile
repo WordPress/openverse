@@ -35,7 +35,7 @@ ENV SKIP_PRE_COMMIT=true
 # Get rid of the lockfile as it won't be accurate for the build without workspace.
 # Then install dependencies, and in the process:
 #   - fix the missing lockfile by writing a new one
-RUN pnpm install
+RUN pnpm install && pnpm i18n
 
 # disable telemetry when building the app
 ENV NUXT_TELEMETRY_DISABLED=1
@@ -44,7 +44,7 @@ ENV SENTRY_DSN=https://b6466b74788a4a2f8a7912eea912beb7@o787041.ingest.sentry.io
 
 ARG API_URL
 
-RUN pnpm build:only
+RUN pnpm build
 
 ############
 # Nuxt app #
