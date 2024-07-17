@@ -1,5 +1,5 @@
 install:
-    pipenv install
+    ../../ov pdm install
 
 run:
-    pipenv run python .
+    ../../ov pdm run __main__.py
