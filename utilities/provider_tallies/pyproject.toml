@@ -1,0 +1,20 @@
+[project]
+name = "provider_tallies"
+version = "0.0.0"
+description = "Provider tallies scripts for Openverse"
+authors = [
+  {name = "Openverse Contributors", email = "openverse@wordpress.org"},
+]
+dependencies = [
+    "redis ~= 5.0",
+    "pandas ~= 2.2",
+    "click ~= 8.1",
+    "matplotlib ~= 3.9",
+]
+requires-python = "==3.12.*"
+readme = "README.md"
+license = {text = "MIT"}
+
+
+[tool.pdm]
+distribution = false

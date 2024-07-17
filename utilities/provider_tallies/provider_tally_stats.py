@@ -51,7 +51,7 @@ def _format_name(value: str) -> str:
     type=str,
 )
 def main(output: Path, start_date: str | None):
-    redis = Redis("localhost", decode_responses=True, db=TALLY_DATABASE)
+    redis = Redis("localhost", port=6399, decode_responses=True, db=TALLY_DATABASE)
     cursor = 0
     should_continue = True
     iter_count = 1

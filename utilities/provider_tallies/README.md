@@ -8,8 +8,8 @@ localhost (usually via tunneling).
 
 ## Usage
 
-1. `pipenv install`
-2. `pipenv run python provider_tally_stats.py`
+1. `../../ov pdm install`
+2. `../../ov pdm run provider_tally_stats.py`
 
 By default, the script will output the results to `provider_tally_stats.csv` in
 the current directory. Use the `--output` flag to specify a different output
