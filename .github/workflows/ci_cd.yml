@@ -165,6 +165,7 @@ jobs:
           setup_python: false
           setup_nodejs: ${{ matrix.image == 'frontend' && 'true' || 'false' }}
           install_recipe: ${{ matrix.image == 'frontend' && 'node-install' || '' }}
+          locales: ${{ matrix.image == 'frontend' && 'production' || '' }}
 
       # Sets build args specifying versions needed to build Docker image.
       - name: Prepare build args
@@ -660,6 +661,7 @@ jobs:
         with:
           setup_python: false
           install_recipe: node-install
+          locales: "production"
 
       - name: Run build
         run: just frontend/run build
@@ -697,6 +699,7 @@ jobs:
         with:
           setup_python: false
           install_recipe: node-install
+          locales: "ci"
 
       - name: Run check recipe
         run: just ${{ matrix.recipe }}
@@ -809,6 +812,7 @@ jobs:
         with:
           setup_python: false
           install_recipe: node-install
+          locales: "ci"
 
       - name: Run Playwright tests
         run: just frontend/run ${{ matrix.script }} --workers=2

@@ -10,6 +10,10 @@ inputs:
     default: "true"
     description: Whether to set up Node.js and dependencies
 
+  locales:
+    default: ""
+    description: The locales to set up. "ci" means copying test locales, "production" - downloading from GlotPress.
+
   install_recipe:
     default: "install"
     description: The recipe to use to install dependencies
@@ -62,3 +66,10 @@ runs:
       shell: bash
       run: |
         just ${{ inputs.install_recipe }}
+
+    # Set up locales
+    - name: Setup locales
+      if: inputs.locales != ''
+      shell: bash
+      run: |
+        just locales ${{ inputs.locales }}

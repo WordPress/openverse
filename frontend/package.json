@@ -10,7 +10,6 @@
     "dev:only": "nuxt --hostname 0.0.0.0",
     "dev:secure": "LOCAL_SSL=enabled pnpm dev",
     "build": "nuxt build",
-    "build:full": "pnpm install && pnpm i18n && nuxt build",
     "build:clean": "rm -rf .nuxt",
     "docker:build": "docker build . -t openverse-frontend:latest",
     "docker:run": "docker run --rm -it -p 127.0.0.1:8443:8443/tcp openverse-frontend:latest",
