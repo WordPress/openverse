@@ -4,9 +4,10 @@ ARG PLAYWRIGHT_VERSION
 
 FROM mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-jammy
 
-ARG PACKAGE_MANAGER
-
 COPY package.json /
 
+# Ensure the Playwright container's pnpm cache folder exists and is writable
+RUN mkdir -p /.cache/node/corepack/ && chmod -R 777 /.cache/node/corepack/
+
 # Requires `packageManager` field to be present in `frontend/package.json`.
-RUN npm install -g $PACKAGE_MANAGER
+RUN corepack enable pnpm
