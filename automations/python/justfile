@@ -11,9 +11,9 @@ NO_COLOR := "\\033[0m"
 
 
 # Install dependencies
-install:
-    pipenv install --dev
+install *args:
+    pdm install {{ args }}
 
 # Run a script
 run script *args:
-    pipenv run {{ script }} {{ args }}
+    pdm run {{ script }} {{ args }}
