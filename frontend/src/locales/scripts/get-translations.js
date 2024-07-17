@@ -3,7 +3,7 @@
  * convert to our JSON format, and save in the correct folder.
  */
 
-const { writeFileSync } = require("fs")
+const { writeFileSync, existsSync } = require("fs")
 const os = require("os")
 
 const chokidar = require("chokidar")
@@ -43,4 +43,12 @@ if (!process.argv.includes("--en-only")) {
       process.exitCode = 1
     }
   })
+} else {
+  // Create valid-locales.json if it doesn't exist. It is required for Nuxt to build the app.
+  const validLocalesFilePath =
+    process.cwd() + "/src/locales/scripts/valid-locales.json"
+  if (!existsSync(validLocalesFilePath)) {
+    writeFileSync(validLocalesFilePath, "[]")
+    console.log("Created empty valid-locales.json.")
+  }
 }
