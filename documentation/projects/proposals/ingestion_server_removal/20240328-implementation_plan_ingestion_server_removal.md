@@ -434,7 +434,7 @@ distributed reindex _locally_. The following code can all be refactored from
     to create a new EC2 instance. The task returns the id of the created
     instance.
     - Under the covers this operator is using boto3
-      [`run_instances'](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/run_instances.html).
+      [`run_instances`](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2/client/run_instances.html).
       We can pass the name or id for the appropriate launch template in the
       `config` parameter. The launch template names will be hard-coded
       constants.
