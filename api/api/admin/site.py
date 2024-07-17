@@ -40,7 +40,7 @@ class OpenverseAdmin(admin.AdminSite):
             media_app = {
                 "name": media_type_name,
                 "app_label": media_type,
-                "app_url": f"/admin/{media_type}",
+                "app_url": f"/admin/api/{media_type}",
                 "has_module_perms": True,
                 "models": models,
             }
