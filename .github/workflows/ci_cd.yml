@@ -664,7 +664,7 @@ jobs:
           locales: "production"
 
       - name: Run build
-        run: just frontend/run build
+        run: DEPLOYMENT_ENV=production just frontend/run build
 
   nuxt-checks:
     name: Run Nuxt checks
