@@ -85,14 +85,19 @@ from django.contrib.auth.models import User, Group, Permission
 mod_group, created = Group.objects.get_or_create(name='Content Moderators')
 if created:
   print('Setting up Content Moderators group')
-  for model in [
-    'image', 'sensitive image', 'deleted image', 'image report', 'image decision',
-    'audio', 'sensitive audio', 'deleted audio', 'audio report', 'audio decision',
-  ]:
-    name = f'Can view {model}'
-    print(f'Adding permission to moderators group: {name}')
-    model_add_perm = Permission.objects.get(name=name)
-    mod_group.permissions.add(model_add_perm)
+  permission_models_map = {
+    'view': [
+      'image', 'sensitive image', 'deleted image', 'image report', 'image decision', 'image decision through',
+      'audio', 'sensitive audio', 'deleted audio', 'audio report', 'audio decision', 'audio decision through',
+    ],
+    'add': ['image decision', 'audio decision'],
+  }
+  for permission, models in permission_models_map.items():
+    for model in models:
+      name = f'Can {permission} {model}'
+      print(f'Adding permission to moderators group: {name}')
+      model_add_perm = Permission.objects.get(name=name)
+      mod_group.permissions.add(model_add_perm)
   mod_group.save()
   mod_group.user_set.add(User.objects.get(username='moderator'))
 " | just dc exec -T "$WEB_SERVICE_NAME" python3 manage.py shell

@@ -447,11 +447,7 @@ class MediaListAdmin(admin.ModelAdmin):
         if request.method != "POST":
             return redir
 
-        is_allowed = (
-            request.user.is_superuser
-            or request.user.groups.filter(name="Content Moderators").exists()
-        )
-        if not is_allowed:
+        if not request.user.has_perm(f"api.add_{self.media_type}decision"):
             messages.error(
                 request,
                 "You do not have permission to create decisions.",
@@ -631,6 +627,22 @@ class MediaReportAdmin(admin.ModelAdmin):
 class MediaDecisionAdmin(admin.ModelAdmin):
     media_type = None
     through_model = None
+
+    ###############
+    # Permissions #
+    ###############
+
+    def has_add_permission(self, request) -> bool:
+        """
+        Disables the "Add" form for media decisions from the admin site.
+
+        This hides the form even for users who are authorised to create
+        decisions (have the permissions "api.add_imagedecision" or
+        "api.add_audiodecision"), because decisions are supposed to be
+        created from the media item view.
+        """
+
+        return False
 
     #############
     # List view #
