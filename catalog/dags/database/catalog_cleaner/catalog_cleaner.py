@@ -41,7 +41,7 @@ logger = logging.getLogger(__name__)
 
 
 @task
-def count_dirty_rows(temp_table_name: str, task: AbstractOperator = None):
+def count_dirty_rows_and_notify(temp_table_name: str, task: AbstractOperator = None):
     """Get the number of rows in the temp table before the updates."""
     count = run_sql.function(
         dry_run=False,
@@ -50,7 +50,10 @@ def count_dirty_rows(temp_table_name: str, task: AbstractOperator = None):
         handler=single_value,
         task=task,
     )
-    logger.info(f"Found {count:,} rows in the `{temp_table_name}` table.")
+    notify_slack.function(
+        text=f"Starting the cleaning process in upstream DB. Expecting {count:,} rows"
+        f" affected given `{temp_table_name}` table."
+    )
     return count
 
 
@@ -174,7 +177,7 @@ def catalog_cleaner():
         sql=constants.CREATE_INDEX_SQL.format(temp_table_name=temp_table_name),
     )
 
-    count = count_dirty_rows(temp_table_name)
+    count = count_dirty_rows_and_notify(temp_table_name)
 
     batches = get_batches(total_row_count=count, batch_size="{{ params.batch_size }}")
 
@@ -190,7 +193,7 @@ def catalog_cleaner():
     total = sum_up_counts(updates)
 
     drop = PGExecuteQueryOperator(
-        task_id="drop_temp_tables",
+        task_id="drop_temp_table",
         postgres_conn_id=POSTGRES_CONN_ID,
         sql=constants.DROP_SQL.format(temp_table_name=temp_table_name),
         execution_timeout=timedelta(minutes=1),
