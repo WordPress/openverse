@@ -50,8 +50,35 @@ def _format_name(value: str) -> str:
     "Results in Redis are grouped by the start of the week.",
     type=str,
 )
-def main(output: Path, start_date: str | None):
-    redis = Redis("localhost", port=6399, decode_responses=True, db=TALLY_DATABASE)
+@click.option(
+    "--host",
+    help="Redis host",
+    type=str,
+    default="localhost",
+)
+@click.option(
+    "--port",
+    help="Redis port",
+    type=int,
+    default=None,
+    show_default=True,
+)
+def main(output: Path, start_date: str | None, host: str, port: int | None):
+    port_str = f":{port}" if port is not None else ""
+    click.echo(f"Connecting to Redis cluster at {host}{port_str}")
+
+    redis_params = {"host": host, "decode_responses": True, "db": TALLY_DATABASE}
+    if port is not None:
+        redis_params["port"] = port
+
+    redis = Redis(**redis_params)
+
+    try:
+        redis.ping()
+    except Exception as e:
+        click.echo(f"Error connecting to Redis: {e}")
+        return
+
     cursor = 0
     should_continue = True
     iter_count = 1
