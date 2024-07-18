@@ -12,7 +12,7 @@ inputs:
 
   locales:
     default: ""
-    description: The locales to set up. "ci" means copying test locales, "production" - downloading from GlotPress.
+    description: The locales to set up. "test" for copying from `frontend/test/locales`, "production" for downloading from GlotPress.
 
   install_recipe:
     default: "install"

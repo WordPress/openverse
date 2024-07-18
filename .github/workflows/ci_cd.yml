@@ -699,7 +699,7 @@ jobs:
         with:
           setup_python: false
           install_recipe: node-install
-          locales: "ci"
+          locales: "test"
 
       - name: Run check recipe
         run: just ${{ matrix.recipe }}
@@ -812,7 +812,7 @@ jobs:
         with:
           setup_python: false
           install_recipe: node-install
-          locales: "ci"
+          locales: "test"
 
       - name: Run Playwright tests
         run: just frontend/run ${{ matrix.script }} --workers=2

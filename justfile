@@ -54,12 +54,14 @@ node-install:
 
 
 # Set up locales for the frontend
-locales mode="ci":
+locales mode="test":
     #! /usr/bin/env bash
     if [ "{{ mode }}" = "production" ]; then
         just frontend/run i18n
-    elif [ "{{ mode }}" = "ci" ]; then
+    elif [ "{{ mode }}" = "test" ]; then
         just frontend/run i18n:copy-test-locales
+    else
+        echo "Invalid mode {{ mode }}. Using only the `en` locale. To set up more locales, use 'production' or 'test'."
     fi
 
 # Install Python dependences for the monorepo
