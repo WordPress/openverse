@@ -1,5 +1,5 @@
 install:
-    ../../ov pdm install
+    pdm install
 
 run:
-    ../../ov pdm run __main__.py
+    pdm run __main__.py
