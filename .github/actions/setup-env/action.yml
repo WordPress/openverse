@@ -44,7 +44,6 @@ runs:
     - name: Setup pnpm
       if: inputs.setup_nodejs == 'true'
       shell: bash
-      # Corepack automatically reads `packageManager` field from root `package.json`.
       run: corepack enable pnpm
 
     - name: Setup Node.js

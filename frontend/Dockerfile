@@ -10,7 +10,6 @@ ARG FRONTEND_NODE_VERSION
 FROM docker.io/node:${FRONTEND_NODE_VERSION}-alpine AS builder
 
 # Install system packages needed to build on macOS
-# Corepack automatically reads `packageManager` field from closest `package.json`.
 RUN apk add --no-cache --virtual .gyp python3 make g++ \
   && corepack enable pnpm
 
