@@ -4,7 +4,6 @@ services:
       context: .
       dockerfile: Dockerfile.playwright
       args:
-        - PACKAGE_MANAGER=${PACKAGE_MANAGER}
         - PLAYWRIGHT_VERSION=${PLAYWRIGHT_VERSION}
     volumes:
       - ../node_modules:/node_modules
