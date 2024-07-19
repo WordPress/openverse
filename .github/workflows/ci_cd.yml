@@ -165,21 +165,13 @@ jobs:
           setup_python: false
           setup_nodejs: ${{ matrix.image == 'frontend' && 'true' || 'false' }}
           install_recipe: ${{ matrix.image == 'frontend' && 'node-install' || '' }}
+          locales: ${{ matrix.image == 'frontend' && 'production' || '' }}
 
       # Sets build args specifying versions needed to build Docker image.
       - name: Prepare build args
         id: prepare-build-args
         run: |
           just versions | tee "$GITHUB_OUTPUT"
-
-      # ℹ️Step only applies for frontend image.
-      # This step
-      # - downloads translation strings from GlotPress so that they can be
-      #   bundled inside the Docker image
-      - name: Prepare frontend for building
-        if: matrix.image == 'frontend'
-        run: |
-          just frontend/run i18n
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -669,9 +661,12 @@ jobs:
         with:
           setup_python: false
           install_recipe: node-install
+          locales: "production"
 
       - name: Run build
         run: just frontend/run build
+        env:
+          DEPLOYMENT_ENV: production
 
   nuxt-checks:
     name: Run Nuxt checks
@@ -706,6 +701,7 @@ jobs:
         with:
           setup_python: false
           install_recipe: node-install
+          locales: "test"
 
       - name: Run check recipe
         run: just ${{ matrix.recipe }}
@@ -818,6 +814,7 @@ jobs:
         with:
           setup_python: false
           install_recipe: node-install
+          locales: "test"
 
       - name: Run Playwright tests
         run: just frontend/run ${{ matrix.script }} --workers=2

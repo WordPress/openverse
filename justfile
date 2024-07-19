@@ -51,7 +51,18 @@ DC_USER := env_var_or_default("DC_USER", "opener")
 node-install:
     pnpm i
     just frontend/run i18n:en
-    just frontend/run i18n:copy-test-locales
+
+
+# Set up locales for the frontend
+locales mode="test":
+    #! /usr/bin/env bash
+    if [ "{{ mode }}" = "production" ]; then
+        just frontend/run i18n
+    elif [ "{{ mode }}" = "test" ]; then
+        just frontend/run i18n:copy-test-locales
+    else
+        echo "Invalid mode {{ mode }}. Using only the `en` locale. To set up more locales, use 'production' or 'test'."
+    fi
 
 # Install Python dependences for the monorepo
 py-install:
