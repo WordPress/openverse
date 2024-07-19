@@ -1,0 +1,19 @@
+[project]
+name = "project_planning"
+version = "0.0.0"
+description = "Project planning utilities"
+readme = "README.md"
+authors = [
+    {name = "Openverse Contributors", email = "openverse@wordpress.org"},
+]
+dependencies = [
+    "pandas >= 2.2",
+    "click >= 8.1",
+    "matplotlib >= 3.0",
+    "jupyter >= 1.0",
+    "openpyxl >= 3.1",
+]
+requires-python = "==3.12.*"
+
+[tool.pdm]
+distribution = false
