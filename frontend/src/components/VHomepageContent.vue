@@ -3,7 +3,7 @@
     <h1
       class="mb-2 mt-auto text-[30px] font-light leading-tight lg:text-[50px]"
     >
-      {{ $t("hero.subtitle") }}
+      {{ $t("hero.subtitle") }}{{ $t("hero.subtitle") }}
     </h1>
 
     <p class="text-base leading-relaxed">
