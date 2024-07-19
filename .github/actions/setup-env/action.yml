@@ -41,11 +41,10 @@ runs:
         pip install -U pip
         pip install pipenv pdm
 
-    # Node.js
     - name: Setup pnpm
       if: inputs.setup_nodejs == 'true'
-      uses: pnpm/action-setup@v3
-      # Automatically reads `packageManager` field from root `package.json`.
+      shell: bash
+      run: corepack enable pnpm
 
     - name: Setup Node.js
       if: inputs.setup_nodejs == 'true'

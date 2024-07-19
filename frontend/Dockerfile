@@ -9,12 +9,9 @@ ARG FRONTEND_NODE_VERSION
 
 FROM docker.io/node:${FRONTEND_NODE_VERSION}-alpine AS builder
 
-# Automatically use the right version of pnpm.
-ARG FRONTEND_PNPM_VERSION
-
 # Install system packages needed to build on macOS
 RUN apk add --no-cache --virtual .gyp python3 make g++ \
-  && npm install -g pnpm@${FRONTEND_PNPM_VERSION}
+  && corepack enable pnpm
 
 USER node
 
