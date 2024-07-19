@@ -59,7 +59,11 @@
     </table>
 
     <section role="region" class="mobile-source-table md:hidden">
-      <article v-for="provider in sortedProviders" :key="provider.display_name" :title="provider.display_name">
+      <article
+        v-for="provider in sortedProviders"
+        :key="provider.display_name"
+        :title="provider.display_name"
+      >
         <p>{{ $t("sources.providers.source") }}</p>
 
         <VLink :href="providerViewUrl(provider)">{{
