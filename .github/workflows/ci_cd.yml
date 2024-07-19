@@ -799,11 +799,11 @@ jobs:
           - storybook
         include:
           - name: playwright_vr
-            script: "test:playwright visual-regression"
+            script: "test:playwright visual-regression -u"
           - name: playwright_e2e
             script: "test:playwright e2e"
           - name: storybook
-            script: "test:storybook"
+            script: "test:storybook -u"
 
     steps:
       - name: Checkout repository
@@ -819,12 +819,37 @@ jobs:
       - name: Run Playwright tests
         run: just frontend/run ${{ matrix.script }} --workers=2
 
+      - name: Check for changes after running tests with -u
+        id: check_snapshots_changed
+        if: failure() || success()
+        run: |
+          diff_names="$(git diff --binary --name-only)"
+          if [ -n "$diff_names" ]; then
+            git add . && git diff --staged --binary > /tmp/snapshot_diff.patch
+            echo "snapshots_changed=true" | tee "$GITHUB_OUTPUT"
+            printf "The following snapshots were updated:\n"
+            while IFS= read -r filename; do
+              printf "\t- %s\n" "$filename"
+            done <<< "$diff_names"
+            exit 1
+          else
+            echo "snapshots_changed=false" | tee "$GITHUB_OUTPUT"
+          fi
+
       - uses: actions/upload-artifact@v4
         if: failure()
         id: test-results
         with:
           name: ${{ matrix.name }}_test_results
           path: frontend/test-results
+
+      # This step only runs if there was a failure and snapshots indeed changed.
+      - uses: actions/upload-artifact@v4
+        if: failure() && steps.check_snapshots_changed.outputs.snapshots_changed == 'true'
+        id: snapshot-patch
+        with:
+          name: ${{ matrix.name }}_snapshot_diff
+          path: /tmp/snapshot_diff.patch
 
   # This job runs when `playwright` doesn't and always passes, thus allowing
   # PRs to meet the required checks criteria and be merged.
@@ -885,11 +910,9 @@ jobs:
           help_body<<$EOF
           **Playwright failure test results**: <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}>
 
-          It looks like some of the Playwright tests failed. You can download the trace output and image diffs for the failed tests under the "Artifacts" section in the above page.
+          It looks like some of the Playwright tests failed. If you made changes to the frontend UI without updating snapshots, this might be the cause. You can download zipped patches containing the updated snapshots alongside a general trace of the tests under the "Artifacts" section in the above page. They're named in the form \`*_snapshot_diff\` and \`*_test_results\` respectively.
 
-          You can read the [docs on how to use this artifact](https://docs.openverse.org/frontend/reference/testing_guidelines.html#debugging).
-
-          Additionally, if you made changes to the frontend UI, you may need to [update relevant playwright test snapshots](https://docs.openverse.org/frontend/guides/test.html#updating-snapshots).
+          You can read more [on how to use these artifacts in the docs](https://docs.openverse.org/frontend/reference/testing_guidelines.html#debugging).
 
           If the test is flaky, follow the [flaky test triage procedure](https://docs.openverse.org/general/test.html#flaky-tests).
           $EOF

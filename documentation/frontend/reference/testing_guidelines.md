@@ -357,15 +357,44 @@ output of failed tests by finding the `trace.zip` for the relevant test in the
 [Playwright Trace Viewer](https://playwright.dev/docs/trace-viewer) to inspect
 these (or open the zip yourself and poke around the files on your own).
 
-For Playwright tests failing in CI, a GitHub comment will appear with a link to
-download an artifact of the `test-results` folder.
+Playwright tests in CI are run with `-u` option by default, this means that
+snapshots will automatically be updated for modified parts of the UI if
+Playwright detects that. See
+[Updating snapshots](/frontend/guides/test.md#updating-snapshots) for more
+reading about this.
+
+When this happens, a GitHub comment will appear with a link to download zipped
+artifacts named in the form `*_snapshot_diff.zip`. Download and save this to the
+repository root. Once downloaded, decompress and apply them to your working
+branch by running:
+
+`ov unzip -p *_snapshot_diff.zip | git apply`
+
+The above command basically uses the `unzip` tool to unpack the contents of the
+downloaded archive file named `*_snapshot_diff.zip`, the `-p` option prevents it
+from actually creating any extracted file but rather prints the contents to the
+standard output which is then piped to `git apply`.
+
+```{note}
+Remember to replace `*_snapshot_diff.zip` with the actual downloaded filename.
+
+Keep in mind that you'd need to delete the downloaded file
+(`*_snapshot_diff.zip`) from the repository after successfully applying
+the changes to avoid committing them.
+
+```
+
+After successfully applying the patch, stage, commit and push the latest changes
+to your branch upstream and you should most likely have Playwright CI tests
+pass.
 
 Visual regression tests that fail to match the existing snapshots will also have
 `expected`, `actual` and `diff` files generated that are helpful for
 understanding why intermittent failures are happening. These are generated
 automatically by Playwright and will be placed in the `test-results` folder
 under the fully qualified name of the test that failed (with every parent
-describe block included).
+describe block included). This is also available for download in the Artifacts
+section after every failed Playwright test in the CI.
 
 Additionally, you can run the tests in debug mode. This will run the tests with
 a headed browser as opposed to a headless (invisible) one and allow you to watch
