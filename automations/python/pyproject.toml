@@ -1,6 +1,6 @@
 [project]
 name = "openverse-automations"
-version = "0.0.0"# redundant for application
+version = "0.0.0"
 description = "Automations for the Openverse project"
 readme = "README.md"
 authors = [
@@ -9,12 +9,12 @@ authors = [
 
 requires-python = "==3.12.*"
 dependencies = [
-    "pygithub >= 2.3",
-    "pyyaml >= 6.0",
-    "beautifulsoup4 >= 4.12",
-    "requests >= 2.32",
-    "mechanize >= 0.4",
-    "pyotp >= 2.9",
+    "pygithub >= 2.3.0, < 3",
+    "pyyaml >= 6.0.1, < 7",
+    "beautifulsoup4 >= 4.12.3, < 5",
+    "requests >= 2.32.3, < 3",
+    "mechanize >= 0.4.10, < 1",
+    "pyotp >= 2.9.0, < 3",
 ]
 
 [tool.pdm]
