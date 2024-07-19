@@ -13,7 +13,7 @@ Follow the [general setup guide](/general/general_setup.md) to set up `ov`.
 Node.js dependencies for automations as well as other parts of the repository.
 If you wish to install only dependencies for automations, run the following:
 
-- `ov pipenv install` in `automations/python`
+- `ov pdm install` in `automations/python`
 - `ov pnpm install --filter=automations`
 
 ## Running a Script
@@ -27,7 +27,7 @@ Ex.:
 ov just automations/python/run print_labels.py
 ```
 
-The recipe is an alias for running `ov pipenv run <script>` inside the
+The recipe is an alias for running `ov pdm run <script>` inside the
 `automations/python` directory. This facilitates correct `PYTHONPATH`
 configuration as expected by many scripts.
 
@@ -48,10 +48,6 @@ executable scripts available can also be run using the same recipe.
 Many Openverse automation scripts expect to run inside a GitHub actions context
 and require specific environment variables to operate. Refer to individual
 script documentation (or implementation when no module documentation exists) to
-know which environment variables are expected.
-[Pipenv automatically loads `.env` files](https://pipenv-fork.readthedocs.io/en/latest/advanced.html#automatic-loading-of-env)
-so for ease of use, you may place relevant environment variables in
-`automations/python/.env`. Unlike Pipenv, however, pnpm does _not_ automatically
-load environment variables. If a Node.js script requires environment variables,
-you must pass them yourself via the command line or use another method to make
-the variables available to the script.
+know which environment variables are expected. If a script requires environment
+variables, you must pass them yourself via the command line or use another
+method to make the variables available to the script.
