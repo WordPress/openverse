@@ -189,6 +189,30 @@ def wait_for_worker(
         raise AirflowSkipException("Skipping instance creation in local environment.")
 
     ec2_hook = EC2Hook(aws_conn_id=aws_conn_id, api_type="client_type")
+    result = ec2_hook.conn.describe_instance_status(InstanceIds=[instance_id])
+
+    instance_status = result.get("InstanceStatuses", [])[0]
+    state = instance_status.get("InstanceState", {}).get("Name")
+    status = next(
+        status.get("Status")
+        for status in instance_status.get("InstanceStatus", {}).get("Details", [])
+        if status.get("Name") == "reachability"
+    )
+
+    return PokeReturnValue(
+        # Sensor completes only when the instance is running and has finished initializing
+        is_done=(state == "running" and status == "ok")
+    )
+
+
+@task
+def get_instance_ip_address(
+    environment: str, instance_id: str, aws_conn_id: str = AWS_ASG_CONN_ID
+):
+    if environment != PRODUCTION:
+        return "catalog_indexer_worker"
+
+    ec2_hook = EC2Hook(aws_conn_id=aws_conn_id, api_type="client_type")
     reservations = ec2_hook.describe_instances(instance_ids=[instance_id]).get(
         "Reservations"
     )
@@ -199,16 +223,7 @@ def wait_for_worker(
     if not (len(reservations) == 1 and len(reservations.get("Instances", {})) == 1):
         raise Exception("Unable to describe worker instance.")
 
-    instance = reservations[0].get("Instances", {})[0]
-    return PokeReturnValue(
-        # Sensor completes only when the instance is healthy
-        is_done=(
-            instance.get("HealthStatus") == "HEALTHY"
-            and instance.get("LifecycleState") == "InService"
-        ),
-        # Return the ip address via XComs
-        xcom_value=instance.get("PrivateIpAddress"),
-    )
+    return reservations[0].get("Instances", {})[0].get("PrivateIpAddress")
 
 
 @task(
@@ -221,10 +236,7 @@ def create_connection(
     instance_id: str,
     server: str,
 ):
-    if environment != PRODUCTION:
-        instance_id = "localhost"
-        server = "catalog_indexer_worker"
-    worker_conn_id = f"indexer_worker_{instance_id or 'local'}"
+    worker_conn_id = f"indexer_worker_{instance_id or 'localhost'}"
 
     # Create the Connection
     logger.info(f"Creating connection with id {worker_conn_id}")
@@ -288,10 +300,16 @@ def reindex(
         aws_conn_id=aws_conn_id,
     )
 
-    # Wait for the instance to be healthy
-    instance_ip_address = wait_for_worker(
+    # Wait for the worker to finish initializing
+    await_worker = wait_for_worker(
         environment=environment, instance_id=instance_id, aws_conn_id=aws_conn_id
     )
+
+    instance_ip_address = get_instance_ip_address(
+        environment=environment, instance_id=instance_id, aws_conn_id=aws_conn_id
+    )
+
+    instance_id >> [await_worker, instance_ip_address]
 
     worker_conn = create_connection(
         instance_id=instance_id,
