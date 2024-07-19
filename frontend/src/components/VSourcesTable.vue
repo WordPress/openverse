@@ -58,8 +58,8 @@
       </tbody>
     </table>
 
-    <section role="region" class="mobile-source-table">
-      <article v-for="provider in sortedProviders" :key="provider.display_name">
+    <section role="region" class="mobile-source-table md:hidden">
+      <article v-for="provider in sortedProviders" :key="provider.display_name" :title="provider.display_name">
         <p>{{ $t("sources.providers.source") }}</p>
 
         <VLink :href="providerViewUrl(provider)">{{
@@ -229,12 +229,8 @@ export default defineComponent({
     @apply border-b first:rounded-es-sm last:rounded-ee-sm;
   }
 
-  .mobile-source-table {
-    @apply md:hidden;
-  }
-
   .mobile-source-table article {
-    @apply grid border-l border-r border-dark-charcoal-20 p-4 sm:grid-cols-4 md:hidden;
+    @apply grid border-l border-r border-dark-charcoal-20 p-4 sm:grid-cols-4;
   }
 
   .mobile-source-table article:first-child {
