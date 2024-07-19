@@ -10,19 +10,12 @@ import pprint
 from collections import defaultdict
 from urllib.parse import urlparse
 
+import click
 from redis import Redis
 from tqdm import tqdm
 
 
-redis = Redis("localhost", decode_responses=True)
-
-cursor = 0
-
-tallies = defaultdict(dict)
-errors = dict()
-
-
-def handle_matches(matches):
+def handle_matches(redis, matches, tallies, errors):
     values = redis.mget(matches)
     for value, match in zip(values, matches):
         try:
@@ -45,26 +38,62 @@ def handle_matches(matches):
             errors[value] = e
 
 
-total_to_process = redis.eval("return #redis.pcall('keys', 'valid:*')", 0)
+@click.command()
+@click.option(
+    "--host",
+    help="Redis host to connect to",
+    type=str,
+    default="localhost",
+)
+@click.option(
+    "--port",
+    help="Port to connect to",
+    type=int,
+    default=None,
+    show_default=True,
+)
+def main(host: str, port: int | None):
+    port_str = f":{port}" if port is not None else ""
+    click.echo(f"Connecting to Redis cluster at {host}{port_str}")
 
-with tqdm(total=total_to_process, miniters=10) as pbar:
-    cursor, matches = redis.scan(cursor=0, match="valid:*", count=250)
-    handle_matches(matches)
-    pbar.update(len(matches))
-    iter_count = 1
+    redis_params = {"host": host, "decode_responses": True}
+    if port is not None:
+        redis_params["port"] = port
 
-    while cursor != 0:
-        cursor, matches = redis.scan(cursor=cursor, match="valid:*", count=250)
-        handle_matches(matches)
+    redis = Redis(**redis_params)
+    try:
+        redis.ping()
+    except Exception as e:
+        click.echo(f"Error connecting to Redis: {e}")
+        return
+
+    tallies = defaultdict(dict)
+    errors = dict()
+
+    total_to_process = redis.eval("return #redis.pcall('keys', 'valid:*')", 0)
+
+    with tqdm(total=total_to_process, miniters=10) as pbar:
+        cursor, matches = redis.scan(cursor=0, match="valid:*", count=250)
+        handle_matches(redis, matches, tallies, errors)
         pbar.update(len(matches))
-        iter_count += 1
-        if iter_count % 10 == 0:
-            # only print each 10 iterations to ease I/O time spent
-            pprint.pprint(dict(cursor=cursor, **tallies), compact=True)
+        iter_count = 1
+
+        while cursor != 0:
+            cursor, matches = redis.scan(cursor=cursor, match="valid:*", count=250)
+            handle_matches(redis, matches, tallies, errors)
+            pbar.update(len(matches))
+            iter_count += 1
+            if iter_count % 10 == 0:
+                # only print each 10 iterations to ease I/O time spent
+                tqdm.write(
+                    pprint.pformat(dict(cursor=cursor, **tallies), compact=True) + "\n"
+                )
+    print("\n\n\n\n============= FINAL RESULTS ============= \n\n")
+    pprint.pprint(tallies)
+
+    print("\n\n\n==================== ERRORS ===============\n\n")
+    pprint.pprint(errors)
 
 
-print("\n\n\n\n============= FINAL RESULTS ============= \n\n")
-pprint.pprint(tallies)
-
-print("\n\n\n==================== ERRORS ===============\n\n")
-pprint.pprint(errors)
+if __name__ == "__main__":
+    main()
