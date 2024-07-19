@@ -6,7 +6,7 @@ authors = [
   {name = "Openverse Contributors", email = "openverse@wordpress.org"},
 ]
 dependencies = [
-    "argostranslate >= 1.9",
+    "argostranslate >= 1.9.6, <2",
 ]
 requires-python = "==3.12.*"
 

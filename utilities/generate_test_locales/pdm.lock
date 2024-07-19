@@ -5,7 +5,7 @@
 groups = ["default"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.2"
-content_hash = "sha256:61d127fa65b3a44435b5a92c6f4bd8e88d3b9b9701d0f435b0f06974da1c0022"
+content_hash = "sha256:5969c24ba58018c3f7f094403a41396a796f960477e5f93ae2d980fbc3a8a627"
 
 [[package]]
 name = "argostranslate"
