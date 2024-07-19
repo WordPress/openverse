@@ -151,6 +151,18 @@ def create_worker(
             # that all indexer workers are running the same code even if a deploy
             # happens in the middle of a data refresh
         },
+        # Name the instance by applying a tag
+        TagSpecifications=[
+            {
+                "ResourceType": "instance",
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": f"catalog-indexer-worker-{target_environment}",
+                    },
+                ],
+            },
+        ],
     )["Instances"]
 
     if not len(instances) == 1:
@@ -187,7 +199,7 @@ def wait_for_worker(
     if not (len(reservations) == 1 and len(reservations.get("Instances", {})) == 1):
         raise Exception("Unable to describe worker instance.")
 
-    instance = reservations.get("Instances", {})[0]
+    instance = reservations[0].get("Instances", {})[0]
     return PokeReturnValue(
         # Sensor completes only when the instance is healthy
         is_done=(
