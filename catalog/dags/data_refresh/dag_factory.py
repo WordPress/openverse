@@ -127,6 +127,7 @@ def create_data_refresh_dag(
             f"{target_environment}_data_refresh",
             concurrency_tag,
         ],
+        render_template_as_native_obj=True,
     )
 
     with dag:

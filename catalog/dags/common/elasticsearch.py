@@ -89,7 +89,7 @@ def get_index_configuration_copy(
     """
     base_config = get_index_configuration.function(source_index, es_host)
 
-    cleaned_config = remove_excluded_index_settings.function(base_config)
+    cleaned_config = remove_excluded_index_settings(base_config)
 
     cleaned_config["index"] = target_index_name
 

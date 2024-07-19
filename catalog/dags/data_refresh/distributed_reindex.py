@@ -7,21 +7,18 @@ TODO Docstring
 
 import logging
 import math
-from dataclasses import dataclass
-from datetime import timedelta
-from functools import cached_property
 from textwrap import dedent
+from typing import Sequence
 from urllib.parse import urlparse
 
 from airflow import settings
 from airflow.decorators import task, task_group
 from airflow.exceptions import AirflowSkipException
 from airflow.models.connection import Connection
-from airflow.providers.amazon.aws.hooks.base_aws import AwsBaseHook
 from airflow.providers.amazon.aws.hooks.ec2 import EC2Hook
 from airflow.providers.http.operators.http import HttpOperator
 from airflow.providers.http.sensors.http import HttpSensor
-from airflow.sensors.base import BaseSensorOperator, PokeReturnValue
+from airflow.sensors.base import PokeReturnValue
 from airflow.utils.trigger_rule import TriggerRule
 from requests import Response
 
@@ -32,6 +29,7 @@ from common.constants import (
     REFRESH_POKE_INTERVAL,
 )
 from common.sql import PGExecuteQueryOperator, single_value
+from data_refresh.constants import INDEXER_LAUNCH_TEMPLATES, INDEXER_WORKER_COUNTS
 from data_refresh.data_refresh_types import DataRefreshConfig
 
 
@@ -41,206 +39,34 @@ logger = logging.getLogger(__name__)
 WORKER_CONN_ID = "indexer_worker_{worker_id}_http_{environment}"
 
 
-@dataclass
-class AutoScalingGroupConfig:
-    name: str
-    instance_count: int
-
-
-class AutoScalingGroupSensor(BaseSensorOperator):
+class TempConnectionHTTPOperator(HttpOperator):
     """
-    Sensor that waits for an AutoScalingGroup to have the desired number of healthy
-    instances in service, and returns the list of instance_ids once the condition
-    has been met.
+    Wrapper around the HTTPOperator which allows templating of the conn_id,
+    in order to support using a temporary conn_id passed through XCOM.
     """
 
-    def __init__(
-        self,
-        *,
-        environment: str,
-        asg_config: AutoScalingGroupConfig,
-        aws_conn_id: str = AWS_ASG_CONN_ID,
-        **kwargs,
-    ):
-        super().__init__(**kwargs)
-        self.environment = environment
-        self.asg_config = asg_config
-        self.aws_conn_id = aws_conn_id
-
-    @cached_property
-    def conn(self):
-        if self.environment != PRODUCTION:
-            raise AirflowSkipException(
-                "Skipping interactions with ASG in local development environment."
-            )
-        return AwsBaseHook(
-            aws_conn_id=self.aws_conn_id, client_type="autoscaling"
-        ).get_conn()
-
-    def poke(self):
-        asg = self.conn.describe_auto_scaling_groups(
-            AutoScalingGroupNames=[self.asg_config.name]
-        ).get("AutoScalingGroups")[0]
-
-        instances = asg.get("Instances")
-
-        # Return True when the ASG has the desired number of instances, and all
-        # instances are healthy and in service.
-        if len(instances) == self.asg_config.instance_count and all(
-            instance.get("HealthStatus") == "HEALTHY"
-            and instance.get("LifecycleState" == "InService")
-            for instance in instances
-        ):
-            # Pass the list of instance_ids along through XCOMs once the conditions
-            # have been met
-            return PokeReturnValue(
-                is_done=True,
-                xcom_value=[instance.get("InstanceId") for instance in instances],
-            )
-
-        return PokeReturnValue(is_done=False, xcom_value=None)
-
-
-@task
-def get_autoscaling_group(
-    environment: str,
-    target_environment: str,
-    aws_conn_id: str = AWS_ASG_CONN_ID,
-):
-    """Select the appropriate autoscaling group for the given environment."""
-    # TODO pull this repeated code out.
-    if environment != PRODUCTION:
-        raise AirflowSkipException(
-            "Skipping interactions with ASG in local development environment."
-        )
-
-    asg_conn = AwsBaseHook(
-        aws_conn_id=aws_conn_id, client_type="autoscaling"
-    ).get_conn()
-
-    asgs = asg_conn.describe_auto_scaling_groups(
-        Filters=[{"Name": "tag:WorkerTargetEnvironment", "Values": [environment]}]
-    ).get("AutoScalingGroups")
-
-    if len(asgs) != 1:
-        raise Exception(
-            f"Could not uniquely identify ASG for {environment} indexer workers."
-        )
-
-    target_asg = asgs[0]
-    return AutoScalingGroupConfig(
-        name=target_asg.get("AutoScalingGroupName"),
-        instance_count=target_asg.get("MaxSize"),
+    template_fields: Sequence[str] = (
+        "endpoint",
+        "data",
+        "headers",
+        # Extended to allow templating of conn_id
+        "http_conn_id",
     )
 
 
-@task
-def set_asg_capacity(
-    environment: str,
-    asg_config: AutoScalingGroupConfig,
-    desired_capacity: int | None = None,
-    aws_conn_id: str = AWS_ASG_CONN_ID,
-):
-    """Set the desired capacity of the autoscaling group to the desired number of instances."""
-    if environment != PRODUCTION:
-        raise AirflowSkipException(
-            "Skipping interactions with ASG in local development environment."
-        )
-
-    asg_conn = AwsBaseHook(
-        aws_conn_id=aws_conn_id, client_type="autoscaling"
-    ).get_conn()
-
-    if desired_capacity is None:
-        desired_capacity = asg_config.instance_count
-
-    return asg_conn.set_desired_capacity(
-        AutoScalingGroupName=asg_config.asg_name, DesiredCapacity=desired_capacity
-    )
-
-
-@task
-def get_worker_params(
-    estimated_record_count: int,
-    instance_ids: list[str],
-    environment: str,
-    target_environment: str,
-    aws_conn_id: str = AWS_ASG_CONN_ID,  # TODO
-):
+class TempConnectionHTTPSensor(HttpSensor):
     """
-    TODO Because we are using an ASG now, we have lost the ability to retry an individual worker --
-    because once an individual worker has failed, it will always be terimated so the trigger task
-    cannot be retried. We can retry starting at the `start_workers` task but this will cause ALL
-    the workers to be spun up and assigned work.
-
-    We could allow the ASG to spin up a replacement when the reindexing task errors, but:
-    (1) Unless someone notices and manually retries immediately, this instance will be kept live
-        (and costing money) in the meantime
-    (2) The trigger task will still attempt to hit the original instance; there's no way to tell
-        it the updated one.
-
-    We could try starting up the instances one at a time, so instead of setting the desired capacity
-    to n all at once and then dynamically (trigger -> wait -> terminate) for each instance, we
-    would have n parallel task groups that (create_instance -> trigger -> wait -> terminate). But
-    this is not possible because of two limitations:
-    * set_desired_capacity has no concept of "increment": you have to give it the total capacity
-      you want for the ASG. So you cannot have n parallel tasks all incrementing the ASG capacity.
-    * even if you could, set_desired_capacity does not return the instance_ids of the instances
-      that get created as a result of the action. So there is no way for the `trigger` task to
-      know which instance "belongs" to its branch
-
-    The only thing I can think is of to make this entire `distributed_reindex` taskgroup take a few
-    additional arguments:
-    * desired_number_of_workers
-    * index_ranges
-
-    Maybe those are optional arguments, and when not passed the DAG assumes you want the max number of
-    workers for this environment and you want all records to be reindexed. But the arguments can be
-    optionally used to use a smaller number of workers, and reindex only portions of the total count.
-    This taskgroup would also be used to create a separate, distributed_reindex DAG.
-
-    Then if a single indexer worker fails during a data refresh, we could manually run this other
-    DAG with desired_number_of_workers set to 1 and the faulty index range specified. When it passes
-    we just manually pass that step in the original data_refresh DagRun and continue.
+    Wrapper around the HTTPSensor which allows templating of the conn_id,
+    in order to support using a temporary conn_id passed through XCOM.
     """
-    if environment != PRODUCTION:
-        # Point to the local catalog_indexer_worker Docker container
-        return {
-            "start_id": 0,
-            "end_id": estimated_record_count,
-            "instance_id": None,
-            "server": "http://catalog_indexer_worker:8003/",
-        }
 
-    # Get the private IP addresses of the worker instances
-    ec2_hook = EC2Hook(aws_conn_id=aws_conn_id, api_type="client_type")
-    reservations = ec2_hook.describe_instances(instance_ids=instance_ids).get(
-        "Reservations"
+    template_fields: Sequence[str] = (
+        "endpoint",
+        "request_params",
+        "headers",
+        # Extended to allow templating of conn_id
+        "http_conn_id",
     )
-
-    # `Reservations` is a list of dicts, grouping instances by the run command that
-    # started them. To be safe we get instances matching our expected instanceIds across
-    # all reservations.
-    servers = {
-        instance.get("InstanceId"): instance.get("PrivateIpAddress")
-        for reservation in reservations
-        for instance in reservation.get("Instances")
-    }
-
-    records_per_worker = math.floor(estimated_record_count / len(instance_ids))
-
-    params = []
-    for worker_index, (instance_id, server) in servers.items():
-        params.append(
-            {
-                "start_id": worker_index * records_per_worker,
-                "end_id": (1 + worker_index) * records_per_worker,
-                "instance_id": instance_id,
-                "server": f"http://{server}:8003/",
-            }
-        )
-
-    return params
 
 
 def response_filter_status_check_endpoint(response: Response) -> str:
@@ -274,74 +100,128 @@ def response_check_wait_for_completion(response: Response) -> bool:
 
 
 @task
-def create_connection(instance_id: str, server: str, target_environment: str):
-    worker_conn_id = WORKER_CONN_ID.format(
-        worker_id=instance_id, environment=target_environment
-    )
-    # Create the Connection
-    Connection(conn_id=worker_conn_id, uri=server)
-    session = settings.Session()
-    session.commit()
-
-
-def trigger_reindex(
-    worker_conn: str,
-    model_name: str,
-    table_name: str,
-    start_id: int,
-    end_id: int,
-    target_index: int,
+def get_worker_params(
+    estimated_record_count: int,
+    environment: str,
     target_environment: str,
-) -> HttpOperator:
-    """Trigger the reindexing task on an indexer worker."""
-    data = {
-        "model_name": model_name,
-        "table_name": table_name,
-        "target_index": target_index,
-        "start_id": start_id,
-        "end_id": end_id,
-    }
-
-    # Create a temporary Connection. We do not persist to the db because the instance is temporary.
-    # TODO Alternative: split out a task to create the connection and persist to the db, add a
-    # cleanup task to drop the connection after the instance is terminated.
-    # worker_conn_id = WORKER_CONN_ID.format(worker_id=instance_id, environment=target_environment)
-    # worker_conn = Connection(conn_id=worker_conn_id, uri=server)
-
-    return HttpOperator(
-        task_id="trigger_reindexing_task",
-        http_conn_id=worker_conn,
-        endpoint="task",
-        data=data,
-        response_check=lambda response: response.status_code == 202,
-        response_filter=response_filter_status_check_endpoint,
+    aws_conn_id: str = AWS_ASG_CONN_ID,  # TODO
+):
+    # Defaults to one indexer worker in local development
+    worker_count = (
+        INDEXER_WORKER_COUNTS.get(target_environment)
+        if environment == PRODUCTION
+        else 1
     )
+    records_per_worker = math.floor(estimated_record_count / worker_count)
+
+    return [
+        {
+            "start_id": worker_index * records_per_worker,
+            "end_id": (1 + worker_index) * records_per_worker,
+        }
+        for worker_index in range(worker_count)
+    ]
 
 
 @task
-def wait_for_reindex(
-    worker_conn: str,
-    status_endpoint: str,
-    timeout: timedelta,
-    poke_interval: int = REFRESH_POKE_INTERVAL,  # TODO
-) -> HttpSensor:
-    """Wait for the reindexing task on an indexer worker to complete."""
-    # Create a temporary Connection. We do not persist to the db because the worker is temporary.
-    # TODO Alternative: split out a task to create the connection and persist to the db, add a
-    # cleanup task to drop the connection after the instance is terminated.
-    # worker_conn_id = WORKER_CONN_ID.format(worker_id=instance_id, environment=target_environment)
-    # worker_conn = Connection(conn_id=worker_conn_id, uri=server)
+def create_worker(
+    environment: str,
+    target_environment: str,
+    aws_conn_id: str = AWS_ASG_CONN_ID,
+):
+    """
+    Create a new EC2 instance using the launch template for the target
+    environment. In local development, skip.
+    """
+    if environment != PRODUCTION:
+        raise AirflowSkipException("Skipping instance creation in local environment.")
 
-    return HttpSensor(
-        task_id="wait_for_reindexing_task",
-        http_conn_id=worker_conn,
-        endpoint=status_endpoint,
-        method="GET",
-        response_check=response_check_wait_for_completion,
-        mode="reschedule",
-        poke_interval=poke_interval,
-        timeout=timeout.total_seconds(),
+    ec2_hook = EC2Hook(aws_conn_id=aws_conn_id, api_type="client_type")
+    instances = ec2_hook.conn.run_instances(
+        # We shouldn't need an ImageId because it is specified in the launch template
+        # That's another reason not to use the EC2CreateInstanceOperator, which does
+        # expect an ImageId
+        MinCount=1,
+        MaxCount=1,
+        LaunchTemplate={
+            "LaunchTemplateName": INDEXER_LAUNCH_TEMPLATES.get(target_environment),
+            "Version": "$Latest",
+            # TODO we could add a task before all of this to get the version number of
+            # the launch template and then use it in all these tasks, that ensures
+            # that all indexer workers are running the same code even if a deploy
+            # happens in the middle of a data refresh
+        },
+    )["Instances"]
+
+    if not len(instances) == 1:
+        raise Exception(
+            f"Expected one new instance, but {len(instances)} were created."
+        )
+
+    return instances[0]["InstanceId"]
+
+
+# TODO configure interval/timeout
+@task.sensor(poke_interval=60, timeout=3600, mode="reschedule")
+def wait_for_worker(
+    environment: str,
+    instance_id: str,
+    aws_conn_id: str = AWS_ASG_CONN_ID,
+):
+    """
+    Awaits the EC2 instance with the given id to be in a healthy running state.
+    Once the instance is healthy, returns the worker ip address.
+    """
+    if environment != PRODUCTION:
+        # TODO return catalog_indexer_worker from this task?
+        raise AirflowSkipException("Skipping instance creation in local environment.")
+
+    ec2_hook = EC2Hook(aws_conn_id=aws_conn_id, api_type="client_type")
+    reservations = ec2_hook.describe_instances(instance_ids=[instance_id]).get(
+        "Reservations"
     )
+
+    # `Reservations` is a list of dicts, grouping instances by the launch request that
+    # started them. Because we are querying a single InstanceId we expect to have one
+    # Reservation.
+    if not (len(reservations) == 1 and len(reservations.get("Instances", {})) == 1):
+        raise Exception("Unable to describe worker instance.")
+
+    instance = reservations.get("Instances", {})[0]
+    return PokeReturnValue(
+        # Sensor completes only when the instance is healthy
+        is_done=(
+            instance.get("HealthStatus") == "HEALTHY"
+            and instance.get("LifecycleState") == "InService"
+        ),
+        # Return the ip address via XComs
+        xcom_value=instance.get("PrivateIpAddress"),
+    )
+
+
+@task(
+    # Worker creation skips locally
+    trigger_rule=TriggerRule.NONE_FAILED
+)
+def create_connection(
+    environment: str,
+    target_environment: str,
+    instance_id: str,
+    server: str,
+):
+    if environment != PRODUCTION:
+        instance_id = "localhost"
+        server = "catalog_indexer_worker"
+    worker_conn_id = f"indexer_worker_{instance_id or 'local'}"
+
+    # Create the Connection
+    logger.info(f"Creating connection with id {worker_conn_id}")
+    worker_conn = Connection(conn_id=worker_conn_id, uri=f"http://{server}:8003/")
+    session = settings.Session()
+    session.add(worker_conn)
+    session.commit()
+
+    return worker_conn_id
 
 
 @task
@@ -353,32 +233,27 @@ def terminate_indexer_worker(
     """Terminate an individual indexer worker."""
     if environment != PRODUCTION:
         raise AirflowSkipException(
-            "Skipping interactions with ASG in local development environment."
+            "Skipping instance termination in local environment."
         )
 
-    asg_conn = AwsBaseHook(
-        aws_conn_id=aws_conn_id, client_type="autoscaling"
-    ).get_conn()
+    ec2_hook = EC2Hook(aws_conn_id=aws_conn_id, api_type="client_type")
 
-    asg_conn.terminate_instance_in_auto_scaling_group(
-        InstanceId=instance_id,
-        # Tell the ASG not to spin up a new instance to replace the terminated one.
-        ShouldDecrementDesiredCapacity=True,
-    )
+    # TODO wait for completion?
+    return ec2_hook.conn.terminate_instances(instance_ids=[instance_id])
 
 
-@task
+@task(trigger_rule=TriggerRule.ALL_DONE)
 def drop_connection(worker_conn: str):
     """Drop the connection to the now terminated instance."""
+    conn = Connection.get_connection_from_secrets(worker_conn)
+
     session = settings.Session()
-    session.delete(worker_conn)
+    session.delete(conn)
     session.commit()
 
 
 @task_group(group_id="reindex")
 def reindex(
-    instance_id: str,
-    server: str,
     model_name: str,
     table_name: str,
     target_index: str,
@@ -389,41 +264,76 @@ def reindex(
     aws_conn_id: str = AWS_ASG_CONN_ID,
 ):
     """
+    TODO: Map the dynamic task names? Nothing useful to map them to since instance ids are not yet created
     Trigger a reindexing task on a remote indexer worker and wait for it to complete. Once done,
     terminate the indexer worker instance.
     """
-    worker_conn = create_connection(
-        instance_id=instance_id, server=server, target_environment=target_environment
+
+    # Create a new EC2 instance
+    instance_id = create_worker(
+        environment=environment,
+        target_environment=target_environment,
+        aws_conn_id=aws_conn_id,
     )
 
-    trigger_reindexing_task = trigger_reindex(
-        worker_conn=worker_conn,
-        model_name=model_name,
-        table_name=table_name,
-        start_id=start_id,
-        end_id=end_id,
-        target_index=target_index,
+    # Wait for the instance to be healthy
+    instance_ip_address = wait_for_worker(
+        environment=environment, instance_id=instance_id, aws_conn_id=aws_conn_id
+    )
+
+    worker_conn = create_connection(
+        instance_id=instance_id,
+        server=instance_ip_address,
+        environment=environment,
         target_environment=target_environment,
     )
 
-    wait_for_reindexing_task = wait_for_reindex(
-        worker_conn=worker_conn,
-        status_endpoint=trigger_reindexing_task,
-        timeout=timedelta(days=1),  # TODO get from config
-        poke_interval=REFRESH_POKE_INTERVAL,  # TODO get from config
+    trigger_reindexing_task = TempConnectionHTTPOperator(
+        task_id="trigger_reindexing_task",
+        http_conn_id=worker_conn,
+        endpoint="task",
+        data={
+            "model_name": model_name,
+            "table_name": table_name,
+            "target_index": target_index,
+            "start_id": start_id,
+            "end_id": end_id,
+        },
+        response_check=lambda response: response.status_code == 202,
+        response_filter=response_filter_status_check_endpoint,
+    )
+
+    # TODO: Why does this have to be explicit?
+    worker_conn >> trigger_reindexing_task
+
+    wait_for_reindexing_task = TempConnectionHTTPSensor(
+        task_id="wait_for_reindexing_task",
+        http_conn_id=worker_conn,
+        endpoint=trigger_reindexing_task.output,
+        method="GET",
+        response_check=response_check_wait_for_completion,
+        mode="reschedule",
+        poke_interval=REFRESH_POKE_INTERVAL,
+        timeout=24 * 60 * 60,  # 1 day
     )
 
     terminate_instance = terminate_indexer_worker.override(
         # Terminate the instance even if there is an upstream failure
         trigger_rule=TriggerRule.ALL_DONE
-    )(environment=environment, instance_id=instance_id, aws_conn_id=aws_conn_id)
+    )(
+        environment=environment,
+        instance_id=instance_id,
+    )
 
     drop_conn = drop_connection(worker_conn=worker_conn)
 
+    trigger_reindexing_task >> wait_for_reindexing_task
     wait_for_reindexing_task >> [terminate_instance, drop_conn]
 
 
-@task_group(group_id="run_distributed_reindex")
+@task_group(
+    group_id="run_distributed_reindex",
+)
 def perform_distributed_reindex(
     environment: str,
     target_environment: str,  # TODO, update types
@@ -443,38 +353,20 @@ def perform_distributed_reindex(
         ),
         handler=single_value,
         return_last=True,
+        trigger_rule=TriggerRule.NONE_FAILED,
     )
-
-    asg_config = get_autoscaling_group(
-        environment=environment,
-        target_environment=target_environment,
-        aws_conn_id=aws_conn_id,
-    )
-
-    start_workers = set_asg_capacity.override(task_id="start_indexer_workers")(
-        environment=environment, asg_config=asg_config, aws_conn_id=aws_conn_id
-    )
-
-    workers = AutoScalingGroupSensor(
-        task_id="wait_for_workers",
-        environment=environment,
-        asg_config=asg_config,
-        aws_conn_id=aws_conn_id,
-    )
-
-    start_workers >> workers
 
     worker_params = get_worker_params(
-        estimated_record_count=estimated_record_count,
-        instance_ids=workers,
+        estimated_record_count=estimated_record_count.output,
         environment=environment,
         target_environment=target_environment,
         aws_conn_id=aws_conn_id,
     )
 
-    workers >> worker_params
+    # TODO why does this have to be explicit?
+    estimated_record_count >> worker_params
 
-    distributed_reindex = reindex.partial(
+    reindex.partial(
         model_name=data_refresh_config.media_type,
         table_name=data_refresh_config.media_type,
         target_index=target_index,
@@ -482,18 +374,3 @@ def perform_distributed_reindex(
         target_environment=target_environment,
         aws_conn_id=aws_conn_id,
     ).expand_kwargs(worker_params)
-
-    # All workers should be terminated once work is complete, even if errors were encountered.
-    # However, it is possible to have live instances left over if a worker crashed during
-    # reindexing and the ASG spun up a replacement that the DAG is not tracking. We force the
-    # ASG capacity to 0 at the end of execution to ensure this does not happen.
-    terminate_workers = set_asg_capacity.override(
-        task_id="ensure_all_workers_terminated", trigger_rule=TriggerRule.ALL_DONE
-    )(
-        environment=environment,
-        asg_config=asg_config,
-        desired_capacity=0,
-        aws_conn_id=aws_conn_id,
-    )
-
-    distributed_reindex >> terminate_workers

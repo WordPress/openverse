@@ -68,8 +68,8 @@ class IndexingJobResource(BaseTaskResource):
                 "model_name": model_name,
                 "table_name": table_name,
                 "target_index": target_index,
-                "start_id": start_id,
-                "end_id": end_id,
+                "start_id": int(start_id),
+                "end_id": int(end_id),
                 # Task tracking arguments
                 "progress": progress,
                 "finish_time": finish_time,
