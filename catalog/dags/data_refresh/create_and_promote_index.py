@@ -26,7 +26,7 @@ def generate_index_name(media_type: str) -> str:
     return f"{media_type}-{uuid.uuid4().hex}"
 
 
-@task_group(group_id="create_index")
+@task_group(group_id="create_temp_index")
 def create_index(
     data_refresh_config: DataRefreshConfig,
     es_host: str,
