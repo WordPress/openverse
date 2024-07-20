@@ -49,6 +49,7 @@ The following are DAGs grouped by their primary tag:
 | -------------------------------------------------------------------------------------- | ----------------- |
 | [`automated_batched_update`](#batched_update)                                          | `None`            |
 | [`batched_update`](#batched_update)                                                    | `None`            |
+| [`catalog_cleaner`](#catalog_cleaner)                                                  | `None`            |
 | [`decode_and_deduplicate_image_tags`](#decode_and_deduplicate_media_type_tags)         | `None`            |
 | [`delete_records`](#delete_records)                                                    | `None`            |
 | [`recreate_full_staging_index`](#recreate_full_staging_index)                          | `None`            |
@@ -139,6 +140,7 @@ The following is documentation associated with each DAG (where available):
 1.  [`auckland_museum_workflow`](#auckland_museum_workflow)
 1.  [`automated_batched_update`](#batched_update)
 1.  [`batched_update`](#batched_update)
+1.  [`catalog_cleaner`](#catalog_cleaner)
 1.  [`cc_mixter_workflow`](#cc_mixter_workflow)
 1.  [`check_silenced_dags`](#check_silenced_dags)
 1.  [`create_filtered_audio_index`](#create_filtered_media_type_index)
@@ -327,6 +329,26 @@ used when the DagRun configuration needs to be changed after the table was
 already created: for example, if there was a problem with the `update_query`
 which caused DAG failures during the `update_batches` step. In this case, verify
 that the `BATCH_START` var is set appropriately for your needs.
+
+----
+
+### `catalog_cleaner`
+
+Catalog Data Cleaner DAG
+
+Use the TSV files created during the cleaning step of the ingestion process to
+bring the changes into the catalog database and make the updates permanent.
+
+The DAG has a structure similar to the batched_update DAG, but with a few key
+differences:
+
+1. Given the structure of the TSV, it updates a single column at a time.
+2. The batch updates are parallelized to speed up the process. The maximum
+   number of active tasks is limited to 3 (at first to try it out and) to avoid
+   overwhelming the database.
+3. It needs slightly different SQL queries to update the data. One change for
+   example, is that it only works with the `image` table given that is the only
+   one where the cleaning steps are applied to in the ingestion server.
 
 ----
 
