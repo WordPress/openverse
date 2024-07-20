@@ -50,9 +50,10 @@ def count_dirty_rows_and_notify(temp_table_name: str, task: AbstractOperator = N
         handler=single_value,
         task=task,
     )
+    column = temp_table_name.split("_")[-1]
     notify_slack.function(
-        text=f"Starting the cleaning process in upstream DB. Expecting {count:,} rows"
-        f" affected given `{temp_table_name}` table."
+        text=f"Starting the cleaning process in upstream DB for column `{column}`."
+        f" Expecting {count:,} rows affected given `{temp_table_name}` table."
     )
     return count
 
