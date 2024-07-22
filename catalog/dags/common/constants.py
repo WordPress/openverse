@@ -47,7 +47,6 @@ POSTGRES_API_CONN_IDS = {
 AWS_CONN_ID = "aws_default"
 AWS_CLOUDWATCH_CONN_ID = os.environ.get("AWS_CLOUDWATCH_CONN_ID", AWS_CONN_ID)
 AWS_RDS_CONN_ID = os.environ.get("AWS_RDS_CONN_ID", AWS_CONN_ID)
-AWS_ASG_CONN_ID = os.environ.get("AWS_ASG_CONN_ID", AWS_CONN_ID)
 ES_PROD_HTTP_CONN_ID = "elasticsearch_http_production"
 REFRESH_POKE_INTERVAL = int(os.getenv("DATA_REFRESH_POKE_INTERVAL", 60 * 30))
 
