@@ -67,7 +67,7 @@ def wait_for_conflicting_dags(
         task_id="wait_for_data_refresh",
         external_dag_ids=external_dag_ids,
         check_existence=True,
-        poke_interval=data_refresh_config.data_refresh_poke_interval,
+        poke_interval=data_refresh_config.concurrency_check_poke_interval,
         mode="reschedule",
         pool=DATA_REFRESH_POOL,
     )
@@ -100,7 +100,7 @@ def create_data_refresh_dag(
 
     data_refresh:       dataclass containing configuration information for the
                         DAG
-    target_environment: the environment in which the data refresh is performed
+    target_environment: the API environment in which the data refresh is performed
     external_dag_ids:   list of ids of the other data refresh DAGs. The data refresh step
                         of this DAG will not run concurrently with the corresponding step
                         of any dependent DAG.
