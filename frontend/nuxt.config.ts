@@ -87,6 +87,7 @@ export default defineNuxtConfig({
   imports: {
     autoImport: false,
   },
+  compatibilityDate: "2024-07-23",
   css: ["~/assets/fonts.css", "~/styles/accent.css"],
   runtimeConfig: {
     apiClientId: "",
