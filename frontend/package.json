@@ -5,7 +5,7 @@
   "version": "2.2.1",
   "packageManager": "pnpm@9.5.0",
   "scripts": {
-    "predev": "pnpm install && pnpm i18n:no-get",
+    "predev": "pnpm install && pnpm i18n:en",
     "dev": "run-p dev:only 'i18n:en --watch'",
     "dev:only": "nuxt dev --host 0.0.0.0",
     "dev:secure": "LOCAL_SSL=enabled pnpm dev",
@@ -23,8 +23,7 @@
     "storybook:build": "pnpm i18n:copy-test-locales && NODE_OPTIONS=--openssl-legacy-provider nuxt storybook build",
     "storybook:build-for-docs": "pnpm install & pnpm i18n:en && NODE_OPTIONS=--openssl-legacy-provider nuxt storybook build",
     "talkback": "node ./test/proxy.js",
-    "pretest": "pnpm install",
-    "postinstall:nuxt": "pnpm i18n:en && nuxt prepare",
+    "prepare:nuxt": "pnpm i18n:en && npx nuxi prepare",
     "test": "pnpm test:unit && pnpm test:playwright",
     "test:unit": "pnpm run i18n:en && vitest run",
     "test:unit:ui": "vitest run --ui",
