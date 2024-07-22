@@ -25,7 +25,6 @@ from common.constants import (
     AWS_ASG_CONN_ID,
     OPENLEDGER_API_CONN_ID,
     PRODUCTION,
-    REFRESH_POKE_INTERVAL,
     Environment,
 )
 from common.sql import PGExecuteQueryOperator, single_value
@@ -194,7 +193,6 @@ def create_worker(
     return instances[0]["InstanceId"]
 
 
-# TODO configure interval/timeout
 @task.sensor(poke_interval=60, timeout=3600, mode="reschedule")
 def wait_for_worker(
     environment: str,
@@ -222,7 +220,10 @@ def wait_for_worker(
     )
 
 
-@task
+@task(
+    # Run locally when create instance tasks are skipped
+    trigger_rule=TriggerRule.NONE_FAILED
+)
 def get_instance_ip_address(
     environment: str, instance_id: str, aws_conn_id: str = AWS_ASG_CONN_ID
 ):
@@ -297,8 +298,7 @@ def drop_connection(worker_conn: str):
 
 @task_group(group_id="reindex")
 def reindex(
-    model_name: str,
-    table_name: str,
+    data_refresh_config: DataRefreshConfig,
     target_index: str,
     start_id: int,
     end_id: int,
@@ -325,9 +325,10 @@ def reindex(
     )
 
     # Wait for the worker to finish initializing
-    await_worker = wait_for_worker(
-        environment=environment, instance_id=instance_id, aws_conn_id=aws_conn_id
-    )
+    await_worker = wait_for_worker.override(
+        poke_interval=data_refresh_config.reindex_poke_interval,
+        timeout=data_refresh_config.indexer_worker_timeout.total_seconds(),
+    )(environment=environment, instance_id=instance_id, aws_conn_id=aws_conn_id)
 
     instance_ip_address = get_instance_ip_address(
         environment=environment, instance_id=instance_id, aws_conn_id=aws_conn_id
@@ -345,8 +346,8 @@ def reindex(
         http_conn_id=worker_conn,
         endpoint="task",
         data={
-            "model_name": model_name,
-            "table_name": table_name,
+            "model_name": data_refresh_config.media_type,
+            "table_name": data_refresh_config.media_type,
             "target_index": target_index,
             "start_id": start_id,
             "end_id": end_id,
@@ -362,8 +363,8 @@ def reindex(
         method="GET",
         response_check=response_check_wait_for_completion,
         mode="reschedule",
-        poke_interval=REFRESH_POKE_INTERVAL,
-        timeout=24 * 60 * 60,  # 1 day TODO
+        poke_interval=data_refresh_config.reindex_poke_interval,
+        timeout=data_refresh_config.indexer_worker_timeout,
     )
 
     terminate_instance = terminate_indexer_worker.override(
@@ -416,8 +417,7 @@ def perform_distributed_reindex(
     estimated_record_count >> worker_params
 
     reindex.partial(
-        model_name=data_refresh_config.media_type,
-        table_name=data_refresh_config.media_type,
+        data_refresh_config=data_refresh_config,
         target_index=target_index,
         environment=environment,
         target_environment=target_environment,

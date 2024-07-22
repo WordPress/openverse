@@ -71,8 +71,10 @@ class DataRefreshConfig:
                                        the distributed reindex
     index_readiness_timeout:           timedelta expressing amount of time it may take
                                        to await a healthy ES index after reindexing
-    data_refresh_poke_interval:        int number of seconds to wait between
-                                       checks to see if conflicting DAGs are running.
+    concurrency_check_poke_interval:   int number of seconds to wait between
+                                       checks to see if conflicting DAGs are running
+    reindex_poke_interval:             int number of seconds to wait between checks to see if
+                                       the reindexing task has completed
     doc_md:                            str used for the DAG's documentation markdown
     """
 
@@ -85,9 +87,10 @@ class DataRefreshConfig:
     default_args: dict = field(default_factory=dict)
     dag_timeout: timedelta = timedelta(days=1)
     copy_data_timeout: timedelta = timedelta(hours=1)
-    indexer_worker_timeout: timedelta = timedelta(hours=6)  # TODO
+    indexer_worker_timeout: timedelta = timedelta(hours=12)
     index_readiness_timeout: timedelta = timedelta(days=1)
-    data_refresh_poke_interval: int = REFRESH_POKE_INTERVAL
+    concurrency_check_poke_interval: int = REFRESH_POKE_INTERVAL
+    reindex_poke_interval: int = REFRESH_POKE_INTERVAL
 
     def __post_init__(self):
         self.dag_id = f"{self.media_type}_data_refresh"
@@ -106,7 +109,10 @@ DATA_REFRESH_CONFIGS = {
         ],
         dag_timeout=timedelta(days=4),
         copy_data_timeout=timedelta(hours=12),
-        data_refresh_poke_interval=int(os.getenv("DATA_REFRESH_POKE_INTERVAL", 60)),
+        concurrency_check_poke_interval=int(
+            os.getenv("DATA_REFRESH_POKE_INTERVAL", 60)
+        ),
+        reindex_poke_interval=int(os.getenv("DATA_REFRESH_POKE_INTERVAL", 60)),
     ),
     AUDIO: DataRefreshConfig(
         media_type=AUDIO,
@@ -125,8 +131,9 @@ DATA_REFRESH_CONFIGS = {
                 copy_data_query=queries.BASIC_COPY_DATA_QUERY,
             ),
         ],
-        data_refresh_poke_interval=int(
+        concurrency_check_poke_interval=int(
             os.getenv("DATA_REFRESH_POKE_INTERVAL", 60 * 30)
         ),
+        reindex_poke_interval=int(os.getenv("DATA_REFRESH_POKE_INTERVAL", 60)),
     ),
 }
