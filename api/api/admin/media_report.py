@@ -576,7 +576,6 @@ class MediaReportAdmin(admin.ModelAdmin):
         "reason",
         ("decision", admin.EmptyFieldListFilter),  # ~is_pending
     )
-    list_select_related = ("media_obj",)
     search_fields = ("description", *_production_deferred("media_obj__identifier"))
 
     @admin.display(description="Media obj")
