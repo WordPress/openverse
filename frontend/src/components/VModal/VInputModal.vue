@@ -31,14 +31,9 @@ import { useDialogControl } from "~/composables/use-dialog-control"
 
 export default defineComponent({
   name: "VInputModal",
-  /**
-   * NB: Most of these technically default to `undefined` so that the underlying `VPopoverContent`
-   * default for each of them can take over.
-   */
   props: {
     /**
-     * This props allows for the modal to be opened or closed programmatically.
-     * The modal handles the visibility internally if this prop is not provided.
+     * This prop allow for the modal to be opened or closed programmatically.
      *
      * @default undefined
      */
@@ -47,16 +42,7 @@ export default defineComponent({
       default: false,
     },
   },
-  emits: [
-    /**
-     * Fires when the popover opens, regardless of reason. There are no extra parameters.
-     */
-    "open",
-    /**
-     * Fires when the popover closes, regardless of reason. There are no extra parameters.
-     */
-    "close",
-  ],
+  emits: ["open", "close"],
   setup(props, { attrs, emit }) {
     const nodeRef = ref<HTMLElement | null>(null)
     const dialogRef = ref<HTMLElement | null>(null)
