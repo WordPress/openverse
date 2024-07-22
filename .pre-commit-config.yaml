@@ -119,7 +119,7 @@ repos:
       - id: types
         name: types
         files: ^(frontend|packages/js)/.*$
-        entry: bash -c 'pnpm run -r types'
+        entry: bash -c 'pnpm run prepare:nuxt && pnpm run -r types'
         language: system
         pass_filenames: false
 
