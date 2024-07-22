@@ -3,10 +3,14 @@ from rest_framework.exceptions import (
     PermissionDenied,
 )
 
+import structlog
 from drf_spectacular.authentication import TokenScheme
 from oauth2_provider.contrib.rest_framework import (
     OAuth2Authentication as BaseOAuth2Authentication,
 )
+
+
+logger = structlog.get_logger(__name__)
 
 
 class OAuth2Authentication(BaseOAuth2Authentication):
@@ -30,6 +34,12 @@ class OAuth2Authentication(BaseOAuth2Authentication):
             if application := getattr(auth, "application", None):
                 if application.revoked:
                     raise PermissionDenied()
+                logger.info(
+                    "client_application_authentication",
+                    application_id=application.id,
+                    application_name=application.name,
+                    application_verified=application.verified,
+                )
 
         return user_auth_tuple
 
