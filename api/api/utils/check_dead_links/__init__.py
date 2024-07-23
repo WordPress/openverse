@@ -17,7 +17,7 @@ from api.utils.dead_link_mask import get_query_mask, save_query_mask
 
 
 logger = structlog.get_logger(__name__)
-
+head_logger = structlog.get_logger(f"{__name__}._head")
 
 CACHE_PREFIX = "valid:"
 HEADERS = {
@@ -57,7 +57,7 @@ async def _head(
         status = response.status
     except (aiohttp.ClientError, asyncio.TimeoutError) as exception:
         if not isinstance(exception, asyncio.TimeoutError):
-            logger.error("dead_link_validation_error", e=exception)
+            head_logger.error("dead_link_validation_error", e=exception)
             status = _ERROR_STATUS
         else:
             status = _TIMEOUT_STATUS
