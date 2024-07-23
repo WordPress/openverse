@@ -6,9 +6,9 @@ authors = [
   {name = "Openverse Contributors", email = "openverse@wordpress.org"},
 ]
 dependencies = [
-    "redis >= 5.0",
-    "tqdm >= 4.66",
-    "click >=8.1.7",
+    "redis >= 5.0.7, <6",
+    "tqdm >= 4.66.4, <5",
+    "click >=8.1.7, <9",
 ]
 requires-python = "==3.12.*"
 

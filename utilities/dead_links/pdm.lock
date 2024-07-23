@@ -5,7 +5,7 @@
 groups = ["default"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.2"
-content_hash = "sha256:f70988441f8f0c8ceb658fcdc107d4e2e2b8e0d6956c0f32d9e4ae525a3ac0d3"
+content_hash = "sha256:be0bd5582a8168accaedaf7df8af55c1ac3dd04ff3c46e1cedada596ea47dc31"
 
 [[package]]
 name = "click"
