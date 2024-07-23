@@ -12,13 +12,6 @@
     "disclaimer": {
       "content": "Todo el contenido de {openverse} está bajo una {license} o es de dominio público.",
       "license": "Licencia Creative Commons"
-    },
-    "licenseFilter": {
-      "label": "Quiero algo que pueda"
-    },
-    "aria": {
-      "search": "buscar",
-      "searchType": "tipo de búsqueda"
     }
   },
   "notification": {
@@ -44,11 +37,6 @@
     },
     "aboutTab": "Acerca de",
     "resourcesTab": "Recursos",
-    "notification": {
-      "text": "{example_notification_text}",
-      "dismiss": "Descartar",
-      "okay": "Aceptar"
-    },
     "loading": "Cargando...",
     "filterButton": {
       "simple": "Filtros",
@@ -221,7 +209,6 @@
     "report": "Informar de un fallo",
     "loading": "Cargando...",
     "aria": {
-      "ccUsability": "canal de slack de cc-usability",
       "improve": "formulario para ayudarnos a mejorar",
       "report": "formulario para informar de un fallo"
     }
@@ -324,6 +311,29 @@
           "b": "En las notas, describa por qué cree que el trabajo no debe tener una designación de sensibilidad.",
           "c": "Al agregar una nueva designación, {openverse} se reserva el derecho a rechazar respetuosamente la solicitud de eliminar una designación de sensibilidad de usuario confirmada."
         }
+      }
+    }
+  },
+  "tags": {
+    "title": "Comprender las etiquetas en {openverse}",
+    "intro": {
+      "a": "Cada trabajo creativo en {openverse} puede tener etiquetas, un conjunto opcional de palabras clave usadas para describir el trabajo y hacer más fácil para los usuarios encontrar los medios pertinentes para sus búsquedas.",
+      "b": "Estas etiquetas caen en dos categorías principales: etiquetas de origen y etiquetas generadas. Comprender la diferencia entre ellos puede mejorar su experiencia de búsqueda y mejorar la precisión de sus resultados."
+    },
+    "sourceTags": {
+      "title": "Fuentes",
+      "content": {
+        "a": "Las etiquetas fuente son etiquetas que se originan de la fuente original del trabajo creativo. Estas etiquetas pueden ser agregadas por diferentes colaboradores, por ejemplo un fotógrafo que subió su imagen a Flickr y agregó etiquetas descriptivas.",
+        "b": "La plataforma original puede asignar etiquetas adicionales de miembros de la comunidad, automatización u otras fuentes."
+      }
+    },
+    "generatedTags": {
+      "title": "Etiquetas generadas",
+      "content": {
+        "a": "Las etiquetas generadas se crean a través del análisis automático de las obras creativas, más comúnmente las imágenes. Este proceso implica tecnologías avanzadas como AWS Rekognition, Clarifai y otros servicios de reconocimiento de imágenes que analizan el contenido y generan etiquetas descriptivas.",
+        "b": "Si bien los sistemas generalmente fiables, automatizados a veces pueden malinterpretar o perder elementos en una imagen.",
+        "c": "Openverse hace esfuerzos para excluir cualquier etiqueta generada que haga inferencias sobre las identidades o afiliaciones de sujetos humanos.",
+        "d": "Si encuentras imágenes con etiquetas generadas haciendo suposiciones sobre, por ejemplo, género, religión o afiliación política, por favor reporta las imágenes usando el botón \"Informe\" en nuestras páginas de resultados individuales."
       }
     }
   },
@@ -505,16 +515,41 @@
       "close": "cerrar",
       "scroll": "scroll al inicio",
       "search": "buscar",
-      "relevance": {
-        "yes": "¿resultado relevante? respuesta: sí",
-        "no": "¿resultado relevante? respuesta: no"
-      },
       "removeFilter": "eliminar el filtro",
       "licenseExplanation": "explicación de la licencia",
       "creator": "buscar por creador",
       "imageTitle": "Imagen: {title}",
       "audioTitle": "Audio: {title}",
-      "results": "Resultados de búsqueda para {query}"
+      "resultsLabel": {
+        "all": "Todos los resultados para {query}",
+        "image": "Resultados de la imagen para {query}",
+        "audio": "Audio tracks for {query}"
+      },
+      "results": {
+        "all": "Todos los resultados para \"{query}\", {imageResults} y {audioResults}",
+        "image": {
+          "zero": "No hay resultados de imagen para \"{query}\"",
+          "count": "{localeCount} resultado de la imagen para \"{query}\" {localeCount} resultados de la imagen para \"{query}\"",
+          "countMore": "Los resultados de la imagen de {localeCount} para \"{query}\"."
+        },
+        "audio": {
+          "zero": "No hay pistas de audio para \"{query}\"",
+          "count": "{localeCount} audio track for \"{query}\" {localeCount} audio tracks for \"{query}\"",
+          "countMore": "Top {localeCount} audio tracks for \"{query}\"."
+        }
+      },
+      "allResultsHeadingCount": {
+        "image": {
+          "zero": "no imágenes",
+          "count": "{localeCount} image preserve{localeCount} images",
+          "countMore": "superior {localeCount} images"
+        },
+        "audio": {
+          "zero": "sin pistas de audio",
+          "count": "{localeCount} audio track {localeCount} audio tracks",
+          "countMore": "superior {localeCount} audio tracks"
+        }
+      }
     }
   },
   "mediaDetails": {
@@ -578,6 +613,13 @@
     "audioInfo": "Información del audio",
     "tags": {
       "title": "Etiquetas",
+      "generated": {
+        "heading": "Etiquetas generadas",
+        "pageTitle": "Más información"
+      },
+      "source": {
+        "heading": "Etiquetas de la fuente"
+      },
       "showMore": "Mostrar más",
       "showLess": "Mostrar menos"
     },
@@ -667,23 +709,8 @@
       "caption": "Haz clic en una fuente de abajo para buscar directamente otras colecciones de imágenes con licencia CC. {break}Por favor, ten en cuenta que el uso de filtros no es compatible con la biblioteca de Open Clip Art o Nappy. "
     },
     "form": {
-      "unsupportedTitle": "{openverse} todavía no es compatible con la búsqueda integrada de {type}.",
       "supportedTitle": "¿No encuentras lo que buscas? Prueba fuentes adicionales de {type}.",
-      "supportedTitleSm": "Búsqueda en fuentes externas",
-      "noResultsTitle": "Ningún resultado de {type} para «{query}».",
-      "caption": "Haz clic en una fuente de abajo para buscar directamente otras colecciones de {type} con licencia CC. {break}Por favor, ten en cuenta que el uso de filtros no es compatible con {filter}.",
-      "types": {
-        "image": "imagen",
-        "audio": "audio",
-        "video": "video",
-        "model3d": "Modelo 3D"
-      },
-      "typesPlural": {
-        "image": "imágenes",
-        "audio": "audios",
-        "video": "videos",
-        "model3d": "Modelos 3D"
-      }
+      "supportedTitleSm": "Búsqueda en fuentes externas"
     }
   },
   "browsers": {
@@ -736,17 +763,6 @@
     "byNcNd": "Reconocimiento-NoComercial-SinObraDerivada",
     "sampling+": "Sampling Plus",
     "ncSampling+": "Sampling Plus NoComercial"
-  },
-  "dropdownButton": {
-    "aria": {
-      "arrowLabel": "Desplegable"
-    }
-  },
-  "downloadButton": {
-    "aria": {
-      "dropdownLabel": "Selecciona el formato de archivo para descargar"
-    },
-    "download": "Descargar"
   },
   "interpunct": "•",
   "modal": {
@@ -862,6 +878,16 @@
       "tag": "Tag",
       "creator": "Creador",
       "source": "Fuente"
+    },
+    "pageTitle": {
+      "tag": {
+        "audio": "{tag} audio tracks",
+        "image": "{tag} images"
+      },
+      "source": {
+        "audio": "{source} audio tracks",
+        "image": "{source} images"
+      }
     },
     "link": {
       "source": "Sitio de código abierto",

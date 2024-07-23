@@ -12,13 +12,6 @@
     "disclaimer": {
       "content": "كل محتوى {openverse} يخضع لـ {license} أو في المجال العام.",
       "license": "رخصة المشاع الإبداعي"
-    },
-    "licenseFilter": {
-      "label": "أريد شيئًا أستطيعه"
-    },
-    "aria": {
-      "search": "بحث",
-      "searchType": "نوع البحث"
     }
   },
   "notification": {
@@ -44,11 +37,6 @@
     },
     "aboutTab": "حول",
     "resourcesTab": "موارد",
-    "notification": {
-      "text": "{example_notification_text}",
-      "dismiss": "رفض",
-      "okay": "نعم"
-    },
     "loading": "جار التحميل...",
     "filterButton": {
       "simple": "مرشحات",
@@ -221,7 +209,6 @@
     "report": "الإبلاغ عن خطأ",
     "loading": "جار التحميل...",
     "aria": {
-      "ccUsability": "قناة slack cc-usability",
       "improve": "ساعدنا في تحسين الشكل",
       "report": "الإبلاغ عن نموذج خطأ"
     }
@@ -324,6 +311,29 @@
           "b": "في الملاحظات، وصف لماذا تعتقد أن العمل لا ينبغي أن يكون له تحديد حساسية.",
           "c": "As when added a new nomination, {openverse} reserves the right to respectfully decline the request to remove a confirmed user sensitivity nomination."
         }
+      }
+    }
+  },
+  "tags": {
+    "title": "Understanding Tags in {openverse}",
+    "intro": {
+      "a": "وقد يكون لكل عمل إبداعي في {openverse} بطاقات، ومجموعة اختيارية من الكلمات الرئيسية المستخدمة لوصف العمل وجعل من الأسهل للمستعملين أن يجدوا وسائل الإعلام ذات الصلة للبحث عنهم.",
+      "b": "وتنقسم هذه البطاقات إلى فئتين رئيسيتين: علامات المصدر والعلامات المولدة. فهم الفرق بينهما يمكن أن يعزز خبرتك في البحث ويحسن دقة نتائجك"
+    },
+    "sourceTags": {
+      "title": "المصدر",
+      "content": {
+        "a": "وعلامات المصدر هي علامات نشأت من المصدر الأصلي للعمل الإبداعي. ويمكن أن يضاف المساهمون المختلفون هذه البطاقات، مثل المصور الذي قام بتحميل صورتهم إلى فليكر والعلامات الوصفية الإضافية.",
+        "b": "ويمكن للمنبر الأصلي نفسه أن يخصص بطاقات إضافية من أعضاء المجتمع المحلي أو التشغيل الآلي أو مصادر أخرى."
+      }
+    },
+    "generatedTags": {
+      "title": "تاغس المولدة",
+      "content": {
+        "a": "وتُنشأ العلامات المولدة من خلال التحليل الآلي للأشغال الإبداعية، ومعظم الصور الشائعة. وتنطوي هذه العملية على تكنولوجيات متطورة مثل  AWS Rekognition ، وكلاريفاي، وغير ذلك من خدمات التعرف على الصور التي تحلل المحتوى وتولد علامات وصفية.",
+        "b": "وفي حين أن النظم الآلية الموثوق بها عموما يمكن أن تسيئ أحيانا تفسير أو تفوت عناصر في صورة ما.",
+        "c": "وتبذل الجهود لاستبعاد أي علامات متولدة تشير إلى هويات أو انتماءات البشر.",
+        "d": "إذا واجهتم أي صور بعلامات متولدة تضعون افتراضات حول، على سبيل المثال، الجنس أو الدين أو الانتماء السياسي، يرجى الإبلاغ عن الصور باستخدام زر \" التقرير \" على صفحات النتائج الوحيدة."
       }
     }
   },
@@ -505,16 +515,41 @@
       "close": "أغلق",
       "scroll": "انتقل إلى أعلى",
       "search": "بحث",
-      "relevance": {
-        "yes": "نتيجة ذات صلة؟ الجواب: نعم",
-        "no": "نتيجة ذات صلة؟ الجواب: لا"
-      },
       "removeFilter": "إزالة عامل التصفية",
       "licenseExplanation": "شرح الترخيص",
       "creator": "البحث عن طريق المنشئ",
       "imageTitle": "Image: {title}",
       "audioTitle": "Audio: {title}",
-      "results": "البحث عن نتائج لـ {query}"
+      "resultsLabel": {
+        "all": "جميع النتائج لـ {query}",
+        "image": "Image results for {query}",
+        "audio": "Audio tracks for {query}"
+      },
+      "results": {
+        "all": "جميع النتائج لـ \"{query}\" و{imageResults} و{audioResults}.",
+        "image": {
+          "zero": "لا توجد نتائج للصور لـ \"{query}\"",
+          "count": "{localeCount} {query}",
+          "countMore": "أهم نتائج الصور {localeCount} لـ \"{query}\"."
+        },
+        "audio": {
+          "zero": "لا توجد آثار صوتية لـ \"{query}\"",
+          "count": "{localeCount} {query}",
+          "countMore": "أهم المقاطع الصوتية {localeCount} لـ \"{query}\"."
+        }
+      },
+      "allResultsHeadingCount": {
+        "image": {
+          "zero": "لا صور",
+          "count": "{localeCount} image.{localeCount} images",
+          "countMore": "أعلى صور {localeCount}"
+        },
+        "audio": {
+          "zero": "لا آثار صوتية",
+          "count": "{localeCount} {localeCount}",
+          "countMore": "أعلى {localeCount}"
+        }
+      }
     }
   },
   "mediaDetails": {
@@ -578,6 +613,13 @@
     "audioInfo": "معلومات صوتية",
     "tags": {
       "title": "العلامات",
+      "generated": {
+        "heading": "العلامات المولدة",
+        "pageTitle": "تعلم المزيد"
+      },
+      "source": {
+        "heading": "بطاقات المصدر"
+      },
       "showMore": "أظهر المزيد",
       "showLess": "تظهر أقل"
     },
@@ -667,23 +709,8 @@
       "caption": "انقر فوق أحد المصادر أدناه للبحث مباشرة في مجموعات أخرى من الصور المرخصة CC. {break} يرجى ملاحظة أن استخدام المرشحات غير مدعوم لمكتبة Open Clip Art Library أو Nappy."
     },
     "form": {
-      "unsupportedTitle": "{openverse} لا يدعم حتى الآن البحث المضمن {type}.",
       "supportedTitle": "لا تجد ما تبحث عنه؟ ابحث في مصادر خارجية",
-      "supportedTitleSm": "ابحث في مصادر خارجية",
-      "noResultsTitle": "لا توجد نتائج {type} لـ \"{query}\".",
-      "caption": "انقر فوق أحد المصادر أدناه للبحث مباشرة في مجموعات أخرى من {type} المرخصة CC.",
-      "types": {
-        "image": "صورة",
-        "audio": "صوتي",
-        "video": "فيديو",
-        "model3d": "نموذج 3D"
-      },
-      "typesPlural": {
-        "image": "الصور",
-        "audio": "صوتيات",
-        "video": "أشرطة فيديو",
-        "model3d": "نماذج ثلاثية الأبعاد"
-      }
+      "supportedTitleSm": "ابحث في مصادر خارجية"
     }
   },
   "browsers": {
@@ -736,17 +763,6 @@
     "byNcNd": "نسب المصنف غير التجاري لا المشتقات",
     "sampling+": "سامبلينغ بلس",
     "ncSampling+": "أخذ العينات غير التجارية زائد"
-  },
-  "dropdownButton": {
-    "aria": {
-      "arrowLabel": "اسقاط"
-    }
-  },
-  "downloadButton": {
-    "aria": {
-      "dropdownLabel": "حدد تنسيق ملف التنزيل"
-    },
-    "download": "تحميل"
   },
   "interpunct": "•",
   "modal": {
@@ -862,6 +878,16 @@
       "tag": "الكلمات الدلالية",
       "creator": "مبتدع",
       "source": "منشأ"
+    },
+    "pageTitle": {
+      "tag": {
+        "audio": "{tag}",
+        "image": "صور {tag}"
+      },
+      "source": {
+        "audio": "{source}",
+        "image": "صور {source}"
+      }
     },
     "link": {
       "source": "موقع مفتوح المصدر",
