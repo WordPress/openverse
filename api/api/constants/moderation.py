@@ -19,5 +19,17 @@ class DecisionAction(models.TextChoices):
     REVERSED_DEINDEX = "reversed_deindex", "Reversed deindex"
 
     @property
-    def is_reversal(self):
+    def is_forward(self):
+        return self in {
+            self.MARKED_SENSITIVE,
+            self.DEINDEXED_COPYRIGHT,
+            self.DEINDEXED_SENSITIVE,
+        }
+
+    @property
+    def is_reverse(self):
         return self in {self.REVERSED_DEINDEX, self.REVERSED_MARK_SENSITIVE}
+
+    @property
+    def is_deindex(self):
+        return self in {self.DEINDEXED_COPYRIGHT, self.DEINDEXED_SENSITIVE}
