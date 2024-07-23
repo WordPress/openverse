@@ -336,9 +336,8 @@ def send_message(
     ):
         return
 
-    environment = Variable.get("ENVIRONMENT", default_var="local")
     s = SlackMessage(
-        f"{username} | {environment}",
+        username,
         icon_emoji,
         unfurl_links,
         unfurl_media,
