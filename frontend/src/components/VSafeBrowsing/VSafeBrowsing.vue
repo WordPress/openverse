@@ -55,7 +55,7 @@ import { useUiStore } from "~/stores/ui"
 import { useAnalytics } from "~/composables/use-analytics"
 import { ON, OFF } from "~/constants/feature-flag"
 
-import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"
+import VCheckbox, { CheckboxAttrs } from "~/components/VCheckbox/VCheckbox.vue"
 import VLink from "~/components/VLink.vue"
 
 /**
@@ -77,7 +77,8 @@ export default defineComponent({
     let fetchSensitive = computed(() =>
       featureFlagStore.isOn("fetch_sensitive")
     )
-    let setFetchSensitive = ({ checked }: { checked: boolean }) => {
+    let setFetchSensitive = (data: Omit<CheckboxAttrs, "disabled">) => {
+      const checked = data.checked ?? false
       featureFlagStore.toggleFeature("fetch_sensitive", checked ? ON : OFF)
       sendCustomEvent("TOGGLE_FETCH_SENSITIVE", { checked })
 
@@ -90,7 +91,8 @@ export default defineComponent({
 
     const uiStore = useUiStore()
     let blurSensitive = computed(() => uiStore.shouldBlurSensitive)
-    let setBlurSensitive = ({ checked }: { checked: boolean }) => {
+    let setBlurSensitive = (data: { checked?: boolean }) => {
+      const checked = data.checked ?? false
       uiStore.setShouldBlurSensitive(checked)
       sendCustomEvent("TOGGLE_BLUR_SENSITIVE", { checked })
     }

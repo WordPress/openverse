@@ -65,7 +65,7 @@ import { defineEvent } from "~/types/emits"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 
-type CheckboxAttrs = {
+export type CheckboxAttrs = {
   name: string
   value: string
   disabled?: "disabled" | undefined
