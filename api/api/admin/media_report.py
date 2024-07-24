@@ -5,6 +5,7 @@ from django import forms
 from django.conf import settings
 from django.contrib import admin, messages
 from django.contrib.admin.views.main import ChangeList
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count, F, Min
 from django.http import JsonResponse
 from django.shortcuts import redirect
@@ -637,13 +638,18 @@ class MediaDecisionAdmin(admin.ModelAdmin):
     @admin.display(description="Media objs")
     def media_ids(self, obj):
         through_objs = getattr(obj, f"{self.media_type}decisionthrough_set").all()
-        text = []
+        data = []
         for obj in through_objs:
-            path = reverse(
-                f"admin:api_{self.media_type}_change", args=(obj.media_obj.id,)
-            )
-            text.append(f'• <a href="{path}">{obj.media_obj}</a>')
-        return format_html("<br>".join(text))
+            try:
+                path = reverse(
+                    f"admin:api_{self.media_type}_change", args=(obj.media_obj.id,)
+                )
+                data.append(
+                    format_html('• <a href="{}">{}</a>', path, obj.media_obj.identifier)
+                )
+            except ObjectDoesNotExist:
+                data.append(f"• {obj.media_obj_id}")
+        return mark_safe("<br>".join(data))
 
     ###############
     # Change view #
