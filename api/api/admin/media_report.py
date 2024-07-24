@@ -879,7 +879,6 @@ class MediaSubreportAdmin(BulkModerationMixin, admin.ModelAdmin):
     ordering = ("-created_on",)
     search_fields = ("media_obj__identifier",)
     readonly_fields = ("media_obj_id",)
-    list_display = ("media_obj_id", "created_on")
 
     def has_add_permission(self, *args, **kwargs):
         # These objects are created through moderation and
@@ -889,6 +888,7 @@ class MediaSubreportAdmin(BulkModerationMixin, admin.ModelAdmin):
 
 class DeletedMediaAdmin(MediaSubreportAdmin):
     actions = ["reversed_deindex"]
+    list_display = ("media_obj_id", "created_on")
 
     ################
     # Bulk actions #
@@ -904,6 +904,15 @@ class DeletedMediaAdmin(MediaSubreportAdmin):
 
 class SensitiveMediaAdmin(MediaSubreportAdmin):
     actions = ["reversed_mark_sensitive"]
+    list_display = ("media_obj_id", "created_on", "is_deindexed")
+
+    @admin.display(description="Deindexed?", boolean=True)
+    def is_deindexed(self, obj):
+        try:
+            getattr(obj, "media_obj")
+            return False
+        except ObjectDoesNotExist:
+            return True
 
     ################
     # Bulk actions #
