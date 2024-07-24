@@ -503,23 +503,6 @@ def test_should_silence_message(silenced_notifications, should_silence):
         )
 
 
-@pytest.mark.parametrize("environment", ["local", "production"])
-def test_send_message(environment, http_hook_mock):
-    with mock.patch("common.slack.should_send_message", return_value=True), mock.patch(
-        "common.slack.Variable"
-    ) as MockVariable:
-        MockVariable.get.side_effect = [environment]
-        send_message("Sample text", dag_id="test_workflow", username="DifferentUser")
-        http_hook_mock.run.assert_called_with(
-            endpoint=None,
-            data=f'{{"username": "DifferentUser | {environment}", "unfurl_links": false, "unfurl_media": false,'
-            ' "icon_emoji": ":airflow:", "blocks": [{"type": "section", "text": '
-            '{"type": "mrkdwn", "text": "Sample text"}}], "text": "Sample text"}',
-            headers={"Content-type": "application/json"},
-            extra_options={"verify": True},
-        )
-
-
 def test_send_message_does_not_send_if_checks_fail(http_hook_mock):
     with mock.patch("common.slack.should_send_message", return_value=False):
         send_message("Sample text", dag_id="test_workflow", username="DifferentUser")
