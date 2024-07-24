@@ -4,11 +4,13 @@ from typing import Sequence
 from django import forms
 from django.conf import settings
 from django.contrib import admin, messages
+from django.contrib.admin import helpers
 from django.contrib.admin.views.main import ChangeList
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count, F, Min
 from django.http import JsonResponse
 from django.shortcuts import redirect
+from django.template.response import TemplateResponse
 from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
@@ -29,6 +31,7 @@ from api.models import (
     ImageReport,
 )
 from api.models.media import AbstractDeletedMedia, AbstractSensitiveMedia
+from api.utils.moderation import perform_moderation
 from api.utils.moderation_lock import LockManager
 
 
@@ -215,7 +218,93 @@ def get_pending_record_filter(media_type: str):
     return PendingRecordCountFilter
 
 
-class MediaListAdmin(admin.ModelAdmin):
+class BulkModerationMixin:
+    def _bulk_mod(self, request, queryset, action: DecisionAction):
+        """
+        Perform bulk moderation for the queryset as per the requested
+        action.
+
+        This follows the pattern of the ``delete_selected`` action
+        defined in ``django.contrib.admin.actions.py``.
+        """
+
+        opts = self.model._meta
+
+        if action == DecisionAction.MARKED_SENSITIVE:
+            initial_count = queryset.count()
+            queryset = queryset.filter(**{f"sensitive_{self.media_type}__isnull": True})
+
+            count = len(queryset)
+            stats = {
+                "selected count": initial_count,
+                "already sensitive": initial_count - count,
+                "count": count,
+            }
+        else:
+            # No filtering is needed for any other actions.
+            count = len(queryset)
+            stats = {"count": count}
+
+        if count == 0:
+            messages.info(
+                request,
+                f"All selected items are already {action.verb}.",
+            )
+            return None
+
+        if request.POST.get("post"):
+            # The user has already confirmed so we will perform the
+            # moderation and return ``None`` to display the change list
+            # view again.
+            decision = perform_moderation(request, self.media_type, queryset, action)
+            path = reverse(
+                f"admin:api_{self.media_type}decision_change", args=(decision.id,)
+            )
+            messages.success(
+                request,
+                format_html(
+                    'Successfully moderated {} items via <a href="{}">decision {}</a>.',
+                    queryset.count(),
+                    path,
+                    decision.id,
+                ),
+            )
+            return None
+
+        objects_name = opts.verbose_name if count == 1 else opts.verbose_name_plural
+        moderatable_objects = [
+            format_html(
+                '<a href="{}">{}</a>',
+                reverse(
+                    f"admin:api_{queryset.model._meta.model_name}_change",
+                    args=(obj.pk,),
+                ),
+                obj,
+            )
+            for obj in queryset
+        ]
+
+        context = {
+            **self.admin_site.each_context(request),
+            "title": "Are you sure?",
+            "objects_name": str(objects_name),
+            "moderatable_objects": [moderatable_objects],
+            "stats": dict(stats).items(),
+            "queryset": queryset,
+            "opts": opts,
+            "action_checkbox_name": helpers.ACTION_CHECKBOX_NAME,
+            "media": self.media,
+            "decision_action": action,
+        }
+
+        return TemplateResponse(
+            request,
+            "admin/api/bulk_moderation_confirmation.html",
+            context,
+        )
+
+
+class MediaListAdmin(BulkModerationMixin, admin.ModelAdmin):
     media_type = None
 
     def __init__(self, *args, **kwargs):
@@ -299,6 +388,7 @@ class MediaListAdmin(admin.ModelAdmin):
     list_display_links = ("identifier",)
     search_fields = _production_deferred("identifier")
     sortable_by = ()  # Ordering is defined in ``get_queryset``.
+    actions = ["marked_sensitive", "deindexed_sensitive", "deindexed_copyright"]
 
     def get_list_filter(self, request):
         return (get_pending_record_filter(self.media_type),)
@@ -556,6 +646,22 @@ class MediaListAdmin(admin.ModelAdmin):
 
     def get_changelist(self, request, **kwargs):
         return PredeterminedOrderChangelist
+
+    ################
+    # Bulk actions #
+    ################
+
+    @admin.action(description="Mark selected %(verbose_name_plural)s as sensitive")
+    def marked_sensitive(self, request, queryset):
+        return self._bulk_mod(request, queryset, DecisionAction.MARKED_SENSITIVE)
+
+    @admin.action(description="Deindex selected %(verbose_name_plural)s (sensitive)")
+    def deindexed_sensitive(self, request, queryset):
+        return self._bulk_mod(request, queryset, DecisionAction.DEINDEXED_SENSITIVE)
+
+    @admin.action(description="Deindex selected %(verbose_name_plural)s (copyright)")
+    def deindexed_copyright(self, request, queryset):
+        return self._bulk_mod(request, queryset, DecisionAction.DEINDEXED_COPYRIGHT)
 
 
 class MediaReportAdmin(admin.ModelAdmin):
