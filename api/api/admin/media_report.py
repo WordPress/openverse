@@ -1,3 +1,4 @@
+import json
 from functools import update_wrapper
 from typing import Sequence
 
@@ -441,69 +442,79 @@ class MediaListAdmin(admin.ModelAdmin):
         reports referencing the media with this decision.
         """
 
-        if request.method == "POST":
-            media_obj = self.get_object(request, object_id)
+        redir = redirect(f"admin:api_{self.media_type}_change", object_id)
 
-            through_model = {
-                "image": ImageDecisionThrough,
-                "audio": AudioDecisionThrough,
-            }[self.media_type]
-            form = get_decision_form(self.media_type)(request.POST)
-            if form.is_valid():
-                decision = form.save(commit=False)
-                decision.moderator = request.user
-                decision.save()
+        if request.method != "POST":
+            return redir
 
-                logger.info(
-                    "Decision created",
-                    decision=decision.id,
-                    action=decision.action,
-                    notes=decision.notes,
-                    moderator=request.user.get_username(),
+        if not request.user.has_perm(f"api.add_{self.media_type}decision"):
+            messages.error(
+                request,
+                "You do not have permission to create decisions.",
+            )
+            return redir
+
+        media_obj = self.get_object(request, object_id)
+
+        through_model = {
+            "image": ImageDecisionThrough,
+            "audio": AudioDecisionThrough,
+        }[self.media_type]
+        form = get_decision_form(self.media_type)(request.POST)
+        if form.is_valid():
+            decision = form.save(commit=False)
+            decision.moderator = request.user
+            decision.save()
+
+            logger.debug(
+                "Decision created",
+                decision=decision.id,
+                action=decision.action,
+                notes=decision.notes,
+                moderator=request.user.get_username(),
+            )
+
+            through = through_model.objects.create(
+                decision=decision,
+                media_obj=media_obj,
+            )
+            logger.debug(
+                "Through model created",
+                through=through.id,
+                decision=decision.id,
+                media_obj=media_obj.id,
+            )
+
+            reports = form.cleaned_data["reports"]
+            count = reports.update(decision=decision)
+            logger.debug(
+                "Decision recorded in reports",
+                report_count=count,
+                decision=decision.id,
+            )
+
+            if decision.action in {
+                DecisionAction.DEINDEXED_COPYRIGHT,
+                DecisionAction.DEINDEXED_SENSITIVE,
+            }:
+                messages.debug(
+                    request,
+                    "The media object has been deindexed from ES and deleted from DB.",
                 )
+                return redirect(f"admin:api_{self.media_type}_changelist")
 
-                through = through_model.objects.create(
-                    decision=decision,
-                    media_obj=media_obj,
+            if decision.action == DecisionAction.MARKED_SENSITIVE:
+                messages.debug(
+                    request,
+                    "The media object has been marked as sensitive.",
                 )
-                logger.info(
-                    "Through model created",
-                    through=through.id,
-                    decision=decision.id,
-                    media_obj=media_obj.id,
-                )
+        else:
+            messages.warning(
+                request,
+                f"Form is invalid: {json.dumps(form.errors)}",
+            )
 
-                reports = form.cleaned_data["reports"]
-                count = reports.update(decision=decision)
-                logger.info(
-                    "Decision recorded in reports",
-                    report_count=count,
-                    decision=decision.id,
-                )
-
-                if decision.action in {
-                    DecisionAction.DEINDEXED_COPYRIGHT,
-                    DecisionAction.DEINDEXED_SENSITIVE,
-                }:
-                    messages.info(
-                        request,
-                        "The media object has been deindexed from ES and deleted from DB.",
-                    )
-                    return redirect(f"admin:api_{self.media_type}_changelist")
-
-                if decision.action == DecisionAction.MARKED_SENSITIVE:
-                    messages.info(
-                        request,
-                        "The media object has been marked as sensitive.",
-                    )
-            else:
-                logger.warning(
-                    "Form is invalid",
-                    **form.cleaned_data,
-                    errors=form.errors,
-                )
-
-        return redirect(f"admin:api_{self.media_type}_change", object_id)
+        return redir
 
     ######################
     # Report create view #
@@ -521,7 +532,7 @@ class MediaListAdmin(admin.ModelAdmin):
                 report.media_obj = media_obj
                 report.save()
 
-                logger.info(
+                logger.debug(
                     "Report created",
                     report=report.id,
                     reason=report.reason,
@@ -529,10 +540,9 @@ class MediaListAdmin(admin.ModelAdmin):
                     media_obj=media_obj.id,
                 )
             else:
-                logger.warning(
-                    "Form is invalid",
-                    **form.cleaned_data,
-                    errors=form.errors,
+                messages.warning(
+                    request,
+                    f"Form is invalid: {json.dumps(form.errors)}",
                 )
 
         return redirect(f"admin:api_{self.media_type}_change", object_id)
@@ -617,6 +627,22 @@ class MediaReportAdmin(admin.ModelAdmin):
 class MediaDecisionAdmin(admin.ModelAdmin):
     media_type = None
     through_model = None
+
+    ###############
+    # Permissions #
+    ###############
+
+    def has_add_permission(self, request) -> bool:
+        """
+        Disables the "Add" form for media decisions from the admin site.
+
+        This hides the form even for users who are authorised to create
+        decisions (have the permissions "api.add_imagedecision" or
+        "api.add_audiodecision"), because decisions are supposed to be
+        created from the media item view.
+        """
+
+        return False
 
     #############
     # List view #
