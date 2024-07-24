@@ -26,6 +26,12 @@ const clickClear = async (page: Page) => (await clearButton(page)).click()
 const recentSearches = (page: Page) =>
   page.locator('[data-testid="recent-searches"]')
 
+const openRecentSearches = async (page: Page) => {
+  if (!(await recentSearches(page).isVisible())) {
+    await page.locator('input[type="search"]').click()
+  }
+}
+
 const tabToSearchbar = async (page: Page) => {
   await page.getByRole("link", { name: t("skipToContent") }).focus()
   for (let i = 0; i < 2; i++) {
@@ -51,8 +57,7 @@ breakpoints.describeMobileXsAndDesktop(({ breakpoint }) => {
   })
 
   test("recent searches shows message when blank", async ({ page }) => {
-    // Click on the input to open the Recent searches
-    await page.locator('input[type="search"]').click()
+    await openRecentSearches(page)
     await clickClear(page)
 
     const recentSearchesText = await getRecentSearchesText(page)
@@ -63,6 +68,7 @@ breakpoints.describeMobileXsAndDesktop(({ breakpoint }) => {
     page,
   }) => {
     const searches = await executeSearches(page)
+    await openRecentSearches(page)
     const recentList = await page
       .locator(`[aria-label="${recentLabel}"]`)
       .locator('[role="option"]')
@@ -75,8 +81,7 @@ breakpoints.describeMobileXsAndDesktop(({ breakpoint }) => {
   test("clicking takes user to that search", async ({ page }) => {
     await executeSearches(page)
     expect(page.url()).toContain("?q=galah")
-    // Click on the input to open the Recent searches
-    await page.locator('input[type="search"]').click()
+    await openRecentSearches(page)
     await page
       .locator(`[aria-label="${recentLabel}"]`)
       .getByRole("option", { name: "honey" })
@@ -87,8 +92,7 @@ breakpoints.describeMobileXsAndDesktop(({ breakpoint }) => {
 
   test("clicking Clear clears the recent searches", async ({ page }) => {
     await executeSearches(page)
-    // Click on the input to open the Recent searches
-    await page.locator('input[type="search"]').click()
+    await openRecentSearches(page)
     await clickClear(page)
     await expect(await clearButton(page)).toBeHidden()
 

@@ -18,7 +18,7 @@ const currentPageLink = 'div[role="dialog"] >> [aria-current="page"]'
 const currentPageLinkInPopover = '.popover-content >> [aria-current="page"]'
 
 const clickMenuButton = async (page: Page) => {
-  return (await getMenuButton(page)).click()
+  await getMenuButton(page).click()
 }
 
 const closeMenu = async (page: Page, dir: LanguageDirection = "ltr") => {
@@ -103,6 +103,7 @@ test.describe("Header internal", () => {
       await page.getByRole("link", { name: t("navigation.about") }).click()
 
       await getHomeLink(page).click()
+      await page.waitForURL(homeUrl)
       expect(page.url()).toBe(homeUrl)
     })
 
@@ -128,7 +129,7 @@ test.describe("Header internal", () => {
 
       await clickMenuButton(page)
       expect(await isPagesPopoverOpen(page)).toBe(false)
-      await expect(await getMenuButton(page)).toBeVisible()
+      await expect(getMenuButton(page)).toBeVisible()
     })
   })
 })

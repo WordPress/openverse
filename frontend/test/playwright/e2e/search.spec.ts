@@ -20,6 +20,7 @@ import {
   scrollToBottom,
   searchFromHeader,
 } from "~~/test/playwright/utils/navigation"
+import { getH1 } from "~~/test/playwright/utils/components"
 
 test.describe.configure({ mode: "parallel" })
 
@@ -39,6 +40,8 @@ test("scroll to top on new search term submitted", async ({ page }) => {
   expect(scrollY).not.toBe(0)
 
   await searchFromHeader(page, "cat")
+  await expect(getH1(page, /cat/i)).toBeVisible()
+
   scrollY = await page.evaluate(
     () => document.getElementById("main-page")?.scrollTop
   )
