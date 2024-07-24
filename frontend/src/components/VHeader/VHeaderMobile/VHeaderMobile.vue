@@ -3,120 +3,118 @@
     ref="headerRef"
     class="main-header z-30 flex w-full items-center bg-white px-6 py-4"
   >
-    <VInputModal
-      class="flex w-full"
-      :is-active="isRecentVisible"
-      :aria-label="$t('recentSearches.heading')"
-      @close="hideRecentSearches"
+    <!-- Form action is a fallback for when JavaScript is disabled. -->
+    <form
+      action="/search"
+      class="search-bar group flex h-12 w-full flex-row items-center overflow-hidden rounded-sm"
+      :class="
+        isSearchBarActive || isInputFocused
+          ? 'bg-white ring ring-pink'
+          : 'bg-dark-charcoal-06'
+      "
+      @submit.prevent="handleFormSubmit"
     >
-      <div class="flex w-full" :class="{ 'px-3': isRecentVisible }">
-        <!-- Form action is a fallback for when JavaScript is disabled. -->
-        <form
-          action="/search"
-          class="search-bar group flex h-12 w-full flex-row items-center overflow-hidden rounded-sm"
-          :class="
-            isSearchBarActive || isInputFocused
-              ? 'bg-white ring ring-pink'
-              : 'bg-dark-charcoal-06'
-          "
-          @submit.prevent="handleFormSubmit"
-        >
-          <slot name="start">
-            <VLogoButton
-              v-show="!isRecentVisible"
-              :is-fetching="isFetching"
-              class="focus-visible:me-1.5px focus-visible:ms-1.5px focus-visible:!h-[45px] focus-visible:max-w-[45px]"
-            />
-            <VSearchBarButton
-              v-show="isRecentVisible"
-              icon="chevron-back"
-              :label="$t('header.backButton')"
-              :rtl-flip="true"
-              variant="filled-gray"
-              @click="hideRecentSearches"
-              @keydown.shift.tab="handleTabOut('backward')"
-            />
-          </slot>
+      <slot name="start">
+        <VLogoButton
+          v-show="!isRecentVisible"
+          :is-fetching="isFetching"
+          class="focus-visible:me-1.5px focus-visible:ms-1.5px focus-visible:!h-[45px] focus-visible:max-w-[45px]"
+        />
+        <VSearchBarButton
+          v-show="isRecentVisible"
+          icon="chevron-back"
+          :label="$t('header.backButton')"
+          :rtl-flip="true"
+          variant="filled-gray"
+          @click="hideRecentSearches"
+          @keydown.shift.tab="handleTabOut('backward')"
+        />
+      </slot>
 
-          <input
-            id="search-bar"
-            ref="searchInputRef"
-            name="q"
-            :placeholder="$t('hero.search.placeholder')"
-            type="search"
-            class="search-field ms-1 h-full w-full flex-grow appearance-none rounded-none border-tx bg-tx text-2xl text-dark-charcoal-70 placeholder-dark-charcoal-70 hover:text-dark-charcoal hover:placeholder-dark-charcoal focus-visible:outline-none"
-            :value="localSearchTerm"
-            :aria-label="
-              $t('search.searchBarLabel', {
-                openverse: 'Openverse',
-              })
-            "
-            autocomplete="off"
-            role="combobox"
-            aria-autocomplete="list"
-            :aria-expanded="isRecentVisible ? 'true' : 'false'"
-            aria-owns="recent-searches-list"
-            aria-controls="recent-searches-list"
-            :aria-activedescendant="
-              selectedIdx === undefined ? undefined : `option-${selectedIdx}`
-            "
-            @input="updateSearchText"
-            @keydown="handleInputKeydown"
-            @focus="handleInputFocus"
-            @focusout="handleInputBlur"
-            @click="handleInputClick"
-          />
-          <slot>
-            <VSearchBarButton
-              v-show="isRecentVisible && localSearchTerm"
-              icon="close-small"
-              :label="$t('browsePage.searchForm.clear')"
-              inner-area-classes="bg-white hover:bg-dark-charcoal-10"
-              @click="clearSearchText"
-              @keydown.tab.exact="handleClearButtonTab"
-            />
-            <span
-              v-show="!isSearchBarActive && searchStatus"
-              class="info mx-4 hidden whitespace-nowrap text-xs group-hover:text-dark-charcoal group-focus:text-dark-charcoal md:flex"
-            >
-              {{ searchStatus }}
-            </span>
-            <VContentSettingsButton
-              v-show="!isRecentVisible"
-              ref="contentSettingsButtonRef"
-              :is-pressed="contentSettingsOpen"
-              :applied-filter-count="appliedFilterCount"
-              v-bind="triggerA11yProps"
-              :disabled="!doneHydrating"
-              @click="toggleContentSettings"
-              @keydown.tab.exact="handleTabOut('forward')"
-            />
-            <VContentSettingsModalContent
-              v-show="!isRecentVisible"
-              variant="two-thirds"
-              :visible="contentSettingsOpen"
-              :is-fetching="isFetching"
-              :close="closeContentSettings"
-              :trigger-element="contentSettingsButton"
-              labelledby="content-settings-button"
-            />
-          </slot>
-        </form>
-      </div>
+      <input
+        id="search-bar"
+        ref="searchInputRef"
+        name="q"
+        :placeholder="$t('hero.search.placeholder')"
+        type="search"
+        class="search-field ms-1 h-full w-full flex-grow appearance-none rounded-none border-tx bg-tx text-2xl text-dark-charcoal-70 placeholder-dark-charcoal-70 hover:text-dark-charcoal hover:placeholder-dark-charcoal focus-visible:outline-none"
+        :value="localSearchTerm"
+        :aria-label="
+          $t('search.searchBarLabel', {
+            openverse: 'Openverse',
+          })
+        "
+        autocomplete="off"
+        role="combobox"
+        aria-autocomplete="list"
+        :aria-expanded="isRecentVisible ? 'true' : 'false'"
+        aria-controls="recent-searches-list"
+        aria-haspopup="listbox"
+        :aria-activedescendant="
+          selectedIdx === undefined ? undefined : `option-${selectedIdx}`
+        "
+        @input="updateSearchText"
+        @keydown="handleInputKeydown"
+        @focus="handleInputFocus"
+        @focusout="handleInputBlur"
+        @click="handleInputClick"
+      />
+      <VSearchBarButton
+        v-show="isRecentVisible && localSearchTerm"
+        icon="close-small"
+        :label="$t('browsePage.searchForm.clear')"
+        inner-area-classes="bg-white hover:bg-dark-charcoal-10"
+        @click="clearSearchText"
+        @keydown.tab.exact="handleClearButtonTab"
+      />
+      <span
+        v-show="!isSearchBarActive && searchStatus"
+        class="info mx-4 hidden whitespace-nowrap text-xs group-hover:text-dark-charcoal group-focus:text-dark-charcoal md:flex"
+      >
+        {{ searchStatus }}
+      </span>
+      <VContentSettingsButton
+        v-show="!isRecentVisible"
+        ref="contentSettingsButtonRef"
+        :is-pressed="contentSettingsOpen"
+        :applied-filter-count="appliedFilterCount"
+        v-bind="triggerA11yProps"
+        :disabled="!doneHydrating"
+        @click="toggleContentSettings"
+        @keydown.tab.exact="handleTabOut('forward')"
+      />
+      <VContentSettingsModalContent
+        v-show="!isRecentVisible"
+        variant="two-thirds"
+        :visible="contentSettingsOpen"
+        :is-fetching="isFetching"
+        :close="closeContentSettings"
+        :trigger-element="contentSettingsButton"
+        labelledby="content-settings-button"
+      />
+    </form>
+    <VModalContent
+      :visible="isRecentVisible"
+      :hide="deactivate"
+      :trigger-element="searchInputRef"
+      :trap-focus="false"
+      :auto-focus-on-show="false"
+      content-classes="px-3"
+      :aria-label="$t('recentSearches.heading')"
+      variant="mobile-input"
+    >
       <ClientOnly>
         <VRecentSearches
-          v-show="isRecentVisible"
           ref="recentSearchesRef"
           :selected-idx="selectedIdx"
           :entries="entries"
           :bordered="false"
-          class="mt-4"
           @select="handleSelect"
           @clear="handleClear"
           @last-tab="handleTabOut('forward')"
         />
       </ClientOnly>
-    </VInputModal>
+    </VModalContent>
   </header>
 </template>
 
@@ -143,7 +141,6 @@ import { useSearchStore } from "~/stores/search"
 import { skipToContentTargetId } from "~/constants/window"
 
 import VLogoButton from "~/components/VHeader/VLogoButton.vue"
-import VInputModal from "~/components/VModal/VInputModal.vue"
 import VContentSettingsModalContent from "~/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue"
 import VContentSettingsButton from "~/components/VHeader/VHeaderMobile/VContentSettingsButton.vue"
 import VRecentSearches from "~/components/VRecentSearches/VRecentSearches.vue"
@@ -159,7 +156,6 @@ export default defineComponent({
   components: {
     VContentSettingsModalContent,
     VContentSettingsButton,
-    VInputModal,
     VLogoButton,
     VRecentSearches,
     VSearchBarButton,
@@ -214,6 +210,7 @@ export default defineComponent({
     }
     const handleSearch = () => {
       window.scrollTo({ top: 0, left: 0, behavior: "auto" })
+      handleTabOut("forward")
       updateSearchState()
     }
 

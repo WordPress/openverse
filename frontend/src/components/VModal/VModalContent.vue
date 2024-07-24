@@ -3,14 +3,16 @@
     <Teleport to="#teleports">
       <div
         v-show="visible"
-        class="fixed inset-0 z-40 flex h-[100dvh] max-h-[100dvh] justify-center overflow-y-auto bg-dark-charcoal bg-opacity-75"
+        class="fixed z-40 flex h-[100dvh] max-h-[100dvh] justify-center overflow-y-auto"
         :class="[
           {
-            'bg-dark-charcoal bg-opacity-75':
-              variant === 'fit-content' || variant === 'two-thirds',
+            'inset-0 bg-dark-charcoal bg-opacity-75':
+              variant !== 'mobile-input',
+            'bottom-0 h-[calc(100dvh-80px)] bg-tx': variant === 'mobile-input',
             'flex-col items-center': variant === 'centered',
           },
           contentClasses,
+          variant,
         ]"
       >
         <!-- re: disabled static element interactions rule https://github.com/WordPress/openverse/issues/2906 -->
@@ -29,6 +31,7 @@
               'w-full': variant === 'full',
               'mt-auto h-2/3 w-full rounded-se-lg rounded-ss-lg bg-white':
                 variant === 'two-thirds',
+              'h-[calc(100dvh-80px)] self-end': variant === 'mobile-input',
               'mt-auto w-full rounded-se-lg rounded-ss-lg bg-white':
                 variant === 'fit-content',
               'm-6 rounded sm:m-0': variant === 'centered',
@@ -72,10 +75,13 @@
                 variant === 'full',
               'overflow-y-hidden rounded-se-lg rounded-ss-lg':
                 variant === 'two-thirds',
+              'h-full': variant === 'mobile-input',
               'bg-black text-white': mode === 'dark',
               'bg-white text-dark-charcoal': mode === 'light',
               'fallback-padding':
-                variant === 'fit-content' || variant === 'two-thirds',
+                variant === 'fit-content' ||
+                variant === 'two-thirds' ||
+                variant === 'mobile-input',
             }"
           >
             <slot />
