@@ -181,12 +181,13 @@ def get_pending_record_filter(media_type: str):
         def lookups(self, request, model_admin):
             return [
                 (None, "Moderation queue"),
+                ("prev", "Resolved"),
                 ("all", "All"),
             ]
 
         def queryset(self, request, qs):
             value = self.value()
-            if value is None:
+            if value is None or value == "prev":
                 # Filter down to only instances with reports
                 qs = qs.filter(**{f"{media_type}_report__isnull": False})
 
@@ -204,6 +205,10 @@ def get_pending_record_filter(media_type: str):
                 qs = qs.order_by(
                     "-total_report_count", "-pending_report_count", "oldest_report_date"
                 )
+            if value is None:
+                qs = qs.filter(pending_report_count__gt=0)
+            if value == "prev":
+                qs = qs.filter(pending_report_count=0)
 
             return qs
 
@@ -299,18 +304,24 @@ class MediaListAdmin(admin.ModelAdmin):
         return (get_pending_record_filter(self.media_type),)
 
     def get_list_display(self, request):
-        if request.GET.get("pending_record_count") != "all":
+        if request.GET.get("pending_record_count") == "all":
+            return self.list_display + (
+                "source",
+                "provider",
+            )
+        elif request.GET.get("pending_record_count") == "prev":
+            return self.list_display + (
+                "total_report_count",
+                "oldest_report_date",
+                "has_sensitive_text",
+            )
+        else:
             return self.list_display + (
                 "total_report_count",
                 "pending_report_count",
                 "oldest_report_date",
                 "pending_reports_links",
                 "has_sensitive_text",
-            )
-        else:
-            return self.list_display + (
-                "source",
-                "provider",
             )
 
     def total_report_count(self, obj):
