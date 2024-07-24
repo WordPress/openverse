@@ -1,18 +1,15 @@
 <template>
-  <div>
+  <div v-if="visible">
     <Teleport to="#teleports">
       <div
         v-show="visible"
-        class="fixed z-40 flex h-[100dvh] max-h-[100dvh] justify-center overflow-y-auto"
+        class="h-dyn-screen min-h-dyn-screen fixed inset-0 z-40 flex justify-center overflow-y-auto"
         :class="[
-          {
-            'inset-0 bg-dark-charcoal bg-opacity-75':
-              variant !== 'mobile-input',
-            'bottom-0 h-[calc(100dvh-80px)] bg-tx': variant === 'mobile-input',
-            'flex-col items-center': variant === 'centered',
-          },
+          { 'flex-col items-center': variant === 'centered' },
+          variant === 'mobile-input'
+            ? 'top-20 h-[calc(100dvh-80px)] bg-tx'
+            : 'bg-dark-charcoal bg-opacity-75',
           contentClasses,
-          variant,
         ]"
       >
         <!-- re: disabled static element interactions rule https://github.com/WordPress/openverse/issues/2906 -->
@@ -31,7 +28,6 @@
               'w-full': variant === 'full',
               'mt-auto h-2/3 w-full rounded-se-lg rounded-ss-lg bg-white':
                 variant === 'two-thirds',
-              'h-[calc(100dvh-80px)] self-end': variant === 'mobile-input',
               'mt-auto w-full rounded-se-lg rounded-ss-lg bg-white':
                 variant === 'fit-content',
               'm-6 rounded sm:m-0': variant === 'centered',

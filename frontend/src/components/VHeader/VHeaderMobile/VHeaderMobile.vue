@@ -1,7 +1,7 @@
 <template>
   <header
     ref="headerRef"
-    class="main-header z-30 flex w-full items-center bg-white px-6 py-4"
+    class="main-header z-30 flex w-full items-center px-6 py-4"
   >
     <!-- Form action is a fallback for when JavaScript is disabled. -->
     <form
@@ -61,11 +61,12 @@
       />
       <VSearchBarButton
         v-show="isRecentVisible && localSearchTerm"
+        ref="clearButtonRef"
         icon="close-small"
         :label="$t('browsePage.searchForm.clear')"
         inner-area-classes="bg-white hover:bg-dark-charcoal-10"
         @click="clearSearchText"
-        @keydown.tab.exact="handleClearButtonTab"
+        @keydown.tab.exact="handleTab($event, 'clear-input')"
       />
       <span
         v-show="!isSearchBarActive && searchStatus"
@@ -81,7 +82,7 @@
         v-bind="triggerA11yProps"
         :disabled="!doneHydrating"
         @click="toggleContentSettings"
-        @keydown.tab.exact="handleTabOut('forward')"
+        @keydown.tab.exact="handleTab($event, 'content-settings')"
       />
       <VContentSettingsModalContent
         v-show="!isRecentVisible"
@@ -94,11 +95,13 @@
       />
     </form>
     <VModalContent
-      :visible="isRecentVisible"
+      v-if="isRecentVisible"
+      :visible="true"
       :hide="deactivate"
       :trigger-element="searchInputRef"
       :trap-focus="false"
       :auto-focus-on-show="false"
+      :auto-focus-on-hide="false"
       content-classes="px-3"
       :aria-label="$t('recentSearches.heading')"
       variant="mobile-input"
@@ -106,6 +109,7 @@
       <ClientOnly>
         <VRecentSearches
           ref="recentSearchesRef"
+          class="w-[100dvw] px-3"
           :selected-idx="selectedIdx"
           :entries="entries"
           :bordered="false"
@@ -119,7 +123,7 @@
 </template>
 
 <script lang="ts">
-import { firstParam, useNuxtApp, useRoute } from "#imports"
+import { firstParam, focusIn, useNuxtApp, useRoute, useRouter } from "#imports"
 
 import { computed, defineComponent, nextTick, ref, watch } from "vue"
 import { onClickOutside } from "@vueuse/core"
@@ -172,6 +176,9 @@ export default defineComponent({
     const contentSettingsButton = computed(
       () => (contentSettingsButtonRef.value?.$el as HTMLElement) ?? undefined
     )
+    const clearButtonRef = ref<InstanceType<typeof VSearchBarButton> | null>(
+      null
+    )
 
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
@@ -210,7 +217,6 @@ export default defineComponent({
     }
     const handleSearch = () => {
       window.scrollTo({ top: 0, left: 0, behavior: "auto" })
-      handleTabOut("forward")
       updateSearchState()
     }
 
@@ -336,14 +342,13 @@ export default defineComponent({
     const handleTabOut = (direction: "forward" | "backward") => {
       recent.hide()
       nextTick().then(() => {
-        let element =
+        const element =
           direction === "forward"
             ? document.getElementById(skipToContentTargetId)
             : getAllTabbableIn(document.body)[1]
-        if (!element) {
-          element = getFirstTabbableIn(document.body)
-        }
-        ensureFocus(element as HTMLElement)
+        ensureFocus(
+          element ?? (getFirstTabbableIn(document.body) as HTMLElement)
+        )
       })
     }
 
@@ -368,11 +373,33 @@ export default defineComponent({
 
     const { doneHydrating } = useHydrating()
 
+    const router = useRouter()
+    router.beforeEach((to, from, next) => {
+      if (to.path !== from.path) {
+        closeContentSettings()
+        deactivate()
+      }
+      next()
+    })
+
+    const handleTab = (
+      event: KeyboardEvent & { key: "Tab" },
+      button: "content-settings" | "clear-input"
+    ) => {
+      if (recent.isVisible.value) {
+        event.preventDefault()
+        focusIn(recentSearchesRef.value?.$el, 1)
+      } else if (button === "content-settings") {
+        handleTabOut("forward")
+      }
+    }
+
     return {
       isInputFocused,
       searchInputRef,
       headerRef,
       recentSearchesRef,
+      clearButtonRef,
       contentSettingsButtonRef,
       contentSettingsButton,
 
@@ -408,6 +435,7 @@ export default defineComponent({
       handleClear,
       handleClearButtonTab,
       handleTabOut,
+      handleTab,
     }
   },
 })
