@@ -33,3 +33,28 @@ class DecisionAction(models.TextChoices):
     @property
     def is_deindex(self):
         return self in {self.DEINDEXED_COPYRIGHT, self.DEINDEXED_SENSITIVE}
+
+    @property
+    def verb(self) -> str:
+        """
+        Return the verb form of the action for use in sentences.
+
+        :param object: the object of the sentence
+        :return: the grammatically coherent verb phrase of the action
+        """
+
+        match self:
+            case self.MARKED_SENSITIVE:
+                return "marked as sensitive"
+            case self.DEINDEXED_COPYRIGHT:
+                return "deindexed (copyright)"
+            case self.DEINDEXED_SENSITIVE:
+                return "deindexed (sensitive)"
+            case self.REJECTED_REPORTS:
+                return "rejected"
+            case self.DEDUPLICATED_REPORTS:
+                return "de-duplicated"
+            case self.REVERSED_MARK_SENSITIVE:
+                return "unmarked as sensitive"
+            case self.REVERSED_DEINDEX:
+                return "reindexed"
