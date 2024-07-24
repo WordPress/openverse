@@ -59,7 +59,7 @@
     "doc:media-props": "node ./scripts/document-media.js"
   },
   "dependencies": {
-    "@floating-ui/dom": "^1.6.7",
+    "@floating-ui/dom": "^1.6.8",
     "@intlify/core-base": "^9.13.1",
     "@intlify/message-compiler": "^9.13.1",
     "@nuxtjs/plausible": "^1.0.0",
@@ -92,8 +92,8 @@
     "@testing-library/user-event": "^14.5.2",
     "@testing-library/vue": "^8.1.0",
     "@types/node": "^20.14.11",
-    "@vitest/coverage-v8": "^2.0.3",
-    "@vitest/ui": "^2.0.3",
+    "@vitest/coverage-v8": "^2.0.4",
+    "@vitest/ui": "^2.0.4",
     "@vue/test-utils": "^2.4.6",
     "adm-zip": "^0.5.14",
     "chokidar": "^3.6.0",
@@ -102,15 +102,15 @@
     "jsdom": "^24.1.0",
     "node-html-parser": "^6.1.13",
     "npm-run-all2": "^6.2.2",
-    "nuxt": "3.12.2",
+    "nuxt": "3.12.4",
     "rimraf": "^6.0.1",
     "talkback": "^4.2.0",
     "typescript": "5.5.3",
-    "vitest": "^2.0.3",
+    "vitest": "^2.0.4",
     "vitest-dom": "^0.1.1",
-    "vue": "3.4.31",
+    "vue": "3.4.33",
     "vue-router": "^4.4.0",
-    "vue-tsc": "2.0.26"
+    "vue-tsc": "2.0.28"
   },
   "browserslist": [
     "> 1%",
