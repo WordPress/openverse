@@ -79,8 +79,8 @@ def perform_moderation(
             DeletedMedia.bulk_perform_action(mod_objects)
 
         case DecisionAction.REVERSED_MARK_SENSITIVE:
-            mod_objects = Media.object.filter(identifier__in=identifiers)
-            SensitiveMedia.bulk_perform_action(False, mod_objects)
+            media_items = Media.objects.filter(identifier__in=identifiers)
+            SensitiveMedia.bulk_perform_action(False, media_items)
             mod_objects.delete()
 
         case DecisionAction.REVERSED_DEINDEX:
