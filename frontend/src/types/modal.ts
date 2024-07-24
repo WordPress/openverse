@@ -6,6 +6,7 @@ export type ModalVariant =
   | "two-thirds"
   | "fit-content"
   | "centered"
+  | "mobile-input"
 export type ModalColorMode = "dark" | "light"
 
 export type DialogOptions = {
