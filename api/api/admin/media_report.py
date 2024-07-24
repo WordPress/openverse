@@ -222,6 +222,9 @@ def get_pending_record_filter(media_type: str):
 
 
 class BulkModerationMixin:
+    def has_bulk_mod_permission(self, request):
+        return request.user.has_perm(f"api.add_{self.media_type}decision")
+
     def _bulk_mod(self, request, queryset, action: DecisionAction):
         """
         Perform bulk moderation for the queryset as per the requested
@@ -654,15 +657,24 @@ class MediaListAdmin(BulkModerationMixin, admin.ModelAdmin):
     # Bulk actions #
     ################
 
-    @admin.action(description="Mark selected %(verbose_name_plural)s as sensitive")
+    @admin.action(
+        permissions=["bulk_mod"],
+        description="Mark selected %(verbose_name_plural)s as sensitive",
+    )
     def marked_sensitive(self, request, queryset):
         return self._bulk_mod(request, queryset, DecisionAction.MARKED_SENSITIVE)
 
-    @admin.action(description="Deindex selected %(verbose_name_plural)s (sensitive)")
+    @admin.action(
+        permissions=["bulk_mod"],
+        description="Deindex selected %(verbose_name_plural)s (sensitive)",
+    )
     def deindexed_sensitive(self, request, queryset):
         return self._bulk_mod(request, queryset, DecisionAction.DEINDEXED_SENSITIVE)
 
-    @admin.action(description="Deindex selected %(verbose_name_plural)s (copyright)")
+    @admin.action(
+        permissions=["bulk_mod"],
+        description="Deindex selected %(verbose_name_plural)s (copyright)",
+    )
     def deindexed_copyright(self, request, queryset):
         return self._bulk_mod(request, queryset, DecisionAction.DEINDEXED_COPYRIGHT)
 
@@ -856,7 +868,10 @@ class DeletedMediaAdmin(MediaSubreportAdmin):
     # Bulk actions #
     ################
 
-    @admin.action(description="Reindex selected %(verbose_name_plural)s")
+    @admin.action(
+        permissions=["bulk_mod"],
+        description="Reindex selected %(verbose_name_plural)s",
+    )
     def reversed_deindex(self, request, queryset):
         return self._bulk_mod(request, queryset, DecisionAction.REVERSED_DEINDEX)
 
@@ -868,7 +883,10 @@ class SensitiveMediaAdmin(MediaSubreportAdmin):
     # Bulk actions #
     ################
 
-    @admin.action(description="Unmark selected %(verbose_name_plural)s as sensitive")
+    @admin.action(
+        permissions=["bulk_mod"],
+        description="Unmark selected %(verbose_name_plural)s as sensitive",
+    )
     def reversed_mark_sensitive(self, request, queryset):
         return self._bulk_mod(request, queryset, DecisionAction.REVERSED_MARK_SENSITIVE)
 
