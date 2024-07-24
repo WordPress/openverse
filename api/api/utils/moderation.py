@@ -60,10 +60,13 @@ def perform_moderation(
             MediaDecision = ImageDecision
             MediaDecisionThrough = ImageDecisionThrough
 
+    # The following block uses ``list`` to force evaluation of the
+    # queryset and store the values because calling ``delete`` below
+    # will otherwise make the querysets evaluate differently.
     if action.is_reverse:
-        identifiers = mod_objects.values_list("media_obj_id", flat=True)
+        identifiers = list(mod_objects.values_list("media_obj_id", flat=True))
     else:
-        identifiers = mod_objects.values_list("identifier", flat=True)
+        identifiers = list(mod_objects.values_list("identifier", flat=True))
 
     match action:
         case DecisionAction.MARKED_SENSITIVE:
