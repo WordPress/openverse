@@ -25,12 +25,15 @@ from api.models import (
     AudioDecision,
     AudioDecisionThrough,
     AudioReport,
+    DeletedAudio,
+    DeletedImage,
     Image,
     ImageDecision,
     ImageDecisionThrough,
     ImageReport,
+    SensitiveAudio,
+    SensitiveImage,
 )
-from api.models.media import AbstractDeletedMedia, AbstractSensitiveMedia
 from api.utils.moderation import perform_moderation
 from api.utils.moderation_lock import LockManager
 
@@ -45,11 +48,11 @@ def register(site):
     site.register(AudioReport, AudioReportAdmin)
     site.register(ImageReport, ImageReportAdmin)
 
-    for klass in [
-        *AbstractSensitiveMedia.__subclasses__(),
-        *AbstractDeletedMedia.__subclasses__(),
-    ]:
-        site.register(klass, MediaSubreportAdmin)
+    site.register(SensitiveImage, SensitiveImageAdmin)
+    site.register(SensitiveAudio, SensitiveAudioAdmin)
+
+    site.register(DeletedImage, DeletedImageAdmin)
+    site.register(DeletedAudio, DeletedAudioAdmin)
 
     site.register(ImageDecision, ImageDecisionAdmin)
     site.register(AudioDecision, AudioDecisionAdmin)
@@ -819,6 +822,43 @@ class MediaDecisionAdmin(admin.ModelAdmin):
         return super().save_model(request, obj, form, change)
 
 
+class MediaSubreportAdmin(BulkModerationMixin, admin.ModelAdmin):
+    media_type = None
+
+    exclude = ("media_obj",)
+    search_fields = "media_obj__identifier"
+    readonly_fields = ("media_obj_id",)
+
+    def has_add_permission(self, *args, **kwargs):
+        # These objects are created through moderation and
+        # bulk-moderation operations.
+        return False
+
+
+class DeletedMediaAdmin(MediaSubreportAdmin):
+    actions = ["reversed_deindex"]
+
+    ################
+    # Bulk actions #
+    ################
+
+    @admin.action(description="Reindex selected %(verbose_name_plural)s")
+    def reversed_deindex(self, request, queryset):
+        return self._bulk_mod(request, queryset, DecisionAction.REVERSED_DEINDEX)
+
+
+class SensitiveMediaAdmin(MediaSubreportAdmin):
+    actions = ["reversed_mark_sensitive"]
+
+    ################
+    # Bulk actions #
+    ################
+
+    @admin.action(description="Unmark selected %(verbose_name_plural)s as sensitive")
+    def reversed_mark_sensitive(self, request, queryset):
+        return self._bulk_mod(request, queryset, DecisionAction.REVERSED_MARK_SENSITIVE)
+
+
 class ImageReportAdmin(MediaReportAdmin):
     media_type = "image"
 
@@ -845,11 +885,17 @@ class AudioDecisionAdmin(MediaDecisionAdmin):
     through_model = AudioDecisionThrough
 
 
-class MediaSubreportAdmin(admin.ModelAdmin):
-    exclude = ("media_obj",)
-    search_fields = ("media_obj__identifier",)
-    readonly_fields = ("media_obj_id",)
+class SensitiveImageAdmin(SensitiveMediaAdmin):
+    media_type = "image"
 
-    def has_add_permission(self, *args, **kwargs):
-        """Create ``_Report`` instances instead."""
-        return False
+
+class SensitiveAudioAdmin(SensitiveMediaAdmin):
+    media_type = "audio"
+
+
+class DeletedImageAdmin(DeletedMediaAdmin):
+    media_type = "image"
+
+
+class DeletedAudioAdmin(DeletedMediaAdmin):
+    media_type = "audio"
