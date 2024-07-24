@@ -21,6 +21,23 @@
 {% block content %}
 <p>Are you sure you want the selected {{ objects_name }} to be {{ decision_action.verb }}?</p>
 
+{% if decision_action == "reversed_deindex" %}
+<div class="bg-warning p-10px">
+  This action does not immediately result in deindexed records being
+  added back to the DB and Elasticsearch indices. When the records were
+  originally deindexed, they were deleted from both, and there is no
+  quick way to restore them without running a data refresh.
+</div>
+<style>
+  .p-10px {
+    padding: 10px;
+  }
+  .bg-warning {
+    background-color: var(--message-warning-bg);
+  }
+</style>
+{% endif %}
+
 <h2>Summary</h2>
 <ul>
   {% for stat_key, stat_value in stats %}
