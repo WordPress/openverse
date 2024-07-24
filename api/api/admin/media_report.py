@@ -806,6 +806,18 @@ class MediaDecisionAdmin(admin.ModelAdmin):
             autocomplete_fields = _production_deferred("media_obj")
             raw_id_fields = _non_production_deferred("media_obj")
 
+            def get_readonly_fields(self, request, obj):
+                if is_mutable:
+                    return super().get_readonly_fields(request, obj)
+                else:
+                    return ("media_obj_id",)
+
+            def get_exclude(self, request, obj):
+                if is_mutable:
+                    return super().get_exclude(request, obj)
+                else:
+                    return ("media_obj",)
+
             def has_add_permission(self, request, obj=None):
                 return is_mutable and super().has_add_permission(request, obj)
 
