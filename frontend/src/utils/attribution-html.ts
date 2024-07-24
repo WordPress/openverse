@@ -46,9 +46,31 @@ const h = (
   attrs: Record<string, string>,
   children: string[] | null = null
 ): string => {
+  const selfClosingTags = [
+    "area",
+    "base",
+    "br",
+    "col",
+    "embed",
+    "hr",
+    "img",
+    "input",
+    "link",
+    "meta",
+    "param",
+    "source",
+    "track",
+    "wbr",
+  ]
+
   const map = Object.entries(attrs)
     .map(([key, value]) => `${key}="${value}"`)
     .join(" ")
+
+  if (selfClosingTags.includes(name)) {
+    return map ? `<${name} ${map} />` : `<${name} />`
+  }
+
   const opening = map ? `<${name} ${map}>` : `<${name}>`
   const closing = `</${name}>`
   return `${opening}${(children ?? []).join("\n")}${closing}`
