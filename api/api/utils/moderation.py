@@ -91,7 +91,7 @@ def perform_moderation(
     media_decision = MediaDecision.objects.create(
         action=action,
         moderator=request.user,
-        notes="Created through bulk moderation.",
+        notes=request.POST.get("notes"),
     )
     MediaDecisionThrough.objects.bulk_create(
         [

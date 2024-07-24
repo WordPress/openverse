@@ -36,6 +36,9 @@
 <form method="post">
   {% csrf_token %}
   <div>
+    <div>
+      <textarea required name="notes" placeholder="Please provide an explanation." rows="4" cols="80"></textarea>
+    </div>
     {% for obj in queryset %}
     <input type="hidden" name="{{ action_checkbox_name }}" value="{{ obj.pk }}">
     {% endfor %}
