@@ -321,17 +321,18 @@ class MediaListAdmin(admin.ModelAdmin):
     def oldest_report_date(self, obj):
         return obj.oldest_report_date
 
+    @admin.display(description="Open reports")
     def pending_reports_links(self, obj):
         reports = getattr(obj, f"{self.media_type}_report")
         pending_reports = reports.filter(decision__isnull=True)
         data = []
         for report in pending_reports.all():
-            url = reverse(
+            path = reverse(
                 f"admin:api_{self.media_type}report_change", args=(report.id,)
             )
-            data.append(format_html('<a href="{}">Report {}</a>', url, report.id))
+            data.append(format_html('• <a href="{}">Report {}</a>', path, report.id))
 
-        return mark_safe(", ".join(data))
+        return mark_safe("<br>".join(data))
 
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
