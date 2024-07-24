@@ -170,35 +170,6 @@ def test_auth_rate_limit_reporting(
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    "verified",
-    (True, False),
-)
-def test_auth_response_headers(
-    api_client, verified, test_auth_tokens_registration, test_auth_token_exchange
-):
-    if verified:
-        _integration_verify_most_recent_token(api_client)
-
-    token = test_auth_token_exchange["access_token"]
-
-    res = api_client.get("/v1/images/", HTTP_AUTHORIZATION=f"Bearer {token}")
-
-    assert (
-        res.headers["x-ov-client-application-name"]
-        == test_auth_tokens_registration["name"]
-    )
-    assert res.headers["x-ov-client-application-verified"] == str(verified)
-
-
-def test_unauthed_response_headers(api_client):
-    res = api_client.get("/v1/images")
-
-    assert "x-ov-client-application-name" not in res.headers
-    assert "x-ov-client-application-verified" not in res.headers
-
-
-@pytest.mark.django_db
-@pytest.mark.parametrize(
     "sort_dir, exp_indexed_on",
     [
         ("desc", "2022-12-31"),

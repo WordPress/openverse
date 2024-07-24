@@ -6,10 +6,10 @@ authors = [
   {name = "Openverse Contributors", email = "openverse@wordpress.org"},
 ]
 dependencies = [
-    "redis >= 5.0",
-    "pandas >= 2.2",
-    "click >= 8.1",
-    "matplotlib >= 3.9",
+    "redis >= 5.0.7, <6",
+    "pandas >= 2.2.2, <3",
+    "click >= 8.1.7, <9",
+    "matplotlib >= 3.9.1, <4",
 ]
 requires-python = "==3.12.*"
 readme = "README.md"

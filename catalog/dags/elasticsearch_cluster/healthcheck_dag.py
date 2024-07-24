@@ -36,6 +36,8 @@ logger = logging.getLogger(__name__)
 
 
 _DAG_ID = "{env}_elasticsearch_cluster_healthcheck"
+ES_ICON = ":elasticsearch_bad:"
+ES_USERNAME = "{env} ES Cluster (via Airflow)"
 
 EXPECTED_NODE_COUNT = 6
 EXPECTED_DATA_NODE_COUNT = 3
@@ -142,10 +144,16 @@ def compose_notification(
 def notify(env: str, message_type_and_string: tuple[MessageType, str]):
     message_type, message = message_type_and_string
 
+    message_kwargs = {
+        "dag_id": _DAG_ID.format(env=env),
+        "username": ES_USERNAME.format(env=env.title()),
+        "icon_emoji": ES_ICON,
+    }
+
     if message_type == "alert":
-        send_alert(dedent(message), dag_id=_DAG_ID.format(env=env))
+        send_alert(dedent(message), **message_kwargs)
     elif message_type == "notification":
-        send_message(dedent(message), dag_id=_DAG_ID.format(env=env))
+        send_message(dedent(message), **message_kwargs)
     else:
         raise ValueError(
             f"Invalid message_type. Expected 'alert' or 'notification', "

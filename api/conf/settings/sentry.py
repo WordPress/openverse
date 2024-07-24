@@ -30,3 +30,6 @@ if not DEBUG and SENTRY_DSN:
     # code, which can be registered by Sentry and obscure the underlying reason
     # why 5xx response was returned in the first place.
     ignore_logger("django_structlog.middlewares.request")
+    # These errors can occur in large volumes and so we don't want them to fill
+    # up in Sentry and overwhelm us with Slack notifications.
+    ignore_logger("api.utils.check_dead_links._head")

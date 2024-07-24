@@ -1,14 +1,12 @@
 [project]
-name = "dead_links"
+name = "generate_test_locales"
 version = "0.0.0"
-description = "Retrieves dead link tallies from Openverse API Redis"
+description = "Generate test locales for Openverse"
 authors = [
   {name = "Openverse Contributors", email = "openverse@wordpress.org"},
 ]
 dependencies = [
-    "redis >= 5.0.7, <6",
-    "tqdm >= 4.66.4, <5",
-    "click >=8.1.7, <9",
+    "argostranslate >= 1.9.6, <2",
 ]
 requires-python = "==3.12.*"
 

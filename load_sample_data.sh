@@ -85,14 +85,16 @@ crud_perm_map = {'C': 'add', 'R': 'view', 'U': 'change', 'D': 'delete'}
 model_perms_map = {
   'image': 'R',
   'audio': 'R',
-  'image report': 'CRU',
-  'audio report': 'CRU',
-  'sensitive image': 'CRU',
-  'sensitive audio': 'CRU',
-  'image decision': 'CRU',
-  'audio decision': 'CRU',
-  'image decision through': 'CRUD',
-  'audio decision through': 'CRUD',
+  'image report': 'R',
+  'audio report': 'R',
+  'sensitive image': 'R',
+  'sensitive audio': 'R',
+  'deleted image': 'R',
+  'deleted audio': 'R',
+  'image decision': 'CR',
+  'audio decision': 'CR',
+  'image decision through': 'R',
+  'audio decision through': 'R',
 }
 
 mod_group, created = Group.objects.get_or_create(name='Content Moderators')
