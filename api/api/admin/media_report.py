@@ -851,7 +851,7 @@ class MediaSubreportAdmin(BulkModerationMixin, admin.ModelAdmin):
 
     exclude = ("media_obj",)
     ordering = ("-created_on",)
-    search_fields = "media_obj__identifier"
+    search_fields = ("media_obj__identifier",)
     readonly_fields = ("media_obj_id",)
     list_display = ("media_obj_id", "created_on")
 
