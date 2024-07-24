@@ -19,15 +19,8 @@ from elasticsearch_dsl import Search
 from api.constants.moderation import DecisionAction
 from api.models import (
     Audio,
-    AudioDecision,
-    AudioDecisionThrough,
-    AudioReport,
     Image,
-    ImageDecision,
-    ImageDecisionThrough,
-    ImageReport,
 )
-from api.models.media import AbstractDeletedMedia, AbstractSensitiveMedia
 from api.utils.moderation_lock import LockManager
 
 
@@ -35,39 +28,12 @@ logger = structlog.get_logger(__name__)
 
 
 def register(site):
-    site.register(Image, ImageListViewAdmin)
-    site.register(Audio, AudioListViewAdmin)
-
-    site.register(AudioReport, AudioReportAdmin)
-    site.register(ImageReport, ImageReportAdmin)
-
-    for klass in [
-        *AbstractSensitiveMedia.__subclasses__(),
-        *AbstractDeletedMedia.__subclasses__(),
-    ]:
-        site.register(klass, MediaSubreportAdmin)
-
-    site.register(ImageDecision, ImageDecisionAdmin)
-    site.register(AudioDecision, AudioDecisionAdmin)
-
-
-def get_report_form(media_type: str):
-    report_class = {
-        "image": ImageReport,
-        "audio": AudioReport,
-    }[media_type]
-
-    class MediaReportForm(forms.ModelForm):
-        class Meta:
-            fields = ["media_obj", "reason", "description"]
-            model = report_class
-
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-            for field in self.fields.values():
-                field.widget.attrs.update({"form": "report-create"})
-
-    return MediaReportForm
+    for media_class, admins in MEDIA_ADMIN.items():
+        site.register(media_class, admins[MediaListAdmin])
+        site.register(media_class.report_class, admins[MediaReportAdmin])
+        site.register(media_class.sensitive_media_class, MediaSubreportAdmin)
+        site.register(media_class.deleted_media_class, MediaSubreportAdmin)
+        site.register(media_class.decision_class, admins[MediaDecisionAdmin])
 
 
 class MultipleValueField(forms.MultipleChoiceField):
@@ -80,42 +46,63 @@ class MultipleValueField(forms.MultipleChoiceField):
         return True
 
 
-def get_decision_form(media_type: str):
-    decision_class, report_class = {
-        "image": (ImageDecision, ImageReport),
-        "audio": (AudioDecision, AudioReport),
-    }[media_type]
+MEDIA_FORMS = {media_class: {} for media_class in [Image, Audio]}
 
-    class MediaDecisionForm(forms.ModelForm):
-        report_id = MultipleValueField()  # not rendered using its widget
 
-        class Meta:
-            model = decision_class
-            fields = ["action", "notes"]
+class MediaReportForm(forms.ModelForm):
+    def __init_subclass__(cls):
+        cls.Meta.model = cls.media_class.report_class
+        MEDIA_FORMS[cls.media_class][MediaReportForm] = cls
 
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-            for field in self.fields.values():
-                field.widget.attrs.update({"form": "decision-create"})
+    class Meta:
+        fields = ["media_obj", "reason", "description"]
+        model: type = None
 
-        def clean_report_id(self):
-            report_ids = set(self.cleaned_data["report_id"])
-            report_qs = report_class.objects.filter(
-                decision=None,
-                id__in=report_ids,
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update({"form": "report-create"})
+
+
+class MediaDecisionForm(forms.ModelForm):
+    report_id = MultipleValueField()  # not rendered using its widget
+
+    def __init_subclass__(cls):
+        cls.Meta.model = cls.media_class.decision_class
+        MEDIA_FORMS[cls.media_class][MediaDecisionForm] = cls
+
+    class Meta:
+        model = None
+        fields = ["action", "notes"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update({"form": "decision-create"})
+
+    def clean_report_id(self):
+        report_ids = set(self.cleaned_data["report_id"])
+        report_qs = self.media_class.report_class.objects.filter(
+            decision=None,
+            id__in=report_ids,
+        )
+        retrieved_report_ids = set(
+            str(val) for val in report_qs.values_list("id", flat=True)
+        )
+        if diff := (report_ids - retrieved_report_ids):
+            raise forms.ValidationError(
+                "No pending reports found for IDs %(value)s.",
+                params={"value": ", ".join(diff)},
             )
-            retrieved_report_ids = set(
-                str(val) for val in report_qs.values_list("id", flat=True)
-            )
-            if diff := (report_ids - retrieved_report_ids):
-                raise forms.ValidationError(
-                    "No pending reports found for IDs %(value)s.",
-                    params={"value": ", ".join(diff)},
-                )
-            self.cleaned_data["reports"] = report_qs
-            return report_ids
+        self.cleaned_data["reports"] = report_qs
+        return report_ids
 
-    return MediaDecisionForm
+
+for media_class in MEDIA_FORMS:
+    type_prefix = media_class.media_type.title()
+    for form in [MediaReportForm, MediaDecisionForm]:
+        name = f"{type_prefix}{form.__name__}"
+        globals()[name] = type(name, (form,), {"media_class": media_class})
 
 
 def _production_deferred(*values: str) -> Sequence[str]:
@@ -162,55 +149,64 @@ class PredeterminedOrderChangelist(ChangeList):
         return []
 
 
-def get_pending_record_filter(media_type: str):
-    class PendingRecordCountFilter(admin.SimpleListFilter):
-        title = "pending record count"
-        parameter_name = "pending_record_count"
+class PendingRecordCountFilter(admin.SimpleListFilter):
+    title = "pending record count"
+    parameter_name = "pending_record_count"
 
-        def choices(self, changelist):
-            for lookup, title in self.lookup_choices:
-                yield {
-                    "selected": self.value() == lookup,
-                    "query_string": changelist.get_query_string(
-                        {self.parameter_name: lookup}, []
-                    ),
-                    "display": title,
-                }
+    def choices(self, changelist):
+        for lookup, title in self.lookup_choices:
+            yield {
+                "selected": self.value() == lookup,
+                "query_string": changelist.get_query_string(
+                    {self.parameter_name: lookup}, []
+                ),
+                "display": title,
+            }
 
-        def lookups(self, request, model_admin):
-            return [
-                (None, "Moderation queue"),
-                ("all", "All"),
-            ]
+    def lookups(self, request, model_admin):
+        return [
+            (None, "Moderation queue"),
+            ("all", "All"),
+        ]
 
-        def queryset(self, request, qs):
-            value = self.value()
-            if value is None:
-                # Filter down to only instances with reports
-                qs = qs.filter(**{f"{media_type}_report__isnull": False})
+    def queryset(self, request, qs):
+        value = self.value()
+        if value is None:
+            # Filter down to only instances with reports
+            qs = qs.filter(**{"report__isnull": False})
 
-                # Annotate and order by report count
-                qs = qs.annotate(total_report_count=Count(f"{media_type}_report"))
-                # Show total pending reports by subtracting the number of reports
-                # from the number of reports that have decisions
-                qs = qs.annotate(
-                    pending_report_count=F("total_report_count")
-                    - Count(f"{media_type}_report__decision__pk")
-                )
-                qs = qs.annotate(
-                    oldest_report_date=Min(f"{media_type}_report__created_at")
-                )
-                qs = qs.order_by(
-                    "-total_report_count", "-pending_report_count", "oldest_report_date"
-                )
+            # Annotate and order by report count
+            qs = qs.annotate(total_report_count=Count("report"))
+            # Show total pending reports by subtracting the number of reports
+            # from the number of reports that have decisions
+            qs = qs.annotate(
+                pending_report_count=F("total_report_count")
+                - Count("report__decision__pk")
+            )
+            qs = qs.annotate(oldest_report_date=Min("report__created_at"))
+            qs = qs.order_by(
+                "-total_report_count", "-pending_report_count", "oldest_report_date"
+            )
 
-            return qs
+        return qs
 
-    return PendingRecordCountFilter
+
+MEDIA_ADMIN = {media_class: {} for media_class in [Image, Audio]}
 
 
 class MediaListAdmin(admin.ModelAdmin):
-    media_type = None
+    media_class: type = None
+
+    def __init_subclass__(cls):
+        MEDIA_ADMIN[cls.media_class][MediaListAdmin] = cls
+
+    @property
+    def media_type(self):
+        return self.media_class.media_type
+
+    @property
+    def _forms(self):
+        return MEDIA_FORMS[self.media_class]
 
     def __init__(self, *args, **kwargs):
         self.lock_manager = LockManager(self.media_type)
@@ -271,7 +267,7 @@ class MediaListAdmin(admin.ModelAdmin):
         :return: whether the item has sensitive text
         """
 
-        filtered_index = f"{settings.MEDIA_INDEX_MAPPING[self.media_type]}-filtered"
+        filtered_index = self.media_class.filtered_index
         try:
             search = (
                 Search(index=filtered_index)
@@ -295,7 +291,7 @@ class MediaListAdmin(admin.ModelAdmin):
     sortable_by = ()  # Ordering is defined in ``get_queryset``.
 
     def get_list_filter(self, request):
-        return (get_pending_record_filter(self.media_type),)
+        return (PendingRecordCountFilter,)
 
     def get_list_display(self, request):
         if request.GET.get("pending_record_count") != "all":
@@ -322,7 +318,7 @@ class MediaListAdmin(admin.ModelAdmin):
         return obj.oldest_report_date
 
     def pending_reports_links(self, obj):
-        reports = getattr(obj, f"{self.media_type}_report")
+        reports = getattr(obj, "report")
         pending_reports = reports.filter(decision__isnull=True)
         data = []
         for report in pending_reports.all():
@@ -393,20 +389,18 @@ class MediaListAdmin(admin.ModelAdmin):
                 ).append(text)
         extra_context["tags"] = tags_by_provider
 
-        manager = getattr(media_obj, f"{self.media_type}decisionthrough_set")
-        decision_throughs = manager.order_by("decision__created_on")
+        decision_throughs = media_obj.decision_through.order_by("decision__created_on")
         extra_context["decision_throughs"] = decision_throughs
 
-        manager = getattr(media_obj, f"{self.media_type}_report")
-        reports = manager.order_by("-created_at")
+        reports = media_obj.report.order_by("-created_at")
         extra_context["reports"] = reports
 
         pending_report_count = reports.filter(decision_id=None).count()
         extra_context["pending_report_count"] = pending_report_count
 
-        extra_context["mod_form"] = get_decision_form(self.media_type)()
+        extra_context["mod_form"] = self._forms[MediaDecisionForm]
 
-        extra_context["report_form"] = get_report_form(self.media_type)()
+        extra_context["report_form"] = self._forms[MediaReportForm]
 
         return super().change_view(request, object_id, form_url, extra_context)
 
@@ -444,11 +438,7 @@ class MediaListAdmin(admin.ModelAdmin):
         if request.method == "POST":
             media_obj = self.get_object(request, object_id)
 
-            through_model = {
-                "image": ImageDecisionThrough,
-                "audio": AudioDecisionThrough,
-            }[self.media_type]
-            form = get_decision_form(self.media_type)(request.POST)
+            form = self._forms[MediaDecisionForm](request.POST)
             if form.is_valid():
                 decision = form.save(commit=False)
                 decision.moderator = request.user
@@ -462,7 +452,7 @@ class MediaListAdmin(admin.ModelAdmin):
                     moderator=request.user.get_username(),
                 )
 
-                through = through_model.objects.create(
+                through = self.media_class.decision_through_class.objects.create(
                     decision=decision,
                     media_obj=media_obj,
                 )
@@ -515,7 +505,7 @@ class MediaListAdmin(admin.ModelAdmin):
         if request.method == "POST":
             media_obj = self.get_object(request, object_id)
 
-            form = get_report_form(self.media_type)(request.POST)
+            form = self._forms[MediaReportForm](request.POST)
             if form.is_valid():
                 report = form.save(commit=False)
                 report.media_obj = media_obj
@@ -546,7 +536,10 @@ class MediaListAdmin(admin.ModelAdmin):
 
 
 class MediaReportAdmin(admin.ModelAdmin):
-    media_type = None
+    media_class: type = None
+
+    def __init_subclass__(cls):
+        MEDIA_ADMIN[cls.media_class][MediaReportAdmin] = cls
 
     @admin.display(description="Is pending?", boolean=True)
     def is_pending(self, obj):
@@ -581,7 +574,9 @@ class MediaReportAdmin(admin.ModelAdmin):
 
     @admin.display(description="Media obj")
     def media_id(self, obj):
-        path = reverse(f"admin:api_{self.media_type}_change", args=(obj.media_obj.id,))
+        path = reverse(
+            f"admin:api_{self.media_class.media_type}_change", args=(obj.media_obj.id,)
+        )
         return format_html(f'<a href="{path}">{obj.media_obj}</a>')
 
     ###############
@@ -614,9 +609,32 @@ class MediaReportAdmin(admin.ModelAdmin):
             return ("media_obj",)
 
 
+class MediaDecisionThroughAdmin(admin.TabularInline):
+    media_class: type = None
+    model: type = None
+    extra = 1
+    autocomplete_fields = _production_deferred("media_obj")
+    raw_id_fields = _non_production_deferred("media_obj")
+
+    def __init_subclass__(cls):
+        cls.model = cls.media_class.decision_through_class
+        MEDIA_ADMIN[cls.media_class][MediaDecisionThroughAdmin] = cls
+
+    def has_add_permission(self, request, obj=None):
+        return obj is None and super().has_change_permission(request, obj)
+
+    def has_change_permission(self, request, obj=None):
+        return obj is None and super().has_change_permission(request, obj)
+
+    def has_delete_permission(self, request, obj=None):
+        return obj is None and super().has_delete_permission(request, obj)
+
+
 class MediaDecisionAdmin(admin.ModelAdmin):
-    media_type = None
-    through_model = None
+    media_class: type = None
+
+    def __init_subclass__(cls):
+        MEDIA_ADMIN[cls.media_class][MediaDecisionAdmin] = cls
 
     #############
     # List view #
@@ -636,11 +654,12 @@ class MediaDecisionAdmin(admin.ModelAdmin):
 
     @admin.display(description="Media objs")
     def media_ids(self, obj):
-        through_objs = getattr(obj, f"{self.media_type}decisionthrough_set").all()
+        through_objs = obj.decision_through.all()
         text = []
         for obj in through_objs:
             path = reverse(
-                f"admin:api_{self.media_type}_change", args=(obj.media_obj.id,)
+                f"admin:api_{self.media_class.media_type}_change",
+                args=(obj.media_obj.id,),
             )
             text.append(f'• <a href="{path}">{obj.media_obj}</a>')
         return format_html("<br>".join(text))
@@ -666,60 +685,18 @@ class MediaDecisionAdmin(admin.ModelAdmin):
         return ()
 
     def get_inlines(self, request, obj=None):
-        if obj is None:
-            # New decision, can make changes to the media objects.
-            is_mutable = True
-        else:
-            # Once created, media objects associated with decisions are
-            # immutable.
-            is_mutable = False
-
-        class MediaDecisionThroughAdmin(admin.TabularInline):
-            model = self.through_model
-            extra = 1
-            autocomplete_fields = _production_deferred("media_obj")
-            raw_id_fields = _non_production_deferred("media_obj")
-
-            def has_add_permission(self, request, obj=None):
-                return is_mutable and super().has_change_permission(request, obj)
-
-            def has_change_permission(self, request, obj=None):
-                return is_mutable and super().has_change_permission(request, obj)
-
-            def has_delete_permission(self, request, obj=None):
-                return is_mutable and super().has_delete_permission(request, obj)
-
-        return (MediaDecisionThroughAdmin,)
+        return (MEDIA_ADMIN[self.media_class][MediaDecisionThroughAdmin],)
 
     def save_model(self, request, obj, form, change):
         obj.moderator = request.user
         return super().save_model(request, obj, form, change)
 
 
-class ImageReportAdmin(MediaReportAdmin):
-    media_type = "image"
-
-
-class AudioReportAdmin(MediaReportAdmin):
-    media_type = "audio"
-
-
-class ImageListViewAdmin(MediaListAdmin):
-    media_type = "image"
-
-
-class AudioListViewAdmin(MediaListAdmin):
-    media_type = "audio"
-
-
-class ImageDecisionAdmin(MediaDecisionAdmin):
-    media_type = "image"
-    through_model = ImageDecisionThrough
-
-
-class AudioDecisionAdmin(MediaDecisionAdmin):
-    media_type = "audio"
-    through_model = AudioDecisionThrough
+for media_class in MEDIA_ADMIN:
+    type_prefix = media_class.media_type.title()
+    for form in [MediaReportAdmin, MediaListAdmin, MediaDecisionAdmin]:
+        name = f"{type_prefix}{form.__name__}"
+        globals()[name] = type(name, (form,), {"media_class": media_class})
 
 
 class MediaSubreportAdmin(admin.ModelAdmin):

@@ -7,7 +7,7 @@ from django.db import models
 from uuslug import uuslug
 
 from api.constants.media_types import AUDIO_TYPE
-from api.models import OpenLedgerModel
+from api.models.base import OpenLedgerModel
 from api.models.media import (
     AbstractAltFile,
     AbstractDeletedMedia,
@@ -17,6 +17,7 @@ from api.models.media import (
     AbstractMediaList,
     AbstractMediaReport,
     AbstractSensitiveMedia,
+    MediaModeratorForeignKey,
 )
 from api.models.mixins import FileMixin, ForeignIdentifierMixin, MediaMixin
 from api.utils.waveform import generate_peaks
@@ -155,6 +156,8 @@ class Audio(AudioFileMixin, AbstractMedia):
         `audio_set_foreign_identifier` and `provider`.
     """
 
+    media_type = "audio"
+
     audioset = models.ForeignObject(
         to="AudioSet",
         on_delete=models.DO_NOTHING,
@@ -206,9 +209,8 @@ class Audio(AudioFileMixin, AbstractMedia):
         """),
     )
 
-    @property
-    def sensitive(self) -> bool:
-        return hasattr(self, "sensitive_audio")
+    class Meta(AbstractMedia.Meta):
+        db_table = "audio"
 
     @property
     def alternative_files(self):
@@ -248,9 +250,6 @@ class Audio(AudioFileMixin, AbstractMedia):
 
         return add_on.waveform_peaks
 
-    class Meta(AbstractMedia.Meta):
-        db_table = "audio"
-
     def get_absolute_url(self):
         """Enable the "View on site" link in the Django Admin."""
 
@@ -277,7 +276,7 @@ class DeletedAudio(AbstractDeletedMedia):
         primary_key=True,
         db_constraint=False,
         db_column="identifier",
-        related_name="deleted_audio",
+        related_name="deleted_media",
         help_text="The reference to the deleted audio.",
     )
 
@@ -303,7 +302,7 @@ class SensitiveAudio(AbstractSensitiveMedia):
         primary_key=True,
         db_constraint=False,
         db_column="identifier",
-        related_name="sensitive_audio",
+        related_name="sensitive_media",
         help_text="The reference to the sensitive audio.",
     )
 
@@ -328,7 +327,7 @@ class AudioReport(AbstractMediaReport):
         on_delete=models.DO_NOTHING,
         db_constraint=False,
         db_column="identifier",
-        related_name="audio_report",
+        related_name="report",
         help_text="The reference to the audio being reported.",
     )
     decision = models.ForeignKey(
@@ -348,10 +347,13 @@ class AudioDecision(AbstractMediaDecision):
 
     media_class = Audio
 
+    moderator = MediaModeratorForeignKey(related_name="audio_decision")
+
     media_objs = models.ManyToManyField(
         to="Audio",
         through="AudioDecisionThrough",
         help_text="The audio items being moderated.",
+        related_name="decision",
     )
 
 
@@ -364,8 +366,6 @@ class AudioDecisionThrough(AbstractMediaDecisionThrough):
     """
 
     media_class = Audio
-    sensitive_media_class = SensitiveAudio
-    deleted_media_class = DeletedAudio
 
     media_obj = models.ForeignKey(
         Audio,
@@ -373,6 +373,7 @@ class AudioDecisionThrough(AbstractMediaDecisionThrough):
         on_delete=models.DO_NOTHING,
         db_column="identifier",
         db_constraint=False,
+        related_name="decision_through",
     )
     decision = models.ForeignKey(AudioDecision, on_delete=models.CASCADE)
 
