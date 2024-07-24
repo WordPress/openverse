@@ -826,8 +826,10 @@ class MediaSubreportAdmin(BulkModerationMixin, admin.ModelAdmin):
     media_type = None
 
     exclude = ("media_obj",)
+    ordering = ("-created_on",)
     search_fields = "media_obj__identifier"
     readonly_fields = ("media_obj_id",)
+    list_display = ("media_obj_id", "created_on")
 
     def has_add_permission(self, *args, **kwargs):
         # These objects are created through moderation and
