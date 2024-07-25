@@ -1,7 +1,7 @@
-import { readFileSync } from 'fs'
+import { readFileSync } from "fs"
 
-import { getBoard } from '../utils/projects.mjs'
-import { PullRequest } from '../utils/pr.mjs'
+import { getBoard } from "../utils/projects.mjs"
+import { PullRequest } from "../utils/pr.mjs"
 
 /**
  * Move the PR to the right column based on the number of reviews.
@@ -19,17 +19,15 @@ async function syncReviews(core, pr, prBoard, prCard) {
   core.debug(`PR review counts: ${reviewCounts}`)
   core.debug(`PR reviews decision: ${reviewDecision}`)
 
-  if (reviewDecision === 'APPROVED') {
-    core.info('Moving PR on the basis of review decision.')
+  if (reviewDecision === "APPROVED") {
+    core.info("Moving PR on the basis of review decision.")
     await prBoard.moveCard(prCard.id, prBoard.columns.Approved)
-  } else if (reviewDecision === 'CHANGES_REQUESTED') {
-    core.info('Moving PR on the basis of review decision.')
+  } else if (reviewDecision === "CHANGES_REQUESTED") {
+    core.info("Moving PR on the basis of review decision.")
     await prBoard.moveCard(prCard.id, prBoard.columns.ChangesRequested)
   } else if (reviewCounts.APPROVED === 1) {
-    core.info('Moving PR on the basis of 1 approval.')
+    core.info("Moving PR on the basis of 1 approval.")
     await prBoard.moveCard(prCard.id, prBoard.columns.Needs1Review)
-  } else {
-    await prBoard.moveCard(prCard.id, prBoard.columns.Needs2Reviews)
   }
 }
 
@@ -62,10 +60,10 @@ async function syncIssues(core, pr, backlogBoard, destColumn) {
  * @param core {import('@actions/core')} GitHub Actions toolkit, for logging
  */
 export const main = async (octokit, core) => {
-  core.info('Starting script `prs.mjs`.')
+  core.info("Starting script `prs.mjs`.")
 
   const { eventName, eventAction, prNodeId } = JSON.parse(
-    readFileSync('/tmp/event.json', 'utf-8')
+    readFileSync("/tmp/event.json", "utf-8")
   )
   core.debug(`Event name: ${eventName}`)
   core.debug(`Event action: ${eventAction}`)
@@ -74,14 +72,14 @@ export const main = async (octokit, core) => {
   const pr = new PullRequest(octokit, core, prNodeId)
   await pr.init()
 
-  const prBoard = await getBoard(octokit, core, 'PRs')
-  const backlogBoard = await getBoard(octokit, core, 'Backlog')
+  const prBoard = await getBoard(octokit, core, "PRs")
+  const backlogBoard = await getBoard(octokit, core, "Backlog")
 
   // Create new, or get the existing, card for the current pull request.
   const prCard = await prBoard.addCard(pr.nodeId)
   core.debug(`PR card ID: ${prCard.id}`)
 
-  if (eventName === 'pull_request_review') {
+  if (eventName === "pull_request_review") {
     if (pr.isDraft) {
       await prBoard.moveCard(prCard.id, prBoard.columns.Draft)
     } else if (!pr.isMerged) {
@@ -95,38 +93,38 @@ export const main = async (octokit, core) => {
     }
   } else {
     switch (eventAction) {
-      case 'opened':
-      case 'reopened': {
+      case "opened":
+      case "reopened": {
         if (pr.isDraft) {
-          core.info('PR is a draft.')
+          core.info("PR is a draft.")
           await prBoard.moveCard(prCard.id, prBoard.columns.Draft)
         } else {
-          core.info('PR is ready for review.')
+          core.info("PR is ready for review.")
           await syncReviews(core, pr, prBoard, prCard)
         }
-        await syncIssues(core, pr, backlogBoard, 'InProgress')
+        await syncIssues(core, pr, backlogBoard, "InProgress")
         break
       }
 
-      case 'edited': {
-        await syncIssues(core, pr, backlogBoard, 'InProgress')
+      case "edited": {
+        await syncIssues(core, pr, backlogBoard, "InProgress")
         break
       }
 
-      case 'converted_to_draft': {
+      case "converted_to_draft": {
         await prBoard.moveCard(prCard.id, prBoard.columns.Draft)
         break
       }
 
-      case 'ready_for_review': {
+      case "ready_for_review": {
         await syncReviews(core, pr, prBoard, prCard)
         break
       }
 
-      case 'closed': {
+      case "closed": {
         if (!pr.isMerged) {
-          core.info('PR was closed without merge.')
-          await syncIssues(core, pr, backlogBoard, 'Backlog')
+          core.info("PR was closed without merge.")
+          await syncIssues(core, pr, backlogBoard, "Backlog")
         }
         break
       }
