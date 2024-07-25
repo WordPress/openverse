@@ -706,3 +706,8 @@ xdf.groupby("image_uuid").median("Confidence").median()
 # Average number of tags per item w/ confidence higher than 90
 (xdf.Confidence > 90).sum() / len(df)
 ```
+
+## Changelog
+
+- 2024-07-25 - (#4662) Clarified policy around initially included demographic
+  labels to ensure they're reviewed on a case-by-case basis.
