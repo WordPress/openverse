@@ -42,7 +42,7 @@ const pages = {
       "/v1/images/da5cb478-c093-4d62-b721-cda18797e3fb/thumb/"
     ),
     ogTitle: "bird",
-    robots: "noindex",
+    robots: "all",
   },
   audioDetail: {
     url: "/audio/7e063ee6-343f-48e4-a4a5-f436393730f6",
@@ -51,7 +51,7 @@ const pages = {
       "/v1/audio/7e063ee6-343f-48e4-a4a5-f436393730f6/thumb/"
     ),
     ogTitle: "I Love My Dog You Love your Cat",
-    robots: "noindex",
+    robots: "all",
   },
   about: {
     url: "/about",

@@ -19,7 +19,7 @@ export const createDetailPageMeta = ({
     {
       hid: "robots",
       name: "robots",
-      content: "noindex",
+      content: "all",
     },
   ] as (MetaPropertyName | MetaPropertyProperty)[]
   if (title) {
