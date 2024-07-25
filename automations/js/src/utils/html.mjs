@@ -7,11 +7,11 @@
  */
 export const escapeHtml = (text) => {
   const charHtmlMap = {
-    "'": '&apos;',
-    '"': '&quot;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '&': '&amp;',
+    "'": "&apos;",
+    '"': "&quot;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "&": "&amp;",
   }
   return text.replace(/[&"'<>]/g, (c) => charHtmlMap[c])
 }

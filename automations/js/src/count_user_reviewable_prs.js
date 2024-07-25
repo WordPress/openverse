@@ -13,7 +13,7 @@ module.exports = async ({ github, context, core }) => {
   const slackID = JSON.parse(GH_SLACK_USERNAME_MAP)[context.actor]
 
   if (!GITHUB_REPOSITORY || !GH_SLACK_USERNAME_MAP) {
-    core.setFailed('Required dependencies were not supplied')
+    core.setFailed("Required dependencies were not supplied")
   }
 
   if (!slackID) {
@@ -44,11 +44,11 @@ query ($repoOwner: String!, $repo: String!, $cursor: String) {
 }
 `
   const ignoredLabels = [
-    '🤖 aspect: text',
-    '🧱 stack: documentation',
-    '🟥 priority: critical',
+    "🤖 aspect: text",
+    "🧱 stack: documentation",
+    "🟥 priority: critical",
   ]
-  const [owner, repo] = GITHUB_REPOSITORY.split('/')
+  const [owner, repo] = GITHUB_REPOSITORY.split("/")
   const isRelevantPrFromGraphql = (pr) =>
     pr.author.login === context.actor &&
     !pr.isDraft &&
@@ -90,8 +90,8 @@ query ($repoOwner: String!, $repo: String!, $cursor: String) {
     }
 
     core.info(`Current user has ${result.pr_count} PR(s).`)
-    core.setOutput('pr_count', result.pr_count)
-    core.setOutput('slack_id', result.slack_id)
+    core.setOutput("pr_count", result.pr_count)
+    core.setOutput("slack_id", result.slack_id)
   } catch (error) {
     core.setFailed(`Error fetching pull requests: ${error.message}`)
   }

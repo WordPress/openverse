@@ -1,9 +1,9 @@
-const fs = require('fs')
-const path = require('path')
+const fs = require("fs")
+const path = require("path")
 
-const nunjucks = require('nunjucks')
+const nunjucks = require("nunjucks")
 
-const rootDir = path.join(__dirname, '..', '..', '..')
+const rootDir = path.join(__dirname, "..", "..", "..")
 nunjucks.configure(rootDir, {
   trimBlocks: true,
   lstripBlocks: true,

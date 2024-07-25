@@ -14,7 +14,7 @@ const PROJECT_NUMBERS = {
   PRs: 98,
   Todos: 59,
   Discussions: 79,
-  'Project Tracker': 70,
+  "Project Tracker": 70,
 }
 
 class Project {
@@ -55,8 +55,8 @@ class Project {
    */
   getColumns() {
     return Object.fromEntries(
-      Object.keys(this.fields['Status'].options).map((key) => [
-        key.replace(/\W/g, '').replace(/^\d*/, '').trim(),
+      Object.keys(this.fields["Status"].options).map((key) => [
+        key.replace(/\W/g, "").replace(/^\d*/, "").trim(),
         key,
       ])
     )
@@ -202,7 +202,7 @@ class Project {
         optionId: this.fields[fieldName].options[optionName],
       }
     )
-    this.core.debug('setCustomChoiceField response:', JSON.stringify(res))
+    this.core.debug("setCustomChoiceField response:", JSON.stringify(res))
     return res.updateProjectV2ItemFieldValue.projectV2Item.id
   }
 
@@ -216,7 +216,7 @@ class Project {
    */
   async moveCard(cardId, destColumn) {
     this.core.info(`Moving card "${cardId}" to column "${destColumn}".`)
-    return await this.setCustomChoiceField(cardId, 'Status', destColumn)
+    return await this.setCustomChoiceField(cardId, "Status", destColumn)
   }
 }
 
@@ -234,7 +234,7 @@ export async function getBoard(octokit, core, name) {
     throw new Error(`Unknown project board "${name}".`)
   }
 
-  const project = new Project(octokit, core, 'WordPress', projectNumber)
+  const project = new Project(octokit, core, "WordPress", projectNumber)
   await project.init()
   return project
 }

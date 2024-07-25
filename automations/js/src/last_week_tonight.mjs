@@ -3,14 +3,14 @@
  * Openverse repos.
  */
 
-import { readFileSync } from 'fs'
-import { resolve } from 'path'
+import { readFileSync } from "fs"
+import { resolve } from "path"
 
-import yaml from 'js-yaml'
-import axios from 'axios'
-import { Octokit } from '@octokit/rest'
+import yaml from "js-yaml"
+import axios from "axios"
+import { Octokit } from "@octokit/rest"
 
-import { escapeHtml } from './utils/html.mjs'
+import { escapeHtml } from "./utils/html.mjs"
 
 /* Environment variables */
 
@@ -34,7 +34,7 @@ if (!(pat && username && password)) process.exit(1)
 
 /* Read GitHub information from the data files */
 
-const githubDataFile = resolve('../data/github.yml') // resolved from `package.json`
+const githubDataFile = resolve("../data/github.yml") // resolved from `package.json`
 const githubInfo = yaml.load(readFileSync(githubDataFile))
 const org = githubInfo.org
 const repos = Object.values(githubInfo.repos)
@@ -43,11 +43,11 @@ const repos = Object.values(githubInfo.repos)
 
 const msInWeeks = (weeks) => weeks * 7 * 24 * 60 * 60 * 1e3
 // End date is always today
-const [endDate] = new Date().toISOString().split('T')
+const [endDate] = new Date().toISOString().split("T")
 // Start date is one week before today
 const [startDate] = new Date(new Date().getTime() - msInWeeks(1))
   .toISOString()
-  .split('T')
+  .split("T")
 
 /* GitHub API */
 
@@ -60,8 +60,8 @@ const closedIssuesQ = (repo) =>
 /* Other constants */
 
 const stackNameMap = {
-  api: 'API',
-  mgmt: 'Management',
+  api: "API",
+  mgmt: "Management",
 }
 
 /* Format issues, PRs and repos as HTML */
@@ -82,7 +82,7 @@ const getItemsHtml = (title, items) => {
       items
         .flatMap((item) => item.labels) // Flatten all labels into a single array
         .map((label) => label.name) // Extract the name of each label
-        .filter((name) => name.startsWith('🧱 stack'))
+        .filter((name) => name.startsWith("🧱 stack"))
     ),
   ].sort()
 
@@ -90,7 +90,7 @@ const getItemsHtml = (title, items) => {
   let itemsByStack = {}
 
   for (const stack of stacks) {
-    const stackName = stack.split(':')[1].trim()
+    const stackName = stack.split(":")[1].trim()
     itemsByStack[stackName] = items
       .filter((item) => item.labels.map((label) => label.name).includes(stack))
       .sort((a, b) => a.number - b.number)
@@ -102,14 +102,14 @@ const getItemsHtml = (title, items) => {
     ...Object.entries(itemsByStack)
       .map(([stackName, items]) => [
         `<h4>${stackNameMap[stackName] || stackName.replace(/\b[a-z]/g, (match) => match.toUpperCase())}</h4>`,
-        '<ul>',
+        "<ul>",
         ...items.map((item) => {
           const href = item.html_url
           const number = `#${item.number}`
           const title = escapeHtml(item.title)
           return `<li><a href="${href}">${number}</a>: ${title}`
         }),
-        '</ul>',
+        "</ul>",
       ])
       .flat(),
   ]
@@ -126,8 +126,8 @@ const getItemsHtml = (title, items) => {
 const getRepoHtml = ({ repo, mergedPrs, closedIssues }) => {
   return [
     `<h2><a href="https://github.com/${org}/${repo}">${repo}</a></h2>`,
-    ...getItemsHtml('Merged PRs', mergedPrs),
-    ...getItemsHtml('Closed issues', closedIssues),
+    ...getItemsHtml("Merged PRs", mergedPrs),
+    ...getItemsHtml("Closed issues", closedIssues),
   ]
 }
 
@@ -143,19 +143,19 @@ const getRepoHtml = ({ repo, mergedPrs, closedIssues }) => {
  * @returns {Promise} - the response for the POST request
  */
 const postActivities = (activities) => {
-  const report = activities.map(getRepoHtml).flat().join('\n')
+  const report = activities.map(getRepoHtml).flat().join("\n")
 
-  const MAKE_SITE_API = 'https://make.wordpress.org/openverse/wp-json/wp/v2/'
-  const token = Buffer.from(`${username}:${password}`).toString('base64')
+  const MAKE_SITE_API = "https://make.wordpress.org/openverse/wp-json/wp/v2/"
+  const token = Buffer.from(`${username}:${password}`).toString("base64")
 
   return axios.post(
-    'posts',
+    "posts",
     {
       title: `A week in Openverse: ${startDate} - ${endDate}`,
       slug: `last-week-openverse-${startDate}-${endDate}`,
       excerpt: `The developments in Openverse between ${startDate} and ${endDate}`,
       content: report,
-      status: 'publish',
+      status: "publish",
       tags: [
         3, // openverse
         5, // week-in-openverse
@@ -185,7 +185,7 @@ for (const repo of repos) {
 
 const res = await postActivities(reportData)
 if (res.status !== 201) {
-  console.error('Create post request failed. See the logs.')
+  console.error("Create post request failed. See the logs.")
   process.exitCode = 1
 }
 console.log(JSON.stringify(res.data, null, 2))

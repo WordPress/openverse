@@ -1,14 +1,14 @@
-import { readFileSync } from 'fs'
-import { PullRequest } from './utils/pr.mjs'
-import { IdSet } from './utils/id_set.mjs'
+import { readFileSync } from "fs"
+import { PullRequest } from "./utils/pr.mjs"
+import { IdSet } from "./utils/id_set.mjs"
 
-const exactlyOne = ['priority', 'goal']
-const atleastOne = ['aspect', 'stack']
+const exactlyOne = ["priority", "goal"]
+const atleastOne = ["aspect", "stack"]
 
 const pathLabels = {
-  migrations: 'migrations',
-  project_proposal: '🧭 project: proposal',
-  project_ip: '🧭 project: implementation plan',
+  migrations: "migrations",
+  project_proposal: "🧭 project: proposal",
+  project_ip: "🧭 project: implementation plan",
 }
 
 /**
@@ -20,9 +20,9 @@ const pathLabels = {
  */
 function getLabelsFromChanges(allLabels, changes) {
   const applicableLabels = allLabels
-    .filter((label) => label.name.startsWith('🧱 stack:'))
+    .filter((label) => label.name.startsWith("🧱 stack:"))
     .filter((label) => {
-      const [, stackName] = label.name.split(': ')
+      const [, stackName] = label.name.split(": ")
       return changes.includes(stackName)
     })
   Object.entries(pathLabels).forEach(([group, labelName]) => {
@@ -61,7 +61,7 @@ function getIsFullyLabeled(labels) {
  * @returns {import('./utils/pr.mjs').Label[]} the label with the `id` and `name` fields
  */
 async function getAllLabels(octokit, repository) {
-  const [owner, repo] = repository.split('/')
+  const [owner, repo] = repository.split("/")
   const res = await octokit.rest.issues.listLabelsForRepo({
     owner,
     repo,
@@ -82,15 +82,15 @@ async function getAllLabels(octokit, repository) {
 export const main = async (octokit, core) => {
   const { GITHUB_REPOSITORY } = process.env
   const { eventName, eventAction, prNodeId } = JSON.parse(
-    readFileSync('/tmp/event.json', 'utf-8')
+    readFileSync("/tmp/event.json", "utf-8")
   )
-  const changes = JSON.parse(readFileSync('/tmp/change.json', 'utf-8'))
+  const changes = JSON.parse(readFileSync("/tmp/change.json", "utf-8"))
 
   const allLabels = await getAllLabels(octokit, GITHUB_REPOSITORY)
 
   if (
-    eventName !== 'pull_request' ||
-    !['opened', 'edited'].includes(eventAction)
+    eventName !== "pull_request" ||
+    !["opened", "edited"].includes(eventAction)
   ) {
     core.info(
       `Event "${eventName}"/"${eventAction}" is not an event where a PR should be labelled.`
@@ -104,7 +104,7 @@ export const main = async (octokit, core) => {
   let isTriaged = false
   if (pr.labels.length) {
     // If a PR already has some labels, it is considered triaged.
-    core.info('The PR already has some labels.')
+    core.info("The PR already has some labels.")
     isTriaged = true
   }
 
@@ -128,7 +128,7 @@ export const main = async (octokit, core) => {
   // Then we compile all the labels of all the linked issues into a pool. This
   // will be used to find the labels that satisfy the requirements.
   const labelPool = pr.linkedIssues.flatMap((issue) => issue.labels)
-  core.debug(`Label pool: ${labelPool.map((label) => label.name).join(',')}`)
+  core.debug(`Label pool: ${labelPool.map((label) => label.name).join(",")}`)
 
   // For each label that we only need one of, we check if the PR already has
   // such a label. If not, we check if the label pool contains any valid labels
@@ -152,7 +152,7 @@ export const main = async (octokit, core) => {
     core.info(
       `Adding labels "${validLabels
         .map((label) => label.name)
-        .join(',')}" to PR.`
+        .join(",")}" to PR.`
     )
     validLabels.forEach((label) => {
       finalLabels.add(label)
@@ -164,9 +164,9 @@ export const main = async (octokit, core) => {
   if (!getIsFullyLabeled(finalLabels.items)) {
     let attnLabel
     if (isTriaged) {
-      attnLabel = '🏷 status: label work required'
+      attnLabel = "🏷 status: label work required"
     } else {
-      attnLabel = '🚦 status: awaiting triage'
+      attnLabel = "🚦 status: awaiting triage"
     }
     core.info(`PR not fully labelled so adding "${attnLabel}".`)
     attnLabel = allLabels.filter((item) => item.name === attnLabel)[0]
