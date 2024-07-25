@@ -25,8 +25,7 @@ async function syncReviews(core, pr, prBoard, prCard) {
   } else if (reviewDecision === "CHANGES_REQUESTED") {
     core.info("Moving PR on the basis of review decision.")
     await prBoard.moveCard(prCard.id, prBoard.columns.ChangesRequested)
-  } else if (reviewCounts.APPROVED === 1) {
-    core.info("Moving PR on the basis of 1 approval.")
+  } else {
     await prBoard.moveCard(prCard.id, prBoard.columns.NeedsReview)
   }
 }
