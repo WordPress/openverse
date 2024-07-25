@@ -164,9 +164,6 @@ definePageMeta({
 const { t } = useI18n({ useScope: "global" })
 
 useHead({
-  title: `${t("about.title", {
-    openverse: "Openverse",
-  })} | Openverse`,
-  meta: [{ hid: "robots", name: "robots", content: "all" }],
+  title: `${t("about.title", { openverse: "Openverse" })} | Openverse`,
 })
 </script>

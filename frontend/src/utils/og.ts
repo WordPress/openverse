@@ -16,13 +16,7 @@ export const createDetailPageMeta = ({
   isSensitive: boolean
 }) => {
   const head: { meta: Meta } = { meta: [] }
-  const meta: Meta = [
-    {
-      key: "robots",
-      name: "robots",
-      content: "noindex",
-    },
-  ]
+  const meta: Meta = []
   if (title) {
     meta.push({
       key: "og:title",

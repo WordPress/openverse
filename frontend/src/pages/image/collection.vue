@@ -83,10 +83,7 @@ const { pageTitle } = useCollectionMeta({
 })
 
 useHead(() => ({
-  meta: [
-    { hid: "robots", name: "robots", content: "all" },
-    { hid: "og:title", property: "og:title", content: pageTitle.value },
-  ],
+  meta: [{ hid: "og:title", property: "og:title", content: pageTitle.value }],
   title: pageTitle.value,
 }))
 

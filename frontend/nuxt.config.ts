@@ -28,6 +28,42 @@ const favicons = [
   },
 ]
 
+const disallowedBots = [
+  "GPTBot",
+  "CCBot",
+  "ChatGPT-User",
+  "Google-Extended",
+  "anthropic-ai",
+  "Omgilibot",
+  "Omgili",
+  "FacebookBot",
+  "Diffbot",
+  "Bytespider",
+  "ImagesiftBot",
+  "cohere-ai",
+]
+
+/**
+ * Robots.txt rules are configured here via the \@nuxtjs/robots package.
+ * @see {@link https://nuxtseo.com/robots/guides/nuxt-config|Robots Config Rules}
+ */
+const robots = {
+  userAgent: "*",
+  disallow: [
+    "/search/audio/",
+    "/search/image/",
+    "/search/",
+    "/image/",
+    "/audio/",
+  ],
+  groups: [
+    ...disallowedBots.map((bot) => ({
+      userAgent: [bot],
+      disallow: ["/"], // block bots from all routes
+    })),
+  ],
+}
+
 const isProductionBuild = import.meta.env.NODE_ENV === "production"
 const isPlaywright = import.meta.env.PW === "true"
 const isProdNotPlaywright = isProductionBuild && !isPlaywright
@@ -107,6 +143,7 @@ export default defineNuxtConfig({
     },
   },
   site: {
+    indexable: isProdNotPlaywright,
     trailingSlash: false,
   },
   /**
@@ -126,12 +163,14 @@ export default defineNuxtConfig({
     "@nuxtjs/plausible",
     "@nuxt/test-utils/module",
     "@nuxtjs/sitemap",
+    "@nuxtjs/robots",
   ],
   routeRules: {
     "/photos/**": { redirect: { to: "/image/**", statusCode: 301 } },
     "/meta-search": { redirect: { to: "/about", statusCode: 301 } },
     "/external-sources": { redirect: { to: "/about", statusCode: 301 } },
   },
+  robots,
   tailwindcss: {
     cssPath: "~/styles/tailwind.css",
   },

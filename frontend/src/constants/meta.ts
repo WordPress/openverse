@@ -12,9 +12,6 @@ export const meta = [
     name: "viewport",
     content: "width=device-width,initial-scale=1",
   },
-  // By default, tell all robots not to index pages. Will be overwritten in the
-  // search, content and home pages.
-  { key: "robots", name: "robots", content: "noindex" },
   {
     key: "theme-color",
     name: "theme-color",

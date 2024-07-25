@@ -46,10 +46,7 @@ const uiStore = useUiStore()
 const { sendCustomEvent } = useAnalytics()
 
 useHead({
-  meta: [
-    { hid: "theme-color", name: "theme-color", content: "#ffe033" },
-    { hid: "robots", name: "robots", content: "all" },
-  ],
+  meta: [{ hid: "theme-color", name: "theme-color", content: "#ffe033" }],
 })
 
 /**

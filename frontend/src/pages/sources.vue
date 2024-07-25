@@ -109,8 +109,5 @@ const {
   $i18n: { t },
 } = useNuxtApp()
 
-useHead({
-  title: `${t("sources.title")} | Openverse`,
-  meta: [{ hid: "robots", name: "robots", content: "all" }],
-})
+useHead({ title: `${t("sources.title")} | Openverse` })
 </script>
