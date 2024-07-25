@@ -4,10 +4,10 @@
 const DAYS_UPDATED_WITHIN = 14
 
 const activeDevelopmentStatuses = [
-  '🚀 In Kickoff',
-  '💬 In RFC',
-  '🚧 In Progress',
-  '🚢 Shipped',
+  "🚀 In Kickoff",
+  "💬 In RFC",
+  "🚧 In Progress",
+  "🚢 Shipped",
 ]
 
 const GET_PROJECT_CARDS = `
@@ -62,7 +62,7 @@ const GET_PROJECT_CARDS = `
  */
 module.exports = async ({ github, core }) => {
   try {
-    const isDryRun = process.env.DRY_RUN === 'true' ?? false
+    const isDryRun = process.env.DRY_RUN === "true" ?? false
 
     const currentDate = new Date()
     // Create a date by subtracting DAYS_UPDATED_WITHIN days
@@ -74,17 +74,17 @@ module.exports = async ({ github, core }) => {
     // Fetch project cards with their associated issue data
     const result = await github.graphql(GET_PROJECT_CARDS, {
       projectBoardID: 70,
-      projectStatusColumnName: 'Status',
-      repoOwner: 'wordpress',
-      repo: 'openverse',
+      projectStatusColumnName: "Status",
+      repoOwner: "wordpress",
+      repo: "openverse",
     })
 
     for (const node of result.repository.projectV2.items.nodes) {
       const issue = node.content
       // If we're not looking at an open issue older than the required update date, move along
       if (
-        issue.__typename !== 'Issue' ||
-        issue.state !== 'OPEN' ||
+        issue.__typename !== "Issue" ||
+        issue.state !== "OPEN" ||
         new Date(issue.createdAt) > requiredUpdatedByDate
       ) {
         continue
@@ -115,7 +115,7 @@ module.exports = async ({ github, core }) => {
           core.info(`Would have commented on issue ${issue.url}: ${body}`)
         } else {
           // Extract the owner, repo, and issue number from the issue URL
-          const [, , , owner, repo, , issue_number] = issue.url.split('/')
+          const [, , , owner, repo, , issue_number] = issue.url.split("/")
 
           await github.rest.issues.createComment({
             owner,

@@ -4,13 +4,13 @@
  */
 
 const infraRepo = {
-  owner: 'WordPress',
-  repo: 'openverse-infrastructure',
+  owner: "WordPress",
+  repo: "openverse-infrastructure",
 }
 
 const monoRepo = {
-  owner: 'WordPress',
-  repo: 'openverse',
+  owner: "WordPress",
+  repo: "openverse",
 }
 
 const exclusions = [/^design:/, /^migrations$/]
@@ -24,10 +24,10 @@ const exclusions = [/^design:/, /^migrations$/]
 const cmpLabels = (a, b) => {
   const differences = []
   if (a.description !== b.description) {
-    differences.push('description')
+    differences.push("description")
   }
   if (a.color !== b.color) {
-    differences.push('color')
+    differences.push("color")
   }
   return differences
 }
@@ -85,7 +85,7 @@ export const main = async (octokit, core) => {
     if (infraLabel) {
       const diff = cmpLabels(label, infraLabel)
       if (diff.length) {
-        const diffs = diff.join(', ')
+        const diffs = diff.join(", ")
         core.info(`Label "${label.name}" differs in ${diffs}. Updating.`)
         await octokit.rest.issues.updateLabel(newLabel)
       }

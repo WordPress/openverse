@@ -125,7 +125,7 @@ repos:
 
       - id: eslint
         name: eslint
-        files: (frontend|automations|packages/js).*?\.(js|ts|vue|json5|json)$
+        files: (frontend|automations|packages/js).*?\.(js|ts|mjs|vue|json5|json)$
         "types": [file] # ESLint only accepts [javascript] by default.
         language: system
         pass_filenames: false
