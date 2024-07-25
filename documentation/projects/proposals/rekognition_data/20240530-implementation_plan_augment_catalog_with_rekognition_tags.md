@@ -129,9 +129,11 @@ have a demographic context in the following categories:
 - Marital status
 
 There are other categories which might be useful for search relevancy and are
-less likely to be applied in an insensitive manner. These labels **should not**
-be excluded, unless they are otherwise gendered (e.g. "stewardess", "actress",
-etc.). Some examples include:
+less likely to be applied in an insensitive manner. Inclusion or exclusion of
+labels that match these categories **should be considered on a case-by-case
+basis** depending on the source of the labeling. Labels within each category
+that are otherwise gendered (e.g. "stewardess", "actress", etc.) should be
+excluded by default. Some examples include:
 
 - Occupation
 - Health and disability status
