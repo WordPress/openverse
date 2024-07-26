@@ -17,9 +17,9 @@ import functools
 import logging
 from datetime import datetime
 
+import backoff
 from airflow.models import Variable
 from requests.exceptions import ConnectionError, HTTPError, SSLError
-from retry import retry
 
 from common.licenses.licenses import get_license_info
 from common.loader import provider_details as prov
@@ -157,7 +157,7 @@ class FreesoundDataIngester(ProviderDataIngester):
         else:
             return None, None, None
 
-    @retry(flaky_exceptions, tries=3, delay=1, backoff=2)
+    @backoff.on_exception(backoff.expo, flaky_exceptions, max_tries=3)
     def _get_audio_file_size(self, url):
         """
         Get the content length of a provided URL.
