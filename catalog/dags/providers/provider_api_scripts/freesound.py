@@ -36,6 +36,7 @@ class FreesoundDataIngester(ProviderDataIngester):
     endpoint = f"https://{host}/apiv2/search/text"
     providers = {"audio": prov.FREESOUND_DEFAULT_PROVIDER}
     flaky_exceptions = (SSLError, ConnectionError)
+    flaky_error_codes = {400, 503}
     preferred_preview = "preview-hq-mp3"
     preview_bitrates = {
         "preview-hq-mp3": 128000,
@@ -52,6 +53,20 @@ class FreesoundDataIngester(ProviderDataIngester):
         }
 
         super().__init__(*args, **kwargs)
+
+    # Freesound often tends to be flaky when making requests during ingestion.
+    # For the flaky HTTP errors above, we wait some time before trying the request
+    # again in the hopes that the upstream issues resolve in that time:
+    #   * 400 - Although framed as bad requests, these appear to succeed later
+    #   * 503 - Service unavailable, so we should just try to wait
+    get_response_json = backoff.on_exception(
+        backoff.expo,
+        HTTPError,
+        max_time=60 * 2,
+        # Raise all other errors
+        giveup=lambda e: e.response.status_code
+        not in FreesoundDataIngester.flaky_error_codes,
+    )(ProviderDataIngester.get_response_json)
 
     def get_next_query_params(self, prev_query_params: dict | None) -> dict:
         if not prev_query_params:
