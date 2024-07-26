@@ -1,10 +1,11 @@
 import { defineNuxtConfig } from "nuxt/config"
 
+import { LOCAL, PRODUCTION } from "./src/constants/deploy-env"
+
 import locales from "./src/locales/scripts/valid-locales.json"
 import { meta as commonMeta } from "./src/constants/meta"
 
 import type { LocaleObject } from "@nuxtjs/i18n"
-import { LOCAL } from "~/constants/deploy-env"
 
 const favicons = [
   // SVG favicon
@@ -138,7 +139,7 @@ export default defineNuxtConfig({
     },
   },
   site: {
-    indexable: import.meta.env.DEPLOYMENT_ENV === "production",
+    indexable: import.meta.env.DEPLOYMENT_ENV === PRODUCTION,
     trailingSlash: false,
   },
   /**
