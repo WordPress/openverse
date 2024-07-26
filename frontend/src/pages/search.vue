@@ -83,7 +83,6 @@ watch(searchTerm, () => {
 
 useHead(() => ({
   title: pageTitle.value,
-  meta: [{ hid: "robots", name: "robots", content: "all" }],
 }))
 
 const searchResults = ref<Results | null>(

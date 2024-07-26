@@ -84,10 +84,7 @@ const {
 } = useNuxtApp()
 
 useHead({
-  title: `${t("privacy.title", {
-    openverse: "Openverse",
-  })} | Openverse`,
-  meta: [{ hid: "robots", name: "robots", content: "all" }],
+  title: `${t("privacy.title", { openverse: "Openverse" })} | Openverse`,
 })
 const featureFlagStore = useFeatureFlagStore()
 

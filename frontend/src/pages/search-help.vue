@@ -61,10 +61,7 @@ const {
 const searchStore = useSearchStore()
 
 useHead({
-  title: `${t("searchGuide.title", {
-    openverse: "Openverse",
-  })} | Openverse`,
-  meta: [{ hid: "robots", name: "robots", content: "all" }],
+  title: `${t("searchGuide.title", { openverse: "Openverse" })} | Openverse`,
 })
 
 const pathFromQuery = (queryString: string) => {

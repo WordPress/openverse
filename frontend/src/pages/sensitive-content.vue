@@ -247,8 +247,5 @@ definePageMeta({
 })
 
 const { t } = useI18n({ useScope: "global" })
-useHead({
-  title: `${t("sensitive.title")} | Openverse`,
-  meta: [{ hid: "robots", name: "robots", content: "all" }],
-})
+useHead({ title: `${t("sensitive.title")} | Openverse` })
 </script>

@@ -72,6 +72,9 @@ importers:
       '@nuxtjs/plausible':
         specifier: ^1.0.0
         version: 1.0.0(magicast@0.3.4)(rollup@4.19.0)
+      '@nuxtjs/robots':
+        specifier: ^4.0.2
+        version: 4.0.2(magicast@0.3.4)(rollup@4.19.0)(vite@5.3.4(@types/node@20.14.11)(terser@5.31.0))(vue@3.4.33(typescript@5.5.3))
       '@nuxtjs/sitemap':
         specifier: ^5.3.5
         version: 5.3.5(h3@1.12.0)(magicast@0.3.4)(rollup@4.19.0)(vite@5.3.4(@types/node@20.14.11)(terser@5.31.0))(vue@3.4.33(typescript@5.5.3))
@@ -1300,6 +1303,9 @@ packages:
 
   '@nuxtjs/plausible@1.0.0':
     resolution: {integrity: sha512-2K0/AbPJAEr3yMA8oDD0I6WB+SXs/YlF297azjR5eSZVQjuimDAwLf4bEXk9ilbrzoMFmm0Tpzn4CC6f0rISBA==}
+
+  '@nuxtjs/robots@4.0.2':
+    resolution: {integrity: sha512-7hpAbSXjrzZNZ2vvzJf5E9H8+yVxJlPNY5wP/MSOWlw3pEJzTJQilAFsJj+jofocGj9y3iNDeqv/a5v/Lz8ppg==}
 
   '@nuxtjs/sitemap@5.3.5':
     resolution: {integrity: sha512-TfhEImgVHEZaI/vphZdoCaWM2TRBJqprHZPhIQwWYJz+dpQWkfY6z8UpjhmUh6npvbj5kNY9ncLenkw0cDJp9g==}
@@ -7973,6 +7979,26 @@ snapshots:
       - magicast
       - rollup
       - supports-color
+
+  '@nuxtjs/robots@4.0.2(magicast@0.3.4)(rollup@4.19.0)(vite@5.3.4(@types/node@20.14.11)(terser@5.31.0))(vue@3.4.33(typescript@5.5.3))':
+    dependencies:
+      '@nuxt/devtools-kit': 1.3.9(magicast@0.3.4)(rollup@4.19.0)(vite@5.3.4(@types/node@20.14.11)(terser@5.31.0))
+      '@nuxt/kit': 3.12.4(magicast@0.3.4)(rollup@4.19.0)
+      consola: 3.2.3
+      defu: 6.1.4
+      nuxt-site-config: 2.2.15(magicast@0.3.4)(rollup@4.19.0)(vite@5.3.4(@types/node@20.14.11)(terser@5.31.0))(vue@3.4.33(typescript@5.5.3))
+      nuxt-site-config-kit: 2.2.15(magicast@0.3.4)(rollup@4.19.0)(vue@3.4.33(typescript@5.5.3))
+      pathe: 1.1.2
+      pkg-types: 1.1.3
+      sirv: 2.0.4
+      std-env: 3.7.0
+      ufo: 1.5.4
+    transitivePeerDependencies:
+      - magicast
+      - rollup
+      - supports-color
+      - vite
+      - vue
 
   '@nuxtjs/sitemap@5.3.5(h3@1.12.0)(magicast@0.3.4)(rollup@4.19.0)(vite@5.3.4(@types/node@20.14.11)(terser@5.31.0))(vue@3.4.33(typescript@5.5.3))':
     dependencies:

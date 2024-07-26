@@ -33,10 +33,7 @@ export default defineComponent({
   setup() {
     const { t } = useI18n({ useScope: "global" })
 
-    useHead({
-      title: `${t("tags.title")} | Openverse`,
-      meta: [{ hid: "robots", name: "robots", content: "all" }],
-    })
+    useHead({ title: `${t("tags.title")} | Openverse` })
 
     return {}
   },

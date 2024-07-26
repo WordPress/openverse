@@ -63,6 +63,7 @@
     "@intlify/core-base": "^9.13.1",
     "@intlify/message-compiler": "^9.13.1",
     "@nuxtjs/plausible": "^1.0.0",
+    "@nuxtjs/robots": "^4.0.2",
     "@nuxtjs/sitemap": "^5.3.5",
     "@nuxtjs/tailwindcss": "^6.12.1",
     "@pinia/nuxt": "^0.5.1",
