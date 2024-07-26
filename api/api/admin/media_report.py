@@ -236,21 +236,23 @@ class BulkModerationMixin:
         """
 
         opts = self.model._meta
+        verbose_name_plural = opts.verbose_name_plural
 
         if action == DecisionAction.MARKED_SENSITIVE:
-            initial_count = queryset.count()
+            init_count = queryset.count()
             queryset = queryset.filter(**{f"sensitive_{self.media_type}__isnull": True})
 
             count = len(queryset)
+            prev_count = init_count - count
             stats = {
-                "selected count": initial_count,
-                "already sensitive": initial_count - count,
-                "count": count,
+                f"selected {verbose_name_plural}": init_count,
+                f"{verbose_name_plural} already marked as sensitive": prev_count,
             }
         else:
             # No filtering is needed for any other actions.
             count = len(queryset)
-            stats = {"count": count}
+            stats = {}
+        stats[f"{verbose_name_plural} to be {action.verb}"] = count
 
         if count == 0:
             messages.info(
