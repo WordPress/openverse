@@ -292,11 +292,36 @@ class MediaListAdmin(admin.ModelAdmin):
     change_list_template = "admin/api/media/change_list.html"
     list_display = ("identifier",)
     list_display_links = ("identifier",)
-    search_fields = _production_deferred("identifier")
+    search_fields = (None,)  # Search functionality is overridden below.
+    search_help_text = format_html(
+        """
+        <p>
+          You can use <a href="{}">query string syntax</a> for advanced search.
+          You can use <code>&quot;</code> to wrap phrases and <code>?</code>, <code>*</code> as wildcards.
+        </p>
+        <details>
+          <summary>Examples</summary>
+          <ul>
+            <li>Search all indexed fields in the model: <code>Animal</code></li>
+            <li>Search for an identifier: <code>3b858852-67df-44e1-8d57-683991d3ec67</code></li>
+            <li>
+              Search for a creator: <code>creator:Al</code><br>
+              When searching by creator, make sure to select a single provider using the filters in the sidebar.
+            </li>
+            <li>Search for a tag name: <code>tags.name:cat</code></li>
+          </ul>
+        </details>
+        """,
+        "https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-syntax",
+    )
     sortable_by = ()  # Ordering is defined in ``get_queryset``.
 
     def get_list_filter(self, request):
-        return (get_pending_record_filter(self.media_type),)
+        return (
+            "source",
+            "provider",
+            get_pending_record_filter(self.media_type),
+        )
 
     def get_list_display(self, request):
         if request.GET.get("pending_record_count") != "all":
@@ -312,6 +337,23 @@ class MediaListAdmin(admin.ModelAdmin):
                 "source",
                 "provider",
             )
+
+    def get_search_results(self, request, queryset, search_term):
+        """
+        Override admin search to use Elasticsearch.
+
+        This enables the admin to make complex search queries using
+        query string syntax, that would not normally be possible with
+        Django's native search.
+        """
+
+        if not search_term:
+            return queryset, False
+
+        search = Search(index=settings.MEDIA_INDEX_MAPPING[self.media_type])
+        search = search.query("query_string", query=search_term)
+        identifiers = (hit.identifier for hit in search.scan())
+        return queryset.filter(identifier__in=identifiers), False
 
     def total_report_count(self, obj):
         return obj.total_report_count
