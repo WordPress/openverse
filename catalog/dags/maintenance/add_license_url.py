@@ -136,7 +136,7 @@ def get_license_conf(license_info) -> dict:
             f"AND meta_data->>'license_url' IS NULL"
         ),
         # Merge existing metadata with the new license_url
-        "update_query": f"SET meta_data = ({Json(license_url_dict)}::jsonb || meta_data), updated_on = now()",
+        "update_query": f"SET updated_on = NOW(), meta_data = ({Json(license_url_dict)}::jsonb || meta_data)",
         "update_timeout": 259200,  # 3 days in seconds
         "dry_run": False,
         "resume_update": False,
@@ -194,7 +194,7 @@ def add_license_url():
         trigger_dag_id=BATCHED_UPDATE_DAG_ID,
         wait_for_completion=True,
         execution_timeout=timedelta(hours=5),
-        max_active_tis_per_dag=1,
+        max_active_tis_per_dag=3,
         map_index_template="""{{ task.conf['query_id'] }}""",
         retries=0,
     ).expand(conf=get_confs(licenses, batch_size="{{ params.batch_size }}"))
