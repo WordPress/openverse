@@ -1,4 +1,7 @@
+from django.conf import settings
+
 import pytest
+from elasticsearch_dsl import Document
 
 from api.models import Audio, Image
 
@@ -54,3 +57,38 @@ def test_license_url_is_generated_if_missing(media_type, media_model):
         license_version="3.0",
     )
     assert obj.license_url is not None
+
+
+@pytest.mark.django_db
+def test_deleted_media_bulk_action(media_type_config):
+    """
+    Test that ``AbstractDeletedMedia`` performs bulk moderation by
+    deleting media items from ES.
+    """
+
+    ids = [media_type_config.model_factory.create().id for _ in range(2)]
+
+    media_type_config.deleted_class._bulk_update_es(ids)
+
+    for index in media_type_config.indexes:
+        for id in ids:
+            exists = Document.exists(id=id, index=index, using=settings.ES)
+            assert not exists
+
+
+@pytest.mark.django_db
+def test_sensitive_media_bulk_action(media_type_config):
+    """
+    Test that ``AbstractSensitiveMedia`` performs bulk moderation by
+    setting ``mature`` field in ES.
+    """
+
+    ids = [media_type_config.model_factory.create().id for _ in range(2)]
+
+    for mature in [True, False]:
+        media_type_config.sensitive_class._bulk_update_es(mature, ids)
+
+        for index in media_type_config.indexes:
+            for id in ids:
+                doc = Document.get(id=id, index=index, using=settings.ES)
+                assert doc.mature == mature
