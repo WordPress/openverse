@@ -294,7 +294,24 @@ class MediaListAdmin(admin.ModelAdmin):
     list_display_links = ("identifier",)
     search_fields = (None,)  # Search functionality is overridden below.
     search_help_text = format_html(
-        'You can use <a href="{}">query string syntax</a> for advanced search.',
+        """
+        <p>
+          You can use <a href="{}">query string syntax</a> for advanced search.
+          You can use <code>&quot;</code> to wrap phrases and <code>?</code>, <code>*</code> as wildcards.
+        </p>
+        <details>
+          <summary>Examples</summary>
+          <ul>
+            <li>Search all indexed fields in the model: <code>Animal</code></li>
+            <li>Search for an identifier: <code>3b858852-67df-44e1-8d57-683991d3ec67</code></li>
+            <li>
+              Search for a creator: <code>creator:Al</code><br>
+              When searching by creator, make sure to select a single provider using the filters in the sidebar.
+            </li>
+            <li>Search for a tag name: <code>tags.name:cat</code></li>
+          </ul>
+        </details>
+        """,
         "https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-syntax",
     )
     sortable_by = ()  # Ordering is defined in ``get_queryset``.
