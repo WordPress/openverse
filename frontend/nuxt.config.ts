@@ -4,6 +4,7 @@ import locales from "./src/locales/scripts/valid-locales.json"
 import { meta as commonMeta } from "./src/constants/meta"
 
 import type { LocaleObject } from "@nuxtjs/i18n"
+import { LOCAL } from "~/constants/deploy-env"
 
 const favicons = [
   // SVG favicon
@@ -124,20 +125,20 @@ export default defineNuxtConfig({
     apiClientSecret: "",
     public: {
       // These values can be overridden by the NUXT_PUBLIC_* env variables
-      deploymentEnv: "local",
+      deploymentEnv: LOCAL,
       apiUrl,
       providerUpdateFrequency: 3600000,
       savedSearchCount: 4,
       sentry: {
         dsn: "",
-        environment: import.meta.env.DEPLOYMENT_ENV ?? "local",
+        environment: import.meta.env.DEPLOYMENT_ENV ?? LOCAL,
         release: import.meta.env.SEMANTIC_VERSION,
       },
       isPlaywright,
     },
   },
   site: {
-    indexable: isProdNotPlaywright,
+    indexable: import.meta.env.DEPLOYMENT_ENV === "production",
     trailingSlash: false,
   },
   /**

@@ -10,12 +10,6 @@ export default defineNitroPlugin((nitroApp) => {
     public: { sentry },
   } = useRuntimeConfig()
 
-  if (import.meta.dev) {
-    // Should not need this, but without it Dev builds fail with "The requested module 'vue' does not provide an export named 'computed'"
-    // @see https://github.com/getsentry/sentry-javascript/issues/12490
-    // @ts-expect-error - globalThis is not defined here, and this is only used in dev mode.
-    globalThis._sentryEsmLoaderHookRegistered = true
-  }
   Sentry.init({
     dsn: sentry.dsn,
     environment: sentry.environment,
