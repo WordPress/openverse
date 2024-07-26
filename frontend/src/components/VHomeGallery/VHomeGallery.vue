@@ -18,7 +18,7 @@
           :key="idx"
           enter-active-class="transition-opacity delay-[var(--delay)] duration-500"
           leave-active-class="transition-opacity delay-[var(--delay)] duration-500"
-          enter-class="opacity-0"
+          enter-from-class="opacity-0"
           leave-to-class="opacity-0"
           mode="out-in"
           appear
