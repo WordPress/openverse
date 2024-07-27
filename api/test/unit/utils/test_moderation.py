@@ -122,6 +122,7 @@ def test_perform_moderation_handles_deindexed(
     assert mock.called
 
 
+@patch("django.conf.settings.ES")
 @pytest.mark.parametrize(
     "prefix, action",
     [
@@ -130,6 +131,7 @@ def test_perform_moderation_handles_deindexed(
     ],
 )
 def test_perform_moderation_creates_decision_and_through_models_for_reverse_actions(
+    mock_es,
     prefix,
     action,
     media_type_config,
@@ -192,8 +194,10 @@ def test_perform_moderation_handles_reversed_mark_sensitive(
     assert mock.called
 
 
+@patch("django.conf.settings.ES")
 @patch.object(AbstractDeletedMedia, "_bulk_update_es")
 def test_perform_moderation_handles_reversed_deindex(
+    mock_es,
     mock,
     media_type_config,
     mod_request,
