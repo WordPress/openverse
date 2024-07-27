@@ -1,4 +1,6 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractUser, Permission
+from django.db.models import Q
 from django.utils import timezone
 
 import factory
@@ -71,5 +73,22 @@ class AccessTokenFactory(DjangoModelFactory):
 
 
 class UserFactory(DjangoModelFactory):
+    username = Faker("word")
+
     class Meta:
         model = get_user_model()
+
+    @classmethod
+    def create(cls, *args, **kwargs) -> AbstractUser:
+        is_moderator = kwargs.pop("is_moderator", False)
+
+        user = super().create(*args, **kwargs)
+
+        if is_moderator:
+            user.user_permissions.set(
+                Permission.objects.filter(
+                    Q(name__contains="Can add") & Q(name__endswith="decision")
+                )
+            )
+
+        return user
