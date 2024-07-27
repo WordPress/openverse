@@ -192,7 +192,7 @@ def test_perform_moderation_handles_reversed_mark_sensitive(
     assert mock.called
 
 
-@patch.object(AbstractSensitiveMedia, "_bulk_update_es")
+@patch.object(AbstractDeletedMedia, "_bulk_update_es")
 def test_perform_moderation_handles_reversed_deindex(
     mock,
     media_type_config,
