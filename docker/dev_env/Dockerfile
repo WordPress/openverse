@@ -34,11 +34,13 @@ ENV PATH="${PNPM_BIN}:${N_PREFIX}/bin:${PDM_PYTHONS}:${HOME}/.local/bin:${PATH}"
 # - pipx: Python CLI app installer
 # - nodejs: language runtime (includes npm but not Corepack)
 # - docker*: used to interact with host Docker socket
+# - postgresql*: used for local development databases
 #
 # pipx dependencies:
 # - httpie: CLI HTTP client
 # - pdm, pipenv: Python package managers
 # - pre-commit: Git pre-commit and pre-push hook manager
+# - pgcli: PostgreSQL CLI
 #
 # Node dependencies:
 # - n: Node.js distribution manager
@@ -56,6 +58,7 @@ RUN mkdir /pipx \
     python3.12 pipx \
     docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin \
     unzip \
+    postgresql postgresql-server \
   && dnf clean all \
   && pipx install --global \
     httpie \
