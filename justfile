@@ -15,7 +15,6 @@ DC_USER := env_var_or_default("DC_USER", "opener")
     just --list --unsorted
     cd packages/python/openverse-attribution && just
     cd docker/cache && just
-    cd docker/nginx && just
     cd docker/es && just
     cd catalog && just
     cd api && just
