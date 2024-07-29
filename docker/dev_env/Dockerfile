@@ -58,7 +58,7 @@ RUN mkdir /pipx \
     python3.12 pipx \
     docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin \
     unzip \
-    postgresql postgresql-server \
+    postgresql postgresql-devel \
   && dnf clean all \
   && pipx install --global \
     httpie \
