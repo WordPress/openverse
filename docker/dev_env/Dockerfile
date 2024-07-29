@@ -34,7 +34,7 @@ ENV PATH="${PNPM_BIN}:${N_PREFIX}/bin:${PDM_PYTHONS}:${HOME}/.local/bin:${PATH}"
 # - pipx: Python CLI app installer
 # - nodejs: language runtime (includes npm but not Corepack)
 # - docker*: used to interact with host Docker socket
-# - postgresql*: used for local development databases
+# - postgresql*: required to connect to PostgreSQL databases
 #
 # pipx dependencies:
 # - httpie: CLI HTTP client
