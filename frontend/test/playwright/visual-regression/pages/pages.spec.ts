@@ -56,6 +56,9 @@ test.describe("layout color is set correctly", () => {
       await expect(
         page.getByRole("button", { name: t("search.search") })
       ).toBeEnabled()
+      await expect(
+        page.getByRole("combobox", { name: t("language.language") })
+      ).toHaveValue("en")
 
       await page.getByRole("combobox", { name: "Language" }).selectOption("ar")
       const searchBar = page.getByPlaceholder(
