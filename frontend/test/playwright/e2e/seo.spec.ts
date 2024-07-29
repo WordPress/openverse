@@ -5,7 +5,7 @@ import { preparePageForTests } from "~~/test/playwright/utils/navigation"
 test.describe.configure({ mode: "parallel" })
 const DESCRIPTION =
   "Search over 800 million free and openly licensed images, photos, audio, and other media types for reuse and remixing."
-const ROBOTS = "noindex, nofollow"
+const NO_INDEX = "noindex, nofollow"
 const DEFAULT_IMAGE = "/openverse-default.jpg"
 
 const pages = {
@@ -14,28 +14,28 @@ const pages = {
     title: "Openly Licensed Images, Audio and More | Openverse",
     ogImage: DEFAULT_IMAGE,
     ogTitle: "Openverse",
-    robots: ROBOTS,
+    robots: NO_INDEX,
   },
   allSearch: {
     url: "/search/?q=birds",
     title: "birds | Openverse",
     ogImage: DEFAULT_IMAGE,
     ogTitle: "Openverse",
-    robots: ROBOTS,
+    robots: NO_INDEX,
   },
   imageSearch: {
     url: "/search/image?q=birds",
     title: "birds | Openverse",
     ogImage: DEFAULT_IMAGE,
     ogTitle: "Openverse",
-    robots: ROBOTS,
+    robots: NO_INDEX,
   },
   audioSearch: {
     url: "/search/audio?q=birds",
     title: "birds | Openverse",
     ogImage: DEFAULT_IMAGE,
     ogTitle: "Openverse",
-    robots: ROBOTS,
+    robots: NO_INDEX,
   },
   imageDetail: {
     url: "/image/da5cb478-c093-4d62-b721-cda18797e3fb",
@@ -44,7 +44,7 @@ const pages = {
       "/v1/images/da5cb478-c093-4d62-b721-cda18797e3fb/thumb/"
     ),
     ogTitle: "bird",
-    robots: ROBOTS,
+    robots: "all",
   },
   audioDetail: {
     url: "/audio/7e063ee6-343f-48e4-a4a5-f436393730f6",
@@ -53,35 +53,35 @@ const pages = {
       "/v1/audio/7e063ee6-343f-48e4-a4a5-f436393730f6/thumb/"
     ),
     ogTitle: "I Love My Dog You Love your Cat",
-    robots: ROBOTS,
+    robots: "all",
   },
   about: {
     url: "/about",
     title: "About Openverse | Openverse",
     ogImage: DEFAULT_IMAGE,
     ogTitle: "Openverse",
-    robots: ROBOTS,
+    robots: NO_INDEX,
   },
   tag: {
     url: "/image/collection?tag=cat",
     title: "cat images | Openverse",
     ogImage: DEFAULT_IMAGE,
     ogTitle: "cat images | Openverse",
-    robots: ROBOTS,
+    robots: NO_INDEX,
   },
   source: {
     url: "/image/collection?source=flickr",
     title: "Flickr images | Openverse",
     ogImage: DEFAULT_IMAGE,
     ogTitle: "Flickr images | Openverse",
-    robots: ROBOTS,
+    robots: NO_INDEX,
   },
   creator: {
     url: "/image/collection?source=flickr&creator=strogoscope",
     title: "strogoscope | Openverse",
     ogImage: DEFAULT_IMAGE,
     ogTitle: "strogoscope | Openverse",
-    robots: ROBOTS,
+    robots: NO_INDEX,
   },
 }
 test.describe("page metadata", () => {
