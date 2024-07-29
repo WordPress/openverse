@@ -64,6 +64,7 @@ const isProductionBuild = import.meta.env.NODE_ENV === "production"
 const isPlaywright = import.meta.env.PW === "true"
 const isProdNotPlaywright = isProductionBuild && !isPlaywright
 const isTest = import.meta.env.TEST === "true"
+const deploymentEnv = import.meta.env.DEPLOYMENT_ENV || LOCAL
 
 const apiUrl =
   import.meta.env.NUXT_PUBLIC_API_URL || "https://api.openverse.org/"
@@ -126,20 +127,20 @@ export default defineNuxtConfig({
     apiClientSecret: "",
     public: {
       // These values can be overridden by the NUXT_PUBLIC_* env variables
-      deploymentEnv: LOCAL,
+      deploymentEnv,
       apiUrl,
       providerUpdateFrequency: 3600000,
       savedSearchCount: 4,
       sentry: {
         dsn: "",
-        environment: import.meta.env.DEPLOYMENT_ENV ?? LOCAL,
+        environment: deploymentEnv,
         release: import.meta.env.SEMANTIC_VERSION,
       },
       isPlaywright,
     },
   },
   site: {
-    indexable: import.meta.env.DEPLOYMENT_ENV === PRODUCTION,
+    indexable: deploymentEnv === PRODUCTION,
     trailingSlash: false,
   },
   /**

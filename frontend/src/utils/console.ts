@@ -1,7 +1,7 @@
 import { PRODUCTION, STAGING } from "~/constants/deploy-env"
 
 const isProductionOrStaging = [PRODUCTION, STAGING].includes(
-  import.meta.env.NODE_ENV
+  import.meta.env.DEPLOYMENT_ENV
 )
 
 /**
