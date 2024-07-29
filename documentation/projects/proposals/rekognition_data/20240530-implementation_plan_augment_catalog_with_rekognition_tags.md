@@ -129,9 +129,11 @@ have a demographic context in the following categories:
 - Marital status
 
 There are other categories which might be useful for search relevancy and are
-less likely to be applied in an insensitive manner. These labels **should not**
-be excluded, unless they are otherwise gendered (e.g. "stewardess", "actress",
-etc.). Some examples include:
+less likely to be applied in an insensitive manner. Inclusion or exclusion of
+labels that match these categories **should be considered on a case-by-case
+basis** depending on the source of the labeling. Labels within each category
+that are otherwise gendered (e.g. "stewardess", "actress", etc.) should be
+excluded by default. Some examples include:
 
 - Occupation
 - Health and disability status
@@ -704,3 +706,8 @@ xdf.groupby("image_uuid").median("Confidence").median()
 # Average number of tags per item w/ confidence higher than 90
 (xdf.Confidence > 90).sum() / len(df)
 ```
+
+## Changelog
+
+- 2024-07-25 - (#4662) Clarified policy around initially included demographic
+  labels to ensure they're reviewed on a case-by-case basis.
