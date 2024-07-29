@@ -1,13 +1,13 @@
 import pook
 from psycopg2._json import Json
 
-from ingestion_server.cleanup import CleanupFunctions
+from ingestion_server.cleanup import TAG_SKIP_PROVIDERS, CleanupFunctions
 from test.unit_tests.conftest import create_mock_image
 
 
 class TestCleanup:
     @staticmethod
-    def test_tag_blacklist():
+    def test_tag_denylisted():
         tags = [
             {"name": "cc0"},
             {"name": " cc0"},
@@ -38,6 +38,19 @@ class TestCleanup:
         ]
         result = str(CleanupFunctions.cleanup_tags(tags))
         expected = str(Json([{"name": "accurate", "accuracy": 0.999}]))
+        assert result == expected
+
+    @staticmethod
+    def test_provider_filter():
+        tags = [
+            {"name": "valid", "provider": "provider1"},
+            *[
+                {"name": "invalid", "provider": provider}
+                for provider in TAG_SKIP_PROVIDERS
+            ],
+        ]
+        result = str(CleanupFunctions.cleanup_tags(tags))
+        expected = str(Json([{"name": "valid", "provider": "provider1"}]))
         assert result == expected
 
     @staticmethod

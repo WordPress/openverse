@@ -55,6 +55,9 @@ TAG_CONTAINS_DENYLIST = {
 # Filter out low-confidence tags, which indicate that the machine-generated tag
 # may be inaccurate.
 TAG_MIN_CONFIDENCE = 0.90
+# Filter out tags that match the following providers (either because they haven't
+# been vetted or because they are known to be low-quality).
+TAG_SKIP_PROVIDERS = {"rekognition"}
 
 # We know that flickr and wikimedia support TLS, so we can add them here
 TLS_CACHE = {
@@ -123,7 +126,7 @@ class CleanupFunctions:
     @staticmethod
     def cleanup_tags(tags):
         """
-        Delete denylisted and low-accuracy tags.
+        Filter denylisted, low-accuracy, and unverified provider tags.
 
         :return: an SQL fragment if an update is needed, ``None`` otherwise
         """
@@ -133,12 +136,14 @@ class CleanupFunctions:
         if not tags:
             return None
         for tag in tags:
-            below_threshold = False
+            alt_filtered = False
             if "accuracy" in tag and float(tag["accuracy"]) < TAG_MIN_CONFIDENCE:
-                below_threshold = True
+                alt_filtered = True
+            if "provider" in tag and tag["provider"] in TAG_SKIP_PROVIDERS:
+                alt_filtered = True
             if "name" in tag and isinstance(tag["name"], str):
                 lower_tag = tag["name"].lower()
-                should_filter = _tag_denylisted(lower_tag) or below_threshold
+                should_filter = _tag_denylisted(lower_tag) or alt_filtered
             else:
                 log.warning(f'Filtering malformed tag "{tag}" in "{tags}"')
                 should_filter = True
