@@ -299,6 +299,33 @@ def get_media_decision_filter(media_type: str):
     return MediaDecisionFilter
 
 
+def get_single_bulk_moderation_filter(media_type: str):
+    class SingleBulkModerationFilter(admin.SimpleListFilter):
+        title = "media count"
+        parameter_name = "media_count"
+
+        def lookups(self, request, model_admin):
+            return [
+                ("single", "Single"),
+                ("bulk", "Bulk"),
+            ]
+
+        def queryset(self, request, queryset):
+            if self.value() not in {"single", "bulk"}:
+                return queryset
+
+            queryset = queryset.annotate(
+                media_count=Count(f"{media_type}decisionthrough")
+            )
+
+            if self.value() == "single":
+                return queryset.filter(media_count=1)
+            elif self.value() == "bulk":
+                return queryset.filter(media_count__gt=1)
+
+    return SingleBulkModerationFilter
+
+
 class BulkModerationMixin:
     def has_bulk_mod_permission(self, request):
         return request.user.has_perm(f"api.add_{self.media_type}decision")
@@ -914,6 +941,9 @@ class MediaDecisionAdmin(admin.ModelAdmin):
     list_prefetch_related = ("media_objs",)
     search_fields = ("notes", *_production_deferred("media_objs__identifier"))
 
+    def get_list_filter(self, request):
+        return (get_single_bulk_moderation_filter(self.media_type),)
+
     @admin.display(description="Media objs")
     def media_ids(self, obj):
         through_objs = getattr(obj, f"{self.media_type}decisionthrough_set").all()
@@ -933,6 +963,23 @@ class MediaDecisionAdmin(admin.ModelAdmin):
     ###############
     # Change view #
     ###############
+
+    change_form_template = "admin/api/media_decision/change_form.html"
+
+    def change_view(self, request, object_id, form_url="", extra_context=None):
+        # Expand the context based on the template's needs.
+        extra_context = extra_context or {}
+
+        extra_context["media_type"] = self.media_type
+
+        decision_obj = self.get_object(request, object_id)
+        if decision_obj:
+            extra_context["decision_obj"] = decision_obj
+        else:
+            messages.warning(request, f"No media decision found with ID {object_id}.")
+            return redirect(f"admin:api_{self.media_type}decision_changelist")
+
+        return super().change_view(request, object_id, form_url, extra_context)
 
     def get_readonly_fields(self, request, obj=None):
         if obj is None:
