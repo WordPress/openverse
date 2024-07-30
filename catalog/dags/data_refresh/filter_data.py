@@ -13,6 +13,7 @@ import time
 import uuid
 
 from airflow.decorators import task
+from airflow.models import Variable
 from airflow.models.abstractoperator import AbstractOperator
 from psycopg2.extras import DictCursor, Json
 
@@ -151,6 +152,11 @@ def filter_table_data(
     timeout: float = None,
 ):
     downstream_conn_id = POSTGRES_API_CONN_IDS.get(environment)
+    default_batch_size = Variable.get(
+        "DATA_REFRESH_FILTER_BATCH_SIZE",
+        deserialize_json=True,
+        default_var=DEFAULT_BATCH_SIZE,
+    )
     temp_table = data_refresh_config.table_mappings[0].temp_table_name
     selection_query = f"SELECT id, identifier, tags from {temp_table};"
     postgres = PostgresHook(
@@ -165,11 +171,11 @@ def filter_table_data(
     with conn.cursor(
         name=cursor_name, cursor_factory=DictCursor, withhold=True
     ) as iter_cur:
-        iter_cur.itersize = DEFAULT_BATCH_SIZE
+        iter_cur.itersize = default_batch_size
         iter_cur.execute(selection_query)
 
         logger.info("Fetching first batch")
-        batch = iter_cur.fetchmany(size=DEFAULT_BATCH_SIZE)
+        batch = iter_cur.fetchmany(size=default_batch_size)
         jobs = []
         num_workers = multiprocessing.cpu_count()
         num_filtered = 0
@@ -209,7 +215,7 @@ def filter_table_data(
                 f"Fetching next batch."
             )
             jobs = []
-            batch = iter_cur.fetchmany(size=DEFAULT_BATCH_SIZE)
+            batch = iter_cur.fetchmany(size=default_batch_size)
     conn.commit()
     iter_cur.close()
     conn.close()
