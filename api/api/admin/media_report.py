@@ -222,6 +222,83 @@ def get_pending_record_filter(media_type: str):
     return PendingRecordCountFilter
 
 
+def get_media_decision_filter(media_type: str):
+    match media_type:
+        case "image":
+            MediaDecision = ImageDecision
+            MediaDecisionThrough = ImageDecisionThrough
+        case "audio":
+            MediaDecision = AudioDecision
+            MediaDecisionThrough = AudioDecisionThrough
+
+    class MediaDecisionFilter(admin.ListFilter):
+        title = f"{media_type} decision"
+        template = "admin/api/filters/media_decision.html"
+
+        parameter_name = "decision_id"
+
+        def __init__(self, request, params, *args, **kwargs):
+            super().__init__(request, params, *args, **kwargs)
+            if self.parameter_name in params:
+                value = params.pop(self.parameter_name)
+                self.used_parameters[self.parameter_name] = value
+
+            self.range_min = first.id if (first := MediaDecision.objects.first()) else 0
+            self.range_max = last.id if (last := MediaDecision.objects.last()) else 0
+
+        def has_output(self) -> bool:
+            """
+            Determine if the filter should be displayed. The filter is only
+            displayed if there is at least one decision for the media type.
+            """
+
+            return MediaDecision.objects.exists()
+
+        def choices(self, changelist):
+            """
+            Return two URL query strings, one for filtering by an arbitrary
+            decision ID and for clearing the filter.
+            """
+
+            return [
+                changelist.get_query_string({self.parameter_name: "VALUE"}),
+                changelist.get_query_string(remove=[self.parameter_name]),
+            ]
+
+        def expected_parameters(self):
+            return [self.parameter_name]
+
+        def queryset(self, request, queryset):
+            """
+            Filter the query set to only show UUIDs associated with the selected
+            media decision.
+            """
+
+            if self.value() is not None:
+                uuids = MediaDecisionThrough.objects.filter(
+                    decision_id=self.value()
+                ).values_list("media_obj_id")
+                queryset = queryset.filter(media_obj_id__in=uuids)
+            return queryset
+
+        def value(self):
+            """
+            Parse the value from the URL query string. Any non numerical value
+            will be treated as ``None``. Any value outside of the filter's range
+            will also be treated as ``None``.
+            """
+
+            try:
+                value = int(self.used_parameters.get(self.parameter_name))
+                if not self.range_min <= value <= self.range_max:
+                    return None
+                return value
+            except (TypeError, ValueError):
+                return None
+
+    return MediaDecisionFilter
+
+
 class BulkModerationMixin:
     def has_bulk_mod_permission(self, request):
         return request.user.has_perm(f"api.add_{self.media_type}decision")
@@ -923,6 +1000,12 @@ class MediaSubreportAdmin(BulkModerationMixin, admin.ModelAdmin):
     ordering = ("-created_on",)
     search_fields = ("media_obj__identifier",)
     readonly_fields = ("media_obj_id",)
+
+    def get_list_filter(self, request):
+        return (
+            "created_on",
+            get_media_decision_filter(self.media_type),
+        )
 
     def has_add_permission(self, *args, **kwargs):
         # These objects are created through moderation and
