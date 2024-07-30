@@ -102,7 +102,8 @@ def generate_waveform(file_name, duration):
 
     logger.debug("waveform_generation_started")
 
-    pps = math.ceil(1e6 / duration)  # approx 1000 points in total
+    width = 1e6 if duration > 100 else 1e5
+    pps = math.ceil(width / duration)  # approx 1000 points in total
     args = [
         "audiowaveform",
         "--input-filename",
