@@ -51,7 +51,7 @@ const disallowedBots = [
  */
 const robots = {
   userAgent: "*",
-  disallow: ["/search/audio/", "/search/image/", "/search/"],
+  disallow: ["/search", "/search/audio", "/search/image"],
   groups: [
     ...disallowedBots.map((bot) => ({
       userAgent: [bot],
