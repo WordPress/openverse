@@ -5,10 +5,13 @@ from typing import Sequence
 from django import forms
 from django.conf import settings
 from django.contrib import admin, messages
+from django.contrib.admin import helpers
 from django.contrib.admin.views.main import ChangeList
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count, F, Min
 from django.http import JsonResponse
 from django.shortcuts import redirect
+from django.template.response import TemplateResponse
 from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
@@ -23,12 +26,16 @@ from api.models import (
     AudioDecision,
     AudioDecisionThrough,
     AudioReport,
+    DeletedAudio,
+    DeletedImage,
     Image,
     ImageDecision,
     ImageDecisionThrough,
     ImageReport,
+    SensitiveAudio,
+    SensitiveImage,
 )
-from api.models.media import AbstractDeletedMedia, AbstractSensitiveMedia
+from api.utils.moderation import perform_moderation
 from api.utils.moderation_lock import LockManager
 
 
@@ -42,11 +49,11 @@ def register(site):
     site.register(AudioReport, AudioReportAdmin)
     site.register(ImageReport, ImageReportAdmin)
 
-    for klass in [
-        *AbstractSensitiveMedia.__subclasses__(),
-        *AbstractDeletedMedia.__subclasses__(),
-    ]:
-        site.register(klass, MediaSubreportAdmin)
+    site.register(SensitiveImage, SensitiveImageAdmin)
+    site.register(SensitiveAudio, SensitiveAudioAdmin)
+
+    site.register(DeletedImage, DeletedImageAdmin)
+    site.register(DeletedAudio, DeletedAudioAdmin)
 
     site.register(ImageDecision, ImageDecisionAdmin)
     site.register(AudioDecision, AudioDecisionAdmin)
@@ -181,12 +188,13 @@ def get_pending_record_filter(media_type: str):
         def lookups(self, request, model_admin):
             return [
                 (None, "Moderation queue"),
+                ("prev", "Resolved"),
                 ("all", "All"),
             ]
 
         def queryset(self, request, qs):
             value = self.value()
-            if value is None:
+            if value is None or value == "prev":
                 # Filter down to only instances with reports
                 qs = qs.filter(**{f"{media_type}_report__isnull": False})
 
@@ -204,13 +212,108 @@ def get_pending_record_filter(media_type: str):
                 qs = qs.order_by(
                     "-total_report_count", "-pending_report_count", "oldest_report_date"
                 )
+            if value is None:
+                qs = qs.filter(pending_report_count__gt=0)
+            if value == "prev":
+                qs = qs.filter(pending_report_count=0)
 
             return qs
 
     return PendingRecordCountFilter
 
 
-class MediaListAdmin(admin.ModelAdmin):
+class BulkModerationMixin:
+    def has_bulk_mod_permission(self, request):
+        return request.user.has_perm(f"api.add_{self.media_type}decision")
+
+    def _bulk_mod(self, request, queryset, action: DecisionAction):
+        """
+        Perform bulk moderation for the queryset as per the requested
+        action.
+
+        This follows the pattern of the ``delete_selected`` action
+        defined in ``django.contrib.admin.actions.py``.
+        """
+
+        opts = self.model._meta
+        verbose_name_plural = opts.verbose_name_plural
+
+        if action == DecisionAction.MARKED_SENSITIVE:
+            init_count = queryset.count()
+            queryset = queryset.filter(**{f"sensitive_{self.media_type}__isnull": True})
+
+            count = len(queryset)
+            prev_count = init_count - count
+            stats = {
+                f"selected {verbose_name_plural}": init_count,
+                f"{verbose_name_plural} already marked as sensitive": prev_count,
+            }
+        else:
+            # No filtering is needed for any other actions.
+            count = len(queryset)
+            stats = {}
+        stats[f"{verbose_name_plural} to be {action.verb}"] = count
+
+        if count == 0:
+            messages.info(
+                request,
+                f"All selected items are already {action.verb}.",
+            )
+            return None
+
+        if request.POST.get("post"):
+            # The user has already confirmed so we will perform the
+            # moderation and return ``None`` to display the change list
+            # view again.
+            decision = perform_moderation(request, self.media_type, queryset, action)
+            path = reverse(
+                f"admin:api_{self.media_type}decision_change", args=(decision.id,)
+            )
+            messages.success(
+                request,
+                format_html(
+                    'Successfully moderated {} items via <a href="{}">decision {}</a>.',
+                    queryset.count(),
+                    path,
+                    decision.id,
+                ),
+            )
+            return None
+
+        objects_name = opts.verbose_name if count == 1 else opts.verbose_name_plural
+        moderatable_objects = [
+            format_html(
+                '<a href="{}">{}</a>',
+                reverse(
+                    f"admin:api_{queryset.model._meta.model_name}_change",
+                    args=(obj.pk,),
+                ),
+                obj,
+            )
+            for obj in queryset
+        ]
+
+        context = {
+            **self.admin_site.each_context(request),
+            "title": "Are you sure?",
+            "objects_name": str(objects_name),
+            "moderatable_objects": [moderatable_objects],
+            "stats": dict(stats).items(),
+            "queryset": queryset,
+            "opts": opts,
+            "action_checkbox_name": helpers.ACTION_CHECKBOX_NAME,
+            "media": self.media,
+            "decision_action": action,
+        }
+
+        return TemplateResponse(
+            request,
+            "admin/api/bulk_moderation_confirmation.html",
+            context,
+        )
+
+
+class MediaListAdmin(BulkModerationMixin, admin.ModelAdmin):
     media_type = None
 
     def __init__(self, *args, **kwargs):
@@ -315,6 +418,7 @@ class MediaListAdmin(admin.ModelAdmin):
         "https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-syntax",
     )
     sortable_by = ()  # Ordering is defined in ``get_queryset``.
+    actions = ["marked_sensitive", "deindexed_sensitive", "deindexed_copyright"]
 
     def get_list_filter(self, request):
         return (
@@ -324,18 +428,24 @@ class MediaListAdmin(admin.ModelAdmin):
         )
 
     def get_list_display(self, request):
-        if request.GET.get("pending_record_count") != "all":
+        if request.GET.get("pending_record_count") == "all":
+            return self.list_display + (
+                "source",
+                "provider",
+            )
+        elif request.GET.get("pending_record_count") == "prev":
+            return self.list_display + (
+                "total_report_count",
+                "oldest_report_date",
+                "has_sensitive_text",
+            )
+        else:
             return self.list_display + (
                 "total_report_count",
                 "pending_report_count",
                 "oldest_report_date",
                 "pending_reports_links",
                 "has_sensitive_text",
-            )
-        else:
-            return self.list_display + (
-                "source",
-                "provider",
             )
 
     def get_search_results(self, request, queryset, search_term):
@@ -364,17 +474,18 @@ class MediaListAdmin(admin.ModelAdmin):
     def oldest_report_date(self, obj):
         return obj.oldest_report_date
 
+    @admin.display(description="Open reports")
     def pending_reports_links(self, obj):
         reports = getattr(obj, f"{self.media_type}_report")
         pending_reports = reports.filter(decision__isnull=True)
         data = []
         for report in pending_reports.all():
-            url = reverse(
+            path = reverse(
                 f"admin:api_{self.media_type}report_change", args=(report.id,)
             )
-            data.append(format_html('<a href="{}">Report {}</a>', url, report.id))
+            data.append(format_html('• <a href="{}">Report {}</a>', path, report.id))
 
-        return mark_safe(", ".join(data))
+        return mark_safe("<br>".join(data))
 
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
@@ -596,6 +707,31 @@ class MediaListAdmin(admin.ModelAdmin):
     def get_changelist(self, request, **kwargs):
         return PredeterminedOrderChangelist
 
+    ################
+    # Bulk actions #
+    ################
+
+    @admin.action(
+        permissions=["bulk_mod"],
+        description="Mark selected %(verbose_name_plural)s as sensitive",
+    )
+    def marked_sensitive(self, request, queryset):
+        return self._bulk_mod(request, queryset, DecisionAction.MARKED_SENSITIVE)
+
+    @admin.action(
+        permissions=["bulk_mod"],
+        description="Deindex selected %(verbose_name_plural)s (sensitive)",
+    )
+    def deindexed_sensitive(self, request, queryset):
+        return self._bulk_mod(request, queryset, DecisionAction.DEINDEXED_SENSITIVE)
+
+    @admin.action(
+        permissions=["bulk_mod"],
+        description="Deindex selected %(verbose_name_plural)s (copyright)",
+    )
+    def deindexed_copyright(self, request, queryset):
+        return self._bulk_mod(request, queryset, DecisionAction.DEINDEXED_COPYRIGHT)
+
 
 class MediaReportAdmin(admin.ModelAdmin):
     media_type = None
@@ -628,7 +764,6 @@ class MediaReportAdmin(admin.ModelAdmin):
         "reason",
         ("decision", admin.EmptyFieldListFilter),  # ~is_pending
     )
-    list_select_related = ("media_obj",)
     search_fields = ("description", *_production_deferred("media_obj__identifier"))
 
     @admin.display(description="Media obj")
@@ -705,13 +840,18 @@ class MediaDecisionAdmin(admin.ModelAdmin):
     @admin.display(description="Media objs")
     def media_ids(self, obj):
         through_objs = getattr(obj, f"{self.media_type}decisionthrough_set").all()
-        text = []
+        data = []
         for obj in through_objs:
-            path = reverse(
-                f"admin:api_{self.media_type}_change", args=(obj.media_obj.id,)
-            )
-            text.append(f'• <a href="{path}">{obj.media_obj}</a>')
-        return format_html("<br>".join(text))
+            try:
+                path = reverse(
+                    f"admin:api_{self.media_type}_change", args=(obj.media_obj.id,)
+                )
+                data.append(
+                    format_html('• <a href="{}">{}</a>', path, obj.media_obj.identifier)
+                )
+            except ObjectDoesNotExist:
+                data.append(f"• {obj.media_obj_id}")
+        return mark_safe("<br>".join(data))
 
     ###############
     # Change view #
@@ -748,8 +888,20 @@ class MediaDecisionAdmin(admin.ModelAdmin):
             autocomplete_fields = _production_deferred("media_obj")
             raw_id_fields = _non_production_deferred("media_obj")
 
+            def get_readonly_fields(self, request, obj):
+                if is_mutable:
+                    return super().get_readonly_fields(request, obj)
+                else:
+                    return ("media_obj_id",)
+
+            def get_exclude(self, request, obj):
+                if is_mutable:
+                    return super().get_exclude(request, obj)
+                else:
+                    return ("media_obj",)
+
             def has_add_permission(self, request, obj=None):
-                return is_mutable and super().has_change_permission(request, obj)
+                return is_mutable and super().has_add_permission(request, obj)
 
             def has_change_permission(self, request, obj=None):
                 return is_mutable and super().has_change_permission(request, obj)
@@ -762,6 +914,60 @@ class MediaDecisionAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         obj.moderator = request.user
         return super().save_model(request, obj, form, change)
+
+
+class MediaSubreportAdmin(BulkModerationMixin, admin.ModelAdmin):
+    media_type = None
+
+    exclude = ("media_obj",)
+    ordering = ("-created_on",)
+    search_fields = ("media_obj__identifier",)
+    readonly_fields = ("media_obj_id",)
+
+    def has_add_permission(self, *args, **kwargs):
+        # These objects are created through moderation and
+        # bulk-moderation operations.
+        return False
+
+
+class DeletedMediaAdmin(MediaSubreportAdmin):
+    actions = ["reversed_deindex"]
+    list_display = ("media_obj_id", "created_on")
+
+    ################
+    # Bulk actions #
+    ################
+
+    @admin.action(
+        permissions=["bulk_mod"],
+        description="Reindex selected %(verbose_name_plural)s",
+    )
+    def reversed_deindex(self, request, queryset):
+        return self._bulk_mod(request, queryset, DecisionAction.REVERSED_DEINDEX)
+
+
+class SensitiveMediaAdmin(MediaSubreportAdmin):
+    actions = ["reversed_mark_sensitive"]
+    list_display = ("media_obj_id", "created_on", "is_deindexed")
+
+    @admin.display(description="Deindexed?", boolean=True)
+    def is_deindexed(self, obj):
+        try:
+            getattr(obj, "media_obj")
+            return False
+        except ObjectDoesNotExist:
+            return True
+
+    ################
+    # Bulk actions #
+    ################
+
+    @admin.action(
+        permissions=["bulk_mod"],
+        description="Unmark selected %(verbose_name_plural)s as sensitive",
+    )
+    def reversed_mark_sensitive(self, request, queryset):
+        return self._bulk_mod(request, queryset, DecisionAction.REVERSED_MARK_SENSITIVE)
 
 
 class ImageReportAdmin(MediaReportAdmin):
@@ -790,11 +996,17 @@ class AudioDecisionAdmin(MediaDecisionAdmin):
     through_model = AudioDecisionThrough
 
 
-class MediaSubreportAdmin(admin.ModelAdmin):
-    exclude = ("media_obj",)
-    search_fields = ("media_obj__identifier",)
-    readonly_fields = ("media_obj_id",)
+class SensitiveImageAdmin(SensitiveMediaAdmin):
+    media_type = "image"
 
-    def has_add_permission(self, *args, **kwargs):
-        """Create ``_Report`` instances instead."""
-        return False
+
+class SensitiveAudioAdmin(SensitiveMediaAdmin):
+    media_type = "audio"
+
+
+class DeletedImageAdmin(DeletedMediaAdmin):
+    media_type = "image"
+
+
+class DeletedAudioAdmin(DeletedMediaAdmin):
+    media_type = "audio"

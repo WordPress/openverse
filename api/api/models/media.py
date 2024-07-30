@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.utils.html import format_html
 
 import structlog
-from elasticsearch import Elasticsearch, NotFoundError
+from elasticsearch import Elasticsearch, NotFoundError, helpers
 from openverse_attribution.license import License
 
 from api.constants.moderation import DecisionAction
@@ -365,9 +365,9 @@ class AbstractMediaDecisionThrough(models.Model):
 
 
 class PerformIndexUpdateMixin:
-    @property
-    def indexes(self):
-        return [self.es_index, f"{self.es_index}-filtered"]
+    @classmethod
+    def indexes(cls):
+        return [cls.es_index, f"{cls.es_index}-filtered"]
 
     def _perform_index_update(self, method: str, raise_errors: bool, **es_method_args):
         """
@@ -387,7 +387,7 @@ class PerformIndexUpdateMixin:
                     f"with identifier {self.media_obj.identifier}."
                 )
 
-        for index in self.indexes:
+        for index in self.indexes():
             try:
                 getattr(es, method)(
                     index=index,
@@ -403,6 +403,42 @@ class PerformIndexUpdateMixin:
                     f"in {index} index. No update performed."
                 )
                 continue
+
+    @classmethod
+    def _bulk_perform_index_update(
+        cls,
+        method: str,
+        document_ids: list[str],
+        **es_method_args,
+    ):
+        """
+        Call ``method`` on the Elasticsearch client in a bulk operation.
+
+        Automatically handles 404 errors for documents, forces a refresh,
+        and calls the method for origin and filtered indexes.
+
+        Unlike the single-document behaviour, this function does not
+        provide validation to check if the media objects exist.
+        """
+
+        es: Elasticsearch = settings.ES
+
+        actions = [
+            {
+                "_op_type": method,
+                "_index": index,
+                "_id": document_id,
+                **es_method_args,
+            }
+            for index in cls.indexes()
+            for document_id in document_ids
+        ]
+
+        # Perform all actions in bulk, while allowing for missing
+        # documents, similar to the single-document behaviour. In all
+        # other cases, this raises ``BulkIndexError``.
+        helpers.bulk(es, actions, ignore_status=(404,))
+        es.indices.refresh(index=cls.indexes())
 
 
 class AbstractDeletedMedia(PerformIndexUpdateMixin, OpenLedgerModel):
@@ -432,21 +468,40 @@ class AbstractDeletedMedia(PerformIndexUpdateMixin, OpenLedgerModel):
     """
     Sub-classes must override this field to point to a concrete sub-class of
     ``AbstractMedia``.
+
+    Note that unlike ``AbstractSensitiveMedia``, this does not provide
+    a ``delete()`` method to undo the effects of ``save()``. Deindexed
+    media can only be restored through a data refresh.
     """
 
     class Meta:
         abstract = True
 
-    def _update_es(self, raise_errors: bool) -> models.Model:
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.perform_action()
+
+    def _update_es(self, raise_errors: bool):
         self._perform_index_update(
             "delete",
             raise_errors,
         )
 
-    def save(self, *args, **kwargs):
+    def perform_action(self):
         self._update_es(True)
-        super().save(*args, **kwargs)
         self.media_obj.delete()  # remove the actual model instance
+
+    @classmethod
+    def _bulk_update_es(cls, media_item_ids: list[str]):
+        cls._bulk_perform_index_update(
+            "delete",
+            media_item_ids,
+        )
+
+    @classmethod
+    def bulk_perform_action(cls, media_items: list[type[AbstractMedia]]):
+        cls._bulk_update_es(media_items.values_list("id", flat=True))
+        media_items.delete()  # remove the actual model instances
 
 
 class AbstractSensitiveMedia(PerformIndexUpdateMixin, models.Model):
@@ -481,6 +536,14 @@ class AbstractSensitiveMedia(PerformIndexUpdateMixin, models.Model):
     class Meta:
         abstract = True
 
+    def save(self, *args, **kwargs):
+        self._update_es(True, True)
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        self._update_es(False, False)
+        super().delete(*args, **kwargs)
+
     def _update_es(self, is_mature: bool, raise_errors: bool):
         """
         Update the Elasticsearch document associated with the given model.
@@ -494,13 +557,21 @@ class AbstractSensitiveMedia(PerformIndexUpdateMixin, models.Model):
             doc={"mature": is_mature},
         )
 
-    def save(self, *args, **kwargs):
-        self._update_es(True, True)
-        super().save(*args, **kwargs)
+    @classmethod
+    def _bulk_update_es(cls, is_mature: bool, media_item_ids: list[str]):
+        cls._bulk_perform_index_update(
+            "update",
+            media_item_ids,
+            doc={"mature": is_mature},
+        )
 
-    def delete(self, *args, **kwargs):
-        self._update_es(False, False)
-        super().delete(*args, **kwargs)
+    @classmethod
+    def bulk_perform_action(
+        cls,
+        is_mature: bool,
+        media_items: list[type[AbstractMedia]],
+    ):
+        cls._bulk_update_es(is_mature, media_items.values_list("id", flat=True))
 
 
 class AbstractMediaList(OpenLedgerModel):
