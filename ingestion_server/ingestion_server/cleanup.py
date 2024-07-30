@@ -57,7 +57,7 @@ TAG_CONTAINS_DENYLIST = {
 TAG_MIN_CONFIDENCE = 0.90
 # Filter out tags that match the following providers (either because they haven't
 # been vetted or because they are known to be low-quality).
-TAG_SKIP_PROVIDERS = {"rekognition"}
+FILTERED_TAG_PROVIDERS = {"rekognition"}
 
 # We know that flickr and wikimedia support TLS, so we can add them here
 TLS_CACHE = {
@@ -139,7 +139,7 @@ class CleanupFunctions:
             alt_filtered = False
             if "accuracy" in tag and float(tag["accuracy"]) < TAG_MIN_CONFIDENCE:
                 alt_filtered = True
-            if "provider" in tag and tag["provider"] in TAG_SKIP_PROVIDERS:
+            if "provider" in tag and tag["provider"] in FILTERED_TAG_PROVIDERS:
                 alt_filtered = True
             if "name" in tag and isinstance(tag["name"], str):
                 lower_tag = tag["name"].lower()

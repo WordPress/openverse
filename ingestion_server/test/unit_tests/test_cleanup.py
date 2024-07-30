@@ -1,7 +1,7 @@
 import pook
 from psycopg2._json import Json
 
-from ingestion_server.cleanup import TAG_SKIP_PROVIDERS, CleanupFunctions
+from ingestion_server.cleanup import FILTERED_TAG_PROVIDERS, CleanupFunctions
 from test.unit_tests.conftest import create_mock_image
 
 
@@ -46,7 +46,7 @@ class TestCleanup:
             {"name": "valid", "provider": "provider1"},
             *[
                 {"name": "invalid", "provider": provider}
-                for provider in TAG_SKIP_PROVIDERS
+                for provider in FILTERED_TAG_PROVIDERS
             ],
         ]
         result = str(CleanupFunctions.cleanup_tags(tags))
