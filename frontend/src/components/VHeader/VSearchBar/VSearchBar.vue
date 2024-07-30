@@ -1,5 +1,5 @@
 <template>
-  <div ref="searchBarEl" class="relative">
+  <div ref="searchBarEl" class="relative" :class="$attrs.class">
     <!-- Form action is a fallback for when JavaScript is disabled. -->
     <form
       action="/search"
@@ -9,13 +9,11 @@
     >
       <VInputField
         ref="inputFieldRef"
-        v-bind="$attrs"
+        v-bind="nonClassAttrs"
         v-model="modelMedium"
         :placeholder="placeholder || $t('hero.search.placeholder')"
         class="search-field flex-grow border-tx bg-dark-charcoal-10 text-dark-charcoal-70 focus-within:bg-white focus:border-pink group-hover:bg-dark-charcoal-10 group-hover:text-dark-charcoal group-hover:focus-within:bg-white"
-        :label-text="
-          $t('search.searchBarLabel', { openverse: 'Openverse' }).toString()
-        "
+        :label-text="$t('search.searchBarLabel', { openverse: 'Openverse' })"
         :connection-sides="['end']"
         :size="size"
         field-id="search-bar"
@@ -50,7 +48,7 @@
         :class="recentClasses"
         @select="handleSelect"
         @clear="handleClear($event)"
-        @keydown.tab.native="hideRecentSearches"
+        @keydown.tab="hideRecentSearches"
       />
     </ClientOnly>
   </div>
@@ -86,7 +84,7 @@ export default defineComponent({
     /**
      * the search query given as input to the field
      */
-    value: {
+    modelValue: {
       type: String,
       default: "",
     },
@@ -100,18 +98,18 @@ export default defineComponent({
     },
   },
   emits: {
-    input: defineEvent<[string]>(),
+    "update:modelValue": defineEvent<[string]>(),
     submit: defineEvent(),
     "recent-hidden": defineEvent(),
   },
-  setup(props, { emit }) {
+  setup(props, { attrs, emit }) {
     const searchBarEl = ref<HTMLElement | null>(null)
     const inputFieldRef = ref<InstanceType<typeof VInputField> | null>(null)
 
     const modelMedium = computed<string>({
-      get: () => props.value ?? "",
+      get: () => props.modelValue ?? "",
       set: (value: string) => {
-        emit("input", value)
+        emit("update:modelValue", value)
       },
     })
 
@@ -154,9 +152,17 @@ export default defineComponent({
       }
     })
 
+    const nonClassAttrs = computed(() => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { class: _, ...rest } = attrs
+      return rest
+    })
+
     return {
       searchBarEl,
       inputFieldRef,
+
+      nonClassAttrs,
 
       handleSearch,
       modelMedium,

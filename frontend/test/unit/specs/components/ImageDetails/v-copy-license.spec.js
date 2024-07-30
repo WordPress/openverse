@@ -24,13 +24,11 @@ describe("VCopyLicense", () => {
       },
       fullLicenseName: "LICENSE",
     }
-    options = {
-      propsData: props,
-    }
+    options = { props }
   })
 
-  it("should contain the correct contents", () => {
-    const { queryAllByText } = render(VCopyLicense, options)
+  it("should contain the correct contents", async () => {
+    const { queryAllByText } = await render(VCopyLicense, options)
     expect(queryAllByText(/Copy text/i)).toHaveLength(4)
   })
 })

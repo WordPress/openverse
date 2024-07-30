@@ -86,8 +86,9 @@
 </template>
 
 <script lang="ts">
+import { useRoute } from "#imports"
+
 import { computed, defineComponent, ref, watch } from "vue"
-import { useRoute } from "@nuxtjs/composition-api"
 
 import { useDialogControl } from "~/composables/use-dialog-control"
 import { useAnalytics } from "~/composables/use-analytics"
@@ -114,7 +115,7 @@ export default defineComponent({
     VWordPressLink,
   },
   setup(_, { emit }) {
-    const menuButtonRef = ref<{ $el: HTMLElement } | null>(null)
+    const menuButtonRef = ref<InstanceType<typeof VIconButton> | null>(null)
     const nodeRef = ref<HTMLElement | null>(null)
     const modalContentRef = ref<{
       $el: HTMLElement
@@ -154,7 +155,7 @@ export default defineComponent({
       visibleRef: isModalVisible,
       nodeRef,
       lockBodyScroll,
-      emit,
+      emit: emit as (event: string) => void,
       deactivateFocusTrap,
     })
 

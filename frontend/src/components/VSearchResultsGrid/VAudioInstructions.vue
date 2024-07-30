@@ -1,12 +1,14 @@
 <template>
   <VSnackbar size="large" :is-visible="isSnackbarVisible">
-    <i18n :path="`${i18nPrefix}.text`" tag="p">
-      <template v-for="keyboardKey in keyboardKeys" #[keyboardKey]>
-        <kbd :key="keyboardKey" class="font-sans">{{
-          $t(`${i18nPrefix}.${keyboardKey}`)
-        }}</kbd>
+    <i18n-t scope="global" :keypath="`${i18nPrefix}.text`" tag="p">
+      <template
+        v-for="keyboardKey in keyboardKeys"
+        #[keyboardKey]
+        :key="keyboardKey"
+      >
+        <kbd class="font-sans">{{ $t(`${i18nPrefix}.${keyboardKey}`) }}</kbd>
       </template>
-    </i18n>
+    </i18n-t>
   </VSnackbar>
 </template>
 <script lang="ts">

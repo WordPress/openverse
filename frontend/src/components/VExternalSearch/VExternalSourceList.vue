@@ -25,9 +25,7 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue"
-
+<script setup lang="ts">
 import { useAnalytics } from "~/composables/use-analytics"
 
 import { useExternalSources } from "~/composables/use-external-sources"
@@ -38,36 +36,22 @@ import VButton from "~/components/VButton.vue"
  * This component renders a list of pre-populated links to additional sources
  * when there are insufficient or zero search results.
  */
-export default defineComponent({
-  name: "VExternalSourceList",
-  components: { VButton },
-  props: {
-    /**
-     * The search term for which the external sources links are generated.
-     */
-    searchTerm: {
-      type: String,
-      required: true,
-    },
-  },
-  setup(props) {
-    const { externalSources, externalSourcesType } = useExternalSources()
+const props = defineProps<{
+  /**
+   * The search term for which the external sources links are generated.
+   */
+  searchTerm: string
+}>()
 
-    const { sendCustomEvent } = useAnalytics()
-    const handleClick = (sourceName: string) => {
-      sendCustomEvent("SELECT_EXTERNAL_SOURCE", {
-        name: sourceName,
-        mediaType: externalSourcesType.value,
-        query: props.searchTerm,
-        component: "VExternalSourceList",
-      })
-    }
+const { externalSources, externalSourcesType } = useExternalSources()
 
-    return {
-      externalSources,
-      externalSourcesType,
-      handleClick,
-    }
-  },
-})
+const { sendCustomEvent } = useAnalytics()
+const handleClick = (sourceName: string) => {
+  sendCustomEvent("SELECT_EXTERNAL_SOURCE", {
+    name: sourceName,
+    mediaType: externalSourcesType.value,
+    query: props.searchTerm,
+    component: "VExternalSourceList",
+  })
+}
 </script>

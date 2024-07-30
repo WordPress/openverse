@@ -15,47 +15,37 @@
     </div>
   </div>
 </template>
-<script lang="ts">
-import { computed, defineComponent, PropType } from "vue"
+<script setup lang="ts">
+import { defineAsyncComponent } from "#imports"
+
+import { computed } from "vue"
 
 import { ECONNABORTED, NO_RESULT, SERVER_TIMEOUT } from "~/constants/errors"
 
 import type { FetchingError } from "~/types/fetch-state"
 
-export default defineComponent({
-  components: {
-    VNoResults: () => import("~/components/VErrorSection/VNoResults.vue"),
-    VErrorImage: () => import("~/components/VErrorSection/VErrorImage.vue"),
-  },
-  props: {
-    fetchingError: {
-      type: Object as PropType<FetchingError>,
-      required: true,
-    },
-  },
-  setup(props) {
-    const searchTerm = computed(
-      () => props.fetchingError.details?.searchTerm ?? ""
-    )
-    /**
-     * The code used for the error page image.
-     * For now, NO_RESULT image is used for searches without result,
-     * and SERVER_TIMEOUT image is used as a fall-back for all other errors.
-     */
-    const errorCode = computed(() =>
-      props.fetchingError.code === NO_RESULT ? NO_RESULT : SERVER_TIMEOUT
-    )
+const VNoResults = defineAsyncComponent(
+  () => import("~/components/VErrorSection/VNoResults.vue")
+)
+const VErrorImage = defineAsyncComponent(
+  () => import("~/components/VErrorSection/VErrorImage.vue")
+)
 
-    const isTimeout = computed(() =>
-      [SERVER_TIMEOUT, ECONNABORTED].includes(props.fetchingError.code)
-    )
+const props = defineProps<{
+  fetchingError: FetchingError
+}>()
 
-    return {
-      errorCode,
-      isTimeout,
-      NO_RESULT,
-      searchTerm,
-    }
-  },
-})
+const searchTerm = computed(() => props.fetchingError.details?.searchTerm ?? "")
+/**
+ * The code used for the error page image.
+ * For now, NO_RESULT image is used for searches without result,
+ * and SERVER_TIMEOUT image is used as a fall-back for all other errors.
+ */
+const errorCode = computed(() =>
+  props.fetchingError.code === NO_RESULT ? NO_RESULT : SERVER_TIMEOUT
+)
+
+const isTimeout = computed(() =>
+  [SERVER_TIMEOUT, ECONNABORTED].includes(props.fetchingError.code)
+)
 </script>

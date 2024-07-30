@@ -7,7 +7,7 @@
   >
     <div
       v-for="(category, index) in contentTypeGroups"
-      :key="index"
+      :key="category.heading"
       class="flex flex-col"
       :class="{
         'border-t border-dark-charcoal-20 bg-dark-charcoal-06':
@@ -27,7 +27,6 @@
         :key="item"
         :item="item"
         :is-first="index === 0 && idx === 0"
-        :size="size"
         :icon="content.icons[item]"
         :use-links="useLinks"
         :selected="isActive(item)"

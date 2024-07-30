@@ -13,13 +13,12 @@
       }"
     >
       <ClientOnly>
-        <Component
-          :is="prefersReducedMotion ? 'div' : 'Transition'"
+        <Transition
           v-for="(image, idx) in imageList"
           :key="idx"
           enter-active-class="transition-opacity delay-[var(--delay)] duration-500"
           leave-active-class="transition-opacity delay-[var(--delay)] duration-500"
-          enter-class="opacity-0"
+          enter-from-class="opacity-0"
           leave-to-class="opacity-0"
           mode="out-in"
           appear
@@ -39,15 +38,16 @@
               :title="image.title"
             />
           </VLink>
-        </Component>
+        </Transition>
       </ClientOnly>
     </div>
   </div>
 </template>
 
 <script lang="ts">
+import { useLocalePath, useRouter } from "#imports"
+
 import { computed, defineComponent, PropType, ref } from "vue"
-import { useContext, useRouter } from "@nuxtjs/composition-api"
 
 import { useReducedMotion } from "~/composables/use-reduced-motion"
 import { useAnalytics } from "~/composables/use-analytics"
@@ -85,7 +85,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const { app } = useContext()
+    const localePath = useLocalePath()
     const router = useRouter()
     const prefersReducedMotion = useReducedMotion()
 
@@ -114,7 +114,7 @@ export default defineComponent({
         ...image,
         src: `/homepage_images/${imageSet.value.key}/${idx + 1}.png`,
         url: router.resolve(
-          app.localePath({
+          localePath({
             name: "image-id",
             params: { id: image.id },
           })

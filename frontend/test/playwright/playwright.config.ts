@@ -1,3 +1,5 @@
+import { PRODUCTION } from "~/constants/deploy-env"
+
 import type { PlaywrightTestConfig } from "@playwright/test"
 
 const UPDATE_TAPES = process.env.UPDATE_TAPES || "false"
@@ -26,7 +28,9 @@ const config: PlaywrightTestConfig = {
     reuseExistingServer: !process.env.CI || process.env.PWDEBUG === "1",
     env: {
       API_URL,
+      NUXT_PUBLIC_API_URL: API_URL,
       UPDATE_TAPES: UPDATE_TAPES,
+      DEPLOYMENT_ENV: PRODUCTION,
       PW: "true",
     },
   },

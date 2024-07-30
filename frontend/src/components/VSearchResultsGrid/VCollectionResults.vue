@@ -35,7 +35,7 @@ import { defineComponent, type PropType } from "vue"
 import { isSupportedMediaType } from "~/constants/media"
 
 import type { CollectionParams } from "~/types/search"
-import type { Results } from "~/types/result"
+import type { AudioResults, ImageResults } from "~/types/result"
 
 import { defineEvent } from "~/types/emits"
 
@@ -56,7 +56,7 @@ export default defineComponent({
       required: true,
     },
     results: {
-      type: Object as PropType<Results>,
+      type: Object as PropType<ImageResults | AudioResults>,
       required: true,
     },
     isFetching: {

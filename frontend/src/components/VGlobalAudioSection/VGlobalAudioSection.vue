@@ -18,8 +18,9 @@
 </template>
 
 <script lang="ts">
+import { useRoute } from "#imports"
+
 import { watch, computed, defineComponent } from "vue"
-import { useRoute } from "@nuxtjs/composition-api"
 
 import { AUDIO } from "~/constants/media"
 import { useActiveAudio } from "~/composables/use-active-audio"
@@ -30,6 +31,8 @@ import { useSingleResultStore } from "~/stores/media/single-result"
 import { useUiStore } from "~/stores/ui"
 
 import type { AudioDetail } from "~/types/media"
+
+import { getRouteNameString } from "~/utils/route-utils"
 
 import VIconButton from "~/components/VIconButton/VIconButton.vue"
 import VGlobalAudioTrack from "~/components/VAudioTrack/VGlobalAudioTrack.vue"
@@ -133,19 +136,22 @@ export default defineComponent({
      * and on desktop, only if the next route is the 'audio-id' page of the
      * track currently playing, or the original search result page.
      */
-    const routeValue = computed(() => route.value)
-    watch(routeValue, (newRouteVal, oldRouteVal) => {
-      if (
-        (oldRouteVal.name?.includes("audio") &&
-          !newRouteVal.name?.includes("audio")) ||
-        (uiStore.isDesktopLayout &&
-          newRouteVal.name?.includes("audio-id") &&
-          newRouteVal.params.id != activeMediaStore.id)
-      ) {
-        activeAudio.obj.value?.pause()
-        activeMediaStore.ejectActiveMediaItem()
+    watch(
+      () => route,
+      (newRouteVal, oldRouteVal) => {
+        const oldName = getRouteNameString(oldRouteVal)
+        const newName = getRouteNameString(newRouteVal)
+        if (
+          (oldName.includes("audio") && !newName.includes("audio")) ||
+          (uiStore.isDesktopLayout &&
+            newName.includes("audio-id") &&
+            newRouteVal.params.id != activeMediaStore.id)
+        ) {
+          activeAudio.obj.value?.pause()
+          activeMediaStore.ejectActiveMediaItem()
+        }
       }
-    })
+    )
 
     return {
       audio,

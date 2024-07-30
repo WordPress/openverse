@@ -1,52 +1,63 @@
+import {
+  createError,
+  defineNuxtRouteMiddleware,
+  firstParam,
+  handledClientSide,
+  showError,
+} from "#imports"
+
+import { RouteLocationNormalized } from "vue-router"
+
 import { useSingleResultStore } from "~/stores/media/single-result"
 import { useSearchStore } from "~/stores/search"
+
+import { AUDIO, IMAGE, supportedMediaTypes } from "~/constants/media"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
-import { isRetriable } from "~/utils/errors"
+import { getRouteNameString } from "~/utils/route-utils"
 
-import { AUDIO, IMAGE } from "~/constants/media"
+const searchPaths = [
+  ...supportedMediaTypes.map((type) => `search-${type}`),
+  "search",
+]
 
-import type { Middleware } from "@nuxt/types"
-
-const isSearchPath = (path: string) => path.includes("/search/")
+const isSearchPath = (route: RouteLocationNormalized) => {
+  return searchPaths.includes(getRouteNameString(route).split("__")[0])
+}
 const isCollectionPath = (path: string) => path.includes("/collection")
 
-export const singleResultMiddleware: Middleware = async ({
-  route,
-  from,
-  error,
-  $pinia,
-}) => {
-  const mediaType = route.fullPath.includes("/image/") ? IMAGE : AUDIO
-  const singleResultStore = useSingleResultStore($pinia)
+export default defineNuxtRouteMiddleware(async (to, from) => {
+  const mediaType = to.fullPath.includes("/image/") ? IMAGE : AUDIO
+  const singleResultStore = useSingleResultStore()
+  const relatedMediaStore = useRelatedMediaStore()
 
-  if (process.server) {
-    const media = await singleResultStore.fetch(mediaType, route.params.id)
+  const mediaId = firstParam(to?.params.id)
+  if (!mediaId) {
+    return
+  }
+  singleResultStore.setMediaById(mediaType, mediaId)
+  if (import.meta.server) {
+    await Promise.allSettled([
+      singleResultStore.fetch(mediaType, mediaId),
+      relatedMediaStore.fetchMedia(mediaType, mediaId),
+    ])
 
-    if (!media) {
-      const fetchingError = singleResultStore.fetchState.fetchingError
-
-      if (fetchingError && !isRetriable(fetchingError)) {
-        error(fetchingError ?? {})
-      }
+    const fetchingError = singleResultStore.fetchState.fetchingError
+    if (
+      !singleResultStore.mediaItem &&
+      fetchingError &&
+      !handledClientSide(fetchingError)
+    ) {
+      showError(createError(fetchingError))
     }
-    await useRelatedMediaStore($pinia).fetchMedia(mediaType, route.params.id)
-  } else {
-    // Client-side rendering
-    singleResultStore.setMediaById(mediaType, route.params.id)
+  } else if (from && (isSearchPath(from) || isCollectionPath(from.path))) {
+    const searchStore = useSearchStore()
+    searchStore.setBackToSearchPath(from.fullPath)
 
-    if (from && (isSearchPath(from.path) || isCollectionPath(from.path))) {
-      const searchStore = useSearchStore($pinia)
-      searchStore.setBackToSearchPath(from.fullPath)
-
-      if (isSearchPath(from.path)) {
-        const searchTerm = Array.isArray(route.query.q)
-          ? route.query.q[0]
-          : route.query.q
-
-        if (searchTerm) {
-          searchStore.setSearchTerm(searchTerm)
-        }
+    if (isSearchPath(from)) {
+      const searchTerm = firstParam(to?.query.q) ?? ""
+      if (searchTerm) {
+        searchStore.setSearchTerm(searchTerm)
       }
     }
   }
-}
+})

@@ -1,8 +1,9 @@
+import { useNuxtApp } from "#imports"
+
 import { useGetLocaleFormattedNumber } from "~/composables/use-get-locale-formatted-number"
-import { useI18n } from "~/composables/use-i18n"
-import type { SupportedMediaType, SupportedSearchType } from "~/constants/media"
 import { ALL_MEDIA, AUDIO, IMAGE } from "~/constants/media"
-import { Collection } from "~/types/search"
+import type { SupportedMediaType, SupportedSearchType } from "~/constants/media"
+import type { Collection } from "~/types/search"
 
 type KeyCollection = {
   zero: string
@@ -85,10 +86,10 @@ export function getCountKey(resultsCount: number): keyof KeyCollection {
  * Returns the localized text for the number of search results.
  */
 export function useI18nResultsCount() {
-  const i18n = useI18n()
+  const { t } = useNuxtApp().$i18n
   const getLocaleFormattedNumber = useGetLocaleFormattedNumber()
 
-  const getLoading = () => i18n.t("header.loading").toString()
+  const getLoading = () => t("header.loading")
 
   const getI18nKey = (
     resultsCount: number,
@@ -100,14 +101,15 @@ export function useI18nResultsCount() {
 
   /**
    * Returns the localized text for the content link label.
-   * E.g. "See 3,567 image results for 'cats'".
+   * E.g. "See 240 image results for 'cats'".
    */
   const getI18nContentLinkLabel = (
     resultsCount: number,
     query: string,
     mediaType: SupportedMediaType
   ) => {
-    return i18n.tc(getI18nKey(resultsCount, mediaType), resultsCount, {
+    return t(getI18nKey(resultsCount, mediaType), {
+      count: resultsCount,
       localeCount: getLocaleFormattedNumber(resultsCount),
       query,
       mediaType,
@@ -121,7 +123,8 @@ export function useI18nResultsCount() {
   ) => {
     const key =
       collectionKeys[collectionType][mediaType][getCountKey(resultCount)]
-    return i18n.tc(key, resultCount, {
+    return t(key, {
+      count: resultCount,
       localeCount: getLocaleFormattedNumber(resultCount),
       ...params,
     })
@@ -133,7 +136,8 @@ export function useI18nResultsCount() {
    * E.g. "No results", "132 results", "Top 240 results".
    */
   const getI18nCount = (resultsCount: number) => {
-    return i18n.tc(getI18nKey(resultsCount, ALL_MEDIA), resultsCount, {
+    return t(getI18nKey(resultsCount, ALL_MEDIA), {
+      count: resultsCount,
       localeCount: getLocaleFormattedNumber(resultsCount),
     })
   }

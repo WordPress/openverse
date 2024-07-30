@@ -1,8 +1,9 @@
+import { useNuxtApp } from "#imports"
+
 import { defineStore } from "pinia"
 
 import { useStorage } from "@vueuse/core"
 
-import { env } from "~/utils/env"
 import { deepClone } from "~/utils/clone"
 import type { DeepWriteable } from "~/types/utils"
 
@@ -46,15 +47,17 @@ import type {
   PaginatedCollectionQuery,
 } from "~/types/search"
 
+import type { LocationQuery, RouteLocationNormalized } from "vue-router"
+
 import type { Ref } from "vue"
-import type { Dictionary } from "vue-router/types/router"
-import type { Context } from "@nuxt/types"
 
 export const isSearchTypeSupported = (
   st: SearchType
 ): st is SupportedSearchType => {
   return supportedSearchTypes.includes(st as SupportedSearchType)
 }
+
+const SAVED_SEARCH_COUNT = 4
 
 export interface SearchState {
   searchType: SearchType
@@ -152,7 +155,7 @@ export const useSearchStore = defineStore("search", {
       entriesStored.value = [
         state.searchTerm,
         ...entriesStored.value.filter((i) => i !== state.searchTerm),
-      ].slice(0, parseInt(env.savedSearchCount))
+      ].slice(0, SAVED_SEARCH_COUNT)
     }
     state.recentSearches = entriesStored.value
   },
@@ -286,10 +289,9 @@ export const useSearchStore = defineStore("search", {
           this.searchTerm,
           "frontend"
         )
-
-      return this.$nuxt.localePath({
+      return useNuxtApp().$localePath({
         path: searchPath(searchType),
-        query: queryParams as unknown as Dictionary<string>,
+        query: queryParams as unknown as LocationQuery,
       })
     },
 
@@ -307,7 +309,7 @@ export const useSearchStore = defineStore("search", {
       const path = `/${type}/collection`
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { collection: _, ...query } = collectionParams
-      return this.$nuxt.localePath({ path, query })
+      return useNuxtApp().$localePath({ path, query })
     },
 
     setSearchType(type: SearchType) {
@@ -366,7 +368,7 @@ export const useSearchStore = defineStore("search", {
       urlQuery,
     }: {
       path: string
-      urlQuery: Context["query"]
+      urlQuery: RouteLocationNormalized["query"]
     }) {
       const query = queryDictionaryToQueryParams(urlQuery)
 
@@ -408,7 +410,7 @@ export const useSearchStore = defineStore("search", {
       const entries = [
         search,
         ...this.recentSearches.filter((i) => i !== search),
-      ].slice(0, parseInt(env.savedSearchCount))
+      ].slice(0, SAVED_SEARCH_COUNT)
       // directly setting value to this.recentSearches does not update the storage and watchers
       this.updateRecentSearches(entries)
     },

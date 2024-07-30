@@ -18,12 +18,12 @@
         ref="inputRef"
         type="search"
         name="q"
-        :placeholder="$t('hero.search.placeholder').toString()"
+        :placeholder="$t('hero.search.placeholder')"
         class="paragraph-large md:label-regular ms-4 h-full w-full appearance-none rounded-none bg-tx leading-none text-dark-charcoal placeholder-dark-charcoal-70 focus-visible:outline-none"
         :aria-label="
           $t('search.searchBarLabel', {
             openverse: 'Openverse',
-          }).toString()
+          })
         "
       />
       <!-- @slot Extra information goes here -->
@@ -66,7 +66,7 @@ export default defineComponent({
   emits: {
     submit: defineEvent<[string]>(),
   },
-  setup(_, { emit }) {
+  setup(_, { emit, expose }) {
     const inputRef = ref<HTMLInputElement | null>(null)
 
     // Only emit `submit` if the input value is not blank
@@ -77,9 +77,16 @@ export default defineComponent({
       }
     }
 
+    const focusInput = () => {
+      inputRef.value?.focus()
+    }
+
+    expose({ focusInput })
+
     return {
       inputRef,
       handleSearch,
+      focusInput,
     }
   },
 })

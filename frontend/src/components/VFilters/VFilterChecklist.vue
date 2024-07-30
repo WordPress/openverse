@@ -2,13 +2,13 @@
   <fieldset class="mb-8">
     <legend class="label-bold">{{ title }}</legend>
     <div
-      v-for="(item, index) in options"
-      :key="index"
+      v-for="item in options"
+      :key="item.code"
       class="mt-4 flex items-center justify-between"
     >
       <VCheckbox
         :id="item.code"
-        :key="index"
+        :key="item.code"
         :checked="item.checked"
         :name="title"
         :value="item.code"
@@ -23,7 +23,7 @@
       <VPopover
         v-if="isLicense(item.code)"
         strategy="fixed"
-        :label="$t('browsePage.aria.licenseExplanation').toString()"
+        :label="$t('browsePage.aria.licenseExplanation')"
         :trap-focus="false"
       >
         <template #trigger="{ a11yProps }">
@@ -56,10 +56,11 @@
 </template>
 
 <script lang="ts">
+import { useI18n } from "#imports"
+
 import { defineComponent, PropType } from "vue"
 
 import { useSearchStore } from "~/stores/search"
-import { useI18n } from "~/composables/use-i18n"
 
 import type { FilterItem, FilterCategory } from "~/constants/filters"
 
@@ -113,12 +114,12 @@ export default defineComponent({
     "toggle-filter": defineEvent<[toggleFilterPayload]>(),
   },
   setup(props, { emit }) {
-    const i18n = useI18n()
+    const { t } = useI18n({ useScope: "global" })
 
     const itemLabel = (item: FilterItem) =>
       ["audioProviders", "imageProviders"].indexOf(props.filterType) > -1
         ? item.name
-        : i18n.t(item.name)
+        : t(item.name)
 
     const onValueChange = ({ value }: { value: string }) => {
       emit("toggle-filter", {
@@ -129,10 +130,10 @@ export default defineComponent({
     const getLicenseExplanationCloseAria = (license: License) => {
       const elements = getElements(license).filter((icon) => icon !== "cc")
       const descriptions = elements
-        .map((element) => i18n.t(`browsePage.licenseDescription.${element}`))
+        .map((element) => t(`browsePage.licenseDescription.${element}`))
         .join(" ")
-      const close = i18n.t("modal.closeNamed", {
-        name: i18n.t("browsePage.aria.licenseExplanation"),
+      const close = t("modal.closeNamed", {
+        name: t("browsePage.aria.licenseExplanation"),
       })
       return `${descriptions} - ${close}`
     }

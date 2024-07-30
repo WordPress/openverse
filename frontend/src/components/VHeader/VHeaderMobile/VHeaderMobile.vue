@@ -1,128 +1,131 @@
 <template>
   <header
     ref="headerRef"
-    class="main-header z-30 flex w-full items-center bg-white px-6 py-4"
+    class="main-header z-30 flex w-full items-center px-6 py-4"
   >
-    <VInputModal
-      class="flex w-full"
-      :is-active="isRecentVisible"
-      :aria-label="$t('recentSearches.heading').toString()"
-      @close="hideRecentSearches"
+    <!-- Form action is a fallback for when JavaScript is disabled. -->
+    <form
+      action="/search"
+      class="search-bar group flex h-12 w-full flex-row items-center overflow-hidden rounded-sm"
+      :class="
+        isSearchBarActive || isInputFocused
+          ? 'bg-white ring ring-pink'
+          : 'bg-dark-charcoal-06'
+      "
+      @submit.prevent="handleFormSubmit"
     >
-      <div class="flex w-full" :class="{ 'px-3': isRecentVisible }">
-        <!-- Form action is a fallback for when JavaScript is disabled. -->
-        <form
-          action="/search"
-          class="search-bar group flex h-12 w-full flex-row items-center overflow-hidden rounded-sm"
-          :class="
-            isSearchBarActive || isInputFocused
-              ? 'bg-white ring ring-pink'
-              : 'bg-dark-charcoal-06'
-          "
-          @submit.prevent="handleFormSubmit"
-        >
-          <slot name="start">
-            <VLogoButton
-              v-show="!isRecentVisible"
-              :is-fetching="isFetching"
-              class="focus-visible:me-1.5px focus-visible:ms-1.5px focus-visible:!h-[45px] focus-visible:max-w-[45px]"
-            />
-            <VSearchBarButton
-              v-show="isRecentVisible"
-              icon="chevron-back"
-              :label="$t('header.backButton')"
-              :rtl-flip="true"
-              variant="filled-gray"
-              @click="hideRecentSearches"
-              @keydown.shift.tab="handleTabOut('backward')"
-            />
-          </slot>
+      <slot name="start">
+        <VLogoButton
+          v-show="!isRecentVisible"
+          :is-fetching="isFetching"
+          class="focus-visible:me-1.5px focus-visible:ms-1.5px focus-visible:!h-[45px] focus-visible:max-w-[45px]"
+        />
+        <VSearchBarButton
+          v-show="isRecentVisible"
+          icon="chevron-back"
+          :label="$t('header.backButton')"
+          :rtl-flip="true"
+          variant="filled-gray"
+          @click="hideRecentSearches"
+          @keydown.shift.tab="handleTabOut('backward')"
+        />
+      </slot>
 
-          <input
-            id="search-bar"
-            ref="searchInputRef"
-            name="q"
-            :placeholder="$t('hero.search.placeholder').toString()"
-            type="search"
-            class="search-field ms-1 h-full w-full flex-grow appearance-none rounded-none border-tx bg-tx text-2xl text-dark-charcoal-70 placeholder-dark-charcoal-70 hover:text-dark-charcoal hover:placeholder-dark-charcoal focus-visible:outline-none"
-            :value="localSearchTerm"
-            :aria-label="
-              $t('search.searchBarLabel', {
-                openverse: 'Openverse',
-              }).toString()
-            "
-            autocomplete="off"
-            role="combobox"
-            aria-autocomplete="list"
-            :aria-expanded="isRecentVisible ? 'true' : 'false'"
-            aria-owns="recent-searches-list"
-            aria-controls="recent-searches-list"
-            :aria-activedescendant="
-              selectedIdx === undefined ? undefined : `option-${selectedIdx}`
-            "
-            @input="updateSearchText"
-            @keydown="handleInputKeydown"
-            @focus="handleInputFocus"
-            @focusout="handleInputBlur"
-            @click="handleInputClick"
-          />
-          <slot>
-            <VSearchBarButton
-              v-show="isRecentVisible && localSearchTerm"
-              icon="close-small"
-              :label="$t('browsePage.searchForm.clear')"
-              inner-area-classes="bg-white hover:bg-dark-charcoal-10"
-              @click="clearSearchText"
-              @keydown.tab.exact="handleClearButtonTab"
-            />
-            <span
-              v-show="!isSearchBarActive && searchStatus"
-              class="info mx-4 hidden whitespace-nowrap text-xs group-hover:text-dark-charcoal group-focus:text-dark-charcoal md:flex"
-            >
-              {{ searchStatus }}
-            </span>
-            <VContentSettingsButton
-              v-show="!isRecentVisible"
-              ref="contentSettingsButtonRef"
-              :is-pressed="contentSettingsOpen"
-              :applied-filter-count="appliedFilterCount"
-              v-bind="triggerA11yProps"
-              :disabled="!doneHydrating"
-              @click="toggleContentSettings"
-              @keydown.tab.exact="handleTabOut('forward')"
-            />
-            <VContentSettingsModalContent
-              v-show="!isRecentVisible"
-              variant="two-thirds"
-              :visible="contentSettingsOpen"
-              :is-fetching="isFetching"
-              :close="closeContentSettings"
-              :trigger-element="contentSettingsButton"
-              labelledby="content-settings-button"
-            />
-          </slot>
-        </form>
-      </div>
+      <input
+        id="search-bar"
+        ref="searchInputRef"
+        name="q"
+        :placeholder="$t('hero.search.placeholder')"
+        type="search"
+        class="search-field ms-1 h-full w-full flex-grow appearance-none rounded-none border-tx bg-tx text-2xl text-dark-charcoal-70 placeholder-dark-charcoal-70 hover:text-dark-charcoal hover:placeholder-dark-charcoal focus-visible:outline-none"
+        :value="localSearchTerm"
+        :aria-label="
+          $t('search.searchBarLabel', {
+            openverse: 'Openverse',
+          })
+        "
+        autocomplete="off"
+        role="combobox"
+        aria-autocomplete="list"
+        :aria-expanded="isRecentVisible ? 'true' : 'false'"
+        aria-controls="recent-searches-list"
+        aria-haspopup="listbox"
+        :aria-activedescendant="
+          selectedIdx === undefined ? undefined : `option-${selectedIdx}`
+        "
+        @input="updateSearchText"
+        @keydown="handleInputKeydown"
+        @focus="handleInputFocus"
+        @focusout="handleInputBlur"
+        @click="handleInputClick"
+      />
+      <VSearchBarButton
+        v-show="isRecentVisible && localSearchTerm"
+        ref="clearButtonRef"
+        icon="close-small"
+        :label="$t('browsePage.searchForm.clear')"
+        inner-area-classes="bg-white hover:bg-dark-charcoal-10"
+        @click="clearSearchText"
+        @keydown.tab.exact="handleTab($event, 'clear-input')"
+      />
+      <span
+        v-show="!isSearchBarActive && searchStatus"
+        class="info mx-4 hidden whitespace-nowrap text-xs group-hover:text-dark-charcoal group-focus:text-dark-charcoal md:flex"
+      >
+        {{ searchStatus }}
+      </span>
+      <VContentSettingsButton
+        v-show="!isRecentVisible"
+        ref="contentSettingsButtonRef"
+        :is-pressed="contentSettingsOpen"
+        :applied-filter-count="appliedFilterCount"
+        v-bind="triggerA11yProps"
+        :disabled="!doneHydrating"
+        @click="toggleContentSettings"
+        @keydown.tab.exact="handleTab($event, 'content-settings')"
+      />
+      <VContentSettingsModalContent
+        v-show="!isRecentVisible"
+        variant="two-thirds"
+        :visible="contentSettingsOpen"
+        :is-fetching="isFetching"
+        :close="closeContentSettings"
+        :trigger-element="contentSettingsButton"
+        labelledby="content-settings-button"
+      />
+    </form>
+    <VModalContent
+      v-if="isRecentVisible"
+      :visible="true"
+      :hide="deactivate"
+      :trigger-element="searchInputRef"
+      :trap-focus="false"
+      :auto-focus-on-show="false"
+      :auto-focus-on-hide="false"
+      content-classes="px-3"
+      :aria-label="$t('recentSearches.heading')"
+      variant="mobile-input"
+    >
       <ClientOnly>
         <VRecentSearches
-          v-show="isRecentVisible"
           ref="recentSearchesRef"
+          class="w-[100dvw] px-3"
           :selected-idx="selectedIdx"
           :entries="entries"
           :bordered="false"
-          class="mt-4"
           @select="handleSelect"
           @clear="handleClear"
           @last-tab="handleTabOut('forward')"
         />
       </ClientOnly>
-    </VInputModal>
+    </VModalContent>
   </header>
 </template>
 
 <script lang="ts">
+import { firstParam, focusIn, useNuxtApp, useRoute, useRouter } from "#imports"
+
 import { computed, defineComponent, nextTick, ref, watch } from "vue"
-import { useContext, useRoute } from "@nuxtjs/composition-api"
 import { onClickOutside } from "@vueuse/core"
 
 import {
@@ -142,7 +145,6 @@ import { useSearchStore } from "~/stores/search"
 import { skipToContentTargetId } from "~/constants/window"
 
 import VLogoButton from "~/components/VHeader/VLogoButton.vue"
-import VInputModal from "~/components/VModal/VInputModal.vue"
 import VContentSettingsModalContent from "~/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue"
 import VContentSettingsButton from "~/components/VHeader/VHeaderMobile/VContentSettingsButton.vue"
 import VRecentSearches from "~/components/VRecentSearches/VRecentSearches.vue"
@@ -158,7 +160,6 @@ export default defineComponent({
   components: {
     VContentSettingsModalContent,
     VContentSettingsButton,
-    VInputModal,
     VLogoButton,
     VRecentSearches,
     VSearchBarButton,
@@ -174,6 +175,9 @@ export default defineComponent({
     > | null>(null)
     const contentSettingsButton = computed(
       () => (contentSettingsButtonRef.value?.$el as HTMLElement) ?? undefined
+    )
+    const clearButtonRef = ref<InstanceType<typeof VSearchBarButton> | null>(
+      null
     )
 
     const mediaStore = useMediaStore()
@@ -192,7 +196,7 @@ export default defineComponent({
      */
     const selection = ref<{ start: number; end: number }>({ start: 0, end: 0 })
 
-    const { $sendCustomEvent } = useContext()
+    const { $sendCustomEvent } = useNuxtApp()
     const { updateSearchState, searchTerm, searchStatus } =
       useSearch($sendCustomEvent)
     const localSearchTerm = ref(searchTerm.value)
@@ -338,14 +342,13 @@ export default defineComponent({
     const handleTabOut = (direction: "forward" | "backward") => {
       recent.hide()
       nextTick().then(() => {
-        let element =
+        const element =
           direction === "forward"
             ? document.getElementById(skipToContentTargetId)
             : getAllTabbableIn(document.body)[1]
-        if (!element) {
-          element = getFirstTabbableIn(document.body)
-        }
-        ensureFocus(element as HTMLElement)
+        ensureFocus(
+          element ?? (getFirstTabbableIn(document.body) as HTMLElement)
+        )
       })
     }
 
@@ -358,25 +361,45 @@ export default defineComponent({
       visibleRef: contentSettingsOpen,
       nodeRef: headerRef,
       lockBodyScroll: true,
-      emit,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      emit: emit as (event: string, ...args: any[]) => void,
     })
 
     const route = useRoute()
-    const routeSearchTerm = computed(() => route.value?.query?.q)
+    const routeSearchTerm = computed(() => firstParam(route?.query.q))
     watch(routeSearchTerm, (newSearchTerm) => {
-      const term = Array.isArray(newSearchTerm)
-        ? newSearchTerm[0]
-        : newSearchTerm
-      localSearchTerm.value = term ?? ""
+      localSearchTerm.value = newSearchTerm ?? ""
     })
 
     const { doneHydrating } = useHydrating()
+
+    const router = useRouter()
+    router.beforeEach((to, from, next) => {
+      if (to.path !== from.path) {
+        closeContentSettings()
+        deactivate()
+      }
+      next()
+    })
+
+    const handleTab = (
+      event: KeyboardEvent & { key: "Tab" },
+      button: "content-settings" | "clear-input"
+    ) => {
+      if (recent.isVisible.value) {
+        event.preventDefault()
+        focusIn(recentSearchesRef.value?.$el, 1)
+      } else if (button === "content-settings") {
+        handleTabOut("forward")
+      }
+    }
 
     return {
       isInputFocused,
       searchInputRef,
       headerRef,
       recentSearchesRef,
+      clearButtonRef,
       contentSettingsButtonRef,
       contentSettingsButton,
 
@@ -412,6 +435,7 @@ export default defineComponent({
       handleClear,
       handleClearButtonTab,
       handleTabOut,
+      handleTab,
     }
   },
 })

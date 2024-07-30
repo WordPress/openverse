@@ -26,7 +26,7 @@ export const project: TSESLint.Linter.ConfigType = {
   settings: {
     "vue-i18n": {
       localeDir: "./frontend/src/locales/*.{json}",
-      messageSyntaxVersion: "^8.24.3",
+      messageSyntaxVersion: "^9.0.0",
     },
   },
   rules: {
@@ -42,15 +42,27 @@ export const project: TSESLint.Linter.ConfigType = {
       parser: "jsonc-eslint-parser",
     },
     {
-      env: { jest: true },
-      files: ["packages/js/**/*/test", "frontend/test/unit/**"],
-      plugins: ["jest"],
-      extends: ["plugin:jest/recommended"],
+      env: { "vitest/env": true },
+      files: ["packages/js/**/*/test"],
+      plugins: ["vitest"],
+      extends: ["plugin:vitest/recommended"],
+      rules: {
+        // Superseded by `@openverse/no-unexplained-disabled-test`
+        "vitest/no-disabled-test": "off",
+      },
+    },
+    {
+      env: {
+        "vitest/env": true,
+      },
+      files: ["frontend/test/unit/**"],
+      plugins: ["vitest"],
+      extends: ["plugin:vitest/recommended"],
       rules: {
         "import/no-named-as-default-member": ["off"],
         "@intlify/vue-i18n/no-raw-text": ["off"],
         // Superseded by `@openverse/no-unexplained-disabled-test`
-        "jest/no-disabled-test": "off",
+        "vitest/no-disabled-test": "off",
         "no-restricted-imports": [
           "error",
           {

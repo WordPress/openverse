@@ -1,23 +1,21 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios"
+import { decodeMediaData, useRuntimeConfig } from "#imports"
 
-import { warn } from "~/utils/console"
-import { AUDIO, IMAGE } from "~/constants/media"
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios"
 
-import { userAgent } from "~/constants/user-agent"
-import { isServer } from "~/utils/node-env"
+import { debug, warn } from "~/utils/console"
+
+import { mediaSlug } from "~/utils/query-utils"
+import { AUDIO, SupportedMediaType } from "~/constants/media"
+import type { Events } from "~/types/analytics"
+import type { Media } from "~/types/media"
+import type {
+  PaginatedCollectionQuery,
+  PaginatedSearchQuery,
+} from "~/types/search"
 
 const DEFAULT_REQUEST_TIMEOUT = 30000
 
-/**
- * Returns a slug with trailing slash for a given resource name.
- * For media types, converts the name into resource slug when necessary (i.e. pluralizes 'image'),
- * for other resources uses the resource name as the slug.
- * @param resource - the first part of the request path
- */
-export const getResourceSlug = (resource: string): string => {
-  const slug = { [AUDIO]: "audio", [IMAGE]: "images" }[resource] ?? resource
-  return `${slug}/`
-}
+export type SearchTimeEventPayload = Events["SEARCH_RESPONSE_TIME"]
 
 /**
  * @param errorCondition - if true, the `message` warning is logged in the console
@@ -37,8 +35,94 @@ Please check the url: ${config.baseURL}${config.url}`
   }
 }
 
+export interface MediaResult<
+  T extends Media | Media[] | Record<string, Media>,
+> {
+  result_count: number
+  page_count: number
+  page_size: number
+  page: number
+  results: T
+}
+
+const userAgent =
+  "Openverse/0.1 (https://openverse.org; openverse@wordpress.org)"
 /**
- * the list of options that can be passed when instantiating a new API service.
+ * Decodes the text data to avoid encoding problems.
+ * Also, converts the results from an array of media
+ * objects into an object with media id as keys.
+ * @param mediaType - the media type of the search query
+ * @param data - search result data
+ */
+function transformResults<T extends Media>(
+  mediaType: SupportedMediaType,
+  data: MediaResult<T[]>
+): MediaResult<Record<string, T>> {
+  const mediaResults = <T[]>data.results ?? []
+  return {
+    ...data,
+    results: mediaResults.reduce(
+      (acc, item) => {
+        acc[item.id] = decodeMediaData(item, mediaType)
+        return acc
+      },
+      {} as Record<string, T>
+    ),
+  }
+}
+
+/**
+ * Processes AxiosResponse from a search query to construct
+ * SEARCH_RESPONSE_TIME analytics event payload.
+ * @param response - Axios response
+ * @param requestDatetime - datetime before request was sent
+ * @param mediaType - the media type of the search query
+ */
+const buildEventPayload = (
+  response: AxiosResponse,
+  requestDatetime: Date,
+  mediaType: SupportedMediaType
+): SearchTimeEventPayload | undefined => {
+  const REQUIRED_HEADERS = ["date", "cf-cache-status", "cf-ray"]
+
+  const responseHeaders = response.headers
+  if (!REQUIRED_HEADERS.every((header) => header in responseHeaders)) {
+    return
+  }
+
+  const responseDatetime = new Date(responseHeaders["date"])
+  if (responseDatetime < requestDatetime) {
+    // response returned was from the local cache
+    return
+  }
+
+  const cfRayIATA = responseHeaders["cf-ray"].split("-")[1]
+  if (cfRayIATA === undefined) {
+    return
+  }
+
+  const elapsedSeconds = Math.floor(
+    (responseDatetime.getTime() - requestDatetime.getTime()) / 1000
+  )
+
+  const responseUrl =
+    response.request?.responseURL ?? response.request?.res?.responseUrl
+  if (!responseUrl) {
+    return
+  }
+  const url = new URL(responseUrl)
+
+  return {
+    cfCacheStatus: responseHeaders["cf-cache-status"].toString(),
+    cfRayIATA: cfRayIATA.toString(),
+    elapsedTime: elapsedSeconds,
+    queryString: url.search,
+    mediaType: mediaType,
+  }
+}
+
+/**
+ * The list of options that can be passed when instantiating a new API service.
  */
 export interface ApiServiceConfig {
   /** to use a different base URL than configured for the environment */
@@ -49,53 +133,17 @@ export interface ApiServiceConfig {
   isVersioned?: boolean
 }
 
-/**
- * the schema of the API service
- */
-export interface ApiService {
-  client: AxiosInstance
-  query<T = unknown>(
-    resource: string,
-    params: Record<string, string>
-  ): Promise<AxiosResponse<T>>
-  get<T = unknown>(
-    resource: string,
-    slug: string,
-    params?: Record<string, string>
-  ): Promise<AxiosResponse<T>>
-  post<T = unknown>(
-    resource: string,
-    data: Parameters<AxiosInstance["post"]>[1],
-    headers?: AxiosRequestConfig["headers"]
-  ): Promise<AxiosResponse<T>>
-  update<T = unknown>(
-    resource: string,
-    slug: string,
-    data: Parameters<AxiosInstance["put"]>[1],
-    headers: AxiosRequestConfig["headers"]
-  ): Promise<AxiosResponse<T>>
-  put<T = unknown>(
-    resource: string,
-    params: AxiosRequestConfig
-  ): Promise<AxiosResponse<T>>
-  delete<T = unknown>(
-    resource: string,
-    slug: string,
-    headers: AxiosRequestConfig["headers"]
-  ): Promise<AxiosResponse<T>>
-}
-
-export const createApiService = ({
-  baseUrl = process.env.apiUrl,
+export const createApiClient = ({
   accessToken = undefined,
   isVersioned = true,
-}: ApiServiceConfig = {}): ApiService => {
-  const headers: AxiosRequestConfig["headers"] = {}
+}: ApiServiceConfig = {}) => {
+  const baseUrl =
+    useRuntimeConfig().public.apiUrl ?? "https://api.openverse.org/"
 
-  if (isServer) {
+  const headers: AxiosRequestConfig["headers"] = {}
+  if (import.meta.server) {
     headers["User-Agent"] = userAgent
   }
-
   if (accessToken) {
     headers["Authorization"] = `Bearer ${accessToken}`
   }
@@ -120,100 +168,65 @@ export const createApiService = ({
     return config
   })
   client.interceptors.response.use(
-    (response) => response,
+    (response) => {
+      debug(
+        response.request.res?.responseUrl ?? response.request.responseURL,
+        response.status
+      )
+      return response
+    },
     (error) => {
       if (error.code === "ECONNABORTED") {
         error.message = `timeout of ${
           DEFAULT_REQUEST_TIMEOUT / 1000
         } seconds exceeded`
       }
+      debug("error:", error.message)
       return Promise.reject(error)
     }
   )
 
-  return {
-    client,
+  const search = async <T extends Media>(
+    mediaType: SupportedMediaType,
+    query: PaginatedSearchQuery | PaginatedCollectionQuery
+  ) => {
+    // Add the `peaks` param to all audio searches automatically
+    if (mediaType === AUDIO) {
+      query.peaks = "true"
+    }
+    const requestDatetime = new Date()
+    const res = await client.get<MediaResult<T[]>>(`${mediaSlug(mediaType)}/`, {
+      params: query,
+    })
+    const eventPayload = buildEventPayload(res, requestDatetime, mediaType)
 
-    /**
-     * @param resource - The endpoint of the resource
-     * @param params - Url parameter object
-     * @returns response  The API response object
-     */
-    query<T = unknown>(
-      resource: string,
-      params: Record<string, string> = {}
-    ): Promise<AxiosResponse<T>> {
-      return client.get(`${getResourceSlug(resource)}`, { params })
-    },
-
-    /**
-     * @param resource - The endpoint of the resource
-     * @param slug - The sub-endpoint of the resource
-     * @param params - Url query parameter object
-     * @returns Response The API response object
-     */
-    get<T = unknown>(
-      resource: string,
-      slug: string,
-      params: Record<string, string> = {}
-    ): Promise<AxiosResponse<T>> {
-      return client.get(`${getResourceSlug(resource)}${slug}/`, { params })
-    },
-
-    /**
-     * @param resource - The endpoint of the resource
-     * @param data - Url parameter object
-     * @returns Response The API response object
-     */
-    post<T = unknown>(
-      resource: string,
-      data: Parameters<(typeof client)["post"]>[1]
-    ): Promise<AxiosResponse<T>> {
-      return client.post(getResourceSlug(resource), data)
-    },
-
-    /**
-     * @param resource - The endpoint of the resource
-     * @param slug - The sub-endpoint of the resource
-     * @param data - Url parameter object
-     * @param headers - Headers object
-     * @returns Response The API response object
-     */
-    update<T = unknown>(
-      resource: string,
-      slug: string,
-      data: Parameters<(typeof client)["put"]>[1],
-      headers: AxiosRequestConfig["headers"]
-    ): Promise<AxiosResponse<T>> {
-      return client.put(`${getResourceSlug(resource)}${slug}`, data, {
-        headers,
-      })
-    },
-
-    /**
-     * @param resource - The endpoint of the resource
-     * @param params - Url parameter object
-     * @returns Response The API response object
-     */
-    put<T = unknown>(
-      resource: string,
-      params: AxiosRequestConfig
-    ): Promise<AxiosResponse<T>> {
-      return client.put(getResourceSlug(resource), params)
-    },
-
-    /**
-     * @param resource - The endpoint of the resource
-     * @param slug - The sub-endpoint of the resource
-     * @param headers - Headers object
-     * @returns Response The API response object
-     */
-    delete<T = unknown>(
-      resource: string,
-      slug: string,
-      headers: AxiosRequestConfig["headers"]
-    ): Promise<AxiosResponse<T>> {
-      return client.delete(`${getResourceSlug(resource)}${slug}`, { headers })
-    },
+    return {
+      eventPayload,
+      data: transformResults(mediaType, res.data),
+    }
   }
+
+  const getSingleMedia = async <T extends Media>(
+    mediaType: SupportedMediaType,
+    id: string
+  ) => {
+    const res = await client.get<T>(`${mediaSlug(mediaType)}/${id}/`)
+    return decodeMediaData(res.data, mediaType)
+  }
+
+  const getRelatedMedia = async (mediaType: SupportedMediaType, id: string) => {
+    const params = mediaType === AUDIO ? { peaks: "true" } : {}
+    const res = await client.get<{ results: Media[] }>(
+      `${mediaSlug(mediaType)}/${id}/related/`,
+      { params }
+    )
+    return res.data.results.map((media) => decodeMediaData(media, mediaType))
+  }
+
+  const stats = async (mediaType: SupportedMediaType) => {
+    const res = await client.get(`${mediaSlug(mediaType)}/stats/`)
+    return res.data
+  }
+
+  return { client, search, getSingleMedia, getRelatedMedia, stats }
 }

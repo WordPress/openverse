@@ -6,7 +6,7 @@
       loading: status === 'loading' && !prefersReducedMotion,
     }"
     aria-hidden="true"
-    :data-prefers-reduced-motion="prefersReducedMotion"
+    :data-prefers-reduced-motion="prefersReducedMotion || undefined"
     data-testid="logo-loader"
     class="inline-flex h-4.5 items-center justify-center rounded"
     fill="currentColor"

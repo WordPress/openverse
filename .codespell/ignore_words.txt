@@ -1,7 +1,7 @@
 ;; Please include explanations for each ignored word.
 ;; See https://docs.openverse.org/meta/codespell.html for docs.
 
-;; Jest's `afterAll` hook incorrectly matched
+;; JS test library's `afterAll` hook incorrectly matched
 afterall
 
 ;; `nd` references licence part

@@ -1,29 +1,11 @@
-import path from "path"
-import fs from "fs"
+import { defineNuxtConfig } from "nuxt/config"
 
-import pkg from "./package.json"
+import { LOCAL, PRODUCTION } from "./src/constants/deploy-env"
+
 import locales from "./src/locales/scripts/valid-locales.json"
+import { meta as commonMeta } from "./src/constants/meta"
 
-import { meta } from "./src/constants/meta"
-import { VIEWPORTS } from "./src/constants/screens"
-
-import { isProd } from "./src/utils/node-env"
-import { sentryConfig } from "./src/utils/sentry-config"
-import { env } from "./src/utils/env"
-
-import type http from "http"
-
-import type { NuxtConfig } from "@nuxt/types"
 import type { LocaleObject } from "@nuxtjs/i18n"
-import type { IncomingMessage, NextFunction } from "connect"
-
-if (process.env.NODE_ENV === "production") {
-  meta.push({
-    // @ts-expect-error: 'http-equiv' isn't allowed here by Nuxt
-    "http-equiv": "Content-Security-Policy",
-    content: "upgrade-insecure-requests",
-  })
-}
 
 const favicons = [
   // SVG favicon
@@ -48,49 +30,44 @@ const favicons = [
   },
 ]
 
-// Default html head
-const head = {
-  title: "Openly Licensed Images, Audio and More | Openverse",
-  meta,
-  link: [
-    ...favicons,
-    {
-      rel: "preconnect",
-      href: env.apiUrl,
-      crossorigin: "",
-    },
-    {
-      rel: "dns-prefetch",
-      href: env.apiUrl,
-    },
-    {
-      rel: "search",
-      type: "application/opensearchdescription+xml",
-      title: "Openverse",
-      href: "/opensearch.xml",
-    },
+const disallowedBots = [
+  "GPTBot",
+  "CCBot",
+  "ChatGPT-User",
+  "Google-Extended",
+  "anthropic-ai",
+  "Omgilibot",
+  "Omgili",
+  "FacebookBot",
+  "Diffbot",
+  "Bytespider",
+  "ImagesiftBot",
+  "cohere-ai",
+]
+
+/**
+ * Robots.txt rules are configured here via the \@nuxtjs/robots package.
+ * @see {@link https://nuxtseo.com/robots/guides/nuxt-config|Robots Config Rules}
+ */
+const robots = {
+  userAgent: "*",
+  disallow: ["/search", "/search/audio", "/search/image"],
+  groups: [
+    ...disallowedBots.map((bot) => ({
+      userAgent: [bot],
+      disallow: ["/"], // block bots from all routes
+    })),
   ],
 }
 
-const baseProdName = process.env.CI ? "[name]" : "[contenthash:7]"
+const isProductionBuild = import.meta.env.NODE_ENV === "production"
+const isPlaywright = import.meta.env.PW === "true"
+const isProdNotPlaywright = isProductionBuild && !isPlaywright
+const isTest = import.meta.env.TEST === "true"
+const deploymentEnv = import.meta.env.DEPLOYMENT_ENV || LOCAL
 
-const filenames: NonNullable<NuxtConfig["build"]>["filenames"] = {
-  app: ({ isDev, isModern }) =>
-    isDev
-      ? `[name]${isModern ? ".modern" : ""}.js`
-      : `${baseProdName}${isModern ? ".modern" : ""}.js`,
-  chunk: ({ isDev, isModern }) =>
-    isDev
-      ? `[name]${isModern ? ".modern" : ""}.js`
-      : `${baseProdName}${isModern ? ".modern" : ""}.js`,
-  css: ({ isDev }) => (isDev ? "[name].css" : `css/${baseProdName}.css`),
-  img: ({ isDev }) =>
-    isDev ? "[path][name].[ext]" : `img/${baseProdName}.[ext]`,
-  font: ({ isDev }) =>
-    isDev ? "[path][name].[ext]" : `fonts/${baseProdName}.[ext]`,
-  video: ({ isDev }) =>
-    isDev ? "[path][name].[ext]" : `videos/${baseProdName}.[ext]`,
-}
+const apiUrl =
+  import.meta.env.NUXT_PUBLIC_API_URL || "https://api.openverse.org/"
 
 const openverseLocales = [
   {
@@ -106,83 +83,96 @@ const openverseLocales = [
     name: "English",
     nativeName: "English",
   },
-  ...(locales ?? []),
+  ...locales,
 ].filter((l) => Boolean(l.iso)) as LocaleObject[]
 
-const port = process.env.PORT || 8443
-const isProdNotPlaywright = isProd && !(process.env.PW === "true")
-
-const config: NuxtConfig = {
-  // eslint-disable-next-line no-undef
-  version: pkg.version, // used to purge cache :)
-  cache: {
-    pages: ["/"],
-    store: {
-      type: "memory", // 'redis' would be nice
-      max: 100,
-      ttl: process.env.MICROCACHE_DURATION || 60,
+export default defineNuxtConfig({
+  app: {
+    head: {
+      title: "Openly Licensed Images, Audio and More | Openverse",
+      meta: commonMeta,
+      link: [
+        ...favicons,
+        {
+          rel: "search",
+          type: "application/opensearchdescription+xml",
+          title: "Openverse",
+          href: "/opensearch.xml",
+        },
+        {
+          rel: "dns-prefetch",
+          href: apiUrl,
+        },
+        {
+          rel: "preconnect",
+          href: apiUrl,
+          crossorigin: "",
+        },
+      ],
     },
   },
   srcDir: "src/",
-  modern: "client",
-  server: {
-    port,
-    https: process.env.LOCAL_SSL
-      ? {
-          key: fs.readFileSync(path.resolve(__dirname, "localhost+1-key.pem")),
-          cert: fs.readFileSync(path.resolve(__dirname, "localhost+1.pem")),
-        }
-      : undefined,
+  serverDir: "server/",
+  devServer: {
+    port: 8443,
+    host: "0.0.0.0",
   },
-  router: {
-    middleware: "feature-flags",
+  imports: {
+    autoImport: false,
   },
-  plugins: [
-    "~/plugins/ua-parse.ts",
-    "~/plugins/focus-visible.client.ts",
-    "~/plugins/api-token.server.ts",
-    "~/plugins/polyfills.client.ts",
-    "~/plugins/sentry.ts",
-    "~/plugins/analytics.ts",
-    "~/plugins/errors.ts",
-    "~/plugins/init-stores.ts",
-  ],
-  css: ["~/assets/fonts.css", "~/styles/tailwind.css", "~/styles/accent.css"],
-  head,
-  env, // TODO: Replace with `publicRuntimeConfig`
-  privateRuntimeConfig: {
-    apiClientId: process.env.API_CLIENT_ID,
-    apiClientSecret: process.env.API_CLIENT_SECRET,
+  compatibilityDate: "2024-07-23",
+  css: ["~/assets/fonts.css", "~/styles/accent.css"],
+  runtimeConfig: {
+    apiClientId: "",
+    apiClientSecret: "",
+    public: {
+      // These values can be overridden by the NUXT_PUBLIC_* env variables
+      deploymentEnv,
+      apiUrl,
+      providerUpdateFrequency: 3600000,
+      savedSearchCount: 4,
+      sentry: {
+        dsn: "",
+        environment: deploymentEnv,
+        release: import.meta.env.SEMANTIC_VERSION,
+      },
+      isPlaywright,
+    },
   },
-  dev: !isProd,
-  buildModules: [
-    "@nuxt/typescript-build",
-    "@nuxtjs/composition-api/module",
-    "@nuxtjs/svg-sprite",
-    "@pinia/nuxt",
-  ],
+  site: {
+    indexable: deploymentEnv === PRODUCTION,
+    trailingSlash: false,
+  },
+  /**
+   * Disable debug mode to prevent excessive timing logs.
+   */
+  debug: false,
+  experimental: {
+    /**
+     * Improve router performance, see https://nuxt.com/blog/v3-10#%EF%B8%8F-build-time-route-metadata
+     */
+    scanPageMeta: true,
+  },
   modules: [
-    "portal-vue/nuxt",
+    "@pinia/nuxt",
     "@nuxtjs/i18n",
-    "@nuxtjs/proxy",
-    "@nuxtjs/redirect-module",
-    "@nuxtjs/sentry",
-    "cookie-universal-nuxt",
-    "vue-plausible",
-    "~/modules/prometheus.ts",
-    // Sitemap must be last to ensure that even routes created by other modules are added
+    "@nuxtjs/tailwindcss",
+    "@nuxtjs/plausible",
+    "@nuxt/test-utils/module",
     "@nuxtjs/sitemap",
+    "@nuxtjs/robots",
   ],
-  serverMiddleware: [
-    { path: "/healthcheck", handler: "~/server-middleware/healthcheck.js" },
-    { path: "/robots.txt", handler: "~/server-middleware/robots.js" },
-  ],
-  svgSprite: {
-    input: "~/assets/svg/raw",
-    output: "~/assets/svg/sprite",
+  routeRules: {
+    "/photos/**": { redirect: { to: "/image/**", statusCode: 301 } },
+    "/meta-search": { redirect: { to: "/about", statusCode: 301 } },
+    "/external-sources": { redirect: { to: "/about", statusCode: 301 } },
+  },
+  robots,
+  tailwindcss: {
+    cssPath: "~/styles/tailwind.css",
   },
   i18n: {
-    baseUrl: "https://openverse.org",
+    baseUrl: import.meta.env.SITE_URL,
     locales: openverseLocales,
     lazy: true,
     langDir: "locales",
@@ -191,160 +181,20 @@ const config: NuxtConfig = {
      * `detectBrowserLanguage` must be false to prevent nuxt/i18n from automatically
      * setting the locale based on headers or the client-side `navigator` object.
      *
-     * Such detection is handled at the parent level in WP.org.
-     *
      * More info about the Nuxt i18n:
      *
-     * - [detectBrowserLanguage](https://i18n.nuxtjs.org/options-reference/#detectbrowserlanguage)
-     * - [Browser language detection info](https://i18n.nuxtjs.org/browser-language-detection)
+     * - [Browser language detection info](https://i18n.nuxtjs.org/docs/guide/browser-language-detection)
      * */
     detectBrowserLanguage: false,
-    vueI18n: "~/plugins/vue-i18n",
-  },
-  sitemap: {
-    hostname: "https://openverse.org",
-    i18n: {
-      locales: openverseLocales.map((l) => l.iso),
-      routesNameSeparator: "___",
-    },
-  },
-  /**
-   * Map the old route for /photos/_id page to /image/_id permanently to keep links working.
-   * See the redirect module for more info.
-   * {@link https://github.com/nuxt-community/redirect-module#usage}
-   */
-  redirect: {
-    rules: [
-      { from: "^/photos/(.*)$", to: "/image/$1", statusCode: 301 },
-      { from: "/meta-search", to: "/about", statusCode: 301 },
-      { from: "/external-sources", to: "/about", statusCode: 301 },
-    ],
-    // If the URL cannot be decoded, we call next() to show the client-side error page.
-    onDecodeError: (
-      _error: Error,
-      _req: IncomingMessage,
-      _res: http.ServerResponse,
-      next: NextFunction
-    ) => {
-      return next()
-    },
-  },
-  sentry: sentryConfig,
-  build: {
-    templates: [
-      {
-        src: "./nuxt-template-overrides/App.js",
-        dst: "App.js",
-      },
-      {
-        src: "./nuxt-template-overrides/index.js",
-        dst: "index.js",
-      },
-    ],
-    filenames,
-    friendlyErrors: false,
-    postcss: {
-      postcssOptions: {
-        preset: {
-          features: {
-            // Disable conversion of logical properties to physical properties
-            // e.g.: `margin-inline-start` is NOT converted to `margin-left`
-            // Necessary for RTL support.
-            "logical-properties-and-values": false,
-          },
-        },
-        plugins: {
-          tailwindcss: {
-            config: path.resolve(__dirname, "tailwind.config.ts"),
-          },
-          "postcss-focus-visible": {},
-        },
-      },
-    },
-    extend(config, ctx) {
-      // Enables use of IDE debuggers
-      config.devtool = ctx.isClient ? "source-map" : "inline-source-map"
-    },
-    transpile: [({ isLegacy }) => (isLegacy ? "axios" : undefined)],
-  },
-  typescript: {
-    typeCheck: {
-      typescript: {
-        configFile: "./tsconfig.json",
-        extensions: {
-          vue: true,
-        },
-      },
-    },
-  },
-  storybook: {
-    port: 6006,
-    addons: [
-      {
-        name: "@storybook/addon-essentials",
-        options: {
-          backgrounds: true,
-          viewport: true,
-          toolbars: true,
-        },
-      },
-    ],
-    parameters: {
-      backgrounds: {
-        default: "White",
-        values: [
-          { name: "White", value: "#ffffff" },
-          { name: "Dark charcoal", value: "#30272e" },
-        ],
-      },
-      options: {
-        storySort: {
-          order: ["Introduction", ["Openverse UI"], "Meta"],
-        },
-      },
-      viewport: {
-        viewports: VIEWPORTS,
-      },
-    },
+    trailingSlash: false,
+    vueI18n: "./src/vue-i18n",
   },
   plausible: {
+    enabled: !isTest,
+    logIgnoredEvents: !isProductionBuild,
     trackLocalhost: !isProdNotPlaywright,
+    autoPageviews: isProdNotPlaywright,
+    domain: import.meta.env.SITE_DOMAIN,
+    apiHost: import.meta.env.PLAUSIBLE_SITE_URL,
   },
-  publicRuntimeConfig: {
-    deploymentEnv: process.env.DEPLOYMENT_ENV ?? "local",
-    plausible: {
-      // This is the current domain of the site.
-      domain:
-        process.env.SITE_DOMAIN ??
-        (isProdNotPlaywright ? "openverse.org" : "localhost"),
-      apiHost:
-        process.env.SITE_DOMAIN ??
-        (isProdNotPlaywright
-          ? "https://openverse.org"
-          : /**
-             * We rely on the Nginx container running as `frontend_nginx`
-             * in the local compose stack to proxy requests. Therefore, the
-             * URL here is not for the Plausible container in the local stack,
-             * but the Nginx service, which then itself forwards the requests
-             * to the local Plausible instance.
-             *
-             * In production, the Nginx container is handling all requests
-             * made to the root URL (openverse.org), and is configured to
-             * forward Plausible requests to upstream Plausible.
-             */
-            "http://localhost:50290"),
-    },
-    sentry: {
-      config: {
-        // We need to explicitly configure this for the frontend to have
-        // access to it at runtime. On the server side it would be picked
-        // up from the environment; the client-side doesn't have that
-        // luxury of a configured runtime environment, so we need to
-        // tell it what environment it is in.
-        environment: process.env.SENTRY_ENVIRONMENT,
-      },
-    },
-  },
-}
-
-export default config
+})

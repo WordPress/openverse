@@ -21,6 +21,7 @@ const pages = [
   "/",
   "/image/e9d97a98-621b-4ec2-bf70-f47a74380452",
   "/about",
+  "/image/collection?collection=tag&tag=cat",
 ]
 
 for (const pageUrl of pages) {

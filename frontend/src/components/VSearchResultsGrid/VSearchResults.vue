@@ -52,9 +52,9 @@
   </VMediaCollection>
 </template>
 <script lang="ts">
-import { computed, defineComponent, PropType } from "vue"
+import { useI18n } from "#imports"
 
-import { useI18n } from "~/composables/use-i18n"
+import { computed, defineComponent, PropType } from "vue"
 
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
@@ -96,16 +96,14 @@ export default defineComponent({
     "load-more": defineEvent(),
   },
   setup(props) {
-    const i18n = useI18n()
+    const { t } = useI18n()
     const mediaStore = useMediaStore()
     const searchStore = useSearchStore()
 
     const collectionLabel = computed(() => {
-      return i18n
-        .t(`browsePage.aria.resultsLabel.${props.results.type}`, {
-          query: props.searchTerm,
-        })
-        .toString()
+      return t(`browsePage.aria.resultsLabel.${props.results.type}`, {
+        query: props.searchTerm,
+      })
     })
     const contentLinkPath = (mediaType: SupportedMediaType) =>
       searchStore.getSearchPath({ type: mediaType })

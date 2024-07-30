@@ -20,9 +20,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, useMeta } from "@nuxtjs/composition-api"
+import { useHead, useI18n } from "#imports"
 
-import { useI18n } from "~/composables/use-i18n"
+import { defineComponent } from "vue"
 
 import VContentPage from "~/components/VContentPage.vue"
 
@@ -31,15 +31,11 @@ export default defineComponent({
   components: { VContentPage },
   layout: "content-layout",
   setup() {
-    const i18n = useI18n()
+    const { t } = useI18n({ useScope: "global" })
 
-    useMeta({
-      title: `${i18n.t("tags.title")} | Openverse`,
-      meta: [{ hid: "robots", name: "robots", content: "all" }],
-    })
+    useHead({ title: `${t("tags.title")} | Openverse` })
 
     return {}
   },
-  head: {},
 })
 </script>

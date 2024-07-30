@@ -8,7 +8,7 @@
         headers: {
             connection: 'close',
         },
-        url: '/v1/audio/632d0076-fdbd-4919-8b8f-b498ef246ee8/related/',
+        url: '/v1/audio/632d0076-fdbd-4919-8b8f-b498ef246ee8/related/?peaks=true',
         method: 'GET',
         body: '',
     },

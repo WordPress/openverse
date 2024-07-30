@@ -1,41 +1,43 @@
-import { screen } from "@testing-library/vue"
+// @vitest-environment jsdom
 
-import { render } from "~~/test/unit/test-utils/render"
+import { describe, expect, it, vi } from "vitest"
+
+import { render, screen } from "@testing-library/vue"
 
 import { useReducedMotion } from "~/composables/use-reduced-motion"
 
 import VLogoLoader from "~/components/VLogoLoader/VLogoLoader.vue"
 
-jest.mock("~/utils/console", () => ({
-  warn: jest.fn(),
-  log: jest.fn(),
+vi.mock("~/utils/console", () => ({
+  warn: vi.fn(),
+  log: vi.fn(),
 }))
 
-jest.mock("~/composables/use-reduced-motion", () => ({
-  useReducedMotion: jest.fn(),
+vi.mock("~/composables/use-reduced-motion", () => ({
+  useReducedMotion: vi.fn(),
 }))
 
 describe("VLogoLoader", () => {
-  it("should render the logo", () => {
-    render(VLogoLoader)
+  it("should render the logo", async () => {
+    await render(VLogoLoader)
     const element = screen.getByTestId("logo-loader")
     expect(element).toBeInTheDocument()
   })
 
   describe("accessibility", () => {
-    it("should render differently when the user prefers reduced motion", () => {
+    it("should render differently when the user prefers reduced motion", async () => {
       useReducedMotion.mockImplementation(() => true)
 
-      render(VLogoLoader, {
+      await render(VLogoLoader, {
         props: { status: "loading" },
       })
       const element = screen.getByTestId("logo-loader")
       expect(element).toHaveAttribute("data-prefers-reduced-motion", "true")
     })
-    it("should show the default loading style when no motion preference is set", () => {
+    it("should show the default loading style when no motion preference is set", async () => {
       useReducedMotion.mockImplementation(() => false)
 
-      render(VLogoLoader, {
+      await render(VLogoLoader, {
         props: { status: "loading" },
       })
       const element = screen.getByTestId("logo-loader")

@@ -2,7 +2,7 @@
   <VButton
     as="VLink"
     href="/"
-    :aria-label="$t('header.homeLink', { openverse: 'Openverse' }).toString()"
+    :aria-label="$t('header.homeLink', { openverse: 'Openverse' })"
     variant="transparent-tx"
     size="large"
     icon-only
@@ -11,7 +11,7 @@
     <VLogoLoader :status="isFetching ? 'loading' : 'idle'" />
   </VButton>
 </template>
-<script>
+<script lang="ts">
 import { defineComponent } from "vue"
 
 import VLogoLoader from "~/components/VLogoLoader/VLogoLoader.vue"

@@ -61,14 +61,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, withDefaults } from "vue"
+import { useI18n, useNuxtApp } from "#imports"
 
-import { useContext } from "@nuxtjs/composition-api"
+import { computed } from "vue"
 
 import type { AspectRatio, ImageDetail } from "~/types/media"
 import type { ResultKind } from "~/types/result"
 import { useImageCellSize } from "~/composables/use-image-cell-size"
-import { useI18n } from "~/composables/use-i18n"
 
 import { IMAGE } from "~/constants/media"
 
@@ -95,12 +94,12 @@ const props = withDefaults(
      */
     aspectRatio?: AspectRatio
     kind?: ResultKind
-    relatedTo?: string | null
+    relatedTo?: string
   }>(),
   {
     aspectRatio: () => "square",
     kind: () => "search",
-    relatedTo: () => null,
+    relatedTo: () => "null",
   }
 )
 
@@ -120,7 +119,7 @@ const { imgHeight, imgWidth, isPanorama, styles } = useImageCellSize({
   imageSize: { width: props.image.width, height: props.image.height },
   isSquare,
 })
-const i18n = useI18n()
+const { t } = useI18n({ useScope: "global" })
 
 const imageUrl = computed(() => {
   // TODO: check if we have blurry panorama thumbnails
@@ -165,17 +164,17 @@ const getImgDimension = (event: Event) => {
 
 const contextSensitiveTitle = computed(() => {
   return shouldBlur.value
-    ? i18n.t("sensitiveContent.title.image")
-    : i18n.t("browsePage.aria.imageTitle", {
+    ? t("sensitiveContent.title.image")
+    : t("browsePage.aria.imageTitle", {
         title: props.image.title,
       })
 })
 
-const { $sendCustomEvent } = useContext()
+const { $sendCustomEvent } = useNuxtApp()
 const searchStore = useSearchStore()
 
 /**
- * If the user left clicks on a search result, send
+ * If the user left-clicks on a search result, send
  * the SELECT_SEARCH_RESULT custom event
  * @param event - the mouse click event
  */
@@ -190,12 +189,12 @@ const sendSelectSearchResultEvent = (event: MouseEvent) => {
     mediaType: IMAGE,
     provider: props.image.provider,
     query: props.searchTerm || "",
-    relatedTo: props.relatedTo,
+    relatedTo: props.relatedTo ?? "null",
     sensitivities: props.image.sensitivity?.join(",") ?? "",
-    isBlurred: shouldBlur.value,
+    isBlurred: shouldBlur.value ?? "null",
     collectionType:
-      searchStore.strategy !== "default" ? searchStore.strategy : null,
-    collectionValue: searchStore.collectionValue,
+      searchStore.strategy !== "default" ? searchStore.strategy : "null",
+    collectionValue: searchStore.collectionValue ?? "null",
   })
 }
 

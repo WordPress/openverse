@@ -1,19 +1,26 @@
 import type { FeatureState } from "~/constants/feature-flag"
-import { isProd } from "~/utils/node-env"
-
-import type { BannerId } from "~/types/banners"
 import type { RealBreakpoint } from "~/constants/screens"
-
-import type { CookieSerializeOptions } from "cookie"
+import type { BannerId } from "~/types/banners"
+import { PRODUCTION } from "~/constants/deploy-env"
 
 export type SnackbarState = "not_shown" | "visible" | "dismissed"
 
-export const cookieOptions: CookieSerializeOptions = {
+const baseCookieOptions = {
   path: "/",
   sameSite: "strict",
-  maxAge: 60 * 60 * 24 * 60, // 60 days
-  secure: isProd,
-}
+  secure: import.meta.env.DEPLOYMENT_ENV === PRODUCTION,
+} as const
+
+export const persistentCookieOptions = {
+  ...baseCookieOptions,
+  maxAge: 60 * 60 * 24 * 60, // 60 days; Makes the cookie persistent.
+} as const
+
+export const sessionCookieOptions = {
+  ...baseCookieOptions,
+  maxAge: undefined, // these cookies are not persistent and will be deleted by the browser after the session.
+} as const
+
 /**
  * The cookies that Openverse uses to store the UI state.
  */

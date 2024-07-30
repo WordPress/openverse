@@ -17,7 +17,12 @@
           })
         }}
       </p>
-      <i18n tag="p" class="mt-2" path="sensitiveContent.singleResult.learnMore">
+      <i18n-t
+        scope="global"
+        tag="p"
+        class="mt-2"
+        keypath="sensitiveContent.singleResult.learnMore"
+      >
         <template #openverse>Openverse</template>
         <template #link>
           <VLink class="text-pink hover:underline" href="/sensitive-content">{{
@@ -25,7 +30,7 @@
           }}</VLink>
           {{ " " }}
         </template>
-      </i18n>
+      </i18n-t>
 
       <div
         class="mt-6 flex flex-col items-stretch justify-center gap-4 md:flex-row md:gap-6"
@@ -56,7 +61,7 @@
 </template>
 
 <script lang="ts">
-import { PropType, computed, defineComponent } from "@nuxtjs/composition-api"
+import { PropType, computed, defineComponent } from "vue"
 
 import { useSearchStore } from "~/stores/search"
 import { useAnalytics } from "~/composables/use-analytics"

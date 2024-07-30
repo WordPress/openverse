@@ -1,55 +1,58 @@
-import { useSearchStore } from "~/stores/search"
-import { useMediaStore } from "~/stores/media"
+import {
+  navigateTo,
+  defineNuxtRouteMiddleware,
+  firstParam,
+  handledClientSide,
+  createError,
+  useNuxtApp,
+  showError,
+} from "#imports"
 
+import { useMediaStore } from "~/stores/media"
 import { skipToContentTargetId } from "~/constants/window"
 
-import { handledClientSide } from "~/utils/errors"
+import { useSearchStore } from "~/stores/search"
 
-import type { Middleware } from "@nuxt/types"
-
-export const searchMiddleware: Middleware = async ({
-  redirect,
-  route,
-  $pinia,
-  error: nuxtError,
-}) => {
+export const searchMiddleware = defineNuxtRouteMiddleware(async (to) => {
   const {
-    query: { q: rawQ },
-  } = route
-  const q = Array.isArray(rawQ) ? rawQ[0] : rawQ
-
+    query: { q },
+  } = to
   /**
    * This middleware redirects any search without a query to the homepage.
    * This is meant to block direct access to /search and all sub-routes.
    *
    * The `q` parameter is required for searches on the frontend.
    */
-  if (!q) {
-    return redirect("/")
+  if (!firstParam(q)) {
+    return navigateTo("/")
   }
 
   // Don't do anything when clicking on the skip-to-content link.
-  if (route.hash === `#${skipToContentTargetId}`) {
+  if (to.hash === `#${skipToContentTargetId}`) {
     return
   }
 
-  const searchStore = useSearchStore($pinia)
+  const searchStore = useSearchStore()
 
   await searchStore.initProviderFilters()
 
-  searchStore.setSearchStateFromUrl({
-    path: route.path,
-    urlQuery: route.query,
-  })
+  const nuxtApp = useNuxtApp()
+  // Set the state from url on the first server rendering, and on client navigation
+  if (!nuxtApp.isHydrating) {
+    searchStore.setSearchStateFromUrl({
+      path: to.path,
+      urlQuery: to.query,
+    })
+  }
 
   // Fetch results before rendering the page on the server.
-  if (process.server) {
-    const mediaStore = useMediaStore($pinia)
+  if (import.meta.server) {
+    const mediaStore = useMediaStore()
     const results = await mediaStore.fetchMedia()
 
     const fetchingError = mediaStore.fetchState.fetchingError
     if (!results.length && fetchingError && !handledClientSide(fetchingError)) {
-      nuxtError(fetchingError)
+      showError(createError(fetchingError))
     }
   }
-}
+})

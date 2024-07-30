@@ -15,10 +15,7 @@ export const getLoadMoreButton = (page: Page, dir: LanguageDirection = "ltr") =>
 export const getH1 = (page: Page, text: string | RegExp) =>
   page.getByRole("heading", { level: 1, name: text })
 
-export const getMenuButton = async (
-  page: Page,
-  dir: LanguageDirection = "ltr"
-) => {
+export const getMenuButton = (page: Page, dir: LanguageDirection = "ltr") => {
   return page.getByRole("button", { name: t("header.aria.menu", dir) })
 }
 

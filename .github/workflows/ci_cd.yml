@@ -294,10 +294,10 @@ jobs:
       - name: Setup CI env
         uses: ./.github/actions/setup-env
         with:
-          # Python is not needed to run the tests.
-          setup_python: false
-          # Node.js is needed by lint actions.
-          install_recipe: "node-install"
+          setup_python: true
+          # Node.js is not needed to run the tests.
+          setup_nodejs: false
+          install_recipe: ""
 
       - name: Load Docker images
         uses: ./.github/actions/load-img
@@ -796,14 +796,11 @@ jobs:
         name:
           - playwright_vr
           - playwright_e2e
-          - storybook
         include:
           - name: playwright_vr
             script: "test:playwright visual-regression -u"
           - name: playwright_e2e
             script: "test:playwright e2e"
-          - name: storybook
-            script: "test:storybook -u"
 
     steps:
       - name: Checkout repository
@@ -866,7 +863,6 @@ jobs:
         name:
           - playwright_vr
           - playwright_e2e
-          - storybook
 
     steps:
       - name: Pass

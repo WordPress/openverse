@@ -33,7 +33,7 @@
       ref="filterButtonRef"
       class="flex self-stretch"
       :pressed="isSidebarVisible"
-      :disabled="areFiltersDisabled"
+      :disabled="!doneHydrating || areFiltersDisabled"
       aria-haspopup="dialog"
       :aria-expanded="isSidebarVisible"
       @toggle="toggleSidebar"
@@ -53,6 +53,8 @@ import { useAnalytics } from "~/composables/use-analytics"
 import { useSearch } from "~/composables/use-search"
 
 import { ensureFocus } from "~/utils/reakit-utils/focus"
+
+import { useHydrating } from "~/composables/use-hydrating"
 
 import VFilterButton from "~/components/VHeader/VFilterButton.vue"
 import VSearchBar from "~/components/VHeader/VSearchBar/VSearchBar.vue"
@@ -118,6 +120,8 @@ export default defineComponent({
 
     const isXl = computed(() => uiStore.isBreakpoint("xl"))
 
+    const { doneHydrating } = useHydrating()
+
     return {
       filterButtonRef,
       searchBarRef,
@@ -132,6 +136,8 @@ export default defineComponent({
       searchStatus,
       searchTerm,
       toggleSidebar,
+
+      doneHydrating,
     }
   },
 })

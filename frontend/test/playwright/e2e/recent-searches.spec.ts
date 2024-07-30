@@ -2,7 +2,6 @@ import { expect, test, type Page } from "@playwright/test"
 
 import {
   goToSearchTerm,
-  isPageDesktop,
   preparePageForTests,
   searchFromHeader,
   sleep,
@@ -27,24 +26,14 @@ const clickClear = async (page: Page) => (await clearButton(page)).click()
 const recentSearches = (page: Page) =>
   page.locator('[data-testid="recent-searches"]')
 
-const navigateBackToSkipToContent = async (page: Page) => {
-  const isSkipToContent = async () =>
-    await page.evaluate(
-      () =>
-        document.activeElement?.textContent?.trim() === "Skip to content" &&
-        document.activeElement?.tagName === "A"
-    )
-  while (!(await isSkipToContent())) {
-    await page.keyboard.press("Shift+Tab")
+const openRecentSearches = async (page: Page) => {
+  if (!(await recentSearches(page).isVisible())) {
+    await page.locator('input[type="search"]').click()
   }
 }
 
 const tabToSearchbar = async (page: Page) => {
-  if (isPageDesktop(page)) {
-    await navigateBackToSkipToContent(page)
-  } else {
-    await page.keyboard.press("Tab")
-  }
+  await page.getByRole("link", { name: t("skipToContent") }).focus()
   for (let i = 0; i < 2; i++) {
     await page.keyboard.press("Tab")
   }
@@ -68,8 +57,7 @@ breakpoints.describeMobileXsAndDesktop(({ breakpoint }) => {
   })
 
   test("recent searches shows message when blank", async ({ page }) => {
-    // Click on the input to open the Recent searches
-    await page.locator('input[type="search"]').click()
+    await openRecentSearches(page)
     await clickClear(page)
 
     const recentSearchesText = await getRecentSearchesText(page)
@@ -80,6 +68,7 @@ breakpoints.describeMobileXsAndDesktop(({ breakpoint }) => {
     page,
   }) => {
     const searches = await executeSearches(page)
+    await openRecentSearches(page)
     const recentList = await page
       .locator(`[aria-label="${recentLabel}"]`)
       .locator('[role="option"]')
@@ -92,8 +81,7 @@ breakpoints.describeMobileXsAndDesktop(({ breakpoint }) => {
   test("clicking takes user to that search", async ({ page }) => {
     await executeSearches(page)
     expect(page.url()).toContain("?q=galah")
-    // Click on the input to open the Recent searches
-    await page.locator('input[type="search"]').click()
+    await openRecentSearches(page)
     await page
       .locator(`[aria-label="${recentLabel}"]`)
       .getByRole("option", { name: "honey" })
@@ -104,8 +92,7 @@ breakpoints.describeMobileXsAndDesktop(({ breakpoint }) => {
 
   test("clicking Clear clears the recent searches", async ({ page }) => {
     await executeSearches(page)
-    // Click on the input to open the Recent searches
-    await page.locator('input[type="search"]').click()
+    await openRecentSearches(page)
     await clickClear(page)
     await expect(await clearButton(page)).toBeHidden()
 

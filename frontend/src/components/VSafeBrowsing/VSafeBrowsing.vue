@@ -5,13 +5,18 @@
         {{ $t("filters.safeBrowsing.title") }}
       </h4>
     </header>
-    <i18n tag="p" path="filters.safeBrowsing.desc" class="label-regular">
+    <i18n-t
+      scope="global"
+      tag="p"
+      keypath="filters.safeBrowsing.desc"
+      class="label-regular"
+    >
       <template #sensitive>
         <VLink :href="sensitivityPath">{{
           $t("filters.safeBrowsing.sensitive")
         }}</VLink>
       </template>
-    </i18n>
+    </i18n-t>
     <form class="safe-browsing-form">
       <fieldset class="mb-10 mt-8 flex flex-col gap-8">
         <div v-for="toggle in toggles" :key="toggle.name">
@@ -41,15 +46,16 @@
 </template>
 
 <script lang="ts">
+import { useLocalePath } from "#imports"
+
 import { computed, defineComponent } from "vue"
-import { useContext } from "@nuxtjs/composition-api"
 
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useUiStore } from "~/stores/ui"
 import { useAnalytics } from "~/composables/use-analytics"
 import { ON, OFF } from "~/constants/feature-flag"
 
-import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"
+import VCheckbox, { CheckboxAttrs } from "~/components/VCheckbox/VCheckbox.vue"
 import VLink from "~/components/VLink.vue"
 
 /**
@@ -61,9 +67,9 @@ export default defineComponent({
   name: "VSafeBrowsing",
   components: { VCheckbox, VLink },
   setup() {
-    const { app } = useContext()
+    const localePath = useLocalePath()
 
-    const sensitivityPath = computed(() => app.localePath("/sensitive-content"))
+    const sensitivityPath = computed(() => localePath("/sensitive-content"))
 
     const featureFlagStore = useFeatureFlagStore()
     const { sendCustomEvent } = useAnalytics()
@@ -71,7 +77,8 @@ export default defineComponent({
     let fetchSensitive = computed(() =>
       featureFlagStore.isOn("fetch_sensitive")
     )
-    let setFetchSensitive = ({ checked }: { checked: boolean }) => {
+    let setFetchSensitive = (data: Omit<CheckboxAttrs, "disabled">) => {
+      const checked = data.checked ?? false
       featureFlagStore.toggleFeature("fetch_sensitive", checked ? ON : OFF)
       sendCustomEvent("TOGGLE_FETCH_SENSITIVE", { checked })
 
@@ -84,7 +91,8 @@ export default defineComponent({
 
     const uiStore = useUiStore()
     let blurSensitive = computed(() => uiStore.shouldBlurSensitive)
-    let setBlurSensitive = ({ checked }: { checked: boolean }) => {
+    let setBlurSensitive = (data: { checked?: boolean }) => {
+      const checked = data.checked ?? false
       uiStore.setShouldBlurSensitive(checked)
       sendCustomEvent("TOGGLE_BLUR_SENSITIVE", { checked })
     }

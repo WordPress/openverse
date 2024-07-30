@@ -1,7 +1,14 @@
-import { isProd, isClient } from "~/utils/node-env"
+import { PRODUCTION, STAGING } from "~/constants/deploy-env"
 
+const isProductionOrStaging = [PRODUCTION, STAGING].includes(
+  import.meta.env.DEPLOYMENT_ENV
+)
+
+/**
+ * Silence logging on the client when deployed
+ */
 export const getLogger = (level: "log" | "warn" | "error") =>
-  isProd && isClient
+  isProductionOrStaging && import.meta.client
     ? () => {
         // do nothing
       }
@@ -9,4 +16,5 @@ export const getLogger = (level: "log" | "warn" | "error") =>
 
 export const warn = getLogger("warn")
 export const log = getLogger("log")
+export const debug = getLogger("log")
 export const error = getLogger("error")

@@ -13,10 +13,11 @@
   </dt>
 </template>
 <script lang="ts">
+import { useI18n } from "#imports"
+
 import { computed, defineComponent, PropType } from "vue"
 
 import { Metadata } from "~/types/media"
-import { useI18n } from "~/composables/use-i18n"
 
 import VTooltip from "~/components/VTooltip/VTooltip.vue"
 
@@ -34,12 +35,12 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const i18n = useI18n()
+    const { t } = useI18n({ useScope: "global" })
     const description = computed(() => {
       if (!props.datum.name) {
         return ""
       }
-      return i18n.t(
+      return t(
         props.datum.name === "source"
           ? "mediaDetails.sourceDescription"
           : "mediaDetails.providerDescription"

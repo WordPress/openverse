@@ -4,8 +4,13 @@ import { preparePageForTests } from "~~/test/playwright/utils/navigation"
 
 import featureData from "~~/feat/feature-flags.json"
 
-import { getFlagStatus } from "~/stores/feature-flag"
-import type { FeatureFlag, FlagName } from "~/types/feature-flag"
+import type {
+  FeatureFlag,
+  FeatureFlagRecord,
+  FlagName,
+} from "~/types/feature-flag"
+import { DISABLED, FLAG_STATUSES, FlagStatus } from "~/constants/feature-flag"
+import { DEPLOY_ENVS, DeployEnv, LOCAL } from "~/constants/deploy-env"
 
 const getFeatureCookies = async (page: Page, cookieName: string) => {
   const cookies = await page.context().cookies()
@@ -16,6 +21,30 @@ const getFeatureCookies = async (page: Page, cookieName: string) => {
     return {}
   }
   return JSON.parse(decodeURIComponent(cookieValue))
+}
+
+const getFlagStatus = (flag: FeatureFlagRecord): FlagStatus => {
+  const deployEnv = (process.env.DEPLOYMENT_ENV ?? LOCAL) as DeployEnv
+  if (typeof flag.status === "string") {
+    if (!FLAG_STATUSES.includes(flag.status as FlagStatus)) {
+      console.warn(`Invalid ${flag.description} flag status: ${flag.status}`)
+      return DISABLED
+    }
+    return flag.status as FlagStatus
+  } else {
+    const envIndex = DEPLOY_ENVS.indexOf(deployEnv)
+    for (let i = envIndex; i < DEPLOY_ENVS.length; i += 1) {
+      if (DEPLOY_ENVS[i] in flag.status) {
+        if (
+          !FLAG_STATUSES.includes(flag.status[DEPLOY_ENVS[i]] as FlagStatus)
+        ) {
+          return DISABLED
+        }
+        return flag.status[DEPLOY_ENVS[i]] as FlagStatus
+      }
+    }
+  }
+  return DISABLED
 }
 
 /**

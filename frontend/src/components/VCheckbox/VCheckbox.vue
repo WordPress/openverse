@@ -26,6 +26,7 @@
               ]
         "
         v-bind="inputAttrs"
+        :disabled="disabled ? true : undefined"
         @click="onChange"
       />
 
@@ -64,10 +65,10 @@ import { defineEvent } from "~/types/emits"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 
-type CheckboxAttrs = {
+export type CheckboxAttrs = {
   name: string
   value: string
-  disabled?: boolean
+  disabled?: "disabled" | undefined
   checked?: boolean
 }
 
@@ -130,7 +131,7 @@ export default defineComponent({
      */
     disabled: {
       type: Boolean,
-      default: false,
+      default: undefined,
     },
     /**
      * whether to make the checkbox appear like a switch
@@ -152,9 +153,6 @@ export default defineComponent({
       const attrs: CheckboxAttrs = {
         name: props.name || props.id,
         value: props.value || props.id,
-      }
-      if (props.disabled) {
-        attrs.disabled = true
       }
       if (localCheckedState.value) {
         attrs.checked = true

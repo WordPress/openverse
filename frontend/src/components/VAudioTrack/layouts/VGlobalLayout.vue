@@ -15,7 +15,10 @@
         {{ shouldBlur ? $t("sensitiveContent.title.audio") : audio.title }}
       </VLink>
     </div>
-    <slot name="audio-control" size="medium" layout="global" />
+    <slot
+      name="audio-control"
+      v-bind="{ size: 'medium', layout: 'global' } as const"
+    />
     <slot name="controller" :usable-frac="1" />
   </div>
 </template>

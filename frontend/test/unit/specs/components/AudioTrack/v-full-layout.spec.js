@@ -1,25 +1,14 @@
 import { getAudioObj } from "~~/test/unit/fixtures/audio"
 import { render } from "~~/test/unit/test-utils/render"
 
-import { useAnalytics } from "~/composables/use-analytics"
-
 import VFullLayout from "~/components/VAudioTrack/layouts/VFullLayout.vue"
 
-jest.mock("~/composables/use-analytics")
-
 describe("VFullLayout", () => {
-  const sendCustomEventMock = jest.fn()
-  useAnalytics.mockImplementation(() => ({
-    sendCustomEvent: sendCustomEventMock,
-  }))
-  beforeEach(() => {
-    sendCustomEventMock.mockClear()
-  })
-  it("should render the weblink button with the foreign landing url", () => {
+  it("should render the weblink button with the foreign landing url", async () => {
     const audio = getAudioObj()
 
-    const { getByText } = render(VFullLayout, {
-      propsData: {
+    const { getByText } = await render(VFullLayout, {
+      props: {
         audio,
         size: "s",
         status: "playing",
