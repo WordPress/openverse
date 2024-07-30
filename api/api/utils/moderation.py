@@ -119,7 +119,7 @@ def perform_moderation(
         notes=request.POST.get("notes"),
     )
     logger.debug(
-        "Decision created",
+        f"{media_type}-decision_created",
         decision=media_decision.id,
         action=media_decision.action,
         notes=media_decision.notes,
@@ -132,6 +132,6 @@ def perform_moderation(
             for identifier in identifiers
         ]
     )
-    logger.debug(f"Created {media_type}-decision-through items.", count=len(created))
+    logger.debug(f"{media_type}-decision-through_bulk_created", count=len(created))
 
     return media_decision

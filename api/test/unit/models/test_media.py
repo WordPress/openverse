@@ -66,13 +66,13 @@ def test_deleted_media_bulk_action(media_type_config):
     deleting media items from ES.
     """
 
-    ids = [media_type_config.model_factory.create().id for _ in range(2)]
+    media_ids = [media_type_config.model_factory.create().id for _ in range(2)]
 
-    media_type_config.deleted_class._bulk_update_es(ids)
+    media_type_config.deleted_class._bulk_update_es(media_ids)
 
     for index in media_type_config.indexes:
-        for id in ids:
-            exists = Document.exists(id=id, index=index, using=settings.ES)
+        for media_id in media_ids:
+            exists = Document.exists(id=media_id, index=index, using=settings.ES)
             assert not exists
 
 
@@ -83,12 +83,12 @@ def test_sensitive_media_bulk_action(media_type_config):
     setting ``mature`` field in ES.
     """
 
-    ids = [media_type_config.model_factory.create().id for _ in range(2)]
+    media_ids = [media_type_config.model_factory.create().id for _ in range(2)]
 
     for mature in [True, False]:
-        media_type_config.sensitive_class._bulk_update_es(mature, ids)
+        media_type_config.sensitive_class._bulk_update_es(mature, media_ids)
 
         for index in media_type_config.indexes:
-            for id in ids:
-                doc = Document.get(id=id, index=index, using=settings.ES)
+            for media_id in media_ids:
+                doc = Document.get(id=media_id, index=index, using=settings.ES)
                 assert doc.mature == mature
