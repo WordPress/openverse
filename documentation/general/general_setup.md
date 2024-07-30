@@ -125,7 +125,8 @@ ones you might see used throughout the documentation:
 - [`httpie`](https://httpie.io/docs/cli) is a command line HTTP client. Like
   cURL but with a lot of conveniences and easier to remember. Try `http --help`
   for info.
-- ['psql'] (https://www.postgresql.org/docs/current/app-psql.html) is the PostgreSQL client
+- ['psql'] (https://www.postgresql.org/docs/current/app-psql.html) is the
+  PostgreSQL client
 
 ````{admonition} Bring your own tools
 :class: tip
