@@ -46,6 +46,7 @@ class MediaTypeConfig:
     model_factory: MediaFactory
     model_class: AbstractMedia
     sensitive_factory: MediaFactory
+    deleted_factory: MediaFactory
     sensitive_class: AbstractSensitiveMedia
     search_request_serializer: MediaSearchRequestSerializer
     model_serializer: MediaSerializer
@@ -78,6 +79,7 @@ MEDIA_TYPE_CONFIGS = {
         model_factory=model_factories.ImageFactory,
         model_class=Image,
         sensitive_factory=model_factories.SensitiveImageFactory,
+        deleted_factory=model_factories.DeletedImageFactory,
         search_request_serializer=ImageSearchRequestSerializer,
         model_serializer=ImageSerializer,
         report_serializer=ImageReportRequestSerializer,
@@ -97,6 +99,7 @@ MEDIA_TYPE_CONFIGS = {
         model_factory=model_factories.AudioFactory,
         model_class=Audio,
         sensitive_factory=model_factories.SensitiveAudioFactory,
+        deleted_factory=model_factories.DeletedAudioFactory,
         search_request_serializer=AudioSearchRequestSerializer,
         model_serializer=AudioSerializer,
         report_serializer=AudioReportRequestSerializer,
