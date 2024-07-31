@@ -8,17 +8,16 @@ minimum accuracy, are malformed, or are from unvetted providers.
 """
 
 import logging
-import multiprocessing
-import time
-import uuid
+from textwrap import dedent
 
-from airflow.decorators import task
+from airflow.decorators import task, task_group
 from airflow.models import Variable
 from airflow.models.abstractoperator import AbstractOperator
+from airflow.providers.common.sql.hooks.sql import fetch_all_handler
 from psycopg2.extras import DictCursor, Json
 
 from common.constants import POSTGRES_API_CONN_IDS, Environment
-from common.sql import PostgresHook
+from common.sql import PGExecuteQueryOperator, PostgresHook, single_value
 from data_refresh.data_refresh_types import DataRefreshConfig
 
 
@@ -58,6 +57,16 @@ TAG_MIN_CONFIDENCE = 0.90
 # Filter out tags that match the following providers (either because they haven't
 # been vetted or because they are known to be low-quality).
 FILTERED_TAG_PROVIDERS = {"rekognition"}
+QUERY_SELECTION = dedent("""
+    SELECT id, identifier, tags
+    FROM {temp_table}
+    WHERE id BETWEEN {batch_start} AND {batch_end}
+""")
+QUERY_UPDATE = dedent("""
+    UPDATE {temp_table}
+    SET tags = {tags_fragment}
+    WHERE id = {_id}
+""")
 
 
 def _tag_denylisted(tag):
@@ -109,17 +118,48 @@ def generate_tag_update_fragments(tags):
         return None
 
 
-def _filter_data_worker(rows: dict, temp_table: str, postgres: PostgresHook) -> int:
-    logger.info("Starting data filtering worker")
+@task
+def get_filter_batches(estimated_record_count: int):
+    batch_size = Variable.get(
+        "DATA_REFRESH_FILTER_BATCH_SIZE",
+        deserialize_json=True,
+        default_var=DEFAULT_BATCH_SIZE,
+    )
+    return [
+        (x, x + batch_size - 1) for x in range(0, estimated_record_count, batch_size)
+    ]
+
+
+@task
+def filter_data_batch(
+    batch: tuple[int, int],
+    temp_table: str,
+    postgres_conn_id: str,
+    task: AbstractOperator = None,
+    timeout: float = None,
+) -> int:
+    logger.info(f"Starting data filtering on batch: {batch}")
+    batch_start, batch_end = batch
+    postgres = PostgresHook(
+        postgres_conn_id=postgres_conn_id,
+        default_statement_timeout=(
+            timeout if timeout else PostgresHook.get_execution_timeout(task)
+        ),
+    )
+    rows = postgres.run(
+        QUERY_SELECTION.format(
+            temp_table=temp_table, batch_start=batch_start, batch_end=batch_end
+        ),
+        handler=fetch_all_handler,
+    )
     worker_conn = postgres.get_conn()
     logger.info("Data filtering worker connected to database")
     write_cur = worker_conn.cursor(cursor_factory=DictCursor)
     logger.info(f"Filtering {len(rows)} rows")
 
-    start_time = time.perf_counter()
     filtered_tags: list[tuple[str, Json]] = []
     for row in rows:
-        _id, identifier, tags = row["id"], row["identifier"], row["tags"]
+        _id, identifier, tags = row
         tags_fragment = generate_tag_update_fragments(tags)
         if not tags_fragment:
             continue
@@ -128,94 +168,50 @@ def _filter_data_worker(rows: dict, temp_table: str, postgres: PostgresHook) -> 
             f"Updated tags for {identifier}\n\t"
             f"from '{tags}' \n\tto '{tags_fragment}'"
         )
-        update_query = f"""
-        UPDATE {temp_table} SET
-        tags = {tags_fragment} WHERE id = {_id}
-        """
+        update_query = QUERY_UPDATE.format(
+            temp_table=temp_table, tags_fragment=tags_fragment, _id=_id
+        )
         logger.debug(f"Executing update query: \n\t{update_query}")
         write_cur.execute(update_query)
     logger.info("Worker committing changes...")
     worker_conn.commit()
     write_cur.close()
     worker_conn.close()
-    end_time = time.perf_counter()
-    total_time = end_time - start_time
-    logger.info(f"Worker finished batch in {total_time}")
     return len(filtered_tags)
 
 
 @task
+def report(counts: list[int]):
+    total_count = sum(counts)
+    logger.info(f"Filtered tags for a total of {total_count} records")
+
+
+@task_group(group_id="filter_table_data")
 def filter_table_data(
     environment: Environment,
     data_refresh_config: DataRefreshConfig,
-    task: AbstractOperator = None,
-    timeout: float = None,
 ):
-    downstream_conn_id = POSTGRES_API_CONN_IDS.get(environment)
-    default_batch_size = Variable.get(
-        "DATA_REFRESH_FILTER_BATCH_SIZE",
-        deserialize_json=True,
-        default_var=DEFAULT_BATCH_SIZE,
-    )
+    """Perform data filtering across a number of tasks."""
+    postgres_conn_id = POSTGRES_API_CONN_IDS.get(environment)
     temp_table = data_refresh_config.table_mappings[0].temp_table_name
-    selection_query = f"SELECT id, identifier, tags from {temp_table};"
-    postgres = PostgresHook(
-        postgres_conn_id=downstream_conn_id,
-        default_statement_timeout=(
-            timeout if timeout else PostgresHook.get_execution_timeout(task)
+
+    estimated_record_count = PGExecuteQueryOperator(
+        task_id="get_estimated_record_count",
+        conn_id=postgres_conn_id,
+        sql=dedent(
+            f"""
+            SELECT max(id) FROM {temp_table}
+            ORDER BY id DESC LIMIT 1;
+            """
         ),
+        handler=single_value,
+        return_last=True,
     )
-    conn = postgres.get_conn()
-    postgres.set_autocommit(conn, True)
-    cursor_name = f"{data_refresh_config.media_type}-{uuid.uuid4()}"
-    with conn.cursor(
-        name=cursor_name, cursor_factory=DictCursor, withhold=True
-    ) as iter_cur:
-        iter_cur.itersize = default_batch_size
-        iter_cur.execute(selection_query)
 
-        logger.info("Fetching first batch")
-        batch = iter_cur.fetchmany(size=default_batch_size)
-        jobs = []
-        num_workers = multiprocessing.cpu_count()
-        num_filtered = 0
+    batches = get_filter_batches(estimated_record_count.output)
 
-        while batch:
-            # Divide updates into jobs for parallel execution.
-            batch_start_time = time.perf_counter()
-            job_size = int(len(batch) / num_workers)
-            last_end = -1
-            logger.info("Dividing work")
-            for n in range(1, num_workers + 1):
-                logger.info(f"Scheduling job {n}")
-                start = last_end + 1
-                end = job_size * n
-                last_end = end
-                # Arguments for parallel _filter_data_worker calls
-                jobs.append(
-                    (
-                        batch[start:end],
-                        temp_table,
-                        postgres,
-                    )
-                )
-            with multiprocessing.Pool(processes=num_workers) as pool:
-                logger.info(f"Starting {len(jobs)} filtering jobs")
+    filter_data = filter_data_batch.partial(
+        temp_table=temp_table, postgres_conn_id=postgres_conn_id
+    ).expand_kwargs(batches=batches)
 
-                for filtered_count in pool.starmap(_filter_data_worker, jobs):
-                    num_filtered += filtered_count
-                pool.close()
-                pool.join()
-
-            batch_end_time = time.perf_counter()
-            rate = len(batch) / (batch_end_time - batch_start_time)
-            logger.info(
-                f"Batch finished, records/s: filter_rate={rate}, "
-                f"items filtered: {num_filtered}.\n"
-                f"Fetching next batch."
-            )
-            jobs = []
-            batch = iter_cur.fetchmany(size=default_batch_size)
-    conn.commit()
-    iter_cur.close()
-    conn.close()
+    report(filter_data)
