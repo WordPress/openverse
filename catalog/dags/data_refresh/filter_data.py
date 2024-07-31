@@ -11,7 +11,6 @@ import logging
 from textwrap import dedent
 
 from airflow.decorators import task, task_group
-from airflow.models import Variable
 from airflow.models.abstractoperator import AbstractOperator
 from airflow.providers.common.sql.hooks.sql import fetch_all_handler, fetch_one_handler
 from psycopg2.extras import Json
@@ -117,13 +116,11 @@ def generate_tag_update_fragments(tags) -> list[dict] | None:
 
 
 @task
-def get_filter_batches(id_bounds: tuple[int, int]) -> list[tuple[int, int]]:
+def get_filter_batches(
+    id_bounds: tuple[int, int], batch_size: int | None
+) -> list[tuple[int, int]]:
     start, stop = id_bounds
-    batch_size = Variable.get(
-        "DATA_REFRESH_FILTER_BATCH_SIZE",
-        deserialize_json=True,
-        default_var=DEFAULT_BATCH_SIZE,
-    )
+    batch_size = batch_size or DEFAULT_BATCH_SIZE
     return [(x, x + batch_size - 1) for x in range(start, stop, batch_size)]
 
 
@@ -200,7 +197,10 @@ def filter_table_data(
         return_last=True,
     )
 
-    batches = get_filter_batches(estimated_record_count.output)
+    batches = get_filter_batches(
+        estimated_record_count.output,
+        batch_size="{{ var.value.get('DATA_REFRESH_FILTER_BATCH_SIZE', none) }}",
+    )
 
     filter_data = filter_data_batch.partial(
         temp_table=temp_table, postgres_conn_id=postgres_conn_id
