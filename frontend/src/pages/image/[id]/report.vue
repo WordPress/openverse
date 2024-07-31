@@ -1,3 +1,50 @@
+<script setup lang="ts">
+import { definePageMeta, useAsyncData, useI18n, useRoute } from "#imports"
+
+import { ref } from "vue"
+
+import { IMAGE } from "~/constants/media"
+import { skipToContentTargetId } from "~/constants/window"
+
+import { useSingleResultStore } from "~/stores/media/single-result"
+import { getAttribution } from "~/utils/attribution-html"
+import { firstParam } from "~/utils/query-utils"
+import type { ImageDetail } from "~/types/media"
+
+import VButton from "~/components/VButton.vue"
+import VContentReportForm from "~/components/VContentReport/VContentReportForm.vue"
+
+defineOptions({
+  name: "ImageReportPage",
+})
+
+definePageMeta({
+  layout: "content-layout",
+})
+
+const i18n = useI18n({ useScope: "global" })
+const route = useRoute()
+const singleResultStore = useSingleResultStore()
+
+const image = ref<ImageDetail>()
+const attributionMarkup = ref<string>()
+
+await useAsyncData("image-report", async () => {
+  const imageId = firstParam(route?.params.id)
+  if (imageId) {
+    image.value = (await singleResultStore.fetch(IMAGE, imageId)) ?? undefined
+    if (image.value) {
+      attributionMarkup.value = getAttribution(image.value, i18n, {
+        includeIcons: false,
+      })
+    }
+  } else {
+    // TODO: Handle Error
+    console.warn("Not found image")
+  }
+})
+</script>
+
 <template>
   <main
     :id="skipToContentTargetId"
@@ -40,45 +87,3 @@
     />
   </main>
 </template>
-
-<script setup lang="ts">
-import { definePageMeta, useAsyncData, useI18n, useRoute } from "#imports"
-
-import { ref } from "vue"
-
-import { IMAGE } from "~/constants/media"
-import { skipToContentTargetId } from "~/constants/window"
-
-import { useSingleResultStore } from "~/stores/media/single-result"
-import { getAttribution } from "~/utils/attribution-html"
-import { firstParam } from "~/utils/query-utils"
-import type { ImageDetail } from "~/types/media"
-
-import VButton from "~/components/VButton.vue"
-import VContentReportForm from "~/components/VContentReport/VContentReportForm.vue"
-
-definePageMeta({
-  layout: "content-layout",
-})
-const i18n = useI18n({ useScope: "global" })
-const route = useRoute()
-const singleResultStore = useSingleResultStore()
-
-const image = ref<ImageDetail>()
-const attributionMarkup = ref<string>()
-
-await useAsyncData("image-report", async () => {
-  const imageId = firstParam(route?.params.id)
-  if (imageId) {
-    image.value = (await singleResultStore.fetch(IMAGE, imageId)) ?? undefined
-    if (image.value) {
-      attributionMarkup.value = getAttribution(image.value, i18n, {
-        includeIcons: false,
-      })
-    }
-  } else {
-    // TODO: Handle Error
-    console.warn("Not found image")
-  }
-})
-</script>

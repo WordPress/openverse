@@ -1,3 +1,28 @@
+<script setup lang="ts">
+import { definePageMeta, useHead, useNuxtApp } from "#imports"
+
+import { supportedMediaTypes } from "~/constants/media"
+
+import VButton from "~/components/VButton.vue"
+import VLink from "~/components/VLink.vue"
+import VContentPage from "~/components/VContentPage.vue"
+import VSourcesTable from "~/components/VSourcesTable.vue"
+
+defineOptions({
+  name: "SourcesPage",
+})
+
+definePageMeta({
+  layout: "content-layout",
+})
+
+const {
+  $i18n: { t },
+} = useNuxtApp()
+
+useHead({ title: `${t("sources.title")} | Openverse` })
+</script>
+
 <template>
   <VContentPage>
     <h1>
@@ -90,24 +115,3 @@
     </template>
   </VContentPage>
 </template>
-
-<script setup lang="ts">
-import { definePageMeta, useHead, useNuxtApp } from "#imports"
-
-import { supportedMediaTypes } from "~/constants/media"
-
-import VButton from "~/components/VButton.vue"
-import VLink from "~/components/VLink.vue"
-import VContentPage from "~/components/VContentPage.vue"
-import VSourcesTable from "~/components/VSourcesTable.vue"
-
-definePageMeta({
-  layout: "content-layout",
-})
-
-const {
-  $i18n: { t },
-} = useNuxtApp()
-
-useHead({ title: `${t("sources.title")} | Openverse` })
-</script>

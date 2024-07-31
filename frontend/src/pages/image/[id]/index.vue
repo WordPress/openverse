@@ -1,74 +1,3 @@
-<template>
-  <main :id="skipToContentTargetId" tabindex="-1" class="relative flex-grow">
-    <VErrorSection
-      v-if="fetchingError"
-      :fetching-error="fetchingError"
-      class="px-6 py-10 lg:px-10"
-    />
-    <template v-else-if="image">
-      <VSafetyWall v-if="isHidden" :media="image" @reveal="reveal" />
-      <template v-else>
-        <VSingleResultControls :media="image" />
-        <figure
-          class="relative mb-4 grid grid-cols-1 grid-rows-1 justify-items-center border-b border-dark-charcoal-20 px-6"
-        >
-          <VBone
-            v-if="showLoadingState"
-            class="col-span-full row-span-full h-[500px] w-[500px] self-center"
-          />
-          <!--
-            re: disabled static element interactions rule https://github.com/WordPress/openverse/issues/2906
-            Note: this one, I believe, should remain disabled ; but should be double checked by the issue nonetheless
-          -->
-          <!-- eslint-disable-next-line vuejs-accessibility/no-static-element-interactions -->
-          <img
-            v-if="!sketchFabUid"
-            id="main-image"
-            :src="imageSrc"
-            :alt="image.title"
-            class="col-span-full row-span-full h-full max-h-[500px] w-full rounded-se-sm rounded-ss-sm object-contain"
-            :width="image.width ?? 0"
-            :height="image.height ?? 0"
-            @load="onImageLoaded"
-            @error="onImageError"
-            @contextmenu="handleRightClick(image.id)"
-          />
-          <div
-            v-if="sketchFabUid"
-            class="col-span-full row-span-full w-full lg:max-w-4xl lg:px-4"
-          >
-            <VSketchFabViewer
-              :uid="sketchFabUid"
-              class="rounded-se-sm rounded-ss-sm"
-              @failure="sketchFabfailure = true"
-            />
-          </div>
-        </figure>
-
-        <section
-          class="grid grid-cols-1 grid-rows-[auto,1fr] sm:grid-cols-[1fr,auto] sm:grid-rows-1 sm:gap-x-6"
-        >
-          <VMediaInfo :media="image" class="min-w-0 sm:col-start-1" />
-          <VGetMediaButton
-            :media="image"
-            media-type="image"
-            class="row-start-1 mb-4 !w-full flex-initial sm:col-start-2 sm:mb-0 sm:mt-1 sm:!w-auto"
-          />
-        </section>
-
-        <VMediaReuse :media="image" />
-        <VMediaDetails :media="image" />
-
-        <VRelatedMedia v-if="image" media-type="image" :related-to="image.id" />
-      </template>
-    </template>
-    <VBone
-      v-else-if="showLoadingState"
-      class="col-span-full row-span-full mx-auto h-[500px] w-[500px]"
-    />
-  </main>
-</template>
-
 <script setup lang="ts">
 import {
   definePageMeta,
@@ -108,6 +37,10 @@ import VMediaInfo from "~/components/VMediaInfo/VMediaInfo.vue"
 import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
 
 import errorImage from "~/assets/image_not_available_placeholder.png"
+
+defineOptions({
+  name: "ImageDetailPage",
+})
 
 definePageMeta({
   layout: "content-layout",
@@ -295,6 +228,77 @@ watch(error, (err) => {
   }
 })
 </script>
+
+<template>
+  <main :id="skipToContentTargetId" tabindex="-1" class="relative flex-grow">
+    <VErrorSection
+      v-if="fetchingError"
+      :fetching-error="fetchingError"
+      class="px-6 py-10 lg:px-10"
+    />
+    <template v-else-if="image">
+      <VSafetyWall v-if="isHidden" :media="image" @reveal="reveal" />
+      <template v-else>
+        <VSingleResultControls :media="image" />
+        <figure
+          class="relative mb-4 grid grid-cols-1 grid-rows-1 justify-items-center border-b border-dark-charcoal-20 px-6"
+        >
+          <VBone
+            v-if="showLoadingState"
+            class="col-span-full row-span-full h-[500px] w-[500px] self-center"
+          />
+          <!--
+            re: disabled static element interactions rule https://github.com/WordPress/openverse/issues/2906
+            Note: this one, I believe, should remain disabled ; but should be double checked by the issue nonetheless
+          -->
+          <!-- eslint-disable-next-line vuejs-accessibility/no-static-element-interactions -->
+          <img
+            v-if="!sketchFabUid"
+            id="main-image"
+            :src="imageSrc"
+            :alt="image.title"
+            class="col-span-full row-span-full h-full max-h-[500px] w-full rounded-se-sm rounded-ss-sm object-contain"
+            :width="image.width ?? 0"
+            :height="image.height ?? 0"
+            @load="onImageLoaded"
+            @error="onImageError"
+            @contextmenu="handleRightClick(image.id)"
+          />
+          <div
+            v-if="sketchFabUid"
+            class="col-span-full row-span-full w-full lg:max-w-4xl lg:px-4"
+          >
+            <VSketchFabViewer
+              :uid="sketchFabUid"
+              class="rounded-se-sm rounded-ss-sm"
+              @failure="sketchFabfailure = true"
+            />
+          </div>
+        </figure>
+
+        <section
+          class="grid grid-cols-1 grid-rows-[auto,1fr] sm:grid-cols-[1fr,auto] sm:grid-rows-1 sm:gap-x-6"
+        >
+          <VMediaInfo :media="image" class="min-w-0 sm:col-start-1" />
+          <VGetMediaButton
+            :media="image"
+            media-type="image"
+            class="row-start-1 mb-4 !w-full flex-initial sm:col-start-2 sm:mb-0 sm:mt-1 sm:!w-auto"
+          />
+        </section>
+
+        <VMediaReuse :media="image" />
+        <VMediaDetails :media="image" />
+
+        <VRelatedMedia v-if="image" media-type="image" :related-to="image.id" />
+      </template>
+    </template>
+    <VBone
+      v-else-if="showLoadingState"
+      class="col-span-full row-span-full mx-auto h-[500px] w-[500px]"
+    />
+  </main>
+</template>
 
 <style scoped>
 section {

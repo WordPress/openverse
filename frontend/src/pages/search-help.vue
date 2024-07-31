@@ -1,3 +1,36 @@
+<script setup lang="ts">
+import { definePageMeta, useHead, useNuxtApp } from "#imports"
+
+import { useSearchStore } from "~/stores/search"
+
+import VLink from "~/components/VLink.vue"
+import VContentPage from "~/components/VContentPage.vue"
+
+defineOptions({
+  name: "SearchHelpPage",
+})
+
+definePageMeta({
+  layout: "content-layout",
+})
+
+const {
+  $i18n: { t },
+} = useNuxtApp()
+
+const searchStore = useSearchStore()
+
+useHead({
+  title: `${t("searchGuide.title", { openverse: "Openverse" })} | Openverse`,
+})
+
+const pathFromQuery = (queryString: string) => {
+  return searchStore.getSearchPath({
+    query: { q: queryString },
+  })
+}
+</script>
+
 <template>
   <VContentPage>
     <h1>{{ $t("searchGuide.title", { openverse: "Openverse" }) }}</h1>
@@ -42,31 +75,3 @@
     </i18n-t>
   </VContentPage>
 </template>
-
-<script setup lang="ts">
-import { definePageMeta, useHead, useNuxtApp } from "#imports"
-
-import { useSearchStore } from "~/stores/search"
-
-import VLink from "~/components/VLink.vue"
-import VContentPage from "~/components/VContentPage.vue"
-
-definePageMeta({
-  layout: "content-layout",
-})
-const {
-  $i18n: { t },
-} = useNuxtApp()
-
-const searchStore = useSearchStore()
-
-useHead({
-  title: `${t("searchGuide.title", { openverse: "Openverse" })} | Openverse`,
-})
-
-const pathFromQuery = (queryString: string) => {
-  return searchStore.getSearchPath({
-    query: { q: queryString },
-  })
-}
-</script>

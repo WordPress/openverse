@@ -1,3 +1,35 @@
+<script setup lang="ts">
+import { definePageMeta, useHead, useI18n } from "#imports"
+
+import VLink from "~/components/VLink.vue"
+import VContentPage from "~/components/VContentPage.vue"
+import VTabs from "~/components/VTabs/VTabs.vue"
+import VTab from "~/components/VTabs/VTab.vue"
+import VTabPanel from "~/components/VTabs/VTabPanel.vue"
+
+const bugForm =
+  "https://docs.google.com/forms/d/e/1FAIpQLSenCn-3HoZlCz4vlL2621wjezfu1sPZDaWGe_FtQ1R5-5qR4Q/viewform"
+const suggestionForm =
+  "https://docs.google.com/forms/d/e/1FAIpQLSfGC7JWbNjGs-_pUNe3B2nzBW-YrIrmRd92t-7u0y7s8jMjzQ/viewform"
+
+const forms = {
+  report: `${bugForm}?embedded=true`,
+  improve: `${suggestionForm}?embedded=true`,
+} as const
+const tabs = Object.keys(forms) as (keyof typeof forms)[]
+
+defineOptions({
+  name: "FeedbackPage",
+})
+
+definePageMeta({
+  layout: "content-layout",
+})
+
+const { t } = useI18n({ useScope: "global" })
+useHead({ title: `${t("feedback.title")} | Openverse` })
+</script>
+
 <template>
   <VContentPage>
     <h1 id="feedback">
@@ -37,31 +69,3 @@
     </section>
   </VContentPage>
 </template>
-
-<script setup lang="ts">
-import { definePageMeta, useHead, useI18n } from "#imports"
-
-import VLink from "~/components/VLink.vue"
-import VContentPage from "~/components/VContentPage.vue"
-import VTabs from "~/components/VTabs/VTabs.vue"
-import VTab from "~/components/VTabs/VTab.vue"
-import VTabPanel from "~/components/VTabs/VTabPanel.vue"
-
-const bugForm =
-  "https://docs.google.com/forms/d/e/1FAIpQLSenCn-3HoZlCz4vlL2621wjezfu1sPZDaWGe_FtQ1R5-5qR4Q/viewform"
-const suggestionForm =
-  "https://docs.google.com/forms/d/e/1FAIpQLSfGC7JWbNjGs-_pUNe3B2nzBW-YrIrmRd92t-7u0y7s8jMjzQ/viewform"
-
-const forms = {
-  report: `${bugForm}?embedded=true`,
-  improve: `${suggestionForm}?embedded=true`,
-} as const
-const tabs = Object.keys(forms) as (keyof typeof forms)[]
-
-definePageMeta({
-  layout: "content-layout",
-})
-
-const { t } = useI18n({ useScope: "global" })
-useHead({ title: `${t("feedback.title")} | Openverse` })
-</script>

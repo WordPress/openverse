@@ -1,3 +1,53 @@
+<script setup lang="ts">
+import { definePageMeta } from "#imports"
+
+import { computed } from "vue"
+
+import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { SWITCHABLE, ON, OFF } from "~/constants/feature-flag"
+
+import VContentPage from "~/components/VContentPage.vue"
+import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"
+
+defineOptions({
+  name: "PreferencesPage",
+})
+
+definePageMeta({
+  layout: "content-layout",
+})
+
+const featureFlagStore = useFeatureFlagStore()
+
+const flags = computed(() => featureFlagStore.flags)
+
+/**
+ * Toggle the state of the switchable flag to the preferred value.
+ * @param name
+ * @param checked
+ */
+const handleChange = ({
+  name,
+  checked,
+}: {
+  name: string
+  checked?: boolean
+}) => {
+  featureFlagStore.toggleFeature(name, checked ? ON : OFF)
+}
+
+const flagsBySwitchable = computed(() => {
+  return {
+    true: featureFlagStore.getFlagsBySwitchable(true),
+    false: featureFlagStore.getFlagsBySwitchable(false),
+  }
+})
+
+const featureGroups = computed(() => {
+  return featureFlagStore.getFeatureGroups()
+})
+</script>
+
 <template>
   <VContentPage>
     <h1>{{ $t("prefPage.title") }}</h1>
@@ -78,49 +128,3 @@
     <pre><code>{{ flags }}</code></pre>
   </VContentPage>
 </template>
-
-<script setup lang="ts">
-import { definePageMeta } from "#imports"
-
-import { computed } from "vue"
-
-import { useFeatureFlagStore } from "~/stores/feature-flag"
-import { SWITCHABLE, ON, OFF } from "~/constants/feature-flag"
-
-import VContentPage from "~/components/VContentPage.vue"
-import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"
-
-definePageMeta({
-  layout: "content-layout",
-})
-
-const featureFlagStore = useFeatureFlagStore()
-
-const flags = computed(() => featureFlagStore.flags)
-
-/**
- * Toggle the state of the switchable flag to the preferred value.
- * @param name
- * @param checked
- */
-const handleChange = ({
-  name,
-  checked,
-}: {
-  name: string
-  checked?: boolean
-}) => {
-  featureFlagStore.toggleFeature(name, checked ? ON : OFF)
-}
-
-const flagsBySwitchable = computed(() => {
-  return {
-    true: featureFlagStore.getFlagsBySwitchable(true),
-    false: featureFlagStore.getFlagsBySwitchable(false),
-  }
-})
-
-const featureGroups = computed(() => {
-  return featureFlagStore.getFeatureGroups()
-})
-</script>
