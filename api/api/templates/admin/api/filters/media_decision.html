@@ -1,0 +1,71 @@
+<details data-filter-title="{{ title }}" open>
+  <summary>By {{ title }}</summary>
+
+  <div id="decision-container">
+    <form id="decision-form">
+      <input
+        id="decision-input"
+        type="number"
+        placeholder="{{ title|capfirst }}"
+        value="{{ spec.value }}"
+        min="{{ spec.range_min }}"
+        max="{{ spec.range_max }}">
+      <button
+        type="submit"
+        id="decision-submit">
+        Filter
+      </button>
+    </form>
+
+    <script>
+      document.getElementById('decision-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const value = document.getElementById('decision-input').value;
+        const search = "{{ choices.0 }}".replace("VALUE", value);
+        window.location.search = search;
+      });
+    </script>
+
+    <li><a href="{{ choices.1 }}">Clear decision ID</a></li>
+  </div>
+
+  <style>
+    #decision-container {
+      margin: 5px 0;
+      padding: 0 15px 15px;
+    }
+
+    #decision-form {
+      margin-bottom: 4px;
+    }
+
+    #decision-input {
+      height: 1.1875rem;
+      border: 1px solid var(--border-color);
+      padding: 2px 5px;
+      margin: 0;
+      vertical-align: top;
+      border-radius: 4px;
+      color: var(--body-fg);
+      width: 128px;
+    }
+
+    #decision-submit {
+      border: 1px solid var(--border-color);
+      font-size: 0.8125rem;
+      padding: 4px 8px;
+      margin: 0;
+      vertical-align: middle;
+      background: var(--body-bg);
+      box-shadow: 0 -15px 20px -10px rgba(0, 0, 0, 0.15) inset;
+      color: var(--body-fg);
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    #decision-submit:hover {
+      border-color: var(--body-quiet-color);
+    }
+  </style>
+</details>
