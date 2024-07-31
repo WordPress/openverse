@@ -1,3 +1,21 @@
+<script setup lang="ts">
+import { definePageMeta, useHead, useI18n } from "#imports"
+
+import VContentPage from "~/components/VContentPage.vue"
+
+defineOptions({
+  name: "TagsPage",
+})
+
+definePageMeta({
+  layout: "content-layout",
+})
+
+const { t } = useI18n({ useScope: "global" })
+
+useHead({ title: `${t("tags.title")} | Openverse` })
+</script>
+
 <template>
   <VContentPage>
     <h1>{{ $t("tags.title", { openverse: "Openverse" }) }}</h1>
@@ -18,24 +36,3 @@
     </p>
   </VContentPage>
 </template>
-
-<script lang="ts">
-import { useHead, useI18n } from "#imports"
-
-import { defineComponent } from "vue"
-
-import VContentPage from "~/components/VContentPage.vue"
-
-export default defineComponent({
-  name: "VTagsPage",
-  components: { VContentPage },
-  layout: "content-layout",
-  setup() {
-    const { t } = useI18n({ useScope: "global" })
-
-    useHead({ title: `${t("tags.title")} | Openverse` })
-
-    return {}
-  },
-})
-</script>

@@ -1,3 +1,24 @@
+<script setup lang="ts">
+import { definePageMeta, useHead, useI18n } from "#imports"
+
+import VLink from "~/components/VLink.vue"
+import VContentPage from "~/components/VContentPage.vue"
+
+defineOptions({
+  name: "AboutPage",
+})
+
+definePageMeta({
+  layout: "content-layout",
+})
+
+const { t } = useI18n({ useScope: "global" })
+
+useHead({
+  title: `${t("about.title", { openverse: "Openverse" })} | Openverse`,
+})
+</script>
+
 <template>
   <VContentPage>
     <h1>
@@ -151,19 +172,3 @@
     </i18n-t>
   </VContentPage>
 </template>
-
-<script setup lang="ts">
-import { definePageMeta, useHead, useI18n } from "#imports"
-
-import VLink from "~/components/VLink.vue"
-import VContentPage from "~/components/VContentPage.vue"
-
-definePageMeta({
-  layout: "content-layout",
-})
-const { t } = useI18n({ useScope: "global" })
-
-useHead({
-  title: `${t("about.title", { openverse: "Openverse" })} | Openverse`,
-})
-</script>

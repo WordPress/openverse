@@ -8,6 +8,7 @@
     >{{ $t("skipToContent") }}
   </VButton>
 </template>
+
 <script lang="ts">
 import { skipToContentTargetId } from "~/constants/window"
 
@@ -23,6 +24,7 @@ export default {
   },
 }
 </script>
+
 <style scoped>
 .skip-button:not(:focus-visible) {
   @apply sr-only;

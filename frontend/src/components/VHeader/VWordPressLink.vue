@@ -17,6 +17,7 @@
     </i18n-t>
   </VLink>
 </template>
+
 <script lang="ts">
 import VLink from "~/components/VLink.vue"
 import VSvg from "~/components/VSvg/VSvg.vue"

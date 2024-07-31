@@ -1,15 +1,3 @@
-<template>
-  <svg
-    :viewBox="viewBox"
-    focusable="false"
-    class="v-icon flex-none"
-    :class="[`w-${size}`, `h-${size}`, { 'rtl-flip': rtlFlip }, icon.class]"
-    aria-hidden="true"
-  >
-    <use :href="icon.url" />
-  </svg>
-</template>
-
 <script lang="ts" setup>
 import { ref, watch } from "vue"
 
@@ -89,6 +77,18 @@ watch(
   }
 )
 </script>
+
+<template>
+  <svg
+    :viewBox="viewBox"
+    focusable="false"
+    class="v-icon flex-none"
+    :class="[`w-${size}`, `h-${size}`, { 'rtl-flip': rtlFlip }, icon.class]"
+    aria-hidden="true"
+  >
+    <use :href="icon.url" />
+  </svg>
+</template>
 
 <style scoped>
 [dir="rtl"] .v-icon.rtl-flip {

@@ -40,6 +40,7 @@
     />
   </header>
 </template>
+
 <script lang="ts">
 import { computed, defineComponent, inject, ref } from "vue"
 

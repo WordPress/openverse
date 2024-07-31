@@ -1,3 +1,89 @@
+<script setup lang="ts">
+import { toRefs, ref, computed, useAttrs } from "vue"
+
+import { useDialogContent } from "~/composables/use-dialog-content"
+
+import type { ModalColorMode, ModalVariant } from "~/types/modal"
+
+import VIconButton from "~/components/VIconButton/VIconButton.vue"
+/**
+ * Renders the inner content of a modal and manages focus.
+ */
+defineOptions({
+  inheritAttrs: false,
+})
+const props = withDefaults(
+  defineProps<{
+    visible: boolean
+    hide: () => void
+    hideOnEsc?: boolean
+    hideOnClickOutside?: boolean
+    autoFocusOnShow?: boolean
+    autoFocusOnHide?: boolean
+    trapFocus?: boolean
+    triggerElement?: HTMLElement | null
+    initialFocusElement?: HTMLElement | null
+    variant?: ModalVariant
+    mode?: ModalColorMode
+    /**
+     * The tailwind classes to apply to the modal backdrop element.
+     * Can be used to make the modal hidden on some breakpoint.
+     */
+    contentClasses?: string
+  }>(),
+  {
+    hideOnEsc: true,
+    hideOnClickOutside: false,
+    autoFocusOnShow: true,
+    autoFocusOnHide: true,
+    trapFocus: true,
+    triggerElement: null,
+    initialFocusElement: null,
+    variant: "default",
+    mode: "light",
+    contentClasses: "",
+  }
+)
+const emit = defineEmits<{
+  keydown: [KeyboardEvent]
+  focus: [FocusEvent]
+  blur: [FocusEvent]
+  close: []
+  open: []
+}>()
+const attrs = useAttrs()
+
+const propsRefs = toRefs(props)
+const closeButton = ref<InstanceType<typeof VIconButton> | null>(null)
+const initialFocusElement = computed(
+  () => props.initialFocusElement || closeButton.value?.$el
+)
+const dialogRef = ref<HTMLElement | null>(null)
+const { onKeyDown, onBlur, deactivateFocusTrap } = useDialogContent({
+  dialogElements: {
+    dialogRef,
+    initialFocusElementRef: initialFocusElement,
+    triggerElementRef: propsRefs.triggerElement,
+  },
+  visibleRef: propsRefs.visible,
+  dialogOptions: {
+    hideOnEscRef: propsRefs.hideOnEsc,
+    hideOnClickOutsideRef: propsRefs.hideOnClickOutside,
+    autoFocusOnShowRef: propsRefs.autoFocusOnShow,
+    autoFocusOnHideRef: propsRefs.autoFocusOnHide,
+    trapFocusRef: propsRefs.trapFocus,
+  },
+  hideRef: propsRefs.hide,
+  emit: emit as (event: string) => void,
+  attrs,
+})
+
+defineExpose({
+  dialogRef,
+  deactivateFocusTrap,
+})
+</script>
+
 <template>
   <div v-if="visible">
     <Teleport to="#teleports">
@@ -87,92 +173,6 @@
     </Teleport>
   </div>
 </template>
-
-<script setup lang="ts">
-import { toRefs, ref, computed, useAttrs } from "vue"
-
-import { useDialogContent } from "~/composables/use-dialog-content"
-
-import type { ModalColorMode, ModalVariant } from "~/types/modal"
-
-import VIconButton from "~/components/VIconButton/VIconButton.vue"
-/**
- * Renders the inner content of a modal and manages focus.
- */
-defineOptions({
-  inheritAttrs: false,
-})
-const props = withDefaults(
-  defineProps<{
-    visible: boolean
-    hide: () => void
-    hideOnEsc?: boolean
-    hideOnClickOutside?: boolean
-    autoFocusOnShow?: boolean
-    autoFocusOnHide?: boolean
-    trapFocus?: boolean
-    triggerElement?: HTMLElement | null
-    initialFocusElement?: HTMLElement | null
-    variant?: ModalVariant
-    mode?: ModalColorMode
-    /**
-     * The tailwind classes to apply to the modal backdrop element.
-     * Can be used to make the modal hidden on some breakpoint.
-     */
-    contentClasses?: string
-  }>(),
-  {
-    hideOnEsc: true,
-    hideOnClickOutside: false,
-    autoFocusOnShow: true,
-    autoFocusOnHide: true,
-    trapFocus: true,
-    triggerElement: null,
-    initialFocusElement: null,
-    variant: "default",
-    mode: "light",
-    contentClasses: "",
-  }
-)
-const emit = defineEmits<{
-  keydown: [KeyboardEvent]
-  focus: [FocusEvent]
-  blur: [FocusEvent]
-  close: []
-  open: []
-}>()
-const attrs = useAttrs()
-
-const propsRefs = toRefs(props)
-const closeButton = ref<InstanceType<typeof VIconButton> | null>(null)
-const initialFocusElement = computed(
-  () => props.initialFocusElement || closeButton.value?.$el
-)
-const dialogRef = ref<HTMLElement | null>(null)
-const { onKeyDown, onBlur, deactivateFocusTrap } = useDialogContent({
-  dialogElements: {
-    dialogRef,
-    initialFocusElementRef: initialFocusElement,
-    triggerElementRef: propsRefs.triggerElement,
-  },
-  visibleRef: propsRefs.visible,
-  dialogOptions: {
-    hideOnEscRef: propsRefs.hideOnEsc,
-    hideOnClickOutsideRef: propsRefs.hideOnClickOutside,
-    autoFocusOnShowRef: propsRefs.autoFocusOnShow,
-    autoFocusOnHideRef: propsRefs.autoFocusOnHide,
-    trapFocusRef: propsRefs.trapFocus,
-  },
-  hideRef: propsRefs.hide,
-  emit: emit as (event: string) => void,
-  attrs,
-})
-
-defineExpose({
-  dialogRef,
-  deactivateFocusTrap,
-})
-</script>
 
 <style scoped>
 /*

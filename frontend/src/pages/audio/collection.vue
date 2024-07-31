@@ -1,21 +1,3 @@
-<template>
-  <div
-    :id="skipToContentTargetId"
-    tabindex="-1"
-    class="p-6 pt-0 lg:p-10 lg:pt-2"
-  >
-    <VCollectionResults
-      v-if="collectionParams"
-      search-term=""
-      :is-fetching="isFetching"
-      :results="{ type: 'audio', items: media }"
-      :collection-label="collectionLabel"
-      :collection-params="collectionParams"
-      @load-more="loadMore"
-    />
-  </div>
-</template>
-
 <script setup lang="ts">
 import {
   definePageMeta,
@@ -36,6 +18,10 @@ import type { AudioDetail } from "~/types/media"
 import { skipToContentTargetId } from "~/constants/window"
 
 import VCollectionResults from "~/components/VSearchResultsGrid/VCollectionResults.vue"
+
+defineOptions({
+  name: "AudioCollection",
+})
 
 definePageMeta({
   layout: "content-layout",
@@ -105,3 +91,21 @@ await useAsyncData(
   { lazy: true, server: false }
 )
 </script>
+
+<template>
+  <div
+    :id="skipToContentTargetId"
+    tabindex="-1"
+    class="p-6 pt-0 lg:p-10 lg:pt-2"
+  >
+    <VCollectionResults
+      v-if="collectionParams"
+      search-term=""
+      :is-fetching="isFetching"
+      :results="{ type: 'audio', items: media }"
+      :collection-label="collectionLabel"
+      :collection-params="collectionParams"
+      @load-more="loadMore"
+    />
+  </div>
+</template>

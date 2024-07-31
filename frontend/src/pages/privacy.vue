@@ -1,3 +1,39 @@
+<script setup lang="ts">
+import { definePageMeta, useHead, useNuxtApp } from "#imports"
+
+import { computed } from "vue"
+
+import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { ON, OFF } from "~/constants/feature-flag"
+
+import VLink from "~/components/VLink.vue"
+import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"
+import VContentPage from "~/components/VContentPage.vue"
+
+defineOptions({
+  name: "PrivacyPage",
+})
+
+definePageMeta({
+  layout: "content-layout",
+})
+
+const {
+  $i18n: { t },
+} = useNuxtApp()
+
+useHead({
+  title: `${t("privacy.title", { openverse: "Openverse" })} | Openverse`,
+})
+const featureFlagStore = useFeatureFlagStore()
+
+const isChecked = computed(() => featureFlagStore.isOn("analytics"))
+
+const handleChange = ({ checked }: { checked?: boolean }) => {
+  featureFlagStore.toggleFeature("analytics", checked ? ON : OFF)
+}
+</script>
+
 <template>
   <VContentPage>
     <h1>
@@ -62,35 +98,3 @@
     </VCheckbox>
   </VContentPage>
 </template>
-
-<script setup lang="ts">
-import { definePageMeta, useHead, useNuxtApp } from "#imports"
-
-import { computed } from "vue"
-
-import { useFeatureFlagStore } from "~/stores/feature-flag"
-import { ON, OFF } from "~/constants/feature-flag"
-
-import VLink from "~/components/VLink.vue"
-import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"
-import VContentPage from "~/components/VContentPage.vue"
-
-definePageMeta({
-  layout: "content-layout",
-})
-
-const {
-  $i18n: { t },
-} = useNuxtApp()
-
-useHead({
-  title: `${t("privacy.title", { openverse: "Openverse" })} | Openverse`,
-})
-const featureFlagStore = useFeatureFlagStore()
-
-const isChecked = computed(() => featureFlagStore.isOn("analytics"))
-
-const handleChange = ({ checked }: { checked?: boolean }) => {
-  featureFlagStore.toggleFeature("analytics", checked ? ON : OFF)
-}
-</script>

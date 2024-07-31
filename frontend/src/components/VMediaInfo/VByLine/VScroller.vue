@@ -9,6 +9,7 @@
     />
   </div>
 </template>
+
 <script lang="ts">
 import { useI18n } from "#imports"
 

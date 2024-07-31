@@ -1,3 +1,20 @@
+<script setup lang="ts">
+import type { AllMediaResults } from "~/types/result"
+
+import VSearchResults from "~/components/VSearchResultsGrid/VSearchResults.vue"
+
+defineOptions({
+  name: "AllMediaSearch",
+})
+
+defineProps<{
+  results: AllMediaResults
+  isFetching: boolean
+  searchTerm: string
+  handleLoadMore: () => void
+}>()
+</script>
+
 <template>
   <VSearchResults
     :results="results"
@@ -7,34 +24,3 @@
     @load-more="handleLoadMore"
   />
 </template>
-
-<script lang="ts">
-import { defineComponent, type PropType } from "vue"
-
-import type { AllMediaResults } from "~/types/result"
-
-import VSearchResults from "~/components/VSearchResultsGrid/VSearchResults.vue"
-
-export default defineComponent({
-  name: "SearchIndex",
-  components: { VSearchResults },
-  props: {
-    results: {
-      type: Object as PropType<AllMediaResults>,
-      required: true,
-    },
-    isFetching: {
-      type: Boolean,
-      required: true,
-    },
-    searchTerm: {
-      type: String,
-      required: true,
-    },
-    handleLoadMore: {
-      type: Function as PropType<() => void>,
-      required: true,
-    },
-  },
-})
-</script>

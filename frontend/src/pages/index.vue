@@ -1,19 +1,3 @@
-<template>
-  <main
-    class="index flex w-full flex-shrink-0 flex-grow flex-col justify-center gap-6 px-6 sm:px-0 lg:flex-row lg:items-center lg:gap-0"
-  >
-    <VHomepageContent
-      class="sm:px-14 md:px-20 lg:px-26 xl:w-[53.375rem] xl:pe-0"
-      :handle-search="handleSearch"
-      :search-type="searchType"
-      :set-search-type="setSearchType"
-    />
-
-    <!-- Image carousel -->
-    <VHomeGallery v-if="isXl" class="flex h-full flex-grow" />
-  </main>
-</template>
-
 <script setup lang="ts">
 import { definePageMeta, navigateTo, useHead } from "#imports"
 
@@ -35,9 +19,14 @@ import { useFeatureFlagStore } from "~/stores/feature-flag"
 import VHomeGallery from "~/components/VHomeGallery/VHomeGallery.vue"
 import VHomepageContent from "~/components/VHomepageContent.vue"
 
+defineOptions({
+  name: "HomePage",
+})
+
 definePageMeta({
   layout: "default",
 })
+
 const featureFlagStore = useFeatureFlagStore()
 const mediaStore = useMediaStore()
 const searchStore = useSearchStore()
@@ -86,6 +75,22 @@ const handleSearch = (searchTerm: string) => {
   )
 }
 </script>
+
+<template>
+  <main
+    class="index flex w-full flex-shrink-0 flex-grow flex-col justify-center gap-6 px-6 sm:px-0 lg:flex-row lg:items-center lg:gap-0"
+  >
+    <VHomepageContent
+      class="sm:px-14 md:px-20 lg:px-26 xl:w-[53.375rem] xl:pe-0"
+      :handle-search="handleSearch"
+      :search-type="searchType"
+      :set-search-type="setSearchType"
+    />
+
+    <!-- Image carousel -->
+    <VHomeGallery v-if="isXl" class="flex h-full flex-grow" />
+  </main>
+</template>
 
 <style>
 @screen lg {
