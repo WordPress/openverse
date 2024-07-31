@@ -9,8 +9,8 @@
       class="search-bar group flex h-12 w-full flex-row items-center overflow-hidden rounded-sm"
       :class="
         isSearchBarActive || isInputFocused
-          ? 'ring-pink-8 bg-white ring'
-          : 'bg-gray-1'
+          ? 'ring-pink-8 bg-bg ring'
+          : 'bg-bg-surface'
       "
       @submit.prevent="handleFormSubmit"
     >
@@ -37,7 +37,7 @@
         name="q"
         :placeholder="$t('hero.search.placeholder')"
         type="search"
-        class="search-field hover:text-gray-12 hover:placeholder-gray-12 text-gray-8 placeholder-gray-8 ms-1 h-full w-full flex-grow appearance-none rounded-none border-tx bg-tx text-2xl focus-visible:outline-none"
+        class="search-field hover:text-text hover:placeholder-gray-12 text-text-secondary placeholder-gray-8 ms-1 h-full w-full flex-grow appearance-none rounded-none border-tx bg-tx text-2xl focus-visible:outline-none"
         :value="localSearchTerm"
         :aria-label="
           $t('search.searchBarLabel', {
@@ -64,13 +64,13 @@
         ref="clearButtonRef"
         icon="close-small"
         :label="$t('browsePage.searchForm.clear')"
-        inner-area-classes="bg-white hover:bg-gray-2"
+        inner-area-classes="bg-bg hover:bg-bg-fill-secondary"
         @click="clearSearchText"
         @keydown.tab.exact="handleTab($event, 'clear-input')"
       />
       <span
         v-show="!isSearchBarActive && searchStatus"
-        class="info group-hover:text-gray-12 group-focus:text-gray-12 mx-4 hidden whitespace-nowrap text-xs md:flex"
+        class="info group-hover:text-text group-focus:text-text mx-4 hidden whitespace-nowrap text-xs md:flex"
       >
         {{ searchStatus }}
       </span>

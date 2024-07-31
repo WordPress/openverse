@@ -1,32 +1,32 @@
 <template>
   <div
-    class="app h-dyn-screen min-h-dyn-screen grid grid-rows-[auto,1fr] bg-white"
+    class="app h-dyn-screen min-h-dyn-screen grid grid-rows-[auto,1fr] bg-bg"
     :class="[
       isSidebarVisible
         ? 'has-sidebar grid-cols-[1fr_var(--filter-sidebar-width)]'
         : 'grid-cols-1',
     ]"
   >
-    <div class="header-el bg-white">
+    <div class="header-el bg-bg">
       <VBanners />
       <VHeaderDesktop
         v-if="isDesktopLayout"
-        class="h-20 border-b bg-white"
+        class="h-20 border-b bg-bg"
         :class="headerBorder"
       />
       <VHeaderMobile
         v-else
-        class="h-20 border-b bg-white"
+        class="h-20 border-b bg-bg"
         :class="headerBorder"
       />
     </div>
 
     <aside
       v-if="isSidebarVisible"
-      class="sidebar border-gray-3 bg-gray-1 end-0 z-10 h-full overflow-y-auto border-s"
+      class="sidebar border-border bg-bg-surface end-0 z-10 h-full overflow-y-auto border-s"
     >
       <VSearchGridFilter class="px-10 py-8" />
-      <VSafeBrowsing class="border-gray-3 border-t px-10 py-8" />
+      <VSafeBrowsing class="border-border border-t px-10 py-8" />
     </aside>
 
     <div
@@ -34,7 +34,7 @@
       class="main-page flex h-full w-full min-w-0 flex-col justify-between overflow-y-auto"
     >
       <slot />
-      <VFooter mode="content" class="border-gray-3 border-t bg-white" />
+      <VFooter mode="content" class="border-border border-t bg-bg" />
     </div>
   </div>
 </template>

@@ -167,14 +167,56 @@
     --modal-layer: var(--gray-12-80);
   }
 
+  :is(.dark-mode *) {
+    --bg: var(--gray-13);
+    --bg-surface: var(--gray-12);
+    --bg-overlay: var(--gray-11);
+    --bg-fill-primary: var(--yellow-4);
+    --bg-fill-primary-hover: var(--yellow-3);
+    --bg-fill-secondary: var(--gray-11);
+    --bg-fill-secondary-hover: var(--gray-1);
+    --bg-fill-tertiary: var(--gray-1);
+    --bg-fill-tertiary-hover: var(--gray-2);
+    --bg-fill-transparent-hover: var(--gray-1-10);
+    --bg-fill-complementary: var(--pink-9);
+    --bg-fill-warning: var(--warning-11);
+    --bg-fill-info: var(--info-11);
+    --bg-fill-success: var(--success-11);
+    --bg-fill-error: var(--error-11);
+    --bg-fill-disabled: var(--gray-8);
+    --bg-zero: var(--gray-13-0);
+    --border: var(--gray-11);
+    --border-hover: var(--gray-1);
+    --border-secondary: var(--gray-1-20);
+    --border-secondary-hover: var(--gray-1);
+    --border-tertiary: var(--gray-1);
+    --border-transparent-hover: var(--gray-11);
+    --border-focus: var(--yellow-4);
+    --border-bg-ring: var(--gray-13);
+    --border-disabled: var(--gray-8);
+    --text: var(--gray-1);
+    --text-secondary: var(--gray-5);
+    --text-disabled: var(--gray-8);
+    --text-link: var(--yellow-4);
+    --text-over-dark: var(--gray-13);
+    --text-secondary-over-dark: var(--gray-8);
+    --icon-warning: var(--warning-5);
+    --icon-info: var(--info-5);
+    --icon-success: var(--success-5);
+    --icon-error: var(--error-5);
+    --wave-active: var(--pink-4);
+    --wave-inactive: var(--gray-1-30);
+    --modal-layer: var(--gray-12-60);
+  }
+
   html {
-    @apply m-0 font-normal leading-loose text-gray-12;
+    @apply m-0 font-normal leading-loose text-text;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   a {
-    @apply text-pink-8 hover:underline;
+    @apply text-text-link hover:underline;
   }
 
   h1,
@@ -336,7 +378,7 @@ Time                - 11px - xs semibold (default leading-tight)
     @apply focus-visible:outline focus-visible:outline-1.5 focus-visible:outline-offset-0;
     /* absolutely positioned overlapping pseudo element with a 1.5px border */
     @apply focus-visible:after:absolute focus-visible:after:z-10 focus-visible:after:rounded-inherit;
-    @apply focus-visible:after:border-1.5 focus-visible:after:border-white;
+    @apply focus-visible:after:border-1.5 focus-visible:after:border-border-bg-ring;
     @apply focus-visible:after:h-full-with-border focus-visible:after:w-full-with-border;
     @apply focus-visible:after:-left-px focus-visible:after:-top-px;
   }

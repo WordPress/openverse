@@ -56,7 +56,7 @@ const image = computed(() => images[props.errorCode])
 
 <style scoped>
 ::v-deep(.attribution) {
-  @apply text-gray-8 mt-4 text-sr;
+  @apply text-text-secondary mt-4 text-sr;
 }
 ::v-deep(.attribution a) {
   @apply text-current underline;

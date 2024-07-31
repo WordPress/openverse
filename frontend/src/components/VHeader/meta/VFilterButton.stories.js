@@ -5,7 +5,7 @@ import { IMAGE } from "~/constants/media"
 import VFilterButton from "~/components/VHeader/VFilterButton.vue"
 
 const Template = (args, { argTypes }) => ({
-  template: `<div class="flex"><div id="wrapper" class="px-4 h-16 bg-gray-1 flex align-center justify-center">
+  template: `<div class="flex"><div id="wrapper" class="px-4 h-16 bg-bg-surface flex align-center justify-center">
   <VFilterButton v-bind="args" v-on="args" />
   </div></div>`,
   components: { VFilterButton },

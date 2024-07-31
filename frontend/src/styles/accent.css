@@ -9,7 +9,7 @@
 
 ::selection {
   /* Using white text because selection background is dark. */
-  @apply bg-gray-12 text-white;
+  @apply bg-bg-fill-tertiary text-text-over-dark;
 }
 
 ::-webkit-calendar-picker-indicator,
@@ -18,5 +18,5 @@
 ::-webkit-outer-spin-button,
 ::marker {
   /* List markers can be tinted as text. */
-  @apply text-pink-8;
+  @apply text-text-link;
 }

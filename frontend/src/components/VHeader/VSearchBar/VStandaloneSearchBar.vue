@@ -3,7 +3,7 @@
   <form
     action="/search"
     role="search"
-    class="search-bar group flex h-14 flex-row items-center rounded-sm border-tx bg-white sm:h-16"
+    class="search-bar group flex h-14 flex-row items-center rounded-sm border-tx bg-bg sm:h-16"
     @submit.prevent="handleSearch"
   >
     <div
@@ -19,7 +19,7 @@
         type="search"
         name="q"
         :placeholder="$t('hero.search.placeholder')"
-        class="paragraph-large md:label-regular text-gray-12 placeholder-gray-8 ms-4 h-full w-full appearance-none rounded-none bg-tx leading-none focus-visible:outline-none"
+        class="paragraph-large md:label-regular text-text placeholder-gray-8 ms-4 h-full w-full appearance-none rounded-none bg-tx leading-none focus-visible:outline-none"
         :aria-label="
           $t('search.searchBarLabel', {
             openverse: 'Openverse',

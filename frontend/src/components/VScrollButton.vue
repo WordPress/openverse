@@ -2,7 +2,7 @@
   <button
     :aria-label="$t('browsePage.aria.scroll')"
     type="button"
-    class="scroll fixed bottom-4 mb-4 ms-auto h-14 w-14 rounded-full bg-pink-8 text-center text-white transition-all duration-100 ease-linear hover:bg-pink-9 hover:shadow-md"
+    class="scroll fixed bottom-4 mb-4 ms-auto h-14 w-14 rounded-full bg-bg-fill-primary text-center text-text-over-dark transition-all duration-100 ease-linear hover:bg-bg-fill-primary-hover hover:shadow-md"
     :class="hClass"
     @click="scrollToTop"
     @keydown.tab.exact="$emit('tab', $event)"

@@ -36,7 +36,7 @@
             tag="p"
           />
           <VIcon
-            :class="{ 'text-white': triggerA11yProps['aria-expanded'] }"
+            :class="{ 'text-text-over-dark': triggerA11yProps['aria-expanded'] }"
             name="caret-down"
           />
         </VButton>

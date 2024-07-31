@@ -3,7 +3,7 @@ import VSearchBar from "~/components/VHeader/VSearchBar/VSearchBar.vue"
 const Template = (args) => ({
   template: `
     <VSearchBar v-bind="args" v-on="args">
-      <span class="info-8 text-xs font-semibold text-gray-8 mx-4 whitespace-nowrap group-hover:text-gray-12 group-focus:text-gray-12">
+      <span class="info-8 text-xs font-semibold text-text-secondary mx-4 whitespace-nowrap group-hover:text-text group-focus:text-text">
         12,345 results
       </span>
     </VSearchBar>`,
@@ -17,7 +17,7 @@ const vModelTemplate = (args) => ({
   template: `
     <div>
       <VSearchBar v-model="text" v-on="args">
-        <span class="info-8 text-xs font-semibold text-gray-8 mx-4 whitespace-nowrap group-hover:text-gray-12 group-focus:text-gray-12">
+        <span class="info-8 text-xs font-semibold text-text-secondary mx-4 whitespace-nowrap group-hover:text-text group-focus:text-text">
           {{ text.length }} chars
         </span>
       </VSearchBar>

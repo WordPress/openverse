@@ -58,7 +58,7 @@
                 variant="transparent-tx"
                 size="large"
                 :icon-props="{ name: 'close' }"
-                class="focus-slim-tx-yellow-3 text-white hover:bg-white hover:bg-opacity-10"
+                class="focus-slim-tx-yellow-3 text-text-over-dark hover:bg-bg hover:bg-opacity-10"
                 :label="$t('modal.closePagesMenu')"
                 @click="closePageMenu"
               />
@@ -69,7 +69,7 @@
               <VPageLinks
                 mode="dark"
                 class="mt-3 flex flex-col items-end gap-y-6"
-                nav-link-classes="text-white text-3xl focus-visible:ring-yellow-3"
+                nav-link-classes="text-text-over-dark text-3xl focus-visible:ring-yellow-3"
                 :is-in-modal="true"
                 @close="closePageMenu"
               />

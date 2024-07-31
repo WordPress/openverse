@@ -295,37 +295,37 @@ a.button {
 }
 
 .filled-pink-8 {
-  @apply border-tx bg-pink-8 text-white hover:bg-pink-9 hover:text-white;
+  @apply border-tx bg-bg-fill-primary text-text-over-dark hover:bg-bg-fill-primary-hover hover:text-text-over-dark;
 }
 .filled-dark {
-  @apply border-tx bg-gray-12 text-white hover:bg-gray-11 hover:text-white disabled:opacity-70;
+  @apply border-tx bg-bg-fill-tertiary text-text-over-dark hover:bg-bg-fill-tertiary-hover hover:text-text-over-dark disabled:opacity-70;
 }
 .filled-gray {
-  @apply border-tx bg-gray-2 text-gray-12 hover:bg-gray-12 hover:text-white;
+  @apply border-tx bg-bg-fill-secondary text-text hover:bg-bg-fill-secondary-hover hover:text-text-over-dark;
 }
 .filled-white {
-  @apply border-tx bg-white text-gray-12 hover:bg-gray-12 hover:text-white;
+  @apply border-tx bg-bg text-text hover:bg-bg-fill-secondary-hover hover:text-text-over-dark;
 }
 .bordered-white {
-  @apply border-white bg-white text-gray-12 hover:border-gray-3;
+  @apply border-border-bg-ring bg-bg text-text hover:border-border-transparent-hover;
 }
 .bordered-white-pressed {
-  @apply border-tx bg-gray-12 text-white hover:border-gray-11 hover:bg-gray-11 hover:focus-visible:border-tx;
+  @apply border-tx bg-bg-fill-tertiary text-text-over-dark hover:border-gray-11 hover:bg-bg-fill-tertiary-hover hover:focus-visible:border-tx;
 }
 .bordered-gray {
-  @apply border-gray-3 bg-white text-gray-12 hover:border-gray-12 focus-visible:border-tx hover:focus-visible:border-tx;
+  @apply border-border bg-bg text-text hover:border-border-hover focus-visible:border-tx hover:focus-visible:border-tx;
 }
 .transparent-tx {
   @apply border-tx;
 }
 .transparent-gray {
-  @apply border-tx bg-tx text-gray-12 hover:bg-gray-12 hover:bg-opacity-10 disabled:text-gray-5;
+  @apply border-tx bg-tx text-text hover:bg-bg-fill-secondary-hover hover:bg-opacity-10 disabled:text-text-disabled;
 }
 .transparent-dark {
-  @apply border-tx bg-tx text-gray-12 hover:bg-gray-12 hover:text-white;
+  @apply border-tx bg-tx text-text hover:bg-bg-fill-secondary-hover hover:text-text-over-dark;
 }
 .transparent-dark-pressed {
-  @apply border-tx bg-gray-12 text-white hover:border-gray-11;
+  @apply border-tx bg-bg-fill-tertiary text-text-over-dark hover:border-gray-11;
 }
 
 .icon-only {

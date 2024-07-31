@@ -8,7 +8,7 @@
           { 'flex-col items-center': variant === 'centered' },
           variant === 'mobile-input'
             ? 'top-20 h-[calc(100dvh-80px)] bg-tx'
-            : 'bg-gray-12 bg-opacity-75',
+            : 'bg-bg-fill-tertiary bg-opacity-75',
           contentClasses,
         ]"
       >
@@ -20,15 +20,15 @@
           class="flex flex-col"
           :class="[
             mode === 'dark'
-              ? 'bg-black text-white'
-              : 'bg-white text-gray-12',
+              ? 'bg-black text-text-over-dark'
+              : 'bg-bg text-text',
             {
               'w-full md:max-w-[768px] lg:w-[768px] xl:w-[1024px] xl:max-w-[1024px]':
                 variant === 'default',
               'w-full': variant === 'full',
-              'mt-auto h-2/3 w-full rounded-se-lg rounded-ss-lg bg-white':
+              'mt-auto h-2/3 w-full rounded-se-lg rounded-ss-lg bg-bg':
                 variant === 'two-thirds',
-              'mt-auto w-full rounded-se-lg rounded-ss-lg bg-white':
+              'mt-auto w-full rounded-se-lg rounded-ss-lg bg-bg':
                 variant === 'fit-content',
               'm-6 rounded sm:m-0': variant === 'centered',
             },
@@ -47,7 +47,7 @@
                 -->
             <div
               v-if="variant === 'default'"
-              class="flex w-full shrink-0 justify-between bg-white py-4 pe-3 ps-4 md:justify-end md:bg-tx md:px-0 md:py-3"
+              class="flex w-full shrink-0 justify-between bg-bg py-4 pe-3 ps-4 md:justify-end md:bg-tx md:px-0 md:py-3"
             >
               <VIconButton
                 ref="closeButton"
@@ -65,15 +65,15 @@
               'text-left align-bottom md:rounded-se-lg md:rounded-ss-lg':
                 variant === 'default',
               'w-auto rounded': variant === 'centered',
-              'mt-auto w-full rounded-se-lg rounded-ss-lg bg-white':
+              'mt-auto w-full rounded-se-lg rounded-ss-lg bg-bg':
                 variant === 'fit-content',
               'flex w-full flex-col justify-between px-6 pb-10':
                 variant === 'full',
               'overflow-y-hidden rounded-se-lg rounded-ss-lg':
                 variant === 'two-thirds',
               'h-full': variant === 'mobile-input',
-              'bg-black text-white': mode === 'dark',
-              'bg-white text-gray-12': mode === 'light',
+              'bg-black text-text-over-dark': mode === 'dark',
+              'bg-bg text-text': mode === 'light',
               'fallback-padding':
                 variant === 'fit-content' ||
                 variant === 'two-thirds' ||

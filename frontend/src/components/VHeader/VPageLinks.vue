@@ -30,10 +30,10 @@
   <ul v-else>
     <li v-for="page in allPages" :key="page.id">
       <VLink
-        class="disabled:text-gray-5 flex flex-row rounded-sm hover:underline focus-visible:outline-none focus-visible:ring focus-visible:ring-offset-tx"
+        class="disabled:text-text-disabled flex flex-row rounded-sm hover:underline focus-visible:outline-none focus-visible:ring focus-visible:ring-offset-tx"
         :class="[
           { 'font-semibold': currentPage === page.id },
-          { 'text-gray-12 focus-visible:ring-pink-8': mode === 'light' },
+          { 'text-text focus-visible:ring-pink-8': mode === 'light' },
           navLinkClasses,
         ]"
         :href="page.link"

@@ -1,14 +1,14 @@
 <template>
   <div
-    class="app h-dyn-screen bg-yellow-3 grid grid-cols-1 grid-rows-[auto,1fr] flex-col"
+    class="app h-dyn-screen bg-bg-fill-complementary grid grid-cols-1 grid-rows-[auto,1fr] flex-col"
   >
     <div class="header-el">
       <VBanners />
-      <VHeaderInternal class="bg-yellow-3" />
+      <VHeaderInternal class="bg-bg-fill-complementary" />
     </div>
     <div class="main-content flex flex-grow flex-col overflow-y-scroll">
       <slot class="flex-grow" />
-      <VFooter mode="internal" class="bg-yellow-3" />
+      <VFooter mode="internal" class="bg-bg-fill-complementary" />
     </div>
   </div>
 </template>

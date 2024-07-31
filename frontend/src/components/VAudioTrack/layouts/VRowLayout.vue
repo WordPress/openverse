@@ -1,7 +1,7 @@
 <template>
   <!-- `pages/search/audio` has negative margin `-mx-4` to compensate for this padding. -->
   <article
-    class="row-track hover:bg-gray-1 grid p-2 md:p-4"
+    class="row-track hover:bg-bg-surface grid p-2 md:p-4"
     :class="[`size-${size}`, { 'items-start': isSmall }]"
   >
     <div
@@ -24,7 +24,7 @@
 
     <div role="document" class="flex min-w-0 flex-shrink-0 flex-col gap-1">
       <h2
-        class="decoration-inherit text-gray-12 hover:text-gray-12 line-clamp-1 block overflow-hidden text-ellipsis whitespace-nowrap rounded-sm group-hover:underline"
+        class="decoration-inherit text-text hover:text-text line-clamp-1 block overflow-hidden text-ellipsis whitespace-nowrap rounded-sm group-hover:underline"
         :class="[
           { 'blur-text': shouldBlur },
           isSmall ? 'label-bold' : 'description-bold',
@@ -34,7 +34,7 @@
       </h2>
 
       <div
-        class="text-gray-8 flex"
+        class="text-text-secondary flex"
         :class="[
           isSmall ? 'caption-regular' : 'label-regular',
           isMedium ? 'flex-row items-center' : 'flex-col gap-1',

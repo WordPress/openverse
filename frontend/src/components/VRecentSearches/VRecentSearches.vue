@@ -1,7 +1,7 @@
 <template>
   <div
-    class="flex flex-col rounded-sm bg-white"
-    :class="{ 'border-gray-3 border p-2 shadow-el-2': bordered }"
+    class="flex flex-col rounded-sm bg-bg"
+    :class="{ 'border-border border p-2 shadow-el-2': bordered }"
     data-testid="recent-searches"
   >
     <div
@@ -37,7 +37,7 @@
         :id="`option-${idx}`"
         :key="entry"
         role="option"
-        class="group/entry label-regular hover:bg-gray-2 flex h-10 flex-row items-center gap-2 rounded-sm border-1.5 pe-1 ps-2"
+        class="group/entry label-regular hover:bg-bg-fill-secondary flex h-10 flex-row items-center gap-2 rounded-sm border-1.5 pe-1 ps-2"
         :class="idx === selectedIdx ? 'border-pink-8' : 'border-tx'"
         :aria-selected="idx === selectedIdx"
         @click="handleClick(idx)"
@@ -65,7 +65,7 @@
       {{ $t("recentSearches.none") }}
     </span>
 
-    <span class="text-gray-8 mt-auto p-3 text-sm leading-close lg:leading-snug">
+    <span class="text-text-secondary mt-auto p-3 text-sm leading-close lg:leading-snug">
       {{ $t("recentSearches.disclaimer") }}
     </span>
   </div>

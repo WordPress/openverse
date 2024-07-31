@@ -1,7 +1,7 @@
 <template>
   <div
     id="safety-wall"
-    class="border-gray-3 relative flex h-full w-full flex-grow items-center justify-center border-t bg-white py-8 text-center"
+    class="border-border relative flex h-full w-full flex-grow items-center justify-center border-t bg-bg py-8 text-center"
   >
     <section class="mx-auto max-w-2xl px-8 text-sm leading-relaxed">
       <h1 class="heading-5 mb-2">
@@ -26,7 +26,7 @@
         <template #openverse>Openverse</template>
         <template #link>
           <VLink
-            class="text-pink-8 hover:underline"
+            class="text-text-link hover:underline"
             href="/sensitive-content"
             >{{ $t("sensitiveContent.singleResult.link") }}</VLink
           >

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-yellow-3 w-min rounded-sm px-2 py-1 text-sm font-semibold uppercase"
+    class="bg-bg-fill-complementary w-min rounded-sm px-2 py-1 text-sm font-semibold uppercase"
   >
     <slot />
   </div>

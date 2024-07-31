@@ -1,18 +1,18 @@
 <template>
   <div
-    class="app min-h-dyn-screen grid grid-cols-1 grid-rows-[auto,1fr] bg-white"
+    class="app min-h-dyn-screen grid grid-cols-1 grid-rows-[auto,1fr] bg-bg"
   >
-    <div class="header-el sticky top-0 z-40 block bg-white">
+    <div class="header-el sticky top-0 z-40 block bg-bg">
       <VBanners />
       <VHeaderInternal
-        class="h-20 border-b bg-white"
+        class="h-20 border-b bg-bg"
         :class="isHeaderScrolled ? 'border-b-gray-3' : 'border-b-tx'"
       />
     </div>
 
     <div class="main-page flex h-full w-full min-w-0 flex-col justify-between">
       <slot />
-      <VFooter mode="internal" class="border-gray-3 border-t bg-white" />
+      <VFooter mode="internal" class="border-border border-t bg-bg" />
     </div>
   </div>
 </template>

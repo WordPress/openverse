@@ -16,7 +16,7 @@ const Template = (args) => ({
 
 const contentSettingsTemplate = (args) => ({
   template: `
-    <div class="wrapper rounded-sm inline-flex justify-end bg-gray-2">
+    <div class="wrapper rounded-sm inline-flex justify-end bg-bg-fill-secondary">
     <VContentSettingsButton label="VContentSettingsButton" :are-filters-selected="true" v-bind="args" />
     </div>
   `,
@@ -27,7 +27,7 @@ const contentSettingsTemplate = (args) => ({
 })
 
 const activeButtonsTemplate = (args) => ({
-  template: `<div class="wrapper rounded-sm bg-white flex justify-between ring ring-pink-8-8">
+  template: `<div class="wrapper rounded-sm bg-bg flex justify-between ring ring-pink-8-8">
   <VSearchBarButton
     icon="chevron-back"
     :label="$t('header.back-button')"

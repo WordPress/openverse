@@ -19,7 +19,7 @@
         size="small"
         :label="closeButtonLabel || $t('modal.closeBanner')"
         :class="{
-          'focus-slim-tx-yellow-3 hover:bg-white hover:bg-opacity-10':
+          'focus-slim-tx-yellow-3 hover:bg-bg hover:bg-opacity-10':
             variant === 'dark',
         }"
         @click="$emit('close')"
@@ -87,12 +87,12 @@ export default defineComponent({
   setup(props) {
     const classNames = computed(() =>
       props.variant === "dark"
-        ? "bg-gray-12 text-white"
+        ? "bg-bg-fill-tertiary text-text-over-dark"
         : {
-            info: "bg-info-2",
-            warning: "bg-warning-2",
-            success: "bg-success-2",
-            error: "bg-error-2",
+            info: "bg-bg-fill-info",
+            warning: "bg-bg-fill-warning",
+            success: "bg-bg-fill-success",
+            error: "bg-bg-fill-error",
           }[props.nature]
     )
     const iconClassNames = computed(() =>

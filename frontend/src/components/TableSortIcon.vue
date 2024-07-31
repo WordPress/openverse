@@ -1,7 +1,7 @@
 <template>
   <div
     class="flex flex-col"
-    :class="[active ? 'text-gray-12' : 'text-gray']"
+    :class="[active ? 'text-text' : 'text-gray']"
   >
     <svg
       width="12"

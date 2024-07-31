@@ -8,12 +8,12 @@
       <!--
       The checkbox focus style is a slight variation on the `focus-slim-tx` style.
       Because it becomes filled when checked, it also needs the
-      `checked:focus-visible:border-white` class.
+      `checked:focus-visible:border-border-bg-ring` class.
       -->
       <input
         :id="id"
         type="checkbox"
-        class="border-gray-12 checked:bg-gray-12 disabled:bg-gray-2 disabled:border-gray-5 checked:disabled:border-gray-5 checked:disabled:bg-gray-5 me-3 block appearance-none border bg-white transition-colors duration-100"
+        class="border-border-tertiary checked:bg-bg-fill-tertiary disabled:bg-bg-fill-secondary disabled:border-border-disabled checked:disabled:border-border-disabled checked:disabled:bg-bg-fill-disabled me-3 block appearance-none border bg-bg transition-colors duration-100"
         :class="
           isSwitch
             ? ['h-4.5', 'w-9', 'rounded-full', 'focus-slim-offset']
@@ -22,7 +22,7 @@
                 'w-5',
                 'rounded-sm',
                 'focus-slim-tx',
-                'checked:focus-visible:border-white',
+                'checked:focus-visible:border-border-bg-ring',
               ]
         "
         v-bind="inputAttrs"
@@ -36,10 +36,10 @@
         class="absolute left-0.75 top-0.75 block h-3 w-3 rounded-full transition-transform duration-100"
         :class="
           localCheckedState
-            ? ['bg-white', 'translate-x-[1.125rem]']
+            ? ['bg-bg', 'translate-x-[1.125rem]']
             : disabled
-              ? ['bg-gray-5']
-              : ['bg-gray-12']
+              ? ['bg-bg-fill-disabled']
+              : ['bg-bg-fill-tertiary']
         "
         aria-hidden="true"
       />
@@ -48,7 +48,7 @@
       <VIcon
         v-else
         v-show="localCheckedState"
-        class="pointer-events-none absolute inset-0 transform text-white"
+        class="pointer-events-none absolute inset-0 transform text-text-over-dark"
         name="check"
         :size="5"
       />
@@ -147,7 +147,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const localCheckedState = ref(props.checked || false)
     const labelClasses = computed(() =>
-      props.disabled ? "text-gray-5" : "text-gray-12"
+      props.disabled ? "text-text-disabled" : "text-text"
     )
     const inputAttrs = computed<CheckboxAttrs>(() => {
       const attrs: CheckboxAttrs = {

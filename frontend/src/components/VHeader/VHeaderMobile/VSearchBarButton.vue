@@ -75,21 +75,21 @@ export default defineComponent({
   outline: none;
 }
 .transparent-dark {
-  @apply text-gray-12 group-hover/button:bg-gray-12 border-tx bg-tx hover:text-white;
+  @apply text-text group-hover/button:bg-bg-fill-tertiary border-tx bg-tx hover:text-text-over-dark;
 }
 .transparent-gray {
-  @apply text-gray-12 group-hover/button:bg-gray-12 border-tx bg-tx group-hover/button:bg-opacity-10;
+  @apply text-text group-hover/button:bg-bg-fill-tertiary border-tx bg-tx group-hover/button:bg-opacity-10;
 }
 .filled-white {
-  @apply text-gray-12 group-hover/button:bg-gray-12 border-tx bg-white group-hover/button:text-white;
+  @apply text-text group-hover/button:bg-bg-fill-tertiary border-tx bg-bg group-hover/button:text-text-over-dark;
 }
 
 .filled-gray {
-  @apply text-gray-12 group-hover/button:bg-gray-12 bg-gray-2 border-tx group-hover/button:text-white;
+  @apply text-text group-hover/button:bg-bg-fill-tertiary bg-bg-fill-secondary border-tx group-hover/button:text-text-over-dark;
 }
 
 .filled-white,
 .filled-gray {
-  @apply group-focus-visible/button:border-white;
+  @apply group-focus-visible/button:border-border-bg-ring;
 }
 </style>

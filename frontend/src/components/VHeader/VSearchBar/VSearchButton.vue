@@ -6,11 +6,11 @@
     :disabled="!doneHydrating"
     variant="plain"
     :class="[
-      'focus-slim-filled h-full flex-shrink-0 rounded-s-none border-s-0 p-0.5px ps-1.5px hover:text-white focus-visible:border-s group-focus-within:border-tx group-focus-within:bg-pink-8 group-focus-within:text-white group-focus-within:hover:bg-pink-9 group-hover:border-tx group-hover:bg-pink-8 group-hover:text-white',
+      'focus-slim-filled h-full flex-shrink-0 rounded-s-none border-s-0 p-0.5px ps-1.5px hover:text-text-over-dark focus-visible:border-s group-focus-within:border-tx group-focus-within:bg-bg-fill-primary group-focus-within:text-text-over-dark group-focus-within:hover:bg-bg-fill-primary-hover group-hover:border-tx group-hover:bg-bg-fill-primary group-hover:text-text-over-dark',
       route === 'search' ? 'w-12' : 'w-14 sm:w-16',
       {
-        'border-tx bg-gray-2 hover:bg-pink-8': route === 'search',
-        'border-tx bg-pink-8 text-white hover:!bg-pink-9': route === 'home',
+        'border-tx bg-bg-fill-secondary hover:bg-bg-fill-primary': route === 'search',
+        'border-tx bg-bg-fill-primary text-text-over-dark hover:!bg-pink-9': route === 'home',
       },
     ]"
   >

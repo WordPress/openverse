@@ -1,7 +1,7 @@
 <template>
   <div
     :role="isVisible ? 'alert' : undefined"
-    class="snackbar fixed bottom-4 z-snackbar rounded-sm bg-black text-white transition-[opacity,transform] duration-500 motion-reduce:transition-opacity ltr:left-4 rtl:right-4"
+    class="snackbar fixed bottom-4 z-snackbar rounded-sm bg-black text-text-over-dark transition-[opacity,transform] duration-500 motion-reduce:transition-opacity ltr:left-4 rtl:right-4"
     :class="[
       size === 'large'
         ? 'w-max max-w-[calc(100%_-_2_*_theme(spacing.4))] flex-row items-center px-6 py-4 text-sm'
