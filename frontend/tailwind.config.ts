@@ -28,31 +28,34 @@ export default {
       error: "#b43e04",
 
       // Brand
-      yellow: "#ffe033",
-      pink: "#c52b9b",
+      yellow: "#fde034",
+      pink: "#ad1f85",
       // Active
       "dark-pink": "#7c2264",
 
       // Grayscale
       black: "#000000",
-      "dark-gray": "#767676", // rgb(118, 118, 188)
-      gray: "#b0b0b0", // rgb(176, 176, 176)
-      "light-gray": "#d8d8d8", // rgb(216, 216, 216)
+      "dark-gray": "#767676",
+      gray: "#b0b0b0",
+      "light-gray": "#d8d8d8",
       white: "white",
       // Dark Charcoal
       "dark-charcoal": {
-        DEFAULT: "#30272e",
-        "06": "#f3f2f2", // rgb(243, 242, 242)
-        10: "#eae9ea", // rgb(234, 233, 234)
-        20: "#d6d4d5",
-        30: "#c1bec0",
-        40: "#aca9ab",
-        50: "#989397",
-        60: "#837d82",
-        70: "#6e686d",
-        80: "#595258",
-        90: "#453D43",
+        DEFAULT: "#232323",
+        "06": "#f7f7f7",
+        10: "#ededed",
+        20: "#dfdfdf",
+        30: "#c5c5c5",
+        40: "#a9a9a9",
+        50: "#929292",
+        60: "#7e7e7e",
+        70: "#676767",
+        80: "#474747",
+        90: "#363636",
+        12: "#0d0d0d",
       },
+      "gray-9": "#565656",
+      "gray-13": "#0d0d0d",
 
       // Special keywords
       tx: "transparent",
