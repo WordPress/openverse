@@ -311,17 +311,17 @@ def get_single_bulk_moderation_filter(media_type: str):
             ]
 
         def queryset(self, request, queryset):
-            if self.value() not in {"single", "bulk"}:
+            conditions = {
+                "single": {"media_count": 1},
+                "bulk": {"media_count__gt": 1},
+            }
+            if self.value() not in conditions:
                 return queryset
 
             queryset = queryset.annotate(
                 media_count=Count(f"{media_type}decisionthrough")
             )
-
-            if self.value() == "single":
-                return queryset.filter(media_count=1)
-            elif self.value() == "bulk":
-                return queryset.filter(media_count__gt=1)
+            return queryset.filter(**conditions[self.value()])
 
     return SingleBulkModerationFilter
 
