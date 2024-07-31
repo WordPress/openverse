@@ -8,13 +8,13 @@
   }
 
   html {
-    @apply m-0 font-normal leading-loose text-dark-charcoal;
+    @apply m-0 font-normal leading-loose text-gray-12;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   a {
-    @apply text-pink hover:underline;
+    @apply text-pink-8 hover:underline;
   }
 
   h1,

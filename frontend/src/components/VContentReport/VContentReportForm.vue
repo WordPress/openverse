@@ -13,7 +13,7 @@
         <template #source>
           <VLink
             :href="media.foreign_landing_url"
-            class="text-pink hover:underline"
+            class="text-pink-8 hover:underline"
             >{{ providerName }}</VLink
           >
         </template>

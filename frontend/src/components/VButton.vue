@@ -294,38 +294,38 @@ a.button {
   @apply rounded-ee-none rounded-es-none;
 }
 
-.filled-pink {
-  @apply border-tx bg-pink text-white hover:bg-dark-pink hover:text-white;
+.filled-pink-8 {
+  @apply bg-pink-8 border-tx text-white hover:bg-dark-pink hover:text-white;
 }
 .filled-dark {
-  @apply border-tx bg-dark-charcoal text-white hover:bg-dark-charcoal-90 hover:text-white disabled:opacity-70;
+  @apply bg-gray-12 border-tx text-white hover:bg-dark-charcoal-90 hover:text-white disabled:opacity-70;
 }
 .filled-gray {
-  @apply border-tx bg-dark-charcoal-10 text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
+  @apply text-gray-12 hover:bg-gray-12 border-tx bg-dark-charcoal-10 hover:text-white;
 }
 .filled-white {
-  @apply border-tx bg-white text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
+  @apply text-gray-12 hover:bg-gray-12 border-tx bg-white hover:text-white;
 }
 .bordered-white {
-  @apply border-white bg-white text-dark-charcoal hover:border-dark-charcoal-20;
+  @apply text-gray-12 border-white bg-white hover:border-dark-charcoal-20;
 }
 .bordered-white-pressed {
-  @apply border-tx bg-dark-charcoal text-white hover:border-dark-charcoal-90 hover:bg-dark-charcoal-90 hover:focus-visible:border-tx;
+  @apply bg-gray-12 border-tx text-white hover:border-dark-charcoal-90 hover:bg-dark-charcoal-90 hover:focus-visible:border-tx;
 }
 .bordered-gray {
-  @apply border-dark-charcoal-20 bg-white text-dark-charcoal hover:border-dark-charcoal focus-visible:border-tx hover:focus-visible:border-tx;
+  @apply text-gray-12 hover:border-gray-12 border-dark-charcoal-20 bg-white focus-visible:border-tx hover:focus-visible:border-tx;
 }
 .transparent-tx {
   @apply border-tx;
 }
 .transparent-gray {
-  @apply border-tx bg-tx text-dark-charcoal hover:bg-dark-charcoal hover:bg-opacity-10 disabled:text-dark-charcoal-40;
+  @apply text-gray-12 hover:bg-gray-12 border-tx bg-tx hover:bg-opacity-10 disabled:text-dark-charcoal-40;
 }
 .transparent-dark {
-  @apply border-tx bg-tx text-dark-charcoal hover:bg-dark-charcoal hover:text-white;
+  @apply text-gray-12 hover:bg-gray-12 border-tx bg-tx hover:text-white;
 }
 .transparent-dark-pressed {
-  @apply border-tx bg-dark-charcoal text-white hover:border-dark-charcoal-90;
+  @apply bg-gray-12 border-tx text-white hover:border-dark-charcoal-90;
 }
 
 .icon-only {

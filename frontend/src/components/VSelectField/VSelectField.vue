@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative m-0.5px box-content block w-fit overflow-hidden rounded-sm border border-dark-charcoal border-opacity-20 text-sm focus-within:m-0 focus-within:border-1.5 focus-within:border-pink hover:border-dark-charcoal focus-within:hover:border-pink"
+    class="border-gray-12 focus-within:border-pink-8 hover:border-gray-12 focus-within:hover:border-pink-8 relative m-0.5px box-content block w-fit overflow-hidden rounded-sm border border-opacity-20 text-sm focus-within:m-0 focus-within:border-1.5"
     :class="splitAttrs.classAttrs"
   >
     <div class="pointer-events-none absolute inset-y-0 start-2 my-auto h-fit">

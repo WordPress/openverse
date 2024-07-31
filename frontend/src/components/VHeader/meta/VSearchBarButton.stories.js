@@ -27,7 +27,7 @@ const contentSettingsTemplate = (args) => ({
 })
 
 const activeButtonsTemplate = (args) => ({
-  template: `<div class="wrapper rounded-sm bg-white flex justify-between ring ring-pink">
+  template: `<div class="wrapper rounded-sm bg-white flex justify-between ring ring-pink-8-8">
   <VSearchBarButton
     icon="chevron-back"
     :label="$t('header.back-button')"

@@ -1,7 +1,7 @@
 <template>
   <!-- Should be wrapped by a fixed-width parent -->
   <div
-    class="relative h-0 w-full overflow-hidden bg-yellow pt-full"
+    class="relative h-0 w-full overflow-hidden bg-yellow-3-3 pt-full"
     :title="helpText"
   >
     <!-- Programmatic thumbnail -->
@@ -14,7 +14,7 @@
         <circle
           v-for="j in dotCount"
           :key="`${i}-${j}`"
-          class="fill-dark-charcoal"
+          class="fill-gray-12"
           :cx="offset(j)"
           :cy="offset(i)"
           :r="radius(i, j)"

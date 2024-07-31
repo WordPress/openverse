@@ -70,7 +70,7 @@
       <template #license>
         <VLink
           href="https://creativecommons.org/licenses/"
-          class="text-dark-charcoal underline hover:text-dark-charcoal"
+          class="text-gray-12 underline hover:text-gray-12"
           >{{ $t("hero.disclaimer.license") }}</VLink
         >
       </template>

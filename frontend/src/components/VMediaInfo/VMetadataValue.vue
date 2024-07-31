@@ -3,7 +3,7 @@
     <VLink
       v-if="datum.url"
       :href="datum.url"
-      class="flex text-pink focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring focus-visible:ring-pink focus-visible:ring-offset-1"
+      class="text-pink-8 focus-visible:ring-pink-8 flex focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring focus-visible:ring-offset-1"
       :send-external-link-click-event="false"
       @click="$emit('click', datum.source)"
       ><span

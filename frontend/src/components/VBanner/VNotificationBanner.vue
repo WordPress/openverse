@@ -19,7 +19,7 @@
         size="small"
         :label="closeButtonLabel || $t('modal.closeBanner')"
         :class="{
-          'focus-slim-tx-yellow hover:bg-white hover:bg-opacity-10':
+          'focus-slim-tx-yellow-3-3 hover:bg-white hover:bg-opacity-10':
             variant === 'dark',
         }"
         @click="$emit('close')"
@@ -61,7 +61,7 @@ export default defineComponent({
     },
     /**
      * the color variant of the banner; The dark variant is intended for use on
-     * yellow pages.
+     * yellow-3-3 pages.
      */
     variant: {
       type: String as PropType<"regular" | "dark">,
@@ -87,22 +87,22 @@ export default defineComponent({
   setup(props) {
     const classNames = computed(() =>
       props.variant === "dark"
-        ? "bg-dark-charcoal text-white"
+        ? "bg-gray-12 text-white"
         : {
-            info: "bg-info-soft",
-            warning: "bg-warning-soft",
-            success: "bg-success-soft",
-            error: "bg-error-soft",
+            info: "bg-info-2",
+            warning: "bg-warning-2",
+            success: "bg-success-2",
+            error: "bg-error-2",
           }[props.nature]
     )
     const iconClassNames = computed(() =>
       props.variant === "dark"
         ? ""
         : {
-            info: "text-info",
-            warning: "text-warning",
-            success: "text-success",
-            error: "text-error",
+            info: "text-8",
+            warning: "text-warning-8",
+            success: "text-success-8",
+            error: "text-error-8",
           }[props.nature]
     )
 

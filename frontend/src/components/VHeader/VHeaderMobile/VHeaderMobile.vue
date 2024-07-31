@@ -9,7 +9,7 @@
       class="search-bar group flex h-12 w-full flex-row items-center overflow-hidden rounded-sm"
       :class="
         isSearchBarActive || isInputFocused
-          ? 'bg-white ring ring-pink'
+          ? 'ring-pink-8 bg-white ring'
           : 'bg-dark-charcoal-06'
       "
       @submit.prevent="handleFormSubmit"
@@ -37,7 +37,7 @@
         name="q"
         :placeholder="$t('hero.search.placeholder')"
         type="search"
-        class="search-field ms-1 h-full w-full flex-grow appearance-none rounded-none border-tx bg-tx text-2xl text-dark-charcoal-70 placeholder-dark-charcoal-70 hover:text-dark-charcoal hover:placeholder-dark-charcoal focus-visible:outline-none"
+        class="search-field hover:text-gray-12 hover:placeholder-gray-12 ms-1 h-full w-full flex-grow appearance-none rounded-none border-tx bg-tx text-2xl text-dark-charcoal-70 placeholder-dark-charcoal-70 focus-visible:outline-none"
         :value="localSearchTerm"
         :aria-label="
           $t('search.searchBarLabel', {
@@ -70,7 +70,7 @@
       />
       <span
         v-show="!isSearchBarActive && searchStatus"
-        class="info mx-4 hidden whitespace-nowrap text-xs group-hover:text-dark-charcoal group-focus:text-dark-charcoal md:flex"
+        class="info group-hover:text-gray-12 group-focus:text-gray-12 mx-4 hidden whitespace-nowrap text-xs md:flex"
       >
         {{ searchStatus }}
       </span>

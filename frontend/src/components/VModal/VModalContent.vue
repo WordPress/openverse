@@ -8,7 +8,7 @@
           { 'flex-col items-center': variant === 'centered' },
           variant === 'mobile-input'
             ? 'top-20 h-[calc(100dvh-80px)] bg-tx'
-            : 'bg-dark-charcoal bg-opacity-75',
+            : 'bg-gray-12 bg-opacity-75',
           contentClasses,
         ]"
       >
@@ -21,7 +21,7 @@
           :class="[
             mode === 'dark'
               ? 'bg-black text-white'
-              : 'bg-white text-dark-charcoal',
+              : 'bg-white text-gray-12',
             {
               'w-full md:max-w-[768px] lg:w-[768px] xl:w-[1024px] xl:max-w-[1024px]':
                 variant === 'default',
@@ -73,7 +73,7 @@
                 variant === 'two-thirds',
               'h-full': variant === 'mobile-input',
               'bg-black text-white': mode === 'dark',
-              'bg-white text-dark-charcoal': mode === 'light',
+              'bg-white text-gray-12': mode === 'light',
               'fallback-padding':
                 variant === 'fit-content' ||
                 variant === 'two-thirds' ||

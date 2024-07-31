@@ -37,7 +37,7 @@
           @error="onImageLoadError($event)"
         />
         <figcaption
-          class="col-span-full self-end justify-self-start rounded-sm bg-white text-dark-charcoal group-hover:visible group-focus-visible:visible"
+          class="text-gray-12 col-span-full self-end justify-self-start rounded-sm bg-white group-hover:visible group-focus-visible:visible"
           :class="
             isSquare
               ? 'invisible row-span-full m-2 p-2'
@@ -52,7 +52,7 @@
           <VLicense
             :license="image.license"
             :hide-name="true"
-            class="text-dark-charcoal-70 group-hover:text-dark-charcoal group-focus-visible:text-dark-charcoal sm:text-dark-charcoal"
+            class="group-hover:text-gray-12 group-focus-visible:text-gray-12 sm:text-gray-12 text-dark-charcoal-70"
           />
         </figcaption>
       </figure>

@@ -2,7 +2,7 @@
   <div
     v-bind="waveformAttributes"
     ref="el"
-    class="waveform bg-background-var group/waveform relative overflow-hidden text-dark-charcoal focus-visible:outline-none"
+    class="waveform bg-background-var group/waveform text-gray-12 relative overflow-hidden focus-visible:outline-none"
     :style="heightProperties"
     :tabIndex="isTabbable && isInteractive ? 0 : -1"
     :aria-disabled="!isInteractive"
@@ -20,7 +20,7 @@
       <!-- Stroke is calculated from the centre of the path -->
       <rect
         v-if="waveformDimens.width && waveformDimens.height"
-        class="stroke-pink"
+        class="stroke-pink-8"
         x="0.75"
         y="0.75"
         :width="waveformDimens.width - 1.5"
@@ -51,7 +51,7 @@
     >
       <rect
         v-if="isReady"
-        class="fill-yellow"
+        class="fill-yellow-3-3"
         x="0"
         y="0"
         :width="progressBarWidth"
@@ -110,7 +110,7 @@
           :class="[
             ...(isProgressTimestampCutoff
               ? ['bg-background-var']
-              : ['bg-yellow', '-translate-x-full']),
+              : ['bg-yellow-3-3', '-translate-x-full']),
           ]"
           :style="progressTimeLeft"
         >
@@ -567,7 +567,7 @@ export default defineComponent({
 .waveform {
   --v-background-color: var(
     --waveform-background-color,
-    theme("colors.dark-charcoal.06")
+    theme("colors.gray-12.06")
   );
 }
 

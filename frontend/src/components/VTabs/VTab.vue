@@ -211,7 +211,7 @@ export default defineComponent({
   @apply -mb-[1px] border border-x-dark-charcoal-20 border-b-white border-t-dark-charcoal-20 bg-white focus-visible:border-tx;
 }
 .plain-selected {
-  @apply relative after:absolute after:right-1/2 after:h-0.5 after:w-full after:translate-x-1/2 after:translate-y-[-50%] after:bg-dark-charcoal after:transition-all after:duration-200;
+  @apply after:bg-gray-12 relative after:absolute after:right-1/2 after:h-0.5 after:w-full after:translate-x-1/2 after:translate-y-[-50%] after:transition-all after:duration-200;
 }
 .plain-selected.size-default {
   @apply after:bottom-[-0.125rem];

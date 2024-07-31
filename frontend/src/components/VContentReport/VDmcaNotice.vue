@@ -9,13 +9,13 @@
       <VLink
         :aria-label="$t('mediaDetails.contentReport.form.dmca.form')"
         :href="DMCA_FORM_URL"
-        class="text-pink hover:underline"
+        class="text-pink-8 hover:underline"
         @click="$emit('click')"
         >{{ $t("mediaDetails.contentReport.form.dmca.form") }}</VLink
       >
     </template>
     <template #source>
-      <VLink :href="foreignLandingUrl" class="text-pink hover:underline">{{
+      <VLink :href="foreignLandingUrl" class="text-pink-8 hover:underline">{{
         provider
       }}</VLink>
     </template>

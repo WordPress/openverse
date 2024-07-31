@@ -18,18 +18,18 @@ export default {
     zIndex: Z_INDICES,
     colors: {
       // Semantic
-      "info-soft": "#dbe2ff",
-      info: "#2349e7",
-      "warning-soft": "#fff1cc",
-      warning: "#9d650b",
-      "success-soft": "#dbf0d6",
-      success: "#3b772c",
-      "error-soft": "#ffe0d1",
-      error: "#b43e04",
+      "info-2": "#dbe2ff",
+      "info-8": "#2349e7",
+      "warning-2": "#fff1cc",
+      "warning-8": "#9d650b",
+      "success-2": "#dbf0d6",
+      "success-8": "#3b772c",
+      "error-2": "#ffe0d1",
+      "error-8": "#b43e04",
 
       // Brand
-      yellow: "#fde034",
-      pink: "#ad1f85",
+      "yellow-3": "#fde034",
+      "pink-8": "#ad1f85",
       // Active
       "dark-pink": "#7c2264",
 
@@ -39,22 +39,20 @@ export default {
       gray: "#b0b0b0",
       "light-gray": "#d8d8d8",
       white: "white",
-      // Dark Charcoal
-      "dark-charcoal": {
-        DEFAULT: "#232323",
-        "06": "#f7f7f7",
-        10: "#ededed",
-        20: "#dfdfdf",
-        30: "#c5c5c5",
-        40: "#a9a9a9",
-        50: "#929292",
-        60: "#7e7e7e",
-        70: "#676767",
-        80: "#474747",
-        90: "#363636",
-        12: "#0d0d0d",
-      },
+
+      // Gray (previously "Dark Charcoal")
+      "gray-1": "#f7f7f7",
+      "gray-2": "#ededed",
+      "gray-3": "#dfdfdf",
+      "gray-4": "#c5c5c5",
+      "gray-5": "#a9a9a9",
+      "gray-6": "#929292",
+      "gray-7": "#7e7e7e",
+      "gray-8": "#676767",
       "gray-9": "#565656",
+      "gray-10": "#474747",
+      "gray-11": "#363636",
+      "gray-12": "#232323",
       "gray-13": "#0d0d0d",
 
       // Special keywords
@@ -226,8 +224,8 @@ export default {
       typography: (theme: PluginAPI["theme"]) => ({
         DEFAULT: {
           css: {
-            "--tw-prose-body": theme("colors.dark-charcoal.default"),
-            "--tw-prose-headings": theme("colors.dark-charcoal.default"),
+            "--tw-prose-body": theme("colors.gray-12.default"),
+            "--tw-prose-headings": theme("colors.gray-12.default"),
             "--tw-prose-links": theme("colors.pink"),
             a: {
               textDecoration: "none",

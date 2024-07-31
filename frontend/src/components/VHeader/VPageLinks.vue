@@ -33,7 +33,7 @@
         class="flex flex-row rounded-sm hover:underline focus-visible:outline-none focus-visible:ring focus-visible:ring-offset-tx disabled:text-dark-charcoal-40"
         :class="[
           { 'font-semibold': currentPage === page.id },
-          { 'text-dark-charcoal focus-visible:ring-pink': mode === 'light' },
+          { 'text-gray-12 focus-visible:ring-pink-8': mode === 'light' },
           navLinkClasses,
         ]"
         :href="page.link"

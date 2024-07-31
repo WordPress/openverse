@@ -24,7 +24,7 @@
 
     <div role="document" class="flex min-w-0 flex-shrink-0 flex-col gap-1">
       <h2
-        class="decoration-inherit line-clamp-1 block overflow-hidden text-ellipsis whitespace-nowrap rounded-sm text-dark-charcoal hover:text-dark-charcoal group-hover:underline"
+        class="decoration-inherit text-gray-12 hover:text-gray-12 line-clamp-1 block overflow-hidden text-ellipsis whitespace-nowrap rounded-sm group-hover:underline"
         :class="[
           { 'blur-text': shouldBlur },
           isSmall ? 'label-bold' : 'description-bold',

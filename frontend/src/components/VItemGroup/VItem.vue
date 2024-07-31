@@ -26,7 +26,7 @@
         '!p-5 !ps-6': contextProps.size === 'medium',
         'bg-dark-charcoal-10 ring-offset-dark-charcoal-10':
           selected && contextProps.showCheck,
-        'text-dark-charcoal': as === 'VLink',
+        'text-gray-12': as === 'VLink',
         '!px-2': !contextProps.showCheck,
       }"
       variant="transparent-tx"

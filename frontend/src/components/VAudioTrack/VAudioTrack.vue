@@ -3,7 +3,7 @@
   <Component
     :is="isComposite ? VLink : 'div'"
     v-bind="containerAttributes"
-    class="audio-track group block overflow-hidden rounded-sm ring-pink hover:no-underline"
+    class="audio-track ring-pink-8 group block overflow-hidden rounded-sm hover:no-underline"
     :aria-label="ariaLabel"
     :role="isComposite ? 'application' : undefined"
     @keydown.shift.tab.exact="$emit('shift-tab', $event)"

@@ -89,7 +89,7 @@ const PopoverStory = (args) => ({
   template: `
     <VPopover>
         <template #trigger="{ a11yProps, visible }">
-            <VButton variant="filled-pink" size="medium" v-bind="a11yProps" :pressed="visible">{{ visible ? 'Close menu' : 'Open menu' }}</VButton>
+            <VButton variant="filled-pink-8-8" size="medium" v-bind="a11yProps" :pressed="visible">{{ visible ? 'Close menu' : 'Open menu' }}</VButton>
         </template>
         <VItemGroup v-bind="args" type="menu">
         <VItem

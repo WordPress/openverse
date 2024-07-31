@@ -205,7 +205,7 @@ export default defineComponent({
   }
 
   .source-table a {
-    @apply text-pink hover:underline;
+    @apply text-pink-8 hover:underline;
   }
 
   .source-table th {
@@ -263,7 +263,7 @@ export default defineComponent({
   }
 
   .mobile-source-table article a {
-    @apply font-bold text-pink hover:underline;
+    @apply text-pink-8 font-bold hover:underline;
   }
 }
 </style>

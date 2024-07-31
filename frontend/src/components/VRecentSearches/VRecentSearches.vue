@@ -38,7 +38,7 @@
         :key="entry"
         role="option"
         class="group/entry label-regular flex h-10 flex-row items-center gap-2 rounded-sm border-1.5 pe-1 ps-2 hover:bg-dark-charcoal-10"
-        :class="idx === selectedIdx ? 'border-pink' : 'border-tx'"
+        :class="idx === selectedIdx ? 'border-pink-8' : 'border-tx'"
         :aria-selected="idx === selectedIdx"
         @click="handleClick(idx)"
       >

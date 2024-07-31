@@ -25,9 +25,11 @@
       >
         <template #openverse>Openverse</template>
         <template #link>
-          <VLink class="text-pink hover:underline" href="/sensitive-content">{{
-            $t("sensitiveContent.singleResult.link")
-          }}</VLink>
+          <VLink
+            class="text-pink-8 hover:underline"
+            href="/sensitive-content"
+            >{{ $t("sensitiveContent.singleResult.link") }}</VLink
+          >
           {{ " " }}
         </template>
       </i18n-t>

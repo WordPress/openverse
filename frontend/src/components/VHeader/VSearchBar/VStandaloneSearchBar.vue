@@ -10,7 +10,7 @@
       class="input-field search-field group flex h-full flex-grow items-center overflow-hidden rounded-sm rounded-e-none border border-e-0 p-0.5px pe-2 focus-within:border-1.5 focus-within:border-e-0 focus-within:p-0 focus-within:pe-2"
       :class="[
         route === 'home' ? 'border-tx' : 'border-black',
-        hasPopover ? 'focus-within:border-tx' : 'focus-within:border-pink',
+        hasPopover ? 'focus-within:border-tx' : 'focus-within:border-pink-8',
       ]"
     >
       <input
@@ -19,7 +19,7 @@
         type="search"
         name="q"
         :placeholder="$t('hero.search.placeholder')"
-        class="paragraph-large md:label-regular ms-4 h-full w-full appearance-none rounded-none bg-tx leading-none text-dark-charcoal placeholder-dark-charcoal-70 focus-visible:outline-none"
+        class="paragraph-large md:label-regular text-gray-12 ms-4 h-full w-full appearance-none rounded-none bg-tx leading-none placeholder-dark-charcoal-70 focus-visible:outline-none"
         :aria-label="
           $t('search.searchBarLabel', {
             openverse: 'Openverse',

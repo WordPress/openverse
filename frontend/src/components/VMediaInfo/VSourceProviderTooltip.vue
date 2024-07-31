@@ -4,7 +4,7 @@
     <VTooltip placement="top" :described-by="describedBy" class="ms-1">
       <template #default>
         <p
-          class="caption-regular rounded-sm bg-dark-charcoal px-2 py-1 text-white"
+          class="caption-regular rounded-sm bg-gray-12 px-2 py-1 text-white"
         >
           {{ description }}
         </p>
