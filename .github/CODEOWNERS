@@ -45,6 +45,7 @@
 /CONTRIBUTING.md         @WordPress/openverse-maintainers
 /LICENSE                 @WordPress/openverse-maintainers
 /README.md               @WordPress/openverse-maintainers
+/packages/README.md      @WordPress/openverse-maintainers
 /docker-compose.yml      @WordPress/openverse-maintainers
 /env.template            @WordPress/openverse-maintainers
 /justfile                @WordPress/openverse-maintainers
