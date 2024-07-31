@@ -4,11 +4,11 @@
 <li>
   {% if decision_obj.action == "deindexed_copyright" or decision_obj.action == "deindexed_sensitive" %}
   <a href="{% url 'admin:api_deleted'|add:media_type|add:'_changelist' %}?decision_id={{ object_id}}">
-    View deleted
+    View deleted media
   </a>
   {% elif decision_obj.action == "marked_sensitive" %}
   <a href="{% url 'admin:api_sensitive'|add:media_type|add:'_changelist' %}?decision_id={{ object_id}}">
-    View sensitive
+    View sensitive media
   </a>
   {% endif %}
 </li>
