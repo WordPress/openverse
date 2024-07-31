@@ -8,7 +8,7 @@
       itemprop="contentUrl"
       :title="contextSensitiveTitle"
       :href="imageLink"
-      class="group relative block w-full overflow-hidden rounded-sm text-dark-charcoal-10 focus-visible:outline-3 focus-visible:outline-offset-4"
+      class="text-gray-2 group relative block w-full overflow-hidden rounded-sm focus-visible:outline-3 focus-visible:outline-offset-4"
       :aria-label="contextSensitiveTitle"
       @mousedown="sendSelectSearchResultEvent"
     >
@@ -52,7 +52,7 @@
           <VLicense
             :license="image.license"
             :hide-name="true"
-            class="group-hover:text-gray-12 group-focus-visible:text-gray-12 sm:text-gray-12 text-dark-charcoal-70"
+            class="group-hover:text-gray-12 group-focus-visible:text-gray-12 sm:text-gray-12 text-gray-8"
           />
         </figcaption>
       </figure>

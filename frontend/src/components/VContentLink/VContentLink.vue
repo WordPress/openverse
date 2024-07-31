@@ -15,7 +15,7 @@
       {{ $t(`searchType.${mediaType}`) }}
     </p>
     <span
-      class="label-regular sm:description-regular group-hover/button:text-gray-12 text-dark-charcoal-70 sm:ms-auto"
+      class="label-regular sm:description-regular group-hover/button:text-gray-12 text-gray-8 sm:ms-auto"
       >{{ resultsCountLabel }}</span
     >
   </VButton>

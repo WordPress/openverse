@@ -1,9 +1,7 @@
 <template>
   <article class="mb-14 flex w-full flex-row">
     <!-- Thumbnail skeleton -->
-    <div
-      class="shimmering mr-4 h-20 w-20 flex-shrink-0 rounded bg-dark-charcoal-10"
-    />
+    <div class="shimmering bg-gray-2 mr-4 h-20 w-20 flex-shrink-0 rounded" />
 
     <div class="flex h-20 w-full flex-row gap-6">
       <!-- Track info skeleton -->
@@ -12,20 +10,18 @@
           <div
             v-for="idx in 2"
             :key="idx"
-            class="row-line shimmering h-3 rounded bg-dark-charcoal-10"
+            class="row-line shimmering bg-gray-2 h-3 rounded"
             :style="{ width: `${getRandomSize()}px` }"
           />
           <div class="inline-flex gap-2 space-x-1">
-            <div class="shimmering h-3 w-14 rounded bg-dark-charcoal-10" />
-            <div class="shimmering h-3 w-3 rounded-full bg-dark-charcoal-10" />
-            <div
-              class="row-line shimmering h-3 w-30 rounded bg-dark-charcoal-10"
-            />
+            <div class="shimmering bg-gray-2 h-3 w-14 rounded" />
+            <div class="shimmering bg-gray-2 h-3 w-3 rounded-full" />
+            <div class="row-line shimmering bg-gray-2 h-3 w-30 rounded" />
           </div>
         </div>
       </div>
       <!-- Waveform skeleton -->
-      <div class="shimmering w-full rounded bg-dark-charcoal-10" />
+      <div class="shimmering bg-gray-2 w-full rounded" />
     </div>
   </article>
 </template>
@@ -57,9 +53,9 @@ export default defineComponent({
   animation: shimmer 3s infinite linear;
   background: linear-gradient(
     to right,
-    theme("colors.gray-12.10") 4%,
-    theme("colors.gray-12.20") 25%,
-    theme("colors.gray-12.10") 36%
+    theme("colors.gray-2") 4%,
+    theme("colors.gray-3") 25%,
+    theme("colors.gray-2") 36%
   );
   background-size: 1000px 100%;
 }

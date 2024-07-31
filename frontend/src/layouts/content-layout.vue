@@ -6,16 +6,13 @@
       <VBanners />
       <VHeaderInternal
         class="h-20 border-b bg-white"
-        :class="isHeaderScrolled ? 'border-b-dark-charcoal-20' : 'border-b-tx'"
+        :class="isHeaderScrolled ? 'border-b-gray-3' : 'border-b-tx'"
       />
     </div>
 
     <div class="main-page flex h-full w-full min-w-0 flex-col justify-between">
       <slot />
-      <VFooter
-        mode="internal"
-        class="border-t border-dark-charcoal-20 bg-white"
-      />
+      <VFooter mode="internal" class="border-gray-3 border-t bg-white" />
     </div>
   </div>
 </template>

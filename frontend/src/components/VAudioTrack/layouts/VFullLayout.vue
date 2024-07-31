@@ -1,14 +1,14 @@
 <template>
   <div class="full-track w-full">
-    <div class="relative border-b border-dark-charcoal-20">
+    <div class="border-gray-3 relative border-b">
       <span
         v-if="currentTime > 0"
-        class="bg-yellow-3-3 pointer-events-none absolute left-0 hidden h-full w-4 md:block lg:w-10"
+        class="bg-yellow-3 pointer-events-none absolute left-0 hidden h-full w-4 md:block lg:w-10"
         aria-hidden
       />
       <span
         v-if="status === 'played'"
-        class="bg-yellow-3-3 pointer-events-none absolute right-0 hidden h-full w-4 md:block lg:w-10"
+        class="bg-yellow-3 pointer-events-none absolute right-0 hidden h-full w-4 md:block lg:w-10"
         aria-hidden
       />
       <div class="md:mx-4 lg:mx-10">

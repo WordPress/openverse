@@ -23,10 +23,10 @@
 
     <aside
       v-if="isSidebarVisible"
-      class="sidebar end-0 z-10 h-full overflow-y-auto border-s border-dark-charcoal-20 bg-dark-charcoal-06"
+      class="sidebar border-gray-3 bg-gray-1 end-0 z-10 h-full overflow-y-auto border-s"
     >
       <VSearchGridFilter class="px-10 py-8" />
-      <VSafeBrowsing class="border-t border-dark-charcoal-20 px-10 py-8" />
+      <VSafeBrowsing class="border-gray-3 border-t px-10 py-8" />
     </aside>
 
     <div
@@ -34,10 +34,7 @@
       class="main-page flex h-full w-full min-w-0 flex-col justify-between overflow-y-auto"
     >
       <slot />
-      <VFooter
-        mode="content"
-        class="border-t border-dark-charcoal-20 bg-white"
-      />
+      <VFooter mode="content" class="border-gray-3 border-t bg-white" />
     </div>
   </div>
 </template>
@@ -100,7 +97,7 @@ provide(IsSidebarVisibleKey, isSidebarVisible)
 
 const headerBorder = computed(() =>
   isHeaderScrolled.value || isSidebarVisible.value
-    ? "border-b-dark-charcoal-20"
+    ? "border-b-gray-3"
     : "border-b-tx"
 )
 </script>

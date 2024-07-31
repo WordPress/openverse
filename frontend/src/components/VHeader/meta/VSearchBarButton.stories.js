@@ -2,7 +2,7 @@ import VContentSettingsButton from "~/components/VHeader/VHeaderMobile/VContentS
 import VSearchBarButton from "~/components/VHeader/VHeaderMobile/VSearchBarButton.vue"
 
 const Template = (args) => ({
-  template: `<div class="wrapper border-dark-charcoal-10 inline-flex justify-start p-2">
+  template: `<div class="wrapper border-gray-2 inline-flex justify-start p-2">
     <VSearchBarButton label="VSearchBarButton" :icon="args.icon" v-bind="args" v-on="args" />
   </div>`,
   components: { VSearchBarButton },
@@ -16,7 +16,7 @@ const Template = (args) => ({
 
 const contentSettingsTemplate = (args) => ({
   template: `
-    <div class="wrapper rounded-sm inline-flex justify-end bg-dark-charcoal-10">
+    <div class="wrapper rounded-sm inline-flex justify-end bg-gray-2">
     <VContentSettingsButton label="VContentSettingsButton" :are-filters-selected="true" v-bind="args" />
     </div>
   `,

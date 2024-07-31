@@ -16,7 +16,7 @@ const Template = (args) => ({
   template: `
     <div class="flex"><div id="wrapper"
         class="px-4 h-16 flex items-center justify-center"
-        :class="variant.startsWith('transparent') ? 'bg-dark-charcoal-06': 'bg-white'">
+        :class="variant.startsWith('transparent') ? 'bg-gray-1': 'bg-white'">
     <VButton :size="size" :variant="variant" v-bind="rest" class="description-bold" v-on="rest" href="/">
       Code is Poetry
     </VButton>

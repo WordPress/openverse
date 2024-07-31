@@ -85,7 +85,7 @@ export default defineComponent({
 }
 
 .filled-gray {
-  @apply text-gray-12 group-hover/button:bg-gray-12 border-tx bg-dark-charcoal-10 group-hover/button:text-white;
+  @apply text-gray-12 group-hover/button:bg-gray-12 bg-gray-2 border-tx group-hover/button:text-white;
 }
 
 .filled-white,

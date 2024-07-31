@@ -21,7 +21,7 @@
       />
       <span
         v-show="Boolean(searchStatus)"
-        class="info group-hover:text-gray-12 group-focus:text-gray-12 mx-4 hidden whitespace-nowrap text-xs text-dark-charcoal-70 group-focus-within:hidden lg:block"
+        class="info group-hover:text-gray-12 group-focus:text-gray-12 text-gray-8 mx-4 hidden whitespace-nowrap text-xs group-focus-within:hidden lg:block"
       >
         {{ searchStatus }}
       </span>

@@ -298,34 +298,34 @@ a.button {
   @apply bg-pink-8 border-tx text-white hover:bg-dark-pink hover:text-white;
 }
 .filled-dark {
-  @apply bg-gray-12 border-tx text-white hover:bg-dark-charcoal-90 hover:text-white disabled:opacity-70;
+  @apply bg-gray-12 hover:bg-gray-11 border-tx text-white hover:text-white disabled:opacity-70;
 }
 .filled-gray {
-  @apply text-gray-12 hover:bg-gray-12 border-tx bg-dark-charcoal-10 hover:text-white;
+  @apply text-gray-12 hover:bg-gray-12 bg-gray-2 border-tx hover:text-white;
 }
 .filled-white {
   @apply text-gray-12 hover:bg-gray-12 border-tx bg-white hover:text-white;
 }
 .bordered-white {
-  @apply text-gray-12 border-white bg-white hover:border-dark-charcoal-20;
+  @apply text-gray-12 hover:border-gray-3 border-white bg-white;
 }
 .bordered-white-pressed {
-  @apply bg-gray-12 border-tx text-white hover:border-dark-charcoal-90 hover:bg-dark-charcoal-90 hover:focus-visible:border-tx;
+  @apply bg-gray-12 hover:border-gray-11 hover:bg-gray-11 border-tx text-white hover:focus-visible:border-tx;
 }
 .bordered-gray {
-  @apply text-gray-12 hover:border-gray-12 border-dark-charcoal-20 bg-white focus-visible:border-tx hover:focus-visible:border-tx;
+  @apply text-gray-12 hover:border-gray-12 border-gray-3 bg-white focus-visible:border-tx hover:focus-visible:border-tx;
 }
 .transparent-tx {
   @apply border-tx;
 }
 .transparent-gray {
-  @apply text-gray-12 hover:bg-gray-12 border-tx bg-tx hover:bg-opacity-10 disabled:text-dark-charcoal-40;
+  @apply text-gray-12 hover:bg-gray-12 disabled:text-gray-5 border-tx bg-tx hover:bg-opacity-10;
 }
 .transparent-dark {
   @apply text-gray-12 hover:bg-gray-12 border-tx bg-tx hover:text-white;
 }
 .transparent-dark-pressed {
-  @apply bg-gray-12 border-tx text-white hover:border-dark-charcoal-90;
+  @apply bg-gray-12 hover:border-gray-11 border-tx text-white;
 }
 
 .icon-only {

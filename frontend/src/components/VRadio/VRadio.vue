@@ -4,7 +4,7 @@
       :id="id"
       v-bind="$attrs"
       :value="value"
-      class="radio border-gray-12 focus-visible:ring-pink-8 relative me-3 h-5 w-5 flex-shrink-0 appearance-none rounded-full border bg-white focus-visible:outline-none focus-visible:ring focus-visible:ring-offset-2 disabled:border-dark-charcoal-40 disabled:bg-dark-charcoal-10"
+      class="radio border-gray-12 focus-visible:ring-pink-8 disabled:bg-gray-2 disabled:border-gray-5 relative me-3 h-5 w-5 flex-shrink-0 appearance-none rounded-full border bg-white focus-visible:outline-none focus-visible:ring focus-visible:ring-offset-2"
       type="radio"
       :checked="isChecked"
       @input="handleInput"
@@ -84,6 +84,6 @@ export default defineComponent({
 }
 
 .radio:disabled ~ .radiomark {
-  @apply text-dark-charcoal-70;
+  @apply text-gray-8;
 }
 </style>

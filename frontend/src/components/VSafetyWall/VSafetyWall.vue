@@ -1,7 +1,7 @@
 <template>
   <div
     id="safety-wall"
-    class="relative flex h-full w-full flex-grow items-center justify-center border-t border-dark-charcoal-20 bg-white py-8 text-center"
+    class="border-gray-3 relative flex h-full w-full flex-grow items-center justify-center border-t bg-white py-8 text-center"
   >
     <section class="mx-auto max-w-2xl px-8 text-sm leading-relaxed">
       <h1 class="heading-5 mb-2">

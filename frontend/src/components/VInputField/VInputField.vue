@@ -1,6 +1,6 @@
 <template>
   <div
-    class="input-field focus-within:border-pink-8 group flex flex-row items-center overflow-hidden rounded-sm border p-0.5px focus-within:border-1.5 focus-within:bg-dark-charcoal-06 focus-within:p-0 group-hover:bg-dark-charcoal-06"
+    class="input-field focus-within:border-pink-8 focus-within:bg-gray-1 group-hover:bg-gray-1 group flex flex-row items-center overflow-hidden rounded-sm border p-0.5px focus-within:border-1.5 focus-within:p-0"
     :class="[
       {
         // Padding is set to 1.5px to accommodate the border that will appear later.
@@ -19,7 +19,7 @@
       ref="inputEl"
       :placeholder="placeholder"
       :type="type"
-      class="ms-4 h-full w-full appearance-none rounded-none bg-tx text-2xl font-semibold leading-none placeholder-dark-charcoal-70 focus-visible:outline-none md:text-base"
+      class="placeholder-gray-8 ms-4 h-full w-full appearance-none rounded-none bg-tx text-2xl font-semibold leading-none focus-visible:outline-none md:text-base"
       :value="modelValue"
       :aria-label="labelText"
       @input="updateModelValue"

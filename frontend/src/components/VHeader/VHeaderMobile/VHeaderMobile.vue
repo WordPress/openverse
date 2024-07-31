@@ -10,7 +10,7 @@
       :class="
         isSearchBarActive || isInputFocused
           ? 'ring-pink-8 bg-white ring'
-          : 'bg-dark-charcoal-06'
+          : 'bg-gray-1'
       "
       @submit.prevent="handleFormSubmit"
     >
@@ -37,7 +37,7 @@
         name="q"
         :placeholder="$t('hero.search.placeholder')"
         type="search"
-        class="search-field hover:text-gray-12 hover:placeholder-gray-12 ms-1 h-full w-full flex-grow appearance-none rounded-none border-tx bg-tx text-2xl text-dark-charcoal-70 placeholder-dark-charcoal-70 focus-visible:outline-none"
+        class="search-field hover:text-gray-12 hover:placeholder-gray-12 text-gray-8 placeholder-gray-8 ms-1 h-full w-full flex-grow appearance-none rounded-none border-tx bg-tx text-2xl focus-visible:outline-none"
         :value="localSearchTerm"
         :aria-label="
           $t('search.searchBarLabel', {
@@ -64,7 +64,7 @@
         ref="clearButtonRef"
         icon="close-small"
         :label="$t('browsePage.searchForm.clear')"
-        inner-area-classes="bg-white hover:bg-dark-charcoal-10"
+        inner-area-classes="bg-white hover:bg-gray-2"
         @click="clearSearchText"
         @keydown.tab.exact="handleTab($event, 'clear-input')"
       />

@@ -15,7 +15,7 @@ const Template = (args) => ({
   template: `
     <div class="flex flex-col gap-y-2">
       <VLanguageSelect />
-      <section class="wrapper flex flex-col p-2 gap-y-2 bg-dark-charcoal-06">
+      <section class="wrapper flex flex-col p-2 gap-y-2 bg-gray-1">
         <VMetadata
         v-for="datum in data"
         :key="datum.media.id"

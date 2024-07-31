@@ -59,17 +59,17 @@
           :show-filter-header="false"
           :change-tab-order="false"
         />
-        <VSafeBrowsing class="border-t border-dark-charcoal-20 px-6 pt-6" />
+        <VSafeBrowsing class="border-gray-3 border-t px-6 pt-6" />
       </VTabPanel>
     </VTabs>
     <footer
       v-if="showFilters"
-      class="mt-auto flex h-20 flex-shrink-0 items-center justify-between border-t border-t-dark-charcoal-20 p-4"
+      class="border-t-gray-3 mt-auto flex h-20 flex-shrink-0 items-center justify-between border-t p-4"
     >
       <VButton
         v-show="showClearFiltersButton"
         variant="transparent-gray"
-        class="label-bold !text-pink-8 disabled:!text-dark-charcoal-40"
+        class="label-bold !text-pink-8 disabled:!text-gray-5"
         :disabled="isClearButtonDisabled"
         size="large"
         @click="clearFilters"

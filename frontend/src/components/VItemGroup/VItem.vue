@@ -7,25 +7,24 @@
       {
         [`${contextProps.direction}-bordered`]: contextProps.bordered,
         [`${contextProps.direction}-popover-item`]: isInPopover,
-        'border border-dark-charcoal-20': contextProps.bordered,
+        'border-gray-3 border': contextProps.bordered,
         'has-check': contextProps.showCheck,
         'font-semibold': selected && !contextProps.showCheck,
-        'bg-dark-charcoal-10':
+        'bg-gray-2':
           selected && contextProps.bordered && contextProps.showCheck,
       },
-      isInPopover ? 'px-2' : 'hover:bg-dark-charcoal-10',
+      isInPopover ? 'px-2' : 'hover:bg-gray-2',
     ]"
   >
     <VButton
       data-item-group-item
       :as="as"
-      class="relative min-w-full justify-between border-0 hover:bg-dark-charcoal-10 focus-visible:z-10"
+      class="hover:bg-gray-2 relative min-w-full justify-between border-0 focus-visible:z-10"
       :class="{
         'w-max': contextProps.direction === 'horizontal',
         '!p-3': contextProps.size === 'small',
         '!p-5 !ps-6': contextProps.size === 'medium',
-        'bg-dark-charcoal-10 ring-offset-dark-charcoal-10':
-          selected && contextProps.showCheck,
+        'bg-gray-2 ring-offset-gray-2': selected && contextProps.showCheck,
         'text-gray-12': as === 'VLink',
         '!px-2': !contextProps.showCheck,
       }"
@@ -207,7 +206,7 @@ export default defineComponent({
 }
 
 .horizontal-bordered {
-  @apply border-e border-s-0 border-dark-charcoal-20;
+  @apply border-gray-3 border-e border-s-0;
 }
 
 .horizontal:first-of-type {

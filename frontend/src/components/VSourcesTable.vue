@@ -196,12 +196,12 @@ export default defineComponent({
 
 @layer components {
   .source-table {
-    @apply hidden rounded-sm border-0 border-dark-charcoal-20 md:table;
+    @apply border-gray-3 hidden rounded-sm border-0 md:table;
   }
 
   .source-table th,
   .source-table td {
-    @apply border-dark-charcoal-20;
+    @apply border-gray-3;
   }
 
   .source-table a {
@@ -209,7 +209,7 @@ export default defineComponent({
   }
 
   .source-table th {
-    @apply cursor-pointer border-t bg-dark-charcoal-10;
+    @apply bg-gray-2 cursor-pointer border-t;
   }
 
   .source-table th,
@@ -222,7 +222,7 @@ export default defineComponent({
   }
 
   .source-table tr {
-    @apply even:bg-dark-charcoal-06;
+    @apply even:bg-gray-1;
   }
 
   .source-table th {
@@ -234,7 +234,7 @@ export default defineComponent({
   }
 
   .mobile-source-table article {
-    @apply grid border-l border-r border-dark-charcoal-20 p-4 sm:grid-cols-4;
+    @apply border-gray-3 grid border-l border-r p-4 sm:grid-cols-4;
   }
 
   .mobile-source-table article:first-child {
@@ -246,7 +246,7 @@ export default defineComponent({
   }
 
   .mobile-source-table article:nth-child(odd) {
-    @apply bg-dark-charcoal-10;
+    @apply bg-gray-2;
   }
 
   .mobile-source-table article p {

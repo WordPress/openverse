@@ -10,8 +10,7 @@
       :key="category.heading"
       class="flex flex-col"
       :class="{
-        'border-t border-dark-charcoal-20 bg-dark-charcoal-06':
-          index > 0 && !bordered,
+        'border-gray-3 bg-gray-1 border-t': index > 0 && !bordered,
         'w-66 gap-1 py-2': size === 'small',
       }"
     >

@@ -21,9 +21,7 @@ export default {
 }
 
 export const SlimTransparent = {
-  render: GetTemplate(
-    "border border-dark-charcoal-40 hover:border-gray-12"
-  ).bind({}),
+  render: GetTemplate("border border-gray-5 hover:border-gray-12").bind({}),
   name: "Slim transparent",
 
   args: {
@@ -50,7 +48,7 @@ export const SlimFilledBorderless = {
 }
 
 export const BoldFilled = {
-  render: GetTemplate("bg-yellow-3-3-3 text-gray-12").bind({}),
+  render: GetTemplate("bg-yellow-3-3 text-gray-12").bind({}),
   name: "Bold filled",
 
   args: {
@@ -63,7 +61,7 @@ export const Colored = {
   name: "Colored",
 
   args: {
-    classNames: ["focus-slim-tx-yellow-3-3-3"],
+    classNames: ["focus-slim-tx-yellow-3-3"],
   },
 
   parameters: {

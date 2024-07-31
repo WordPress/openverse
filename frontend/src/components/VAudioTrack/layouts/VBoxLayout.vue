@@ -1,6 +1,6 @@
 <template>
   <div
-    class="box-track group relative h-0 w-full rounded-sm bg-yellow-3-3 pt-full text-gray-12"
+    class="box-track bg-yellow-3 text-gray-12 group relative h-0 w-full rounded-sm pt-full"
   >
     <div class="absolute inset-0 flex flex-col">
       <div class="info flex flex-grow flex-col justify-between px-4 pt-4">
@@ -94,6 +94,6 @@ export default defineComponent({
 <style scoped>
 :deep(.waveform) {
   @apply h-10 flex-grow;
-  --waveform-background-color: theme("colors.yellow-3-3");
+  --waveform-background-color: theme("colors.yellow-3");
 }
 </style>

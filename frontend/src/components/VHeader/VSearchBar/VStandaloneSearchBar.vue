@@ -19,7 +19,7 @@
         type="search"
         name="q"
         :placeholder="$t('hero.search.placeholder')"
-        class="paragraph-large md:label-regular text-gray-12 ms-4 h-full w-full appearance-none rounded-none bg-tx leading-none placeholder-dark-charcoal-70 focus-visible:outline-none"
+        class="paragraph-large md:label-regular text-gray-12 placeholder-gray-8 ms-4 h-full w-full appearance-none rounded-none bg-tx leading-none focus-visible:outline-none"
         :aria-label="
           $t('search.searchBarLabel', {
             openverse: 'Openverse',

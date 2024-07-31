@@ -6,7 +6,7 @@
     variant="transparent-tx"
     size="large"
     icon-only
-    class="text-gray-12 hover:bg-yellow-3-3"
+    class="text-gray-12 hover:bg-yellow-3"
   >
     <VLogoLoader :status="isFetching ? 'loading' : 'idle'" />
   </VButton>

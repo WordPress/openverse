@@ -12,7 +12,7 @@
         v-bind="nonClassAttrs"
         v-model="modelMedium"
         :placeholder="placeholder || $t('hero.search.placeholder')"
-        class="search-field focus:border-pink-8 group-hover:text-gray-12 flex-grow border-tx bg-dark-charcoal-10 text-dark-charcoal-70 focus-within:bg-white group-hover:bg-dark-charcoal-10 group-hover:focus-within:bg-white"
+        class="search-field focus:border-pink-8 group-hover:text-gray-12 bg-gray-2 group-hover:bg-gray-2 text-gray-8 flex-grow border-tx focus-within:bg-white group-hover:focus-within:bg-white"
         :label-text="$t('search.searchBarLabel', { openverse: 'Openverse' })"
         :connection-sides="['end']"
         :size="size"

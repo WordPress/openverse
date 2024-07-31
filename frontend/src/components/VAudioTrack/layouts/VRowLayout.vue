@@ -1,7 +1,7 @@
 <template>
   <!-- `pages/search/audio` has negative margin `-mx-4` to compensate for this padding. -->
   <article
-    class="row-track grid p-2 hover:bg-dark-charcoal-06 md:p-4"
+    class="row-track hover:bg-gray-1 grid p-2 md:p-4"
     :class="[`size-${size}`, { 'items-start': isSmall }]"
   >
     <div
@@ -34,7 +34,7 @@
       </h2>
 
       <div
-        class="flex text-dark-charcoal-70"
+        class="text-gray-8 flex"
         :class="[
           isSmall ? 'caption-regular' : 'label-regular',
           isMedium ? 'flex-row items-center' : 'flex-col gap-1',
@@ -204,11 +204,11 @@ export default defineComponent({
 
 .dot-after {
   @apply relative me-5;
-  @apply after:absolute after:-end-3 after:top-[calc(50%-0.125rem)] after:h-1 after:w-1 after:rounded-full after:bg-dark-charcoal-70;
+  @apply after:bg-gray-8 after:absolute after:-end-3 after:top-[calc(50%-0.125rem)] after:h-1 after:w-1 after:rounded-full;
 }
 
 .dot-before {
   @apply relative ms-5;
-  @apply before:absolute before:-start-3 before:top-[calc(50%-0.125rem)] before:h-1 before:w-1 before:rounded-full before:bg-dark-charcoal-70;
+  @apply before:bg-gray-8 before:absolute before:-start-3 before:top-[calc(50%-0.125rem)] before:h-1 before:w-1 before:rounded-full;
 }
 </style>

@@ -51,7 +51,7 @@
     >
       <rect
         v-if="isReady"
-        class="fill-yellow-3-3"
+        class="fill-yellow-3"
         x="0"
         y="0"
         :width="progressBarWidth"
@@ -73,7 +73,7 @@
         class="origin-bottom transform transition-transform duration-500"
         :class="[
           isReady ? 'scale-y-100' : 'scale-y-0',
-          index <= seekIndex ? 'fill-black' : 'fill-dark-charcoal-20-alpha',
+          index <= seekIndex ? 'fill-black' : 'fill-gray-3-alpha',
         ]"
         :x="spaceBefore(index)"
         :y="spaceAbove(index)"
@@ -110,7 +110,7 @@
           :class="[
             ...(isProgressTimestampCutoff
               ? ['bg-background-var']
-              : ['bg-yellow-3-3', '-translate-x-full']),
+              : ['bg-yellow-3', '-translate-x-full']),
           ]"
           :style="progressTimeLeft"
         >
@@ -567,7 +567,7 @@ export default defineComponent({
 .waveform {
   --v-background-color: var(
     --waveform-background-color,
-    theme("colors.gray-12.06")
+    theme("colors.gray-1")
   );
 }
 
@@ -596,7 +596,7 @@ export default defineComponent({
   left: var(--seek-time-left);
 }
 
-.fill-dark-charcoal-20-alpha {
+.fill-gray-3-alpha {
   fill: rgba(48, 39, 46, 0.2);
 }
 </style>

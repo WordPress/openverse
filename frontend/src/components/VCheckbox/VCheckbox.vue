@@ -13,7 +13,7 @@
       <input
         :id="id"
         type="checkbox"
-        class="border-gray-12 checked:bg-gray-12 me-3 block appearance-none border bg-white transition-colors duration-100 disabled:border-dark-charcoal-40 disabled:bg-dark-charcoal-10 checked:disabled:border-dark-charcoal-40 checked:disabled:bg-dark-charcoal-40"
+        class="border-gray-12 checked:bg-gray-12 disabled:bg-gray-2 disabled:border-gray-5 checked:disabled:border-gray-5 checked:disabled:bg-gray-5 me-3 block appearance-none border bg-white transition-colors duration-100"
         :class="
           isSwitch
             ? ['h-4.5', 'w-9', 'rounded-full', 'focus-slim-offset']
@@ -38,7 +38,7 @@
           localCheckedState
             ? ['bg-white', 'translate-x-[1.125rem]']
             : disabled
-              ? ['bg-dark-charcoal-40']
+              ? ['bg-gray-5']
               : ['bg-gray-12']
         "
         aria-hidden="true"
@@ -147,7 +147,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const localCheckedState = ref(props.checked || false)
     const labelClasses = computed(() =>
-      props.disabled ? "text-dark-charcoal-40" : "text-gray-12"
+      props.disabled ? "text-gray-5" : "text-gray-12"
     )
     const inputAttrs = computed<CheckboxAttrs>(() => {
       const attrs: CheckboxAttrs = {
