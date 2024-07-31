@@ -13,11 +13,11 @@ from textwrap import dedent
 from airflow.decorators import task, task_group
 from airflow.models import Variable
 from airflow.models.abstractoperator import AbstractOperator
-from airflow.providers.common.sql.hooks.sql import fetch_all_handler
+from airflow.providers.common.sql.hooks.sql import fetch_all_handler, fetch_one_handler
 from psycopg2.extras import DictCursor, Json
 
 from common.constants import POSTGRES_API_CONN_IDS, Environment
-from common.sql import PGExecuteQueryOperator, PostgresHook, single_value
+from common.sql import PGExecuteQueryOperator, PostgresHook
 from data_refresh.data_refresh_types import DataRefreshConfig
 
 
@@ -66,6 +66,9 @@ QUERY_UPDATE = dedent("""
     UPDATE {temp_table}
     SET tags = {tags_fragment}
     WHERE id = {_id}
+""")
+QUERY_ROW_ESTIMATE = dedent("""
+    SELECT min(id), max(id) FROM {temp_table}
 """)
 
 
@@ -119,15 +122,14 @@ def generate_tag_update_fragments(tags):
 
 
 @task
-def get_filter_batches(estimated_record_count: int):
+def get_filter_batches(id_bounds: tuple[int, int]):
+    start, stop = id_bounds
     batch_size = Variable.get(
         "DATA_REFRESH_FILTER_BATCH_SIZE",
         deserialize_json=True,
         default_var=DEFAULT_BATCH_SIZE,
     )
-    return [
-        (x, x + batch_size - 1) for x in range(0, estimated_record_count, batch_size)
-    ]
+    return [(x, x + batch_size - 1) for x in range(start, stop, batch_size)]
 
 
 @task
@@ -198,13 +200,8 @@ def filter_table_data(
     estimated_record_count = PGExecuteQueryOperator(
         task_id="get_estimated_record_count",
         conn_id=postgres_conn_id,
-        sql=dedent(
-            f"""
-            SELECT max(id) FROM {temp_table}
-            ORDER BY id DESC LIMIT 1;
-            """
-        ),
-        handler=single_value,
+        sql=QUERY_ROW_ESTIMATE.format(temp_table=temp_table),
+        handler=fetch_one_handler,
         return_last=True,
     )
 
@@ -212,6 +209,6 @@ def filter_table_data(
 
     filter_data = filter_data_batch.partial(
         temp_table=temp_table, postgres_conn_id=postgres_conn_id
-    ).expand_kwargs(batches=batches)
+    ).expand(batch=batches)
 
     report(filter_data)
