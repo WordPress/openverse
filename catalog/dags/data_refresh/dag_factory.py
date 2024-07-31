@@ -116,6 +116,7 @@ def create_data_refresh_dag(
         default_args=default_args,
         start_date=data_refresh_config.start_date,
         schedule=data_refresh_config.schedule,
+        render_template_as_native_obj=True,
         max_active_runs=1,
         catchup=False,
         doc_md=__doc__,
