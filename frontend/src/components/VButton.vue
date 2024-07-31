@@ -295,37 +295,37 @@ a.button {
 }
 
 .filled-pink-8 {
-  @apply bg-pink-8 border-tx text-white hover:bg-dark-pink hover:text-white;
+  @apply border-tx bg-pink-8 text-white hover:bg-pink-9 hover:text-white;
 }
 .filled-dark {
-  @apply bg-gray-12 hover:bg-gray-11 border-tx text-white hover:text-white disabled:opacity-70;
+  @apply border-tx bg-gray-12 text-white hover:bg-gray-11 hover:text-white disabled:opacity-70;
 }
 .filled-gray {
-  @apply text-gray-12 hover:bg-gray-12 bg-gray-2 border-tx hover:text-white;
+  @apply border-tx bg-gray-2 text-gray-12 hover:bg-gray-12 hover:text-white;
 }
 .filled-white {
-  @apply text-gray-12 hover:bg-gray-12 border-tx bg-white hover:text-white;
+  @apply border-tx bg-white text-gray-12 hover:bg-gray-12 hover:text-white;
 }
 .bordered-white {
-  @apply text-gray-12 hover:border-gray-3 border-white bg-white;
+  @apply border-white bg-white text-gray-12 hover:border-gray-3;
 }
 .bordered-white-pressed {
-  @apply bg-gray-12 hover:border-gray-11 hover:bg-gray-11 border-tx text-white hover:focus-visible:border-tx;
+  @apply border-tx bg-gray-12 text-white hover:border-gray-11 hover:bg-gray-11 hover:focus-visible:border-tx;
 }
 .bordered-gray {
-  @apply text-gray-12 hover:border-gray-12 border-gray-3 bg-white focus-visible:border-tx hover:focus-visible:border-tx;
+  @apply border-gray-3 bg-white text-gray-12 hover:border-gray-12 focus-visible:border-tx hover:focus-visible:border-tx;
 }
 .transparent-tx {
   @apply border-tx;
 }
 .transparent-gray {
-  @apply text-gray-12 hover:bg-gray-12 disabled:text-gray-5 border-tx bg-tx hover:bg-opacity-10;
+  @apply border-tx bg-tx text-gray-12 hover:bg-gray-12 hover:bg-opacity-10 disabled:text-gray-5;
 }
 .transparent-dark {
-  @apply text-gray-12 hover:bg-gray-12 border-tx bg-tx hover:text-white;
+  @apply border-tx bg-tx text-gray-12 hover:bg-gray-12 hover:text-white;
 }
 .transparent-dark-pressed {
-  @apply bg-gray-12 hover:border-gray-11 border-tx text-white;
+  @apply border-tx bg-gray-12 text-white hover:border-gray-11;
 }
 
 .icon-only {
