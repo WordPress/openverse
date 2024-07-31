@@ -30,6 +30,7 @@
     /></VButton>
   </div>
 </template>
+
 <script lang="ts">
 import { useI18n, useNuxtApp } from "#imports"
 

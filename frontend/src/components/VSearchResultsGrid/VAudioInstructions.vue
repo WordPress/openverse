@@ -11,6 +11,7 @@
     </i18n-t>
   </VSnackbar>
 </template>
+
 <script lang="ts">
 import { computed, defineComponent, type PropType } from "vue"
 

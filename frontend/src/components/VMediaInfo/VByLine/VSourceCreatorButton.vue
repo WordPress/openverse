@@ -11,6 +11,7 @@
     <span class="w-max">{{ title }}</span>
   </VButton>
 </template>
+
 <script lang="ts">
 import { defineComponent, PropType } from "vue"
 

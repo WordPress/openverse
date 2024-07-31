@@ -1,3 +1,55 @@
+<script setup lang="ts">
+import { computed, ref } from "vue"
+
+import { storeToRefs } from "pinia"
+
+import { useUiStore } from "~/stores/ui"
+import { useSearchStore } from "~/stores/search"
+import { useMediaStore } from "~/stores/media"
+
+import { useAnalytics } from "~/composables/use-analytics"
+import { useExternalSources } from "~/composables/use-external-sources"
+
+import VExternalSourceList from "~/components/VExternalSearch/VExternalSourceList.vue"
+import VButton from "~/components/VButton.vue"
+import VIcon from "~/components/VIcon/VIcon.vue"
+import VModal from "~/components/VModal/VModal.vue"
+import VIconButton from "~/components/VIconButton/VIconButton.vue"
+
+withDefaults(
+  defineProps<{
+    searchTerm: string
+    isSupported?: boolean
+    hasNoResults?: boolean
+  }>(),
+  {
+    isSupported: false,
+    hasNoResults: true,
+  }
+)
+
+const sectionRef = ref<HTMLElement | null>(null)
+const searchStore = useSearchStore()
+const uiStore = useUiStore()
+
+const { sendCustomEvent } = useAnalytics()
+
+const mediaStore = useMediaStore()
+const { currentPage } = storeToRefs(mediaStore)
+
+const handleModalOpen = () => {
+  sendCustomEvent("VIEW_EXTERNAL_SOURCES", {
+    searchType: searchStore.searchType,
+    query: searchStore.searchTerm,
+    resultPage: currentPage.value || 1,
+  })
+}
+
+const { externalSourcesType } = useExternalSources()
+
+const isMd = computed(() => uiStore.isBreakpoint("md"))
+</script>
+
 <template>
   <section
     :key="externalSourcesType"
@@ -61,55 +113,3 @@
     </VModal>
   </section>
 </template>
-
-<script setup lang="ts">
-import { computed, ref } from "vue"
-
-import { storeToRefs } from "pinia"
-
-import { useUiStore } from "~/stores/ui"
-import { useSearchStore } from "~/stores/search"
-import { useMediaStore } from "~/stores/media"
-
-import { useAnalytics } from "~/composables/use-analytics"
-import { useExternalSources } from "~/composables/use-external-sources"
-
-import VExternalSourceList from "~/components/VExternalSearch/VExternalSourceList.vue"
-import VButton from "~/components/VButton.vue"
-import VIcon from "~/components/VIcon/VIcon.vue"
-import VModal from "~/components/VModal/VModal.vue"
-import VIconButton from "~/components/VIconButton/VIconButton.vue"
-
-withDefaults(
-  defineProps<{
-    searchTerm: string
-    isSupported?: boolean
-    hasNoResults?: boolean
-  }>(),
-  {
-    isSupported: false,
-    hasNoResults: true,
-  }
-)
-
-const sectionRef = ref<HTMLElement | null>(null)
-const searchStore = useSearchStore()
-const uiStore = useUiStore()
-
-const { sendCustomEvent } = useAnalytics()
-
-const mediaStore = useMediaStore()
-const { currentPage } = storeToRefs(mediaStore)
-
-const handleModalOpen = () => {
-  sendCustomEvent("VIEW_EXTERNAL_SOURCES", {
-    searchType: searchStore.searchType,
-    query: searchStore.searchTerm,
-    resultPage: currentPage.value || 1,
-  })
-}
-
-const { externalSourcesType } = useExternalSources()
-
-const isMd = computed(() => uiStore.isBreakpoint("md"))
-</script>

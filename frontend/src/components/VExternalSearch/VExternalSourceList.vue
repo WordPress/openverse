@@ -1,30 +1,3 @@
-<template>
-  <div
-    class="p-4 pt-0 sm:max-w-[25rem] sm:p-6 sm:pt-0"
-    data-testid="source-list-popover"
-  >
-    <p class="label-regular px-3 py-4 text-start !leading-normal">
-      {{ $t("externalSources.caption", { openverse: "Openverse" }) }}
-    </p>
-    <VButton
-      v-for="source in externalSources"
-      :key="source.name"
-      as="VLink"
-      variant="transparent-gray"
-      size="medium"
-      class="label-regular !w-full justify-between"
-      show-external-icon
-      has-icon-end
-      :external-icon-size="6"
-      :href="source.url"
-      :send-external-link-click-event="false"
-      @mousedown="handleClick(source.name)"
-    >
-      {{ source.name }}
-    </VButton>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { useAnalytics } from "~/composables/use-analytics"
 
@@ -55,3 +28,30 @@ const handleClick = (sourceName: string) => {
   })
 }
 </script>
+
+<template>
+  <div
+    class="p-4 pt-0 sm:max-w-[25rem] sm:p-6 sm:pt-0"
+    data-testid="source-list-popover"
+  >
+    <p class="label-regular px-3 py-4 text-start !leading-normal">
+      {{ $t("externalSources.caption", { openverse: "Openverse" }) }}
+    </p>
+    <VButton
+      v-for="source in externalSources"
+      :key="source.name"
+      as="VLink"
+      variant="transparent-gray"
+      size="medium"
+      class="label-regular !w-full justify-between"
+      show-external-icon
+      has-icon-end
+      :external-icon-size="6"
+      :href="source.url"
+      :send-external-link-click-event="false"
+      @mousedown="handleClick(source.name)"
+    >
+      {{ source.name }}
+    </VButton>
+  </div>
+</template>
