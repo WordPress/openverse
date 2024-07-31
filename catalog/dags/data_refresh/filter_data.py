@@ -14,7 +14,7 @@ from airflow.decorators import task, task_group
 from airflow.models import Variable
 from airflow.models.abstractoperator import AbstractOperator
 from airflow.providers.common.sql.hooks.sql import fetch_all_handler, fetch_one_handler
-from psycopg2.extras import DictCursor, Json
+from psycopg2.extras import Json
 
 from common.constants import POSTGRES_API_CONN_IDS, Environment
 from common.sql import PGExecuteQueryOperator, PostgresHook
@@ -57,16 +57,19 @@ TAG_MIN_CONFIDENCE = 0.90
 # Filter out tags that match the following providers (either because they haven't
 # been vetted or because they are known to be low-quality).
 FILTERED_TAG_PROVIDERS = {"rekognition"}
+# Select the data within a given batch
 QUERY_SELECTION = dedent("""
     SELECT id, identifier, tags
     FROM {temp_table}
     WHERE id BETWEEN {batch_start} AND {batch_end}
 """)
+# Update the tags for a given ID
 QUERY_UPDATE = dedent("""
     UPDATE {temp_table}
     SET tags = {tags_fragment}
     WHERE id = {_id}
 """)
+# Get an estimate of total rows based on the min and max auto-assigned ID
 QUERY_ROW_ESTIMATE = dedent("""
     SELECT min(id), max(id) FROM {temp_table}
 """)
@@ -83,13 +86,8 @@ def _tag_denylisted(tag):
     return False
 
 
-def generate_tag_update_fragments(tags):
-    """
-    Filter denylisted, low-accuracy, and unverified provider tags.
-
-    :return: an SQL fragment if an update is needed, ``None`` otherwise
-    """
-
+def generate_tag_update_fragments(tags) -> list[dict] | None:
+    """Filter denylisted, low-accuracy, and unverified provider tags."""
     update_required = False
     tag_output = []
     if not tags:
@@ -114,15 +112,12 @@ def generate_tag_update_fragments(tags):
             tag_output.append(tag)
 
     if update_required:
-        fragment = Json(tag_output)
-        logger.debug(f"Tags fragment: {fragment}")
-        return fragment
-    else:
-        return None
+        return tag_output
+    return None
 
 
 @task
-def get_filter_batches(id_bounds: tuple[int, int]):
+def get_filter_batches(id_bounds: tuple[int, int]) -> list[tuple[int, int]]:
     start, stop = id_bounds
     batch_size = Variable.get(
         "DATA_REFRESH_FILTER_BATCH_SIZE",
@@ -156,36 +151,36 @@ def filter_data_batch(
     )
     worker_conn = postgres.get_conn()
     logger.info("Data filtering worker connected to database")
-    write_cur = worker_conn.cursor(cursor_factory=DictCursor)
-    logger.info(f"Filtering {len(rows)} rows")
+    with worker_conn.cursor() as write_cur:
+        logger.info(f"Filtering {len(rows)} rows")
 
-    filtered_tags: list[tuple[str, Json]] = []
-    for row in rows:
-        _id, identifier, tags = row
-        tags_fragment = generate_tag_update_fragments(tags)
-        if not tags_fragment:
-            continue
-        filtered_tags.append((identifier, tags_fragment))
-        logger.debug(
-            f"Updated tags for {identifier}\n\t"
-            f"from '{tags}' \n\tto '{tags_fragment}'"
-        )
-        update_query = QUERY_UPDATE.format(
-            temp_table=temp_table, tags_fragment=tags_fragment, _id=_id
-        )
-        logger.debug(f"Executing update query: \n\t{update_query}")
-        write_cur.execute(update_query)
+        filtered_count = 0
+        for row in rows:
+            _id, identifier, tags = row
+            tags_fragment = generate_tag_update_fragments(tags)
+            if not tags_fragment:
+                continue
+            filtered_count += 1
+            logger.debug(
+                f"Updated tags for {identifier}\n\t"
+                f"from '{tags}' \n\tto '{tags_fragment}'"
+            )
+            update_query = QUERY_UPDATE.format(
+                temp_table=temp_table, tags_fragment=Json(tags_fragment), _id=_id
+            )
+            logger.debug(f"Executing update query: \n\t{update_query}")
+            write_cur.execute(update_query)
     logger.info("Worker committing changes...")
     worker_conn.commit()
-    write_cur.close()
     worker_conn.close()
-    return len(filtered_tags)
+    return filtered_count
 
 
 @task
 def report(counts: list[int]):
     total_count = sum(counts)
     logger.info(f"Filtered tags for a total of {total_count} records")
+    return total_count
 
 
 @task_group(group_id="filter_table_data")
