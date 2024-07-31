@@ -85,7 +85,7 @@ def _tag_denylisted(tag):
     return False
 
 
-def generate_tag_update_fragments(tags) -> list[dict] | None:
+def generate_tag_updates(tags) -> list[dict] | None:
     """Filter denylisted, low-accuracy, and unverified provider tags."""
     update_required = False
     tag_output = []
@@ -154,7 +154,7 @@ def filter_data_batch(
         filtered_count = 0
         for row in rows:
             _id, identifier, tags = row
-            tags_fragment = generate_tag_update_fragments(tags)
+            tags_fragment = generate_tag_updates(tags)
             if not tags_fragment:
                 continue
             filtered_count += 1
