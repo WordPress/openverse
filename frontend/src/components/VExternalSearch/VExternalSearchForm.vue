@@ -64,11 +64,11 @@ const isMd = computed(() => uiStore.isBreakpoint("md"))
       class="w-full"
       @open="handleModalOpen"
     >
-      <template #trigger="triggerA11yProps">
+      <template #trigger="{ a11yProps }">
         <VButton
           id="external-sources-button"
           ref="triggerRef"
-          :pressed="triggerA11yProps['aria-expanded']"
+          :pressed="a11yProps['aria-expanded']"
           aria-haspopup="dialog"
           aria-controls="external-sources-modal"
           variant="bordered-gray"
@@ -88,7 +88,7 @@ const isMd = computed(() => uiStore.isBreakpoint("md"))
             tag="p"
           />
           <VIcon
-            :class="{ 'text-white': triggerA11yProps['aria-expanded'] }"
+            :class="{ 'text-white': a11yProps['aria-expanded'] }"
             name="caret-down"
           />
         </VButton>
