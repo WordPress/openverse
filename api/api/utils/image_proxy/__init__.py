@@ -245,16 +245,22 @@ async def get(
             params=params,
             headers=headers,
         )
+
         await _tally_response(tallies, media_info, month, domain, upstream_response)
+
         upstream_response.raise_for_status()
+
         status_code = upstream_response.status
         content_type = upstream_response.headers.get("Content-Type")
+
         logger.debug(
             "Image proxy response status: %s, content-type: %s",
             status_code,
             content_type,
         )
+
         content = await upstream_response.content.read()
+
         return HttpResponse(
             content,
             status=status_code,
@@ -263,6 +269,7 @@ async def get(
     except Exception as exc:
         exception_name = f"{exc.__class__.__module__}.{exc.__class__.__name__}"
         key = f"thumbnail_error:{exception_name}:{domain}:{month}"
+
         try:
             await tallies_incr(key)
         except ConnectionError:
@@ -272,9 +279,11 @@ async def get(
             status = exc.status
             await _tally_client_response_errors(tallies, month, domain, status)
             logger.warning(
-                f"Failed to render thumbnail "
-                f"{upstream_url=} {status=} "
-                f"{media_info.media_provider=} "
-                f"{exc.message=}"
+                "thumbnail_failure",
+                url=upstream_url,
+                status=status,
+                provider=media_info.media_provider,
+                exc=exc.message,
             )
+
         raise UpstreamThumbnailException(f"Failed to render thumbnail. {exc}")
