@@ -35,7 +35,7 @@ dependencies = [
   "python-decouple >=3.8, <4",
   "python-xmp-toolkit >=2.0.2, <3",
   "sentry-sdk >=1.40.6, <2",
-  "uvicorn[standard] >=0.29, <0.30",
+  "uvicorn[standard] >=0.30, <0.31",
   "openverse-attribution @ file:///${PROJECT_ROOT}/../packages/python/openverse-attribution",
 ]
 
