@@ -29,3 +29,6 @@ THUMBNAIL_FAILURE_CACHE_WINDOW_SECONDS = config(
 THUMBNAIL_FAILURE_CACHE_TOLERANCE = config(
     "THUMBNAIL_FAILURE_CACHE_TOLERANCE", default=2, cast=int
 )
+
+# Timeout when requesting the thumbnail from the upstream image proxy
+THUMBNAIL_UPSTREAM_TIMEOUT = config("THUMBNAIL_UPSTREAM_TIMEOUT", default=4, cast=int)

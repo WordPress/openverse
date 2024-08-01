@@ -200,7 +200,7 @@ def _cache_repeated_failures(_get):
     return do_cache
 
 
-_UPSTREAM_TIMEOUT = aiohttp.ClientTimeout(15)
+_UPSTREAM_TIMEOUT = aiohttp.ClientTimeout(settings.THUMBNAIL_UPSTREAM_TIMEOUT)
 
 
 @_cache_repeated_failures
