@@ -32,3 +32,8 @@ THUMBNAIL_FAILURE_CACHE_TOLERANCE = config(
 
 # Timeout when requesting the thumbnail from the upstream image proxy
 THUMBNAIL_UPSTREAM_TIMEOUT = config("THUMBNAIL_UPSTREAM_TIMEOUT", default=4, cast=int)
+
+# Timeout when trying to determine the filetype based on a HEAD request to the upstream image provider
+THUMBNAIL_EXTENSION_REQUEST_TIMEOUT = config(
+    "THUMBNAIL_EXTENSION_REQUEST_TIMEOUT", default=4, cast=int
+)
