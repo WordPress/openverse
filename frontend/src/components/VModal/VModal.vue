@@ -128,6 +128,10 @@ const {
   emit: emit as SetupContext["emit"],
   deactivateFocusTrap,
 })
+
+defineExpose({
+  close,
+})
 </script>
 
 <template>

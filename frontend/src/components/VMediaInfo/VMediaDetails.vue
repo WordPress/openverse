@@ -1,3 +1,37 @@
+<script setup lang="ts">
+import { useI18n } from "#imports"
+
+import { computed } from "vue"
+
+import type { AudioDetail, ImageDetail, Metadata } from "~/types/media"
+import { IMAGE } from "~/constants/media"
+
+import { getMediaMetadata } from "~/utils/metadata"
+
+import VContentReportPopover from "~/components/VContentReport/VContentReportPopover.vue"
+import VMetadata from "~/components/VMediaInfo/VMetadata.vue"
+import VMediaTags from "~/components/VMediaInfo/VMediaTags.vue"
+
+const props = defineProps<{ media: AudioDetail | ImageDetail }>()
+
+const i18n = useI18n({ useScope: "global" })
+
+const metadata = computed<null | Metadata[]>(() => {
+  if (!props.media) {
+    return null
+  }
+  let imageInfo =
+    props.media.frontendMediaType === IMAGE
+      ? {
+          width: props.media.width,
+          height: props.media.height,
+          type: props.media.filetype,
+        }
+      : {}
+  return getMediaMetadata(props.media, i18n, imageInfo)
+})
+</script>
+
 <template>
   <section class="flex flex-col gap-y-6 md:gap-y-8">
     <header class="flex flex-row items-center justify-between">
@@ -25,54 +59,3 @@
     </div>
   </section>
 </template>
-
-<script lang="ts">
-import { useI18n } from "#imports"
-
-import { computed, defineComponent, PropType } from "vue"
-
-import type { AudioDetail, ImageDetail, Metadata } from "~/types/media"
-import { IMAGE } from "~/constants/media"
-
-import { getMediaMetadata } from "~/utils/metadata"
-
-import VContentReportPopover from "~/components/VContentReport/VContentReportPopover.vue"
-import VMetadata from "~/components/VMediaInfo/VMetadata.vue"
-import VMediaTags from "~/components/VMediaInfo/VMediaTags.vue"
-
-export default defineComponent({
-  components: {
-    VMediaTags,
-    VMetadata,
-    VContentReportPopover,
-  },
-  props: {
-    media: {
-      type: Object as PropType<AudioDetail | ImageDetail>,
-      required: true,
-    },
-  },
-  setup(props) {
-    const i18n = useI18n({ useScope: "global" })
-
-    const metadata = computed<null | Metadata[]>(() => {
-      if (!props.media) {
-        return null
-      }
-      let imageInfo =
-        props.media.frontendMediaType === IMAGE
-          ? {
-              width: props.media.width,
-              height: props.media.height,
-              type: props.media.filetype,
-            }
-          : {}
-      return getMediaMetadata(props.media, i18n, imageInfo)
-    })
-
-    return {
-      metadata,
-    }
-  },
-})
-</script>

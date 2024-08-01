@@ -1,3 +1,109 @@
+<script setup lang="ts">
+import { useRuntimeConfig } from "#imports"
+
+import { computed, ref } from "vue"
+
+import { ofetch } from "ofetch"
+
+import {
+  reasons,
+  DMCA,
+  OTHER,
+  SENT,
+  FAILED,
+  WIP,
+  DMCA_FORM_URL,
+  type ReportReason,
+} from "~/constants/content-report"
+
+import type { AudioDetail, ImageDetail } from "~/types/media"
+import { useAnalytics } from "~/composables/use-analytics"
+
+import { mediaSlug } from "~/utils/query-utils"
+
+import VButton from "~/components/VButton.vue"
+import VRadio from "~/components/VRadio/VRadio.vue"
+import VDmcaNotice from "~/components/VContentReport/VDmcaNotice.vue"
+import VReportDescForm from "~/components/VContentReport/VReportDescForm.vue"
+import VLink from "~/components/VLink.vue"
+
+const props = withDefaults(
+  defineProps<{
+    media: AudioDetail | ImageDetail
+    providerName: string
+    closeFn: () => void
+    allowCancel?: boolean
+  }>(),
+  {
+    allowCancel: true,
+  }
+)
+
+const description = ref("")
+
+const status = ref<string | null>(WIP)
+
+const selectedReason = ref<ReportReason>(DMCA)
+
+/* Buttons */
+const handleCancel = () => {
+  selectedReason.value = DMCA
+  description.value = ""
+  props.closeFn()
+}
+
+const isSubmitDisabled = computed(
+  () => selectedReason.value === OTHER && description.value.length < 20
+)
+
+const { sendCustomEvent } = useAnalytics()
+
+const handleDmcaSubmit = () => {
+  sendCustomEvent("REPORT_MEDIA", {
+    id: props.media.id,
+    mediaType: props.media.frontendMediaType,
+    provider: props.media.provider,
+    reason: selectedReason.value,
+  })
+  status.value = SENT
+}
+const handleSubmit = async (event: Event) => {
+  event.preventDefault()
+  // Submit report
+  try {
+    const mediaType = props.media.frontendMediaType
+    const reason = selectedReason.value
+
+    const {
+      public: { apiUrl },
+    } = useRuntimeConfig()
+
+    await ofetch(
+      `${apiUrl}v1/${mediaSlug(mediaType)}/${props.media.id}/report/`,
+      {
+        method: "POST",
+        body: {
+          mediaType,
+          reason,
+          identifier: props.media.id,
+          description: description.value,
+        },
+      }
+    )
+
+    sendCustomEvent("REPORT_MEDIA", {
+      mediaType,
+      reason,
+      id: props.media.id,
+      provider: props.media.provider,
+    })
+    status.value = SENT
+  } catch (error) {
+    status.value = FAILED
+  }
+}
+</script>
+
 <template>
   <div id="content-report-form">
     <div v-if="status === SENT">
@@ -122,146 +228,3 @@
     </div>
   </div>
 </template>
-
-<script lang="ts">
-import { useRuntimeConfig } from "#imports"
-
-import { computed, defineComponent, PropType, ref } from "vue"
-
-import { ofetch } from "ofetch"
-
-import {
-  reasons,
-  DMCA,
-  OTHER,
-  SENT,
-  FAILED,
-  WIP,
-  DMCA_FORM_URL,
-  type ReportReason,
-} from "~/constants/content-report"
-
-import type { AudioDetail, ImageDetail } from "~/types/media"
-import { useAnalytics } from "~/composables/use-analytics"
-
-import { mediaSlug } from "~/utils/query-utils"
-
-import VButton from "~/components/VButton.vue"
-import VRadio from "~/components/VRadio/VRadio.vue"
-import VDmcaNotice from "~/components/VContentReport/VDmcaNotice.vue"
-import VReportDescForm from "~/components/VContentReport/VReportDescForm.vue"
-import VLink from "~/components/VLink.vue"
-
-export default defineComponent({
-  name: "VContentReportForm",
-  components: {
-    VButton,
-    VLink,
-    VRadio,
-    VDmcaNotice,
-    VReportDescForm,
-  },
-  props: {
-    media: {
-      type: Object as PropType<AudioDetail | ImageDetail>,
-      required: true,
-    },
-    providerName: {
-      type: String as PropType<string>,
-      required: true,
-    },
-    closeFn: {
-      type: Function,
-      required: true,
-    },
-    allowCancel: {
-      type: Boolean,
-      default: true,
-    },
-  },
-  setup(props) {
-    const description = ref("")
-
-    const status = ref<string | null>(WIP)
-
-    const selectedReason = ref<ReportReason>(DMCA)
-
-    /* Buttons */
-    const handleCancel = () => {
-      selectedReason.value = DMCA
-      description.value = ""
-      props.closeFn()
-    }
-
-    const isSubmitDisabled = computed(
-      () => selectedReason.value === OTHER && description.value.length < 20
-    )
-
-    const { sendCustomEvent } = useAnalytics()
-
-    const handleDmcaSubmit = () => {
-      sendCustomEvent("REPORT_MEDIA", {
-        id: props.media.id,
-        mediaType: props.media.frontendMediaType,
-        provider: props.media.provider,
-        reason: selectedReason.value,
-      })
-      status.value = SENT
-    }
-    const handleSubmit = async (event: Event) => {
-      event.preventDefault()
-      // Submit report
-      try {
-        const mediaType = props.media.frontendMediaType
-        const reason = selectedReason.value
-
-        const {
-          public: { apiUrl },
-        } = useRuntimeConfig()
-
-        await ofetch(
-          `${apiUrl}v1/${mediaSlug(mediaType)}/${props.media.id}/report/`,
-          {
-            method: "POST",
-            body: {
-              mediaType,
-              reason,
-              identifier: props.media.id,
-              description: description.value,
-            },
-          }
-        )
-
-        sendCustomEvent("REPORT_MEDIA", {
-          mediaType,
-          reason,
-          id: props.media.id,
-          provider: props.media.provider,
-        })
-        status.value = SENT
-      } catch (error) {
-        status.value = FAILED
-      }
-    }
-
-    return {
-      reasons,
-      DMCA,
-      OTHER,
-      SENT,
-      FAILED,
-      DMCA_FORM_URL,
-
-      selectedReason,
-      status,
-      description,
-
-      handleCancel,
-
-      isSubmitDisabled,
-      handleSubmit,
-      handleDmcaSubmit,
-    }
-  },
-})
-</script>

@@ -82,6 +82,11 @@ const { onKeyDown, onBlur, deactivateFocusTrap } = useDialogContent({
   attrs,
 })
 
+const handleClose = (event: MouseEvent) => {
+  event.stopPropagation()
+  props.hide()
+}
+
 defineExpose({
   dialogRef,
   deactivateFocusTrap,
@@ -89,93 +94,91 @@ defineExpose({
 </script>
 
 <template>
-  <div>
-    <Teleport to="#teleports">
+  <Teleport to="#teleports">
+    <div
+      v-show="visible"
+      class="h-dyn-screen min-h-dyn-screen fixed inset-0 z-40 flex justify-center overflow-y-auto"
+      :class="[
+        { 'flex-col items-center': variant === 'centered' },
+        variant === 'mobile-input'
+          ? 'top-20 h-[calc(100dvh-80px)] bg-tx'
+          : 'bg-dark-charcoal bg-opacity-75',
+        contentClasses,
+      ]"
+    >
+      <!-- re: disabled static element interactions rule https://github.com/WordPress/openverse/issues/2906 -->
+      <!-- eslint-disable-next-line vuejs-accessibility/no-static-element-interactions -->
       <div
-        v-show="visible"
-        class="h-dyn-screen min-h-dyn-screen fixed inset-0 z-40 flex justify-center overflow-y-auto"
+        ref="dialogRef"
+        v-bind="$attrs"
+        class="flex flex-col"
         :class="[
-          { 'flex-col items-center': variant === 'centered' },
-          variant === 'mobile-input'
-            ? 'top-20 h-[calc(100dvh-80px)] bg-tx'
-            : 'bg-dark-charcoal bg-opacity-75',
-          contentClasses,
+          mode === 'dark'
+            ? 'bg-black text-white'
+            : 'bg-white text-dark-charcoal',
+          {
+            'w-full md:max-w-[768px] lg:w-[768px] xl:w-[1024px] xl:max-w-[1024px]':
+              variant === 'default',
+            'w-full': variant === 'full',
+            'mt-auto h-2/3 w-full rounded-se-lg rounded-ss-lg bg-white':
+              variant === 'two-thirds',
+            'mt-auto w-full rounded-se-lg rounded-ss-lg bg-white':
+              variant === 'fit-content',
+            'm-6 rounded sm:m-0': variant === 'centered',
+          },
         ]"
+        role="dialog"
+        aria-modal="true"
+        @keydown="onKeyDown"
+        @blur="onBlur"
       >
-        <!-- re: disabled static element interactions rule https://github.com/WordPress/openverse/issues/2906 -->
-        <!-- eslint-disable-next-line vuejs-accessibility/no-static-element-interactions -->
-        <div
-          ref="dialogRef"
-          v-bind="$attrs"
-          class="flex flex-col"
-          :class="[
-            mode === 'dark'
-              ? 'bg-black text-white'
-              : 'bg-white text-dark-charcoal',
-            {
-              'w-full md:max-w-[768px] lg:w-[768px] xl:w-[1024px] xl:max-w-[1024px]':
-                variant === 'default',
-              'w-full': variant === 'full',
-              'mt-auto h-2/3 w-full rounded-se-lg rounded-ss-lg bg-white':
-                variant === 'two-thirds',
-              'mt-auto w-full rounded-se-lg rounded-ss-lg bg-white':
-                variant === 'fit-content',
-              'm-6 rounded sm:m-0': variant === 'centered',
-            },
-          ]"
-          role="dialog"
-          aria-modal="true"
-          @keydown="onKeyDown"
-          @blur="onBlur"
-        >
-          <slot name="top-bar" :close="hide">
-            <!--
+        <slot name="top-bar" :close="hide">
+          <!--
                   These specific padding and margin values serve to
                   visually align the Openverse logo button in the modal
                   with the header logo button so that there isn't a
                   jarring "shifting" effect when opening the mobile modal.
                 -->
-            <div
-              v-if="variant === 'default'"
-              class="flex w-full shrink-0 justify-between bg-white py-4 pe-3 ps-4 md:justify-end md:bg-tx md:px-0 md:py-3"
-            >
-              <VIconButton
-                ref="closeButton"
-                :label="$t('modal.ariaClose')"
-                variant="filled-white"
-                size="small"
-                @click="hide()"
-              />
-            </div>
-          </slot>
-
           <div
-            class="modal-content flex w-full flex-grow flex-col"
-            :class="{
-              'text-left align-bottom md:rounded-se-lg md:rounded-ss-lg':
-                variant === 'default',
-              'w-auto rounded': variant === 'centered',
-              'mt-auto w-full rounded-se-lg rounded-ss-lg bg-white':
-                variant === 'fit-content',
-              'flex w-full flex-col justify-between px-6 pb-10':
-                variant === 'full',
-              'overflow-y-hidden rounded-se-lg rounded-ss-lg':
-                variant === 'two-thirds',
-              'h-full': variant === 'mobile-input',
-              'bg-black text-white': mode === 'dark',
-              'bg-white text-dark-charcoal': mode === 'light',
-              'fallback-padding':
-                variant === 'fit-content' ||
-                variant === 'two-thirds' ||
-                variant === 'mobile-input',
-            }"
+            v-if="variant === 'default'"
+            class="flex w-full shrink-0 justify-between bg-white py-4 pe-3 ps-4 md:justify-end md:bg-tx md:px-0 md:py-3"
           >
-            <slot />
+            <VIconButton
+              ref="closeButton"
+              :label="$t('modal.ariaClose')"
+              variant="filled-white"
+              size="small"
+              @click="handleClose"
+            />
           </div>
+        </slot>
+
+        <div
+          class="modal-content flex w-full flex-grow flex-col"
+          :class="{
+            'text-left align-bottom md:rounded-se-lg md:rounded-ss-lg':
+              variant === 'default',
+            'w-auto rounded': variant === 'centered',
+            'mt-auto w-full rounded-se-lg rounded-ss-lg bg-white':
+              variant === 'fit-content',
+            'flex w-full flex-col justify-between px-6 pb-10':
+              variant === 'full',
+            'overflow-y-hidden rounded-se-lg rounded-ss-lg':
+              variant === 'two-thirds',
+            'h-full': variant === 'mobile-input',
+            'bg-black text-white': mode === 'dark',
+            'bg-white text-dark-charcoal': mode === 'light',
+            'fallback-padding':
+              variant === 'fit-content' ||
+              variant === 'two-thirds' ||
+              variant === 'mobile-input',
+          }"
+        >
+          <slot />
         </div>
       </div>
-    </Teleport>
-  </div>
+    </div>
+  </Teleport>
 </template>
 
 <style scoped>
