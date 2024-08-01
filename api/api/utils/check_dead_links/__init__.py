@@ -52,7 +52,11 @@ async def _head(
 
     try:
         response = await session.head(
-            url, allow_redirects=False, headers=HEADERS, timeout=_timeout
+            url,
+            allow_redirects=False,
+            headers=HEADERS,
+            timeout=_timeout,
+            raise_for_status=True,
         )
         status = response.status
     except (aiohttp.ClientError, asyncio.TimeoutError) as exception:
