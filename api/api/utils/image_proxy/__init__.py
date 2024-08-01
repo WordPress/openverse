@@ -1,11 +1,7 @@
-import asyncio
-import time
-from dataclasses import dataclass
 from datetime import timedelta
 from functools import wraps
 from typing import Literal, Type
 from urllib.parse import urlparse
-from uuid import UUID
 
 from django.conf import settings
 from django.http import HttpResponse
@@ -20,6 +16,7 @@ from redis.client import Redis
 from redis.exceptions import ConnectionError
 
 from api.utils.aiohttp import get_aiohttp_session
+from api.utils.image_proxy.dataclasses import MediaInfo, RequestConfig
 from api.utils.image_proxy.exception import UpstreamThumbnailException
 from api.utils.image_proxy.extension import get_image_extension
 from api.utils.image_proxy.photon import get_photon_request_params
@@ -40,20 +37,6 @@ ORIGINAL_TYPES = {"svg"}
 PHOTON = "photon"
 ORIGINAL = "original"
 THUMBNAIL_STRATEGY = Literal["photon_proxy", "original"]
-
-
-@dataclass
-class MediaInfo:
-    media_provider: str
-    media_identifier: UUID
-    image_url: str
-
-
-@dataclass
-class RequestConfig:
-    accept_header: str = "image/*"
-    is_full_size: bool = False
-    is_compressed: bool = True
 
 
 def get_request_params_for_extension(
@@ -217,13 +200,12 @@ async def get(
     original image if the file type is SVG. Otherwise, raise an exception.
     """
     image_url = media_info.image_url
-    media_identifier = media_info.media_identifier
 
     tallies = django_redis.get_redis_connection("tallies")
     tallies_incr = sync_to_async(tallies.incr)
     month = get_monthly_timestamp()
 
-    image_extension = await get_image_extension(image_url, media_identifier)
+    image_extension = await get_image_extension(media_info)
 
     headers = {"Accept": request_config.accept_header} | HEADERS
 
@@ -238,8 +220,6 @@ async def get(
         request_config,
     )
 
-    start_time = time.perf_counter()
-
     try:
         session = await get_aiohttp_session()
 
@@ -248,6 +228,14 @@ async def get(
             timeout=_UPSTREAM_TIMEOUT,
             params=params,
             headers=headers,
+            trace_request_ctx={
+                "timing_event_name": "thumbnail_upstream_timing",
+                "timing_event_ctx": {
+                    "provider": media_info.media_provider,
+                    "image_url": media_info.image_url,
+                    "image_extension": image_extension,
+                },
+            },
         )
 
         await _tally_response(tallies, media_info, month, domain, upstream_response)
@@ -259,27 +247,12 @@ async def get(
 
         content = await upstream_response.content.read()
 
-        end_time = time.perf_counter()
-        logger.info(
-            "thumbnail_upstream_timing",
-            status=status_code,
-            time=end_time - start_time,
-            provider=media_info.media_provider,
-            content_type=content_type,
-            url=image_url,
-        )
-
         return HttpResponse(
             content,
             status=status_code,
             content_type=content_type,
         )
     except Exception as exc:
-        # Record timing before tallying to Redis to avoid including
-        # the Redis request timing in what is meant to be the upstream
-        # request timing.
-        end_time = time.perf_counter()
-
         exception_name = f"{exc.__class__.__module__}.{exc.__class__.__name__}"
         key = f"thumbnail_error:{exception_name}:{domain}:{month}"
 
@@ -298,16 +271,5 @@ async def get(
                 provider=media_info.media_provider,
                 exc=exc.message,
             )
-        else:
-            status = -1
-
-        logger.info(
-            "thumbnail_upstream_timing",
-            status=status,
-            time=end_time - start_time,
-            provider=media_info.media_provider,
-            content_type=image_extension,
-            url=image_url,
-        )
 
         raise UpstreamThumbnailException(f"Failed to render thumbnail. {exc}")
