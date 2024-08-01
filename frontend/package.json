@@ -111,7 +111,7 @@
     "vitest-dom": "^0.1.1",
     "vue": "3.4.35",
     "vue-router": "^4.4.0",
-    "vue-tsc": "2.0.28"
+    "vue-tsc": "2.0.29"
   },
   "browserslist": [
     "> 1%",

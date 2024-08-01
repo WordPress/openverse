@@ -24,7 +24,7 @@
     "prettier": "3.3.2",
     "prettier-plugin-tailwindcss": "0.6.5",
     "typescript": "5.5.4",
-    "vue-tsc": "2.0.26"
+    "vue-tsc": "2.0.29"
   },
   "pnpm": {
     "overrides": {
