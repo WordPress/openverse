@@ -7,7 +7,7 @@
       {
         [`${contextProps.direction}-bordered`]: contextProps.bordered,
         [`${contextProps.direction}-popover-item`]: isInPopover,
-        'border-border border': contextProps.bordered,
+        'border border-border': contextProps.bordered,
         'has-check': contextProps.showCheck,
         'font-semibold': selected && !contextProps.showCheck,
         'bg-bg-fill-secondary':
@@ -19,12 +19,13 @@
     <VButton
       data-item-group-item
       :as="as"
-      class="hover:bg-bg-fill-secondary relative min-w-full justify-between border-0 focus-visible:z-10"
+      class="relative min-w-full justify-between border-0 hover:bg-bg-fill-secondary focus-visible:z-10"
       :class="{
         'w-max': contextProps.direction === 'horizontal',
         '!p-3': contextProps.size === 'small',
         '!p-5 !ps-6': contextProps.size === 'medium',
-        'bg-bg-fill-secondary ring-offset-gray-2': selected && contextProps.showCheck,
+        'bg-bg-fill-secondary ring-offset-gray-2':
+          selected && contextProps.showCheck,
         'text-text': as === 'VLink',
         '!px-2': !contextProps.showCheck,
       }"
@@ -206,7 +207,7 @@ export default defineComponent({
 }
 
 .horizontal-bordered {
-  @apply border-border border-e border-s-0;
+  @apply border-e border-s-0 border-border;
 }
 
 .horizontal:first-of-type {

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="app h-dyn-screen bg-bg-fill-complementary grid grid-cols-1 grid-rows-[auto,1fr] flex-col"
+    class="app h-dyn-screen grid grid-cols-1 grid-rows-[auto,1fr] flex-col bg-bg-fill-complementary"
   >
     <div class="header-el">
       <VBanners />
@@ -20,7 +20,7 @@ import VFooter from "~/components/VFooter/VFooter.vue"
 import VHeaderInternal from "~/components/VHeader/VHeaderInternal.vue"
 
 /**
- * The default layout is one screen high and yellow-3, without sidebars.
+ * The default layout is one screen high and bg-fill-complementary, without sidebars.
  */
 export default defineComponent({
   name: "DefaultLayout",

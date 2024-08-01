@@ -2,7 +2,7 @@
   <div
     v-bind="waveformAttributes"
     ref="el"
-    class="waveform bg-background-var group/waveform text-text relative overflow-hidden focus-visible:outline-none"
+    class="waveform bg-background-var group/waveform relative overflow-hidden text-text focus-visible:outline-none"
     :style="heightProperties"
     :tabIndex="isTabbable && isInteractive ? 0 : -1"
     :aria-disabled="!isInteractive"
@@ -51,7 +51,7 @@
     >
       <rect
         v-if="isReady"
-        class="fill-yellow-3"
+        class="fill-bg-fill-complementary"
         x="0"
         y="0"
         :width="progressBarWidth"
@@ -73,7 +73,7 @@
         class="origin-bottom transform transition-transform duration-500"
         :class="[
           isReady ? 'scale-y-100' : 'scale-y-0',
-          index <= seekIndex ? 'fill-black' : 'fill-gray-3-alpha',
+          index <= seekIndex ? 'fill-wave-active' : 'fill-wave-inactive',
         ]"
         :x="spaceBefore(index)"
         :y="spaceAbove(index)"

@@ -196,7 +196,7 @@ export default defineComponent({
 
 @layer components {
   .source-table {
-    @apply border-border hidden rounded-sm border-0 md:table;
+    @apply hidden rounded-sm border-0 border-border md:table;
   }
 
   .source-table th,
@@ -209,7 +209,7 @@ export default defineComponent({
   }
 
   .source-table th {
-    @apply bg-bg-fill-secondary cursor-pointer border-t;
+    @apply cursor-pointer border-t bg-bg-fill-secondary;
   }
 
   .source-table th,
@@ -234,7 +234,7 @@ export default defineComponent({
   }
 
   .mobile-source-table article {
-    @apply border-border grid border-l border-r p-4 sm:grid-cols-4;
+    @apply grid border-l border-r border-border p-4 sm:grid-cols-4;
   }
 
   .mobile-source-table article:first-child {
@@ -263,7 +263,7 @@ export default defineComponent({
   }
 
   .mobile-source-table article a {
-    @apply text-text-link font-bold hover:underline;
+    @apply font-bold text-text-link hover:underline;
   }
 }
 </style>

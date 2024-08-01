@@ -8,7 +8,7 @@
       itemprop="contentUrl"
       :title="contextSensitiveTitle"
       :href="imageLink"
-      class="text-gray-2 group relative block w-full overflow-hidden rounded-sm focus-visible:outline-3 focus-visible:outline-offset-4"
+      class="group relative block w-full overflow-hidden rounded-sm text-gray-2 focus-visible:outline-3 focus-visible:outline-offset-4"
       :aria-label="contextSensitiveTitle"
       @mousedown="sendSelectSearchResultEvent"
     >
@@ -37,7 +37,7 @@
           @error="onImageLoadError($event)"
         />
         <figcaption
-          class="text-text col-span-full self-end justify-self-start rounded-sm bg-bg group-hover:visible group-focus-visible:visible"
+          class="col-span-full self-end justify-self-start rounded-sm bg-bg text-text group-hover:visible group-focus-visible:visible"
           :class="
             isSquare
               ? 'invisible row-span-full m-2 p-2'
@@ -52,7 +52,7 @@
           <VLicense
             :license="image.license"
             :hide-name="true"
-            class="group-hover:text-text group-focus-visible:text-text sm:text-text text-text-secondary"
+            class="text-text-secondary group-hover:text-text group-focus-visible:text-text sm:text-text"
           />
         </figcaption>
       </figure>

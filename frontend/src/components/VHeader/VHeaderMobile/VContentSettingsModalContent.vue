@@ -27,7 +27,7 @@
         >
         <h2
           v-else
-          class="label-regular after:bg-bg-fill-tertiary relative my-2 me-4 flex h-12 items-center gap-x-2 px-2 after:absolute after:bottom-[-0.625rem] after:right-1/2 after:h-0.5 after:w-full after:translate-x-1/2 after:translate-y-[-50%]"
+          class="label-regular relative my-2 me-4 flex h-12 items-center gap-x-2 px-2 after:absolute after:bottom-[-0.625rem] after:right-1/2 after:h-0.5 after:w-full after:translate-x-1/2 after:translate-y-[-50%] after:bg-bg-fill-tertiary"
         >
           <VIcon :name="searchType.searchType" />
           {{ $t("searchType.heading") }}
@@ -59,12 +59,12 @@
           :show-filter-header="false"
           :change-tab-order="false"
         />
-        <VSafeBrowsing class="border-border border-t px-6 pt-6" />
+        <VSafeBrowsing class="border-t border-border px-6 pt-6" />
       </VTabPanel>
     </VTabs>
     <footer
       v-if="showFilters"
-      class="border-t-gray-3 mt-auto flex h-20 flex-shrink-0 items-center justify-between border-t p-4"
+      class="mt-auto flex h-20 flex-shrink-0 items-center justify-between border-t border-t-border p-4"
     >
       <VButton
         v-show="showClearFiltersButton"

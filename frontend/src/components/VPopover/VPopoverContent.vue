@@ -4,7 +4,7 @@
     ref="popoverRef"
     role="dialog"
     aria-modal="true"
-    class="popover-content w-max-content absolute left-0 top-0 overflow-y-auto overflow-x-hidden rounded-sm border border-light-gray bg-bg shadow"
+    class="popover-content w-max-content absolute left-0 top-0 overflow-y-auto overflow-x-hidden rounded-sm border border-border bg-bg-overlay shadow"
     :class="`z-${zIndex}`"
     :style="{ ...heightProperties, ...style }"
     :tabindex="-1"

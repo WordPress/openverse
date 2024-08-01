@@ -25,7 +25,7 @@ const DefaultPopoverStory = (args) => ({
       <div tabindex="0">Focusable external area</div>
       <VPopover v-bind="args" v-on="args" v-for="item in args.popoverItems" :key="item" class="mb-2">
         <template #trigger="{ visible, a11yProps }">
-          <VButton :pressed="visible" variant="filled-pink-8-8" size="medium" v-bind="a11yProps">{{
+          <VButton :pressed="visible" variant="filled-pink-8" size="medium" v-bind="a11yProps">{{
               visible ? 'Close' : 'Open'
            }}</VButton>
         </template>
@@ -43,7 +43,7 @@ const ControlStory = (args) => ({
   template: `
     <VPopover v-bind="args" v-on="args">
       <template #trigger="{ visible, a11yProps }">
-        <VButton :pressed="visible" variant="filled-pink-8-8" size="medium" v-bind="a11yProps">{{
+        <VButton :pressed="visible" variant="filled-pink-8" size="medium" v-bind="a11yProps">{{
             visible ? 'Close' : 'Open'
         }}</VButton>
       </template>

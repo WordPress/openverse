@@ -58,7 +58,7 @@
                 variant="transparent-tx"
                 size="large"
                 :icon-props="{ name: 'close' }"
-                class="focus-slim-tx-yellow-3 text-text-over-dark hover:bg-bg hover:bg-opacity-10"
+                class="text-text-over-dark focus-slim-tx-bg-fill-complementary hover:bg-bg hover:bg-opacity-10"
                 :label="$t('modal.closePagesMenu')"
                 @click="closePageMenu"
               />
@@ -69,13 +69,13 @@
               <VPageLinks
                 mode="dark"
                 class="mt-3 flex flex-col items-end gap-y-6"
-                nav-link-classes="text-text-over-dark text-3xl focus-visible:ring-yellow-3"
+                nav-link-classes="text-text-over-dark text-3xl focus-visible:ring-bg-fill-complementary"
                 :is-in-modal="true"
                 @close="closePageMenu"
               />
             </nav>
             <VWordPressLink
-              class="focus-visible:ring-yellow-3 mt-auto focus-visible:ring-offset-0"
+              class="mt-auto focus-visible:ring-bg-fill-complementary focus-visible:ring-offset-0"
               mode="dark"
             />
           </template>

@@ -14,19 +14,15 @@
         class="h-20 border-b bg-bg"
         :class="headerBorder"
       />
-      <VHeaderMobile
-        v-else
-        class="h-20 border-b bg-bg"
-        :class="headerBorder"
-      />
+      <VHeaderMobile v-else class="h-20 border-b bg-bg" :class="headerBorder" />
     </div>
 
     <aside
       v-if="isSidebarVisible"
-      class="sidebar border-border bg-bg-surface end-0 z-10 h-full overflow-y-auto border-s"
+      class="sidebar end-0 z-10 h-full overflow-y-auto border-s border-border bg-bg-surface"
     >
       <VSearchGridFilter class="px-10 py-8" />
-      <VSafeBrowsing class="border-border border-t px-10 py-8" />
+      <VSafeBrowsing class="border-t border-border px-10 py-8" />
     </aside>
 
     <div
@@ -34,7 +30,7 @@
       class="main-page flex h-full w-full min-w-0 flex-col justify-between overflow-y-auto"
     >
       <slot />
-      <VFooter mode="content" class="border-border border-t bg-bg" />
+      <VFooter mode="content" class="border-t border-border bg-bg" />
     </div>
   </div>
 </template>

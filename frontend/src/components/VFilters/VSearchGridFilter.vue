@@ -12,7 +12,7 @@
         id="clear-filter-button"
         variant="transparent-gray"
         size="small"
-        class="label-bold !text-text-link absolute end-0"
+        class="label-bold absolute end-0 !text-text-link"
         @click="clearFilters"
       >
         {{ $t("filterList.clear") }}

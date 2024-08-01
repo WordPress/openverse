@@ -8,7 +8,7 @@
     :class="
       variant === 'dark'
         ? 'text-text hover:bg-bg-fill-complementary'
-        : 'focus-slim-tx-yellow-3 text-text-over-dark'
+        : 'text-text-over-dark focus-slim-tx-bg-fill-complementary'
     "
     class="h-12 px-4 text-[1.125rem]"
   >

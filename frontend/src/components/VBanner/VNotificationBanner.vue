@@ -19,7 +19,7 @@
         size="small"
         :label="closeButtonLabel || $t('modal.closeBanner')"
         :class="{
-          'focus-slim-tx-yellow-3 hover:bg-bg hover:bg-opacity-10':
+          'focus-slim-tx-bg-fill-complementary hover:bg-bg hover:bg-opacity-10':
             variant === 'dark',
         }"
         @click="$emit('close')"
@@ -61,7 +61,7 @@ export default defineComponent({
     },
     /**
      * the color variant of the banner; The dark variant is intended for use on
-     * yellow-3 pages.
+     * bg-fill-complementary pages.
      */
     variant: {
       type: String as PropType<"regular" | "dark">,

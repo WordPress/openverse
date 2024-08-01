@@ -23,7 +23,10 @@
 
     <!-- Locale chooser and WordPress affiliation graphic -->
     <div class="locale-and-wp flex flex-col justify-between">
-      <VLanguageSelect v-bind="languageProps" class="language max-w-full" />
+      <VLanguageSelect
+        v-bind="languageProps"
+        class="language max-w-full border-border-secondary"
+      />
       <VWordPressLink mode="light" />
     </div>
   </footer>

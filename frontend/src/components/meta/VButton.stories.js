@@ -128,7 +128,7 @@ export const Default = {
   name: "VButton",
 
   args: {
-    variant: "filled-pink-8-8",
+    variant: "filled-pink-8",
   },
 }
 

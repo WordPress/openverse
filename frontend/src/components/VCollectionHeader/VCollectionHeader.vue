@@ -10,7 +10,7 @@
         :size="10"
         class="icon hidden sm:flex"
       />
-      <span class="label-regular text-text-secondary flex sm:hidden">{{
+      <span class="label-regular flex text-text-secondary sm:hidden">{{
         $t(`collection.heading.${collection}`)
       }}</span>
       <span class="text-3xl font-semibold leading-snug sm:text-6xl">{{
@@ -34,7 +34,7 @@
       class="results mt-6 flex w-full min-w-0 flex-col items-start gap-1 sm:mt-0 sm:flex-row sm:items-center"
     >
       <p
-        class="label-regular text-text-secondary w-max sm:whitespace-nowrap"
+        class="label-regular w-max text-text-secondary sm:whitespace-nowrap"
         :class="{ 'pb-2 sm:pb-0': collection !== 'creator' }"
       >
         {{ resultsLabel }}

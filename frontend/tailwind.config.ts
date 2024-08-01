@@ -362,12 +362,9 @@ export default {
         1.5: "1.5px",
         3: "3px",
       },
-      typography: (theme: PluginAPI["theme"]) => ({
+      typography: () => ({
         DEFAULT: {
           css: {
-            "--tw-prose-body": theme("colors.gray-12.default"),
-            "--tw-prose-headings": theme("colors.gray-12.default"),
-            "--tw-prose-links": theme("colors.pink"),
             a: {
               textDecoration: "none",
               "&:hover": {

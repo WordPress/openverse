@@ -1,7 +1,9 @@
 <template>
   <article class="mb-14 flex w-full flex-row">
     <!-- Thumbnail skeleton -->
-    <div class="shimmering bg-bg-fill-secondary mr-4 h-20 w-20 flex-shrink-0 rounded" />
+    <div
+      class="shimmering mr-4 h-20 w-20 flex-shrink-0 rounded bg-bg-fill-secondary"
+    />
 
     <div class="flex h-20 w-full flex-row gap-6">
       <!-- Track info skeleton -->
@@ -10,18 +12,20 @@
           <div
             v-for="idx in 2"
             :key="idx"
-            class="row-line shimmering bg-bg-fill-secondary h-3 rounded"
+            class="row-line shimmering h-3 rounded bg-bg-fill-secondary"
             :style="{ width: `${getRandomSize()}px` }"
           />
           <div class="inline-flex gap-2 space-x-1">
-            <div class="shimmering bg-bg-fill-secondary h-3 w-14 rounded" />
-            <div class="shimmering bg-bg-fill-secondary h-3 w-3 rounded-full" />
-            <div class="row-line shimmering bg-bg-fill-secondary h-3 w-30 rounded" />
+            <div class="shimmering h-3 w-14 rounded bg-bg-fill-secondary" />
+            <div class="shimmering h-3 w-3 rounded-full bg-bg-fill-secondary" />
+            <div
+              class="row-line shimmering h-3 w-30 rounded bg-bg-fill-secondary"
+            />
           </div>
         </div>
       </div>
       <!-- Waveform skeleton -->
-      <div class="shimmering bg-bg-fill-secondary w-full rounded" />
+      <div class="shimmering w-full rounded bg-bg-fill-secondary" />
     </div>
   </article>
 </template>

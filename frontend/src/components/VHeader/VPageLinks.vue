@@ -30,7 +30,7 @@
   <ul v-else>
     <li v-for="page in allPages" :key="page.id">
       <VLink
-        class="disabled:text-text-disabled flex flex-row rounded-sm hover:underline focus-visible:outline-none focus-visible:ring focus-visible:ring-offset-tx"
+        class="flex flex-row rounded-sm hover:underline focus-visible:outline-none focus-visible:ring focus-visible:ring-offset-tx disabled:text-text-disabled"
         :class="[
           { 'font-semibold': currentPage === page.id },
           { 'text-text focus-visible:ring-pink-8': mode === 'light' },

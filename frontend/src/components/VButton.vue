@@ -319,7 +319,7 @@ a.button {
   @apply border-tx;
 }
 .transparent-gray {
-  @apply border-tx bg-tx text-text hover:bg-bg-fill-secondary-hover hover:bg-opacity-10 disabled:text-text-disabled;
+  @apply border-tx bg-tx text-text hover:bg-bg-fill-secondary-hover hover:bg-opacity-10 hover:text-text-over-dark disabled:text-text-disabled;
 }
 .transparent-dark {
   @apply border-tx bg-tx text-text hover:bg-bg-fill-secondary-hover hover:text-text-over-dark;

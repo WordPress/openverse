@@ -3,7 +3,7 @@
     href="https://wordpress.org"
     :aria-label="$t('footer.wordpressAffiliation', { wordpress: 'WordPress' })"
     :class="mode === 'light' ? 'text-text' : 'text-text-over-dark'"
-    class="focus-visible:ring-pink-8 hover:no-underline focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring focus-visible:ring-offset-1 focus-visible:ring-offset-tx"
+    class="hover:no-underline focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring focus-visible:ring-pink-8 focus-visible:ring-offset-1 focus-visible:ring-offset-tx"
   >
     <i18n-t
       scope="global"

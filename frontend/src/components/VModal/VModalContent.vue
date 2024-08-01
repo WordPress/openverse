@@ -8,7 +8,7 @@
           { 'flex-col items-center': variant === 'centered' },
           variant === 'mobile-input'
             ? 'top-20 h-[calc(100dvh-80px)] bg-tx'
-            : 'bg-bg-fill-tertiary bg-opacity-75',
+            : 'bg-modal-layer',
           contentClasses,
         ]"
       >
@@ -21,14 +21,14 @@
           :class="[
             mode === 'dark'
               ? 'bg-black text-text-over-dark'
-              : 'bg-bg text-text',
+              : 'bg-bg-overlay text-text',
             {
               'w-full md:max-w-[768px] lg:w-[768px] xl:w-[1024px] xl:max-w-[1024px]':
                 variant === 'default',
               'w-full': variant === 'full',
-              'mt-auto h-2/3 w-full rounded-se-lg rounded-ss-lg bg-bg':
+              'mt-auto h-2/3 w-full rounded-se-lg rounded-ss-lg bg-bg-overlay':
                 variant === 'two-thirds',
-              'mt-auto w-full rounded-se-lg rounded-ss-lg bg-bg':
+              'mt-auto w-full rounded-se-lg rounded-ss-lg bg-bg-overlay':
                 variant === 'fit-content',
               'm-6 rounded sm:m-0': variant === 'centered',
             },
@@ -47,7 +47,7 @@
                 -->
             <div
               v-if="variant === 'default'"
-              class="flex w-full shrink-0 justify-between bg-bg py-4 pe-3 ps-4 md:justify-end md:bg-tx md:px-0 md:py-3"
+              class="flex w-full shrink-0 justify-between bg-bg-overlay py-4 pe-3 ps-4 md:justify-end md:bg-tx md:px-0 md:py-3"
             >
               <VIconButton
                 ref="closeButton"
@@ -65,7 +65,7 @@
               'text-left align-bottom md:rounded-se-lg md:rounded-ss-lg':
                 variant === 'default',
               'w-auto rounded': variant === 'centered',
-              'mt-auto w-full rounded-se-lg rounded-ss-lg bg-bg':
+              'mt-auto w-full rounded-se-lg rounded-ss-lg bg-bg-overlay':
                 variant === 'fit-content',
               'flex w-full flex-col justify-between px-6 pb-10':
                 variant === 'full',
@@ -73,7 +73,7 @@
                 variant === 'two-thirds',
               'h-full': variant === 'mobile-input',
               'bg-black text-text-over-dark': mode === 'dark',
-              'bg-bg text-text': mode === 'light',
+              'bg-bg-overlay text-text': mode === 'light',
               'fallback-padding':
                 variant === 'fit-content' ||
                 variant === 'two-thirds' ||

@@ -125,6 +125,7 @@
   }
 
   :root,
+  :is(.light-mode),
   :is(.light-mode *) {
     --bg: var(--white);
     --bg-surface: var(--gray-1);
@@ -167,7 +168,8 @@
     --modal-layer: var(--gray-12-80);
   }
 
-  :is(.dark-mode *) {
+  :is(.dark-mode *),
+  :is(.dark-mode) {
     --bg: var(--gray-13);
     --bg-surface: var(--gray-12);
     --bg-overlay: var(--gray-11);
@@ -209,7 +211,7 @@
     --modal-layer: var(--gray-12-60);
   }
 
-  html {
+  body {
     @apply m-0 font-normal leading-loose text-text;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
