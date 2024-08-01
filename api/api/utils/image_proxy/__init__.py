@@ -1,3 +1,5 @@
+import asyncio
+import time
 from dataclasses import dataclass
 from datetime import timedelta
 from functools import wraps
@@ -236,6 +238,8 @@ async def get(
         request_config,
     )
 
+    start_time = time.perf_counter()
+
     try:
         session = await get_aiohttp_session()
 
@@ -253,13 +257,17 @@ async def get(
         status_code = upstream_response.status
         content_type = upstream_response.headers.get("Content-Type")
 
-        logger.debug(
-            "Image proxy response status: %s, content-type: %s",
-            status_code,
-            content_type,
-        )
-
         content = await upstream_response.content.read()
+
+        end_time = time.perf_counter()
+        logger.info(
+            "thumbnail_upstream_timing",
+            status=status_code,
+            time=end_time - start_time,
+            provider=media_info.media_provider,
+            content_type=content_type,
+            url=image_url,
+        )
 
         return HttpResponse(
             content,
@@ -267,6 +275,11 @@ async def get(
             content_type=content_type,
         )
     except Exception as exc:
+        # Record timing before tallying to Redis to avoid including
+        # the Redis request timing in what is meant to be the upstream
+        # request timing.
+        end_time = time.perf_counter()
+
         exception_name = f"{exc.__class__.__module__}.{exc.__class__.__name__}"
         key = f"thumbnail_error:{exception_name}:{domain}:{month}"
 
@@ -279,11 +292,22 @@ async def get(
             status = exc.status
             await _tally_client_response_errors(tallies, month, domain, status)
             logger.warning(
-                "thumbnail_failure",
+                "thumbnail_upstream_failure",
                 url=upstream_url,
                 status=status,
                 provider=media_info.media_provider,
                 exc=exc.message,
             )
+        else:
+            status = -1
+
+        logger.info(
+            "thumbnail_upstream_timing",
+            status=status,
+            time=end_time - start_time,
+            provider=media_info.media_provider,
+            content_type=image_extension,
+            url=image_url,
+        )
 
         raise UpstreamThumbnailException(f"Failed to render thumbnail. {exc}")
