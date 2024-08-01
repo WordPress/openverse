@@ -90,7 +90,7 @@ def _tally_response(
     response: aiohttp.ClientResponse,
 ):
     """
-    Tally image proxy response without waiting for Redis to respond.
+    Tally image proxy response.
 
     Pulled into a separate function to help reduce overload when skimming
     the `get` function, which is complex enough as is.
