@@ -1,4 +1,7 @@
 <script setup lang="ts">
+/**
+ * Renders the inner content of a modal and manages focus.
+ */
 import { toRefs, ref, computed, useAttrs } from "vue"
 
 import { useDialogContent } from "~/composables/use-dialog-content"
@@ -6,12 +9,11 @@ import { useDialogContent } from "~/composables/use-dialog-content"
 import type { ModalColorMode, ModalVariant } from "~/types/modal"
 
 import VIconButton from "~/components/VIconButton/VIconButton.vue"
-/**
- * Renders the inner content of a modal and manages focus.
- */
+
 defineOptions({
   inheritAttrs: false,
 })
+
 const props = withDefaults(
   defineProps<{
     visible: boolean
@@ -44,6 +46,7 @@ const props = withDefaults(
     contentClasses: "",
   }
 )
+
 const emit = defineEmits<{
   keydown: [KeyboardEvent]
   focus: [FocusEvent]
@@ -51,6 +54,7 @@ const emit = defineEmits<{
   close: []
   open: []
 }>()
+
 const attrs = useAttrs()
 
 const propsRefs = toRefs(props)
@@ -85,7 +89,7 @@ defineExpose({
 </script>
 
 <template>
-  <div v-if="visible">
+  <div>
     <Teleport to="#teleports">
       <div
         v-show="visible"
