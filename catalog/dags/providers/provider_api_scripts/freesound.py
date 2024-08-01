@@ -35,8 +35,6 @@ class FreesoundDataIngester(ProviderDataIngester):
     host = "freesound.org"
     endpoint = f"https://{host}/apiv2/search/text"
     providers = {"audio": prov.FREESOUND_DEFAULT_PROVIDER}
-    flaky_exceptions = (SSLError, ConnectionError)
-    flaky_error_codes = {400, 503}
     preferred_preview = "preview-hq-mp3"
     preview_bitrates = {
         "preview-hq-mp3": 128000,
@@ -44,6 +42,20 @@ class FreesoundDataIngester(ProviderDataIngester):
         "preview-hq-ogg": 192000,
         "preview-lq-ogg": 80000,
     }
+
+    # Freesound often tends to be flaky when making requests during ingestion.
+    # For the flaky HTTP errors above, we wait some time before trying the request
+    # again in the hopes that the upstream issues resolve in that time:
+    #   * 400 - Although framed as bad requests, these appear to succeed later
+    #   * 503 - Service unavailable, so we should just try to wait
+    flaky_error_codes = {400, 503}
+    # For certain requests, we want to retry it a few times on these conditions:
+    # * SSLError - 'EOF occurred in violation of protocol (_ssl.c:1129)'
+    # * ConnectionError - '[Errno 113] No route to host'
+    # Both of these seem transient and may be the result of some odd behavior on the
+    # Freesound API end. We have an API key that's supposed to be maxed out, so
+    # I can't imagine it's throttling (aetherunbound).
+    flaky_exceptions = (SSLError, ConnectionError)
 
     def __init__(self, *args, **kwargs):
         self.api_key = Variable.get("API_KEY_FREESOUND")
@@ -54,11 +66,6 @@ class FreesoundDataIngester(ProviderDataIngester):
 
         super().__init__(*args, **kwargs)
 
-    # Freesound often tends to be flaky when making requests during ingestion.
-    # For the flaky HTTP errors above, we wait some time before trying the request
-    # again in the hopes that the upstream issues resolve in that time:
-    #   * 400 - Although framed as bad requests, these appear to succeed later
-    #   * 503 - Service unavailable, so we should just try to wait
     get_response_json = backoff.on_exception(
         backoff.expo,
         HTTPError,
@@ -174,18 +181,7 @@ class FreesoundDataIngester(ProviderDataIngester):
 
     @backoff.on_exception(backoff.expo, flaky_exceptions, max_tries=3)
     def _get_audio_file_size(self, url):
-        """
-        Get the content length of a provided URL.
-
-        Freesound can be finicky, so we want to retry it a few times on
-        these conditions:
-          * SSLError - 'EOF occurred in violation of protocol (_ssl.c:1129)'
-          * ConnectionError - '[Errno 113] No route to host'
-
-        Both of these seem transient and may be the result of some odd behavior on the
-        Freesound API end. We have an API key that's supposed to be maxed out, so
-        I can't imagine it's throttling (aetherunbound).
-        """
+        """Get the content length of a provided URL."""
         response = self.delayed_requester.head(url)
 
         if response:
