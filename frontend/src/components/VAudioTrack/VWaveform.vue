@@ -357,7 +357,7 @@ export default defineComponent({
 
     /* Progress bar */
     const progressBarWidth = computed(() => {
-      const frac = isDragging.value ? seekFrac.value ?? 0 : currentFrac.value
+      const frac = isDragging.value ? (seekFrac.value ?? 0) : currentFrac.value
       return waveformDimens.value.width * frac
     })
 

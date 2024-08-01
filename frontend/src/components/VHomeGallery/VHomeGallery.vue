@@ -106,8 +106,8 @@ export default defineComponent({
     const imageSet = computed(() =>
       props.set === "random"
         ? imageInfo.sets[Math.floor(Math.random() * imageInfo.sets.length)]
-        : imageInfo.sets.find((item) => (item.key = props.set)) ??
-          imageInfo.sets[0]
+        : (imageInfo.sets.find((item) => (item.key = props.set)) ??
+          imageInfo.sets[0])
     )
     const imageList = computed(() => {
       return imageSet.value.images.map((image, idx) => ({
