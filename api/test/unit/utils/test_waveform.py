@@ -4,7 +4,7 @@ from pathlib import Path
 import pook
 import pytest
 
-from api.utils.waveform import UA_STRING, download_audio
+from api.utils.waveform import UA_STRING, download_audio, generate_waveform
 
 
 _MOCK_AUDIO_PATH = Path(__file__).parent / ".." / ".." / "factory"
@@ -30,3 +30,17 @@ def test_download_audio_sends_ua_header(mock_request):
     download_audio("http://example.org", "abcd-1234")
     # ``pook`` will only match if UA header is sent.
     assert mock_request.total_matches > 0
+
+
+@pytest.mark.parametrize(
+    "audio, duration",
+    [
+        ("sample-audio.mp3", 26000),
+        ("sample-short-audio.mp3", 45),
+    ],
+)
+def test_generate_waveform(audio, duration):
+    file_name = str(_MOCK_AUDIO_PATH.joinpath(audio))
+
+    json_out = generate_waveform(file_name, duration)
+    assert len(json_out) > 0

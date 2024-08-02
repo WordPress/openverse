@@ -89,7 +89,7 @@ def download_audio(url, identifier):
     return file_name
 
 
-def generate_waveform(file_name, duration):
+def generate_waveform(file_name: str, duration: int):
     """
     Generate the waveform for the file by invoking the ``audiowaveform`` binary.
 
@@ -125,7 +125,8 @@ def generate_waveform(file_name, duration):
         raise WaveformGenerationFailure()
 
     logger.debug("waveform_generation_finished", returncode=proc.returncode)
-    return proc.stdout
+    json_out = json.loads(proc.stdout)
+    return json_out
 
 
 def process_waveform_output(json_out):
@@ -142,8 +143,7 @@ def process_waveform_output(json_out):
 
     logger.info("Transforming points")
 
-    output = json.loads(json_out)
-    data = output["data"]
+    data = json_out["data"]
     logger.debug(f"initial points len(data)={len(data)}")
 
     transformed_data = []
