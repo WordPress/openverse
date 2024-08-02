@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { computed, onMounted, useLocaleHead } from "#imports"
+import { computed, onMounted, useLocaleHead, useHead } from "#imports"
 
 import { useUiStore } from "~/stores/ui"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import { useLayout } from "~/composables/use-layout"
+import { useDarkMode } from "~/composables/use-dark-mode"
 
 import VSkipToContentButton from "~/components/VSkipToContentButton.vue"
 
@@ -12,6 +13,8 @@ const { updateBreakpoint } = useLayout()
 
 const featureFlagStore = useFeatureFlagStore()
 const uiStore = useUiStore()
+
+const darkMode = useDarkMode()
 
 /* UI store */
 const isDesktopLayout = computed(() => uiStore.isDesktopLayout)
@@ -21,6 +24,10 @@ const head = useLocaleHead({
   addDirAttribute: true,
   identifierAttribute: "id",
   addSeoAttributes: true,
+})
+
+useHead({
+  bodyAttrs: { class: darkMode.cssClass },
 })
 
 /**
