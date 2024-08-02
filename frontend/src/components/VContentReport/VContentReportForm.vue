@@ -32,9 +32,11 @@ const props = withDefaults(
     providerName: string
     closeFn: () => void
     allowCancel?: boolean
+    isStandalone?: boolean
   }>(),
   {
     allowCancel: true,
+    default: false,
   }
 )
 
@@ -106,7 +108,8 @@ const handleSubmit = async (event: Event) => {
 <template>
   <div id="content-report-form">
     <header
-      class="flex h-22 w-[calc(100%+0.5rem)] items-center justify-between"
+      class="flex items-center justify-between"
+      :class="isStandalone ? 'mb-4' : 'h-22 w-[calc(100%+0.5rem)]'"
     >
       <h2 class="heading-6" tabindex="0">
         {{
