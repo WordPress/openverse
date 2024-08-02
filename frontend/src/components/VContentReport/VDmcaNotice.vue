@@ -39,7 +39,7 @@ export default defineComponent({
 <template>
   <i18n-t
     scope="global"
-    class="dmca-notice"
+    class="dmca-notice leading-normal"
     keypath="mediaDetails.contentReport.form.dmca.note"
     tag="p"
   >

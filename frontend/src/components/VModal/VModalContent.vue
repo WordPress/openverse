@@ -100,7 +100,7 @@ defineExpose({
       class="backdrop h-dyn-screen min-h-dyn-screen fixed inset-0 z-40 flex justify-center overflow-y-auto"
       :class="[
         { 'flex-col items-center': variant === 'centered' },
-        variant === 'mobile-input' ? 'bg-tx' : 'bg-modal-layer',
+        variant === 'mobile-input' ? 'bg-tx' : 'bg-modal-layer bg-opacity-75',
         contentClasses,
         variant,
       ]"
@@ -121,7 +121,7 @@ defineExpose({
               variant === 'two-thirds',
             'mt-auto w-full rounded-se-lg rounded-ss-lg bg-overlay':
               variant === 'fit-content',
-            'm-6 rounded sm:m-0': variant === 'centered',
+            'm-6 max-w-90 rounded sm:m-0': variant === 'centered',
           },
         ]"
         role="dialog"

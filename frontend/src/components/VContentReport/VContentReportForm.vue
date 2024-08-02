@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useRuntimeConfig } from "#imports"
+import { useNuxtApp, useRuntimeConfig } from "#imports"
 
 import { computed, ref } from "vue"
 
@@ -17,7 +17,6 @@ import {
 } from "~/constants/content-report"
 
 import type { AudioDetail, ImageDetail } from "~/types/media"
-import { useAnalytics } from "~/composables/use-analytics"
 
 import { mediaSlug } from "~/utils/query-utils"
 
@@ -56,10 +55,10 @@ const isSubmitDisabled = computed(
   () => selectedReason.value === OTHER && description.value.length < 20
 )
 
-const { sendCustomEvent } = useAnalytics()
+const { $sendCustomEvent } = useNuxtApp()
 
 const handleDmcaSubmit = () => {
-  sendCustomEvent("REPORT_MEDIA", {
+  $sendCustomEvent("REPORT_MEDIA", {
     id: props.media.id,
     mediaType: props.media.frontendMediaType,
     provider: props.media.provider,
@@ -91,7 +90,7 @@ const handleSubmit = async (event: Event) => {
       }
     )
 
-    sendCustomEvent("REPORT_MEDIA", {
+    $sendCustomEvent("REPORT_MEDIA", {
       mediaType,
       reason,
       id: props.media.id,
@@ -106,10 +105,21 @@ const handleSubmit = async (event: Event) => {
 
 <template>
   <div id="content-report-form">
-    <div v-if="status === SENT">
-      <h2 class="heading-6 mb-4">
-        {{ $t("mediaDetails.contentReport.success.title") }}
+    <header
+      class="flex h-22 w-[calc(100%+0.5rem)] items-center justify-between"
+    >
+      <h2 class="heading-6" tabindex="0">
+        {{
+          status === WIP
+            ? $t("mediaDetails.contentReport.long")
+            : status === SENT
+              ? $t("mediaDetails.contentReport.success.title")
+              : $t("mediaDetails.contentReport.failure.title")
+        }}
       </h2>
+      <slot name="close-button" />
+    </header>
+    <div v-if="status === SENT">
       <i18n-t
         scope="global"
         keypath="mediaDetails.contentReport.success.note"
@@ -127,9 +137,6 @@ const handleSubmit = async (event: Event) => {
     </div>
 
     <div v-else-if="status === FAILED">
-      <h2 class="heading-6 mb-4">
-        {{ $t("mediaDetails.contentReport.failure.title") }}
-      </h2>
       <p class="text-sm">
         {{ $t("mediaDetails.contentReport.failure.note") }}
       </p>
@@ -137,11 +144,7 @@ const handleSubmit = async (event: Event) => {
 
     <!-- Main form -->
     <div v-else>
-      <div class="heading-6 mb-4">
-        {{ $t("mediaDetails.contentReport.long") }}
-      </div>
-
-      <p class="mb-4 text-sm">
+      <p class="mb-4 text-sm leading-normal">
         {{
           $t("mediaDetails.contentReport.form.disclaimer", {
             openverse: "Openverse",
@@ -167,15 +170,15 @@ const handleSubmit = async (event: Event) => {
           </VRadio>
         </fieldset>
 
-        <div class="mb-4 min-h-[7rem]">
+        <div class="mb-4 leading-normal">
           <VDmcaNotice
-            v-if="media.foreign_landing_url && selectedReason === DMCA"
+            v-if="selectedReason === DMCA"
             :provider="providerName"
             :foreign-landing-url="media.foreign_landing_url"
             @click="handleDmcaSubmit"
           />
           <VReportDescForm
-            v-if="selectedReason !== DMCA"
+            v-else
             key="other"
             v-model:content="description"
             :reason="selectedReason"

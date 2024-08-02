@@ -1,16 +1,16 @@
-import VContentReportPopover from "~/components/VContentReport/VContentReportPopover.vue"
+import VContentReportModal from "~/components/VContentReport/VContentReportModal.vue"
 
 const Template = (args) => ({
-  template: `<VContentReportPopover v-bind="args" class="float-right"/>`,
-  components: { VContentReportPopover },
+  template: `<VContentReportModal :media="args.media" class="float-right"/>`,
+  components: { VContentReportModal },
   setup() {
     return { args }
   },
 })
 
 export default {
-  title: "Components/VContentReportPopover",
-  component: VContentReportPopover,
+  title: "Components/VContentReportModal",
+  component: VContentReportModal,
 }
 
 export const Default = {
