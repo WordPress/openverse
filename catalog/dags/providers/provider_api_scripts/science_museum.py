@@ -14,6 +14,9 @@ import logging
 import re
 from datetime import date
 
+import backoff
+from requests import HTTPError
+
 from common import slack
 from common.licenses import LicenseInfo, get_license_info
 from common.loader import provider_details as prov
@@ -43,6 +46,17 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
         # track page number as instance variable so we can more
         # easily detect when the page limit is reached
         self.page_number = 0
+
+    # Science Museum's API tends to be flaky, so we add a backoff on every request
+    # for 5XX error codes.
+    # See: https://github.com/WordPress/openverse/issues/4710
+    get_response_json = backoff.on_exception(
+        backoff.expo,
+        HTTPError,
+        max_time=60 * 2,
+        # Only retry on 5XX errors
+        giveup=lambda e: e.response.status_code not in {502, 503, 504},
+    )(ProviderDataIngester.get_response_json)
 
     @staticmethod
     def _get_year_ranges(final_year: int) -> list[tuple[int, int]]:
