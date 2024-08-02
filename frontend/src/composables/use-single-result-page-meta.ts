@@ -36,7 +36,7 @@ export const useSingleResultPageMeta = (
     }
     return isSensitive.value
       ? titles().sensitiveTitle
-      : media.value.title ?? titles().genericTitle
+      : (media.value.title ?? titles().genericTitle)
   }
   const getPageTitle = () => `${getMediaTitle()} | Openverse`
 
