@@ -4,7 +4,6 @@ from urllib.parse import urlparse
 
 import aiohttp
 import django_redis
-import sentry_sdk
 import structlog
 from asgiref.sync import sync_to_async
 from redis.exceptions import ConnectionError
@@ -47,7 +46,7 @@ async def get_image_extension(image_url: str, media_identifier) -> str | None:
 
             await _cache_extension(cache, key, ext)
         except Exception as exc:
-            sentry_sdk.capture_exception(exc)
+            logger.error("upstream_thumbnail_exception", e=exc)
             raise UpstreamThumbnailException(
                 "Failed to render thumbnail due to inability to check media "
                 f"type. {exc}"

@@ -1,7 +1,9 @@
+import logging
 from logging import LogRecord
 
 import structlog
 from decouple import config
+from structlog_sentry import SentryProcessor
 
 from conf.settings.base import ENVIRONMENT, INSTALLED_APPS, MIDDLEWARE
 from conf.settings.security import DEBUG
@@ -40,6 +42,8 @@ shared_processors = [
     structlog.contextvars.merge_contextvars,
     structlog.stdlib.add_logger_name,
     structlog.stdlib.add_log_level,
+    # https://github.com/kiwicom/structlog-sentry - for Sentry integration
+    SentryProcessor(event_level=logging.ERROR),
     structlog.stdlib.PositionalArgumentsFormatter(),
     structlog.processors.CallsiteParameterAdder(
         {
