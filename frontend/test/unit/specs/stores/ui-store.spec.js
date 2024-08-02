@@ -4,6 +4,17 @@ import { setActivePinia, createPinia } from "~~/test/unit/test-utils/pinia"
 
 import { useUiStore } from "~/stores/ui"
 
+vi.mock("~/types/cookies", async () => {
+  const actual = await vi.importActual("~/types/cookies")
+  return {
+    ...actual,
+    persistentCookieOptions: {
+      ...actual.persistentCookieOptions,
+      secure: false,
+    },
+  }
+})
+
 const initialState = {
   instructionsSnackbarState: "not_shown",
   innerFilterVisible: false,
