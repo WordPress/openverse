@@ -8,7 +8,7 @@ import { IMAGE } from "~/constants/media"
 
 import { getMediaMetadata } from "~/utils/metadata"
 
-import VContentReportPopover from "~/components/VContentReport/VContentReportPopover.vue"
+import VContentReportModal from "~/components/VContentReport/VContentReportModal.vue"
 import VMetadata from "~/components/VMediaInfo/VMetadata.vue"
 import VMediaTags from "~/components/VMediaInfo/VMediaTags.vue"
 
@@ -38,7 +38,7 @@ const metadata = computed<null | Metadata[]>(() => {
       <h2 class="heading-6 md:heading-5">
         {{ $t(`mediaDetails.${media.frontendMediaType}Info`) }}
       </h2>
-      <VContentReportPopover :media="media" />
+      <VContentReportModal :media="media" />
     </header>
     <div class="flex flex-col items-start gap-6 md:flex-row">
       <slot name="thumbnail" />

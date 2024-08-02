@@ -158,7 +158,7 @@ defineExpose({
           :class="{
             'text-left align-bottom md:rounded-se-lg md:rounded-ss-lg':
               variant === 'default',
-            'w-auto rounded': variant === 'centered',
+            'w-auto rounded sm:max-w-90': variant === 'centered',
             'mt-auto w-full rounded-se-lg rounded-ss-lg bg-white':
               variant === 'fit-content',
             'flex w-full flex-col justify-between px-6 pb-10':
