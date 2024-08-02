@@ -15,6 +15,7 @@
     </span>
   </VButton>
 </template>
+
 <script lang="ts">
 import { defineComponent, PropType } from "vue"
 

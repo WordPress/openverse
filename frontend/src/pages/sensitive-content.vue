@@ -1,3 +1,21 @@
+<script setup lang="ts">
+import { definePageMeta, useHead, useI18n } from "#imports"
+
+import VLink from "~/components/VLink.vue"
+import VContentPage from "~/components/VContentPage.vue"
+
+defineOptions({
+  name: "SensitiveContentPage",
+})
+
+definePageMeta({
+  layout: "content-layout",
+})
+
+const { t } = useI18n({ useScope: "global" })
+useHead({ title: `${t("sensitive.title")} | Openverse` })
+</script>
+
 <template>
   <VContentPage>
     <h1>
@@ -235,17 +253,3 @@
     </p>
   </VContentPage>
 </template>
-
-<script setup lang="ts">
-import { definePageMeta, useHead, useI18n } from "#imports"
-
-import VLink from "~/components/VLink.vue"
-import VContentPage from "~/components/VContentPage.vue"
-
-definePageMeta({
-  layout: "content-layout",
-})
-
-const { t } = useI18n({ useScope: "global" })
-useHead({ title: `${t("sensitive.title")} | Openverse` })
-</script>

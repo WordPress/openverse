@@ -34,6 +34,7 @@
     </div>
   </VItemGroup>
 </template>
+
 <script lang="ts">
 import { computed, defineComponent, type PropType } from "vue"
 

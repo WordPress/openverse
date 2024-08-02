@@ -19,6 +19,14 @@ export = {
         splitByDots: false,
       },
     ],
+    // Vue rules
+    "vue/block-order": [
+      "error",
+      {
+        order: ["script[setup]", "template", "script:not([setup])", "style"],
+      },
+    ],
+    "vue/padding-line-between-blocks": ["error", "always"],
     "vue/max-attributes-per-line": "off",
     "vue/require-prop-types": "off",
     "vue/require-default-prop": "off",

@@ -1,34 +1,3 @@
-<template>
-  <div>
-    <Html :lang="head.htmlAttrs.lang" :dir="head.htmlAttrs.dir">
-      <Head>
-        <template v-for="link in head.link" :key="link.id">
-          <Link
-            :id="link.id"
-            :rel="link.rel"
-            :href="link.href"
-            :hreflang="link.hreflang"
-          />
-        </template>
-        <template v-for="meta in head.meta" :key="meta.id">
-          <Meta
-            :id="meta.id"
-            :property="meta.property"
-            :content="meta.content"
-          />
-        </template>
-      </Head>
-      <Body>
-        <VSkipToContentButton />
-        <NuxtLayout name="default">
-          <VFourOhFour class="flex-grow" :error="error" />
-        </NuxtLayout>
-        <div id="modal"></div>
-      </Body>
-    </Html>
-  </div>
-</template>
-
 <script setup lang="ts">
 import {
   onMounted,
@@ -68,3 +37,34 @@ onMounted(() => {
 const featureFlagStore = useFeatureFlagStore()
 featureFlagStore.initFromQuery(route.query)
 </script>
+
+<template>
+  <div>
+    <Html :lang="head.htmlAttrs.lang" :dir="head.htmlAttrs.dir">
+      <Head>
+        <template v-for="link in head.link" :key="link.id">
+          <Link
+            :id="link.id"
+            :rel="link.rel"
+            :href="link.href"
+            :hreflang="link.hreflang"
+          />
+        </template>
+        <template v-for="meta in head.meta" :key="meta.id">
+          <Meta
+            :id="meta.id"
+            :property="meta.property"
+            :content="meta.content"
+          />
+        </template>
+      </Head>
+      <Body>
+        <VSkipToContentButton />
+        <NuxtLayout name="default">
+          <VFourOhFour class="flex-grow" :error="error" />
+        </NuxtLayout>
+        <div id="modal"></div>
+      </Body>
+    </Html>
+  </div>
+</template>

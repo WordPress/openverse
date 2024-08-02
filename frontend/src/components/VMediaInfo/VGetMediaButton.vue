@@ -14,6 +14,7 @@
     {{ $t(`${mediaType}Details.weblink`) }}
   </VButton>
 </template>
+
 <script lang="ts">
 import { defineComponent, PropType } from "vue"
 

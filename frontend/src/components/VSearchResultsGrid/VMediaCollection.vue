@@ -24,6 +24,7 @@
     />
   </section>
 </template>
+
 <script lang="ts">
 import { computed, defineComponent, inject, type PropType, ref } from "vue"
 

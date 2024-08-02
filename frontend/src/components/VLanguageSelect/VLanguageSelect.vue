@@ -1,17 +1,3 @@
-<template>
-  <VSelectField
-    v-model="locale"
-    field-id="language"
-    :choices="choices"
-    :blank-text="$t('language.language')"
-    :label-text="$t('language.language')"
-  >
-    <template #start>
-      <VIcon name="globe" />
-    </template>
-  </VSelectField>
-</template>
-
 <script setup lang="ts">
 import { useI18n } from "#imports"
 
@@ -45,3 +31,17 @@ const choices = computed<Choice[]>(() =>
     .sort((a, b) => a.key.localeCompare(b.key))
 )
 </script>
+
+<template>
+  <VSelectField
+    v-model="locale"
+    field-id="language"
+    :choices="choices"
+    :blank-text="$t('language.language')"
+    :label-text="$t('language.language')"
+  >
+    <template #start>
+      <VIcon name="globe" />
+    </template>
+  </VSelectField>
+</template>

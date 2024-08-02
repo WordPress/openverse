@@ -30,3 +30,11 @@ export const getBackToSearchLink = (
 // Get the header home link. Hard-codes the text because `t` does not support interpolation.
 export const getHomeLink = (page: Page) =>
   page.getByRole("banner").getByRole("link", { name: "Openverse Home" })
+
+export const getHomepageSearchButton = (
+  page: Page,
+  dir: LanguageDirection = "ltr"
+) => page.getByRole("button", { name: t("search.search", dir) })
+
+export const getLanguageSelect = (page: Page, dir: LanguageDirection = "ltr") =>
+  page.getByRole("combobox", { name: t("language.language", dir) })

@@ -1,65 +1,3 @@
-<template>
-  <li
-    :style="styles"
-    class="container w-full max-w-full"
-    :class="isSquare ? 'square' : 'intrinsic'"
-  >
-    <VLink
-      itemprop="contentUrl"
-      :title="contextSensitiveTitle"
-      :href="imageLink"
-      class="group relative block w-full overflow-hidden rounded-sm text-gray-2 focus-visible:outline-3 focus-visible:outline-offset-4"
-      :aria-label="contextSensitiveTitle"
-      @mousedown="sendSelectSearchResultEvent"
-    >
-      <figure
-        itemprop="image"
-        itemscope
-        itemtype="https://schema.org/ImageObject"
-        class="grid w-full rounded-sm"
-        :class="{ 'aspect-square': isSquare }"
-      >
-        <img
-          loading="lazy"
-          class="image col-span-full row-span-full block w-full overflow-hidden rounded-sm object-cover duration-200 motion-safe:transition-[filter,transform]"
-          :class="[
-            isSquare ? 'h-full' : 'margin-auto',
-            { 'scale-150 blur-image': shouldBlur },
-          ]"
-          :alt="
-            shouldBlur ? `${$t('sensitiveContent.title.image')}` : image.title
-          "
-          :src="imageUrl"
-          :width="imgWidth"
-          :height="imgHeight"
-          itemprop="thumbnailUrl"
-          @load="getImgDimension"
-          @error="onImageLoadError($event)"
-        />
-        <figcaption
-          class="col-span-full self-end justify-self-start rounded-sm bg-bg text-text group-hover:visible group-focus-visible:visible"
-          :class="
-            isSquare
-              ? 'invisible row-span-full m-2 p-2'
-              : 'my-2 sm:invisible sm:row-span-full sm:m-2 sm:p-2'
-          "
-        >
-          <h2 class="sr-only">
-            {{
-              shouldBlur ? `${$t("sensitiveContent.title.image")}` : image.title
-            }}
-          </h2>
-          <VLicense
-            :license="image.license"
-            :hide-name="true"
-            class="text-text-secondary group-hover:text-text group-focus-visible:text-text sm:text-text"
-          />
-        </figcaption>
-      </figure>
-    </VLink>
-  </li>
-</template>
-
 <script setup lang="ts">
 import { useI18n, useNuxtApp } from "#imports"
 
@@ -200,6 +138,68 @@ const sendSelectSearchResultEvent = (event: MouseEvent) => {
 
 const { isHidden: shouldBlur } = useSensitiveMedia(props.image)
 </script>
+
+<template>
+  <li
+    :style="styles"
+    class="container w-full max-w-full"
+    :class="isSquare ? 'square' : 'intrinsic'"
+  >
+    <VLink
+      itemprop="contentUrl"
+      :title="contextSensitiveTitle"
+      :href="imageLink"
+      class="group relative block w-full overflow-hidden rounded-sm text-gray-2 focus-visible:outline-3 focus-visible:outline-offset-4"
+      :aria-label="contextSensitiveTitle"
+      @mousedown="sendSelectSearchResultEvent"
+    >
+      <figure
+        itemprop="image"
+        itemscope
+        itemtype="https://schema.org/ImageObject"
+        class="grid w-full rounded-sm"
+        :class="{ 'aspect-square': isSquare }"
+      >
+        <img
+          loading="lazy"
+          class="image col-span-full row-span-full block w-full overflow-hidden rounded-sm object-cover duration-200 motion-safe:transition-[filter,transform]"
+          :class="[
+            isSquare ? 'h-full' : 'margin-auto',
+            { 'scale-150 blur-image': shouldBlur },
+          ]"
+          :alt="
+            shouldBlur ? `${$t('sensitiveContent.title.image')}` : image.title
+          "
+          :src="imageUrl"
+          :width="imgWidth"
+          :height="imgHeight"
+          itemprop="thumbnailUrl"
+          @load="getImgDimension"
+          @error="onImageLoadError($event)"
+        />
+        <figcaption
+          class="col-span-full self-end justify-self-start rounded-sm bg-bg text-text group-hover:visible group-focus-visible:visible"
+          :class="
+            isSquare
+              ? 'invisible row-span-full m-2 p-2'
+              : 'my-2 sm:invisible sm:row-span-full sm:m-2 sm:p-2'
+          "
+        >
+          <h2 class="sr-only">
+            {{
+              shouldBlur ? `${$t("sensitiveContent.title.image")}` : image.title
+            }}
+          </h2>
+          <VLicense
+            :license="image.license"
+            :hide-name="true"
+            class="text-text-secondary group-hover:text-text group-focus-visible:text-text sm:text-text"
+          />
+        </figcaption>
+      </figure>
+    </VLink>
+  </li>
+</template>
 
 <style scoped>
 @screen sm {

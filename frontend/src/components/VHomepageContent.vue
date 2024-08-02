@@ -77,6 +77,7 @@
     </i18n-t>
   </div>
 </template>
+
 <script lang="ts">
 import { computed, defineComponent, ref, PropType } from "vue"
 

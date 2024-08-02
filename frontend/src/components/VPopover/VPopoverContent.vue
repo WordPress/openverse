@@ -117,6 +117,7 @@ export default defineComponent({
   },
 })
 </script>
+
 <style>
 .popover-content {
   height: var(--popover-height, auto);

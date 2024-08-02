@@ -40,11 +40,6 @@ from ingestion_server.queries import get_existence_queries
 from ingestion_server.utils.sensitive_terms import get_sensitive_terms
 
 
-# See https://www.elastic.co/guide/en/elasticsearch/reference/8.8/docs-reindex.html#docs-reindex-throttle
-ES_FILTERED_INDEX_THROTTLING_RATE = config(
-    "ES_FILTERED_INDEX_THROTTLING_RATE", default=20_000, cast=int
-)
-
 # The number of database records to load in memory at once.
 DB_BUFFER_SIZE = config("DB_BUFFER_SIZE", default=100000, cast=int)
 
@@ -494,7 +489,6 @@ class TableIndexer:
             },
             slices="auto",
             wait_for_completion=True,
-            requests_per_second=ES_FILTERED_INDEX_THROTTLING_RATE,
             # Temporary workaround to allow the action to complete.
             request_timeout=48 * 3600,
         )

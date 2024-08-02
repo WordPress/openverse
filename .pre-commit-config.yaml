@@ -46,7 +46,7 @@ repos:
       - id: requirements-txt-fixer
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.5.0
+    rev: v0.5.5
     hooks:
       - id: ruff # replaces Flake8, isort, pydocstyle, pyupgrade
         args:
@@ -61,9 +61,9 @@ repos:
         # Must include any plugins defined in prettier.config.js, along with TypeScript and Prettier themselves
         # Versions must be manually kept in sync with those in the pnpm-lock.yaml file to prevent drift.
         additional_dependencies:
-          - prettier@3.3.2
+          - prettier@3.3.3
           - prettier-plugin-tailwindcss@0.6.5
-          - typescript@5.5.2
+          - typescript@5.5.4
 
   - repo: https://github.com/koalaman/shellcheck-precommit
     rev: v0.10.0
@@ -155,7 +155,7 @@ repos:
         files: (.vale/.*|.mdx?)$
 
   - repo: https://github.com/renovatebot/pre-commit-hooks
-    rev: 37.421.5
+    rev: 37.440.7
     hooks:
       - id: renovate-config-validator
         args:

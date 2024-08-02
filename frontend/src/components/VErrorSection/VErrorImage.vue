@@ -1,12 +1,3 @@
-<template>
-  <figure class="error-image">
-    <img :src="image.src" :alt="$t(image.alt)" :title="$t(image.alt)" />
-    <!-- Disable reason: We control the attribution HTML generation so this is safe and will not lead to XSS attacks -->
-    <!-- eslint-disable-next-line vue/no-v-html -->
-    <figcaption class="attribution" v-html="image.attribution" />
-  </figure>
-</template>
-
 <script setup lang="ts">
 import { useI18n } from "#imports"
 
@@ -53,6 +44,15 @@ const images = Object.fromEntries(
 )
 const image = computed(() => images[props.errorCode])
 </script>
+
+<template>
+  <figure class="error-image">
+    <img :src="image.src" :alt="$t(image.alt)" :title="$t(image.alt)" />
+    <!-- Disable reason: We control the attribution HTML generation so this is safe and will not lead to XSS attacks -->
+    <!-- eslint-disable-next-line vue/no-v-html -->
+    <figcaption class="attribution" v-html="image.attribution" />
+  </figure>
+</template>
 
 <style scoped>
 ::v-deep(.attribution) {

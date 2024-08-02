@@ -1,26 +1,3 @@
-<!-- eslint-disable vue/no-restricted-syntax -->
-<template>
-  <NuxtLink
-    :class="{ 'inline-flex w-max items-center gap-x-2': showExternalIcon }"
-    :aria-disabled="!to"
-    v-bind="linkProps"
-    :to="to"
-    @click="handleClick"
-    @mousedown="emit('mousedown', $event)"
-    @blur="emit('blur', $event)"
-    @focus="emit('focus', $event)"
-    @keydown="emit('keydown', $event)"
-  >
-    <slot /><VIcon
-      v-if="showExternalIcon && !isInternal"
-      name="external-link"
-      class="inline-block"
-      :size="externalIconSize"
-      rtl-flip
-    />
-  </NuxtLink>
-</template>
-
 <script setup lang="ts">
 /**
  * This is a wrapper component for all links. If `href` prop is undefined,
@@ -136,3 +113,26 @@ const handleClick = (e: MouseEvent) => {
   })
 }
 </script>
+
+<!-- eslint-disable vue/no-restricted-syntax -->
+<template>
+  <NuxtLink
+    :class="{ 'inline-flex w-max items-center gap-x-2': showExternalIcon }"
+    :aria-disabled="!to"
+    v-bind="linkProps"
+    :to="to"
+    @click="handleClick"
+    @mousedown="emit('mousedown', $event)"
+    @blur="emit('blur', $event)"
+    @focus="emit('focus', $event)"
+    @keydown="emit('keydown', $event)"
+  >
+    <slot /><VIcon
+      v-if="showExternalIcon && !isInternal"
+      name="external-link"
+      class="inline-block"
+      :size="externalIconSize"
+      rtl-flip
+    />
+  </NuxtLink>
+</template>

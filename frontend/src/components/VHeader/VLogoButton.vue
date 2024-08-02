@@ -11,6 +11,7 @@
     <VLogoLoader :status="isFetching ? 'loading' : 'idle'" />
   </VButton>
 </template>
+
 <script lang="ts">
 import { defineComponent } from "vue"
 

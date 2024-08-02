@@ -1,15 +1,3 @@
-<template>
-  <svg
-    :viewBox="viewBox"
-    focusable="false"
-    class="v-icon flex-none"
-    :class="icon.class"
-    aria-hidden="true"
-  >
-    <use :href="icon.url" />
-  </svg>
-</template>
-
 <script setup lang="ts">
 import { ref, watch } from "vue"
 
@@ -53,3 +41,15 @@ watch(
   }
 )
 </script>
+
+<template>
+  <svg
+    :viewBox="viewBox"
+    focusable="false"
+    class="v-icon flex-none"
+    :class="icon.class"
+    aria-hidden="true"
+  >
+    <use :href="icon.url" />
+  </svg>
+</template>

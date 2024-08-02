@@ -11,6 +11,7 @@
     <h2 class="label-regular">{{ $t("filters.title") }}</h2>
   </VTab>
 </template>
+
 <script lang="ts">
 import VFilterIconOrCounter from "~/components/VHeader/VFilterIconOrCounter.vue"
 import VTab from "~/components/VTabs/VTab.vue"

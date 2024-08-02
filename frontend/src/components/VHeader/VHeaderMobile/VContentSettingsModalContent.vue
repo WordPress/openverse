@@ -79,6 +79,7 @@
     </footer>
   </VModalContent>
 </template>
+
 <script lang="ts">
 import { computed, defineComponent, PropType, ref } from "vue"
 

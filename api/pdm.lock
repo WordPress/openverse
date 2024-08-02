@@ -3,9 +3,12 @@
 
 [metadata]
 groups = ["default", "dev", "overrides", "test"]
-strategy = ["cross_platform", "inherit_metadata"]
-lock_version = "4.4.2"
-content_hash = "sha256:72eb89318bd54e3a8e02fc09eb12c405311b08827f0956b307fe9b154fb108a1"
+strategy = ["inherit_metadata"]
+lock_version = "4.5.0"
+content_hash = "sha256:b5b54c06235e8a363db385bb12af39fecc3048d46969c7ece1a41b022e24e7b9"
+
+[[metadata.targets]]
+requires_python = "==3.11.*"
 
 [[package]]
 name = "adrf"
@@ -31,6 +34,7 @@ summary = "Async http client/server framework (asyncio)"
 groups = ["default"]
 dependencies = [
     "aiosignal>=1.1.2",
+    "async-timeout<5.0,>=4.0; python_version < \"3.11\"",
     "attrs>=17.3.0",
     "frozenlist>=1.1.1",
     "multidict<7.0,>=4.5",
@@ -76,8 +80,10 @@ requires_python = ">=3.7"
 summary = "High level compatibility layer for multiple asynchronous event loop implementations"
 groups = ["default", "test"]
 dependencies = [
+    "exceptiongroup; python_version < \"3.11\"",
     "idna>=2.8",
     "sniffio>=1.1",
+    "typing-extensions; python_version < \"3.8\"",
 ]
 files = [
     {file = "anyio-3.7.1-py3-none-any.whl", hash = "sha256:91dee416e570e92c64041bd18b900d1d6fa78dff7048769ce5ac5ddad004fbb5"},
@@ -90,6 +96,9 @@ version = "3.8.1"
 requires_python = ">=3.8"
 summary = "ASGI specs, helper code, and adapters"
 groups = ["default"]
+dependencies = [
+    "typing-extensions>=4; python_version < \"3.11\"",
+]
 files = [
     {file = "asgiref-3.8.1-py3-none-any.whl", hash = "sha256:3e1e3ecc849832fe52ccf2cb6686b7a55f82bb1d6aee72a58826471390335e47"},
     {file = "asgiref-3.8.1.tar.gz", hash = "sha256:c343bd80a0bec947a9860adb4c432ffa7db769836c64238fc34bdc3fec84d590"},
@@ -102,6 +111,7 @@ summary = "Annotate AST trees with source code positions"
 groups = ["dev"]
 dependencies = [
     "six>=1.12.0",
+    "typing; python_version < \"3.5\"",
 ]
 files = [
     {file = "asttokens-2.4.1-py2.py3-none-any.whl", hash = "sha256:051ed49c3dcae8913ea7cd08e46a606dba30b79993209636c4875bc1d637bc24"},
@@ -125,6 +135,9 @@ requires_python = ">=3.7"
 summary = "Timeout context manager for asyncio programs"
 groups = ["default", "test"]
 marker = "python_full_version < \"3.11.3\""
+dependencies = [
+    "typing-extensions>=3.6.5; python_version < \"3.8\"",
+]
 files = [
     {file = "async-timeout-4.0.3.tar.gz", hash = "sha256:4640d96be84d82d02ed59ea2b7105a0f7b33abe8703703cd0ab0bf87c427522f"},
     {file = "async_timeout-4.0.3-py3-none-any.whl", hash = "sha256:7405140ff1230c310e51dc27b3145b9092d659ce68ff733fb0cefe3ee42be028"},
@@ -136,6 +149,9 @@ version = "23.2.0"
 requires_python = ">=3.7"
 summary = "Classes Without Boilerplate"
 groups = ["default", "test"]
+dependencies = [
+    "importlib-metadata; python_version < \"3.8\"",
+]
 files = [
     {file = "attrs-23.2.0-py3-none-any.whl", hash = "sha256:99b87a485a5820b23b879f04c2305b44b951b502fd64be915879d77a7e8fc6f1"},
     {file = "attrs-23.2.0.tar.gz", hash = "sha256:935dc3b529c262f6cf76e50877d35a4bd3c1de194fd41f47a2b7ae8f19971f30"},
@@ -266,6 +282,7 @@ summary = "Composable command line interface toolkit"
 groups = ["default", "dev", "test"]
 dependencies = [
     "colorama; platform_system == \"Windows\"",
+    "importlib-metadata; python_version < \"3.8\"",
 ]
 files = [
     {file = "click-8.1.7-py3-none-any.whl", hash = "sha256:ae74fb96c20a0277a1d615f1e4d73c8414f5a98db8b799a7931d1582f3390c28"},
@@ -374,6 +391,7 @@ summary = "A high-level Python web framework that encourages rapid development a
 groups = ["default"]
 dependencies = [
     "asgiref<4,>=3.6.0",
+    "backports-zoneinfo; python_version < \"3.9\"",
     "sqlparse>=0.3.1",
     "tzdata; sys_platform == \"win32\"",
 ]
@@ -533,6 +551,7 @@ requires_python = ">=3.6"
 summary = "Web APIs for Django, made easy."
 groups = ["default"]
 dependencies = [
+    "backports-zoneinfo; python_version < \"3.9\"",
     "django>=3.0",
 ]
 files = [
@@ -552,6 +571,7 @@ dependencies = [
     "djangorestframework>=3.10.3",
     "inflection>=0.3.1",
     "jsonschema>=2.6.0",
+    "typing-extensions; python_version < \"3.10\"",
     "uritemplate>=2.0.0",
 ]
 files = [
@@ -567,6 +587,7 @@ summary = "Transport classes and utilities shared among Python Elastic client li
 groups = ["default"]
 dependencies = [
     "certifi",
+    "importlib-metadata; python_version < \"3.8\"",
     "urllib3<3,>=1.26.2",
 ]
 files = [
@@ -622,6 +643,7 @@ summary = "A versatile test fixtures replacement based on thoughtbot's factory_b
 groups = ["test"]
 dependencies = [
     "Faker>=0.7.0",
+    "importlib-metadata; python_version < \"3.8\"",
 ]
 files = [
     {file = "factory_boy-3.3.0-py2.py3-none-any.whl", hash = "sha256:a2cdbdb63228177aa4f1c52f4b6d83fab2b8623bf602c7dedd7eb83c0f69c04c"},
@@ -636,6 +658,7 @@ summary = "Faker is a Python package that generates fake data for you."
 groups = ["test"]
 dependencies = [
     "python-dateutil>=2.4",
+    "typing-extensions>=3.10.0.1; python_version <= \"3.8\"",
 ]
 files = [
     {file = "Faker-24.9.0-py3-none-any.whl", hash = "sha256:97c7874665e8eb7b517f97bf3b59f03bf3f07513fe2c159e98b6b9ea6b9f2b3d"},
@@ -727,6 +750,9 @@ version = "3.2.3"
 requires_python = ">=3.6,<4"
 summary = "GraphQL implementation for Python, a port of GraphQL.js, the JavaScript reference implementation for GraphQL."
 groups = ["test"]
+dependencies = [
+    "typing-extensions<5,>=4.2; python_version < \"3.8\"",
+]
 files = [
     {file = "graphql-core-3.2.3.tar.gz", hash = "sha256:06d2aad0ac723e35b1cb47885d3e5c45e956a53bc1b209a9fc5369007fe46676"},
     {file = "graphql_core-3.2.3-py3-none-any.whl", hash = "sha256:5766780452bd5ec8ba133f8bf287dc92713e3868ddd83aee4faab9fc3e303dc3"},
@@ -738,6 +764,9 @@ version = "0.14.0"
 requires_python = ">=3.7"
 summary = "A pure-Python, bring-your-own-I/O implementation of HTTP/1.1"
 groups = ["default", "test"]
+dependencies = [
+    "typing-extensions; python_version < \"3.8\"",
+]
 files = [
     {file = "h11-0.14.0-py3-none-any.whl", hash = "sha256:e3fe4ac4b851c468cc8363d500db52c2ead036020723024a109d37346efaa761"},
     {file = "h11-0.14.0.tar.gz", hash = "sha256:8f19fbbe99e72420ff35c00b27a34cb9937e902a8b810e2c88300c6f0a3b699d"},
@@ -812,6 +841,7 @@ summary = "A library for property-based testing"
 groups = ["test"]
 dependencies = [
     "attrs>=22.2.0",
+    "exceptiongroup>=1.0.0; python_version < \"3.11\"",
     "sortedcontainers<3.0.0,>=2.1.0",
 ]
 files = [
@@ -891,6 +921,7 @@ groups = ["dev"]
 dependencies = [
     "colorama; sys_platform == \"win32\"",
     "decorator",
+    "exceptiongroup; python_version < \"3.11\"",
     "jedi>=0.16",
     "matplotlib-inline",
     "pexpect>4.3; sys_platform != \"win32\" and sys_platform != \"emscripten\"",
@@ -927,7 +958,9 @@ summary = "An implementation of JSON Schema validation for Python"
 groups = ["default", "test"]
 dependencies = [
     "attrs>=22.2.0",
+    "importlib-resources>=1.4.0; python_version < \"3.9\"",
     "jsonschema-specifications>=2023.03.6",
+    "pkgutil-resolve-name>=1.3.10; python_version < \"3.9\"",
     "referencing>=0.28.4",
     "rpds-py>=0.7.1",
 ]
@@ -943,6 +976,7 @@ requires_python = ">=3.8"
 summary = "The JSON Schema meta-schemas and vocabularies, exposed as a Registry"
 groups = ["default", "test"]
 dependencies = [
+    "importlib-resources>=1.4.0; python_version < \"3.9\"",
     "referencing>=0.31.0",
 ]
 files = [
@@ -1120,6 +1154,8 @@ requires_python = ">=3.8"
 summary = "Python datetimes made easy"
 groups = ["dev"]
 dependencies = [
+    "backports-zoneinfo>=0.2.1; python_version < \"3.9\"",
+    "importlib-resources>=5.9.0; python_version < \"3.9\"",
     "python-dateutil>=2.6",
     "time-machine>=2.6.0; implementation_name != \"pypy\"",
     "tzdata>=2020.1",
@@ -1299,6 +1335,7 @@ requires_python = ">=3.7"
 summary = "PostgreSQL database adapter for Python"
 groups = ["default", "dev"]
 dependencies = [
+    "backports-zoneinfo>=0.2.0; python_version < \"3.9\"",
     "typing-extensions>=4.1",
     "tzdata; sys_platform == \"win32\"",
 ]
@@ -1370,9 +1407,12 @@ summary = "pytest: simple powerful testing with Python"
 groups = ["test"]
 dependencies = [
     "colorama; sys_platform == \"win32\"",
+    "exceptiongroup>=1.0.0rc8; python_version < \"3.11\"",
+    "importlib-metadata>=0.12; python_version < \"3.8\"",
     "iniconfig",
     "packaging",
     "pluggy<2.0,>=0.12",
+    "tomli>=1.0.0; python_version < \"3.11\"",
 ]
 files = [
     {file = "pytest-7.4.4-py3-none-any.whl", hash = "sha256:b090cdf5ed60bf4c45261be03239c2c1c22df034fbffe691abe93cd80cea01d8"},
@@ -1559,6 +1599,8 @@ summary = "Python client for Redis database and key-value store"
 groups = ["default", "test"]
 dependencies = [
     "async-timeout>=4.0.3; python_full_version < \"3.11.3\"",
+    "importlib-metadata>=1.0; python_version < \"3.8\"",
+    "typing-extensions; python_version < \"3.8\"",
 ]
 files = [
     {file = "redis-5.0.3-py3-none-any.whl", hash = "sha256:5da9b8fe9e1254293756c16c008e8620b3d15fcc6dde6babde9541850e72a32d"},
@@ -1679,6 +1721,7 @@ dependencies = [
     "hypothesis-graphql<1,>=0.11.0",
     "hypothesis-jsonschema<0.24,>=0.23.1",
     "hypothesis<7,>=6.103.4; python_version > \"3.8\"",
+    "hypothesis[zoneinfo]<7,>=6.103.4; python_version == \"3.8\"",
     "jsonschema<5.0,>=4.18.0",
     "junit-xml<2.0,>=1.9",
     "pyrate-limiter<4.0,>=2.10",
@@ -1705,7 +1748,9 @@ summary = "Python client for Sentry (https://sentry.io)"
 groups = ["default"]
 dependencies = [
     "certifi",
+    "urllib3>=1.25.7; python_version <= \"3.4\"",
     "urllib3>=1.26.11; python_version >= \"3.6\"",
+    "urllib3>=1.26.9; python_version == \"3.5\"",
 ]
 files = [
     {file = "sentry-sdk-1.45.0.tar.gz", hash = "sha256:509aa9678c0512344ca886281766c2e538682f8acfa50fd8d405f8c417ad0625"},
@@ -1827,6 +1872,7 @@ summary = "The little ASGI library that shines."
 groups = ["test"]
 dependencies = [
     "anyio<5,>=3.4.0",
+    "typing-extensions>=3.10.0; python_version < \"3.10\"",
 ]
 files = [
     {file = "starlette-0.37.2-py3-none-any.whl", hash = "sha256:6fe59f29268538e5d0d182f2791a479a0c64638e6935d1c6989e63fb2699c6ee"},
@@ -2025,22 +2071,23 @@ files = [
 
 [[package]]
 name = "uvicorn"
-version = "0.29.0"
+version = "0.30.4"
 requires_python = ">=3.8"
 summary = "The lightning-fast ASGI server."
 groups = ["default"]
 dependencies = [
     "click>=7.0",
     "h11>=0.8",
+    "typing-extensions>=4.0; python_version < \"3.11\"",
 ]
 files = [
-    {file = "uvicorn-0.29.0-py3-none-any.whl", hash = "sha256:2c2aac7ff4f4365c206fd773a39bf4ebd1047c238f8b8268ad996829323473de"},
-    {file = "uvicorn-0.29.0.tar.gz", hash = "sha256:6a69214c0b6a087462412670b3ef21224fa48cae0e452b5883e8e8bdfdd11dd0"},
+    {file = "uvicorn-0.30.4-py3-none-any.whl", hash = "sha256:06b00e3087e58c6865c284143c0c42f810b32ff4f265ab19d08c566f74a08728"},
+    {file = "uvicorn-0.30.4.tar.gz", hash = "sha256:00db9a9e3711a5fa59866e2b02fac69d8dc70ce0814aaec9a66d1d9e5c832a30"},
 ]
 
 [[package]]
 name = "uvicorn"
-version = "0.29.0"
+version = "0.30.4"
 extras = ["standard"]
 requires_python = ">=3.8"
 summary = "The lightning-fast ASGI server."
@@ -2050,14 +2097,14 @@ dependencies = [
     "httptools>=0.5.0",
     "python-dotenv>=0.13",
     "pyyaml>=5.1",
-    "uvicorn==0.29.0",
+    "uvicorn==0.30.4",
     "uvloop!=0.15.0,!=0.15.1,>=0.14.0; (sys_platform != \"cygwin\" and sys_platform != \"win32\") and platform_python_implementation != \"PyPy\"",
     "watchfiles>=0.13",
     "websockets>=10.4",
 ]
 files = [
-    {file = "uvicorn-0.29.0-py3-none-any.whl", hash = "sha256:2c2aac7ff4f4365c206fd773a39bf4ebd1047c238f8b8268ad996829323473de"},
-    {file = "uvicorn-0.29.0.tar.gz", hash = "sha256:6a69214c0b6a087462412670b3ef21224fa48cae0e452b5883e8e8bdfdd11dd0"},
+    {file = "uvicorn-0.30.4-py3-none-any.whl", hash = "sha256:06b00e3087e58c6865c284143c0c42f810b32ff4f265ab19d08c566f74a08728"},
+    {file = "uvicorn-0.30.4.tar.gz", hash = "sha256:00db9a9e3711a5fa59866e2b02fac69d8dc70ce0814aaec9a66d1d9e5c832a30"},
 ]
 
 [[package]]
@@ -2120,6 +2167,9 @@ name = "wcwidth"
 version = "0.2.13"
 summary = "Measures the displayed width of unicode strings in a terminal"
 groups = ["dev"]
+dependencies = [
+    "backports-functools-lru-cache>=1.2.1; python_version < \"3.2\"",
+]
 files = [
     {file = "wcwidth-0.2.13-py2.py3-none-any.whl", hash = "sha256:3da69048e4540d84af32131829ff948f1e022c1c6bdb8d6102117aac784f6859"},
     {file = "wcwidth-0.2.13.tar.gz", hash = "sha256:72ea0c06399eb286d978fdedb6923a9eb47e1c486ce63e9b4e64fc18303972b5"},
@@ -2196,6 +2246,7 @@ groups = ["default", "test"]
 dependencies = [
     "idna>=2.0",
     "multidict>=4.0",
+    "typing-extensions>=3.7.4; python_version < \"3.8\"",
 ]
 files = [
     {file = "yarl-1.9.4-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:35a2b9396879ce32754bd457d31a51ff0a9d426fd9e0e3c33394bf4b9036b099"},

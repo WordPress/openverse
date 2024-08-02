@@ -1,28 +1,3 @@
-<template>
-  <div
-    :id="skipToContentTargetId"
-    tabindex="-1"
-    class="browse-page flex w-full flex-col px-6 lg:px-10"
-  >
-    <VErrorSection
-      v-if="fetchingError"
-      :fetching-error="fetchingError"
-      class="w-full py-10"
-    />
-    <section v-else>
-      <NuxtPage
-        :page-key="$route.path"
-        :results="searchResults"
-        :is-fetching="isFetching"
-        :search-term="searchTerm"
-        :supported="supported"
-        :handle-load-more="handleLoadMore"
-        data-testid="search-results"
-      />
-    </section>
-  </div>
-</template>
-
 <script setup lang="ts">
 import {
   createError,
@@ -53,6 +28,10 @@ import { areQueriesEqual } from "~/utils/search-query-transform"
 import { handledClientSide, isRetriable } from "~/utils/errors"
 
 import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
+
+defineOptions({
+  name: "SearchPage",
+})
 
 definePageMeta({
   layout: "search-layout",
@@ -176,3 +155,28 @@ await useAsyncData(
   }
 )
 </script>
+
+<template>
+  <div
+    :id="skipToContentTargetId"
+    tabindex="-1"
+    class="browse-page flex w-full flex-col px-6 lg:px-10"
+  >
+    <VErrorSection
+      v-if="fetchingError"
+      :fetching-error="fetchingError"
+      class="w-full py-10"
+    />
+    <section v-else>
+      <NuxtPage
+        :page-key="$route.path"
+        :results="searchResults"
+        :is-fetching="isFetching"
+        :search-term="searchTerm"
+        :supported="supported"
+        :handle-load-more="handleLoadMore"
+        data-testid="search-results"
+      />
+    </section>
+  </div>
+</template>

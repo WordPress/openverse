@@ -1,39 +1,3 @@
-<template>
-  <div
-    class="app h-dyn-screen min-h-dyn-screen grid grid-rows-[auto,1fr] bg-bg"
-    :class="[
-      isSidebarVisible
-        ? 'has-sidebar grid-cols-[1fr_var(--filter-sidebar-width)]'
-        : 'grid-cols-1',
-    ]"
-  >
-    <div class="header-el bg-bg">
-      <VBanners />
-      <VHeaderDesktop
-        v-if="isDesktopLayout"
-        class="h-20 border-b bg-bg"
-        :class="headerBorder"
-      />
-      <VHeaderMobile v-else class="h-20 border-b bg-bg" :class="headerBorder" />
-    </div>
-
-    <aside
-      v-if="isSidebarVisible"
-      class="sidebar end-0 z-10 h-full overflow-y-auto border-s border-border bg-bg-surface"
-    >
-      <VSearchGridFilter class="px-10 py-8" />
-      <VSafeBrowsing class="border-t border-border px-10 py-8" />
-    </aside>
-
-    <div
-      id="main-page"
-      class="main-page flex h-full w-full min-w-0 flex-col justify-between overflow-y-auto"
-    >
-      <slot />
-      <VFooter mode="content" class="border-t border-border bg-bg" />
-    </div>
-  </div>
-</template>
 <script setup lang="ts">
 import { computed, onMounted, provide, ref, watch } from "vue"
 import { useScroll } from "@vueuse/core"
@@ -49,6 +13,10 @@ import VSearchGridFilter from "~/components/VFilters/VSearchGridFilter.vue"
 import VSafeBrowsing from "~/components/VSafeBrowsing/VSafeBrowsing.vue"
 import VHeaderDesktop from "~/components/VHeader/VHeaderDesktop.vue"
 import VHeaderMobile from "~/components/VHeader/VHeaderMobile/VHeaderMobile.vue"
+
+defineOptions({
+  name: "SearchLayout",
+})
 
 /**
  * This is the SearchLayout: the search page that has a sidebar.
@@ -97,6 +65,43 @@ const headerBorder = computed(() =>
     : "border-b-tx"
 )
 </script>
+
+<template>
+  <div
+    class="app h-dyn-screen min-h-dyn-screen grid grid-rows-[auto,1fr] bg-bg"
+    :class="[
+      isSidebarVisible
+        ? 'has-sidebar grid-cols-[1fr_var(--filter-sidebar-width)]'
+        : 'grid-cols-1',
+    ]"
+  >
+    <div class="header-el bg-bg">
+      <VBanners />
+      <VHeaderDesktop
+        v-if="isDesktopLayout"
+        class="h-20 border-b bg-bg"
+        :class="headerBorder"
+      />
+      <VHeaderMobile v-else class="h-20 border-b bg-bg" :class="headerBorder" />
+    </div>
+
+    <aside
+      v-if="isSidebarVisible"
+      class="sidebar end-0 z-10 h-full overflow-y-auto border-s border-border bg-bg-surface"
+    >
+      <VSearchGridFilter class="px-10 py-8" />
+      <VSafeBrowsing class="border-t border-border px-10 py-8" />
+    </aside>
+
+    <div
+      id="main-page"
+      class="main-page flex h-full w-full min-w-0 flex-col justify-between overflow-y-auto"
+    >
+      <slot />
+      <VFooter mode="content" class="border-t border-border bg-bg" />
+    </div>
+  </div>
+</template>
 
 <style scoped>
 .has-sidebar .sidebar {

@@ -17,6 +17,7 @@
     <template v-else>{{ datum.value }}</template>
   </dd>
 </template>
+
 <script lang="ts">
 import type { Metadata } from "~/types/media"
 

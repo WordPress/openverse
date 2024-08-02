@@ -40,6 +40,7 @@
     </template>
   </dl>
 </template>
+
 <script lang="ts">
 import { firstParam, useNuxtApp, useRoute } from "#imports"
 
