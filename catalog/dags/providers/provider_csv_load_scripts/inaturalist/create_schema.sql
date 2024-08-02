@@ -58,14 +58,14 @@ COMMIT;
    https://github.com/CatalogueOfLife/coldp/blob/master/README.md#vernacularname
 */
 CREATE TABLE inaturalist.col_vernacular (
-    taxonID varchar(5),
+    taxonID text,
     sourceID decimal,
-    taxon_name varchar(2000),
+    taxon_name text,
     transliteration text,
     name_language varchar(3),
     preferred boolean,
     country varchar(3),
-    area varchar(2000),
+    area text,
     sex decimal,
     referenceID decimal,
     remarks text
