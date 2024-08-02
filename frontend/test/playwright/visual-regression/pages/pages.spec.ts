@@ -64,8 +64,10 @@ test.describe("layout color is set correctly", () => {
 
       await expect(languageSelect).toHaveValue("en")
       await languageSelect.selectOption("ar")
-      const searchBar = page.getByRole("searchbox")
 
+      await page.waitForURL(/ar/)
+
+      const searchBar = page.getByRole("searchbox")
       await searchBar.fill("cat")
       await searchBar.press("Enter")
 
