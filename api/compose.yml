@@ -54,6 +54,7 @@ services:
     depends_on:
       - web
 
+  # Used in API unit tests
   httpbin:
     profiles:
       - api
