@@ -1,56 +1,32 @@
 import { defineNuxtConfig } from "nuxt/config"
 
+import { disallowedBots } from "./src/constants/disallowed-bots"
 import locales from "./src/locales/scripts/valid-locales.json"
 
 import type { LocaleObject } from "@nuxtjs/i18n"
 
-const disallowedBots = [
-  "GPTBot",
-  "CCBot",
-  "ChatGPT-User",
-  "Google-Extended",
-  "anthropic-ai",
-  "Omgilibot",
-  "Omgili",
-  "FacebookBot",
-  "Diffbot",
-  "Bytespider",
-  "ImagesiftBot",
-  "cohere-ai",
-]
-
 /**
- * Robots.txt rules are configured here via the \@nuxtjs/robots package.
- * @see {@link https://nuxtseo.com/robots/guides/nuxt-config|Robots Config Rules}
+ * This configuration sets values necessary at *build time*
+ * to build the app and prerender our pages.
+ *
+ * Pay special attention when setting runtimeConfig values
+ * in this file.
+ *
+ * Any key in `{runtimeConfig: {}}` can be
+ * overwritten with a NUXT_ environment variable,
+ * with the camelCase key converted to SCREAMING_SNAKE_CASE.
+ *
+ * The runtimeConfig values here are either defaults for local
+ * development, or placeholders used to register the NUXT_
+ * environment variables.
+ *
+ * See our .env.template for a definitive list of runtime values.
+ *
+ * Do not use import.meta.env to retrieve environment variables
+ * here without careful consideration.
+ *
+ * @see {@link https://nuxt.com/docs/guide/going-further/runtime-config#example}
  */
-const robots = {
-  userAgent: "*",
-  disallow: ["/search", "/search/audio", "/search/image"],
-  groups: [
-    ...disallowedBots.map((bot) => ({
-      userAgent: [bot],
-      disallow: ["/"], // block bots from all routes
-    })),
-  ],
-}
-
-const openverseLocales = [
-  {
-    /* Nuxt i18n fields */
-
-    code: "en", // unique identifier for the locale in Vue i18n
-    dir: "ltr",
-    file: "en.json",
-    iso: "en", // used for SEO purposes (html lang attribute)
-
-    /* Custom fields */
-
-    name: "English",
-    nativeName: "English",
-  },
-  ...locales,
-].filter((l) => Boolean(l.iso)) as LocaleObject[]
-
 export default defineNuxtConfig({
   srcDir: "src/",
   serverDir: "server/",
@@ -63,11 +39,12 @@ export default defineNuxtConfig({
   },
   compatibilityDate: "2024-07-23",
   css: ["~/assets/fonts.css", "~/styles/accent.css"],
+  // Remember: Can be overwritten by NUXT_* env vars
   runtimeConfig: {
     apiClientId: "",
     apiClientSecret: "",
+    // Remember: Can be overwritten by NUXT_PUBLIC_* env vars
     public: {
-      // These values can be overridden by the NUXT_PUBLIC_* env variables
       deploymentEnv: "local",
       apiUrl: "https://api.openverse.org/",
       providerUpdateFrequency: 3600000,
@@ -106,12 +83,39 @@ export default defineNuxtConfig({
     "/meta-search": { redirect: { to: "/about", statusCode: 301 } },
     "/external-sources": { redirect: { to: "/about", statusCode: 301 } },
   },
-  robots,
+  /**
+   * Robots.txt rules are configured here via the \@nuxtjs/robots package.
+   * @see {@link https://nuxtseo.com/robots/guides/nuxt-config|Robots Config Rules}
+   */
+  robots: {
+    disallow: ["/search", "/search/audio", "/search/image"],
+    groups: [
+      ...disallowedBots.map((bot) => ({
+        userAgent: [bot],
+        disallow: ["/"], // block bots from all routes
+      })),
+    ],
+  },
   tailwindcss: {
     cssPath: "~/styles/tailwind.css",
   },
   i18n: {
-    locales: openverseLocales,
+    locales: [
+      {
+        /* Nuxt i18n fields */
+
+        code: "en", // unique identifier for the locale in Vue i18n
+        dir: "ltr",
+        file: "en.json",
+        iso: "en", // used for SEO purposes (html lang attribute)
+
+        /* Custom fields */
+
+        name: "English",
+        nativeName: "English",
+      },
+      ...locales,
+    ].filter((l) => Boolean(l.iso)) as LocaleObject[],
     lazy: true,
     langDir: "locales",
     defaultLocale: "en",
