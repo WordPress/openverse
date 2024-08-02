@@ -1,7 +1,5 @@
 import { defineNuxtConfig } from "nuxt/config"
 
-import { LOCAL, PRODUCTION } from "./src/constants/deploy-env"
-
 import locales from "./src/locales/scripts/valid-locales.json"
 import { meta as commonMeta } from "./src/constants/meta"
 
@@ -60,15 +58,6 @@ const robots = {
   ],
 }
 
-const isProductionBuild = import.meta.env.NODE_ENV === "production"
-const isPlaywright = import.meta.env.PW === "true"
-const isProdNotPlaywright = isProductionBuild && !isPlaywright
-const isTest = import.meta.env.TEST === "true"
-const deploymentEnv = import.meta.env.DEPLOYMENT_ENV || LOCAL
-
-const apiUrl =
-  import.meta.env.NUXT_PUBLIC_API_URL || "https://api.openverse.org/"
-
 const openverseLocales = [
   {
     /* Nuxt i18n fields */
@@ -101,11 +90,11 @@ export default defineNuxtConfig({
         },
         {
           rel: "dns-prefetch",
-          href: apiUrl,
+          href: process.env.NUXT_PUBLIC_API_URL,
         },
         {
           rel: "preconnect",
-          href: apiUrl,
+          href: process.env.NUXT_PUBLIC_API_URL,
           crossorigin: "",
         },
       ],
@@ -127,20 +116,18 @@ export default defineNuxtConfig({
     apiClientSecret: "",
     public: {
       // These values can be overridden by the NUXT_PUBLIC_* env variables
-      deploymentEnv,
-      apiUrl,
+      deploymentEnv: "local",
+      apiUrl: "https://api.openverse.org/",
       providerUpdateFrequency: 3600000,
       savedSearchCount: 4,
       sentry: {
         dsn: "",
-        environment: deploymentEnv,
-        release: import.meta.env.SEMANTIC_VERSION,
+        environment: "local",
+        release: "",
       },
-      isPlaywright,
     },
   },
   site: {
-    indexable: deploymentEnv === PRODUCTION,
     trailingSlash: false,
   },
   /**
@@ -172,7 +159,6 @@ export default defineNuxtConfig({
     cssPath: "~/styles/tailwind.css",
   },
   i18n: {
-    baseUrl: import.meta.env.SITE_URL,
     locales: openverseLocales,
     lazy: true,
     langDir: "locales",
@@ -188,13 +174,5 @@ export default defineNuxtConfig({
     detectBrowserLanguage: false,
     trailingSlash: false,
     vueI18n: "./src/vue-i18n",
-  },
-  plausible: {
-    enabled: !isTest,
-    logIgnoredEvents: !isProductionBuild,
-    trackLocalhost: !isProdNotPlaywright,
-    autoPageviews: isProdNotPlaywright,
-    domain: import.meta.env.SITE_DOMAIN,
-    apiHost: import.meta.env.PLAUSIBLE_SITE_URL,
   },
 })

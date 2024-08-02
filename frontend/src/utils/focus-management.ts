@@ -36,7 +36,7 @@ const focusableSelector = [
   "textarea:not([disabled])",
 ]
   .map(
-    import.meta.env.NODE_ENV === "test"
+    import.meta.env?.NODE_ENV === "test"
       ? // TODO: Remove this once JSDOM fixes the issue where an element that is
         // "hidden" can be the document.activeElement, because this is not possible
         // in real browsers.

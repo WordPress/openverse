@@ -3,6 +3,8 @@ import { useCookie } from "#imports"
 import { defineStore } from "pinia"
 import { useStorage } from "@vueuse/core"
 
+import { useRuntimeConfig } from "#app"
+
 import featureData from "~~/feat/feature-flags.json"
 
 import { warn } from "~/utils/console"
@@ -24,7 +26,12 @@ import {
   SESSION,
   SWITCHABLE,
 } from "~/constants/feature-flag"
-import { DEPLOY_ENVS, DeployEnv, LOCAL } from "~/constants/deploy-env"
+import {
+  DEPLOY_ENVS,
+  DeployEnv,
+  LOCAL,
+  PRODUCTION,
+} from "~/constants/deploy-env"
 
 import {
   OpenverseCookieState,
@@ -204,9 +211,11 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
      * are read in the corresponding `initFromCookies` method.
      */
     writeToCookie() {
+      const secure = useRuntimeConfig().public.deploymentEnv === PRODUCTION
+
       const featuresCookie = useCookie<OpenverseCookieState["features"]>(
         "features",
-        persistentCookieOptions
+        { ...persistentCookieOptions, secure }
       )
       featuresCookie.value = this.flagStateMap(COOKIE)
     },
@@ -218,9 +227,11 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
      * and will be deleted by the browser after the session.
      */
     writeToSession() {
+      const secure = useRuntimeConfig().public.deploymentEnv === PRODUCTION
+
       const sessionFeaturesCookie = useCookie<
         OpenverseCookieState["sessionFeatures"]
-      >("sessionFeatures", sessionCookieOptions)
+      >("sessionFeatures", { ...sessionCookieOptions, secure })
       sessionFeaturesCookie.value = this.flagStateMap(SESSION)
     },
     /**

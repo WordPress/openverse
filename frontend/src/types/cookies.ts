@@ -1,14 +1,12 @@
 import type { FeatureState } from "~/constants/feature-flag"
 import type { RealBreakpoint } from "~/constants/screens"
 import type { BannerId } from "~/types/banners"
-import { PRODUCTION } from "~/constants/deploy-env"
 
 export type SnackbarState = "not_shown" | "visible" | "dismissed"
 
 const baseCookieOptions = {
   path: "/",
   sameSite: "strict",
-  secure: import.meta.env.DEPLOYMENT_ENV === PRODUCTION,
 } as const
 
 export const persistentCookieOptions = {
