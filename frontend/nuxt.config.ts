@@ -175,4 +175,7 @@ export default defineNuxtConfig({
     trailingSlash: false,
     vueI18n: "./src/vue-i18n",
   },
+  plausible: {
+    trackLocalhost: true,
+  },
 })
