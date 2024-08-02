@@ -5,7 +5,6 @@ import { SCREENS } from "./src/constants/screens"
 import { Z_INDICES } from "./src/constants/z-indices"
 
 import type { Config } from "tailwindcss"
-import type { PluginAPI } from "tailwindcss/types/config"
 
 export default {
   content: [
