@@ -7,7 +7,11 @@ import {
   sleep,
 } from "~~/test/playwright/utils/navigation"
 import { languageDirections, t } from "~~/test/playwright/utils/i18n"
-import { getH1 } from "~~/test/playwright/utils/components"
+import {
+  getH1,
+  getHomepageSearchButton,
+  getLanguageSelect,
+} from "~~/test/playwright/utils/components"
 
 test.describe.configure({ mode: "parallel" })
 
@@ -52,23 +56,21 @@ test.describe("layout color is set correctly", () => {
     test("change language on homepage and search", async ({ page }) => {
       await page.goto("/")
 
-      // Wait for hydration
-      await expect(
-        page.getByRole("button", { name: t("search.search") })
-      ).toBeEnabled()
-      await expect(
-        page.getByRole("combobox", { name: t("language.language") })
-      ).toHaveValue("en")
+      const searchButton = getHomepageSearchButton(page)
+      const languageSelect = getLanguageSelect(page)
 
-      await page.getByRole("combobox", { name: "Language" }).selectOption("ar")
-      const searchBar = page.getByPlaceholder(
-        t("hero.search.placeholder", "rtl")
-      )
+      // Wait for hydration
+      await expect(searchButton).toBeEnabled()
+
+      await expect(languageSelect).toHaveValue("en")
+      await languageSelect.selectOption("ar")
+      const searchBar = page.getByRole("searchbox")
+
       await searchBar.fill("cat")
       await searchBar.press("Enter")
 
-      await expect(getH1(page, "Cat")).toBeVisible()
       await page.waitForURL(/ar\/search/)
+      await expect(getH1(page, "Cat")).toBeVisible()
 
       expect(await page.screenshot()).toMatchSnapshot("search-page-rtl-lg.png")
     })
@@ -80,9 +82,7 @@ test.describe("layout color is set correctly", () => {
 
       // wait for hydration
       await sleep(500)
-      await page
-        .getByRole("combobox", { name: t("language.language", "rtl") })
-        .selectOption("en")
+      await getLanguageSelect(page, "rtl").selectOption("en")
 
       await page
         .getByRole("link", { name: t("navigation.about", "ltr") })
