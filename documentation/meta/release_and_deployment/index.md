@@ -1,4 +1,4 @@
-# The process of releasing and deploying code
+# Releasing and deploying code
 
 This document covers the code release and deployment processes for each service
 and environment. Colocating all information related to release and deployment
