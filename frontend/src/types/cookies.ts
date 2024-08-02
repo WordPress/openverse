@@ -7,6 +7,7 @@ export type SnackbarState = "not_shown" | "visible" | "dismissed"
 const baseCookieOptions = {
   path: "/",
   sameSite: "strict",
+  secure: true,
 } as const
 
 export const persistentCookieOptions = {

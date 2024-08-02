@@ -1,4 +1,4 @@
-import { useCookie, useRuntimeConfig } from "#imports"
+import { useCookie } from "#imports"
 
 import { defineStore } from "pinia"
 
@@ -14,7 +14,6 @@ import type { BannerId } from "~/types/banners"
 import type { RealBreakpoint } from "~/constants/screens"
 import { ALL_SCREEN_SIZES } from "~/constants/screens"
 import { needsTranslationBanner } from "~/utils/translation-banner"
-import { PRODUCTION } from "~/constants/deploy-env"
 
 const desktopBreakpoints: RealBreakpoint[] = ["2xl", "xl", "lg"]
 
@@ -177,12 +176,10 @@ export const useUiStore = defineStore("ui", {
      * are read in the corresponding `initFromCookies` method.
      */
     writeToCookie() {
-      const secure = useRuntimeConfig().public.deploymentEnv === PRODUCTION
-
-      const uiCookie = useCookie<OpenverseCookieState["ui"]>("ui", {
-        ...persistentCookieOptions,
-        secure,
-      })
+      const uiCookie = useCookie<OpenverseCookieState["ui"]>(
+        "ui",
+        persistentCookieOptions
+      )
       uiCookie.value = this.cookieState
     },
 
