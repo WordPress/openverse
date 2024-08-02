@@ -40,9 +40,6 @@ export PGCLI_VERSION := `grep -A 1 'name = "pgcli"' pdm.lock | grep 'version' | 
 install *args:
     pdm install {{ args }}
 
-add *args:
-    pdm add {{ args }}
-
 ######
 # Up #
 ######
