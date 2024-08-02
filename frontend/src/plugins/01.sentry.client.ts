@@ -14,6 +14,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   Sentry.init({
     dsn: sentry.dsn,
     environment: sentry.environment,
+    release: sentry.release,
     app: nuxtApp.vueApp,
   })
   Sentry.setContext("render context", { platform: "client" })
