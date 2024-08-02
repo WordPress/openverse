@@ -31,7 +31,9 @@ const config: PlaywrightTestConfig = {
       NUXT_PUBLIC_API_URL: API_URL,
       UPDATE_TAPES: UPDATE_TAPES,
       DEPLOYMENT_ENV: PRODUCTION,
-      PW: "true",
+      NUXT_PUBLIC_PLAUSIBLE_ENABLED: "true",
+      NUXT_PUBLIC_PLAUSIBLE_DOMAIN: "localhost",
+      NUXT_PUBLIC_PLAUSIBLE_API_HOST: "http://localhost:50290",
     },
   },
   use: {
