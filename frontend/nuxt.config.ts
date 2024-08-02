@@ -123,7 +123,7 @@ export default defineNuxtConfig({
       sentry: {
         dsn: "",
         environment: "local",
-        release: "",
+        release: import.meta.env.SEMANTIC_VERSION,
       },
     },
   },
