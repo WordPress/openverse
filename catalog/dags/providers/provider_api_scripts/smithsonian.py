@@ -261,7 +261,7 @@ class SmithsonianDataIngester(ProviderDataIngester):
         if unknown_input is None:
             logger.debug(f"{unknown_input} is of type {type(unknown_input)}.")
             typed_input = required_type()
-        elif type(unknown_input) != required_type:
+        elif not isinstance(unknown_input, required_type):
             logger.info(
                 f"{unknown_input} is of type {type(unknown_input)}"
                 f" rather than {required_type}."

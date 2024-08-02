@@ -182,7 +182,7 @@ def freeze_time(monkeypatch):
 
     class FreezeMeta(type):
         def __instancecheck__(self, instance):
-            if type(instance) == original or type(instance) == Freeze:
+            if isinstance(instance, (original, Freeze)):
                 return True
 
     class Freeze(datetime.datetime):

@@ -62,7 +62,7 @@ jobs:
           sudo chown -R runneradmin:root /tmp/renovate/
           ls -R "$cache_dir"
 
-      - uses: renovatebot/github-action@v40.1.12
+      - uses: renovatebot/github-action@v40.2.4
         with:
           # Renovate recommends _not_ to use any of
           # [these names](https://docs.renovatebot.com/configuration-options/).
