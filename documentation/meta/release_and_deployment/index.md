@@ -1,13 +1,20 @@
 # Releasing and deploying code
 
+<!--
+A note to maintainers on the purpose of this document and motivations behind
+its method of organising the relevant information:
+
 This document covers the code release and deployment processes for each service
 and environment. Colocating all information related to release and deployment
 (as opposed to separating them into the app-specific directories) allows us to
 more easily point out similarities and difference to keep in mind between each
 application, as these details tend to be where confusion happens the most.
+-->
 
+```{tip}
 This documentation section is targeted at Openverse maintainers. As such, some
 information or links may be inaccessible to general contributors.
+```
 
 ## Runbooks
 
@@ -23,10 +30,10 @@ runbooks/*
 
 ## Tangled web of ambiguous terminology
 
-The [terminology defined in the next section](#definitions) must be understood
-and referred to with absolute clarity in order to prevent confusion when
-thinking about, discussing, or modifying the release and deployment processes.
-Of particular difficulty are:
+The [terminology defined in the next section](#glossary) must be understood and
+referred to with absolute clarity in order to prevent confusion when thinking
+about, discussing, or modifying the release and deployment processes. Of
+particular difficulty are:
 
 - That **release** and **tag** are both nouns and verbs, and can individually
   refer to multiple different distinct concepts
@@ -37,15 +44,15 @@ Of particular difficulty are:
 - That **release** (as a verb) and **deploy** are often used to denote either
   part of or the entire process of both releasing and deploying code for a
   service. This can make it communicating about a particular step of the overall
-  release-and-deploy process confusing. The definitions below treat release and
+  release-and-deploy process confusing. The glossary below treats release and
   deploy as distinct, non-overlapping, but related processes. _This is an
   important distinction, and can be especially meaningful in the context of
   fixing a live environment, when deciding between whether to roll back or
   release a new version with fixes (or a revert)_.
 
-## Definitions
+## Glossary
 
-Refer to the following definitions for unambiguous descriptions of each.
+Refer to the following definitions for unambiguous descriptions of each term.
 
 - **Application** or **app** (noun)
 
@@ -268,11 +275,11 @@ the manual workflow run dialogue, add a reason for the manual deployment as the
 ```{admonition} Production tag details
 :class: warning
 
-The production release and deployment process uses the <code>rel-*</code> pattern image tags when dispatching
-the deployment workflow for each app. However, the <code>rel-*</code> image tags are merely aliases for the
+The production release and deployment process uses the <code>rel-\*</code> pattern image tags when dispatching
+the deployment workflow for each app. However, the <code>rel-\*</code> image tags are merely aliases for the
 git commit hash based image tags that are returned by the <code>/version</code> endpoints linked above. There
 is no difference between running the deployment workflow with the tag returned by the <code>/version</code> endpoint
-or the <code>rel-*</code> tag. Use whichever method you find most convenient.
+or the <code>rel-\*</code> tag. Use whichever method you find most convenient.
 ```
 
 ```{note}
