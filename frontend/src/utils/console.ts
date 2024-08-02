@@ -3,6 +3,10 @@ import { PRODUCTION, STAGING } from "~/constants/deploy-env"
 const isProductionOrStaging = [PRODUCTION, STAGING].includes(
   import.meta.env.DEPLOYMENT_ENV
 )
+console.log(
+  "setting up console utils, deployment env",
+  import.meta.env.DEPLOYMENT_ENV
+)
 
 /**
  * Silence logging on the client when deployed
