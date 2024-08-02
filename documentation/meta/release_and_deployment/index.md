@@ -36,19 +36,21 @@ about, discussing, or modifying the release and deployment processes. Of
 particular difficulty are:
 
 - That **release** and **tag** are both nouns and verbs, and can individually
-  refer to multiple different distinct concepts
+  refer to multiple different distinct concepts.
 - That **workflow** and **process** may refer to the same things, but that
   **workflow** is also the name of a specific GitHub feature used to perform
-  either a part of or a whole process, and so saying **the workflow** may either
-  be interpreted as **the process** or a GitHub Workflow
+  either a part of or a whole process. As such, the phrase "**the workflow**" is
+  ambiguous and may be interpreted as either "**the process**" or a specific
+  GitHub Workflow.
 - That **release** (as a verb) and **deploy** are often used to denote either
   part of or the entire process of both releasing and deploying code for a
-  service. This can make it communicating about a particular step of the overall
+  service. This can make communicating about a particular step of the overall
   release-and-deploy process confusing. The glossary below treats release and
-  deploy as distinct, non-overlapping, but related processes. _This is an
-  important distinction, and can be especially meaningful in the context of
-  fixing a live environment, when deciding between whether to roll back or
-  release a new version with fixes (or a revert)_.
+  deploy as distinct, non-overlapping, but related processes.
+  - _This is a critical distinction, and can be especially meaningful in the
+    context of fixing a live environment, when deciding between and
+    communicating specific corrective actions like a roll back, the release of a
+    new version with fixes, or a revert_.
 
 ## Glossary
 
@@ -56,7 +58,8 @@ Refer to the following definitions for unambiguous descriptions of each term.
 
 - **Application** or **app** (noun)
 
-  - One of the Openverse **apps**, frontend, API, catalog, ingestion server.
+  - One of the Openverse **apps**, frontend, API, catalog (Airflow), ingestion
+    server.
 
 - **Service** (noun):
 
@@ -65,9 +68,10 @@ Refer to the following definitions for unambiguous descriptions of each term.
 - **Docker image** (noun):
 
   - A binary blob containing information used to run an application in a
-    containerised environment. Openverse uses Docker images to distribute our
-    applications. A new Docker image is created for each app for every push to
-    main that included modifications of code related to the app.
+    containerised environment. Openverse uses Docker images to distribute and
+    run its services. A new Docker image is created for each app for every push
+    to main that included modifications of code related to the app.
+  - Docker images have one or more **Docker image tags** (see below).
 
 - **Process** (noun):
 
@@ -77,8 +81,8 @@ Refer to the following definitions for unambiguous descriptions of each term.
 
   - An alternative name for **process**. Because it is too easy to confuse this
     with **GitHub Workflow**, it is clearer to use **process** to refer to any
-    generic process, and the full name **GitHub Workflow** to refer to the
-    GitHub feature.
+    set of steps to achieve an outcome, and the full name **GitHub Workflow** to
+    refer to the GitHub feature.
 
 - **GitHub Workflow** (noun):
 
@@ -95,9 +99,10 @@ Refer to the following definitions for unambiguous descriptions of each term.
 - **Publish (GitHub) release** (verb):
 
   - Literally clicking the **publish** button on a GitHub Release's page. This
-    **publishes** the GitHub Release, which in turn triggers our "tag docker
-    image and trigger deployment" GitHub Workflow. Sometimes **cut a release**
-    is used to refer to this, but should be avoided due to lack of clarity.
+    **publishes** the GitHub Release, which in turn triggers Openverse's "tag
+    docker image and trigger deployment" GitHub Workflow. Sometimes **cut a
+    release** is used to refer to this, but should be avoided due to being
+    jargon.
 
 - **Tag docker image and trigger deployment GitHub Workflow** (noun):
 
@@ -107,9 +112,17 @@ Refer to the following definitions for unambiguous descriptions of each term.
     also triggers a deployment by dispatching the relevant GitHub Workflow in
     the `openverse-infrastructure` repository.
 
+- **Tag** (verb):
+
+  - The action of applying a tag (of any sort) to a thing. e.g.:
+    - "Tag the release"
+    - "Tag the Docker image"
+    - "Add a tag to the Docker image"
+    - "Tag the git commit"
+
 - **Release** (verb):
 
-  - The process of giving a release tag to build artefacts.
+  - The process of applying a release tag to build artefacts.
 
 - **Deploy** (verb):
 
@@ -122,10 +135,16 @@ Refer to the following definitions for unambiguous descriptions of each term.
 
 - **Docker image tag** or sometimes just **image tag** (noun):
 
-  - The **version** of a docker image. The part that comes after the `:` in a
-    qualified docker image reference. In `openverse-frontend:latest`, **latest**
-    is the image tag. Openverse uses git tags in the pattern `rel-{date}` to
-    denote Docker image versions corresponding to a published release.
+  - The identifier of a specific **version** of a Docker image. The part that
+    comes after the `:` in a qualified docker image reference. In
+    `openverse-frontend:latest`, **latest** is the image tag. Openverse uses
+    tags in the pattern `rel-{date}` to denote Docker image versions
+    corresponding to a published release. All Openverse Docker images are also
+    tagged with the git commit SHA from which the image was built.
+  - Any given tag refers only to a single image at one time. However, tags may
+    refer to more than one image at different times by changing the image
+    referenced by the tag in the Docker image repository. This is called "moving
+    the tag" between the images.
 
 - **Git tag** (noun):
 
@@ -134,7 +153,8 @@ Refer to the following definitions for unambiguous descriptions of each term.
     for a particular app.
 
 - **Release tag** (noun):
-  - Both a **git tag** and **docker image tag**, each using a separate format.
+  - Both a **git tag** and **docker image tag**, each using a separate format as
+    described above.
 
 ## How to publish a release
 
@@ -151,8 +171,8 @@ deployment accordingly.
 | [Catalog](https://github.com/WordPress/openverse/releases?q=catalog-)                   |
 | [Ingestion server](https://github.com/WordPress/openverse/releases?q=ingestion-server-) |
 
-The indexer workers do not have releases (because they always run the `latest`
-docker image tag).
+The indexer worker does not use releases (because they always run the Docker
+image tagged `latest`).
 
 Upon publishing the GitHub Release, the Openverse bot will automatically open a
 PR with a new changelog entry. You should review and approve (or modify and
@@ -162,11 +182,10 @@ approve) this PR after publishing the release.
 
 The flow charts below describe the flow of code from `main` all the way to
 "production" for each application in a single flow chart. Not all apps have
-fully automated deployments, and only staging releases are ever automated.
-Production releases are never automated, but production deployments may be
-automated as a result of a production release. Some applications do not have a
-clear separation between staging and production (catalog, indexer worker, and
-ingestion server).
+fully automated deployments, and only staging releases are automated. Production
+releases are never automated, but production deployments may be automated as a
+result of a production release. Some applications do not have a clear separation
+between staging and production (catalog, indexer worker, and ingestion server).
 
 Steps that require manual human intervention are designated with squared boxes,
 whereas rounded boxes indicate a step that occurs as a direct and automatic
@@ -174,18 +193,17 @@ result of the previous step.
 
 The dotted lines from the automated catalog, API, and frontend deployment denote
 the flow of code to the production release event, rather than a specific action.
-These lines are merely meant to indicate a continuation of the lifecycle of the
-code for each of these apps through the entire flowchart, from the initial
-staging release to the final production deployment.
+These lines are meant to indicate a continuation of the lifecycle of the code
+for each of these apps through the entire flowchart, from the initial staging
+release to the final production deployment.
 
 Build artefacts are generated for every Openverse application any time a push to
 main includes changes relevant to the code base for the app. This is always the
-"latest" Docker image tag released for each app. While all apps have a rolling
-`latest` release that reflect the most recent changes to their code base, only
-the staging API and staging frontend are automatically "deployed" as a result of
-these releases. However, the catalog has an automatic DAG sync process that
+Docker image tagged `latest` for each app and constitutes the whole of a staging
+release. Only the staging API and staging frontend are automatically deployed as
+a result of these releases. The catalog has an automatic DAG sync process that
 pulls code from `main` without intervention, and so has something of a "partial"
-staging deployment process, despite not rely on the `latest` docker image. On
+staging deployment process, despite not rely on the `latest` image to do so. On
 the other hand, the indexer workers pull and run the `latest` docker image each
 time they execute. As such, they do not have a formal "deployment" process, nor
 a distinct staging/production release.
@@ -193,14 +211,14 @@ a distinct staging/production release.
 The API, frontend, catalog, and ingestion server all experience "true"
 production releases and deployments that are distinct from the release and
 deployment of the `latest` docker image or repository code. The API and frontend
-are automatically deployed whenever a production release occurs, following the
-same deployment process as their staging counterparts (despite having different
-release processes). Neither the "staging" or "production" ingestion servers run
-the `latest` code in most circumstances, and are usually deployed together as a
-result of a production release. While the catalog always runs the latest DAG
-code (via the DAG sync operation on merges to main), it only receives updates to
-dependencies (including Airflow itself), after a production release and manual
-deployment.
+are automatically deployed whenever a maintainer creates a production release,
+following the same deployment process as their staging counterparts (despite
+having different release processes). Neither the "staging" or "production"
+ingestion servers run the `latest` code in most circumstances, and are usually
+deployed together as a result of a production release. While the catalog always
+runs the latest DAG code (via the DAG sync operation on merges to main), it only
+receives updates to dependencies (including Airflow itself), after a production
+release and subsequent manual deployment.
 
 ### API and Frontend
 
@@ -237,14 +255,14 @@ flowchart TD
 #### Force a deployment to a specific version (roll back, redeploy, re-run, etc.)
 
 Roll back and redeployment of the API and frontend follows an identical process,
-based on the approach of forcing a deployment of the app to a specific version.
+based on the ability to force a deployment of the app to a specific version.
 Regardless of whether that version is the version currently running, a past
 version, or a completely new version, the same deployment workflows are used in
-all cases. The same process works to retry a failed deployment.
+all cases. This process also works to retry a failed deployment.
 
-To force a deployment of the API or frontend (of either environment) to a
+To force a deployment of the API or frontend (of either environment) to any
 specific version, manually trigger the deployment workflow for the app and
-environment with the docker image tag that should be deployed.
+environment with the docker image tag to deploy.
 
 To find historically deployed production image tags, refer to the title of the
 workflow runs for the app (linked in the table below). The `rel-*` image tags in
@@ -261,7 +279,8 @@ endpoint of the API or frontend environment you wish to redeploy:
 | [API staging `/version`](https://api-staging.openverse.org/version)  | [Deployment workflow](https://github.com/WordPress/openverse-infrastructure/actions/workflows/deploy-staging-api.yml)         |
 | [API production `/version`](https://api.openverse.org/version)       | [Deployment workflow](https://github.com/WordPress/openverse-infrastructure/actions/workflows/deploy-production-api.yml)      |
 
-Click the "Run workflow" button to open the manual workflow trigger dialogue.
+Click the "Run workflow" button on the deployment workflow page in GitHub to
+open the manual workflow trigger dialogue.
 
 ```{figure} ./manually-trigger-workflow.png
 :alt: Deployment workflow manual trigger dialogue
@@ -307,13 +326,12 @@ that in practice it isn't usually necessary.
 Please refer to the [general ECS logging documentation](/meta/monitoring/cloudwatch_logs/index.md)
 for details about how to find logs for individual tasks.
 
-An additional resource that is often helpful other than logs is the events list for a
-service. You can find that under the "Events" tab of the ECS service's page:
+The ECS events list for a service may also be helpful for debugging a failed deployment. You can find that under the "Events" tab of the ECS service's page:
 
 ![Example ECS events tab for the production API](/_static/ecs_events_tab.png)
 
-This tab shows a chronological list of the 100 most recent "events". Please
-[refer to the AWS ECS documentation for information on what each of these events mean](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs_cwe_events.html).
+This tab shows a chronological list of the 100 most recent "events".
+[Refer to the AWS ECS documentation for information on what each of these events mean](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs_cwe_events.html).
 ```
 
 ### Catalog
@@ -324,7 +342,7 @@ code.
 
 ```{note}
 New DAGs are not automatically enabled and will need to be turned on
-once deployed by the DAG sync script.
+after the DAG sync script pulls the new code.
 ```
 
 ```{admonition} When to release and deploy the catalog
@@ -357,7 +375,7 @@ flowchart TD
 
 #### Migrations
 
-Any migrations to the Catalog database must either be performed by hand or as
+Any migration to the Catalog database must either be performed by hand or as
 part of a DAG's normal operation (see:
 [iNaturalist](https://github.com/WordPress/openverse/blob/main/catalog/dags/providers/provider_api_scripts/inaturalist.py)).
 
