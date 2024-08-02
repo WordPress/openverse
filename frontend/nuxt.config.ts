@@ -1,32 +1,8 @@
 import { defineNuxtConfig } from "nuxt/config"
 
 import locales from "./src/locales/scripts/valid-locales.json"
-import { meta as commonMeta } from "./src/constants/meta"
 
 import type { LocaleObject } from "@nuxtjs/i18n"
-
-const favicons = [
-  // SVG favicon
-  {
-    rel: "icon",
-    href: "/favicon.ico",
-  },
-  {
-    rel: "icon",
-    href: "/openverse-logo.svg",
-  },
-  // SVG favicon for Safari
-  {
-    rel: "mask-icon",
-    href: "/opvenverse-logo.svg",
-    color: "#30272E",
-  },
-  // Fallback iPhone Icon
-  {
-    rel: "apple-touch-icon",
-    href: "/openverse-logo-180.png",
-  },
-]
 
 const disallowedBots = [
   "GPTBot",
@@ -76,30 +52,6 @@ const openverseLocales = [
 ].filter((l) => Boolean(l.iso)) as LocaleObject[]
 
 export default defineNuxtConfig({
-  app: {
-    head: {
-      title: "Openly Licensed Images, Audio and More | Openverse",
-      meta: commonMeta,
-      link: [
-        ...favicons,
-        {
-          rel: "search",
-          type: "application/opensearchdescription+xml",
-          title: "Openverse",
-          href: "/opensearch.xml",
-        },
-        {
-          rel: "dns-prefetch",
-          href: process.env.NUXT_PUBLIC_API_URL,
-        },
-        {
-          rel: "preconnect",
-          href: process.env.NUXT_PUBLIC_API_URL,
-          crossorigin: "",
-        },
-      ],
-    },
-  },
   srcDir: "src/",
   serverDir: "server/",
   devServer: {

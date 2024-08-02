@@ -1,14 +1,24 @@
 <script setup lang="ts">
-import { computed, onMounted, useLocaleHead } from "#imports"
+import {
+  computed,
+  onMounted,
+  useLocaleHead,
+  useHead,
+  useRuntimeConfig,
+} from "#imports"
 
 import { useUiStore } from "~/stores/ui"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import { useLayout } from "~/composables/use-layout"
 
+import { meta as commonMeta } from "~/constants/meta"
+
 import VSkipToContentButton from "~/components/VSkipToContentButton.vue"
 
 const { updateBreakpoint } = useLayout()
+
+const config = useRuntimeConfig()
 
 const featureFlagStore = useFeatureFlagStore()
 const uiStore = useUiStore()
@@ -21,6 +31,52 @@ const head = useLocaleHead({
   addDirAttribute: true,
   identifierAttribute: "id",
   addSeoAttributes: true,
+})
+
+const favicons = [
+  // SVG favicon
+  {
+    rel: "icon",
+    href: "/favicon.ico",
+  },
+  {
+    rel: "icon",
+    href: "/openverse-logo.svg",
+  },
+  // SVG favicon for Safari
+  {
+    rel: "mask-icon",
+    href: "/opvenverse-logo.svg",
+    color: "#30272E",
+  },
+  // Fallback iPhone Icon
+  {
+    rel: "apple-touch-icon",
+    href: "/openverse-logo-180.png",
+  },
+]
+
+useHead({
+  title: "Openly Licensed Images, Audio and More | Openverse",
+  meta: commonMeta,
+  link: [
+    ...favicons,
+    {
+      rel: "search",
+      type: "application/opensearchdescription+xml",
+      title: "Openverse",
+      href: "/opensearch.xml",
+    },
+    {
+      rel: "dns-prefetch",
+      href: config.public.apiUrl,
+    },
+    {
+      rel: "preconnect",
+      href: config.public.apiUrl,
+      crossorigin: "",
+    },
+  ],
 })
 
 /**
