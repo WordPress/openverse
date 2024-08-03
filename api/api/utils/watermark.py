@@ -152,10 +152,10 @@ def _open_image(url):
         img_bytes = BytesIO(response.content)
         img = Image.open(img_bytes)
     except requests.exceptions.RequestException as e:
-        logger.error("Error requesting image", e=e)
+        logger.error("Error requesting image", exc=e, exc_info=True)
         raise UpstreamWatermarkException(f"{e}")
     except UnidentifiedImageError as e:
-        logger.error("Error loading image data", e=e)
+        logger.error("Error loading image data", exc=e, exc_info=True)
         raise UpstreamWatermarkException(f"{e}")
 
     return img, img.getexif()
