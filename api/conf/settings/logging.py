@@ -42,8 +42,6 @@ shared_processors = [
     structlog.contextvars.merge_contextvars,
     structlog.stdlib.add_logger_name,
     structlog.stdlib.add_log_level,
-    # https://github.com/kiwicom/structlog-sentry - for Sentry integration
-    SentryProcessor(event_level=logging.ERROR),
     structlog.stdlib.PositionalArgumentsFormatter(),
     structlog.processors.CallsiteParameterAdder(
         {
@@ -53,6 +51,10 @@ shared_processors = [
         }
     ),
     structlog.processors.StackInfoRenderer(),
+    # https://github.com/kiwicom/structlog-sentry - for Sentry integration
+    # Must go after `add_logger_name` and `add_log_level`,
+    # but before `format_exc_info`
+    SentryProcessor(event_level=logging.ERROR),
     structlog.processors.format_exc_info,
     structlog.processors.UnicodeDecoder(),
 ]
