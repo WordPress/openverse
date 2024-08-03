@@ -109,8 +109,7 @@ class Register(APIView):
                 fail_silently=False,
             )
         except smtplib.SMTPException as e:
-            logger.error("Failed to send API verification email!")
-            logger.error(e)
+            logger.error("Failed to send API verification email!", exc=e, exc_info=True)
         # Give the user their newly created credentials.
         return Response(
             status=201,

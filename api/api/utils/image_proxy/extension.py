@@ -46,7 +46,7 @@ async def get_image_extension(image_url: str, media_identifier) -> str | None:
 
             await _cache_extension(cache, key, ext)
         except Exception as exc:
-            logger.error("upstream_thumbnail_exception", e=exc)
+            logger.error("upstream_thumbnail_exception", exc=exc, exc_info=True)
             raise UpstreamThumbnailException(
                 "Failed to render thumbnail due to inability to check media "
                 f"type. {exc}"
