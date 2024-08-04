@@ -7,6 +7,13 @@ import { Z_INDICES } from "./src/constants/z-indices"
 import type { Config } from "tailwindcss"
 
 export default {
+  darkMode: [
+    "variant",
+    [
+      "@media (prefers-color-scheme: dark) { &:not(.light-mode *) }",
+      "&:is(.dark-mode *)", // :is is so the specificity matches and there's not unexpected behavior
+    ],
+  ],
   content: [
     "./src/**/*.{vue,js,jsx,ts,tsx,mdx}",
     "./nuxt.config.ts",

@@ -34,7 +34,7 @@ provide(ShowScrollButtonKey, showScrollButton)
       <VBanners />
       <VHeaderInternal
         class="h-20 border-b bg-bg"
-        :class="isHeaderScrolled ? 'border-b-gray-3' : 'border-b-tx'"
+        :class="isHeaderScrolled ? 'border-b-border' : 'border-b-tx'"
       />
     </div>
 

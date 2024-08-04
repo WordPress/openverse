@@ -61,7 +61,7 @@ provide(IsSidebarVisibleKey, isSidebarVisible)
 
 const headerBorder = computed(() =>
   isHeaderScrolled.value || isSidebarVisible.value
-    ? "border-b-gray-3"
+    ? "border-b-border"
     : "border-b-tx"
 )
 </script>
