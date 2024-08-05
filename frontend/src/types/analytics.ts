@@ -484,3 +484,8 @@ export type Events = {
  * the name of a custom event sent from the site
  */
 export type EventName = keyof Events
+
+export type SendCustomEvent = <T extends EventName>(
+  name: T,
+  payload: Events[T]
+) => void
