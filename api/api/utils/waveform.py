@@ -89,7 +89,7 @@ def download_audio(url, identifier):
     return file_name
 
 
-def generate_waveform(file_name, duration):
+def generate_waveform(file_name: str, duration: int):
     """
     Generate the waveform for the file by invoking the ``audiowaveform`` binary.
 
@@ -102,7 +102,16 @@ def generate_waveform(file_name, duration):
 
     logger.debug("waveform_generation_started")
 
-    pps = math.ceil(1e6 / duration)  # approx 1000 points in total
+    # Determine the width of the waveform based on the duration of the audio.
+    # The width varies to improve the appearance and "resolution" of the waveform.
+    # It also prevents requesting to many points from short audio files.
+    # See https://github.com/WordPress/openverse/issues/4676
+    #
+    # For long audio files, we set the width to 1,000,000 pixels.
+    # For short audio files, we set the width to 100,000 pixels.
+    # This prevents the waveform from appearing "stretched out" and sparse.
+    width = 1e6 if duration > 100 else 1e5
+    pps = math.ceil(width / duration)  # approx 1000 points in total
     args = [
         "audiowaveform",
         "--input-filename",
@@ -124,7 +133,8 @@ def generate_waveform(file_name, duration):
         raise WaveformGenerationFailure()
 
     logger.debug("waveform_generation_finished", returncode=proc.returncode)
-    return proc.stdout
+    json_out = json.loads(proc.stdout)
+    return json_out
 
 
 def process_waveform_output(json_out):
@@ -141,8 +151,7 @@ def process_waveform_output(json_out):
 
     logger.info("Transforming points")
 
-    output = json.loads(json_out)
-    data = output["data"]
+    data = json_out["data"]
     logger.debug(f"initial points len(data)={len(data)}")
 
     transformed_data = []
