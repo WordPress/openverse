@@ -102,6 +102,14 @@ def generate_waveform(file_name: str, duration: int):
 
     logger.debug("waveform_generation_started")
 
+    # Determine the width of the waveform based on the duration of the audio.
+    # The width varies to improve the appearance and "resolution" of the waveform.
+    # It also prevents requesting to many points from short audio files.
+    # See https://github.com/WordPress/openverse/issues/4676
+    #
+    # For long audio files, we set the width to 1,000,000 pixels.
+    # For short audio files, we set the width to 100,000 pixels.
+    # This prevents the waveform from appearing "stretched out" and sparse.
     width = 1e6 if duration > 100 else 1e5
     pps = math.ceil(width / duration)  # approx 1000 points in total
     args = [
