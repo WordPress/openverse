@@ -115,8 +115,11 @@ export default defineNuxtConfig({
     vueI18n: "./src/vue-i18n",
   },
   plausible: {
-    // `trackLocalhost` is deprecated, but the replacement `ignoredHostnames: []`
-    // has a bug, @see https://github.com/nuxt-modules/plausible/issues/30
-    trackLocalhost: true,
+    enabled: !isTest,
+    logIgnoredEvents: !isProductionBuild,
+    ignoredHostnames: [],
+    autoPageviews: isProdNotPlaywright,
+    domain: import.meta.env.SITE_DOMAIN,
+    apiHost: import.meta.env.PLAUSIBLE_SITE_URL,
   },
 })
