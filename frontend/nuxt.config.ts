@@ -5,28 +5,6 @@ import locales from "./src/locales/scripts/valid-locales.json"
 
 import type { LocaleObject } from "@nuxtjs/i18n"
 
-/**
- * This configuration sets values necessary at *build time*
- * to build the app and prerender our pages.
- *
- * Pay special attention when setting runtimeConfig values
- * in this file.
- *
- * Any key in `{runtimeConfig: {}}` can be
- * overwritten with a NUXT_ environment variable,
- * with the camelCase key converted to SCREAMING_SNAKE_CASE.
- *
- * The runtimeConfig values here are either defaults for local
- * development, or placeholders used to register the NUXT_
- * environment variables.
- *
- * See our .env.template for a definitive list of runtime values.
- *
- * Do not use import.meta.env to retrieve environment variables
- * here without careful consideration.
- *
- * @see {@link https://nuxt.com/docs/guide/going-further/runtime-config#example}
- */
 export default defineNuxtConfig({
   srcDir: "src/",
   serverDir: "server/",
@@ -39,11 +17,17 @@ export default defineNuxtConfig({
   },
   compatibilityDate: "2024-07-23",
   css: ["~/assets/fonts.css", "~/styles/accent.css"],
-  // Remember: Can be overwritten by NUXT_* env vars
+  /**
+   * Define available runtime configuration values and their defaults.
+   *
+   * See linked documentation for details, including how to override defaults
+   * with runtime values using environment variables.
+   *
+   * @see {@link https://nuxt.com/docs/api/nuxt-config#runtimeconfig-1}
+   */
   runtimeConfig: {
     apiClientId: "",
     apiClientSecret: "",
-    // Remember: Can be overwritten by NUXT_PUBLIC_* env vars
     public: {
       deploymentEnv: "local",
       apiUrl: "https://api.openverse.org/",
@@ -52,7 +36,7 @@ export default defineNuxtConfig({
       sentry: {
         dsn: "",
         environment: "local",
-        release: import.meta.env.SEMANTIC_VERSION,
+        // Release is a build time variable, and as such, is defined in app.config.ts
       },
     },
   },

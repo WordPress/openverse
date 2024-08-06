@@ -1,4 +1,4 @@
-import { defineNuxtPlugin, useRuntimeConfig } from "#imports"
+import { defineNuxtPlugin, useRuntimeConfig, useAppConfig } from "#imports"
 
 import * as Sentry from "@sentry/vue"
 
@@ -7,6 +7,8 @@ export default defineNuxtPlugin((nuxtApp) => {
     public: { sentry },
   } = useRuntimeConfig()
 
+  const { semanticVersion } = useAppConfig()
+
   if (!sentry.dsn) {
     console.warn("Sentry DSN wasn't provided")
   }
@@ -14,7 +16,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   Sentry.init({
     dsn: sentry.dsn,
     environment: sentry.environment,
-    release: sentry.release,
+    release: semanticVersion,
     app: nuxtApp.vueApp,
   })
   Sentry.setContext("render context", { platform: "client" })
