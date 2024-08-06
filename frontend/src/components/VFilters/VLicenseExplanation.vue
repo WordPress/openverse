@@ -1,3 +1,23 @@
+<script setup lang="ts">
+/**
+ * Renders the explanation of the license passed to it by breaking it down to
+ * its constituent clauses.
+ */
+import { getLicenseUrl, isLicense } from "~/utils/license"
+
+import type { License } from "~/constants/license"
+
+import VLicenseElements from "~/components/VLicense/VLicenseElements.vue"
+import VLink from "~/components/VLink.vue"
+
+defineProps<{
+  /**
+   * the code of the license whose elements need to be explained
+   */
+  license: License
+}>()
+</script>
+
 <template>
   <div class="license-explanation w-70 max-w-xs p-6">
     <h5 class="text-base font-semibold">
@@ -35,41 +55,3 @@
     </i18n-t>
   </div>
 </template>
-
-<script lang="ts">
-import { defineComponent, PropType } from "vue"
-
-import { getLicenseUrl, isLicense } from "~/utils/license"
-
-import type { License } from "~/constants/license"
-
-import VLicenseElements from "~/components/VLicense/VLicenseElements.vue"
-import VLink from "~/components/VLink.vue"
-
-/**
- * Renders the explanation of the license passed to it by breaking it down to
- * its constituent clauses.
- */
-export default defineComponent({
-  name: "VLicenseExplanation",
-  components: {
-    VLicenseElements,
-    VLink,
-  },
-  props: {
-    /**
-     * the code of the license whose elements need to be explained
-     */
-    license: {
-      type: String as PropType<License>,
-      required: true,
-    },
-  },
-  setup() {
-    return {
-      isLicense,
-      getLicenseUrl,
-    }
-  },
-})
-</script>
