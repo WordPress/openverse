@@ -28,11 +28,13 @@ const config: PlaywrightTestConfig = {
     reuseExistingServer: !process.env.CI || process.env.PWDEBUG === "1",
     env: {
       UPDATE_TAPES,
+      DEPLOYMENT_ENV: PRODUCTION,
       NUXT_PUBLIC_API_URL: API_URL,
       NUXT_PUBLIC_DEPLOYMENT_ENV: STAGING,
       NUXT_PUBLIC_PLAUSIBLE_API_HOST: "http://localhost:50290",
       NUXT_PUBLIC_PLAUSIBLE_DOMAIN: "localhost",
       NUXT_PUBLIC_PLAUSIBLE_AUTO_PAGEVIEWS: "false",
+      NUXT_PUBLIC_SITE_INDEXABLE: "true",
       PW: "true",
     },
   },

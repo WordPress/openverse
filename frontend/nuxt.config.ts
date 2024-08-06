@@ -40,6 +40,7 @@ export default defineNuxtConfig({
     },
   },
   site: {
+    indexable: false,
     trailingSlash: false,
   },
   /**
