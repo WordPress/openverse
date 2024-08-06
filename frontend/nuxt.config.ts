@@ -119,9 +119,7 @@ export default defineNuxtConfig({
     enabled: !isTest,
     // In dev, the events are not sent anywhere, only logged to the console.
     // In production builds, ignore events from staging.
-    ignoredHostnames: !isProductionBuild
-      ? ["localhost"]
-      : ["staging.openverse.org"],
+    ignoredHostnames: ["localhost", "staging.openverse.org"],
     logIgnoredEvents: !isProductionBuild,
     autoPageviews: false,
     apiHost: "http://localhost:50290",
