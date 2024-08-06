@@ -12,6 +12,7 @@
         class="mb-2 md:mb-3"
         :media-type="results.type"
         :collection-params="collectionParams"
+        :creator-url="creatorUrl"
       />
     </template>
 
@@ -67,6 +68,9 @@ export default defineComponent({
     searchTerm: {
       type: String,
       required: true,
+    },
+    creatorUrl: {
+      type: String,
     },
   },
   emits: {
