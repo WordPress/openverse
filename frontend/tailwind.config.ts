@@ -403,7 +403,9 @@ export default {
             }),
           ])
         ),
-        { values: { ...theme("colors"), DEFAULT: theme("colors.pink") } }
+        {
+          values: { ...theme("colors"), DEFAULT: theme("colors.border-focus") },
+        }
       )
     }),
   ],

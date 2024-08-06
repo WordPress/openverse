@@ -7,7 +7,7 @@
     size="disabled"
     variant="plain--avoid"
     v-bind="tabProps"
-    class="focus-slim-tx rounded-none bg-bg focus:z-10"
+    class="rounded-none bg-bg focus-slim-tx focus:z-10"
     :class="[variant, `size-${size}`, { [`${variant}-selected`]: isSelected }]"
     @click="handleSelection"
     @focus="handleFocus"

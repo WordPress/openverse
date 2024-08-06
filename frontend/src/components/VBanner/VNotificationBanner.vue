@@ -99,7 +99,7 @@ export default defineComponent({
       props.variant === "dark"
         ? ""
         : {
-            info: "text-8",
+            info: "text-info-8",
             warning: "text-warning-8",
             success: "text-success-8",
             error: "text-error-8",

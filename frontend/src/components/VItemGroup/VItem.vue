@@ -10,10 +10,10 @@
         'border border-border': contextProps.bordered,
         'has-check': contextProps.showCheck,
         'font-semibold': selected && !contextProps.showCheck,
-        'bg-bg-fill-transparent-hover':
+        'bg-bg-fill-transparent':
           selected && contextProps.bordered && contextProps.showCheck,
       },
-      isInPopover ? 'px-2' : 'hover:bg-bg-fill-transparent-hover',
+      isInPopover ? 'px-2' : '',
     ]"
   >
     <VButton
