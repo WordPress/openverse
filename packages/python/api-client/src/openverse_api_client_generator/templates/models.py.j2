@@ -1,0 +1,35 @@
+import typing_extensions as typing
+
+__all__ = [
+{%- for name in enums %}
+    "{{ name }}",
+{%- endfor %}
+{%- for model in models %}
+    "{{ model }}",
+{%- endfor %}
+]
+
+{% for name, enum in enums.items() %}
+{{ name }} = {{ enum | py_type_string }}
+{%- endfor %}
+
+
+{% for model in models.values() -%}
+class {{ model.name }}(typing.TypedDict):
+{%- if model.description %}
+    """
+    {{ model.description | indent(4) }}
+    """
+{% endif %}
+
+{%- for property in model.py_properties %}
+    {{ property.py_property_string }}
+{%- if property.description %}
+    """
+    {{ property.description }}
+    """
+{% endif %}
+
+{%- endfor %}
+
+{% endfor %}

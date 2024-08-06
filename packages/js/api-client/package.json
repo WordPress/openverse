@@ -1,0 +1,46 @@
+{
+  "name": "@openverse/api-client",
+  "version": "0.0.1-a1",
+  "description": "",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    "import": "./dist/index.mjs",
+    "require": "./dist/index.cjs"
+  },
+  "scripts": {
+    "build": "rm -rf dist && mkdir dist && pnpm run build:cjs && pnpm run build:esm && pnpm run build:types",
+    "build:cjs": "esbuild ./src/**/* --packages=external --sourcemap --format=cjs --out-extension:.js=.cjs --outdir=dist",
+    "build:esm": "esbuild ./src/**/* --packages=external --sourcemap --format=esm --out-extension:.js=.mjs --outdir=dist",
+    "build:types": "tsc -p ./tsconfig.prod.json",
+    "test": "vitest"
+  },
+  "keywords": [
+    "openverse",
+    "creative commons"
+  ],
+  "homepage": "https://sr.ht/~sara/openverse-api-client/#openverse-api-client",
+  "bugs": {
+    "email": "~sara/openverse-api-client@todo.sr.ht",
+    "url": "https://todo.sr.ht/~sara/openverse-api-client"
+  },
+  "author": "sarayourfriend <git@sarayourfriend.pictures>",
+  "repository": {
+    "type": "git",
+    "url": "https://git.sr.ht/~sara/openverse-api-client",
+    "directory": "packages/openverse-api-client"
+  },
+  "license": "LGPL-3.0-or-later",
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "cross-fetch": "^4.0.0",
+    "esbuild": "^0.20.0",
+    "nock": "14.0.0-beta.5",
+    "typescript": "^5.3.3",
+    "vite-tsconfig-paths": "^4.3.2",
+    "vitest": "^1.4.0"
+  }
+}

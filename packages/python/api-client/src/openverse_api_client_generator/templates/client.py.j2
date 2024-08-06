@@ -1,0 +1,194 @@
+from datetime import datetime, timedelta, UTC
+from typing_extensions import Dict, Any, cast, Self, Literal, overload
+import typing_extensions as typing
+import httpx
+{%- if Async %}
+import asyncio
+{%- endif %}
+
+from openverse_api_client._generated.models import (
+    {%- for model in models %}
+    {{ model }},
+    {%- endfor %}
+)
+from openverse_api_client._auth import OpenverseAuth
+from openverse_api_client._response import Response, Request
+from openverse_api_client._utils import Empty, EMPTY, is_empty
+
+
+EXPIRY_THRESHOLD = 30
+
+
+class {{ Async }}OpenverseClient:
+    base_url: str = "https://api.openverse.engineering"
+    auth: OpenverseAuth | None = None
+    client: httpx.{{ Async }}Client
+
+    _is_shared_client: bool
+
+    def __init__(
+        self,
+        base_url: str | None = None,
+        client_id: str | None = None,
+        client_secret: str | None = None,
+        httpx_client: httpx.{{ Async }}Client | None = None,
+    ):
+        self.base_url = base_url if base_url else self.base_url
+        if self.base_url[-1] == "/":
+            self.base_url = self.base_url[:-1]
+
+        if httpx_client is None:
+            self.client = httpx.{{ Async }}Client()
+            self._is_shared_client = False
+        else:
+            self.client = httpx_client
+            self._is_shared_client = True
+
+        if client_id or client_secret:
+            if not client_id and client_secret:
+                raise ValueError("`client_id` and `client_secret` are both required when either is defined")
+
+            self.auth = OpenverseAuth(
+                client=self,
+                client_id=typing.cast(str, client_id),
+                client_secret=typing.cast(str, client_secret),
+            )
+
+    def unauthed(self) -> Self:
+        return cast(Self, {{ Async }}OpenverseClient(
+            base_url=self.base_url,
+            httpx_client=self.client,
+        ))
+
+    {{ def }} __{{ a }}enter__(self) -> Self:
+        return self
+
+    {{ def }} __{{ a }}exit__(self, exc_type=None, exc_value=None, traceback=None) -> None:
+        {{ await }}self.client.__{{ a }}exit__(exc_type, exc_value, traceback)
+
+    {{ def }} close(self):
+        {{ await }}self.client.{{ a }}close()
+
+    {{ def }} _base_request(
+        self,
+        *,
+        method: str,
+        path: str,
+        **kwargs,
+    ) -> httpx.Response:
+        return {{ await }}self.client.request(
+            method=method,
+            url=f"{self.base_url}{path}",
+            **kwargs,
+        )
+
+    {{ def }} _request(
+        self,
+        *,
+        method: str,
+        path: str,
+        **kwargs,
+    ) -> httpx.Response:
+        kwargs.setdefault("auth", self.auth)
+        return {{ await }}self._base_request(
+            method=method,
+            path=path,
+            **kwargs,
+        )
+
+    {% for route in routes %}
+    {{ def }} {{ route.py_route_methodname }}(
+        self,
+        {%- for param in route.path_params.values() %}
+        {{ param.py_parameter_string }},
+        {%- endfor %}
+        *,
+        {%- for param in route.required_query_params %}
+        {{ param.py_parameter_string }},
+        {%- endfor %}
+        {%- for param in route.required_body_params %}
+        {{ param.py_parameter_string }},
+        {%- endfor %}
+        {%- for param in route.optional_query_params %}
+        {{ param.py_parameter_string }},
+        {%- endfor %}
+        {%- for param in route.optional_body_params %}
+        {{ param.py_parameter_string }},
+        {%- endfor %}
+        headers: dict | httpx.Headers | None = None,
+    ) -> Response[{{ route.response | py_type_string }}]:
+        {%- if route.path_params %}
+        path = "{{ route.path }}".format(
+            {%- for param in route.path_params.values() %}
+            {{ param.name }}={{ param.name }},
+            {%- endfor %}
+        )
+        {% else %}
+        path = "{{ route.path }}"
+        {%- endif %}
+
+        {%- if route.query_params %}
+        {%- if route.has_required_query_params %}
+        params: dict[str, typing.Any] = {
+            {%- for param in route.required_query_params %}
+            "{{ param.name }}": {{ param.name }},
+            {%- endfor %}
+        }
+        {%- else %}
+        params: dict[str, typing.Any] = {}
+        {%- endif %}
+        {%- for param in route.optional_query_params %}
+        if not is_empty({{ param.name }}):
+            params["{{ param.name }}"] = {{ param.name }}
+        {%- endfor %}
+        {%- else %}
+        params = None
+        {%- endif %}
+        {% if route.request_body %}
+        {%- if route.has_required_body_params %}
+        body: dict[str, typing.Any] = {
+            {%- for param in route.required_body_params %}
+            "{{ param.name }}": {{ param.name }},
+            {%- endfor %}
+        }
+        {%- else %}
+        body: dict[str, typing.Any] = {}
+        {%- endif %}
+        {%- for param in route.optional_body_params %}
+        if not is_empty({{ param.name }}):
+            body["{{ param.name }}"] = {{ param.name }}
+        {%- endfor %}
+        {% else %}
+        body = None
+        {%- endif %}
+
+        response = {{ await }}self._request(
+            method="{{ route.method }}",
+            path=path,
+            params=params,
+            {%- if route.content_type == "application/json" %}
+            json=body,
+            {%- else %}
+            data=body,
+            {%- endif %}
+            headers=headers,
+        )
+
+        {{ await }}response.{{ a }}read()
+        {% if route.json_response -%}
+        content = response.json()
+        {% else -%}
+        content = response.content
+        {% endif -%}
+        return Response[{{ route.response | py_type_string }}](
+            body={{ route.py_cast_content }},
+            status_code=response.status_code,
+            headers=response.headers,
+            request=Request(
+                headers=response.request.headers,
+                content=response.request.content,
+                url=str(response.request.url),
+                method=response.request.method,
+            )
+        )
+    {% endfor %}
