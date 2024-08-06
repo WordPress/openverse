@@ -4,7 +4,7 @@ const Template = (args) => ({
   template: `<div class="flex p-4" :class="bg"><VHomeLink v-bind="args" /></div>`,
   components: { VHomeLink },
   setup() {
-    const bg = args.variant === "dark" ? "bg-bg" : "bg-black"
+    const bg = args.variant === "dark" ? "bg-default" : "bg-black"
     return { args, bg }
   },
 })

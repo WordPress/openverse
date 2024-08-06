@@ -10,7 +10,7 @@
       :key="category.heading"
       class="flex flex-col"
       :class="{
-        'border-t border-border bg-bg-surface': index > 0 && !bordered,
+        'border-default border-t bg-surface': index > 0 && !bordered,
         'w-66 gap-1 py-2': size === 'small',
       }"
     >

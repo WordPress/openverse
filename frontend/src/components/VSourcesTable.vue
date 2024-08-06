@@ -196,20 +196,20 @@ export default defineComponent({
 
 @layer components {
   .source-table {
-    @apply hidden rounded-sm border-0 border-border md:table;
+    @apply border-default hidden rounded-sm border-0 md:table;
   }
 
   .source-table th,
   .source-table td {
-    @apply border-border;
+    @apply border-default;
   }
 
   .source-table a {
-    @apply text-text-link hover:underline;
+    @apply text-link hover:underline;
   }
 
   .source-table th {
-    @apply cursor-pointer border-t bg-bg-fill-secondary;
+    @apply cursor-pointer border-t bg-fill-secondary;
   }
 
   .source-table th,
@@ -222,7 +222,7 @@ export default defineComponent({
   }
 
   .source-table tr {
-    @apply even:bg-bg-surface;
+    @apply even:bg-surface;
   }
 
   .source-table th {
@@ -234,7 +234,7 @@ export default defineComponent({
   }
 
   .mobile-source-table article {
-    @apply grid border-l border-r border-border p-4 sm:grid-cols-4;
+    @apply border-default grid border-l border-r p-4 sm:grid-cols-4;
   }
 
   .mobile-source-table article:first-child {
@@ -246,7 +246,7 @@ export default defineComponent({
   }
 
   .mobile-source-table article:nth-child(odd) {
-    @apply bg-bg-fill-secondary;
+    @apply bg-fill-secondary;
   }
 
   .mobile-source-table article p {
@@ -263,7 +263,7 @@ export default defineComponent({
   }
 
   .mobile-source-table article a {
-    @apply font-bold text-text-link hover:underline;
+    @apply font-bold text-link hover:underline;
   }
 }
 </style>

@@ -12,15 +12,15 @@ defineOptions({
 
 <template>
   <div
-    class="app h-dyn-screen grid grid-cols-1 grid-rows-[auto,1fr] flex-col bg-bg-fill-complementary"
+    class="app h-dyn-screen grid grid-cols-1 grid-rows-[auto,1fr] flex-col bg-fill-complementary"
   >
     <div class="header-el">
       <VBanners />
-      <VHeaderInternal class="bg-bg-fill-complementary" />
+      <VHeaderInternal class="bg-fill-complementary" />
     </div>
     <div class="main-content flex flex-grow flex-col overflow-y-scroll">
       <slot class="flex-grow" />
-      <VFooter mode="internal" class="bg-bg-fill-complementary" />
+      <VFooter mode="internal" class="bg-fill-complementary" />
     </div>
   </div>
 </template>

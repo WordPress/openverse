@@ -29,18 +29,20 @@ provide(ShowScrollButtonKey, showScrollButton)
 </script>
 
 <template>
-  <div class="app min-h-dyn-screen grid grid-cols-1 grid-rows-[auto,1fr] bg-bg">
-    <div class="header-el sticky top-0 z-40 block bg-bg">
+  <div
+    class="app min-h-dyn-screen bg-default grid grid-cols-1 grid-rows-[auto,1fr]"
+  >
+    <div class="header-el bg-default sticky top-0 z-40 block">
       <VBanners />
       <VHeaderInternal
-        class="h-20 border-b bg-bg"
-        :class="isHeaderScrolled ? 'border-b-border' : 'border-b-tx'"
+        class="bg-default h-20 border-b"
+        :class="isHeaderScrolled ? 'border-b-default' : 'border-b-tx'"
       />
     </div>
 
     <div class="main-page flex h-full w-full min-w-0 flex-col justify-between">
       <slot />
-      <VFooter mode="internal" class="border-t border-border bg-bg" />
+      <VFooter mode="internal" class="border-default bg-default border-t" />
     </div>
   </div>
 </template>

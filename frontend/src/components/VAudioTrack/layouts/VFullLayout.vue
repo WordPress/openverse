@@ -1,14 +1,14 @@
 <template>
   <div class="full-track w-full">
-    <div class="relative border-b border-border">
+    <div class="border-default relative border-b">
       <span
         v-if="currentTime > 0"
-        class="pointer-events-none absolute left-0 hidden h-full w-4 bg-bg-fill-complementary md:block lg:w-10"
+        class="pointer-events-none absolute left-0 hidden h-full w-4 bg-fill-complementary md:block lg:w-10"
         aria-hidden
       />
       <span
         v-if="status === 'played'"
-        class="pointer-events-none absolute right-0 hidden h-full w-4 bg-bg-fill-complementary md:block lg:w-10"
+        class="pointer-events-none absolute right-0 hidden h-full w-4 bg-fill-complementary md:block lg:w-10"
         aria-hidden
       />
       <div class="md:mx-4 lg:mx-10">
@@ -72,7 +72,7 @@ export default defineComponent({
 <style>
 .full-track .waveform {
   @apply h-[185px] rounded-sm;
-  --waveform-background-color: theme("colors.bg");
+  --waveform-background-color: theme("backgroundColor.default");
 }
 
 .full-track .audio-control {

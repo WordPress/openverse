@@ -60,7 +60,7 @@ const featureGroups = computed(() => {
     <div
       v-for="group in featureGroups"
       :key="group.title"
-      class="not-prose border-b border-border py-6 last-of-type:border-b-0"
+      class="not-prose border-default border-b py-6 last-of-type:border-b-0"
     >
       <h2 class="label-bold mb-2">
         {{ $t(`prefPage.groups.${group.title}.title`) }}
@@ -92,7 +92,7 @@ const featureGroups = computed(() => {
     <div
       v-for="isSwitchable in [false, true]"
       :key="`${isSwitchable}`"
-      class="not-prose border-b border-border py-6 last-of-type:border-b-0"
+      class="not-prose border-default border-b py-6 last-of-type:border-b-0"
     >
       <h2 class="label-bold mb-2">
         {{ $t(`prefPage.${isSwitchable ? "s" : "nonS"}witchable.title`) }}

@@ -76,21 +76,21 @@ export default defineComponent({
   outline: none;
 }
 .transparent-dark {
-  @apply border-tx bg-tx text-text hover:text-text-over-dark group-hover/button:bg-bg-fill-tertiary;
+  @apply text-default border-tx bg-tx hover:text-over-dark group-hover/button:bg-fill-tertiary;
 }
 .transparent-gray {
-  @apply border-tx bg-tx text-text group-hover/button:bg-bg-fill-tertiary group-hover/button:bg-opacity-10;
+  @apply text-default border-tx bg-tx group-hover/button:bg-fill-tertiary group-hover/button:bg-opacity-10;
 }
 .filled-white {
-  @apply border-tx bg-bg text-text group-hover/button:bg-bg-fill-tertiary group-hover/button:text-text-over-dark;
+  @apply bg-default text-default border-tx group-hover/button:bg-fill-tertiary group-hover/button:text-over-dark;
 }
 
 .filled-gray {
-  @apply border-tx bg-bg-fill-secondary text-text group-hover/button:bg-bg-fill-tertiary group-hover/button:text-text-over-dark;
+  @apply text-default border-tx bg-fill-secondary group-hover/button:bg-fill-tertiary group-hover/button:text-over-dark;
 }
 
 .filled-white,
 .filled-gray {
-  @apply group-focus-visible/button:border-border-bg-ring;
+  @apply group-focus-visible/button:border-bg-ring;
 }
 </style>

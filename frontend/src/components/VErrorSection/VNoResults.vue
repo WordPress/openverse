@@ -48,7 +48,7 @@ onMounted(() => {
         :href="source.url"
         variant="bordered-gray"
         size="medium"
-        class="label-bold !w-full text-text sm:!w-auto"
+        class="label-bold text-default !w-full sm:!w-auto"
         show-external-icon
         has-icon-end
         :external-icon-size="6"

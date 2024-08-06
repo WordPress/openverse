@@ -6,10 +6,10 @@
       <VAudioThumbnail class="rounded-ss" :audio="audio" />
     </div>
 
-    <div class="flex h-12 items-center justify-between rounded-se bg-bg">
+    <div class="bg-default flex h-12 items-center justify-between rounded-se">
       <VLink
         :href="`/audio/${audio.id}`"
-        class="hover-underline label-bold z-10 flex flex-row items-center px-3 pe-12 text-text"
+        class="hover-underline label-bold text-default z-10 flex flex-row items-center px-3 pe-12"
         :class="{ 'blur-text': shouldBlur }"
       >
         {{ shouldBlur ? $t("sensitiveContent.title.audio") : audio.title }}
@@ -67,7 +67,7 @@ export default defineComponent({
 
 .global-track .waveform {
   @apply h-full rounded-ee;
-  --waveform-background-color: theme("colors.white");
+  --waveform-background-color: theme("backgroundColor.default");
 }
 .global-track .audio-control {
   @apply rounded-es;

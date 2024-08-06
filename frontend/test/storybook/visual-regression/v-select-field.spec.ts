@@ -18,7 +18,7 @@ test.describe("VSelectField", () => {
   })
 
   test("without border", async ({ page }) => {
-    await makeGotoWithArgs("components-vselectfield--without-border")(page)
-    await expectSnapshot("vselectfield-without-border", page)
+    await makeGotoWithArgs("components-vselectfield--without-default")(page)
+    await expectSnapshot("vselectfield-without-default", page)
   })
 })

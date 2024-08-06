@@ -36,8 +36,8 @@ const imageProviderNames = [
 
 const AllCollectionsTemplate = (args) => ({
   template: `
-<div class="wrapper w-full p-3 flex flex-col gap-4 bg-bg-surface">
-    <VCollectionHeader v-for="collection in args.collections" :key="collection.collectionName" v-bind="collection" class="bg-bg"/>
+<div class="wrapper w-full p-3 flex flex-col gap-4 bg-surface">
+    <VCollectionHeader v-for="collection in args.collections" :key="collection.collectionName" v-bind="collection" class="bg-default"/>
 </div>`,
   components: { VCollectionHeader },
   setup() {

@@ -1,5 +1,5 @@
 <template>
-  <div :class="['bg-bg-fill-secondary', shimmer ? 'shimmering' : '']" />
+  <div :class="['bg-fill-secondary', shimmer ? 'shimmering' : '']" />
 </template>
 
 <script lang="ts">

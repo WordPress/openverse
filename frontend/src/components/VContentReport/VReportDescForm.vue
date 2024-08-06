@@ -9,7 +9,7 @@
     <textarea
       id="description"
       v-model="text"
-      class="mt-2 h-20 w-full border border-border p-2 placeholder-gray-8"
+      class="border-default mt-2 h-20 w-full border p-2 placeholder-gray-8"
       :placeholder="$t(`mediaDetails.contentReport.form.${reason}.placeholder`)"
       :required="isRequired"
       :minlength="isRequired ? 20 : 0"

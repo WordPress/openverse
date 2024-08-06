@@ -22,42 +22,11 @@ export default {
   theme: {
     screens: SCREENS,
     zIndex: Z_INDICES,
+    /**
+     * See the extend.color, extend.backgroundColor, and extend.borderColor
+     * sections for additional, context-specific colors.
+     */
     colors: {
-      /**
-       * Semantic color names.
-       */
-      bg: "var(--bg)",
-      "bg-surface": "var(--bg-surface)",
-      "bg-overlay": "var(--bg-overlay)",
-      "bg-fill-primary": "var(--bg-fill-primary)",
-      "bg-fill-primary-hover": "var(--bg-fill-primary-hover)",
-      "bg-fill-secondary": "var(--bg-fill-secondary)",
-      "bg-fill-secondary-hover": "var(--bg-fill-secondary-hover)",
-      "bg-fill-tertiary": "var(--bg-fill-tertiary)",
-      "bg-fill-tertiary-hover": "var(--bg-fill-tertiary-hover)",
-      "bg-fill-transparent-hover": "var(--bg-fill-transparent-hover)",
-      "bg-fill-complementary": "var(--bg-fill-complementary)",
-      "bg-fill-warning": "var(--bg-fill-warning)",
-      "bg-fill-info": "var(--bg-fill-info)",
-      "bg-fill-success": "var(--bg-fill-success)",
-      "bg-fill-error": "var(--bg-fill-error)",
-      "bg-fill-disabled": "var(--bg-fill-disabled)",
-      "bg-zero": "var(--bg-zero)",
-      border: "var(--border)",
-      "border-hover": "var(--border-hover)",
-      "border-secondary": "var(--border-secondary)",
-      "border-secondary-hover": "var(--border-secondary-hover)",
-      "border-tertiary": "var(--border-tertiary)",
-      "border-transparent-hover": "var(--border-transparent-hover)",
-      "border-focus": "var(--border-focus)",
-      "border-bg-ring": "var(--border-bg-ring)",
-      "border-disabled": "var(--border-disabled)",
-      text: "var(--text)",
-      "text-secondary": "var(--text-secondary)",
-      "text-disabled": "var(--text-disabled)",
-      "text-link": "var(--text-link)",
-      "text-over-dark": "var(--text-over-dark)",
-      "text-secondary-over-dark": "var(--text-secondary-over-dark)",
       "icon-warning": "var(--icon-warning)",
       "icon-info": "var(--icon-info)",
       "icon-success": "var(--icon-success)",
@@ -65,13 +34,6 @@ export default {
       "wave-active": "var(--wave-active)",
       "wave-inactive": "var(--wave-inactive)",
       "modal-layer": "var(--modal-layer)",
-
-      /**
-       * Raw colors.
-       *
-       * These should be used sparingly as an "escape hatch" from the
-       * semantic color names.
-       */
 
       "info-1": "var(--info-1)",
       "info-2": "var(--info-2)",
@@ -336,6 +298,44 @@ export default {
       serif: [...defaultTheme.fontFamily.serif],
     },
     extend: {
+      textColor: {
+        default: "var(--text)",
+        secondary: "var(--text-secondary)",
+        disabled: "var(--text-disabled)",
+        link: "var(--text-link)",
+        "over-dark": "var(--text-over-dark)",
+        "secondary-over-dark": "var(--text-secondary-over-dark)",
+      },
+      backgroundColor: {
+        default: "var(--bg)",
+        surface: "var(--bg-surface)",
+        overlay: "var(--bg-overlay)",
+        "fill-primary": "var(--bg-fill-primary)",
+        "fill-primary-hover": "var(--bg-fill-primary-hover)",
+        "fill-secondary": "var(--bg-fill-secondary)",
+        "fill-secondary-hover": "var(--bg-fill-secondary-hover)",
+        "fill-tertiary": "var(--bg-fill-tertiary)",
+        "fill-tertiary-hover": "var(--bg-fill-tertiary-hover)",
+        "fill-transparent-hover": "var(--bg-fill-transparent-hover)",
+        "fill-complementary": "var(--bg-fill-complementary)",
+        "fill-warning": "var(--bg-fill-warning)",
+        "fill-info": "var(--bg-fill-info)",
+        "fill-success": "var(--bg-fill-success)",
+        "fill-error": "var(--bg-fill-error)",
+        "fill-disabled": "var(--bg-fill-disabled)",
+        zero: "var(--bg-zero)",
+      },
+      borderColor: {
+        default: "var(--border)",
+        hover: "var(--border-hover)",
+        secondary: "var(--border-secondary)",
+        "secondary-hover": "var(--border-secondary-hover)",
+        tertiary: "var(--border-tertiary)",
+        "transparent-hover": "var(--border-transparent-hover)",
+        focus: "var(--border-focus)",
+        "bg-ring": "var(--border-bg-ring)",
+        disabled: "var(--border-disabled)",
+      },
       blur: {
         image: "60px",
         text: "4px",
@@ -404,7 +404,7 @@ export default {
           ])
         ),
         {
-          values: { ...theme("colors"), DEFAULT: theme("colors.border-focus") },
+          values: { ...theme("colors"), DEFAULT: theme("borderColor.focus") },
         }
       )
     }),

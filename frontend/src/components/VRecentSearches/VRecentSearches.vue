@@ -1,7 +1,7 @@
 <template>
   <div
-    class="flex flex-col rounded-sm bg-bg"
-    :class="{ 'border border-border p-2 shadow-el-2': bordered }"
+    class="bg-default flex flex-col rounded-sm"
+    :class="{ 'border-default border p-2 shadow-el-2': bordered }"
     data-testid="recent-searches"
   >
     <div
@@ -37,8 +37,8 @@
         :id="`option-${idx}`"
         :key="entry"
         role="option"
-        class="group/entry label-regular flex h-10 flex-row items-center gap-2 rounded-sm border-1.5 pe-1 ps-2 hover:bg-bg-fill-secondary"
-        :class="idx === selectedIdx ? 'border-border-focus' : 'border-tx'"
+        class="group/entry label-regular flex h-10 flex-row items-center gap-2 rounded-sm border-1.5 pe-1 ps-2 hover:bg-fill-secondary"
+        :class="idx === selectedIdx ? 'border-focus' : 'border-tx'"
         :aria-selected="idx === selectedIdx"
         @click="handleClick(idx)"
       >
@@ -66,7 +66,7 @@
     </span>
 
     <span
-      class="mt-auto p-3 text-sm leading-close text-text-secondary lg:leading-snug"
+      class="mt-auto p-3 text-sm leading-close text-secondary lg:leading-snug"
     >
       {{ $t("recentSearches.disclaimer") }}
     </span>

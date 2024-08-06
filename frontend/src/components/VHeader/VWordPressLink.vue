@@ -2,8 +2,7 @@
   <VLink
     href="https://wordpress.org"
     :aria-label="$t('footer.wordpressAffiliation', { wordpress: 'WordPress' })"
-    :class="mode === 'light' ? 'text-text' : 'text-text-over-dark'"
-    class="hover:no-underline focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring focus-visible:ring-border-focus focus-visible:ring-offset-1 focus-visible:ring-offset-tx"
+    class="focus-visible:ring-border-focus text-default hover:no-underline focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring focus-visible:ring-offset-1 focus-visible:ring-offset-tx"
   >
     <i18n-t
       scope="global"

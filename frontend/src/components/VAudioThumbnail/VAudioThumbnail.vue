@@ -1,7 +1,7 @@
 <template>
   <!-- Should be wrapped by a fixed-width parent -->
   <div
-    class="relative h-0 w-full overflow-hidden bg-bg-fill-complementary pt-full"
+    class="relative h-0 w-full overflow-hidden bg-fill-complementary pt-full"
     :title="helpText"
   >
     <!-- Programmatic thumbnail -->

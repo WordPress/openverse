@@ -2,7 +2,7 @@
   <div
     v-bind="waveformAttributes"
     ref="el"
-    class="waveform bg-background-var group/waveform relative overflow-hidden text-text focus-visible:outline-none"
+    class="waveform bg-background-var group/waveform text-default relative overflow-hidden focus-visible:outline-none"
     :style="heightProperties"
     :tabIndex="isTabbable && isInteractive ? 0 : -1"
     :aria-disabled="!isInteractive"
@@ -51,7 +51,7 @@
     >
       <rect
         v-if="isReady"
-        class="fill-bg-fill-complementary"
+        class="progress-bar"
         x="0"
         y="0"
         :width="progressBarWidth"
@@ -110,7 +110,7 @@
           :class="[
             ...(isProgressTimestampCutoff
               ? ['bg-background-var']
-              : ['bg-bg-fill-complementary', '-translate-x-full']),
+              : ['bg-fill-complementary', '-translate-x-full']),
           ]"
           :style="progressTimeLeft"
         >
@@ -590,6 +590,10 @@ export default defineComponent({
 
 .progress {
   left: var(--progress-time-left);
+}
+
+.progress-bar {
+  fill: theme("backgroundColor.fill-complementary");
 }
 
 .seek {

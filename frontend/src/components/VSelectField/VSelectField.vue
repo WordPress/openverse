@@ -73,7 +73,7 @@ const splitAttrs = computed(() => {
 
 <template>
   <div
-    class="relative m-0.5px box-content block w-fit overflow-hidden rounded-sm border border-border text-sm focus-within:m-0 focus-within:border-1.5 focus-within:border-border-focus hover:border-border-hover focus-within:hover:border-border-focus"
+    class="border-default relative m-0.5px box-content block w-fit overflow-hidden rounded-sm border text-sm focus-within:m-0 focus-within:border-1.5 focus-within:border-focus hover:border-hover focus-within:hover:border-focus"
     :class="splitAttrs.classAttrs"
   >
     <div class="pointer-events-none absolute inset-y-0 start-2 my-auto h-fit">

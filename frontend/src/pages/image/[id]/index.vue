@@ -241,7 +241,7 @@ watch(error, (err) => {
       <template v-else>
         <VSingleResultControls :media="image" />
         <figure
-          class="relative mb-4 grid grid-cols-1 grid-rows-1 justify-items-center border-b border-border px-6"
+          class="border-default relative mb-4 grid grid-cols-1 grid-rows-1 justify-items-center border-b px-6"
         >
           <VBone
             v-if="showLoadingState"

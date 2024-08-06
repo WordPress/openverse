@@ -1,6 +1,6 @@
 <template>
   <div
-    class="input-field group flex flex-row items-center overflow-hidden rounded-sm border p-0.5px focus-within:border-1.5 focus-within:border-border-focus focus-within:bg-bg-surface focus-within:p-0 group-hover:bg-bg-surface"
+    class="input-field group flex flex-row items-center overflow-hidden rounded-sm border p-0.5px focus-within:border-1.5 focus-within:border-focus focus-within:bg-surface focus-within:p-0 group-hover:bg-surface"
     :class="[
       {
         // Padding is set to 1.5px to accommodate the border that will appear later.
@@ -146,7 +146,7 @@ export default defineComponent({
 
 <style scoped>
 .input-field:focus-within .info {
-  @apply text-text;
+  @apply text-default;
 }
 
 .input-field input::placeholder {

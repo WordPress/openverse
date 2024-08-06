@@ -295,37 +295,37 @@ a.button {
 }
 
 .filled-pink-8 {
-  @apply border-tx bg-bg-fill-primary text-text-over-dark hover:bg-bg-fill-primary-hover hover:text-text-over-dark;
+  @apply border-tx bg-fill-primary text-over-dark hover:bg-fill-primary-hover hover:text-over-dark;
 }
 .filled-dark {
-  @apply border-tx bg-bg-fill-tertiary text-text-over-dark hover:bg-bg-fill-tertiary-hover hover:text-text-over-dark disabled:opacity-70;
+  @apply border-tx bg-fill-tertiary text-over-dark hover:bg-fill-tertiary-hover hover:text-over-dark disabled:opacity-70;
 }
 .filled-gray {
-  @apply border-tx bg-bg-fill-secondary text-text hover:bg-bg-fill-secondary-hover hover:text-text-over-dark;
+  @apply text-default border-tx bg-fill-secondary hover:bg-fill-secondary-hover hover:text-over-dark;
 }
 .filled-white {
-  @apply border-tx bg-bg text-text hover:bg-bg-fill-secondary-hover hover:text-text-over-dark;
+  @apply bg-default text-default border-tx hover:bg-fill-secondary-hover hover:text-over-dark;
 }
 .bordered-white {
-  @apply border-border-bg-ring bg-bg text-text hover:border-border-transparent-hover;
+  @apply bg-default text-default border-bg-ring hover:border-transparent-hover;
 }
 .bordered-white-pressed {
-  @apply border-tx bg-bg-fill-tertiary text-text-over-dark hover:border-gray-11 hover:bg-bg-fill-tertiary-hover hover:focus-visible:border-tx;
+  @apply border-tx bg-fill-tertiary text-over-dark hover:border-gray-11 hover:bg-fill-tertiary-hover hover:focus-visible:border-tx;
 }
 .bordered-gray {
-  @apply border-border bg-bg text-text hover:border-border-hover focus-visible:border-tx hover:focus-visible:border-tx;
+  @apply border-default bg-default text-default hover:border-hover focus-visible:border-tx hover:focus-visible:border-tx;
 }
 .transparent-tx {
   @apply border-tx;
 }
 .transparent-gray {
-  @apply border-tx bg-tx text-text hover:bg-bg-fill-secondary-hover hover:bg-opacity-10 hover:text-text-over-dark disabled:text-text-disabled;
+  @apply text-default border-tx bg-tx hover:bg-fill-secondary disabled:text-disabled;
 }
 .transparent-dark {
-  @apply border-tx bg-tx text-text hover:bg-bg-fill-secondary-hover hover:text-text-over-dark;
+  @apply text-default border-tx bg-tx hover:bg-fill-secondary-hover hover:text-over-dark;
 }
 .transparent-dark-pressed {
-  @apply border-tx bg-bg-fill-tertiary text-text-over-dark hover:border-gray-11;
+  @apply border-tx bg-fill-tertiary text-over-dark hover:border-gray-11;
 }
 
 .icon-only {

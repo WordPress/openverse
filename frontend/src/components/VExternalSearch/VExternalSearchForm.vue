@@ -89,7 +89,7 @@ const isMd = computed(() => uiStore.isBreakpoint("md"))
           />
           <VIcon
             :class="{
-              'text-text-over-dark': a11yProps['aria-expanded'],
+              'text-over-dark': a11yProps['aria-expanded'],
             }"
             name="caret-down"
           />

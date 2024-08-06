@@ -178,7 +178,7 @@ const { isHidden: shouldBlur } = useSensitiveMedia(props.image)
           @error="onImageLoadError($event)"
         />
         <figcaption
-          class="col-span-full self-end justify-self-start rounded-sm bg-bg text-text group-hover:visible group-focus-visible:visible"
+          class="bg-default text-default col-span-full self-end justify-self-start rounded-sm group-hover:visible group-focus-visible:visible"
           :class="
             isSquare
               ? 'invisible row-span-full m-2 p-2'
@@ -193,7 +193,7 @@ const { isHidden: shouldBlur } = useSensitiveMedia(props.image)
           <VLicense
             :license="image.license"
             :hide-name="true"
-            class="text-text-secondary group-hover:text-text group-focus-visible:text-text sm:text-text"
+            class="group-hover:text-default group-focus-visible:text-default sm:text-default text-secondary"
           />
         </figcaption>
       </figure>

@@ -14,7 +14,7 @@ const Template = (args, { argTypes }) => ({
     <VFilterTab v-bind="args" v-on="args" />
   </template>
 </VTabs>
-<div class="border-t border-border h-2 w-full" />
+<div class="border-t border-default h-2 w-full" />
 </div>`,
   components: { VFilterTab, VTabs, VTab },
   props: Object.keys(argTypes),

@@ -1,15 +1,15 @@
 body * {
   /* Accent color tints checkbox, radio, range and progress. */
-  accent-color: theme("colors.border-focus");
+  accent-color: theme("borderColor.focus");
 }
 
 :focus-visible {
-  outline-color: theme("colors.border-focus");
+  outline-color: theme("borderColor.focus");
 }
 
 ::selection {
   /* Using white text because selection background is dark. */
-  @apply bg-bg-fill-primary text-text-over-dark;
+  @apply bg-fill-primary text-over-dark;
 }
 
 ::-webkit-calendar-picker-indicator,
@@ -18,5 +18,5 @@ body * {
 ::-webkit-outer-spin-button,
 ::marker {
   /* List markers can be tinted as text. */
-  @apply text-text-link;
+  @apply text-link;
 }
