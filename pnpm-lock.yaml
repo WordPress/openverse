@@ -70,8 +70,8 @@ importers:
         specifier: ^9.13.1
         version: 9.13.1
       '@nuxtjs/plausible':
-        specifier: ^1.0.1
-        version: 1.0.1(magicast@0.3.4)(rollup@4.19.0)
+        specifier: ^1.0.2
+        version: 1.0.2(magicast@0.3.4)(rollup@4.19.0)
       '@nuxtjs/robots':
         specifier: ^4.0.2
         version: 4.0.2(magicast@0.3.4)(rollup@4.19.0)(vite@5.3.4(@types/node@20.14.11)(terser@5.31.0))(vue@3.4.36(typescript@5.5.4))
@@ -1301,8 +1301,8 @@ packages:
     resolution: {integrity: sha512-VHnnjFTTep2oC5++61WY06y4c/h943NyHQh1CRUJQvjsdbGSMX3WQjMGk+X05a3pyPFN70aq0YbgtsEoEoTEjQ==}
     engines: {node: ^14.16.0 || >=16.11.0}
 
-  '@nuxtjs/plausible@1.0.1':
-    resolution: {integrity: sha512-bd5oUE/I0j8dVoBR8pwYUAdT6TjyYyLoKzbWPYy/ZevtOu66qqOwR2GQ0wCh05LyaPYKaIMv5jBWVnFyK0nkZA==}
+  '@nuxtjs/plausible@1.0.2':
+    resolution: {integrity: sha512-AT5GoVddqgvbp39OY1/DtWHUgjn+6LGjJXB75imdEUxPok2uAVGtr3oZ0F7merC9T3y0rIqZx8HzpUmCcipBnQ==}
 
   '@nuxtjs/robots@4.0.2':
     resolution: {integrity: sha512-7hpAbSXjrzZNZ2vvzJf5E9H8+yVxJlPNY5wP/MSOWlw3pEJzTJQilAFsJj+jofocGj9y3iNDeqv/a5v/Lz8ppg==}
@@ -7975,7 +7975,7 @@ snapshots:
       - vue
       - vue-i18n-bridge
 
-  '@nuxtjs/plausible@1.0.1(magicast@0.3.4)(rollup@4.19.0)':
+  '@nuxtjs/plausible@1.0.2(magicast@0.3.4)(rollup@4.19.0)':
     dependencies:
       '@barbapapazes/plausible-tracker': 0.5.2
       '@nuxt/kit': 3.12.4(magicast@0.3.4)(rollup@4.19.0)
