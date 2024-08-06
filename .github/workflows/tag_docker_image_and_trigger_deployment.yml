@@ -1,4 +1,4 @@
-name: Release app
+name: Tag Docker image and trigger deployment
 
 on:
   release:
@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  release-app:
+  tag-docker-image-and-trigger-deployment:
     name: Release app
     runs-on: ubuntu-latest
     # Prevent running this workflow on forks, it's unnecessary for external contributors

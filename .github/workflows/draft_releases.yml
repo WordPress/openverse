@@ -44,7 +44,7 @@ jobs:
 
       # Each time this runs, it should replace the previous drafted release matching the tag prefix set in the release drafter config
       # This means there will always be a running drafted release for all apps
-      # Publishing the drafted release triggers the `release-app` workflow
+      # Publishing the drafted release triggers the "Tag docker image and trigger deployment" workflow
       - uses: release-drafter/release-drafter@v6
         id: release-drafter
         with:
