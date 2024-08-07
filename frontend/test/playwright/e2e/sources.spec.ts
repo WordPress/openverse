@@ -18,7 +18,7 @@ test("sources table has links to source pages", async ({ page }) => {
 })
 
 // Tests the fix for https://github.com/WordPress/openverse/issues/4724
-test("sources table can be sorted", async ({ page }) => {
+test("sources table can be sorted multiple times", async ({ page }) => {
   await preparePageForTests(page, "xl")
   await page.goto("/sources")
 
