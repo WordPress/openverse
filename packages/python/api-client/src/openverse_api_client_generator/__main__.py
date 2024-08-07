@@ -9,7 +9,7 @@ from openverse_api_client_generator.main import main
 arg_parser = argparse.ArgumentParser()
 arg_parser.add_argument(
     "--openverse-api-url",
-    default="http://localhost:50280",
+    default="https://api.openverse.org",
     help="URL of the Openverse API instance to use",
 )
 

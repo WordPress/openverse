@@ -26,7 +26,7 @@ test = { shell = "pytest" }
 types = "mypy --install-types --non-interactive {args:src/openverse_api_client tests}"
 
 generate = { call = "openverse_api_client_generator.__main__:cli" }
-build_all = { shell = "just ../../../api/wait-up && pdm build && cd ../../js/api-client && pnpm run build" }
+build_all = { shell = "pdm build && cd ../../js/api-client && pnpm run build" }
 
 [tool.pdm.dev-dependencies]
 dev = [

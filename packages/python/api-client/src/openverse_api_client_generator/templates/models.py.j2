@@ -1,3 +1,11 @@
+"""
+Openverse API client OpenAPI schema types.
+
+This file is generated from a template. Do not edit it by hand!
+
+See https://docs.openverse.org/packages/python/api-client/index.html#development-and-implementation-details
+"""
+
 import typing_extensions as typing
 
 __all__ = [
