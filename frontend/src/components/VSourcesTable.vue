@@ -40,7 +40,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="provider in sortedProviders" :key="provider.display_name">
+        <tr v-for="provider in providers" :key="provider.display_name">
           <td>
             <VLink :href="providerViewUrl(provider)">{{
               provider.display_name
@@ -60,7 +60,7 @@
 
     <section role="region" class="mobile-source-table md:hidden">
       <article
-        v-for="provider in sortedProviders"
+        v-for="provider in providers"
         :key="provider.display_name"
         :title="provider.display_name"
       >
@@ -87,7 +87,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, type PropType, reactive } from "vue"
+import { defineComponent, type PropType, reactive, ref } from "vue"
 
 import { useProviderStore } from "~/stores/provider"
 import { useGetLocaleFormattedNumber } from "~/composables/use-get-locale-formatted-number"
@@ -113,20 +113,29 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const sorting = reactive({
-      direction: "asc",
-      field: "display_name" as keyof Omit<MediaProvider, "logo_url">,
-    })
+    const providerStore = useProviderStore()
+    const searchStore = useSearchStore()
+
+    const providers = ref<MediaProvider[]>(providerStore.providers[props.media])
 
     function sortTable(field: keyof Omit<MediaProvider, "logo_url">) {
-      let direction = "asc"
+      let direction = field === "media_count" ? "desc" : "asc"
       if (field === sorting.field) {
         direction = sorting.direction === "asc" ? "desc" : "asc"
       }
 
       sorting.direction = direction
       sorting.field = field
+
+      const sortedProviders = providers.value.sort(compareProviders)
+
+      providers.value =
+        direction === "asc" ? sortedProviders : sortedProviders.reverse()
     }
+    const sorting = reactive({
+      direction: "asc",
+      field: "display_name" as keyof Omit<MediaProvider, "logo_url">,
+    })
 
     function cleanSourceUrlForPresentation(url: string) {
       const stripProtocol = (s: string) => s.replace(/https?:\/\//, "")
@@ -138,7 +147,6 @@ export default defineComponent({
     }
 
     const getLocaleFormattedNumber = useGetLocaleFormattedNumber()
-    const providerStore = useProviderStore()
 
     function compareProviders(prov1: MediaProvider, prov2: MediaProvider) {
       let field1 = prov1[sorting.field]
@@ -161,13 +169,6 @@ export default defineComponent({
       return 0
     }
 
-    const sortedProviders = computed<MediaProvider[]>(() => {
-      const providers = providerStore.providers[props.media]
-      providers.sort(compareProviders)
-      return sorting.direction === "asc" ? providers : providers.reverse()
-    })
-
-    const searchStore = useSearchStore()
     const providerViewUrl = (provider: MediaProvider) => {
       return searchStore.getCollectionPath({
         type: props.media,
@@ -179,7 +180,7 @@ export default defineComponent({
     }
     return {
       getLocaleFormattedNumber,
-      sortedProviders,
+      providers,
       sorting,
       sortTable,
       cleanSourceUrlForPresentation,
