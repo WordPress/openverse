@@ -31,7 +31,6 @@ export default defineNuxtConfig({
     public: {
       deploymentEnv: "local",
       apiUrl: "https://api.openverse.org/",
-      providerUpdateFrequency: 3600000,
       savedSearchCount: 4,
       sentry: {
         dsn: "",
