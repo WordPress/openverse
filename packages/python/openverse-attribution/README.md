@@ -5,4 +5,4 @@ open licenses, tools, and attribution.
 
 This library is a part of the Openverse project. For more information, refer to
 the
-[documentation](https://docs.openverse.org/packages/openverse_attribution/index.html).
+[documentation](https://docs.openverse.org/packages/python/openverse_attribution/index.html).

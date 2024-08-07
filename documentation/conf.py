@@ -110,6 +110,8 @@ redirects = {
     "catalog/guides/deploy": "/meta/release_and_deployment/runbooks/catalog.html",
     "catalog/guides/deployment": "/meta/release_and_deployment/index.html#catalog",
     "ingestion_server/guides/deploy": "/meta/release_and_deployment/runbooks/ingestion_server.html",
+    "packages/eslint_plugin/*": "/packages/js/eslint_plugin/$source.html",
+    "packages/openverse_attribution/*": "/packages/python/openverse_attribution/$source.html",
 }
 
 myst_enable_extensions = ["linkify"]

@@ -9,8 +9,9 @@ packages and how to add/maintain them.
 ```{toctree}
 :titlesonly:
 :glob:
+:maxdepth: 1
 
-eslint_plugin/index
+js/*/index
 ```
 
 ```{caution}
@@ -91,8 +92,9 @@ how to add/maintain them.
 ```{toctree}
 :titlesonly:
 :glob:
+:maxdepth: 1
 
-openverse_attribution/index
+python/*/index
 ```
 
 ```{caution}
