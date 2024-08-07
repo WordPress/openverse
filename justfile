@@ -344,10 +344,33 @@ f:
 p package script +args="":
     pnpm --filter {{ package }} run {{ script }} {{ args }}
 
-# Run PDM scripts by name for all packages matching the pattern, ignoring matches if the script does not exist
-pdm-run-recursive pattern script +args="":
+# List directories containing pyproject.toml that match the pattern. Override `print_cmd` to `print0` if needed. See `man find` for details.
+@python-projects pattern +print_cmd="printf '%h\\n'":
+    # Ignore hidden files
+    # Match only files with the path pattern
+    # And only if they are named pyproject.toml
     find . \
         -not -path '*/[@.]*' \
         -path '*/{{ pattern }}/*' \
         -name 'pyproject.toml' \
-        -execdir bash -c 'if pdm run -l | grep {{ script }} -q; then pdm run {{ script }}; fi' \;
+        -{{ print_cmd }};
+
+# Run a command inside the Python packages matching the pattern
+exec-python-projects pattern +cmd:
+    #! /usr/bin/env bash
+    for package in $(just python-projects {{ pattern }} | tr '\n' ' ');
+    do
+        # $package is relative to the CWD of `just python-projects`, which is the justfile directory
+        # so change back to that before cding to the package to ensure $package is a coherent relative path
+        cd {{ justfile_directory() }}
+        cd "$package"
+        {{ cmd }}
+    done
+
+# Run a PDM command inside the Python packages mattching the pattern
+@pdm pattern +pdm_command:
+    just exec-python-projects {{ pattern }} pdm {{ pdm_command }}
+
+# Run PDM scripts by name for all packages matching the pattern, ignoring matches if the script does not exist
+pdm-run pattern script +args="":
+    just exec-python-projects {{ pattern }} bash -c "'if pdm run -l | grep {{ script }} -q; then pdm run {{ script }} {{ args }}; fi'"

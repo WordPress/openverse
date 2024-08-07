@@ -123,7 +123,7 @@ repos:
       - id: python-types
         name: python-types
         files: ^packages/python/.*$
-        entry: bash -c "just pdm-run-recursive packages/python types"
+        entry: bash -c "just pdm-run packages types"
         language: system
         pass_filenames: false
 
