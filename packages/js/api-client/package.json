@@ -33,7 +33,7 @@
     "url": "https://git.sr.ht/~sara/openverse-api-client",
     "directory": "packages/openverse-api-client"
   },
-  "license": "LGPL-3.0-or-later",
+  "license": "MIT",
   "devDependencies": {
     "@types/node": "^20.11.30",
     "cross-fetch": "^4.0.0",
