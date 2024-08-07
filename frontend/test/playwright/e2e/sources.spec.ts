@@ -16,3 +16,17 @@ test("sources table has links to source pages", async ({ page }) => {
 
   await expect(getH1(page, "Flickr")).toBeVisible()
 })
+
+// Tests the fix for https://github.com/WordPress/openverse/issues/4724
+test("sources table can be sorted multiple times", async ({ page }) => {
+  await preparePageForTests(page, "xl")
+  await page.goto("/sources")
+
+  const totalItems = page.getByRole("cell", { name: /total items/i }).first()
+  await totalItems.click()
+  await totalItems.click()
+  await totalItems.click()
+
+  const firstRow = page.getByRole("row", { name: "Flickr" })
+  await expect(firstRow).toBeVisible()
+})
