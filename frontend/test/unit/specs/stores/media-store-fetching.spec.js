@@ -51,6 +51,7 @@ vi.mock("#app/nuxt", async () => {
   const original = await import("#app/nuxt")
   return {
     ...original,
+    useRuntimeConfig: vi.fn(() => ({ public: { deploymentEnv: "local" } })),
     useNuxtApp: vi.fn(() => ({
       $sentry: {
         captureException: vi.fn(),
