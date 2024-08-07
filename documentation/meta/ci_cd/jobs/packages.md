@@ -18,3 +18,15 @@ given script and just run it for the ones that do.
 
 Since this is a required check for a matrix job, it has a bypass counterpart.
 Refer to the documentation for [bypass jobs](/meta/ci_cd/flow.md#bypass-jobs).
+
+## `py-package-checks`
+
+Runs a matrix of the following checks for packages in the `packages/python`:
+
+- PDM `build`
+- PDM script `test`
+
+All packages in `packages/python` must define a `test` script. Python projects
+should only reside in `packages` if they are distributable packages (regardless
+of whether they are published). As such, all packages in the directory must be
+buildable.

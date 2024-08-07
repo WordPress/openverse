@@ -12,11 +12,11 @@
     "require": "./dist/index.cjs"
   },
   "scripts": {
-    "build": "pnpm run test && rm -rf dist && mkdir dist && pnpm run build:cjs && pnpm run build:esm && pnpm run build:types && pnpm pack && pnpm publish --dry-run",
+    "build": "pnpm run test:unit && rm -rf dist && mkdir dist && pnpm run build:cjs && pnpm run build:esm && pnpm run build:types && pnpm pack && pnpm publish --dry-run --no-git-checks",
     "build:cjs": "esbuild ./src/**/* --packages=external --sourcemap --format=cjs --out-extension:.js=.cjs --outdir=dist",
     "build:esm": "esbuild ./src/**/* --packages=external --sourcemap --format=esm --out-extension:.js=.mjs --outdir=dist",
     "build:types": "tsc -p ./tsconfig.prod.json",
-    "test": "vitest run"
+    "test:unit": "vitest run ./tests"
   },
   "keywords": [
     "openverse",
