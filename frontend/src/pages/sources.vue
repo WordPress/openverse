@@ -44,6 +44,7 @@ useHead({ title: `${t("sources.title")} | Openverse` })
           <VLink href="https://www.si.edu/">Smithsonian Institute</VLink>
         </template>
       </i18n-t>
+      {{ " " }}
       <i18n-t
         scope="global"
         keypath="sources.ccContent.provider.b"
