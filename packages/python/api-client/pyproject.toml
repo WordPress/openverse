@@ -16,17 +16,17 @@ license = {text = "MIT"}
 requires = ["pdm-backend"]
 build-backend = "pdm.backend"
 
-
 [tool.pdm]
 distribution = true
 
 [tool.pdm.scripts]
-pre_build = "pdm run generate"
+pre_build = { shell = "pdm run test && pdm run types && rm -rf ./dist" }
+post_build = { shell = "twine check dist/*"}
+
 test = { shell = "pytest" }
 types = "mypy --install-types --non-interactive {args:src/openverse_api_client tests}"
 
 generate = { call = "openverse_api_client_generator.__main__:cli" }
-build_all = { shell = "pdm build && cd ../../js/api-client && pnpm run build" }
 
 [tool.pdm.dev-dependencies]
 dev = [
