@@ -1,6 +1,12 @@
 /* eslint-disable eslint-comments/no-unlimited-disable */
 /* eslint-disable */
 
+/**
+ * This file is generated from a template. Do not edit it by hand!
+ *
+ * @see {@link https://docs.openverse.org/packages/js/api-client/index.html#development-and-implementation-details}
+ */
+
 export type GrantTypeEnum = "client_credentials"
 
 export interface OAuth2KeyInfo {

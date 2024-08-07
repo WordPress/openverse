@@ -1,3 +1,11 @@
+"""
+Fully typed Openverse API client.
+
+This file is generated from a template. Do not edit it by hand!
+
+See https://docs.openverse.org/packages/python/api-client/index.html#development-and-implementation-details
+"""
+
 from typing_extensions import cast, Self
 import typing_extensions as typing
 import httpx

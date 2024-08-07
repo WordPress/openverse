@@ -2,7 +2,7 @@ import re
 from http.client import HTTPResponse
 from pathlib import Path
 from typing import TypeAlias
-from urllib.request import urlopen
+from urllib.request import urlopen, Request
 
 import yaml
 
@@ -64,8 +64,13 @@ def main(openverse_api_url: str) -> None:
     openverse_api_url = (
         openverse_api_url[:-1] if openverse_api_url[-1] == "/" else openverse_api_url
     )
-    schema_res: HTTPResponse = urlopen(f"{openverse_api_url}/v1/schema/")
-
+    req = Request(
+        f"{openverse_api_url}/v1/schema/",
+        headers={
+            "User-Agent": "OpenverseAPIClientGenerator/1.0",
+        },
+    )
+    schema_res: HTTPResponse = urlopen(req)
     schema_bytes = schema_res.read()
     out_schema = Path.cwd() / "schema.yaml"
     out_schema.unlink(missing_ok=True)
