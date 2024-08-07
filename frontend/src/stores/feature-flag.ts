@@ -1,4 +1,4 @@
-import { useCookie } from "#imports"
+import { useCookie, useRuntimeConfig } from "#imports"
 
 import { defineStore } from "pinia"
 import { useStorage } from "@vueuse/core"
@@ -24,7 +24,7 @@ import {
   SESSION,
   SWITCHABLE,
 } from "~/constants/feature-flag"
-import { DEPLOY_ENVS, DeployEnv, LOCAL } from "~/constants/deploy-env"
+import { DEPLOY_ENVS, DeployEnv } from "~/constants/deploy-env"
 
 import {
   OpenverseCookieState,
@@ -49,12 +49,15 @@ interface FeatureGroup {
 /**
  * Get the status of the flag. If the flag status is environment dependent, this
  * function will use the flag status for the current environment based on the
- * `DEPLOYMENT_ENV` environment variable.
+ * value from the runtime config.
  *
  * @param flag - the flag for which to get the status
+ * @param deploymentEnv - the current deployment environment
  */
-export const getFlagStatus = (flag: FeatureFlagRecord): FlagStatus => {
-  const deployEnv = (import.meta.env.DEPLOYMENT_ENV ?? LOCAL) as DeployEnv
+export const getFlagStatus = (
+  flag: FeatureFlagRecord,
+  deploymentEnv: DeployEnv
+): FlagStatus => {
   if (typeof flag.status === "string") {
     if (!FLAG_STATUSES.includes(flag.status as FlagStatus)) {
       warn(`Invalid ${flag.description} flag status: ${flag.status}`)
@@ -62,7 +65,7 @@ export const getFlagStatus = (flag: FeatureFlagRecord): FlagStatus => {
     }
     return flag.status as FlagStatus
   } else {
-    const envIndex = DEPLOY_ENVS.indexOf(deployEnv)
+    const envIndex = DEPLOY_ENVS.indexOf(deploymentEnv)
     for (let i = envIndex; i < DEPLOY_ENVS.length; i += 1) {
       if (DEPLOY_ENVS[i] in flag.status) {
         if (
@@ -85,11 +88,13 @@ export const getFlagStatus = (flag: FeatureFlagRecord): FlagStatus => {
  * preferences of the user.
  *
  * @param flag - the flag for which to get the state
+ * @param deploymentEnv - the current deployment environment
  */
 const getFeatureState = (
-  flag: FeatureFlag | FeatureFlagRecord
+  flag: FeatureFlag | FeatureFlagRecord,
+  deploymentEnv: DeployEnv
 ): FeatureState => {
-  const status = getFlagStatus(flag)
+  const status = getFlagStatus(flag, deploymentEnv)
   if (status === SWITCHABLE) {
     if ("preferredState" in flag) {
       return (flag.preferredState as FeatureState) ?? flag.defaultState ?? OFF
@@ -102,7 +107,7 @@ const getFeatureState = (
   return OFF
 }
 
-const initializeFlagState = () => {
+export const initializeFlagState = (deploymentEnv: DeployEnv) => {
   // Resolve the status of the feature flags based on the current environment
   const features: Record<FlagName, FeatureFlag> = Object.entries(
     featureData.features as Record<FlagName, FeatureFlagRecord>
@@ -111,8 +116,8 @@ const initializeFlagState = () => {
       acc[name as FlagName] = {
         ...flag,
         name: name as FlagName,
-        state: getFeatureState(flag),
-        status: getFlagStatus(flag),
+        state: getFeatureState(flag, deploymentEnv),
+        status: getFlagStatus(flag, deploymentEnv),
         preferredState: undefined,
       }
       return acc
@@ -126,7 +131,8 @@ const FEATURE_FLAG = "feature_flag"
 
 export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
   state: () => {
-    return initializeFlagState()
+    const deploymentEnv = useRuntimeConfig().public.deploymentEnv as DeployEnv
+    return initializeFlagState(deploymentEnv)
   },
   getters: {
     /**
