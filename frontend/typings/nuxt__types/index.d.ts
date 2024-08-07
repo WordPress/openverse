@@ -4,7 +4,6 @@ declare module "@nuxtjs/i18n" {
    * locale's name and native name, which comes in use here.
    */
   export interface LocaleObject {
-    name: string
     nativeName: string
     translated: number
   }
