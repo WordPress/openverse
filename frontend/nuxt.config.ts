@@ -119,7 +119,7 @@ export default defineNuxtConfig({
     enabled: !isTest,
     ignoredHostnames: ["localhost", "staging.openverse.org"],
     // Set `NUXT_PUBLIC_PLAUSIBLE_LOG_IGNORED_EVENTS` to "true" to log in the dev environment.
-    logIgnoredEvents: false,
+    logIgnoredEvents: true,
     autoPageviews: false,
     apiHost: "http://localhost:50290",
     domain: "localhost",
