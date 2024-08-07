@@ -116,7 +116,15 @@ export default defineComponent({
     const providerStore = useProviderStore()
     const searchStore = useSearchStore()
 
-    const providers = ref<MediaProvider[]>(providerStore.providers[props.media])
+    const sorting = reactive({
+      direction: "asc",
+      field: "display_name" as keyof Omit<MediaProvider, "logo_url">,
+    })
+
+    // The providers in store are sorted by `source_name`, here we sort them by `display_name`.
+    const providers = ref<MediaProvider[]>(
+      providerStore.providers[props.media].sort(compareProviders)
+    )
 
     function sortTable(field: keyof Omit<MediaProvider, "logo_url">) {
       let direction = field === "media_count" ? "desc" : "asc"
@@ -132,10 +140,6 @@ export default defineComponent({
       providers.value =
         direction === "asc" ? sortedProviders : sortedProviders.reverse()
     }
-    const sorting = reactive({
-      direction: "asc",
-      field: "display_name" as keyof Omit<MediaProvider, "logo_url">,
-    })
 
     function cleanSourceUrlForPresentation(url: string) {
       const stripProtocol = (s: string) => s.replace(/https?:\/\//, "")
