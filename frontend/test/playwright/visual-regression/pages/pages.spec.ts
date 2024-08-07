@@ -39,7 +39,7 @@ for (const contentPage of contentPages) {
             {
               fullPage: true,
             },
-            { maxDiffPixelRatio: 0.01 }
+            { maxDiffPixelRatio: 0.005 }
           )
         })
       })
