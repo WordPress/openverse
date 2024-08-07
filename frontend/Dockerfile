@@ -67,11 +67,6 @@ WORKDIR /home/node/frontend/
 
 ARG SEMANTIC_VERSION
 
-ARG API_URL=https://api.openverse.org/
-
-ENV NUXT_PUBLIC_API_URL=$API_URL
-ENV NUXT_PUBLIC_SENTRY_RELEASE=$SEMANTIC_VERSION
-
 # set app serving to permissive / assigned
 ENV NUXT_HOST=0.0.0.0
 
