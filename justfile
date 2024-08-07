@@ -308,16 +308,6 @@ prune delete="false":
     @just prune_node {{ delete }}
     @just prune_venv {{ delete }}
 
-########
-# Misc #
-########
-
-# Pull, build, and deploy all services
-deploy:
-    -git pull
-    @just pull
-    @just up
-
 #####################
 # Aliases/shortcuts #
 #####################
@@ -353,3 +343,11 @@ f:
 # alias for `pnpm --filter {package} run {script}`
 p package script +args="":
     pnpm --filter {{ package }} run {{ script }} {{ args }}
+
+# Run PDM scripts by name for all packages matching the pattern, ignoring matches if the script does not exist
+pdm-run-recursive pattern script +args="":
+    find . \
+        -not -path '*/[@.]*' \
+        -path '*/{{ pattern }}/*' \
+        -name 'pyproject.toml' \
+        -execdir bash -c 'if pdm run -l | grep {{ script }} -q; then pdm run {{ script }}; fi' \;
