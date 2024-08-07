@@ -123,6 +123,13 @@ repos:
         language: system
         pass_filenames: false
 
+      - id: python-types
+        name: python-types
+        files: ^packages/python/.*$
+        entry: bash -c "just pdm-run-recursive packages/python types"
+        language: system
+        pass_filenames: false
+
       - id: eslint
         name: eslint
         files: (frontend|automations|packages/js).*?\.(js|ts|mjs|vue|json5|json)$
