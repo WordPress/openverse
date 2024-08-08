@@ -1,6 +1,6 @@
 <template>
   <div
-    class="box-track text-default group relative h-0 w-full rounded-sm bg-fill-complementary pt-full"
+    class="box-track group relative h-0 w-full rounded-sm bg-fill-complementary pt-full text-default"
   >
     <div class="absolute inset-0 flex flex-col">
       <div class="info flex flex-grow flex-col justify-between px-4 pt-4">

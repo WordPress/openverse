@@ -1,21 +1,24 @@
-# Deployment runbook
+# Catalog deployment runbook
+
+```{tip}
+For more information on how deployments work, please see the [general deployment guide](/meta/release_and_deployment/index.md).
+```
 
 ## Setup
 
-1. Check [the running DAGs](https://airflow.openverse.org/home?status=running)
-   in Airflow to make sure no DAGs are running.
+Check [the running DAGs](https://airflow.openverse.org/home?status=running) in
+Airflow to make sure no DAGs are running.
 
-   ```{caution}
-   It is possible to perform a deploy if the image and audio refresh DAGs are
-   running, but only if they are currently waiting on an `HttpSensor` step. If
-   that is the case, you should pause the DAG, complete the deploy, and then
-   unpause it back.
-   ```
+```{caution}
+It is possible to perform a deploy if the image and audio refresh DAGs are
+running, but only if they are currently waiting on an `HttpSensor` step. If
+that is the case, you should pause the DAG, complete the deploy, and then
+unpause it back.
+```
 
-1. [Publish the drafted catalog release in the GitHub release page of the monorepo](https://github.com/WordPress/openverse/releases?q=catalog-)
-   - Here you can preview the changes included in the catalog release and decide
-     whether a release is necessary and adjust monitoring during the deployment
-     accordingly.
+## Publish the release
+
+[Publish the drafted catalog release in the GitHub release page of the monorepo](/meta/release_and_deployment/index.md#how-to-publish-a-release).
 
 ## Deployment
 

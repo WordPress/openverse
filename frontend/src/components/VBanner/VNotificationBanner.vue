@@ -18,10 +18,7 @@
         :icon-props="{ name: 'close-small' }"
         size="small"
         :label="closeButtonLabel || $t('modal.closeBanner')"
-        :class="{
-          'focus-slim-tx-bg-fill-complementary hover:bg-default hover:bg-opacity-10':
-            variant === 'dark',
-        }"
+        :class="closeButtonClassNames"
         @click="$emit('close')"
       />
     </slot>
@@ -106,9 +103,21 @@ export default defineComponent({
           }[props.nature]
     )
 
+    const closeButtonClassNames = computed(() =>
+      props.variant === "dark"
+        ? "focus-slim-tx-bg-fill-complementary hover:bg-fill-tertiary-hover"
+        : {
+            info: "hover:!bg-info-3",
+            warning: "hover:!bg-warning-3",
+            success: "hover:!bg-success-3",
+            error: "hover:!bg-error-3",
+          }[props.nature]
+    )
+
     return {
       classNames,
       iconClassNames,
+      closeButtonClassNames,
     }
   },
 })

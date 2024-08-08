@@ -1,6 +1,6 @@
 <template>
   <div class="full-track w-full">
-    <div class="border-default relative border-b">
+    <div class="relative border-b border-default">
       <span
         v-if="currentTime > 0"
         class="pointer-events-none absolute left-0 hidden h-full w-4 bg-fill-complementary md:block lg:w-10"

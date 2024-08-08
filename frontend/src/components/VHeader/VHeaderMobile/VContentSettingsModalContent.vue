@@ -1,3 +1,73 @@
+<script setup lang="ts">
+import { computed, ref } from "vue"
+
+import { useSearchStore } from "~/stores/search"
+
+import useSearchType from "~/composables/use-search-type"
+
+import { SearchType } from "~/constants/media"
+
+import VButton from "~/components/VButton.vue"
+import VFilterTab from "~/components/VHeader/VHeaderMobile/VFilterTab.vue"
+import VIcon from "~/components/VIcon/VIcon.vue"
+import VModalContent from "~/components/VModal/VModalContent.vue"
+import VSearchGridFilter from "~/components/VFilters/VSearchGridFilter.vue"
+import VSearchTypes from "~/components/VContentSwitcher/VSearchTypes.vue"
+import VShowResultsButton from "~/components/VHeader/VHeaderMobile/VShowResultsButton.vue"
+import VTab from "~/components/VTabs/VTab.vue"
+import VTabPanel from "~/components/VTabs/VTabPanel.vue"
+import VTabs from "~/components/VTabs/VTabs.vue"
+import VSafeBrowsing from "~/components/VSafeBrowsing/VSafeBrowsing.vue"
+import VIconButton from "~/components/VIconButton/VIconButton.vue"
+
+type ContentSettingsTab = "content-settings" | "filters"
+
+const props = withDefaults(
+  defineProps<{
+    triggerElement?: HTMLElement | null
+    variant?: "fit-content" | "two-thirds"
+    isFetching?: boolean
+    close: () => void
+    visible?: boolean
+    showFilters?: boolean
+    useLinks?: boolean
+  }>(),
+  {
+    triggerElement: null,
+    variant: "fit-content",
+    isFetching: false,
+    visible: false,
+    showFilters: true,
+    useLinks: true,
+  }
+)
+
+defineEmits<{
+  select: [SearchType]
+}>()
+
+const searchStore = useSearchStore()
+const content = useSearchType()
+const selectedTab = ref<ContentSettingsTab>("content-settings")
+const changeSelectedTab = (tab: string) => {
+  selectedTab.value = tab as ContentSettingsTab
+}
+
+const showClearFiltersButton = computed(
+  () => props.showFilters && selectedTab.value === "filters"
+)
+const isClearButtonDisabled = computed(() => !searchStore.isAnyFilterApplied)
+const appliedFilterCount = computed<number>(
+  () => searchStore.appliedFilterCount
+)
+
+const searchType = computed(() => content.getSearchTypeProps())
+
+const clearFilters = () => {
+  searchStore.clearFilters()
+}
+</script>
+
 <template>
   <VModalContent
     :aria-label="$t('header.aria.menu')"
@@ -59,12 +129,12 @@
           :show-filter-header="false"
           :change-tab-order="false"
         />
-        <VSafeBrowsing class="border-default border-t px-6 pt-6" />
+        <VSafeBrowsing class="border-t border-default px-6 pt-6" />
       </VTabPanel>
     </VTabs>
     <footer
       v-if="showFilters"
-      class="border-t-default mt-auto flex h-20 flex-shrink-0 items-center justify-between border-t p-4"
+      class="mt-auto flex h-20 flex-shrink-0 items-center justify-between border-t border-t-default p-4"
     >
       <VButton
         v-show="showClearFiltersButton"
@@ -79,122 +149,3 @@
     </footer>
   </VModalContent>
 </template>
-
-<script lang="ts">
-import { computed, defineComponent, PropType, ref } from "vue"
-
-import { useSearchStore } from "~/stores/search"
-
-import useSearchType from "~/composables/use-search-type"
-
-import { defineEvent } from "~/types/emits"
-
-import { SearchType } from "~/constants/media"
-
-import VButton from "~/components/VButton.vue"
-import VFilterTab from "~/components/VHeader/VHeaderMobile/VFilterTab.vue"
-import VIcon from "~/components/VIcon/VIcon.vue"
-import VModalContent from "~/components/VModal/VModalContent.vue"
-import VSearchGridFilter from "~/components/VFilters/VSearchGridFilter.vue"
-import VSearchTypes from "~/components/VContentSwitcher/VSearchTypes.vue"
-import VShowResultsButton from "~/components/VHeader/VHeaderMobile/VShowResultsButton.vue"
-import VTab from "~/components/VTabs/VTab.vue"
-import VTabPanel from "~/components/VTabs/VTabPanel.vue"
-import VTabs from "~/components/VTabs/VTabs.vue"
-import VSafeBrowsing from "~/components/VSafeBrowsing/VSafeBrowsing.vue"
-import VIconButton from "~/components/VIconButton/VIconButton.vue"
-
-type ContentSettingsTab = "content-settings" | "filters"
-
-export default defineComponent({
-  name: "VContentSettingsModalContent",
-  components: {
-    VIconButton,
-    VSafeBrowsing,
-    VIcon,
-    VModalContent,
-    VButton,
-    VFilterTab,
-    VSearchGridFilter,
-    VSearchTypes,
-    VShowResultsButton,
-    VTab,
-    VTabPanel,
-    VTabs,
-  },
-  props: {
-    triggerElement: {
-      type: (import.meta.server
-        ? Object
-        : HTMLElement) as PropType<HTMLElement>,
-      default: null,
-    },
-    variant: {
-      type: String as PropType<"fit-content" | "two-thirds">,
-      default: "fit-content",
-    },
-    isFetching: {
-      type: Boolean,
-      default: false,
-    },
-    close: {
-      type: Function as PropType<() => void>,
-      required: true,
-    },
-    visible: {
-      type: Boolean,
-      default: false,
-    },
-    showFilters: {
-      type: Boolean,
-      default: true,
-    },
-    useLinks: {
-      type: Boolean,
-      default: true,
-    },
-  },
-  emits: {
-    select: defineEvent<[SearchType]>(),
-  },
-  setup(props) {
-    const searchStore = useSearchStore()
-    const content = useSearchType()
-    const selectedTab = ref<ContentSettingsTab>("content-settings")
-    const changeSelectedTab = (tab: string) => {
-      selectedTab.value = tab as ContentSettingsTab
-    }
-
-    const areFiltersSelected = computed(() => searchStore.isAnyFilterApplied)
-
-    const showClearFiltersButton = computed(
-      () => props.showFilters && selectedTab.value === "filters"
-    )
-    const isClearButtonDisabled = computed(
-      () => !searchStore.isAnyFilterApplied
-    )
-    const appliedFilterCount = computed<number>(
-      () => searchStore.appliedFilterCount
-    )
-
-    const searchType = computed(() => content.getSearchTypeProps())
-
-    const clearFilters = () => {
-      searchStore.clearFilters()
-    }
-
-    return {
-      searchType,
-
-      selectedTab,
-      changeSelectedTab,
-
-      areFiltersSelected,
-      appliedFilterCount,
-      showClearFiltersButton,
-      isClearButtonDisabled,
-      clearFilters,
-    }
-  },
-})
-</script>

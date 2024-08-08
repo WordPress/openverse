@@ -4,14 +4,14 @@
       :id="id"
       v-bind="$attrs"
       :value="value"
-      class="radio bg-default focus-visible:ring-border-focus relative me-3 h-5 w-5 flex-shrink-0 appearance-none rounded-full border border-tertiary focus-visible:outline-none focus-visible:ring focus-visible:ring-offset-2 disabled:border-disabled disabled:bg-fill-secondary"
+      class="radio focus-visible:ring-border-focus relative me-3 h-5 w-5 flex-shrink-0 appearance-none rounded-full border border-tertiary bg-default focus-visible:outline-none focus-visible:ring focus-visible:ring-offset-2 disabled:border-disabled disabled:bg-fill-secondary"
       type="radio"
       :checked="isChecked"
       @input="handleInput"
     />
     <VSvg
       name="radiomark"
-      class="radiomark text-default absolute start-0 h-5 w-5 opacity-0 transition-opacity"
+      class="radiomark absolute start-0 h-5 w-5 text-default opacity-0 transition-opacity"
       width="20"
       height="20"
     />

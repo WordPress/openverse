@@ -6,10 +6,10 @@
       <VAudioThumbnail class="rounded-ss" :audio="audio" />
     </div>
 
-    <div class="bg-default flex h-12 items-center justify-between rounded-se">
+    <div class="flex h-12 items-center justify-between rounded-se bg-default">
       <VLink
         :href="`/audio/${audio.id}`"
-        class="hover-underline label-bold text-default z-10 flex flex-row items-center px-3 pe-12"
+        class="hover-underline label-bold z-10 flex flex-row items-center px-3 pe-12 text-default"
         :class="{ 'blur-text': shouldBlur }"
       >
         {{ shouldBlur ? $t("sensitiveContent.title.audio") : audio.title }}

@@ -5,6 +5,5 @@
 
 quickstart
 test
-deploy
 documentation
 ```

@@ -169,7 +169,7 @@ flowchart TD
 1. Merge [PR number 2](#pull-request-guidelines). This will automatically deploy
    the API to staging.
 2. Verify that the staging API continues to work.
-3. [Deploy the API](/api/guides/deploy.md) to production.
+3. [Deploy the API](/meta/release_and_deployment/runbooks/api.md) to production.
 4. Verify that the production API continues to work.
 
 At the close of this phase the API is exclusively using the new fields and the

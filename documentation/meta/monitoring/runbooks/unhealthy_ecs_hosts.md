@@ -30,7 +30,7 @@ requests.
 
 If the container fails to start altogether (usually only after a deployment),
 the severity is critical. Immediately
-[roll the service back to the previous version](/general/deployment.md#rollbacks).
+[roll the service back to the previous version](/meta/release_and_deployment/index.md#force-a-deployment-to-a-specific-version-roll-back-redeploy-re-run-etc).
 After kicking off the roll back,
 [query the logs for the failed tasks](/meta/monitoring/cloudwatch_logs/index.md)
 to check if there are logs that identify the problem preventing the container

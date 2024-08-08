@@ -4,7 +4,6 @@
 :titlesonly:
 
 quickstart
-deploy
 test
 analytics
 icons

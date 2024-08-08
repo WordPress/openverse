@@ -13,7 +13,7 @@
       <input
         :id="id"
         type="checkbox"
-        class="bg-default me-3 block appearance-none border border-tertiary transition-colors duration-100 checked:bg-fill-tertiary disabled:border-disabled disabled:bg-fill-secondary checked:disabled:border-disabled checked:disabled:bg-fill-disabled"
+        class="me-3 block appearance-none border border-tertiary bg-default transition-colors duration-100 checked:bg-fill-tertiary disabled:border-disabled disabled:bg-fill-secondary checked:disabled:border-disabled checked:disabled:bg-fill-disabled"
         :class="
           isSwitch
             ? ['h-4.5', 'w-9', 'rounded-full', 'focus-slim-offset']

@@ -68,7 +68,7 @@ const headerBorder = computed(() =>
 
 <template>
   <div
-    class="app h-dyn-screen min-h-dyn-screen bg-default grid grid-rows-[auto,1fr]"
+    class="app h-dyn-screen min-h-dyn-screen grid grid-rows-[auto,1fr] bg-default"
     :class="[
       isSidebarVisible
         ? 'has-sidebar grid-cols-[1fr_var(--filter-sidebar-width)]'
@@ -79,22 +79,22 @@ const headerBorder = computed(() =>
       <VBanners />
       <VHeaderDesktop
         v-if="isDesktopLayout"
-        class="bg-default h-20 border-b"
+        class="h-20 border-b bg-default"
         :class="headerBorder"
       />
       <VHeaderMobile
         v-else
-        class="bg-default h-20 border-b"
+        class="h-20 border-b bg-default"
         :class="headerBorder"
       />
     </div>
 
     <aside
       v-if="isSidebarVisible"
-      class="sidebar border-default end-0 z-10 h-full overflow-y-auto border-s bg-surface"
+      class="sidebar end-0 z-10 h-full overflow-y-auto border-s border-default bg-surface"
     >
       <VSearchGridFilter class="px-10 py-8" />
-      <VSafeBrowsing class="border-default border-t px-10 py-8" />
+      <VSafeBrowsing class="border-t border-default px-10 py-8" />
     </aside>
 
     <div
@@ -102,7 +102,7 @@ const headerBorder = computed(() =>
       class="main-page flex h-full w-full min-w-0 flex-col justify-between overflow-y-auto"
     >
       <slot />
-      <VFooter mode="content" class="border-default bg-default border-t" />
+      <VFooter mode="content" class="border-t border-default bg-default" />
     </div>
   </div>
 </template>

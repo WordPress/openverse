@@ -1,7 +1,7 @@
 ;; Please include filenames and explanations for each ignored line.
 ;; See https://docs.openverse.org/meta/codespell.html for docs.
 
-;; .github/workflows/release-app.yml
+;; .github/workflows/draft_releases.yml
 ;; The release-drafter/release-drafter configuration variable name cannot be changed
           commitish: main
 

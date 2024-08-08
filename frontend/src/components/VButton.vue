@@ -301,13 +301,13 @@ a.button {
   @apply border-tx bg-fill-tertiary text-over-dark hover:bg-fill-tertiary-hover hover:text-over-dark disabled:opacity-70;
 }
 .filled-gray {
-  @apply text-default border-tx bg-fill-secondary hover:bg-fill-secondary-hover hover:text-over-dark;
+  @apply border-tx bg-fill-secondary text-default hover:bg-fill-secondary-hover hover:text-over-dark;
 }
 .filled-white {
-  @apply bg-default text-default border-tx hover:bg-fill-secondary-hover hover:text-over-dark;
+  @apply border-tx bg-default text-default hover:bg-fill-secondary-hover hover:text-over-dark;
 }
 .bordered-white {
-  @apply bg-default text-default border-bg-ring hover:border-transparent-hover;
+  @apply border-bg-ring bg-default text-default hover:border-transparent-hover;
 }
 .bordered-white-pressed {
   @apply border-tx bg-fill-tertiary text-over-dark hover:border-gray-11 hover:bg-fill-tertiary-hover hover:focus-visible:border-tx;
@@ -319,10 +319,10 @@ a.button {
   @apply border-tx;
 }
 .transparent-gray {
-  @apply text-default border-tx bg-tx hover:bg-fill-secondary disabled:text-disabled;
+  @apply border-tx bg-tx text-default hover:bg-fill-secondary disabled:text-disabled;
 }
 .transparent-dark {
-  @apply text-default border-tx bg-tx hover:bg-fill-secondary-hover hover:text-over-dark;
+  @apply border-tx bg-tx text-default hover:bg-fill-secondary-hover hover:text-over-dark;
 }
 .transparent-dark-pressed {
   @apply border-tx bg-fill-tertiary text-over-dark hover:border-gray-11;

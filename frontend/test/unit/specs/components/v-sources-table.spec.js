@@ -27,6 +27,12 @@ describe("VSourcesTable", () => {
       providers: {
         image: [
           {
+            source_name: "Provider_A",
+            display_name: "Provider A",
+            source_url: "https://zzz.com",
+            media_count: 3333,
+          },
+          {
             source_name: "Provider_B",
             display_name: "Provider B",
             source_url: "http://yyy.com",
@@ -37,12 +43,6 @@ describe("VSourcesTable", () => {
             display_name: "Provider C",
             source_url: "www.xxx.com",
             media_count: 2222,
-          },
-          {
-            source_name: "Provider_A",
-            display_name: "Provider A",
-            source_url: "https://zzz.com",
-            media_count: 3333,
           },
         ],
       },
@@ -55,7 +55,7 @@ describe("VSourcesTable", () => {
     }
   })
 
-  it('should be sorted by display_name ("Source") by default', async () => {
+  it('should use the provider store default sorting by display_name ("Source") by default', async () => {
     await render(VSourcesTable, options)
 
     const table = getTableData(screen.getAllByRole("row"))
@@ -90,9 +90,9 @@ describe("VSourcesTable", () => {
     await userEvent.click(domainCell)
     const table = getTableData(screen.getAllByRole("row"))
     const expectedTable = [
-      ["Provider B", "yyy.com", "1,111"],
-      ["Provider C", "xxx.com", "2,222"],
       ["Provider A", "zzz.com", "3,333"],
+      ["Provider C", "xxx.com", "2,222"],
+      ["Provider B", "yyy.com", "1,111"],
     ]
     expect(table).toEqual(expectedTable)
   })

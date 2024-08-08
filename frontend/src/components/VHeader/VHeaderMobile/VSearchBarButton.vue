@@ -76,17 +76,17 @@ export default defineComponent({
   outline: none;
 }
 .transparent-dark {
-  @apply text-default border-tx bg-tx hover:text-over-dark group-hover/button:bg-fill-tertiary;
+  @apply border-tx bg-tx text-default hover:text-over-dark group-hover/button:bg-fill-tertiary;
 }
 .transparent-gray {
-  @apply text-default border-tx bg-tx group-hover/button:bg-fill-tertiary group-hover/button:bg-opacity-10;
+  @apply border-tx bg-tx text-default group-hover/button:bg-fill-tertiary;
 }
 .filled-white {
-  @apply bg-default text-default border-tx group-hover/button:bg-fill-tertiary group-hover/button:text-over-dark;
+  @apply border-tx bg-default text-default group-hover/button:bg-fill-tertiary group-hover/button:text-over-dark;
 }
 
 .filled-gray {
-  @apply text-default border-tx bg-fill-secondary group-hover/button:bg-fill-tertiary group-hover/button:text-over-dark;
+  @apply border-tx bg-fill-secondary text-default group-hover/button:bg-fill-tertiary group-hover/button:text-over-dark;
 }
 
 .filled-white,

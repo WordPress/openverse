@@ -1,7 +1,7 @@
 <template>
   <div
-    class="bg-default flex flex-col rounded-sm"
-    :class="{ 'border-default border p-2 shadow-el-2': bordered }"
+    class="flex flex-col rounded-sm bg-default"
+    :class="{ 'border border-default p-2 shadow-el-2': bordered }"
     data-testid="recent-searches"
   >
     <div

@@ -105,6 +105,11 @@ redirects = {
     "meta/contribution/good_first_and_help_wanted_issues": "/general/contribution/good_first_and_help_wanted_issues.html",
     "frontend/reference/playwright_tests.html": "/frontend/reference/testing_guidelines.html#playwright-tests",
     "frontend/reference/storybook_tests.html": "/frontend/reference/testing_guidelines.html#storybook-tests",
+    "frontend/guides/deploy": "/meta/release_and_deployment/runbooks/frontend.html",
+    "api/guides/deploy": "/meta/release_and_deployment/runbooks/api.html",
+    "catalog/guides/deploy": "/meta/release_and_deployment/runbooks/catalog.html",
+    "catalog/guides/deployment": "/meta/release_and_deployment/index.html#catalog",
+    "ingestion_server/guides/deploy": "/meta/release_and_deployment/runbooks/ingestion_server.html",
 }
 
 myst_enable_extensions = ["linkify"]

@@ -2,7 +2,7 @@
   <div
     v-bind="waveformAttributes"
     ref="el"
-    class="waveform bg-background-var group/waveform text-default relative overflow-hidden focus-visible:outline-none"
+    class="waveform bg-background-var group/waveform relative overflow-hidden text-default focus-visible:outline-none"
     :style="heightProperties"
     :tabIndex="isTabbable && isInteractive ? 0 : -1"
     :aria-disabled="!isInteractive"

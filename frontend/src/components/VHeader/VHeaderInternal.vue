@@ -1,3 +1,82 @@
+<script setup lang="ts">
+import { useNuxtApp, useRoute } from "#imports"
+
+import { computed, ref, SetupContext, watch } from "vue"
+
+import { useDialogControl } from "~/composables/use-dialog-control"
+import { useHydrating } from "~/composables/use-hydrating"
+
+import { useUiStore } from "~/stores/ui"
+
+import VHomeLink from "~/components/VHeader/VHomeLink.vue"
+import VPageLinks from "~/components/VHeader/VPageLinks.vue"
+import VModalContent from "~/components/VModal/VModalContent.vue"
+import VPopoverContent from "~/components/VPopover/VPopoverContent.vue"
+import VWordPressLink from "~/components/VHeader/VWordPressLink.vue"
+import VIconButton from "~/components/VIconButton/VIconButton.vue"
+
+const emit = defineEmits<{
+  open: []
+  close: []
+}>() as SetupContext["emit"]
+
+const menuButtonRef = ref<InstanceType<typeof VIconButton> | null>(null)
+const nodeRef = ref<HTMLElement | null>(null)
+const modalContentRef = ref<{
+  $el: HTMLElement
+  deactivateFocusTrap: () => void
+} | null>(null)
+
+const uiStore = useUiStore()
+
+const route = useRoute()
+
+const { $sendCustomEvent } = useNuxtApp()
+
+const isModalVisible = ref(false)
+
+const isSm = computed(() => uiStore.isBreakpoint("sm"))
+
+const triggerElement = computed(
+  () => (menuButtonRef.value?.$el as HTMLElement) || null
+)
+
+const lockBodyScroll = computed(() => !isSm.value)
+
+const deactivateFocusTrap = computed(
+  () => modalContentRef.value?.deactivateFocusTrap
+)
+
+const { doneHydrating } = useHydrating()
+
+const {
+  close: closePageMenu,
+  open: openPageMenu,
+  onTriggerClick: internalOnTriggerClick,
+  triggerA11yProps,
+} = useDialogControl({
+  visibleRef: isModalVisible,
+  nodeRef,
+  lockBodyScroll,
+  emit,
+  deactivateFocusTrap,
+})
+
+const onTriggerClick = () => {
+  if (!isModalVisible.value) {
+    $sendCustomEvent("OPEN_PAGES_MENU", {})
+  }
+  return internalOnTriggerClick()
+}
+
+// When clicking on an internal link in the modal, close the modal
+watch(route, () => {
+  if (isModalVisible.value) {
+    closePageMenu()
+  }
+})
+</script>
+
 <template>
   <header
     ref="nodeRef"
@@ -58,7 +137,7 @@
                 variant="transparent-tx"
                 size="large"
                 :icon-props="{ name: 'close' }"
-                class="bg-fill-complementary text-white focus-slim-tx hover:bg-fill-tertiary"
+                class="focus-visible:ring-bg-fill-complementary text-white focus-slim-tx hover:bg-fill-tertiary"
                 :label="$t('modal.closePagesMenu')"
                 @click="closePageMenu"
               />
@@ -84,112 +163,3 @@
     </div>
   </header>
 </template>
-
-<script lang="ts">
-import { useRoute } from "#imports"
-
-import { computed, defineComponent, ref, watch } from "vue"
-
-import { useDialogControl } from "~/composables/use-dialog-control"
-import { useAnalytics } from "~/composables/use-analytics"
-import { useHydrating } from "~/composables/use-hydrating"
-import usePages from "~/composables/use-pages"
-
-import { useUiStore } from "~/stores/ui"
-
-import VHomeLink from "~/components/VHeader/VHomeLink.vue"
-import VPageLinks from "~/components/VHeader/VPageLinks.vue"
-import VModalContent from "~/components/VModal/VModalContent.vue"
-import VPopoverContent from "~/components/VPopover/VPopoverContent.vue"
-import VWordPressLink from "~/components/VHeader/VWordPressLink.vue"
-import VIconButton from "~/components/VIconButton/VIconButton.vue"
-
-export default defineComponent({
-  name: "VHeaderInternal",
-  components: {
-    VIconButton,
-    VModalContent,
-    VPopoverContent,
-    VHomeLink,
-    VPageLinks,
-    VWordPressLink,
-  },
-  setup(_, { emit }) {
-    const menuButtonRef = ref<InstanceType<typeof VIconButton> | null>(null)
-    const nodeRef = ref<HTMLElement | null>(null)
-    const modalContentRef = ref<{
-      $el: HTMLElement
-      deactivateFocusTrap: () => void
-    } | null>(null)
-
-    const uiStore = useUiStore()
-
-    const route = useRoute()
-
-    const { sendCustomEvent } = useAnalytics()
-
-    const { all: allPages, current: currentPage } = usePages()
-
-    const isModalVisible = ref(false)
-
-    const isSm = computed(() => uiStore.isBreakpoint("sm"))
-
-    const triggerElement = computed(
-      () => (menuButtonRef.value?.$el as HTMLElement) || null
-    )
-
-    const lockBodyScroll = computed(() => !isSm.value)
-
-    const deactivateFocusTrap = computed(
-      () => modalContentRef.value?.deactivateFocusTrap
-    )
-
-    const { doneHydrating } = useHydrating()
-
-    const {
-      close: closePageMenu,
-      open: openPageMenu,
-      onTriggerClick,
-      triggerA11yProps,
-    } = useDialogControl({
-      visibleRef: isModalVisible,
-      nodeRef,
-      lockBodyScroll,
-      emit: emit as (event: string) => void,
-      deactivateFocusTrap,
-    })
-
-    const eventedOnTriggerClick = () => {
-      if (!isModalVisible.value) {
-        sendCustomEvent("OPEN_PAGES_MENU", {})
-      }
-      return onTriggerClick()
-    }
-
-    // When clicking on an internal link in the modal, close the modal
-    watch(route, () => {
-      if (isModalVisible.value) {
-        closePageMenu()
-      }
-    })
-
-    return {
-      menuButtonRef,
-      modalContentRef,
-      nodeRef,
-
-      allPages,
-      currentPage,
-
-      isModalVisible,
-      doneHydrating,
-      closePageMenu,
-      openPageMenu,
-      isSm,
-      onTriggerClick: eventedOnTriggerClick,
-      triggerA11yProps,
-      triggerElement,
-    }
-  },
-})
-</script>

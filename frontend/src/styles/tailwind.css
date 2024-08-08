@@ -212,7 +212,7 @@
   }
 
   body {
-    @apply text-default m-0 font-normal leading-loose;
+    @apply m-0 font-normal leading-loose text-default;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -380,7 +380,7 @@ Time                - 11px - xs semibold (default leading-tight)
     @apply focus-visible:outline focus-visible:outline-1.5 focus-visible:outline-offset-0;
     /* absolutely positioned overlapping pseudo element with a 1.5px border */
     @apply focus-visible:after:absolute focus-visible:after:z-10 focus-visible:after:rounded-inherit;
-    @apply focus-visible:after:border-bg-ring focus-visible:after:border-1.5;
+    @apply focus-visible:after:border-1.5 focus-visible:after:border-bg-ring;
     @apply focus-visible:after:h-full-with-border focus-visible:after:w-full-with-border;
     @apply focus-visible:after:-left-px focus-visible:after:-top-px;
   }

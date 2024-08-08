@@ -5,7 +5,7 @@
     :aria-labelledby="`tab-${id}`"
     role="tabpanel"
     :tabindex="isSelected ? 0 : -1"
-    class="border-default min-h-0 overflow-y-auto p-6"
+    class="min-h-0 overflow-y-auto border-default p-6"
     :class="[panelVariantStyle, { hidden: !isSelected }]"
   >
     <slot />

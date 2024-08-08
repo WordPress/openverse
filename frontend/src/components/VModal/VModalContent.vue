@@ -113,7 +113,7 @@ defineExpose({
         v-bind="$attrs"
         class="flex flex-col"
         :class="[
-          mode === 'dark' ? 'text-default bg-black' : 'text-default bg-overlay',
+          mode === 'dark' ? 'bg-black text-default' : 'bg-overlay text-default',
           {
             'w-full md:max-w-[768px] lg:w-[768px] xl:w-[1024px] xl:max-w-[1024px]':
               variant === 'default',
@@ -164,8 +164,8 @@ defineExpose({
             'overflow-y-hidden rounded-se-lg rounded-ss-lg':
               variant === 'two-thirds',
             'h-full': variant === 'mobile-input',
-            'text-default bg-black': mode === 'dark',
-            'text-default bg-overlay': mode === 'light',
+            'bg-black text-default': mode === 'dark',
+            'bg-overlay text-default': mode === 'light',
             'fallback-padding':
               variant === 'fit-content' ||
               variant === 'two-thirds' ||

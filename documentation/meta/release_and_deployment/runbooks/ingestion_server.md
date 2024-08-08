@@ -1,13 +1,21 @@
-# Deployment runbook
+# Ingestion server deployment runbook
+
+```{tip}
+For more information on how deployments work, please see the [general deployment guide](/meta/release_and_deployment/index.md).
+```
 
 ## Setup
 
-1. Check [Airflow](https://airflow.openverse.org/home?tags=data_refresh) to make
-   sure a data refresh isn't occurring.
-1. [Publish the drafted ingestion server release in the GitHub release page of the monorepo](https://github.com/WordPress/openverse/releases?q=ingestion_server-)
-   - Here you can preview the changes included in the ingestion server release
-     and decide whether a release is necessary and adjust monitoring during the
-     deployment accordingly.
+Check [Airflow](https://airflow.openverse.org/home?tags=data_refresh) to make
+sure a data refresh isn't occurring.
+
+## Publish the release
+
+[Publish the drafted ingestion server release in the GitHub release page of the monorepo](https://github.com/WordPress/openverse/releases?q=ingestion_server-)
+
+- Here you can preview the changes included in the ingestion server release and
+  decide whether a release is necessary and adjust monitoring during the
+  deployment accordingly.
 
 ## Deployment
 

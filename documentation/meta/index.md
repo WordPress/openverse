@@ -12,4 +12,5 @@ documentation/index
 monitoring/index
 maintenance/index
 media_properties/index
+release_and_deployment/index
 ```
