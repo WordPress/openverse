@@ -20,10 +20,10 @@ build-backend = "pdm.backend"
 distribution = true
 
 [tool.pdm.scripts]
-pre_build = { shell = "pdm run test && pdm run types && rm -rf ./dist" }
+pre_build = { shell = "pdm run types && rm -rf ./dist" }
 post_build = { shell = "twine check dist/*"}
 
-test = { shell = "pytest" }
+test = { shell = "just ../../../api/init && pytest" }
 types = "mypy --install-types --non-interactive {args:src/openverse_api_client tests}"
 
 generate = { call = "openverse_api_client_generator.__main__:cli" }
