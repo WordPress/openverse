@@ -1,4 +1,5 @@
 import asyncio
+import time
 import weakref
 
 import aiohttp
@@ -73,7 +74,64 @@ async def get_aiohttp_session() -> aiohttp.ClientSession:
         logger.info(msg)
 
         if create_session:
-            session = aiohttp.ClientSession()
+            session = aiohttp.ClientSession(trace_configs=[LogTiming()])
             _SESSIONS[loop] = session
 
         return _SESSIONS[loop]
+
+
+class LogTiming(aiohttp.TraceConfig):
+    TIMEOUT_STATUS = -2
+    ERROR_STATUS = -1
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.on_request_start.append(self._start_timing)
+        self.on_request_end.append(self._log_timing)
+        self.on_request_exception.append(self._log_timing)
+
+    async def _start_timing(
+        self,
+        session: aiohttp.ClientSession,
+        trace_config_ctx,
+        params: aiohttp.TraceRequestStartParams,
+    ):
+        trace_config_ctx.start_time = time.perf_counter()
+
+    async def _log_timing(
+        self,
+        session: aiohttp.ClientSession,
+        trace_config_ctx,
+        params: aiohttp.TraceRequestEndParams | aiohttp.TraceRequestExceptionParams,
+    ):
+        """Log timing at end of request or when request results in an exception."""
+
+        if not (
+            trace_config_ctx.trace_request_ctx
+            and "timing_event_name" in trace_config_ctx.trace_request_ctx
+        ):
+            return
+
+        end_time = time.perf_counter()
+        start_time = trace_config_ctx.start_time
+
+        request_ctx = trace_config_ctx.trace_request_ctx
+
+        if hasattr(params, "response"):
+            # request end
+            status = params.response.status
+        elif isinstance(params.exception, aiohttp.ClientResponseError):
+            status = params.exception.status
+        elif isinstance(params.exception, asyncio.TimeoutError):
+            status = self.TIMEOUT_STATUS
+        else:
+            status = self.ERROR_STATUS
+
+        logger.info(
+            request_ctx["timing_event_name"],
+            status=status,
+            time=end_time - start_time,
+            url=str(params.url),
+            **request_ctx.get("timing_event_ctx", {}),
+        )
