@@ -1,0 +1,39 @@
+set dotenv-load := false
+
+COLOR := "\\033[0;35m"
+NO_COLOR := "\\033[0m"
+
+# Show all available recipes
+@_default:
+    printf "\n{{ COLOR }}# Docker (path: \`docker/\`)\n"
+    printf "=========================={{ NO_COLOR }}\n"
+    just --list --unsorted
+
+################
+# Offline mode #
+################
+
+# Save all Docker images needed for all services
+save:
+    #!/usr/bin/env bash
+    mkdir -p images/;
+    git grep "image:" \
+    | grep "compose.yml" \
+    | grep --invert-match "openverse" \
+    | awk 'NF>1{print $NF}' \
+    | while read line; do
+        name="docker/images/"$(echo $line | sed 's:/:-:g')".tar.gz";
+        echo "Exporting image $line to file $name";
+        docker image pull --quiet $line;
+        docker image save $line | gzip > $name;
+      done
+
+# Load all images saved in the `images/` dir
+load:
+    #!/usr/bin/env bash
+    ls images/ \
+    | while read line; do
+        name="images/"$line;
+        echo "Importing image from $name";
+        docker image load < $name;
+      done

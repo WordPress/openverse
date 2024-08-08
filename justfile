@@ -14,6 +14,7 @@ DC_USER := env_var_or_default("DC_USER", "opener")
 @_default:
     just --list --unsorted
     cd packages/python/openverse-attribution && just
+    cd docker/ && just
     cd docker/cache && just
     cd docker/es && just
     cd catalog && just
@@ -163,6 +164,15 @@ lint-codeowners checks="stable":
     ([ ! -f ingestion_server/.env ] && cp ingestion_server/env.template ingestion_server/.env) || true
     ([ ! -f indexer_worker/.env ] && cp indexer_worker/env.template indexer_worker/.env)   || true
     ([ ! -f api/.env ] && cp api/env.template api/.env) || true
+
+# Delete `.env` files
+unenv:
+    rm \
+        .env \
+        docker/minio/.env \
+        catalog/.env \
+        ingestion_server/.env \
+        api/.env
 
 ##########
 # Docker #
