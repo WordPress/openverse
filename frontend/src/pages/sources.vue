@@ -87,7 +87,7 @@ useHead({ title: `${t("sources.title")} | Openverse` })
     <p class="mt-5 inline-block">
       <VButton
         as="VLink"
-        variant="filled-pink"
+        variant="filled-pink-8"
         size="large"
         class="not-prose description-bold"
         show-external-icon

@@ -1,7 +1,7 @@
 <template>
   <div class="error grid overflow-x-hidden">
     <VSvg
-      class="z-0 pointer-events-none col-start-1 row-start-1 -mx-[15%] fill-dark-charcoal opacity-5 lg:mx-15 lg:-mt-20"
+      class="z-0 pointer-events-none col-start-1 row-start-1 -mx-[15%] fill-gray-12 opacity-5 lg:mx-15 lg:-mt-20"
       viewBox="0 0 1320 569"
       name="oops"
     />

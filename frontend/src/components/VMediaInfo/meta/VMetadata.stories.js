@@ -15,14 +15,14 @@ const Template = (args) => ({
   template: `
     <div class="flex flex-col gap-y-2">
       <VLanguageSelect />
-      <section class="wrapper flex flex-col p-2 gap-y-2 bg-dark-charcoal-06">
+      <section class="wrapper flex flex-col p-2 gap-y-2 bg-surface">
         <VMetadata
         v-for="datum in data"
         :key="datum.media.id"
         :metadata="datum.metadata"
         :media="datum.media"
         v-bind="datum"
-        class="bg-white"/>
+        class="bg-default"/>
       </section>
     </div>
   `,

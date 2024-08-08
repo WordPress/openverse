@@ -24,7 +24,7 @@
           appear
         >
           <VLink
-            class="home-cell rounded-full p-1 focus-visible:bg-white"
+            class="home-cell rounded-full p-1 focus-visible:bg-default"
             :class="idx >= imageCount ? 'hidden' : 'block'"
             :style="{ '--delay': `${idx * 0.05}s` }"
             :href="image.url"

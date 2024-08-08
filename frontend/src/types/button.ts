@@ -3,7 +3,7 @@ export const buttonForms = ["VLink", "button", "a"] as const
 export type ButtonForm = (typeof buttonForms)[number]
 
 export const baseButtonVariants = [
-  "filled-pink",
+  "filled-pink-8",
   "filled-dark",
   "filled-gray",
   "filled-white",

@@ -1,15 +1,15 @@
 <template>
   <div
-    class="global-track grid w-full grid-cols-[3rem,1fr] grid-rows-[3rem,3rem] rounded ring-1 ring-dark-charcoal ring-opacity-20"
+    class="global-track grid w-full grid-cols-[3rem,1fr] grid-rows-[3rem,3rem] rounded ring-1 ring-gray-3 ring-opacity-20"
   >
     <div class="h-12 w-12 rounded-ss">
       <VAudioThumbnail class="rounded-ss" :audio="audio" />
     </div>
 
-    <div class="flex h-12 items-center justify-between rounded-se bg-white">
+    <div class="flex h-12 items-center justify-between rounded-se bg-default">
       <VLink
         :href="`/audio/${audio.id}`"
-        class="hover-underline label-bold z-10 flex flex-row items-center px-3 pe-12 text-dark-charcoal"
+        class="hover-underline label-bold z-10 flex flex-row items-center px-3 pe-12 text-default"
         :class="{ 'blur-text': shouldBlur }"
       >
         {{ shouldBlur ? $t("sensitiveContent.title.audio") : audio.title }}
@@ -67,7 +67,7 @@ export default defineComponent({
 
 .global-track .waveform {
   @apply h-full rounded-ee;
-  --waveform-background-color: theme("colors.white");
+  --waveform-background-color: theme("backgroundColor.default");
 }
 .global-track .audio-control {
   @apply rounded-es;

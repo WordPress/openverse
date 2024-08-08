@@ -3,7 +3,7 @@
     as="VLink"
     :href="media.foreign_landing_url"
     size="large"
-    variant="filled-pink"
+    variant="filled-pink-8"
     has-icon-end
     show-external-icon
     :external-icon-size="6"

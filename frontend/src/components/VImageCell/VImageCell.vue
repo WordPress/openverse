@@ -149,7 +149,7 @@ const { isHidden: shouldBlur } = useSensitiveMedia(props.image)
       itemprop="contentUrl"
       :title="contextSensitiveTitle"
       :href="imageLink"
-      class="group relative block w-full overflow-hidden rounded-sm text-dark-charcoal-10 focus-visible:outline-3 focus-visible:outline-offset-4"
+      class="group relative block w-full overflow-hidden rounded-sm text-gray-2 focus-visible:outline-3 focus-visible:outline-offset-4"
       :aria-label="contextSensitiveTitle"
       @mousedown="sendSelectSearchResultEvent"
     >
@@ -178,7 +178,7 @@ const { isHidden: shouldBlur } = useSensitiveMedia(props.image)
           @error="onImageLoadError($event)"
         />
         <figcaption
-          class="col-span-full self-end justify-self-start rounded-sm bg-white text-dark-charcoal group-hover:visible group-focus-visible:visible"
+          class="col-span-full self-end justify-self-start rounded-sm bg-default text-default group-hover:visible group-focus-visible:visible"
           :class="
             isSquare
               ? 'invisible row-span-full m-2 p-2'
@@ -193,7 +193,7 @@ const { isHidden: shouldBlur } = useSensitiveMedia(props.image)
           <VLicense
             :license="image.license"
             :hide-name="true"
-            class="text-dark-charcoal-70 group-hover:text-dark-charcoal group-focus-visible:text-dark-charcoal sm:text-dark-charcoal"
+            class="text-secondary group-hover:text-default group-focus-visible:text-default sm:text-default"
           />
         </figcaption>
       </figure>

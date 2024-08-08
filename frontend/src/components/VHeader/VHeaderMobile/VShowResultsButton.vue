@@ -1,6 +1,6 @@
 <template>
   <VButton
-    variant="filled-pink"
+    variant="filled-pink-8"
     size="large"
     class="label-bold relative ms-auto"
     @click="$emit('click')"
