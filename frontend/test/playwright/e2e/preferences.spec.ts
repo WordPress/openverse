@@ -10,7 +10,7 @@ import type {
   FlagName,
 } from "~/types/feature-flag"
 import { DISABLED, FLAG_STATUSES, FlagStatus } from "~/constants/feature-flag"
-import { DEPLOY_ENVS, DeployEnv, LOCAL } from "~/constants/deploy-env"
+import { DEPLOY_ENVS, DeployEnv } from "~/constants/deploy-env"
 
 const getFeatureCookies = async (page: Page, cookieName: string) => {
   const cookies = await page.context().cookies()
@@ -23,8 +23,10 @@ const getFeatureCookies = async (page: Page, cookieName: string) => {
   return JSON.parse(decodeURIComponent(cookieValue))
 }
 
-const getFlagStatus = (flag: FeatureFlagRecord): FlagStatus => {
-  const deployEnv = (process.env.DEPLOYMENT_ENV ?? LOCAL) as DeployEnv
+const getFlagStatus = (
+  flag: FeatureFlagRecord,
+  deployEnv: DeployEnv
+): FlagStatus => {
   if (typeof flag.status === "string") {
     if (!FLAG_STATUSES.includes(flag.status as FlagStatus)) {
       console.warn(`Invalid ${flag.description} flag status: ${flag.status}`)
@@ -57,7 +59,7 @@ const getFeaturesToTest = () => {
   } as const
   for (const [name, state] of Object.entries(testableFeatures)) {
     const flag = featureData.features[name as FlagName] as FeatureFlag
-    if (getFlagStatus(flag) !== "switchable") {
+    if (getFlagStatus(flag, "staging") !== "switchable") {
       throw new Error(`Feature ${name} is not switchable`)
     }
     if (flag.defaultState !== state) {

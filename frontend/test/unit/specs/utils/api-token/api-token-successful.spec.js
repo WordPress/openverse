@@ -1,4 +1,3 @@
-// @vitest-environment node
 import axios from "axios"
 
 import { describe, expect, it, vi } from "vitest"

@@ -1,18 +1,22 @@
-import { PRODUCTION, STAGING } from "~/constants/deploy-env"
+import { tryUseNuxtApp } from "#app"
 
-const isProductionOrStaging = [PRODUCTION, STAGING].includes(
-  import.meta.env.DEPLOYMENT_ENV
-)
+import { LOCAL } from "~/constants/deploy-env"
 
 /**
- * Silence logging on the client when deployed
+ * Silence logging on the client in production and on staging.
  */
-export const getLogger = (level: "log" | "warn" | "error") =>
-  isProductionOrStaging && import.meta.client
-    ? () => {
-        // do nothing
-      }
-    : console[level]
+export const getLogger = (level: "log" | "warn" | "error") => {
+  if (
+    import.meta.server ||
+    (import.meta.client &&
+      tryUseNuxtApp()?.$config?.public.deploymentEnv === LOCAL)
+  ) {
+    return console[level]
+  }
+  return () => {
+    // do nothing
+  }
+}
 
 export const warn = getLogger("warn")
 export const log = getLogger("log")

@@ -1,116 +1,11 @@
 import { defineNuxtConfig } from "nuxt/config"
 
-import { LOCAL, PRODUCTION } from "./src/constants/deploy-env"
-
+import { disallowedBots } from "./src/constants/disallowed-bots"
 import locales from "./src/locales/scripts/valid-locales.json"
-import { meta as commonMeta } from "./src/constants/meta"
 
 import type { LocaleObject } from "@nuxtjs/i18n"
 
-const favicons = [
-  // SVG favicon
-  {
-    rel: "icon",
-    href: "/favicon.ico",
-  },
-  {
-    rel: "icon",
-    href: "/openverse-logo.svg",
-  },
-  // SVG favicon for Safari
-  {
-    rel: "mask-icon",
-    href: "/opvenverse-logo.svg",
-    color: "#30272E",
-  },
-  // Fallback iPhone Icon
-  {
-    rel: "apple-touch-icon",
-    href: "/openverse-logo-180.png",
-  },
-]
-
-const disallowedBots = [
-  "GPTBot",
-  "CCBot",
-  "ChatGPT-User",
-  "Google-Extended",
-  "anthropic-ai",
-  "Omgilibot",
-  "Omgili",
-  "FacebookBot",
-  "Diffbot",
-  "Bytespider",
-  "ImagesiftBot",
-  "cohere-ai",
-]
-
-/**
- * Robots.txt rules are configured here via the \@nuxtjs/robots package.
- * @see {@link https://nuxtseo.com/robots/guides/nuxt-config|Robots Config Rules}
- */
-const robots = {
-  userAgent: "*",
-  disallow: ["/search", "/search/audio", "/search/image"],
-  groups: [
-    ...disallowedBots.map((bot) => ({
-      userAgent: [bot],
-      disallow: ["/"], // block bots from all routes
-    })),
-  ],
-}
-
-const isProductionBuild = import.meta.env.NODE_ENV === "production"
-const isPlaywright = import.meta.env.PW === "true"
-const isProdNotPlaywright = isProductionBuild && !isPlaywright
-const isTest = import.meta.env.TEST === "true"
-const deploymentEnv = import.meta.env.DEPLOYMENT_ENV || LOCAL
-
-const apiUrl =
-  import.meta.env.NUXT_PUBLIC_API_URL || "https://api.openverse.org/"
-
-const openverseLocales = [
-  {
-    /* Nuxt i18n fields */
-
-    code: "en", // unique identifier for the locale in Vue i18n
-    dir: "ltr",
-    file: "en.json",
-    iso: "en", // used for SEO purposes (html lang attribute)
-
-    /* Custom fields */
-
-    name: "English",
-    nativeName: "English",
-  },
-  ...locales,
-].filter((l) => Boolean(l.iso)) as LocaleObject[]
-
 export default defineNuxtConfig({
-  app: {
-    head: {
-      title: "Openly Licensed Images, Audio and More | Openverse",
-      meta: commonMeta,
-      link: [
-        ...favicons,
-        {
-          rel: "search",
-          type: "application/opensearchdescription+xml",
-          title: "Openverse",
-          href: "/opensearch.xml",
-        },
-        {
-          rel: "dns-prefetch",
-          href: apiUrl,
-        },
-        {
-          rel: "preconnect",
-          href: apiUrl,
-          crossorigin: "",
-        },
-      ],
-    },
-  },
   srcDir: "src/",
   serverDir: "server/",
   devServer: {
@@ -122,25 +17,29 @@ export default defineNuxtConfig({
   },
   compatibilityDate: "2024-07-23",
   css: ["~/assets/fonts.css", "~/styles/accent.css"],
+  /**
+   * Define available runtime configuration values and their defaults.
+   *
+   * See linked documentation for details, including how to override defaults
+   * with runtime values using environment variables.
+   *
+   * @see {@link https://nuxt.com/docs/api/nuxt-config#runtimeconfig-1}
+   */
   runtimeConfig: {
     apiClientId: "",
     apiClientSecret: "",
     public: {
-      // These values can be overridden by the NUXT_PUBLIC_* env variables
-      deploymentEnv,
-      apiUrl,
-      providerUpdateFrequency: 3600000,
+      deploymentEnv: "local",
+      apiUrl: "https://api.openverse.org/",
       savedSearchCount: 4,
       sentry: {
         dsn: "",
-        environment: deploymentEnv,
-        release: import.meta.env.SEMANTIC_VERSION,
+        environment: "local",
+        // Release is a build time variable, and as such, is defined in app.config.ts
       },
-      isPlaywright,
     },
   },
   site: {
-    indexable: deploymentEnv === PRODUCTION,
     trailingSlash: false,
   },
   /**
@@ -167,13 +66,39 @@ export default defineNuxtConfig({
     "/meta-search": { redirect: { to: "/about", statusCode: 301 } },
     "/external-sources": { redirect: { to: "/about", statusCode: 301 } },
   },
-  robots,
+  /**
+   * Robots.txt rules are configured here via the \@nuxtjs/robots package.
+   * @see {@link https://nuxtseo.com/robots/guides/nuxt-config|Robots Config Rules}
+   */
+  robots: {
+    disallow: ["/search", "/search/audio", "/search/image"],
+    groups: [
+      ...disallowedBots.map((bot) => ({
+        userAgent: [bot],
+        disallow: ["/"], // block bots from all routes
+      })),
+    ],
+  },
   tailwindcss: {
     cssPath: "~/styles/tailwind.css",
   },
   i18n: {
-    baseUrl: import.meta.env.SITE_URL,
-    locales: openverseLocales,
+    locales: [
+      {
+        /* Nuxt i18n fields */
+
+        code: "en", // unique identifier for the locale in Vue i18n
+        dir: "ltr",
+        file: "en.json",
+        iso: "en", // used for SEO purposes (html lang attribute)
+
+        /* Custom fields */
+
+        name: "English",
+        nativeName: "English",
+      },
+      ...locales,
+    ].filter((l) => Boolean(l.iso)) as LocaleObject[],
     lazy: true,
     langDir: "locales",
     defaultLocale: "en",
@@ -190,11 +115,8 @@ export default defineNuxtConfig({
     vueI18n: "./src/vue-i18n",
   },
   plausible: {
-    enabled: !isTest,
-    logIgnoredEvents: !isProductionBuild,
-    trackLocalhost: !isProdNotPlaywright,
-    autoPageviews: isProdNotPlaywright,
-    domain: import.meta.env.SITE_DOMAIN,
-    apiHost: import.meta.env.PLAUSIBLE_SITE_URL,
+    // `trackLocalhost` is deprecated, but the replacement `ignoredHostnames: []`
+    // has a bug, @see https://github.com/nuxt-modules/plausible/issues/30
+    trackLocalhost: true,
   },
 })

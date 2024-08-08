@@ -5,8 +5,6 @@ import { setActivePinia, createPinia } from "~~/test/unit/test-utils/pinia"
 import { AUDIO, IMAGE } from "~/constants/media"
 import { useProviderStore } from "~/stores/provider"
 
-process.env.providerUpdateFrequency = "0"
-
 const testProviders = [
   {
     source_name: "test_source",
