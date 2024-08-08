@@ -79,6 +79,24 @@ def remove_excluded_index_settings(index_config):
 
 
 @task
+def get_index_configuration_copy(
+    source_index: str, target_index_name: str, es_host: str
+):
+    """
+    Create a new index configuration based off the `source_index` but with the given
+    `target_index_name`, in the format needed for `create_index`. Removes fields that
+    should not be copied into a new index configuration such as the uuid.
+    """
+    base_config = get_index_configuration.function(source_index, es_host)
+
+    cleaned_config = remove_excluded_index_settings(base_config)
+
+    cleaned_config["index"] = target_index_name
+
+    return cleaned_config
+
+
+@task
 def get_record_count_group_by_sources(es_host: str, index: str):
     """
     Return a dict where the keys are the sources, and the values are the counts.
