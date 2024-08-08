@@ -65,6 +65,7 @@ RUN mkdir /pipx \
     pdm pipenv  \
     pgcli \
     pre-commit \
+    twine \
   && npm install -g \
     n \
     corepack \
