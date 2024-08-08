@@ -11,7 +11,6 @@ import requests
 import structlog
 from openverse_attribution.license import License
 from PIL import Image, ImageDraw, ImageFont, UnidentifiedImageError
-from sentry_sdk import capture_exception
 
 
 logger = structlog.get_logger(__name__)
@@ -153,12 +152,10 @@ def _open_image(url):
         img_bytes = BytesIO(response.content)
         img = Image.open(img_bytes)
     except requests.exceptions.RequestException as e:
-        capture_exception(e)
-        logger.error(f"Error requesting image: {e}")
+        logger.error("Error requesting image", exc=e, exc_info=True)
         raise UpstreamWatermarkException(f"{e}")
     except UnidentifiedImageError as e:
-        capture_exception(e)
-        logger.error(f"Error loading image data: {e}")
+        logger.error("Error loading image data", exc=e, exc_info=True)
         raise UpstreamWatermarkException(f"{e}")
 
     return img, img.getexif()

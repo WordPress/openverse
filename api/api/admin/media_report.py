@@ -489,7 +489,7 @@ class MediaListAdmin(BulkModerationMixin, admin.ModelAdmin):
             if search.hits:
                 return False
         except NotFoundError:
-            logger.error("Could not resolve index.", name=filtered_index)
+            logger.error("Could not resolve index.", name=filtered_index, exc_info=True)
         return True
 
     #############

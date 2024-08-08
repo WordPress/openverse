@@ -37,6 +37,7 @@ dependencies = [
   "sentry-sdk >=1.40.6, <2",
   "uvicorn[standard] >=0.30, <0.31",
   "openverse-attribution @ file:///${PROJECT_ROOT}/../packages/python/openverse-attribution",
+  "structlog-sentry>=2.1.0",
 ]
 
 [tool.pdm]

@@ -1,7 +1,7 @@
 import sentry_sdk
 from decouple import config
 from sentry_sdk.integrations.django import DjangoIntegration
-from sentry_sdk.integrations.logging import ignore_logger
+from sentry_sdk.integrations.logging import LoggingIntegration, ignore_logger
 
 from conf.settings.base import ENVIRONMENT
 
@@ -12,10 +12,16 @@ SENTRY_SAMPLE_RATE = config("SENTRY_SAMPLE_RATE", default=1.0, cast=float)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DJANGO_DEBUG_ENABLED", default=False, cast=bool)
+
+INTEGRATIONS = [
+    DjangoIntegration(),
+    LoggingIntegration(event_level=None, level=None),
+]
+
 if not DEBUG and SENTRY_DSN:
     sentry_sdk.init(
         dsn=SENTRY_DSN,
-        integrations=[DjangoIntegration()],
+        integrations=INTEGRATIONS,
         traces_sample_rate=SENTRY_SAMPLE_RATE,
         send_default_pii=False,
         environment=ENVIRONMENT,
