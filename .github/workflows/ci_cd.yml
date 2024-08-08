@@ -635,6 +635,14 @@ jobs:
       - name: Install packages
         run: just pdm ${{ matrix.package }} install
 
+      - name: Load Docker images
+        # api-client tests require local API to be available
+        if: contains(matrix.package, 'api-client')
+        uses: ./.github/actions/load-img
+        with:
+          run_id: ${{ github.run_id }}
+          setup_images: upstream_db ingestion_server api
+
       - name: Run Python packages checks
         run: just pdm ${{ matrix.package }} ${{ matrix.pdm_cmd }}
 
