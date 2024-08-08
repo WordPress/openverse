@@ -110,8 +110,10 @@ redirects = {
     "catalog/guides/deploy": "/meta/release_and_deployment/runbooks/catalog.html",
     "catalog/guides/deployment": "/meta/release_and_deployment/index.html#catalog",
     "ingestion_server/guides/deploy": "/meta/release_and_deployment/runbooks/ingestion_server.html",
-    "packages/eslint_plugin/*": "/packages/js/eslint_plugin/$source.html",
-    "packages/openverse_attribution/*": "/packages/python/openverse_attribution/$source.html",
+    "packages/eslint_plugin/index": "/packages/js/eslint_plugin/index.html",
+    "packages/eslint_plugin/analytics_configuration": "/packages/js/eslint_plugin/analytics_configuration.html",
+    "packages/eslint_plugin/no-unexplained-disabled-test": "/packages/js/eslint_plugin/no-unexplained-disabled-test.html",
+    "packages/openverse_attribution/index": "/packages/python/openverse_attribution/index.html",
 }
 
 myst_enable_extensions = ["linkify"]
