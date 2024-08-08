@@ -617,6 +617,7 @@ jobs:
       - get-changes
       - lint
       - list-py-packages
+      - build-images
     strategy:
       fail-fast: false
       matrix:
@@ -632,9 +633,6 @@ jobs:
       - name: Setup CI env
         uses: ./.github/actions/setup-env
 
-      - name: Install packages
-        run: just pdm ${{ matrix.package }} install
-
       - name: Load Docker images
         # api-client tests require local API to be available
         if: contains(matrix.package, 'api-client')
@@ -644,7 +642,9 @@ jobs:
           setup_images: upstream_db ingestion_server api
 
       - name: Run Python packages checks
-        run: just pdm ${{ matrix.package }} ${{ matrix.pdm_cmd }}
+        run: |
+          just pdm ${{ matrix.package }} install
+          just pdm ${{ matrix.package }} ${{ matrix.pdm_cmd }}
 
   # This job runs when `py-package-checks` doesn't and always passes, thus
   # allowing PRs to meet the required checks criteria and be merged.
