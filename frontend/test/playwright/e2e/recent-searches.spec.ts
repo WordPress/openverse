@@ -2,6 +2,7 @@ import { expect, test, type Page } from "@playwright/test"
 
 import {
   goToSearchTerm,
+  isPageDesktop,
   preparePageForTests,
   searchFromHeader,
   sleep,
@@ -23,20 +24,46 @@ const clearButton = async (page: Page) =>
   page.locator(`[aria-label="${clearRecentLabel}"]`)
 const clickClear = async (page: Page) => (await clearButton(page)).click()
 
+const searchbarName = t("search.searchBarLabel").replace(
+  "{openverse}",
+  "Openverse"
+)
+
 const recentSearches = (page: Page) =>
   page.locator('[data-testid="recent-searches"]')
 
 const openRecentSearches = async (page: Page) => {
   if (!(await recentSearches(page).isVisible())) {
-    await page.locator('input[type="search"]').click()
+    await page.getByRole("combobox", { name: searchbarName }).click()
   }
+}
+
+const getFocusedElementName = async (page: Page) => {
+  return await page.evaluate(() => {
+    const el = document.activeElement as HTMLElement
+    return el ? (el.getAttribute("aria-label") ?? el.textContent) : null
+  })
 }
 
 const tabToSearchbar = async (page: Page) => {
   await page.getByRole("link", { name: t("skipToContent") }).focus()
-  for (let i = 0; i < 2; i++) {
+
+  let focusedInputName = null
+  while (focusedInputName !== searchbarName) {
     await page.keyboard.press("Tab")
+    focusedInputName = await page.evaluate(() => {
+      const el = document.activeElement as HTMLElement
+      return el && el.nodeName === "INPUT"
+        ? el.getAttribute("aria-label")
+        : null
+    })
   }
+}
+
+const openRecentSearchesWithKeyboard = async (page: Page) => {
+  await tabToSearchbar(page)
+  expect(await getFocusedElementName(page)).toEqual(searchbarName)
+  await page.keyboard.press("ArrowDown")
 }
 
 const executeSearches = async (page: Page) => {
@@ -46,6 +73,12 @@ const executeSearches = async (page: Page) => {
     await expect(getH1(page, new RegExp(term, "i"))).toBeVisible()
   }
   return searches
+}
+
+const getLastFocusableElementLabel = (page: Page, firstSearch: string) => {
+  return isPageDesktop(page)
+    ? clearRecentLabel
+    : t("recentSearches.clearSingle.label").replace("{entry}", firstSearch)
 }
 
 breakpoints.describeMobileXsAndDesktop(({ breakpoint }) => {
@@ -100,53 +133,76 @@ breakpoints.describeMobileXsAndDesktop(({ breakpoint }) => {
     const recentSearchesText = await getRecentSearchesText(page)
     expect(recentSearchesText).toContain(noRecentLabel)
   })
+})
 
-  test("can open recent searches with keyboard", async ({ page }) => {
-    await executeSearches(page)
-    await tabToSearchbar(page)
-    await page.keyboard.press("ArrowDown")
+breakpoints.describeMobileXsAndDesktop(({ breakpoint }) => {
+  for (const dismissBanners of [true, false]) {
+    test.beforeEach(async ({ page }) => {
+      await preparePageForTests(page, breakpoint, { dismissBanners })
+      // We are first navigating to search because the recent searches feature has
+      // not yet been implemented on the homepage.
+      await goToSearchTerm(page, "galah")
+    })
+    const bannerStatus = `${dismissBanners ? "without" : "with"} banners`
 
-    await expect(recentSearches(page)).toBeVisible()
-  })
+    test(`can open recent searches with keyboard, ${bannerStatus}`, async ({
+      page,
+    }) => {
+      await executeSearches(page)
 
-  test("can close the recent searches with escape key", async ({ page }) => {
-    await executeSearches(page)
-    await tabToSearchbar(page)
+      await openRecentSearchesWithKeyboard(page)
+      await expect(recentSearches(page)).toBeVisible()
+    })
 
-    await page.keyboard.press("ArrowDown")
-    await expect(recentSearches(page)).toBeVisible()
+    test(`can close the recent searches with escape key, ${bannerStatus}`, async ({
+      page,
+    }) => {
+      await executeSearches(page)
 
-    await page.keyboard.press("Escape")
-    await sleep(300)
-    await expect(recentSearches(page)).toBeHidden()
-  })
+      await openRecentSearchesWithKeyboard(page)
+      await expect(recentSearches(page)).toBeVisible()
 
-  test("can navigate out of the recent searches with tab key", async ({
-    page,
-  }) => {
-    const searches = await executeSearches(page)
-    await tabToSearchbar(page)
+      await page.keyboard.press("Escape")
+      await sleep(300)
+      await expect(recentSearches(page)).toBeHidden()
+    })
 
-    await page.keyboard.press("ArrowDown")
-    await expect(recentSearches(page)).toBeVisible()
+    test(`can navigate out of the recent searches with tab key, ${bannerStatus}`, async ({
+      page,
+    }) => {
+      const searches = await executeSearches(page)
 
-    for (let i = 0; i < searches.length + 3; i++) {
+      await openRecentSearchesWithKeyboard(page)
+
+      await expect(recentSearches(page)).toBeVisible()
+
+      const lastFocusableElementLabel = getLastFocusableElementLabel(
+        page,
+        searches[0]
+      )
+
+      let focused = await getFocusedElementName(page)
+      while (focused !== lastFocusableElementLabel) {
+        await page.keyboard.press("Tab")
+        focused = await getFocusedElementName(page)
+      }
       await page.keyboard.press("Tab")
-    }
-    await expect(recentSearches(page)).toBeHidden()
-  })
 
-  test("can navigate out of the recent searches using shift tab", async ({
-    page,
-  }) => {
-    await executeSearches(page)
-    await tabToSearchbar(page)
+      await expect(recentSearches(page)).toBeHidden()
+    })
 
-    await page.keyboard.press("ArrowDown")
-    await expect(recentSearches(page)).toBeVisible()
+    test(`can navigate out of the recent searches using shift tab, ${bannerStatus}`, async ({
+      page,
+    }) => {
+      await executeSearches(page)
+      await tabToSearchbar(page)
 
-    await page.keyboard.press("Shift+Tab")
-    await page.keyboard.press("Shift+Tab")
-    await expect(recentSearches(page)).toBeHidden()
-  })
+      await page.keyboard.press("ArrowDown")
+      await expect(recentSearches(page)).toBeVisible()
+
+      await page.keyboard.press("Shift+Tab")
+      await page.keyboard.press("Shift+Tab")
+      await expect(recentSearches(page)).toBeHidden()
+    })
+  }
 })
