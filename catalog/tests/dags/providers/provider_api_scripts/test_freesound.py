@@ -37,6 +37,29 @@ def audio_data():
     yield _get_resource_json("audio_data_example.json")
 
 
+@pytest.mark.parametrize(
+    "http_error",
+    [
+        # These should be fine
+        *FreesoundDataIngester.flaky_error_codes,
+        # These should raise immediately
+        pytest.param(401, marks=pytest.mark.raises(exception=HTTPError)),
+        pytest.param(500, marks=pytest.mark.raises(exception=HTTPError)),
+    ],
+)
+def test_get_response_json_retries(http_error):
+    valid_response = MagicMock(status_code=200, json=MagicMock())
+    # Patch the sleep function so it doesn't take long
+    with patch.object(fsd.delayed_requester, "get") as get_patch, patch("time.sleep"):
+        # Error out at first, then return a value
+        get_patch.side_effect = [
+            HTTPError(request=MagicMock(), response=MagicMock(status_code=http_error))
+        ] * 5 + [valid_response]
+        result = fsd.get_response_json("endpoint")
+        assert get_patch.call_count == 6
+        assert result == valid_response.json.return_value
+
+
 def test_get_audio_pages_returns_correctly_with_no_data():
     actual_result = fsd.get_batch_data({})
     assert actual_result is None
