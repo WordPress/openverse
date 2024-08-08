@@ -40,7 +40,6 @@ export default defineNuxtConfig({
     },
   },
   site: {
-    indexable: false,
     trailingSlash: false,
   },
   /**
@@ -116,11 +115,8 @@ export default defineNuxtConfig({
     vueI18n: "./src/vue-i18n",
   },
   plausible: {
-    enabled: !isTest,
     ignoredHostnames: ["localhost", "staging.openverse.org"],
-    // Set `NUXT_PUBLIC_PLAUSIBLE_LOG_IGNORED_EVENTS` to "true" to log in the dev environment.
     logIgnoredEvents: true,
-    autoPageviews: false,
     apiHost: "http://localhost:50290",
     domain: "localhost",
   },
