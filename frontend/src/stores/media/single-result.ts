@@ -1,4 +1,4 @@
-import { useNuxtApp } from "#imports"
+import { useFeatureFlagStore, useNuxtApp } from "#imports"
 
 import { defineStore } from "pinia"
 
@@ -142,11 +142,16 @@ export const useSingleResultStore = defineStore("single-result", {
 
       // When fetch is called by the middleware, the app context is not available during the error handling,
       // so we need to use the `useNuxtApp` here, outside the catch clause, to access the app context.
-      const { $processFetchingError } = useNuxtApp()
+      const { $processFetchingError, $openverseApiToken: accessToken } =
+        useNuxtApp()
+
+      const featureFlagStore = useFeatureFlagStore()
+      const fakeSensitive =
+        featureFlagStore.isOn("fake_sensitive") &&
+        featureFlagStore.isOn("fetch_sensitive")
 
       try {
-        const { $openverseApiToken: accessToken } = useNuxtApp()
-        const client = createApiClient({ accessToken })
+        const client = createApiClient({ accessToken, fakeSensitive })
 
         const item = await client.getSingleMedia(type, id)
 

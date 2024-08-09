@@ -1,4 +1,4 @@
-import { useNuxtApp } from "#imports"
+import { useFeatureFlagStore, useNuxtApp } from "#imports"
 
 import { defineStore } from "pinia"
 
@@ -130,9 +130,16 @@ export const useProviderStore = defineStore("provider", {
     ): Promise<void> {
       this._updateFetchState(mediaType, "start")
       let sortedProviders = [] as MediaProvider[]
+
+      const featureFlagStore = useFeatureFlagStore()
+      const fakeSensitive =
+        featureFlagStore.isOn("fake_sensitive") &&
+        featureFlagStore.isOn("fetch_sensitive")
+
+      const { $openverseApiToken: accessToken } = useNuxtApp()
+
       try {
-        const { $openverseApiToken: accessToken } = useNuxtApp()
-        const client = createApiClient({ accessToken })
+        const client = createApiClient({ accessToken, fakeSensitive })
         const res = await client.stats(mediaType)
         sortedProviders = sortProviders(res ?? [])
         this._updateFetchState(mediaType, "end")

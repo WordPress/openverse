@@ -100,6 +100,7 @@ describe("fetchMedia", () => {
 
     expect(mocks.createApiClient).toHaveBeenCalledWith({
       accessToken: undefined,
+      fakeSensitive: false,
     })
     expect(imageSearchMock).toHaveBeenCalledWith(IMAGE, { q: "cat" })
     expect(audioSearchMock).toHaveBeenCalledWith(AUDIO, { q: "cat" })
