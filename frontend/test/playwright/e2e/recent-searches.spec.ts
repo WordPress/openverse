@@ -86,8 +86,9 @@ breakpoints.describeMobileXsAndDesktop(({ breakpoint }) => {
       .locator(`[aria-label="${recentLabel}"]`)
       .getByRole("option", { name: "honey" })
       .click()
+
+    await page.waitForURL(/search\?q=honey/)
     await expect(getH1(page, /honey/i)).toBeVisible()
-    expect(page.url()).toContain("?q=honey")
   })
 
   test("clicking Clear clears the recent searches", async ({ page }) => {

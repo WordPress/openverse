@@ -14,7 +14,7 @@ breakpoints.describeEvery(({ breakpoint, expectSnapshot }) => {
       dismissBanners: false,
       dismissFilter: false,
     })
-    await page.goto("/ru/search/?q=birds&referrer=creativecommons.org")
+    await page.goto("/ru/search?q=birds")
     await ensureSearchPageHydrated(page)
   })
 

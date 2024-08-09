@@ -3,7 +3,6 @@ import { SENSITIVITY_RESPONSE_PARAM } from "~/constants/content-safety"
 import { AUDIO, IMAGE, MODEL_3D, VIDEO } from "~/constants/media"
 import type { ApiMedia, Media, Tag } from "~/types/media"
 import type { MediaType } from "~/constants/media"
-import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useProviderStore } from "~/stores/provider"
 import { capitalCase } from "~/utils/case"
 import { getFakeSensitivities } from "~/utils/content-safety"
@@ -110,22 +109,21 @@ const parseTags = (tags: Tag[]) => {
  *
  * @param media - the media object of which to decode attributes
  * @param mediaType - the type of the media
+ * @param fakeSensitive - whether to fake sensitive data for testing
  * @returns the given media object with the text fields decoded
  */
 export const decodeMediaData = <T extends Media>(
   media: ApiMedia | undefined | null,
-  mediaType: T["frontendMediaType"]
+  mediaType: T["frontendMediaType"],
+  fakeSensitive = false
 ): T => {
   if (!media) {
     throw new Error("Media is undefined or null")
   }
   // Fake ~50% of results as sensitive.
-  const featureFlagStore = useFeatureFlagStore()
-  const sensitivity =
-    featureFlagStore.isOn("fake_sensitive") &&
-    featureFlagStore.isOn("fetch_sensitive")
-      ? getFakeSensitivities(media.id)
-      : (media[SENSITIVITY_RESPONSE_PARAM] ?? [])
+  const sensitivity = fakeSensitive
+    ? getFakeSensitivities(media.id)
+    : (media[SENSITIVITY_RESPONSE_PARAM] ?? [])
   sensitivity.sort()
   const isSensitive = sensitivity.length > 0
 
