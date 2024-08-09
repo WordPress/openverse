@@ -27,9 +27,10 @@ const config: PlaywrightTestConfig = {
     port: 8443,
     reuseExistingServer: !process.env.CI || process.env.PWDEBUG === "1",
     env: {
-      API_URL,
       NUXT_PUBLIC_API_URL: API_URL,
       UPDATE_TAPES: UPDATE_TAPES,
+      // Must be true for seo tests to receive appropriate values
+      NUXT_PUBLIC_SITE_INDEXABLE: "true",
       NUXT_PUBLIC_DEPLOYMENT_ENV: STAGING,
       NUXT_PUBLIC_PLAUSIBLE_ENABLED: "true",
       NUXT_PUBLIC_PLAUSIBLE_DOMAIN: "localhost",
