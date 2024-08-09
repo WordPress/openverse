@@ -8,6 +8,7 @@ const DESCRIPTION =
 const NO_INDEX = "noindex, nofollow"
 const INDEX =
   "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+const INDEX_NO_FOLLOW = "index, nofollow"
 const DEFAULT_IMAGE = "/openverse-default.jpg"
 
 const pages = {
@@ -46,7 +47,7 @@ const pages = {
       "/v1/images/da5cb478-c093-4d62-b721-cda18797e3fb/thumb/"
     ),
     ogTitle: "bird",
-    robots: INDEX,
+    robots: NO_INDEX,
   },
   audioDetail: {
     url: "/audio/7e063ee6-343f-48e4-a4a5-f436393730f6",
@@ -55,7 +56,7 @@ const pages = {
       "/v1/audio/7e063ee6-343f-48e4-a4a5-f436393730f6/thumb/"
     ),
     ogTitle: "I Love My Dog You Love your Cat",
-    robots: INDEX,
+    robots: NO_INDEX,
   },
   about: {
     url: "/about",
@@ -69,21 +70,21 @@ const pages = {
     title: "cat images | Openverse",
     ogImage: DEFAULT_IMAGE,
     ogTitle: "cat images | Openverse",
-    robots: INDEX,
+    robots: NO_INDEX,
   },
   source: {
     url: "/image/collection?source=flickr",
     title: "Flickr images | Openverse",
     ogImage: DEFAULT_IMAGE,
     ogTitle: "Flickr images | Openverse",
-    robots: INDEX,
+    robots: INDEX_NO_FOLLOW,
   },
   creator: {
     url: "/image/collection?source=flickr&creator=strogoscope",
     title: "strogoscope | Openverse",
     ogImage: DEFAULT_IMAGE,
     ogTitle: "strogoscope | Openverse",
-    robots: INDEX,
+    robots: NO_INDEX,
   },
 }
 test.describe("page metadata", () => {
@@ -111,4 +112,13 @@ test.describe("page metadata", () => {
       )
     })
   }
+})
+
+test.describe("robots.txt", () => {
+  test("snapshot", async ({ page }) => {
+    await page.goto("/robots.txt")
+    const robotsText = await page.innerText("body")
+
+    expect(robotsText).toMatchSnapshot({ name: "robots.txt" })
+  })
 })

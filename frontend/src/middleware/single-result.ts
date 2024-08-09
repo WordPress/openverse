@@ -4,6 +4,7 @@ import {
   firstParam,
   handledClientSide,
   showError,
+  useRobotsRule,
 } from "#imports"
 
 import { RouteLocationNormalized } from "vue-router"
@@ -34,6 +35,9 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   if (!mediaId) {
     return
   }
+
+  useRobotsRule("noindex, nofollow")
+
   singleResultStore.setMediaById(mediaType, mediaId)
   if (import.meta.server) {
     await Promise.allSettled([
