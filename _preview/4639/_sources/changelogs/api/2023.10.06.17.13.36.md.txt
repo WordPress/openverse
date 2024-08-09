@@ -1,0 +1,21 @@
+# 2023.10.06.17.13.36
+
+## Internal Improvements
+
+- Bump django-redis from 5.3.0 to 5.4.0 in /api
+  ([#3131](https://github.com/WordPress/openverse/pull/3131)) by @dependabot
+- Bump ipython from 8.16.0 to 8.16.1 in /api
+  ([#3129](https://github.com/WordPress/openverse/pull/3129)) by @dependabot
+- Bump urllib3 from 1.26.16 to 1.26.17 in /api
+  ([#3123](https://github.com/WordPress/openverse/pull/3123)) by @dependabot
+- Bump fakeredis from 2.18.0 to 2.19.0 in /api
+  ([#3100](https://github.com/WordPress/openverse/pull/3100)) by @dependabot
+- Bump elasticsearch from 8.8.2 to 8.10.0 in /api
+  ([#3103](https://github.com/WordPress/openverse/pull/3103)) by @dependabot
+- Remove boto3 dependency
+  ([#3073](https://github.com/WordPress/openverse/pull/3073)) by @ngken0995
+
+## Bug Fixes
+
+- Update glibc ([#3154](https://github.com/WordPress/openverse/pull/3154)) by
+  @stacimc

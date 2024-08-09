@@ -1,0 +1,125 @@
+# Internationalization
+
+The frontend uses Nuxt's [i18n module](https://i18n.nuxtjs.org/) to support
+[internationalization](https://developer.mozilla.org/en-US/docs/Glossary/I18N),
+enabling localization of the user interface.
+
+WordPress uses GlotPress for managing translations, which is built on top of the
+[`gettext` standard](https://www.gnu.org/software/gettext/). On the other hand,
+Nuxt (and most JS-based i18n libraries) use
+[JSON](https://kazupon.github.io/vue-i18n/guide/formatting.html) for managing
+translations. This disconnect means that Openverse translations must convert
+from JSON to POT and back again. Hence there is quite a bit of scaffolding
+involved.
+
+## Upload pipeline
+
+This pipeline deals with how translations strings are extracted from the
+frontend application and provided to GlotPress for translation.
+
+### Steps
+
+- Create a POT file from the `en.json5` file.
+
+  **Script:** `i18n:generate-pot`
+
+- Upload this
+  [POT file](https://github.com/WordPress/openverse/blob/translations/openverse.pot)
+  to a fixed URL. Currently the file is hosted in the `translations` branch of
+  the [WordPress/openverse](https://github.com/WordPress/openverse) repo.
+
+- GlotPress presents the strings, fuzzy translations and other helpful context
+  to translators in a web UI to help them provide a translation.
+
+## Download pipeline
+
+This pipeline deals with how translations are retrieved from GlotPress,
+processed and loaded into Nuxt via the Nuxt i18n module.
+
+### Steps
+
+- Parse and extract the list of all locales from GlotPress's PHP source code.
+  Then narrow down the list to locales available in the WP GlotPress instance
+  and populate their coverage percentage from the
+  [GlotPress stats](https://translate.wordpress.org/projects/meta/openverse/).
+
+  The output is written to `wp-locales.json`.
+
+  **Script:** `i18n:create-locales-list`
+
+- Download all translations from GlotPress as JED 1.x JSON files. The flattened
+  JED 1.x (derived from the flattened POT files) files are converted back into
+  the nested JSON as expected by Nuxt i18n.
+
+  This script downloads all available translations in bulk as a ZIP file and
+  then extracts JSON files from the ZIP file. This prevents excessive calls to
+  GlotPress, which can be throttled and cause some locales to be missed.
+
+  **Script:** `i18n:get-translations`
+
+- Separate the locales into three groups based on the JSON files emitted by
+  `i18n:get-translations`.
+
+  - **translated:** JSON file is present with mappings, written to
+    `valid-locales.json`.
+  - **untranslated:** JSON file is present but empty, written to both
+    `valid-locales.json` and `untranslated-locales.json`.
+  - **invalid:** JSON file is not present, written to `invalid-locales.json`.
+
+  **Script:** `i18n:update-locales`
+
+- Pass the list of valid locales (along with extra fields) into the Nuxt i18n
+  module. This is configured in the Nuxt configuration file, `nuxt.config.ts`.
+
+- Pass the fallback locale mappings to the underlying Vue i18n plugin. This is
+  configured in the plugin configuration file,
+  `frontend/src/plugins/vue-i18n.ts`.
+
+## Test locales
+
+Three locales are maintained in the code base (as opposed to downloaded from
+Glotpress) for use in testing, alongside the default English locale. These
+locales are **not** meant to be representative of actual final translations.
+They are merely used to approximate length and language features that help
+identify potential layout issues in the application.
+
+The following languages are used:
+
+- Arabic (`ar`)
+- Russian (`ru`)
+- Spanish (`es`)
+
+The JSON files for these test locales are located in `frontend/test/locales`.
+
+In the past, Openverse maintainers updated these locales by hand when new
+strings were introduced or changed. That is no longer necessary. Instead, use
+the `generate_test_locales` utility, which relies on Argos Translate to generate
+new testing translations on your local machine. It only translates strings for
+keys that are not already present in the test locales. This means you can freely
+make manual changes to the generated strings if you feel there is a better way
+to represent features of a particular string in the test locale languages (for
+example, if you speak any of these languages and happen to know a generated
+translation is badly inaccurate).
+
+To use the script:
+
+```shell
+# Install python dependencies
+just utilities/generate_test_locales/install
+
+# Run the script
+just utilities/generate_test_locales/run
+```
+
+The script caches Argos translation packages on your local machine. The first
+time you run the script, it will take a little longer while it updates the
+package repository and downloads the necessary translation models. Subsequent
+runs will start much faster, unless there are updates to the language packages,
+in which case they will be downloaded.
+
+Due to the nature of how the script traverses the locales, some runs may reorder
+keys. The order of keys in the JSON file is meaningless, but can create noise in
+diffs. If it is too noisy for a particular change, you can generate a patch of
+just the new or changed strings, revert the overall changes, and then apply the
+patch of new strings (either manually or using git and then resolving
+conflicts).

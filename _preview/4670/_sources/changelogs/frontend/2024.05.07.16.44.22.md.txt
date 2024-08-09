@@ -1,0 +1,26 @@
+# 2024.05.07.16.44.22
+
+## Improvements
+
+- Remove untranslated locales from page generation and the locale chooser
+  ([#4224](https://github.com/WordPress/openverse/pull/4224)) by @zackkrida
+- Point openverse frontend to api.openverse.org
+  ([#4228](https://github.com/WordPress/openverse/pull/4228)) by @sarayourfriend
+
+## Internal Improvements
+
+- Update docker.io/clickhouse/clickhouse-server Docker tag to v23.12
+  ([#4247](https://github.com/WordPress/openverse/pull/4247)) by @openverse-bot
+- Update Nuxt dependencies
+  ([#4251](https://github.com/WordPress/openverse/pull/4251)) by @obulat
+- Update docker.io/nginx Docker tag to v1.26.0
+  ([#4248](https://github.com/WordPress/openverse/pull/4248)) by @openverse-bot
+- Update pnpm to v8.15.8
+  ([#4241](https://github.com/WordPress/openverse/pull/4241)) by @openverse-bot
+- Remove the additional search views flag
+  ([#4222](https://github.com/WordPress/openverse/pull/4222)) by @obulat
+
+## Bug Fixes
+
+- Use "audio track(s)" to refer to individual audio works
+  ([#4037](https://github.com/WordPress/openverse/pull/4037)) by @Collins-Webdev

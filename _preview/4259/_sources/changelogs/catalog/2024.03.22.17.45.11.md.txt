@@ -1,0 +1,29 @@
+# 2024.03.22.17.45.11
+
+## Improvements
+
+- Add point_alias DAG and add alias params to create_new_es_index DAGs
+  ([#3890](https://github.com/WordPress/openverse/pull/3890)) by @stacimc
+
+## Bug Fixes
+
+- Use DAG_DEFAULT_ARGS for all DAGs
+  ([#3928](https://github.com/WordPress/openverse/pull/3928)) by @AetherUnbound
+- Freesound: handle space in creator name when making URL
+  ([#3909](https://github.com/WordPress/openverse/pull/3909)) by @AetherUnbound
+- Remove leftover files from catalog
+  ([#3915](https://github.com/WordPress/openverse/pull/3915)) by @krysal
+- ccMixter: Handle spaces in URLs
+  ([#3907](https://github.com/WordPress/openverse/pull/3907)) by @AetherUnbound
+- Recover from updated build_param in Phylopic DAG
+  ([#3874](https://github.com/WordPress/openverse/pull/3874)) by @stacimc
+- ccMixter: Handle bad numbers with a decimal point
+  ([#3905](https://github.com/WordPress/openverse/pull/3905)) by @AetherUnbound
+- ES healthcheck: skip message composition task when cluster is green
+  ([#3903](https://github.com/WordPress/openverse/pull/3903)) by @AetherUnbound
+- Extend timeout on iNaturalist table loads
+  ([#3888](https://github.com/WordPress/openverse/pull/3888)) by @AetherUnbound
+- Various iNaturalist updates
+  ([#3846](https://github.com/WordPress/openverse/pull/3846)) by @AetherUnbound
+- Preemptively fail unparsable/unusable Europeana URLs
+  ([#3845](https://github.com/WordPress/openverse/pull/3845)) by @AetherUnbound

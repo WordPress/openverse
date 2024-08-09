@@ -1,0 +1,1650 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><link rel="next" title="2023-06-06 Implementation Plan: Baseline Alarms for ECS Services" href="20230606_implementation_plan_ecs_alarms.html" /><link rel="prev" title="Monitoring" href="index.html" />
+
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/><!-- Generated with Sphinx 7.3.7 and Furo 2024.04.27 -->
+        <title>2022-03-07 Project Proposal: Monitoring - Openverse documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=437aa6ec" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=36a5483c" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../index.html"><div class="brand">Openverse  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo only-light" src="../../../_static/logo_light.svg" alt="Light Logo"/>
+    <img class="sidebar-logo only-dark" src="../../../_static/logo_dark.svg" alt="Dark Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../api/index.html">Django API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Django API</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../api/guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Guides</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/guides/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/guides/test.html">Testing guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/guides/deploy.html">Deployment runbook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/guides/documentation.html">API Documentation Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/guides/https.html">Local HTTPS testing</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../api/reference/index.html">Reference</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/reference/made_with_ov.html">Made with Openverse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/reference/search_algorithm.html">Search Algorithm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/reference/authentication_and_throttling.html">Authentication and Throttling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/reference/healthcheck.html">Django Healthcheck</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../automations/index.html">Automations</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Automations</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../automations/guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Guides</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../automations/guides/quickstart.html">Quickstart Guide</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../automations/reference/index.html">Reference</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../automations/reference/python_scripts.html">Python Scripts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../automations/reference/project_automations.html">Project Automations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../catalog/index.html">Airflow Catalog</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of Airflow Catalog</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../catalog/guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of Guides</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../catalog/guides/quickstart.html">Quickstart</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../catalog/guides/deploy.html">Deployment runbook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../catalog/guides/adding_a_new_provider.html">Openverse Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../catalog/guides/deployment.html">Catalog Deployments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../catalog/guides/deployment.html#airflow">Airflow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../catalog/guides/deployment.html#postgres">Postgres</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../catalog/guides/dag_testing.html">Running DAGs locally</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../catalog/reference/index.html">Reference</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../catalog/reference/DAGs.html">DAGs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../catalog/reference/retired.html">Retired</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../changelogs/index.html">Changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of Changelogs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../changelogs/api/index.html">API changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle navigation of API changelogs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.06.24.18.01.42.html">2024.06.24.18.01.42</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.06.17.15.33.56.html">2024.06.17.15.33.56</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.06.07.17.19.06.html">2024.06.07.17.19.06</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.06.03.15.35.02.html">2024.06.03.15.35.02</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.05.28.21.25.54.html">2024.05.28.21.25.54</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.05.27.15.21.38.html">2024.05.27.15.21.38</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.05.23.15.02.00.html">2024.05.23.15.02.00</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.05.20.15.14.53.html">2024.05.20.15.14.53</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.05.13.15.19.42.html">2024.05.13.15.19.42</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.05.07.23.56.36.html">2024.05.07.23.56.36</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.05.06.19.44.35.html">2024.05.06.19.44.35</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.05.01.13.59.00.html">2024.05.01.13.59.00</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.04.22.15.11.09.html">2024.04.22.15.11.09</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.04.15.17.18.29.html">2024.04.15.17.18.29</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.04.09.03.50.11.html">2024.04.09.03.50.11</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.04.02.05.06.52.html">2024.04.02.05.06.52</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.04.01.17.07.10.html">2024.04.01.17.07.10</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.03.25.15.22.26.html">2024.03.25.15.22.26</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.03.18.15.51.25.html">2024.03.18.15.51.25</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.03.13.17.10.22.html">2024.03.13.17.10.22</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.03.11.15.26.16.html">2024.03.11.15.26.16</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.03.04.15.15.13.html">2024.03.04.15.15.13</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.02.28.16.32.28.html">2024.02.28.16.32.28</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.02.20.22.54.08.html">2024.02.20.22.54.08</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.02.13.05.45.50.html">2024.02.13.05.45.50</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.02.05.20.34.01.html">2024.02.05.20.34.01</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.01.29.19.36.26.html">2024.01.29.19.36.26</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.01.16.17.28.14.html">2024.01.16.17.28.14</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.01.08.20.06.53.html">2024.01.08.20.06.53</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.01.01.19.52.14.html">2024.01.01.19.52.14</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.12.26.05.11.22.html">2023.12.26.05.11.22</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.12.18.17.56.24.html">2023.12.18.17.56.24</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.12.11.19.20.45.html">2023.12.11.19.20.45</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.12.04.19.51.23.html">2023.12.04.19.51.23</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.11.29.22.20.31.html">2023.11.29.22.20.31</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.11.27.05.10.48.html">2023.11.27.05.10.48</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.11.20.09.32.25.html">2023.11.20.09.32.25</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.11.14.23.44.01.html">2023.11.14.23.44.01</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.11.13.22.18.21.html">2023.11.13.22.18.21</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.11.01.21.27.09.html">2023.11.01.21.27.09</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.10.30.16.26.21.html">2023.10.30.16.26.21</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.10.23.11.40.59.html">2023.10.23.11.40.59</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.10.18.15.25.27.html">2023.10.18.15.25.27</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.10.11.04.49.20.html">2023.10.11.04.49.20</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.10.10.21.08.33.html">2023.10.10.21.08.33</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.10.10.18.42.39.html">2023.10.10.18.42.39</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.10.06.17.13.36.html">2023.10.06.17.13.36</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.09.30.00.15.32.html">2023.09.30.00.15.32</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.09.28.00.26.34.html">2023.09.28.00.26.34</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.09.25.21.34.44.html">2023.09.25.21.34.44</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.09.20.11.16.51.html">2023.09.20.11.16.51</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.09.20.07.37.52.html">2023.09.20.07.37.52</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.09.19.08.13.24.html">2023.09.19.08.13.24</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.09.15.19.15.58.html">2023.09.15.19.15.58</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.09.11.16.56.52.html">2023.09.11.16.56.52</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.09.04.19.52.19.html">2023.09.04.19.52.19</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.08.28.20.43.01.html">2023.08.28.20.43.01</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.08.22.04.57.04.html">2023.08.22.04.57.04</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.08.14.16.35.15.html">2023.08.14.16.35.15</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.08.08.22.22.02.html">2023.08.08.22.22.02</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.07.24.20.47.04.html">2023.07.24.20.47.04</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.07.17.21.05.23.html">2023.07.17.21.05.23</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.07.10.08.44.19.html">2023.07.10.08.44.19</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.07.03.17.52.00.html">2023.07.03.17.52.00</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.06.28.19.49.58.html">2023.06.28.19.49.58</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.06.28.02.17.04.html">2023.06.28.02.17.04</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.06.26.20.33.46.html">2023.06.26.20.33.46</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.06.19.17.48.39.html">2023.06.19.17.48.39</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.06.13.00.21.51.html">2023.06.13.00.21.51</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.06.05.15.04.02.html">2023.06.05.15.04.02</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.06.01.01.50.43.html">2023.06.01.01.50.43</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.05.30.17.57.04.html">2023.05.30.17.57.04</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.05.30.12.02.04.html">2023.05.30.12.02.04</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.05.19.22.08.07.html">2023.05.19.22.08.07</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.05.19.18.58.25.html">2023.05.19.18.58.25</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.05.19.17.16.50.html">2023.05.19.17.16.50</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.05.15.21.51.49.html">2023.05.15.21.51.49</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.05.02.21.26.28.html">2023.05.02.21.26.28</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.04.27.07.29.23.html">2023.04.27.07.29.23</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.04.23.23.22.14.html">2023.04.23.23.22.14</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.04.19.00.01.39.html">2023.04.19.00.01.39</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.04.18.15.27.15.html">2023.04.18.15.27.15</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.04.12.23.29.59.html">2023.04.12.23.29.59</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../changelogs/catalog/index.html">Catalog changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle navigation of Catalog changelogs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2024.06.17.15.33.56.html">2024.06.17.15.33.56</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2024.04.18.23.30.21.html">2024.04.18.23.30.21</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2024.03.22.17.45.11.html">2024.03.22.17.45.11</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2024.03.06.16.40.36.html">2024.03.06.16.40.36</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2024.01.25.17.42.59.html">2024.01.25.17.42.59</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2024.01.04.20.39.50.html">2024.01.04.20.39.50</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2023.12.20.22.19.13.html">2023.12.20.22.19.13</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2023.11.29.15.35.59.html">2023.11.29.15.35.59</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2023.11.14.18.24.16.html">2023.11.14.18.24.16</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2023.10.06.18.29.33.html">2023.10.06.18.29.33</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2023.08.30.17.30.22.html">2023.08.30.17.30.22</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2023.07.20.15.07.11.html">2023.07.20.15.07.11</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2023.06.19.17.21.41.html">2023.06.19.17.21.41</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2023.06.08.16.52.36.html">2023.06.08.16.52.36</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2023.05.16.22.14.49.html">2023.05.16.22.14.49</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2023.04.27.02.43.13.html">2023.04.27.02.43.13</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../changelogs/frontend/index.html">Frontend changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle navigation of Frontend changelogs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.06.24.18.01.44.html">2024.06.24.18.01.44</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.06.17.15.33.55.html">2024.06.17.15.33.55</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.06.07.17.19.06.html">2024.06.07.17.19.06</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.06.03.15.35.03.html">2024.06.03.15.35.03</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.05.27.15.21.40.html">2024.05.27.15.21.40</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.05.20.15.14.53.html">2024.05.20.15.14.53</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.05.13.17.18.44.html">2024.05.13.17.18.44</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.05.07.16.44.22.html">2024.05.07.16.44.22</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.04.25.15.32.08.html">2024.04.25.15.32.08</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.04.24.12.19.32.html">2024.04.24.12.19.32</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.04.22.15.11.07.html">2024.04.22.15.11.07</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.04.15.15.20.23.html">2024.04.15.15.20.23</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.04.13.16.19.50.html">2024.04.13.16.19.50</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.04.09.03.50.12.html">2024.04.09.03.50.12</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.04.01.17.07.11.html">2024.04.01.17.07.11</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.03.25.15.22.24.html">2024.03.25.15.22.24</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.03.18.15.51.41.html">2024.03.18.15.51.41</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.03.11.15.25.54.html">2024.03.11.15.25.54</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.03.04.15.15.07.html">2024.03.04.15.15.07</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.02.26.18.58.35.html">2024.02.26.18.58.35</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.02.19.15.45.00.html">2024.02.19.15.45.00</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.02.12.23.34.43.html">2024.02.12.23.34.43</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.02.05.18.10.41.html">2024.02.05.18.10.41</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.01.29.19.41.17.html">2024.01.29.19.41.17</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.01.08.19.12.18.html">2024.01.08.19.12.18</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.01.01.19.52.49.html">2024.01.01.19.52.49</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.12.11.19.44.28.html">2023.12.11.19.44.28</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.12.04.19.35.53.html">2023.12.04.19.35.53</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.11.27.19.20.44.html">2023.11.27.19.20.44</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.11.20.09.09.57.html">2023.11.20.09.09.57</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.11.14.19.30.29.html">2023.11.14.19.30.29</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.11.06.20.32.30.html">2023.11.06.20.32.30</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.11.01.00.18.44.html">2023.11.01.00.18.44</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.10.30.16.27.33.html">2023.10.30.16.27.33</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.10.09.17.18.13.html">2023.10.09.17.18.13</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.09.25.22.11.48.html">2023.09.25.22.11.48</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.09.18.10.25.25.html">2023.09.18.10.25.25</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.09.11.17.34.23.html">2023.09.11.17.34.23</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.09.05.17.09.13.html">2023.09.05.17.09.13</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.09.04.20.20.34.html">2023.09.04.20.20.34</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.08.28.19.38.22.html">2023.08.28.19.38.22</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.08.22.06.04.39.html">2023.08.22.06.04.39</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.08.14.16.26.44.html">2023.08.14.16.26.44</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.08.08.21.19.44.html">2023.08.08.21.19.44</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.07.28.23.42.26.html">2023.07.28.23.42.26</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.07.24.21.23.45.html">2023.07.24.21.23.45</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.07.20.17.25.42.html">2023.07.20.17.25.42</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.07.19.19.15.39.html">2023.07.19.19.15.39</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.07.17.21.49.20.html">2023.07.17.21.49.20</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.07.10.08.29.25.html">2023.07.10.08.29.25</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.07.06.14.52.49.html">2023.07.06.14.52.49</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.07.05.17.56.39.html">2023.07.05.17.56.39</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.07.03.18.19.32.html">2023.07.03.18.19.32</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.06.26.20.22.48.html">2023.06.26.20.22.48</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.06.19.17.31.24.html">2023.06.19.17.31.24</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.06.13.00.28.40.html">2023.06.13.00.28.40</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.06.05.14.48.06.html">2023.06.05.14.48.06</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.05.23.17.02.26.html">2023.05.23.17.02.26</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.05.22.15.55.57.html">2023.05.22.15.55.57</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.05.15.22.13.27.html">2023.05.15.22.13.27</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.05.02.19.17.32.html">2023.05.02.19.17.32</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.04.23.23.07.51.html">2023.04.23.23.07.51</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../changelogs/ingestion_server/index.html">Ingestion server changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle navigation of Ingestion server changelogs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2024.06.13.17.07.56.html">2024.06.13.17.07.56</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2024.05.27.13.36.10.html">2024.05.27.13.36.10</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2024.05.20.19.47.22.html">2024.05.20.19.47.22</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2024.05.10.03.01.22.html">2024.05.10.03.01.22</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2024.04.18.16.49.08.html">2024.04.18.16.49.08</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2024.04.04.14.33.24.html">2024.04.04.14.33.24</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2024.03.06.16.40.36.html">2024.03.06.16.40.36</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2024.02.28.18.32.08.html">2024.02.28.18.32.08</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2024.02.07.18.41.16.html">2024.02.07.18.41.16</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2024.01.18.18.31.08.html">2024.01.18.18.31.08</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.12.12.17.23.14.html">2023.12.12.17.23.14</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.12.06.19.13.35.html">2023.12.06.19.13.35</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.11.14.18.39.29.html">2023.11.14.18.39.29</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.10.25.06.38.07.html">2023.10.25.06.38.07</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.10.19.06.08.15.html">2023.10.19.06.08.15</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.10.06.18.02.20.html">2023.10.06.18.02.20</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.09.29.17.40.50.html">2023.09.29.17.40.50</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.09.05.18.56.18.html">2023.09.05.18.56.18</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.08.29.17.36.35.html">2023.08.29.17.36.35</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.07.21.20.19.21.html">2023.07.21.20.19.21</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.07.05.17.46.34.html">2023.07.05.17.46.34</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.06.13.00.25.04.html">2023.06.13.00.25.04</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.06.07.17.56.30.html">2023.06.07.17.56.30</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.05.17.22.57.37.html">2023.05.17.22.57.37</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.05.03.22.29.52.html">2023.05.03.22.29.52</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../frontend/index.html">Nuxt frontend</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle navigation of Nuxt frontend</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../frontend/guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle navigation of Guides</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/guides/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/guides/deploy.html">Deployment runbook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/guides/test.html">Running frontend tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/guides/analytics.html">Analytics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/guides/icons.html">SVG Icon Sprites in Openverse Frontend</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/guides/translate.html">Translate</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../frontend/reference/index.html">Reference</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle navigation of Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/i18n.html">Internationalization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/feature_flags.html">Feature flags</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/testing_guidelines.html">Testing Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/playwright_tests.html">Playwright tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/storybook_tests.html">Storybook tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/miscellaneous.html">Miscellaneous notes on the frontend</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/healthcheck.html">Nuxt Healthcheck</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/nginx.html">Frontend reverse proxy</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../general/index.html">General development guidelines</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle navigation of General development guidelines</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../general/contributing.html">Get started with contributions</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><div class="visually-hidden">Toggle navigation of Get started with contributions</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../general/contribution/github_contribution_practices.html">GitHub contribution practices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../general/contribution/dev_flow.html">Development workflow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../general/contribution/current_maintainers.html">Current maintainers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../general/contribution/communication_aliases.html">Communication aliases</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../general/contribution/becoming_a_committer.html">Becoming a Committer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../general/contribution/maintainer_tasks.html">Regular maintainer tasks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../general/contribution/codespell.html">Codespell Configuration : spellcheck pre-commit hook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../general/contribution/good_first_and_help_wanted_issues.html">Maintainer guidelines for “Good first” and “Help wanted” issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/general_setup.html">General setup guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/run.html">Run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/test.html">Test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/zero_downtime_database_management.html">Zero Downtime and Database Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/deployment.html">Deployments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/logging.html">Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/https.html">Testing HTTPS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/stack.html">Stack</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../ingestion_server/index.html">Ingestion server</a><input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" role="switch" type="checkbox"/><label for="toctree-checkbox-20"><div class="visually-hidden">Toggle navigation of Ingestion server</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../ingestion_server/guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" role="switch" type="checkbox"/><label for="toctree-checkbox-21"><div class="visually-hidden">Toggle navigation of Guides</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/guides/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/guides/config.html">Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/guides/mapping.html">Mapping database tables to Elasticsearch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/guides/test.html">Testing guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/guides/deploy.html">Deployment runbook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/guides/migrate.html">Index migration runbook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/guides/upgrade.html">Manual index upgrade runbook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/guides/troubleshoot.html">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../ingestion_server/reference/index.html">Reference</a><input class="toctree-checkbox" id="toctree-checkbox-22" name="toctree-checkbox-22" role="switch" type="checkbox"/><label for="toctree-checkbox-22"><div class="visually-hidden">Toggle navigation of Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/reference/elasticsearch.html">Elasticsearch and Indexing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/reference/safety.html">Safety and Security Considerations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/reference/notifications.html">Notifications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/reference/data_refresh.html">Data Refresh Limit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/reference/task_api.html">Ingestion server API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../meta/index.html">Managing the Openverse</a><input class="toctree-checkbox" id="toctree-checkbox-23" name="toctree-checkbox-23" role="switch" type="checkbox"/><label for="toctree-checkbox-23"><div class="visually-hidden">Toggle navigation of Managing the Openverse</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../meta/brand/index.html">Brand assets</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/incidents/index.html">Responding to Incidents</a><input class="toctree-checkbox" id="toctree-checkbox-24" name="toctree-checkbox-24" role="switch" type="checkbox"/><label for="toctree-checkbox-24"><div class="visually-hidden">Toggle navigation of Responding to Incidents</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../meta/incidents/runbooks/index.html">Runbooks</a><input class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" role="switch" type="checkbox"/><label for="toctree-checkbox-25"><div class="visually-hidden">Toggle navigation of Runbooks</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/incidents/runbooks/incident_response_runbook.html">Incident Response Runbook</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/project_boards/index.html">Project boards</a><input class="toctree-checkbox" id="toctree-checkbox-26" name="toctree-checkbox-26" role="switch" type="checkbox"/><label for="toctree-checkbox-26"><div class="visually-hidden">Toggle navigation of Project boards</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/project_boards/issues.html">Issues project: Openverse Backlog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/project_boards/prs.html">PR project: Openverse PRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/project_boards/projects.html">Project project: Openverse Project Tracker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/project_boards/discussions.html">Discussion project: Openverse Discussions</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/ci_cd/index.html">CI + CD workflow</a><input class="toctree-checkbox" id="toctree-checkbox-27" name="toctree-checkbox-27" role="switch" type="checkbox"/><label for="toctree-checkbox-27"><div class="visually-hidden">Toggle navigation of CI + CD workflow</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/ci_cd/actions.html">Actions</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../meta/ci_cd/jobs/index.html">Jobs</a><input class="toctree-checkbox" id="toctree-checkbox-28" name="toctree-checkbox-28" role="switch" type="checkbox"/><label for="toctree-checkbox-28"><div class="visually-hidden">Toggle navigation of Jobs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/preparation.html">Preparation jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/frontend.html">Frontend jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/packages.html">Packages jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/docker.html">Docker jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/catalog.html">Catalog jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/ingestion_server.html">Ingestion server jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/api.html">API jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/documentation.html">Documentation jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/deployment.html">Deployment jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/notification.html">Notification jobs</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/ci_cd/flow.html">Flow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/ci_cd/proof_of_functionality.html">Proof-of-functionality</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/ci_cd/artifacts.html">Artifacts</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/decision_making/index.html">Openverse Decision-Making Process</a><input class="toctree-checkbox" id="toctree-checkbox-29" name="toctree-checkbox-29" role="switch" type="checkbox"/><label for="toctree-checkbox-29"><div class="visually-hidden">Toggle navigation of Openverse Decision-Making Process</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/decision_making/process_description.html">Process description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/decision_making/how_to_use.html">How to follow the process in different settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/decision_making/additional_practices.html">Additional practices</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/documentation/index.html">Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-30" name="toctree-checkbox-30" role="switch" type="checkbox"/><label for="toctree-checkbox-30"><div class="visually-hidden">Toggle navigation of Documentation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/documentation/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/documentation/guidelines.html">Documentation guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/documentation/adding_docs.html">Adding a new documentation page</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/documentation/extensions.html">Sphinx extensions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/documentation/review.html">Documentation proofreading and review</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/monitoring/index.html">Monitoring the Openverse</a><input class="toctree-checkbox" id="toctree-checkbox-31" name="toctree-checkbox-31" role="switch" type="checkbox"/><label for="toctree-checkbox-31"><div class="visually-hidden">Toggle navigation of Monitoring the Openverse</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../meta/monitoring/traffic/index.html">Traffic Management</a><input class="toctree-checkbox" id="toctree-checkbox-32" name="toctree-checkbox-32" role="switch" type="checkbox"/><label for="toctree-checkbox-32"><div class="visually-hidden">Toggle navigation of Traffic Management</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/traffic/runbooks/identifying-and-blocking-traffic-anomalies.html">Identifying and Blocking Traffic Anomalies in Cloudflare</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/monitoring/cloudwatch_logs/index.html">Log querying</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../meta/monitoring/runbooks/index.html">Runbooks</a><input class="toctree-checkbox" id="toctree-checkbox-33" name="toctree-checkbox-33" role="switch" type="checkbox"/><label for="toctree-checkbox-33"><div class="visually-hidden">Toggle navigation of Runbooks</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/api_http_2xx_under_threshold.html">Run Book: API Production HTTP 2XX responses count under threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/api_http_5xx_above_threshold.html">Run Book: API Production HTTP 5XX responses count above threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/api_avg_response_time_above_threshold.html">Run Book: API Production Average Response Time above threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/api_avg_response_time_anomaly.html">Run Book: API Production Average Response Time anomaly</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/api_p99_response_time_above_threshold.html">Run Book: API Production P99 Response Time above threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/api_p99_response_time_anomaly.html">Run Book: API Production P99 Response Time anomaly</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/api_request_count_anomaly.html">Run Book: API Production Request Count anomalously high</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/nuxt_http_2xx_under_threshold.html">Run Book: Nuxt 2XX responses count under threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/nuxt_http_5xx_above_threshold.html">Run Book: Nuxt 5XX responses count above threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/nuxt_avg_response_time_above_threshold.html">Run Book: Nuxt Production Average Response Time above threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/nuxt_avg_response_time_anomaly.html">Run Book: Nuxt Production Average Response Time anomalously high</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/nuxt_p99_response_time_above_threshold.html">Run Book: Nuxt Production P99 Response Time above threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/nuxt_p99_response_time_anomaly.html">Run Book: Nuxt Production P99 Response Time anomalously high</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/nuxt_request_count_anomaly.html">Run Book: Nuxt Request Count anomalously high</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/unhealthy_ecs_hosts.html">Run Book: Unhealthy hosts for ECS service</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/maintenance/index.html">Openverse Infrastructure Maintenance</a><input class="toctree-checkbox" id="toctree-checkbox-34" name="toctree-checkbox-34" role="switch" type="checkbox"/><label for="toctree-checkbox-34"><div class="visually-hidden">Toggle navigation of Openverse Infrastructure Maintenance</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/maintenance/elasticsearch_cluster.html">Elasticsearch cluster maintenance</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/media_properties/index.html">Media properties</a><input class="toctree-checkbox" id="toctree-checkbox-35" name="toctree-checkbox-35" role="switch" type="checkbox"/><label for="toctree-checkbox-35"><div class="visually-hidden">Toggle navigation of Media properties</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/media_properties/catalog.html">Catalog Media Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/media_properties/api.html">API Media Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/media_properties/frontend.html">Frontend Media Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/media_properties/etls.html">Extract-Transform-Load flows</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../packages/index.html">Subpackages</a><input class="toctree-checkbox" id="toctree-checkbox-36" name="toctree-checkbox-36" role="switch" type="checkbox"/><label for="toctree-checkbox-36"><div class="visually-hidden">Toggle navigation of Subpackages</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../packages/eslint_plugin/index.html"><code class="docutils literal notranslate"><span class="pre">@openverse/eslint-plugin</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-37" name="toctree-checkbox-37" role="switch" type="checkbox"/><label for="toctree-checkbox-37"><div class="visually-hidden">Toggle navigation of @openverse/eslint-plugin</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../packages/eslint_plugin/analytics_configuration.html"><code class="docutils literal notranslate"><span class="pre">analytics-configuration</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../packages/eslint_plugin/no-unexplained-disabled-test.html"><code class="docutils literal notranslate"><span class="pre">no-unexplained-disabled-test</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../packages/openverse_attribution/index.html"><code class="docutils literal notranslate"><span class="pre">openverse-attribution</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../../index.html">Projects</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-38" name="toctree-checkbox-38" role="switch" type="checkbox"/><label for="toctree-checkbox-38"><div class="visually-hidden">Toggle navigation of Projects</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../planning.html">Project Planning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../templates/implementation_plan.html">Template: Implementation Plan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../templates/index.html">Template: Project Directory <code class="docutils literal notranslate"><span class="pre">index.md</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../templates/project_proposal.html">Template: Project Proposal</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../yearly_planning/index.html">Yearly Planning</a><input class="toctree-checkbox" id="toctree-checkbox-39" name="toctree-checkbox-39" role="switch" type="checkbox"/><label for="toctree-checkbox-39"><div class="visually-hidden">Toggle navigation of Yearly Planning</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../yearly_planning/process_outline.html">Yearly Planning: Process Outline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../yearly_planning/project_themes.html">Project Themes</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../3d_model_support/index.html">3D Model Support</a><input class="toctree-checkbox" id="toctree-checkbox-40" name="toctree-checkbox-40" role="switch" type="checkbox"/><label for="toctree-checkbox-40"><div class="visually-hidden">Toggle navigation of 3D Model Support</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../3d_model_support/20220221-project_proposal.html">2022-02-21 Project Proposal: 3D model support</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../additional_search_views/index.html">Additional Search Views</a><input class="toctree-checkbox" id="toctree-checkbox-41" name="toctree-checkbox-41" role="switch" type="checkbox"/><label for="toctree-checkbox-41"><div class="visually-hidden">Toggle navigation of Additional Search Views</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../additional_search_views/20230424-project_proposal_additional_search_views.html">2023-04-24 Project Proposal: Additional search views</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_search_views/20230719-implementation_plan_additional_search_views.html">2023-07-20 Implementation Plan: Additional Search Views</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_search_views/SUPERSEDED-20230719-implementation_plan_additional_search_views.html">SUPERSEDED 2023-07-20 Implementation Plan: Additional Search Views</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../analytics/index.html">Analytics</a><input class="toctree-checkbox" id="toctree-checkbox-42" name="toctree-checkbox-42" role="switch" type="checkbox"/><label for="toctree-checkbox-42"><div class="visually-hidden">Toggle navigation of Analytics</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../analytics/20221006-implementation_plan_frontend.html">2022-10-06 Implementation Plan: Frontend event tracking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../analytics/20230307-backend_service.html">2023-03-07 Implementation Plan: Analytics backend and visualisation service</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../core_user_interface_improvement/index.html">Core User Interface Improvements</a><input class="toctree-checkbox" id="toctree-checkbox-43" name="toctree-checkbox-43" role="switch" type="checkbox"/><label for="toctree-checkbox-43"><div class="visually-hidden">Toggle navigation of Core User Interface Improvements</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../core_user_interface_improvement/20230314-project_proposal_core_ui_improvement.html">2023-03-14 Project Proposal: Core UI Improvement</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../dark_mode/index.html">Dark Mode</a><input class="toctree-checkbox" id="toctree-checkbox-44" name="toctree-checkbox-44" role="switch" type="checkbox"/><label for="toctree-checkbox-44"><div class="visually-hidden">Toggle navigation of Dark Mode</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../dark_mode/20240313-project_proposal_dark_mode.html">2024-03-13 Project Proposal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dark_mode/20240325-implementation_plan_dark_mode.html">2024-03-25 Implementation Plan: Dark Mode</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../data_normalization/index.html">Data Normalization</a><input class="toctree-checkbox" id="toctree-checkbox-45" name="toctree-checkbox-45" role="switch" type="checkbox"/><label for="toctree-checkbox-45"><div class="visually-hidden">Toggle navigation of Data Normalization</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../data_normalization/20240227-implementation_plan_catalog_data_cleaning.html">2024-02-27 Implementation Plan: Catalog Data Cleaning</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../document_all_media_properties/index.html">Document all media properties</a><input class="toctree-checkbox" id="toctree-checkbox-46" name="toctree-checkbox-46" role="switch" type="checkbox"/><label for="toctree-checkbox-46"><div class="visually-hidden">Toggle navigation of Document all media properties</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../document_all_media_properties/20230307-project_proposal.html">2023-03-07 Project proposal for Document all media properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../document_all_media_properties/20230426-implementation_plan_documenting_media_properties.html">2023-04-26 Implementation Plan: Document all media properties in the catalog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../document_all_media_properties/20240313-implementation_plan_document_media_properties_api.html">2024-03-25 Implementation Plan: Document all media properties in the API</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../document_all_media_properties/samples/index.html">Samples</a><input class="toctree-checkbox" id="toctree-checkbox-47" name="toctree-checkbox-47" role="switch" type="checkbox"/><label for="toctree-checkbox-47"><div class="visually-hidden">Toggle navigation of Samples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../document_all_media_properties/samples/openverse_media_properties.html">Openverse Media Properties</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../document_all_media_properties/samples/sample_media_properties.html">sample_media_properties.md</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../document_all_media_properties/samples/sample_postamble.html">sample_postamble.md</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../document_all_media_properties/samples/sample_preamble.html">sample_preamble.md</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../document_all_media_properties/samples/index.html">Samples</a><input class="toctree-checkbox" id="toctree-checkbox-48" name="toctree-checkbox-48" role="switch" type="checkbox"/><label for="toctree-checkbox-48"><div class="visually-hidden">Toggle navigation of Samples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../document_all_media_properties/samples/openverse_media_properties.html">Openverse Media Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../document_all_media_properties/samples/sample_media_properties.html">sample_media_properties.md</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../document_all_media_properties/samples/sample_postamble.html">sample_postamble.md</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../document_all_media_properties/samples/sample_preamble.html">sample_preamble.md</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../feature_flags/index.html">Feature Flags</a><input class="toctree-checkbox" id="toctree-checkbox-49" name="toctree-checkbox-49" role="switch" type="checkbox"/><label for="toctree-checkbox-49"><div class="visually-hidden">Toggle navigation of Feature Flags</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../feature_flags/20220309-project_proposal.html">2022-03-09 Project Proposal: Feature flags</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../frontend_ui_state_cookie/index.html">Frontend UI State Cookie</a><input class="toctree-checkbox" id="toctree-checkbox-50" name="toctree-checkbox-50" role="switch" type="checkbox"/><label for="toctree-checkbox-50"><div class="visually-hidden">Toggle navigation of Frontend UI State Cookie</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../frontend_ui_state_cookie/20220218-project_proposal.html">2022-02-18 Project Propsal: Frontend UI State Cookie</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../infrastructure_improvements/index.html">Openverse Infrastructure</a><input class="toctree-checkbox" id="toctree-checkbox-51" name="toctree-checkbox-51" role="switch" type="checkbox"/><label for="toctree-checkbox-51"><div class="visually-hidden">Toggle navigation of Openverse Infrastructure</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../infrastructure_improvements/20240105_implementation_plan_move_remaining_services_to_openverse_org.html">2024-01-05 Implementation Plan: Finish moving all services to <code class="docutils literal notranslate"><span class="pre">openverse.org</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../ingestion_server_removal/index.html">Ingestion server removal</a><input class="toctree-checkbox" id="toctree-checkbox-52" name="toctree-checkbox-52" role="switch" type="checkbox"/><label for="toctree-checkbox-52"><div class="visually-hidden">Toggle navigation of Ingestion server removal</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../ingestion_server_removal/20240319-project_proposal.html">2024-03-19 Project Proposal: Removal of the Ingestion Server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../ingestion_server_removal/20240328-implementation_plan_ingestion_server_removal.html">2024-03-28 Implementation Plan: Ingestion Server Removal</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current has-children"><a class="reference internal" href="index.html">Monitoring</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-53" name="toctree-checkbox-53" role="switch" type="checkbox"/><label for="toctree-checkbox-53"><div class="visually-hidden">Toggle navigation of Monitoring</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3 current current-page"><a class="current reference internal" href="#">2022-03-07 Project Proposal: Monitoring</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="20230606_implementation_plan_ecs_alarms.html">2023-06-06 Implementation Plan: Baseline Alarms for ECS Services</a><input class="toctree-checkbox" id="toctree-checkbox-54" name="toctree-checkbox-54" role="switch" type="checkbox"/><label for="toctree-checkbox-54"><div class="visually-hidden">Toggle navigation of 2023-06-06 Implementation Plan: Baseline Alarms for ECS Services</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="run_book_samples/stable_run_book_sample.html">Stable Run Book Sample</a></li>
+<li class="toctree-l4"><a class="reference internal" href="run_book_samples/unstable_run_book_sample.html">Unstable Run Book Sample</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../monorepo/index.html">Monorepo</a><input class="toctree-checkbox" id="toctree-checkbox-55" name="toctree-checkbox-55" role="switch" type="checkbox"/><label for="toctree-checkbox-55"><div class="visually-hidden">Toggle navigation of Monorepo</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../monorepo/20221124-project_proposal.html">2022-11-24 Project Proposal: Monorepo</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../nuxt_3_migration/index.html">Nuxt 3 Migration</a><input class="toctree-checkbox" id="toctree-checkbox-56" name="toctree-checkbox-56" role="switch" type="checkbox"/><label for="toctree-checkbox-56"><div class="visually-hidden">Toggle navigation of Nuxt 3 Migration</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../nuxt_3_migration/20230604-project_proposal_nuxt_3_migration.html">2023-06-02 Project Proposal</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../popularity_optimizations/index.html">Popularity Calculation Optimizations</a><input class="toctree-checkbox" id="toctree-checkbox-57" name="toctree-checkbox-57" role="switch" type="checkbox"/><label for="toctree-checkbox-57"><div class="visually-hidden">Toggle navigation of Popularity Calculation Optimizations</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../popularity_optimizations/20230406-project_proposal_popularity_optimizations.html">2023-04-06 Project Proposal: Popularity Calculation Optimizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../popularity_optimizations/20230420-implementation_plan_popularity_optimizations.html">Implementation Plan: Decoupling Popularity Calculations from the Data Refresh</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../project_improvement/index.html">Project board improvements</a><input class="toctree-checkbox" id="toctree-checkbox-58" name="toctree-checkbox-58" role="switch" type="checkbox"/><label for="toctree-checkbox-58"><div class="visually-hidden">Toggle navigation of Project board improvements</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../project_improvement/20230913-project_proposal_project_improvements.html">2023-09-13 Project proposal: Project board improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../project_improvement/20230914-implementation_plan_project_automations.html">2023-09-14 Implementation plan: Project automations</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../publish_dataset/index.html">Providing and maintaining an Openverse image dataset</a><input class="toctree-checkbox" id="toctree-checkbox-59" name="toctree-checkbox-59" role="switch" type="checkbox"/><label for="toctree-checkbox-59"><div class="visually-hidden">Toggle navigation of Providing and maintaining an Openverse image dataset</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../publish_dataset/20230706-project_proposal_openverse_dataset.html">2023-07-06 Project Proposal: Providing and maintaining an Openverse image dataset</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python_packaging/index.html">Python packaging and code sharing</a><input class="toctree-checkbox" id="toctree-checkbox-60" name="toctree-checkbox-60" role="switch" type="checkbox"/><label for="toctree-checkbox-60"><div class="visually-hidden">Toggle navigation of Python packaging and code sharing</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../python_packaging/20240412-implementation_plan_switching_to_a_new_python_package_manager.html">2024-04-12 Implementation Plan: Switching to a new Python package manager</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../rekognition_data/index.html">Rekognition Data Incorporation</a><input class="toctree-checkbox" id="toctree-checkbox-61" name="toctree-checkbox-61" role="switch" type="checkbox"/><label for="toctree-checkbox-61"><div class="visually-hidden">Toggle navigation of Rekognition Data Incorporation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../rekognition_data/20240320-project_proposal_rekognition_data.html">2024-03-20 Project Proposal: Incorporate Rekognition data into the Catalog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../rekognition_data/20240423-implementation_plan_machine_generated_tags_api.html">2024-04-23 Implementation Plan: Machine-generated tags in the API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../rekognition_data/20240510-implementation_plan_machine_generated_tags_frontend.html">2024-05-08 Implementation Plan: Machine-generated tags in the frontend</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../search_relevancy_sandbox/index.html">Search Relevancy Sandbox</a><input class="toctree-checkbox" id="toctree-checkbox-62" name="toctree-checkbox-62" role="switch" type="checkbox"/><label for="toctree-checkbox-62"><div class="visually-hidden">Toggle navigation of Search Relevancy Sandbox</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../search_relevancy_sandbox/20230331-project_proposal_search_relevancy_sandbox.html">2023-03-31 Project Proposal: Search relevancy sandbox</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../search_relevancy_sandbox/20230406-implementation_plan_update_staging_database.html">2023-04-06 Implementation Plan: Update Staging Database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../search_relevancy_sandbox/20230518-implementation_plan_staging_index_rapid_iteration.html">2023-05-18 Implementation Plan: Rapid iteration of ingestion server index configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../search_relevancy_sandbox/20230530-implementation_plan_staging_elasticsearch_reindex_dags.html">2023-06-08 Implementation Plan: Staging Elasticsearch Reindex DAGs</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../trust_and_safety/content_report_moderation/index.html">Sensitive Content Report Moderation Initial Practices</a><input class="toctree-checkbox" id="toctree-checkbox-63" name="toctree-checkbox-63" role="switch" type="checkbox"/><label for="toctree-checkbox-63"><div class="visually-hidden">Toggle navigation of Sensitive Content Report Moderation Initial Practices</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/content_report_moderation/20230411-project_proposal_content_report_moderation.html">2023-04-11 Project Proposal: Sensitive content report moderation: initial practices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/content_report_moderation/20230517-implementation_plan_mature_copy_change.html">2023-05-17 Implementation Plan: Copy updates <code class="docutils literal notranslate"><span class="pre">mature</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">sensitive</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/content_report_moderation/20231208-implementation_plan_django_admin_moderator_access.html">2023-12-08 Implementation Plan: Django admin tools and access control for moderators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/content_report_moderation/20240122-implementation_plan_bulk_moderation_actions.html">2024-01-22 Implementation Plan: Bulk Moderation Actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/content_report_moderation/20240122-implementation_plan_moderation_metrics.html">2024-01-22 Implementation Plan: Moderation response times</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/index.html">Detecting and Blurring Sensitive Textual Content</a><input class="toctree-checkbox" id="toctree-checkbox-64" name="toctree-checkbox-64" role="switch" type="checkbox"/><label for="toctree-checkbox-64"><div class="visually-hidden">Toggle navigation of Detecting and Blurring Sensitive Textual Content</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/20230309-implementation_plan_sensitive_terms_list.html">2023-03-09 Implementation Plan: Sensitive Terms List</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/20230309-project_proposal_detecting_sensitive_textual_content.html">2023-03-09 Project Proposal: Detecting sensitive textual content and blurring all sensitive results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/20230330-implementation_plan_filtering_and_designating_results_with_sensitive_textual_content.html">2023-03-30 Implementation Plan: Filtering and designating results with sensitive textual content</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/20230506-implementation_plan_frontend_blurring_sensitive.html">2023-05-06 Implementation Plan: Fetching, blurring sensitive results</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../trust_and_safety/index.html">Trust and Safety</a><input class="toctree-checkbox" id="toctree-checkbox-65" name="toctree-checkbox-65" role="switch" type="checkbox"/><label for="toctree-checkbox-65"><div class="visually-hidden">Toggle navigation of Trust and Safety</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/20230109-trust_and_safety_preliminary_overview_and_exploration.html">2023-01-09 Initial Overview and User Stories</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../trust_and_safety/content_report_moderation/index.html">Sensitive Content Report Moderation Initial Practices</a><input class="toctree-checkbox" id="toctree-checkbox-66" name="toctree-checkbox-66" role="switch" type="checkbox"/><label for="toctree-checkbox-66"><div class="visually-hidden">Toggle navigation of Sensitive Content Report Moderation Initial Practices</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../trust_and_safety/content_report_moderation/20230411-project_proposal_content_report_moderation.html">2023-04-11 Project Proposal: Sensitive content report moderation: initial practices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../trust_and_safety/content_report_moderation/20230517-implementation_plan_mature_copy_change.html">2023-05-17 Implementation Plan: Copy updates <code class="docutils literal notranslate"><span class="pre">mature</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">sensitive</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../trust_and_safety/content_report_moderation/20231208-implementation_plan_django_admin_moderator_access.html">2023-12-08 Implementation Plan: Django admin tools and access control for moderators</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../trust_and_safety/content_report_moderation/20240122-implementation_plan_bulk_moderation_actions.html">2024-01-22 Implementation Plan: Bulk Moderation Actions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../trust_and_safety/content_report_moderation/20240122-implementation_plan_moderation_metrics.html">2024-01-22 Implementation Plan: Moderation response times</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/index.html">Detecting and Blurring Sensitive Textual Content</a><input class="toctree-checkbox" id="toctree-checkbox-67" name="toctree-checkbox-67" role="switch" type="checkbox"/><label for="toctree-checkbox-67"><div class="visually-hidden">Toggle navigation of Detecting and Blurring Sensitive Textual Content</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/20230309-implementation_plan_sensitive_terms_list.html">2023-03-09 Implementation Plan: Sensitive Terms List</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/20230309-project_proposal_detecting_sensitive_textual_content.html">2023-03-09 Project Proposal: Detecting sensitive textual content and blurring all sensitive results</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/20230330-implementation_plan_filtering_and_designating_results_with_sensitive_textual_content.html">2023-03-30 Implementation Plan: Filtering and designating results with sensitive textual content</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/20230506-implementation_plan_frontend_blurring_sensitive.html">2023-05-06 Implementation Plan: Fetching, blurring sensitive results</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../visual_regression_testing/index.html">Visual Regression Testing</a><input class="toctree-checkbox" id="toctree-checkbox-68" name="toctree-checkbox-68" role="switch" type="checkbox"/><label for="toctree-checkbox-68"><div class="visually-hidden">Toggle navigation of Visual Regression Testing</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../visual_regression_testing/20220217-implementation_plan.html">2022-02-17 Implementation Plan: Visual regression testing</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../vuex_to_pina_conversion/index.html">Pinia Conversion</a><input class="toctree-checkbox" id="toctree-checkbox-69" name="toctree-checkbox-69" role="switch" type="checkbox"/><label for="toctree-checkbox-69"><div class="visually-hidden">Toggle navigation of Pinia Conversion</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../vuex_to_pina_conversion/20220223-project_proposal.html">2022-02-23 Project Proposal: Vuex to Pinia conversion</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../terms_of_service.html">Openverse Terms of Service</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">External links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://openverse.org">Openverse</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/WordPress/openverse">GitHub</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/WordPress/openverse/edit/main/documentation/projects/proposals/monitoring/20220307-project_proposal.md" title="Edit this page">
+    <svg aria-hidden="true" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
+      <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
+    </svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="project-proposal-monitoring">
+<h1>2022-03-07 Project Proposal: Monitoring<a class="headerlink" href="#project-proposal-monitoring" title="Link to this heading">¶</a></h1>
+<p><strong>Author</strong>: <a class="reference external" href="https://github.com/sarayourfriend" title="sarayourfriend on GitHub">&#64;sarayourfriend</a></p>
+<p>Note: Because I had to spend a good deal of time sketching out how this stuff
+works, I wrote a good deal of preliminary code. It’s probably not perfect so
+it’s really only a starting point, but it at least gives a vision for how we
+could do this.</p>
+<section id="reviewers">
+<h2>Reviewers<a class="headerlink" href="#reviewers" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>[x] <a class="reference external" href="https://github.com/zackkrida" title="zackkrida on GitHub">&#64;zackkrida</a> (Infrastructure sign off)</p></li>
+<li><p>[x] <a class="reference external" href="https://github.com/AetherUnbound" title="AetherUnbound on GitHub">&#64;AetherUnbound</a></p></li>
+<li><p>[x] <a class="reference external" href="https://github.com/obulat" title="obulat on GitHub">&#64;obulat</a></p></li>
+</ul>
+</section>
+<section id="milestone">
+<h2>Milestone<a class="headerlink" href="#milestone" title="Link to this heading">¶</a></h2>
+<p>TBD</p>
+</section>
+<section id="rationale">
+<h2>Rationale<a class="headerlink" href="#rationale" title="Link to this heading">¶</a></h2>
+<p>Production Openverse is deployed across several services, each with their own
+unique parameters for optimal performance and stability. We have little to no
+visibility into the performance of most of these services aside from Sentry.</p>
+<ul class="simple">
+<li><p>Airflow - Has some Slack alerting for DAG failures/successes and some built in
+things we can gather basic performance information from.</p></li>
+<li><p>API - Has Sentry error monitoring but zero performance monitoring.</p></li>
+<li><p>Nuxt - Has Sentry error monitoring but zero performance monitoring.</p></li>
+<li><p>Thumbnail proxy - Has zero monitoring</p></li>
+<li><p>Postgres - Has zero monitoring aside from some CloudWatch system metrics being
+tracked</p></li>
+<li><p>Elasticsearch - Same as Postgres as far as I’m aware</p></li>
+</ul>
+<p>Without visibility into our various services stability and performance we have
+few or even zero ways to know whether we’re introducing performance or stability
+degradations with new releases (nor whether we’re improving things). If our
+services go down, we’ll learn this because a user or contributor notices and
+lets the team know. This is not ideal.</p>
+<p>As the production instances of the Openverse API start getting used for Jetpack
+and even WordPress core integrations soon and in the near future we will likely
+see a tremendous increase in traffic. Without visibility into our services we
+will be significantly hindered when debugging production performance and
+stability issues.</p>
+<p>Without measuring <em>current</em> performance, we can’t make decisions about how to
+improve performance that aren’t couched in anything better than educated
+guesses. This is not a situation we want to be in long term. We also have a
+sense that our services are reasonably speedy at the moment, but we don’t know
+exactly how speedy or what kind of outliers exist. Sometimes we see the API slow
+down to over 2 seconds per-request. How often does that happen? Is it a 99th
+percentile or more like 60th (i.e., closer to the average experience).</p>
+</section>
+<section id="purpose">
+<h2>Purpose<a class="headerlink" href="#purpose" title="Link to this heading">¶</a></h2>
+<p>This RFC proposes we introduce <a class="reference external" href="https://prometheus.io">Prometheus</a> and
+<a class="reference external" href="https://grafana.com/">Grafana</a> to monitor our infrastructure. It also proposes
+that we create a new RDS Postgres instance for Grafana.</p>
+<p>Prometheus is a time series database with an advanced query language and the
+ability to configure aggregate data transformations (for example, based on a
+given metric you can also tell Prometheus to calculate a running mean of the
+metric from over the last 5 minutes, or any other span of time). It includes
+anomaly detection as well as integration with many tools you can use for
+alerting like Slack, PagerDuty, or email. There are
+<a class="reference external" href="https://prometheus.io/docs/instrumenting/clientlibs/">official and unofficial client libraries</a>
+for all the languages we currently use or could conceivably use in the future
+including Python, Node.js, Go, PHP, and JVM languages.</p>
+<p>Grafana is a data visualization tool that supports building complex dashboards.
+It has the ability to integrate with nearly any source of data you could
+imagine, including our existing catalog and API databases. In the future we
+could use it to monitor cataloging progress over time for example. It’s a tool
+good for many things in addition to visualizing metrics.</p>
+<p>The Prometheus and Grafana services encompass the following key features that
+are important for maintaining the health and stability of our services:</p>
+<ul class="simple">
+<li><p>Metrics gathering</p></li>
+<li><p>Dashboard creation for making it quick and easy to understand the current
+state of our service health</p></li>
+<li><p>Anomaly detection and alarming so that if things get weird, we’ll know about
+it as soon as possible</p></li>
+</ul>
+<p>Additionally, both are free software. Prometheus is Apache 2 licensed and
+Grafana is AGPL-3.0. Both are actively developed in the open with heavy
+community involvement. They are also both widely deployed with lots of blog
+posts discussing configuration, use cases, and troubleshooting.</p>
+</section>
+<section id="self-hosted-vs-hosted">
+<h2>Self-hosted vs. hosted<a class="headerlink" href="#self-hosted-vs-hosted" title="Link to this heading">¶</a></h2>
+<p>We will self-host and use a new Postgres RDS instance for Grafana.</p>
+<p>To simplify the hosting situation, let’s try to deploy this using ECS from the
+beginning.</p>
+</section>
+<section id="what-will-we-monitor">
+<h2>What will we monitor<a class="headerlink" href="#what-will-we-monitor" title="Link to this heading">¶</a></h2>
+<p>There are three key aspects of the application services I think we should
+monitor, along with a slew of system level metrics that we should monitor as
+well.</p>
+<section id="system-level-metrics">
+<h3>System level metrics<a class="headerlink" href="#system-level-metrics" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>CPU</p></li>
+<li><p>RAM</p></li>
+<li><p>Storage</p></li>
+<li><p>Processes/threads</p></li>
+</ul>
+<p>These would be gathered from Airflow, API, Thumbnail proxy, Postgres and Nuxt.
+These metrics need to be retrieved from AWS. I <em>think</em> that
+<a class="reference external" href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Agent-PrometheusEC2.html">this page describes how to do that</a>
+but AWS’s language around this stuff is so cryptic to me I can’t say with
+confidence it’s the right documentation page for it.</p>
+<p>It would also be nice if we could integrate Cloudflare data into Grafana so that
+our visualizations are all in one place. Cache hits and other relevant
+information from Cloudflare would be excellent to monitor within our greater
+monitoring stack.</p>
+</section>
+<section id="application-level-metrics">
+<h3>Application level metrics<a class="headerlink" href="#application-level-metrics" title="Link to this heading">¶</a></h3>
+<p>These are <em>per service</em> when available. The Thumbnail proxy and Postgres, for
+example, may not be able to implement all or any of these.</p>
+<ul class="simple">
+<li><p>Overall requests per second</p></li>
+<li><p>Per-route requests per second</p></li>
+<li><p>Per-route timings per response code</p></li>
+<li><p>Per-route response code rate</p></li>
+<li><p>Overall response code rate</p></li>
+<li><p>DB transaction times</p></li>
+<li><p>DB transaction count</p></li>
+<li><p>DB query count</p></li>
+<li><p>External request count and times</p></li>
+</ul>
+</section>
+</section>
+<section id="how-we-will-gather-metrics">
+<h2>How we will gather metrics<a class="headerlink" href="#how-we-will-gather-metrics" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">django-prometheus</span></code> exports Prometheus metrics from a Django app and covers all
+the information we’d want, at least to start off with.</p>
+<p>There is not a real equivalent for Nuxt so we’ll have to write our own either
+from scratch or based on the ones that already exist. It would be nice to do
+this as a separate Nuxt module so that we can share it with the wider Nuxt
+community as an actively maintained and used-in-production Prometheus exporter.</p>
+<p>The rest of our services all have relevant exporters available, either official
+ones or ones with massive community support. Those are covered in the
+“Prometheus data integrations” section below.</p>
+</section>
+<section id="monitoring">
+<h2>Monitoring<a class="headerlink" href="#monitoring" title="Link to this heading">¶</a></h2>
+<p>It’s hard to get into specifics about this, but there are a some scenarios
+up-front that we can anticipate wanting monitors for.</p>
+<ul class="simple">
+<li><p>Sustained periods of time (60 seconds?) where
+<code class="docutils literal notranslate"><span class="pre">count_req_total</span> <span class="pre">==</span> <span class="pre">count_5xx_total</span></code> or
+<code class="docutils literal notranslate"><span class="pre">count_req_total</span> <span class="pre">&gt;=</span> <span class="pre">(count_5xx_total</span> <span class="pre">/</span> <span class="pre">threshold)</span></code></p>
+<ul>
+<li><p>Note, queries are rarely that intuitive to write and have at least two
+moving parts that dictate how the alarm works, the query and then the alarm
+condition.</p></li>
+</ul>
+</li>
+<li><p>Each view has a version of the above relative to request frequency. Views with
+lower overall requests per second will require longer windows of time before
+alerting. We could also configure something like
+<code class="docutils literal notranslate"><span class="pre">view_request_count</span> <span class="pre">&gt;</span> <span class="pre">threshold</span> <span class="pre">&amp;&amp;</span> <span class="pre">view_5xx_count</span> <span class="pre">==</span> <span class="pre">view_request_count</span></code> to
+filter out cases where only a small number of requests have occurred against a
+view that happened to fail; though this is risky. I think in those cases we’d
+not want an <em>alarm</em> <em>per se</em> but would still want to be closely monitoring
+these types of occurrences through some low-priority alert and active
+dashboard viewing.</p></li>
+</ul>
+<p>Additionally, we’ll eventually be able to incorporate anomaly monitors. Anomaly
+monitoring boils down to determining whether there are any statistically
+significant periods of time where any given metric is an unexpected standard
+deviation away from seasonal-mean<a class="footnote-reference brackets" href="#id3" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> for the metric. For example, if we
+normally mean 1200 2xx response codes per second, with a standard deviation of
+100 and our 2xx response codes drop to 1000 per second for a sustained period of
+time, then we’d want an alarm to be raised.</p>
+<p>Note that those numbers above are <em>not</em> realistic, they’re just simpler for
+explaining the concept. In reality an anomaly monitor takes a lot of tinkering
+to get right and often need to be iterated on to prevent false alarms.
+Additionally, I suspect our services see irregular levels of traffic so our
+standard deviations for some metrics might be really wild and hard to figure out
+a good solution for. If a metric is extremely consistent then alarming on
+deviations as low as 1 standard deviation away from mean could make sense. For
+irregular metrics we could have to go higher.</p>
+<p>Generally, anomaly monitors have two main variables that need tweaking to get
+right:</p>
+<ul class="simple">
+<li><p>How long before alarming; that is, how long should the metric be outside the
+expected trend before we consider it to be an anomaly?</p></li>
+<li><p>How far outside the trend; that is, how many standard deviations away from the
+center/mean does it need to be for us to consider it anomalous?</p></li>
+</ul>
+<p>Our ability to fine tune monitors based on these two variables goes up with the
+more traffic we have, simply because with more data you can create better
+statistical trend models with which to define anomalous behavior against. If we
+have views that get relatively few requests per second then it will be difficult
+to create anomaly monitors for them and we’ll have to rely on binary monitors
+for them.</p>
+<p>There are additional derived statistical information for each metric:
+percentiles. In particular for view timing this would be a useful thing to keep
+in mind. If the mean or median response time for a particular view is 300 ms,
+that looks great. However, if the 95th percentile response time is 1500 ms, then
+we’ve got a problem. Most users are experiencing good response times but there
+are some outliers that are getting significantly worse experiences. Percentile
+based metrics falling outside of 1 standard deviation from the mean should be
+actionable and high-value tickets to address.</p>
+</section>
+<section id="isolating-the-monitoring-backend">
+<h2>Isolating the monitoring backend<a class="headerlink" href="#isolating-the-monitoring-backend" title="Link to this heading">¶</a></h2>
+<p>I considered that it might be nice to isolate the monitoring backend integration
+so that the various Openverse services didn’t rely on any specific
+implementation. This would be nice (especially for alternative deployments of
+Openverse, which would be cool to be able to support) but is too heavy a lift
+for us and given we can isolate the integrations via configuration and external
+modules it wouldn’t be worth our time at the moment.</p>
+</section>
+<section id="relevant-integrations">
+<h2>Relevant integrations<a class="headerlink" href="#relevant-integrations" title="Link to this heading">¶</a></h2>
+<p>Here’s the list of integrations we’ll want to incorporate into Prometheus and
+Grafana.</p>
+<section id="prometheus-data-integrations">
+<h3>Prometheus data integrations<a class="headerlink" href="#prometheus-data-integrations" title="Link to this heading">¶</a></h3>
+<p>These are for pulling metrics into Prometheus from various services. This would
+all be in addition to writing and integration for Nuxt and deploying
+<code class="docutils literal notranslate"><span class="pre">django-prometheus</span></code> for the API (Airflow should be automatically covered by the
+exporter listed below).</p>
+<ul class="simple">
+<li><p>Elasticsearch exporter:
+<a class="reference external" href="https://github.com/prometheus-community/elasticsearch_exporter">https://github.com/prometheus-community/elasticsearch_exporter</a></p></li>
+<li><p>Postgres exporter: <a class="reference external" href="https://github.com/prometheus-community/postgres_exporter">https://github.com/prometheus-community/postgres_exporter</a></p></li>
+<li><p>AWS ECS exporter: <a class="reference external" href="https://github.com/slok/ecs-exporter">https://github.com/slok/ecs-exporter</a></p></li>
+<li><p>Cloudflare exporter: <a class="reference external" href="https://gitlab.com/gitlab-org/cloudflare_exporter">https://gitlab.com/gitlab-org/cloudflare_exporter</a></p></li>
+<li><p>AWS CloudWatch exporter: <a class="reference external" href="https://github.com/prometheus/cloudwatch_exporter">https://github.com/prometheus/cloudwatch_exporter</a></p>
+<ul>
+<li><p>This one is interesting. I think we’d define system metrics to gather in
+CloudWatch and then export them into Prometheus. Hopefully this wouldn’t
+incur additional costs to what we’re already doing with CloudWatch.</p></li>
+</ul>
+</li>
+<li><p>Alternative to the CloudWatch exporter is to implement the Node exporter:
+<a class="reference external" href="https://github.com/prometheus/node_exporter">https://github.com/prometheus/node_exporter</a></p>
+<ul>
+<li><p>This has the added benefit of being portable across cloud providers vs
+CloudWatch being AWS services only.</p></li>
+<li><p>Does not cover ECS in an obvious way; could we run the node exporter in the
+container? Would that produce meaningful information?</p></li>
+</ul>
+</li>
+<li><p>Additional alternative to CloudWatch exporter is EC2 exporter:
+<a class="reference external" href="https://github.com/jmal98/ec2-exporter">https://github.com/jmal98/ec2-exporter</a></p></li>
+<li><p>Airflow exporter: <a class="reference external" href="https://github.com/epoch8/airflow-exporter">https://github.com/epoch8/airflow-exporter</a></p></li>
+</ul>
+</section>
+<section id="grafana-alerting-integrations">
+<h3>Grafana alerting integrations<a class="headerlink" href="#grafana-alerting-integrations" title="Link to this heading">¶</a></h3>
+<p>Grafana has built in alerting since v4.0. It works upstream from provider
+alertmanagers, so if we wanted to consume alerting rules from Prometheus we
+could build rules in Prometheus and then consume them in Grafana and alert on
+them.</p>
+<p><a class="reference external" href="https://grafana.com/docs/grafana/latest/alerting/unified-alerting/contact-points/">Here is the list of Grafana “contact points” for alerting.</a>
+A contact point is the notification channels that Grafana can send alerts to.</p>
+<p>The most relevant for our usage are probably Slack, Webhook, and Email.
+Optionally we could incorporate PagerDuty depending on the team’s tolerance and
+how we decide to organize expectations around responding to alerts.</p>
+<p>My preference is for us to primarily rely on email and in particular to use
+email lists to allow individuals to subscribe/unsubscribe at will from alarm
+streams and provide an easy historical public record of alarms. We could use
+something like <a class="reference external" href="https://list.org/">GNU Mailman</a> to
+<a class="reference external" href="https://github.com/maxking/docker-mailman">host this ourselves</a> using FARGATE.</p>
+<p>Email also makes it easy to compartmentalize alarms per category, it makes it
+easy for individuals to subscribe to specific streams of alarms by using
+different email prefixes per category. For example, each service could have its
+own mailing list.</p>
+<p>We can also integrate Slack for good measure and have all alarms sent to the
+relevant channels via Slack incoming Webhook. It’s very easy to configure the
+Slack integration.</p>
+<p>The general purpose Webhook integration is useful for a future where we migrate
+away from Slack to Matrix (should that ever happen).</p>
+<section id="runbooks">
+<h4>Runbooks<a class="headerlink" href="#runbooks" title="Link to this heading">¶</a></h4>
+<p>Runbooks are the expected steps for addressing a particular alarm. As I
+mentioned elsewhere, alarms should be actionable. If they’re not actionable then
+they’re just noise and should be demoted to a warning until they’re more
+accurate (less false positives). The <em>actions</em> you take for any given alarm are
+directed by an alarm’s accompanying runbook.</p>
+<p>All alarms should have a relevant runbook linked in the alarm body. Ideally
+these would just be flat Markdown files but it’d be best if they could be hosted
+in the Openverse handbook on <a class="reference external" href="http://WordPress.org">WordPress.org</a> as well for redundancy and
+accessibility.</p>
+</section>
+</section>
+<section id="grafana-data-sources">
+<h3>Grafana data sources<a class="headerlink" href="#grafana-data-sources" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Prometheus: <a class="reference external" href="https://grafana.com/docs/grafana/latest/datasources/prometheus/">https://grafana.com/docs/grafana/latest/datasources/prometheus/</a></p></li>
+<li><p>Elasticsearch:
+<a class="reference external" href="https://grafana.com/docs/grafana/latest/datasources/elasticsearch/">https://grafana.com/docs/grafana/latest/datasources/elasticsearch/</a></p>
+<ul>
+<li><p>Note: not for visualizing system stats, those will come from Prometheus.
+This would be for querying the index. Totally optional.</p></li>
+</ul>
+</li>
+<li><p>Postgres: <a class="reference external" href="https://grafana.com/docs/grafana/latest/datasources/postgres/">https://grafana.com/docs/grafana/latest/datasources/postgres/</a></p>
+<ul>
+<li><p>Just if we wanted to be able to visualize certain query results. Could
+eventually be relevant for general analytics.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="configuration-and-infrastructure-local-and-cloud">
+<h2>Configuration and infrastructure (local and cloud)<a class="headerlink" href="#configuration-and-infrastructure-local-and-cloud" title="Link to this heading">¶</a></h2>
+<p>The discussion about Prometheus configuration and infrastructure go hand in
+hand, primarily because so much of the configuration needs to directly reference
+other pieces of infrastructure for the various integrations to work.</p>
+<p>Prometheus works by scraping HTTP endpoints on services that provide a formatted
+set of metrics data. Essentially services don’t need to worry about whether
+Prometheus is running or concern themselves with how long to wait between
+sending batched event lists. Each service just writes to a file (or some other
+storage) that is served to Prometheus over HTTP whenever it requests it.</p>
+<p>That has some really nice properties in that each service doesn’t need to worry
+about what Prometheus is doing. We don’t need to worry about it’s tolerances for
+getting new events, rate limits, handling bad requests or timeouts if Prometheus
+is temporarily unavailable, anything like that. We (or rather the client
+library) just write and serve the metric data in the appropriate format and
+Prometheus handles the rest.</p>
+<p>This does have the effect of centralizing a ton of decisions about how to
+organize things directly into Prometheus’s configuration. I don’t know where we
+would want to store this information necessarily. Ideally it’d be somewhere
+central like our infrastructure repository so that we don’t have to duplicate or
+aggregate various configurations during deployments.</p>
+<p>On the other hand, this massively complicates local development of the
+monitoring infrastructure and leaves us with two options:</p>
+<ol class="arabic simple">
+<li><p>We can choose one of the existing repositories to put a docker-compose stack
+into that would spin up Prometheus and Grafana as needed for the entire local
+stack. The catalog, API, and frontend repositories would need to be
+configured such that that Prometheus stack is able to discover them on the
+local network.</p></li>
+<li><p>We can place a <code class="docutils literal notranslate"><span class="pre">docker-compose.monitoring.yml</span></code> in the WordPress/openverse
+repository and optionally pull the file down when certain commands are run to
+set up monitoring for each individual piece of the stack.</p></li>
+</ol>
+<p>The second one seems more complicated to me. For one, if you’re running all
+three repositories locally you’d end up with three separate Prometheus and
+Grafana instances to manage and configure.</p>
+<p>The first one also seems complicated but I believe it’s also easier. Remember
+that Prometheus is the source of truth for the configuration, so we wouldn’t
+have to spread out the knowledge about where Prometheus lives in all our
+services. As long as our services are configured to serve Prometheus the
+appropriate data on consistent HTTP endpoints, then any Prometheus instance
+anywhere can consume them. That does mean that some configuration will be spread
+in the other direction: that is, rather than storing information about
+Prometheus in each service, each service’s information will be stored in
+Prometheus. This seems like an appropriate compromise.</p>
+<p>I’m not sure where the best place to put the monitoring docker-compose is. I
+think I’d like to propose putting it in WordPress/openverse under a <code class="docutils literal notranslate"><span class="pre">monitoring</span></code>
+directory that would include the <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code> as well as documentation
+about how to configure monitors, our own best practices, etc. It doesn’t make
+sense to me for us to just pick one of the three application repositories to put
+it in. The monitoring stack also fits in with the “meta”/”overview” nature of
+the WordPress/openverse repository.</p>
+<p>The major difference between the production stack and the local stack will be
+the lack of a dedicated Postgres instance locally. Grafana will happily run on
+SQLite locally and there’s no reason to complicate that for us locally
+(especially because we already have several other Postgres instances running
+locally elsewhere in the stack). We can follow the standard
+<code class="docutils literal notranslate"><span class="pre">docker-compose.overrides.yml</span></code> pattern we have followed to make changes in our
+stack between local and production. This will mostly involve passing environment
+variables to Grafana and Prometheus to configure them for production.</p>
+<p>Aside from service configuration, however, there is also the issue of how to
+store our Prometheus query, alerting, and other configurations locally. Likewise
+we need to address that for Grafana dashboards. For example, we don’t want to
+have to manually copy the configurations for our anomaly monitors from
+production. Even if we develop these monitors in a live staging environment
+(more on that in the section below on the monitor development workflow) we’ll
+still want to store those in code to have them committed to production, rather
+than manually copying them to prod. As long as the code they’re saved to is
+accessible to the local monitoring stack, we should be able to seed the local
+stack with the same base monitors and dashboards present in production.</p>
+<section id="local-infrastructure-recommendations">
+<h3>Local infrastructure recommendations<a class="headerlink" href="#local-infrastructure-recommendations" title="Link to this heading">¶</a></h3>
+<p>One of the goals I’d like to achieve with the local infrastructure is to make it
+as easy as running <code class="docutils literal notranslate"><span class="pre">just</span> <span class="pre">monitor</span></code> and it spins up everything with tolerances for
+services that aren’t currently running locally. For example, if someone is
+working primarily on developing frontend monitors, it would do no good for
+Prometheus to be producing errors about not be able to reach a local API,
+Airflow, image proxy, or Postgres instance. Same for someone working on the
+catalog, they should have to deal with answers about the frontend not being
+discoverable by Prometheus locally.</p>
+</section>
+</section>
+<section id="monitor-development-workflow">
+<h2>Monitor development workflow<a class="headerlink" href="#monitor-development-workflow" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Log into the staging Prometheus and Grafana instances</p></li>
+<li><p>Develop your monitors and dashboards</p></li>
+<li><p>Export them from staging and save them into the appropriate
+<code class="docutils literal notranslate"><span class="pre">monitoring/configurations/{prometheus,grafana}</span></code> folder</p>
+<ul class="simple">
+<li><p>For Grafana, you can save new dashboards in the
+<code class="docutils literal notranslate"><span class="pre">monitoring/grafana/dashboards</span></code> folder in the Grafana JSON format.
+Datasources should be configured in the
+<code class="docutils literal notranslate"><span class="pre">monitoring/grafana/provisioning/datasources/datasources.yml</span></code>. It is
+unnecessary to change the <code class="docutils literal notranslate"><span class="pre">dashboards/dashboards.yml</span></code> configuration as the
+proposed configuration automatically picks up new JSON files.</p></li>
+<li><p>For Prometheus, make the necessary changes to the
+<code class="docutils literal notranslate"><span class="pre">prometheus.yml.template</span></code>, run <code class="docutils literal notranslate"><span class="pre">just</span> <span class="pre">mkpromconf</span> <span class="pre">[environment]</span></code>. Any rules
+(if we end up using them) can be places directly into the <code class="docutils literal notranslate"><span class="pre">rules.d</span></code> and
+they will be automatically picked up by Prometheus the next time it is
+restarted.</p></li>
+</ul>
+</li>
+<li><p>Run the local monitoring stack to ensure that the saved configurations in a
+brand new deployment match the expected configurations from staging.</p>
+<ul class="simple">
+<li><p>This may require exercising the local service a bit to check that metrics
+appear as expected in the dashboards… can be difficult with small amounts
+of data though.</p></li>
+</ul>
+</li>
+<li><p>Deploy them to production via terraform or some other method to update the
+running Prometheus and Grafana instances with the latest configurations</p>
+<ul class="simple">
+<li><p>Terraform has
+<a class="reference external" href="https://registry.terraform.io/providers/grafana/grafana/latest">providers for uploading dashboard configurations to Grafana</a></p></li>
+<li><p>With Prometheus, generate the new configuration file per environment using
+<code class="docutils literal notranslate"><span class="pre">just</span> <span class="pre">mkpromconf</span> <span class="pre">[environment]</span></code> and upload the configuration to the
+environment then restart Prometheus.</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="devex">
+<h2>DevEx<a class="headerlink" href="#devex" title="Link to this heading">¶</a></h2>
+<p>I’ve added some new <code class="docutils literal notranslate"><span class="pre">just</span></code> recipes in the example code in this PR.</p>
+<p>Grafana configurations are stored as JSON so I think they’d be linted by
+prettier. They should be copy/paste exports anyway so we don’t need to lint them
+for correctness or even style technically.</p>
+<p>Prometheus configurations can be linted by <code class="docutils literal notranslate"><span class="pre">promtool</span></code> using this pre-commit
+repo: <a class="reference external" href="https://github.com/fortman/pre-commit-prometheus">https://github.com/fortman/pre-commit-prometheus</a>.</p>
+</section>
+<section id="outstanding-questions">
+<h2>Outstanding questions<a class="headerlink" href="#outstanding-questions" title="Link to this heading">¶</a></h2>
+<section id="authentication">
+<h3>Authentication<a class="headerlink" href="#authentication" title="Link to this heading">¶</a></h3>
+<p>Do we want to hide the metrics endpoint behind authentication? I don’t really
+see why we would other than to stop spamming (but we could throttle those
+endpoints to match the prometheus scrape rate for example and it would prevent
+anyone from doing too much damage).</p>
+<p>I like the idea of having fully open Prometheus and Grafana dashboards that
+don’t require authentication to <em>explore</em>. Obviously we’d want to hide
+administration inside of authentication but each Prometheus and Grafana handle
+that on their own.</p>
+</section>
+<section id="alerting">
+<h3>Alerting<a class="headerlink" href="#alerting" title="Link to this heading">¶</a></h3>
+<p>Do we want to use Prometheus for alerting or Grafana?</p>
+<p>Pros for Prometheus:</p>
+<ul class="simple">
+<li><p>It is possible and potentially even trivial to provision alerts based on
+configuration files</p></li>
+</ul>
+<p>Cons for Prometheus:</p>
+<ul class="simple">
+<li><p>It is much harder to configure and automatically provision changes to
+Prometheus’s configuration</p></li>
+<li><p>The UI for building them does not exist so I’m not sure what the best way to
+write new rules is other than via yaml files which will be harder for folks to
+contribute to given we’re not all full-time devops people with tons of time to
+learn how to do this without fiddling around with visual helper tools</p></li>
+</ul>
+<p>Pros for Grafana:</p>
+<ul class="simple">
+<li><p>The UI for building them is nice</p></li>
+</ul>
+<p>Cons for Grafana:</p>
+<ul class="simple">
+<li><p>There’s no way to export or provision them so the only way to add rules is
+through the UI (there’s no JSON version of the form either). Moving rules
+across environments would be hard… to be fair, developing rules with
+anything except production data is also very difficult (lots of guessing) so
+maybe this isn’t a problem.</p></li>
+</ul>
+<p>I’d rather use Grafana provided we back up the database of alert configurations.
+If we do that then not having them in the code is hopefully less of a disaster.</p>
+<p>It is possible to export <em>all</em> of them via the rules API:
+<code class="docutils literal notranslate"><span class="pre">http://grafana/api/ruler/grafana/api/v1/rules</span></code>. There’s just no way to upload
+that JSON blob directly. We could scrape the endpoint and back it up into the
+code base for good measure and to further distribute the configuration.</p>
+</section>
+<section id="updating-configurations">
+<h3>Updating configurations<a class="headerlink" href="#updating-configurations" title="Link to this heading">¶</a></h3>
+<section id="grafana">
+<h4>Grafana<a class="headerlink" href="#grafana" title="Link to this heading">¶</a></h4>
+<p>Grafana is configured to automatically detect new dashboards uploaded via JSON.
+It needs a restart to add new datasources and notification channels via the
+<code class="docutils literal notranslate"><span class="pre">provisioning</span></code> folder<a class="footnote-reference brackets" href="#id4" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.</p>
+<p>There is currently no way to export or provision alerting rules.</p>
+</section>
+<section id="prometheus">
+<h4>Prometheus<a class="headerlink" href="#prometheus" title="Link to this heading">¶</a></h4>
+<p>Prometheus is configured via a single <code class="docutils literal notranslate"><span class="pre">prometheus.yml</span></code> file. I’ve created a
+Python script that generatese the appropriate <code class="docutils literal notranslate"><span class="pre">prometheus.{environment}.yml</span></code>
+file based on a <code class="docutils literal notranslate"><span class="pre">.conf</span></code> file using Python’s <code class="docutils literal notranslate"><span class="pre">configparser</span></code> module. It’s in the
+contents of this PR.</p>
+</section>
+</section>
+</section>
+<section id="overview-of-proposed-changes">
+<h2>Overview of proposed changes<a class="headerlink" href="#overview-of-proposed-changes" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Use the existing Grafana instance in production</p></li>
+<li><p>Use ECS to deploy the following services in production:</p>
+<ul>
+<li><p>Prometheus</p></li>
+<li><p>GNU Mailman</p></li>
+</ul>
+</li>
+<li><p>Use a new, small RDS instance for Grafana’s Postgres DB.</p></li>
+<li><p>Rely on Prometheus primarily as a metrics aggregator and time series database.
+Do not use it for rule and alarm configuration.</p></li>
+<li><p>Rely on Grafana for visibility and alarming upstream from Prometheus.</p></li>
+<li><p>Create separate alarm streams per service in Mailman and aggregate all alarms
+into a Slack channel for extra visibility and redundancy.</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">django-prometheus</span></code> library to add the Prometheus <code class="docutils literal notranslate"><span class="pre">/metrics</span></code> endpoint to
+the API</p></li>
+<li><p>Expose Grafana dashboards publicly <em>a la</em>
+<a class="reference external" href="https://grafana.wikimedia.org/?orgId=1">Wikimedia</a> and other FOSS projects</p></li>
+<li><p>Create <code class="docutils literal notranslate"><span class="pre">&#64;openverse/nuxt-module-prometheus</span></code> to create a pluggable Prometheus
+monitoring integration for Nuxt based on existing (but incomplete) projects</p></li>
+<li><p>Integrate Prometheus exporters for the rest of our services and infrastructure</p></li>
+<li><p>Deploy Runbooks for all alarms to the Openverse handbook on <a class="reference external" href="http://WordPress.org">WordPress.org</a></p></li>
+</ul>
+</section>
+<section id="implementation-plan">
+<h2>Implementation Plan<a class="headerlink" href="#implementation-plan" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Merge the example local stack implementation from this PR and update any of
+the things we agree to change during the RFC period.</p>
+<ul class="simple">
+<li><p>Additionally configure pre-commit linting for prometheus configurations</p></li>
+</ul>
+</li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">django_prometheus</span></code> to the API to expose the <code class="docutils literal notranslate"><span class="pre">/metrics</span></code> endpoint consumed
+by Prometheus.</p>
+<ul class="simple">
+<li><p>As part of this we need to figure out if we want to hide the metrics
+endpoint behind authentication. See <code class="docutils literal notranslate"><span class="pre">Outstanding</span> <span class="pre">questions/Authentication</span></code>
+above.</p></li>
+<li><p>Configure Prometheus to be able to scrape the relevant environment’s
+<code class="docutils literal notranslate"><span class="pre">/metrics</span></code> endpoint (base this off the local configuration)</p></li>
+<li><p>Deploy the API and confirm that the metrics are able to be scraped at the
+new endpoint.</p></li>
+</ul>
+</li>
+<li><p>Create the same <code class="docutils literal notranslate"><span class="pre">/metrics</span></code> endpoint for Nuxt using the
+<a class="reference external" href="https://github.com/siimon/prom-client">Node.js client library</a></p>
+<ul class="simple">
+<li><p>This will be more work as we’ll have to write our own middleware for it.</p></li>
+<li><p>There are some existing Nuxt Prometheus modules like
+<a class="reference external" href="https://github.com/franckaragao/nuxt-prometheus-module">this one</a> but
+they’re not maintained and far more basic than what we actually want to
+get. We could fork those and create our own
+<code class="docutils literal notranslate"><span class="pre">&#64;openverse/nuxt-prometheus-module</span></code> or something with better defaults more
+akin to the level of visibility that the <code class="docutils literal notranslate"><span class="pre">django-prometheus</span></code> module
+provides for Django.</p></li>
+<li><p>Configure Prometheus to be able to scrape the <code class="docutils literal notranslate"><span class="pre">/metrics</span></code> endpoint and
+update configurations for each environment.</p></li>
+</ul>
+</li>
+<li><p>Continue the above for each service.</p></li>
+<li><p>Let metrics gather for around 3-6 weeks then begin identifying areas we can
+create our first alerts around. Once we reach that milestone, create issues
+for creating alarms and writing runbooks for them.</p></li>
+</ol>
+<hr />
+</section>
+<section id="appendices">
+<h2>Appendices<a class="headerlink" href="#appendices" title="Link to this heading">¶</a></h2>
+<section id="appendix-a-relevant-documentation">
+<h3>Appendix A: Relevant documentation<a class="headerlink" href="#appendix-a-relevant-documentation" title="Link to this heading">¶</a></h3>
+<p>Below are links to relevant documentation in Prometheus and Grafana. Reviewing
+these is not necessary for reviewing the RFC. I’ve included them to help
+implementers have a good starting point for finding things as sometimes even
+knowing what terms to search for can be a hurdle.</p>
+<ul class="simple">
+<li><p>Prometheus rules unit tests:
+<a class="reference external" href="https://prometheus.io/docs/prometheus/latest/configuration/unit_testing_rules/">https://prometheus.io/docs/prometheus/latest/configuration/unit_testing_rules/</a></p></li>
+<li><p>Prometheus metric types: <a class="reference external" href="https://prometheus.io/docs/concepts/metric_types/">https://prometheus.io/docs/concepts/metric_types/</a></p></li>
+<li><p>Prometheus anomaly detection:
+<a class="reference external" href="https://prometheus.io/blog/2015/06/18/practical-anomaly-detection/">https://prometheus.io/blog/2015/06/18/practical-anomaly-detection/</a></p></li>
+<li><p>Prometheus query functions:
+<a class="reference external" href="https://prometheus.io/docs/prometheus/latest/querying/functions/">https://prometheus.io/docs/prometheus/latest/querying/functions/</a></p></li>
+<li><p>Prometheus range vectors:
+<a class="reference external" href="https://prometheus.io/docs/prometheus/latest/querying/basics/#range-vector-selectors">https://prometheus.io/docs/prometheus/latest/querying/basics/#range-vector-selectors</a></p></li>
+<li><p>Prometheus naming best practices: <a class="reference external" href="https://prometheus.io/docs/practices/naming/">https://prometheus.io/docs/practices/naming/</a></p></li>
+<li><p>Prometheus official and unofficial client libraries:
+<a class="reference external" href="https://prometheus.io/docs/instrumenting/clientlibs/">https://prometheus.io/docs/instrumenting/clientlibs/</a></p></li>
+<li><p>Adding a datasource to Grafana:
+<a class="reference external" href="https://grafana.com/docs/grafana/latest/datasources/add-a-data-source/">https://grafana.com/docs/grafana/latest/datasources/add-a-data-source/</a></p></li>
+<li><p>Grafana dashboard best practices:
+<a class="reference external" href="https://grafana.com/docs/grafana/latest/best-practices/best-practices-for-creating-dashboards/">https://grafana.com/docs/grafana/latest/best-practices/best-practices-for-creating-dashboards/</a></p></li>
+<li><p>Histograms and heatmaps in Grafana:
+<a class="reference external" href="https://grafana.com/docs/grafana/latest/basics/intro-histograms/">https://grafana.com/docs/grafana/latest/basics/intro-histograms/</a></p></li>
+<li><p>Grafana glossary (super helpful!):
+<a class="reference external" href="https://grafana.com/docs/grafana/latest/basics/glossary/">https://grafana.com/docs/grafana/latest/basics/glossary/</a></p></li>
+</ul>
+</section>
+<section id="appendix-b-alternative-technologies">
+<h3>Appendix B: Alternative technologies<a class="headerlink" href="#appendix-b-alternative-technologies" title="Link to this heading">¶</a></h3>
+<p>The following alternatives were considered before landing on Prometheus and
+Grafana.</p>
+<section id="graphite-with-grafana">
+<h4>Graphite with Grafana<a class="headerlink" href="#graphite-with-grafana" title="Link to this heading">¶</a></h4>
+<p><a class="reference external" href="https://graphiteapp.org/">Graphite</a> is very easy to put metrics into and
+integrates smoothly with Grafana. However, for every bit as easy as Graphite is
+to put metrics into, it is also that difficult to create queries against.
+Graphite does not hold your hand at all. It supports anomaly detection through
+<a class="reference external" href="https://github.com/etsy/skyline">additional services</a>, but they’re not actively
+developed and configuring the anomaly detections requires relatively deep
+knowledge about statistics that I don’t think our team is necessarily prepared
+to invest time into (nor do we have the existing knowledge here as far as I
+know).</p>
+<p>Graphite is also older than Prometheus and while it works really well, there’s a
+lot less current information about how to deploy and configure it. There’s also
+almost no support for languages outside of the core languages supported by the
+project including poor JavaScript support (which would make monitoring our Nuxt
+service more difficult).</p>
+</section>
+<section id="cloudwatch">
+<h4>CloudWatch<a class="headerlink" href="#cloudwatch" title="Link to this heading">¶</a></h4>
+<p><a class="reference external" href="https://docs.aws.amazon.com/cloudwatch/index.html">CloudWatch</a> is AWS’s
+proprietary system and service monitoring tool. It supports the three key
+features I listed above. It is also easy to deploy, literally just click a
+button and AWS adds it to your account.</p>
+<p>As long as you’re comfortable with AWS IAM credentials management, it is also
+easy to wire up the AWS SDK clients to the backend.</p>
+<p>However, as it is a proprietary AWS offering, it is targeted at large enterprise
+clients, most of whom have multiple teams dedicated to managing their
+infrastructure. These teams are often staffed with engineers who are trained
+specifically in AWS and will have enterprise level support accounts to lean on
+to fill in knowledge gaps.</p>
+<p>We don’t have anyone on the team who has dedicated AWS knowledge.</p>
+<p>AWS’s documentation for CloudWatch is downright cryptic. There are decent
+overviews about the <em>concepts</em>, but implementing new monitors in Python or
+JavaScript might as well be esoteric knowledge. The libraries are extremely
+low-level for what they’re doing and require you to manage batched event
+reporting by hand, something other client libraries for competing services like
+Prometheu’s clients or statsd for Graphite handle out of the box.</p>
+<p>Additionally, it is a proprietary service. We would not be able to get our
+metrics out of AWS and if we decided to move away from AWS this would be a huge
+hurdle to overcome if we invest into it. Likewise, anyone else trying to deploy
+Openverse anywhere other than AWS would have to do work to tear out the
+CloudWatch stuff as there are no alternative backends for it the way there are
+for S3. More on this below.</p>
+</section>
+<section id="other-extremely-low-level-monitoring-tools">
+<h4>Other extremely low level monitoring tools<a class="headerlink" href="#other-extremely-low-level-monitoring-tools" title="Link to this heading">¶</a></h4>
+<p>There are also some very low level
+<a class="reference external" href="https://github.com/oetiker/rrdtool-1.x">Linux daemon based time-series databases</a>
+that are quite capable and can integrate with Grafana. However, they are all
+very low level and mostly do not support all of the three features I listed
+above.</p>
+</section>
+<section id="datadog">
+<h4>DataDog<a class="headerlink" href="#datadog" title="Link to this heading">¶</a></h4>
+<p><a class="reference external" href="https://www.datadoghq.com/">DataDog</a> is a SaaS offerring that runs an open
+source stack mixed with some proprietary magic. Prometheus and Grafana together
+very much resemble DataDog, even down to the UI.</p>
+<p>DataDog is fantastic. But it also comes at a higher cost than self-hosted
+Prometheus and Grafana. It is also ultimately a closed system. They provide ways
+for getting your data out and the client libraries for sending events used are
+the same (or very similar) to the ones for Graphite and Prometheus but it would
+still put work on alternative Openverse instances to make significant changes to
+the monitoring backend.</p>
+<p>DataDog does have very good documentation and holds your hand a <em>lot</em> when it
+comes to setting up monitors and dashboards. If I had to choose a hosted
+proprietary solution I’d go with DataDog over AWS. However, I would not choose
+it over hosted Prometheus and Grafana if given the choice.</p>
+</section>
+<section id="solar-winds-stack">
+<h4>Solar Winds stack<a class="headerlink" href="#solar-winds-stack" title="Link to this heading">¶</a></h4>
+<p>Solar Winds also has their own
+<a class="reference external" href="https://www.solarwinds.com/server-application-monitor/use-cases">server and application monitoring tool</a>.
+It’s meant to be easy to deploy and automatically configures itself for the
+services you have running. I don’t have any experience with this other than
+having used it to monitor Tomcat services at a previous job. My impression is
+that it’s targeted mostly at large enterprise and government contracts rather
+than projects like ours. The services themselves are also not free software,
+though the SDKs that integrate with them are. Likewise, it doesn’t seem to be a
+very flexible offering; it would probably be difficult to integrate things like
+monitoring a Nuxt service.</p>
+</section>
+<section id="the-elk-stack">
+<h4>The ELK stack<a class="headerlink" href="#the-elk-stack" title="Link to this heading">¶</a></h4>
+<p>The final alternative is the
+<a class="reference external" href="https://www.elastic.co/what-is/elk-stack">ELK stack</a>. It’s not exactly a 1:1
+alternative to Prometheus and Grafana, though it could fulfill
+<a class="reference external" href="https://www.elastic.co/guide/en/kibana/current/xpack-ml-anomalies.html">some</a>
+of the <a class="reference external" href="https://www.elastic.co/kibana/">same</a> use cases. This is a strong
+alternative that I hope reviewers of this RFC spend time considering. Read
+through Elastic’s documentation about it and see if it could make sense for us.
+It could also be something that we implement down the road as a supplement to
+Prometheus and Grafana. Or it can replace it altogether.</p>
+<hr class="footnotes docutils" />
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id3" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">2</a><span class="fn-bracket">]</span></span>
+<p>The “seasonal-mean” is a mean that incorporates daily, weekly or monthly
+seasonality. For example, the mean Friday at 1200 UTC is treated as distinct
+from the mean on Saturday at 1200 UTC. Browsing activity changes during the
+week. Most services see reduced traffic over the weekends. I’m not sure if
+that’ll be the case for Openverse but implementing this is usually “free”
+and comes with any standard</p>
+</aside>
+<aside class="footnote brackets" id="id4" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">3</a><span class="fn-bracket">]</span></span>
+<p>This could be wrong but I couldn’t find any other way to do it that didn’t
+require a script that made HTTP requests. Even the grafana-cli isn’t capable
+of re-evaluating the provisioning scripts.</p>
+</aside>
+</aside>
+</section>
+</section>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="20230606_implementation_plan_ecs_alarms.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">2023-06-06 Implementation Plan: Baseline Alarms for ECS Services</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="index.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Monitoring</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/WordPress/openverse" aria-label="GitHub"><svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">2022-03-07 Project Proposal: Monitoring</a><ul>
+<li><a class="reference internal" href="#reviewers">Reviewers</a></li>
+<li><a class="reference internal" href="#milestone">Milestone</a></li>
+<li><a class="reference internal" href="#rationale">Rationale</a></li>
+<li><a class="reference internal" href="#purpose">Purpose</a></li>
+<li><a class="reference internal" href="#self-hosted-vs-hosted">Self-hosted vs. hosted</a></li>
+<li><a class="reference internal" href="#what-will-we-monitor">What will we monitor</a><ul>
+<li><a class="reference internal" href="#system-level-metrics">System level metrics</a></li>
+<li><a class="reference internal" href="#application-level-metrics">Application level metrics</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#how-we-will-gather-metrics">How we will gather metrics</a></li>
+<li><a class="reference internal" href="#monitoring">Monitoring</a></li>
+<li><a class="reference internal" href="#isolating-the-monitoring-backend">Isolating the monitoring backend</a></li>
+<li><a class="reference internal" href="#relevant-integrations">Relevant integrations</a><ul>
+<li><a class="reference internal" href="#prometheus-data-integrations">Prometheus data integrations</a></li>
+<li><a class="reference internal" href="#grafana-alerting-integrations">Grafana alerting integrations</a><ul>
+<li><a class="reference internal" href="#runbooks">Runbooks</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#grafana-data-sources">Grafana data sources</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#configuration-and-infrastructure-local-and-cloud">Configuration and infrastructure (local and cloud)</a><ul>
+<li><a class="reference internal" href="#local-infrastructure-recommendations">Local infrastructure recommendations</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#monitor-development-workflow">Monitor development workflow</a></li>
+<li><a class="reference internal" href="#devex">DevEx</a></li>
+<li><a class="reference internal" href="#outstanding-questions">Outstanding questions</a><ul>
+<li><a class="reference internal" href="#authentication">Authentication</a></li>
+<li><a class="reference internal" href="#alerting">Alerting</a></li>
+<li><a class="reference internal" href="#updating-configurations">Updating configurations</a><ul>
+<li><a class="reference internal" href="#grafana">Grafana</a></li>
+<li><a class="reference internal" href="#prometheus">Prometheus</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#overview-of-proposed-changes">Overview of proposed changes</a></li>
+<li><a class="reference internal" href="#implementation-plan">Implementation Plan</a></li>
+<li><a class="reference internal" href="#appendices">Appendices</a><ul>
+<li><a class="reference internal" href="#appendix-a-relevant-documentation">Appendix A: Relevant documentation</a></li>
+<li><a class="reference internal" href="#appendix-b-alternative-technologies">Appendix B: Alternative technologies</a><ul>
+<li><a class="reference internal" href="#graphite-with-grafana">Graphite with Grafana</a></li>
+<li><a class="reference internal" href="#cloudwatch">CloudWatch</a></li>
+<li><a class="reference internal" href="#other-extremely-low-level-monitoring-tools">Other extremely low level monitoring tools</a></li>
+<li><a class="reference internal" href="#datadog">DataDog</a></li>
+<li><a class="reference internal" href="#solar-winds-stack">Solar Winds stack</a></li>
+<li><a class="reference internal" href="#the-elk-stack">The ELK stack</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/furo.js?v=4e2eecee"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    </body>
+</html>

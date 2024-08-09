@@ -1,0 +1,231 @@
+# 2023.04.23.23.07.51
+
+## New Features
+
+- Add documentation for the CI + CD workflow
+  ([#1001](https://github.com/WordPress/openverse/pull/1001)) @dhruvkb
+- Analytics event: COPY_ATTRIBUTION
+  ([#1147](https://github.com/WordPress/openverse/pull/1147)) @obulat
+- Analytics event: GET_MEDIA
+  ([#1180](https://github.com/WordPress/openverse/pull/1180)) @obulat
+- Add new buttons variants and sizes
+  ([#1003](https://github.com/WordPress/openverse/pull/1003)) @obulat
+- Implement analytics in Nuxt
+  ([#844](https://github.com/WordPress/openverse/pull/844)) @dhruvkb
+- Adding brand assets ([#888](https://github.com/WordPress/openverse/pull/888))
+  @panchovm
+- Add preferences for analytics
+  ([#843](https://github.com/WordPress/openverse/pull/843)) @dhruvkb
+- Add actions to search forms
+  ([#785](https://github.com/WordPress/openverse/pull/785)) @zackkrida
+
+## Improvements
+
+- Deduce Python/Node.js/pnpm version in Docker images
+  ([#1225](https://github.com/WordPress/openverse/pull/1225)) @dhruvkb
+- Move Nuxt testing docs to the Docs site
+  ([#1144](https://github.com/WordPress/openverse/pull/1144)) @obulat
+- Convert `VContentLink` story to MDX
+  ([#1062](https://github.com/WordPress/openverse/pull/1062)) @sepehrrezaei
+- Update the CTA buttons
+  ([#1049](https://github.com/WordPress/openverse/pull/1049)) @obulat
+- Update the Copy button
+  ([#1140](https://github.com/WordPress/openverse/pull/1140)) @obulat
+- Update sources button
+  ([#1021](https://github.com/WordPress/openverse/pull/1021)) @obulat
+- Convert VModal story to MDX
+  ([#1091](https://github.com/WordPress/openverse/pull/1091)) @sepehrrezaei
+- Extract VCloseButton and add descriptive labels
+  ([#988](https://github.com/WordPress/openverse/pull/988)) @obulat
+- Convert VPill and VItemGroup stories to mdx
+  ([#1092](https://github.com/WordPress/openverse/pull/1092)) @sepehrrezaei
+- Update other references of media count to 700 million
+  ([#1098](https://github.com/WordPress/openverse/pull/1098)) @AetherUnbound
+- Simplify CI + CD workflow
+  ([#1054](https://github.com/WordPress/openverse/pull/1054)) @dhruvkb
+- Improve documentation for partial stack setups
+  ([#974](https://github.com/WordPress/openverse/pull/974)) @dhruvkb
+- Project Proposal: Core UI improvement
+  ([#912](https://github.com/WordPress/openverse/pull/912)) @panchovm
+- Update URLs to point to docs.openverse.org
+  ([#991](https://github.com/WordPress/openverse/pull/991)) @dhruvkb
+- Use profiles in Docker Compose
+  ([#914](https://github.com/WordPress/openverse/pull/914)) @dhruvkb
+- Add a counter to filter button and tab
+  ([#826](https://github.com/WordPress/openverse/pull/826)) @obulat
+- Prepare Docker setup for monorepo
+  ([#889](https://github.com/WordPress/openverse/pull/889)) @dhruvkb
+- Update homepage copy to "700 million"
+  ([#842](https://github.com/WordPress/openverse/pull/842)) @Rishav1707
+- Add stack label if available, make get-changes composite action
+  ([#786](https://github.com/WordPress/openverse/pull/786)) @AetherUnbound
+- Update home link screen reader text
+  ([#788](https://github.com/WordPress/openverse/pull/788)) @zackkrida
+
+## Internal Improvements
+
+- Dispatch deployment workflows from infrastructure repository
+  ([#1865](https://github.com/WordPress/openverse/pull/1865)) @sarayourfriend
+- Deduce Python/Node.js/pnpm version in Docker images
+  ([#1225](https://github.com/WordPress/openverse/pull/1225)) @dhruvkb
+- Update Tailwind to version 3.3
+  ([#1060](https://github.com/WordPress/openverse/pull/1060)) @obulat
+- Use the built-in Tailwind named groups
+  ([#1179](https://github.com/WordPress/openverse/pull/1179)) @obulat
+- Change deployment workflow name from colon to dash
+  ([#1174](https://github.com/WordPress/openverse/pull/1174)) @AetherUnbound
+- Update deployment doc and add zero-downtime info about environment variables
+  ([#907](https://github.com/WordPress/openverse/pull/907)) @sarayourfriend
+- Delete unused VSearchTypeRadio.vue
+  ([#1143](https://github.com/WordPress/openverse/pull/1143)) @obulat
+- Safely call create-or-update-comment when dealing with forks
+  ([#997](https://github.com/WordPress/openverse/pull/997)) @sarayourfriend
+- Use context manager for multiprocessing in the ingestion server
+  ([#1057](https://github.com/WordPress/openverse/pull/1057)) @obulat
+- Add more docs for Plausible and auto-initialise custom event names
+  ([#1122](https://github.com/WordPress/openverse/pull/1122)) @sarayourfriend
+- Prepare VButton for updates
+  ([#1002](https://github.com/WordPress/openverse/pull/1002)) @obulat
+- Add `SLACK_WEBHOOK_TYPE` env var to reporting job
+  ([#1131](https://github.com/WordPress/openverse/pull/1131)) @dhruvkb
+- Fix types in VFilters and VContentReport
+  ([#1030](https://github.com/WordPress/openverse/pull/1030)) @obulat
+- Update other references of media count to 700 million
+  ([#1100](https://github.com/WordPress/openverse/pull/1100)) @krysal
+- Pass actor for staging deploys with the `-f` flag
+  ([#1104](https://github.com/WordPress/openverse/pull/1104)) @dhruvkb
+- Dispatch workflows instead of regular reuse to show deployment runs
+  ([#1034](https://github.com/WordPress/openverse/pull/1034)) @sarayourfriend
+- Save cleaned up data during the cleanup step
+  ([#904](https://github.com/WordPress/openverse/pull/904)) @obulat
+- Add tag app release action
+  ([#987](https://github.com/WordPress/openverse/pull/987)) @sarayourfriend
+- Update TS configuration to use composite projects and fix VSCode integration
+  ([#951](https://github.com/WordPress/openverse/pull/951)) @sarayourfriend
+- Update Nuxt to v.2.16.3
+  ([#952](https://github.com/WordPress/openverse/pull/952)) @obulat
+- Skip build and publish job if nothing to do
+  ([#977](https://github.com/WordPress/openverse/pull/977)) @dhruvkb
+- Update Playwright ([#919](https://github.com/WordPress/openverse/pull/919))
+  @obulat
+- Use profiles in Docker Compose
+  ([#914](https://github.com/WordPress/openverse/pull/914)) @dhruvkb
+- Update pinia and pinia/testing
+  ([#917](https://github.com/WordPress/openverse/pull/917)) @obulat
+- Always build both api & ingestion server images for either service
+  ([#936](https://github.com/WordPress/openverse/pull/936)) @AetherUnbound
+- Build `api` when ingestion server changes
+  ([#925](https://github.com/WordPress/openverse/pull/925)) @dhruvkb
+- Prepare Docker setup for monorepo
+  ([#889](https://github.com/WordPress/openverse/pull/889)) @dhruvkb
+- Skip more jobs based on changed files
+  ([#895](https://github.com/WordPress/openverse/pull/895)) @dhruvkb
+- Update Vue from 2.7.10 to 2.7.14
+  ([#916](https://github.com/WordPress/openverse/pull/916)) @obulat
+- Move peerDependencyRules to root package.json
+  ([#828](https://github.com/WordPress/openverse/pull/828)) @obulat
+- Only generate POT file if `en.json5` has changed
+  ([#893](https://github.com/WordPress/openverse/pull/893)) @dhruvkb
+- Only run stack label addition step on pull requests
+  ([#882](https://github.com/WordPress/openverse/pull/882)) @AetherUnbound
+- Simplify and fix bundle size workflow
+  ([#894](https://github.com/WordPress/openverse/pull/894)) @dhruvkb
+- Split deployment workflow into 4 separate workflows
+  ([#886](https://github.com/WordPress/openverse/pull/886)) @AetherUnbound
+- Add feature flag for fake marking results as sensitive
+  ([#862](https://github.com/WordPress/openverse/pull/862)) @dhruvkb
+- Update sentry; fix config
+  ([#870](https://github.com/WordPress/openverse/pull/870)) @zackkrida
+- Add stack label if available, make get-changes composite action
+  ([#786](https://github.com/WordPress/openverse/pull/786)) @AetherUnbound
+- Combine VImageCellSquare with VImageCell
+  ([#814](https://github.com/WordPress/openverse/pull/814)) @obulat
+- Replace imports from capi with vue imports
+  ([#816](https://github.com/WordPress/openverse/pull/816)) @obulat
+- Update TS dependencies
+  ([#805](https://github.com/WordPress/openverse/pull/805)) @obulat
+- Unify rollback & deployment, simplify deployment workflow
+  ([#767](https://github.com/WordPress/openverse/pull/767)) @AetherUnbound
+
+## Bug Fixes
+
+- Fix focus rings ([#1253](https://github.com/WordPress/openverse/pull/1253))
+  @obulat
+- Update frontend Dockerfile to use same release ARG as API
+  ([#1827](https://github.com/WordPress/openverse/pull/1827)) @sarayourfriend
+- Disable Plausible at init
+  ([#1182](https://github.com/WordPress/openverse/pull/1182)) @dhruvkb
+- Change deployment workflow name from colon to dash
+  ([#1174](https://github.com/WordPress/openverse/pull/1174)) @AetherUnbound
+- Add a check for `statement`'s name to fix the failure
+  ([#1177](https://github.com/WordPress/openverse/pull/1177)) @obulat
+- Fix Storybook tests by waiting for URL instead of a port
+  ([#1137](https://github.com/WordPress/openverse/pull/1137)) @obulat
+- Safely call create-or-update-comment when dealing with forks
+  ([#997](https://github.com/WordPress/openverse/pull/997)) @sarayourfriend
+- Make `label` prop required for VIconButton
+  ([#954](https://github.com/WordPress/openverse/pull/954)) @obulat
+- Fix Tailwind line heights
+  ([#946](https://github.com/WordPress/openverse/pull/946)) @obulat
+- Pass `GITHUB_TOKEN` to deploy docs
+  ([#1134](https://github.com/WordPress/openverse/pull/1134)) @dhruvkb
+- Add `SLACK_WEBHOOK_TYPE` env var to reporting job
+  ([#1131](https://github.com/WordPress/openverse/pull/1131)) @dhruvkb
+- Fix types in VFilters and VContentReport
+  ([#1030](https://github.com/WordPress/openverse/pull/1030)) @obulat
+- Add a wait to filter button test to fix CI
+  ([#1124](https://github.com/WordPress/openverse/pull/1124)) @obulat
+- Pass actor for staging deploys with the `-f` flag
+  ([#1104](https://github.com/WordPress/openverse/pull/1104)) @dhruvkb
+- Add `GITHUB_TOKEN` to GitHub CLI step
+  ([#1103](https://github.com/WordPress/openverse/pull/1103)) @dhruvkb
+- Dispatch workflows instead of regular reuse to show deployment runs
+  ([#1034](https://github.com/WordPress/openverse/pull/1034)) @sarayourfriend
+- Fix typo in docs building on `main`
+  ([#1067](https://github.com/WordPress/openverse/pull/1067)) @dhruvkb
+- Pin pnpm version in frontend `Dockerfile`
+  ([#1051](https://github.com/WordPress/openverse/pull/1051)) @dhruvkb
+- Add tag app release action
+  ([#987](https://github.com/WordPress/openverse/pull/987)) @sarayourfriend
+- Update TS configuration to use composite projects and fix VSCode integration
+  ([#951](https://github.com/WordPress/openverse/pull/951)) @sarayourfriend
+- Switch to internal header on single results
+  ([#981](https://github.com/WordPress/openverse/pull/981)) @zackkrida
+- Add decoding of the strings that don't have backslashes
+  ([#979](https://github.com/WordPress/openverse/pull/979)) @obulat
+- Skip build and publish job if nothing to do
+  ([#977](https://github.com/WordPress/openverse/pull/977)) @dhruvkb
+- Make `searchTerm` for VAudioTrack and VImageCell optional
+  ([#955](https://github.com/WordPress/openverse/pull/955)) @obulat
+- Update opensearch.xml to fix bad url
+  ([#961](https://github.com/WordPress/openverse/pull/961)) @zackkrida
+- Make Plausible setup idempotent
+  ([#943](https://github.com/WordPress/openverse/pull/943)) @dhruvkb
+- Fix background color on report pages
+  ([#915](https://github.com/WordPress/openverse/pull/915)) @obulat
+- Fix global audio player's close button
+  ([#927](https://github.com/WordPress/openverse/pull/927)) @obulat
+- Always build both api & ingestion server images for either service
+  ([#936](https://github.com/WordPress/openverse/pull/936)) @AetherUnbound
+- Fix links on the main Storybook page
+  ([#930](https://github.com/WordPress/openverse/pull/930)) @obulat
+- Build `api` when ingestion server changes
+  ([#925](https://github.com/WordPress/openverse/pull/925)) @dhruvkb
+- Fix global audio player layout
+  ([#918](https://github.com/WordPress/openverse/pull/918)) @obulat
+- Skip more jobs based on changed files
+  ([#895](https://github.com/WordPress/openverse/pull/895)) @dhruvkb
+- Move peerDependencyRules to root package.json
+  ([#828](https://github.com/WordPress/openverse/pull/828)) @obulat
+- Add get-image-tag as dependency for nginx build step
+  ([#909](https://github.com/WordPress/openverse/pull/909)) @AetherUnbound
+- Only run stack label addition step on pull requests
+  ([#882](https://github.com/WordPress/openverse/pull/882)) @AetherUnbound
+- Simplify and fix bundle size workflow
+  ([#894](https://github.com/WordPress/openverse/pull/894)) @dhruvkb
+- Update sentry; fix config
+  ([#870](https://github.com/WordPress/openverse/pull/870)) @zackkrida
+- Fix crash when more than one `q` parameter is provided in URL
+  ([#806](https://github.com/WordPress/openverse/pull/806)) @obulat
+- Unify rollback & deployment, simplify deployment workflow
+  ([#767](https://github.com/WordPress/openverse/pull/767)) @AetherUnbound

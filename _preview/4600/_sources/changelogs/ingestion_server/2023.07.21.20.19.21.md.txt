@@ -1,0 +1,21 @@
+# 2023.07.21.20.19.21
+
+## Improvements
+
+- added reasons why certain warnings were filtered in 'pytest.ini'
+  ([#2431](https://github.com/WordPress/openverse/pull/2431)) by @rahulsindhu01
+
+## Internal Improvements
+
+- Improve and unify ingestion server logging, simplify docker CMDs
+  ([#2639](https://github.com/WordPress/openverse/pull/2639)) by @AetherUnbound
+
+## Bug Fixes
+
+- Move data refresh complete Slack message from ingestion server to catalog
+  ([#2692](https://github.com/WordPress/openverse/pull/2692)) by
+  @viktoriussuwandi
+- Improve and unify ingestion server logging, simplify docker CMDs
+  ([#2639](https://github.com/WordPress/openverse/pull/2639)) by @AetherUnbound
+- Use trigger_and_wait for alias point step in create filtered index DAG
+  ([#2620](https://github.com/WordPress/openverse/pull/2620)) by @AetherUnbound

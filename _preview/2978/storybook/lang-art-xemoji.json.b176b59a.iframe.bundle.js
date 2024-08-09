@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[29],{"./src/locales/art-xemoji.json":function(module){module.exports=JSON.parse("{}")}}]);

@@ -1,0 +1,17 @@
+# 2024.01.18.18.31.08
+
+## Improvements
+
+- Additional service checks for ingestion server health endpoint
+  ([#3590](https://github.com/WordPress/openverse/pull/3590)) by @AetherUnbound
+
+## Internal Improvements
+
+- Increase ES throttling rate in Ingestion Server
+  ([#3644](https://github.com/WordPress/openverse/pull/3644)) by @krysal
+- Convert unittest to pytest
+  ([#3622](https://github.com/WordPress/openverse/pull/3622)) by @ngken0995
+- Update dependency elasticsearch to v8.11.1
+  ([#3608](https://github.com/WordPress/openverse/pull/3608)) by @openverse-bot
+- Bump Redis to v7 in local dev environment
+  ([#3561](https://github.com/WordPress/openverse/pull/3561)) by @dhruvkb

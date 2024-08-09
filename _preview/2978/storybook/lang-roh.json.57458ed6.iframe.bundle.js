@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[172],{"./src/locales/roh.json":function(module){module.exports=JSON.parse("{}")}}]);

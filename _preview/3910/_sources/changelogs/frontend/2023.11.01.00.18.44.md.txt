@@ -1,0 +1,6 @@
+# 2023.11.01.00.18.44
+
+## Bug Fixes
+
+- Add ability to configure Nginx DNS resolver
+  ([#3275](https://github.com/WordPress/openverse/pull/3275)) by @sarayourfriend
