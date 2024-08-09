@@ -2,10 +2,9 @@ import { beforeEach, describe, expect, vi } from "vitest"
 
 import { setActivePinia, createPinia } from "~~/test/unit/test-utils/pinia"
 
-import { getFlagStatus, useFeatureFlagStore } from "~/stores/feature-flag"
+import { initializeFlagState, useFeatureFlagStore } from "~/stores/feature-flag"
 import { OFF, COOKIE, SESSION } from "~/constants/feature-flag"
 
-vi.resetModules()
 vi.mock("~~/feat/feature-flags.json", () => ({
   default: {
     features: {
@@ -47,24 +46,27 @@ vi.mock("~~/feat/feature-flags.json", () => ({
         defaultState: "off",
         storage: "cookie",
       },
+      feat_env_specific_no_local: {
+        status: {
+          staging: "switchable",
+          production: "disabled",
+        },
+        description: "Depends on the environment",
+        defaultState: "off",
+        storage: "cookie",
+      },
     },
   },
 }))
 
 describe("Feature flag store", () => {
-  let initialEnv
   beforeEach(() => {
     setActivePinia(createPinia())
-    initialEnv = process.env.DEPLOYMENT_ENV
-  })
-
-  afterEach(() => {
-    process.env.DEPLOYMENT_ENV = initialEnv
   })
 
   it("initialises state from JSON", () => {
     const featureFlagStore = useFeatureFlagStore()
-    expect(Object.keys(featureFlagStore.flags).length).toBe(6)
+    expect(Object.keys(featureFlagStore.flags).length).toBe(7)
   })
 
   it.each`
@@ -152,35 +154,23 @@ describe("Feature flag store", () => {
   `(
     "returns $featureState for $environment",
     ({ environment, featureState }) => {
-      // The value is cleaned up in afterEach
-      process.env.DEPLOYMENT_ENV = environment
-      const featureFlagStore = useFeatureFlagStore()
-
-      expect(featureFlagStore.featureState("feat_env_specific")).toEqual(
+      const featureFlagState = initializeFlagState(environment)
+      expect(featureFlagState.flags.feat_env_specific.state).toEqual(
         featureState
       )
-      expect(featureFlagStore.isOn("feat_env_specific")).toEqual(
-        featureState === "on"
-      )
     }
   )
 
-  it.each`
-    environment     | flagStatus
-    ${"local"}      | ${"switchable"}
-    ${"staging"}    | ${"switchable"}
-    ${"production"} | ${"disabled"}
-  `(
-    "handles fallback for missing $environment",
-    ({ environment, flagStatus }) => {
-      // The value is cleaned up in afterEach
-      process.env.DEPLOYMENT_ENV = environment
-      const actualStatus = getFlagStatus({
-        status: { staging: "switchable" },
-      })
-      expect(actualStatus).toEqual(flagStatus)
-    }
-  )
+  it("handles fallback for missing local environment", () => {
+    const featureFlagState = initializeFlagState("local")
+
+    expect(featureFlagState.flags["feat_env_specific_no_local"].status).toEqual(
+      "switchable"
+    )
+    expect(featureFlagState.flags["feat_env_specific_no_local"].state).toEqual(
+      "off"
+    )
+  })
 
   it.each`
     storage    | flagName

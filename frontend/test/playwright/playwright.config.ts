@@ -1,4 +1,4 @@
-import { PRODUCTION } from "~/constants/deploy-env"
+import { STAGING } from "~/constants/deploy-env"
 
 import type { PlaywrightTestConfig } from "@playwright/test"
 
@@ -30,8 +30,10 @@ const config: PlaywrightTestConfig = {
       API_URL,
       NUXT_PUBLIC_API_URL: API_URL,
       UPDATE_TAPES: UPDATE_TAPES,
-      DEPLOYMENT_ENV: PRODUCTION,
-      PW: "true",
+      NUXT_PUBLIC_DEPLOYMENT_ENV: STAGING,
+      NUXT_PUBLIC_PLAUSIBLE_ENABLED: "true",
+      NUXT_PUBLIC_PLAUSIBLE_DOMAIN: "localhost",
+      NUXT_PUBLIC_PLAUSIBLE_API_HOST: "http://localhost:50290",
     },
   },
   use: {

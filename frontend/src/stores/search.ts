@@ -1,4 +1,4 @@
-import { useNuxtApp } from "#imports"
+import { useNuxtApp, useRuntimeConfig } from "#imports"
 
 import { defineStore } from "pinia"
 
@@ -57,8 +57,6 @@ export const isSearchTypeSupported = (
   return supportedSearchTypes.includes(st as SupportedSearchType)
 }
 
-const SAVED_SEARCH_COUNT = 4
-
 export interface SearchState {
   searchType: SearchType
   strategy: SearchStrategy
@@ -68,6 +66,7 @@ export interface SearchState {
   searchTerm: string
   localSearchTerm: string
   filters: Filters
+  savedSearchCount: number
 }
 
 export function getSensitiveQuery(
@@ -145,6 +144,7 @@ export const useSearchStore = defineStore("search", {
     localSearchTerm: "",
     recentSearches: useStorage<string[]>("recent-searches", []),
     filters: deepClone(filterData as DeepWriteable<typeof filterData>),
+    savedSearchCount: useRuntimeConfig().public.savedSearchCount,
   }),
   /**
    * If the server set the search term, add it to the top of the recent searches stack saved in the local storage.
@@ -155,7 +155,7 @@ export const useSearchStore = defineStore("search", {
       entriesStored.value = [
         state.searchTerm,
         ...entriesStored.value.filter((i) => i !== state.searchTerm),
-      ].slice(0, SAVED_SEARCH_COUNT)
+      ].slice(0, state.savedSearchCount)
     }
     state.recentSearches = entriesStored.value
   },
@@ -410,7 +410,7 @@ export const useSearchStore = defineStore("search", {
       const entries = [
         search,
         ...this.recentSearches.filter((i) => i !== search),
-      ].slice(0, SAVED_SEARCH_COUNT)
+      ].slice(0, this.savedSearchCount)
       // directly setting value to this.recentSearches does not update the storage and watchers
       this.updateRecentSearches(entries)
     },

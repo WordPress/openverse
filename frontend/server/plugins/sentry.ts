@@ -1,4 +1,4 @@
-import { useRuntimeConfig } from "#imports"
+import { useRuntimeConfig, useAppConfig } from "#imports"
 
 import { defineNitroPlugin } from "nitropack/runtime"
 import * as Sentry from "@sentry/node"
@@ -10,13 +10,18 @@ export default defineNitroPlugin((nitroApp) => {
     public: { sentry },
   } = useRuntimeConfig()
 
-  Sentry.init({
+  const appConfig = useAppConfig()
+
+  const sentryConfig = {
     dsn: sentry.dsn,
     environment: sentry.environment,
-    release: sentry.release,
-  })
+    release: appConfig.semanticVersion,
+  }
+
+  Sentry.init(sentryConfig)
+
   Sentry.setContext("render context", { platform: "server" })
-  logger.success("Initialized sentry on the server with config\n", sentry)
+  logger.success("Initialized sentry on the server with config\n", sentryConfig)
 
   nitroApp.hooks.hook("request", (event) => {
     event.context.$sentry = Sentry
