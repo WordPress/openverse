@@ -77,7 +77,13 @@ export default defineNuxtConfig({
    * @see {@link https://nuxtseo.com/robots/guides/nuxt-config|Robots Config Rules}
    */
   robots: {
-    disallow: ["/search", "/search/audio", "/search/image"],
+    disallow: [
+      "/search",
+      "/search/audio",
+      "/search/image",
+      "/image/collection",
+      "/audio/collection",
+    ],
     groups: [
       ...disallowedBots.map((bot) => ({
         userAgent: [bot],
