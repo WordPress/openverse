@@ -137,14 +137,17 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
         nuxtApp.$config.public.deploymentEnv as DeployEnv
       )
     }
-    if (!process.env.NUXT_PUBLIC_DEPLOYMENT_ENV) {
-      throw new Error(
-        "Cannot initialize feature flags store. Deployment environment not set in the Nuxt app context and the env variable is unavailable."
-      )
-    }
-    return initializeFlagState(
-      process.env.NUXT_PUBLIC_DEPLOYMENT_ENV as DeployEnv
+    throw new Error(
+      "Cannot initialize feature flags store. Nuxt app context is unavailable."
     )
+    // if (!process.env.NUXT_PUBLIC_DEPLOYMENT_ENV) {
+    //   throw new Error(
+    //     "Cannot initialize feature flags store. Deployment environment not set in the Nuxt app context and the env variable is unavailable."
+    //   )
+    // }
+    // return initializeFlagState(
+    //   process.env.NUXT_PUBLIC_DEPLOYMENT_ENV as DeployEnv
+    // )
   },
   getters: {
     /**
