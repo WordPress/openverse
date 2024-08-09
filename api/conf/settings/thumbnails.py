@@ -37,3 +37,8 @@ THUMBNAIL_UPSTREAM_TIMEOUT = config("THUMBNAIL_UPSTREAM_TIMEOUT", default=4, cas
 THUMBNAIL_EXTENSION_REQUEST_TIMEOUT = config(
     "THUMBNAIL_EXTENSION_REQUEST_TIMEOUT", default=4, cast=int
 )
+
+# Use Wikimedia's thumbnail endpoint when requesting thumbnails from Site Accelerator (formerly Photon)
+USE_WIKIMEDIA_THUMBNAIL_ENDPOINT = config(
+    "USE_WIKIMEDIA_THUMBNAIL_ENDPOINT", default=True, cast=bool
+)

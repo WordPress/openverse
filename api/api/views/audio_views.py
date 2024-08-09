@@ -64,6 +64,8 @@ class AudioViewSet(MediaViewSet):
             media_identifier=audio.identifier,
             media_provider=audio.provider,
             image_url=image_url,
+            width=None,
+            height=None,
         )
 
     @thumbnail_docs

@@ -7,6 +7,7 @@ class MediaInfo:
     media_provider: str
     media_identifier: UUID
     image_url: str
+    width: int | None = None
 
 
 @dataclass
