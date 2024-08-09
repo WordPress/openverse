@@ -1,0 +1,81 @@
+# START nuxt-robots (indexable)
+User-agent: *
+Disallow: /search
+Disallow: /ar/search
+Disallow: /es/search
+Disallow: /ru/search
+
+User-agent: GPTBot
+Disallow: /
+Disallow: /ar/
+Disallow: /es/
+Disallow: /ru/
+
+User-agent: CCBot
+Disallow: /
+Disallow: /ar/
+Disallow: /es/
+Disallow: /ru/
+
+User-agent: ChatGPT-User
+Disallow: /
+Disallow: /ar/
+Disallow: /es/
+Disallow: /ru/
+
+User-agent: Google-Extended
+Disallow: /
+Disallow: /ar/
+Disallow: /es/
+Disallow: /ru/
+
+User-agent: anthropic-ai
+Disallow: /
+Disallow: /ar/
+Disallow: /es/
+Disallow: /ru/
+
+User-agent: Omgilibot
+Disallow: /
+Disallow: /ar/
+Disallow: /es/
+Disallow: /ru/
+
+User-agent: Omgili
+Disallow: /
+Disallow: /ar/
+Disallow: /es/
+Disallow: /ru/
+
+User-agent: FacebookBot
+Disallow: /
+Disallow: /ar/
+Disallow: /es/
+Disallow: /ru/
+
+User-agent: Diffbot
+Disallow: /
+Disallow: /ar/
+Disallow: /es/
+Disallow: /ru/
+
+User-agent: Bytespider
+Disallow: /
+Disallow: /ar/
+Disallow: /es/
+Disallow: /ru/
+
+User-agent: ImagesiftBot
+Disallow: /
+Disallow: /ar/
+Disallow: /es/
+Disallow: /ru/
+
+User-agent: cohere-ai
+Disallow: /
+Disallow: /ar/
+Disallow: /es/
+Disallow: /ru/
+
+Sitemap: http://localhost:8443/sitemap_index.xml
+# END nuxt-robots

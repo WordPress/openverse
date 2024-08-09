@@ -1,4 +1,9 @@
-import { createError, defineNuxtRouteMiddleware } from "#imports"
+import {
+  createError,
+  defineNuxtRouteMiddleware,
+  useRobotsRule,
+  useSiteConfig,
+} from "#imports"
 
 import { isShallowEqualObjects } from "@wordpress/is-shallow-equal"
 
@@ -76,6 +81,14 @@ export const collectionMiddleware = defineNuxtRouteMiddleware(async (to) => {
       statusCode: 404,
       message: "Invalid collection route",
     })
+  }
+
+  const s = useSiteConfig()
+
+  if (s.indexable && collectionParams.collection === "source") {
+    useRobotsRule("index, nofollow")
+  } else {
+    useRobotsRule("noindex, nofollow")
   }
 
   if ("source" in collectionParams) {
