@@ -37,7 +37,7 @@
         :id="`option-${idx}`"
         :key="entry"
         role="option"
-        class="group/entry label-regular flex h-10 flex-row items-center gap-2 rounded-sm border-1.5 pe-1 ps-2 hover:bg-fill-secondary"
+        class="group/entry label-regular flex h-10 flex-row items-center gap-2 rounded-sm border-1.5 pe-1 ps-2 hover:bg-secondary"
         :class="idx === selectedIdx ? 'border-focus' : 'border-tx'"
         :aria-selected="idx === selectedIdx"
         @click="handleClick(idx)"

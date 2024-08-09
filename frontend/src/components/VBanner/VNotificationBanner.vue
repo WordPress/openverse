@@ -58,7 +58,7 @@ export default defineComponent({
     },
     /**
      * the color variant of the banner; The dark variant is intended for use on
-     * bg-fill-complementary pages.
+     * bg-complementary pages.
      */
     variant: {
       type: String as PropType<"regular" | "dark">,
@@ -84,12 +84,12 @@ export default defineComponent({
   setup(props) {
     const classNames = computed(() =>
       props.variant === "dark"
-        ? "bg-fill-tertiary text-over-dark"
+        ? "bg-tertiary text-over-dark"
         : {
-            info: "bg-fill-info",
-            warning: "bg-fill-warning",
-            success: "bg-fill-success",
-            error: "bg-fill-error",
+            info: "bg-info",
+            warning: "bg-warning",
+            success: "bg-success",
+            error: "bg-error",
           }[props.nature]
     )
     const iconClassNames = computed(() =>
@@ -105,7 +105,7 @@ export default defineComponent({
 
     const closeButtonClassNames = computed(() =>
       props.variant === "dark"
-        ? "focus-slim-tx-bg-fill-complementary hover:bg-fill-tertiary-hover"
+        ? "focus-slim-tx-bg-complementary hover:bg-tertiary-hover"
         : {
             info: "hover:!bg-info-3",
             warning: "hover:!bg-warning-3",

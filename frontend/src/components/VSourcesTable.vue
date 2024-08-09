@@ -214,7 +214,7 @@ export default defineComponent({
   }
 
   .source-table th {
-    @apply cursor-pointer border-t bg-fill-secondary;
+    @apply cursor-pointer border-t bg-secondary;
   }
 
   .source-table th,
@@ -251,7 +251,7 @@ export default defineComponent({
   }
 
   .mobile-source-table article:nth-child(odd) {
-    @apply bg-fill-secondary;
+    @apply bg-secondary;
   }
 
   .mobile-source-table article p {

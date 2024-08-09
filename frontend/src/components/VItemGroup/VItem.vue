@@ -10,7 +10,7 @@
         'border border-default': contextProps.bordered,
         'has-check': contextProps.showCheck,
         'font-semibold': selected && !contextProps.showCheck,
-        'bg-fill-transparent':
+        'bg-transparent':
           selected && contextProps.bordered && contextProps.showCheck,
       },
       isInPopover ? 'px-2' : '',
@@ -19,12 +19,12 @@
     <VButton
       data-item-group-item
       :as="as"
-      class="relative min-w-full justify-between border-0 hover:bg-fill-transparent-hover focus-visible:z-10"
+      class="relative min-w-full justify-between border-0 hover:bg-transparent-hover focus-visible:z-10"
       :class="{
         'w-max': contextProps.direction === 'horizontal',
         '!p-3': contextProps.size === 'small',
         '!p-5 !ps-6': contextProps.size === 'medium',
-        'bg-fill-transparent-hover ring-offset-gray-2':
+        'bg-transparent-hover ring-offset-gray-2':
           selected && contextProps.showCheck,
         'text-default': as === 'VLink',
         '!px-2': !contextProps.showCheck,

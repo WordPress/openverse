@@ -16,7 +16,7 @@ const Template = (args) => ({
 
 const contentSettingsTemplate = (args) => ({
   template: `
-    <div class="wrapper rounded-sm inline-flex justify-end bg-fill-secondary">
+    <div class="wrapper rounded-sm inline-flex justify-end bg-secondary">
     <VContentSettingsButton label="VContentSettingsButton" :are-filters-selected="true" v-bind="args" />
     </div>
   `,

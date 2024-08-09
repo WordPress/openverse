@@ -3,12 +3,12 @@
     <div class="relative border-b border-default">
       <span
         v-if="currentTime > 0"
-        class="pointer-events-none absolute left-0 hidden h-full w-4 bg-fill-complementary md:block lg:w-10"
+        class="pointer-events-none absolute left-0 hidden h-full w-4 bg-complementary md:block lg:w-10"
         aria-hidden
       />
       <span
         v-if="status === 'played'"
-        class="pointer-events-none absolute right-0 hidden h-full w-4 bg-fill-complementary md:block lg:w-10"
+        class="pointer-events-none absolute right-0 hidden h-full w-4 bg-complementary md:block lg:w-10"
         aria-hidden
       />
       <div class="md:mx-4 lg:mx-10">

@@ -7,8 +7,8 @@
     size="disabled"
     :class="
       variant === 'dark'
-        ? 'text-default hover:bg-fill-complementary'
-        : 'focus-slim-tx-bg-fill-complementary text-white'
+        ? 'text-default hover:bg-complementary'
+        : 'focus-slim-tx-bg-complementary text-white'
     "
     class="h-12 px-4 text-[1.125rem]"
   >

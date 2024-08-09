@@ -9,7 +9,7 @@ body * {
 
 ::selection {
   /* Using white text because selection background is dark. */
-  @apply bg-fill-primary text-over-dark;
+  @apply bg-primary text-over-dark;
 }
 
 ::-webkit-calendar-picker-indicator,

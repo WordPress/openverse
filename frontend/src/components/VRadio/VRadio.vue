@@ -4,7 +4,7 @@
       :id="id"
       v-bind="$attrs"
       :value="value"
-      class="radio focus-visible:ring-border-focus relative me-3 h-5 w-5 flex-shrink-0 appearance-none rounded-full border border-tertiary bg-default focus-visible:outline-none focus-visible:ring focus-visible:ring-offset-2 disabled:border-disabled disabled:bg-fill-secondary"
+      class="radio focus-visible:ring-border-focus relative me-3 h-5 w-5 flex-shrink-0 appearance-none rounded-full border border-tertiary bg-default focus-visible:outline-none focus-visible:ring focus-visible:ring-offset-2 disabled:border-disabled disabled:bg-secondary"
       type="radio"
       :checked="isChecked"
       @input="handleInput"

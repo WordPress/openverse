@@ -110,7 +110,7 @@
           :class="[
             ...(isProgressTimestampCutoff
               ? ['bg-background-var']
-              : ['bg-fill-complementary', '-translate-x-full']),
+              : ['bg-complementary', '-translate-x-full']),
           ]"
           :style="progressTimeLeft"
         >
@@ -567,7 +567,7 @@ export default defineComponent({
 .waveform {
   --v-background-color: var(
     --waveform-background-color,
-    theme("colors.gray-1")
+    theme("colors.gray.1")
   );
 }
 
@@ -593,7 +593,7 @@ export default defineComponent({
 }
 
 .progress-bar {
-  fill: theme("backgroundColor.fill-complementary");
+  fill: theme("backgroundColor.complementary");
 }
 
 .seek {

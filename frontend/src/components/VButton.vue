@@ -295,22 +295,22 @@ a.button {
 }
 
 .filled-pink-8 {
-  @apply border-tx bg-fill-primary text-over-dark hover:bg-fill-primary-hover hover:text-over-dark;
+  @apply border-tx bg-primary text-over-dark hover:bg-primary-hover hover:text-over-dark;
 }
 .filled-dark {
-  @apply border-tx bg-fill-tertiary text-over-dark hover:bg-fill-tertiary-hover hover:text-over-dark disabled:opacity-70;
+  @apply border-tx bg-tertiary text-over-dark hover:bg-tertiary-hover hover:text-over-dark disabled:opacity-70;
 }
 .filled-gray {
-  @apply border-tx bg-fill-secondary text-default hover:bg-fill-secondary-hover hover:text-over-dark;
+  @apply border-tx bg-secondary text-default hover:bg-secondary-hover hover:text-over-dark;
 }
 .filled-white {
-  @apply border-tx bg-default text-default hover:bg-fill-secondary-hover hover:text-over-dark;
+  @apply border-tx bg-default text-default hover:bg-secondary-hover hover:text-over-dark;
 }
 .bordered-white {
   @apply border-bg-ring bg-default text-default hover:border-transparent-hover;
 }
 .bordered-white-pressed {
-  @apply border-tx bg-fill-tertiary text-over-dark hover:border-gray-11 hover:bg-fill-tertiary-hover hover:focus-visible:border-tx;
+  @apply border-tx bg-tertiary text-over-dark hover:border-gray-11 hover:bg-tertiary-hover hover:focus-visible:border-tx;
 }
 .bordered-gray {
   @apply border-default bg-default text-default hover:border-hover focus-visible:border-tx hover:focus-visible:border-tx;
@@ -319,13 +319,13 @@ a.button {
   @apply border-tx;
 }
 .transparent-gray {
-  @apply border-tx bg-tx text-default hover:bg-fill-secondary disabled:text-disabled;
+  @apply border-tx bg-tx text-default hover:bg-secondary disabled:text-disabled;
 }
 .transparent-dark {
-  @apply border-tx bg-tx text-default hover:bg-fill-secondary-hover hover:text-over-dark;
+  @apply border-tx bg-tx text-default hover:bg-secondary-hover hover:text-over-dark;
 }
 .transparent-dark-pressed {
-  @apply border-tx bg-fill-tertiary text-over-dark hover:border-gray-11;
+  @apply border-tx bg-tertiary text-over-dark hover:border-gray-11;
 }
 
 .icon-only {

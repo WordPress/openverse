@@ -97,7 +97,7 @@ const clearFilters = () => {
         >
         <h2
           v-else
-          class="label-regular relative my-2 me-4 flex h-12 items-center gap-x-2 px-2 after:absolute after:bottom-[-0.625rem] after:right-1/2 after:h-0.5 after:w-full after:translate-x-1/2 after:translate-y-[-50%] after:bg-fill-tertiary"
+          class="label-regular relative my-2 me-4 flex h-12 items-center gap-x-2 px-2 after:absolute after:bottom-[-0.625rem] after:right-1/2 after:h-0.5 after:w-full after:translate-x-1/2 after:translate-y-[-50%] after:bg-tertiary"
         >
           <VIcon :name="searchType.searchType" />
           {{ $t("searchType.heading") }}
