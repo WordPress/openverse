@@ -18,8 +18,6 @@ export default defineNuxtPlugin(async () => {
   // is not available` error is thrown.
   const featureFlagStore = useFeatureFlagStore()
 
-  featureFlagStore.syncAnalyticsWithLocalStorage()
-
   const featureCookies = useCookie<OpenverseCookieState["features"]>("features")
   featureFlagStore.initFromCookies(featureCookies.value ?? {})
 
