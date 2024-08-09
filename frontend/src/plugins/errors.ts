@@ -139,7 +139,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
   return {
     provide: {
-      processFetchingError: processFetchingError,
+      processFetchingError,
     },
   }
 })
