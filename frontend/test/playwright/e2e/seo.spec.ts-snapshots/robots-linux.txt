@@ -4,22 +4,6 @@ Disallow: /search
 Disallow: /ar/search
 Disallow: /es/search
 Disallow: /ru/search
-Disallow: /search/audio
-Disallow: /ar/search/audio
-Disallow: /es/search/audio
-Disallow: /ru/search/audio
-Disallow: /search/image
-Disallow: /ar/search/image
-Disallow: /es/search/image
-Disallow: /ru/search/image
-Disallow: /image/collection
-Disallow: /ar/image/collection
-Disallow: /es/image/collection
-Disallow: /ru/image/collection
-Disallow: /audio/collection
-Disallow: /ar/audio/collection
-Disallow: /es/audio/collection
-Disallow: /ru/audio/collection
 
 User-agent: GPTBot
 Disallow: /

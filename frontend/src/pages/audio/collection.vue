@@ -34,6 +34,7 @@ useHead({
   meta: [{ hid: "og:title", property: "og:title", content: pageTitle.value }],
   title: pageTitle.value,
 })
+
 /**
  * Media is not empty when we navigate back to this page, so we don't need to fetch
  * it again to make sure that all the previously fetched media is displayed.
