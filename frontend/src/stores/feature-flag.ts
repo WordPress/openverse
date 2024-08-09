@@ -138,15 +138,8 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
       )
     }
 
-    const deploymentEnv = process.env.NUXT_PUBLIC_DEPLOYMENT_ENV as DeployEnv
-    if (deploymentEnv) {
-      console.warn(
-        "Nuxt app is not available in feature flag store setup. Using the environment variable instead."
-      )
-      return initializeFlagState(deploymentEnv)
-    }
     throw new Error(
-      "Could not set up feature flag store. Neither Nuxt app nor environment variable is available."
+      "Could not set up feature flag store because Nuxt content isn't available."
     )
   },
   getters: {
