@@ -1,5 +1,5 @@
 <template>
-  <label class="other-form block" for="description">
+  <label class="other-form block min-h-[7rem]" for="description">
     <span class="flex flex-row items-center justify-between">
       <span>{{ $t("mediaDetails.contentReport.form.other.note") }}</span>
       <span>{{

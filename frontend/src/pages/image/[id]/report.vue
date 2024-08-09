@@ -83,7 +83,8 @@ await useAsyncData("image-report", async () => {
       :close-fn="() => {}"
       :media="image"
       :allow-cancel="false"
-      :provider-name="image.providerName || image.provider"
+      :is-standalone="true"
+      :provider-name="image.providerName"
     />
   </main>
 </template>
