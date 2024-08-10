@@ -83,9 +83,9 @@ export const collectionMiddleware = defineNuxtRouteMiddleware(async (to) => {
     })
   }
 
-  const s = useSiteConfig()
+  const siteConfig = useSiteConfig()
 
-  if (s.indexable && collectionParams.collection === "source") {
+  if (siteConfig.indexable && collectionParams.collection === "source") {
     useRobotsRule("index, nofollow")
   } else {
     useRobotsRule("noindex, nofollow")
