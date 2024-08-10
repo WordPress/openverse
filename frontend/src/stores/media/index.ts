@@ -25,7 +25,7 @@ import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { deepFreeze } from "~/utils/deep-freeze"
 
-import { createApiClient } from "~/data/api-service"
+import { useApiClient } from "~/composables/use-api-client"
 
 interface SearchFetchState extends Omit<FetchState, "hasStarted"> {
   hasStarted: boolean
@@ -466,13 +466,11 @@ export const useMediaStore = defineStore("media", {
 
       this._updateFetchState(mediaType, "start")
 
-      const { $processFetchingError } = useNuxtApp()
+      const { $sendCustomEvent, $processFetchingError } = useNuxtApp()
+
+      const client = useApiClient()
+
       try {
-        const { $openverseApiToken: accessToken, $sendCustomEvent } =
-          useNuxtApp()
-
-        const client = createApiClient({ accessToken })
-
         const { eventPayload, data } = await client.search(
           mediaType,
           queryParams

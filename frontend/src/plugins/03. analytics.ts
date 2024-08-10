@@ -2,7 +2,6 @@ import { defineNuxtPlugin, useTrackEvent } from "#imports"
 
 import type { Events, EventName } from "~/types/analytics"
 import { useUiStore } from "~/stores/ui"
-import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 type SendCustomEvent = <T extends EventName>(
   name: T,
@@ -20,9 +19,6 @@ export default defineNuxtPlugin(() => {
   }
 
   const uiStore = useUiStore()
-  const featureFlagStore = useFeatureFlagStore()
-
-  featureFlagStore.syncAnalyticsWithLocalStorage()
 
   const sendCustomEvent: SendCustomEvent = (name, payload) => {
     useTrackEvent(name, {

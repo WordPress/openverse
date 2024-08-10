@@ -13,7 +13,7 @@ import {
 import type { MediaProvider } from "~/types/media-provider"
 import type { FetchingError, FetchState } from "~/types/fetch-state"
 
-import { createApiClient } from "~/data/api-service"
+import { useApiClient } from "~/composables/use-api-client"
 
 export interface ProviderState {
   providers: {
@@ -130,9 +130,10 @@ export const useProviderStore = defineStore("provider", {
     ): Promise<void> {
       this._updateFetchState(mediaType, "start")
       let sortedProviders = [] as MediaProvider[]
+
+      const client = useApiClient()
+
       try {
-        const { $openverseApiToken: accessToken } = useNuxtApp()
-        const client = createApiClient({ accessToken })
         const res = await client.stats(mediaType)
         sortedProviders = sortProviders(res ?? [])
         this._updateFetchState(mediaType, "end")

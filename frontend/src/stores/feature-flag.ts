@@ -1,4 +1,4 @@
-import { useCookie, useRuntimeConfig } from "#imports"
+import { tryUseNuxtApp, useCookie } from "#imports"
 
 import { defineStore } from "pinia"
 import { useStorage } from "@vueuse/core"
@@ -131,8 +131,16 @@ const FEATURE_FLAG = "feature_flag"
 
 export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
   state: () => {
-    const deploymentEnv = useRuntimeConfig().public.deploymentEnv as DeployEnv
-    return initializeFlagState(deploymentEnv)
+    const nuxtApp = tryUseNuxtApp()
+    if (nuxtApp) {
+      return initializeFlagState(
+        nuxtApp.$config.public.deploymentEnv as DeployEnv
+      )
+    }
+
+    throw new Error(
+      "Could not set up feature flag store because Nuxt content isn't available."
+    )
   },
   getters: {
     /**

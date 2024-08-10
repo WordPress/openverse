@@ -52,11 +52,9 @@ export const useRelatedMediaStore = defineStore("related-media", {
       this.mainMediaId = id
       this._startFetching()
       this.media = []
+      const client = createApiClient()
+
       try {
-        const { $openverseApiToken: accessToken } = useNuxtApp()
-
-        const client = createApiClient({ accessToken })
-
         this.media = await client.getRelatedMedia(mediaType, id)
         this._endFetching()
 
