@@ -1,4 +1,4 @@
-import { useFeatureFlagStore, useNuxtApp } from "#imports"
+import { useNuxtApp } from "#imports"
 
 import { defineStore } from "pinia"
 
@@ -25,7 +25,7 @@ import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { deepFreeze } from "~/utils/deep-freeze"
 
-import { createApiClient } from "~/data/api-service"
+import { useApiClient } from "~/composables/use-api-client"
 
 interface SearchFetchState extends Omit<FetchState, "hasStarted"> {
   hasStarted: boolean
@@ -466,20 +466,11 @@ export const useMediaStore = defineStore("media", {
 
       this._updateFetchState(mediaType, "start")
 
-      const {
-        $openverseApiToken: accessToken,
-        $sendCustomEvent,
-        $processFetchingError,
-      } = useNuxtApp()
+      const { $sendCustomEvent, $processFetchingError } = useNuxtApp()
 
-      const featureFlagStore = useFeatureFlagStore()
-      const fakeSensitive =
-        featureFlagStore.isOn("fake_sensitive") &&
-        featureFlagStore.isOn("fetch_sensitive")
+      const client = useApiClient()
 
       try {
-        const client = createApiClient({ accessToken, fakeSensitive })
-
         const { eventPayload, data } = await client.search(
           mediaType,
           queryParams

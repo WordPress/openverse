@@ -1,4 +1,4 @@
-import { useFeatureFlagStore, useNuxtApp } from "#imports"
+import { useNuxtApp } from "#imports"
 
 import { defineStore } from "pinia"
 
@@ -52,16 +52,9 @@ export const useRelatedMediaStore = defineStore("related-media", {
       this.mainMediaId = id
       this._startFetching()
       this.media = []
-      const { $openverseApiToken: accessToken } = useNuxtApp()
-
-      const featureFlagStore = useFeatureFlagStore()
-      const fakeSensitive =
-        featureFlagStore.isOn("fake_sensitive") &&
-        featureFlagStore.isOn("fetch_sensitive")
+      const client = createApiClient()
 
       try {
-        const client = createApiClient({ accessToken, fakeSensitive })
-
         this.media = await client.getRelatedMedia(mediaType, id)
         this._endFetching()
 

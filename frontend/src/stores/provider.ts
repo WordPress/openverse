@@ -1,4 +1,4 @@
-import { useFeatureFlagStore, useNuxtApp } from "#imports"
+import { useNuxtApp } from "#imports"
 
 import { defineStore } from "pinia"
 
@@ -13,7 +13,7 @@ import {
 import type { MediaProvider } from "~/types/media-provider"
 import type { FetchingError, FetchState } from "~/types/fetch-state"
 
-import { createApiClient } from "~/data/api-service"
+import { useApiClient } from "~/composables/use-api-client"
 
 export interface ProviderState {
   providers: {
@@ -131,15 +131,9 @@ export const useProviderStore = defineStore("provider", {
       this._updateFetchState(mediaType, "start")
       let sortedProviders = [] as MediaProvider[]
 
-      const featureFlagStore = useFeatureFlagStore()
-      const fakeSensitive =
-        featureFlagStore.isOn("fake_sensitive") &&
-        featureFlagStore.isOn("fetch_sensitive")
-
-      const { $openverseApiToken: accessToken } = useNuxtApp()
+      const client = useApiClient()
 
       try {
-        const client = createApiClient({ accessToken, fakeSensitive })
         const res = await client.stats(mediaType)
         sortedProviders = sortProviders(res ?? [])
         this._updateFetchState(mediaType, "end")

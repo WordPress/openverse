@@ -1,4 +1,4 @@
-import { useFeatureFlagStore, useNuxtApp } from "#imports"
+import { useNuxtApp } from "#imports"
 
 import { defineStore } from "pinia"
 
@@ -15,7 +15,7 @@ import { useMediaStore } from "~/stores/media/index"
 import { validateUUID } from "~/utils/query-utils"
 
 import { FetchingError, FetchState } from "~/types/fetch-state"
-import { createApiClient } from "~/data/api-service"
+import { useApiClient } from "~/composables/use-api-client"
 
 export type MediaItemState = {
   mediaType: SupportedMediaType | null
@@ -142,17 +142,11 @@ export const useSingleResultStore = defineStore("single-result", {
 
       // When fetch is called by the middleware, the app context is not available during the error handling,
       // so we need to use the `useNuxtApp` here, outside the catch clause, to access the app context.
-      const { $processFetchingError, $openverseApiToken: accessToken } =
-        useNuxtApp()
+      const { $processFetchingError } = useNuxtApp()
 
-      const featureFlagStore = useFeatureFlagStore()
-      const fakeSensitive =
-        featureFlagStore.isOn("fake_sensitive") &&
-        featureFlagStore.isOn("fetch_sensitive")
+      const client = useApiClient()
 
       try {
-        const client = createApiClient({ accessToken, fakeSensitive })
-
         const item = await client.getSingleMedia(type, id)
 
         this.setMediaItem(item)
