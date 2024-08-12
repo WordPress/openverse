@@ -37,7 +37,7 @@ describe("VLicense", () => {
     const licenseIcons = container.querySelectorAll("v-icon-stub")
     expect(licenseIcons).toHaveLength(2)
     licenseIcons.forEach((icon) => {
-      expect(icon).toHaveClass("bged", "text-black")
+      expect(icon).toHaveClass("license-bg", "text-black")
     })
   })
 })
