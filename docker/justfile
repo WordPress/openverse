@@ -13,10 +13,11 @@ NO_COLOR := "\\033[0m"
 # Offline mode #
 ################
 
-# Save all Docker images needed for all services
-save:
+# Export third-party Docker images as `.tar.gz` files
+dump-3p:
     #!/usr/bin/env bash
-    mkdir -p images/;
+    cd ..
+    mkdir -p docker/images/;
     git grep "image:" \
     | grep "compose.yml" \
     | grep --invert-match "openverse" \
@@ -27,6 +28,37 @@ save:
         docker image pull --quiet $line;
         docker image save $line | gzip > $name;
       done
+
+# Export pre-commit Docker images as `.tar.gz` files
+dump-lint:
+    #!/usr/bin/env bash
+    cd ..
+    images=("rhysd/actionlint" "ghcr.io/hadolint/hadolint" "koalaman/shellcheck" "mvdan/shfmt");
+    for line in "${images[@]}"; do
+      name="docker/images/"$(echo $line | sed 's:/:-:g')".tar.gz";
+      echo "Exporting image $line to file $name";
+      docker image pull --quiet $line;
+      docker image save $line | gzip > $name;
+    done
+
+# Export Openverse Docker images as `.tar.gz` files
+dump-ov: build
+    #!/usr/bin/env bash
+    cd ..
+    mkdir -p docker/images/;
+    docker image ls \
+    | grep "openverse-" \
+    | awk 'NF>1{print $1}' \
+    | while read line; do
+        name="docker/images/"$line".tar.gz";
+        echo "Exporting image $line to $name";
+        docker image save $line | gzip > $name;
+      done
+
+# Build all images for Openverse services
+build:
+    ../ov build
+    just ../dc build
 
 # Load all images saved in the `images/` dir
 load:
