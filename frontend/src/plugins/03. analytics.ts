@@ -1,12 +1,7 @@
 import { defineNuxtPlugin, useTrackEvent } from "#imports"
 
-import type { Events, EventName } from "~/types/analytics"
+import type { SendCustomEvent } from "~/types/analytics"
 import { useUiStore } from "~/stores/ui"
-
-type SendCustomEvent = <T extends EventName>(
-  name: T,
-  payload: Events[T]
-) => void
 
 export default defineNuxtPlugin(() => {
   if (import.meta.server) {

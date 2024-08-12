@@ -70,8 +70,8 @@ importers:
         specifier: ^9.13.1
         version: 9.13.1
       '@nuxtjs/plausible':
-        specifier: ^1.0.0
-        version: 1.0.0(magicast@0.3.4)(rollup@4.19.0)
+        specifier: ^1.0.2
+        version: 1.0.2(magicast@0.3.4)(rollup@4.19.0)
       '@nuxtjs/robots':
         specifier: ^4.0.2
         version: 4.0.2(magicast@0.3.4)(rollup@4.19.0)(vite@5.3.4(@types/node@20.14.11)(terser@5.31.0))(vue@3.4.36(typescript@5.5.4))
@@ -548,8 +548,8 @@ packages:
     resolution: {integrity: sha512-xm8XrMKz0IlUdocVbYJe0Z9xEgidU7msskG8BbhnTPK/HZ2z/7FP7ykqPgrUH+C+r414mNfNWam1f2vqOjqjYQ==}
     engines: {node: '>=6.9.0'}
 
-  '@barbapapazes/plausible-tracker@0.4.0':
-    resolution: {integrity: sha512-4hhXK62ORb4feJfjnIILXRnb6xfejHM6yvGCid6MwNdKiQyj6YLW0M779zXLH5IBS4mQObmrNul2HUleeavSKw==}
+  '@barbapapazes/plausible-tracker@0.5.2':
+    resolution: {integrity: sha512-su3ut2STFDV+pVCRd0SbCYCA31YWqqEk0Z4/vDMeGvqLMw5hJaQt2mXxbbokIzXTnjODDTeCA/m+TjkHRTWBEg==}
 
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
@@ -1301,8 +1301,8 @@ packages:
     resolution: {integrity: sha512-VHnnjFTTep2oC5++61WY06y4c/h943NyHQh1CRUJQvjsdbGSMX3WQjMGk+X05a3pyPFN70aq0YbgtsEoEoTEjQ==}
     engines: {node: ^14.16.0 || >=16.11.0}
 
-  '@nuxtjs/plausible@1.0.0':
-    resolution: {integrity: sha512-2K0/AbPJAEr3yMA8oDD0I6WB+SXs/YlF297azjR5eSZVQjuimDAwLf4bEXk9ilbrzoMFmm0Tpzn4CC6f0rISBA==}
+  '@nuxtjs/plausible@1.0.2':
+    resolution: {integrity: sha512-AT5GoVddqgvbp39OY1/DtWHUgjn+6LGjJXB75imdEUxPok2uAVGtr3oZ0F7merC9T3y0rIqZx8HzpUmCcipBnQ==}
 
   '@nuxtjs/robots@4.0.2':
     resolution: {integrity: sha512-7hpAbSXjrzZNZ2vvzJf5E9H8+yVxJlPNY5wP/MSOWlw3pEJzTJQilAFsJj+jofocGj9y3iNDeqv/a5v/Lz8ppg==}
@@ -7116,7 +7116,7 @@ snapshots:
       '@babel/helper-validator-identifier': 7.24.7
       to-fast-properties: 2.0.0
 
-  '@barbapapazes/plausible-tracker@0.4.0': {}
+  '@barbapapazes/plausible-tracker@0.5.2': {}
 
   '@bcoe/v8-coverage@0.2.3': {}
 
@@ -7975,9 +7975,9 @@ snapshots:
       - vue
       - vue-i18n-bridge
 
-  '@nuxtjs/plausible@1.0.0(magicast@0.3.4)(rollup@4.19.0)':
+  '@nuxtjs/plausible@1.0.2(magicast@0.3.4)(rollup@4.19.0)':
     dependencies:
-      '@barbapapazes/plausible-tracker': 0.4.0
+      '@barbapapazes/plausible-tracker': 0.5.2
       '@nuxt/kit': 3.12.4(magicast@0.3.4)(rollup@4.19.0)
       defu: 6.1.4
     transitivePeerDependencies:
