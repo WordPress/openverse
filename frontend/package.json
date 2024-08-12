@@ -9,7 +9,7 @@
     "dev": "run-p dev:only 'i18n:en --watch'",
     "dev:only": "nuxt dev --host 0.0.0.0",
     "dev:secure": "LOCAL_SSL=enabled pnpm dev",
-    "build": "NODE_ENV=production NODE_OPTIONS='--max_old_space_size=4096' nuxt build",
+    "build": "NODE_ENV=production nuxt build",
     "build:clean": "rm -rf .nuxt",
     "docker:build": "docker build . -t openverse-frontend:latest",
     "docker:run": "docker run --rm -it -p 127.0.0.1:8443:8443/tcp openverse-frontend:latest",
