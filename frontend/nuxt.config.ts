@@ -40,6 +40,12 @@ export default defineNuxtConfig({
         environment: "local",
         // Release is a build time variable, and as such, is defined in app.config.ts
       },
+      plausible: {
+        ignoredHostnames: ["localhost", "staging.openverse.org"],
+        logIgnoredEvents: true,
+        apiHost: "http://localhost:50290",
+        domain: "localhost",
+      },
     },
   },
   /**
@@ -113,11 +119,5 @@ export default defineNuxtConfig({
     detectBrowserLanguage: false,
     trailingSlash: false,
     vueI18n: "./src/vue-i18n",
-  },
-  plausible: {
-    ignoredHostnames: ["localhost", "staging.openverse.org"],
-    logIgnoredEvents: true,
-    apiHost: "http://localhost:50290",
-    domain: "localhost",
   },
 })
