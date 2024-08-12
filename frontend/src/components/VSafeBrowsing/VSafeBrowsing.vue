@@ -35,7 +35,7 @@
           </VCheckbox>
           <p
             class="label-regular mt-2"
-            :class="{ 'text-dark-charcoal-40': isDisabled(toggle.name) }"
+            :class="{ 'text-disabled': isDisabled(toggle.name) }"
           >
             {{ $t(`filters.safeBrowsing.toggles.${toggle.name}.desc`) }}
           </p>

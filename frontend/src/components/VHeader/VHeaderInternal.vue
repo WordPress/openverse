@@ -137,7 +137,7 @@ watch(route, () => {
                 variant="transparent-tx"
                 size="large"
                 :icon-props="{ name: 'close' }"
-                class="text-white focus-slim-tx-yellow hover:bg-white hover:bg-opacity-10"
+                class="focus-visible:ring-bg-complementary text-white focus-slim-tx hover:bg-tertiary"
                 :label="$t('modal.closePagesMenu')"
                 @click="closePageMenu"
               />
@@ -148,13 +148,13 @@ watch(route, () => {
               <VPageLinks
                 mode="dark"
                 class="mt-3 flex flex-col items-end gap-y-6"
-                nav-link-classes="text-white text-3xl focus-visible:ring-yellow"
+                nav-link-classes="text-white text-3xl focus-visible:ring-bg-complementary"
                 :is-in-modal="true"
                 @close="closePageMenu"
               />
             </nav>
             <VWordPressLink
-              class="mt-auto focus-visible:ring-yellow focus-visible:ring-offset-0"
+              class="focus-visible:ring-bg-complementary mt-auto focus-visible:ring-offset-0"
               mode="dark"
             />
           </template>

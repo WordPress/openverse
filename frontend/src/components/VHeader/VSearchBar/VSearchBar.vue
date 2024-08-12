@@ -4,7 +4,7 @@
     <form
       action="/search"
       role="search"
-      class="search-bar group flex h-12 flex-row items-center rounded-sm border-tx bg-white"
+      class="search-bar group flex h-12 flex-row items-center rounded-sm border-tx bg-default"
       @submit.prevent="handleSearch"
     >
       <VInputField
@@ -12,7 +12,7 @@
         v-bind="nonClassAttrs"
         v-model="modelMedium"
         :placeholder="placeholder || $t('hero.search.placeholder')"
-        class="search-field flex-grow border-tx bg-dark-charcoal-10 text-dark-charcoal-70 focus-within:bg-white focus:border-pink group-hover:bg-dark-charcoal-10 group-hover:text-dark-charcoal group-hover:focus-within:bg-white"
+        class="search-field flex-grow border-tx bg-secondary text-secondary focus-within:bg-default focus:border-focus group-hover:bg-secondary group-hover:text-default group-hover:focus-within:bg-default"
         :label-text="$t('search.searchBarLabel', { openverse: 'Openverse' })"
         :connection-sides="['end']"
         :size="size"

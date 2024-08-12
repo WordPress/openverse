@@ -4,14 +4,14 @@
       :id="id"
       v-bind="$attrs"
       :value="value"
-      class="radio relative me-3 h-5 w-5 flex-shrink-0 appearance-none rounded-full border border-dark-charcoal bg-white focus-visible:outline-none focus-visible:ring focus-visible:ring-pink focus-visible:ring-offset-2 disabled:border-dark-charcoal-40 disabled:bg-dark-charcoal-10"
+      class="radio focus-visible:ring-border-focus relative me-3 h-5 w-5 flex-shrink-0 appearance-none rounded-full border border-tertiary bg-default focus-visible:outline-none focus-visible:ring focus-visible:ring-offset-2 disabled:border-disabled disabled:bg-secondary"
       type="radio"
       :checked="isChecked"
       @input="handleInput"
     />
     <VSvg
       name="radiomark"
-      class="radiomark absolute start-0 h-5 w-5 text-dark-charcoal opacity-0 transition-opacity"
+      class="radiomark absolute start-0 h-5 w-5 text-default opacity-0 transition-opacity"
       width="20"
       height="20"
     />
@@ -84,6 +84,6 @@ export default defineComponent({
 }
 
 .radio:disabled ~ .radiomark {
-  @apply text-dark-charcoal-70;
+  @apply text-secondary;
 }
 </style>

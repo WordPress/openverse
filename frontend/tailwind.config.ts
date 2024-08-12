@@ -5,9 +5,15 @@ import { SCREENS } from "./src/constants/screens"
 import { Z_INDICES } from "./src/constants/z-indices"
 
 import type { Config } from "tailwindcss"
-import type { PluginAPI } from "tailwindcss/types/config"
 
 export default {
+  darkMode: [
+    "variant",
+    [
+      "@media (prefers-color-scheme: dark) { &:not(.light-mode *) }",
+      "&:is(.dark-mode *)", // :is is so the specificity matches and there's not unexpected behavior
+    ],
+  ],
   content: [
     "./src/**/*.{vue,js,jsx,ts,tsx,mdx}",
     "./nuxt.config.ts",
@@ -16,42 +22,160 @@ export default {
   theme: {
     screens: SCREENS,
     zIndex: Z_INDICES,
+    /**
+     * See the extend.color, extend.backgroundColor, and extend.borderColor
+     * sections for additional, context-specific colors.
+     */
     colors: {
-      // Semantic
-      "info-soft": "#dbe2ff",
-      info: "#2349e7",
-      "warning-soft": "#fff1cc",
-      warning: "#9d650b",
-      "success-soft": "#dbf0d6",
-      success: "#3b772c",
-      "error-soft": "#ffe0d1",
-      error: "#b43e04",
-
-      // Brand
-      yellow: "#ffe033",
-      pink: "#c52b9b",
-      // Active
-      "dark-pink": "#7c2264",
-
-      // Grayscale
-      black: "#000000",
-      "dark-gray": "#767676", // rgb(118, 118, 188)
-      gray: "#b0b0b0", // rgb(176, 176, 176)
-      "light-gray": "#d8d8d8", // rgb(216, 216, 216)
-      white: "white",
-      // Dark Charcoal
-      "dark-charcoal": {
-        DEFAULT: "#30272e",
-        "06": "#f3f2f2", // rgb(243, 242, 242)
-        10: "#eae9ea", // rgb(234, 233, 234)
-        20: "#d6d4d5",
-        30: "#c1bec0",
-        40: "#aca9ab",
-        50: "#989397",
-        60: "#837d82",
-        70: "#6e686d",
-        80: "#595258",
-        90: "#453D43",
+      icon: {
+        warning: "var(--color-icon-warning)",
+        info: "var(--color-icon-info)",
+        success: "var(--color-icon-success)",
+        error: "var(--color-icon-error)",
+      },
+      wave: {
+        active: "var(--color-wave-active)",
+        inactive: "var(--color-wave-inactive)",
+      },
+      "modal-layer": "var(--color-modal-layer)",
+      info: {
+        1: "var(--color-info-1)",
+        2: "var(--color-info-2)",
+        3: "var(--color-info-3)",
+        4: "var(--color-info-4)",
+        5: "var(--color-info-5)",
+        6: "var(--color-info-6)",
+        7: "var(--color-info-7)",
+        8: "var(--color-info-8)",
+        9: "var(--color-info-9)",
+        10: "var(--color-info-10)",
+        11: "var(--color-info-11)",
+        12: "var(--color-info-12)",
+        13: "var(--color-info-13)",
+      },
+      warning: {
+        1: "var(--color-warning-1)",
+        2: "var(--color-warning-2)",
+        3: "var(--color-warning-3)",
+        4: "var(--color-warning-4)",
+        5: "var(--color-warning-5)",
+        6: "var(--color-warning-6)",
+        7: "var(--color-warning-7)",
+        8: "var(--color-warning-8)",
+        9: "var(--color-warning-9)",
+        10: "var(--color-warning-10)",
+        11: "var(--color-warning-11)",
+        12: "var(--color-warning-12)",
+        13: "var(--color-warning-13)",
+      },
+      success: {
+        1: "var(--color-success-1)",
+        2: "var(--color-success-2)",
+        3: "var(--color-success-3)",
+        4: "var(--color-success-4)",
+        5: "var(--color-success-5)",
+        6: "var(--color-success-6)",
+        7: "var(--color-success-7)",
+        8: "var(--color-success-8)",
+        9: "var(--color-success-9)",
+        10: "var(--color-success-10)",
+        11: "var(--color-success-11)",
+        12: "var(--color-success-12)",
+        13: "var(--color-success-13)",
+      },
+      error: {
+        1: "var(--color-error-1)",
+        2: "var(--color-error-2)",
+        3: "var(--color-error-3)",
+        4: "var(--color-error-4)",
+        5: "var(--color-error-5)",
+        6: "var(--color-error-6)",
+        7: "var(--color-error-7)",
+        8: "var(--color-error-8)",
+        9: "var(--color-error-9)",
+        10: "var(--color-error-10)",
+        11: "var(--color-error-11)",
+        12: "var(--color-error-12)",
+        13: "var(--color-error-13)",
+      },
+      black: "var(--color-black)",
+      gray: {
+        DEFAULT: "var(--color-gray)",
+        "dark-gray": "var(--color-dark-gray)",
+        "light-gray": "var(--color-light-gray)",
+        1: "var(--color-gray-1)",
+        2: "var(--color-gray-2)",
+        3: "var(--color-gray-3)",
+        4: "var(--color-gray-4)",
+        5: "var(--color-gray-5)",
+        6: "var(--color-gray-6)",
+        7: "var(--color-gray-7)",
+        8: "var(--color-gray-8)",
+        9: "var(--color-gray-9)",
+        10: "var(--color-gray-10)",
+        11: "var(--color-gray-11)",
+        12: "var(--color-gray-12)",
+        13: "var(--color-gray-13)",
+      },
+      "gray-opacity": {
+        1: {
+          10: "var(--color-gray-1-10)",
+          20: "var(--color-gray-1-20)",
+          30: "var(--color-gray-1-30)",
+          40: "var(--color-gray-1-40)",
+          50: "var(--color-gray-1-50)",
+          60: "var(--color-gray-1-60)",
+          70: "var(--color-gray-1-70)",
+          80: "var(--color-gray-1-80)",
+          90: "var(--color-gray-1-90)",
+        },
+        12: {
+          10: "var(--color-gray-12-10)",
+          20: "var(--color-gray-12-20)",
+          30: "var(--color-gray-12-30)",
+          40: "var(--color-gray-12-40)",
+          50: "var(--color-gray-12-50)",
+          60: "var(--color-gray-12-60)",
+          70: "var(--color-gray-12-70)",
+          80: "var(--color-gray-12-80)",
+          90: "var(--color-gray-12-90)",
+        },
+        13: {
+          0: "var(--color-gray-13-0)",
+        },
+      },
+      white: {
+        DEFAULT: "var(--color-white)",
+        0: "var(--color-white-0)",
+      },
+      pink: {
+        1: "var(--color-pink-1)",
+        2: "var(--color-pink-2)",
+        3: "var(--color-pink-3)",
+        4: "var(--color-pink-4)",
+        5: "var(--color-pink-5)",
+        6: "var(--color-pink-6)",
+        7: "var(--color-pink-7)",
+        8: "var(--color-pink-8)",
+        9: "var(--color-pink-9)",
+        10: "var(--color-pink-10)",
+        11: "var(--color-pink-11)",
+        12: "var(--color-pink-12)",
+        13: "var(--color-pink-13)",
+      },
+      yellow: {
+        1: "var(--color-yellow-1)",
+        2: "var(--color-yellow-2)",
+        3: "var(--color-yellow-3)",
+        4: "var(--color-yellow-4)",
+        5: "var(--color-yellow-5)",
+        7: "var(--color-yellow-7)",
+        8: "var(--color-yellow-8)",
+        9: "var(--color-yellow-9)",
+        10: "var(--color-yellow-10)",
+        11: "var(--color-yellow-11)",
+        12: "var(--color-yellow-12)",
+        13: "var(--color-yellow-13)",
       },
 
       // Special keywords
@@ -188,6 +312,44 @@ export default {
       serif: [...defaultTheme.fontFamily.serif],
     },
     extend: {
+      textColor: {
+        default: "var(--color-text)",
+        secondary: "var(--color-text-secondary)",
+        disabled: "var(--color-text-disabled)",
+        link: "var(--color-text-link)",
+        "over-dark": "var(--color-text-over-dark)",
+        "secondary-over-dark": "var(--color-text-secondary-over-dark)",
+      },
+      backgroundColor: {
+        default: "var(--color-bg)",
+        surface: "var(--color-bg-surface)",
+        overlay: "var(--color-bg-overlay)",
+        primary: "var(--color-bg-primary)",
+        "primary-hover": "var(--color-bg-primary-hover)",
+        secondary: "var(--color-bg-secondary)",
+        "secondary-hover": "var(--color-bg-secondary-hover)",
+        tertiary: "var(--color-bg-tertiary)",
+        "tertiary-hover": "var(--color-bg-tertiary-hover)",
+        "transparent-hover": "var(--color-bg-transparent-hover)",
+        complementary: "var(--color-bg-complementary)",
+        warning: "var(--color-bg-warning)",
+        info: "var(--color-bg-info)",
+        success: "var(--color-bg-success)",
+        error: "var(--color-bg-error)",
+        disabled: "var(--color-bg-disabled)",
+        zero: "var(--color-bg-zero)",
+      },
+      borderColor: {
+        default: "var(--color-border)",
+        hover: "var(--color-border-hover)",
+        secondary: "var(--color-border-secondary)",
+        "secondary-hover": "var(--color-border-secondary-hover)",
+        tertiary: "var(--color-border-tertiary)",
+        "transparent-hover": "var(--color-border-transparent-hover)",
+        focus: "var(--color-border-focus)",
+        "bg-ring": "var(--color-border-bg-ring)",
+        disabled: "var(--color-border-disabled)",
+      },
       blur: {
         image: "60px",
         text: "4px",
@@ -220,12 +382,9 @@ export default {
         1.5: "1.5px",
         3: "3px",
       },
-      typography: (theme: PluginAPI["theme"]) => ({
+      typography: () => ({
         DEFAULT: {
           css: {
-            "--tw-prose-body": theme("colors.dark-charcoal.default"),
-            "--tw-prose-headings": theme("colors.dark-charcoal.default"),
-            "--tw-prose-links": theme("colors.pink"),
             a: {
               textDecoration: "none",
               "&:hover": {
@@ -253,12 +412,14 @@ export default {
           ].map((item) => [
             item,
             (value) => ({
-              "--tw-ring-color": value,
-              "--tw-outline-color": value,
+              "--color-tw-ring-color": value,
+              "--color-tw-outline-color": value,
             }),
           ])
         ),
-        { values: { ...theme("colors"), DEFAULT: theme("colors.pink") } }
+        {
+          values: { ...theme("colors"), DEFAULT: theme("borderColor.focus") },
+        }
       )
     }),
   ],

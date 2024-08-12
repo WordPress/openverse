@@ -1,7 +1,7 @@
 <template>
   <!-- `pages/search/audio` has negative margin `-mx-4` to compensate for this padding. -->
   <article
-    class="row-track grid p-2 hover:bg-dark-charcoal-06 md:p-4"
+    class="row-track grid p-2 hover:bg-surface md:p-4"
     :class="[`size-${size}`, { 'items-start': isSmall }]"
   >
     <div
@@ -24,7 +24,7 @@
 
     <div role="document" class="flex min-w-0 flex-shrink-0 flex-col gap-1">
       <h2
-        class="decoration-inherit line-clamp-1 block overflow-hidden text-ellipsis whitespace-nowrap rounded-sm text-dark-charcoal hover:text-dark-charcoal group-hover:underline"
+        class="decoration-inherit line-clamp-1 block overflow-hidden text-ellipsis whitespace-nowrap rounded-sm text-default hover:text-default group-hover:underline"
         :class="[
           { 'blur-text': shouldBlur },
           isSmall ? 'label-bold' : 'description-bold',
@@ -34,7 +34,7 @@
       </h2>
 
       <div
-        class="flex text-dark-charcoal-70"
+        class="flex text-secondary"
         :class="[
           isSmall ? 'caption-regular' : 'label-regular',
           isMedium ? 'flex-row items-center' : 'flex-col gap-1',
@@ -204,11 +204,11 @@ export default defineComponent({
 
 .dot-after {
   @apply relative me-5;
-  @apply after:absolute after:-end-3 after:top-[calc(50%-0.125rem)] after:h-1 after:w-1 after:rounded-full after:bg-dark-charcoal-70;
+  @apply after:absolute after:-end-3 after:top-[calc(50%-0.125rem)] after:h-1 after:w-1 after:rounded-full after:bg-gray-8;
 }
 
 .dot-before {
   @apply relative ms-5;
-  @apply before:absolute before:-start-3 before:top-[calc(50%-0.125rem)] before:h-1 before:w-1 before:rounded-full before:bg-dark-charcoal-70;
+  @apply before:absolute before:-start-3 before:top-[calc(50%-0.125rem)] before:h-1 before:w-1 before:rounded-full before:bg-gray-8;
 }
 </style>

@@ -9,7 +9,7 @@
   >
     <!-- Logo and links -->
     <div v-if="isContentMode" class="logo-and-links flex flex-col gap-y-10">
-      <VLink href="/" class="logo text-dark-charcoal" aria-label="Openverse">
+      <VLink href="/" class="logo text-default" aria-label="Openverse">
         <VBrand class="text-[18px]" />
       </VLink>
       <nav>
@@ -23,7 +23,10 @@
 
     <!-- Locale chooser and WordPress affiliation graphic -->
     <div class="locale-and-wp flex flex-col justify-between">
-      <VLanguageSelect v-bind="languageProps" class="language max-w-full" />
+      <VLanguageSelect
+        v-bind="languageProps"
+        class="language max-w-full border-secondary"
+      />
       <VWordPressLink mode="light" />
     </div>
   </footer>

@@ -4,7 +4,7 @@
       <VIcon
         v-for="name in iconNames"
         :key="name"
-        :class="{ 'bg-filled text-black': bgFilled }"
+        :class="{ 'license-bg text-black': bgFilled }"
         view-box="0 0 30 30"
         :name="`licenses/${name}`"
         :size="4"
@@ -80,7 +80,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.bg-filled {
+.license-bg {
   background-image: radial-gradient(circle, #ffffff 60%, transparent 60%);
 }
 </style>

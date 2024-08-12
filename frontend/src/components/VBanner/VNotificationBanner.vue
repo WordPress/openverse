@@ -18,10 +18,7 @@
         :icon-props="{ name: 'close-small' }"
         size="small"
         :label="closeButtonLabel || $t('modal.closeBanner')"
-        :class="{
-          'focus-slim-tx-yellow hover:bg-white hover:bg-opacity-10':
-            variant === 'dark',
-        }"
+        :class="closeButtonClassNames"
         @click="$emit('close')"
       />
     </slot>
@@ -61,7 +58,7 @@ export default defineComponent({
     },
     /**
      * the color variant of the banner; The dark variant is intended for use on
-     * yellow pages.
+     * bg-complementary pages.
      */
     variant: {
       type: String as PropType<"regular" | "dark">,
@@ -87,28 +84,40 @@ export default defineComponent({
   setup(props) {
     const classNames = computed(() =>
       props.variant === "dark"
-        ? "bg-dark-charcoal text-white"
+        ? "bg-tertiary text-over-dark"
         : {
-            info: "bg-info-soft",
-            warning: "bg-warning-soft",
-            success: "bg-success-soft",
-            error: "bg-error-soft",
+            info: "bg-info",
+            warning: "bg-warning",
+            success: "bg-success",
+            error: "bg-error",
           }[props.nature]
     )
     const iconClassNames = computed(() =>
       props.variant === "dark"
         ? ""
         : {
-            info: "text-info",
-            warning: "text-warning",
-            success: "text-success",
-            error: "text-error",
+            info: "text-info-8",
+            warning: "text-warning-8",
+            success: "text-success-8",
+            error: "text-error-8",
+          }[props.nature]
+    )
+
+    const closeButtonClassNames = computed(() =>
+      props.variant === "dark"
+        ? "focus-slim-tx-bg-complementary hover:bg-tertiary-hover"
+        : {
+            info: "hover:!bg-info-3",
+            warning: "hover:!bg-warning-3",
+            success: "hover:!bg-success-3",
+            error: "hover:!bg-error-3",
           }[props.nature]
     )
 
     return {
       classNames,
       iconClassNames,
+      closeButtonClassNames,
     }
   },
 })

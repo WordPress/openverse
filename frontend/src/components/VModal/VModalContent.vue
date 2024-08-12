@@ -100,7 +100,7 @@ defineExpose({
       class="backdrop h-dyn-screen min-h-dyn-screen fixed inset-0 z-40 flex justify-center overflow-y-auto"
       :class="[
         { 'flex-col items-center': variant === 'centered' },
-        variant === 'mobile-input' ? 'bg-tx' : 'bg-dark-charcoal bg-opacity-75',
+        variant === 'mobile-input' ? 'bg-tx' : 'bg-modal-layer',
         contentClasses,
         variant,
       ]"
@@ -112,16 +112,14 @@ defineExpose({
         v-bind="$attrs"
         class="flex flex-col"
         :class="[
-          mode === 'dark'
-            ? 'bg-black text-white'
-            : 'bg-white text-dark-charcoal',
+          mode === 'dark' ? 'bg-black text-default' : 'bg-overlay text-default',
           {
             'w-full md:max-w-[768px] lg:w-[768px] xl:w-[1024px] xl:max-w-[1024px]':
               variant === 'default',
             'w-full': variant === 'full',
-            'mt-auto h-2/3 w-full rounded-se-lg rounded-ss-lg bg-white':
+            'mt-auto h-2/3 w-full rounded-se-lg rounded-ss-lg bg-overlay':
               variant === 'two-thirds',
-            'mt-auto w-full rounded-se-lg rounded-ss-lg bg-white':
+            'mt-auto w-full rounded-se-lg rounded-ss-lg bg-overlay':
               variant === 'fit-content',
             'm-6 rounded sm:m-0': variant === 'centered',
           },
@@ -140,7 +138,7 @@ defineExpose({
                 -->
           <div
             v-if="variant === 'default'"
-            class="flex w-full shrink-0 justify-between bg-white py-4 pe-3 ps-4 md:justify-end md:bg-tx md:px-0 md:py-3"
+            class="flex w-full shrink-0 justify-between bg-overlay py-4 pe-3 ps-4 md:justify-end md:bg-tx md:px-0 md:py-3"
           >
             <VIconButton
               ref="closeButton"
@@ -158,15 +156,15 @@ defineExpose({
             'text-left align-bottom md:rounded-se-lg md:rounded-ss-lg':
               variant === 'default',
             'w-auto rounded': variant === 'centered',
-            'mt-auto w-full rounded-se-lg rounded-ss-lg bg-white':
+            'mt-auto w-full rounded-se-lg rounded-ss-lg bg-overlay':
               variant === 'fit-content',
             'flex w-full flex-col justify-between px-6 pb-10':
               variant === 'full',
             'overflow-y-hidden rounded-se-lg rounded-ss-lg':
               variant === 'two-thirds',
             'h-full': variant === 'mobile-input',
-            'bg-black text-white': mode === 'dark',
-            'bg-white text-dark-charcoal': mode === 'light',
+            'bg-black text-default': mode === 'dark',
+            'bg-overlay text-default': mode === 'light',
             'fallback-padding':
               variant === 'fit-content' ||
               variant === 'two-thirds' ||

@@ -2,7 +2,7 @@
   <div
     v-bind="waveformAttributes"
     ref="el"
-    class="waveform bg-background-var group/waveform relative overflow-hidden text-dark-charcoal focus-visible:outline-none"
+    class="waveform bg-background-var group/waveform relative overflow-hidden text-default focus-visible:outline-none"
     :style="heightProperties"
     :tabIndex="isTabbable && isInteractive ? 0 : -1"
     :aria-disabled="!isInteractive"
@@ -20,7 +20,7 @@
       <!-- Stroke is calculated from the centre of the path -->
       <rect
         v-if="waveformDimens.width && waveformDimens.height"
-        class="stroke-pink"
+        class="stroke-pink-8"
         x="0.75"
         y="0.75"
         :width="waveformDimens.width - 1.5"
@@ -51,7 +51,7 @@
     >
       <rect
         v-if="isReady"
-        class="fill-yellow"
+        class="progress-bar"
         x="0"
         y="0"
         :width="progressBarWidth"
@@ -73,7 +73,7 @@
         class="origin-bottom transform transition-transform duration-500"
         :class="[
           isReady ? 'scale-y-100' : 'scale-y-0',
-          index <= seekIndex ? 'fill-black' : 'fill-dark-charcoal-20-alpha',
+          index <= seekIndex ? 'fill-wave-active' : 'fill-wave-inactive',
         ]"
         :x="spaceBefore(index)"
         :y="spaceAbove(index)"
@@ -110,7 +110,7 @@
           :class="[
             ...(isProgressTimestampCutoff
               ? ['bg-background-var']
-              : ['bg-yellow', '-translate-x-full']),
+              : ['bg-complementary', '-translate-x-full']),
           ]"
           :style="progressTimeLeft"
         >
@@ -567,7 +567,7 @@ export default defineComponent({
 .waveform {
   --v-background-color: var(
     --waveform-background-color,
-    theme("colors.dark-charcoal.06")
+    theme("colors.gray.1")
   );
 }
 
@@ -592,11 +592,15 @@ export default defineComponent({
   left: var(--progress-time-left);
 }
 
+.progress-bar {
+  fill: theme("backgroundColor.complementary");
+}
+
 .seek {
   left: var(--seek-time-left);
 }
 
-.fill-dark-charcoal-20-alpha {
+.fill-gray-3-alpha {
   fill: rgba(48, 39, 46, 0.2);
 }
 </style>

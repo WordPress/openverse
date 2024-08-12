@@ -1,7 +1,7 @@
 <template>
   <VButton :aria-label="label" size="large" variant="plain--avoid" icon-only>
     <span
-      class="relative flex h-8 w-8 flex-none items-center justify-center rounded-sm border border-tx group-focus-visible/button:ring group-focus-visible/button:ring-pink group-active/button:ring group-active/button:ring-pink"
+      class="relative flex h-8 w-8 flex-none items-center justify-center rounded-sm border border-tx group-focus-visible/button:ring group-focus-visible/button:ring-pink-8 group-active/button:ring group-active/button:ring-pink-8"
       :class="variant"
     >
       <VIcon
@@ -76,21 +76,21 @@ export default defineComponent({
   outline: none;
 }
 .transparent-dark {
-  @apply border-tx bg-tx text-dark-charcoal hover:text-white group-hover/button:bg-dark-charcoal;
+  @apply border-tx bg-tx text-default hover:text-over-dark group-hover/button:bg-tertiary;
 }
 .transparent-gray {
-  @apply border-tx bg-tx text-dark-charcoal group-hover/button:bg-dark-charcoal group-hover/button:bg-opacity-10;
+  @apply border-tx bg-tx text-default group-hover/button:bg-tertiary;
 }
 .filled-white {
-  @apply border-tx bg-white text-dark-charcoal group-hover/button:bg-dark-charcoal group-hover/button:text-white;
+  @apply border-tx bg-default text-default group-hover/button:bg-tertiary group-hover/button:text-over-dark;
 }
 
 .filled-gray {
-  @apply border-tx bg-dark-charcoal-10 text-dark-charcoal group-hover/button:bg-dark-charcoal group-hover/button:text-white;
+  @apply border-tx bg-secondary text-default group-hover/button:bg-tertiary group-hover/button:text-over-dark;
 }
 
 .filled-white,
 .filled-gray {
-  @apply group-focus-visible/button:border-white;
+  @apply group-focus-visible/button:border-bg-ring;
 }
 </style>

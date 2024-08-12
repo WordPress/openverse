@@ -70,40 +70,40 @@ provide(IsSidebarVisibleKey, isSidebarVisible)
 
 const headerBorder = computed(() =>
   isHeaderScrolled.value || isSidebarVisible.value
-    ? "border-b-dark-charcoal-20"
+    ? "border-b-default"
     : "border-b-tx"
 )
 </script>
 
 <template>
   <div
-    class="app h-dyn-screen min-h-dyn-screen grid grid-rows-[auto,1fr] bg-white"
+    class="app h-dyn-screen min-h-dyn-screen grid grid-rows-[auto,1fr] bg-default"
     :class="[
       isSidebarVisible
         ? 'has-sidebar grid-cols-[1fr_var(--filter-sidebar-width)]'
         : 'grid-cols-1',
     ]"
   >
-    <div class="header-el bg-white">
+    <div class="header-el bg-default">
       <VBanners />
       <VHeaderDesktop
         v-if="isDesktopLayout"
-        class="h-20 border-b bg-white"
+        class="h-20 border-b bg-default"
         :class="headerBorder"
       />
       <VHeaderMobile
         v-else
-        class="h-20 border-b bg-white"
+        class="h-20 border-b bg-default"
         :class="headerBorder"
       />
     </div>
 
     <aside
       v-if="isSidebarVisible"
-      class="sidebar end-0 z-10 h-full overflow-y-auto border-s border-dark-charcoal-20 bg-dark-charcoal-06"
+      class="sidebar end-0 z-10 h-full overflow-y-auto border-s border-default bg-surface"
     >
       <VSearchGridFilter class="px-10 py-8" />
-      <VSafeBrowsing class="border-t border-dark-charcoal-20 px-10 py-8" />
+      <VSafeBrowsing class="border-t border-default px-10 py-8" />
     </aside>
 
     <div
@@ -111,10 +111,7 @@ const headerBorder = computed(() =>
       class="main-page flex h-full w-full min-w-0 flex-col justify-between overflow-y-auto"
     >
       <slot />
-      <VFooter
-        mode="content"
-        class="border-t border-dark-charcoal-20 bg-white"
-      />
+      <VFooter mode="content" class="border-t border-default bg-default" />
     </div>
   </div>
 </template>

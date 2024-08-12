@@ -3,7 +3,7 @@
   <p
     v-else
     class="flex h-6 w-6 items-center justify-center rounded-sm"
-    :class="pressed ? 'bg-tx' : 'bg-dark-charcoal-10'"
+    :class="pressed ? 'bg-tx' : 'bg-secondary'"
   >
     {{ appliedFilterCount }}
   </p>

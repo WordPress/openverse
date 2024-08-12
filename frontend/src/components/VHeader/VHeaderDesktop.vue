@@ -1,6 +1,6 @@
 <template>
   <header
-    class="main-header z-30 flex w-full items-stretch justify-between gap-x-2 bg-white px-6 py-4"
+    class="main-header z-30 flex w-full items-stretch justify-between gap-x-2 bg-default px-6 py-4"
   >
     <VLogoButton :is-fetching="isFetching" />
 
@@ -21,7 +21,7 @@
       />
       <span
         v-show="Boolean(searchStatus)"
-        class="info mx-4 hidden whitespace-nowrap text-xs text-dark-charcoal-70 group-focus-within:hidden group-hover:text-dark-charcoal group-focus:text-dark-charcoal lg:block"
+        class="info mx-4 hidden whitespace-nowrap text-xs text-secondary group-focus-within:hidden group-hover:text-default group-focus:text-default lg:block"
       >
         {{ searchStatus }}
       </span>

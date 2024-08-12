@@ -7,14 +7,218 @@
     --filter-sidebar-width: 336px;
   }
 
-  html {
-    @apply m-0 font-normal leading-loose text-dark-charcoal;
+  :root {
+    --color-black: #000;
+    --color-white: #fff;
+    --color-yellow-3: #fde034;
+    --color-pink-8: #ad1f85;
+    --color-gray: #232323;
+    --color-gray-1: #f7f7f7;
+    --color-gray-2: #ededed;
+    --color-gray-3: #dfdfdf;
+    --color-gray-4: #c5c5c5;
+    --color-gray-5: #a9a9a9;
+    --color-gray-6: #929292;
+    --color-gray-7: #7d7d7d;
+    --color-gray-8: #676767;
+    --color-gray-9: #565656;
+    --color-gray-10: #474747;
+    --color-gray-11: #363636;
+    --color-gray-12: #232323;
+    --color-gray-13: #0d0d0d;
+    --color-pink-1: #fcf4fa;
+    --color-pink-2: #f9e7f3;
+    --color-pink-3: #f9d2ec;
+    --color-pink-4: #efadd9;
+    --color-pink-5: #eb7dc8;
+    --color-pink-6: #eb3bbf;
+    --color-pink-7: #d028a3;
+    --color-pink-9: #911a71;
+    --color-pink-10: #79165d;
+    --color-pink-11: #5e1241;
+    --color-pink-12: #3e0c2a;
+    --color-pink-13: #1b0410;
+    --color-yellow-1: #fff9d4;
+    --color-yellow-2: #feefa0;
+    --color-yellow-4: #e5c428;
+    --color-yellow-5: #c7a714;
+    --color-yellow-6: #ad9011;
+    --color-yellow-7: #977a17;
+    --color-yellow-8: #81620c;
+    --color-yellow-9: #6c5113;
+    --color-yellow-10: #5e4012;
+    --color-yellow-11: #4a300c;
+    --color-yellow-12: #331d05;
+    --color-yellow-13: #180801;
+    --color-gray-1-10: #f7f7f71a;
+    --color-gray-1-20: #f7f7f733;
+    --color-gray-1-30: #f7f7f74d;
+    --color-gray-1-40: #f7f7f766;
+    --color-gray-1-50: #f7f7f780;
+    --color-gray-1-60: #f7f7f799;
+    --color-gray-1-70: #f7f7f7b2;
+    --color-gray-1-80: #f7f7f7cc;
+    --color-gray-1-90: #f7f7f7e5;
+    --color-gray-12-10: #2323231a;
+    --color-gray-12-20: #23232333;
+    --color-gray-12-30: #2323234d;
+    --color-gray-12-40: #23232366;
+    --color-gray-12-50: #23232380;
+    --color-gray-12-60: #23232399;
+    --color-gray-12-70: #232323b2;
+    --color-gray-12-80: #232323cc;
+    --color-gray-12-90: #232323e5;
+    --color-gray-13-0: #0d0d0d00;
+    --color-white-0: #fff0;
+    --color-info-1: #f5f7fb;
+    --color-info-2: #e6edfc;
+    --color-info-3: #d3dffb;
+    --color-info-4: #aec5f7;
+    --color-info-5: #89a7ef;
+    --color-info-6: #678ded;
+    --color-info-7: #4571f2;
+    --color-info-8: #274fed;
+    --color-info-9: #1935dd;
+    --color-info-10: #1835ab;
+    --color-info-11: #192f73;
+    --color-info-12: #122047;
+    --color-info-13: #060c1c;
+    --color-warning-1: #fcf6f0;
+    --color-warning-2: #faead9;
+    --color-warning-3: #f9d9b4;
+    --color-warning-4: #f1ba77;
+    --color-warning-5: #e2972b;
+    --color-warning-6: #c7810a;
+    --color-warning-7: #ac6e00;
+    --color-warning-8: #8d5b0d;
+    --color-warning-9: #764c0b;
+    --color-warning-10: #643e00;
+    --color-warning-11: #4b2f05;
+    --color-warning-12: #341e00;
+    --color-warning-13: #160a00;
+    --color-success-1: #f1fbef;
+    --color-success-2: #dff5db;
+    --color-success-3: #caeac1;
+    --color-success-4: #a1d695;
+    --color-success-5: #6cc258;
+    --color-success-6: #47ac29;
+    --color-success-7: #2f9600;
+    --color-success-8: #257c00;
+    --color-success-9: #1d6800;
+    --color-success-10: #175600;
+    --color-success-11: #104200;
+    --color-success-12: #072c00;
+    --color-success-13: #021200;
+    --color-error-1: #fdf5f3;
+    --color-error-2: #fee7e4;
+    --color-error-3: #f9d6d0;
+    --color-error-4: #f5b2a7;
+    --color-error-5: #f78273;
+    --color-error-6: #f45344;
+    --color-error-7: #dd362a;
+    --color-error-8: #ba251c;
+    --color-error-9: #9b221a;
+    --color-error-10: #801e16;
+    --color-error-11: #631610;
+    --color-error-12: #420e09;
+    --color-error-13: #1e0302;
+  }
+
+  :root,
+  :is(.light-mode),
+  :is(.light-mode *) {
+    --color-bg: var(--color-white);
+    --color-bg-surface: var(--color-gray-1);
+    --color-bg-overlay: var(--color-white);
+    --color-bg-primary: var(--color-pink-8);
+    --color-bg-primary-hover: var(--color-pink-9);
+    --color-bg-secondary: var(--color-gray-2);
+    --color-bg-secondary-hover: var(--color-gray-12);
+    --color-bg-tertiary: var(--color-gray-12);
+    --color-bg-tertiary-hover: var(--color-gray-11);
+    --color-bg-transparent-hover: var(--color-gray-12-10);
+    --color-bg-complementary: var(--color-yellow-3);
+    --color-bg-warning: var(--color-warning-2);
+    --color-bg-info: var(--color-info-2);
+    --color-bg-success: var(--color-success-2);
+    --color-bg-error: var(--color-error-2);
+    --color-bg-disabled: var(--color-gray-5);
+    --color-bg-zero: var(--color-white-0);
+    --color-border: var(--color-gray-3);
+    --color-border-hover: var(--color-gray-12);
+    --color-border-secondary: var(--color-gray-12-20);
+    --color-border-secondary-hover: var(--color-gray-12);
+    --color-border-tertiary: var(--color-gray-12);
+    --color-border-transparent-hover: var(--color-gray-3);
+    --color-border-focus: var(--color-pink-8);
+    --color-border-bg-ring: var(--color-white);
+    --color-border-disabled: var(--color-gray-5);
+    --color-text: var(--color-gray-12);
+    --color-text-secondary: var(--color-gray-8);
+    --color-text-disabled: var(--color-gray-5);
+    --color-text-link: var(--color-pink-8);
+    --color-text-over-dark: var(--color-white);
+    --color-text-secondary-over-dark: var(--color-gray-5);
+    --color-icon-warning: var(--color-warning-8);
+    --color-icon-info: var(--color-info-8);
+    --color-icon-success: var(--color-success-8);
+    --color-icon-error: var(--color-error-8);
+    --color-wave-active: var(--color-yellow-9);
+    --color-wave-inactive: var(--color-gray-12-20);
+    --color-modal-layer: var(--color-gray-12-80);
+  }
+
+  :is(.dark-mode *),
+  :is(.dark-mode) {
+    --color-bg: var(--color-gray-13);
+    --color-bg-surface: var(--color-gray-12);
+    --color-bg-overlay: var(--color-gray-11);
+    --color-bg-primary: var(--color-yellow-4);
+    --color-bg-primary-hover: var(--color-yellow-3);
+    --color-bg-secondary: var(--color-gray-11);
+    --color-bg-secondary-hover: var(--color-gray-1);
+    --color-bg-tertiary: var(--color-gray-1);
+    --color-bg-tertiary-hover: var(--color-gray-2);
+    --color-bg-transparent-hover: var(--color-gray-1-10);
+    --color-bg-complementary: var(--color-pink-9);
+    --color-bg-warning: var(--color-warning-11);
+    --color-bg-info: var(--color-info-11);
+    --color-bg-success: var(--color-success-11);
+    --color-bg-error: var(--color-error-11);
+    --color-bg-disabled: var(--color-gray-8);
+    --color-bg-zero: var(--color-gray-13-0);
+    --color-border: var(--color-gray-11);
+    --color-border-hover: var(--color-gray-1);
+    --color-border-secondary: var(--color-gray-1-20);
+    --color-border-secondary-hover: var(--color-gray-1);
+    --color-border-tertiary: var(--color-gray-1);
+    --color-border-transparent-hover: var(--color-gray-11);
+    --color-border-focus: var(--color-yellow-4);
+    --color-border-bg-ring: var(--color-gray-13);
+    --color-border-disabled: var(--color-gray-8);
+    --color-text: var(--color-gray-1);
+    --color-text-secondary: var(--color-gray-5);
+    --color-text-disabled: var(--color-gray-8);
+    --color-text-link: var(--color-yellow-4);
+    --color-text-over-dark: var(--color-gray-13);
+    --color-text-secondary-over-dark: var(--color-gray-8);
+    --color-icon-warning: var(--color-warning-5);
+    --color-icon-info: var(--color-info-5);
+    --color-icon-success: var(--color-success-5);
+    --color-icon-error: var(--color-error-5);
+    --color-wave-active: var(--color-pink-4);
+    --color-wave-inactive: var(--color-gray-1-30);
+    --color-modal-layer: var(--color-gray-12-60);
+  }
+
+  body {
+    @apply m-0 font-normal leading-loose text-default;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   a {
-    @apply text-pink hover:underline;
+    @apply text-link hover:underline;
   }
 
   h1,
@@ -176,7 +380,7 @@ Time                - 11px - xs semibold (default leading-tight)
     @apply focus-visible:outline focus-visible:outline-1.5 focus-visible:outline-offset-0;
     /* absolutely positioned overlapping pseudo element with a 1.5px border */
     @apply focus-visible:after:absolute focus-visible:after:z-10 focus-visible:after:rounded-inherit;
-    @apply focus-visible:after:border-1.5 focus-visible:after:border-white;
+    @apply focus-visible:after:border-1.5 focus-visible:after:border-bg-ring;
     @apply focus-visible:after:h-full-with-border focus-visible:after:w-full-with-border;
     @apply focus-visible:after:-left-px focus-visible:after:-top-px;
   }

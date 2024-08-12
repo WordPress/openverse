@@ -147,7 +147,7 @@ const {
       <template #license>
         <VLink
           href="https://creativecommons.org/licenses/"
-          class="text-dark-charcoal underline hover:text-dark-charcoal"
+          class="text-default underline hover:text-default"
           >{{ $t("hero.disclaimer.license") }}</VLink
         >
       </template>
