@@ -2,8 +2,6 @@ import mimetypes
 from os.path import splitext
 from urllib.parse import urlparse
 
-from django.conf import settings
-
 import aiohttp
 import django_redis
 import sentry_sdk
@@ -12,21 +10,18 @@ from asgiref.sync import sync_to_async
 from redis.exceptions import ConnectionError
 
 from api.utils.aiohttp import get_aiohttp_session
-from api.utils.image_proxy.dataclasses import MediaInfo
 from api.utils.image_proxy.exception import UpstreamThumbnailException
 
 
 logger = structlog.get_logger(__name__)
 
 
-_HEAD_TIMEOUT = aiohttp.ClientTimeout(settings.THUMBNAIL_EXTENSION_REQUEST_TIMEOUT)
+_HEAD_TIMEOUT = aiohttp.ClientTimeout(10)
 
 
-async def get_image_extension(media_info: MediaInfo) -> str | None:
-    image_url = media_info.image_url
-
+async def get_image_extension(image_url: str, media_identifier) -> str | None:
     cache = django_redis.get_redis_connection("default")
-    key = f"media:{media_info.media_identifier}:thumb_type"
+    key = f"media:{media_identifier}:thumb_type"
 
     ext = _get_file_extension_from_url(image_url)
 
@@ -42,16 +37,8 @@ async def get_image_extension(media_info: MediaInfo) -> str | None:
         # If the extension is still not present, try getting it from the content type
         try:
             session = await get_aiohttp_session()
-            response = await session.head(
-                image_url,
-                raise_for_status=True,
-                timeout=_HEAD_TIMEOUT,
-                trace_request_ctx={
-                    "timing_event_name": "thumbnail_extension_request_timing",
-                    "timing_event_ctx": {"provider": media_info.media_provider},
-                },
-            )
-
+            response = await session.head(image_url, timeout=_HEAD_TIMEOUT)
+            response.raise_for_status()
             if response.headers and "Content-Type" in response.headers:
                 content_type = response.headers["Content-Type"]
                 ext = _get_file_extension_from_content_type(content_type)
