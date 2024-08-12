@@ -7,6 +7,9 @@ import { skipToContentTargetId } from "~/constants/window"
 import { useCollection } from "~/composables/use-collection"
 import { IMAGE } from "~/constants/media"
 
+import { usePageRobotsRule } from "~/composables/use-page-robots-rule"
+import { CollectionParams } from "~/types/search"
+
 import VCollectionResults from "~/components/VSearchResultsGrid/VCollectionResults.vue"
 
 defineOptions({
@@ -33,6 +36,12 @@ useHead(() => ({
   meta: [{ hid: "og:title", property: "og:title", content: pageTitle.value }],
   title: pageTitle.value,
 }))
+
+// Collection params are not nullable in the collections route, this is enforced by the middleware
+// Question: should this non-nullability be filtered in the type and enforced in runtime by `useCollection`?
+usePageRobotsRule(
+  `${(collectionParams.value as NonNullable<CollectionParams>).collection}-collection`
+)
 
 /**
  * Media is not empty when we navigate back to this page, so we don't need

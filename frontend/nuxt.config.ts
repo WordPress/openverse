@@ -74,14 +74,18 @@ export default defineNuxtConfig({
   },
   /**
    * Robots.txt rules are configured here via the \@nuxtjs/robots package.
-   * @see {@link https://nuxtseo.com/robots/guides/nuxt-config|Robots Config Rules}
+   * @see {@link https://nuxtseo.com/robots/guides/nuxt-config}
    */
   robots: {
-    disallow: ["/search", "/search/audio", "/search/image"],
+    disallow: [
+      // robots rules are prefixed-based, so there's no need to configure specific media type searches
+      "/search",
+      // Other routes have more complex requirements; we configure those with `useRobotsRule` as needed
+    ],
     groups: [
       ...disallowedBots.map((bot) => ({
         userAgent: [bot],
-        disallow: ["/"], // block bots from all routes
+        disallow: ["/"], // block disallowed bots from all routes
       })),
     ],
   },

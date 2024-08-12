@@ -34,7 +34,9 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   if (!mediaId) {
     return
   }
+
   singleResultStore.setMediaById(mediaType, mediaId)
+
   if (import.meta.server) {
     await Promise.allSettled([
       singleResultStore.fetch(mediaType, mediaId),
@@ -42,6 +44,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     ])
 
     const fetchingError = singleResultStore.fetchState.fetchingError
+
     if (
       !singleResultStore.mediaItem &&
       fetchingError &&
