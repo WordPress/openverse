@@ -6,7 +6,10 @@ import { collectionMiddleware } from "~/middleware/collection"
 import { skipToContentTargetId } from "~/constants/window"
 
 import { useCollection } from "~/composables/use-collection"
+import { usePageRobotsRule } from "~/composables/use-page-robots-rule"
 import { AUDIO } from "~/constants/media"
+
+import { CollectionParams } from "~/types/search"
 
 import VCollectionResults from "~/components/VSearchResultsGrid/VCollectionResults.vue"
 
@@ -29,6 +32,12 @@ const {
   loadMore,
   pageTitle,
 } = useCollection({ mediaType: AUDIO })
+
+// Collection params are not nullable in the collections route, this is enforced by the middleware
+// Question: should this non-nullability be filtered in the type and enforced in runtime by `useCollection`?
+usePageRobotsRule(
+  `${(collectionParams.value as NonNullable<CollectionParams>).collection}-collection`
+)
 
 useHead({
   meta: [{ hid: "og:title", property: "og:title", content: pageTitle.value }],

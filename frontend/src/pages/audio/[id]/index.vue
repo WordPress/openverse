@@ -24,6 +24,8 @@ import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 import { useSingleResultStore } from "~/stores/media/single-result"
 import singleResultMiddleware from "~/middleware/single-result"
 
+import { usePageRobotsRule } from "~/composables/use-page-robots-rule"
+
 import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"
 import VMediaReuse from "~/components/VMediaInfo/VMediaReuse.vue"
 import VRelatedMedia from "~/components/VMediaInfo/VRelatedMedia.vue"
@@ -41,6 +43,8 @@ definePageMeta({
   layout: "content-layout",
   middleware: singleResultMiddleware,
 })
+
+usePageRobotsRule("single-result")
 
 const singleResultStore = useSingleResultStore()
 

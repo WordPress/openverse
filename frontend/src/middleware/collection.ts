@@ -1,9 +1,4 @@
-import {
-  createError,
-  defineNuxtRouteMiddleware,
-  useRobotsRule,
-  useSiteConfig,
-} from "#imports"
+import { createError, defineNuxtRouteMiddleware } from "#imports"
 
 import { isShallowEqualObjects } from "@wordpress/is-shallow-equal"
 
@@ -83,8 +78,6 @@ export const collectionMiddleware = defineNuxtRouteMiddleware(async (to) => {
     })
   }
 
-  const siteConfig = useSiteConfig()
-
   if ("source" in collectionParams) {
     const providerStore = useProviderStore()
     if (!providerStore.isSourceNameValid(mediaType, collectionParams.source)) {
@@ -93,12 +86,6 @@ export const collectionMiddleware = defineNuxtRouteMiddleware(async (to) => {
         message: `Invalid source name ${collectionParams.source} for media type ${mediaType}`,
       })
     }
-  }
-
-  if (siteConfig.indexable && collectionParams.collection === "source") {
-    useRobotsRule("index, nofollow")
-  } else {
-    useRobotsRule("noindex, nofollow")
   }
 
   // Update the search store with the new collection state

@@ -4,7 +4,6 @@ import {
   firstParam,
   handledClientSide,
   showError,
-  useRobotsRule,
 } from "#imports"
 
 import { RouteLocationNormalized } from "vue-router"
@@ -52,15 +51,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       !handledClientSide(fetchingError)
     ) {
       showError(createError(fetchingError))
-    } else {
-      /**
-       * robots meta tag and header are only relevant for SSR requests,
-       * so we do not need to call this in the else branch of the check
-       * against `import.meta.server`
-       *
-       * Single result pages are non-indexed because they duplicate upstream
-       */
-      useRobotsRule("noindex, nofollow")
     }
   } else if (from && (isSearchPath(from) || isCollectionPath(from.path))) {
     const searchStore = useSearchStore()
