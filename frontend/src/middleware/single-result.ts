@@ -36,9 +36,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     return
   }
 
-  useRobotsRule("noindex, nofollow")
-
   singleResultStore.setMediaById(mediaType, mediaId)
+
   if (import.meta.server) {
     await Promise.allSettled([
       singleResultStore.fetch(mediaType, mediaId),
@@ -46,12 +45,22 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     ])
 
     const fetchingError = singleResultStore.fetchState.fetchingError
+
     if (
       !singleResultStore.mediaItem &&
       fetchingError &&
       !handledClientSide(fetchingError)
     ) {
       showError(createError(fetchingError))
+    } else {
+      /**
+       * robots meta tag and header are only relevant for SSR requests,
+       * so we do not need to call this in the else branch of the check
+       * against `import.meta.server`
+       *
+       * Single result pages are non-indexed because they duplicate upstream
+       */
+      useRobotsRule("noindex, nofollow")
     }
   } else if (from && (isSearchPath(from) || isCollectionPath(from.path))) {
     const searchStore = useSearchStore()
