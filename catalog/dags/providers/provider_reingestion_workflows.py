@@ -91,7 +91,7 @@ PROVIDER_REINGESTION_WORKFLOWS = [
         # 64 total reingestion days
         dag_id="wikimedia_reingestion_workflow",
         ingester_class=WikimediaCommonsDataIngester,
-        pull_timeout=timedelta(minutes=90),
+        pull_timeout=timedelta(hours=4),
         max_active_tasks=2,
         daily_list_length=6,
         one_month_list_length=9,
