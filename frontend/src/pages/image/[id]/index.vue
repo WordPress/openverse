@@ -25,6 +25,8 @@ import { useSingleResultPageMeta } from "~/composables/use-single-result-page-me
 import { useSingleResultStore } from "~/stores/media/single-result"
 import singleResultMiddleware from "~/middleware/single-result"
 
+import { usePageRobotsRule } from "~/composables/use-page-robots-rule"
+
 import VBone from "~/components/VSkeleton/VBone.vue"
 import VMediaReuse from "~/components/VMediaInfo/VMediaReuse.vue"
 import VRelatedMedia from "~/components/VMediaInfo/VRelatedMedia.vue"
@@ -46,6 +48,8 @@ definePageMeta({
   layout: "content-layout",
   middleware: singleResultMiddleware,
 })
+
+usePageRobotsRule("single-result")
 
 const singleResultStore = useSingleResultStore()
 

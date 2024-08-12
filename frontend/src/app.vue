@@ -29,6 +29,9 @@ const darkMode = useDarkMode()
 /* UI store */
 const isDesktopLayout = computed(() => uiStore.isDesktopLayout)
 const breakpoint = computed(() => uiStore.breakpoint)
+const headerHeight = computed(() => {
+  return `--header-height: ${uiStore.headerHeight}px`
+})
 
 const head = useLocaleHead({
   addDirAttribute: true,
@@ -114,7 +117,7 @@ onMounted(() => {
           />
         </template>
       </Head>
-      <Body>
+      <Body :style="headerHeight">
         <div :class="[isDesktopLayout ? 'desktop' : 'mobile', breakpoint]">
           <VSkipToContentButton />
           <NuxtLayout>

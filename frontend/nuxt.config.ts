@@ -32,15 +32,21 @@ export default defineNuxtConfig({
       deploymentEnv: "local",
       apiUrl: "https://api.openverse.org/",
       savedSearchCount: 4,
+      site: {
+        trailingSlash: false,
+      },
       sentry: {
         dsn: "",
         environment: "local",
         // Release is a build time variable, and as such, is defined in app.config.ts
       },
+      plausible: {
+        ignoredHostnames: ["localhost", "staging.openverse.org"],
+        logIgnoredEvents: true,
+        apiHost: "http://localhost:50290",
+        domain: "localhost",
+      },
     },
-  },
-  site: {
-    trailingSlash: false,
   },
   /**
    * Disable debug mode to prevent excessive timing logs.
@@ -68,14 +74,18 @@ export default defineNuxtConfig({
   },
   /**
    * Robots.txt rules are configured here via the \@nuxtjs/robots package.
-   * @see {@link https://nuxtseo.com/robots/guides/nuxt-config|Robots Config Rules}
+   * @see {@link https://nuxtseo.com/robots/guides/nuxt-config}
    */
   robots: {
-    disallow: ["/search", "/search/audio", "/search/image"],
+    disallow: [
+      // robots rules are prefixed-based, so there's no need to configure specific media type searches
+      "/search",
+      // Other routes have more complex requirements; we configure those with `useRobotsRule` as needed
+    ],
     groups: [
       ...disallowedBots.map((bot) => ({
         userAgent: [bot],
-        disallow: ["/"], // block bots from all routes
+        disallow: ["/"], // block disallowed bots from all routes
       })),
     ],
   },
@@ -113,10 +123,5 @@ export default defineNuxtConfig({
     detectBrowserLanguage: false,
     trailingSlash: false,
     vueI18n: "./src/vue-i18n",
-  },
-  plausible: {
-    // `trackLocalhost` is deprecated, but the replacement `ignoredHostnames: []`
-    // has a bug, @see https://github.com/nuxt-modules/plausible/issues/30
-    trackLocalhost: true,
   },
 })

@@ -15,7 +15,7 @@ import { useMediaStore } from "~/stores/media/index"
 import { validateUUID } from "~/utils/query-utils"
 
 import { FetchingError, FetchState } from "~/types/fetch-state"
-import { createApiClient } from "~/data/api-service"
+import { useApiClient } from "~/composables/use-api-client"
 
 export type MediaItemState = {
   mediaType: SupportedMediaType | null
@@ -144,10 +144,9 @@ export const useSingleResultStore = defineStore("single-result", {
       // so we need to use the `useNuxtApp` here, outside the catch clause, to access the app context.
       const { $processFetchingError } = useNuxtApp()
 
-      try {
-        const { $openverseApiToken: accessToken } = useNuxtApp()
-        const client = createApiClient({ accessToken })
+      const client = useApiClient()
 
+      try {
         const item = await client.getSingleMedia(type, id)
 
         this.setMediaItem(item)

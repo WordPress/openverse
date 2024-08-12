@@ -97,13 +97,12 @@ defineExpose({
   <Teleport to="#teleports">
     <div
       v-show="visible"
-      class="h-dyn-screen min-h-dyn-screen fixed inset-0 z-40 flex justify-center overflow-y-auto"
+      class="backdrop h-dyn-screen min-h-dyn-screen fixed inset-0 z-40 flex justify-center overflow-y-auto"
       :class="[
         { 'flex-col items-center': variant === 'centered' },
-        variant === 'mobile-input'
-          ? 'top-20 h-[calc(100dvh-80px)] bg-tx'
-          : 'bg-modal-layer',
+        variant === 'mobile-input' ? 'bg-tx' : 'bg-modal-layer',
         contentClasses,
+        variant,
       ]"
     >
       <!-- re: disabled static element interactions rule https://github.com/WordPress/openverse/issues/2906 -->
@@ -180,6 +179,10 @@ defineExpose({
 </template>
 
 <style scoped>
+.backdrop.mobile-input {
+  height: calc(100dvh - var(--header-height, 80px));
+  top: var(--header-height, 80px);
+}
 /*
 For mobiles that do not support dvh units, we add a fallback padding
 to the modal content to make sure that no clickable elements are hidden

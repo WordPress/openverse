@@ -36,7 +36,7 @@ repos:
       - id: check-xml
       - id: check-yaml
       - id: end-of-file-fixer
-        exclude: frontend/test/tapes/.+\.json5
+        exclude: (frontend/test/tapes/.+\.json5|frontend/.*snapshots.*)
       - id: check-symlinks
       - id: mixed-line-ending
       - id: fix-encoding-pragma

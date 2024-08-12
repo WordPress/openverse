@@ -52,6 +52,7 @@ export interface UiState {
   shouldBlurSensitive: boolean
   /* A list of sensitive single result UUIDs the user has opted-into seeing */
   revealedSensitiveResults: string[]
+  headerHeight: number
 }
 
 export const breakpoints = Object.keys(ALL_SCREEN_SIZES)
@@ -66,6 +67,7 @@ export const useUiStore = defineStore("ui", {
     dismissedBanners: [],
     shouldBlurSensitive: true,
     revealedSensitiveResults: [],
+    headerHeight: 80,
   }),
 
   getters: {
@@ -254,6 +256,9 @@ export const useUiStore = defineStore("ui", {
     setShouldBlurSensitive(value: boolean) {
       this.shouldBlurSensitive = value
       this.revealedSensitiveResults = []
+    },
+    setHeaderHeight(height: number) {
+      this.headerHeight = Math.max(height, 80)
     },
   },
 })

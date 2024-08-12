@@ -53,17 +53,19 @@ const userAgent =
  * objects into an object with media id as keys.
  * @param mediaType - the media type of the search query
  * @param data - search result data
+ * @param fakeSensitive - whether to fake sensitive data for testing
  */
 function transformResults<T extends Media>(
   mediaType: SupportedMediaType,
-  data: MediaResult<T[]>
+  data: MediaResult<T[]>,
+  fakeSensitive: boolean
 ): MediaResult<Record<string, T>> {
   const mediaResults = <T[]>data.results ?? []
   return {
     ...data,
     results: mediaResults.reduce(
       (acc, item) => {
-        acc[item.id] = decodeMediaData(item, mediaType)
+        acc[item.id] = decodeMediaData(item, mediaType, fakeSensitive)
         return acc
       },
       {} as Record<string, T>
@@ -131,11 +133,14 @@ export interface ApiServiceConfig {
   accessToken?: string
   /** whether to use the `'v1/'` prefix after the base URL */
   isVersioned?: boolean
+  /** whether to use fake sensitivity data for testing */
+  fakeSensitive?: boolean
 }
 
 export const createApiClient = ({
   accessToken = undefined,
   isVersioned = true,
+  fakeSensitive = false,
 }: ApiServiceConfig = {}) => {
   const baseUrl =
     useRuntimeConfig().public.apiUrl ?? "https://api.openverse.org/"
@@ -202,7 +207,7 @@ export const createApiClient = ({
 
     return {
       eventPayload,
-      data: transformResults(mediaType, res.data),
+      data: transformResults(mediaType, res.data, fakeSensitive),
     }
   }
 
