@@ -32,15 +32,15 @@ export default defineNuxtConfig({
       deploymentEnv: "local",
       apiUrl: "https://api.openverse.org/",
       savedSearchCount: 4,
+      site: {
+        trailingSlash: false,
+      },
       sentry: {
         dsn: "",
         environment: "local",
         // Release is a build time variable, and as such, is defined in app.config.ts
       },
     },
-  },
-  site: {
-    trailingSlash: false,
   },
   /**
    * Disable debug mode to prevent excessive timing logs.
