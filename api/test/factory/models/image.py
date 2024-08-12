@@ -2,6 +2,7 @@ import factory
 from factory.django import DjangoModelFactory
 
 from api.models.image import DeletedImage, Image, ImageReport, SensitiveImage
+from test.factory.faker import Faker
 from test.factory.models.media import MediaFactory, MediaReportFactory
 
 
@@ -24,6 +25,9 @@ class ImageFactory(MediaFactory):
 
     class Meta:
         model = Image
+
+    width = Faker("random_element", elements=(100, 1200, 2500))
+    height = Faker("random_element", elements=(100, 1200, 2500))
 
 
 class ImageReportFactory(MediaReportFactory):

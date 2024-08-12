@@ -53,7 +53,7 @@ class MediaFactory(DjangoModelFactory):
     """The foreign identifier isn't necessarily a UUID but for test purposes it's fine if it looks like one"""
 
     license = Faker("random_element", elements=ALL_LICENSES)
-    provider = Faker("random_element", elements=("wikimedia", "flickr"))
+    provider = Faker("random_element", elements=("flickr", "stocksnap"))
 
     foreign_landing_url = Faker("globally_unique_url")
     url = Faker("globally_unique_url")

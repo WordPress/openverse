@@ -20,6 +20,7 @@ from api.utils.image_proxy.dataclasses import MediaInfo, RequestConfig
 from api.utils.image_proxy.exception import UpstreamThumbnailException
 from api.utils.image_proxy.extension import get_image_extension
 from api.utils.image_proxy.photon import get_photon_request_params
+from api.utils.image_proxy.wikimedia import get_wikimedia_thumbnail_url
 from api.utils.tallies import get_monthly_timestamp
 
 
@@ -42,7 +43,7 @@ THUMBNAIL_STRATEGY = Literal["photon_proxy", "original"]
 def get_request_params_for_extension(
     ext: str,
     headers: dict[str, str],
-    image_url: str,
+    media_info: MediaInfo,
     parsed_image_url: urlparse,
     request_config: RequestConfig,
 ) -> tuple[str, dict[str, str], dict[str, str]]:
@@ -52,6 +53,29 @@ def get_request_params_for_extension(
     request params, if the file can be cached and returned as is (SVG), we do that,
     otherwise we raise UnsupportedMediaType exception.
     """
+
+    if media_info.media_provider == "wikimedia":
+        # Wikimedia supports all file types with their own thumbnail
+        # endpoints; we still request the thumbnail through to Site Accelerator to offload repeated
+        # requests from Wikimedia's servers. Site Accelerator essentially acts as a cache,
+        # because we'll rely on Wikimedia to resize and compress the image as needed.
+        thumbnail_url = get_wikimedia_thumbnail_url(
+            media_info,
+            parsed_image_url,
+            request_config,
+        )
+        if thumbnail_url is not None:
+            return get_photon_request_params(
+                thumbnail_url,
+                # Because Wikimedia's thumbnails are configurable for compression
+                # and size, we can skip both operations in Site Accelerator
+                is_full_size=True,
+                is_compressed=False,
+                headers=headers,
+            )
+        # else, `get_wikimedia_thumbnail_url` was unable to create a thumbnail URL
+        # for this wikimedia image, so fallback to the default routine
+
     if ext in PHOTON_TYPES:
         return get_photon_request_params(
             parsed_image_url,
@@ -60,7 +84,7 @@ def get_request_params_for_extension(
             headers,
         )
     elif ext in ORIGINAL_TYPES:
-        return image_url, {}, headers
+        return media_info.image_url, {}, headers
     raise UnsupportedMediaType(
         f"Image extension {ext} is not supported by the thumbnail proxy."
     )
@@ -215,7 +239,7 @@ async def get(
     upstream_url, params, headers = get_request_params_for_extension(
         image_extension,
         headers,
-        image_url,
+        media_info,
         parsed_image_url,
         request_config,
     )

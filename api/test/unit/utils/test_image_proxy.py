@@ -34,6 +34,12 @@ TEST_IMAGE_URL = PHOTON_URL_FOR_TEST_IMAGE.replace(settings.PHOTON_ENDPOINT, "ht
 TEST_MEDIA_IDENTIFIER = uuid4()
 TEST_MEDIA_PROVIDER = "foo"
 
+# pook assets the params are passed matching type, so `'600' != 600`
+# this is a bug in pook, but we need to handle it here anyway
+# otherwise we would need to adjust the runtime code to account for
+# this testing oddity
+THUMBNAIL_WIDTH_PARAM = str(settings.THUMBNAIL_WIDTH_PX)
+
 TEST_MEDIA_INFO = MediaInfo(
     media_identifier=TEST_MEDIA_IDENTIFIER,
     media_provider=TEST_MEDIA_PROVIDER,
@@ -84,7 +90,7 @@ def test_get_successful_no_auth_key_default_args(mock_image_data):
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
         .params(
             {
-                "w": settings.THUMBNAIL_WIDTH_PX,
+                "w": THUMBNAIL_WIDTH_PARAM,
                 "quality": settings.THUMBNAIL_QUALITY,
             }
         )
@@ -126,7 +132,7 @@ def test_get_successful_with_auth_key_default_args(mock_image_data, auth_key):
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
         .params(
             {
-                "w": settings.THUMBNAIL_WIDTH_PX,
+                "w": THUMBNAIL_WIDTH_PARAM,
                 "quality": settings.THUMBNAIL_QUALITY,
             }
         )
@@ -149,7 +155,7 @@ def test_get_successful_no_auth_key_not_compressed(mock_image_data):
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
         .params(
             {
-                "w": settings.THUMBNAIL_WIDTH_PX,
+                "w": THUMBNAIL_WIDTH_PARAM,
             }
         )
         .header("User-Agent", UA_HEADER)
@@ -210,7 +216,7 @@ def test_get_successful_no_auth_key_png_only(mock_image_data):
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
         .params(
             {
-                "w": settings.THUMBNAIL_WIDTH_PX,
+                "w": THUMBNAIL_WIDTH_PARAM,
                 "quality": settings.THUMBNAIL_QUALITY,
             }
         )
@@ -233,7 +239,7 @@ def test_get_successful_forward_query_params(mock_image_data):
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
         .params(
             {
-                "w": settings.THUMBNAIL_WIDTH_PX,
+                "w": THUMBNAIL_WIDTH_PARAM,
                 "quality": settings.THUMBNAIL_QUALITY,
                 "q": params,
             }
@@ -275,7 +281,7 @@ def test_get_successful_records_response_code(
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
         .params(
             {
-                "w": settings.THUMBNAIL_WIDTH_PX,
+                "w": THUMBNAIL_WIDTH_PARAM,
                 "quality": settings.THUMBNAIL_QUALITY,
             }
         )
@@ -430,7 +436,7 @@ def test_caches_failures_if_cache_surpasses_tolerance(mock_image_data, settings,
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
         .params(
             {
-                "w": settings.THUMBNAIL_WIDTH_PX,
+                "w": THUMBNAIL_WIDTH_PARAM,
                 "quality": settings.THUMBNAIL_QUALITY,
             }
         )
@@ -512,7 +518,7 @@ def test_get_successful_https_image_url_sends_ssl_parameter(mock_image_data):
         pook.get(PHOTON_URL_FOR_TEST_IMAGE)
         .params(
             {
-                "w": settings.THUMBNAIL_WIDTH_PX,
+                "w": THUMBNAIL_WIDTH_PARAM,
                 "quality": settings.THUMBNAIL_QUALITY,
                 "ssl": "true",
             }
@@ -640,3 +646,249 @@ def test_photon_get_saves_image_type_to_cache(
                 "Redis connect failed, cannot cache image extension.",
             ]
         )
+
+
+@pytest.mark.django_db
+@pytest.mark.pook(start_active=False)
+def test_wikimedia_thumbnail_default_params_small_image():
+    image_url = (
+        "https://upload.wikimedia.org/wikipedia/commons/9/9e/Color_icon_yellow.svg"
+    )
+    width = settings.THUMBNAIL_WIDTH_PX - 1
+    image = ImageFactory.create(url=image_url, provider="wikimedia", width=width)
+    # It uses the image width to prevent wikimedia's thumbnail service upscaling the image
+    expected_thumbnail_url_path = f"upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Color_icon_yellow.svg/lossy-{width}px-Color_icon_yellow.svg.png"
+
+    pook.on()
+    (
+        pook.get(settings.PHOTON_ENDPOINT + expected_thumbnail_url_path)
+        .params(
+            {
+                "ssl": "true",
+            }
+        )
+        .header("User-Agent", UA_HEADER)
+        .header("Accept", "image/*")
+        .reply(200)
+        .body(MOCK_BODY)
+    )
+
+    photon_get(
+        MediaInfo(
+            media_identifier=image.identifier,
+            media_provider=image.provider,
+            image_url=image_url,
+            width=image.width,
+        )
+    )
+
+
+@pytest.mark.django_db
+@pytest.mark.pook(start_active=False)
+def test_wikimedia_thumbnail_default_params_large_image():
+    image_url = (
+        "https://upload.wikimedia.org/wikipedia/commons/9/9e/Color_icon_yellow.svg"
+    )
+    width = settings.THUMBNAIL_WIDTH_PX + 1
+    image = ImageFactory.create(url=image_url, provider="wikimedia", width=width)
+    # Uses the default thumbnail setting because that value is smaller than the width of the image
+    expected_thumbnail_url_path = f"upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Color_icon_yellow.svg/lossy-{settings.THUMBNAIL_WIDTH_PX}px-Color_icon_yellow.svg.png"
+
+    pook.on()
+    (
+        pook.get(settings.PHOTON_ENDPOINT + expected_thumbnail_url_path)
+        .params(
+            {
+                "ssl": "true",
+            }
+        )
+        .header("User-Agent", UA_HEADER)
+        .header("Accept", "image/*")
+        .reply(200)
+        .body(MOCK_BODY)
+    )
+
+    photon_get(
+        MediaInfo(
+            media_identifier=image.identifier,
+            media_provider=image.provider,
+            image_url=image_url,
+            width=image.width,
+        )
+    )
+
+
+@pytest.mark.django_db
+@pytest.mark.pook(start_active=False)
+def test_wikimedia_thumbnail_default_params_unknown_width():
+    image_url = (
+        "https://upload.wikimedia.org/wikipedia/commons/9/9e/Color_icon_yellow.svg"
+    )
+    image = ImageFactory.create(url=image_url, provider="wikimedia")
+    # Uses the default thumbnail setting because the actual image size is unknown
+    expected_thumbnail_url_path = f"upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Color_icon_yellow.svg/lossy-{settings.THUMBNAIL_WIDTH_PX}px-Color_icon_yellow.svg.png"
+
+    pook.on()
+    (
+        pook.get(settings.PHOTON_ENDPOINT + expected_thumbnail_url_path)
+        .params(
+            {
+                "ssl": "true",
+            }
+        )
+        .header("User-Agent", UA_HEADER)
+        .header("Accept", "image/*")
+        .reply(200)
+        .body(MOCK_BODY)
+    )
+
+    photon_get(
+        MediaInfo(
+            media_identifier=image.identifier,
+            media_provider=image.provider,
+            image_url=image_url,
+            width=None,
+        )
+    )
+
+
+@pytest.mark.django_db
+@pytest.mark.pook(start_active=False)
+def test_wikimedia_thumbnail_full_size_params():
+    image_url = (
+        "https://upload.wikimedia.org/wikipedia/commons/9/9e/Color_icon_yellow.svg"
+    )
+    image = ImageFactory.create(url=image_url, provider="wikimedia")
+    expected_thumbnail_url_path = f"upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Color_icon_yellow.svg/lossy-{image.width}px-Color_icon_yellow.svg.png"
+
+    pook.on()
+    (
+        pook.get(settings.PHOTON_ENDPOINT + expected_thumbnail_url_path)
+        .params(
+            {
+                "ssl": "true",
+            }
+        )
+        .header("User-Agent", UA_HEADER)
+        .header("Accept", "image/*")
+        .reply(200)
+        .body(MOCK_BODY)
+    )
+
+    photon_get(
+        MediaInfo(
+            media_identifier=image.identifier,
+            media_provider=image.provider,
+            image_url=image_url,
+            width=image.width,
+        ),
+        request_config=RequestConfig(is_full_size=True),
+    )
+
+
+@pytest.mark.django_db
+@pytest.mark.pook(start_active=False)
+def test_wikimedia_thumbnail_uncompressed_params():
+    image_url = (
+        "https://upload.wikimedia.org/wikipedia/commons/9/9e/Color_icon_yellow.svg"
+    )
+    # ensure image width is larger than the default so we can reliably assert it is _not_ pulling the full-size image
+    # if width is smaller than the default, even if we request full size, it will always use the images actual width
+    # to prevent wikimedia's thumbnail service from upscaling the image, which it will do if the requested width is
+    # larger than the actual width of the image
+    width = settings.THUMBNAIL_WIDTH_PX + 1
+    image = ImageFactory.create(url=image_url, provider="wikimedia", width=width)
+    expected_thumbnail_url_path = f"upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Color_icon_yellow.svg/{settings.THUMBNAIL_WIDTH_PX}px-Color_icon_yellow.svg.png"
+
+    pook.on()
+    (
+        pook.get(settings.PHOTON_ENDPOINT + expected_thumbnail_url_path)
+        .params(
+            {
+                "ssl": "true",
+            }
+        )
+        .header("User-Agent", UA_HEADER)
+        .header("Accept", "image/*")
+        .reply(200)
+        .body(MOCK_BODY)
+    )
+
+    photon_get(
+        MediaInfo(
+            media_identifier=image.identifier,
+            media_provider=image.provider,
+            image_url=image_url,
+            width=image.width,
+        ),
+        request_config=RequestConfig(is_compressed=False),
+    )
+
+
+@pytest.mark.django_db
+@pytest.mark.pook(start_active=False)
+def test_wikimedia_thumbnail_uncompressed_full_size_params():
+    image_url = (
+        "https://upload.wikimedia.org/wikipedia/commons/9/9e/Color_icon_yellow.svg"
+    )
+    image = ImageFactory.create(url=image_url, provider="wikimedia")
+    expected_thumbnail_url_path = f"upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Color_icon_yellow.svg/{image.width}px-Color_icon_yellow.svg.png"
+
+    pook.on()
+    (
+        pook.get(settings.PHOTON_ENDPOINT + expected_thumbnail_url_path)
+        .params(
+            {
+                "ssl": "true",
+            }
+        )
+        .header("User-Agent", UA_HEADER)
+        .header("Accept", "image/*")
+        .reply(200)
+        .body(MOCK_BODY)
+    )
+
+    photon_get(
+        MediaInfo(
+            media_identifier=image.identifier,
+            media_provider=image.provider,
+            image_url=image_url,
+            width=image.width,
+        ),
+        request_config=RequestConfig(is_compressed=False, is_full_size=True),
+    )
+
+
+@pytest.mark.django_db
+@pytest.mark.pook(start_active=False)
+def test_wikimedia_thumbnail_unknown_url_format():
+    image_url = "https://upload.wikimedia.org/path_prefix/Color_icon_yellow.jpg"
+    image = ImageFactory.create(url=image_url, provider="wikimedia")
+    expected_thumbnail_url_path = (
+        "upload.wikimedia.org/path_prefix/Color_icon_yellow.jpg"
+    )
+
+    pook.on()
+    (
+        pook.get(settings.PHOTON_ENDPOINT + expected_thumbnail_url_path)
+        .params(
+            {
+                "ssl": "true",
+                "w": THUMBNAIL_WIDTH_PARAM,
+                "quality": settings.THUMBNAIL_QUALITY,
+            }
+        )
+        .header("User-Agent", UA_HEADER)
+        .header("Accept", "image/*")
+        .reply(200)
+        .body(MOCK_BODY)
+    )
+
+    photon_get(
+        MediaInfo(
+            media_identifier=image.identifier,
+            media_provider=image.provider,
+            image_url=image_url,
+            width=image.width,
+        ),
+    )
