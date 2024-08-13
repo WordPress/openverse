@@ -1050,22 +1050,48 @@ def test_upsert_records_merges_tags(
     IMG_URL = "https://images.com/a/img.jpg"
     LICENSE = "by"
 
-    TAGS_A = json.dumps(
-        [{"name": "tagone", "provider": "test"}, {"name": "tagtwo", "provider": "test"}]
-    )
-    TAGS_B = json.dumps(
+    unchanged_provider_tag = {"name": "unchanged_provider_tag", "provider": PROVIDER}
+    deleted_provider_tag = {"name": "deleted_provider_tag", "provider": PROVIDER}
+    brand_new_tag = {"name": "brand_new_tag", "provider": PROVIDER}
+    shared_machine_tag = {"name": "shared_tag", "provider": "magic_vision_ai"}
+    incoming_shared_provider_tag = shared_machine_tag | {"provider": PROVIDER}
+
+    # e.g., the provider had a tag that we also added during enrichment, but the provider deleted it
+    retained_machine_tag = deleted_provider_tag | {"provider": "magic_vision_ai"}
+
+    EXISTING_TAGS = json.dumps(
         [
-            {"name": "tagone", "provider": "test"},
-            {"name": "tagthree", "provider": "test"},
+            unchanged_provider_tag,
+            deleted_provider_tag,
+            shared_machine_tag,
+            retained_machine_tag,
         ]
     )
+    INCOMING_TAGS = json.dumps(
+        [
+            unchanged_provider_tag,
+            brand_new_tag,
+            incoming_shared_provider_tag,
+        ]
+    )
+
+    # i.e., we retain everything not from the provider, and only use the most recent ("incoming") provider tags
+    # the "shared" tags test that any distinctness checking only deduplicates tags that share a provider
+    # and does not delete enriched tags in favour of tags from the provider with the same name
+    EXPECTED_TAGS = [
+        unchanged_provider_tag,
+        brand_new_tag,
+        shared_machine_tag,
+        incoming_shared_provider_tag,
+        retained_machine_tag,
+    ]
 
     query_values_a = utils.create_query_values(
         {
             col.FOREIGN_ID.db_name: FID,
             col.DIRECT_URL.db_name: IMG_URL,
             col.LICENSE.db_name: LICENSE,
-            col.TAGS.db_name: TAGS_A,
+            col.TAGS.db_name: EXISTING_TAGS,
             col.PROVIDER.db_name: PROVIDER,
         }
     )
@@ -1076,7 +1102,7 @@ def test_upsert_records_merges_tags(
             col.FOREIGN_ID.db_name: FID,
             col.DIRECT_URL.db_name: IMG_URL,
             col.LICENSE.db_name: LICENSE,
-            col.TAGS.db_name: TAGS_B,
+            col.TAGS.db_name: INCOMING_TAGS,
             col.PROVIDER.db_name: PROVIDER,
         }
     )
@@ -1112,15 +1138,10 @@ def test_upsert_records_merges_tags(
     actual_rows = postgres_with_load_and_image_table.cursor.fetchall()
     actual_row = actual_rows[0]
     assert len(actual_rows) == 1
-    expect_tags = [
-        {"name": "tagone", "provider": "test"},
-        {"name": "tagtwo", "provider": "test"},
-        {"name": "tagthree", "provider": "test"},
-    ]
     actual_tags = actual_row[utils.tags_idx]
-    assert len(actual_tags) == 3
-    assert all([t in expect_tags for t in actual_tags])
-    assert all([t in actual_tags for t in expect_tags])
+    assert all([t in EXPECTED_TAGS for t in actual_tags])
+    assert all([t in actual_tags for t in EXPECTED_TAGS])
+    assert len(actual_tags) == len(EXPECTED_TAGS)
 
 
 def test_upsert_records_does_not_replace_tags_with_null(
@@ -1139,6 +1160,8 @@ def test_upsert_records_does_not_replace_tags_with_null(
     IMG_URL = "https://images.com/a/img.jpg"
     LICENSE = "by"
 
+    # These are all retained because `provider` on the tag != the image provider
+    # Therefore, these tags are not filtered out, even though the incoming tags are empty
     TAGS = [
         {"name": "tagone", "provider": "test"},
         {"name": "tagtwo", "provider": "test"},
