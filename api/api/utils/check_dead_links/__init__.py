@@ -17,7 +17,6 @@ from api.utils.dead_link_mask import get_query_mask, save_query_mask
 
 
 logger = structlog.get_logger(__name__)
-head_logger = structlog.get_logger(f"{__name__}._head")
 
 CACHE_PREFIX = "valid:"
 HEADERS = {
@@ -41,35 +40,31 @@ def _get_expiry(status, default):
 
 
 _timeout = aiohttp.ClientTimeout(total=settings.LINK_VALIDATION_TIMEOUT_SECONDS)
-_TIMEOUT_STATUS = -2
+
 _ERROR_STATUS = -1
 
 
 async def _head(
     url: str, session: aiohttp.ClientSession, provider: str
 ) -> tuple[str, int]:
-    start_time = time.perf_counter()
-
     try:
         response = await session.head(
-            url, allow_redirects=False, headers=HEADERS, timeout=_timeout
+            url,
+            allow_redirects=False,
+            headers=HEADERS,
+            timeout=_timeout,
+            raise_for_status=True,
+            trace_request_ctx={
+                "timing_event_name": "dead_link_validation_timing",
+                "timing_event_ctx": {
+                    "provider": provider,
+                },
+            },
         )
         status = response.status
     except (aiohttp.ClientError, asyncio.TimeoutError) as exception:
-        if not isinstance(exception, asyncio.TimeoutError):
-            head_logger.error("dead_link_validation_error", e=exception)
-            status = _ERROR_STATUS
-        else:
-            status = _TIMEOUT_STATUS
-
-    end_time = time.perf_counter()
-    logger.info(
-        "dead_link_validation_timing",
-        url=url,
-        status=status,
-        time=end_time - start_time,
-        provider=provider,
-    )
+        logger.error("dead_link_validation_error", e=exception)
+        status = _ERROR_STATUS
 
     return url, status
 
@@ -140,7 +135,7 @@ def check_dead_links(query_hash: str, start_slice: int, results: list[Hit]) -> N
     for key, status in to_cache.items():
         if status == 200:
             logger.debug(f"healthy link key={key}")
-        elif status == _TIMEOUT_STATUS or status == _ERROR_STATUS:
+        elif status == _ERROR_STATUS:
             logger.debug(f"no response from provider key={key}")
         else:
             logger.debug(f"broken link key={key}")
