@@ -173,30 +173,32 @@ def base_repo_name(pr: dict):
     return pr["base"]["repo"]["name"]
 
 
-_BRANCH_PROTECTION_CACHE = defaultdict(dict)
+def get_branch_protection(
+    gh: GitHubAPI, repo: str, branch_name: str, cache: dict
+) -> dict:
+    if branch_name not in cache[repo]:
+        cache[repo][branch_name] = gh.get_branch_protection(repo, branch_name)
 
-
-def get_branch_protection(gh: GitHubAPI, repo: str, branch_name: str) -> dict:
-    if branch_name not in _BRANCH_PROTECTION_CACHE[repo]:
-        _BRANCH_PROTECTION_CACHE[repo][branch_name] = gh.get_branch_protection(
-            repo, branch_name
-        )
-
-    return _BRANCH_PROTECTION_CACHE[repo][branch_name]
+    return cache[repo][branch_name]
 
 
 def get_min_required_approvals(gh: GitHubAPI, pr: dict) -> int:
+    branch_protection_cache = defaultdict(dict)
     repo = base_repo_name(pr)
     branch_name = pr["base"]["ref"]
 
     try:
-        branch_protection_rules = get_branch_protection(gh, repo, branch_name)
+        branch_protection_rules = get_branch_protection(
+            gh, repo, branch_name, branch_protection_cache
+        )
     except HTTPError as e:
         # If the base branch does not have protection rules, the request
         # above will 404. In that case, fall back to the rules for `main`
         # as a safe default.
         if e.response is not None and e.response.status_code == 404:
-            branch_protection_rules = get_branch_protection(gh, repo, "main")
+            branch_protection_rules = get_branch_protection(
+                gh, repo, "main", branch_protection_cache
+            )
         else:
             raise e
 
@@ -204,7 +206,9 @@ def get_min_required_approvals(gh: GitHubAPI, pr: dict) -> int:
         # This can happen in the rare case where a PR is multiple branches deep,
         # e.g. it depends on a branch which depends on a branch which depends on main.
         # In that case, default to the rules for `main` as a safe default.
-        branch_protection_rules = get_branch_protection(gh, repo, "main")
+        branch_protection_rules = get_branch_protection(
+            gh, repo, "main", branch_protection_cache
+        )
 
     return branch_protection_rules["required_pull_request_reviews"][
         "required_approving_review_count"
