@@ -115,8 +115,13 @@ package to the Python `openverse-api-client` package. The `src/generated`
 directory contains these generated files.
 
 Refer to
-[the Python package's "Development and implementation details" documentation](https://docs.openverse.org/packages/python/api_client/index.html#development-and-implementation-details)
+[the Python package's "Development and implementation details" documentation](/packages/python/api_client/index.md#development-and-implementation-details)
 for details on how type generation is implemented and maintained.
+
+## Versioning
+
+This package follows semantic versioning. Refer to the
+["Versioning" section of the related Python package how to interpret this with respect to changes in the Openverse API](/packages/python/api_client/index.md#versioning).
 
 ## License
 

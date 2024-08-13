@@ -96,9 +96,49 @@ localhost_openverse = OpenverseClient(
 )
 ```
 
-## Development
+## Versioning
 
-Please refer to the repository README
+This package and the `@openverse/api-client` package follow
+[semantic versioning](https://semver.org/). For both packages, the version of
+the package reflects changes to the client APIs rather than tracking any
+particular changes in the Openverse REST API. Any change to the client APIs to
+support changes in the Openverse REST API will be reflected as major, minor, or
+patch versions depending on their affect to the client API, rather than to
+reflect the significance of changes in the Openverse REST API.
+
+## Development and implementation details
+
+This package and the `@openverse/api-client` package rely on types and code
+generated based on the Openverse REST API's OpenAPI schema. You can access the
+schema at <https://api.openverse.org/v1/schema/>.
+
+An internal `openverse_api_client_generator` package is responsible for
+interpreting the OpenAPI schema and translating it into Python data structures
+used to generate Python and TypeScript code from Jinja2 templates.
+
+To generate new code based on the latest OpenAPI schema, run:
+
+```shell
+ov just pdm api-client run generate --openverse-api-url https://api.openverse.org
+```
+
+This will update the Python and TypeScript code. Changes to the generated files
+should be committed, even though they are generated artefacts. The rationale for
+this is to support building the API clients without needing to have access to a
+running Openverse API instance (for example, in CI/CD), otherwise every new
+clone of the Openverse repository (including in CI) would need to generate the
+API client code.
+
+This also makes it easier to review changes in the generated code as it will
+appear directly in pull request diffs.
+
+The API clients are not strictly coupled to the latest code in the Openverse
+API. New client code only needs to be generated when new features are available
+in the production Openverse API. Decoupling these from each other allows
+Openverse maintainers to verify new features in production before publishing API
+clients that support them, in case those features need to be rolled back. This
+means maintainers must intentionally generate new API client code for review in
+PRs separate from the changes to the Openverse REST API itself.
 
 ## License
 
