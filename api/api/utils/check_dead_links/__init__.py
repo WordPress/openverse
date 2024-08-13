@@ -53,7 +53,15 @@ async def _head(
             allow_redirects=False,
             headers=HEADERS,
             timeout=_timeout,
-            raise_for_status=True,
+            # do not raise_for_status=True; we want "bad" status codes
+            # so we can cache on them and interpret them per provider
+            # the except block should only handle errors in making or
+            # receiving the response, but not the content of the response
+            # e.g., a 500 from upstream is good information for dead link
+            # validation. An issue with timeouts or being able to actually
+            # access the upstream over the wire are problems we want in
+            # the log and for which we need to fall back to the _ERROR_STATUS
+            # because we won't have a true status from upstream.
             trace_request_ctx={
                 "timing_event_name": "dead_link_validation_timing",
                 "timing_event_ctx": {
@@ -63,7 +71,7 @@ async def _head(
         )
         status = response.status
     except (aiohttp.ClientError, asyncio.TimeoutError) as exception:
-        logger.error("dead_link_validation_error", e=exception)
+        logger.error("dead_link_validation_error", exc_info=True, e=exception)
         status = _ERROR_STATUS
 
     return url, status
