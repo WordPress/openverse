@@ -82,7 +82,7 @@ def test_handles_error(monkeypatch):
     # so should not appear in the final list of results.
     assert len(results) == 0
 
-    # A timeout should not get logged as an error
+    # A non-timeout exception should get logged as an error
     log_event = next((log for log in logs if log["log_level"] == "error"), None)
     assert log_event is not None
 
