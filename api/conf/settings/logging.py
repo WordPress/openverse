@@ -54,9 +54,14 @@ shared_processors = [
     # https://github.com/kiwicom/structlog-sentry - for Sentry integration
     # Must go after `add_logger_name` and `add_log_level`,
     # but before `format_exc_info`
-    # `level` here dictates which log levels will be included in breadcrumbs
-    # Set to WARNING for now to prevent PII/sensitive information from appearing there
-    SentryProcessor(event_level=logging.ERROR, level=logging.WARNING),
+    SentryProcessor(
+        event_level=logging.ERROR,
+        # `level` here dictates which log levels will be included in breadcrumbs
+        # Set to WARNING for now to prevent PII/sensitive info from appearing there
+        level=logging.WARNING,
+        # Also ignore any Django SQL logs entirely in case they get enabled
+        ignore_loggers=["django.db.backends"],
+    ),
     structlog.processors.format_exc_info,
     structlog.processors.UnicodeDecoder(),
 ]
