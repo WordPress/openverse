@@ -71,7 +71,16 @@ async def _head(
         )
         status = response.status
     except (aiohttp.ClientError, asyncio.TimeoutError) as exception:
-        logger.error("dead_link_validation_error", exc_info=True, e=exception)
+        if not isinstance(exception, asyncio.TimeoutError):
+            # only log non-timeout exceptions. Timeouts are more or less expected
+            # and we have means of visibility into them (e.g., querying for timings
+            # that exceed the timeout); they do _not_ need to be in the error log or go to Sentry
+            # The timeout exception class aiohttp uses is a subclass of `ClientError` and `asyncio.TimeoutError`,
+            # so we have to explicitly check that the error is _not_ an asyncio timeout error, not that it
+            # _is_ an aiohttp error. When it is a timeout error, it will be both `asyncio.TimeoutError` and
+            # `aiohttp.ClientError` because it's a subclass of both
+            logger.error("dead_link_validation_error", exc_info=True, exc=exception)
+
         status = _ERROR_STATUS
 
     return url, status

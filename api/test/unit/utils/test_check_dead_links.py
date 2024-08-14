@@ -2,9 +2,9 @@ import asyncio
 from collections.abc import Callable
 from typing import Any
 
+import aiohttp
 import pook
 import pytest
-from aiohttp.client import ClientSession
 from elasticsearch_dsl.response import Hit
 from structlog.testing import capture_logs
 
@@ -44,12 +44,6 @@ def test_sends_user_agent():
 
 
 def test_handles_timeout(monkeypatch):
-    """
-    Test that case where timeout occurs.
-
-    Note: This test takes just over 3 seconds to run as it simulates network delay of
-    3 seconds.
-    """
     query_hash = "test_handles_timeout"
     results = _make_hits(1)
     start_slice = 0
@@ -57,13 +51,40 @@ def test_handles_timeout(monkeypatch):
     async def raise_timeout_error(*args, **kwargs):
         raise asyncio.TimeoutError()
 
-    monkeypatch.setattr(ClientSession, "_request", raise_timeout_error)
-    check_dead_links(query_hash, start_slice, results)
+    monkeypatch.setattr(aiohttp.ClientSession, "_request", raise_timeout_error)
+    with capture_logs() as logs:
+        check_dead_links(query_hash, start_slice, results)
 
     # `check_dead_links` directly modifies the results list
     # if the results are timing out then they're considered dead and discarded
     # so should not appear in the final list of results.
     assert len(results) == 0
+
+    # A timeout should not get logged as an error
+    log_event = next((log for log in logs if log["log_level"] == "error"), None)
+    assert log_event is None
+
+
+def test_handles_error(monkeypatch):
+    query_hash = "test_handles_timeout"
+    results = _make_hits(1)
+    start_slice = 0
+
+    async def raise_nontimeout_error(*args, **kwargs):
+        raise aiohttp.InvalidURL("https://invalid-url")
+
+    monkeypatch.setattr(aiohttp.ClientSession, "_request", raise_nontimeout_error)
+    with capture_logs() as logs:
+        check_dead_links(query_hash, start_slice, results)
+
+    # `check_dead_links` directly modifies the results list
+    # if the results are erroring out then they're considered dead and discarded
+    # so should not appear in the final list of results.
+    assert len(results) == 0
+
+    # A non-timeout exception should get logged as an error
+    log_event = next((log for log in logs if log["log_level"] == "error"), None)
+    assert log_event is not None
 
 
 @pook.on
