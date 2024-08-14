@@ -53,18 +53,6 @@ repos:
           - --fix
       - id: ruff-format # replaces Black
 
-  # Use the `.prettierignore` and `.prettier.config.js` files to configure project-specific requirements.
-  - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v3.1.0
-    hooks:
-      - id: prettier
-        # Must include any plugins defined in prettier.config.js, along with TypeScript and Prettier themselves
-        # Versions must be manually kept in sync with those in the pnpm-lock.yaml file to prevent drift.
-        additional_dependencies:
-          - prettier@3.3.3
-          - prettier-plugin-tailwindcss@0.6.5
-          - typescript@5.5.4
-
   - repo: https://github.com/koalaman/shellcheck-precommit
     rev: v0.10.0
     hooks:
@@ -122,6 +110,15 @@ repos:
         entry: bash -c 'pnpm run prepare:nuxt && pnpm run -r types'
         language: system
         pass_filenames: false
+
+      - id: prettier
+        name: prettier
+        "types": [text]
+        language: system
+        pass_filenames: true
+        # Set log-level to error to prevent prettier printing every single file it checks
+        # when running pre-commit with --all-files
+        entry: pnpm exec prettier --write --ignore-unknown --log-level error
 
       - id: eslint
         name: eslint

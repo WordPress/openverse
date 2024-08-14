@@ -77,6 +77,8 @@ install:
 # Install `ov`-based git hooks
 @install-hooks:
     bash -c "cp ./docker/dev_env/hooks/* ./.git/hooks"
+    # Run pnpm install to ensure eslint and prettier are available
+    pnpm install
 
 # Create an `.ov_profile.json` as a starting point for development environment customisation. Does not make changes if the file already exists.
 init-ov-profile:
