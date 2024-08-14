@@ -54,7 +54,9 @@ shared_processors = [
     # https://github.com/kiwicom/structlog-sentry - for Sentry integration
     # Must go after `add_logger_name` and `add_log_level`,
     # but before `format_exc_info`
-    SentryProcessor(event_level=logging.ERROR),
+    # `level` here dictates which log levels will be included in breadcrumbs
+    # Set to WARNING for now to prevent PII/sensitive information from appearing there
+    SentryProcessor(event_level=logging.ERROR, level=logging.WARNING),
     structlog.processors.format_exc_info,
     structlog.processors.UnicodeDecoder(),
 ]

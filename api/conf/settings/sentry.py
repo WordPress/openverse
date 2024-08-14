@@ -15,6 +15,10 @@ DEBUG = config("DJANGO_DEBUG_ENABLED", default=False, cast=bool)
 
 INTEGRATIONS = [
     DjangoIntegration(),
+    # This prevents two errors from being sent to Sentry (one with the correct
+    # information and the other with the logged JSON as the error name), since we
+    # use JSON-logging as well which can conflict with the way Sentry expects alerts.
+    # https://github.com/kiwicom/structlog-sentry?tab=readme-ov-file#logging-as-json
     LoggingIntegration(event_level=None, level=None),
 ]
 
