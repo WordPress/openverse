@@ -15,7 +15,7 @@ PHOTON_ENDPOINT = config("PHOTON_ENDPOINT", default="https://i0.wp.com/")
 # they're just passed through to Photon's API
 # Keeping them as strings makes the tests slightly less verbose (for not needing
 # to cast them in assertions to match the parsed param types)
-THUMBNAIL_WIDTH_PX = config("THUMBNAIL_WIDTH_PX", default="600")
+THUMBNAIL_WIDTH_PX = config("THUMBNAIL_WIDTH_PX", default="600", cast=int)
 THUMBNAIL_QUALITY = config("THUMBNAIL_JPG_QUALITY", default="80")
 
 # The length of time to cache repeated thumbnail failures
@@ -36,4 +36,9 @@ THUMBNAIL_UPSTREAM_TIMEOUT = config("THUMBNAIL_UPSTREAM_TIMEOUT", default=4, cas
 # Timeout when trying to determine the filetype based on a HEAD request to the upstream image provider
 THUMBNAIL_EXTENSION_REQUEST_TIMEOUT = config(
     "THUMBNAIL_EXTENSION_REQUEST_TIMEOUT", default=4, cast=int
+)
+
+# Use Wikimedia's thumbnail endpoint when requesting thumbnails from Site Accelerator (formerly Photon)
+USE_WIKIMEDIA_THUMBNAIL_ENDPOINT = config(
+    "USE_WIKIMEDIA_THUMBNAIL_ENDPOINT", default=True, cast=bool
 )

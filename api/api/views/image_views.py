@@ -110,6 +110,7 @@ class ImageViewSet(MediaViewSet):
             media_identifier=image.identifier,
             media_provider=image.provider,
             image_url=image_url,
+            width=image.width,
         )
 
     @thumbnail_docs

@@ -43,6 +43,7 @@ def test_thumbnail_uses_upstream_thumb_for_smk(
 ):
     thumb_url = "http://iip.smk.dk/thumb.jpg" if smk_has_thumb else None
     image = ImageFactory.create(
+        provider="smk",
         url="http://iip.smk.dk/image.jpg",
         thumbnail=thumb_url,
     )
