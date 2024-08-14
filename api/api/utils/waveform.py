@@ -11,7 +11,6 @@ from rest_framework import status
 from rest_framework.exceptions import APIException
 
 import requests
-import sentry_sdk
 import structlog
 
 
@@ -79,11 +78,10 @@ def download_audio(url, identifier):
             with open(TMP_DIR.joinpath(file_name), "wb") as file:
                 shutil.copyfileobj(res.raw, file)
     except (requests.RequestException, ValueError) as e:
-        logger.error("waveform_audio_download_failed", e=e)
+        logger.error("waveform_audio_download_failed", exc=e, exc_info=True)
         if isinstance(e, requests.RequestException):
             raise UpstreamWaveformException()
         else:
-            sentry_sdk.capture_exception(e)
             raise WaveformGenerationFailure("Unknown file extension")
 
     return file_name
@@ -126,8 +124,9 @@ def generate_waveform(file_name: str, duration: int):
     try:
         proc = subprocess.run(args, cwd=TMP_DIR, check=True, capture_output=True)
     except subprocess.CalledProcessError as e:
-        logger.error("waveform_generation_failed", file_name=file_name, e=e)
-        sentry_sdk.capture_exception(e)
+        logger.error(
+            "waveform_generation_failed", file_name=file_name, exc=e, exc_info=True
+        )
         # Do not return details of the exception; we're calling directly to a system binary, and
         # the command output could be sensitive. Folks debugging can find details in the logs
         raise WaveformGenerationFailure()
@@ -186,8 +185,9 @@ def cleanup(file_name):
             os.remove(file_path)
         except (OSError, FileNotFoundError) as e:
             # Do not raise a further exception, because this actually doesn't necessarily mean the request needs to fail
-            sentry_sdk.capture_exception(e)
-            logger.error("waveform_cleanup_failed", e=e, file_name=file_name)
+            logger.error(
+                "waveform_cleanup_failed", exc=e, file_name=file_name, exc_info=True
+            )
             return
 
         logger.debug("file deleted")

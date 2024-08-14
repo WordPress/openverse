@@ -3,7 +3,6 @@ import time
 import weakref
 
 import aiohttp
-import sentry_sdk
 import structlog
 from django_asgi_lifespan.signals import asgi_shutdown
 
@@ -32,8 +31,7 @@ async def _close_sessions(sender, **kwargs):
             await session.close()
             closed_sessions += 1
         except BaseException as exc:
-            logger.error(exc)
-            sentry_sdk.capture_exception(exc)
+            logger.error("Error closing sessions", exc=exc, exc_info=True)
 
     logger.debug("Successfully closed %s session(s)", closed_sessions)
 

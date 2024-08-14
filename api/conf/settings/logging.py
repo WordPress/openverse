@@ -1,7 +1,9 @@
+import logging
 from logging import LogRecord
 
 import structlog
 from decouple import config
+from structlog_sentry import SentryProcessor
 
 from conf.settings.base import ENVIRONMENT, INSTALLED_APPS, MIDDLEWARE
 from conf.settings.security import DEBUG
@@ -49,6 +51,17 @@ shared_processors = [
         }
     ),
     structlog.processors.StackInfoRenderer(),
+    # https://github.com/kiwicom/structlog-sentry - for Sentry integration
+    # Must go after `add_logger_name` and `add_log_level`,
+    # but before `format_exc_info`
+    SentryProcessor(
+        event_level=logging.ERROR,
+        # `level` here dictates which log levels will be included in breadcrumbs
+        # Set to WARNING for now to prevent PII/sensitive info from appearing there
+        level=logging.WARNING,
+        # Also ignore any Django SQL logs entirely in case they get enabled
+        ignore_loggers=["django.db.backends"],
+    ),
     structlog.processors.format_exc_info,
     structlog.processors.UnicodeDecoder(),
 ]

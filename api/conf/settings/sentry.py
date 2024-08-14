@@ -1,7 +1,7 @@
 import sentry_sdk
 from decouple import config
 from sentry_sdk.integrations.django import DjangoIntegration
-from sentry_sdk.integrations.logging import ignore_logger
+from sentry_sdk.integrations.logging import LoggingIntegration, ignore_logger
 
 from conf.settings.base import ENVIRONMENT
 
@@ -12,10 +12,20 @@ SENTRY_SAMPLE_RATE = config("SENTRY_SAMPLE_RATE", default=1.0, cast=float)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DJANGO_DEBUG_ENABLED", default=False, cast=bool)
+
+INTEGRATIONS = [
+    DjangoIntegration(),
+    # This prevents two errors from being sent to Sentry (one with the correct
+    # information and the other with the logged JSON as the error name), since we
+    # use JSON-logging as well which can conflict with the way Sentry expects alerts.
+    # https://github.com/kiwicom/structlog-sentry?tab=readme-ov-file#logging-as-json
+    LoggingIntegration(event_level=None, level=None),
+]
+
 if not DEBUG and SENTRY_DSN:
     sentry_sdk.init(
         dsn=SENTRY_DSN,
-        integrations=[DjangoIntegration()],
+        integrations=INTEGRATIONS,
         traces_sample_rate=SENTRY_SAMPLE_RATE,
         send_default_pii=False,
         environment=ENVIRONMENT,
