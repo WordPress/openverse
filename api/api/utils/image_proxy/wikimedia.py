@@ -30,12 +30,11 @@ def get_wikimedia_thumbnail_url(
 
     groups = path_match.groupdict()
 
-    if request_config.is_full_size and media_info.width:
-        width = media_info.width
+    if request_config.is_full_size:
+        width = media_info.width or settings.THUMBNAIL_WIDTH_PX
     else:
-        # either not full size or there is no width defined
-        # if no width is defined, use the default thumbnail size (by falling back to infinity for the media_info.width)
-        # otherwise, use whichever is smallest, so that Wikimedia does not upscale the image
+        # If not full size, prevent Wikimedia from upscaling the image by using the smaller of
+        # the default thumbnail size or media_info.width
         # Wikimedia _requires_ sending a width, so there's no other fallback than the default thumbnail size
         width = min(settings.THUMBNAIL_WIDTH_PX, media_info.width or inf)
 
