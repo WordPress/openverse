@@ -1,53 +1,41 @@
-<script lang="ts">
-import { defineComponent, PropType } from "vue"
-
-import VButton from "~/components/VButton.vue"
-import VIcon from "~/components/VIcon/VIcon.vue"
-
-import type { TranslateResult } from "vue-i18n"
-
+<script setup lang="ts">
 /**
  * The buttons placed inside the mobile search bar in the header.
  * They are based on the VButton, look like they have a smallish focus area
  * (32x32px), but actually have a larger tappable area of 48x48px to comply with
  * accessibility requirements.
  */
-export default defineComponent({
-  name: "VSearchBarButton",
-  components: { VIcon, VButton },
-  props: {
+import VButton from "~/components/VButton.vue"
+import VIcon from "~/components/VIcon/VIcon.vue"
+
+withDefaults(
+  defineProps<{
     /**
      * The name of the icon.
      */
-    icon: {
-      type: String,
-      required: true,
-    },
+    icon: string
     /**
      * Whether the icon should be flipped when the page is in RTL mode.
      */
-    rtlFlip: {
-      type: Boolean,
-      default: false,
-    },
+    rtlFlip?: boolean
     /**
      * The label to use as accessible name for the button (aria-label).
      */
-    label: {
-      type: [String, Object] as PropType<string | TranslateResult>,
-      required: true,
-    },
+    label: string
     /**
      * The style of the inner area, matches the variants of VButton component.
      */
-    variant: {
-      type: String as PropType<
-        "transparent-dark" | "transparent-gray" | "filled-white" | "filled-gray"
-      >,
-      default: "transparent-dark",
-    },
-  },
-})
+    variant?:
+      | "transparent-dark"
+      | "transparent-gray"
+      | "filled-white"
+      | "filled-gray"
+  }>(),
+  {
+    rtlFlip: false,
+    variant: "transparent-dark",
+  }
+)
 </script>
 
 <template>

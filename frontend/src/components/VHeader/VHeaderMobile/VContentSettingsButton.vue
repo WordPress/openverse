@@ -1,22 +1,16 @@
-<script lang="ts">
-import { defineComponent } from "vue"
-
+<script setup lang="ts">
 import VSearchBarButton from "~/components/VHeader/VHeaderMobile/VSearchBarButton.vue"
 
-export default defineComponent({
-  name: "VContentSettingsButton",
-  components: { VSearchBarButton },
-  props: {
-    isPressed: {
-      type: Boolean,
-      default: false,
-    },
-    appliedFilterCount: {
-      type: Number,
-      default: 0,
-    },
-  },
-})
+withDefaults(
+  defineProps<{
+    isPressed?: boolean
+    appliedFilterCount?: number
+  }>(),
+  {
+    isPressed: false,
+    appliedFilterCount: 0,
+  }
+)
 </script>
 
 <template>

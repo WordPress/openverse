@@ -1,44 +1,33 @@
-<script lang="ts">
-import { computed, defineComponent } from "vue"
-
-import { defineEvent } from "~/types/emits"
-
-import VButton from "~/components/VButton.vue"
-
+<script setup lang="ts">
 /**
  * This button dismisses the open modal for changing content types or applying
  * filters and takes the user back to the results.
  */
-export default defineComponent({
-  name: "VShowResultsButton",
-  components: { VButton },
-  props: {
+import { computed } from "vue"
+
+import VButton from "~/components/VButton.vue"
+
+withDefaults(
+  defineProps<{
     /**
      * whether the results are being updated behind the open modal
      */
-    isFetching: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  emits: {
-    click: defineEvent(),
-  },
-  setup() {
-    const diameter = 8 // px
-    const spacing = 8 // px
+    isFetching?: boolean
+  }>(),
+  {
+    isFetching: false,
+  }
+)
 
-    const radius = computed(() => diameter / 2)
-    const width = computed(() => diameter * 3 + spacing * 2)
+defineEmits<{
+  click: []
+}>()
 
-    return {
-      diameter,
-      spacing,
-      radius,
-      width,
-    }
-  },
-})
+const diameter = 8 // px
+const spacing = 8 // px
+
+const radius = computed(() => diameter / 2)
+const width = computed(() => diameter * 3 + spacing * 2)
 </script>
 
 <template>

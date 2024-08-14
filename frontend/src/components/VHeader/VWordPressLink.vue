@@ -1,19 +1,13 @@
-<script lang="ts">
+<script setup lang="ts">
 import VLink from "~/components/VLink.vue"
 import VSvg from "~/components/VSvg/VSvg.vue"
 
-import type { PropType } from "vue"
-
-export default {
-  name: "VWordPressLink",
-  components: { VLink, VSvg },
-  props: {
-    mode: {
-      type: String as PropType<"dark" | "light">,
-      default: "light",
-    },
-  },
-}
+withDefaults(
+  defineProps<{
+    mode: "dark" | "light"
+  }>(),
+  { mode: "light" }
+)
 </script>
 
 <template>

@@ -1,10 +1,4 @@
-<script lang="ts">
-import { defineComponent, PropType, ref } from "vue"
-
-import { defineEvent } from "~/types/emits"
-
-import VSearchButton from "~/components/VHeader/VSearchBar/VSearchButton.vue"
-
+<script setup lang="ts">
 /**
  * Displays a search input for a search query and is attached to an action button
  * that fires a search request. Can contain other elements like the search type
@@ -12,49 +6,43 @@ import VSearchButton from "~/components/VHeader/VSearchBar/VSearchButton.vue"
  * hydrating the server-rendered code, so the value entered before full hydration
  * is not removed.
  */
-export default defineComponent({
-  name: "VStandaloneSearchBar",
-  components: { VSearchButton },
-  props: {
-    route: {
-      type: String as PropType<"home" | "404">,
-      default: "home",
-    },
+import { ref } from "vue"
+
+import VSearchButton from "~/components/VHeader/VSearchBar/VSearchButton.vue"
+
+withDefaults(
+  defineProps<{
+    route?: "home" | "404"
     /**
      * Search bar should not have a focus box when a popover is open.
      */
-    hasPopover: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  emits: {
-    submit: defineEvent<[string]>(),
-  },
-  setup(_, { emit, expose }) {
-    const inputRef = ref<HTMLInputElement | null>(null)
+    hasPopover: boolean
+  }>(),
+  {
+    route: "home",
+    hasPopover: false,
+  }
+)
 
-    // Only emit `submit` if the input value is not blank
-    const handleSearch = () => {
-      const searchTerm = inputRef.value?.value.trim()
-      if (searchTerm) {
-        emit("submit", searchTerm)
-      }
-    }
+const emit = defineEmits<{
+  submit: [string]
+}>()
 
-    const focusInput = () => {
-      inputRef.value?.focus()
-    }
+const inputRef = ref<HTMLInputElement | null>(null)
 
-    expose({ focusInput })
+// Only emit `submit` if the input value is not blank
+const handleSearch = () => {
+  const searchTerm = inputRef.value?.value.trim()
+  if (searchTerm) {
+    emit("submit", searchTerm)
+  }
+}
 
-    return {
-      inputRef,
-      handleSearch,
-      focusInput,
-    }
-  },
-})
+const focusInput = () => {
+  inputRef.value?.focus()
+}
+
+defineExpose({ focusInput })
 </script>
 
 <template>

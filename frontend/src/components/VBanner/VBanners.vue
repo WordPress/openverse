@@ -1,5 +1,5 @@
-<script lang="ts">
-import { defineComponent, defineAsyncComponent, useNuxtApp } from "#imports"
+<script setup lang="ts">
+import { defineAsyncComponent, useNuxtApp } from "#imports"
 
 import { computed } from "vue"
 
@@ -10,58 +10,40 @@ import type { TranslationBannerId, BannerId } from "~/types/banners"
 
 import type { LocaleObject } from "@nuxtjs/i18n"
 
-export default defineComponent({
-  name: "VBanners",
-  components: {
-    VTranslationStatusBanner: defineAsyncComponent(
-      () => import("~/components/VBanner/VTranslationStatusBanner.vue")
-    ),
-    VAnalyticsNotice: defineAsyncComponent(
-      () => import("~/components/VBanner/VAnalyticsNotice.vue")
-    ),
-  },
-  setup() {
-    const uiStore = useUiStore()
-    const localeProperties = useNuxtApp().$i18n.localeProperties
+const VTranslationStatusBanner = defineAsyncComponent(
+  () => import("~/components/VBanner/VTranslationStatusBanner.vue")
+)
+const VAnalyticsNotice = defineAsyncComponent(
+  () => import("~/components/VBanner/VAnalyticsNotice.vue")
+)
+const uiStore = useUiStore()
+const localeProperties = useNuxtApp().$i18n.localeProperties
 
-    const shouldShowTranslationBanner = computed(() =>
-      uiStore.shouldShowTranslationBanner(
-        localeProperties.value as LocaleObject
-      )
-    )
-    const shouldShowAnalyticsBanner = computed(
-      () => uiStore.shouldShowAnalyticsBanner
-    )
+const shouldShowTranslationBanner = computed(() =>
+  uiStore.shouldShowTranslationBanner(localeProperties.value as LocaleObject)
+)
+const shouldShowAnalyticsBanner = computed(
+  () => uiStore.shouldShowAnalyticsBanner
+)
 
-    const translationBannerId = computed<TranslationBannerId>(
-      () => `translation-${localeProperties.value.code}`
-    )
+const translationBannerId = computed<TranslationBannerId>(
+  () => `translation-${localeProperties.value.code}`
+)
 
-    const { current: currentPage } = usePages()
-    const variant = computed(() =>
-      ["", "index"].includes(currentPage.value) ? "dark" : "regular"
-    )
+const { current: currentPage } = usePages()
+const variant = computed(() =>
+  ["", "index"].includes(currentPage.value) ? "dark" : "regular"
+)
 
-    const dismissBanner = (bannerKey: BannerId) => {
-      uiStore.dismissBanner(bannerKey)
-    }
+const dismissBanner = (bannerKey: BannerId) => {
+  uiStore.dismissBanner(bannerKey)
+}
 
-    const showBanners = computed(() =>
-      [shouldShowTranslationBanner, shouldShowAnalyticsBanner].some(
-        (item) => item.value
-      )
-    )
-
-    return {
-      translationBannerId,
-      shouldShowTranslationBanner,
-      shouldShowAnalyticsBanner,
-      showBanners,
-      dismissBanner,
-      variant,
-    }
-  },
-})
+const showBanners = computed(() =>
+  [shouldShowTranslationBanner, shouldShowAnalyticsBanner].some(
+    (item) => item.value
+  )
+)
 </script>
 
 <template>

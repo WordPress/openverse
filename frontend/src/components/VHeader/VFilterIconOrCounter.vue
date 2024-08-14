@@ -1,29 +1,20 @@
-<script lang="ts">
-import { computed, defineComponent } from "vue"
+<script setup lang="ts">
+import { computed } from "vue"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 
-export default defineComponent({
-  name: "VFilterIconOrCounter",
-  components: { VIcon },
-  props: {
-    appliedFilterCount: {
-      type: Number,
-      default: 0,
-    },
-    pressed: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  setup(props) {
-    const showIcon = computed(() => props.appliedFilterCount === 0)
+const props = withDefaults(
+  defineProps<{
+    appliedFilterCount?: number
+    pressed?: boolean
+  }>(),
+  {
+    appliedFilterCount: 0,
+    pressed: false,
+  }
+)
 
-    return {
-      showIcon,
-    }
-  },
-})
+const showIcon = computed(() => props.appliedFilterCount === 0)
 </script>
 
 <template>

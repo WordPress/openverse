@@ -1,28 +1,17 @@
-<script lang="ts">
+<script setup lang="ts">
 import { useLocalePath } from "#imports"
 
-import { computed, defineComponent } from "vue"
-
-import { defineEvent } from "~/types/emits"
+import { computed } from "vue"
 
 import VLink from "~/components/VLink.vue"
 import VNotificationBanner from "~/components/VBanner/VNotificationBanner.vue"
 
-export default defineComponent({
-  name: "VAnalyticsNotice",
-  components: { VLink, VNotificationBanner },
-  emits: {
-    close: defineEvent(),
-  },
-  setup() {
-    const localePath = useLocalePath()
-    const privacyPath = computed(() => localePath("/privacy"))
+defineEmits<{
+  close: []
+}>()
 
-    return {
-      privacyPath,
-    }
-  },
-})
+const localePath = useLocalePath()
+const privacyPath = computed(() => localePath("/privacy"))
 </script>
 
 <template>

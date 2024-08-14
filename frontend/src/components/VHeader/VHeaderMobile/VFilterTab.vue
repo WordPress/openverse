@@ -1,17 +1,18 @@
-<script lang="ts">
+<script setup lang="ts">
 import VFilterIconOrCounter from "~/components/VHeader/VFilterIconOrCounter.vue"
 import VTab from "~/components/VTabs/VTab.vue"
 
-export default {
-  name: "VFilterTab",
-  components: { VFilterIconOrCounter, VTab },
-  props: {
-    appliedFilterCount: {
-      type: Number,
-      default: 0,
-    },
-  },
-}
+withDefaults(
+  defineProps<{
+    /**
+     * The number of filters that are currently applied.
+     */
+    appliedFilterCount?: number
+  }>(),
+  {
+    appliedFilterCount: 0,
+  }
+)
 </script>
 
 <template>

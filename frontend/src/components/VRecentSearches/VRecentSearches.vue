@@ -1,66 +1,51 @@
-<script lang="ts">
-import { defineComponent, type PropType } from "vue"
-
-import { defineEvent } from "~/types/emits"
-
-import VButton from "~/components/VButton.vue"
-import VIcon from "~/components/VIcon/VIcon.vue"
-import VIconButton from "~/components/VIconButton/VIconButton.vue"
-
+<script setup lang="ts">
 /**
  * List the recent searches of the user allowing them to go back to a previous
  * search. These searches are saved locally and never shared with the server.
  */
-export default defineComponent({
-  name: "VRecentSearches",
-  components: { VIconButton, VIcon, VButton },
-  props: {
+import VButton from "~/components/VButton.vue"
+import VIcon from "~/components/VIcon/VIcon.vue"
+import VIconButton from "~/components/VIconButton/VIconButton.vue"
+
+const props = withDefaults(
+  defineProps<{
     /**
      * the list of saved past searches
      */
-    entries: {
-      type: Array as PropType<string[]>,
-      default: () => [],
-    },
+    entries?: string[]
     /**
      * the index of the currently selected entry
      */
-    selectedIdx: {
-      type: Number,
-    },
+    selectedIdx?: number
     /**
      * the desktop popover is bordered, and the mobile element is not
      */
-    bordered: {
-      type: Boolean,
-      default: true,
-    },
-  },
-  emits: {
-    select: defineEvent<[number]>(),
-    clear: defineEvent<[string?]>(),
-    "last-tab": defineEvent(),
-  },
-  setup(props, { emit }) {
-    const handleClick = (idx: number) => {
-      emit("select", idx)
-    }
-    const handleClear = (entry?: string) => {
-      emit("clear", entry)
-    }
-    const handleTab = (idx: number) => {
-      if (idx === props.entries.length - 1) {
-        emit("last-tab")
-      }
-    }
+    bordered?: boolean
+  }>(),
+  {
+    entries: () => [],
+    selectedIdx: undefined,
+    bordered: true,
+  }
+)
 
-    return {
-      handleClick,
-      handleClear,
-      handleTab,
-    }
-  },
-})
+const emit = defineEmits<{
+  select: [number]
+  clear: [string?]
+  "last-tab": []
+}>()
+
+const handleClick = (idx: number) => {
+  emit("select", idx)
+}
+const handleClear = (entry?: string) => {
+  emit("clear", entry)
+}
+const handleTab = (idx: number) => {
+  if (idx === props.entries.length - 1) {
+    emit("last-tab")
+  }
+}
 </script>
 
 <template>
