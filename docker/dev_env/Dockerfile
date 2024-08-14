@@ -31,6 +31,8 @@ ENV PATH="${PNPM_BIN}:${N_PREFIX}/bin:${PDM_PYTHONS}:${HOME}/.local/bin:${PATH}"
 # - just: command runner
 # - jq: JSON processor
 # - which: locate a program file in `PATH`
+# - python*: required by some Python libraries for compilation during installation
+# - libffi*: required for the Python package cffi
 # - pipx: Python CLI app installer
 # - nodejs: language runtime (includes npm but not Corepack)
 # - docker*: used to interact with host Docker socket
@@ -55,7 +57,8 @@ RUN mkdir /pipx \
     jq \
     which \
     nodejs npm \
-    python3.12 pipx \
+    python3.12 python3.12-devel pipx \
+    libffi-devel \
     docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin \
     unzip \
     postgresql postgresql-devel \
