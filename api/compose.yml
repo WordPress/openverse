@@ -53,3 +53,13 @@ services:
       DJANGO_NGINX_UPSTREAM_URL: web:50280
     depends_on:
       - web
+
+  # Used in API unit tests
+  httpbin:
+    profiles:
+      - api
+    # Use go-httpbin because it's only 15 MB compared to upstream HTTPBin's 204 MB
+    # That helps reduce the network burden of spinning up a development environment
+    image: docker.io/mccutchen/go-httpbin:v2.14.0
+    expose:
+      - "8080"
