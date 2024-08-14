@@ -116,7 +116,9 @@ repos:
         "types": [text]
         language: system
         pass_filenames: true
-        entry: pnpm exec prettier --write --ignore-unknown
+        # Set log-level to error to prevent prettier printing every single file it checks
+        # when running pre-commit with --all-files
+        entry: pnpm exec prettier --write --ignore-unknown --log-level error
 
       - id: eslint
         name: eslint
