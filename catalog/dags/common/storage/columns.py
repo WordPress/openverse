@@ -2,6 +2,7 @@ import json
 import logging
 from abc import ABC, abstractmethod
 from enum import Enum, auto
+from textwrap import dedent
 from typing import NewType
 
 
@@ -29,6 +30,7 @@ class UpsertStrategy(Enum):
     merge_jsonb_objects = auto()
     merge_jsonb_arrays = auto()
     merge_array = auto()
+    merge_tags = auto()
     no_change = ()
     calculate_value = auto()
 
@@ -89,6 +91,41 @@ def _merge_array(column: str) -> str:
        )"""
 
 
+def _merge_tags(*args) -> str:
+    """
+    Merge provider tags with additional tags.
+
+    Always keep all additional tags, but never retain previous provider tags,
+    to ensure any provider tags during reingestion exactly match those at
+    the provider, and no tags deleted or changed upstream are incorrectly retained
+    in Openverse.
+
+    See https://github.com/WordPress/openverse/issues/4732 for rationale.
+
+    This approach applies to media table tags. As such, the column name is not configurable.
+    Other jsonb array columns with similar needs must implement their own strategies to
+    sound merging of incoming and existing values.
+
+    Table name `old` comes from `upsert_records_to_db_table` implementation details.
+    `EXCLUDED` is because this is interpolated into `DO UPDATE SET`.
+    """
+    return dedent(
+        """
+        tags = COALESCE(
+            (
+                SELECT EXCLUDED.tags || jsonb_path_query_array(
+                    old.tags,
+                    '$ ? (@.provider != $provider)',
+                    jsonb_build_object('provider', old.provider)
+                )
+            ),
+            EXCLUDED.tags,
+            old.tags
+        )
+        """
+    ).strip()
+
+
 def _now(column: str):
     return f"{column} = {NOW}"
 
@@ -112,6 +149,7 @@ class Column(ABC):
         UpsertStrategy.merge_jsonb_objects: _merge_jsonb_objects,
         UpsertStrategy.merge_jsonb_arrays: _merge_jsonb_arrays,
         UpsertStrategy.merge_array: _merge_array,
+        UpsertStrategy.merge_tags: _merge_tags,
     }
 
     def __init__(
@@ -686,7 +724,7 @@ CREATOR_URL = URLColumn(name="creator_url", required=False, size=2000)
 TITLE = StringColumn(name="title", required=False, size=5000, truncate=True)
 META_DATA = JSONColumn(name="meta_data", required=False)
 TAGS = JSONColumn(
-    name="tags", required=False, upsert_strategy=UpsertStrategy.merge_jsonb_arrays
+    name="tags", required=False, upsert_strategy=UpsertStrategy.merge_tags
 )
 WATERMARKED = BooleanColumn(name="watermarked", required=False)
 PROVIDER = StringColumn(name="provider", required=False, size=80, truncate=False)
