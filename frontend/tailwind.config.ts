@@ -412,8 +412,8 @@ export default {
           ].map((item) => [
             item,
             (value) => ({
-              "--color-tw-ring-color": value,
-              "--color-tw-outline-color": value,
+              "--tw-ring-color": value,
+              "--tw-outline-color": value,
             }),
           ])
         ),
