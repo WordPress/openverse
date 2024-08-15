@@ -182,8 +182,9 @@ def get_branch_protection(
     return cache[repo][branch_name]
 
 
-def get_min_required_approvals(gh: GitHubAPI, pr: dict) -> int:
-    branch_protection_cache = defaultdict(dict)
+def get_min_required_approvals(
+    gh: GitHubAPI, pr: dict, branch_protection_cache: dict
+) -> int:
     repo = base_repo_name(pr)
     branch_name = pr["base"]["ref"]
 
@@ -218,6 +219,7 @@ def get_min_required_approvals(gh: GitHubAPI, pr: dict) -> int:
 @task(task_id="pr_review_reminder_operator")
 def post_reminders(maintainers: set[str], github_pat: str, dry_run: bool):
     gh = GitHubAPI(github_pat)
+    branch_protection_cache = defaultdict(dict)
 
     open_prs = []
     for repo in REPOSITORIES:
@@ -271,7 +273,9 @@ def post_reminders(maintainers: set[str], github_pat: str, dry_run: bool):
         existing_reviews = gh.get_pull_reviews(base_repo_name(pr), pr["number"])
 
         approved_reviews = [r for r in existing_reviews if r["state"] == "APPROVED"]
-        if len(approved_reviews) >= get_min_required_approvals(gh, pr):
+        if len(approved_reviews) >= get_min_required_approvals(
+            gh, pr, branch_protection_cache
+        ):
             # if PR already has sufficient reviews to be merged, do not ping
             # the requested reviewers.
             continue
