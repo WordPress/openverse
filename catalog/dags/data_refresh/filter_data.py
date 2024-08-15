@@ -34,7 +34,7 @@ TAG_DENYLIST = {
     "by",
 }
 
-# Filter out tags that contain the following terms. All entrees should be
+# Filter out tags that contain the following terms. All entries should be
 # lowercase.
 TAG_CONTAINS_DENYLIST = {
     "flickriosapp",
