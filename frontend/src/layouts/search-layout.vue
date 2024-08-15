@@ -1,18 +1,16 @@
 <script setup lang="ts">
 import { computed, onMounted, provide, ref, watch } from "vue"
-import { useElementSize, useScroll } from "@vueuse/core"
+import { useScroll } from "@vueuse/core"
 
 import { useUiStore } from "~/stores/ui"
 import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
 
 import { IsHeaderScrolledKey, IsSidebarVisibleKey } from "~/types/provides"
 
-import VBanners from "~/components/VBanner/VBanners.vue"
 import VFooter from "~/components/VFooter/VFooter.vue"
 import VSearchGridFilter from "~/components/VFilters/VSearchGridFilter.vue"
 import VSafeBrowsing from "~/components/VSafeBrowsing/VSafeBrowsing.vue"
-import VHeaderDesktop from "~/components/VHeader/VHeaderDesktop.vue"
-import VHeaderMobile from "~/components/VHeader/VHeaderMobile/VHeaderMobile.vue"
+import VHeader from "~/components/VHeader/VHeader.vue"
 
 defineOptions({
   name: "SearchLayout",
@@ -45,7 +43,6 @@ const showScrollButton = ref(false)
  * Note: template refs do not work in a Nuxt layout, so we get the `main-page` element using `document.getElementById`.
  */
 let mainPageElement = ref<HTMLElement | null>(null)
-let headerElement = ref<HTMLElement | null>(null)
 
 const { y: mainPageY } = useScroll(mainPageElement)
 watch(mainPageY, (y) => {
@@ -55,24 +52,10 @@ watch(mainPageY, (y) => {
 
 onMounted(() => {
   mainPageElement.value = document.getElementById("main-page")
-  headerElement.value = document.getElementsByClassName(
-    "header-el"
-  )[0] as HTMLElement
-})
-
-const { height } = useElementSize(headerElement)
-watch(height, (height) => {
-  uiStore.setHeaderHeight(height)
 })
 
 provide(IsHeaderScrolledKey, isHeaderScrolled)
 provide(IsSidebarVisibleKey, isSidebarVisible)
-
-const headerBorder = computed(() =>
-  isHeaderScrolled.value || isSidebarVisible.value
-    ? "border-b-default"
-    : "border-b-tx"
-)
 </script>
 
 <template>
@@ -84,19 +67,11 @@ const headerBorder = computed(() =>
         : 'grid-cols-1',
     ]"
   >
-    <div class="header-el bg-default">
-      <VBanners />
-      <VHeaderDesktop
-        v-if="isDesktopLayout"
-        class="h-20 border-b bg-default"
-        :class="headerBorder"
-      />
-      <VHeaderMobile
-        v-else
-        class="h-20 border-b bg-default"
-        :class="headerBorder"
-      />
-    </div>
+    <VHeader
+      class="header-el"
+      :kind="isDesktopLayout ? 'search-desktop' : 'search-mobile'"
+      :show-bottom-border="isHeaderScrolled"
+    />
 
     <aside
       v-if="isSidebarVisible"
