@@ -174,6 +174,11 @@ out in #421. We still feel that this project has value _now_, much like the
 [introduction of iNaturalist data did](https://make.wordpress.org/openverse/2023/01/14/preparing-for-inaturalist/)
 even though we incurred the same risks with that effort.
 
+The S3 bucket containing the Rekognition data will persist in perpetuity even
+after this project's completion, though it can be moved to an infrequent access
+storage class after the initial data import is complete. This will allow us to
+perform additional extractions on the data in the future if desired.
+
 ## Participants and stakeholders
 
 <!-- Who is working on the project and who are the external stakeholders, if any? Consider the lead, implementers, designers, and other stakeholders who have a say in how the project goes. -->
