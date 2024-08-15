@@ -1,14 +1,3 @@
-<template>
-  <VButton
-    as="VLink"
-    size="small"
-    variant="filled-gray"
-    class="label-bold"
-    v-bind="$props"
-    ><slot
-  /></VButton>
-</template>
-
 <script lang="ts">
 import { defineComponent } from "vue"
 
@@ -25,3 +14,14 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <VButton
+    as="VLink"
+    size="small"
+    variant="filled-gray"
+    class="label-bold"
+    v-bind="$props"
+    ><slot
+  /></VButton>
+</template>

@@ -1,3 +1,24 @@
+<script lang="ts">
+import { defineComponent } from "vue"
+
+import VSearchBarButton from "~/components/VHeader/VHeaderMobile/VSearchBarButton.vue"
+
+export default defineComponent({
+  name: "VContentSettingsButton",
+  components: { VSearchBarButton },
+  props: {
+    isPressed: {
+      type: Boolean,
+      default: false,
+    },
+    appliedFilterCount: {
+      type: Number,
+      default: 0,
+    },
+  },
+})
+</script>
+
 <template>
   <VSearchBarButton
     id="content-settings-button"
@@ -22,24 +43,3 @@
     </template>
   </VSearchBarButton>
 </template>
-
-<script lang="ts">
-import { defineComponent } from "vue"
-
-import VSearchBarButton from "~/components/VHeader/VHeaderMobile/VSearchBarButton.vue"
-
-export default defineComponent({
-  name: "VContentSettingsButton",
-  components: { VSearchBarButton },
-  props: {
-    isPressed: {
-      type: Boolean,
-      default: false,
-    },
-    appliedFilterCount: {
-      type: Number,
-      default: 0,
-    },
-  },
-})
-</script>

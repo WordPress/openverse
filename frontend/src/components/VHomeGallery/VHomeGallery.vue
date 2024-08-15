@@ -1,49 +1,3 @@
-<template>
-  <!-- Wrapper element to center the grid if space is more than 5 columns. -->
-  <div
-    ref="el"
-    class="mx-10 me-12 flex flex-row items-center justify-end 2xl:justify-center"
-  >
-    <!-- Image grid only occupies as much width as needed. -->
-    <div
-      class="home-gallery inline-grid grid-flow-col grid-rows-3 gap-8"
-      :style="{
-        gap: `${space}px`,
-        gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))`,
-      }"
-    >
-      <ClientOnly>
-        <Transition
-          v-for="(image, idx) in imageList"
-          :key="idx"
-          enter-active-class="transition-opacity delay-[var(--delay)] duration-500"
-          leave-active-class="transition-opacity delay-[var(--delay)] duration-500"
-          enter-from-class="opacity-0"
-          leave-to-class="opacity-0"
-          mode="out-in"
-          appear
-        >
-          <VLink
-            class="home-cell rounded-full p-1 focus-visible:bg-default"
-            :class="idx >= imageCount ? 'hidden' : 'block'"
-            :style="{ '--delay': `${idx * 0.05}s` }"
-            :href="image.url"
-            @click="handleClick(image.id)"
-          >
-            <img
-              :height="dimens"
-              :width="dimens"
-              :src="image.src"
-              :alt="image.title"
-              :title="image.title"
-            />
-          </VLink>
-        </Transition>
-      </ClientOnly>
-    </div>
-  </div>
-</template>
-
 <script lang="ts">
 import { useLocalePath, useRouter } from "#imports"
 
@@ -148,3 +102,49 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <!-- Wrapper element to center the grid if space is more than 5 columns. -->
+  <div
+    ref="el"
+    class="mx-10 me-12 flex flex-row items-center justify-end 2xl:justify-center"
+  >
+    <!-- Image grid only occupies as much width as needed. -->
+    <div
+      class="home-gallery inline-grid grid-flow-col grid-rows-3 gap-8"
+      :style="{
+        gap: `${space}px`,
+        gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))`,
+      }"
+    >
+      <ClientOnly>
+        <Transition
+          v-for="(image, idx) in imageList"
+          :key="idx"
+          enter-active-class="transition-opacity delay-[var(--delay)] duration-500"
+          leave-active-class="transition-opacity delay-[var(--delay)] duration-500"
+          enter-from-class="opacity-0"
+          leave-to-class="opacity-0"
+          mode="out-in"
+          appear
+        >
+          <VLink
+            class="home-cell rounded-full p-1 focus-visible:bg-default"
+            :class="idx >= imageCount ? 'hidden' : 'block'"
+            :style="{ '--delay': `${idx * 0.05}s` }"
+            :href="image.url"
+            @click="handleClick(image.id)"
+          >
+            <img
+              :height="dimens"
+              :width="dimens"
+              :src="image.src"
+              :alt="image.title"
+              :title="image.title"
+            />
+          </VLink>
+        </Transition>
+      </ClientOnly>
+    </div>
+  </div>
+</template>

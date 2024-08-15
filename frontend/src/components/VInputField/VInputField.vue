@@ -1,35 +1,3 @@
-<template>
-  <div
-    class="input-field group flex flex-row items-center overflow-hidden rounded-sm border p-0.5px focus-within:border-1.5 focus-within:border-focus focus-within:bg-surface focus-within:p-0 group-hover:bg-surface"
-    :class="[
-      {
-        // Padding is set to 1.5px to accommodate the border that will appear later.
-        'rounded-s-none border-s-0 ps-1.5px focus-within:rounded-s-none focus-within:border-s-0 focus-within:ps-1.5px':
-          connectionSides.includes('start'),
-        'rounded-e-none border-e-0 pe-1.5px focus-within:rounded-e-none focus-within:border-e-0 focus-within:pe-1.5px':
-          connectionSides.includes('end'),
-      },
-      sizeClass,
-      $attrs.class,
-    ]"
-  >
-    <input
-      :id="fieldId"
-      v-bind="nonClassAttrs"
-      ref="inputEl"
-      :placeholder="placeholder"
-      :type="type"
-      class="ms-4 h-full w-full appearance-none rounded-none bg-tx text-2xl font-semibold leading-none placeholder-gray-8 focus-visible:outline-none md:text-base"
-      :value="modelValue"
-      :aria-label="labelText"
-      @input="updateModelValue"
-    />
-
-    <!-- @slot Extra information goes here -->
-    <slot />
-  </div>
-</template>
-
 <script lang="ts">
 import {
   ref,
@@ -143,6 +111,38 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <div
+    class="input-field group flex flex-row items-center overflow-hidden rounded-sm border p-0.5px focus-within:border-1.5 focus-within:border-focus focus-within:bg-surface focus-within:p-0 group-hover:bg-surface"
+    :class="[
+      {
+        // Padding is set to 1.5px to accommodate the border that will appear later.
+        'rounded-s-none border-s-0 ps-1.5px focus-within:rounded-s-none focus-within:border-s-0 focus-within:ps-1.5px':
+          connectionSides.includes('start'),
+        'rounded-e-none border-e-0 pe-1.5px focus-within:rounded-e-none focus-within:border-e-0 focus-within:pe-1.5px':
+          connectionSides.includes('end'),
+      },
+      sizeClass,
+      $attrs.class,
+    ]"
+  >
+    <input
+      :id="fieldId"
+      v-bind="nonClassAttrs"
+      ref="inputEl"
+      :placeholder="placeholder"
+      :type="type"
+      class="ms-4 h-full w-full appearance-none rounded-none bg-tx text-2xl font-semibold leading-none placeholder-gray-8 focus-visible:outline-none md:text-base"
+      :value="modelValue"
+      :aria-label="labelText"
+      @input="updateModelValue"
+    />
+
+    <!-- @slot Extra information goes here -->
+    <slot />
+  </div>
+</template>
 
 <style scoped>
 .input-field:focus-within .info {

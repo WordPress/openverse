@@ -1,34 +1,3 @@
-<template>
-  <div
-    class="audio-track relative rounded"
-    :aria-label="ariaLabel"
-    role="region"
-  >
-    <VGlobalLayout :audio="audio">
-      <template #controller="waveformProps">
-        <VWaveform
-          v-bind="waveformProps"
-          :peaks="audio.peaks"
-          :audio-id="audio.id"
-          :current-time="currentTime"
-          :duration="duration"
-          :message="message"
-          @seeked="handleSeeked"
-          @toggle-playback="handleToggle"
-        />
-      </template>
-
-      <template #audio-control="audioControlProps">
-        <VAudioControl
-          v-bind="audioControlProps"
-          :status="status"
-          @toggle="handleToggle"
-        />
-      </template>
-    </VGlobalLayout>
-  </div>
-</template>
-
 <script lang="ts">
 import { useI18n, useNuxtApp } from "#imports"
 
@@ -268,3 +237,34 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <div
+    class="audio-track relative rounded"
+    :aria-label="ariaLabel"
+    role="region"
+  >
+    <VGlobalLayout :audio="audio">
+      <template #controller="waveformProps">
+        <VWaveform
+          v-bind="waveformProps"
+          :peaks="audio.peaks"
+          :audio-id="audio.id"
+          :current-time="currentTime"
+          :duration="duration"
+          :message="message"
+          @seeked="handleSeeked"
+          @toggle-playback="handleToggle"
+        />
+      </template>
+
+      <template #audio-control="audioControlProps">
+        <VAudioControl
+          v-bind="audioControlProps"
+          :status="status"
+          @toggle="handleToggle"
+        />
+      </template>
+    </VGlobalLayout>
+  </div>
+</template>

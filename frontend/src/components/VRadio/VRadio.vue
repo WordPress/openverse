@@ -1,25 +1,3 @@
-<template>
-  <label :for="id" class="radio-label relative flex leading-5">
-    <input
-      :id="id"
-      v-bind="$attrs"
-      :value="value"
-      class="radio focus-visible:ring-border-focus relative me-3 h-5 w-5 flex-shrink-0 appearance-none rounded-full border border-tertiary bg-default focus-visible:outline-none focus-visible:ring focus-visible:ring-offset-2 disabled:border-disabled disabled:bg-secondary"
-      type="radio"
-      :checked="isChecked"
-      @input="handleInput"
-    />
-    <VSvg
-      name="radiomark"
-      class="radiomark absolute start-0 h-5 w-5 text-default opacity-0 transition-opacity"
-      width="20"
-      height="20"
-    />
-    <!--  @slot Label content goes here  -->
-    <slot />
-  </label>
-</template>
-
 <script lang="ts">
 import { computed, defineComponent } from "vue"
 
@@ -77,6 +55,28 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <label :for="id" class="radio-label relative flex leading-5">
+    <input
+      :id="id"
+      v-bind="$attrs"
+      :value="value"
+      class="radio focus-visible:ring-border-focus relative me-3 h-5 w-5 flex-shrink-0 appearance-none rounded-full border border-tertiary bg-default focus-visible:outline-none focus-visible:ring focus-visible:ring-offset-2 disabled:border-disabled disabled:bg-secondary"
+      type="radio"
+      :checked="isChecked"
+      @input="handleInput"
+    />
+    <VSvg
+      name="radiomark"
+      class="radiomark absolute start-0 h-5 w-5 text-default opacity-0 transition-opacity"
+      width="20"
+      height="20"
+    />
+    <!--  @slot Label content goes here  -->
+    <slot />
+  </label>
+</template>
 
 <style scoped>
 .radio:checked ~ .radiomark {

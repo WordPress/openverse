@@ -1,26 +1,3 @@
-<template>
-  <div>
-    <VAudioInstructions kind="audio" />
-    <!-- Negative margin compensates for the `p-4` padding in row layout. -->
-    <ol
-      :aria-label="collectionLabel"
-      class="-mx-2 flex flex-col md:-mx-4"
-      :class="kind === 'related' ? 'gap-4' : 'gap-2 md:gap-1'"
-    >
-      <VAudioResult
-        v-for="audio in results"
-        :key="audio.id"
-        :search-term="searchTerm"
-        :related-to="relatedTo"
-        :audio="audio"
-        layout="row"
-        :size="audioTrackSize"
-        :kind="kind"
-      />
-    </ol>
-  </div>
-</template>
-
 <script lang="ts">
 import { computed, defineComponent, type PropType } from "vue"
 
@@ -93,3 +70,26 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <div>
+    <VAudioInstructions kind="audio" />
+    <!-- Negative margin compensates for the `p-4` padding in row layout. -->
+    <ol
+      :aria-label="collectionLabel"
+      class="-mx-2 flex flex-col md:-mx-4"
+      :class="kind === 'related' ? 'gap-4' : 'gap-2 md:gap-1'"
+    >
+      <VAudioResult
+        v-for="audio in results"
+        :key="audio.id"
+        :search-term="searchTerm"
+        :related-to="relatedTo"
+        :audio="audio"
+        layout="row"
+        :size="audioTrackSize"
+        :kind="kind"
+      />
+    </ol>
+  </div>
+</template>

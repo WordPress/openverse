@@ -1,32 +1,3 @@
-<template>
-  <section>
-    <div
-      v-if="isForTab === 'all'"
-      class="grid grid-cols-2 gap-4"
-      :class="
-        isSidebarVisible
-          ? 'lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'
-          : 'sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'
-      "
-    >
-      <VBone v-for="idx in elementCount" :key="idx" class="square" />
-    </div>
-
-    <div v-if="isForTab === 'image'" class="masonry">
-      <VBone
-        v-for="idx in elementCount"
-        :key="idx"
-        class="mb-4"
-        :style="{ height: `${getRandomSize()}px` }"
-      />
-    </div>
-
-    <template v-if="isForTab === 'audio'">
-      <VAudioTrackSkeleton v-for="idx in elementCount" :key="idx" />
-    </template>
-  </section>
-</template>
-
 <script lang="ts">
 /**
  * Display placeholder elements while waiting for the actual elements to be
@@ -78,6 +49,35 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <section>
+    <div
+      v-if="isForTab === 'all'"
+      class="grid grid-cols-2 gap-4"
+      :class="
+        isSidebarVisible
+          ? 'lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'
+          : 'sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'
+      "
+    >
+      <VBone v-for="idx in elementCount" :key="idx" class="square" />
+    </div>
+
+    <div v-if="isForTab === 'image'" class="masonry">
+      <VBone
+        v-for="idx in elementCount"
+        :key="idx"
+        class="mb-4"
+        :style="{ height: `${getRandomSize()}px` }"
+      />
+    </div>
+
+    <template v-if="isForTab === 'audio'">
+      <VAudioTrackSkeleton v-for="idx in elementCount" :key="idx" />
+    </template>
+  </section>
+</template>
 
 <style scoped>
 .square {

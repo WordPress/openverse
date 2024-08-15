@@ -1,26 +1,3 @@
-<template>
-  <VButton
-    as="VLink"
-    :href="to"
-    :aria-label="resultsAriaLabel"
-    variant="bordered-gray"
-    size="disabled"
-    :disabled="!doneHydrating"
-    class="h-auto w-full flex-col !items-start !justify-start gap-1 overflow-hidden p-4 sm:h-18 sm:flex-row sm:!items-center sm:gap-2 sm:px-6"
-    @keydown.shift.tab.exact="$emit('shift-tab', $event)"
-    @mousedown="handleClick"
-  >
-    <VIcon :name="mediaType" />
-    <p class="label-bold sm:description-bold mt-1 sm:mt-0">
-      {{ $t(`searchType.${mediaType}`) }}
-    </p>
-    <span
-      class="label-regular sm:description-regular text-secondary group-hover/button:text-default sm:ms-auto"
-      >{{ resultsCountLabel }}</span
-    >
-  </VButton>
-</template>
-
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue"
 
@@ -109,3 +86,26 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <VButton
+    as="VLink"
+    :href="to"
+    :aria-label="resultsAriaLabel"
+    variant="bordered-gray"
+    size="disabled"
+    :disabled="!doneHydrating"
+    class="h-auto w-full flex-col !items-start !justify-start gap-1 overflow-hidden p-4 sm:h-18 sm:flex-row sm:!items-center sm:gap-2 sm:px-6"
+    @keydown.shift.tab.exact="$emit('shift-tab', $event)"
+    @mousedown="handleClick"
+  >
+    <VIcon :name="mediaType" />
+    <p class="label-bold sm:description-bold mt-1 sm:mt-0">
+      {{ $t(`searchType.${mediaType}`) }}
+    </p>
+    <span
+      class="label-regular sm:description-regular text-secondary group-hover/button:text-default sm:ms-auto"
+      >{{ resultsCountLabel }}</span
+    >
+  </VButton>
+</template>

@@ -1,17 +1,3 @@
-<template>
-  <li>
-    <VAudioTrack
-      :audio="audio"
-      :layout="layout"
-      :size="size"
-      :search-term="searchTerm"
-      v-bind="$attrs"
-      @interacted="sendInteractionEvent"
-      @mousedown="sendSelectSearchResultEvent(audio, $event)"
-    />
-  </li>
-</template>
-
 <script lang="ts">
 import { useNuxtApp } from "#imports"
 
@@ -110,3 +96,17 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <li>
+    <VAudioTrack
+      :audio="audio"
+      :layout="layout"
+      :size="size"
+      :search-term="searchTerm"
+      v-bind="$attrs"
+      @interacted="sendInteractionEvent"
+      @mousedown="sendSelectSearchResultEvent(audio, $event)"
+    />
+  </li>
+</template>

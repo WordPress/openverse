@@ -1,19 +1,3 @@
-<template>
-  <div ref="loadMoreSectionRef" class="w-full">
-    <VButton
-      v-show="canLoadMore"
-      class="label-bold lg:description-bold h-16 w-full lg:h-18"
-      variant="filled-gray"
-      size="disabled"
-      :disabled="isFetching"
-      data-testid="load-more"
-      @click="onLoadMore"
-    >
-      {{ buttonLabel }}
-    </VButton>
-  </div>
-</template>
-
 <script lang="ts">
 import { useI18n, useNuxtApp, useRoute } from "#imports"
 
@@ -163,3 +147,19 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <div ref="loadMoreSectionRef" class="w-full">
+    <VButton
+      v-show="canLoadMore"
+      class="label-bold lg:description-bold h-16 w-full lg:h-18"
+      variant="filled-gray"
+      size="disabled"
+      :disabled="isFetching"
+      data-testid="load-more"
+      @click="onLoadMore"
+    >
+      {{ buttonLabel }}
+    </VButton>
+  </div>
+</template>

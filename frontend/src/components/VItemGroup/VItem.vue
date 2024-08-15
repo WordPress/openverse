@@ -1,66 +1,3 @@
-<template>
-  <div
-    class="flex"
-    :class="[
-      contextProps.direction,
-      splitAttrs.class,
-      {
-        [`${contextProps.direction}-bordered`]: contextProps.bordered,
-        [`${contextProps.direction}-popover-item`]: isInPopover,
-        'border border-default': contextProps.bordered,
-        'has-check': contextProps.showCheck,
-        'font-semibold': selected && !contextProps.showCheck,
-        'bg-transparent':
-          selected && contextProps.bordered && contextProps.showCheck,
-      },
-      isInPopover ? 'px-2' : '',
-    ]"
-  >
-    <VButton
-      data-item-group-item
-      :as="as"
-      class="relative min-w-full justify-between border-0 hover:bg-transparent-hover focus-visible:z-10"
-      :class="{
-        'w-max': contextProps.direction === 'horizontal',
-        '!p-3': contextProps.size === 'small',
-        '!p-5 !ps-6': contextProps.size === 'medium',
-        'bg-transparent-hover ring-offset-gray-2':
-          selected && contextProps.showCheck,
-        'text-default': as === 'VLink',
-        '!px-2': !contextProps.showCheck,
-      }"
-      variant="transparent-tx"
-      size="disabled"
-      :pressed="selected"
-      :role="contextProps.type === 'radiogroup' ? 'radio' : 'menuitemcheckbox'"
-      :aria-checked="selected"
-      :tabindex="tabIndex"
-      v-bind="splitAttrs.vButtonAttrs"
-      @focus="isFocused = true"
-      @blur="isFocused = false"
-      @keydown="focusContext.onItemKeyPress"
-      @click="$emit('click')"
-    >
-      <div
-        class="flex w-full flex-grow gap-x-2 whitespace-nowrap rounded-sm"
-        :class="[`${contextProps.direction}-content`]"
-      >
-        <slot name="default" />
-      </div>
-      <VIcon
-        v-if="
-          selected &&
-          contextProps.direction === 'vertical' &&
-          contextProps.showCheck
-        "
-        class="absolute"
-        :class="contextProps.size === 'small' ? 'end-3' : 'end-5'"
-        name="item-indicator"
-      />
-    </VButton>
-  </div>
-</template>
-
 <script lang="ts">
 import { defineComponent, inject, ref, computed, watch, PropType } from "vue"
 
@@ -176,6 +113,69 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <div
+    class="flex"
+    :class="[
+      contextProps.direction,
+      splitAttrs.class,
+      {
+        [`${contextProps.direction}-bordered`]: contextProps.bordered,
+        [`${contextProps.direction}-popover-item`]: isInPopover,
+        'border border-default': contextProps.bordered,
+        'has-check': contextProps.showCheck,
+        'font-semibold': selected && !contextProps.showCheck,
+        'bg-transparent':
+          selected && contextProps.bordered && contextProps.showCheck,
+      },
+      isInPopover ? 'px-2' : '',
+    ]"
+  >
+    <VButton
+      data-item-group-item
+      :as="as"
+      class="relative min-w-full justify-between border-0 hover:bg-transparent-hover focus-visible:z-10"
+      :class="{
+        'w-max': contextProps.direction === 'horizontal',
+        '!p-3': contextProps.size === 'small',
+        '!p-5 !ps-6': contextProps.size === 'medium',
+        'bg-transparent-hover ring-offset-gray-2':
+          selected && contextProps.showCheck,
+        'text-default': as === 'VLink',
+        '!px-2': !contextProps.showCheck,
+      }"
+      variant="transparent-tx"
+      size="disabled"
+      :pressed="selected"
+      :role="contextProps.type === 'radiogroup' ? 'radio' : 'menuitemcheckbox'"
+      :aria-checked="selected"
+      :tabindex="tabIndex"
+      v-bind="splitAttrs.vButtonAttrs"
+      @focus="isFocused = true"
+      @blur="isFocused = false"
+      @keydown="focusContext.onItemKeyPress"
+      @click="$emit('click')"
+    >
+      <div
+        class="flex w-full flex-grow gap-x-2 whitespace-nowrap rounded-sm"
+        :class="[`${contextProps.direction}-content`]"
+      >
+        <slot name="default" />
+      </div>
+      <VIcon
+        v-if="
+          selected &&
+          contextProps.direction === 'vertical' &&
+          contextProps.showCheck
+        "
+        class="absolute"
+        :class="contextProps.size === 'small' ? 'end-3' : 'end-5'"
+        name="item-indicator"
+      />
+    </VButton>
+  </div>
+</template>
 
 <style scoped>
 .vertical {

@@ -1,22 +1,3 @@
-<template>
-  <div
-    class="global-audio sticky z-global-audio sm:hidden"
-    :class="{ 'bottom-2 mx-2': !!audio }"
-  >
-    <template v-if="audio">
-      <VGlobalAudioTrack :audio="audio" />
-      <VIconButton
-        class="!absolute end-0 top-0 z-30 m-2"
-        variant="transparent-gray"
-        :icon-props="{ name: 'close-small' }"
-        size="small"
-        :label="$t('audioTrack.close')"
-        @click="handleClose"
-      />
-    </template>
-  </div>
-</template>
-
 <script lang="ts">
 import { useRoute } from "#imports"
 
@@ -161,3 +142,22 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <div
+    class="global-audio sticky z-global-audio sm:hidden"
+    :class="{ 'bottom-2 mx-2': !!audio }"
+  >
+    <template v-if="audio">
+      <VGlobalAudioTrack :audio="audio" />
+      <VIconButton
+        class="!absolute end-0 top-0 z-30 m-2"
+        variant="transparent-gray"
+        :icon-props="{ name: 'close-small' }"
+        size="small"
+        :label="$t('audioTrack.close')"
+        @click="handleClose"
+      />
+    </template>
+  </div>
+</template>

@@ -1,40 +1,3 @@
-<template>
-  <VItemGroup
-    direction="vertical"
-    :size="size"
-    :bordered="bordered"
-    type="radiogroup"
-  >
-    <div
-      v-for="(category, index) in contentTypeGroups"
-      :key="category.heading"
-      class="flex flex-col"
-      :class="{
-        'border-t border-default bg-surface': index > 0 && !bordered,
-        'w-66 gap-1 py-2': size === 'small',
-      }"
-    >
-      <h4
-        v-if="index !== 0"
-        :class="bordered ? 'ps-0' : 'ps-6'"
-        class="category pb-4 pt-6"
-      >
-        {{ $t(`searchType.${category.heading}`) }}
-      </h4>
-      <VSearchTypeItem
-        v-for="(item, idx) in category.items"
-        :key="item"
-        :item="item"
-        :is-first="index === 0 && idx === 0"
-        :icon="content.icons[item]"
-        :use-links="useLinks"
-        :selected="isActive(item)"
-        @click="selectItem(item)"
-      />
-    </div>
-  </VItemGroup>
-</template>
-
 <script lang="ts">
 import { computed, defineComponent, type PropType } from "vue"
 
@@ -112,3 +75,40 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <VItemGroup
+    direction="vertical"
+    :size="size"
+    :bordered="bordered"
+    type="radiogroup"
+  >
+    <div
+      v-for="(category, index) in contentTypeGroups"
+      :key="category.heading"
+      class="flex flex-col"
+      :class="{
+        'border-t border-default bg-surface': index > 0 && !bordered,
+        'w-66 gap-1 py-2': size === 'small',
+      }"
+    >
+      <h4
+        v-if="index !== 0"
+        :class="bordered ? 'ps-0' : 'ps-6'"
+        class="category pb-4 pt-6"
+      >
+        {{ $t(`searchType.${category.heading}`) }}
+      </h4>
+      <VSearchTypeItem
+        v-for="(item, idx) in category.items"
+        :key="item"
+        :item="item"
+        :is-first="index === 0 && idx === 0"
+        :icon="content.icons[item]"
+        :use-links="useLinks"
+        :selected="isActive(item)"
+        @click="selectItem(item)"
+      />
+    </div>
+  </VItemGroup>
+</template>

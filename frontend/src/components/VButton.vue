@@ -1,33 +1,3 @@
-<template>
-  <Component
-    :is="as"
-    :type="typeAttribute"
-    class="group/button button flex appearance-none items-center justify-center rounded-sm no-underline"
-    :class="[
-      variantClass,
-      connectionStyles,
-      size,
-      {
-        'icon-only': iconOnly,
-        'icon-start': hasIconStart,
-        'icon-end': hasIconEnd,
-        border: !isPlainDangerous,
-        'focus-visible:outline-tx': isPlainDangerous,
-        'focus-slim-filled': isFocusSlimFilled,
-        'focus-slim-tx': isFocusSlimTx,
-      },
-    ]"
-    :aria-pressed="pressed"
-    :aria-disabled="ariaDisabled"
-    :disabled="disabledAttribute"
-  >
-    <!--
-      @slot The content of the button
-    -->
-    <slot />
-  </Component>
-</template>
-
 <script lang="ts">
 import { defineComponent, watch, computed, PropType } from "vue"
 
@@ -270,6 +240,36 @@ const VButton = defineComponent({
 
 export default VButton
 </script>
+
+<template>
+  <Component
+    :is="as"
+    :type="typeAttribute"
+    class="group/button button flex appearance-none items-center justify-center rounded-sm no-underline"
+    :class="[
+      variantClass,
+      connectionStyles,
+      size,
+      {
+        'icon-only': iconOnly,
+        'icon-start': hasIconStart,
+        'icon-end': hasIconEnd,
+        border: !isPlainDangerous,
+        'focus-visible:outline-tx': isPlainDangerous,
+        'focus-slim-filled': isFocusSlimFilled,
+        'focus-slim-tx': isFocusSlimTx,
+      },
+    ]"
+    :aria-pressed="pressed"
+    :aria-disabled="ariaDisabled"
+    :disabled="disabledAttribute"
+  >
+    <!--
+      @slot The content of the button
+    -->
+    <slot />
+  </Component>
+</template>
 
 <style scoped>
 .button[disabled="disabled"],

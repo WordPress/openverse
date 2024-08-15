@@ -1,36 +1,3 @@
-<template>
-  <div class="-my-1.5px">
-    <ul
-      ref="tagsContainerRef"
-      class="flex flex-wrap gap-3 overflow-y-hidden p-1.5px"
-      :class="heightClass"
-    >
-      <li v-for="tag in visibleTags" :key="tag">
-        <VTag :href="localizedTagPath(tag)">{{ tag }}</VTag>
-      </li>
-    </ul>
-    <VButton
-      v-if="hasOverflow"
-      size="small"
-      variant="transparent-tx"
-      has-icon-end
-      class="label-bold -ms-2 mt-4 hover:underline"
-      :aria-expanded="buttonStatus === 'show' ? 'false' : 'true'"
-      @click="handleClick"
-      >{{
-        $t(
-          buttonStatus === "show"
-            ? "mediaDetails.tags.showMore"
-            : "mediaDetails.tags.showLess"
-        )
-      }}<VIcon
-        name="caret-down"
-        :size="4"
-        :class="{ '-scale-y-100 transform': buttonStatus === 'hide' }"
-    /></VButton>
-  </div>
-</template>
-
 <script lang="ts">
 import { useI18n, useNuxtApp } from "#imports"
 
@@ -228,3 +195,36 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <div class="-my-1.5px">
+    <ul
+      ref="tagsContainerRef"
+      class="flex flex-wrap gap-3 overflow-y-hidden p-1.5px"
+      :class="heightClass"
+    >
+      <li v-for="tag in visibleTags" :key="tag">
+        <VTag :href="localizedTagPath(tag)">{{ tag }}</VTag>
+      </li>
+    </ul>
+    <VButton
+      v-if="hasOverflow"
+      size="small"
+      variant="transparent-tx"
+      has-icon-end
+      class="label-bold -ms-2 mt-4 hover:underline"
+      :aria-expanded="buttonStatus === 'show' ? 'false' : 'true'"
+      @click="handleClick"
+      >{{
+        $t(
+          buttonStatus === "show"
+            ? "mediaDetails.tags.showMore"
+            : "mediaDetails.tags.showLess"
+        )
+      }}<VIcon
+        name="caret-down"
+        :size="4"
+        :class="{ '-scale-y-100 transform': buttonStatus === 'hide' }"
+    /></VButton>
+  </div>
+</template>

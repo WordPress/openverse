@@ -1,20 +1,3 @@
-<template>
-  <VButton
-    as="VLink"
-    :href="media.foreign_landing_url"
-    size="large"
-    variant="filled-pink-8"
-    has-icon-end
-    show-external-icon
-    :external-icon-size="6"
-    class="description-bold"
-    :send-external-link-click-event="false"
-    @click="sendGetMediaEvent"
-  >
-    {{ $t(`${mediaType}Details.weblink`) }}
-  </VButton>
-</template>
-
 <script lang="ts">
 import { defineComponent, PropType } from "vue"
 
@@ -53,3 +36,20 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <VButton
+    as="VLink"
+    :href="media.foreign_landing_url"
+    size="large"
+    variant="filled-pink-8"
+    has-icon-end
+    show-external-icon
+    :external-icon-size="6"
+    class="description-bold"
+    :send-external-link-click-event="false"
+    @click="sendGetMediaEvent"
+  >
+    {{ $t(`${mediaType}Details.weblink`) }}
+  </VButton>
+</template>

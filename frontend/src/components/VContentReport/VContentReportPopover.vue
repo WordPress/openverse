@@ -1,3 +1,33 @@
+<script lang="ts">
+import { defineComponent, PropType } from "vue"
+
+import type { AudioDetail, ImageDetail } from "~/types/media"
+
+import VContentReportButton from "~/components/VContentReport/VContentReportButton.vue"
+import VContentReportForm from "~/components/VContentReport/VContentReportForm.vue"
+import VPopover from "~/components/VPopover/VPopover.vue"
+import VIconButton from "~/components/VIconButton/VIconButton.vue"
+
+export default defineComponent({
+  name: "VContentReportPopover",
+  components: {
+    VIconButton,
+    VContentReportButton,
+    VContentReportForm,
+    VPopover,
+  },
+  props: {
+    /**
+     * the media item to report; This can either be an audio track or an image.
+     */
+    media: {
+      type: Object as PropType<AudioDetail | ImageDetail>,
+      required: true,
+    },
+  },
+})
+</script>
+
 <template>
   <VPopover
     ref="popoverEl"
@@ -28,33 +58,3 @@
     </template>
   </VPopover>
 </template>
-
-<script lang="ts">
-import { defineComponent, PropType } from "vue"
-
-import type { AudioDetail, ImageDetail } from "~/types/media"
-
-import VContentReportButton from "~/components/VContentReport/VContentReportButton.vue"
-import VContentReportForm from "~/components/VContentReport/VContentReportForm.vue"
-import VPopover from "~/components/VPopover/VPopover.vue"
-import VIconButton from "~/components/VIconButton/VIconButton.vue"
-
-export default defineComponent({
-  name: "VContentReportPopover",
-  components: {
-    VIconButton,
-    VContentReportButton,
-    VContentReportForm,
-    VPopover,
-  },
-  props: {
-    /**
-     * the media item to report; This can either be an audio track or an image.
-     */
-    media: {
-      type: Object as PropType<AudioDetail | ImageDetail>,
-      required: true,
-    },
-  },
-})
-</script>

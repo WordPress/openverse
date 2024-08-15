@@ -1,7 +1,3 @@
-<template>
-  <div :class="['bg-secondary', shimmer ? 'shimmering' : '']" />
-</template>
-
 <script lang="ts">
 import { defineComponent } from "vue"
 
@@ -10,6 +6,10 @@ export default defineComponent({
   props: { shimmer: { type: Boolean, default: true } },
 })
 </script>
+
+<template>
+  <div :class="['bg-secondary', shimmer ? 'shimmering' : '']" />
+</template>
 
 <style scoped>
 @keyframes shimmer {

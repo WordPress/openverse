@@ -1,40 +1,3 @@
-<template>
-  <!-- Should be wrapped by a fixed-width parent -->
-  <div
-    class="relative h-0 w-full overflow-hidden bg-complementary pt-full"
-    :title="helpText"
-  >
-    <!-- Programmatic thumbnail -->
-    <svg
-      class="absolute inset-0"
-      :class="{ hidden: shouldBlur && isOk }"
-      :viewBox="`0 0 ${canvasSize} ${canvasSize}`"
-    >
-      <template v-for="i in dotCount">
-        <circle
-          v-for="j in dotCount"
-          :key="`${i}-${j}`"
-          class="fill-gray-12"
-          :cx="offset(j)"
-          :cy="offset(i)"
-          :r="radius(i, j)"
-        />
-      </template>
-    </svg>
-
-    <div v-show="audio.thumbnail && isOk" class="thumbnail absolute inset-0">
-      <img
-        ref="imgEl"
-        class="h-full w-full overflow-clip object-cover object-center duration-200 motion-safe:transition-[filter,transform]"
-        :class="{ 'scale-150 blur-image': shouldBlur }"
-        :src="audio.thumbnail"
-        :alt="helpText"
-        @load="handleLoad"
-      />
-    </div>
-  </div>
-</template>
-
 <script lang="ts">
 import { useI18n } from "#imports"
 
@@ -125,3 +88,40 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <!-- Should be wrapped by a fixed-width parent -->
+  <div
+    class="relative h-0 w-full overflow-hidden bg-complementary pt-full"
+    :title="helpText"
+  >
+    <!-- Programmatic thumbnail -->
+    <svg
+      class="absolute inset-0"
+      :class="{ hidden: shouldBlur && isOk }"
+      :viewBox="`0 0 ${canvasSize} ${canvasSize}`"
+    >
+      <template v-for="i in dotCount">
+        <circle
+          v-for="j in dotCount"
+          :key="`${i}-${j}`"
+          class="fill-gray-12"
+          :cx="offset(j)"
+          :cy="offset(i)"
+          :r="radius(i, j)"
+        />
+      </template>
+    </svg>
+
+    <div v-show="audio.thumbnail && isOk" class="thumbnail absolute inset-0">
+      <img
+        ref="imgEl"
+        class="h-full w-full overflow-clip object-cover object-center duration-200 motion-safe:transition-[filter,transform]"
+        :class="{ 'scale-150 blur-image': shouldBlur }"
+        :src="audio.thumbnail"
+        :alt="helpText"
+        @load="handleLoad"
+      />
+    </div>
+  </div>
+</template>

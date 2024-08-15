@@ -1,36 +1,3 @@
-<template>
-  <section id="filters" aria-labelledby="filters-heading" class="filters">
-    <header
-      v-if="showFilterHeader"
-      class="relative mb-6 flex items-center justify-between"
-    >
-      <h4 id="filters-heading" class="caption-bold uppercase">
-        {{ $t("filterList.filterBy") }}
-      </h4>
-      <VButton
-        v-show="isAnyFilterApplied"
-        id="clear-filter-button"
-        variant="transparent-gray"
-        size="small"
-        class="label-bold absolute end-0 !text-link"
-        @click="clearFilters"
-      >
-        {{ $t("filterList.clear") }}
-      </VButton>
-    </header>
-    <form class="filters-form">
-      <VFilterChecklist
-        v-for="filterType in filterTypes"
-        :key="filterType"
-        :options="filters[filterType]"
-        :title="filterTypeTitle(filterType)"
-        :filter-type="filterType"
-        @toggle-filter="toggleFilter"
-      />
-    </form>
-  </section>
-</template>
-
 <script lang="ts">
 import { useI18n } from "#imports"
 
@@ -119,3 +86,36 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <section id="filters" aria-labelledby="filters-heading" class="filters">
+    <header
+      v-if="showFilterHeader"
+      class="relative mb-6 flex items-center justify-between"
+    >
+      <h4 id="filters-heading" class="caption-bold uppercase">
+        {{ $t("filterList.filterBy") }}
+      </h4>
+      <VButton
+        v-show="isAnyFilterApplied"
+        id="clear-filter-button"
+        variant="transparent-gray"
+        size="small"
+        class="label-bold absolute end-0 !text-link"
+        @click="clearFilters"
+      >
+        {{ $t("filterList.clear") }}
+      </VButton>
+    </header>
+    <form class="filters-form">
+      <VFilterChecklist
+        v-for="filterType in filterTypes"
+        :key="filterType"
+        :options="filters[filterType]"
+        :title="filterTypeTitle(filterType)"
+        :filter-type="filterType"
+        @toggle-filter="toggleFilter"
+      />
+    </form>
+  </section>
+</template>

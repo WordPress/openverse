@@ -1,17 +1,3 @@
-<template>
-  <h1
-    class="sr-only break-words md:not-sr-only"
-    :class="[
-      size === 'large'
-        ? 'heading-2 lg:heading-1 !leading-none lg:!leading-none'
-        : 'heading-2 !leading-none',
-    ]"
-  >
-    <span aria-hidden="true">{{ searchTerm }}</span
-    ><span class="sr-only">{{ ariaHeading }}</span>
-  </h1>
-</template>
-
 <script lang="ts">
 import { useI18n } from "#imports"
 
@@ -120,6 +106,20 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <h1
+    class="sr-only break-words md:not-sr-only"
+    :class="[
+      size === 'large'
+        ? 'heading-2 lg:heading-1 !leading-none lg:!leading-none'
+        : 'heading-2 !leading-none',
+    ]"
+  >
+    <span aria-hidden="true">{{ searchTerm }}</span
+    ><span class="sr-only">{{ ariaHeading }}</span>
+  </h1>
+</template>
 
 <style scoped>
 /* Title case the user's search query */

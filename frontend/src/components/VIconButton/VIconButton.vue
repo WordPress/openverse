@@ -1,22 +1,3 @@
-<template>
-  <VButton
-    :aria-label="label"
-    :size="size"
-    :variant="variant"
-    :connections="connections"
-    class="icon-button"
-    icon-only
-  >
-    <slot name="default" :icon-size="iconSize" />
-    <VIcon
-      v-if="iconProps"
-      class="pointer-events-none"
-      :size="iconSize"
-      v-bind="iconProps"
-    />
-  </VButton>
-</template>
-
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue"
 
@@ -83,3 +64,22 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <VButton
+    :aria-label="label"
+    :size="size"
+    :variant="variant"
+    :connections="connections"
+    class="icon-button"
+    icon-only
+  >
+    <slot name="default" :icon-size="iconSize" />
+    <VIcon
+      v-if="iconProps"
+      class="pointer-events-none"
+      :size="iconSize"
+      v-bind="iconProps"
+    />
+  </VButton>
+</template>

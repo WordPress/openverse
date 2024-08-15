@@ -1,3 +1,15 @@
+<script>
+import { defineComponent } from "vue"
+
+import VIcon from "~/components/VIcon/VIcon.vue"
+import VButton from "~/components/VButton.vue"
+
+export default defineComponent({
+  name: "VContentReportButton",
+  components: { VButton, VIcon },
+})
+</script>
+
 <template>
   <VButton
     variant="transparent-gray"
@@ -12,15 +24,3 @@
     <VIcon name="flag" />
   </VButton>
 </template>
-
-<script>
-import { defineComponent } from "vue"
-
-import VIcon from "~/components/VIcon/VIcon.vue"
-import VButton from "~/components/VButton.vue"
-
-export default defineComponent({
-  name: "VContentReportButton",
-  components: { VButton, VIcon },
-})
-</script>

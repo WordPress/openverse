@@ -1,19 +1,3 @@
-<template>
-  <!-- @todo: Separate the absolute container from the link itself. -->
-  <VButton
-    as="VLink"
-    :href="href"
-    has-icon-start
-    variant="transparent-gray"
-    size="small"
-    class="label-bold inline-flex"
-    @mousedown="handleClick"
-  >
-    <VIcon name="chevron-back" :rtl-flip="true" />
-    {{ $t("singleResult.back") }}
-  </VButton>
-</template>
-
 <script lang="ts">
 import { defineComponent } from "vue"
 
@@ -62,3 +46,19 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <!-- @todo: Separate the absolute container from the link itself. -->
+  <VButton
+    as="VLink"
+    :href="href"
+    has-icon-start
+    variant="transparent-gray"
+    size="small"
+    class="label-bold inline-flex"
+    @mousedown="handleClick"
+  >
+    <VIcon name="chevron-back" :rtl-flip="true" />
+    {{ $t("singleResult.back") }}
+  </VButton>
+</template>

@@ -1,27 +1,3 @@
-<template>
-  <i18n-t
-    scope="global"
-    class="dmca-notice"
-    keypath="mediaDetails.contentReport.form.dmca.note"
-    tag="p"
-  >
-    <template #form>
-      <VLink
-        :aria-label="$t('mediaDetails.contentReport.form.dmca.form')"
-        :href="DMCA_FORM_URL"
-        class="text-link hover:underline"
-        @click="$emit('click')"
-        >{{ $t("mediaDetails.contentReport.form.dmca.form") }}</VLink
-      >
-    </template>
-    <template #source>
-      <VLink :href="foreignLandingUrl" class="text-link hover:underline">{{
-        provider
-      }}</VLink>
-    </template>
-  </i18n-t>
-</template>
-
 <script lang="ts">
 import { defineComponent } from "vue"
 
@@ -59,3 +35,27 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <i18n-t
+    scope="global"
+    class="dmca-notice"
+    keypath="mediaDetails.contentReport.form.dmca.note"
+    tag="p"
+  >
+    <template #form>
+      <VLink
+        :aria-label="$t('mediaDetails.contentReport.form.dmca.form')"
+        :href="DMCA_FORM_URL"
+        class="text-link hover:underline"
+        @click="$emit('click')"
+        >{{ $t("mediaDetails.contentReport.form.dmca.form") }}</VLink
+      >
+    </template>
+    <template #source>
+      <VLink :href="foreignLandingUrl" class="text-link hover:underline">{{
+        provider
+      }}</VLink>
+    </template>
+  </i18n-t>
+</template>

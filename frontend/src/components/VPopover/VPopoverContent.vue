@@ -1,21 +1,3 @@
-<template>
-  <div
-    v-show="visible"
-    ref="popoverRef"
-    role="dialog"
-    aria-modal="true"
-    class="popover-content w-max-content absolute left-0 top-0 overflow-y-auto overflow-x-hidden rounded-sm border border-default bg-overlay shadow"
-    :class="`z-${zIndex}`"
-    :style="{ ...heightProperties, ...style }"
-    :tabindex="-1"
-    :aria-hidden="!visible"
-    @blur="onBlur"
-    @keydown="onKeyDown"
-  >
-    <slot />
-  </div>
-</template>
-
 <script lang="ts">
 import {
   defineComponent,
@@ -117,6 +99,24 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <div
+    v-show="visible"
+    ref="popoverRef"
+    role="dialog"
+    aria-modal="true"
+    class="popover-content w-max-content absolute left-0 top-0 overflow-y-auto overflow-x-hidden rounded-sm border border-default bg-overlay shadow"
+    :class="`z-${zIndex}`"
+    :style="{ ...heightProperties, ...style }"
+    :tabindex="-1"
+    :aria-hidden="!visible"
+    @blur="onBlur"
+    @keydown="onKeyDown"
+  >
+    <slot />
+  </div>
+</template>
 
 <style>
 .popover-content {

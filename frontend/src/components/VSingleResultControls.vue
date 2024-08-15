@@ -1,19 +1,3 @@
-<template>
-  <!-- Only display these controls if one of the children is shown,
-    to prevent rendering extra whitespace when both buttons are hidden. -->
-  <div
-    v-show="canBeHidden || backToSearchPath"
-    class="flex w-full justify-between px-4 pb-4 md:px-8"
-  >
-    <VBackToSearchResultsLink
-      v-if="backToSearchPath"
-      :id="media.id"
-      :href="backToSearchPath"
-    />
-    <VHideButton v-if="canBeHidden" class="ml-auto" @click="hide" />
-  </div>
-</template>
-
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue"
 
@@ -52,3 +36,19 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <!-- Only display these controls if one of the children is shown,
+    to prevent rendering extra whitespace when both buttons are hidden. -->
+  <div
+    v-show="canBeHidden || backToSearchPath"
+    class="flex w-full justify-between px-4 pb-4 md:px-8"
+  >
+    <VBackToSearchResultsLink
+      v-if="backToSearchPath"
+      :id="media.id"
+      :href="backToSearchPath"
+    />
+    <VHideButton v-if="canBeHidden" class="ml-auto" @click="hide" />
+  </div>
+</template>

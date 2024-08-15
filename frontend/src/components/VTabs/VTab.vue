@@ -1,23 +1,3 @@
-<template>
-  <VButton
-    :id="`tab-${id}`"
-    ref="internalTabRef"
-    role="tab"
-    :tabindex="isSelected ? 0 : -1"
-    size="disabled"
-    variant="plain--avoid"
-    v-bind="tabProps"
-    class="rounded-none bg-default focus-slim-tx focus:z-10"
-    :class="[variant, `size-${size}`, { [`${variant}-selected`]: isSelected }]"
-    @click="handleSelection"
-    @focus="handleFocus"
-    @mousedown="handleMouseDown"
-    @keydown="handleKeyDown"
-  >
-    <slot />
-  </VButton>
-</template>
-
 <script lang="ts">
 import {
   computed,
@@ -199,6 +179,26 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <VButton
+    :id="`tab-${id}`"
+    ref="internalTabRef"
+    role="tab"
+    :tabindex="isSelected ? 0 : -1"
+    size="disabled"
+    variant="plain--avoid"
+    v-bind="tabProps"
+    class="rounded-none bg-default focus-slim-tx focus:z-10"
+    :class="[variant, `size-${size}`, { [`${variant}-selected`]: isSelected }]"
+    @click="handleSelection"
+    @focus="handleFocus"
+    @mousedown="handleMouseDown"
+    @keydown="handleKeyDown"
+  >
+    <slot />
+  </VButton>
+</template>
 
 <style scoped>
 .bordered {

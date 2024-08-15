@@ -1,51 +1,3 @@
-<template>
-  <div class="media-attribution">
-    <h3 class="description-bold md:heading-6 mb-4">
-      {{ headerText }}
-    </h3>
-
-    <template v-if="isLicense">
-      <i18n-t
-        scope="global"
-        keypath="mediaDetails.reuse.attribution"
-        tag="span"
-        class="mb-2 block text-sm md:mb-4 md:text-base"
-      >
-        <template #link>
-          <VLink
-            :href="licenseUrl"
-            :send-external-link-click-event="false"
-            @click="sendVisitLicensePage"
-          >
-            {{ fullLicenseName }}
-          </VLink>
-        </template>
-      </i18n-t>
-      <VLicenseElements :license="license" />
-    </template>
-
-    <template v-else>
-      <VLicenseElements :license="license" />
-      <i18n-t
-        scope="global"
-        keypath="mediaDetails.reuse.tool.content"
-        tag="span"
-        class="description-bold"
-      >
-        <template #link>
-          <VLink
-            :aria-label="$t('mediaDetails.aria.attribution.tool')"
-            :href="licenseUrl"
-            :send-external-link-click-event="false"
-            @click="sendVisitLicensePage"
-            >{{ $t("mediaDetails.reuse.tool.link") }}</VLink
-          >
-        </template>
-      </i18n-t>
-    </template>
-  </div>
-</template>
-
 <script lang="ts">
 import { useI18n } from "#imports"
 
@@ -105,3 +57,51 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <div class="media-attribution">
+    <h3 class="description-bold md:heading-6 mb-4">
+      {{ headerText }}
+    </h3>
+
+    <template v-if="isLicense">
+      <i18n-t
+        scope="global"
+        keypath="mediaDetails.reuse.attribution"
+        tag="span"
+        class="mb-2 block text-sm md:mb-4 md:text-base"
+      >
+        <template #link>
+          <VLink
+            :href="licenseUrl"
+            :send-external-link-click-event="false"
+            @click="sendVisitLicensePage"
+          >
+            {{ fullLicenseName }}
+          </VLink>
+        </template>
+      </i18n-t>
+      <VLicenseElements :license="license" />
+    </template>
+
+    <template v-else>
+      <VLicenseElements :license="license" />
+      <i18n-t
+        scope="global"
+        keypath="mediaDetails.reuse.tool.content"
+        tag="span"
+        class="description-bold"
+      >
+        <template #link>
+          <VLink
+            :aria-label="$t('mediaDetails.aria.attribution.tool')"
+            :href="licenseUrl"
+            :send-external-link-click-event="false"
+            @click="sendVisitLicensePage"
+            >{{ $t("mediaDetails.reuse.tool.link") }}</VLink
+          >
+        </template>
+      </i18n-t>
+    </template>
+  </div>
+</template>

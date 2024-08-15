@@ -1,3 +1,21 @@
+<script lang="ts">
+import VLink from "~/components/VLink.vue"
+import VSvg from "~/components/VSvg/VSvg.vue"
+
+import type { PropType } from "vue"
+
+export default {
+  name: "VWordPressLink",
+  components: { VLink, VSvg },
+  props: {
+    mode: {
+      type: String as PropType<"dark" | "light">,
+      default: "light",
+    },
+  },
+}
+</script>
+
 <template>
   <VLink
     href="https://wordpress.org"
@@ -16,21 +34,3 @@
     </i18n-t>
   </VLink>
 </template>
-
-<script lang="ts">
-import VLink from "~/components/VLink.vue"
-import VSvg from "~/components/VSvg/VSvg.vue"
-
-import type { PropType } from "vue"
-
-export default {
-  name: "VWordPressLink",
-  components: { VLink, VSvg },
-  props: {
-    mode: {
-      type: String as PropType<"dark" | "light">,
-      default: "light",
-    },
-  },
-}
-</script>

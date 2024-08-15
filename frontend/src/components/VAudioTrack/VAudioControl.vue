@@ -1,36 +1,3 @@
-<template>
-  <VIconButton
-    :tabindex="isTabbable ? 0 : -1"
-    class="audio-control"
-    :size="buttonSize"
-    :variant="layout === 'box' ? 'transparent-dark' : 'filled-dark'"
-    :icon-props="icon === undefined ? undefined : { name: icon, size: iSize }"
-    :label="$t(label)"
-    :connections="connections"
-    :disabled="!doneHydrating"
-    @click.stop.prevent="handleClick"
-    @mousedown="handleMouseDown"
-  >
-    <template #default>
-      <svg
-        v-if="isLoading"
-        class="loading p-2"
-        :class="`w-${iSize} h-${iSize}`"
-        xmlns="http://www.w3.org/2000/svg"
-        overflow="visible"
-        viewBox="0 0 12 12"
-      >
-        <circle cx="6" cy="6" r="6" vector-effect="non-scaling-stroke" />
-        <path
-          d="m 6 0 a 6 6 0 0 1 6 6"
-          stroke="white"
-          vector-effect="non-scaling-stroke"
-        />
-      </svg>
-    </template>
-  </VIconButton>
-</template>
-
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue"
 
@@ -177,6 +144,39 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <VIconButton
+    :tabindex="isTabbable ? 0 : -1"
+    class="audio-control"
+    :size="buttonSize"
+    :variant="layout === 'box' ? 'transparent-dark' : 'filled-dark'"
+    :icon-props="icon === undefined ? undefined : { name: icon, size: iSize }"
+    :label="$t(label)"
+    :connections="connections"
+    :disabled="!doneHydrating"
+    @click.stop.prevent="handleClick"
+    @mousedown="handleMouseDown"
+  >
+    <template #default>
+      <svg
+        v-if="isLoading"
+        class="loading p-2"
+        :class="`w-${iSize} h-${iSize}`"
+        xmlns="http://www.w3.org/2000/svg"
+        overflow="visible"
+        viewBox="0 0 12 12"
+      >
+        <circle cx="6" cy="6" r="6" vector-effect="non-scaling-stroke" />
+        <path
+          d="m 6 0 a 6 6 0 0 1 6 6"
+          stroke="white"
+          vector-effect="non-scaling-stroke"
+        />
+      </svg>
+    </template>
+  </VIconButton>
+</template>
 
 <style scoped>
 @keyframes spinAnimation {

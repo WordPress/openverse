@@ -1,18 +1,3 @@
-<template>
-  <dt>
-    {{ $t(datum.label) }}
-    <VTooltip placement="top" :described-by="describedBy" class="ms-1">
-      <template #default>
-        <p
-          class="caption-regular rounded-sm bg-tertiary px-2 py-1 text-over-dark"
-        >
-          {{ description }}
-        </p>
-      </template>
-    </VTooltip>
-  </dt>
-</template>
-
 <script lang="ts">
 import { useI18n } from "#imports"
 
@@ -54,3 +39,18 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <dt>
+    {{ $t(datum.label) }}
+    <VTooltip placement="top" :described-by="describedBy" class="ms-1">
+      <template #default>
+        <p
+          class="caption-regular rounded-sm bg-tertiary px-2 py-1 text-over-dark"
+        >
+          {{ description }}
+        </p>
+      </template>
+    </VTooltip>
+  </dt>
+</template>

@@ -1,37 +1,3 @@
-<template>
-  <footer
-    ref="footerEl"
-    class="footer flex flex-col gap-10 px-6"
-    :class="[
-      ...variantNames,
-      isContentMode ? 'footer-content' : 'footer-internal',
-    ]"
-  >
-    <!-- Logo and links -->
-    <div v-if="isContentMode" class="logo-and-links flex flex-col gap-y-10">
-      <VLink href="/" class="logo text-default" aria-label="Openverse">
-        <VBrand class="text-[18px]" />
-      </VLink>
-      <nav>
-        <VPageLinks
-          class="nav-list label-regular"
-          :style="linkColumnHeight"
-          nav-link-classes="py-2"
-        />
-      </nav>
-    </div>
-
-    <!-- Locale chooser and WordPress affiliation graphic -->
-    <div class="locale-and-wp flex flex-col justify-between">
-      <VLanguageSelect
-        v-bind="languageProps"
-        class="language max-w-full border-secondary"
-      />
-      <VWordPressLink mode="light" />
-    </div>
-  </footer>
-</template>
-
 <script lang="ts">
 import { computed, defineComponent, PropType, ref } from "vue"
 
@@ -118,6 +84,40 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <footer
+    ref="footerEl"
+    class="footer flex flex-col gap-10 px-6"
+    :class="[
+      ...variantNames,
+      isContentMode ? 'footer-content' : 'footer-internal',
+    ]"
+  >
+    <!-- Logo and links -->
+    <div v-if="isContentMode" class="logo-and-links flex flex-col gap-y-10">
+      <VLink href="/" class="logo text-default" aria-label="Openverse">
+        <VBrand class="text-[18px]" />
+      </VLink>
+      <nav>
+        <VPageLinks
+          class="nav-list label-regular"
+          :style="linkColumnHeight"
+          nav-link-classes="py-2"
+        />
+      </nav>
+    </div>
+
+    <!-- Locale chooser and WordPress affiliation graphic -->
+    <div class="locale-and-wp flex flex-col justify-between">
+      <VLanguageSelect
+        v-bind="languageProps"
+        class="language max-w-full border-secondary"
+      />
+      <VWordPressLink mode="light" />
+    </div>
+  </footer>
+</template>
 
 <style>
 /* wrapper element styles */

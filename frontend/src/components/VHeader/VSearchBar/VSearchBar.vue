@@ -1,59 +1,3 @@
-<template>
-  <div ref="searchBarEl" class="relative" :class="$attrs.class">
-    <!-- Form action is a fallback for when JavaScript is disabled. -->
-    <form
-      action="/search"
-      role="search"
-      class="search-bar group flex h-12 flex-row items-center rounded-sm border-tx bg-default"
-      @submit.prevent="handleSearch"
-    >
-      <VInputField
-        ref="inputFieldRef"
-        v-bind="nonClassAttrs"
-        v-model="modelMedium"
-        :placeholder="placeholder || $t('hero.search.placeholder')"
-        class="search-field flex-grow border-tx bg-secondary text-secondary focus-within:bg-default focus:border-focus group-hover:bg-secondary group-hover:text-default group-hover:focus-within:bg-default"
-        :label-text="$t('search.searchBarLabel', { openverse: 'Openverse' })"
-        :connection-sides="['end']"
-        :size="size"
-        field-id="search-bar"
-        type="search"
-        autocomplete="off"
-        name="q"
-        role="combobox"
-        aria-autocomplete="none"
-        :aria-expanded="isRecentVisible"
-        aria-controls="recent-searches-list"
-        :aria-activedescendant="
-          selectedIdx !== undefined ? `option-${selectedIdx}` : undefined
-        "
-        @focus="showRecentSearches"
-        @keydown="handleKeydown"
-      >
-        <!-- @slot Extra information such as loading message or result count goes here. -->
-        <slot />
-      </VInputField>
-      <VSearchButton
-        type="submit"
-        route="search"
-        @keydown.tab.exact="handleSearchBlur"
-      />
-    </form>
-    <ClientOnly>
-      <VRecentSearches
-        v-show="isRecentVisible"
-        :selected-idx="selectedIdx"
-        :entries="entries"
-        class="absolute inset-x-0 z-popover lg:flex"
-        :class="recentClasses"
-        @select="handleSelect"
-        @clear="handleClear($event)"
-        @keydown.tab="hideRecentSearches"
-      />
-    </ClientOnly>
-  </div>
-</template>
-
 <script lang="ts">
 import { computed, defineComponent, PropType, ref, watch } from "vue"
 
@@ -183,3 +127,59 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <div ref="searchBarEl" class="relative" :class="$attrs.class">
+    <!-- Form action is a fallback for when JavaScript is disabled. -->
+    <form
+      action="/search"
+      role="search"
+      class="search-bar group flex h-12 flex-row items-center rounded-sm border-tx bg-default"
+      @submit.prevent="handleSearch"
+    >
+      <VInputField
+        ref="inputFieldRef"
+        v-bind="nonClassAttrs"
+        v-model="modelMedium"
+        :placeholder="placeholder || $t('hero.search.placeholder')"
+        class="search-field flex-grow border-tx bg-secondary text-secondary focus-within:bg-default focus:border-focus group-hover:bg-secondary group-hover:text-default group-hover:focus-within:bg-default"
+        :label-text="$t('search.searchBarLabel', { openverse: 'Openverse' })"
+        :connection-sides="['end']"
+        :size="size"
+        field-id="search-bar"
+        type="search"
+        autocomplete="off"
+        name="q"
+        role="combobox"
+        aria-autocomplete="none"
+        :aria-expanded="isRecentVisible"
+        aria-controls="recent-searches-list"
+        :aria-activedescendant="
+          selectedIdx !== undefined ? `option-${selectedIdx}` : undefined
+        "
+        @focus="showRecentSearches"
+        @keydown="handleKeydown"
+      >
+        <!-- @slot Extra information such as loading message or result count goes here. -->
+        <slot />
+      </VInputField>
+      <VSearchButton
+        type="submit"
+        route="search"
+        @keydown.tab.exact="handleSearchBlur"
+      />
+    </form>
+    <ClientOnly>
+      <VRecentSearches
+        v-show="isRecentVisible"
+        :selected-idx="selectedIdx"
+        :entries="entries"
+        class="absolute inset-x-0 z-popover lg:flex"
+        :class="recentClasses"
+        @select="handleSelect"
+        @clear="handleClear($event)"
+        @keydown.tab="hideRecentSearches"
+      />
+    </ClientOnly>
+  </div>
+</template>

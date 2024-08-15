@@ -1,22 +1,3 @@
-<template>
-  <VButton
-    :id="id"
-    type="button"
-    variant="filled-dark"
-    size="small"
-    class="label-bold flex-shrink-0"
-    :disabled="!doneHydrating"
-    :data-clipboard-target="el"
-  >
-    <span v-if="!success">
-      {{ $t("mediaDetails.reuse.copyLicense.copyText") }}
-    </span>
-    <span v-else>
-      {{ $t("mediaDetails.reuse.copyLicense.copied") }}
-    </span>
-  </VButton>
-</template>
-
 <script lang="ts">
 import Clipboard from "clipboard"
 
@@ -90,3 +71,22 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <VButton
+    :id="id"
+    type="button"
+    variant="filled-dark"
+    size="small"
+    class="label-bold flex-shrink-0"
+    :disabled="!doneHydrating"
+    :data-clipboard-target="el"
+  >
+    <span v-if="!success">
+      {{ $t("mediaDetails.reuse.copyLicense.copyText") }}
+    </span>
+    <span v-else>
+      {{ $t("mediaDetails.reuse.copyLicense.copied") }}
+    </span>
+  </VButton>
+</template>

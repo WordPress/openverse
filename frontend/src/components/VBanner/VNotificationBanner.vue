@@ -1,30 +1,3 @@
-<template>
-  <section
-    class="flex flex-row items-center gap-2 rounded-sm p-2 lg:p-3"
-    :class="classNames"
-    :data-testid="`banner-${id}`"
-  >
-    <slot name="start">
-      <VIcon :name="nature" :class="iconClassNames" />
-    </slot>
-
-    <p class="caption-regular lg:paragraph-small flex-grow">
-      <slot />
-    </p>
-
-    <slot name="end">
-      <VIconButton
-        :variant="variant === 'dark' ? 'transparent-tx' : 'transparent-gray'"
-        :icon-props="{ name: 'close-small' }"
-        size="small"
-        :label="closeButtonLabel || $t('modal.closeBanner')"
-        :class="closeButtonClassNames"
-        @click="$emit('close')"
-      />
-    </slot>
-  </section>
-</template>
-
 <script lang="ts">
 import { defineComponent, PropType, computed } from "vue"
 
@@ -122,3 +95,30 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <section
+    class="flex flex-row items-center gap-2 rounded-sm p-2 lg:p-3"
+    :class="classNames"
+    :data-testid="`banner-${id}`"
+  >
+    <slot name="start">
+      <VIcon :name="nature" :class="iconClassNames" />
+    </slot>
+
+    <p class="caption-regular lg:paragraph-small flex-grow">
+      <slot />
+    </p>
+
+    <slot name="end">
+      <VIconButton
+        :variant="variant === 'dark' ? 'transparent-tx' : 'transparent-gray'"
+        :icon-props="{ name: 'close-small' }"
+        size="small"
+        :label="closeButtonLabel || $t('modal.closeBanner')"
+        :class="closeButtonClassNames"
+        @click="$emit('close')"
+      />
+    </slot>
+  </section>
+</template>

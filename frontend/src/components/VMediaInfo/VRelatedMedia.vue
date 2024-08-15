@@ -1,26 +1,3 @@
-<template>
-  <VMediaCollection
-    v-if="showRelated"
-    :results="results"
-    :is-fetching="isFetching"
-    :collection-label="collectionLabel"
-    kind="related"
-    :related-to="relatedTo"
-    :search-term="searchTerm"
-    :aria-label="collectionLabel"
-  >
-    <template #header>
-      <h2
-        id="related-heading"
-        class="heading-6 mb-6"
-        :class="results.type === 'image' ? 'md:heading-5' : 'lg:heading-6'"
-      >
-        {{ collectionLabel }}
-      </h2>
-    </template>
-  </VMediaCollection>
-</template>
-
 <script lang="ts">
 import { useRoute, useI18n, firstParam } from "#imports"
 
@@ -98,3 +75,26 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <VMediaCollection
+    v-if="showRelated"
+    :results="results"
+    :is-fetching="isFetching"
+    :collection-label="collectionLabel"
+    kind="related"
+    :related-to="relatedTo"
+    :search-term="searchTerm"
+    :aria-label="collectionLabel"
+  >
+    <template #header>
+      <h2
+        id="related-heading"
+        class="heading-6 mb-6"
+        :class="results.type === 'image' ? 'md:heading-5' : 'lg:heading-6'"
+      >
+        {{ collectionLabel }}
+      </h2>
+    </template>
+  </VMediaCollection>
+</template>

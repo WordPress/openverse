@@ -1,53 +1,3 @@
-<template>
-  <!-- eslint-disable vue/use-v-on-exact -->
-  <Component
-    :is="isComposite ? VLink : 'div'"
-    v-bind="containerAttributes"
-    class="audio-track group block overflow-hidden rounded-sm ring-pink-8 hover:no-underline"
-    :aria-label="ariaLabel"
-    :role="isComposite ? 'application' : undefined"
-    @keydown.shift.tab.exact="$emit('shift-tab', $event)"
-    @keydown="handleKeydown"
-    @blur="handleBlur"
-    @mousedown="handleMousedown"
-    @focus="handleFocus"
-  >
-    <Component
-      :is="layoutComponent"
-      :audio="audio"
-      :size="layoutSize"
-      :status="status"
-      :current-time="currentTime"
-    >
-      <template #controller="waveformProps">
-        <VWaveform
-          ref="waveformRef"
-          v-bind="waveformProps"
-          :is-parent-seeking="isSeeking"
-          :peaks="audio.peaks"
-          :audio-id="audio.id"
-          :current-time="currentTime"
-          :duration="duration"
-          :message="message"
-          @seeked="handleSeeked"
-          @toggle-playback="handleToggle"
-          @blur="handleWaveformBlur"
-          @focus="handleWaveformFocus"
-        />
-      </template>
-
-      <template #audio-control="audioControlProps">
-        <VAudioControl
-          ref="audioControlRef"
-          :status="status"
-          v-bind="audioControlProps"
-          @toggle="handleToggle"
-        />
-      </template>
-    </Component>
-  </Component>
-</template>
-
 <script lang="ts">
 import { firstParam, useI18n, useRoute } from "#imports"
 
@@ -607,3 +557,53 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <!-- eslint-disable vue/use-v-on-exact -->
+  <Component
+    :is="isComposite ? VLink : 'div'"
+    v-bind="containerAttributes"
+    class="audio-track group block overflow-hidden rounded-sm ring-pink-8 hover:no-underline"
+    :aria-label="ariaLabel"
+    :role="isComposite ? 'application' : undefined"
+    @keydown.shift.tab.exact="$emit('shift-tab', $event)"
+    @keydown="handleKeydown"
+    @blur="handleBlur"
+    @mousedown="handleMousedown"
+    @focus="handleFocus"
+  >
+    <Component
+      :is="layoutComponent"
+      :audio="audio"
+      :size="layoutSize"
+      :status="status"
+      :current-time="currentTime"
+    >
+      <template #controller="waveformProps">
+        <VWaveform
+          ref="waveformRef"
+          v-bind="waveformProps"
+          :is-parent-seeking="isSeeking"
+          :peaks="audio.peaks"
+          :audio-id="audio.id"
+          :current-time="currentTime"
+          :duration="duration"
+          :message="message"
+          @seeked="handleSeeked"
+          @toggle-playback="handleToggle"
+          @blur="handleWaveformBlur"
+          @focus="handleWaveformFocus"
+        />
+      </template>
+
+      <template #audio-control="audioControlProps">
+        <VAudioControl
+          ref="audioControlRef"
+          :status="status"
+          v-bind="audioControlProps"
+          @toggle="handleToggle"
+        />
+      </template>
+    </Component>
+  </Component>
+</template>
