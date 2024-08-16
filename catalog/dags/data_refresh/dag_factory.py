@@ -42,9 +42,9 @@ from common.constants import DAG_DEFAULT_ARGS, ENVIRONMENTS, Environment
 from common.sensors.constants import ES_CONCURRENCY_TAGS
 from common.sensors.single_run_external_dags_sensor import SingleRunExternalDAGsSensor
 from common.sensors.utils import wait_for_external_dags_with_tag
+from data_refresh.alter_data import alter_table_data
 from data_refresh.copy_data import copy_upstream_tables
 from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS, DataRefreshConfig
-from data_refresh.filter_data import filter_table_data
 from data_refresh.reporting import report_record_difference
 
 
@@ -147,9 +147,7 @@ def create_data_refresh_dag(
             environment=environment, data_refresh_config=data_refresh_config
         )
 
-        # TODO Cleaning steps
-
-        filter_data = filter_table_data(
+        alter_data = alter_table_data(
             environment=environment, data_refresh_config=data_refresh_config
         )
 
@@ -208,7 +206,7 @@ def create_data_refresh_dag(
             before_record_count
             >> wait_for_dags
             >> copy_data
-            >> filter_data
+            >> alter_data
             >> disable_alarms
         )
         # TODO: this will include reindex/etc once added

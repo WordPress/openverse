@@ -1,9 +1,9 @@
 """
-# Filter Data Task
+# Alter Data Task
 
-This module contains the Airflow task used for filtering data from the
-newly created temporary table in the downstream (API) database. This
-provides an entrypoint for filtering tags that do not meet a certain
+This module contains the Airflow tasks used for filtering, transforming, and augmenting
+data from the newly created temporary table in the downstream (API) database.
+Currently, this provides an entrypoint for filtering tags that do not meet a certain
 minimum accuracy, are malformed, or are from unvetted providers.
 """
 
@@ -116,7 +116,7 @@ def generate_tag_updates(tags) -> list[dict] | None:
 
 
 @task
-def get_filter_batches(
+def get_alter_batches(
     id_bounds: tuple[int, int], batch_size: int | None
 ) -> list[tuple[int, int]]:
     start, stop = id_bounds
@@ -125,14 +125,14 @@ def get_filter_batches(
 
 
 @task
-def filter_data_batch(
+def alter_data_batch(
     batch: tuple[int, int],
     temp_table: str,
     postgres_conn_id: str,
     task: AbstractOperator = None,
     timeout: float = None,
 ) -> int:
-    logger.info(f"Starting data filtering on batch: {batch}")
+    logger.info(f"Starting data altering on batch: {batch}")
     batch_start, batch_end = batch
     postgres = PostgresHook(
         postgres_conn_id=postgres_conn_id,
@@ -147,17 +147,17 @@ def filter_data_batch(
         handler=fetch_all_handler,
     )
     worker_conn = postgres.get_conn()
-    logger.info("Data filtering worker connected to database")
+    logger.info("Data altering worker connected to database")
     with worker_conn.cursor() as write_cur:
         logger.info(f"Filtering {len(rows)} rows")
 
-        filtered_count = 0
+        altered_count = 0
         for row in rows:
             _id, identifier, tags = row
             tags_fragment = generate_tag_updates(tags)
             if not tags_fragment:
                 continue
-            filtered_count += 1
+            altered_count += 1
             logger.debug(
                 f"Updated tags for {identifier}\n\t"
                 f"from '{tags}' \n\tto '{tags_fragment}'"
@@ -170,7 +170,7 @@ def filter_data_batch(
     logger.info("Worker committing changes...")
     worker_conn.commit()
     worker_conn.close()
-    return filtered_count
+    return altered_count
 
 
 @task
@@ -180,12 +180,12 @@ def report(counts: list[int]):
     return total_count
 
 
-@task_group(group_id="filter_table_data")
-def filter_table_data(
+@task_group(group_id="alter_table_data")
+def alter_table_data(
     environment: Environment,
     data_refresh_config: DataRefreshConfig,
 ):
-    """Perform data filtering across a number of tasks."""
+    """Perform data altering across a number of tasks."""
     postgres_conn_id = POSTGRES_API_CONN_IDS.get(environment)
     temp_table = data_refresh_config.table_mappings[0].temp_table_name
 
@@ -197,13 +197,13 @@ def filter_table_data(
         return_last=True,
     )
 
-    batches = get_filter_batches(
+    batches = get_alter_batches(
         estimated_record_count.output,
-        batch_size="{{ var.value.get('DATA_REFRESH_FILTER_BATCH_SIZE', none) }}",
+        batch_size="{{ var.value.get('DATA_REFRESH_ALTER_BATCH_SIZE', none) }}",
     )
 
-    filter_data = filter_data_batch.partial(
+    alter_data = alter_data_batch.partial(
         temp_table=temp_table, postgres_conn_id=postgres_conn_id
     ).expand(batch=batches)
 
-    report(filter_data)
+    report(alter_data)

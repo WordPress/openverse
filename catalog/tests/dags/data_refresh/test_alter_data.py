@@ -2,12 +2,12 @@ from unittest import mock
 
 import pytest
 
-from data_refresh.filter_data import (
+from data_refresh.alter_data import (
     DEFAULT_BATCH_SIZE,
     FILTERED_TAG_PROVIDERS,
-    filter_data_batch,
+    alter_data_batch,
     generate_tag_updates,
-    get_filter_batches,
+    get_alter_batches,
 )
 
 
@@ -66,12 +66,12 @@ def test_generate_tag_updates(tags, expected):
         ((1, 100), None, [(1, DEFAULT_BATCH_SIZE)]),
     ],
 )
-def test_get_filter_batches(id_bounds, batch_size, expected):
-    actual = get_filter_batches.function(id_bounds, batch_size)
+def test_get_alter_batches(id_bounds, batch_size, expected):
+    actual = get_alter_batches.function(id_bounds, batch_size)
     assert actual == expected
 
 
-def test_filter_data_batch():
+def test_alter_data_batch():
     batch = (50, 100)
     temp_table = "temp_foobar"
     postgres_conn_id = "fake_conn_id"
@@ -80,8 +80,8 @@ def test_filter_data_batch():
         (51, "bbb", True),
         (52, "ccc", False),
     ]
-    with mock.patch("data_refresh.filter_data.PostgresHook") as HookMock, mock.patch(
-        "data_refresh.filter_data.generate_tag_updates"
+    with mock.patch("data_refresh.alter_data.PostgresHook") as HookMock, mock.patch(
+        "data_refresh.alter_data.generate_tag_updates"
     ) as tag_updates_mock:
         mock_pg = HookMock.return_value
         mock_pg.run.return_value = sample_data
@@ -90,7 +90,7 @@ def test_filter_data_batch():
         )
         tag_updates_mock.side_effect = lambda x: x or None
 
-        count = filter_data_batch.function(
+        count = alter_data_batch.function(
             batch=batch, temp_table=temp_table, postgres_conn_id=postgres_conn_id
         )
 
