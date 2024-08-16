@@ -399,6 +399,27 @@ def test_extract_creator_info_handles_link_as_partial_text(wmc):
     assert expect_creator_url == actual_creator_url
 
 
+@pytest.mark.parametrize(
+    "url, media_type, expected",
+    [
+        # Valid images
+        ("https://example.com/image.jpg", "image", "jpg"),
+        ("https://example.com/image.JpeG", "image", "jpeg"),
+        ("https://example.com/image.Png", "image", "png"),
+        ("https://example.com/image.GIF", "image", "gif"),
+        # Invalid (for our sake) images
+        ("https://example.com/image.ogv", "image", None),
+        ("https://example.com/image.xyz", "image", None),
+        # Valid audio
+        ("https://example.com/audio.mp3", "audio", "mp3"),
+        ("https://example.com/audio.ogg", "audio", "ogg"),
+        ("https://example.com/audio.WAV", "audio", "wav"),
+    ],
+)
+def test_extract_file_type(wmc, url, media_type, expected):
+    assert wmc.extract_file_type(url, media_type) == expected
+
+
 def test_extract_license_info_finds_license_url(wmc):
     image_info = _get_resource_json("image_info_from_example_data.json")
     expect_license_url = "https://creativecommons.org/licenses/by-sa/4.0/"
