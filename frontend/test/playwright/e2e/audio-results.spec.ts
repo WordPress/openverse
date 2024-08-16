@@ -22,7 +22,7 @@ test.describe("all results grid keyboard accessibility test", () => {
   }) => {
     await walkToType("audio", page)
 
-    await expect(page.locator("[role=alert]")).toBeVisible()
+    await expect(page.getByRole("alert")).toBeVisible()
   })
 
   test("should hide the instructions snackbar when interacted with audio", async ({
@@ -30,12 +30,12 @@ test.describe("all results grid keyboard accessibility test", () => {
   }) => {
     await walkToType("audio", page)
 
-    await expect(page.locator("[role=alert]")).toBeVisible()
+    await expect(page.getByRole("alert")).toBeVisible()
 
     const focusedResult = await locateFocusedResult(page)
 
     await focusedResult.press("Space")
 
-    await expect(page.locator("[role=alert]")).toBeHidden()
+    await expect(page.getByRole("alert")).toBeHidden()
   })
 })

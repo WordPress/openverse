@@ -4,6 +4,8 @@ import breakpoints from "~~/test/playwright/utils/breakpoints"
 
 import { preparePageForTests } from "~~/test/playwright/utils/navigation"
 
+import { skipToContentLink } from "~~/test/playwright/utils/components"
+
 import { keycodes } from "~/constants/key-codes"
 import { skipToContentTargetId } from "~/constants/window"
 
@@ -36,9 +38,7 @@ for (const pageUrl of pages) {
       // Tab to the skip to content button
       await page.keyboard.press(keycodes.Tab)
 
-      await expect(
-        page.getByRole("link", { name: "Skip to content" })
-      ).toBeFocused()
+      await expect(skipToContentLink(page)).toBeFocused()
 
       // We cannot check if the screen reader cursor has moved to the content
       // because Playwright does not support this, and when you click on

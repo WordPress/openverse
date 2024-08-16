@@ -132,11 +132,11 @@ for (const searchType of supportedSearchTypes) {
 
         await page.mouse.move(0, 82)
 
-        // The CC logos in the attribution are loaded from the CC website, and can be flaky.
         await expectSnapshot(
           `search-result-timeout-${dir}`,
           page.locator("#main-page"),
           {},
+          // Timeout pages attribution has icons that don't always load from CC site
           { maxDiffPixelRatio: 0.01 }
         )
       })

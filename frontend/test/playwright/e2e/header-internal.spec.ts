@@ -30,6 +30,8 @@ const closeMenu = async (page: Page, dir: LanguageDirection = "ltr") => {
 const isPagesPopoverOpen = async (page: Page) =>
   page.locator(".popover-content").isVisible({ timeout: 100 })
 
+const aboutPageTitle = t("about.title")
+
 test.describe.configure({ mode: "parallel" })
 
 test.describe("Header internal", () => {
@@ -43,18 +45,20 @@ test.describe("Header internal", () => {
       await clickMenuButton(page)
       expect(await isDialogOpen(page)).toBe(true)
       await expect(page.locator(currentPageLink)).toBeVisible()
-      await expect(page.locator(currentPageLink)).toHaveText("About")
+      await expect(page.locator(currentPageLink)).toHaveText(
+        t("navigation.about")
+      )
 
       await closeMenu(page)
       expect(await isDialogOpen(page)).toBe(false)
-      await expect(await getMenuButton(page)).toBeVisible()
+      await expect(getMenuButton(page)).toBeVisible()
     })
 
     test("the modal locks the scroll on xs breakpoint", async ({ page }) => {
       await page.goto("/about")
 
       // Wait for hydration
-      await expect(await getMenuButton(page)).toBeEnabled()
+      await expect(getMenuButton(page)).toBeEnabled()
       await scrollToBottom(page)
 
       await clickMenuButton(page)
@@ -85,11 +89,13 @@ test.describe("Header internal", () => {
       await clickMenuButton(page)
       await page.getByRole("link", { name: t("navigation.about") }).click()
       await page.waitForURL("/about")
+
+      const pageTitleRegex = new RegExp(aboutPageTitle, "i")
       // For some reason during this test the navigation overlay sometimes takes ~5-9 ms
       // During that time, the page cannot scroll. We just need to wait for the
       // page's title to be visible before going on.
       await page
-        .locator("h1", { hasText: "About" })
+        .getByRole("heading", { level: 1, name: pageTitleRegex })
         .waitFor({ state: "visible" })
       await scrollToBottom(page)
       const scrollPosition = await page.evaluate(() => window.scrollY)
@@ -125,7 +131,9 @@ test.describe("Header internal", () => {
       await clickMenuButton(page)
       expect(await isPagesPopoverOpen(page)).toBe(true)
       await expect(page.locator(currentPageLinkInPopover)).toBeVisible()
-      await expect(page.locator(currentPageLinkInPopover)).toHaveText("About")
+      await expect(page.locator(currentPageLinkInPopover)).toHaveText(
+        t("navigation.about")
+      )
 
       await clickMenuButton(page)
       expect(await isPagesPopoverOpen(page)).toBe(false)

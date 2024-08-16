@@ -11,6 +11,9 @@ import { mockProviderApis } from "~~/test/playwright/utils/route"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 
+import { getHeaderSearchbar } from "~~/test/playwright/utils/components"
+import { t } from "~~/test/playwright/utils/i18n"
+
 import { ALL_MEDIA, AUDIO, IMAGE } from "~/constants/media"
 
 /**
@@ -39,10 +42,8 @@ test.describe("search query on SSR", () => {
         query: "license=cc0&license_type=commercial",
       })
 
-      const searchInput = page.locator('input[type="search"]')
+      const searchInput = getHeaderSearchbar(page)
       await expect(searchInput).toHaveValue("cat")
-      // Todo: focus the input?
-      // await expect(searchInput).toBeFocused()
     })
 
     test("url path /search/ is used to select `all` search tab", async ({
@@ -72,8 +73,11 @@ test.describe("search query on SSR", () => {
       })
 
       await filters.open(page)
-      // Creator filter was removed from the UI
-      for (const checkbox of ["Zero", "Use commercially"]) {
+
+      for (const checkbox of [
+        t("licenseReadableNames.cc0"),
+        t("filters.licenseTypes.commercial"),
+      ]) {
         await expect(
           page.getByRole("checkbox", { name: checkbox })
         ).toBeChecked()

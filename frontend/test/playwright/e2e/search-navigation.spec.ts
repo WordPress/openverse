@@ -10,9 +10,14 @@ import {
 import { mockProviderApis } from "~~/test/playwright/utils/route"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 
-import { getBackToSearchLink } from "~~/test/playwright/utils/components"
+import {
+  getBackToSearchLink,
+  getHeaderSearchbar,
+} from "~~/test/playwright/utils/components"
 
 import { getContentLink } from "~~/test/playwright/utils/search-results"
+
+import { t } from "~~/test/playwright/utils/i18n"
 
 import { AUDIO, IMAGE } from "~/constants/media"
 
@@ -33,7 +38,7 @@ test.describe("search history navigation", () => {
       await filters.open(page)
 
       const modifyLocator = page.getByRole("checkbox", {
-        name: "Modify or adapt",
+        name: t("filters.licenseTypes.modification"),
       })
       // Apply a filter
       await modifyLocator.click()
@@ -77,12 +82,12 @@ test.describe("search history navigation", () => {
       await goToSearchTerm(page, "galah")
 
       await searchFromHeader(page, "cat")
-      await expect(page.locator('input[name="q"]')).toHaveValue("cat")
+      await expect(getHeaderSearchbar(page)).toHaveValue("cat")
 
       await page.goBack()
 
       await expect(await getContentLink(page, IMAGE)).toBeVisible()
-      await expect(page.locator('input[name="q"]')).toHaveValue("galah")
+      await expect(getHeaderSearchbar(page)).toHaveValue("galah")
     })
 
     test("navigates to the image detail page correctly", async ({ page }) => {

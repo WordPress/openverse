@@ -15,9 +15,8 @@ export const getLoadMoreButton = (page: Page, dir: LanguageDirection = "ltr") =>
 export const getH1 = (page: Page, text: string | RegExp) =>
   page.getByRole("heading", { level: 1, name: text })
 
-export const getMenuButton = (page: Page, dir: LanguageDirection = "ltr") => {
-  return page.getByRole("button", { name: t("header.aria.menu", dir) })
-}
+export const getMenuButton = (page: Page, dir: LanguageDirection = "ltr") =>
+  page.getByRole("button", { name: t("header.aria.menu", dir) })
 
 export const getBackToSearchLink = (
   page: Page,
@@ -27,9 +26,13 @@ export const getBackToSearchLink = (
   return page.getByRole("link", { name: t("singleResult.back", dir, locale) })
 }
 
-// Get the header home link. Hard-codes the text because `t` does not support interpolation.
-export const getHomeLink = (page: Page) =>
-  page.getByRole("banner").getByRole("link", { name: "Openverse Home" })
+export const skipToContentLink = (page: Page, dir: LanguageDirection = "ltr") =>
+  page.getByRole("link", { name: t("skipToContent", dir) })
+
+export const getHomeLink = (page: Page, dir: LanguageDirection = "ltr") =>
+  page
+    .getByRole("banner")
+    .getByRole("link", { name: t("header.homeLink", dir) })
 
 export const getHomepageSearchButton = (
   page: Page,
@@ -38,3 +41,8 @@ export const getHomepageSearchButton = (
 
 export const getLanguageSelect = (page: Page, dir: LanguageDirection = "ltr") =>
   page.getByRole("combobox", { name: t("language.language", dir) })
+
+export const getHeaderSearchbar = (
+  page: Page,
+  dir: LanguageDirection = "ltr"
+) => page.getByRole("combobox", { name: t("search.searchBarLabel", dir) })
