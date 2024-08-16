@@ -282,7 +282,7 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
     def get_batch_data(self, response_json):
         image_pages = self.get_media_pages(response_json)
         if image_pages is not None:
-            return image_pages.values()
+            return list(image_pages.values())
         return None
 
     @staticmethod
