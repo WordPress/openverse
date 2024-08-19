@@ -27,7 +27,6 @@ https://github.com/WordPress/openverse-catalog/issues/453)
 """
 
 import logging
-import os
 from collections.abc import Sequence
 from itertools import product
 
@@ -38,7 +37,12 @@ from airflow.utils.trigger_rule import TriggerRule
 
 from common import cloudwatch
 from common import elasticsearch as es
-from common.constants import DAG_DEFAULT_ARGS, ENVIRONMENTS, Environment
+from common.constants import (
+    DAG_DEFAULT_ARGS,
+    DATA_REFRESH_POOL,
+    ENVIRONMENTS,
+    Environment,
+)
 from common.sensors.constants import ES_CONCURRENCY_TAGS
 from common.sensors.single_run_external_dags_sensor import SingleRunExternalDAGsSensor
 from common.sensors.utils import wait_for_external_dags_with_tag
@@ -51,9 +55,6 @@ from data_refresh.reporting import report_record_difference
 
 
 logger = logging.getLogger(__name__)
-
-
-DATA_REFRESH_POOL = os.getenv("DATA_REFRESH_POOL", "data_refresh")
 
 
 @task_group(group_id="wait_for_conflicting_dags")

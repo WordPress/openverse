@@ -7,7 +7,6 @@ This module contains the Airflow tasks used for orchestrating the reindexing of 
 import logging
 import math
 from textwrap import dedent
-from typing import Sequence
 from urllib.parse import urlparse
 
 from airflow import settings
@@ -15,8 +14,6 @@ from airflow.decorators import task, task_group
 from airflow.exceptions import AirflowSkipException
 from airflow.models.connection import Connection
 from airflow.providers.amazon.aws.hooks.ec2 import EC2Hook
-from airflow.providers.http.operators.http import HttpOperator
-from airflow.providers.http.sensors.http import HttpSensor
 from airflow.sensors.base import PokeReturnValue
 from airflow.utils.trigger_rule import TriggerRule
 from requests import Response
@@ -27,6 +24,10 @@ from common.constants import (
     PRODUCTION,
     Environment,
 )
+from common.operators.TemplatedConnectionHttpOperator import (
+    TemplatedConnectionHttpOperator,
+)
+from common.sensors.TemplatedConnectionHttpSensor import TemplatedConnectionHttpSensor
 from common.sql import PGExecuteQueryOperator, single_value
 from data_refresh.constants import INDEXER_LAUNCH_TEMPLATES, INDEXER_WORKER_COUNTS
 from data_refresh.data_refresh_types import DataRefreshConfig
@@ -36,36 +37,6 @@ logger = logging.getLogger(__name__)
 
 
 WORKER_CONN_ID = "indexer_worker_{worker_id}_http_{environment}"
-
-
-class TempConnectionHTTPOperator(HttpOperator):
-    """
-    Wrapper around the HTTPOperator which allows templating of the conn_id,
-    in order to support using a temporary conn_id passed through XCOMs.
-    """
-
-    template_fields: Sequence[str] = (
-        "endpoint",
-        "data",
-        "headers",
-        # Extended to allow templating of conn_id
-        "http_conn_id",
-    )
-
-
-class TempConnectionHTTPSensor(HttpSensor):
-    """
-    Wrapper around the HTTPSensor which allows templating of the conn_id,
-    in order to support using a temporary conn_id passed through XCOMs.
-    """
-
-    template_fields: Sequence[str] = (
-        "endpoint",
-        "request_params",
-        "headers",
-        # Extended to allow templating of conn_id
-        "http_conn_id",
-    )
 
 
 def response_filter_status_check_endpoint(response: Response) -> str:
@@ -333,7 +304,7 @@ def reindex(
         target_environment=target_environment,
     )
 
-    trigger_reindexing_task = TempConnectionHTTPOperator(
+    trigger_reindexing_task = TemplatedConnectionHttpOperator(
         task_id="trigger_reindexing_task",
         http_conn_id=worker_conn,
         endpoint="task",
@@ -348,7 +319,7 @@ def reindex(
         response_filter=response_filter_status_check_endpoint,
     )
 
-    wait_for_reindexing_task = TempConnectionHTTPSensor(
+    wait_for_reindexing_task = TemplatedConnectionHttpSensor(
         task_id="wait_for_reindexing_task",
         http_conn_id=worker_conn,
         endpoint=trigger_reindexing_task.output,

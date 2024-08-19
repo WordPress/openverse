@@ -6,7 +6,6 @@ as part of the Data Refresh.
 """
 
 import logging
-import os
 import uuid
 
 from airflow.decorators import task, task_group
@@ -16,9 +15,6 @@ from data_refresh.data_refresh_types import DataRefreshConfig
 
 
 logger = logging.getLogger(__name__)
-
-
-DATA_REFRESH_POOL = os.getenv("DATA_REFRESH_POOL", "data_refresh")
 
 
 @task
