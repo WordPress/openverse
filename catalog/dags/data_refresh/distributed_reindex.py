@@ -124,13 +124,13 @@ def get_worker_params(
 
 
 @task
-def get_launch_template_version(
+def get_launch_template_version_number(
     environment: str,
     target_environment: Environment,
     aws_conn_id: str = AWS_CONN_ID,
 ):
     """
-    Get the latest version of the launch template. Indexer workers will all be created with this
+    Get the latest version number of the launch template. Indexer workers will all be created with this
     version. Importantly, this allows us to retry an individual indexer worker and ensure that
     it will run with the same version of the indexer worker as the others, even if code has been
     deployed to the indexer worker in the meantime.
@@ -149,11 +149,15 @@ def get_launch_template_version(
     return launch_templates.get("LaunchTemplates")[0].get("LatestVersionNumber")
 
 
-@task
+@task(
+    # Prevents the entire reindex TaskGroup from skipping when get_launch_template_version_number
+    # was skipped locally
+    trigger_rule=TriggerRule.NONE_FAILED
+)
 def create_worker(
     environment: str,
     target_environment: Environment,
-    launch_template_version: int,
+    launch_template_version_number: int | str,
     aws_conn_id: str = AWS_CONN_ID,
 ):
     """
@@ -169,7 +173,7 @@ def create_worker(
         MaxCount=1,
         LaunchTemplate={
             "LaunchTemplateName": INDEXER_LAUNCH_TEMPLATES.get(target_environment),
-            "Version": str(launch_template_version),
+            "Version": str(launch_template_version_number),
         },
         # Name the instance by applying a tag
         TagSpecifications=[
@@ -300,6 +304,7 @@ def drop_connection(worker_conn: str):
 def reindex(
     data_refresh_config: DataRefreshConfig,
     target_index: str,
+    launch_template_version_number: int | str,
     start_id: int,
     end_id: int,
     environment: str,
@@ -311,16 +316,11 @@ def reindex(
     terminate the indexer worker instance.
     """
 
-    launch_template_version = get_launch_template_version(
-        environment=environment,
-        target_environment=target_environment,
-    )
-
     # Create a new EC2 instance
     instance_id = create_worker(
         environment=environment,
         target_environment=target_environment,
-        launch_template_version=launch_template_version,
+        launch_template_version_number=launch_template_version_number,
         aws_conn_id=aws_conn_id,
     )
 
@@ -406,6 +406,11 @@ def perform_distributed_reindex(
         trigger_rule=TriggerRule.NONE_FAILED,
     )
 
+    launch_template_version_number = get_launch_template_version_number(
+        environment=environment,
+        target_environment=target_environment,
+    )
+
     worker_params = get_worker_params(
         estimated_record_count=estimated_record_count.output,
         environment=environment,
@@ -418,6 +423,7 @@ def perform_distributed_reindex(
     reindex.partial(
         data_refresh_config=data_refresh_config,
         target_index=target_index,
+        launch_template_version_number=launch_template_version_number,
         environment=environment,
         target_environment=target_environment,
         aws_conn_id=aws_conn_id,
