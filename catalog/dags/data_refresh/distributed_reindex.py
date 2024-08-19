@@ -4,6 +4,7 @@
 This module contains the Airflow tasks used for orchestrating the reindexing of records from the temporary tables in the downstream (API) database, into a new Elasticsearch index. Reindexing is performed on a fleet of indexer worker EC2 instances, with instance creation and termination managed by Airflow.
 """
 
+import functools
 import logging
 import math
 from textwrap import dedent
@@ -36,7 +37,21 @@ from data_refresh.data_refresh_types import DataRefreshConfig
 logger = logging.getLogger(__name__)
 
 
-WORKER_CONN_ID = "indexer_worker_{worker_id}_http_{environment}"
+def setup_ec2_hook(func: callable) -> callable:
+    """
+    Provide an ec2_hook as one of the parameters for the called function.
+    If the function is explicitly supplied with an ec2_hook, use that one.
+    :return:
+    """
+
+    @functools.wraps(func)
+    def wrapped(*args, **kwargs):
+        ec2_hook = kwargs.pop("ec2_hook", None) or EC2Hook(
+            aws_conn_id=AWS_CONN_ID, api_type="client_type"
+        )
+        return func(*args, **kwargs, ec2_hook=ec2_hook)
+
+    return wrapped
 
 
 def response_filter_status_check_endpoint(response: Response) -> str:
@@ -70,11 +85,12 @@ def response_check_wait_for_completion(response: Response) -> bool:
 
 
 @task
+@setup_ec2_hook
 def get_worker_params(
     estimated_record_count: int,
     environment: str,
     target_environment: Environment,
-    aws_conn_id: str = AWS_CONN_ID,
+    ec2_hook: EC2Hook = None,
 ):
     """Determine the set of start/end indices to be passed to each indexer worker."""
     # Defaults to one indexer worker in local development
@@ -95,10 +111,11 @@ def get_worker_params(
 
 
 @task
+@setup_ec2_hook
 def get_launch_template_version_number(
     environment: str,
     target_environment: Environment,
-    aws_conn_id: str = AWS_CONN_ID,
+    ec2_hook: EC2Hook = None,
 ):
     """
     Get the latest version number of the launch template. Indexer workers will all be created with this
@@ -109,7 +126,6 @@ def get_launch_template_version_number(
     if environment != PRODUCTION:
         raise AirflowSkipException("Skipping instance creation in local environment.")
 
-    ec2_hook = EC2Hook(aws_conn_id=aws_conn_id, api_type="client_type")
     launch_templates = ec2_hook.conn.describe_launch_templates(
         LaunchTemplateNames=INDEXER_LAUNCH_TEMPLATES.get(target_environment)
     )
@@ -121,11 +137,12 @@ def get_launch_template_version_number(
     # was skipped locally
     trigger_rule=TriggerRule.NONE_FAILED
 )
+@setup_ec2_hook
 def create_worker(
     environment: str,
     target_environment: Environment,
     launch_template_version_number: int | str,
-    aws_conn_id: str = AWS_CONN_ID,
+    ec2_hook: EC2Hook = None,
 ):
     """
     Create a new EC2 instance using the launch template for the target
@@ -134,7 +151,6 @@ def create_worker(
     if environment != PRODUCTION:
         raise AirflowSkipException("Skipping instance creation in local environment.")
 
-    ec2_hook = EC2Hook(aws_conn_id=aws_conn_id, api_type="client_type")
     instances = ec2_hook.conn.run_instances(
         MinCount=1,
         MaxCount=1,
@@ -165,16 +181,16 @@ def create_worker(
 
 
 @task.sensor(poke_interval=60, timeout=3600, mode="reschedule")
+@setup_ec2_hook
 def wait_for_worker(
     environment: str,
     instance_id: str,
-    aws_conn_id: str = AWS_CONN_ID,
+    ec2_hook: EC2Hook = None,
 ):
     """Await the EC2 instance with the given id to be in a healthy running state."""
     if environment != PRODUCTION:
         raise AirflowSkipException("Skipping instance creation in local environment.")
 
-    ec2_hook = EC2Hook(aws_conn_id=aws_conn_id, api_type="client_type")
     result = ec2_hook.conn.describe_instance_status(InstanceIds=[instance_id])
 
     instance_status = result.get("InstanceStatuses", [])[0]
@@ -198,13 +214,15 @@ def wait_for_worker(
     # Run locally when create instance tasks are skipped
     trigger_rule=TriggerRule.NONE_FAILED
 )
+@setup_ec2_hook
 def get_instance_ip_address(
-    environment: str, instance_id: str, aws_conn_id: str = AWS_CONN_ID
+    environment: str,
+    instance_id: str,
+    ec2_hook: EC2Hook = None,
 ):
     if environment != PRODUCTION:
         return "catalog_indexer_worker"
 
-    ec2_hook = EC2Hook(aws_conn_id=aws_conn_id, api_type="client_type")
     reservations = ec2_hook.describe_instances(instance_ids=[instance_id]).get(
         "Reservations"
     )
@@ -238,18 +256,17 @@ def create_connection(
 
 
 @task
+@setup_ec2_hook
 def terminate_indexer_worker(
     environment: str,
     instance_id: str,
-    aws_conn_id: str = AWS_CONN_ID,
+    ec2_hook: EC2Hook = None,
 ):
     """Terminate an individual indexer worker."""
     if environment != PRODUCTION:
         raise AirflowSkipException(
             "Skipping instance termination in local environment."
         )
-
-    ec2_hook = EC2Hook(aws_conn_id=aws_conn_id, api_type="client_type")
     return ec2_hook.conn.terminate_instances(instance_ids=[instance_id])
 
 
@@ -272,7 +289,6 @@ def reindex(
     end_id: int,
     environment: str,
     target_environment: Environment,
-    aws_conn_id: str = AWS_CONN_ID,
 ):
     """
     Trigger a reindexing task on a remote indexer worker and wait for it to complete. Once done,
@@ -284,17 +300,16 @@ def reindex(
         environment=environment,
         target_environment=target_environment,
         launch_template_version_number=launch_template_version_number,
-        aws_conn_id=aws_conn_id,
     )
 
     # Wait for the worker to finish initializing
     await_worker = wait_for_worker.override(
         poke_interval=data_refresh_config.reindex_poke_interval,
         timeout=data_refresh_config.indexer_worker_timeout.total_seconds(),
-    )(environment=environment, instance_id=instance_id, aws_conn_id=aws_conn_id)
+    )(environment=environment, instance_id=instance_id)
 
     instance_ip_address = get_instance_ip_address(
-        environment=environment, instance_id=instance_id, aws_conn_id=aws_conn_id
+        environment=environment, instance_id=instance_id
     )
 
     worker_conn = create_connection(
@@ -353,7 +368,6 @@ def perform_distributed_reindex(
     target_environment: Environment,
     target_index: str,
     data_refresh_config: DataRefreshConfig,
-    aws_conn_id: str = AWS_CONN_ID,
 ):
     """Perform the distributed reindex on a fleet of remote indexer workers."""
     estimated_record_count = PGExecuteQueryOperator(
@@ -378,7 +392,6 @@ def perform_distributed_reindex(
         estimated_record_count=estimated_record_count.output,
         environment=environment,
         target_environment=target_environment,
-        aws_conn_id=aws_conn_id,
     )
 
     estimated_record_count >> worker_params
@@ -389,5 +402,4 @@ def perform_distributed_reindex(
         launch_template_version_number=launch_template_version_number,
         environment=environment,
         target_environment=target_environment,
-        aws_conn_id=aws_conn_id,
     ).expand_kwargs(worker_params)
