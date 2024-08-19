@@ -209,9 +209,12 @@ def wait_for_worker(
     instance_status = result.get("InstanceStatuses", [])[0]
     state = instance_status.get("InstanceState", {}).get("Name")
     status = next(
-        status.get("Status")
-        for status in instance_status.get("InstanceStatus", {}).get("Details", [])
-        if status.get("Name") == "reachability"
+        (
+            status.get("Status")
+            for status in instance_status.get("InstanceStatus", {}).get("Details", [])
+            if status.get("Name") == "reachability"
+        ),
+        None,
     )
 
     return PokeReturnValue(
