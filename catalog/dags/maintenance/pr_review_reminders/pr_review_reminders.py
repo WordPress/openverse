@@ -219,6 +219,11 @@ def get_min_required_approvals(
 @task(task_id="pr_review_reminder_operator")
 def post_reminders(maintainers: set[str], github_pat: str, dry_run: bool):
     gh = GitHubAPI(github_pat)
+    # Build a new cache for each DAG run so that changes to repository branch settings
+    # are reflected "by the next DAG run". Caching them at the run level also ensures
+    # that all evaluations for pings happen with the same settings, preventing changes
+    # during a run from causing PRs to receive different treatment, which could
+    # produce confusing results we might interpret as a bug rather than just a delay.
     branch_protection_cache = defaultdict(dict)
 
     open_prs = []
