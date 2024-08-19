@@ -1,27 +1,12 @@
-<script lang="ts">
-import { defineComponent, PropType } from "vue"
-
+<script setup lang="ts">
 import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
 
-export default defineComponent({
-  name: "VSourceCreatorButton",
-  components: { VButton, VIcon },
-  props: {
-    href: {
-      type: String,
-      required: true,
-    },
-    iconName: {
-      type: String as PropType<"person" | "institution">,
-      required: true,
-    },
-    title: {
-      type: String,
-      required: true,
-    },
-  },
-})
+defineProps<{
+  href: string
+  iconName: "person" | "institution"
+  title: string
+}>()
 </script>
 
 <template>

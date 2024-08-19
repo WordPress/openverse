@@ -1,22 +1,9 @@
-<script lang="ts">
-import { defineComponent } from "vue"
-
+<script setup lang="ts">
 import type { Media } from "~/types/media"
 
 import VByLine from "~/components/VMediaInfo/VByLine/VByLine.vue"
 
-import type { PropType } from "vue"
-
-export default defineComponent({
-  name: "VMediaInfo",
-  components: { VByLine },
-  props: {
-    media: {
-      type: Object as PropType<Media>,
-      required: true,
-    },
-  },
-})
+defineProps<{ media: Media }>()
 </script>
 
 <template>

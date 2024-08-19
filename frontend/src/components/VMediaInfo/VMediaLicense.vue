@@ -1,61 +1,38 @@
-<script lang="ts">
-import { useI18n } from "#imports"
+<script setup lang="ts">
+import { useI18n, useNuxtApp } from "#imports"
 
-import { computed, defineComponent, PropType } from "vue"
+import { computed } from "vue"
 
 import { getFullLicenseName, isLicense as isLicenseFn } from "~/utils/license"
-import { useAnalytics } from "~/composables/use-analytics"
 
 import type { License, LicenseVersion } from "~/constants/license"
 
 import VLicenseElements from "~/components/VLicense/VLicenseElements.vue"
 import VLink from "~/components/VLink.vue"
 
-export default defineComponent({
-  name: "VMediaLicense",
-  components: { VLicenseElements, VLink },
-  props: {
-    license: {
-      type: String as PropType<License>,
-      required: true,
-    },
-    licenseVersion: {
-      type: String as PropType<LicenseVersion>,
-      required: true,
-    },
-    licenseUrl: {
-      type: String,
-      required: true,
-    },
-  },
-  setup(props) {
-    const i18n = useI18n({ useScope: "global" })
-    const { sendCustomEvent } = useAnalytics()
+const props = defineProps<{
+  license: License
+  licenseVersion: LicenseVersion
+  licenseUrl: string
+}>()
 
-    const isLicense = computed(() => isLicenseFn(props.license))
-    const headerText = computed(() => {
-      const licenseOrTool = isLicense.value ? "license" : "tool"
-      return i18n.t(`mediaDetails.reuse.${licenseOrTool}Header`)
-    })
-    const fullLicenseName = computed(() =>
-      getFullLicenseName(props.license, props.licenseVersion, i18n)
-    )
+const i18n = useI18n({ useScope: "global" })
+const { $sendCustomEvent } = useNuxtApp()
 
-    const sendVisitLicensePage = () => {
-      sendCustomEvent("VISIT_LICENSE_PAGE", {
-        license: props.license,
-      })
-    }
-
-    return {
-      isLicense,
-      headerText,
-      fullLicenseName,
-
-      sendVisitLicensePage,
-    }
-  },
+const isLicense = computed(() => isLicenseFn(props.license))
+const headerText = computed(() => {
+  const licenseOrTool = isLicense.value ? "license" : "tool"
+  return i18n.t(`mediaDetails.reuse.${licenseOrTool}Header`)
 })
+const fullLicenseName = computed(() =>
+  getFullLicenseName(props.license, props.licenseVersion, i18n)
+)
+
+const sendVisitLicensePage = () => {
+  $sendCustomEvent("VISIT_LICENSE_PAGE", {
+    license: props.license,
+  })
+}
 </script>
 
 <template>

@@ -1,27 +1,16 @@
-<script lang="ts">
+<script setup lang="ts">
 import type { Metadata } from "~/types/media"
 
-import { defineEvent } from "~/types/emits"
-
 import VLink from "~/components/VLink.vue"
-
 import VIcon from "~/components/VIcon/VIcon.vue"
 
-import type { PropType } from "vue"
+defineProps<{
+  datum: Metadata
+}>()
 
-export default {
-  name: "VMetadataValue",
-  components: { VIcon, VLink },
-  props: {
-    datum: {
-      type: Object as PropType<Metadata>,
-      required: true,
-    },
-  },
-  emits: {
-    click: defineEvent<[string | undefined]>(),
-  },
-}
+defineEmits<{
+  click: [string | undefined]
+}>()
 </script>
 
 <template>

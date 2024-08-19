@@ -1,56 +1,37 @@
-<script lang="ts">
-import { PropType, computed, defineComponent } from "vue"
+<script setup lang="ts">
+import { useNuxtApp } from "#imports"
+
+import { computed } from "vue"
 
 import { useSearchStore } from "~/stores/search"
-import { useAnalytics } from "~/composables/use-analytics"
 import { camelCase } from "~/utils/case"
 import type { AudioDetail, ImageDetail } from "~/types/media"
-
-import { defineEvent } from "~/types/emits"
 
 import VLink from "~/components/VLink.vue"
 import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
 
-export default defineComponent({
-  name: "VSafetyWall",
-  components: {
-    VButton,
-    VIcon,
-    VLink,
-  },
-  props: {
-    media: {
-      type: Object as PropType<AudioDetail | ImageDetail>,
-      required: true,
-    },
-  },
-  emits: {
-    reveal: defineEvent(),
-  },
-  setup(props, { emit }) {
-    const searchStore = useSearchStore()
-    const backToSearchPath = computed(() => searchStore.backToSearchPath)
+const props = defineProps<{
+  media: AudioDetail | ImageDetail
+}>()
 
-    const { sendCustomEvent } = useAnalytics()
-    const handleBack = () => {
-      sendCustomEvent("GO_BACK_FROM_SENSITIVE_RESULT", {
-        id: props.media.id,
-        sensitivities: props.media.sensitivity.join(","),
-      })
-    }
-    const handleShow = () => {
-      emit("reveal")
-    }
+const emit = defineEmits<{
+  reveal: []
+}>()
 
-    return {
-      backToSearchPath,
-      handleBack,
-      handleShow,
-      camelCase,
-    }
-  },
-})
+const searchStore = useSearchStore()
+const backToSearchPath = computed(() => searchStore.backToSearchPath)
+
+const { $sendCustomEvent } = useNuxtApp()
+const handleBack = () => {
+  $sendCustomEvent("GO_BACK_FROM_SENSITIVE_RESULT", {
+    id: props.media.id,
+    sensitivities: props.media.sensitivity.join(","),
+  })
+}
+const handleShow = () => {
+  emit("reveal")
+}
 </script>
 
 <template>

@@ -1,40 +1,25 @@
-<script lang="ts">
-import { defineComponent, PropType } from "vue"
+<script setup lang="ts">
+import { useNuxtApp } from "#imports"
 
-import { useAnalytics } from "~/composables/use-analytics"
 import type { SupportedMediaType } from "~/constants/media"
 import type { Media } from "~/types/media"
 
 import VButton from "~/components/VButton.vue"
 
-export default defineComponent({
-  name: "VGetMediaButton",
-  components: { VButton },
-  props: {
-    media: {
-      type: Object as PropType<Media>,
-      required: true,
-    },
-    mediaType: {
-      type: String as PropType<SupportedMediaType>,
-      required: true,
-    },
-  },
-  setup(props) {
-    const { sendCustomEvent } = useAnalytics()
+const props = defineProps<{
+  media: Media
+  mediaType: SupportedMediaType
+}>()
 
-    const sendGetMediaEvent = () => {
-      sendCustomEvent("GET_MEDIA", {
-        id: props.media.id,
-        provider: props.media.provider,
-        mediaType: props.mediaType,
-      })
-    }
-    return {
-      sendGetMediaEvent,
-    }
-  },
-})
+const { $sendCustomEvent } = useNuxtApp()
+
+const sendGetMediaEvent = () => {
+  $sendCustomEvent("GET_MEDIA", {
+    id: props.media.id,
+    provider: props.media.provider,
+    mediaType: props.mediaType,
+  })
+}
 </script>
 
 <template>
