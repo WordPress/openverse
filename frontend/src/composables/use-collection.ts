@@ -1,6 +1,6 @@
 import { useCollectionMeta, useI18n, useRoute } from "#imports"
 
-import { computed, ref, watch } from "vue"
+import { computed, Ref, ref, watch } from "vue"
 
 import { SupportedMediaType } from "~/constants/media"
 import { useMediaStore } from "~/stores/media"
@@ -22,7 +22,7 @@ export const useCollection = <T extends SupportedMediaType>({
 
   const media = ref<ResultType[]>(
     mediaStore.resultItems[mediaType] as ResultType[]
-  )
+  ) as Ref<ResultType[]>
   const creatorUrl = ref<string>()
 
   const i18n = useI18n({ useScope: "global" })
