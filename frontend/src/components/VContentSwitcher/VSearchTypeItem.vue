@@ -1,20 +1,3 @@
-<template>
-  <VItem
-    :selected="selected"
-    :is-first="isFirst"
-    :as="component"
-    class="label-regular"
-    v-bind="{ href }"
-    @click="$emit('click', item)"
-  >
-    <VIcon :name="icon" class="h-6 w-6" />
-    <span>{{ itemLabelKey }}</span>
-    <VPill v-if="isBeta" class="ms-auto">{{
-      $t("searchType.statusBeta")
-    }}</VPill>
-  </VItem>
-</template>
-
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue"
 
@@ -105,3 +88,20 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <VItem
+    :selected="selected"
+    :is-first="isFirst"
+    :as="component"
+    class="label-regular"
+    v-bind="{ href }"
+    @click="$emit('click', item)"
+  >
+    <VIcon :name="icon" class="h-6 w-6" />
+    <span>{{ itemLabelKey }}</span>
+    <VPill v-if="isBeta" class="ms-auto">{{
+      $t("searchType.statusBeta")
+    }}</VPill>
+  </VItem>
+</template>

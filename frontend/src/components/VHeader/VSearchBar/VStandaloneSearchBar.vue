@@ -1,38 +1,3 @@
-<template>
-  <!-- Form action is a fallback for when JavaScript is disabled. -->
-  <form
-    action="/search"
-    role="search"
-    class="search-bar group flex h-14 flex-row items-center rounded-sm border-tx bg-default sm:h-16"
-    @submit.prevent="handleSearch"
-  >
-    <div
-      class="input-field search-field group flex h-full flex-grow items-center overflow-hidden rounded-sm rounded-e-none border border-e-0 p-0.5px pe-2 focus-within:border-1.5 focus-within:border-e-0 focus-within:p-0 focus-within:pe-2"
-      :class="[
-        route === 'home' ? 'border-tx' : 'border-black',
-        hasPopover ? 'focus-within:border-tx' : 'focus-within:border-focus',
-      ]"
-    >
-      <input
-        id="search-bar"
-        ref="inputRef"
-        type="search"
-        name="q"
-        :placeholder="$t('hero.search.placeholder')"
-        class="paragraph-large md:label-regular ms-4 h-full w-full appearance-none rounded-none bg-tx leading-none text-default placeholder-gray-8 focus-visible:outline-none"
-        :aria-label="
-          $t('search.searchBarLabel', {
-            openverse: 'Openverse',
-          })
-        "
-      />
-      <!-- @slot Extra information goes here -->
-      <slot />
-    </div>
-    <VSearchButton :route="route" />
-  </form>
-</template>
-
 <script lang="ts">
 import { defineComponent, PropType, ref } from "vue"
 
@@ -91,3 +56,38 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <!-- Form action is a fallback for when JavaScript is disabled. -->
+  <form
+    action="/search"
+    role="search"
+    class="search-bar group flex h-14 flex-row items-center rounded-sm border-tx bg-default sm:h-16"
+    @submit.prevent="handleSearch"
+  >
+    <div
+      class="input-field search-field group flex h-full flex-grow items-center overflow-hidden rounded-sm rounded-e-none border border-e-0 p-0.5px pe-2 focus-within:border-1.5 focus-within:border-e-0 focus-within:p-0 focus-within:pe-2"
+      :class="[
+        route === 'home' ? 'border-tx' : 'border-black',
+        hasPopover ? 'focus-within:border-tx' : 'focus-within:border-focus',
+      ]"
+    >
+      <input
+        id="search-bar"
+        ref="inputRef"
+        type="search"
+        name="q"
+        :placeholder="$t('hero.search.placeholder')"
+        class="paragraph-large md:label-regular ms-4 h-full w-full appearance-none rounded-none bg-tx leading-none text-default placeholder-gray-8 focus-visible:outline-none"
+        :aria-label="
+          $t('search.searchBarLabel', {
+            openverse: 'Openverse',
+          })
+        "
+      />
+      <!-- @slot Extra information goes here -->
+      <slot />
+    </div>
+    <VSearchButton :route="route" />
+  </form>
+</template>

@@ -1,25 +1,3 @@
-<template>
-  <VButton
-    class="min-w-12 gap-x-2"
-    :class="{ '!px-3': showLabel }"
-    variant="bordered-white"
-    :icon-only="!showLabel"
-    :disabled="!doneHydrating"
-    size="large"
-    :aria-label="$t('searchType.selectLabel', { type: label })"
-    @click="$emit('click')"
-  >
-    <VIcon :name="searchType" />
-    <template v-if="showLabel">
-      <span
-        class="label-regular block max-w-30 flex-none truncate text-start"
-        >{{ label }}</span
-      >
-      <VIcon name="caret-down" />
-    </template>
-  </VButton>
-</template>
-
 <script lang="ts">
 import { defineComponent, PropType } from "vue"
 
@@ -78,3 +56,25 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <VButton
+    class="min-w-12 gap-x-2"
+    :class="{ '!px-3': showLabel }"
+    variant="bordered-white"
+    :icon-only="!showLabel"
+    :disabled="!doneHydrating"
+    size="large"
+    :aria-label="$t('searchType.selectLabel', { type: label })"
+    @click="$emit('click')"
+  >
+    <VIcon :name="searchType" />
+    <template v-if="showLabel">
+      <span
+        class="label-regular block max-w-30 flex-none truncate text-start"
+        >{{ label }}</span
+      >
+      <VIcon name="caret-down" />
+    </template>
+  </VButton>
+</template>

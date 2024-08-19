@@ -1,19 +1,3 @@
-<template>
-  <div class="block aspect-[2/1]">
-    <iframe
-      id="sketchfab-iframe"
-      ref="node"
-      src=""
-      sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
-      :title="label"
-      :aria-label="label"
-      allow="autoplay; fullscreen; vr"
-      :autoplay="true"
-      class="h-full w-full"
-    />
-  </div>
-</template>
-
 <script lang="ts">
 import { useI18n, useNuxtApp } from "#imports"
 
@@ -80,3 +64,19 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <div class="block aspect-[2/1]">
+    <iframe
+      id="sketchfab-iframe"
+      ref="node"
+      src=""
+      sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+      :title="label"
+      :aria-label="label"
+      allow="autoplay; fullscreen; vr"
+      :autoplay="true"
+      class="h-full w-full"
+    />
+  </div>
+</template>

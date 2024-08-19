@@ -1,17 +1,3 @@
-<template>
-  <div>
-    <div
-      role="tablist"
-      class="flex flex-row items-stretch"
-      :class="tablistStyle"
-      v-bind="accessibleLabel"
-    >
-      <slot name="tabs" />
-    </div>
-    <slot name="default" />
-  </div>
-</template>
-
 <script lang="ts">
 import { computed, defineComponent, PropType, provide, ref } from "vue"
 
@@ -142,3 +128,17 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <div>
+    <div
+      role="tablist"
+      class="flex flex-row items-stretch"
+      :class="tablistStyle"
+      v-bind="accessibleLabel"
+    >
+      <slot name="tabs" />
+    </div>
+    <slot name="default" />
+  </div>
+</template>

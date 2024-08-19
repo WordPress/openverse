@@ -1,48 +1,3 @@
-<template>
-  <div
-    ref="containerRef"
-    class="container relative flex min-w-0"
-    :class="{ 'pointer-events-none': !isInteractive }"
-  >
-    <div
-      ref="innerContainerRef"
-      class="inner-container max-w-full"
-      :class="{
-        'faded-overflow-s': showScrollButton.start,
-        'faded-overflow-e': showScrollButton.end,
-      }"
-    >
-      <div
-        ref="buttonsRef"
-        class="buttons flex justify-start gap-x-3 overflow-x-scroll sm:gap-x-1"
-        :class="[
-          showScrollButton.start
-            ? showScrollButton.end
-              ? 'me-11 ms-11 w-[calc(100%_-_2_*_theme(spacing.11))]'
-              : 'ms-11 w-[calc(100%_-_theme(spacing.11))]'
-            : showScrollButton.end
-              ? 'me-11 w-[calc(100%_-_theme(spacing.11))]'
-              : '',
-        ]"
-      >
-        <slot />
-      </div>
-    </div>
-    <VScroller
-      v-show="showScrollButton.start"
-      class="start-0"
-      direction="back"
-      @click="scroll('start')"
-    />
-    <VScroller
-      v-show="showScrollButton.end"
-      class="end-0"
-      direction="forward"
-      @click="scroll('end')"
-    />
-  </div>
-</template>
-
 <script lang="ts">
 import { useI18n } from "#imports"
 
@@ -213,6 +168,51 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <div
+    ref="containerRef"
+    class="container relative flex min-w-0"
+    :class="{ 'pointer-events-none': !isInteractive }"
+  >
+    <div
+      ref="innerContainerRef"
+      class="inner-container max-w-full"
+      :class="{
+        'faded-overflow-s': showScrollButton.start,
+        'faded-overflow-e': showScrollButton.end,
+      }"
+    >
+      <div
+        ref="buttonsRef"
+        class="buttons flex justify-start gap-x-3 overflow-x-scroll sm:gap-x-1"
+        :class="[
+          showScrollButton.start
+            ? showScrollButton.end
+              ? 'me-11 ms-11 w-[calc(100%_-_2_*_theme(spacing.11))]'
+              : 'ms-11 w-[calc(100%_-_theme(spacing.11))]'
+            : showScrollButton.end
+              ? 'me-11 w-[calc(100%_-_theme(spacing.11))]'
+              : '',
+        ]"
+      >
+        <slot />
+      </div>
+    </div>
+    <VScroller
+      v-show="showScrollButton.start"
+      class="start-0"
+      direction="back"
+      @click="scroll('start')"
+    />
+    <VScroller
+      v-show="showScrollButton.end"
+      class="end-0"
+      direction="forward"
+      @click="scroll('end')"
+    />
+  </div>
+</template>
 
 <style scoped>
 .buttons::-webkit-scrollbar {

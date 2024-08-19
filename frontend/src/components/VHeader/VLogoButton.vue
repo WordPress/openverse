@@ -1,17 +1,3 @@
-<template>
-  <VButton
-    as="VLink"
-    href="/"
-    :aria-label="$t('header.homeLink', { openverse: 'Openverse' })"
-    variant="transparent-tx"
-    size="large"
-    icon-only
-    class="text-default hover:bg-complementary"
-  >
-    <VLogoLoader :status="isFetching ? 'loading' : 'idle'" />
-  </VButton>
-</template>
-
 <script lang="ts">
 import { defineComponent } from "vue"
 
@@ -33,3 +19,17 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <VButton
+    as="VLink"
+    href="/"
+    :aria-label="$t('header.homeLink', { openverse: 'Openverse' })"
+    variant="transparent-tx"
+    size="large"
+    icon-only
+    class="text-default hover:bg-complementary"
+  >
+    <VLogoLoader :status="isFetching ? 'loading' : 'idle'" />
+  </VButton>
+</template>

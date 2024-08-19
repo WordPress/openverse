@@ -1,19 +1,3 @@
-<template>
-  <VScrollableLine>
-    <VSourceCreatorButton
-      v-if="creator"
-      :title="creator.name"
-      :href="creator.href"
-      icon-name="person"
-    />
-    <VSourceCreatorButton
-      :href="sourceHref"
-      icon-name="institution"
-      :title="media.sourceName"
-    />
-  </VScrollableLine>
-</template>
-
 <script lang="ts">
 import { computed, defineComponent, type PropType } from "vue"
 
@@ -73,3 +57,19 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <VScrollableLine>
+    <VSourceCreatorButton
+      v-if="creator"
+      :title="creator.name"
+      :href="creator.href"
+      icon-name="person"
+    />
+    <VSourceCreatorButton
+      :href="sourceHref"
+      icon-name="institution"
+      :title="media.sourceName"
+    />
+  </VScrollableLine>
+</template>

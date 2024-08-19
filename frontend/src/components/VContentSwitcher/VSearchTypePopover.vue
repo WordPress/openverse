@@ -1,28 +1,3 @@
-<template>
-  <VPopover
-    ref="contentMenuPopover"
-    :label="$t('searchType.label')"
-    placement="bottom-end"
-    :clippable="true"
-    :trap-focus="false"
-  >
-    <template #trigger="{ a11yProps }">
-      <VSearchTypeButton
-        id="search-type-button"
-        v-bind="{ ...a11yProps, ...searchTypeProps }"
-        :show-label="showLabel"
-        aria-controls="content-switcher-popover"
-      />
-    </template>
-    <VSearchTypes
-      id="content-switcher-popover"
-      size="small"
-      :use-links="placement === 'header'"
-      @select="handleSelect"
-    />
-  </VPopover>
-</template>
-
 <script lang="ts">
 import { computed, defineComponent, PropType, ref } from "vue"
 
@@ -76,3 +51,28 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <VPopover
+    ref="contentMenuPopover"
+    :label="$t('searchType.label')"
+    placement="bottom-end"
+    :clippable="true"
+    :trap-focus="false"
+  >
+    <template #trigger="{ a11yProps }">
+      <VSearchTypeButton
+        id="search-type-button"
+        v-bind="{ ...a11yProps, ...searchTypeProps }"
+        :show-label="showLabel"
+        aria-controls="content-switcher-popover"
+      />
+    </template>
+    <VSearchTypes
+      id="content-switcher-popover"
+      size="small"
+      :use-links="placement === 'header'"
+      @select="handleSelect"
+    />
+  </VPopover>
+</template>

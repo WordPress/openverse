@@ -1,21 +1,3 @@
-<template>
-  <div>
-    <div v-show="showBanners" class="flex flex-col gap-2 p-2 pb-0">
-      <VAnalyticsNotice
-        v-if="shouldShowAnalyticsBanner"
-        :variant="variant"
-        @close="dismissBanner('analytics')"
-      />
-      <VTranslationStatusBanner
-        v-if="shouldShowTranslationBanner"
-        :variant="variant"
-        :banner-key="translationBannerId"
-        @close="dismissBanner(translationBannerId)"
-      />
-    </div>
-  </div>
-</template>
-
 <script lang="ts">
 import { defineComponent, defineAsyncComponent, useNuxtApp } from "#imports"
 
@@ -81,3 +63,21 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <div>
+    <div v-show="showBanners" class="flex flex-col gap-2 p-2 pb-0">
+      <VAnalyticsNotice
+        v-if="shouldShowAnalyticsBanner"
+        :variant="variant"
+        @close="dismissBanner('analytics')"
+      />
+      <VTranslationStatusBanner
+        v-if="shouldShowTranslationBanner"
+        :variant="variant"
+        :banner-key="translationBannerId"
+        @close="dismissBanner(translationBannerId)"
+      />
+    </div>
+  </div>
+</template>

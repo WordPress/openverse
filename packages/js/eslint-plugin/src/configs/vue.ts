@@ -23,7 +23,7 @@ export = {
     "vue/block-order": [
       "error",
       {
-        order: ["script[setup]", "template", "script:not([setup])", "style"],
+        order: ["script[setup]", "script:not([setup])", "template", "style"],
       },
     ],
     "vue/padding-line-between-blocks": ["error", "always"],

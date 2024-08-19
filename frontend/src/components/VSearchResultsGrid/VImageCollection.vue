@@ -1,17 +1,3 @@
-<template>
-  <ol class="image-grid flex flex-wrap gap-4" :aria-label="collectionLabel">
-    <VImageCell
-      v-for="image in results"
-      :key="image.id"
-      :image="image"
-      :search-term="searchTerm"
-      aspect-ratio="intrinsic"
-      :kind="kind"
-      :related-to="relatedTo"
-    />
-  </ol>
-</template>
-
 <script lang="ts">
 /**
  * This component receives an array of images as a prop, and
@@ -51,6 +37,20 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <ol class="image-grid flex flex-wrap gap-4" :aria-label="collectionLabel">
+    <VImageCell
+      v-for="image in results"
+      :key="image.id"
+      :image="image"
+      :search-term="searchTerm"
+      aspect-ratio="intrinsic"
+      :kind="kind"
+      :related-to="relatedTo"
+    />
+  </ol>
+</template>
 
 <style scoped>
 @screen md {

@@ -1,21 +1,3 @@
-<template>
-  <div class="license flex flex-row items-center gap-2">
-    <div class="flex gap-1">
-      <VIcon
-        v-for="name in iconNames"
-        :key="name"
-        :class="{ 'license-bg text-black': bgFilled }"
-        view-box="0 0 30 30"
-        :name="`licenses/${name}`"
-        :size="4"
-      />
-    </div>
-    <span v-show="!hideName" class="name" :aria-label="licenseName.readable">
-      {{ licenseName.full }}
-    </span>
-  </div>
-</template>
-
 <script lang="ts">
 import { useI18n } from "#imports"
 
@@ -78,6 +60,24 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <div class="license flex flex-row items-center gap-2">
+    <div class="flex gap-1">
+      <VIcon
+        v-for="name in iconNames"
+        :key="name"
+        :class="{ 'license-bg text-black': bgFilled }"
+        view-box="0 0 30 30"
+        :name="`licenses/${name}`"
+        :size="4"
+      />
+    </div>
+    <span v-show="!hideName" class="name" :aria-label="licenseName.readable">
+      {{ licenseName.full }}
+    </span>
+  </div>
+</template>
 
 <style scoped>
 .license-bg {

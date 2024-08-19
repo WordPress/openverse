@@ -1,24 +1,3 @@
-<template>
-  <VNotificationBanner
-    :id="bannerKey"
-    nature="warning"
-    data-testid="banner-translation"
-    :close-button-label="$t('notification.translation.close')"
-    @close="$emit('close')"
-  >
-    <i18n-t scope="global" keypath="notification.translation.text" tag="span">
-      <template #link>
-        <VLink :href="currentLocale.link" class="text-curr underline">{{
-          $t("notification.translation.link")
-        }}</VLink>
-      </template>
-      <template #locale>
-        {{ currentLocale.name }}
-      </template>
-    </i18n-t>
-  </VNotificationBanner>
-</template>
-
 <script lang="ts">
 import { useI18n } from "#imports"
 
@@ -71,3 +50,24 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <VNotificationBanner
+    :id="bannerKey"
+    nature="warning"
+    data-testid="banner-translation"
+    :close-button-label="$t('notification.translation.close')"
+    @close="$emit('close')"
+  >
+    <i18n-t scope="global" keypath="notification.translation.text" tag="span">
+      <template #link>
+        <VLink :href="currentLocale.link" class="text-curr underline">{{
+          $t("notification.translation.link")
+        }}</VLink>
+      </template>
+      <template #locale>
+        {{ currentLocale.name }}
+      </template>
+    </i18n-t>
+  </VNotificationBanner>
+</template>

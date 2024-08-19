@@ -1,46 +1,3 @@
-<template>
-  <header
-    class="main-header z-30 flex w-full items-stretch justify-between gap-x-2 bg-default px-6 py-4"
-  >
-    <VLogoButton :is-fetching="isFetching" />
-
-    <VSearchBar
-      ref="searchBarRef"
-      v-model.trim="searchTerm"
-      class="me-4 flex-grow"
-      @submit="handleSearch"
-      @recent-hidden="handleSearch"
-    >
-      <VSearchBarButton
-        v-show="searchTerm !== ''"
-        icon="close-small"
-        :label="$t('browsePage.searchForm.clear')"
-        variant="filled-white"
-        class="hidden group-focus-within:flex"
-        @click="clearSearchTerm"
-      />
-      <span
-        v-show="Boolean(searchStatus)"
-        class="info mx-4 hidden whitespace-nowrap text-xs text-secondary group-focus-within:hidden group-hover:text-default group-focus:text-default lg:block"
-      >
-        {{ searchStatus }}
-      </span>
-    </VSearchBar>
-
-    <VSearchTypePopover :show-label="isXl" placement="header" />
-
-    <VFilterButton
-      ref="filterButtonRef"
-      class="flex self-stretch"
-      :pressed="isSidebarVisible"
-      :disabled="!doneHydrating || areFiltersDisabled"
-      aria-haspopup="dialog"
-      :aria-expanded="isSidebarVisible"
-      @toggle="toggleSidebar"
-    />
-  </header>
-</template>
-
 <script lang="ts">
 import { computed, defineComponent, inject, ref } from "vue"
 
@@ -143,3 +100,46 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <header
+    class="main-header z-30 flex w-full items-stretch justify-between gap-x-2 bg-default px-6 py-4"
+  >
+    <VLogoButton :is-fetching="isFetching" />
+
+    <VSearchBar
+      ref="searchBarRef"
+      v-model.trim="searchTerm"
+      class="me-4 flex-grow"
+      @submit="handleSearch"
+      @recent-hidden="handleSearch"
+    >
+      <VSearchBarButton
+        v-show="searchTerm !== ''"
+        icon="close-small"
+        :label="$t('browsePage.searchForm.clear')"
+        variant="filled-white"
+        class="hidden group-focus-within:flex"
+        @click="clearSearchTerm"
+      />
+      <span
+        v-show="Boolean(searchStatus)"
+        class="info mx-4 hidden whitespace-nowrap text-xs text-secondary group-focus-within:hidden group-hover:text-default group-focus:text-default lg:block"
+      >
+        {{ searchStatus }}
+      </span>
+    </VSearchBar>
+
+    <VSearchTypePopover :show-label="isXl" placement="header" />
+
+    <VFilterButton
+      ref="filterButtonRef"
+      class="flex self-stretch"
+      :pressed="isSidebarVisible"
+      :disabled="!doneHydrating || areFiltersDisabled"
+      aria-haspopup="dialog"
+      :aria-expanded="isSidebarVisible"
+      @toggle="toggleSidebar"
+    />
+  </header>
+</template>

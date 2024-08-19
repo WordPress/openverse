@@ -1,63 +1,3 @@
-<template>
-  <label
-    :for="id"
-    class="relative flex text-sm leading-5"
-    :class="labelClasses"
-  >
-    <span class="relative block">
-      <!--
-      The checkbox focus style is a slight variation on the `focus-slim-tx` style.
-      Because it becomes filled when checked, it also needs the
-      `checked:focus-visible:border-bg-ring` class.
-      -->
-      <input
-        :id="id"
-        type="checkbox"
-        class="me-3 block appearance-none border border-tertiary bg-default transition-colors duration-100 checked:bg-tertiary disabled:border-disabled disabled:bg-secondary checked:disabled:border-disabled checked:disabled:bg-disabled"
-        :class="
-          isSwitch
-            ? ['h-4.5', 'w-9', 'rounded-full', 'focus-slim-offset']
-            : [
-                'h-5',
-                'w-5',
-                'rounded-sm',
-                'focus-slim-tx',
-                'checked:focus-visible:border-bg-ring',
-              ]
-        "
-        v-bind="inputAttrs"
-        :disabled="disabled ? true : undefined"
-        @click="onChange"
-      />
-
-      <!-- Knob, for when `ifSwitch` is `true` -->
-      <span
-        v-if="isSwitch"
-        class="absolute left-0.75 top-0.75 block h-3 w-3 rounded-full transition-transform duration-100"
-        :class="
-          localCheckedState
-            ? ['bg-default', 'translate-x-[1.125rem]']
-            : disabled
-              ? ['bg-disabled']
-              : ['bg-tertiary']
-        "
-        aria-hidden="true"
-      />
-
-      <!-- Checkmark, for when `ifSwitch` is `false` -->
-      <VIcon
-        v-else
-        v-show="localCheckedState"
-        class="pointer-events-none absolute inset-0 transform text-over-dark"
-        name="check"
-        :size="5"
-      />
-    </span>
-
-    <!--  @slot The checkbox label  --><slot />
-  </label>
-</template>
-
 <script lang="ts">
 import { computed, defineComponent, ref, watch } from "vue"
 
@@ -186,3 +126,63 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <label
+    :for="id"
+    class="relative flex text-sm leading-5"
+    :class="labelClasses"
+  >
+    <span class="relative block">
+      <!--
+      The checkbox focus style is a slight variation on the `focus-slim-tx` style.
+      Because it becomes filled when checked, it also needs the
+      `checked:focus-visible:border-bg-ring` class.
+      -->
+      <input
+        :id="id"
+        type="checkbox"
+        class="me-3 block appearance-none border border-tertiary bg-default transition-colors duration-100 checked:bg-tertiary disabled:border-disabled disabled:bg-secondary checked:disabled:border-disabled checked:disabled:bg-disabled"
+        :class="
+          isSwitch
+            ? ['h-4.5', 'w-9', 'rounded-full', 'focus-slim-offset']
+            : [
+                'h-5',
+                'w-5',
+                'rounded-sm',
+                'focus-slim-tx',
+                'checked:focus-visible:border-bg-ring',
+              ]
+        "
+        v-bind="inputAttrs"
+        :disabled="disabled ? true : undefined"
+        @click="onChange"
+      />
+
+      <!-- Knob, for when `ifSwitch` is `true` -->
+      <span
+        v-if="isSwitch"
+        class="absolute left-0.75 top-0.75 block h-3 w-3 rounded-full transition-transform duration-100"
+        :class="
+          localCheckedState
+            ? ['bg-default', 'translate-x-[1.125rem]']
+            : disabled
+              ? ['bg-disabled']
+              : ['bg-tertiary']
+        "
+        aria-hidden="true"
+      />
+
+      <!-- Checkmark, for when `ifSwitch` is `false` -->
+      <VIcon
+        v-else
+        v-show="localCheckedState"
+        class="pointer-events-none absolute inset-0 transform text-over-dark"
+        name="check"
+        :size="5"
+      />
+    </span>
+
+    <!--  @slot The checkbox label  --><slot />
+  </label>
+</template>

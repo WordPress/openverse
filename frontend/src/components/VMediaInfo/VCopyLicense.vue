@@ -1,60 +1,3 @@
-<template>
-  <div>
-    <h3 id="copy-license-title" class="description-bold md:heading-6 mb-4">
-      {{ $t("mediaDetails.reuse.copyLicense.title") }}
-    </h3>
-
-    <VTabs label="#copy-license-title" :selected-id="tabs[0]">
-      <template #tabs>
-        <VTab v-for="tab in tabs" :id="tab" :key="tab">
-          {{ $t(`mediaDetails.reuse.copyLicense.${tab}`) }}
-        </VTab>
-      </template>
-      <VLicenseTabPanel
-        :tab="tabs[0]"
-        :media-id="media.id"
-        :media-type="media.frontendMediaType"
-      >
-        <!-- Disable reason: We control the attribution HTML generation so this is safe and will not lead to XSS attacks -->
-        <!-- eslint-disable vue/no-v-html -->
-        <div
-          ref="richRef"
-          v-html="getAttributionMarkup({ includeIcons: false })"
-        />
-        <!-- eslint-enable vue/no-v-html -->
-      </VLicenseTabPanel>
-      <VLicenseTabPanel
-        :tab="tabs[1]"
-        :media-id="media.id"
-        :media-type="media.frontendMediaType"
-      >
-        <!-- Ignore reason: the interpolated string cannot have any whitespace around it when inside <p>, else there will be unwanted whitespace -->
-        <!-- prettier-ignore -->
-        <p id="attribution-html" class="break-all font-mono" dir="ltr">{{ getAttributionMarkup() }}</p>
-      </VLicenseTabPanel>
-      <VLicenseTabPanel
-        :tab="tabs[2]"
-        :media-id="media.id"
-        :media-type="media.frontendMediaType"
-      >
-        <p>{{ getAttributionMarkup({ isPlaintext: true }) }}</p>
-      </VLicenseTabPanel>
-      <VLicenseTabPanel
-        :tab="tabs[3]"
-        :media-id="media.id"
-        :media-type="media.frontendMediaType"
-      >
-        <pre
-          id="attribution-xml"
-          class="whitespace-pre-wrap break-all"
-          dir="ltr"
-          >{{ getAttributionMarkup({ isXml: true }) }}</pre
-        >
-      </VLicenseTabPanel>
-    </VTabs>
-  </div>
-</template>
-
 <script lang="ts">
 import { useI18n } from "#imports"
 
@@ -119,3 +62,60 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <div>
+    <h3 id="copy-license-title" class="description-bold md:heading-6 mb-4">
+      {{ $t("mediaDetails.reuse.copyLicense.title") }}
+    </h3>
+
+    <VTabs label="#copy-license-title" :selected-id="tabs[0]">
+      <template #tabs>
+        <VTab v-for="tab in tabs" :id="tab" :key="tab">
+          {{ $t(`mediaDetails.reuse.copyLicense.${tab}`) }}
+        </VTab>
+      </template>
+      <VLicenseTabPanel
+        :tab="tabs[0]"
+        :media-id="media.id"
+        :media-type="media.frontendMediaType"
+      >
+        <!-- Disable reason: We control the attribution HTML generation so this is safe and will not lead to XSS attacks -->
+        <!-- eslint-disable vue/no-v-html -->
+        <div
+          ref="richRef"
+          v-html="getAttributionMarkup({ includeIcons: false })"
+        />
+        <!-- eslint-enable vue/no-v-html -->
+      </VLicenseTabPanel>
+      <VLicenseTabPanel
+        :tab="tabs[1]"
+        :media-id="media.id"
+        :media-type="media.frontendMediaType"
+      >
+        <!-- Ignore reason: the interpolated string cannot have any whitespace around it when inside <p>, else there will be unwanted whitespace -->
+        <!-- prettier-ignore -->
+        <p id="attribution-html" class="break-all font-mono" dir="ltr">{{ getAttributionMarkup() }}</p>
+      </VLicenseTabPanel>
+      <VLicenseTabPanel
+        :tab="tabs[2]"
+        :media-id="media.id"
+        :media-type="media.frontendMediaType"
+      >
+        <p>{{ getAttributionMarkup({ isPlaintext: true }) }}</p>
+      </VLicenseTabPanel>
+      <VLicenseTabPanel
+        :tab="tabs[3]"
+        :media-id="media.id"
+        :media-type="media.frontendMediaType"
+      >
+        <pre
+          id="attribution-xml"
+          class="whitespace-pre-wrap break-all"
+          dir="ltr"
+          >{{ getAttributionMarkup({ isXml: true }) }}</pre
+        >
+      </VLicenseTabPanel>
+    </VTabs>
+  </div>
+</template>

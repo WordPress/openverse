@@ -1,149 +1,3 @@
-<template>
-  <div
-    v-bind="waveformAttributes"
-    ref="el"
-    class="waveform bg-background-var group/waveform relative overflow-hidden text-default focus-visible:outline-none"
-    :style="heightProperties"
-    :tabIndex="isTabbable && isInteractive ? 0 : -1"
-    :aria-disabled="!isInteractive"
-    :aria-label="$t('waveform.label')"
-    v-on="eventHandlers"
-  >
-    <!-- Focus ring -->
-    <svg
-      v-if="isInteractive"
-      class="shadow-ring-1 absolute inset-0 z-20 hidden h-full w-full group-focus/waveform:block"
-      xmlns="http://www.w3.org/2000/svg"
-      :viewBox="viewBox"
-      preserveAspectRatio="none"
-    >
-      <!-- Stroke is calculated from the centre of the path -->
-      <rect
-        v-if="waveformDimens.width && waveformDimens.height"
-        class="stroke-pink-8"
-        x="0.75"
-        y="0.75"
-        :width="waveformDimens.width - 1.5"
-        :height="waveformDimens.height - 1.5"
-        rx="2"
-        fill="none"
-        stroke-width="1.5"
-      />
-      <rect
-        v-if="waveformDimens.width && waveformDimens.height"
-        class="stroke-white"
-        x="2"
-        y="2"
-        :width="waveformDimens.width - 4"
-        :height="waveformDimens.height - 4"
-        fill="none"
-        stroke-width="1"
-        rx="0.75"
-      />
-    </svg>
-
-    <!-- Progress bar -->
-    <svg
-      class="absolute inset-0 h-full w-full"
-      xmlns="http://www.w3.org/2000/svg"
-      :viewBox="viewBox"
-      preserveAspectRatio="none"
-    >
-      <rect
-        v-if="isReady"
-        class="progress-bar"
-        x="0"
-        y="0"
-        :width="progressBarWidth"
-        height="100%"
-      />
-    </svg>
-
-    <!-- Bars -->
-    <svg
-      class="bars absolute bottom-0 w-full"
-      :class="{ 'with-space': showDuration || showTimestamps }"
-      xmlns="http://www.w3.org/2000/svg"
-      :viewBox="viewBox"
-      preserveAspectRatio="none"
-    >
-      <rect
-        v-for="(peak, index) in normalizedPeaks"
-        :key="index"
-        class="origin-bottom transform transition-transform duration-500"
-        :class="[
-          isReady ? 'scale-y-100' : 'scale-y-0',
-          index <= seekIndex ? 'fill-wave-active' : 'fill-wave-inactive',
-        ]"
-        :x="spaceBefore(index)"
-        :y="spaceAbove(index)"
-        :width="barWidth"
-        :height="peak"
-      />
-    </svg>
-
-    <!-- Focus bar -->
-    <div
-      v-if="isInteractive && isSeeking"
-      class="absolute top-0 z-20 hidden h-full flex-col items-center justify-between bg-black group-focus/waveform:flex group-focus:flex"
-      :style="{ width: `${barWidth}px`, left: `${progressBarWidth}px` }"
-    >
-      <div
-        v-for="(classes, name) in {
-          top: ['-translate-y-1/2'],
-          bottom: ['translate-y-1/2'],
-        }"
-        :key="name"
-        class="h-2 w-2 transform rounded-full bg-black"
-        :class="classes"
-      >
-        &nbsp;
-      </div>
-    </div>
-
-    <!-- Timestamps -->
-    <template v-if="isReady">
-      <template v-if="showTimestamps">
-        <div
-          ref="progressTimestampEl"
-          class="progress timestamp z-10 transform"
-          :class="[
-            ...(isProgressTimestampCutoff
-              ? ['bg-background-var']
-              : ['bg-complementary', '-translate-x-full']),
-          ]"
-          :style="progressTimeLeft"
-        >
-          {{ timeFmt(progressTimestamp) }}
-        </div>
-        <div
-          v-if="seekFrac"
-          ref="seekTimestampEl"
-          class="seek timestamp transform"
-          :class="{ '-translate-x-full': !isSeekTimestampCutoff }"
-          :style="seekTimeLeft"
-        >
-          {{ timeFmt(seekTimestamp) }}
-        </div>
-      </template>
-      <div
-        v-if="showDuration"
-        class="duration timestamp bg-background-var right-0"
-      >
-        {{ timeFmt(duration) }}
-      </div>
-    </template>
-
-    <!-- Message overlay -->
-    <div
-      v-else
-      class="loading absolute inset-0 flex items-center justify-center text-xs font-bold"
-    >
-      {{ message }}
-    </div>
-  </div>
-</template>
-
 <script lang="ts">
 import { computed, defineComponent, PropType, ref, toRef } from "vue"
 
@@ -562,6 +416,152 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <div
+    v-bind="waveformAttributes"
+    ref="el"
+    class="waveform bg-background-var group/waveform relative overflow-hidden text-default focus-visible:outline-none"
+    :style="heightProperties"
+    :tabIndex="isTabbable && isInteractive ? 0 : -1"
+    :aria-disabled="!isInteractive"
+    :aria-label="$t('waveform.label')"
+    v-on="eventHandlers"
+  >
+    <!-- Focus ring -->
+    <svg
+      v-if="isInteractive"
+      class="shadow-ring-1 absolute inset-0 z-20 hidden h-full w-full group-focus/waveform:block"
+      xmlns="http://www.w3.org/2000/svg"
+      :viewBox="viewBox"
+      preserveAspectRatio="none"
+    >
+      <!-- Stroke is calculated from the centre of the path -->
+      <rect
+        v-if="waveformDimens.width && waveformDimens.height"
+        class="stroke-pink-8"
+        x="0.75"
+        y="0.75"
+        :width="waveformDimens.width - 1.5"
+        :height="waveformDimens.height - 1.5"
+        rx="2"
+        fill="none"
+        stroke-width="1.5"
+      />
+      <rect
+        v-if="waveformDimens.width && waveformDimens.height"
+        class="stroke-white"
+        x="2"
+        y="2"
+        :width="waveformDimens.width - 4"
+        :height="waveformDimens.height - 4"
+        fill="none"
+        stroke-width="1"
+        rx="0.75"
+      />
+    </svg>
+
+    <!-- Progress bar -->
+    <svg
+      class="absolute inset-0 h-full w-full"
+      xmlns="http://www.w3.org/2000/svg"
+      :viewBox="viewBox"
+      preserveAspectRatio="none"
+    >
+      <rect
+        v-if="isReady"
+        class="progress-bar"
+        x="0"
+        y="0"
+        :width="progressBarWidth"
+        height="100%"
+      />
+    </svg>
+
+    <!-- Bars -->
+    <svg
+      class="bars absolute bottom-0 w-full"
+      :class="{ 'with-space': showDuration || showTimestamps }"
+      xmlns="http://www.w3.org/2000/svg"
+      :viewBox="viewBox"
+      preserveAspectRatio="none"
+    >
+      <rect
+        v-for="(peak, index) in normalizedPeaks"
+        :key="index"
+        class="origin-bottom transform transition-transform duration-500"
+        :class="[
+          isReady ? 'scale-y-100' : 'scale-y-0',
+          index <= seekIndex ? 'fill-wave-active' : 'fill-wave-inactive',
+        ]"
+        :x="spaceBefore(index)"
+        :y="spaceAbove(index)"
+        :width="barWidth"
+        :height="peak"
+      />
+    </svg>
+
+    <!-- Focus bar -->
+    <div
+      v-if="isInteractive && isSeeking"
+      class="absolute top-0 z-20 hidden h-full flex-col items-center justify-between bg-black group-focus/waveform:flex group-focus:flex"
+      :style="{ width: `${barWidth}px`, left: `${progressBarWidth}px` }"
+    >
+      <div
+        v-for="(classes, name) in {
+          top: ['-translate-y-1/2'],
+          bottom: ['translate-y-1/2'],
+        }"
+        :key="name"
+        class="h-2 w-2 transform rounded-full bg-black"
+        :class="classes"
+      >
+        &nbsp;
+      </div>
+    </div>
+
+    <!-- Timestamps -->
+    <template v-if="isReady">
+      <template v-if="showTimestamps">
+        <div
+          ref="progressTimestampEl"
+          class="progress timestamp z-10 transform"
+          :class="[
+            ...(isProgressTimestampCutoff
+              ? ['bg-background-var']
+              : ['bg-complementary', '-translate-x-full']),
+          ]"
+          :style="progressTimeLeft"
+        >
+          {{ timeFmt(progressTimestamp) }}
+        </div>
+        <div
+          v-if="seekFrac"
+          ref="seekTimestampEl"
+          class="seek timestamp transform"
+          :class="{ '-translate-x-full': !isSeekTimestampCutoff }"
+          :style="seekTimeLeft"
+        >
+          {{ timeFmt(seekTimestamp) }}
+        </div>
+      </template>
+      <div
+        v-if="showDuration"
+        class="duration timestamp bg-background-var right-0"
+      >
+        {{ timeFmt(duration) }}
+      </div>
+    </template>
+
+    <!-- Message overlay -->
+    <div
+      v-else
+      class="loading absolute inset-0 flex items-center justify-center text-xs font-bold"
+    >
+      {{ message }}
+    </div>
+  </div>
+</template>
 
 <style scoped>
 .waveform {

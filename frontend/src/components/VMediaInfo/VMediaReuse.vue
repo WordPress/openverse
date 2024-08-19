@@ -1,3 +1,23 @@
+<script lang="ts">
+import { defineComponent, PropType } from "vue"
+
+import type { Media } from "~/types/media"
+
+import VCopyLicense from "~/components/VMediaInfo/VCopyLicense.vue"
+import VMediaLicense from "~/components/VMediaInfo/VMediaLicense.vue"
+
+export default defineComponent({
+  name: "VMediaReuse",
+  components: { VCopyLicense, VMediaLicense },
+  props: {
+    media: {
+      type: Object as PropType<Media>,
+      required: true,
+    },
+  },
+})
+</script>
+
 <template>
   <section :aria-label="$t('mediaDetails.reuse.title')" class="media-reuse">
     <h2 class="heading-6 md:heading-5 mb-4">
@@ -26,23 +46,3 @@
     </div>
   </section>
 </template>
-
-<script lang="ts">
-import { defineComponent, PropType } from "vue"
-
-import type { Media } from "~/types/media"
-
-import VCopyLicense from "~/components/VMediaInfo/VCopyLicense.vue"
-import VMediaLicense from "~/components/VMediaInfo/VMediaLicense.vue"
-
-export default defineComponent({
-  name: "VMediaReuse",
-  components: { VCopyLicense, VMediaLicense },
-  props: {
-    media: {
-      type: Object as PropType<Media>,
-      required: true,
-    },
-  },
-})
-</script>

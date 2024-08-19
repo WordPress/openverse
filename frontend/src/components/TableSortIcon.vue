@@ -1,3 +1,17 @@
+<script lang="ts">
+import { defineComponent } from "vue"
+
+export default defineComponent({
+  name: "TableSortIcon",
+  props: {
+    active: {
+      type: Boolean,
+      required: true,
+    },
+  },
+})
+</script>
+
 <template>
   <div class="flex flex-col" :class="[active ? 'text-default' : 'text-gray']">
     <svg
@@ -23,17 +37,3 @@
     </svg>
   </div>
 </template>
-
-<script lang="ts">
-import { defineComponent } from "vue"
-
-export default defineComponent({
-  name: "TableSortIcon",
-  props: {
-    active: {
-      type: Boolean,
-      required: true,
-    },
-  },
-})
-</script>

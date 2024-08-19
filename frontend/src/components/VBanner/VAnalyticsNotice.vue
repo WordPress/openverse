@@ -1,20 +1,3 @@
-<template>
-  <VNotificationBanner
-    id="analytics"
-    nature="info"
-    :close-button-label="$t('notification.analytics.close')"
-    @close="$emit('close')"
-  >
-    <i18n-t scope="global" tag="span" keypath="notification.analytics.text">
-      <template #link>
-        <VLink :href="privacyPath" class="text-curr underline">{{
-          $t("notification.analytics.link")
-        }}</VLink>
-      </template>
-    </i18n-t>
-  </VNotificationBanner>
-</template>
-
 <script lang="ts">
 import { useLocalePath } from "#imports"
 
@@ -41,3 +24,20 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <VNotificationBanner
+    id="analytics"
+    nature="info"
+    :close-button-label="$t('notification.analytics.close')"
+    @close="$emit('close')"
+  >
+    <i18n-t scope="global" tag="span" keypath="notification.analytics.text">
+      <template #link>
+        <VLink :href="privacyPath" class="text-curr underline">{{
+          $t("notification.analytics.link")
+        }}</VLink>
+      </template>
+    </i18n-t>
+  </VNotificationBanner>
+</template>

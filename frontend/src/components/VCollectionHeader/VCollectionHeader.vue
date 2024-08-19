@@ -1,67 +1,3 @@
-<template>
-  <div
-    class="collection-header grid gap-2 sm:grid-cols-[1fr,auto]"
-    :class="{ 'no-link': !showCollectionExternalLink }"
-  >
-    <h1 class="title flex flex-col gap-2 sm:flex-row">
-      <VIcon
-        :name="iconName"
-        :title="collection"
-        :size="10"
-        class="icon hidden sm:flex"
-      />
-      <span class="label-regular flex text-secondary sm:hidden">{{
-        $t(`collection.heading.${collection}`)
-      }}</span>
-      <span class="text-3xl font-semibold leading-snug sm:text-6xl">{{
-        title
-      }}</span>
-    </h1>
-    <VButton
-      v-if="showCollectionExternalLink"
-      as="VLink"
-      variant="filled-dark"
-      size="medium"
-      class="link label-bold mt-1 !w-full"
-      has-icon-end
-      show-external-icon
-      :external-icon-size="6"
-      :href="url"
-      @click="sendAnalyticsEvent"
-      >{{ $t(`collection.link.${collection}`) }}</VButton
-    >
-    <div
-      class="results mt-6 flex w-full min-w-0 flex-col items-start gap-1 sm:mt-0 sm:flex-row sm:items-center"
-    >
-      <p
-        class="label-regular w-max text-secondary sm:whitespace-nowrap"
-        :class="{ 'pb-2 sm:pb-0': collection !== 'creator' }"
-      >
-        {{ resultsLabel }}
-      </p>
-      <VScrollableLine
-        v-if="collection === 'creator'"
-        class="-ms-2 -mt-1.5px h-8 w-[calc(100%+theme(space.4))] sm:ms-0"
-      >
-        <VButton
-          as="VLink"
-          size="disabled"
-          variant="transparent-gray"
-          class="label-bold m-1.5px h-8 w-max gap-x-1 whitespace-nowrap p-1"
-          :href="sourceCollectionLink"
-          has-icon-start
-          ><VIcon
-            name="institution"
-            :title="$t('collection.link.source')"
-          /><span class="w-max whitespace-nowrap">{{
-            source.name
-          }}</span></VButton
-        >
-      </VScrollableLine>
-    </div>
-  </div>
-</template>
-
 <script lang="ts">
 import { computed, defineComponent, type PropType } from "vue"
 
@@ -212,6 +148,70 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <div
+    class="collection-header grid gap-2 sm:grid-cols-[1fr,auto]"
+    :class="{ 'no-link': !showCollectionExternalLink }"
+  >
+    <h1 class="title flex flex-col gap-2 sm:flex-row">
+      <VIcon
+        :name="iconName"
+        :title="collection"
+        :size="10"
+        class="icon hidden sm:flex"
+      />
+      <span class="label-regular flex text-secondary sm:hidden">{{
+        $t(`collection.heading.${collection}`)
+      }}</span>
+      <span class="text-3xl font-semibold leading-snug sm:text-6xl">{{
+        title
+      }}</span>
+    </h1>
+    <VButton
+      v-if="showCollectionExternalLink"
+      as="VLink"
+      variant="filled-dark"
+      size="medium"
+      class="link label-bold mt-1 !w-full"
+      has-icon-end
+      show-external-icon
+      :external-icon-size="6"
+      :href="url"
+      @click="sendAnalyticsEvent"
+      >{{ $t(`collection.link.${collection}`) }}</VButton
+    >
+    <div
+      class="results mt-6 flex w-full min-w-0 flex-col items-start gap-1 sm:mt-0 sm:flex-row sm:items-center"
+    >
+      <p
+        class="label-regular w-max text-secondary sm:whitespace-nowrap"
+        :class="{ 'pb-2 sm:pb-0': collection !== 'creator' }"
+      >
+        {{ resultsLabel }}
+      </p>
+      <VScrollableLine
+        v-if="collection === 'creator'"
+        class="-ms-2 -mt-1.5px h-8 w-[calc(100%+theme(space.4))] sm:ms-0"
+      >
+        <VButton
+          as="VLink"
+          size="disabled"
+          variant="transparent-gray"
+          class="label-bold m-1.5px h-8 w-max gap-x-1 whitespace-nowrap p-1"
+          :href="sourceCollectionLink"
+          has-icon-start
+          ><VIcon
+            name="institution"
+            :title="$t('collection.link.source')"
+          /><span class="w-max whitespace-nowrap">{{
+            source.name
+          }}</span></VButton
+        >
+      </VScrollableLine>
+    </div>
+  </div>
+</template>
 
 <style scoped>
 .collection-header {

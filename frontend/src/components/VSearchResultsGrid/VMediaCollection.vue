@@ -1,30 +1,3 @@
-<template>
-  <section>
-    <slot name="header" />
-
-    <VGridSkeleton v-if="showSkeleton" :is-for-tab="results.type" />
-
-    <Component
-      :is="component"
-      v-if="!showSkeleton"
-      :results="results.items"
-      :kind="kind"
-      :search-term="searchTerm"
-      :related-to="relatedTo"
-      :collection-label="collectionLabel"
-      :class="{ 'pt-2 sm:pt-0': results.type === 'image' }"
-    />
-
-    <slot name="footer" />
-
-    <VScrollButton
-      v-show="showScrollButton"
-      :is-filter-sidebar-visible="isSidebarVisible"
-      data-testid="scroll-button"
-    />
-  </section>
-</template>
-
 <script lang="ts">
 import { computed, defineComponent, inject, type PropType, ref } from "vue"
 
@@ -107,3 +80,30 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <section>
+    <slot name="header" />
+
+    <VGridSkeleton v-if="showSkeleton" :is-for-tab="results.type" />
+
+    <Component
+      :is="component"
+      v-if="!showSkeleton"
+      :results="results.items"
+      :kind="kind"
+      :search-term="searchTerm"
+      :related-to="relatedTo"
+      :collection-label="collectionLabel"
+      :class="{ 'pt-2 sm:pt-0': results.type === 'image' }"
+    />
+
+    <slot name="footer" />
+
+    <VScrollButton
+      v-show="showScrollButton"
+      :is-filter-sidebar-visible="isSidebarVisible"
+      data-testid="scroll-button"
+    />
+  </section>
+</template>

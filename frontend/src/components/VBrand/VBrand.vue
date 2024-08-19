@@ -1,14 +1,3 @@
-<template>
-  <!-- Using `flex` to place two SVGs side by side, centered. -->
-  <span
-    class="flex h-[1em] flex-row items-center gap-x-[0.4em]"
-    aria-hidden="true"
-  >
-    <VSvg class="h-full w-auto" viewBox="0 0 50 42" name="logo" />
-    <VSvg class="h-full w-auto" viewBox="0 0 215 42" name="brand" />
-  </span>
-</template>
-
 <script lang="ts">
 import { defineComponent } from "vue"
 
@@ -25,3 +14,14 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <!-- Using `flex` to place two SVGs side by side, centered. -->
+  <span
+    class="flex h-[1em] flex-row items-center gap-x-[0.4em]"
+    aria-hidden="true"
+  >
+    <VSvg class="h-full w-auto" viewBox="0 0 50 42" name="logo" />
+    <VSvg class="h-full w-auto" viewBox="0 0 215 42" name="brand" />
+  </span>
+</template>

@@ -1,20 +1,3 @@
-<template>
-  <VTabPanel
-    :id="tab"
-    class="flex h-[190px] flex-col items-start justify-between text-sm md:text-base"
-  >
-    <div :id="`panel-slot-${tab}`" class="overflow-y-auto">
-      <slot />
-    </div>
-    <VCopyButton
-      :id="`copyattr-${tab}`"
-      :el="`#panel-slot-${tab}`"
-      class="mt-6"
-      @copied="handleCopy"
-    />
-  </VTabPanel>
-</template>
-
 <script lang="ts">
 import { defineComponent, PropType } from "vue"
 
@@ -71,3 +54,20 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <VTabPanel
+    :id="tab"
+    class="flex h-[190px] flex-col items-start justify-between text-sm md:text-base"
+  >
+    <div :id="`panel-slot-${tab}`" class="overflow-y-auto">
+      <slot />
+    </div>
+    <VCopyButton
+      :id="`copyattr-${tab}`"
+      :el="`#panel-slot-${tab}`"
+      class="mt-6"
+      @copied="handleCopy"
+    />
+  </VTabPanel>
+</template>

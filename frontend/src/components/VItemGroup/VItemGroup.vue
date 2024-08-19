@@ -1,24 +1,3 @@
-<template>
-  <div
-    ref="nodeRef"
-    class="flex w-full"
-    :role="type"
-    :class="{
-      'flex-col': direction === 'vertical',
-      'flex-row': direction !== 'vertical',
-      'flex-wrap': direction === 'columns',
-    }"
-    @focusin="isFocused = true"
-    @focusout="isFocused = false"
-  >
-    <!--
-      @slot The items in the item group. Must include some `VItem`s but can
-      include additional elements as-needed.
-    -->
-    <slot name="default" />
-  </div>
-</template>
-
 <script lang="ts">
 import { useNuxtApp } from "#imports"
 
@@ -198,3 +177,24 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <div
+    ref="nodeRef"
+    class="flex w-full"
+    :role="type"
+    :class="{
+      'flex-col': direction === 'vertical',
+      'flex-row': direction !== 'vertical',
+      'flex-wrap': direction === 'columns',
+    }"
+    @focusin="isFocused = true"
+    @focusout="isFocused = false"
+  >
+    <!--
+      @slot The items in the item group. Must include some `VItem`s but can
+      include additional elements as-needed.
+    -->
+    <slot name="default" />
+  </div>
+</template>

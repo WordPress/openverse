@@ -1,17 +1,3 @@
-<template>
-  <div
-    :id="`panel-${id}`"
-    ref="internalPanelRef"
-    :aria-labelledby="`tab-${id}`"
-    role="tabpanel"
-    :tabindex="isSelected ? 0 : -1"
-    class="min-h-0 overflow-y-auto border-default p-6"
-    :class="[panelVariantStyle, { hidden: !isSelected }]"
-  >
-    <slot />
-  </div>
-</template>
-
 <script lang="ts">
 import {
   computed,
@@ -75,3 +61,17 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <div
+    :id="`panel-${id}`"
+    ref="internalPanelRef"
+    :aria-labelledby="`tab-${id}`"
+    role="tabpanel"
+    :tabindex="isSelected ? 0 : -1"
+    class="min-h-0 overflow-y-auto border-default p-6"
+    :class="[panelVariantStyle, { hidden: !isSelected }]"
+  >
+    <slot />
+  </div>
+</template>

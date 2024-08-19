@@ -1,25 +1,3 @@
-<template>
-  <ul>
-    <li
-      v-for="element in elementNames"
-      :key="element"
-      class="mb-2 flex items-center gap-3 text-sm md:mb-4 md:text-base"
-    >
-      <VIcon
-        view-box="0 0 30 30"
-        :size="isSmall || isMobile ? 5 : 6"
-        :name="`licenses/${element}`"
-      />
-      <span v-if="elementNames.length > 1" class="sr-only">{{
-        element.toUpperCase()
-      }}</span>
-      <p class="label-regular" :class="{ 'md:description-regular': !isSmall }">
-        {{ getLicenseDescription(element) }}
-      </p>
-    </li>
-  </ul>
-</template>
-
 <script lang="ts">
 import { useI18n } from "#imports"
 
@@ -76,3 +54,25 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <ul>
+    <li
+      v-for="element in elementNames"
+      :key="element"
+      class="mb-2 flex items-center gap-3 text-sm md:mb-4 md:text-base"
+    >
+      <VIcon
+        view-box="0 0 30 30"
+        :size="isSmall || isMobile ? 5 : 6"
+        :name="`licenses/${element}`"
+      />
+      <span v-if="elementNames.length > 1" class="sr-only">{{
+        element.toUpperCase()
+      }}</span>
+      <p class="label-regular" :class="{ 'md:description-regular': !isSmall }">
+        {{ getLicenseDescription(element) }}
+      </p>
+    </li>
+  </ul>
+</template>

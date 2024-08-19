@@ -1,14 +1,3 @@
-<template>
-  <VIcon v-if="showIcon" name="filter" />
-  <p
-    v-else
-    class="flex h-6 w-6 items-center justify-center rounded-sm"
-    :class="pressed ? 'bg-tx' : 'bg-secondary'"
-  >
-    {{ appliedFilterCount }}
-  </p>
-</template>
-
 <script lang="ts">
 import { computed, defineComponent } from "vue"
 
@@ -36,3 +25,14 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <VIcon v-if="showIcon" name="filter" />
+  <p
+    v-else
+    class="flex h-6 w-6 items-center justify-center rounded-sm"
+    :class="pressed ? 'bg-tx' : 'bg-secondary'"
+  >
+    {{ appliedFilterCount }}
+  </p>
+</template>

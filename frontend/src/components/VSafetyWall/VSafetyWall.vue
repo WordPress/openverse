@@ -1,3 +1,58 @@
+<script lang="ts">
+import { PropType, computed, defineComponent } from "vue"
+
+import { useSearchStore } from "~/stores/search"
+import { useAnalytics } from "~/composables/use-analytics"
+import { camelCase } from "~/utils/case"
+import type { AudioDetail, ImageDetail } from "~/types/media"
+
+import { defineEvent } from "~/types/emits"
+
+import VLink from "~/components/VLink.vue"
+import VButton from "~/components/VButton.vue"
+import VIcon from "~/components/VIcon/VIcon.vue"
+
+export default defineComponent({
+  name: "VSafetyWall",
+  components: {
+    VButton,
+    VIcon,
+    VLink,
+  },
+  props: {
+    media: {
+      type: Object as PropType<AudioDetail | ImageDetail>,
+      required: true,
+    },
+  },
+  emits: {
+    reveal: defineEvent(),
+  },
+  setup(props, { emit }) {
+    const searchStore = useSearchStore()
+    const backToSearchPath = computed(() => searchStore.backToSearchPath)
+
+    const { sendCustomEvent } = useAnalytics()
+    const handleBack = () => {
+      sendCustomEvent("GO_BACK_FROM_SENSITIVE_RESULT", {
+        id: props.media.id,
+        sensitivities: props.media.sensitivity.join(","),
+      })
+    }
+    const handleShow = () => {
+      emit("reveal")
+    }
+
+    return {
+      backToSearchPath,
+      handleBack,
+      handleShow,
+      camelCase,
+    }
+  },
+})
+</script>
+
 <template>
   <div
     id="safety-wall"
@@ -59,61 +114,6 @@
     </section>
   </div>
 </template>
-
-<script lang="ts">
-import { PropType, computed, defineComponent } from "vue"
-
-import { useSearchStore } from "~/stores/search"
-import { useAnalytics } from "~/composables/use-analytics"
-import { camelCase } from "~/utils/case"
-import type { AudioDetail, ImageDetail } from "~/types/media"
-
-import { defineEvent } from "~/types/emits"
-
-import VLink from "~/components/VLink.vue"
-import VButton from "~/components/VButton.vue"
-import VIcon from "~/components/VIcon/VIcon.vue"
-
-export default defineComponent({
-  name: "VSafetyWall",
-  components: {
-    VButton,
-    VIcon,
-    VLink,
-  },
-  props: {
-    media: {
-      type: Object as PropType<AudioDetail | ImageDetail>,
-      required: true,
-    },
-  },
-  emits: {
-    reveal: defineEvent(),
-  },
-  setup(props, { emit }) {
-    const searchStore = useSearchStore()
-    const backToSearchPath = computed(() => searchStore.backToSearchPath)
-
-    const { sendCustomEvent } = useAnalytics()
-    const handleBack = () => {
-      sendCustomEvent("GO_BACK_FROM_SENSITIVE_RESULT", {
-        id: props.media.id,
-        sensitivities: props.media.sensitivity.join(","),
-      })
-    }
-    const handleShow = () => {
-      emit("reveal")
-    }
-
-    return {
-      backToSearchPath,
-      handleBack,
-      handleShow,
-      camelCase,
-    }
-  },
-})
-</script>
 
 <style scoped>
 #safety-wall {

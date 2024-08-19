@@ -1,55 +1,3 @@
-<template>
-  <VItemGroup
-    v-if="variant === 'itemgroup'"
-    class="my-2 min-w-50 gap-y-2"
-    :bordered="false"
-    :show-check="false"
-  >
-    <VItem
-      v-for="(page, i) of allPages"
-      :key="i"
-      as="VLink"
-      :is-first="i === 0"
-      :selected="currentPage === page.id"
-      :href="page.link"
-      class="w-full"
-      @click="onClick"
-    >
-      <div class="flex w-full flex-row justify-between">
-        <span class="pe-2">{{ $t(page.name) }}</span>
-        <VIcon
-          v-if="isLinkExternal(page)"
-          name="external-link"
-          :size="4"
-          class="self-center"
-          rtl-flip
-        />
-      </div>
-    </VItem>
-  </VItemGroup>
-  <ul v-else>
-    <li v-for="page in allPages" :key="page.id">
-      <VLink
-        class="flex flex-row rounded-sm hover:underline focus-visible:outline-none focus-visible:ring focus-visible:ring-offset-tx disabled:text-disabled"
-        :class="[
-          { 'font-semibold': currentPage === page.id },
-          { 'focus-visible:ring-border-focus text-default': mode === 'light' },
-          navLinkClasses,
-        ]"
-        :href="page.link"
-        @click="onClick"
-        >{{ $t(page.name)
-        }}<VIcon
-          v-if="isLinkExternal(page)"
-          name="external-link"
-          :size="externalIconSize"
-          class="ms-2 self-center"
-          rtl-flip
-      /></VLink>
-    </li>
-  </ul>
-</template>
-
 <script lang="ts">
 import { type PropType, defineComponent, computed } from "vue"
 
@@ -125,3 +73,55 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <VItemGroup
+    v-if="variant === 'itemgroup'"
+    class="my-2 min-w-50 gap-y-2"
+    :bordered="false"
+    :show-check="false"
+  >
+    <VItem
+      v-for="(page, i) of allPages"
+      :key="i"
+      as="VLink"
+      :is-first="i === 0"
+      :selected="currentPage === page.id"
+      :href="page.link"
+      class="w-full"
+      @click="onClick"
+    >
+      <div class="flex w-full flex-row justify-between">
+        <span class="pe-2">{{ $t(page.name) }}</span>
+        <VIcon
+          v-if="isLinkExternal(page)"
+          name="external-link"
+          :size="4"
+          class="self-center"
+          rtl-flip
+        />
+      </div>
+    </VItem>
+  </VItemGroup>
+  <ul v-else>
+    <li v-for="page in allPages" :key="page.id">
+      <VLink
+        class="flex flex-row rounded-sm hover:underline focus-visible:outline-none focus-visible:ring focus-visible:ring-offset-tx disabled:text-disabled"
+        :class="[
+          { 'font-semibold': currentPage === page.id },
+          { 'focus-visible:ring-border-focus text-default': mode === 'light' },
+          navLinkClasses,
+        ]"
+        :href="page.link"
+        @click="onClick"
+        >{{ $t(page.name)
+        }}<VIcon
+          v-if="isLinkExternal(page)"
+          name="external-link"
+          :size="externalIconSize"
+          class="ms-2 self-center"
+          rtl-flip
+      /></VLink>
+    </li>
+  </ul>
+</template>

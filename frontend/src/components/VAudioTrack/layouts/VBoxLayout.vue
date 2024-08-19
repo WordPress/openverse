@@ -1,3 +1,49 @@
+<script lang="ts">
+import { useI18n } from "#imports"
+
+import { computed, defineComponent, type PropType } from "vue"
+
+import type { AudioDetail } from "~/types/media"
+import type { AudioSize } from "~/constants/audio"
+import { useSensitiveMedia } from "~/composables/use-sensitive-media"
+
+import VLicense from "~/components/VLicense/VLicense.vue"
+
+export default defineComponent({
+  name: "VBoxLayout",
+  components: {
+    VLicense,
+  },
+  props: {
+    audio: {
+      type: Object as PropType<AudioDetail>,
+      required: true,
+    },
+    size: {
+      type: String as PropType<Extract<AudioSize, "s" | "l">>,
+      required: true,
+    },
+  },
+  setup(props) {
+    const { t } = useI18n({ useScope: "global" })
+
+    const isSmall = computed(() => props.size === "s")
+
+    const categoryLabel = computed(() =>
+      t(`filters.audioCategories.${props.audio.category}`)
+    )
+
+    const { isHidden: shouldBlur } = useSensitiveMedia(props.audio)
+    return {
+      isSmall,
+      shouldBlur,
+
+      categoryLabel,
+    }
+  },
+})
+</script>
+
 <template>
   <div
     class="box-track group relative h-0 w-full rounded-sm bg-complementary pt-full text-default"
@@ -44,52 +90,6 @@
     </div>
   </div>
 </template>
-
-<script lang="ts">
-import { useI18n } from "#imports"
-
-import { computed, defineComponent, type PropType } from "vue"
-
-import type { AudioDetail } from "~/types/media"
-import type { AudioSize } from "~/constants/audio"
-import { useSensitiveMedia } from "~/composables/use-sensitive-media"
-
-import VLicense from "~/components/VLicense/VLicense.vue"
-
-export default defineComponent({
-  name: "VBoxLayout",
-  components: {
-    VLicense,
-  },
-  props: {
-    audio: {
-      type: Object as PropType<AudioDetail>,
-      required: true,
-    },
-    size: {
-      type: String as PropType<Extract<AudioSize, "s" | "l">>,
-      required: true,
-    },
-  },
-  setup(props) {
-    const { t } = useI18n({ useScope: "global" })
-
-    const isSmall = computed(() => props.size === "s")
-
-    const categoryLabel = computed(() =>
-      t(`filters.audioCategories.${props.audio.category}`)
-    )
-
-    const { isHidden: shouldBlur } = useSensitiveMedia(props.audio)
-    return {
-      isSmall,
-      shouldBlur,
-
-      categoryLabel,
-    }
-  },
-})
-</script>
 
 <style scoped>
 :deep(.waveform) {

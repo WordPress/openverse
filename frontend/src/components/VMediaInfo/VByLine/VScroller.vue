@@ -1,15 +1,3 @@
-<template>
-  <div class="absolute z-10 h-8 w-8 flex-none">
-    <VIconButton
-      :icon-props="{ name: iconName, rtlFlip: true }"
-      :label="label"
-      variant="transparent-gray"
-      size="small"
-      @click="$emit('click')"
-    />
-  </div>
-</template>
-
 <script lang="ts">
 import { useI18n } from "#imports"
 
@@ -51,3 +39,15 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <div class="absolute z-10 h-8 w-8 flex-none">
+    <VIconButton
+      :icon-props="{ name: iconName, rtlFlip: true }"
+      :label="label"
+      variant="transparent-gray"
+      size="small"
+      @click="$emit('click')"
+    />
+  </div>
+</template>

@@ -1,17 +1,3 @@
-<template>
-  <VButton
-    as="VLink"
-    size="small"
-    has-icon-start
-    class="label-bold !bg-secondary hover:!bg-tertiary hover:!text-over-dark sm:!bg-tx"
-    variant="transparent-gray"
-    :href="href"
-  >
-    <VIcon :name="iconName" />
-    <span class="w-max">{{ title }}</span>
-  </VButton>
-</template>
-
 <script lang="ts">
 import { defineComponent, PropType } from "vue"
 
@@ -37,3 +23,17 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <VButton
+    as="VLink"
+    size="small"
+    has-icon-start
+    class="label-bold !bg-secondary hover:!bg-tertiary hover:!text-over-dark sm:!bg-tx"
+    variant="transparent-gray"
+    :href="href"
+  >
+    <VIcon :name="iconName" />
+    <span class="w-max">{{ title }}</span>
+  </VButton>
+</template>

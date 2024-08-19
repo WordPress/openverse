@@ -1,3 +1,66 @@
+<script lang="ts">
+import { computed, defineComponent, PropType } from "vue"
+
+import { timeFmt } from "~/utils/time-fmt"
+import type { AudioDetail } from "~/types/media"
+import { audioFeatures, AudioSize } from "~/constants/audio"
+
+import { useSensitiveMedia } from "~/composables/use-sensitive-media"
+
+import { useUiStore } from "~/stores/ui"
+
+import VAudioThumbnail from "~/components/VAudioThumbnail/VAudioThumbnail.vue"
+import VLicense from "~/components/VLicense/VLicense.vue"
+
+export default defineComponent({
+  name: "VRowLayout",
+  components: {
+    VAudioThumbnail,
+    VLicense,
+  },
+  props: {
+    audio: {
+      type: Object as PropType<AudioDetail>,
+      required: true,
+    },
+    size: {
+      type: String as PropType<AudioSize>,
+      required: false,
+    },
+  },
+  setup(props) {
+    const featureNotices: {
+      timestamps?: string
+      duration?: string
+      seek?: string
+    } = {}
+
+    const isSmall = computed(() => props.size === "s")
+    const isMedium = computed(() => props.size === "m")
+    const isLarge = computed(() => props.size === "l")
+
+    const { isHidden: shouldBlur } = useSensitiveMedia(props.audio)
+
+    const uiStore = useUiStore()
+    const isMd = computed(() => uiStore.isBreakpoint("md"))
+
+    return {
+      timeFmt,
+
+      audioFeatures,
+      featureNotices,
+
+      isSmall,
+      isMedium,
+      isLarge,
+      isMd,
+
+      shouldBlur,
+    }
+  },
+})
+</script>
+
 <template>
   <!-- `pages/search/audio` has negative margin `-mx-4` to compensate for this padding. -->
   <article
@@ -95,69 +158,6 @@
     </div>
   </article>
 </template>
-
-<script lang="ts">
-import { computed, defineComponent, PropType } from "vue"
-
-import { timeFmt } from "~/utils/time-fmt"
-import type { AudioDetail } from "~/types/media"
-import { audioFeatures, AudioSize } from "~/constants/audio"
-
-import { useSensitiveMedia } from "~/composables/use-sensitive-media"
-
-import { useUiStore } from "~/stores/ui"
-
-import VAudioThumbnail from "~/components/VAudioThumbnail/VAudioThumbnail.vue"
-import VLicense from "~/components/VLicense/VLicense.vue"
-
-export default defineComponent({
-  name: "VRowLayout",
-  components: {
-    VAudioThumbnail,
-    VLicense,
-  },
-  props: {
-    audio: {
-      type: Object as PropType<AudioDetail>,
-      required: true,
-    },
-    size: {
-      type: String as PropType<AudioSize>,
-      required: false,
-    },
-  },
-  setup(props) {
-    const featureNotices: {
-      timestamps?: string
-      duration?: string
-      seek?: string
-    } = {}
-
-    const isSmall = computed(() => props.size === "s")
-    const isMedium = computed(() => props.size === "m")
-    const isLarge = computed(() => props.size === "l")
-
-    const { isHidden: shouldBlur } = useSensitiveMedia(props.audio)
-
-    const uiStore = useUiStore()
-    const isMd = computed(() => uiStore.isBreakpoint("md"))
-
-    return {
-      timeFmt,
-
-      audioFeatures,
-      featureNotices,
-
-      isSmall,
-      isMedium,
-      isLarge,
-      isMd,
-
-      shouldBlur,
-    }
-  },
-})
-</script>
 
 <style scoped>
 :deep(.audio-control) {

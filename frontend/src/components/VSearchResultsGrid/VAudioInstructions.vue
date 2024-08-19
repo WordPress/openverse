@@ -1,17 +1,3 @@
-<template>
-  <VSnackbar size="large" :is-visible="isSnackbarVisible">
-    <i18n-t scope="global" :keypath="`${i18nPrefix}.text`" tag="p">
-      <template
-        v-for="keyboardKey in keyboardKeys"
-        #[keyboardKey]
-        :key="keyboardKey"
-      >
-        <kbd class="font-sans">{{ $t(`${i18nPrefix}.${keyboardKey}`) }}</kbd>
-      </template>
-    </i18n-t>
-  </VSnackbar>
-</template>
-
 <script lang="ts">
 import { computed, defineComponent, type PropType } from "vue"
 
@@ -49,3 +35,17 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <VSnackbar size="large" :is-visible="isSnackbarVisible">
+    <i18n-t scope="global" :keypath="`${i18nPrefix}.text`" tag="p">
+      <template
+        v-for="keyboardKey in keyboardKeys"
+        #[keyboardKey]
+        :key="keyboardKey"
+      >
+        <kbd class="font-sans">{{ $t(`${i18nPrefix}.${keyboardKey}`) }}</kbd>
+      </template>
+    </i18n-t>
+  </VSnackbar>
+</template>

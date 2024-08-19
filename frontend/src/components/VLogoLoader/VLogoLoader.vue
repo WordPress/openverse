@@ -1,3 +1,24 @@
+<script lang="ts">
+import { defineComponent, PropType } from "vue"
+
+import { useReducedMotion } from "~/composables/use-reduced-motion"
+
+export default defineComponent({
+  name: "VLogoLoader",
+  props: {
+    status: {
+      type: String as PropType<"loading" | "idle">,
+      default: "idle",
+    },
+  },
+  setup() {
+    const prefersReducedMotion = useReducedMotion()
+
+    return { prefersReducedMotion }
+  },
+})
+</script>
+
 <template>
   <svg
     viewBox="0 0 34 32"
@@ -37,27 +58,6 @@
     />
   </svg>
 </template>
-
-<script lang="ts">
-import { defineComponent, PropType } from "vue"
-
-import { useReducedMotion } from "~/composables/use-reduced-motion"
-
-export default defineComponent({
-  name: "VLogoLoader",
-  props: {
-    status: {
-      type: String as PropType<"loading" | "idle">,
-      default: "idle",
-    },
-  },
-  setup() {
-    const prefersReducedMotion = useReducedMotion()
-
-    return { prefersReducedMotion }
-  },
-})
-</script>
 
 <style scoped>
 /**

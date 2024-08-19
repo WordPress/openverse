@@ -1,43 +1,3 @@
-<template>
-  <div>
-    <!-- re: disabled static element interactions rule https://github.com/WordPress/openverse/issues/2906 -->
-    <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events, vuejs-accessibility/no-static-element-interactions -->
-    <div
-      ref="triggerContainerRef"
-      class="flex w-min items-stretch whitespace-nowrap"
-      @keydown.esc="handleEscape"
-    >
-      <!--
-        @slot The trigger, should be a button 99.99% of the time. If you need custom event handling on the trigger button, ensure bubbling is not prevented or else the tooltip will not open
-          @binding {object} a11yProps
-          @binding {boolean} visible
-      -->
-      <slot name="trigger" :open="open">
-        <VIconButton
-          :label="describedBy"
-          :aria-describedby="describedBy"
-          variant="bordered-white"
-          size="disabled"
-          class="h-4 w-4 hover:!border-tx"
-          :icon-props="{ name: 'info', size: 4 }"
-          @click="open"
-        />
-      </slot>
-    </div>
-    <div
-      v-show="visibleRef"
-      :id="describedBy"
-      ref="tooltipRef"
-      role="tooltip"
-      :class="`z-${zIndex} w-max-content absolute left-0 top-0`"
-      :style="{ ...style }"
-      :aria-hidden="!visibleRef"
-    >
-      <slot />
-    </div>
-  </div>
-</template>
-
 <script lang="ts">
 import {
   defineComponent,
@@ -178,3 +138,43 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <div>
+    <!-- re: disabled static element interactions rule https://github.com/WordPress/openverse/issues/2906 -->
+    <!-- eslint-disable-next-line vuejs-accessibility/click-events-have-key-events, vuejs-accessibility/no-static-element-interactions -->
+    <div
+      ref="triggerContainerRef"
+      class="flex w-min items-stretch whitespace-nowrap"
+      @keydown.esc="handleEscape"
+    >
+      <!--
+        @slot The trigger, should be a button 99.99% of the time. If you need custom event handling on the trigger button, ensure bubbling is not prevented or else the tooltip will not open
+          @binding {object} a11yProps
+          @binding {boolean} visible
+      -->
+      <slot name="trigger" :open="open">
+        <VIconButton
+          :label="describedBy"
+          :aria-describedby="describedBy"
+          variant="bordered-white"
+          size="disabled"
+          class="h-4 w-4 hover:!border-tx"
+          :icon-props="{ name: 'info', size: 4 }"
+          @click="open"
+        />
+      </slot>
+    </div>
+    <div
+      v-show="visibleRef"
+      :id="describedBy"
+      ref="tooltipRef"
+      role="tooltip"
+      :class="`z-${zIndex} w-max-content absolute left-0 top-0`"
+      :style="{ ...style }"
+      :aria-hidden="!visibleRef"
+    >
+      <slot />
+    </div>
+  </div>
+</template>

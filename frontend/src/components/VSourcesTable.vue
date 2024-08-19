@@ -1,91 +1,3 @@
-<template>
-  <div>
-    <table
-      :aria-label="$t('sources.aria.table')"
-      role="region"
-      class="not-prose source-table w-full table-fixed text-base"
-    >
-      <thead>
-        <tr>
-          <th
-            tabindex="0"
-            @click="sortTable('display_name')"
-            @keypress.enter="sortTable('display_name')"
-          >
-            <span class="flex w-full flex-row items-center justify-between">
-              {{ $t("sources.providers.source") }}
-              <TableSortIcon :active="sorting.field === 'display_name'" />
-            </span>
-          </th>
-          <th
-            tabindex="0"
-            @click="sortTable('source_url')"
-            @keypress.enter="sortTable('source_url')"
-          >
-            <span class="flex w-full flex-row items-center justify-between">
-              {{ $t("sources.providers.domain") }}
-              <TableSortIcon :active="sorting.field === 'source_url'" />
-            </span>
-          </th>
-          <th
-            tabindex="0"
-            @click="sortTable('media_count')"
-            @keypress.enter="sortTable('media_count')"
-          >
-            <span class="flex w-full flex-row items-center justify-between">
-              {{ $t("sources.providers.item") }}
-              <TableSortIcon :active="sorting.field === 'media_count'" />
-            </span>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="provider in providers" :key="provider.display_name">
-          <td>
-            <VLink :href="providerViewUrl(provider)">{{
-              provider.display_name
-            }}</VLink>
-          </td>
-          <td class="truncate font-semibold">
-            <VLink :href="provider.source_url">
-              {{ cleanSourceUrlForPresentation(provider.source_url) }}
-            </VLink>
-          </td>
-          <td class="text-right">
-            {{ getLocaleFormattedNumber(provider.media_count || 0) }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <section role="region" class="mobile-source-table md:hidden">
-      <article
-        v-for="provider in providers"
-        :key="provider.display_name"
-        :title="provider.display_name"
-      >
-        <p>{{ $t("sources.providers.source") }}</p>
-
-        <VLink :href="providerViewUrl(provider)">{{
-          provider.display_name
-        }}</VLink>
-
-        <p>{{ $t("sources.providers.domain") }}</p>
-
-        <VLink :href="provider.source_url">
-          {{ cleanSourceUrlForPresentation(provider.source_url) }}
-        </VLink>
-
-        <p>{{ $t("sources.providers.item") }}</p>
-
-        <span>
-          {{ getLocaleFormattedNumber(provider.media_count || 0) }}
-        </span>
-      </article>
-    </section>
-  </div>
-</template>
-
 <script lang="ts">
 import { defineComponent, type PropType, reactive, ref } from "vue"
 
@@ -193,6 +105,94 @@ export default defineComponent({
   },
 })
 </script>
+
+<template>
+  <div>
+    <table
+      :aria-label="$t('sources.aria.table')"
+      role="region"
+      class="not-prose source-table w-full table-fixed text-base"
+    >
+      <thead>
+        <tr>
+          <th
+            tabindex="0"
+            @click="sortTable('display_name')"
+            @keypress.enter="sortTable('display_name')"
+          >
+            <span class="flex w-full flex-row items-center justify-between">
+              {{ $t("sources.providers.source") }}
+              <TableSortIcon :active="sorting.field === 'display_name'" />
+            </span>
+          </th>
+          <th
+            tabindex="0"
+            @click="sortTable('source_url')"
+            @keypress.enter="sortTable('source_url')"
+          >
+            <span class="flex w-full flex-row items-center justify-between">
+              {{ $t("sources.providers.domain") }}
+              <TableSortIcon :active="sorting.field === 'source_url'" />
+            </span>
+          </th>
+          <th
+            tabindex="0"
+            @click="sortTable('media_count')"
+            @keypress.enter="sortTable('media_count')"
+          >
+            <span class="flex w-full flex-row items-center justify-between">
+              {{ $t("sources.providers.item") }}
+              <TableSortIcon :active="sorting.field === 'media_count'" />
+            </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="provider in providers" :key="provider.display_name">
+          <td>
+            <VLink :href="providerViewUrl(provider)">{{
+              provider.display_name
+            }}</VLink>
+          </td>
+          <td class="truncate font-semibold">
+            <VLink :href="provider.source_url">
+              {{ cleanSourceUrlForPresentation(provider.source_url) }}
+            </VLink>
+          </td>
+          <td class="text-right">
+            {{ getLocaleFormattedNumber(provider.media_count || 0) }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <section role="region" class="mobile-source-table md:hidden">
+      <article
+        v-for="provider in providers"
+        :key="provider.display_name"
+        :title="provider.display_name"
+      >
+        <p>{{ $t("sources.providers.source") }}</p>
+
+        <VLink :href="providerViewUrl(provider)">{{
+          provider.display_name
+        }}</VLink>
+
+        <p>{{ $t("sources.providers.domain") }}</p>
+
+        <VLink :href="provider.source_url">
+          {{ cleanSourceUrlForPresentation(provider.source_url) }}
+        </VLink>
+
+        <p>{{ $t("sources.providers.item") }}</p>
+
+        <span>
+          {{ getLocaleFormattedNumber(provider.media_count || 0) }}
+        </span>
+      </article>
+    </section>
+  </div>
+</template>
 
 <style scoped>
 @tailwind base;

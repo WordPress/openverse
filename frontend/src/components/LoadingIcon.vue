@@ -1,3 +1,9 @@
+<script lang="ts">
+export default {
+  name: "LoadingIcon",
+}
+</script>
+
 <template>
   <div class="lds-ring" data-testid="lds-ring">
     <div />
@@ -6,12 +12,6 @@
     <div />
   </div>
 </template>
-
-<script lang="ts">
-export default {
-  name: "LoadingIcon",
-}
-</script>
 
 <style scoped>
 .lds-ring {
