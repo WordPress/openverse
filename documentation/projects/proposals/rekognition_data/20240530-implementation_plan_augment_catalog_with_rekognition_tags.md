@@ -743,6 +743,6 @@ xdf.groupby("image_uuid").median("Confidence").median()
 
 - 2024-07-25 - (#4662) Clarified policy around initially included demographic
   labels to ensure they're reviewed on a case-by-case basis.
-- 2024-08-19 - () Added a note about the inclusion-based filtering process and
-  the "unreviewed" label capture, and a note to insert all available Rekognition
-  data and filter it afterwards.
+- 2024-08-19 - (#4784) Added a note about the inclusion-based filtering process
+  and the "unreviewed" label capture, and a note to insert all available
+  Rekognition data and filter it afterwards.
