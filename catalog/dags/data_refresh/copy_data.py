@@ -313,7 +313,7 @@ def copy_upstream_tables(
         target_environment=target_environment,
         timeout=data_refresh_config.copy_data_timeout,
         limit=limit,
-    ).expand_kwargs([asdict(tm) for tm in data_refresh_config.table_mappings])
+    ).expand_kwargs([asdict(tm) for tm in data_refresh_config.table_mappings()])
 
     drop_fdw = _run_sql.override(task_id="drop_fdw")(
         postgres_conn_id=downstream_conn_id,

@@ -187,7 +187,7 @@ def alter_table_data(
 ):
     """Perform data altering across a number of tasks."""
     postgres_conn_id = POSTGRES_API_CONN_IDS.get(environment)
-    temp_table = data_refresh_config.table_mappings[0].temp_table_name
+    temp_table = data_refresh_config.table_mapping.temp_table_name
 
     estimated_record_count = PGExecuteQueryOperator(
         task_id="get_estimated_record_count",
