@@ -347,7 +347,7 @@ def reindex(
         endpoint="task",
         data={
             "model_name": data_refresh_config.media_type,
-            "table_name": data_refresh_config.media_type,
+            "table_name": data_refresh_config.table_mapping.temp_table_name,
             "target_index": target_index,
             "start_id": start_id,
             "end_id": end_id,
