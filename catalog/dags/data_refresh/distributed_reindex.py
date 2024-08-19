@@ -398,8 +398,7 @@ def perform_distributed_reindex(
         conn_id=OPENLEDGER_API_CONN_ID,
         sql=dedent(
             f"""
-            SELECT id FROM {data_refresh_config.media_type}
-            ORDER BY id DESC LIMIT 1;
+            SELECT max(id) FROM {data_refresh_config.table_mapping.temp_table_name};
             """
         ),
         handler=single_value,
