@@ -25,19 +25,5 @@
     "prettier-plugin-tailwindcss": "0.6.5",
     "typescript": "5.5.4",
     "vue-tsc": "2.0.29"
-  },
-  "pnpm": {
-    "overrides": {
-      "@nuxt/kit": "^3.12.4",
-      "@nuxt/schema": "^3.12.4"
-    },
-    "peerDependencyRules": {
-      "ignoreMissing": [
-        "react",
-        "react-dom",
-        "consola",
-        "eslint"
-      ]
-    }
   }
 }
