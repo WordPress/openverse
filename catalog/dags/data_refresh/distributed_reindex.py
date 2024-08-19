@@ -142,10 +142,6 @@ def get_launch_template_version_number(
     launch_templates = ec2_hook.conn.describe_launch_templates(
         LaunchTemplateNames=INDEXER_LAUNCH_TEMPLATES.get(target_environment)
     )
-
-    if len(launch_templates.get("LaunchTemplates")) == 0:
-        raise Exception("Unable to determine launch template version.")
-
     return launch_templates.get("LaunchTemplates")[0].get("LatestVersionNumber")
 
 
@@ -238,13 +234,6 @@ def get_instance_ip_address(
     reservations = ec2_hook.describe_instances(instance_ids=[instance_id]).get(
         "Reservations"
     )
-
-    # `Reservations` is a list of dicts, grouping instances by the launch request that
-    # started them. Because we are querying a single InstanceId we expect to have one
-    # Reservation.
-    if not (len(reservations) == 1 and len(reservations.get("Instances", {})) == 1):
-        raise Exception("Unable to describe worker instance.")
-
     return reservations[0].get("Instances", {})[0].get("PrivateIpAddress")
 
 
