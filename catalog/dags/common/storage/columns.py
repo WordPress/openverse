@@ -31,7 +31,7 @@ class UpsertStrategy(Enum):
     merge_jsonb_arrays = auto()
     merge_array = auto()
     merge_tags = auto()
-    no_change = ()
+    no_change = auto()
     calculate_value = auto()
 
 
