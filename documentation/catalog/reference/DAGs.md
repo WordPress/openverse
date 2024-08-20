@@ -228,8 +228,8 @@ airflow dags trigger --conf
 
 `--conf` options:
 
-- maxLogAgeInDays:<INT> - Optional
-- enableDelete:<BOOLEAN> - Optional
+- maxLogAgeInDays: int, optional
+- enableDelete: bool, optional
 
 ----
 
@@ -1159,7 +1159,7 @@ Depending on the kind of property data that's being returned, it's possible for
 the API to iterate extensively on a specific media item. What Wikimedia is
 iterating over in these cases can be gleaned from the "continue" token. Those
 tokens take the form of, as I understand it,
-"<primary-iterator>||<next-iteration-prop>", paired with an "<XX>continue" value
+`<primary-iterator>||<next-iteration-prop>`, paired with an `<XX>continue` value
 for the property being iterated over. For example, if we're were iterating over
 a set of image properties, the token might look like:
 

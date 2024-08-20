@@ -16,8 +16,8 @@ airflow dags trigger --conf
 '{"maxLogAgeInDays":-1, "enableDelete": "false"}' airflow_log_cleanup
 ```
 `--conf` options:
-- maxLogAgeInDays:<INT> - Optional
-- enableDelete:<BOOLEAN> - Optional
+- maxLogAgeInDays: int, optional
+- enableDelete: bool, optional
 """
 
 from datetime import datetime, timedelta
