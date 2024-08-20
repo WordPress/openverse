@@ -113,7 +113,9 @@ breakpoints.describeMobileXsAndDesktop(({ breakpoint }) => {
 
   test("clicking takes user to that search", async ({ page }) => {
     await executeSearches(page)
-    expect(page.url()).toContain("?q=galah")
+
+    await page.waitForURL(/search\?q=galah/)
+
     await openRecentSearches(page)
     await page
       .locator(`[aria-label="${recentLabel}"]`)
