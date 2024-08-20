@@ -20,9 +20,7 @@ export const useCollection = <T extends SupportedMediaType>({
   const collectionParams = computed(() => searchStore.collectionParams)
   const isFetching = computed(() => mediaStore.fetchState.isFetching)
 
-  const media = ref<ResultType[]>(
-    mediaStore.resultItems[mediaType] as ResultType[]
-  ) as Ref<ResultType[]>
+  const media = ref(mediaStore.resultItems[mediaType]) as Ref<ResultType[]>
   const creatorUrl = ref<string>()
 
   const i18n = useI18n({ useScope: "global" })
