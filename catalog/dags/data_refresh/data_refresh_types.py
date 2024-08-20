@@ -101,6 +101,7 @@ class DataRefreshConfig:
         self.dag_id = f"{self.media_type}_data_refresh"
         self.filtered_index_dag_id = f"create_filtered_{self.media_type}_index"
 
+    @property
     def table_mappings(self) -> list[TableMapping]:
         """Return the complete list of all table mappings for this media type."""
         if not self.additional_table_mappings:

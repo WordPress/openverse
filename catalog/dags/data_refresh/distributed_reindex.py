@@ -25,10 +25,8 @@ from common.constants import (
     PRODUCTION,
     Environment,
 )
-from common.operators.TemplatedConnectionHttpOperator import (
-    TemplatedConnectionHttpOperator,
-)
-from common.sensors.TemplatedConnectionHttpSensor import TemplatedConnectionHttpSensor
+from common.operators.http import TemplatedConnectionHttpOperator
+from common.sensors.http import TemplatedConnectionHttpSensor
 from common.sql import PGExecuteQueryOperator, single_value
 from data_refresh.constants import INDEXER_LAUNCH_TEMPLATES, INDEXER_WORKER_COUNTS
 from data_refresh.data_refresh_types import DataRefreshConfig
