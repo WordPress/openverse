@@ -1,5 +1,5 @@
-<script lang="ts">
-import { toRefs, defineComponent, PropType } from "vue"
+<script setup lang="ts">
+import { toRefs } from "vue"
 
 import type { AudioDetail } from "~/types/media"
 
@@ -8,27 +8,11 @@ import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 import VAudioThumbnail from "~/components/VAudioThumbnail/VAudioThumbnail.vue"
 import VLink from "~/components/VLink.vue"
 
-export default defineComponent({
-  name: "VGlobalLayout",
-  components: {
-    VAudioThumbnail,
-    VLink,
-  },
-  props: {
-    audio: {
-      type: Object as PropType<AudioDetail>,
-      required: true,
-    },
-  },
-  setup(props) {
-    const { audio } = toRefs(props)
-    const { isHidden: shouldBlur } = useSensitiveMedia(audio)
-
-    return {
-      shouldBlur,
-    }
-  },
-})
+const props = defineProps<{
+  audio: AudioDetail
+}>()
+const { audio } = toRefs(props)
+const { isHidden: shouldBlur } = useSensitiveMedia(audio)
 </script>
 
 <template>

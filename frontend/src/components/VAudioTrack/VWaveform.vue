@@ -1,5 +1,9 @@
-<script lang="ts">
-import { computed, defineComponent, PropType, ref, toRef } from "vue"
+<script setup lang="ts">
+/**
+ * Renders an SVG representation of the waveform given a list of heights for the
+ * bars.
+ */
+import { computed, ref, toRef } from "vue"
 
 import { downsampleArray, upsampleArray } from "~/utils/resampling"
 import { timeFmt } from "~/utils/time-fmt"
@@ -11,410 +15,333 @@ import useResizeObserver from "~/composables/use-resize-observer"
 
 import { hash, rand as prng } from "~/utils/prng"
 
-import { defineEvent } from "~/types/emits"
-
 /**
  * If the duration is above this threshold, the progress timestamp will show ms.
  */
 const MAX_SECONDS_FOR_MS = 1
 
-/**
- * Renders an SVG representation of the waveform given a list of heights for the
- * bars.
- */
-export default defineComponent({
-  name: "VWaveform",
-  props: {
+const props = withDefaults(
+  defineProps<{
     /**
-     * an array of heights of the bars; The waveform will be generated with
+     * An array of heights of the bars. The waveform will be generated with
      * bars of random length if the prop is not provided.
      */
-    peaks: {
-      type: Array as PropType<number[]>,
-      required: false,
-      validator: (val: unknown[]) =>
-        val.every((item) => typeof item === "number"),
-    },
+    peaks?: number[]
     /**
-     * the message to display instead of the waveform; This is useful when
+     * The message to display instead of the waveform. This is useful when
      * displaying a loading or error state.
      */
-    message: {
-      type: String,
-    },
+    message?: string
     /**
-     * the current play time of the audio track
+     * The current play time of the audio track.
      */
-    currentTime: {
-      type: Number,
-      default: 0,
-    },
+    currentTime?: number
     /**
-     * the total play time of the audio track
+     * The total play time of the audio track.
      */
-    duration: {
-      type: Number as PropType<number>,
-      default: 0,
-    },
+    duration?: number
     /**
-     * the fraction of the waveform height to use for the bars and timestamp;
+     * The fraction of the waveform height to use for the bars and timestamp.
      * The remaining space can be used to place other elements.
      */
-    usableFrac: {
-      type: Number,
-      default: 1,
-    },
+    usableFrac?: number
     /**
-     * selectively enable features in the waveform; Available features are
+     * Selectively enable features in the waveform. Available features are
      * `'timestamps'`, `'duration'`, `'seek'`.
      */
-    features: {
-      type: Array as PropType<AudioFeature[]>,
-      default: () => ["timestamps", "seek"],
-    },
+    features?: readonly AudioFeature[]
     /**
      * An object of notices to display when a feature is disabled.
      * `'timestamps'`, `'duration'`, `'seek'`.
      */
-    featureNotices: {
-      type: Object as PropType<Record<AudioFeature, boolean>>,
-      default: () => ({}),
-    },
+    featureNotices?: Partial<Record<AudioFeature, string>>
     /**
      * Audio id to make the randomly-created peaks deterministic.
      */
-    audioId: {
-      type: String,
-      required: true,
-    },
+    audioId: string
     /**
-     * whether the waveform can be focused by using the `Tab` key
+     * Whether the waveform can be focused by using the `Tab` key
      */
-    isTabbable: {
-      type: Boolean,
-      default: true,
-    },
+    isTabbable?: boolean
     /**
-     * whether the waveform should render as seeking when it is controlled by
+     * Whether the waveform should render as seeking when it is controlled by
      * the parent audio track
      */
-    isParentSeeking: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  emits: {
-    /**
-     * Emitted when the waveform receives mouse events for seeking,
-     * either single clicks on a specific part of the waveform,
-     * or a click and drag.
-     *
-     * Also emitted when the waveform receives arrow key or home/end
-     * keyboard events that also correspond to seeking.
-     */
-    seeked: defineEvent<[number]>(),
-    "toggle-playback": defineEvent<[]>(),
-    focus: defineEvent<[FocusEvent]>(),
-    blur: defineEvent<[FocusEvent]>(),
-  },
-  setup(props, { emit }) {
-    /* Utils */
+    isParentSeeking?: boolean
+  }>(),
+  {
+    currentTime: 0,
+    duration: 0,
+    usableFrac: 1,
+    features: () => ["timestamps", "seek"] as AudioFeature[],
+    featureNotices: () => ({}),
+    isTabbable: true,
+    isParentSeeking: false,
+  }
+)
 
-    /**
-     * Get the x-coordinate of the event with respect to the bounding box of the
-     * waveform.
-     * @param event - the event from which to get the position
-     * @returns the x-position of the event inside the waveform
-     */
-    const getPosition = (event: MouseEvent): number => {
-      return el.value
-        ? event.clientX - el.value.getBoundingClientRect().x
-        : event.clientX
-    }
-    /**
-     * Get the x-position of the event with respect to the bounding box of the
-     * waveform, as a fraction of the waveform width.
-     * @param event - the event from which to get the position
-     * @returns the x-position of the event as a fraction
-     */
-    const getPositionFrac = (event: MouseEvent): number => {
-      const xPos = getPosition(event)
-      return xPos / waveformDimens.value.width
-    }
-    /**
-     * Get the number of peaks that will fit within the given width.
-     * @param width - the number of pixels inside which to count peaks
-     * @returns the number of peaks that can be accommodated
-     */
-    const getPeaksInWidth = (width: number): number => {
-      return Math.floor((width - barGap) / (barWidth + barGap))
-    }
+const emit = defineEmits<{
+  /**
+   * Emitted when the waveform receives mouse events for seeking,
+   * either single clicks on a specific part of the waveform,
+   * or a click and drag.
+   *
+   * Also emitted when the waveform receives arrow key or home/end
+   * keyboard events that also correspond to seeking.
+   */
+  seeked: [number]
+  "toggle-playback": []
+  focus: [FocusEvent]
+  blur: [FocusEvent]
+}>()
 
-    /* Element dimensions */
+/* Utils */
 
-    const el = ref<HTMLElement | null>(null) // template ref
-    const { dimens: waveformDimens } = useResizeObserver(el)
+/**
+ * Get the x-coordinate of the event with respect to the bounding box of the
+ * waveform.
+ * @param event - the event from which to get the position
+ * @returns the x-position of the event inside the waveform
+ */
+const getPosition = (event: MouseEvent): number => {
+  return el.value
+    ? event.clientX - el.value.getBoundingClientRect().x
+    : event.clientX
+}
+/**
+ * Get the x-position of the event with respect to the bounding box of the
+ * waveform, as a fraction of the waveform width.
+ * @param event - the event from which to get the position
+ * @returns the x-position of the event as a fraction
+ */
+const getPositionFrac = (event: MouseEvent): number => {
+  const xPos = getPosition(event)
+  return xPos / waveformDimens.value.width
+}
+/**
+ * Get the number of peaks that will fit within the given width.
+ * @param width - the number of pixels inside which to count peaks
+ * @returns the number of peaks that can be accommodated
+ */
+const getPeaksInWidth = (width: number): number => {
+  return Math.floor((width - barGap) / (barWidth + barGap))
+}
 
-    /* Features */
+/* Element dimensions */
 
-    const showDuration = computed(() => props.features.includes("duration"))
-    const showTimestamps = computed(() => props.features.includes("timestamps"))
-    const isSeekable = computed(() => props.features.includes("seek"))
+const el = ref<HTMLElement | null>(null) // template ref
+const { dimens: waveformDimens } = useResizeObserver(el)
 
-    /* State */
+/* Features */
 
-    const isReady = computed(() => !props.message)
-    const isInteractive = computed(() => isSeekable.value && isReady.value)
-    const isSeeking = computed(
-      () => (!props.isTabbable && props.isParentSeeking) || isSelfSeeking.value
-    )
+const showDuration = computed(() => props.features.includes("duration"))
+const showTimestamps = computed(() => props.features.includes("timestamps"))
+const isSeekable = computed(() => props.features.includes("seek"))
 
-    /* Resampling */
+/* State */
 
-    const barWidth = 2
-    const barGap = 2
-    const peakCount = computed(() =>
-      getPeaksInWidth(waveformDimens.value.width)
-    )
+const isReady = computed(() => !props.message)
+const isInteractive = computed(() => isSeekable.value && isReady.value)
+const isSeeking = computed(
+  () => (!props.isTabbable && props.isParentSeeking) || isSelfSeeking.value
+)
 
-    const createRandomPeaks = (audioId: string) => {
-      const rand = prng(hash(audioId))
-      return Array.from({ length: 100 }, () => rand())
-    }
-    const peaks = computed(() =>
-      props.peaks?.length ? props.peaks : createRandomPeaks(props.audioId)
-    )
-    const normalizedPeaks = computed(() => {
-      let samples = peaks.value
+/* Resampling */
 
-      const givenLength = samples.length
-      const required = peakCount.value
-      if (givenLength < required) {
-        samples = upsampleArray(samples, required)
-      } else if (givenLength > required) {
-        samples = downsampleArray(samples, required)
-      }
+const barWidth = 2
+const barGap = 2
+const peakCount = computed(() => getPeaksInWidth(waveformDimens.value.width))
 
-      return samples.map(
-        (peak) => Math.max(peak, 0) * waveformDimens.value.height
-      )
-    })
+const createRandomPeaks = (audioId: string) => {
+  const rand = prng(hash(audioId))
+  return Array.from({ length: 100 }, () => rand())
+}
+const peaks = computed(() =>
+  props.peaks?.length ? props.peaks : createRandomPeaks(props.audioId)
+)
+const normalizedPeaks = computed(() => {
+  let samples = peaks.value
 
-    /* SVG drawing */
+  const givenLength = samples.length
+  const required = peakCount.value
+  if (givenLength < required) {
+    samples = upsampleArray(samples, required)
+  } else if (givenLength > required) {
+    samples = downsampleArray(samples, required)
+  }
 
-    const viewBox = computed(() =>
-      [0, 0, waveformDimens.value.width, waveformDimens.value.height].join(" ")
-    )
-    const spaceBefore = (index: number) => index * barWidth + index * barGap
-    const spaceAbove = (index: number) =>
-      waveformDimens.value.height - normalizedPeaks.value[index]
-
-    /* Progress bar */
-    const progressBarWidth = computed(() => {
-      const frac = isDragging.value ? (seekFrac.value ?? 0) : currentFrac.value
-      return waveformDimens.value.width * frac
-    })
-
-    /* Progress timestamp */
-
-    const progressTimestampEl = ref<HTMLElement>()
-    const progressTimestamp = computed(() =>
-      isDragging.value ? seekTimestamp.value : props.currentTime
-    )
-    const isProgressTimestampCutoff = computed(() => {
-      if (!progressTimestampEl.value) {
-        return false
-      }
-      const barWidth = progressBarWidth.value
-      const timestampWidth = progressTimestampEl.value.offsetWidth
-      return barWidth < timestampWidth + 2
-    })
-
-    /**
-     * Whether to show the ms part in the timestamps. True when the duration
-     * is below MAX_SECONDS_FOR_MS seconds.
-     */
-    const showMsInTimestamp = computed(
-      () =>
-        Number.isFinite(props.duration) && props.duration < MAX_SECONDS_FOR_MS
-    )
-
-    /* Seek bar */
-
-    const seekFrac = ref<number | null>(null)
-    const seekBarWidth = computed(() => {
-      const frac = seekFrac.value ?? currentFrac.value
-      return waveformDimens.value.width * frac
-    })
-    const seekIndex = computed(() => getPeaksInWidth(seekBarWidth.value))
-
-    /* Seek timestamp */
-
-    const seekTimestampEl = ref<HTMLElement | null>(null)
-    const seekTimestamp = computed(() =>
-      seekFrac.value ? seekFrac.value * props.duration : props.duration
-    )
-    const isSeekTimestampCutoff = computed(() => {
-      if (!seekTimestampEl.value) {
-        return false
-      }
-      const barWidth = seekBarWidth.value
-      const timestampWidth = seekTimestampEl.value.offsetWidth
-      return barWidth < timestampWidth + 2
-    })
-
-    const { isSeeking: isSelfSeeking, ...seekable } = useSeekable({
-      duration: toRef(props, "duration"),
-      currentTime: toRef(props, "currentTime"),
-      isSeekable,
-      isReady,
-      onSeek: (frac) => {
-        clearSeekProgress()
-        emit("seeked", frac)
-      },
-      onTogglePlayback: () => emit("toggle-playback"),
-    })
-    const waveformAttributes = computed(() => ({
-      // ARIA slider attributes are only added when interactive
-      ...(isInteractive.value ? seekable.attributes.value : {}),
-    }))
-
-    /* Seeking */
-
-    /**
-     * the seek jump length as a % of the track
-     */
-    const { currentFrac } = seekable.meta
-    const setSeekProgress = (event: MouseEvent) => {
-      seekFrac.value = getPositionFrac(event)
-    }
-    const clearSeekProgress = () => {
-      seekFrac.value = null
-    }
-    const seek = (event: MouseEvent) => {
-      emit("seeked", getPositionFrac(event))
-    }
-
-    /* Dragging */
-
-    const dragThreshold = 2 // px
-    let startPos: null | number = null
-    const isDragging = ref(false)
-    const handleMouseDown = (event: MouseEvent) => {
-      if (!props.isTabbable) {
-        // to prevent focus
-        event.preventDefault()
-      }
-      isDragging.value = false
-      startPos = getPosition(event)
-      setSeekProgress(event)
-    }
-    const handleMouseMove = (event: MouseEvent) => {
-      if (startPos) {
-        const clickPos = getPosition(event)
-        if (Math.abs(clickPos - startPos) > dragThreshold) {
-          isDragging.value = true
-        }
-      }
-      setSeekProgress(event)
-    }
-    const handleMouseUp = (event: MouseEvent) => {
-      isDragging.value = false
-      startPos = null
-      seek(event)
-    }
-    const handleMouseLeave = () => {
-      clearSeekProgress()
-    }
-    const handleClick = (event: MouseEvent) => {
-      // Prevent event from bubbling to the parent anchor tag.
-      event.stopPropagation()
-      event.preventDefault()
-    }
-    const handleFocus = (event: FocusEvent) => {
-      emit("focus", event)
-    }
-    const handleBlur = (event: FocusEvent) => {
-      seekable.listeners.blur()
-      emit("blur", event)
-    }
-
-    /* v-on */
-
-    const eventHandlers = computed(() => {
-      if (isInteractive.value) {
-        return {
-          mousedown: handleMouseDown,
-          mousemove: handleMouseMove,
-          mouseup: handleMouseUp,
-          mouseleave: handleMouseLeave,
-          click: handleClick,
-          blur: handleBlur,
-          focus: handleFocus,
-          keydown: seekable.listeners.keydown,
-        }
-      } else {
-        return {}
-      }
-    })
-
-    const heightProperties = computed(() => ({
-      "--usable-height": `${Math.floor(props.usableFrac * 100)}%`,
-      "--unusable-height": `${Math.floor((1 - props.usableFrac) * 100)}%`,
-    }))
-
-    const progressTimeLeft = computed(() => ({
-      "--progress-time-left": `${progressBarWidth.value}px`,
-    }))
-
-    const seekTimeLeft = computed(() => ({
-      "--seek-time-left": `${seekBarWidth.value}px`,
-    }))
-
-    return {
-      timeFmt,
-
-      el, // template ref
-
-      showDuration,
-      showTimestamps,
-      isSeekable,
-
-      isReady,
-      isInteractive,
-      isSeeking,
-
-      barWidth,
-      normalizedPeaks,
-
-      waveformDimens,
-      viewBox,
-      spaceBefore,
-      spaceAbove,
-
-      progressBarWidth,
-      progressTimestamp,
-      progressTimestampEl,
-      isProgressTimestampCutoff,
-      showMsInTimestamp,
-
-      seekFrac,
-      seekBarWidth,
-      seekIndex,
-
-      seekTimestamp,
-      seekTimestampEl,
-      isSeekTimestampCutoff,
-      waveformAttributes,
-
-      eventHandlers,
-
-      heightProperties,
-      progressTimeLeft,
-      seekTimeLeft,
-    }
-  },
+  return samples.map((peak) => Math.max(peak, 0) * waveformDimens.value.height)
 })
+
+/* SVG drawing */
+
+const viewBox = computed(() =>
+  [0, 0, waveformDimens.value.width, waveformDimens.value.height].join(" ")
+)
+const spaceBefore = (index: number) => index * barWidth + index * barGap
+const spaceAbove = (index: number) =>
+  waveformDimens.value.height - normalizedPeaks.value[index]
+
+/* Progress bar */
+const progressBarWidth = computed(() => {
+  const frac = isDragging.value ? (seekFrac.value ?? 0) : currentFrac.value
+  return waveformDimens.value.width * frac
+})
+
+/* Progress timestamp */
+
+const progressTimestampEl = ref<HTMLElement>()
+const progressTimestamp = computed(() =>
+  isDragging.value ? seekTimestamp.value : props.currentTime
+)
+const isProgressTimestampCutoff = computed(() => {
+  if (!progressTimestampEl.value) {
+    return false
+  }
+  const barWidth = progressBarWidth.value
+  const timestampWidth = progressTimestampEl.value.offsetWidth
+  return barWidth < timestampWidth + 2
+})
+
+/**
+ * Whether to show the ms part in the timestamps. True when the duration
+ * is below MAX_SECONDS_FOR_MS seconds.
+ */
+const showMsInTimestamp = computed(
+  () => Number.isFinite(props.duration) && props.duration < MAX_SECONDS_FOR_MS
+)
+
+/* Seek bar */
+
+const seekFrac = ref<number | null>(null)
+const seekBarWidth = computed(() => {
+  const frac = seekFrac.value ?? currentFrac.value
+  return waveformDimens.value.width * frac
+})
+const seekIndex = computed(() => getPeaksInWidth(seekBarWidth.value))
+
+/* Seek timestamp */
+
+const seekTimestampEl = ref<HTMLElement | null>(null)
+const seekTimestamp = computed(() =>
+  seekFrac.value ? seekFrac.value * props.duration : props.duration
+)
+const isSeekTimestampCutoff = computed(() => {
+  if (!seekTimestampEl.value) {
+    return false
+  }
+  const barWidth = seekBarWidth.value
+  const timestampWidth = seekTimestampEl.value.offsetWidth
+  return barWidth < timestampWidth + 2
+})
+
+const { isSeeking: isSelfSeeking, ...seekable } = useSeekable({
+  duration: toRef(props, "duration"),
+  currentTime: toRef(props, "currentTime"),
+  isSeekable,
+  isReady,
+  onSeek: (frac) => {
+    clearSeekProgress()
+    emit("seeked", frac)
+  },
+  onTogglePlayback: () => emit("toggle-playback"),
+})
+const waveformAttributes = computed(() => ({
+  // ARIA slider attributes are only added when interactive
+  ...(isInteractive.value ? seekable.attributes.value : {}),
+}))
+
+/* Seeking */
+
+/**
+ * the seek jump length as a % of the track
+ */
+const { currentFrac } = seekable.meta
+const setSeekProgress = (event: MouseEvent) => {
+  seekFrac.value = getPositionFrac(event)
+}
+const clearSeekProgress = () => {
+  seekFrac.value = null
+}
+const seek = (event: MouseEvent) => {
+  emit("seeked", getPositionFrac(event))
+}
+
+/* Dragging */
+
+const dragThreshold = 2 // px
+let startPos: null | number = null
+const isDragging = ref(false)
+const handleMouseDown = (event: MouseEvent) => {
+  if (!props.isTabbable) {
+    // to prevent focus
+    event.preventDefault()
+  }
+  isDragging.value = false
+  startPos = getPosition(event)
+  setSeekProgress(event)
+}
+const handleMouseMove = (event: MouseEvent) => {
+  if (startPos) {
+    const clickPos = getPosition(event)
+    if (Math.abs(clickPos - startPos) > dragThreshold) {
+      isDragging.value = true
+    }
+  }
+  setSeekProgress(event)
+}
+const handleMouseUp = (event: MouseEvent) => {
+  isDragging.value = false
+  startPos = null
+  seek(event)
+}
+const handleMouseLeave = () => {
+  clearSeekProgress()
+}
+const handleClick = (event: MouseEvent) => {
+  // Prevent event from bubbling to the parent anchor tag.
+  event.stopPropagation()
+  event.preventDefault()
+}
+const handleFocus = (event: FocusEvent) => {
+  emit("focus", event)
+}
+const handleBlur = (event: FocusEvent) => {
+  seekable.listeners.blur()
+  emit("blur", event)
+}
+
+/* v-on */
+
+const eventHandlers = computed(() => {
+  if (isInteractive.value) {
+    return {
+      mousedown: handleMouseDown,
+      mousemove: handleMouseMove,
+      mouseup: handleMouseUp,
+      mouseleave: handleMouseLeave,
+      click: handleClick,
+      blur: handleBlur,
+      focus: handleFocus,
+      keydown: seekable.listeners.keydown,
+    }
+  } else {
+    return {}
+  }
+})
+
+const heightProperties = computed(() => ({
+  "--usable-height": `${Math.floor(props.usableFrac * 100)}%`,
+  "--unusable-height": `${Math.floor((1 - props.usableFrac) * 100)}%`,
+}))
+
+const progressTimeLeft = computed(() => ({
+  "--progress-time-left": `${progressBarWidth.value}px`,
+}))
+
+const seekTimeLeft = computed(() => ({
+  "--seek-time-left": `${seekBarWidth.value}px`,
+}))
 </script>
 
 <template>
@@ -533,7 +460,7 @@ export default defineComponent({
           ]"
           :style="progressTimeLeft"
         >
-          {{ timeFmt(progressTimestamp) }}
+          {{ timeFmt(progressTimestamp, showMsInTimestamp) }}
         </div>
         <div
           v-if="seekFrac"
@@ -542,14 +469,14 @@ export default defineComponent({
           :class="{ '-translate-x-full': !isSeekTimestampCutoff }"
           :style="seekTimeLeft"
         >
-          {{ timeFmt(seekTimestamp) }}
+          {{ timeFmt(seekTimestamp, showMsInTimestamp) }}
         </div>
       </template>
       <div
         v-if="showDuration"
         class="duration timestamp bg-background-var right-0"
       >
-        {{ timeFmt(duration) }}
+        {{ timeFmt(duration, showMsInTimestamp) }}
       </div>
     </template>
 

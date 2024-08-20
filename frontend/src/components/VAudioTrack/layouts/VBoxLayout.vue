@@ -1,7 +1,7 @@
-<script lang="ts">
+<script setup lang="ts">
 import { useI18n } from "#imports"
 
-import { computed, defineComponent, type PropType } from "vue"
+import { computed } from "vue"
 
 import type { AudioDetail } from "~/types/media"
 import type { AudioSize } from "~/constants/audio"
@@ -9,39 +9,20 @@ import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 
 import VLicense from "~/components/VLicense/VLicense.vue"
 
-export default defineComponent({
-  name: "VBoxLayout",
-  components: {
-    VLicense,
-  },
-  props: {
-    audio: {
-      type: Object as PropType<AudioDetail>,
-      required: true,
-    },
-    size: {
-      type: String as PropType<Extract<AudioSize, "s" | "l">>,
-      required: true,
-    },
-  },
-  setup(props) {
-    const { t } = useI18n({ useScope: "global" })
+const props = defineProps<{
+  audio: AudioDetail
+  size: Extract<AudioSize, "s" | "l">
+}>()
 
-    const isSmall = computed(() => props.size === "s")
+const { t } = useI18n({ useScope: "global" })
 
-    const categoryLabel = computed(() =>
-      t(`filters.audioCategories.${props.audio.category}`)
-    )
+const isSmall = computed(() => props.size === "s")
 
-    const { isHidden: shouldBlur } = useSensitiveMedia(props.audio)
-    return {
-      isSmall,
-      shouldBlur,
+const categoryLabel = computed(() =>
+  t(`filters.audioCategories.${props.audio.category}`)
+)
 
-      categoryLabel,
-    }
-  },
-})
+const { isHidden: shouldBlur } = useSensitiveMedia(props.audio)
 </script>
 
 <template>
@@ -72,9 +53,9 @@ export default defineComponent({
         <div class="flex-none p-2">
           <slot
             name="audio-control"
-            size="small"
-            layout="box"
-            :is-tabbable="false"
+            v-bind="
+              { size: 'small', layout: 'box', isTabbable: false } as const
+            "
           />
         </div>
         <p v-if="audio.category && isSmall" class="label-regular self-center">
