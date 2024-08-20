@@ -42,6 +42,7 @@ from common.constants import DAG_DEFAULT_ARGS, ENVIRONMENTS, Environment
 from common.sensors.constants import ES_CONCURRENCY_TAGS
 from common.sensors.single_run_external_dags_sensor import SingleRunExternalDAGsSensor
 from common.sensors.utils import wait_for_external_dags_with_tag
+from data_refresh.alter_data import alter_table_data
 from data_refresh.copy_data import copy_upstream_tables
 from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS, DataRefreshConfig
 from data_refresh.reporting import report_record_difference
@@ -115,6 +116,7 @@ def create_data_refresh_dag(
         default_args=default_args,
         start_date=data_refresh_config.start_date,
         schedule=data_refresh_config.schedule,
+        render_template_as_native_obj=True,
         max_active_runs=1,
         catchup=False,
         doc_md=__doc__,
@@ -145,7 +147,9 @@ def create_data_refresh_dag(
             environment=environment, data_refresh_config=data_refresh_config
         )
 
-        # TODO Cleaning steps
+        alter_data = alter_table_data(
+            environment=environment, data_refresh_config=data_refresh_config
+        )
 
         # Disable Cloudwatch alarms that are noisy during the reindexing steps of a
         # data refresh.
@@ -198,7 +202,13 @@ def create_data_refresh_dag(
         )
 
         # Set up task dependencies
-        before_record_count >> wait_for_dags >> copy_data >> disable_alarms
+        (
+            before_record_count
+            >> wait_for_dags
+            >> copy_data
+            >> alter_data
+            >> disable_alarms
+        )
         # TODO: this will include reindex/etc once added
         disable_alarms >> [enable_alarms, after_record_count]
         after_record_count >> report_counts
