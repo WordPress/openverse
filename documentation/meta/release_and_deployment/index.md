@@ -254,15 +254,20 @@ flowchart TD
 
 #### Force a deployment to a specific version (roll back, redeploy, re-run, etc.)
 
-Roll back and redeployment of the API and frontend follows an identical process,
-based on the ability to force a deployment of the app to a specific version.
-Regardless of whether that version is the version currently running, a past
-version, or a completely new version, the same deployment workflows are used in
-all cases. This process also works to retry a failed deployment.
+```{tip} Quick Tips for Performing a Rollback
+
+To perform a rollback, manually trigger the appropriate deployment workflow from the WordPress/openverse-infrastructure repository using the tag of the latest stable version. You can find the release version number in the [changelogs](/changelogs/index); the tag to pass to the action is the version number prefixed with "rel-", for example "rel-2023.07.03.17.52.00".
+```
+
+Because we have the ability to force a deployment of the app to any specific
+version, the same process can be used to deploy to a completely new version, the
+version currently running, or a past version. This same process works to perform
+rollbacks or retry a failed deployment.
 
 To force a deployment of the API or frontend (of either environment) to any
-specific version, manually trigger the deployment workflow for the app and
-environment with the docker image tag to deploy.
+specific version, manually trigger the appropriate deployment workflow for the
+desired app and environment (see table below), using the docker image tag that
+you want to deploy.
 
 To find historically deployed production image tags, refer to the title of the
 workflow runs for the app (linked in the table below). The `rel-*` image tags in
