@@ -25,7 +25,7 @@ COMMANDS
     Initialise the Openverse development toolkit for the first time
     Alias for:
 
-        ov build && ov setup-env && ov just install-hooks && ov just init-ov-profile
+        ov build && ov setup-env && ov just install-hooks init-ov-profile install
 
   ov build [...ARGS]
     Build the Openverse development toolkit Docker image.
@@ -88,6 +88,7 @@ init)
   "$_self" setup-env
   "$_self" just install-hooks
   "$_self" just init-ov-profile
+  "$_self" just install
   ;;
 
 build)
