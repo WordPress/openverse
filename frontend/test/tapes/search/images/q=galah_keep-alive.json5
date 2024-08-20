@@ -92,8 +92,8 @@
             ],
         },
         body: {
-            result_count: 3275,
-            page_count: 164,
+            result_count: 240,
+            page_count: 12,
             page_size: 20,
             page: 1,
             results: [
