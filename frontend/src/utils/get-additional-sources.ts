@@ -80,8 +80,8 @@ const additionalSourceBuilders: AdditionalSourceBuilder[] = [
       url: "https://www.google.com/search",
       queryParams: {
         q: search.q,
-        tbm: "isch", // this means 'search images'
-        tbs: "il:cl",
+        udm: "2", // this means "search images"
+        tbs: "sur:cl",
       },
     }),
   },
