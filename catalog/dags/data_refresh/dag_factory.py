@@ -119,7 +119,6 @@ def create_data_refresh_dag(
         default_args=default_args,
         start_date=data_refresh_config.start_date,
         schedule=data_refresh_config.schedule,
-        render_template_as_native_obj=True,
         max_active_runs=1,
         catchup=False,
         doc_md=__doc__,
@@ -153,7 +152,8 @@ def create_data_refresh_dag(
         )
 
         alter_data = alter_table_data(
-            environment=environment, data_refresh_config=data_refresh_config
+            target_environment=target_environment,
+            data_refresh_config=data_refresh_config,
         )
 
         # Create a new temporary index based off the configuration of the existing media index.
