@@ -1,25 +1,19 @@
-<script lang="ts">
-import { defineComponent, watch, computed, PropType } from "vue"
+<script setup lang="ts">
+import { watch, computed, useAttrs } from "vue"
 
 import { warn } from "~/utils/console"
 
-import type { ProperlyExtractPropTypes } from "~/types/prop-extraction"
-import {
+import type {
   ButtonConnections,
-  buttonForms,
+  ButtonForm,
   ButtonSize,
   ButtonType,
   ButtonVariant,
 } from "~/types/button"
-import type { ButtonForm } from "~/types/button"
 
 import { skipToContentTargetId } from "~/constants/window"
 
 import VLink from "~/components/VLink.vue"
-
-export type ButtonProps = ProperlyExtractPropTypes<
-  NonNullable<(typeof VButton)["props"]>
->
 
 /**
  * A button component that behaves just like a regular HTML `button` element
@@ -33,10 +27,8 @@ export type ButtonProps = ProperlyExtractPropTypes<
  * The accessibility helpers on this component are critical and are completely
  * adapted from Reakit's Button, Clickable, and Tabbable component implementations.
  */
-const VButton = defineComponent({
-  name: "VButton",
-  components: { VLink },
-  props: {
+const props = withDefaults(
+  defineProps<{
     /**
      * Passed to `component :is` to allow the button to *appear* as a button but
      * work like another element (like an `anchor`). May only be either `button` or `VLink`.
@@ -52,11 +44,7 @@ const VButton = defineComponent({
      *
      * @default 'button'
      */
-    as: {
-      type: String as PropType<ButtonForm>,
-      default: "button",
-      validate: (val: ButtonForm) => buttonForms.includes(val),
-    },
+    as?: ButtonForm
     /**
      * The variant of the button.
      *
@@ -64,28 +52,19 @@ const VButton = defineComponent({
      * should set a border color, otherwise the browser default is used.
      * Plain--avoid removes _all_ styles including the focus ring.
      */
-    variant: {
-      type: String as PropType<ButtonVariant>,
-      required: true,
-    },
+    variant: ButtonVariant
     /**
      * Allows for programmatically setting the pressed state of a button,
      * i.e., in the case of a button opening a menu.
      */
-    pressed: {
-      type: Boolean,
-      default: undefined,
-    },
+    pressed?: boolean
     /**
      * The size of the button. `disabled` removes all internal padding allowing
      * the consumer of the component to determine the padding.
      *
      * @default 'medium'
      */
-    size: {
-      type: String as PropType<ButtonSize>,
-      required: true,
-    },
+    size: ButtonSize
     /**
      * Whether the button is disabled. Used alone this will only
      * visually effect the button but will not "truly" disable the
@@ -93,10 +72,7 @@ const VButton = defineComponent({
      *
      * @default false
      */
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
+    disabled?: boolean
     /**
      * Whether the button is focusable when disabled. Should be `false`
      * in almost all cases except when a button needs to be focusable
@@ -105,145 +81,122 @@ const VButton = defineComponent({
      *
      * @default false
      */
-    focusableWhenDisabled: {
-      type: Boolean,
-      default: false,
-    },
+    focusableWhenDisabled?: boolean
     /**
      * The HTML `type` attribute for the button. Ignored if `as` is
      * passed as anything other than `"button"`.
      *
      * @default 'button'
      */
-    type: {
-      type: String as PropType<ButtonType>,
-      default: "button",
-    },
+    type?: ButtonType
     /**
      * Whether the button is connected to another control and needs to have no rounded
      * borders at that edge.
      *
      * @default []
      */
-    connections: {
-      type: Array as PropType<ButtonConnections[]>,
-      default: () => [] as ButtonConnections[],
-    },
+    connections?: ButtonConnections[]
     /**
      * Whether the button has an icon at the inline start of the button.
      *
      * @default false
      */
-    hasIconStart: {
-      type: Boolean,
-      default: false,
-    },
+    hasIconStart?: boolean
     /**
      * Whether the button has an icon at the inline end of the button.
      *
      * @default false
      */
-    hasIconEnd: {
-      type: Boolean,
-      default: false,
-    },
+    hasIconEnd?: boolean
     /**
      * If the button is only an icon, width is set to height, and padding is removed.
      */
-    iconOnly: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  setup(props, { attrs }) {
-    const typeAttribute = computed<ButtonType | undefined>(() =>
-      ["VLink", "a"].includes(props.as) ? undefined : props.type
-    )
+    iconOnly?: boolean
+  }>(),
+  {
+    as: "button",
+    disabled: false,
+    focusableWhenDisabled: false,
+    type: "button",
+    connections: () => [],
+    hasIconStart: false,
+    hasIconEnd: false,
+    iconOnly: false,
+  }
+)
 
-    const connectionStyles = computed(() =>
-      props.connections
-        .map((connection) => `connection-${connection}`)
-        .join(" ")
-    )
+const comp = computed(() => (props.as === "VLink" ? VLink : props.as))
 
-    const isActive = computed(() => {
-      return props.pressed || attrs["aria-pressed"] || attrs["aria-expanded"]
-    })
-    const variantClass = computed(() => {
-      if (
-        isActive.value &&
-        ["bordered-white", "transparent-dark"].includes(props.variant)
-      ) {
-        return `${props.variant}-pressed`
-      }
-      return props.variant
-    })
+const attrs = useAttrs()
+const typeAttribute = computed<ButtonType | undefined>(() =>
+  ["VLink", "a"].includes(props.as) ? undefined : props.type
+)
 
-    const isPlainDangerous = computed(() => {
-      return props.variant === "plain--avoid"
-    })
-    const isFocusSlimFilled = computed(() => {
-      return props.variant.startsWith("filled-")
-    })
-    const isFocusSlimTx = computed(() => {
-      return (
-        props.variant.startsWith("bordered-") ||
-        props.variant.startsWith("transparent-") ||
-        props.variant === "plain"
-      )
-    })
+const connectionStyles = computed(() =>
+  props.connections.map((connection) => `connection-${connection}`).join(" ")
+)
 
-    const supportsDisabledAttribute = computed(() => props.as !== "VLink")
-
-    const ariaDisabled = computed<true | undefined>(
-      () =>
-        // If disabled and focusable then use `aria-disabled` instead of the `disabled` attribute to allow
-        // the button to still be tabbed into by screen reader users
-        (props.disabled && props.focusableWhenDisabled) || undefined
-    )
-
-    const disabledAttribute = computed<true | undefined>(() => {
-      const trulyDisabled = props.disabled && !props.focusableWhenDisabled
-
-      return (trulyDisabled && supportsDisabledAttribute.value) || undefined
-    })
-
-    watch(
-      () => props.as,
-      (as) => {
-        if (
-          ["a", "NuxtLink"].includes(as) &&
-          attrs.href !== `#${skipToContentTargetId}`
-        ) {
-          warn(
-            `Please use \`VLink\` with an \`href\` prop instead of ${as} for the button component`
-          )
-        }
-      },
-      { immediate: true }
-    )
-
-    return {
-      variantClass,
-      connectionStyles,
-      disabledAttribute,
-      ariaDisabled,
-      typeAttribute,
-      isActive,
-
-      isPlainDangerous,
-      isFocusSlimFilled,
-      isFocusSlimTx,
-    }
-  },
+const isActive = computed(() => {
+  return props.pressed || attrs["aria-pressed"] || attrs["aria-expanded"]
+})
+const variantClass = computed(() => {
+  if (
+    isActive.value &&
+    ["bordered-white", "transparent-dark"].includes(props.variant)
+  ) {
+    return `${props.variant}-pressed`
+  }
+  return props.variant
 })
 
-export default VButton
+const isPlainDangerous = computed(() => {
+  return props.variant === "plain--avoid"
+})
+const isFocusSlimFilled = computed(() => {
+  return props.variant.startsWith("filled-")
+})
+const isFocusSlimTx = computed(() => {
+  return (
+    props.variant.startsWith("bordered-") ||
+    props.variant.startsWith("transparent-") ||
+    props.variant === "plain"
+  )
+})
+
+const supportsDisabledAttribute = computed(() => props.as !== "VLink")
+
+const ariaDisabled = computed<true | undefined>(
+  () =>
+    // If disabled and focusable then use `aria-disabled` instead of the `disabled` attribute to allow
+    // the button to still be tabbed into by screen reader users
+    (props.disabled && props.focusableWhenDisabled) || undefined
+)
+
+const disabledAttribute = computed<true | undefined>(() => {
+  const trulyDisabled = props.disabled && !props.focusableWhenDisabled
+
+  return (trulyDisabled && supportsDisabledAttribute.value) || undefined
+})
+
+watch(
+  () => props.as,
+  (as) => {
+    if (
+      ["a", "NuxtLink"].includes(as) &&
+      attrs.href !== `#${skipToContentTargetId}`
+    ) {
+      warn(
+        `Please use \`VLink\` with an \`href\` prop instead of ${as} for the button component`
+      )
+    }
+  },
+  { immediate: true }
+)
 </script>
 
 <template>
   <Component
-    :is="as"
+    :is="comp"
     :type="typeAttribute"
     class="group/button button flex appearance-none items-center justify-center rounded-sm no-underline"
     :class="[

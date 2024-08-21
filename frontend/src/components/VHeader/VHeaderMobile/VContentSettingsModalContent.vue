@@ -47,7 +47,7 @@ const props = withDefaults(
 defineEmits<{ select: [SearchType] }>()
 
 const searchStore = useSearchStore()
-const content = useSearchType()
+const content = useSearchType({ component: "VContentSettingsModalContent" })
 const selectedTab = ref<ContentSettingsTab>("content-settings")
 const changeSelectedTab = (tab: string) => {
   selectedTab.value = tab as ContentSettingsTab

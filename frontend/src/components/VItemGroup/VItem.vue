@@ -1,9 +1,11 @@
-<script lang="ts">
-import { defineComponent, inject, ref, computed, watch, PropType } from "vue"
+<script setup lang="ts">
+import { inject, ref, computed, watch, useAttrs } from "vue"
 
 import { warn } from "~/utils/console"
 
 import {
+  type VIemGroupContext,
+  type VIemGroupFocusContext,
   VItemGroupContextKey,
   VItemGroupFocusContextKey,
 } from "~/types/item-group"
@@ -12,105 +14,89 @@ import { VPopoverContentContextKey } from "~/types/provides"
 import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
 
-export default defineComponent({
-  name: "VItem",
-  components: { VButton, VIcon },
-  inheritAttrs: false,
-  props: {
+defineOptions({ inheritAttrs: false })
+
+const props = withDefaults(
+  defineProps<{
     /**
      * Whether the item is selected/checked.
      */
-    selected: {
-      type: Boolean,
-      required: true,
-    },
+    selected: boolean
     /**
      * Whether the item is the first in the group.
      */
-    isFirst: {
-      type: Boolean,
-      required: true,
-    },
+    isFirst: boolean
     /**
      * To change the underlying component for the VButton,
      * pass `as` prop.
      * @variants 'button', 'VLink'
      */
-    as: {
-      type: String as PropType<"button" | "VLink">,
-      default: "button",
-      validator: (val: string) => ["button", "VLink"].includes(val),
-    },
-  },
-  emits: ["click"],
-  setup(props, { attrs }) {
-    const focusContext = inject(VItemGroupFocusContextKey)
-    const isFocused = ref(false)
-    const isInPopover = inject(VPopoverContentContextKey, false)
-    const contextProps = inject(VItemGroupContextKey)
+    as?: "button" | "VLink"
+  }>(),
+  {
+    as: "button",
+  }
+)
 
-    if (!contextProps || !focusContext) {
-      throw new Error(
-        "Do not use `VItem` outside of a `VItemGroup`. Use `VButton` instead."
-      )
-    }
+defineEmits<{ click: [] }>()
 
-    if (isInPopover && contextProps.bordered) {
-      warn("Bordered popover items are not supported")
-    }
+const attrs = useAttrs()
+const injectedFocusContext = inject(VItemGroupFocusContextKey)
+const isFocused = ref(false)
+const isInPopover = inject(VPopoverContentContextKey, false)
+const injectedContextProps = inject(VItemGroupContextKey)
 
-    if (attrs.size) {
-      warn(
-        "The `size` prop should be passed to the parent `VItemGroup` component."
-      )
-    }
+if (!injectedContextProps || !injectedFocusContext) {
+  throw new Error(
+    "Do not use `VItem` outside of a `VItemGroup`. Use `VButton` instead."
+  )
+}
+const contextProps = injectedContextProps as VIemGroupContext
+const focusContext = injectedFocusContext as VIemGroupFocusContext
 
-    watch(
-      () => props.selected,
-      (selected, previousSelected) =>
-        focusContext.setSelected(selected, previousSelected)
-    )
+if (isInPopover && contextProps.bordered) {
+  warn("Bordered popover items are not supported")
+}
 
-    const tabIndex = computed(() => {
-      // If outside a radiogroup then everything can be tabbable in order
-      if (contextProps.type !== "radiogroup") {
-        return 0
-      }
-      // If no items are selected then all can be tabbable to ensure it is possible to enter into the group
-      if (
-        focusContext.selectedCount.value === 0 &&
-        props.isFirst &&
-        !focusContext.isGroupFocused.value
-      ) {
-        return 0
-      }
-      // If this one is focused then it should be the tabbable item
-      if (isFocused.value) {
-        return 0
-      }
-      // If the group is not focused but this is the selected item, then this should be the focusable item when focusing into the group
-      if (!focusContext.isGroupFocused.value && props.selected) {
-        return 0
-      }
+if (attrs.size) {
+  warn("The `size` prop should be passed to the parent `VItemGroup` component.")
+}
 
-      // Otherwise, the item should not be tabbable. The logic above guarantees that at least one other item in the group will be tabbable.
-      return -1
-    })
+watch(
+  () => props.selected,
+  (selected, previousSelected) =>
+    focusContext.setSelected(selected, previousSelected)
+)
 
-    const splitAttrs = computed(() => {
-      const { class: classAttrs, ...rest } = attrs
-      return { class: classAttrs, vButtonAttrs: rest }
-    })
+const tabIndex = computed(() => {
+  // If outside a radiogroup then everything can be tabbable in order
+  if (contextProps.type !== "radiogroup") {
+    return 0
+  }
+  // If no items are selected then all can be tabbable to ensure it is possible to enter into the group
+  if (
+    focusContext.selectedCount.value === 0 &&
+    props.isFirst &&
+    !focusContext.isGroupFocused.value
+  ) {
+    return 0
+  }
+  // If this one is focused then it should be the tabbable item
+  if (isFocused.value) {
+    return 0
+  }
+  // If the group is not focused but this is the selected item, then this should be the focusable item when focusing into the group
+  if (!focusContext.isGroupFocused.value && props.selected) {
+    return 0
+  }
 
-    return {
-      contextProps,
-      isInPopover,
-      isFocused,
-      tabIndex,
-      focusContext,
-      splitAttrs,
-    }
-  },
+  // Otherwise, the item should not be tabbable. The logic above guarantees that at least one other item in the group will be tabbable.
+  return -1
+})
+
+const splitAttrs = computed(() => {
+  const { class: classAttrs, ...rest } = attrs
+  return { class: classAttrs, vButtonAttrs: rest }
 })
 </script>
 
