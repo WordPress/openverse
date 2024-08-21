@@ -13,18 +13,14 @@ const props = withDefaults(
     /**
      * In `dark` mode (in the modal), the links are white and the background is dark charcoal.
      * In `light` mode, the links are dark charcoal and the background is transparent.
-     *
-     * @default 'light'
      */
     mode?: "light" | "dark"
     /**
      * Pass the tailwind classes to style the nav links.
-     *
-     * @default ''
      */
-    navLinkClasses: string
-    variant: "links" | "itemgroup"
-    isInModal: boolean
+    navLinkClasses?: string
+    variant?: "links" | "itemgroup"
+    isInModal?: boolean
   }>(),
   {
     mode: "light",
