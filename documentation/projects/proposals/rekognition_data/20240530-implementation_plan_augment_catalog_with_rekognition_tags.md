@@ -531,7 +531,7 @@ not the record's `provider`.
 
 We will also add a step for recording if a label was not in the inclusion list
 _and_ if it did not exist in a full list of all reviewed labels from the
-provider. These "unreviewed" labels can be surfaced as part of the data refresh,
+provider. These "unreviewed" labels should be surfaced as part of the data refresh,
 so maintainers can review them and decide if they should be included in the
 inclusion list.
 
