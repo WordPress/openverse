@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import { ref, watch } from "vue"
 
 import { useSprite } from "~/composables/use-sprite"

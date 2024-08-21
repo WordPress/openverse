@@ -1,37 +1,16 @@
-<script lang="ts">
-import { defineComponent, PropType } from "vue"
-
+<script setup lang="ts">
 import type { AudioDetail } from "~/types/media"
 import { audioFeatures, AudioSize, AudioStatus } from "~/constants/audio"
 
 import VGetMediaButton from "~/components/VMediaInfo/VGetMediaButton.vue"
 import VMediaInfo from "~/components/VMediaInfo/VMediaInfo.vue"
 
-export default defineComponent({
-  name: "VFullLayout",
-  components: { VMediaInfo, VGetMediaButton },
-  props: {
-    audio: {
-      type: Object as PropType<AudioDetail>,
-      required: true,
-    },
-    size: {
-      type: String as PropType<AudioSize>,
-    },
-    status: {
-      type: String as PropType<AudioStatus>,
-    },
-    currentTime: {
-      type: Number,
-      required: true,
-    },
-  },
-  setup() {
-    return {
-      audioFeatures,
-    }
-  },
-})
+defineProps<{
+  audio: AudioDetail
+  size?: AudioSize
+  status?: AudioStatus
+  currentTime: number
+}>()
 </script>
 
 <template>
@@ -57,7 +36,10 @@ export default defineComponent({
       <div
         class="row-start-1 flex justify-between gap-x-6 sm:col-start-2 sm:mt-1"
       >
-        <slot name="audio-control" layout="full" size="medium" />
+        <slot
+          name="audio-control"
+          v-bind="{ layout: 'full', size: 'medium' } as const"
+        />
         <VGetMediaButton
           :media="audio"
           media-type="audio"

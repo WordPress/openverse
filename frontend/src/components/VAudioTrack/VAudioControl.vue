@@ -1,14 +1,11 @@
-<script lang="ts">
-import { computed, defineComponent, PropType } from "vue"
+<script setup lang="ts">
+/**
+ * Displays the control for switching between the playing and paused states of
+ * a media file.
+ */
+import { computed } from "vue"
 
-import {
-  AudioLayout,
-  audioLayouts,
-  AudioStatus,
-  audioStatuses,
-  statusVerbMap,
-} from "~/constants/audio"
-import { defineEvent } from "~/types/emits"
+import { AudioLayout, AudioStatus, statusVerbMap } from "~/constants/audio"
 import type { ButtonConnections } from "~/types/button"
 
 import { useHydrating } from "~/composables/use-hydrating"
@@ -40,109 +37,73 @@ const sizes = {
   large: { button: "larger", icon: 10 },
 } as const
 
-/**
- * Displays the control for switching between the playing and paused states of
- * a media file.
- */
-export default defineComponent({
-  name: "VAudioControl",
-  components: { VIconButton },
-  model: {
-    prop: "status",
-    event: "toggle",
-  },
-  props: {
+const props = withDefaults(
+  defineProps<{
     /**
      * the current play status of the audio
      */
-    status: {
-      type: String as PropType<AudioStatus>,
-      required: true,
-      validator: (val: string) =>
-        (audioStatuses as readonly string[]).includes(val),
-    },
+    status: AudioStatus
     /**
      * The size of the button. The size affects both the size of the button
      * itself and the icon inside it.
      */
-    size: {
-      type: String as PropType<"small" | "medium" | "large">,
-      required: true,
-      validator: (val: string) => ["small", "medium", "large"].includes(val),
-    },
+    size: "small" | "medium" | "large"
     /**
      * The parent audio layout currently in use. The connections are determined
      * by the layout and the size of the button.
      */
-    layout: {
-      type: String as PropType<AudioLayout>,
-      default: "full",
-      validator: (val: string) =>
-        (audioLayouts as readonly string[]).includes(val),
-    },
+    layout: AudioLayout
     /**
      * Whether the audio control button can be focused by using the `Tab` key
      */
-    isTabbable: {
-      type: Boolean,
-      default: true,
-    },
-  },
-  emits: {
-    toggle: defineEvent<["paused" | "playing"]>(),
-  },
-  setup(props, { emit }) {
-    const isPlaying = computed(() => props.status === "playing")
-    const isLoading = computed(() => props.status === "loading")
-    /**
-     * Get the button label based on the current status of the player.
-     */
-    const label = computed(() => `playPause.${statusVerbMap[props.status]}`)
-    /**
-     * Get the button icon based on the current status of the player.
-     */
-    const icon = computed(() => statusIconMap[props.status])
+    isTabbable?: boolean
+  }>(),
+  {
+    layout: "full",
+    isTabbable: true,
+  }
+)
 
-    /**
-     * Set the connections (none-rounded corners) for the button based on the layout.
-     */
-    const connections = computed(() => {
-      return props.layout === "row" && props.size === "small"
-        ? []
-        : [...layoutConnectionsMap[props.layout]]
-    })
+const emit = defineEmits<{
+  toggle: ["paused" | "playing"]
+}>()
 
-    /** Convert the `audio-control` sizes to `VIconButton` sizes */
-    const buttonSize = computed(() => sizes[props.size].button)
+const isPlaying = computed(() => props.status === "playing")
+const isLoading = computed(() => props.status === "loading")
+/**
+ * Get the button label based on the current status of the player.
+ */
+const label = computed(() => `playPause.${statusVerbMap[props.status]}`)
+/**
+ * Get the button icon based on the current status of the player.
+ */
+const icon = computed(() => statusIconMap[props.status])
 
-    const iSize = computed(() => sizes[props.size].icon)
-
-    const handleMouseDown = (event: MouseEvent) => {
-      if (!props.isTabbable) {
-        // to prevent focus
-        event.preventDefault()
-      }
-    }
-    const handleClick = () => {
-      emit("toggle", isPlaying.value || isLoading.value ? "paused" : "playing")
-    }
-
-    const { doneHydrating } = useHydrating()
-
-    return {
-      label,
-      icon,
-      connections,
-      buttonSize,
-      iSize,
-      isLoading,
-
-      handleClick,
-      handleMouseDown,
-      doneHydrating,
-    }
-  },
+/**
+ * Set the connections (none-rounded corners) for the button based on the layout.
+ */
+const connections = computed(() => {
+  return props.layout === "row" && props.size === "small"
+    ? []
+    : [...layoutConnectionsMap[props.layout]]
 })
+
+/** Convert the `audio-control` sizes to `VIconButton` sizes */
+const buttonSize = computed(() => sizes[props.size].button)
+
+const iSize = computed(() => sizes[props.size].icon)
+
+const handleMouseDown = (event: MouseEvent) => {
+  if (!props.isTabbable) {
+    // to prevent focus
+    event.preventDefault()
+  }
+}
+const handleClick = () => {
+  emit("toggle", isPlaying.value || isLoading.value ? "paused" : "playing")
+}
+
+const { doneHydrating } = useHydrating()
 </script>
 
 <template>
