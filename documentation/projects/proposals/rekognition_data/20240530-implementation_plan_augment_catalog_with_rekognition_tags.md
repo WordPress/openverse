@@ -497,9 +497,10 @@ steps:
    1. For each line, read in the JSON object and pull out the top-level labels &
       confidence values. **Note**: some records may not have any labels.
    2. Construct a `tags` JSON object similar to the existing tags data for that
-      image, including accuracy and provider. Ensure that the labels are lower
-      case and that the confidence value is between 0.0 and 1.0 (e.g.
-      `[{"name": "cat", "accuracy": 0.9983, "provider": "rekognition"}, ...]`).
+      image, including accuracy and provider. Ensure that the casing of the
+      labels is preserved and that the confidence value is between 0.0 and 1.0
+      (e.g.
+      `[{"name": "Cat", "accuracy": 0.9983, "provider": "rekognition"}, ...]`).
    3. At regular intervals, insert batches of constructed `identifier`/`tags`
       pairs into the temporary table.
 3. Launch a [batched update run][batched_update] which merges the existing tags
