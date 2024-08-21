@@ -60,6 +60,13 @@ def test_dag_import_errors():
         len(dagbag.import_errors) == 0
     ), f"Errors found during DAG import for files: {error_string}"
 
+    all_paths = {dag.filepath for dag in dagbag.dags.values()}
+    missing_paths = all_paths - set(DAG_PATHS)
+    assert len(missing_paths) == 0, (
+        f"The following DAG files are unaccounted for in the DAG parse testing, "
+        f"please add them to `DAG_PATHS` in `test_dag_parsing.py`: {missing_paths}"
+    )
+
 
 # relative_path represents the path from the DAG folder to the file
 @pytest.mark.parametrize("relative_path", DAG_PATHS)
@@ -69,8 +76,10 @@ def test_dags_loads_correct_number_with_no_errors(relative_path, tmpdir):
     expected_count = EXPECTED_COUNT.get(relative_path, 1)
     dag_bag = DagBag(dag_folder=tmpdir, include_examples=False)
     dag_bag.process_file(str(DAG_FOLDER / relative_path))
+    assert len(dag_bag.dags), "No DAGs found in file"
     assert len(dag_bag.import_errors) == 0, "Errors found during DAG import"
-    assert len(dag_bag.dags) == expected_count, "An unexpected # of DAGs was found"
+    found = len(dag_bag.dags)
+    assert found == expected_count, f"An unexpected # of DAGs ({found}) were found"
 
 
 def test_dag_uses_default_args():
