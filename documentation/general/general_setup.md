@@ -29,7 +29,10 @@ On macOS and most popular Linux distributions, bash and git are installed by
 default. Most contributors will only need to install Docker or a compatible
 container runtime to use `ov`.
 
-[Follow Docker's instructions to install Docker on your host system](https://docs.docker.com/engine/install/).
+For macOS users, [OrbStack](https://docs.orbstack.dev/quick-start) is the tested
+and supported option for installing and using Docker for Openverse development.
+Otherwise,
+[follow Docker's instructions to install Docker on your host system](https://docs.docker.com/engine/install/).
 
 ```{tip}
 For Openverse, you'll only need the container runtime, and do not necessarily
