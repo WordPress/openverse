@@ -520,7 +520,8 @@ to remove the blanket-filter for all Rekognition tags that was put in place in
 the [preemptive filtering step](#preemptively-filter-rekognition-tags). We will
 also need to add the logic for filtering out the tags that were determined
 should be excluded in the
-[determine excluded labels step](#determine-excluded-labels).
+[determine excluded labels step](#determine-excluded-labels). This filtering is
+done in service of appropriately improving search relevancy.
 
 For all machine-generated labels, we will employ an inclusion-based filtering
 process. This means that we will only filter out labels that match the list of
@@ -529,11 +530,24 @@ downstream dataset. This can be added to the `alter_data` step of the data
 refresh (see #4684) and would only be applied to tags where the `provider` was
 not the record's `provider`.
 
+The comparison between labels on the record and labels in the list should be
+case-insensitive, given that the semantic content of the labels is generally
+case-insensitive too. Similar to the
+[sensitive terms list](/projects/proposals/trust_and_safety/detecting_sensitive_textual_content/20230309-implementation_plan_sensitive_terms_list.md),
+both inclusion and reviewed lists will be applied to all tag sources (in that,
+we will not maintain provider-specific lists).
+
+For any orthographic corrections we've made to the labels, we will have the
+corrected label present in the inclusion list and the original label in the
+reviewed list. This will ensure that the corrected label is surfaced in the API,
+but the original label gets blocked in the cases where it may be added by
+another provider.
+
 We will also add a step for recording if a label was not in the inclusion list
 _and_ if it did not exist in a full list of all reviewed labels from the
-provider. These "unreviewed" labels should be surfaced as part of the data refresh,
-so maintainers can review them and decide if they should be included in the
-inclusion list.
+provider. These "unreviewed" labels should be surfaced as part of the data
+refresh, so maintainers can review them and decide if they should be included in
+the inclusion list.
 
 ### Filter Clarifai tags
 
