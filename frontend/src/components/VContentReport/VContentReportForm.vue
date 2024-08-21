@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useNuxtApp, useRuntimeConfig } from "#imports"
+import { useNuxtApp, useRuntimeConfig, watch } from "#imports"
 
 import { computed, ref } from "vue"
 
@@ -14,6 +14,7 @@ import {
   WIP,
   DMCA_FORM_URL,
   type ReportReason,
+  type ReportStatus,
 } from "~/constants/content-report"
 
 import type { AudioDetail, ImageDetail } from "~/types/media"
@@ -41,15 +42,27 @@ const props = withDefaults(
 )
 
 const description = ref("")
-
-const status = ref<string | null>(WIP)
-
+const status = ref<ReportStatus | null>(WIP)
 const selectedReason = ref<ReportReason>(DMCA)
+
+const reportUrl = computed(() => {
+  const apiUrl = useRuntimeConfig().public.apiUrl
+  return `${apiUrl}v1/${mediaSlug(props.media.frontendMediaType)}/${props.media.id}/report/`
+})
+const dmcaFormUrl = computed(
+  () =>
+    `${DMCA_FORM_URL}?entry.917669540=https://openverse.org/${props.media.frontendMediaType}/${props.media.id}`
+)
+
+const resetForm = () => {
+  selectedReason.value = DMCA
+  description.value = ""
+  status.value = WIP
+}
 
 /* Buttons */
 const handleCancel = () => {
-  selectedReason.value = DMCA
-  description.value = ""
+  resetForm()
   props.closeFn()
 }
 
@@ -60,49 +73,50 @@ const isSubmitDisabled = computed(
 const { $sendCustomEvent } = useNuxtApp()
 
 const handleDmcaSubmit = () => {
-  $sendCustomEvent("REPORT_MEDIA", {
-    id: props.media.id,
-    mediaType: props.media.frontendMediaType,
-    provider: props.media.provider,
-    reason: selectedReason.value,
-  })
   status.value = SENT
 }
+
 const handleSubmit = async (event: Event) => {
   event.preventDefault()
-  // Submit report
   try {
-    const mediaType = props.media.frontendMediaType
-    const reason = selectedReason.value
-
-    const {
-      public: { apiUrl },
-    } = useRuntimeConfig()
-
-    await ofetch(
-      `${apiUrl}v1/${mediaSlug(mediaType)}/${props.media.id}/report/`,
-      {
-        method: "POST",
-        body: {
-          mediaType,
-          reason,
-          identifier: props.media.id,
-          description: description.value,
-        },
-      }
-    )
-
-    $sendCustomEvent("REPORT_MEDIA", {
-      mediaType,
-      reason,
-      id: props.media.id,
-      provider: props.media.provider,
+    await ofetch(reportUrl.value, {
+      method: "POST",
+      body: {
+        mediaType: props.media.frontendMediaType,
+        reason: selectedReason.value,
+        identifier: props.media.id,
+        description: description.value,
+      },
     })
     status.value = SENT
   } catch (error) {
     status.value = FAILED
   }
 }
+
+watch(status, (newStatus) => {
+  if (newStatus === SENT) {
+    $sendCustomEvent("REPORT_MEDIA", {
+      id: props.media.id,
+      mediaType: props.media.frontendMediaType,
+      provider: props.media.provider,
+      reason: selectedReason.value,
+    })
+  }
+  // Close the SENT/FAILED status modal automatically after 3 seconds.
+  // Since DMCA reports open in a new tab, the modal should stay open until
+  // the user closes it manually.
+  if (
+    selectedReason.value !== DMCA &&
+    (newStatus === SENT || newStatus === FAILED)
+  ) {
+    setTimeout(() => {
+      props.closeFn()
+    }, 3000)
+  }
+})
+
+defineExpose({ resetForm })
 </script>
 
 <template>
@@ -210,8 +224,9 @@ const handleSubmit = async (event: Event) => {
             has-icon-end
             show-external-icon
             :external-icon-size="6"
-            :href="DMCA_FORM_URL"
+            :href="dmcaFormUrl"
             :send-external-link-click-event="false"
+            target="_blank"
             @click="handleDmcaSubmit"
           >
             {{ $t("mediaDetails.contentReport.form.dmca.open") }}

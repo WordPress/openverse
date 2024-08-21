@@ -16,8 +16,12 @@ defineProps<{
 }>()
 
 const modalRef = ref<InstanceType<typeof VModal> | null>(null)
+const contentReportFormRef = ref<InstanceType<
+  typeof VContentReportForm
+> | null>(null)
 
 const close = () => {
+  contentReportFormRef.value?.resetForm()
   modalRef.value?.close()
 }
 
@@ -30,7 +34,6 @@ const initialFocusElement = computed(
 <template>
   <VModal
     ref="modalRef"
-    :hide-on-click-outside="false"
     :initial-focus-element="initialFocusElement"
     :label="$t('mediaDetails.contentReport.long')"
     variant="centered"
@@ -41,6 +44,7 @@ const initialFocusElement = computed(
     <template #default>
       <div ref="dialogRef" class="pe-1 ps-3">
         <VContentReportForm
+          ref="contentReportFormRef"
           class="-mt-6 p-6"
           :close-fn="close"
           :media="media"
