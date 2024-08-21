@@ -16,26 +16,39 @@ DAG_FOLDER = Path(__file__).parents[2] / "dags"
 
 # DAG paths to test
 DAG_PATHS = [
-    "providers/provider_workflow_dag_factory.py",
+    "data_refresh/dag_factory.py",
+    "database/batched_update/batched_update_dag.py",
+    "database/catalog_cleaner/catalog_cleaner.py",
+    "database/delete_records/delete_records_dag.py",
+    "database/report_pending_reported_media.py",
+    "database/staging_database_restore/staging_database_restore_dag.py",
+    "elasticsearch_cluster/create_new_es_index/create_new_es_index_dag.py",
+    "elasticsearch_cluster/create_proportional_by_source_staging_index/create_proportional_by_source_staging_index_dag.py",  # noqa: E501
+    "elasticsearch_cluster/healthcheck_dag.py",
+    "elasticsearch_cluster/point_es_alias/point_es_alias_dag.py",
+    "elasticsearch_cluster/recreate_staging_index/recreate_full_staging_index_dag.py",
+    "legacy_data_refresh/create_filtered_index_dag.py",
+    "legacy_data_refresh/dag_factory.py",
+    "maintenance/add_license_url.py",
     "maintenance/airflow_log_cleanup_workflow.py",
+    "maintenance/check_silenced_dags.py",
+    "maintenance/decode_and_deduplicate_image_tags.py",
+    "maintenance/flickr_audit_sub_provider_workflow.py",
     "maintenance/pr_review_reminders/pr_review_reminders_dag.py",
     "maintenance/rotate_db_snapshots.py",
-    "popularity/recreate_popularity_calculation_dag_factory.py",
-    "popularity/popularity_refresh_dag_factory.py",
-    "legacy_data_refresh/dag_factory.py",
-    "legacy_data_refresh/create_filtered_index_dag.py",
-    "elasticsearch_cluster/recreate_staging_index/recreate_full_staging_index_dag.py",
-    "elasticsearch_cluster/healthcheck_dag.py",
     "oauth2/authorize_dag.py",
     "oauth2/token_refresh_dag.py",
-    "database/delete_records/delete_records_dag.py",
+    "popularity/popularity_refresh_dag_factory.py",
+    "popularity/recreate_popularity_calculation_dag_factory.py",
+    "providers/provider_reingestion_workflow_dag_factory.py",
+    "providers/provider_workflow_dag_factory.py",
 ]
 
 # Expected count from the DagBag once a file has been parsed
 # (this will likely not need to be edited for new providers)
 EXPECTED_COUNT = {
     "providers/provider_workflow_dag_factory.py": len(PROVIDER_WORKFLOW_CONFIGS),
-    "providers/provider_ingestion_workflow_dag_factory.py": len(
+    "providers/provider_reingestion_workflow_dag_factory.py": len(
         REINGESTION_WORKFLOW_CONFIGS
     ),
     "popularity/recreate_popularity_calculation_dag_factory.py": len(MEDIA_TYPES),
@@ -43,6 +56,12 @@ EXPECTED_COUNT = {
     "legacy_data_refresh/dag_factory.py": len(MEDIA_TYPES),
     "legacy_data_refresh/create_filtered_index_dag.py": len(MEDIA_TYPES),
     "elasticsearch_cluster/healthcheck_dag.py": len(ENVIRONMENTS),
+    "data_refresh/dag_factory.py": len(MEDIA_TYPES) * len(ENVIRONMENTS),
+    "database/batched_update/batched_update_dag.py": 2,
+    "elasticsearch_cluster/create_new_es_index/create_new_es_index_dag.py": len(
+        ENVIRONMENTS
+    ),
+    "elasticsearch_cluster/point_es_alias/point_es_alias_dag.py": len(ENVIRONMENTS),
 }
 
 
