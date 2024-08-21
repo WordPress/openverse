@@ -198,7 +198,6 @@ def copy_data(
 def copy_upstream_table(
     upstream_conn_id: str,
     downstream_conn_id: str,
-    target_environment: Environment,
     timeout: timedelta,
     limit: int,
     upstream_table_name: str,
@@ -310,7 +309,6 @@ def copy_upstream_tables(
     copy_tables = copy_upstream_table.partial(
         upstream_conn_id=upstream_conn_id,
         downstream_conn_id=downstream_conn_id,
-        target_environment=target_environment,
         timeout=data_refresh_config.copy_data_timeout,
         limit=limit,
     ).expand_kwargs([asdict(tm) for tm in data_refresh_config.table_mappings])

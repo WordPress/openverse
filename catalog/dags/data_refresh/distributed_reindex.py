@@ -83,12 +83,10 @@ def response_check_wait_for_completion(response: Response) -> bool:
 
 
 @task
-@setup_ec2_hook
 def get_worker_params(
     estimated_record_count: int,
     environment: str,
     target_environment: Environment,
-    ec2_hook: EC2Hook = None,
 ):
     """Determine the set of start/end indices to be passed to each indexer worker."""
     # Defaults to one indexer worker in local development
@@ -232,8 +230,6 @@ def get_instance_ip_address(
     trigger_rule=TriggerRule.NONE_FAILED
 )
 def create_connection(
-    environment: str,
-    target_environment: str,
     instance_id: str,
     server: str,
 ):
@@ -313,8 +309,6 @@ def reindex(
     worker_conn = create_connection(
         instance_id=instance_id,
         server=instance_ip_address,
-        environment=environment,
-        target_environment=target_environment,
     )
 
     trigger_reindexing_task = TemplatedConnectionHttpOperator(
