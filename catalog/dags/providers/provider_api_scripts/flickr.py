@@ -21,6 +21,9 @@ from airflow.models import Variable
 from common.licenses import LicenseInfo, get_license_info
 from common.loader import provider_details as prov
 from common.loader.provider_details import ImageCategory
+from providers.provider_api_scripts.targeted_records_provider_data_ingester import (
+    TargetedRecordsProviderDataIngesterMixin,
+)
 from providers.provider_api_scripts.time_delineated_provider_data_ingester import (
     TimeDelineatedProviderDataIngester,
 )
@@ -47,6 +50,7 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
 
     providers = {"image": provider_string}
     endpoint = "https://api.flickr.com/services/rest"
+    single_record_endpoint = endpoint
     batch_limit = 500
     retries = 5
 
@@ -345,6 +349,18 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
         if "content_type" in image_data and image_data["content_type"] == "0":
             return ImageCategory.PHOTOGRAPH
         return None
+
+
+class TargetedFlickrDataIngester(
+    TargetedRecordsProviderDataIngesterMixin, FlickrDataIngester
+):
+    def get_query_params(self, foreign_identifier: str) -> dict:
+        return {
+            "method": "flickr.photos.search",
+            "format": "json",
+            "api_key": self.api_key,
+            "photo_id": foreign_identifier,
+        }
 
 
 def main(date):

@@ -87,6 +87,9 @@ from common.constants import POSTGRES_CONN_ID as DB_CONN_ID
 from common.loader import loader, reporting, s3, sql
 from providers.factory_utils import date_partition_for_prefix, pull_media_wrapper
 from providers.provider_reingestion_workflows import ProviderReingestionWorkflow
+from providers.provider_targeted_ingestion_workflows import (
+    ProviderTargetedIngestionWorkflow,
+)
 from providers.provider_workflows import (
     ProviderWorkflow,
     TaskOverride,
@@ -697,6 +700,91 @@ def create_day_partitioned_reingestion_dag(
             >> report_aggregate_errors
             >> report_load_completion
         )
+
+    # Apply any overrides from the DAG configuration
+    _apply_configuration_overrides(dag, provider_conf.overrides)
+
+    return dag
+
+
+def create_targeted_ingestion_dag(provider_conf: ProviderTargetedIngestionWorkflow):
+    """
+    Instantiate a targeted ingestion DAG.
+    """
+    default_args = {**DAG_DEFAULT_ARGS, **(provider_conf.default_args or {})}
+
+    dag = DAG(
+        dag_id=provider_conf.dag_id,
+        default_args={**default_args, "start_date": provider_conf.start_date},
+        max_active_tasks=provider_conf.max_active_tasks,
+        max_active_runs=provider_conf.max_active_runs,
+        start_date=provider_conf.start_date,
+        schedule=None,
+        doc_md=provider_conf.doc_md,
+        tags=[
+            "provider",
+            *[f"provider: {media_type}" for media_type in provider_conf.media_types],
+            "ingestion: targeted",
+            *provider_conf.tags,
+        ],
+        render_template_as_native_obj=True,
+        params={
+            "foreign_identifiers": Param(
+                type=["array"],
+                items={"type": "string"},
+                description=(
+                    "The list of targeted foreign identifiers to ingest from the provider."
+                ),
+            ),
+            "additional_query_params": Param(
+                default={},
+                type=["object", "null"],
+                description=(
+                    "Supplement the `query_params` on each request. This option is used"
+                    " to run a DAG but restrict the search by specifying extra query"
+                    " params."
+                ),
+            ),
+            "skip_ingestion_errors": Param(
+                default=False,
+                type="boolean",
+                description=(
+                    "Whether to skip over all errors encountered during ingestion,"
+                    " continuing to the next batch and reporting errors in aggregate"
+                    " when ingestion is complete. This option should be used sparingly."
+                ),
+            ),
+            "sql_rm_source_data_after_ingesting": Param(
+                default=False,
+                type="boolean",
+                description=(
+                    "Whether to delete source data from airflow and DB once ingestion"
+                    " is complete. This is used to support data quality testing in"
+                    " SQL-only DAGs like iNaturalist."
+                ),
+            ),
+        },
+    )
+
+    with dag:
+        if callable(
+            getattr(provider_conf.ingester_class, "create_ingestion_workflow", None)
+        ):
+            (
+                ingest_data,
+                ingestion_metrics,
+            ) = provider_conf.ingester_class.create_ingestion_workflow()
+        else:
+            ingest_data, ingestion_metrics = create_ingestion_workflow(provider_conf)
+
+        report_load_completion = create_report_load_completion(
+            provider_conf.dag_id,
+            provider_conf.media_types,
+            ingestion_metrics,
+            provider_conf.dated,
+        )
+
+        ingest_data >> report_load_completion
 
     # Apply any overrides from the DAG configuration
     _apply_configuration_overrides(dag, provider_conf.overrides)
