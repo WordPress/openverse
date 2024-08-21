@@ -79,7 +79,7 @@ def test_dag_import_errors():
         len(dagbag.import_errors) == 0
     ), f"Errors found during DAG import for files: {error_string}"
 
-    all_paths = {dag.filepath for dag in dagbag.dags.values()}
+    all_paths = {str(dag.relative_fileloc) for dag in dagbag.dags.values()}
     missing_paths = all_paths - set(DAG_PATHS)
     assert len(missing_paths) == 0, (
         f"The following DAG files are unaccounted for in the DAG parse testing, "
