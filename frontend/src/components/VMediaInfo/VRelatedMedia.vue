@@ -1,7 +1,7 @@
-<script lang="ts">
+<script setup lang="ts">
 import { useRoute, useI18n, firstParam } from "#imports"
 
-import { computed, defineComponent, PropType, watch } from "vue"
+import { computed, watch } from "vue"
 
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 
@@ -10,69 +10,47 @@ import type { AudioResults, ImageResults } from "~/types/result"
 
 import VMediaCollection from "~/components/VSearchResultsGrid/VMediaCollection.vue"
 
-export default defineComponent({
-  name: "VRelatedMedia",
-  components: { VMediaCollection },
-  props: {
-    mediaType: {
-      type: String as PropType<SupportedMediaType>,
-      required: true,
-    },
-    relatedTo: {
-      type: String as PropType<string>,
-      required: true,
-    },
-  },
-  setup(props) {
-    const relatedMediaStore = useRelatedMediaStore()
+const props = defineProps<{
+  mediaType: SupportedMediaType
+  relatedTo: string
+}>()
 
-    const route = useRoute()
+const relatedMediaStore = useRelatedMediaStore()
 
-    const results = computed(() => {
-      const media = relatedMediaStore.media ?? []
-      return { type: props.mediaType, items: media } as
-        | ImageResults
-        | AudioResults
-    })
-    watch(
-      route,
-      async (newRoute) => {
-        const mediaId = firstParam(newRoute?.params.id)
-        if (mediaId && mediaId !== relatedMediaStore.mainMediaId) {
-          await relatedMediaStore.fetchMedia(props.mediaType, mediaId)
-        }
-      },
-      { immediate: true }
-    )
+const route = useRoute()
 
-    const isFetching = computed(() => relatedMediaStore.fetchState.isFetching)
-    const showRelated = computed(
-      () => results.value.items.length > 0 || isFetching.value
-    )
-
-    const searchTerm = computed(() => {
-      return firstParam(route?.query.q) ?? ""
-    })
-
-    const { t } = useI18n({ useScope: "global" })
-
-    const collectionLabel = computed(() => {
-      const key =
-        props.mediaType === "audio"
-          ? "audioDetails.relatedAudios"
-          : "imageDetails.relatedImages"
-      return t(key)
-    })
-
-    return {
-      results,
-      showRelated,
-      isFetching,
-
-      searchTerm,
-      collectionLabel,
+const results = computed(() => {
+  const media = relatedMediaStore.media ?? []
+  return { type: props.mediaType, items: media } as ImageResults | AudioResults
+})
+watch(
+  route,
+  async (newRoute) => {
+    const mediaId = firstParam(newRoute?.params.id)
+    if (mediaId && mediaId !== relatedMediaStore.mainMediaId) {
+      await relatedMediaStore.fetchMedia(props.mediaType, mediaId)
     }
   },
+  { immediate: true }
+)
+
+const isFetching = computed(() => relatedMediaStore.fetchState.isFetching)
+const showRelated = computed(
+  () => results.value.items.length > 0 || isFetching.value
+)
+
+const searchTerm = computed(() => {
+  return firstParam(route?.query.q) ?? ""
+})
+
+const { t } = useI18n({ useScope: "global" })
+
+const collectionLabel = computed(() => {
+  const key =
+    props.mediaType === "audio"
+      ? "audioDetails.relatedAudios"
+      : "imageDetails.relatedImages"
+  return t(key)
 })
 </script>
 

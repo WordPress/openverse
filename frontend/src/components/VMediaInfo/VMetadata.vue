@@ -1,7 +1,7 @@
-<script lang="ts">
+<script setup lang="ts">
 import { firstParam, useNuxtApp, useRoute } from "#imports"
 
-import { computed, defineComponent, PropType } from "vue"
+import { computed } from "vue"
 
 import type { Metadata } from "~/types/media"
 import { useUiStore } from "~/stores/ui"
@@ -9,54 +9,36 @@ import { useUiStore } from "~/stores/ui"
 import VMetadataValue from "~/components/VMediaInfo/VMetadataValue.vue"
 import VSourceProviderTooltip from "~/components/VMediaInfo/VSourceProviderTooltip.vue"
 
-export default defineComponent({
-  name: "VMetadata",
-  components: { VSourceProviderTooltip, VMetadataValue },
-  props: {
-    metadata: {
-      type: Array as PropType<Metadata[]>,
-      required: true,
-    },
-  },
-  setup(props) {
-    const route = useRoute()
-    const uiStore = useUiStore()
+const props = defineProps<{
+  metadata: Metadata[]
+}>()
 
-    const isSm = computed(() => uiStore.isBreakpoint("sm"))
-    const tooltipId = (datum: Metadata): "source" | "provider" | "" => {
-      if (
-        datum.name &&
-        (datum.name === "source" || datum.name === "provider")
-      ) {
-        return datum.name
-      }
-      return ""
-    }
+const route = useRoute()
+const uiStore = useUiStore()
 
-    const columnCount = computed(() => ({
-      "--column-count": props.metadata.length,
-    }))
+const isSm = computed(() => uiStore.isBreakpoint("sm"))
+const tooltipId = (datum: Metadata): "source" | "provider" | "" => {
+  if (datum.name && (datum.name === "source" || datum.name === "provider")) {
+    return datum.name
+  }
+  return ""
+}
 
-    const { $sendCustomEvent } = useNuxtApp()
-    const sendVisitSourceLinkEvent = (source?: string) => {
-      const mediaId = firstParam(route?.params.id)
-      if (!source || !mediaId) {
-        return
-      }
-      $sendCustomEvent("VISIT_SOURCE_LINK", {
-        id: mediaId,
-        source,
-      })
-    }
+const columnCount = computed(() => ({
+  "--column-count": props.metadata.length,
+}))
 
-    return {
-      sendVisitSourceLinkEvent,
-      tooltipId,
-      isSm,
-      columnCount,
-    }
-  },
-})
+const { $sendCustomEvent } = useNuxtApp()
+const sendVisitSourceLinkEvent = (source?: string) => {
+  const mediaId = firstParam(route?.params.id)
+  if (!source || !mediaId) {
+    return
+  }
+  $sendCustomEvent("VISIT_SOURCE_LINK", {
+    id: mediaId,
+    source,
+  })
+}
 </script>
 
 <template>

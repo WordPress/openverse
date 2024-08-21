@@ -1,172 +1,153 @@
-<script lang="ts">
+<script setup lang="ts">
+/**
+ * A link to a collection page, either a source or a creator.
+ */
 import { useI18n } from "#imports"
 
-import { computed, defineComponent, onMounted, reactive, ref } from "vue"
+import { computed, onMounted, reactive, ref } from "vue"
 import { useElementSize, useScroll, watchDebounced } from "@vueuse/core"
 
 import VScroller from "~/components/VMediaInfo/VByLine/VScroller.vue"
 
-/**
- * A link to a collection page, either a source or a creator.
- */
-export default defineComponent({
-  name: "VScrollableLine",
-  components: {
-    VScroller,
-  },
-  setup() {
-    const containerRef = ref<HTMLElement | null>(null)
-    const buttonsRef = ref<HTMLElement | null>(null)
-    const innerContainerRef = ref<HTMLElement | null>(null)
+const containerRef = ref<HTMLElement | null>(null)
+const buttonsRef = ref<HTMLElement | null>(null)
+const innerContainerRef = ref<HTMLElement | null>(null)
 
-    const { localeProperties } = useI18n({ useScope: "global" })
-    const dir = computed(() => localeProperties.value.dir ?? "ltr")
+const { localeProperties } = useI18n({ useScope: "global" })
+const dir = computed(() => localeProperties.value.dir ?? "ltr")
 
-    const scrollStep = 150 // px to scroll on each click
-    const scrollMargin = 44 // px, button + margin
-    const shouldScroll = ref(false)
+const scrollStep = 150 // px to scroll on each click
+const scrollMargin = 44 // px, button + margin
+const shouldScroll = ref(false)
 
-    const { x } = useScroll(buttonsRef)
-    const { width: containerWidth } = useElementSize(containerRef)
+const { x } = useScroll(buttonsRef)
+const { width: containerWidth } = useElementSize(containerRef)
 
-    const showScrollButton = reactive({
-      start: false,
-      end: false,
-    })
-    const setScrollable = () => {
-      shouldScroll.value = true
-      showScrollButton.start = false
-      showScrollButton.end = true
-    }
-
-    const hideScrollButton = (side: "start" | "end") => {
-      showScrollButton[side] = false
-      isInteractive.value = false
-      setTimeout(() => {
-        isInteractive.value = true
-      }, 500)
-    }
-    const isInteractive = ref(true)
-
-    watchDebounced(
-      containerWidth,
-      (cWidth) => {
-        const buttonsScrollWidth = buttonsRef.value?.scrollWidth ?? 0
-        const hasOverflow = buttonsScrollWidth >= cWidth
-        if (hasOverflow && !shouldScroll.value) {
-          setScrollable()
-        } else if (!hasOverflow && shouldScroll.value) {
-          shouldScroll.value = false
-          showScrollButton.start = false
-          showScrollButton.end = false
-        }
-      },
-      { debounce: 500 }
-    )
-
-    onMounted(() => {
-      if (!buttonsRef.value || !containerRef.value) {
-        return
-      }
-      if (buttonsRef.value?.scrollWidth > containerRef.value.scrollWidth) {
-        setScrollable()
-      }
-    })
-
-    const getScrollEnd = (el: HTMLElement, dir: "ltr" | "rtl" | "auto") => {
-      return (
-        el.scrollWidth -
-        el.clientWidth -
-        (dir === "rtl" ? -el.scrollLeft : el.scrollLeft)
-      )
-    }
-    const getScrollStart = (el: HTMLElement) => {
-      return Math.abs(el.scrollLeft)
-    }
-
-    const getDistToSide = (
-      to: "start" | "end",
-      dir: "ltr" | "rtl" | "auto",
-      el: HTMLElement
-    ) => {
-      return to === "start" ? getScrollStart(el) : getScrollEnd(el, dir)
-    }
-
-    const scrollToSide = ({ side }: { side: "start" | "end" }) => {
-      hideScrollButton(side)
-      if (!buttonsRef.value) {
-        return
-      }
-      const left =
-        side === "start"
-          ? 0
-          : dir.value === "ltr"
-            ? buttonsRef.value.scrollWidth
-            : -buttonsRef.value.scrollWidth
-      buttonsRef.value.scrollTo({ left, behavior: "smooth" })
-    }
-
-    const scroll = (to: "start" | "end") => {
-      if (!buttonsRef.value || !innerContainerRef.value) {
-        return
-      }
-      const innerContainer = innerContainerRef.value
-
-      showScrollButton[to === "start" ? "end" : "start"] = true
-
-      let distToSide = getDistToSide(to, dir.value, innerContainer)
-      let adjustedScrollStep = scrollStep
-
-      // If the scroll step is larger than the distance to the side, scroll
-      // to the side and hide the scroll button.
-      // If the distance to the side is less than twice the scroll step, scroll
-      // half the distance to the side to prevent a very small scroll at the end.
-      const isLastScroll = distToSide - scrollMargin <= scrollStep
-      if (isLastScroll) {
-        scrollToSide({ side: to })
-        return
-      }
-      if (distToSide < scrollStep * 2) {
-        adjustedScrollStep = distToSide / 2
-      }
-      if (dir.value === "rtl") {
-        adjustedScrollStep = -adjustedScrollStep
-      }
-
-      let left = to === "start" ? -adjustedScrollStep : adjustedScrollStep
-      buttonsRef.value?.scrollBy({ left, behavior: "smooth" })
-    }
-
-    watchDebounced(
-      x,
-      (xValue) => {
-        if (!buttonsRef.value) {
-          return
-        }
-        // This is necessary for handling both RTL and LTR.
-        const distFromStart = Math.abs(xValue)
-        const distFromEnd =
-          buttonsRef.value.scrollWidth -
-          distFromStart -
-          buttonsRef.value.clientWidth
-        showScrollButton.start = distFromStart >= scrollMargin
-        showScrollButton.end = distFromEnd >= scrollMargin
-      },
-      { debounce: 100 }
-    )
-    return {
-      containerRef,
-      buttonsRef,
-      innerContainerRef,
-
-      shouldScroll,
-      showScrollButton,
-
-      scroll,
-      isInteractive,
-    }
-  },
+const showScrollButton = reactive({
+  start: false,
+  end: false,
 })
+const setScrollable = () => {
+  shouldScroll.value = true
+  showScrollButton.start = false
+  showScrollButton.end = true
+}
+
+const hideScrollButton = (side: "start" | "end") => {
+  showScrollButton[side] = false
+  isInteractive.value = false
+  setTimeout(() => {
+    isInteractive.value = true
+  }, 500)
+}
+const isInteractive = ref(true)
+
+watchDebounced(
+  containerWidth,
+  (cWidth) => {
+    const buttonsScrollWidth = buttonsRef.value?.scrollWidth ?? 0
+    const hasOverflow = buttonsScrollWidth >= cWidth
+    if (hasOverflow && !shouldScroll.value) {
+      setScrollable()
+    } else if (!hasOverflow && shouldScroll.value) {
+      shouldScroll.value = false
+      showScrollButton.start = false
+      showScrollButton.end = false
+    }
+  },
+  { debounce: 500 }
+)
+
+onMounted(() => {
+  if (!buttonsRef.value || !containerRef.value) {
+    return
+  }
+  if (buttonsRef.value?.scrollWidth > containerRef.value.scrollWidth) {
+    setScrollable()
+  }
+})
+
+const getScrollEnd = (el: HTMLElement, dir: "ltr" | "rtl" | "auto") => {
+  return (
+    el.scrollWidth -
+    el.clientWidth -
+    (dir === "rtl" ? -el.scrollLeft : el.scrollLeft)
+  )
+}
+const getScrollStart = (el: HTMLElement) => {
+  return Math.abs(el.scrollLeft)
+}
+
+const getDistToSide = (
+  to: "start" | "end",
+  dir: "ltr" | "rtl" | "auto",
+  el: HTMLElement
+) => {
+  return to === "start" ? getScrollStart(el) : getScrollEnd(el, dir)
+}
+
+const scrollToSide = ({ side }: { side: "start" | "end" }) => {
+  hideScrollButton(side)
+  if (!buttonsRef.value) {
+    return
+  }
+  const left =
+    side === "start"
+      ? 0
+      : dir.value === "ltr"
+        ? buttonsRef.value.scrollWidth
+        : -buttonsRef.value.scrollWidth
+  buttonsRef.value.scrollTo({ left, behavior: "smooth" })
+}
+
+const scroll = (to: "start" | "end") => {
+  if (!buttonsRef.value || !innerContainerRef.value) {
+    return
+  }
+  const innerContainer = innerContainerRef.value
+
+  showScrollButton[to === "start" ? "end" : "start"] = true
+
+  let distToSide = getDistToSide(to, dir.value, innerContainer)
+  let adjustedScrollStep = scrollStep
+
+  // If the scroll step is larger than the distance to the side, scroll
+  // to the side and hide the scroll button.
+  // If the distance to the side is less than twice the scroll step, scroll
+  // half the distance to the side to prevent a very small scroll at the end.
+  const isLastScroll = distToSide - scrollMargin <= scrollStep
+  if (isLastScroll) {
+    scrollToSide({ side: to })
+    return
+  }
+  if (distToSide < scrollStep * 2) {
+    adjustedScrollStep = distToSide / 2
+  }
+  if (dir.value === "rtl") {
+    adjustedScrollStep = -adjustedScrollStep
+  }
+
+  let left = to === "start" ? -adjustedScrollStep : adjustedScrollStep
+  buttonsRef.value?.scrollBy({ left, behavior: "smooth" })
+}
+
+watchDebounced(
+  x,
+  (xValue) => {
+    if (!buttonsRef.value) {
+      return
+    }
+    // This is necessary for handling both RTL and LTR.
+    const distFromStart = Math.abs(xValue)
+    const distFromEnd =
+      buttonsRef.value.scrollWidth -
+      distFromStart -
+      buttonsRef.value.clientWidth
+    showScrollButton.start = distFromStart >= scrollMargin
+    showScrollButton.end = distFromEnd >= scrollMargin
+  },
+  { debounce: 100 }
+)
 </script>
 
 <template>

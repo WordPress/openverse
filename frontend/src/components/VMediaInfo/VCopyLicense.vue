@@ -1,11 +1,10 @@
-<script lang="ts">
-import { useI18n } from "#imports"
+<script setup lang="ts">
+import { useI18n, useNuxtApp } from "#imports"
 
-import { defineComponent, onBeforeUnmount, onMounted, PropType, ref } from "vue"
+import { onBeforeUnmount, onMounted, ref } from "vue"
 
 import { AttributionOptions, getAttribution } from "~/utils/attribution-html"
 import type { Media } from "~/types/media"
-import { useAnalytics } from "~/composables/use-analytics"
 
 import VTabs from "~/components/VTabs/VTabs.vue"
 import VTab from "~/components/VTabs/VTab.vue"
@@ -13,53 +12,35 @@ import VLicenseTabPanel from "~/components/VMediaInfo/VLicenseTabPanel.vue"
 
 const tabs = ["rich", "html", "plain", "xml"] as const
 
-export default defineComponent({
-  name: "VCopyLicense",
-  components: { VTabs, VTab, VLicenseTabPanel },
-  props: {
-    media: {
-      type: Object as PropType<Media>,
-      required: true,
-    },
-  },
-  setup(props) {
-    const richRef = ref<HTMLElement | null>(null)
+const props = defineProps<{ media: Media }>()
 
-    const i18n = useI18n({ useScope: "global" })
-    const getAttributionMarkup = (options?: AttributionOptions) =>
-      getAttribution(props.media, i18n, options)
+const richRef = ref<HTMLElement | null>(null)
 
-    const { sendCustomEvent } = useAnalytics()
+const i18n = useI18n({ useScope: "global" })
+const getAttributionMarkup = (options?: AttributionOptions) =>
+  getAttribution(props.media, i18n, options)
 
-    const sendAnalyticsEvent = (event: MouseEvent) => {
-      if (!event.currentTarget) {
-        return
-      }
+const { $sendCustomEvent } = useNuxtApp()
 
-      const url = (event.currentTarget as HTMLAnchorElement).href
-      sendCustomEvent("EXTERNAL_LINK_CLICK", { url })
-    }
+const sendAnalyticsEvent = (event: MouseEvent) => {
+  if (!event.currentTarget) {
+    return
+  }
 
-    onMounted(() => {
-      richRef.value?.querySelectorAll("a").forEach((link) => {
-        link.addEventListener("click", sendAnalyticsEvent)
-      })
-    })
+  const url = (event.currentTarget as HTMLAnchorElement).href
+  $sendCustomEvent("EXTERNAL_LINK_CLICK", { url })
+}
 
-    onBeforeUnmount(() => {
-      richRef.value?.querySelectorAll("a").forEach((link) => {
-        link.removeEventListener("click", sendAnalyticsEvent)
-      })
-    })
+onMounted(() => {
+  richRef.value?.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", sendAnalyticsEvent)
+  })
+})
 
-    return {
-      richRef,
-
-      tabs,
-
-      getAttributionMarkup,
-    }
-  },
+onBeforeUnmount(() => {
+  richRef.value?.querySelectorAll("a").forEach((link) => {
+    link.removeEventListener("click", sendAnalyticsEvent)
+  })
 })
 </script>
 

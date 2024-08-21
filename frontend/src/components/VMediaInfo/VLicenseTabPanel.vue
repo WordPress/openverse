@@ -1,58 +1,36 @@
-<script lang="ts">
-import { defineComponent, PropType } from "vue"
+<script setup lang="ts">
+import { useNuxtApp } from "#imports"
 
 import type { MediaType } from "~/constants/media"
-
-import { useAnalytics } from "~/composables/use-analytics"
 
 import VCopyButton from "~/components/VCopyButton.vue"
 import VTabPanel from "~/components/VTabs/VTabPanel.vue"
 
-export default defineComponent({
-  name: "VLicenseTabPanel",
-  components: {
-    VCopyButton,
-    VTabPanel,
-  },
-  props: {
-    /**
-     * The kind of attribution shown in the tab.
-     */
-    tab: {
-      type: String as PropType<"rich" | "html" | "plain" | "xml">,
-      required: true,
-    },
-    /**
-     * The ID of the media for which the attribution is generated.
-     * Used for analytics.
-     */
-    mediaId: {
-      type: String,
-      required: true,
-    },
-    /**
-     * The media type of the media for which the attribution is generated.
-     * Used for analytics.
-     */
-    mediaType: {
-      type: String as PropType<MediaType>,
-      required: true,
-    },
-  },
-  setup(props) {
-    const { sendCustomEvent } = useAnalytics()
-    const handleCopy = () => {
-      sendCustomEvent("COPY_ATTRIBUTION", {
-        id: props.mediaId,
-        format: props.tab,
-        mediaType: props.mediaType,
-      })
-    }
-    return {
-      handleCopy,
-    }
-  },
-})
+const props = defineProps<{
+  /**
+   * The kind of attribution shown in the tab.
+   */
+  tab: "rich" | "html" | "plain" | "xml"
+  /**
+   * The ID of the media for which the attribution is generated.
+   * Used for analytics.
+   */
+  mediaId: string
+  /**
+   * The media type of the media for which the attribution is generated.
+   * Used for analytics.
+   */
+  mediaType: MediaType
+}>()
+
+const { $sendCustomEvent } = useNuxtApp()
+const handleCopy = () => {
+  $sendCustomEvent("COPY_ATTRIBUTION", {
+    id: props.mediaId,
+    format: props.tab,
+    mediaType: props.mediaType,
+  })
+}
 </script>
 
 <template>

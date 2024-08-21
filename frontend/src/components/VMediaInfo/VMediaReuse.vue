@@ -1,21 +1,10 @@
-<script lang="ts">
-import { defineComponent, PropType } from "vue"
-
+<script setup lang="ts">
 import type { Media } from "~/types/media"
 
 import VCopyLicense from "~/components/VMediaInfo/VCopyLicense.vue"
 import VMediaLicense from "~/components/VMediaInfo/VMediaLicense.vue"
 
-export default defineComponent({
-  name: "VMediaReuse",
-  components: { VCopyLicense, VMediaLicense },
-  props: {
-    media: {
-      type: Object as PropType<Media>,
-      required: true,
-    },
-  },
-})
+defineProps<{ media: Media }>()
 </script>
 
 <template>

@@ -1,79 +1,63 @@
-<script lang="ts">
-import { useLocalePath } from "#imports"
-
-import { computed, defineComponent } from "vue"
-
-import { useFeatureFlagStore } from "~/stores/feature-flag"
-import { useUiStore } from "~/stores/ui"
-import { useAnalytics } from "~/composables/use-analytics"
-import { ON, OFF } from "~/constants/feature-flag"
-
-import VCheckbox, { CheckboxAttrs } from "~/components/VCheckbox/VCheckbox.vue"
-import VLink from "~/components/VLink.vue"
-
+<script setup lang="ts">
 /**
  * Contains toggles to determine the users preferences towards fetching results
  * that may contain sensitive content and subsequently blurring them to prevent
  * accidental exposure or showing them directly.
  */
-export default defineComponent({
-  name: "VSafeBrowsing",
-  components: { VCheckbox, VLink },
-  setup() {
-    const localePath = useLocalePath()
+import { useLocalePath, useNuxtApp } from "#imports"
 
-    const sensitivityPath = computed(() => localePath("/sensitive-content"))
+import { computed } from "vue"
 
-    const featureFlagStore = useFeatureFlagStore()
-    const { sendCustomEvent } = useAnalytics()
+import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { useUiStore } from "~/stores/ui"
+import { ON, OFF } from "~/constants/feature-flag"
 
-    let fetchSensitive = computed(() =>
-      featureFlagStore.isOn("fetch_sensitive")
-    )
-    let setFetchSensitive = (data: Omit<CheckboxAttrs, "disabled">) => {
-      const checked = data.checked ?? false
-      featureFlagStore.toggleFeature("fetch_sensitive", checked ? ON : OFF)
-      sendCustomEvent("TOGGLE_FETCH_SENSITIVE", { checked })
+import VCheckbox, { CheckboxAttrs } from "~/components/VCheckbox/VCheckbox.vue"
+import VLink from "~/components/VLink.vue"
 
-      if (!checked) {
-        // If sensitive content is not fetched, there is nothing to blur/unblur.
-        // In this case, we reset blurring to its default value.
-        setBlurSensitive({ checked: true })
-      }
-    }
+const localePath = useLocalePath()
 
-    const uiStore = useUiStore()
-    let blurSensitive = computed(() => uiStore.shouldBlurSensitive)
-    let setBlurSensitive = (data: { checked?: boolean }) => {
-      const checked = data.checked ?? false
-      uiStore.setShouldBlurSensitive(checked)
-      sendCustomEvent("TOGGLE_BLUR_SENSITIVE", { checked })
-    }
+const sensitivityPath = computed(() => localePath("/sensitive-content"))
 
-    const toggles = [
-      {
-        name: "fetchSensitive",
-        state: fetchSensitive,
-        switchFn: setFetchSensitive,
-      },
-      {
-        name: "blurSensitive",
-        state: blurSensitive,
-        switchFn: setBlurSensitive,
-      },
-    ]
+const featureFlagStore = useFeatureFlagStore()
+const { $sendCustomEvent } = useNuxtApp()
 
-    const isDisabled = (name: string) =>
-      name === "blurSensitive" && !fetchSensitive.value
+let fetchSensitive = computed(() => featureFlagStore.isOn("fetch_sensitive"))
+let setFetchSensitive = (data: Omit<CheckboxAttrs, "disabled">) => {
+  const checked = data.checked ?? false
+  featureFlagStore.toggleFeature("fetch_sensitive", checked ? ON : OFF)
+  $sendCustomEvent("TOGGLE_FETCH_SENSITIVE", { checked })
 
-    return {
-      sensitivityPath,
+  if (!checked) {
+    // If sensitive content is not fetched, there is nothing to blur/unblur.
+    // In this case, we reset blurring to its default value.
+    setBlurSensitive({ checked: true })
+  }
+}
 
-      toggles,
-      isDisabled,
-    }
+const uiStore = useUiStore()
+let blurSensitive = computed(() => uiStore.shouldBlurSensitive)
+let setBlurSensitive = (data: { checked?: boolean }) => {
+  const checked = data.checked ?? false
+  uiStore.setShouldBlurSensitive(checked)
+  $sendCustomEvent("TOGGLE_BLUR_SENSITIVE", { checked })
+}
+
+const toggles = [
+  {
+    name: "fetchSensitive",
+    state: fetchSensitive,
+    switchFn: setFetchSensitive,
   },
-})
+  {
+    name: "blurSensitive",
+    state: blurSensitive,
+    switchFn: setBlurSensitive,
+  },
+]
+
+const isDisabled = (name: string) =>
+  name === "blurSensitive" && !fetchSensitive.value
 </script>
 
 <template>
