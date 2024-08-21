@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { ref } from "vue"
 
+import { WIP } from "~/constants/content-report"
+import { useContentReport } from "~/composables/use-content-report"
 import type { AudioDetail, ImageDetail } from "~/types/media"
 
 import VContentReportButton from "~/components/VContentReport/VContentReportButton.vue"
 import VContentReportForm from "~/components/VContentReport/VContentReportForm.vue"
-import VIconButton from "~/components/VIconButton/VIconButton.vue"
 import VModal from "~/components/VModal/VModal.vue"
 
 defineProps<{
@@ -20,47 +21,44 @@ const contentReportFormRef = ref<InstanceType<
   typeof VContentReportForm
 > | null>(null)
 
-const close = () => {
+const { status, updateStatus, title } = useContentReport()
+
+const resetForm = () => {
   contentReportFormRef.value?.resetForm()
-  modalRef.value?.close()
+  updateStatus(WIP)
 }
 
-const dialogRef = ref<HTMLElement | undefined>(undefined)
-const initialFocusElement = computed(
-  () => dialogRef.value?.querySelector("h2") ?? undefined
-)
+const close = () => {
+  resetForm()
+  modalRef.value?.close()
+}
 </script>
 
 <template>
   <VModal
     ref="modalRef"
-    :initial-focus-element="initialFocusElement"
     :label="$t('mediaDetails.contentReport.long')"
+    :hide-on-click-outside="true"
     variant="centered"
+    @close="resetForm"
   >
     <template #trigger="{ a11yProps }">
       <VContentReportButton v-bind="a11yProps" />
     </template>
+    <template #title>
+      <h2 class="heading-6" tabindex="-1">{{ title }}</h2>
+    </template>
     <template #default>
-      <div ref="dialogRef" class="pe-1 ps-3">
-        <VContentReportForm
-          ref="contentReportFormRef"
-          class="-mt-6 p-6"
-          :close-fn="close"
-          :media="media"
-          :provider-name="media.providerName"
-        >
-          <template #close-button>
-            <VIconButton
-              :label="$t('modal.close')"
-              :icon-props="{ name: 'close' }"
-              variant="transparent-gray"
-              size="small"
-              @click="close"
-            />
-          </template>
-        </VContentReportForm>
-      </div>
+      <VContentReportForm
+        ref="contentReportFormRef"
+        class="p-7 pt-0 sm:p-9"
+        :media="media"
+        :status="status"
+        :allow-cancel="true"
+        @update-status="updateStatus"
+        @close="close"
+      >
+      </VContentReportForm>
     </template>
   </VModal>
 </template>

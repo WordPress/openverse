@@ -149,6 +149,21 @@ defineExpose({
             />
           </div>
         </slot>
+        <header
+          v-if="variant === 'centered'"
+          class="flex items-center justify-between p-5 ps-7 sm:p-7 sm:ps-9"
+        >
+          <slot name="title" />
+          <slot name="close-button">
+            <VIconButton
+              :label="$t('modal.close')"
+              :icon-props="{ name: 'close' }"
+              variant="transparent-gray"
+              size="small"
+              @click="handleClose"
+            />
+          </slot>
+        </header>
 
         <div
           class="modal-content flex w-full flex-grow flex-col"

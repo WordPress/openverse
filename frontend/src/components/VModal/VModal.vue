@@ -170,6 +170,7 @@ defineExpose({
       <template #top-bar="{ close: hide }">
         <slot name="top-bar" :close="hide" />
       </template>
+      <template #title><slot name="title" /></template>
       <slot name="default" />
     </VModalContent>
   </div>
