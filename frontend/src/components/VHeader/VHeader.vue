@@ -28,7 +28,7 @@ watch(height, (height) => {
   uiStore.setHeaderHeight(height)
 })
 
-const comp = computed(() => {
+const headerComponent = computed(() => {
   return {
     internal: VHeaderInternal,
     "search-desktop": VHeaderDesktop,
@@ -43,7 +43,7 @@ const bg = computed(() => `bg-${props.color}`)
   <div ref="headerRef" class="header-el" :class="bg">
     <VBanners />
     <component
-      :is="comp"
+      :is="headerComponent"
       class="h-20 border-b"
       :class="[showBottomBorder ? 'border-b-default' : 'border-b-tx', bg]"
     />
