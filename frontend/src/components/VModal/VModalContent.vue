@@ -100,7 +100,7 @@ defineExpose({
       class="backdrop h-dyn-screen min-h-dyn-screen fixed inset-0 z-40 flex justify-center overflow-y-auto"
       :class="[
         { 'flex-col items-center': variant === 'centered' },
-        variant === 'mobile-input' ? 'bg-tx' : 'bg-modal-layer',
+        variant === 'mobile-input' ? 'bg-tx' : 'bg-modal-layer bg-opacity-75',
         contentClasses,
         variant,
       ]"
@@ -121,7 +121,7 @@ defineExpose({
               variant === 'two-thirds',
             'mt-auto w-full rounded-se-lg rounded-ss-lg bg-overlay':
               variant === 'fit-content',
-            'm-6 rounded sm:m-0': variant === 'centered',
+            'm-6 max-w-90 rounded sm:m-0': variant === 'centered',
           },
         ]"
         role="dialog"
@@ -149,6 +149,21 @@ defineExpose({
             />
           </div>
         </slot>
+        <header
+          v-if="variant === 'centered'"
+          class="flex items-center justify-between p-5 ps-7 sm:p-7 sm:ps-9"
+        >
+          <slot name="title" />
+          <slot name="close-button">
+            <VIconButton
+              :label="$t('modal.close')"
+              :icon-props="{ name: 'close' }"
+              variant="transparent-gray"
+              size="small"
+              @click="handleClose"
+            />
+          </slot>
+        </header>
 
         <div
           class="modal-content flex w-full flex-grow flex-col"

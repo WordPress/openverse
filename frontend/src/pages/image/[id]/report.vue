@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import { definePageMeta, useAsyncData, useI18n, useRoute } from "#imports"
+import { defineNuxtRouteMiddleware, definePageMeta, useI18n } from "#imports"
 
-import { ref } from "vue"
+import { computed } from "vue"
 
 import { IMAGE } from "~/constants/media"
 import { skipToContentTargetId } from "~/constants/window"
 
+import { useContentReport } from "~/composables/use-content-report"
 import { useSingleResultStore } from "~/stores/media/single-result"
+
 import { getAttribution } from "~/utils/attribution-html"
 import { firstParam } from "~/utils/query-utils"
-import type { ImageDetail } from "~/types/media"
 
 import VButton from "~/components/VButton.vue"
 import VContentReportForm from "~/components/VContentReport/VContentReportForm.vue"
@@ -20,29 +21,25 @@ defineOptions({
 
 definePageMeta({
   layout: "content-layout",
+  middleware: defineNuxtRouteMiddleware(async (to) => {
+    const imageId = firstParam(to.params?.id)
+    const singleResultStore = useSingleResultStore()
+    await singleResultStore.fetch(IMAGE, imageId)
+  }),
 })
 
 const i18n = useI18n({ useScope: "global" })
-const route = useRoute()
 const singleResultStore = useSingleResultStore()
 
-const image = ref<ImageDetail>()
-const attributionMarkup = ref<string>()
-
-await useAsyncData("image-report", async () => {
-  const imageId = firstParam(route?.params.id)
-  if (imageId) {
-    image.value = (await singleResultStore.fetch(IMAGE, imageId)) ?? undefined
-    if (image.value) {
-      attributionMarkup.value = getAttribution(image.value, i18n, {
+const image = computed(() => singleResultStore.image)
+const attributionMarkup = computed(() =>
+  image.value
+    ? getAttribution(image.value, i18n, {
         includeIcons: false,
       })
-    }
-  } else {
-    // TODO: Handle Error
-    console.warn("Not found image")
-  }
-})
+    : ""
+)
+const { status, updateStatus, title } = useContentReport()
 </script>
 
 <template>
@@ -78,12 +75,15 @@ await useAsyncData("image-report", async () => {
       </VButton>
     </figure>
 
-    <VContentReportForm
-      v-if="image"
-      :close-fn="() => {}"
-      :media="image"
-      :allow-cancel="false"
-      :provider-name="image.providerName || image.provider"
-    />
+    <div>
+      <h2 class="heading-6 mb-4">{{ title }}</h2>
+      <VContentReportForm
+        v-if="image"
+        :media="image"
+        :allow-cancel="false"
+        :status="status"
+        @update-status="updateStatus"
+      />
+    </div>
   </main>
 </template>

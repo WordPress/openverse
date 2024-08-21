@@ -7,21 +7,13 @@ import { useFocusOnBlur } from "~/composables/use-focus-on-blur"
 
 import { warn } from "~/utils/console"
 
+import type { DialogElements, DialogOptions } from "~/types/modal"
+
 import type { Ref, SetupContext } from "vue"
 
 type Props = {
-  dialogElements: {
-    dialogRef: Ref<HTMLElement | null>
-    initialFocusElementRef: Ref<HTMLElement | null>
-    triggerElementRef: Ref<HTMLElement | null>
-  }
-  dialogOptions?: {
-    autoFocusOnShowRef?: Ref<boolean>
-    autoFocusOnHideRef?: Ref<boolean>
-    hideOnClickOutsideRef?: Ref<boolean>
-    hideOnEscRef?: Ref<boolean>
-    trapFocusRef?: Ref<boolean>
-  }
+  dialogElements: DialogElements
+  dialogOptions?: Partial<DialogOptions>
   visibleRef: Ref<boolean>
   hideRef: Ref<() => void>
   emit: SetupContext["emit"]

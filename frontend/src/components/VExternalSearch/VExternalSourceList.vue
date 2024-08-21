@@ -34,7 +34,7 @@ const handleClick = (sourceName: string) => {
     class="p-4 pt-0 sm:max-w-[25rem] sm:p-6 sm:pt-0"
     data-testid="source-list-popover"
   >
-    <p class="label-regular px-3 py-4 text-start !leading-normal">
+    <p class="label-regular px-3 pb-4 text-start !leading-normal">
       {{ $t("externalSources.caption", { openverse: "Openverse" }) }}
     </p>
     <VButton

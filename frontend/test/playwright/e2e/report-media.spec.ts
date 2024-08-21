@@ -58,11 +58,13 @@ const submitDmcaReport = async (page: Page, context: BrowserContext) => {
   })
   await page.click('text="Infringes copyright"')
 
+  const popupPromise = page.waitForEvent("popup")
   await page.click('text="Open form"')
-  await page.waitForURL(/forms/)
+  const form = await popupPromise
+  const formUrl: string = await form.evaluate("location.href")
 
   // Return the beginning of the url, without parameters
-  return page.url().split("/forms/")[0] + "/forms/"
+  return formUrl.split("/forms/")[0] + "/forms/"
 }
 
 // todo: Test a sensitive report with the optional description field

@@ -37,10 +37,12 @@ for (const dir of languageDirections) {
       })
 
       test(`filters modal 1 filter selected - ${dir}`, async ({ page }) => {
-        await page.locator('input[type="checkbox"]').first().check()
+        const firstFilter = page.getByRole("checkbox").first()
+        await firstFilter.check()
 
         const snapshotName = `${getFiltersName(breakpoint)}-checked-${dir}`
 
+        await firstFilter.hover()
         await expectSnapshot(
           snapshotName,
           isDesktop ? page.locator(".sidebar") : page,

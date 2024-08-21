@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useNuxtApp } from "#imports"
+
 import { computed, ref } from "vue"
 
 import { storeToRefs } from "pinia"
@@ -7,14 +9,12 @@ import { useUiStore } from "~/stores/ui"
 import { useSearchStore } from "~/stores/search"
 import { useMediaStore } from "~/stores/media"
 
-import { useAnalytics } from "~/composables/use-analytics"
 import { useExternalSources } from "~/composables/use-external-sources"
 
 import VExternalSourceList from "~/components/VExternalSearch/VExternalSourceList.vue"
 import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VModal from "~/components/VModal/VModal.vue"
-import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
 withDefaults(
   defineProps<{
@@ -32,13 +32,13 @@ const sectionRef = ref<HTMLElement | null>(null)
 const searchStore = useSearchStore()
 const uiStore = useUiStore()
 
-const { sendCustomEvent } = useAnalytics()
+const { $sendCustomEvent } = useNuxtApp()
 
 const mediaStore = useMediaStore()
 const { currentPage } = storeToRefs(mediaStore)
 
 const handleModalOpen = () => {
-  sendCustomEvent("VIEW_EXTERNAL_SOURCES", {
+  $sendCustomEvent("VIEW_EXTERNAL_SOURCES", {
     searchType: searchStore.searchType,
     query: searchStore.searchTerm,
     resultPage: currentPage.value || 1,
@@ -95,23 +95,15 @@ const isMd = computed(() => uiStore.isBreakpoint("md"))
           />
         </VButton>
       </template>
-      <template #top-bar="{ close }">
-        <header
-          class="flex items-center justify-between pe-5 ps-7 pt-5 sm:pe-7 sm:ps-9 sm:pt-7"
-        >
-          <h2 class="heading-6" tabindex="-1">
-            {{ $t("externalSources.title") }}
-          </h2>
-          <VIconButton
-            size="small"
-            :icon-props="{ name: 'close' }"
-            variant="transparent-gray"
-            :label="$t('modal.close')"
-            @click="close"
-          />
-        </header>
+      <template #title>
+        <h2 class="heading-6" tabindex="-1">
+          {{ $t("externalSources.title") }}
+        </h2>
       </template>
-      <VExternalSourceList class="flex flex-col" :search-term="searchTerm" />
+      <VExternalSourceList
+        class="-mt-3 flex flex-col"
+        :search-term="searchTerm"
+      />
     </VModal>
   </section>
 </template>
