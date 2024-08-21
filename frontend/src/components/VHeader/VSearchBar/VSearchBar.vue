@@ -1,9 +1,14 @@
-<script lang="ts">
-import { computed, defineComponent, PropType, ref, watch } from "vue"
+<script setup lang="ts">
+/**
+ * The search bar displayed on the search page.
+ *
+ * Displays a text field for a search query and is attached to an action button
+ * that fires a search request. The loading state and number of hits are also
+ * displayed in the bar itself.
+ */
+import { computed, ref, useAttrs, watch } from "vue"
 
 import { onClickOutside } from "@vueuse/core"
-
-import { defineEvent } from "~/types/emits"
 
 import { useRecentSearches } from "~/composables/use-recent-searches"
 
@@ -13,118 +18,92 @@ import VInputField, {
 import VSearchButton from "~/components/VHeader/VSearchBar/VSearchButton.vue"
 import VRecentSearches from "~/components/VRecentSearches/VRecentSearches.vue"
 
-/**
- * The search bar displayed on the search page.
- *
- * Displays a text field for a search query and is attached to an action button
- * that fires a search request. The loading state and number of hits are also
- * displayed in the bar itself.
- */
-export default defineComponent({
-  name: "VSearchBar",
-  components: { VRecentSearches, VInputField, VSearchButton },
-  inheritAttrs: false,
-  props: {
+defineOptions({ inheritAttrs: false })
+
+const props = withDefaults(
+  defineProps<{
     /**
      * the search query given as input to the field
      */
-    modelValue: {
-      type: String,
-      default: "",
-    },
-    size: {
-      type: String as PropType<keyof typeof FIELD_SIZES>,
-      default: "medium",
-    },
-    placeholder: {
-      type: String,
-      required: false,
-    },
+    modelValue?: string
+    size?: keyof typeof FIELD_SIZES
+    placeholder?: string
+  }>(),
+  {
+    modelValue: "",
+    size: "medium",
+  }
+)
+
+const emit = defineEmits<{
+  "update:modelValue": [string]
+  submit: []
+  "recent-hidden": []
+}>()
+const attrs = useAttrs()
+const searchBarEl = ref<HTMLElement | null>(null)
+const inputFieldRef = ref<InstanceType<typeof VInputField> | null>(null)
+
+const modelMedium = computed<string>({
+  get: () => props.modelValue ?? "",
+  set: (value: string) => {
+    emit("update:modelValue", value)
   },
-  emits: {
-    "update:modelValue": defineEvent<[string]>(),
-    submit: defineEvent(),
-    "recent-hidden": defineEvent(),
+})
+
+const handleSearch = () => {
+  emit("submit")
+}
+
+/* Recent searches */
+const recentClasses = computed(() => {
+  // Calculated by adding 8px to all heights defined in `VInputField.vue`.
+  const FIELD_OFFSETS = {
+    medium: "top-14",
+  } as const
+  return FIELD_OFFSETS[props.size]
+})
+const focusInput = () => {
+  inputFieldRef.value?.focusInput()
+}
+
+/**
+ * Hide recent searches on blur and click outside.
+ */
+const handleSearchBlur = () => {
+  if (!entries.value.length) {
+    hideRecentSearches()
+  }
+}
+
+const {
+  handleKeydown,
+  handleSelect,
+  handleClear,
+  recent: {
+    show: showRecentSearches,
+    hide: hideRecentSearches,
+    isVisible: isRecentVisible,
+    selectedIdx,
+    entries,
   },
-  setup(props, { attrs, emit }) {
-    const searchBarEl = ref<HTMLElement | null>(null)
-    const inputFieldRef = ref<InstanceType<typeof VInputField> | null>(null)
+} = useRecentSearches({
+  focusInput,
+  term: modelMedium,
+  isMobile: false,
+})
+onClickOutside(searchBarEl, hideRecentSearches)
 
-    const modelMedium = computed<string>({
-      get: () => props.modelValue ?? "",
-      set: (value: string) => {
-        emit("update:modelValue", value)
-      },
-    })
+watch(isRecentVisible, (isVisible) => {
+  if (!isVisible) {
+    emit("recent-hidden")
+  }
+})
 
-    const handleSearch = () => {
-      emit("submit")
-    }
-
-    /* Recent searches */
-    const recentClasses = computed(() => {
-      // Calculated by adding 8px to all heights defined in `VInputField.vue`.
-      const FIELD_OFFSETS = {
-        medium: "top-14",
-      } as const
-      return FIELD_OFFSETS[props.size]
-    })
-    const focusInput = () => {
-      inputFieldRef.value?.focusInput()
-    }
-
-    /**
-     * Hide recent searches on blur and click outside.
-     */
-    const handleSearchBlur = () => {
-      if (!recent.entries.value.length) {
-        recent.hide()
-      }
-    }
-
-    const { handleKeydown, handleSelect, handleClear, recent } =
-      useRecentSearches({
-        focusInput,
-        term: modelMedium,
-        isMobile: false,
-      })
-    onClickOutside(searchBarEl, recent.hide)
-
-    watch(recent.isVisible, (isVisible) => {
-      if (!isVisible) {
-        emit("recent-hidden")
-      }
-    })
-
-    const nonClassAttrs = computed(() => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { class: _, ...rest } = attrs
-      return rest
-    })
-
-    return {
-      searchBarEl,
-      inputFieldRef,
-
-      nonClassAttrs,
-
-      handleSearch,
-      modelMedium,
-
-      showRecentSearches: recent.show,
-      hideRecentSearches: recent.hide,
-      handleSearchBlur,
-
-      recentClasses,
-      isRecentVisible: recent.isVisible,
-      selectedIdx: recent.selectedIdx,
-      entries: recent.entries,
-
-      handleKeydown,
-      handleSelect,
-      handleClear,
-    }
-  },
+const nonClassAttrs = computed(() => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { class: _, ...rest } = attrs
+  return rest
 })
 </script>
 

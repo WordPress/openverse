@@ -1,5 +1,7 @@
-<script lang="ts">
-import { computed, defineComponent, inject, ref } from "vue"
+<script setup lang="ts">
+import { useNuxtApp } from "#imports"
+
+import { computed, inject, ref } from "vue"
 
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
@@ -7,12 +9,10 @@ import { useUiStore } from "~/stores/ui"
 
 import { IsSidebarVisibleKey } from "~/types/provides"
 
-import { useAnalytics } from "~/composables/use-analytics"
 import { useSearch } from "~/composables/use-search"
+import { useHydrating } from "~/composables/use-hydrating"
 
 import { ensureFocus } from "~/utils/reakit-utils/focus"
-
-import { useHydrating } from "~/composables/use-hydrating"
 
 import VFilterButton from "~/components/VHeader/VFilterButton.vue"
 import VSearchBar from "~/components/VHeader/VSearchBar/VSearchBar.vue"
@@ -25,80 +25,49 @@ import type { Ref } from "vue"
 /**
  * The desktop search header.
  */
-export default defineComponent({
-  name: "VHeaderDesktop",
-  components: {
-    VFilterButton,
-    VLogoButton,
-    VSearchBarButton,
-    VSearchTypePopover,
-    VSearchBar,
-  },
-  setup() {
-    const filterButtonRef = ref<InstanceType<typeof VFilterButton> | null>(null)
-    const searchBarRef = ref<InstanceType<typeof VSearchBar> | null>(null)
 
-    const mediaStore = useMediaStore()
-    const searchStore = useSearchStore()
-    const uiStore = useUiStore()
+const filterButtonRef = ref<InstanceType<typeof VFilterButton> | null>(null)
+const searchBarRef = ref<InstanceType<typeof VSearchBar> | null>(null)
 
-    const isSidebarVisible = inject<Ref<boolean>>(IsSidebarVisibleKey)
+const mediaStore = useMediaStore()
+const searchStore = useSearchStore()
+const uiStore = useUiStore()
 
-    const isFetching = computed(() => mediaStore.fetchState.isFetching)
+const isSidebarVisible = inject<Ref<boolean>>(IsSidebarVisibleKey)
 
-    const { sendCustomEvent } = useAnalytics()
+const isFetching = computed(() => mediaStore.fetchState.isFetching)
 
-    const { updateSearchState, searchTerm, searchStatus } =
-      useSearch(sendCustomEvent)
+const { $sendCustomEvent } = useNuxtApp()
 
-    const clearSearchTerm = () => {
-      searchTerm.value = ""
-      ensureFocus(searchBarRef.value?.$el.querySelector("input") as HTMLElement)
-    }
+const { updateSearchState, searchTerm, searchStatus } =
+  useSearch($sendCustomEvent)
 
-    const handleSearch = async () => {
-      window.scrollTo({ top: 0, left: 0, behavior: "auto" })
-      const activeElement = document.activeElement as HTMLElement
-      activeElement?.blur()
-      updateSearchState()
-    }
+const clearSearchTerm = () => {
+  searchTerm.value = ""
+  ensureFocus(searchBarRef.value?.$el.querySelector("input") as HTMLElement)
+}
 
-    const areFiltersDisabled = computed(
-      () => !searchStore.searchTypeIsSupported
-    )
+const handleSearch = async () => {
+  window.scrollTo({ top: 0, left: 0, behavior: "auto" })
+  const activeElement = document.activeElement as HTMLElement
+  activeElement?.blur()
+  updateSearchState()
+}
 
-    const toggleSidebar = () => {
-      const toState = isSidebarVisible?.value ? "closed" : "opened"
-      sendCustomEvent("TOGGLE_FILTER_SIDEBAR", {
-        searchType: searchStore.searchType,
-        toState,
-      })
-      uiStore.toggleFilters()
-    }
+const areFiltersDisabled = computed(() => !searchStore.searchTypeIsSupported)
 
-    const isXl = computed(() => uiStore.isBreakpoint("xl"))
+const toggleSidebar = () => {
+  const toState = isSidebarVisible?.value ? "closed" : "opened"
+  $sendCustomEvent("TOGGLE_FILTER_SIDEBAR", {
+    searchType: searchStore.searchType,
+    toState,
+  })
+  uiStore.toggleFilters()
+}
 
-    const { doneHydrating } = useHydrating()
+const isXl = computed(() => uiStore.isBreakpoint("xl"))
 
-    return {
-      filterButtonRef,
-      searchBarRef,
-      isFetching,
-
-      isSidebarVisible,
-      areFiltersDisabled,
-      isXl,
-
-      handleSearch,
-      clearSearchTerm,
-      searchStatus,
-      searchTerm,
-      toggleSidebar,
-
-      doneHydrating,
-    }
-  },
-})
+const { doneHydrating } = useHydrating()
 </script>
 
 <template>

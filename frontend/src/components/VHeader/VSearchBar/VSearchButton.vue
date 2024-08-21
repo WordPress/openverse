@@ -1,6 +1,4 @@
-<script lang="ts">
-import { defineComponent, PropType } from "vue"
-
+<script setup lang="ts">
 import { useHydrating } from "~/composables/use-hydrating"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
@@ -8,26 +6,14 @@ import VButton from "~/components/VButton.vue"
 /**
  * The search button used in the search bar on the home, 404 and search pages.
  */
-export default defineComponent({
-  name: "VSearchButton",
-  components: { VIcon, VButton },
-  props: {
-    /**
-     * The current route determines the size and the style of the button.
-     */
-    route: {
-      type: String as PropType<"home" | "404" | "search">,
-      required: true,
-    },
-  },
-  setup() {
-    const { doneHydrating } = useHydrating()
+defineProps<{
+  /**
+   * The current route determines the size and the style of the button.
+   */
+  route: "home" | "404" | "search"
+}>()
 
-    return {
-      doneHydrating,
-    }
-  },
-})
+const { doneHydrating } = useHydrating()
 </script>
 
 <template>

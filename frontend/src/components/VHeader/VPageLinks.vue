@@ -1,77 +1,48 @@
-<script lang="ts">
-import { type PropType, defineComponent, computed } from "vue"
+<script setup lang="ts">
+import { computed } from "vue"
 
 import usePages from "~/composables/use-pages"
-
-import { defineEvent } from "~/types/emits"
 
 import VItemGroup from "~/components/VItemGroup/VItemGroup.vue"
 import VItem from "~/components/VItemGroup/VItem.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VLink from "~/components/VLink.vue"
 
-export default defineComponent({
-  name: "VPageLinks",
-  components: {
-    VIcon,
-    VItem,
-    VItemGroup,
-    VLink,
-  },
-  props: {
+const props = withDefaults(
+  defineProps<{
     /**
      * In `dark` mode (in the modal), the links are white and the background is dark charcoal.
      * In `light` mode, the links are dark charcoal and the background is transparent.
-     *
-     * @default 'light'
      */
-    mode: {
-      type: String as PropType<"light" | "dark">,
-      default: "light",
-    },
+    mode?: "light" | "dark"
     /**
      * Pass the tailwind classes to style the nav links.
-     *
-     * @default ''
      */
-    navLinkClasses: {
-      type: String,
-      default: "",
-    },
-    variant: {
-      type: String as PropType<"links" | "itemgroup">,
-      default: "links",
-    },
-    isInModal: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  emits: {
-    close: defineEvent(),
-  },
-  setup(props, { emit }) {
-    const { all: allPages, current: currentPage } = usePages()
+    navLinkClasses?: string
+    variant?: "links" | "itemgroup"
+    isInModal?: boolean
+  }>(),
+  {
+    mode: "light",
+    navLinkClasses: "",
+    variant: "links",
+    isInModal: false,
+  }
+)
+const emit = defineEmits<{
+  close: []
+}>()
 
-    // The modal isn't closed if we click on the current page link,
-    // so we need to close it manually.
-    const onClick = () => emit("close")
+const { all: allPages, current: currentPage } = usePages()
 
-    const isLinkExternal = (item: (typeof allPages)[number]) =>
-      !item.link.startsWith("/")
+// The modal isn't closed if we click on the current page link,
+// so we need to close it manually.
+const onClick = () => emit("close")
 
-    const externalIconSize = computed(() => (props.isInModal ? 6 : 4))
+const isLinkExternal = (item: (typeof allPages)[number]) =>
+  !item.link.startsWith("/")
 
-    return {
-      allPages,
-      currentPage,
-      onClick,
-      isLinkExternal,
-
-      externalIconSize,
-    }
-  },
-})
+const externalIconSize = computed(() => (props.isInModal ? 6 : 4))
 </script>
 
 <template>

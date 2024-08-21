@@ -1,52 +1,36 @@
-<script lang="ts">
+<script setup lang="ts">
 import { useI18n } from "#imports"
 
-import { computed, defineComponent } from "vue"
+import { computed } from "vue"
 
 import { useSearchStore } from "~/stores/search"
-import { defineEvent } from "~/types/emits"
 
 import VButton from "~/components/VButton.vue"
 import VFilterIconOrCounter from "~/components/VHeader/VFilterIconOrCounter.vue"
 
-export default defineComponent({
-  name: "VFilterButton",
-  components: {
-    VFilterIconOrCounter,
-    VButton,
-  },
-  props: {
-    pressed: {
-      type: Boolean,
-      default: false,
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  emits: {
-    toggle: defineEvent(),
-  },
-  setup() {
-    const { t } = useI18n({ useScope: "global" })
-    const searchStore = useSearchStore()
-    const filterCount = computed(() => searchStore.appliedFilterCount)
-    const filtersAreApplied = computed(() => filterCount.value > 0)
+withDefaults(
+  defineProps<{
+    pressed?: boolean
+    disabled?: boolean
+  }>(),
+  {
+    pressed: false,
+    disabled: false,
+  }
+)
 
-    const textLabel = computed(() => t("header.filterButton.simple"))
-    const ariaLabel = computed(() =>
-      t("header.filterButton.withCount", { count: filterCount.value })
-    )
+defineEmits<{
+  toggle: []
+}>()
 
-    return {
-      ariaLabel,
-      textLabel,
-      filtersAreApplied,
-      filterCount,
-    }
-  },
-})
+const { t } = useI18n({ useScope: "global" })
+const searchStore = useSearchStore()
+const filterCount = computed(() => searchStore.appliedFilterCount)
+
+const textLabel = computed(() => t("header.filterButton.simple"))
+const ariaLabel = computed(() =>
+  t("header.filterButton.withCount", { count: filterCount.value })
+)
 </script>
 
 <template>

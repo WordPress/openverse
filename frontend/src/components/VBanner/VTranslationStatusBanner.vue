@@ -1,53 +1,37 @@
-<script lang="ts">
+<script setup lang="ts">
 import { useI18n } from "#imports"
 
-import { computed, defineComponent, PropType } from "vue"
+import { computed } from "vue"
 
 import type { BannerId } from "~/types/banners"
 
 import { createTranslationLink } from "~/utils/translation-banner"
-
-import { defineEvent } from "~/types/emits"
 
 import VLink from "~/components/VLink.vue"
 import VNotificationBanner from "~/components/VBanner/VNotificationBanner.vue"
 
 import type { LocaleObject } from "@nuxtjs/i18n"
 
-export default defineComponent({
-  name: "VTranslationStatusBanner",
-  components: {
-    VLink,
-    VNotificationBanner,
-  },
-  props: {
-    bannerKey: {
-      type: String as PropType<BannerId>,
-      required: true,
-    },
-  },
-  emits: {
-    close: defineEvent(),
-  },
-  setup() {
-    const i18n = useI18n({ useScope: "global" })
+defineProps<{
+  bannerKey: BannerId
+}>()
 
-    /**
-     * Returns the link to the GlotPress project for the current locale and the locale native name.
-     */
-    const currentLocale = computed(() => {
-      const localeObject = i18n.localeProperties.value as LocaleObject
+defineEmits<{
+  close: []
+}>()
 
-      return {
-        link: createTranslationLink(localeObject),
-        name: localeObject.name,
-      }
-    })
+const i18n = useI18n({ useScope: "global" })
 
-    return {
-      currentLocale,
-    }
-  },
+/**
+ * Returns the link to the GlotPress project for the current locale and the locale native name.
+ */
+const currentLocale = computed(() => {
+  const localeObject = i18n.localeProperties.value as LocaleObject
+
+  return {
+    link: createTranslationLink(localeObject),
+    name: localeObject.name,
+  }
 })
 </script>
 
