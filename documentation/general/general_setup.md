@@ -30,7 +30,8 @@ default. Most contributors will only need to install Docker or a compatible
 container runtime to use `ov`.
 
 For macOS users, [OrbStack](https://docs.orbstack.dev/quick-start) is the tested
-and supported option for installing and using Docker for Openverse development. Otherwise,
+and supported option for installing and using Docker for Openverse development.
+Otherwise,
 [follow Docker's instructions to install Docker on your host system](https://docs.docker.com/engine/install/).
 
 ```{tip}
