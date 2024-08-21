@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from types import NoneType, UnionType
 from typing import Any, Iterable, Literal, TypeAlias, Union, get_args
+from textwrap import dedent, indent
 
 
 def py_type_string(t: type | TypeAlias) -> str:
@@ -69,6 +70,22 @@ def ts_type_string(t: type | TypeAlias) -> str:
                 return "Record<string, unknown>"
 
     raise ValueError(f"Could not cast {t}")
+
+
+def ts_comment(comment: str, indentation: int = 0) -> str:
+    clean_comment = (
+        comment.strip().replace(">", "\\>").replace("``", "`").replace("\n", "\n * ")
+    )
+    return indent(
+        dedent(
+            f"""
+            /**
+             * {clean_comment}
+             */
+            """
+        ).strip(),
+        " " * indentation,
+    )
 
 
 NO_DEFAULT = object()

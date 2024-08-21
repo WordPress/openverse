@@ -129,11 +129,11 @@ repos:
 
       - id: eslint
         name: eslint
-        files: (frontend|automations|packages/js).*?\.(js|ts|mjs|vue|json5|json)$
+        files: (frontend|automations|packages/js).*?\.(js|ts|mjs|vue|json5?)$
         "types": [file] # ESLint only accepts [javascript] by default.
         language: system
         pass_filenames: false
-        entry: bash -c 'pnpm run eslint --fix'
+        entry: just eslint
 
       - id: test:unit
         name: test:unit

@@ -1,6 +1,3 @@
-/* eslint-disable eslint-comments/no-unlimited-disable */
-/* eslint-disable */
-
 /**
  * This file is generated from a template. Do not edit it by hand!
  *
@@ -165,7 +162,7 @@ export interface Tag {
 
 /**
  * A set of alternative files for a single audio object,
- * rendered as a part of the ``AudioSerializer`` output.
+ * rendered as a part of the `AudioSerializer` output.
  */
 export interface AudioAltFile {
   /**
@@ -195,7 +192,7 @@ export interface AudioAltFile {
 }
 
 /**
- * An audio set, rendered as a part of the ``AudioSerializer`` output.
+ * An audio set, rendered as a part of the `AudioSerializer` output.
  */
 export interface AudioSet {
   /**
@@ -572,5 +569,3 @@ export interface PaginatedAudioList {
    */
   warnings?: Array<unknown>
 }
-
-/* eslint-enable */

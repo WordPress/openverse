@@ -374,3 +374,14 @@ exec-python-projects pattern +cmd:
 # Run PDM scripts by name for all packages matching the pattern, ignoring matches if the script does not exist
 pdm-run pattern script +args="":
     just exec-python-projects {{ pattern }} bash -c "'if pdm run -l | grep {{ script }} -q; then pdm run {{ script }} {{ args }}; fi'"
+
+# Run eslint with --fix and default file selection enabled; used to enable easy file overriding whilst retaining the defaults when running --all-files
+eslint *files="frontend automations/js packages/js .pnpmfile.cjs .eslintrc.js prettier.config.js tsconfig.base.json":
+    just p '@openverse/eslint-plugin' run build
+    pnpm exec eslint \
+        --ext .js,.ts,.vue,.json,.json5 \
+        --ignore-path .gitignore \
+        --ignore-path .eslintignore \
+        --max-warnings=0 \
+        --fix \
+        {{ files }}

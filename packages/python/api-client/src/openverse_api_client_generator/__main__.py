@@ -33,6 +33,12 @@ def cli():
 
     subprocess.run(lint_args)
 
+    eslint_args = ["just", "eslint"] + [
+        file.absolute() for file in GENERATED.iterdir() if file.suffix == ".ts"
+    ]
+
+    subprocess.run(eslint_args)
+
     shutil.rmtree(JS_CLIENT_OUT, ignore_errors=True)
     JS_CLIENT_OUT.mkdir()
     shutil.rmtree(PY_CLIENT_OUT, ignore_errors=True)

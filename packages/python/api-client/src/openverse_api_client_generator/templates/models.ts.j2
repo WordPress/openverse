@@ -1,6 +1,3 @@
-/* eslint-disable eslint-comments/no-unlimited-disable */
-/* eslint-disable */
-
 /**
  * This file is generated from a template. Do not edit it by hand!
  *
@@ -12,19 +9,14 @@ export type {{ name }} = {{ enum | ts_type_string }}
 {%- endfor %}
 {% for model in models.values() %}
 {% if model.description -%}
-/**
- * {{ model.description | replace('\n', '\n * ') }}
- */
+{{ model.description | ts_comment }}
 {% endif -%}
 export interface {{ model.name }} {
 {%- for property in model.properties.values() -%}
 {% if property.description %}
-  /**
-   * {{ property.description | replace('\n', '\n     * ') | replace(' * \n', ' *\n') }}
-   */
+  {{ property.description | ts_comment(2) }}
 {%- endif %}
   {{ property.ts_property_string }}
 {% endfor -%}
 }
 {% endfor %}
-/* eslint-enable */

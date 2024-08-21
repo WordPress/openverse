@@ -1,33 +1,37 @@
-/* eslint-disable eslint-comments/no-unlimited-disable */
-/* eslint-disable */
-
 /**
  * This file is generated from a template. Do not edit it by hand!
  *
  * @see {@link https://docs.openverse.org/packages/js/api-client/index.html#development-and-implementation-details}
  */
 
+{# It's much easier to disable this rule than to filter the imported models based on whether they are used and the value in doing that filtering is minimal #}
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type {
   {%- for model in models.values() %}
   {{ model.name }},
   {%- endfor %}
 } from "./models"
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 export type Routes = {
   {%- for route in routes %}
   {%- if route.description %}
-  /**
-   * {{ route.description | replace('\n', '\n   * ') | replace(' * \n', ' *\n') }}
-   */
+  {{ route.description | ts_comment(2) }}
   {%- endif %}
   "{{ route.method | upper }} {{ route.path }}": {
-    request: {
+    request: {% if route.path_params or route.query_params or route.request_body %}{
       {%- for param in route.path_params.values() %}
+      {%- if param.description %}
+      {{ param.description | ts_comment(6) }}
+      {%- endif %}
       {{ param.ts_property_string }}
       {%- endfor %}
       {%- if route.query_params %}
       params{{ "" if route.has_required_query_params else "?" }}: {
         {%- for param in route.query_params.values() %}
+        {%- if param.description %}
+        {{ param.description | ts_comment(8) }}
+        {%- endif %}
         {{ param.ts_property_string }}
         {%- endfor %}
       }
@@ -35,7 +39,7 @@ export type Routes = {
       {%- if route.request_body %}
       body: {{ route.request_body | ts_type_string }}
       {%- endif %}
-    }
+    }{% else %}unknown{% endif %}
     response: {{ route.response | ts_type_string }}
   }
 {% endfor -%}
@@ -50,4 +54,3 @@ export const RoutesMeta = {
   },
 {% endfor -%}
 } as const
-/* eslint-enable */

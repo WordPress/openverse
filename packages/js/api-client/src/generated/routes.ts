@@ -1,12 +1,10 @@
-/* eslint-disable eslint-comments/no-unlimited-disable */
-/* eslint-disable */
-
 /**
  * This file is generated from a template. Do not edit it by hand!
  *
  * @see {@link https://docs.openverse.org/packages/js/api-client/index.html#development-and-implementation-details}
  */
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type {
   OAuth2KeyInfo,
   OAuth2Token,
@@ -23,10 +21,10 @@ import type {
   PaginatedImageList,
   PaginatedAudioList,
 } from "./models"
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 export type Routes = {
   /**
-   *
    * Return audio files that match the query.
    *
    * This endpoint allows you to search within specific fields, or to retrieve
@@ -63,33 +61,192 @@ export type Routes = {
    *
    * Collection results are sorted by the time they were added to Openverse, with the most recent
    * additions appearing first. The filters such as `license` are not available for collections.
-   *
    */
   "GET /v1/audio/": {
     request: {
       params?: {
+        /**
+         * The page of results to retrieve. This parameter is subject to limitations based on authentication and access level. For details, refer to [the authentication documentation](#tag/auth).
+         */
         page?: number
+        /**
+         * Number of results to return per page. This parameter is subject to limitations based on authentication and access level. For details, refer to [the authentication documentation](#tag/auth).
+         */
         page_size?: number
+        /**
+         * A query string that should not exceed 200 characters in length
+         */
         q?: string
+        /**
+         * For default search, a comma separated list of data sources.
+         * When the `unstable__collection` parameter is used, this parameter only accepts a single source.
+         *
+         * Valid values are `source_name`s from the stats endpoint: https://api.openverse.org/v1/audio/stats/.
+         */
         source?: string
+        /**
+         * A comma separated list of data sources to exclude from the search.
+         * Valid values are `source_name`s from the stats endpoint: https://api.openverse.org/v1/audio/stats/.
+         */
         excluded_source?: string
+        /**
+         * Search by tag only. Cannot be used with `q`. The search is fuzzy, so `tags=cat` will match any value that includes the word `cat`. If the value contains space, items that contain any of the words in the value will match. To search for several values, join them with a comma.
+         */
         tags?: string
+        /**
+         * Search by title only. Cannot be used with `q`. The search is fuzzy, so `title=photo` will match any value that includes the word `photo`. If the value contains space, items that contain any of the words in the value will match. To search for several values, join them with a comma.
+         */
         title?: string
+        /**
+         * _When `q` parameter is present, `creator` parameter is ignored._
+         *
+         * **Creator collection**
+         * When used with `unstable__collection=creator&source=sourceName`, returns the collection of media
+         * by the specified creator. Notice that a single creator's media items
+         * can be found on several sources, but this collection only returns the
+         * items from the specified source.
+         * This is why for this collection, both the creator and the source
+         * parameters are required, and matched exactly. For a fuzzy creator search,
+         * use the default search without the `unstable__collection` parameter.
+         *
+         * **Creator search**
+         * When used without the `unstable__collection` parameter, will search in the creator field only.
+         * The search is fuzzy, so `creator=john` will match any value that includes the
+         * word `john`. If the value contains space, items that contain any of
+         * the words in the value will match. To search for several values,
+         * join them with a comma.
+         */
         creator?: string
+        /**
+         * _Caution: Parameters prefixed with `unstable__` are experimental and
+         * may change or be removed without notice in future updates. Use them
+         * with caution as they are not covered by our API versioning policy._
+         *
+         *
+         *
+         * The kind of media collection to return.
+         *
+         * Must be used with `unstable__tag`, `source` or `creator`+`source`
+         *
+         * * `tag` - tag
+         * * `source` - source
+         * * `creator` - creator
+         */
         unstable__collection?: "tag" | "source" | "creator"
+        /**
+         * _Caution: Parameters prefixed with `unstable__` are experimental and
+         * may change or be removed without notice in future updates. Use them
+         * with caution as they are not covered by our API versioning policy._
+         *
+         *
+         *
+         * _Must be used with `unstable__collection=tag`_
+         *
+         * Get the collection of media with a specific tag. Returns the collection of media
+         * that has the specified tag, matching exactly and entirely.
+         *
+         * Differences that will cause tags to not match are:
+         * - upper and lower case letters
+         * - diacritical marks
+         * - hyphenation
+         * - spacing
+         * - multi-word tags where the query is only one of the words in the tag
+         * - multi-word tags where the words are in a different order.
+         *
+         * Examples of tags that **do not** match:
+         * - "Low-Quality" and "low-quality"
+         * - "jalapeño" and "jalapeno"
+         * - "Saint Pierre des Champs" and "Saint-Pierre-des-Champs"
+         * - "dog walking" and "dog  walking" (where the latter has two spaces between the
+         * last two words, as in a typographical error)
+         * - "runner" and "marathon runner"
+         * - "exclaiming loudly" and "loudly exclaiming"
+         *
+         * For non-exact or multi-tag matching, using the `tags` query parameter.
+         */
         unstable__tag?: string
+        /**
+         * A comma separated list of licenses; available licenses include: `by`, `by-nc`, `by-nc-nd`, `by-nc-sa`, `by-nd`, `by-sa`, `cc0`, `nc-sampling+`, `pdm`, and `sampling+`.
+         */
         license?: string
+        /**
+         * A comma separated list of license types; available license types include: `all`, `all-cc`, `commercial`, and `modification`.
+         */
         license_type?: string
+        /**
+         * Control whether 404 links are filtered out.
+         */
         filter_dead?: boolean
+        /**
+         * A comma separated list of desired file extensions.
+         */
         extension?: string
+        /**
+         * Whether to include sensitive content.
+         */
         mature?: boolean
+        /**
+         * _Caution: Parameters prefixed with `unstable__` are experimental and
+         * may change or be removed without notice in future updates. Use them
+         * with caution as they are not covered by our API versioning policy._
+         *
+         *
+         * The field which should be the basis for sorting results.
+         *
+         * * `relevance` - Relevance
+         * * `indexed_on` - Indexing date
+         */
         unstable__sort_by?: "relevance" | "indexed_on"
+        /**
+         * _Caution: Parameters prefixed with `unstable__` are experimental and
+         * may change or be removed without notice in future updates. Use them
+         * with caution as they are not covered by our API versioning policy._
+         *
+         *
+         * The direction of sorting. Cannot be applied when sorting by `relevance`.
+         *
+         * * `desc` - Descending
+         * * `asc` - Ascending
+         */
         unstable__sort_dir?: "desc" | "asc"
+        /**
+         * _Caution: Parameters prefixed with `unstable__` are experimental and
+         * may change or be removed without notice in future updates. Use them
+         * with caution as they are not covered by our API versioning policy._
+         *
+         *
+         * If enabled, the search will add a boost to results that are from authoritative sources.
+         */
         unstable__authority?: boolean
+        /**
+         * _Caution: Parameters prefixed with `unstable__` are experimental and
+         * may change or be removed without notice in future updates. Use them
+         * with caution as they are not covered by our API versioning policy._
+         *
+         *
+         * The boost coefficient to apply to authoritative sources, multiplied with the popularity boost.
+         */
         unstable__authority_boost?: number
+        /**
+         * _Caution: Parameters prefixed with `unstable__` are experimental and
+         * may change or be removed without notice in future updates. Use them
+         * with caution as they are not covered by our API versioning policy._
+         *
+         *
+         * Whether to include results considered sensitive.
+         */
         unstable__include_sensitive_results?: boolean
+        /**
+         * A comma separated list of categories; available categories include: `audiobook`, `music`, `news`, `podcast`, `pronunciation`, and `sound_effect`.
+         */
         category?: string
+        /**
+         * A comma separated list of lengths; available lengths include: `long`, `medium`, `short`, and `shortest`.
+         */
         length?: string
+        /**
+         * Whether to include the waveform peaks or not
+         */
         peaks?: boolean
       }
     }
@@ -97,7 +254,6 @@ export type Routes = {
   }
 
   /**
-   *
    * Get the details of a specified audio track.
    *
    * By using this endpoint, you can obtain info about audio files such as
@@ -111,7 +267,6 @@ export type Routes = {
   }
 
   /**
-   *
    * Get related audio files for a specified audio track.
    *
    * By using this endpoint, you can get the details of related audio such as
@@ -132,7 +287,13 @@ export type Routes = {
     request: {
       identifier: string
       params?: {
+        /**
+         * whether to render the actual image and not a thumbnail version
+         */
         full_size?: boolean
+        /**
+         * whether to compress the output image to reduce file size,defaults to opposite of `full_size`
+         */
         compressed?: boolean
       }
     }
@@ -154,7 +315,6 @@ export type Routes = {
   }
 
   /**
-   *
    * Get a list of all content sources and their respective number of
    * audio files in the Openverse catalog.
    *
@@ -162,7 +322,7 @@ export type Routes = {
    * as `source_name`, `display_name`, `source_url`, `logo_url` and `media_count`.
    */
   "GET /v1/audio/stats/": {
-    request: {}
+    request: unknown
     response: Array<Source>
   }
 
@@ -172,11 +332,11 @@ export type Routes = {
    * Upon registering, you will receive a `client_id` and `client_secret`,
    * which you can then use to authenticate using the standard OAuth2 flow.
    *
-   * > ⚠️ **WARNINGS:**
-   * > - Store your `client_id` and `client_secret` because you will not be
-   * >   able to retrieve them later.
-   * > - You must keep `client_secret` confidential, as anybody with your
-   * >   `client_secret` can impersonate your application.
+   * \> ⚠️ **WARNINGS:**
+   * \> - Store your `client_id` and `client_secret` because you will not be
+   * \>   able to retrieve them later.
+   * \> - You must keep `client_secret` confidential, as anybody with your
+   * \>   `client_secret` can impersonate your application.
    *
    * You must verify your email address by click the link sent to you in an
    * email. Until you do that, the application will be subject to the same
@@ -197,8 +357,8 @@ export type Routes = {
    * requests. This endpoint takes your client ID and secret, and issues an
    * access token.
    *
-   * > **NOTE:** This endpoint only accepts data as
-   * > `application/x-www-form-urlencoded`. Any other encoding will not work.
+   * \> **NOTE:** This endpoint only accepts data as
+   * \> `application/x-www-form-urlencoded`. Any other encoding will not work.
    *
    * Once your access token expires, you can request another one from this
    * endpoint.
@@ -211,7 +371,6 @@ export type Routes = {
   }
 
   /**
-   *
    * Return images that match the query.
    *
    * This endpoint allows you to search within specific fields, or to retrieve
@@ -248,33 +407,192 @@ export type Routes = {
    *
    * Collection results are sorted by the time they were added to Openverse, with the most recent
    * additions appearing first. The filters such as `license` are not available for collections.
-   *
    */
   "GET /v1/images/": {
     request: {
       params?: {
+        /**
+         * The page of results to retrieve. This parameter is subject to limitations based on authentication and access level. For details, refer to [the authentication documentation](#tag/auth).
+         */
         page?: number
+        /**
+         * Number of results to return per page. This parameter is subject to limitations based on authentication and access level. For details, refer to [the authentication documentation](#tag/auth).
+         */
         page_size?: number
+        /**
+         * A query string that should not exceed 200 characters in length
+         */
         q?: string
+        /**
+         * For default search, a comma separated list of data sources.
+         * When the `unstable__collection` parameter is used, this parameter only accepts a single source.
+         *
+         * Valid values are `source_name`s from the stats endpoint: https://api.openverse.org/v1/images/stats/.
+         */
         source?: string
+        /**
+         * A comma separated list of data sources to exclude from the search.
+         * Valid values are `source_name`s from the stats endpoint: https://api.openverse.org/v1/images/stats/.
+         */
         excluded_source?: string
+        /**
+         * Search by tag only. Cannot be used with `q`. The search is fuzzy, so `tags=cat` will match any value that includes the word `cat`. If the value contains space, items that contain any of the words in the value will match. To search for several values, join them with a comma.
+         */
         tags?: string
+        /**
+         * Search by title only. Cannot be used with `q`. The search is fuzzy, so `title=photo` will match any value that includes the word `photo`. If the value contains space, items that contain any of the words in the value will match. To search for several values, join them with a comma.
+         */
         title?: string
+        /**
+         * _When `q` parameter is present, `creator` parameter is ignored._
+         *
+         * **Creator collection**
+         * When used with `unstable__collection=creator&source=sourceName`, returns the collection of media
+         * by the specified creator. Notice that a single creator's media items
+         * can be found on several sources, but this collection only returns the
+         * items from the specified source.
+         * This is why for this collection, both the creator and the source
+         * parameters are required, and matched exactly. For a fuzzy creator search,
+         * use the default search without the `unstable__collection` parameter.
+         *
+         * **Creator search**
+         * When used without the `unstable__collection` parameter, will search in the creator field only.
+         * The search is fuzzy, so `creator=john` will match any value that includes the
+         * word `john`. If the value contains space, items that contain any of
+         * the words in the value will match. To search for several values,
+         * join them with a comma.
+         */
         creator?: string
+        /**
+         * _Caution: Parameters prefixed with `unstable__` are experimental and
+         * may change or be removed without notice in future updates. Use them
+         * with caution as they are not covered by our API versioning policy._
+         *
+         *
+         *
+         * The kind of media collection to return.
+         *
+         * Must be used with `unstable__tag`, `source` or `creator`+`source`
+         *
+         * * `tag` - tag
+         * * `source` - source
+         * * `creator` - creator
+         */
         unstable__collection?: "tag" | "source" | "creator"
+        /**
+         * _Caution: Parameters prefixed with `unstable__` are experimental and
+         * may change or be removed without notice in future updates. Use them
+         * with caution as they are not covered by our API versioning policy._
+         *
+         *
+         *
+         * _Must be used with `unstable__collection=tag`_
+         *
+         * Get the collection of media with a specific tag. Returns the collection of media
+         * that has the specified tag, matching exactly and entirely.
+         *
+         * Differences that will cause tags to not match are:
+         * - upper and lower case letters
+         * - diacritical marks
+         * - hyphenation
+         * - spacing
+         * - multi-word tags where the query is only one of the words in the tag
+         * - multi-word tags where the words are in a different order.
+         *
+         * Examples of tags that **do not** match:
+         * - "Low-Quality" and "low-quality"
+         * - "jalapeño" and "jalapeno"
+         * - "Saint Pierre des Champs" and "Saint-Pierre-des-Champs"
+         * - "dog walking" and "dog  walking" (where the latter has two spaces between the
+         * last two words, as in a typographical error)
+         * - "runner" and "marathon runner"
+         * - "exclaiming loudly" and "loudly exclaiming"
+         *
+         * For non-exact or multi-tag matching, using the `tags` query parameter.
+         */
         unstable__tag?: string
+        /**
+         * A comma separated list of licenses; available licenses include: `by`, `by-nc`, `by-nc-nd`, `by-nc-sa`, `by-nd`, `by-sa`, `cc0`, `nc-sampling+`, `pdm`, and `sampling+`.
+         */
         license?: string
+        /**
+         * A comma separated list of license types; available license types include: `all`, `all-cc`, `commercial`, and `modification`.
+         */
         license_type?: string
+        /**
+         * Control whether 404 links are filtered out.
+         */
         filter_dead?: boolean
+        /**
+         * A comma separated list of desired file extensions.
+         */
         extension?: string
+        /**
+         * Whether to include sensitive content.
+         */
         mature?: boolean
+        /**
+         * _Caution: Parameters prefixed with `unstable__` are experimental and
+         * may change or be removed without notice in future updates. Use them
+         * with caution as they are not covered by our API versioning policy._
+         *
+         *
+         * The field which should be the basis for sorting results.
+         *
+         * * `relevance` - Relevance
+         * * `indexed_on` - Indexing date
+         */
         unstable__sort_by?: "relevance" | "indexed_on"
+        /**
+         * _Caution: Parameters prefixed with `unstable__` are experimental and
+         * may change or be removed without notice in future updates. Use them
+         * with caution as they are not covered by our API versioning policy._
+         *
+         *
+         * The direction of sorting. Cannot be applied when sorting by `relevance`.
+         *
+         * * `desc` - Descending
+         * * `asc` - Ascending
+         */
         unstable__sort_dir?: "desc" | "asc"
+        /**
+         * _Caution: Parameters prefixed with `unstable__` are experimental and
+         * may change or be removed without notice in future updates. Use them
+         * with caution as they are not covered by our API versioning policy._
+         *
+         *
+         * If enabled, the search will add a boost to results that are from authoritative sources.
+         */
         unstable__authority?: boolean
+        /**
+         * _Caution: Parameters prefixed with `unstable__` are experimental and
+         * may change or be removed without notice in future updates. Use them
+         * with caution as they are not covered by our API versioning policy._
+         *
+         *
+         * The boost coefficient to apply to authoritative sources, multiplied with the popularity boost.
+         */
         unstable__authority_boost?: number
+        /**
+         * _Caution: Parameters prefixed with `unstable__` are experimental and
+         * may change or be removed without notice in future updates. Use them
+         * with caution as they are not covered by our API versioning policy._
+         *
+         *
+         * Whether to include results considered sensitive.
+         */
         unstable__include_sensitive_results?: boolean
+        /**
+         * A comma separated list of categories; available categories include: `digitized_artwork`, `illustration`, and `photograph`.
+         */
         category?: string
+        /**
+         * A comma separated list of aspect ratios; available aspect ratios include: `square`, `tall`, and `wide`.
+         */
         aspect_ratio?: string
+        /**
+         * A comma separated list of image sizes; available image sizes include: `large`, `medium`, and `small`.
+         */
         size?: string
       }
     }
@@ -282,7 +600,6 @@ export type Routes = {
   }
 
   /**
-   *
    * Get the details of a specified image.
    *
    * By using this endpoint, you can obtain info about images such as
@@ -296,7 +613,6 @@ export type Routes = {
   }
 
   /**
-   *
    * Get related images for a specified image.
    *
    * By using this endpoint, you can get the details of related images such as
@@ -316,7 +632,13 @@ export type Routes = {
     request: {
       identifier: string
       params?: {
+        /**
+         * whether to render the actual image and not a thumbnail version
+         */
         full_size?: boolean
+        /**
+         * whether to compress the output image to reduce file size,defaults to opposite of `full_size`
+         */
         compressed?: boolean
       }
     }
@@ -324,7 +646,6 @@ export type Routes = {
   }
 
   /**
-   *
    * Get a list of all content sources and their respective number of
    * images in the Openverse catalog.
    *
@@ -332,7 +653,7 @@ export type Routes = {
    * as `source_name`, `display_name`, `source_url`, `logo_url` and `media_count`.
    */
   "GET /v1/images/stats/": {
-    request: {}
+    request: unknown
     response: Array<Source>
   }
 
@@ -342,11 +663,11 @@ export type Routes = {
    * You can use this endpoint to get information about your API key such as
    * `requests_this_minute`, `requests_today`, and `rate_limit_model`.
    *
-   * > ℹ️ **NOTE:** If you get a 401 Unauthorized, it means your token is invalid
-   * > (malformed, non-existent, or expired).
+   * \> ℹ️ **NOTE:** If you get a 401 Unauthorized, it means your token is invalid
+   * \> (malformed, non-existent, or expired).
    */
   "GET /v1/rate_limit/": {
-    request: {}
+    request: unknown
     response: OAuth2KeyInfo
   }
 }
@@ -436,4 +757,3 @@ export const RoutesMeta = {
     jsonResponse: true,
   },
 } as const
-/* eslint-enable */

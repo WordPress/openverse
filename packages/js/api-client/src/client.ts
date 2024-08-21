@@ -65,10 +65,7 @@ async function getFetch(): Promise<Transport> {
 
 export type OpenverseClient = ReturnType<typeof OpenverseClient>
 export const OpenverseClient = (
-  {
-    baseUrl = "https://api.openverse.engineering/",
-    credentials,
-  }: ClientOptions = {},
+  { baseUrl = "https://api.openverse.org/", credentials }: ClientOptions = {},
   getTransport: () => Promise<Transport> = getFetch
 ) => {
   let apiToken: Routes["POST /v1/auth_tokens/token/"]["response"] | null = null
@@ -93,7 +90,12 @@ export const OpenverseClient = (
 
     if (req && endpointMeta.pathParams.length) {
       endpointMeta.pathParams.forEach((param) => {
-        url = url.replace(`{${param}}`, (req as { [param]: string })[param])
+        if (!(param in req)) {
+          throw Error(
+            `'${endpoint}' request missing required path parameter '${param}'`
+          )
+        }
+        url = url.replace(`{${param}}`, req[param] as string)
       })
     }
 

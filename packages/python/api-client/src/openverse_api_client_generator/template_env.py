@@ -1,6 +1,10 @@
 from jinja2 import Environment, PackageLoader, select_autoescape
 
-from openverse_api_client_generator.components import py_type_string, ts_type_string
+from openverse_api_client_generator.components import (
+    py_type_string,
+    ts_type_string,
+    ts_comment,
+)
 
 
 template_env = Environment(
@@ -10,6 +14,7 @@ template_env = Environment(
 
 template_env.filters["ts_type_string"] = ts_type_string
 template_env.filters["py_type_string"] = py_type_string
+template_env.filters["ts_comment"] = ts_comment
 
 
 class MultiTemplate:

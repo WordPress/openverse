@@ -30,7 +30,7 @@ EXPIRY_THRESHOLD = 30
 
 
 class AsyncOpenverseClient:
-    base_url: str = "https://api.openverse.engineering"
+    base_url: str = "https://api.openverse.org"
     auth: OpenverseAuth | None = None
     client: httpx.AsyncClient
 

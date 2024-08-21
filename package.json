@@ -10,9 +10,7 @@
   "author": "Openverse <openverse@wordpress.org>",
   "scripts": {
     "postinstall": "pnpm --filter './packages/js/*' run build",
-    "prepare:nuxt": "pnpm --filter frontend run prepare:nuxt",
-    "preeslint": "pnpm --filter '@openverse/eslint-plugin' run build",
-    "eslint": "eslint --ext .js,.ts,.vue,.json,.json5 --ignore-path .gitignore --ignore-path .eslintignore --max-warnings=0 frontend automations/js packages/js .pnpmfile.cjs .eslintrc.js prettier.config.js tsconfig.base.json"
+    "prepare:nuxt": "pnpm --filter frontend run prepare:nuxt"
   },
   "packageManager": "pnpm@9.5.0",
   "engines": {
