@@ -216,6 +216,10 @@ class Route:
         return any(self.required_body_params)
 
     @property
+    def has_params_or_body(self) -> bool:
+        return bool(self.query_params or self.request_body)
+
+    @property
     def py_route_methodname(self) -> str:
         if self.path in {"/v1/audio/", "/v1/images/"}:
             path = self.path + "search/"
@@ -234,6 +238,10 @@ class Route:
     @property
     def py_cast_content(self) -> str:
         return f"typing.cast({py_type_string(self.response)}, content)"
+
+    @property
+    def endpoint(self) -> str:
+        return f"{self.method.upper()} {self.path}"
 
 
 def python_type_from_schema(schema: dict) -> type | TypeAlias:

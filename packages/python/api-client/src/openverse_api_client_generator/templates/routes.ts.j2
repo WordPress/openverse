@@ -18,7 +18,7 @@ export type Routes = {
   {%- if route.description %}
   {{ route.description | ts_comment(2) }}
   {%- endif %}
-  "{{ route.method | upper }} {{ route.path }}": {
+  "{{ route.endpoint }}": {
     request: {% if route.path_params or route.query_params or route.request_body %}{
       {%- for param in route.path_params.values() %}
       {%- if param.description %}
@@ -47,7 +47,7 @@ export type Routes = {
 
 export const RoutesMeta = {
   {%- for route in routes %}
-  "{{ route.method | upper }} {{ route.path }}": {
+  "{{ route.endpoint }}": {
     contentType: "{{ route.content_type }}",
     pathParams: [{% for p in route.path_params %}"{{ p }}"{% endfor %}],
     jsonResponse: {{ "true" if route.json_response else "false" }},

@@ -13,6 +13,12 @@ arg_parser.add_argument(
     help="URL of the Openverse API instance to use",
 )
 
+arg_parser.add_argument(
+    "--use-cache",
+    action="store_true",
+    default=True,
+)
+
 
 PACKAGES = Path(__file__).parents[4]
 REPO = PACKAGES.parent
@@ -26,18 +32,6 @@ PY_CLIENT_OUT = (
 def cli():
     args = arg_parser.parse_args()
     main(**args.__dict__)
-
-    lint_args = ["pre-commit", "run", "--files"] + [
-        file.absolute() for file in GENERATED.iterdir()
-    ]
-
-    subprocess.run(lint_args)
-
-    eslint_args = ["just", "eslint"] + [
-        file.absolute() for file in GENERATED.iterdir() if file.suffix == ".ts"
-    ]
-
-    subprocess.run(eslint_args)
 
     shutil.rmtree(JS_CLIENT_OUT, ignore_errors=True)
     JS_CLIENT_OUT.mkdir()
@@ -55,3 +49,5 @@ def cli():
         dest.unlink(missing_ok=True)
         dest.touch()
         dest.write_bytes(file.read_bytes())
+
+    subprocess.run(["pre-commit", "run", "--all-files"])

@@ -6,7 +6,7 @@ This file is generated from a template. Do not edit it by hand!
 See https://docs.openverse.org/packages/python/api-client/index.html#development-and-implementation-details
 """
 
-from typing_extensions import cast, Self
+from typing_extensions import Any, cast, Self, Literal, overload
 import typing_extensions as typing
 import httpx
 
@@ -21,9 +21,9 @@ from openverse_api_client._generated.models import (
     PaginatedImageList,
     PaginatedAudioList,
 )
+from openverse_api_client._generated import routes
 from openverse_api_client._auth import OpenverseAuth
 from openverse_api_client._response import Response, Request
-from openverse_api_client._utils import Empty, EMPTY, is_empty
 
 
 EXPIRY_THRESHOLD = 30
@@ -111,642 +111,219 @@ class AsyncOpenverseClient:
             **kwargs,
         )
 
-    async def v1_audio_search(
+    @overload
+    def endpoint(
         self,
-        *,
-        page: int | Empty = EMPTY,
-        page_size: int | Empty = EMPTY,
-        q: str | Empty = EMPTY,
-        source: str | Empty = EMPTY,
-        excluded_source: str | Empty = EMPTY,
-        tags: str | Empty = EMPTY,
-        title: str | Empty = EMPTY,
-        creator: str | Empty = EMPTY,
-        unstable__collection: typing.Literal["tag", "source", "creator"]
-        | Empty = EMPTY,
-        unstable__tag: str | Empty = EMPTY,
-        license: str | Empty = EMPTY,
-        license_type: str | Empty = EMPTY,
-        filter_dead: bool | Empty = EMPTY,
-        extension: str | Empty = EMPTY,
-        mature: bool | Empty = EMPTY,
-        unstable__sort_by: typing.Literal["relevance", "indexed_on"] | Empty = EMPTY,
-        unstable__sort_dir: typing.Literal["desc", "asc"] | Empty = EMPTY,
-        unstable__authority: bool | Empty = EMPTY,
-        unstable__authority_boost: float | Empty = EMPTY,
-        unstable__include_sensitive_results: bool | Empty = EMPTY,
-        category: str | Empty = EMPTY,
-        length: str | Empty = EMPTY,
-        peaks: bool | Empty = EMPTY,
-        headers: dict | httpx.Headers | None = None,
-    ) -> Response[PaginatedAudioList]:
-        path = "/v1/audio/"
-        params: dict[str, typing.Any] = {}
-        if not is_empty(page):
-            params["page"] = page
-        if not is_empty(page_size):
-            params["page_size"] = page_size
-        if not is_empty(q):
-            params["q"] = q
-        if not is_empty(source):
-            params["source"] = source
-        if not is_empty(excluded_source):
-            params["excluded_source"] = excluded_source
-        if not is_empty(tags):
-            params["tags"] = tags
-        if not is_empty(title):
-            params["title"] = title
-        if not is_empty(creator):
-            params["creator"] = creator
-        if not is_empty(unstable__collection):
-            params["unstable__collection"] = unstable__collection
-        if not is_empty(unstable__tag):
-            params["unstable__tag"] = unstable__tag
-        if not is_empty(license):
-            params["license"] = license
-        if not is_empty(license_type):
-            params["license_type"] = license_type
-        if not is_empty(filter_dead):
-            params["filter_dead"] = filter_dead
-        if not is_empty(extension):
-            params["extension"] = extension
-        if not is_empty(mature):
-            params["mature"] = mature
-        if not is_empty(unstable__sort_by):
-            params["unstable__sort_by"] = unstable__sort_by
-        if not is_empty(unstable__sort_dir):
-            params["unstable__sort_dir"] = unstable__sort_dir
-        if not is_empty(unstable__authority):
-            params["unstable__authority"] = unstable__authority
-        if not is_empty(unstable__authority_boost):
-            params["unstable__authority_boost"] = unstable__authority_boost
-        if not is_empty(unstable__include_sensitive_results):
-            params["unstable__include_sensitive_results"] = (
-                unstable__include_sensitive_results
-            )
-        if not is_empty(category):
-            params["category"] = category
-        if not is_empty(length):
-            params["length"] = length
-        if not is_empty(peaks):
-            params["peaks"] = peaks
+        endpoint: Literal["GET /v1/audio/"],
+    ) -> type[routes.v1_audio_search]: ...
 
-        body = None
-
-        response = await self._request(
-            method="get",
-            path=path,
-            params=params,
-            json=body,
-            headers=headers,
-        )
-
-        await response.aread()
-        content = response.json()
-        return Response[PaginatedAudioList](
-            body=typing.cast(PaginatedAudioList, content),
-            status_code=response.status_code,
-            headers=response.headers,
-            request=Request(
-                headers=response.request.headers,
-                content=response.request.content,
-                url=str(response.request.url),
-                method=response.request.method,
-            ),
-        )
-
-    async def v1_audio(
+    @overload
+    def endpoint(
         self,
-        identifier: str,
-        *,
-        headers: dict | httpx.Headers | None = None,
-    ) -> Response[Audio]:
-        path = "/v1/audio/{identifier}/".format(
-            identifier=identifier,
-        )
+        endpoint: Literal["GET /v1/audio/{identifier}/"],
+    ) -> type[routes.v1_audio]: ...
 
-        params = None
-
-        body = None
-
-        response = await self._request(
-            method="get",
-            path=path,
-            params=params,
-            json=body,
-            headers=headers,
-        )
-
-        await response.aread()
-        content = response.json()
-        return Response[Audio](
-            body=typing.cast(Audio, content),
-            status_code=response.status_code,
-            headers=response.headers,
-            request=Request(
-                headers=response.request.headers,
-                content=response.request.content,
-                url=str(response.request.url),
-                method=response.request.method,
-            ),
-        )
-
-    async def v1_audio_related(
+    @overload
+    def endpoint(
         self,
-        identifier: str,
-        *,
-        headers: dict | httpx.Headers | None = None,
-    ) -> Response[PaginatedAudioList]:
-        path = "/v1/audio/{identifier}/related/".format(
-            identifier=identifier,
-        )
+        endpoint: Literal["GET /v1/audio/{identifier}/related/"],
+    ) -> type[routes.v1_audio_related]: ...
 
-        params = None
-
-        body = None
-
-        response = await self._request(
-            method="get",
-            path=path,
-            params=params,
-            json=body,
-            headers=headers,
-        )
-
-        await response.aread()
-        content = response.json()
-        return Response[PaginatedAudioList](
-            body=typing.cast(PaginatedAudioList, content),
-            status_code=response.status_code,
-            headers=response.headers,
-            request=Request(
-                headers=response.request.headers,
-                content=response.request.content,
-                url=str(response.request.url),
-                method=response.request.method,
-            ),
-        )
-
-    async def v1_audio_thumb(
+    @overload
+    def endpoint(
         self,
-        identifier: str,
-        *,
-        full_size: bool | Empty = EMPTY,
-        compressed: bool | Empty = EMPTY,
-        headers: dict | httpx.Headers | None = None,
-    ) -> Response[bytes]:
-        path = "/v1/audio/{identifier}/thumb/".format(
-            identifier=identifier,
-        )
+        endpoint: Literal["GET /v1/audio/{identifier}/thumb/"],
+    ) -> type[routes.v1_audio_thumb]: ...
 
-        params: dict[str, typing.Any] = {}
-        if not is_empty(full_size):
-            params["full_size"] = full_size
-        if not is_empty(compressed):
-            params["compressed"] = compressed
-
-        body = None
-
-        response = await self._request(
-            method="get",
-            path=path,
-            params=params,
-            json=body,
-            headers=headers,
-        )
-
-        await response.aread()
-        content = response.content
-        return Response[bytes](
-            body=typing.cast(bytes, content),
-            status_code=response.status_code,
-            headers=response.headers,
-            request=Request(
-                headers=response.request.headers,
-                content=response.request.content,
-                url=str(response.request.url),
-                method=response.request.method,
-            ),
-        )
-
-    async def v1_audio_waveform(
+    @overload
+    def endpoint(
         self,
-        identifier: str,
-        *,
-        headers: dict | httpx.Headers | None = None,
-    ) -> Response[AudioWaveform]:
-        path = "/v1/audio/{identifier}/waveform/".format(
-            identifier=identifier,
-        )
+        endpoint: Literal["GET /v1/audio/{identifier}/waveform/"],
+    ) -> type[routes.v1_audio_waveform]: ...
 
-        params = None
-
-        body = None
-
-        response = await self._request(
-            method="get",
-            path=path,
-            params=params,
-            json=body,
-            headers=headers,
-        )
-
-        await response.aread()
-        content = response.json()
-        return Response[AudioWaveform](
-            body=typing.cast(AudioWaveform, content),
-            status_code=response.status_code,
-            headers=response.headers,
-            request=Request(
-                headers=response.request.headers,
-                content=response.request.content,
-                url=str(response.request.url),
-                method=response.request.method,
-            ),
-        )
-
-    async def v1_audio_stats(
+    @overload
+    def endpoint(
         self,
-        *,
-        headers: dict | httpx.Headers | None = None,
-    ) -> Response[list[Source]]:
-        path = "/v1/audio/stats/"
-        params = None
+        endpoint: Literal["GET /v1/audio/stats/"],
+    ) -> type[routes.v1_audio_stats]: ...
 
-        body = None
-
-        response = await self._request(
-            method="get",
-            path=path,
-            params=params,
-            json=body,
-            headers=headers,
-        )
-
-        await response.aread()
-        content = response.json()
-        return Response[list[Source]](
-            body=typing.cast(list[Source], content),
-            status_code=response.status_code,
-            headers=response.headers,
-            request=Request(
-                headers=response.request.headers,
-                content=response.request.content,
-                url=str(response.request.url),
-                method=response.request.method,
-            ),
-        )
-
-    async def v1_auth_tokens_register(
+    @overload
+    def endpoint(
         self,
-        *,
-        name: str,
-        description: str,
-        email: str,
-        headers: dict | httpx.Headers | None = None,
-    ) -> Response[OAuth2Application]:
-        path = "/v1/auth_tokens/register/"
-        params = None
+        endpoint: Literal["POST /v1/auth_tokens/register/"],
+    ) -> type[routes.v1_auth_tokens_register]: ...
 
-        body: dict[str, typing.Any] = {
-            "name": name,
-            "description": description,
-            "email": email,
+    @overload
+    def endpoint(
+        self,
+        endpoint: Literal["POST /v1/auth_tokens/token/"],
+    ) -> type[routes.v1_auth_tokens_token]: ...
+
+    @overload
+    def endpoint(
+        self,
+        endpoint: Literal["GET /v1/images/"],
+    ) -> type[routes.v1_image_search]: ...
+
+    @overload
+    def endpoint(
+        self,
+        endpoint: Literal["GET /v1/images/{identifier}/"],
+    ) -> type[routes.v1_image]: ...
+
+    @overload
+    def endpoint(
+        self,
+        endpoint: Literal["GET /v1/images/{identifier}/related/"],
+    ) -> type[routes.v1_image_related]: ...
+
+    @overload
+    def endpoint(
+        self,
+        endpoint: Literal["GET /v1/images/{identifier}/thumb/"],
+    ) -> type[routes.v1_image_thumb]: ...
+
+    @overload
+    def endpoint(
+        self,
+        endpoint: Literal["GET /v1/images/stats/"],
+    ) -> type[routes.v1_image_stats]: ...
+
+    @overload
+    def endpoint(
+        self,
+        endpoint: Literal["GET /v1/rate_limit/"],
+    ) -> type[routes.v1_rate_limit]: ...
+
+    def endpoint(self, endpoint: str):
+        return routes.ROUTES_BY_ENDPOINT[endpoint]
+
+    @overload
+    async def request(
+        self,
+        route: routes.v1_audio_search,
+        headers: dict[str, str] | httpx.Headers | None = None,
+    ) -> Response[PaginatedAudioList]: ...
+
+    @overload
+    async def request(
+        self,
+        route: routes.v1_audio,
+        headers: dict[str, str] | httpx.Headers | None = None,
+    ) -> Response[Audio]: ...
+
+    @overload
+    async def request(
+        self,
+        route: routes.v1_audio_related,
+        headers: dict[str, str] | httpx.Headers | None = None,
+    ) -> Response[PaginatedAudioList]: ...
+
+    @overload
+    async def request(
+        self,
+        route: routes.v1_audio_thumb,
+        headers: dict[str, str] | httpx.Headers | None = None,
+    ) -> Response[bytes]: ...
+
+    @overload
+    async def request(
+        self,
+        route: routes.v1_audio_waveform,
+        headers: dict[str, str] | httpx.Headers | None = None,
+    ) -> Response[AudioWaveform]: ...
+
+    @overload
+    async def request(
+        self,
+        route: routes.v1_audio_stats,
+        headers: dict[str, str] | httpx.Headers | None = None,
+    ) -> Response[list[Source]]: ...
+
+    @overload
+    async def request(
+        self,
+        route: routes.v1_auth_tokens_register,
+        headers: dict[str, str] | httpx.Headers | None = None,
+    ) -> Response[OAuth2Application]: ...
+
+    @overload
+    async def request(
+        self,
+        route: routes.v1_auth_tokens_token,
+        headers: dict[str, str] | httpx.Headers | None = None,
+    ) -> Response[OAuth2Token]: ...
+
+    @overload
+    async def request(
+        self,
+        route: routes.v1_image_search,
+        headers: dict[str, str] | httpx.Headers | None = None,
+    ) -> Response[PaginatedImageList]: ...
+
+    @overload
+    async def request(
+        self,
+        route: routes.v1_image,
+        headers: dict[str, str] | httpx.Headers | None = None,
+    ) -> Response[Image]: ...
+
+    @overload
+    async def request(
+        self,
+        route: routes.v1_image_related,
+        headers: dict[str, str] | httpx.Headers | None = None,
+    ) -> Response[Image]: ...
+
+    @overload
+    async def request(
+        self,
+        route: routes.v1_image_thumb,
+        headers: dict[str, str] | httpx.Headers | None = None,
+    ) -> Response[bytes]: ...
+
+    @overload
+    async def request(
+        self,
+        route: routes.v1_image_stats,
+        headers: dict[str, str] | httpx.Headers | None = None,
+    ) -> Response[list[Source]]: ...
+
+    @overload
+    async def request(
+        self,
+        route: routes.v1_rate_limit,
+        headers: dict[str, str] | httpx.Headers | None = None,
+    ) -> Response[OAuth2KeyInfo]: ...
+
+    async def request(
+        self, route: routes.Route, headers: dict[str, str] | httpx.Headers | None = None
+    ) -> Any:
+        path = route.path
+
+        if route.path_params:
+            path = path.format(**route.path_params)
+
+        req_kwargs = {
+            "params": route.query_params,
+            "headers": headers,
         }
 
-        response = await self._request(
-            method="post",
-            path=path,
-            params=params,
-            json=body,
-            headers=headers,
-        )
+        if route.content_type == "application/json":
+            req_kwargs["json"] = route.body
+        else:
+            req_kwargs["data"] = route.body
+
+        response = await self._request(method=route.method, path=path, **req_kwargs)
 
         await response.aread()
-        content = response.json()
-        return Response[OAuth2Application](
-            body=typing.cast(OAuth2Application, content),
-            status_code=response.status_code,
-            headers=response.headers,
-            request=Request(
-                headers=response.request.headers,
-                content=response.request.content,
-                url=str(response.request.url),
-                method=response.request.method,
-            ),
-        )
+        if route.json_response:
+            content = response.json()
+        else:
+            content = response.content
 
-    async def v1_auth_tokens_token(
-        self,
-        *,
-        client_id: str,
-        client_secret: str,
-        grant_type: typing.Literal["client_credentials"],
-        headers: dict | httpx.Headers | None = None,
-    ) -> Response[OAuth2Token]:
-        path = "/v1/auth_tokens/token/"
-        params = None
-
-        body: dict[str, typing.Any] = {
-            "client_id": client_id,
-            "client_secret": client_secret,
-            "grant_type": grant_type,
-        }
-
-        response = await self._request(
-            method="post",
-            path=path,
-            params=params,
-            data=body,
-            headers=headers,
-        )
-
-        await response.aread()
-        content = response.json()
-        return Response[OAuth2Token](
-            body=typing.cast(OAuth2Token, content),
-            status_code=response.status_code,
-            headers=response.headers,
-            request=Request(
-                headers=response.request.headers,
-                content=response.request.content,
-                url=str(response.request.url),
-                method=response.request.method,
-            ),
-        )
-
-    async def v1_image_search(
-        self,
-        *,
-        page: int | Empty = EMPTY,
-        page_size: int | Empty = EMPTY,
-        q: str | Empty = EMPTY,
-        source: str | Empty = EMPTY,
-        excluded_source: str | Empty = EMPTY,
-        tags: str | Empty = EMPTY,
-        title: str | Empty = EMPTY,
-        creator: str | Empty = EMPTY,
-        unstable__collection: typing.Literal["tag", "source", "creator"]
-        | Empty = EMPTY,
-        unstable__tag: str | Empty = EMPTY,
-        license: str | Empty = EMPTY,
-        license_type: str | Empty = EMPTY,
-        filter_dead: bool | Empty = EMPTY,
-        extension: str | Empty = EMPTY,
-        mature: bool | Empty = EMPTY,
-        unstable__sort_by: typing.Literal["relevance", "indexed_on"] | Empty = EMPTY,
-        unstable__sort_dir: typing.Literal["desc", "asc"] | Empty = EMPTY,
-        unstable__authority: bool | Empty = EMPTY,
-        unstable__authority_boost: float | Empty = EMPTY,
-        unstable__include_sensitive_results: bool | Empty = EMPTY,
-        category: str | Empty = EMPTY,
-        aspect_ratio: str | Empty = EMPTY,
-        size: str | Empty = EMPTY,
-        headers: dict | httpx.Headers | None = None,
-    ) -> Response[PaginatedImageList]:
-        path = "/v1/images/"
-        params: dict[str, typing.Any] = {}
-        if not is_empty(page):
-            params["page"] = page
-        if not is_empty(page_size):
-            params["page_size"] = page_size
-        if not is_empty(q):
-            params["q"] = q
-        if not is_empty(source):
-            params["source"] = source
-        if not is_empty(excluded_source):
-            params["excluded_source"] = excluded_source
-        if not is_empty(tags):
-            params["tags"] = tags
-        if not is_empty(title):
-            params["title"] = title
-        if not is_empty(creator):
-            params["creator"] = creator
-        if not is_empty(unstable__collection):
-            params["unstable__collection"] = unstable__collection
-        if not is_empty(unstable__tag):
-            params["unstable__tag"] = unstable__tag
-        if not is_empty(license):
-            params["license"] = license
-        if not is_empty(license_type):
-            params["license_type"] = license_type
-        if not is_empty(filter_dead):
-            params["filter_dead"] = filter_dead
-        if not is_empty(extension):
-            params["extension"] = extension
-        if not is_empty(mature):
-            params["mature"] = mature
-        if not is_empty(unstable__sort_by):
-            params["unstable__sort_by"] = unstable__sort_by
-        if not is_empty(unstable__sort_dir):
-            params["unstable__sort_dir"] = unstable__sort_dir
-        if not is_empty(unstable__authority):
-            params["unstable__authority"] = unstable__authority
-        if not is_empty(unstable__authority_boost):
-            params["unstable__authority_boost"] = unstable__authority_boost
-        if not is_empty(unstable__include_sensitive_results):
-            params["unstable__include_sensitive_results"] = (
-                unstable__include_sensitive_results
-            )
-        if not is_empty(category):
-            params["category"] = category
-        if not is_empty(aspect_ratio):
-            params["aspect_ratio"] = aspect_ratio
-        if not is_empty(size):
-            params["size"] = size
-
-        body = None
-
-        response = await self._request(
-            method="get",
-            path=path,
-            params=params,
-            json=body,
-            headers=headers,
-        )
-
-        await response.aread()
-        content = response.json()
-        return Response[PaginatedImageList](
-            body=typing.cast(PaginatedImageList, content),
-            status_code=response.status_code,
-            headers=response.headers,
-            request=Request(
-                headers=response.request.headers,
-                content=response.request.content,
-                url=str(response.request.url),
-                method=response.request.method,
-            ),
-        )
-
-    async def v1_image(
-        self,
-        identifier: str,
-        *,
-        headers: dict | httpx.Headers | None = None,
-    ) -> Response[Image]:
-        path = "/v1/images/{identifier}/".format(
-            identifier=identifier,
-        )
-
-        params = None
-
-        body = None
-
-        response = await self._request(
-            method="get",
-            path=path,
-            params=params,
-            json=body,
-            headers=headers,
-        )
-
-        await response.aread()
-        content = response.json()
-        return Response[Image](
-            body=typing.cast(Image, content),
-            status_code=response.status_code,
-            headers=response.headers,
-            request=Request(
-                headers=response.request.headers,
-                content=response.request.content,
-                url=str(response.request.url),
-                method=response.request.method,
-            ),
-        )
-
-    async def v1_image_related(
-        self,
-        identifier: str,
-        *,
-        headers: dict | httpx.Headers | None = None,
-    ) -> Response[Image]:
-        path = "/v1/images/{identifier}/related/".format(
-            identifier=identifier,
-        )
-
-        params = None
-
-        body = None
-
-        response = await self._request(
-            method="get",
-            path=path,
-            params=params,
-            json=body,
-            headers=headers,
-        )
-
-        await response.aread()
-        content = response.json()
-        return Response[Image](
-            body=typing.cast(Image, content),
-            status_code=response.status_code,
-            headers=response.headers,
-            request=Request(
-                headers=response.request.headers,
-                content=response.request.content,
-                url=str(response.request.url),
-                method=response.request.method,
-            ),
-        )
-
-    async def v1_image_thumb(
-        self,
-        identifier: str,
-        *,
-        full_size: bool | Empty = EMPTY,
-        compressed: bool | Empty = EMPTY,
-        headers: dict | httpx.Headers | None = None,
-    ) -> Response[bytes]:
-        path = "/v1/images/{identifier}/thumb/".format(
-            identifier=identifier,
-        )
-
-        params: dict[str, typing.Any] = {}
-        if not is_empty(full_size):
-            params["full_size"] = full_size
-        if not is_empty(compressed):
-            params["compressed"] = compressed
-
-        body = None
-
-        response = await self._request(
-            method="get",
-            path=path,
-            params=params,
-            json=body,
-            headers=headers,
-        )
-
-        await response.aread()
-        content = response.content
-        return Response[bytes](
-            body=typing.cast(bytes, content),
-            status_code=response.status_code,
-            headers=response.headers,
-            request=Request(
-                headers=response.request.headers,
-                content=response.request.content,
-                url=str(response.request.url),
-                method=response.request.method,
-            ),
-        )
-
-    async def v1_image_stats(
-        self,
-        *,
-        headers: dict | httpx.Headers | None = None,
-    ) -> Response[list[Source]]:
-        path = "/v1/images/stats/"
-        params = None
-
-        body = None
-
-        response = await self._request(
-            method="get",
-            path=path,
-            params=params,
-            json=body,
-            headers=headers,
-        )
-
-        await response.aread()
-        content = response.json()
-        return Response[list[Source]](
-            body=typing.cast(list[Source], content),
-            status_code=response.status_code,
-            headers=response.headers,
-            request=Request(
-                headers=response.request.headers,
-                content=response.request.content,
-                url=str(response.request.url),
-                method=response.request.method,
-            ),
-        )
-
-    async def v1_rate_limit(
-        self,
-        *,
-        headers: dict | httpx.Headers | None = None,
-    ) -> Response[OAuth2KeyInfo]:
-        path = "/v1/rate_limit/"
-        params = None
-
-        body = None
-
-        response = await self._request(
-            method="get",
-            path=path,
-            params=params,
-            json=body,
-            headers=headers,
-        )
-
-        await response.aread()
-        content = response.json()
-        return Response[OAuth2KeyInfo](
-            body=typing.cast(OAuth2KeyInfo, content),
+        return Response(
+            body=content,
             status_code=response.status_code,
             headers=response.headers,
             request=Request(

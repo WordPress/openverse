@@ -60,21 +60,26 @@ def get_routes(
     return routes
 
 
-def main(openverse_api_url: str) -> None:
-    openverse_api_url = (
-        openverse_api_url[:-1] if openverse_api_url[-1] == "/" else openverse_api_url
-    )
-    req = Request(
-        f"{openverse_api_url}/v1/schema/",
-        headers={
-            "User-Agent": "OpenverseAPIClientGenerator/1.0",
-        },
-    )
-    schema_res: HTTPResponse = urlopen(req)
-    schema_bytes = schema_res.read()
+def main(openverse_api_url: str, use_cache: bool = False) -> None:
     out_schema = Path.cwd() / "schema.yaml"
-    out_schema.unlink(missing_ok=True)
-    out_schema.write_bytes(schema_bytes)
+    if not (use_cache and out_schema.exists()):
+        openverse_api_url = (
+            openverse_api_url[:-1]
+            if openverse_api_url[-1] == "/"
+            else openverse_api_url
+        )
+        req = Request(
+            f"{openverse_api_url}/v1/schema/",
+            headers={
+                "User-Agent": "OpenverseAPIClientGenerator/1.0",
+            },
+        )
+        schema_res: HTTPResponse = urlopen(req)
+        schema_bytes = schema_res.read()
+        out_schema.unlink(missing_ok=True)
+        out_schema.write_bytes(schema_bytes)
+    else:
+        schema_bytes = out_schema.read_bytes()
 
     schema: dict = yaml.full_load(schema_bytes)
 

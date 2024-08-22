@@ -29,6 +29,7 @@ class MultiTemplate:
 templates = {
     "py": {
         "models": template_env.get_template("models.py.j2"),
+        "routes": template_env.get_template("routes.py.j2"),
         "async_client": MultiTemplate(
             "client.py.j2",
             defaults={
