@@ -214,11 +214,17 @@ const emit = defineEmits<{
   close: []
 }>() as SetupContext["emit"]
 
+const contentSettingsRef = ref<
+  InstanceType<typeof VContentSettingsModalContent> | undefined
+>()
+const contentSettingsId = computed(() => contentSettingsRef.value?.id)
+
 const {
   close: closeContentSettings,
   onTriggerClick: toggleContentSettings,
   triggerA11yProps,
 } = useDialogControl({
+  id: contentSettingsId,
   visibleRef: contentSettingsOpen,
   nodeRef: headerRef,
   lockBodyScroll: true,
@@ -342,6 +348,7 @@ const handleTab = (
         @keydown.tab.exact="handleTab($event, 'content-settings')"
       />
       <VContentSettingsModalContent
+        ref="contentSettingsRef"
         variant="two-thirds"
         :visible="contentSettingsOpen"
         :is-fetching="isFetching"
@@ -352,6 +359,7 @@ const handleTab = (
     </form>
     <VModalContent
       v-if="isRecentVisible"
+      id="recent-searches"
       :visible="true"
       :hide="deactivate"
       :trigger-element="searchInputRef"

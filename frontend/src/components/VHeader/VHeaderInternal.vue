@@ -55,6 +55,7 @@ const {
   onTriggerClick: internalOnTriggerClick,
   triggerA11yProps,
 } = useDialogControl({
+  id: "pages-menu",
   visibleRef: isModalVisible,
   nodeRef,
   lockBodyScroll,
@@ -105,6 +106,7 @@ watch(route, () => {
       <template v-if="triggerElement">
         <VPopoverContent
           v-if="isSm"
+          id="pages-menu"
           z-index="popover"
           :hide="closePageMenu"
           :visible="isModalVisible"
@@ -121,6 +123,7 @@ watch(route, () => {
         </VPopoverContent>
         <VModalContent
           v-else-if="!isSm"
+          id="pages-menu"
           ref="modalContentRef"
           aria-labelledby="menu-button"
           :hide="closePageMenu"

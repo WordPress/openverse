@@ -70,7 +70,7 @@ provide(IsSidebarVisibleKey, isSidebarVisible)
     <VHeader
       class="header-el"
       :kind="isDesktopLayout ? 'search-desktop' : 'search-mobile'"
-      :show-bottom-border="isHeaderScrolled"
+      :show-bottom-border="isHeaderScrolled || isSidebarVisible"
     />
 
     <aside

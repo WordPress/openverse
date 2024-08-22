@@ -15,6 +15,7 @@ import type { Placement, Strategy } from "@floating-ui/dom"
 
 const props = withDefaults(
   defineProps<{
+    id: string
     /**
      * Whether the popover should show when the trigger is hovered on.
      */
@@ -131,6 +132,7 @@ const triggerRef = computed(() =>
 )
 
 const { close, onTriggerClick, triggerA11yProps } = useDialogControl({
+  id: props.id,
   visibleRef,
   emit: emit as SetupContext["emit"],
 })
@@ -162,6 +164,7 @@ defineExpose({
     </div>
     <VPopoverContent
       v-if="triggerRef"
+      :id="id"
       :z-index="zIndex"
       :visible="visibleRef"
       :trigger-element="triggerRef"

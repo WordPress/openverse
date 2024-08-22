@@ -58,6 +58,7 @@ const isMd = computed(() => uiStore.isBreakpoint("md"))
     data-testid="external-sources-form"
   >
     <VModal
+      id="external-search-form"
       variant="centered"
       :hide-on-click-outside="true"
       labelled-by="external-sources-button"

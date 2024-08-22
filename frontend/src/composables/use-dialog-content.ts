@@ -10,8 +10,10 @@ import { warn } from "~/utils/console"
 import type { DialogElements, DialogOptions } from "~/types/modal"
 
 import type { Ref, SetupContext } from "vue"
+import type { MaybeRefOrGetter } from "@vueuse/core"
 
 type Props = {
+  id: MaybeRefOrGetter<string | undefined>
   dialogElements: DialogElements
   dialogOptions?: Partial<DialogOptions>
   visibleRef: Ref<boolean>
@@ -21,6 +23,7 @@ type Props = {
 }
 
 export function useDialogContent({
+  id,
   emit,
   attrs,
   visibleRef,
@@ -59,6 +62,7 @@ export function useDialogContent({
     autoFocusOnHideRef,
   })
   useHideOnClickOutside({
+    id,
     dialogRef,
     triggerElementRef,
 

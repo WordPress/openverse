@@ -12,6 +12,7 @@ import type { SetupContext } from "vue"
 
 const props = withDefaults(
   defineProps<{
+    id: string
     visible: boolean
     hide: () => void
     hideOnEsc?: boolean

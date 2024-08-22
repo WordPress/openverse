@@ -19,24 +19,10 @@ defineProps<{
 </script>
 
 <template>
-  <div class="license-explanation w-70 max-w-xs p-6">
-    <h5 class="text-base font-semibold">
-      <template v-if="isLicense(license)">{{
-        $t("filters.licenseExplanation.licenseDefinition")
-      }}</template>
-      <template v-else>{{
-        $t("filters.licenseExplanation.markDefinition", {
-          mark: license.toUpperCase(),
-        })
-      }}</template>
-    </h5>
-
-    <VLicenseElements
-      v-if="license"
-      size="small"
-      class="my-4"
-      :license="license"
-    />
+  <div
+    class="license-explanation flex flex-col gap-y-4 p-6 pt-0 sm:p-9 sm:pt-0"
+  >
+    <VLicenseElements size="small" :license="license" />
 
     <i18n-t
       scope="global"

@@ -1,6 +1,7 @@
-import { Ref, ref, watch } from "vue"
+import { type Ref, ref, watch } from "vue"
 
 import { contains, getDocument, isInDocument } from "~/utils/reakit-utils/dom"
+import { useModalStack } from "~/composables/use-modal-stack"
 
 interface Props {
   /**
@@ -65,6 +66,10 @@ export const useEventListenerOutside = ({
         }
         // Event on the trigger
         if (trigger && contains(trigger, target)) {
+          return
+        }
+        // Event is inside modal that is nested inside the current one
+        if (useModalStack().activeModal.value !== container.id) {
           return
         }
 

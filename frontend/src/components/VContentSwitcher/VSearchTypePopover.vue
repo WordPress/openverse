@@ -38,6 +38,7 @@ const handleSelect = (searchType: SearchType) => {
 
 <template>
   <VPopover
+    id="search-type-popover"
     ref="contentMenuPopover"
     :label="$t('searchType.label')"
     placement="bottom-end"

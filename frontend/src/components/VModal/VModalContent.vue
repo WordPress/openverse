@@ -16,6 +16,7 @@ defineOptions({
 
 const props = withDefaults(
   defineProps<{
+    id: string
     visible: boolean
     hide: () => void
     hideOnEsc?: boolean
@@ -64,6 +65,7 @@ const initialFocusElement = computed(
 )
 const dialogRef = ref<HTMLElement | null>(null)
 const { onKeyDown, onBlur, deactivateFocusTrap } = useDialogContent({
+  id: propsRefs.id,
   dialogElements: {
     dialogRef,
     initialFocusElementRef: initialFocusElement,
@@ -108,6 +110,7 @@ defineExpose({
       <!-- re: disabled static element interactions rule https://github.com/WordPress/openverse/issues/2906 -->
       <!-- eslint-disable-next-line vuejs-accessibility/no-static-element-interactions -->
       <div
+        :id="id"
         ref="dialogRef"
         v-bind="$attrs"
         class="flex flex-col"
@@ -121,7 +124,7 @@ defineExpose({
               variant === 'two-thirds',
             'mt-auto w-full rounded-se-lg rounded-ss-lg bg-overlay':
               variant === 'fit-content',
-            'm-6 max-w-90 rounded sm:m-0': variant === 'centered',
+            'm-6 max-w-90 rounded sm:m-0 sm:w-90': variant === 'centered',
           },
         ]"
         role="dialog"
@@ -154,7 +157,7 @@ defineExpose({
           class="flex items-center justify-between p-5 ps-7 sm:p-7 sm:ps-9"
         >
           <slot name="title" />
-          <slot name="close-button">
+          <slot name="close-button" :close="handleClose">
             <VIconButton
               :label="$t('modal.close')"
               :icon-props="{ name: 'close' }"

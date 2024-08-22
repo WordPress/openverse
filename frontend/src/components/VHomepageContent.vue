@@ -62,12 +62,14 @@ const handleSelect = (searchType: SearchType) => {
   closeContentSwitcher()
 }
 
+const contentSwitcherId = "homepage-content-switcher"
 const {
   close: closeContentSwitcher,
   open: openContentSwitcher,
   onTriggerClick,
   triggerA11yProps,
 } = useDialogControl({
+  id: contentSwitcherId,
   visibleRef: isContentSwitcherVisible,
   nodeRef,
   lockBodyScroll,
@@ -108,6 +110,7 @@ const {
       <template v-if="triggerElement">
         <VPopoverContent
           v-if="isLg"
+          :id="contentSwitcherId"
           z-index="popover"
           :hide="closeContentSwitcher"
           :trap-focus="false"
@@ -124,6 +127,7 @@ const {
 
         <VContentSettingsModalContent
           v-else
+          :id="contentSwitcherId"
           aria-labelledby="search-type-button"
           :close="closeContentSwitcher"
           :visible="isContentSwitcherVisible"

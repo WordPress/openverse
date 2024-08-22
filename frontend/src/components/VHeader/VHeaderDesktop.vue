@@ -1,4 +1,7 @@
 <script setup lang="ts">
+/**
+ * The desktop search header.
+ */
 import { useNuxtApp } from "#imports"
 
 import { computed, inject, ref } from "vue"
@@ -21,10 +24,6 @@ import VSearchBarButton from "~/components/VHeader/VHeaderMobile/VSearchBarButto
 import VSearchTypePopover from "~/components/VContentSwitcher/VSearchTypePopover.vue"
 
 import type { Ref } from "vue"
-
-/**
- * The desktop search header.
- */
 
 const filterButtonRef = ref<InstanceType<typeof VFilterButton> | null>(null)
 const searchBarRef = ref<InstanceType<typeof VSearchBar> | null>(null)

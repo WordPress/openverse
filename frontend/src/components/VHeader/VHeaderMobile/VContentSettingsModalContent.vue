@@ -42,9 +42,7 @@ const props = withDefaults(
   }
 )
 
-defineEmits<{
-  select: [SearchType]
-}>()
+defineEmits<{ select: [SearchType] }>()
 
 const searchStore = useSearchStore()
 const content = useSearchType()
@@ -66,10 +64,13 @@ const searchType = computed(() => content.getSearchTypeProps())
 const clearFilters = () => {
   searchStore.clearFilters()
 }
+const id = "content-settings-modal"
+defineExpose({ id })
 </script>
 
 <template>
   <VModalContent
+    :id="id"
     :aria-label="$t('header.aria.menu')"
     :hide-on-click-outside="true"
     :hide="close"

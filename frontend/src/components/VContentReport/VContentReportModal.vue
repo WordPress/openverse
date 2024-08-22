@@ -36,6 +36,7 @@ const close = () => {
 
 <template>
   <VModal
+    id="content-report"
     ref="modalRef"
     :label="$t('mediaDetails.contentReport.long')"
     :hide-on-click-outside="true"

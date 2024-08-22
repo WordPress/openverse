@@ -1,9 +1,12 @@
-import { ref, watch, computed, Ref } from "vue"
+import { ref, watch, computed, type Ref } from "vue"
 
 import { getDocument } from "~/utils/reakit-utils/dom"
 import { useEventListenerOutside } from "~/composables/use-event-listener-outside"
 
+import type { MaybeRefOrGetter } from "@vueuse/core"
+
 type Props = {
+  id: MaybeRefOrGetter<string | undefined>
   dialogRef: Ref<HTMLElement | null>
   visibleRef: Ref<boolean>
   hideOnClickOutsideRef: Ref<boolean>
@@ -15,11 +18,10 @@ function useMouseDownTargetRef({
   dialogRef,
   visibleRef,
   hideOnClickOutsideRef,
-}: {
-  dialogRef: Props["dialogRef"]
-  visibleRef: Props["visibleRef"]
-  hideOnClickOutsideRef: Props["hideOnClickOutsideRef"]
-}): Ref<EventTarget> {
+}: Pick<
+  Props,
+  "dialogRef" | "visibleRef" | "hideOnClickOutsideRef"
+>): Ref<EventTarget> {
   const mouseDownTargetRef = ref()
 
   watch(
@@ -82,6 +84,7 @@ export function useHideOnClickOutside({
     eventType: "focusin",
     listener: (event: Event) => {
       const document = getDocument(dialogRef.value)
+
       if (event.target !== document) {
         hideRef.value()
       }
