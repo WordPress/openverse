@@ -1,106 +1,73 @@
-<script lang="ts">
-import { useLocalePath, useRouter } from "#imports"
-
-import { computed, defineComponent, PropType, ref } from "vue"
-
-import { useReducedMotion } from "~/composables/use-reduced-motion"
-import { useAnalytics } from "~/composables/use-analytics"
-import useResizeObserver from "~/composables/use-resize-observer"
-
-import VLink from "~/components/VLink.vue"
-
-import imageInfo from "~/assets/homepage_images.json"
-
-export const GALLERY_SETS = [
-  "universe",
-  "pottery",
-  "olympics",
-  "random",
-] as const
-export type GallerySet = (typeof GALLERY_SETS)[number]
-
+<script setup lang="ts">
 /**
  * Displays a grid of images for the homepage, with each image linking to its
  * single result page. The number of columns automatically adjusts to the width
  * of the container upto a max of 5.
  */
-export default defineComponent({
-  name: "VHomeGallery",
-  components: { VLink },
-  props: {
-    /**
-     * the set of images to use for the gallery grid
-     */
-    set: {
-      type: String as PropType<GallerySet>,
-      required: false,
-      default: "random",
-      validator: (val: GallerySet) => GALLERY_SETS.includes(val),
-    },
-  },
-  setup(props) {
-    const localePath = useLocalePath()
-    const router = useRouter()
-    const prefersReducedMotion = useReducedMotion()
+import { useLocalePath, useRouter } from "#imports"
 
-    const dimens = 152 // px
-    const space = 24 // px; 32px space - 4px padding on both sides
+import { computed, ref } from "vue"
 
-    const rowCount = 3
-    const columnCount = computed(() =>
-      Math.min(
-        5, // Grid cannot exceed 5 columns as we only have 15 images.
-        Math.floor((gridDimens.value.width + space) / (dimens + space))
-      )
-    )
+import { useReducedMotion } from "~/composables/use-reduced-motion"
+import useResizeObserver from "~/composables/use-resize-observer"
 
-    const el = ref<HTMLElement | null>(null) // template ref
-    const { dimens: gridDimens } = useResizeObserver(el)
+import type { GallerySet } from "~/types/home-gallery"
 
-    const imageSet = computed(() =>
-      props.set === "random"
-        ? imageInfo.sets[Math.floor(Math.random() * imageInfo.sets.length)]
-        : (imageInfo.sets.find((item) => (item.key = props.set)) ??
-          imageInfo.sets[0])
-    )
-    const imageList = computed(() => {
-      return imageSet.value.images.map((image, idx) => ({
-        ...image,
-        src: `/homepage_images/${imageSet.value.key}/${idx + 1}.png`,
-        url: router.resolve(
-          localePath({
-            name: "image-id",
-            params: { id: image.id },
-          })
-        ).href,
-      }))
-    })
-    const imageCount = computed(() => columnCount.value * rowCount)
+import VGalleryImage from "~/components/VHomeGallery/VGalleryImage.vue"
 
-    const { sendCustomEvent } = useAnalytics()
-    const handleClick = (id: string) => {
-      sendCustomEvent("CLICK_HOME_GALLERY_IMAGE", {
-        set: imageSet.value.key,
-        id,
-      })
-    }
+import untypedImageInfo from "~/assets/homepage_images.json"
 
-    return {
-      el,
-
-      dimens,
-      space,
-
-      imageCount,
-      columnCount,
-      imageList,
-
-      prefersReducedMotion,
-
-      handleClick,
-    }
-  },
+const props = withDefaults(defineProps<{ set?: GallerySet }>(), {
+  set: "random",
 })
+
+type HomepageImage = { id: string; title: string; src: string }
+type ImageSet = {
+  key: GallerySet
+  term: string
+  images: HomepageImage[]
+}
+const imageInfo = untypedImageInfo as unknown as {
+  sets: ImageSet[]
+}
+
+const localePath = useLocalePath()
+const router = useRouter()
+const prefersReducedMotion = useReducedMotion()
+
+const dimens = 152 // px
+const space = 24 // px; 32px space - 4px padding on both sides
+
+const rowCount = 3
+const columnCount = computed(() =>
+  Math.min(
+    5, // Grid cannot exceed 5 columns as we only have 15 images.
+    Math.floor((gridDimens.value.width + space) / (dimens + space))
+  )
+)
+
+const el = ref<HTMLElement | null>(null) // template ref
+const { dimens: gridDimens } = useResizeObserver(el)
+
+const imageSet = computed(() =>
+  props.set === "random"
+    ? imageInfo.sets[Math.floor(Math.random() * imageInfo.sets.length)]
+    : (imageInfo.sets.find((item) => (item.key = props.set)) ??
+      imageInfo.sets[0])
+)
+const imageList = computed(() => {
+  return imageSet.value.images.map((image, idx) => ({
+    ...image,
+    src: `/homepage_images/${imageSet.value.key}/${idx + 1}.png`,
+    url: router.resolve(
+      localePath({
+        name: "image-id",
+        params: { id: image.id },
+      })
+    ).href,
+  }))
+})
+const imageCount = computed(() => columnCount.value * rowCount)
 </script>
 
 <template>
@@ -118,8 +85,19 @@ export default defineComponent({
       }"
     >
       <ClientOnly>
+        <template v-if="prefersReducedMotion">
+          <VGalleryImage
+            v-for="(image, idx) in imageList"
+            :key="image.url"
+            :image="image"
+            :set="imageSet.key"
+            :idx="idx"
+            :dimens="dimens"
+          />
+        </template>
         <Transition
           v-for="(image, idx) in imageList"
+          v-else
           :key="idx"
           enter-active-class="transition-opacity delay-[var(--delay)] duration-500"
           leave-active-class="transition-opacity delay-[var(--delay)] duration-500"
@@ -128,21 +106,13 @@ export default defineComponent({
           mode="out-in"
           appear
         >
-          <VLink
-            class="home-cell rounded-full p-1 focus-visible:bg-default"
+          <VGalleryImage
+            :idx="idx"
+            :dimens="dimens"
+            :image="image"
+            :set="imageSet.key"
             :class="idx >= imageCount ? 'hidden' : 'block'"
-            :style="{ '--delay': `${idx * 0.05}s` }"
-            :href="image.url"
-            @click="handleClick(image.id)"
-          >
-            <img
-              :height="dimens"
-              :width="dimens"
-              :src="image.src"
-              :alt="image.title"
-              :title="image.title"
-            />
-          </VLink>
+          />
         </Transition>
       </ClientOnly>
     </div>

@@ -5,12 +5,17 @@ import { useScroll } from "@vueuse/core"
 import { useUiStore } from "~/stores/ui"
 import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
 
-import { IsHeaderScrolledKey, IsSidebarVisibleKey } from "~/types/provides"
+import {
+  IsHeaderScrolledKey,
+  IsSidebarVisibleKey,
+  ShowScrollButtonKey,
+} from "~/types/provides"
 
 import VFooter from "~/components/VFooter/VFooter.vue"
 import VSearchGridFilter from "~/components/VFilters/VSearchGridFilter.vue"
 import VSafeBrowsing from "~/components/VSafeBrowsing/VSafeBrowsing.vue"
 import VHeader from "~/components/VHeader/VHeader.vue"
+import VScrollButton from "~/components/VScrollButton.vue"
 
 defineOptions({
   name: "SearchLayout",
@@ -56,6 +61,7 @@ onMounted(() => {
 
 provide(IsHeaderScrolledKey, isHeaderScrolled)
 provide(IsSidebarVisibleKey, isSidebarVisible)
+provide(ShowScrollButtonKey, showScrollButton)
 </script>
 
 <template>
@@ -88,6 +94,12 @@ provide(IsSidebarVisibleKey, isSidebarVisible)
       <slot />
       <VFooter mode="content" class="border-t border-default bg-default" />
     </div>
+
+    <VScrollButton
+      v-show="showScrollButton"
+      :is-filter-sidebar-visible="isSidebarVisible"
+      data-testid="scroll-button"
+    />
   </div>
 </template>
 

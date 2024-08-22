@@ -1,22 +1,14 @@
-<script lang="ts">
-import { defineComponent, PropType } from "vue"
-
-export default defineComponent({
-  name: "VSnackbar",
-  props: {
-    size: {
-      type: String as PropType<"small" | "large">,
-      default: "small",
-    },
-    /**
-     * whether the snackbar is visible or hidden
-     */
-    isVisible: {
-      type: Boolean,
-      default: true,
-    },
-  },
-})
+<script setup lang="ts">
+withDefaults(
+  defineProps<{
+    size?: "small" | "large"
+    isVisible?: boolean
+  }>(),
+  {
+    size: "small",
+    isVisible: true,
+  }
+)
 </script>
 
 <template>

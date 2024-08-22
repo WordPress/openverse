@@ -1,14 +1,9 @@
-<script lang="ts">
-import { defineComponent } from "vue"
-
-export default defineComponent({
-  name: "VBone",
-  props: { shimmer: { type: Boolean, default: true } },
-})
+<script setup lang="ts">
+withDefaults(defineProps<{ shimmer?: boolean }>(), { shimmer: true })
 </script>
 
 <template>
-  <div :class="['bg-secondary', shimmer ? 'shimmering' : '']" />
+  <div :class="['bg-secondary', { shimmering: shimmer }]" />
 </template>
 
 <style scoped>

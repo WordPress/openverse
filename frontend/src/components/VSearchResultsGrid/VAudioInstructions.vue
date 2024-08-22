@@ -1,38 +1,20 @@
-<script lang="ts">
-import { computed, defineComponent, type PropType } from "vue"
+<script setup lang="ts">
+import { computed } from "vue"
 
 import { useAudioSnackbar } from "~/composables/use-audio-snackbar"
 
 import VSnackbar from "~/components/VSnackbar.vue"
 
-export default defineComponent({
-  name: "VAudioInstructions",
-  components: { VSnackbar },
-  props: {
-    kind: {
-      type: String as PropType<"all" | "audio">,
-      required: true,
-    },
-  },
-  setup(props) {
-    const { isVisible: isSnackbarVisible } = useAudioSnackbar()
+const props = defineProps<{ kind: "all" | "audio" }>()
 
-    const keyboardKeys = computed(() =>
-      props.kind === "all" ? ["spacebar"] : ["spacebar", "left", "right"]
-    )
+const { isVisible: isSnackbarVisible } = useAudioSnackbar()
 
-    const i18nPrefix = computed(() => {
-      return props.kind === "all"
-        ? "allResults.snackbar"
-        : "audioResults.snackbar"
-    })
+const keyboardKeys = computed(() =>
+  props.kind === "all" ? ["spacebar"] : ["spacebar", "left", "right"]
+)
 
-    return {
-      keyboardKeys,
-      isSnackbarVisible,
-      i18nPrefix,
-    }
-  },
+const i18nPrefix = computed(() => {
+  return props.kind === "all" ? "allResults.snackbar" : "audioResults.snackbar"
 })
 </script>
 
