@@ -3,10 +3,10 @@ from unittest import mock
 
 import pytest
 from airflow import DAG
-from airflow.exceptions import AirflowSkipException, BackfillUnfinished
-from airflow.executors.debug_executor import DebugExecutor
+from airflow.exceptions import AirflowSkipException
+from airflow.models import DagRun
 from airflow.operators.empty import EmptyOperator
-from pendulum import now
+from airflow.utils.state import TaskInstanceState
 from tests.conftest import mark_extended
 from tests.dags.providers.provider_api_scripts.resources.provider_data_ingester.mock_provider_data_ingester import (
     MockAudioOnlyProviderDataIngester,
@@ -21,24 +21,24 @@ from providers.provider_workflows import ProviderWorkflow
 
 @mark_extended
 @pytest.mark.parametrize(
-    "side_effect",
+    "pull_data_function, expected_state",
     [
         # Simple "pull_data" function, no issues raised
-        lambda **x: None,
+        (lambda **x: None, TaskInstanceState.SUCCESS),
         # Simulated pull_data function skips
-        AirflowSkipException("Sample Skip"),
+        (AirflowSkipException("Sample Skip"), TaskInstanceState.SKIPPED),
         # Simulated pull_data function raises an exception
-        pytest.param(
+        (
             ValueError("Oops, something went wrong in ingestion"),
-            marks=pytest.mark.raises(exception=BackfillUnfinished),
+            TaskInstanceState.FAILED,
         ),
     ],
 )
-def test_skipped_pull_data_runs_successfully(side_effect, clean_db):
+def test_pull_data_behaves_as_expected(pull_data_function, expected_state, clean_db):
     with mock.patch(
         "tests.dags.providers.provider_api_scripts.resources.provider_data_ingester.mock_provider_data_ingester.MockProviderDataIngester.ingest_records"
     ) as ingest_records_mock:
-        ingest_records_mock.side_effect = side_effect
+        ingest_records_mock.side_effect = pull_data_function
         dag = provider_dag_factory.create_provider_api_workflow_dag(
             ProviderWorkflow(
                 ingester_class=MockProviderDataIngester,
@@ -46,8 +46,11 @@ def test_skipped_pull_data_runs_successfully(side_effect, clean_db):
                 schedule_string="@once",
             )
         )
-        # Pendulum must be used here in order for Airflow to run this successfully
-        dag.run(start_date=now(), executor=DebugExecutor())
+        dag_run: DagRun = dag.test()
+
+    pull_data_instance = dag_run.get_task_instance("ingest_data.pull_mixed_data")
+    assert dag_run.state == TaskInstanceState.SUCCESS
+    assert pull_data_instance.state == expected_state
 
 
 def test_create_day_partitioned_ingestion_dag_with_single_layer_dependencies():
