@@ -256,7 +256,7 @@ flowchart TD
 
 ```{tip} Quick Tips for Performing a Rollback
 
-To perform a rollback, manually trigger the appropriate deployment workflow from the [WordPress/openverse-infrastructure repository]((https://github.com/WordPress/openverse-infrastructure/actions) using the tag of the latest stable version. You can find the release version number in the [changelogs](/changelogs/index); the tag to pass to the action is the version number prefixed with "rel-", for example "rel-2023.07.03.17.52.00".
+To perform a rollback, manually trigger the appropriate deployment workflow from the [WordPress/openverse-infrastructure repository](https://github.com/WordPress/openverse-infrastructure/actions) using the tag of the latest stable version. You can find the release version number in the [changelogs](/changelogs/index); the tag to pass to the action is the version number prefixed with "rel-", for example "rel-2023.07.03.17.52.00".
 ```
 
 Because we have the ability to force a deployment of the app to any specific
