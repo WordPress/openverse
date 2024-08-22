@@ -1,4 +1,4 @@
-from typing import Literal, Any
+from typing import Literal, Any, overload
 import typing
 from abc import ABC
 
@@ -437,19 +437,94 @@ class v1_rate_limit(Route):
         self.body = None
 
 
-ROUTES_BY_ENDPOINT = {
-    "GET /v1/audio/": v1_audio_search,
-    "GET /v1/audio/{identifier}/": v1_audio,
-    "GET /v1/audio/{identifier}/related/": v1_audio_related,
-    "GET /v1/audio/{identifier}/thumb/": v1_audio_thumb,
-    "GET /v1/audio/{identifier}/waveform/": v1_audio_waveform,
-    "GET /v1/audio/stats/": v1_audio_stats,
-    "POST /v1/auth_tokens/register/": v1_auth_tokens_register,
-    "POST /v1/auth_tokens/token/": v1_auth_tokens_token,
-    "GET /v1/images/": v1_image_search,
-    "GET /v1/images/{identifier}/": v1_image,
-    "GET /v1/images/{identifier}/related/": v1_image_related,
-    "GET /v1/images/{identifier}/thumb/": v1_image_thumb,
-    "GET /v1/images/stats/": v1_image_stats,
-    "GET /v1/rate_limit/": v1_rate_limit,
-}
+class _Endpoints:
+    """Retrieve endpoints from a protected dict."""
+
+    _ENDPOINTS = {
+        "GET /v1/audio/": v1_audio_search,
+        "GET /v1/audio/{identifier}/": v1_audio,
+        "GET /v1/audio/{identifier}/related/": v1_audio_related,
+        "GET /v1/audio/{identifier}/thumb/": v1_audio_thumb,
+        "GET /v1/audio/{identifier}/waveform/": v1_audio_waveform,
+        "GET /v1/audio/stats/": v1_audio_stats,
+        "POST /v1/auth_tokens/register/": v1_auth_tokens_register,
+        "POST /v1/auth_tokens/token/": v1_auth_tokens_token,
+        "GET /v1/images/": v1_image_search,
+        "GET /v1/images/{identifier}/": v1_image,
+        "GET /v1/images/{identifier}/related/": v1_image_related,
+        "GET /v1/images/{identifier}/thumb/": v1_image_thumb,
+        "GET /v1/images/stats/": v1_image_stats,
+        "GET /v1/rate_limit/": v1_rate_limit,
+    }
+
+    @overload
+    def __getitem__(self, key: Literal["GET /v1/audio/"]) -> type[v1_audio_search]: ...
+
+    @overload
+    def __getitem__(
+        self, key: Literal["GET /v1/audio/{identifier}/"]
+    ) -> type[v1_audio]: ...
+
+    @overload
+    def __getitem__(
+        self, key: Literal["GET /v1/audio/{identifier}/related/"]
+    ) -> type[v1_audio_related]: ...
+
+    @overload
+    def __getitem__(
+        self, key: Literal["GET /v1/audio/{identifier}/thumb/"]
+    ) -> type[v1_audio_thumb]: ...
+
+    @overload
+    def __getitem__(
+        self, key: Literal["GET /v1/audio/{identifier}/waveform/"]
+    ) -> type[v1_audio_waveform]: ...
+
+    @overload
+    def __getitem__(
+        self, key: Literal["GET /v1/audio/stats/"]
+    ) -> type[v1_audio_stats]: ...
+
+    @overload
+    def __getitem__(
+        self, key: Literal["POST /v1/auth_tokens/register/"]
+    ) -> type[v1_auth_tokens_register]: ...
+
+    @overload
+    def __getitem__(
+        self, key: Literal["POST /v1/auth_tokens/token/"]
+    ) -> type[v1_auth_tokens_token]: ...
+
+    @overload
+    def __getitem__(self, key: Literal["GET /v1/images/"]) -> type[v1_image_search]: ...
+
+    @overload
+    def __getitem__(
+        self, key: Literal["GET /v1/images/{identifier}/"]
+    ) -> type[v1_image]: ...
+
+    @overload
+    def __getitem__(
+        self, key: Literal["GET /v1/images/{identifier}/related/"]
+    ) -> type[v1_image_related]: ...
+
+    @overload
+    def __getitem__(
+        self, key: Literal["GET /v1/images/{identifier}/thumb/"]
+    ) -> type[v1_image_thumb]: ...
+
+    @overload
+    def __getitem__(
+        self, key: Literal["GET /v1/images/stats/"]
+    ) -> type[v1_image_stats]: ...
+
+    @overload
+    def __getitem__(
+        self, key: Literal["GET /v1/rate_limit/"]
+    ) -> type[v1_rate_limit]: ...
+
+    def __getitem__(self, key: str):
+        return self._ENDPOINTS[key]
+
+
+ENDPOINTS = _Endpoints()

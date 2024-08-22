@@ -32,6 +32,7 @@ class {{ Async }}OpenverseClient:
     base_url: str = "https://api.openverse.org"
     auth: OpenverseAuth | None = None
     client: httpx.{{ Async }}Client
+    endpoints = routes.ENDPOINTS
 
     _is_shared_client: bool
 
@@ -107,23 +108,11 @@ class {{ Async }}OpenverseClient:
 
     {% for route in routes %}
     @overload
-    def endpoint(
-        self,
-        endpoint: Literal["{{ route.endpoint }}"],
-    ) -> type[routes.{{ route.py_route_methodname }}]:
-        ...
-    {% endfor %}
-
-    def endpoint(self, endpoint: str):
-        return routes.ROUTES_BY_ENDPOINT[endpoint]
-
-    {% for route in routes %}
-    @overload
     {{ def }} request(self, route: routes.{{ route.py_route_methodname }}, headers: dict[str, str] | httpx.Headers | None = None) -> Response[{{ route.response | py_type_string }}]:
         ...
     {% endfor %}
 
-    {{ def }} request(self, route: routes.Route, headers: dict[str, str] | httpx.Headers | None = None) -> Any:
+    {{ def }} request(self, route: routes.Route, headers: dict[str, str] | httpx.Headers | None = None):
         path = route.path
 
         if route.path_params:

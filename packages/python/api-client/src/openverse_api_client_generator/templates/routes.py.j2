@@ -1,4 +1,4 @@
-from typing import Protocol, Literal, Any
+from typing import Protocol, Literal, Any, TypedDict, ReadOnly, overload
 import typing
 from abc import ABC
 
@@ -97,8 +97,22 @@ class {{ route.py_route_methodname }}(Route):
 {% endfor %}
 
 
-ROUTES_BY_ENDPOINT = {
+class _Endpoints:
+    """Retrieve endpoints from a protected dict."""
+
+    _ENDPOINTS = {
+        {% for route in routes %}
+        "{{ route.endpoint }}": {{ route.py_route_methodname }},
+        {% endfor %}
+    }
+
     {% for route in routes %}
-    "{{ route.endpoint }}": {{ route.py_route_methodname }},
+    @overload
+    def __getitem__(self, key: Literal["{{ route.endpoint }}"]) -> type[{{ route.py_route_methodname }}]:
+        ...
     {% endfor %}
-}
+
+    def __getitem__(self, key: str):
+        return self._ENDPOINTS[key]
+
+ENDPOINTS = _Endpoints()

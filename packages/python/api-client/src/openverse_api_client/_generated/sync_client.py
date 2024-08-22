@@ -6,7 +6,7 @@ This file is generated from a template. Do not edit it by hand!
 See https://docs.openverse.org/packages/python/api-client/index.html#development-and-implementation-details
 """
 
-from typing_extensions import Any, cast, Self, Literal, overload
+from typing_extensions import cast, Self, overload
 import typing_extensions as typing
 import httpx
 
@@ -33,6 +33,7 @@ class OpenverseClient:
     base_url: str = "https://api.openverse.org"
     auth: OpenverseAuth | None = None
     client: httpx.Client
+    endpoints = routes.ENDPOINTS
 
     _is_shared_client: bool
 
@@ -110,93 +111,6 @@ class OpenverseClient:
             path=path,
             **kwargs,
         )
-
-    @overload
-    def endpoint(
-        self,
-        endpoint: Literal["GET /v1/audio/"],
-    ) -> type[routes.v1_audio_search]: ...
-
-    @overload
-    def endpoint(
-        self,
-        endpoint: Literal["GET /v1/audio/{identifier}/"],
-    ) -> type[routes.v1_audio]: ...
-
-    @overload
-    def endpoint(
-        self,
-        endpoint: Literal["GET /v1/audio/{identifier}/related/"],
-    ) -> type[routes.v1_audio_related]: ...
-
-    @overload
-    def endpoint(
-        self,
-        endpoint: Literal["GET /v1/audio/{identifier}/thumb/"],
-    ) -> type[routes.v1_audio_thumb]: ...
-
-    @overload
-    def endpoint(
-        self,
-        endpoint: Literal["GET /v1/audio/{identifier}/waveform/"],
-    ) -> type[routes.v1_audio_waveform]: ...
-
-    @overload
-    def endpoint(
-        self,
-        endpoint: Literal["GET /v1/audio/stats/"],
-    ) -> type[routes.v1_audio_stats]: ...
-
-    @overload
-    def endpoint(
-        self,
-        endpoint: Literal["POST /v1/auth_tokens/register/"],
-    ) -> type[routes.v1_auth_tokens_register]: ...
-
-    @overload
-    def endpoint(
-        self,
-        endpoint: Literal["POST /v1/auth_tokens/token/"],
-    ) -> type[routes.v1_auth_tokens_token]: ...
-
-    @overload
-    def endpoint(
-        self,
-        endpoint: Literal["GET /v1/images/"],
-    ) -> type[routes.v1_image_search]: ...
-
-    @overload
-    def endpoint(
-        self,
-        endpoint: Literal["GET /v1/images/{identifier}/"],
-    ) -> type[routes.v1_image]: ...
-
-    @overload
-    def endpoint(
-        self,
-        endpoint: Literal["GET /v1/images/{identifier}/related/"],
-    ) -> type[routes.v1_image_related]: ...
-
-    @overload
-    def endpoint(
-        self,
-        endpoint: Literal["GET /v1/images/{identifier}/thumb/"],
-    ) -> type[routes.v1_image_thumb]: ...
-
-    @overload
-    def endpoint(
-        self,
-        endpoint: Literal["GET /v1/images/stats/"],
-    ) -> type[routes.v1_image_stats]: ...
-
-    @overload
-    def endpoint(
-        self,
-        endpoint: Literal["GET /v1/rate_limit/"],
-    ) -> type[routes.v1_rate_limit]: ...
-
-    def endpoint(self, endpoint: str):
-        return routes.ROUTES_BY_ENDPOINT[endpoint]
 
     @overload
     def request(
@@ -298,7 +212,7 @@ class OpenverseClient:
 
     def request(
         self, route: routes.Route, headers: dict[str, str] | httpx.Headers | None = None
-    ) -> Any:
+    ):
         path = route.path
 
         if route.path_params:
