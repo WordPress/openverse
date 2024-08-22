@@ -1,7 +1,7 @@
-<script lang="ts">
+<script setup lang="ts">
 import { useI18n } from "#imports"
 
-import { computed, defineComponent, PropType } from "vue"
+import { computed } from "vue"
 
 import type { License } from "~/constants/license"
 import { useUiStore } from "~/stores/ui"
@@ -10,49 +10,35 @@ import { getElements } from "~/utils/license"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 
-export default defineComponent({
-  name: "VLicenseElements",
-  components: { VIcon },
-  props: {
+const props = withDefaults(
+  defineProps<{
     /**
      * the slug of the license
      * @values ALL_LICENSES
      */
-    license: {
-      type: String as PropType<License>,
-      required: true,
-    },
+    license: License
     /**
      * the size of the icons and text
      */
-    size: {
-      type: String as PropType<"big" | "small">,
-      default: "big",
-    },
-  },
-  setup(props) {
-    const i18n = useI18n({ useScope: "global" })
-    const elementNames = computed(() =>
-      getElements(props.license).filter((icon) => icon !== "cc")
-    )
+    size?: "big" | "small"
+  }>(),
+  {
+    size: "big",
+  }
+)
 
-    const isSmall = computed(() => props.size === "small")
-    const uiStore = useUiStore()
-    const isMobile = computed(() => !uiStore.isDesktopLayout)
+const i18n = useI18n({ useScope: "global" })
+const elementNames = computed(() =>
+  getElements(props.license).filter((icon) => icon !== "cc")
+)
 
-    const getLicenseDescription = (element: string) => {
-      return i18n.t(`browsePage.licenseDescription.${camelCase(element)}`)
-    }
+const isSmall = computed(() => props.size === "small")
+const uiStore = useUiStore()
+const isMobile = computed(() => !uiStore.isDesktopLayout)
 
-    return {
-      elementNames,
-      isSmall,
-      isMobile,
-
-      getLicenseDescription,
-    }
-  },
-})
+const getLicenseDescription = (element: string) => {
+  return i18n.t(`browsePage.licenseDescription.${camelCase(element)}`)
+}
 </script>
 
 <template>
