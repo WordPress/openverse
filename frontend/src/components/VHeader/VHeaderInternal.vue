@@ -8,6 +8,8 @@ import { useHydrating } from "~/composables/use-hydrating"
 
 import { useUiStore } from "~/stores/ui"
 
+import { PAGES_DIALOG } from "~/constants/dialogs"
+
 import VHomeLink from "~/components/VHeader/VHomeLink.vue"
 import VPageLinks from "~/components/VHeader/VPageLinks.vue"
 import VModalContent from "~/components/VModal/VModalContent.vue"
@@ -46,15 +48,13 @@ const deactivateFocusTrap = computed(
 
 const { doneHydrating } = useHydrating()
 
-const menuId = "pages-menu"
-
 const {
   close: closePageMenu,
   open: openPageMenu,
   onTriggerClick: internalOnTriggerClick,
   triggerA11yProps,
 } = useDialogControl({
-  id: menuId,
+  id: PAGES_DIALOG,
   visibleRef: isModalVisible,
   nodeRef,
   lockBodyScroll,
@@ -105,7 +105,7 @@ watch(route, () => {
       <template v-if="triggerElement">
         <VPopoverContent
           v-if="isSm"
-          :id="menuId"
+          :id="PAGES_DIALOG"
           z-index="popover"
           :hide="closePageMenu"
           :visible="isModalVisible"
@@ -122,7 +122,7 @@ watch(route, () => {
         </VPopoverContent>
         <VModalContent
           v-else-if="!isSm"
-          :id="menuId"
+          :id="PAGES_DIALOG"
           ref="modalContentRef"
           aria-labelledby="menu-button"
           :hide="closePageMenu"

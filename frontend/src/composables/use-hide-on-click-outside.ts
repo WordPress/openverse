@@ -3,10 +3,7 @@ import { ref, watch, computed, type Ref } from "vue"
 import { getDocument } from "~/utils/reakit-utils/dom"
 import { useEventListenerOutside } from "~/composables/use-event-listener-outside"
 
-import type { MaybeRefOrGetter } from "@vueuse/core"
-
 type Props = {
-  id: MaybeRefOrGetter<string | undefined>
   dialogRef: Ref<HTMLElement | null>
   visibleRef: Ref<boolean>
   hideOnClickOutsideRef: Ref<boolean>

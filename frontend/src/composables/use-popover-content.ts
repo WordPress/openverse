@@ -38,7 +38,6 @@ export function usePopoverContent({
   attrs,
 }: Props) {
   const { onKeyDown, onBlur } = useDialogContent({
-    id: popoverPropsRefs.id,
     visibleRef: popoverPropsRefs.visible,
     hideRef: popoverPropsRefs.hide,
     dialogElements: {

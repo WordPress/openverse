@@ -3,6 +3,7 @@ import { computed, ref } from "vue"
 
 import useSearchType from "~/composables/use-search-type"
 
+import { SEARCH_TYPES_DIALOG } from "~/constants/dialogs"
 import type { SearchType } from "~/constants/media"
 
 import VPopover from "~/components/VPopover/VPopover.vue"
@@ -38,7 +39,7 @@ const handleSelect = (searchType: SearchType) => {
 
 <template>
   <VPopover
-    id="search-type-popover"
+    :id="SEARCH_TYPES_DIALOG"
     ref="contentMenuPopover"
     :label="$t('searchType.label')"
     placement="bottom-end"

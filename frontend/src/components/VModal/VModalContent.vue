@@ -67,7 +67,6 @@ const initialFocusElement = computed(
 )
 const dialogRef = ref<HTMLElement | null>(null)
 const { onKeyDown, onBlur, deactivateFocusTrap } = useDialogContent({
-  id: propsRefs.id,
   dialogElements: {
     dialogRef,
     initialFocusElementRef: initialFocusElement,

@@ -2,6 +2,7 @@
 import { ref } from "vue"
 
 import { WIP } from "~/constants/content-report"
+import { CONTENT_REPORT_DIALOG } from "~/constants/dialogs"
 import { useContentReport } from "~/composables/use-content-report"
 import type { AudioDetail, ImageDetail } from "~/types/media"
 
@@ -36,7 +37,7 @@ const close = () => {
 
 <template>
   <VModal
-    id="content-report"
+    :id="CONTENT_REPORT_DIALOG"
     ref="modalRef"
     :label="$t('mediaDetails.contentReport.long')"
     :hide-on-click-outside="true"

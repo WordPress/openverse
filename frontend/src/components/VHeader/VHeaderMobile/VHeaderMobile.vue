@@ -18,6 +18,10 @@ import { useRecentSearches } from "~/composables/use-recent-searches"
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 
+import {
+  CONTENT_SETTINGS_DIALOG,
+  RECENT_SEARCHES_DIALOG,
+} from "~/constants/dialogs"
 import { skipToContentTargetId } from "~/constants/window"
 
 import VLogoButton from "~/components/VHeader/VLogoButton.vue"
@@ -214,17 +218,12 @@ const emit = defineEmits<{
   close: []
 }>() as SetupContext["emit"]
 
-const contentSettingsRef = ref<
-  InstanceType<typeof VContentSettingsModalContent> | undefined
->()
-const contentSettingsId = computed(() => contentSettingsRef.value?.id)
-
 const {
   close: closeContentSettings,
   onTriggerClick: toggleContentSettings,
   triggerA11yProps,
 } = useDialogControl({
-  id: contentSettingsId,
+  id: CONTENT_SETTINGS_DIALOG,
   visibleRef: contentSettingsOpen,
   nodeRef: headerRef,
   lockBodyScroll: true,
@@ -348,7 +347,6 @@ const handleTab = (
         @keydown.tab.exact="handleTab($event, 'content-settings')"
       />
       <VContentSettingsModalContent
-        ref="contentSettingsRef"
         variant="two-thirds"
         :visible="contentSettingsOpen"
         :is-fetching="isFetching"
@@ -359,7 +357,7 @@ const handleTab = (
     </form>
     <VModalContent
       v-if="isRecentVisible"
-      id="recent-searches"
+      :id="RECENT_SEARCHES_DIALOG"
       :visible="true"
       :hide="deactivate"
       :trigger-element="searchInputRef"
