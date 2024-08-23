@@ -23,5 +23,5 @@ class LabeledImage(TypedDict, total=False):
 
 class MachineGeneratedTag(TypedDict):
     name: str
-    confidence: float
+    accuracy: float
     provider: str

@@ -40,9 +40,4 @@ SELECT_TEMP_TABLE_COUNT_QUERY = f"""
     SELECT COUNT(*)
     FROM {TEMP_TABLE_NAME};
     """
-# VALUES here will be interpolated by `execute_values` from psycopg2.extras
-INSERT_BATCH_QUERY = f"""
-    INSERT INTO {TEMP_TABLE_NAME} (identifier, tags)
-    VALUES %s;
-"""
 DROP_TABLE_QUERY = "DROP TABLE IF EXISTS {TEMP_TABLE_NAME} CASCADE;"
