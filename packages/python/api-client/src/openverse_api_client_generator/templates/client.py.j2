@@ -108,11 +108,17 @@ class {{ Async }}OpenverseClient:
 
     {% for route in routes %}
     @overload
-    {{ def }} request(self, route: routes.{{ route.py_route_methodname }}, headers: dict[str, str] | httpx.Headers | None = None) -> Response[{{ route.response | py_type_string }}]:
+    {{ def }} __call__(self, route: type[routes.{{ route.py_route_methodname }}] | routes.{{ route.py_route_methodname }}, headers: dict[str, str] | httpx.Headers | None = None) -> Response[{{ route.response | py_type_string }}]:
         ...
     {% endfor %}
 
-    {{ def }} request(self, route: routes.Route, headers: dict[str, str] | httpx.Headers | None = None):
+    {{ def }} __call__(self, route: type[routes.Route] | routes.Route, headers: dict[str, str] | httpx.Headers | None = None):
+        if not isinstance(route, routes.Route):
+            # Allow passing a raw Route class without instantiating it for paramless requests
+            # Also allow it to raise a type error in case the route has required parameters
+            route = route()
+
+
         path = route.path
 
         if route.path_params:

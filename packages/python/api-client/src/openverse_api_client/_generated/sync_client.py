@@ -113,106 +113,113 @@ class OpenverseClient:
         )
 
     @overload
-    def request(
+    def __call__(
         self,
-        route: routes.v1_audio_search,
+        route: type[routes.v1_audio_search] | routes.v1_audio_search,
         headers: dict[str, str] | httpx.Headers | None = None,
     ) -> Response[PaginatedAudioList]: ...
 
     @overload
-    def request(
+    def __call__(
         self,
-        route: routes.v1_audio,
+        route: type[routes.v1_audio] | routes.v1_audio,
         headers: dict[str, str] | httpx.Headers | None = None,
     ) -> Response[Audio]: ...
 
     @overload
-    def request(
+    def __call__(
         self,
-        route: routes.v1_audio_related,
+        route: type[routes.v1_audio_related] | routes.v1_audio_related,
         headers: dict[str, str] | httpx.Headers | None = None,
     ) -> Response[PaginatedAudioList]: ...
 
     @overload
-    def request(
+    def __call__(
         self,
-        route: routes.v1_audio_thumb,
+        route: type[routes.v1_audio_thumb] | routes.v1_audio_thumb,
         headers: dict[str, str] | httpx.Headers | None = None,
     ) -> Response[bytes]: ...
 
     @overload
-    def request(
+    def __call__(
         self,
-        route: routes.v1_audio_waveform,
+        route: type[routes.v1_audio_waveform] | routes.v1_audio_waveform,
         headers: dict[str, str] | httpx.Headers | None = None,
     ) -> Response[AudioWaveform]: ...
 
     @overload
-    def request(
+    def __call__(
         self,
-        route: routes.v1_audio_stats,
+        route: type[routes.v1_audio_stats] | routes.v1_audio_stats,
         headers: dict[str, str] | httpx.Headers | None = None,
     ) -> Response[list[Source]]: ...
 
     @overload
-    def request(
+    def __call__(
         self,
-        route: routes.v1_auth_tokens_register,
+        route: type[routes.v1_auth_tokens_register] | routes.v1_auth_tokens_register,
         headers: dict[str, str] | httpx.Headers | None = None,
     ) -> Response[OAuth2Application]: ...
 
     @overload
-    def request(
+    def __call__(
         self,
-        route: routes.v1_auth_tokens_token,
+        route: type[routes.v1_auth_tokens_token] | routes.v1_auth_tokens_token,
         headers: dict[str, str] | httpx.Headers | None = None,
     ) -> Response[OAuth2Token]: ...
 
     @overload
-    def request(
+    def __call__(
         self,
-        route: routes.v1_image_search,
+        route: type[routes.v1_image_search] | routes.v1_image_search,
         headers: dict[str, str] | httpx.Headers | None = None,
     ) -> Response[PaginatedImageList]: ...
 
     @overload
-    def request(
+    def __call__(
         self,
-        route: routes.v1_image,
+        route: type[routes.v1_image] | routes.v1_image,
         headers: dict[str, str] | httpx.Headers | None = None,
     ) -> Response[Image]: ...
 
     @overload
-    def request(
+    def __call__(
         self,
-        route: routes.v1_image_related,
+        route: type[routes.v1_image_related] | routes.v1_image_related,
         headers: dict[str, str] | httpx.Headers | None = None,
     ) -> Response[Image]: ...
 
     @overload
-    def request(
+    def __call__(
         self,
-        route: routes.v1_image_thumb,
+        route: type[routes.v1_image_thumb] | routes.v1_image_thumb,
         headers: dict[str, str] | httpx.Headers | None = None,
     ) -> Response[bytes]: ...
 
     @overload
-    def request(
+    def __call__(
         self,
-        route: routes.v1_image_stats,
+        route: type[routes.v1_image_stats] | routes.v1_image_stats,
         headers: dict[str, str] | httpx.Headers | None = None,
     ) -> Response[list[Source]]: ...
 
     @overload
-    def request(
+    def __call__(
         self,
-        route: routes.v1_rate_limit,
+        route: type[routes.v1_rate_limit] | routes.v1_rate_limit,
         headers: dict[str, str] | httpx.Headers | None = None,
     ) -> Response[OAuth2KeyInfo]: ...
 
-    def request(
-        self, route: routes.Route, headers: dict[str, str] | httpx.Headers | None = None
+    def __call__(
+        self,
+        route: type[routes.Route] | routes.Route,
+        headers: dict[str, str] | httpx.Headers | None = None,
     ):
+        if not isinstance(route, routes.Route):
+            # Allow passing a raw Route class without instantiating it for paramless requests
+            # Also allow it to raise a type error in case the route has required parameters
+            route = route()
+
         path = route.path
 
         if route.path_params:
