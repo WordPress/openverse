@@ -46,7 +46,6 @@ https://github.com/WordPress/openverse-catalog/issues/353)
 """
 
 import logging
-import os
 from collections.abc import Sequence
 
 from airflow.models.baseoperator import chain
@@ -55,7 +54,7 @@ from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
 
 from common import cloudwatch, ingestion_server
-from common.constants import XCOM_PULL_TEMPLATE
+from common.constants import DATA_REFRESH_POOL, XCOM_PULL_TEMPLATE
 from common.sensors.constants import PRODUCTION_ES_CONCURRENCY_TAG
 from common.sensors.single_run_external_dags_sensor import SingleRunExternalDAGsSensor
 from common.sensors.utils import wait_for_external_dags_with_tag
@@ -66,9 +65,6 @@ from legacy_data_refresh.data_refresh_types import DataRefresh
 
 
 logger = logging.getLogger(__name__)
-
-
-DATA_REFRESH_POOL = os.getenv("DATA_REFRESH_POOL", "data_refresh")
 
 
 def create_data_refresh_task_group(
