@@ -5,7 +5,7 @@
  */
 import { ref, computed, SetupContext } from "vue"
 
-import { zIndexValidator } from "~/constants/z-indices"
+import { type ZIndex, zIndexValidator } from "~/constants/z-indices"
 
 import { useDialogControl } from "~/composables/use-dialog-control"
 
@@ -78,7 +78,7 @@ const props = withDefaults(
     /**
      * the z-index to apply to the popover content
      */
-    zIndex?: number | string
+    zIndex?: ZIndex
     /**
      * Whether the popover height should be clipped and made scrollable
      * if the window height is too small.

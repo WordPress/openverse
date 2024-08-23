@@ -23,3 +23,5 @@ export const Z_INDICES = Object.freeze({
  */
 export const zIndexValidator = (value: string | number): boolean =>
   Object.keys(Z_INDICES).includes(value.toString())
+
+export type ZIndex = keyof typeof Z_INDICES

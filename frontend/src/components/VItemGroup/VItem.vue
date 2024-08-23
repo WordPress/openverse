@@ -7,10 +7,10 @@ import {
   VItemGroupContextKey,
   VItemGroupFocusContextKey,
 } from "~/types/item-group"
+import { VPopoverContentContextKey } from "~/types/provides"
 
 import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
-import { VPopoverContentContextKey } from "~/components/VPopover/VPopoverContent.vue"
 
 export default defineComponent({
   name: "VItem",

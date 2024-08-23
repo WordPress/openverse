@@ -1,55 +1,39 @@
-<script lang="ts">
-import { computed, defineComponent, PropType, ref } from "vue"
+<script setup lang="ts">
+import { computed, ref } from "vue"
 
 import useSearchType from "~/composables/use-search-type"
 
 import type { SearchType } from "~/constants/media"
 
-import { defineEvent } from "~/types/emits"
-
 import VPopover from "~/components/VPopover/VPopover.vue"
 import VSearchTypeButton from "~/components/VContentSwitcher/VSearchTypeButton.vue"
 import VSearchTypes from "~/components/VContentSwitcher/VSearchTypes.vue"
 
-export default defineComponent({
-  name: "VSearchTypePopover",
-  components: {
-    VPopover,
-    VSearchTypeButton,
-    VSearchTypes,
-  },
-  props: {
-    showLabel: {
-      type: Boolean,
-      default: false,
-    },
-    placement: {
-      type: String as PropType<"header" | "searchbar">,
-      default: "header",
-    },
-  },
-  emits: {
-    select: defineEvent<[SearchType]>(),
-  },
-  setup(_, { emit }) {
-    const contentMenuPopover = ref<InstanceType<typeof VPopover> | null>(null)
+withDefaults(
+  defineProps<{
+    showLabel?: boolean
+    placement?: "header" | "searchbar"
+  }>(),
+  {
+    showLabel: false,
+    placement: "header",
+  }
+)
 
-    const { getSearchTypeProps } = useSearchType()
+const emit = defineEmits<{
+  select: [SearchType]
+}>()
 
-    const searchTypeProps = computed(() => getSearchTypeProps())
+const contentMenuPopover = ref<InstanceType<typeof VPopover> | null>(null)
 
-    const handleSelect = (searchType: SearchType) => {
-      emit("select", searchType)
-      contentMenuPopover.value?.close()
-    }
+const { getSearchTypeProps } = useSearchType()
 
-    return {
-      handleSelect,
-      contentMenuPopover,
-      searchTypeProps,
-    }
-  },
-})
+const searchTypeProps = computed(() => getSearchTypeProps())
+
+const handleSelect = (searchType: SearchType) => {
+  emit("select", searchType)
+  contentMenuPopover.value?.close()
+}
 </script>
 
 <template>
