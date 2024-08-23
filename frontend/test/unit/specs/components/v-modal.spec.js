@@ -31,7 +31,7 @@ const TestWrapper = createApp({}).component("TestWrapper", {
   },
   template: `
     <div>
-      <VModal label="modal label" :initial-focus-element="resolvedInitialFocusElement">
+      <VModal label="modal label" id="modal" :initial-focus-element="resolvedInitialFocusElement">
         <template #trigger="{ a11yProps, visible }">
           <VButton variant="filled-white" size="medium" v-bind="a11yProps">{{ visible }}</VButton>
         </template>
