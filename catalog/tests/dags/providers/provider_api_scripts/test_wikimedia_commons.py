@@ -404,31 +404,20 @@ def test_extract_creator_info_handles_link_as_partial_text(wmc):
     [
         # Valid images
         ("https://example.com/image.jpg", "image", "jpg"),
-        ("https://example.com/image.JpeG", "image", "jpg"),
+        ("https://example.com/image.JpeG", "image", "jpeg"),
         ("https://example.com/image.Png", "image", "png"),
         ("https://example.com/image.GIF", "image", "gif"),
+        # Invalid (for our sake) images
+        ("https://example.com/image.ogv", "image", None),
+        ("https://example.com/image.xyz", "image", None),
         # Valid audio
         ("https://example.com/audio.mp3", "audio", "mp3"),
+        ("https://example.com/audio.ogg", "audio", "ogg"),
         ("https://example.com/audio.WAV", "audio", "wav"),
-        ("https://example.com/audio.oga", "audio", "oga"),
-        ("https://example.com/audio.Opus", "audio", "oga"),
     ],
 )
-def test_get_filetype(wmc, url, media_type, expected):
-    assert wmc.get_filetype(url, media_type) == expected
-
-
-@pytest.mark.parametrize(
-    "url, media_type",
-    [
-        ("https://example.com/image.ogv", "image"),
-        ("https://example.com/image.xyz", "image"),
-        ("https://example.com/doc.pdf", "image"),
-    ],
-)
-def test_get_filetype_raises_error_on_invalid_media_type(wmc, url, media_type):
-    with pytest.raises(ValueError):
-        wmc.get_filetype(url, media_type)
+def test_extract_file_type(wmc, url, media_type, expected):
+    assert wmc.extract_file_type(url, media_type) == expected
 
 
 def test_extract_license_info_finds_license_url(wmc):
