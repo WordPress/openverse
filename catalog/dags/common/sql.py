@@ -1,7 +1,9 @@
 import logging
 from datetime import timedelta
 
+from airflow.decorators import task
 from airflow.models import BaseOperator
+from airflow.models.abstractoperator import AbstractOperator
 from airflow.models.mappedoperator import MappedOperator
 from airflow.providers.common.sql.hooks.sql import fetch_one_handler
 from airflow.providers.common.sql.operators.sql import SQLExecuteQueryOperator
@@ -172,3 +174,29 @@ class PGExecuteQueryOperator(SQLExecuteQueryOperator):
             postgres_conn_id=self.postgres_conn_id,
             **self.hook_params,
         )
+
+
+@task
+def run_sql(
+    postgres_conn_id: str,
+    sql_template: str,
+    task: AbstractOperator = None,
+    timeout: float = None,
+    handler: callable = RETURN_ROW_COUNT,
+    **kwargs,
+):
+    """
+    Run an SQL query with the given template and parameters. Any kwargs handed
+    into the function outside of those defined will be passed into the template
+    `.format` call.
+    """
+    query = sql_template.format(**kwargs)
+
+    postgres = PostgresHook(
+        postgres_conn_id=postgres_conn_id,
+        default_statement_timeout=(
+            timeout if timeout else PostgresHook.get_execution_timeout(task)
+        ),
+    )
+
+    return postgres.run(query, handler=handler)
