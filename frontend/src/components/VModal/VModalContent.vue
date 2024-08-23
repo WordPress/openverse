@@ -4,6 +4,8 @@
  */
 import { toRefs, ref, computed, useAttrs } from "vue"
 
+import { useElementSize } from "@vueuse/core"
+
 import { useDialogContent } from "~/composables/use-dialog-content"
 
 import type { ModalColorMode, ModalVariant } from "~/types/modal"
@@ -89,6 +91,13 @@ const handleClose = (event: MouseEvent) => {
   props.hide()
 }
 
+const modalHeaderRef = ref<HTMLElement | null>(null)
+const { height: modalHeaderHeight } = useElementSize(
+  modalHeaderRef,
+  { width: 0, height: 0 },
+  { box: "border-box" }
+)
+
 defineExpose({
   dialogRef,
   deactivateFocusTrap,
@@ -127,6 +136,7 @@ defineExpose({
             'm-6 max-w-90 rounded sm:m-0 sm:w-90': variant === 'centered',
           },
         ]"
+        :style="`--modal-header-height: ${modalHeaderHeight}px;`"
         role="dialog"
         aria-modal="true"
         @keydown="onKeyDown"
@@ -154,6 +164,7 @@ defineExpose({
         </slot>
         <header
           v-if="variant === 'centered'"
+          ref="modalHeaderRef"
           class="flex items-center justify-between p-5 ps-7 sm:p-7 sm:ps-9"
         >
           <slot name="title" />
@@ -210,5 +221,9 @@ by the address bar.
   .modal-content.fallback-padding {
     @apply pb-10;
   }
+}
+.modal-content {
+  max-height: calc(100vh - var(--modal-header-height, 0) - 6rem);
+  overflow-y: scroll;
 }
 </style>
