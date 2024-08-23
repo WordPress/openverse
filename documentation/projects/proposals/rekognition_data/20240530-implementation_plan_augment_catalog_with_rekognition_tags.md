@@ -198,9 +198,10 @@ In order to incorporate accomplish the goals of this plan, the following steps
 will need to be performed:
 
 1. [Determine which labels to exclude from Rekognition's label set](#determine-excluded-labels)
-2. [Preemptively filter the Rekognition tags](#preemptively-filter-rekognition-tags)
+2. [Preemptively filter all Rekognition tags](#preemptively-filter-rekognition-tags)
 3. [Generate and insert the new Rekognition tags](#insert-new-rekognition-tags)
-4. [Filter and assess the existing Clarifai tags](#filter-clarifai-tags)
+4. [Filter the Rekognition tags based on the criteria determined in step 1](#filter-rekognition-tags)
+5. [Filter and assess the existing Clarifai tags](#filter-clarifai-tags)
 
 ## Step details
 
@@ -257,6 +258,12 @@ in bulk in a similar manner in the future, having a clear and repeatable process
 for doing so will make those operations easier down the line. It also allows us
 to test the insertion process locally, which feels crucial for such a
 significant addition of data.
+
+```{note}
+This step will add _all_ of the available Rekognition tags to the catalog. The
+tags with an insufficient confidence value or that were determined to be excluded
+will be filtered out of the API database during the data refresh.
+```
 
 #### Context
 
@@ -490,9 +497,10 @@ steps:
    1. For each line, read in the JSON object and pull out the top-level labels &
       confidence values. **Note**: some records may not have any labels.
    2. Construct a `tags` JSON object similar to the existing tags data for that
-      image, including accuracy and provider. Ensure that the labels are lower
-      case and that the confidence value is between 0.0 and 1.0 (e.g.
-      `[{"name": "cat", "accuracy": 0.9983, "provider": "rekognition"}, ...]`).
+      image, including accuracy and provider. Ensure that the casing of the
+      labels is preserved and that the confidence value is between 0.0 and 1.0
+      (e.g.
+      `[{"name": "Cat", "accuracy": 0.9983, "provider": "rekognition"}, ...]`).
    3. At regular intervals, insert batches of constructed `identifier`/`tags`
       pairs into the temporary table.
 3. Launch a [batched update run][batched_update] which merges the existing tags
@@ -505,6 +513,42 @@ steps:
 For local testing, a small sample of the Rekognition data could be made
 available in the local S3 server
 [similar to the iNaturalist sample data](https://github.com/WordPress/openverse/blob/82282a00abdaed21e8381052a874d8ab9a4f7e0a/catalog/compose.yml#L98-L101).
+
+### Filter Rekognition tags
+
+Once the new Rekognition tags have been inserted into the catalog, we will want
+to remove the blanket-filter for all Rekognition tags that was put in place in
+the [preemptive filtering step](#preemptively-filter-rekognition-tags). We will
+also need to add the logic for filtering out the tags that were determined
+should be excluded in the
+[determine excluded labels step](#determine-excluded-labels). This filtering is
+done in service of appropriately improving search relevancy.
+
+For all machine-generated labels, we will employ an inclusion-based filtering
+process. This means that we will only filter out labels that match the list of
+approved labels, which prevents labels that are unreviewed from appearing in the
+downstream dataset. This can be added to the `alter_data` step of the data
+refresh (see #4684) and would only be applied to tags where the `provider` was
+not the record's `provider`.
+
+The comparison between labels on the record and labels in the list should be
+case-insensitive, given that the semantic content of the labels is generally
+case-insensitive too. Similar to the
+[sensitive terms list](/projects/proposals/trust_and_safety/detecting_sensitive_textual_content/20230309-implementation_plan_sensitive_terms_list.md),
+both inclusion and reviewed lists will be applied to all tag sources (in that,
+we will not maintain provider-specific lists).
+
+For any orthographic corrections we've made to the labels, we will have the
+corrected label present in the inclusion list and the original label in the
+reviewed list. This will ensure that the corrected label is surfaced in the API,
+but the original label gets blocked in the cases where it may be added by
+another provider.
+
+We will also add a step for recording if a label was not in the inclusion list
+_and_ if it did not exist in a full list of all reviewed labels from the
+provider. These "unreviewed" labels should be surfaced as part of the data
+refresh, so maintainers can review them and decide if they should be included in
+the inclusion list.
 
 ### Filter Clarifai tags
 
@@ -527,16 +571,19 @@ will want to filter the existing Clarifai tags until we can perform the same
 analysis on the set of available tags
 [as will be done for the Rekognition ones](#determine-excluded-labels). This can
 be done using the same steps described for the Rekognition filtering, based on
-the status of this project and #3925.
+the status of this project and #3925. An alternative approach could be to use
+the "unreviewed" label approach described in the
+[filter Rekognition tags](#filter-rekognition-tags) section to surface the
+Clarifai tags for review.
 
 Once the filtering is in place, we can construct an exhaustive set of Clarifai
 labels and determine exclusions for that provider using the approach
-[described above](#label-criteria). Then the Clarifai label exclusions can be
-added to #4541 in the same way Rekognition's are added and the blanked exclusion
-for all tags from that provider can be lifted. These exclusion lists could be
-combined into a single filtering step, or we could have individual filter lists
-based on the label provider. My preference is former, since that way the single
-list serves as a more exhaustive exclusion list.
+[described above](#label-criteria). Then the Clarifai label inclusions can be
+added to the `alter_data` step (#4541) in the same way Rekognition's are added
+and the blanked exclusion for all tags from that provider can be lifted. These
+exclusion lists could be combined into a single filtering step, or we could have
+individual filter lists based on the label provider. My preference is former,
+since that way the single list serves as a more exhaustive exclusion list.
 
 ## Dependencies
 
@@ -711,3 +758,6 @@ xdf.groupby("image_uuid").median("Confidence").median()
 
 - 2024-07-25 - (#4662) Clarified policy around initially included demographic
   labels to ensure they're reviewed on a case-by-case basis.
+- 2024-08-19 - (#4784) Added a note about the inclusion-based filtering process
+  and the "unreviewed" label capture, and a note to insert all available
+  Rekognition data and filter it afterwards.
