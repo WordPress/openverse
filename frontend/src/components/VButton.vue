@@ -260,7 +260,7 @@ a.button {
   @apply border-tx bg-default text-default hover:bg-secondary-hover hover:text-over-dark;
 }
 .bordered-white {
-  @apply border-bg-ring bg-default text-default hover:border-transparent-hover;
+  @apply border-bg-ring bg-default text-default hover:border-transparent-hover hover:focus-visible:border-tx;
 }
 .bordered-white-pressed {
   @apply border-tx bg-tertiary text-over-dark hover:border-gray-11 hover:bg-tertiary-hover hover:focus-visible:border-tx;
