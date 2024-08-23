@@ -52,7 +52,7 @@ const close = () => {
     <template #default>
       <VContentReportForm
         ref="contentReportFormRef"
-        class="p-7 pt-0 sm:p-9"
+        class="p-7 pt-0 sm:p-9 sm:pt-0"
         :media="media"
         :status="status"
         :allow-cancel="true"
