@@ -103,10 +103,7 @@ const isMd = computed(() => uiStore.isBreakpoint("md"))
           {{ $t("externalSources.title") }}
         </h2>
       </template>
-      <VExternalSourceList
-        class="-mt-3 flex flex-col"
-        :search-term="searchTerm"
-      />
+      <VExternalSourceList class="flex flex-col" :search-term="searchTerm" />
     </VModal>
   </section>
 </template>
