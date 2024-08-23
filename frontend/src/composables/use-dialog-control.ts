@@ -11,7 +11,7 @@ import {
 import { MaybeRefOrGetter, toValue } from "@vueuse/core"
 
 import { useBodyScrollLock } from "~/composables/use-body-scroll-lock"
-import { useModalStack } from "~/composables/use-modal-stack"
+import { useDialogStack } from "~/composables/use-dialog-stack"
 
 type Fn = () => void
 export function useDialogControl({
@@ -87,7 +87,7 @@ export function useDialogControl({
   }
 
   const pushModalToStack = () => {
-    const { push } = useModalStack()
+    const { push } = useDialogStack()
     const idValue = toValue(id)
     if (idValue) {
       push(idValue)
@@ -95,7 +95,7 @@ export function useDialogControl({
   }
 
   const popModalFromStack = () => {
-    const openModalStack = useModalStack()
+    const openModalStack = useDialogStack()
     const idValue = toValue(id)
     if (idValue && openModalStack.indexOf(idValue) > -1) {
       openModalStack.pop()

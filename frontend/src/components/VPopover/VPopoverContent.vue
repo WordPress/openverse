@@ -63,6 +63,7 @@ const { onKeyDown, onBlur, heightProperties, style } = usePopoverContent({
 <template>
   <div
     v-show="visible"
+    :id="id"
     ref="popoverRef"
     role="dialog"
     aria-modal="true"

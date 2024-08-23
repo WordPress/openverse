@@ -1,7 +1,7 @@
 import { type Ref, ref, watch } from "vue"
 
 import { contains, getDocument, isInDocument } from "~/utils/reakit-utils/dom"
-import { useModalStack } from "~/composables/use-modal-stack"
+import { useDialogStack } from "~/composables/use-dialog-stack"
 
 interface Props {
   /**
@@ -68,8 +68,9 @@ export const useEventListenerOutside = ({
         if (trigger && contains(trigger, target)) {
           return
         }
-        // Event is inside modal that is nested inside the current one
-        if (useModalStack().activeModal.value !== container.id) {
+        // Event is in the top-level dialog, so shouldn't be handled by the
+        // parent dialogs
+        if (useDialogStack().activeDialog.value !== container.id) {
           return
         }
 

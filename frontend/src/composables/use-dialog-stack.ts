@@ -2,7 +2,7 @@ import { computed, ref } from "vue"
 
 const stack = ref<string[]>([])
 
-export const useModalStack = () => {
+export const useDialogStack = () => {
   const push = (id: string) => {
     stack.value.push(id)
   }
@@ -16,7 +16,7 @@ export const useModalStack = () => {
     return stack.value.indexOf(id)
   }
 
-  const activeModal = computed(() => stack.value[stack.value.length - 1])
+  const activeDialog = computed(() => stack.value[stack.value.length - 1])
 
   return {
     stack,
@@ -24,6 +24,6 @@ export const useModalStack = () => {
     pop,
     clear,
     indexOf,
-    activeModal,
+    activeDialog,
   }
 }

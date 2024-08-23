@@ -22,10 +22,7 @@ const emit = defineEmits<{
 
 const menuButtonRef = ref<InstanceType<typeof VIconButton> | null>(null)
 const nodeRef = ref<HTMLElement | null>(null)
-const modalContentRef = ref<{
-  $el: HTMLElement
-  deactivateFocusTrap: () => void
-} | null>(null)
+const modalContentRef = ref<InstanceType<typeof VModalContent> | null>(null)
 
 const uiStore = useUiStore()
 
@@ -49,13 +46,15 @@ const deactivateFocusTrap = computed(
 
 const { doneHydrating } = useHydrating()
 
+const menuId = "pages-menu"
+
 const {
   close: closePageMenu,
   open: openPageMenu,
   onTriggerClick: internalOnTriggerClick,
   triggerA11yProps,
 } = useDialogControl({
-  id: "pages-menu",
+  id: menuId,
   visibleRef: isModalVisible,
   nodeRef,
   lockBodyScroll,
@@ -106,7 +105,7 @@ watch(route, () => {
       <template v-if="triggerElement">
         <VPopoverContent
           v-if="isSm"
-          id="pages-menu"
+          :id="menuId"
           z-index="popover"
           :hide="closePageMenu"
           :visible="isModalVisible"
@@ -123,7 +122,7 @@ watch(route, () => {
         </VPopoverContent>
         <VModalContent
           v-else-if="!isSm"
-          id="pages-menu"
+          :id="menuId"
           ref="modalContentRef"
           aria-labelledby="menu-button"
           :hide="closePageMenu"
