@@ -58,8 +58,8 @@ while read -r var_string; do
   # set the environment variable
   export "$var_name"="$new_value"
 
-  # only include Slack airflow connections
-done < <(env | grep "^AIRFLOW_CONN_SLACK*")
+  # only include Slack airflow connections and the Sensitive Terms connection
+done < <(env | grep "^AIRFLOW_CONN_SLACK*\|AIRFLOW_CONN_SENSITIVE_TERMS")
 
 if [[ $* == "webserver" ]]; then
   # Wait for the database to initialize, will time out if not

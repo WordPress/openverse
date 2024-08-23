@@ -7,6 +7,7 @@ Accept an HTTP request specifying a range of image IDs to reindex.
 import logging as log
 import uuid
 from multiprocessing import Process, Value
+from pathlib import Path
 from urllib.parse import urlparse
 
 import boto3
@@ -116,6 +117,7 @@ def create_api():
     _api.add_route("/healthcheck", HealthcheckResource())
     _api.add_route("/task", IndexingJobResource(task_tracker))
     _api.add_route("/task/{task_id}", TaskStatusResource(task_tracker))
+    _api.add_static_route("/static", (Path(".") / "static").absolute())
 
     return _api
 
