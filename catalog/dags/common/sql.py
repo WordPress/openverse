@@ -178,8 +178,8 @@ class PGExecuteQueryOperator(SQLExecuteQueryOperator):
 
 @task
 def run_sql(
-    postgres_conn_id: str,
     sql_template: str,
+    postgres_conn_id: str = POSTGRES_CONN_ID,
     task: AbstractOperator = None,
     timeout: float = None,
     handler: callable = RETURN_ROW_COUNT,
