@@ -48,6 +48,9 @@ from common.sensors.single_run_external_dags_sensor import SingleRunExternalDAGs
 from common.sensors.utils import wait_for_external_dags_with_tag
 from data_refresh.alter_data import alter_table_data
 from data_refresh.copy_data import copy_upstream_tables
+from data_refresh.create_and_populate_filtered_index import (
+    create_and_populate_filtered_index,
+)
 from data_refresh.create_and_promote_index import create_index
 from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS, DataRefreshConfig
 from data_refresh.distributed_reindex import perform_distributed_reindex
@@ -174,13 +177,20 @@ def create_data_refresh_dag(
 
         # Populate the Elasticsearch index.
         reindex = perform_distributed_reindex(
+            es_host=es_host,
             environment="{{ var.value.ENVIRONMENT }}",
             target_environment=target_environment,
             target_index=target_index,
             data_refresh_config=data_refresh_config,
         )
 
-        # TODO create_and_populate_filtered_index
+        # Create and populate the filtered index
+        filtered_index = create_and_populate_filtered_index(
+            es_host=es_host,
+            media_type=data_refresh_config.media_type,
+            origin_index_name=target_index,
+            destination_index_name=f"{target_index}-filtered",
+        )
 
         # Re-enable Cloudwatch alarms once reindexing is complete, even if it
         # failed.
@@ -226,8 +236,9 @@ def create_data_refresh_dag(
             >> target_index
             >> disable_alarms
             >> reindex
+            >> filtered_index
         )
-        reindex >> [enable_alarms, after_record_count]
+        filtered_index >> [enable_alarms, after_record_count]
         after_record_count >> report_counts
 
     return dag

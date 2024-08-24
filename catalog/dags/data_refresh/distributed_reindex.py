@@ -19,6 +19,7 @@ from airflow.sensors.base import PokeReturnValue
 from airflow.utils.trigger_rule import TriggerRule
 from requests import Response
 
+from common import elasticsearch as es
 from common.constants import (
     AWS_CONN_ID,
     OPENLEDGER_API_CONN_ID,
@@ -356,6 +357,7 @@ def reindex(
     group_id="run_distributed_reindex",
 )
 def perform_distributed_reindex(
+    es_host: str,
     environment: str,
     target_environment: Environment,
     target_index: str,
@@ -388,10 +390,21 @@ def perform_distributed_reindex(
 
     estimated_record_count >> worker_params
 
-    reindex.partial(
+    perform_reindex = reindex.partial(
         data_refresh_config=data_refresh_config,
         target_index=target_index,
         launch_template_version_number=launch_template_version_number,
         environment=environment,
         target_environment=target_environment,
     ).expand_kwargs(worker_params)
+
+    # Refresh the index at the end, in order to make the documents available for
+    # filtered index creation
+    refresh_index = es.refresh_index.override(
+        trigger_rule=TriggerRule.NONE_FAILED,
+    )(
+        es_host=es_host,
+        index_name=target_index,
+    )
+
+    perform_reindex >> refresh_index
