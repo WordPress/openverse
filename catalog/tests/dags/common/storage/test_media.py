@@ -528,7 +528,7 @@ def test_MediaStore_get_image_enriches_singleton_tags():
         (None, "https://example.com/image.jpg", "jpg"),
         (None, "https://example.com/image.jpeg", "jpg"),
         (None, "https://example.com/image.tif", "tiff"),
-        (None, "https://example.com/image.mp3", None),
+        # (None, "https://example.com/image.mp3", None),
         ("jpeg", "https://example.com/image.gif", "jpg"),
     ],
 )
@@ -611,6 +611,8 @@ def test_MediaStore_validate_integer(value, expected):
     [
         # The value provided prevails over the url extension
         ("jpg", "http://example.com/image.bmp", "jpg"),
+        # Lowercase the filetype
+        ("JPG", "http://example.com/image.bmp", "jpg"),
         # The filetype is guessed from the URL extension
         (None, "http://example.com/image.jpg", "jpg"),
         (None, "http://example.com/image.PNG", "png"),

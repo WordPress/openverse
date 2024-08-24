@@ -11,6 +11,10 @@ FILETYPE_EQUIVALENTS = {
     "midi": "mid",
 }
 
+mimetypes.add_type("audio/midi", ".mid")
+mimetypes.add_type("audio/midi", ".midi")
+mimetypes.add_type("audio/x-matroska", ".mka")
+
 
 def extract_filetype(url: str) -> tuple[str | None, str | None]:
     """
@@ -21,10 +25,8 @@ def extract_filetype(url: str) -> tuple[str | None, str | None]:
     if mime_type := mimetypes.guess_type(url)[0]:
         media_type, _ = mime_type.split("/")
         filetype = mimetypes.guess_extension(mime_type)
-
         # Removes the leading dot if there is an extension
         filetype = filetype[1:] if filetype else None
         if media_type in SUPPORTED_TYPES:
             return filetype, media_type
-
     return None, None
