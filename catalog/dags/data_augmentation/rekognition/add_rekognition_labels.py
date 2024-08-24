@@ -4,8 +4,11 @@ import logging
 import smart_open
 from airflow.decorators import task
 from airflow.models import Variable
+from airflow.providers.amazon.aws.hooks.s3 import S3Hook
+from airflow.utils.trigger_rule import TriggerRule
 from psycopg2.extras import Json
 
+from common.constants import AWS_CONN_ID
 from common.sql import PostgresHook
 from data_augmentation.rekognition import constants, types
 from data_augmentation.rekognition.label_mapping import LABEL_MAPPING
@@ -54,33 +57,41 @@ def _insert_tags(tags_buffer: types.TagsBuffer, postgres_conn_id: str):
     postgres.insert_rows(constants.TEMP_TABLE_NAME, tags_buffer, executemany=True)
 
 
-@task(multiple_outputs=True)
+@task(
+    task_id=constants.INSERT_LABELS_TASK_ID,
+    trigger_rule=TriggerRule.NONE_FAILED_MIN_ONE_SUCCESS,
+)
 def parse_and_insert_labels(
     s3_bucket: str,
     s3_prefix: str,
     in_memory_buffer_size: int,
     file_buffer_size: int,
     postgres_conn_id: str,
-):
+) -> dict[str, list[str] | int]:
     tags_buffer: types.TagsBuffer = []
     failed_records = []
     total_processed = 0
+    total_skipped = 0
     known_offset = Variable.get(
         constants.CURRENT_POS_VAR_NAME,
         default_var=None,
         deserialize_json=True,
     )
 
+    s3_client = S3Hook(aws_conn_id=AWS_CONN_ID).get_client_type("s3")
     with smart_open.open(
         f"{s3_bucket}/{s3_prefix}",
-        transport_params={"buffer_size": file_buffer_size},
+        transport_params={"buffer_size": file_buffer_size, "client": s3_client},
     ) as file:
         # Navigate to known offset if available
         if known_offset:
+            logger.info(f"Previous offset found, seeking to: {known_offset}")
             file.seek(known_offset)
 
         # Begin parsing the file
-        for blob in file:
+        # Cannot use "for blob in file" because we cannot iterate over the file
+        # and also use file.tell() to get the current position
+        while blob := file.readline():
             total_processed += 1
             try:
                 labeled_image: types.LabeledImage = json.loads(blob)
@@ -94,6 +105,7 @@ def parse_and_insert_labels(
             image_id = labeled_image["image_uuid"]
             raw_labels = labeled_image["response"]["Labels"]
             if not raw_labels:
+                total_skipped += 1
                 continue
             tags = _process_labels(raw_labels)
             tags_buffer.append((image_id, Json(tags)))
@@ -114,4 +126,8 @@ def parse_and_insert_labels(
         # Clear the offset if we've finished processing the file
         Variable.delete(constants.CURRENT_POS_VAR_NAME)
 
-    return {"total_processed": total_processed, "failed_record": failed_records}
+    return {
+        "total_processed": total_processed,
+        "total_skipped": total_skipped,
+        "failed_records": failed_records,
+    }
