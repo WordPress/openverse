@@ -15,6 +15,10 @@ import type { Placement, Strategy } from "@floating-ui/dom"
 
 const props = withDefaults(
   defineProps<{
+    /**
+     * The id used to keep track of the popover in the open dialog stack, to enable
+     * nested dialogs.
+     */
     id: string
     /**
      * Whether the popover should show when the trigger is hovered on.

@@ -82,8 +82,8 @@ const props = withDefaults(
     mode?: ModalColorMode
     modalContentClasses?: string
     /**
-     * The id used to keep track of the modal in the open modal stack, to enable
-     * nested modals.
+     * The id used to keep track of the modal in the open dialog stack, to enable
+     * nested dialogs.
      */
     id: string
   }>(),
