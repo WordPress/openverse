@@ -12,6 +12,7 @@ import type { SetupContext } from "vue"
 
 const props = withDefaults(
   defineProps<{
+    id: string
     visible: boolean
     hide: () => void
     hideOnEsc?: boolean
@@ -62,6 +63,7 @@ const { onKeyDown, onBlur, heightProperties, style } = usePopoverContent({
 <template>
   <div
     v-show="visible"
+    :id="id"
     ref="popoverRef"
     role="dialog"
     aria-modal="true"

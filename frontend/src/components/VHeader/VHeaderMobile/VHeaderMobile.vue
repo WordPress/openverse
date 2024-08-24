@@ -18,6 +18,10 @@ import { useRecentSearches } from "~/composables/use-recent-searches"
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 
+import {
+  CONTENT_SETTINGS_DIALOG,
+  RECENT_SEARCHES_DIALOG,
+} from "~/constants/dialogs"
 import { skipToContentTargetId } from "~/constants/window"
 
 import VLogoButton from "~/components/VHeader/VLogoButton.vue"
@@ -219,6 +223,7 @@ const {
   onTriggerClick: toggleContentSettings,
   triggerA11yProps,
 } = useDialogControl({
+  id: CONTENT_SETTINGS_DIALOG,
   visibleRef: contentSettingsOpen,
   nodeRef: headerRef,
   lockBodyScroll: true,
@@ -352,6 +357,7 @@ const handleTab = (
     </form>
     <VModalContent
       v-if="isRecentVisible"
+      :id="RECENT_SEARCHES_DIALOG"
       :visible="true"
       :hide="deactivate"
       :trigger-element="searchInputRef"

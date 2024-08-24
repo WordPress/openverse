@@ -42,11 +42,11 @@ const getLicenseDescription = (element: string) => {
 </script>
 
 <template>
-  <ul>
+  <ul class="flex flex-col gap-y-2 md:gap-y-4">
     <li
       v-for="element in elementNames"
       :key="element"
-      class="mb-2 flex items-center gap-3 text-sm md:mb-4 md:text-base"
+      class="flex items-center gap-x-3 text-sm md:text-base"
     >
       <VIcon
         view-box="0 0 30 30"

@@ -11,6 +11,8 @@ import { useMediaStore } from "~/stores/media"
 
 import { useExternalSources } from "~/composables/use-external-sources"
 
+import { EXTERNAL_SEARCH_DIALOG } from "~/constants/dialogs"
+
 import VExternalSourceList from "~/components/VExternalSearch/VExternalSourceList.vue"
 import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
@@ -58,6 +60,7 @@ const isMd = computed(() => uiStore.isBreakpoint("md"))
     data-testid="external-sources-form"
   >
     <VModal
+      :id="EXTERNAL_SEARCH_DIALOG"
       variant="centered"
       :hide-on-click-outside="true"
       labelled-by="external-sources-button"
@@ -100,10 +103,7 @@ const isMd = computed(() => uiStore.isBreakpoint("md"))
           {{ $t("externalSources.title") }}
         </h2>
       </template>
-      <VExternalSourceList
-        class="-mt-3 flex flex-col"
-        :search-term="searchTerm"
-      />
+      <VExternalSourceList class="flex flex-col" :search-term="searchTerm" />
     </VModal>
   </section>
 </template>

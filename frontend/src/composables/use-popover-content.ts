@@ -10,6 +10,7 @@ import type { Ref, ToRefs, SetupContext } from "vue"
 import type { Placement, Strategy } from "@floating-ui/dom"
 
 export type PopoverContentProps = {
+  id: string
   visible: boolean
   hide: () => void
   hideOnEsc: boolean

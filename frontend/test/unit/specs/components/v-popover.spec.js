@@ -25,7 +25,7 @@ const TestWrapper = createApp({}).component("TestWrapper", {
     <div>
       <!-- This div is a clickable area that is neither the trigger nor the content, useful for testing click-away behavior -->
       <div>External area</div>
-      <VPopover label="Test label" v-bind="popoverProps">
+      <VPopover label="Test label" id="test-popover" v-bind="popoverProps">
         <template #trigger="{ visible, a11yProps }">
           <VButton id="popover-button" variant="bordered-white" size="medium" :pressed="visible" v-bind="a11yProps">{{ visible ? 'Close' : 'Open' }}</VButton>
         </template>

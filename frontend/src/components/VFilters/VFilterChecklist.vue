@@ -4,7 +4,6 @@ import { useI18n } from "#imports"
 import { useSearchStore } from "~/stores/search"
 
 import type { FilterItem, FilterCategory } from "~/constants/filters"
-
 import type { License } from "~/constants/license"
 
 import { getElements } from "~/utils/license"
@@ -12,10 +11,9 @@ import { getElements } from "~/utils/license"
 import VButton from "~/components/VButton.vue"
 import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
-import VIconButton from "~/components/VIconButton/VIconButton.vue"
 import VLicense from "~/components/VLicense/VLicense.vue"
 import VLicenseExplanation from "~/components/VFilters/VLicenseExplanation.vue"
-import VPopover from "~/components/VPopover/VPopover.vue"
+import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
 type toggleFilterPayload = {
   filterType: FilterCategory
@@ -69,6 +67,14 @@ const isLicense = (code: string): code is License => {
   // Quick check that also prevents "`code` is declared but its value is never read" warning.
   return !!code && props.filterType === "licenses"
 }
+
+const getTitle = (code: string) => {
+  return isLicense(code)
+    ? t("filters.licenseExplanation.licenseDefinition")
+    : t("filters.licenseExplanation.markDefinition", {
+        mark: code.toUpperCase(),
+      })
+}
 </script>
 
 <template>
@@ -93,11 +99,12 @@ const isLicense = (code: string): code is License => {
       </VCheckbox>
 
       <!-- License explanation -->
-      <VPopover
+      <VModal
         v-if="isLicense(item.code)"
-        strategy="fixed"
+        :id="item.code"
+        variant="centered"
+        :hide-on-click-outside="true"
         :label="$t('browsePage.aria.licenseExplanation')"
-        :trap-focus="false"
       >
         <template #trigger="{ a11yProps }">
           <VButton
@@ -110,20 +117,24 @@ const isLicense = (code: string): code is License => {
             <VIcon name="help" />
           </VButton>
         </template>
-        <template #default="{ close }">
-          <div class="relative">
-            <VIconButton
-              :label="getLicenseExplanationCloseAria(item.code)"
-              :icon-props="{ name: 'close' }"
-              variant="transparent-gray"
-              size="small"
-              class="!absolute end-1 top-1"
-              @click="close"
-            />
-            <VLicenseExplanation :license="item.code" />
-          </div>
+        <template #title>
+          <h5 class="text-base font-semibold">
+            {{ getTitle(item.code) }}
+          </h5>
         </template>
-      </VPopover>
+        <template #close-button="{ close }">
+          <VIconButton
+            :label="getLicenseExplanationCloseAria(item.code)"
+            :icon-props="{ name: 'close' }"
+            variant="transparent-gray"
+            size="small"
+            @click="close"
+          />
+        </template>
+        <template #default>
+          <VLicenseExplanation :license="item.code" />
+        </template>
+      </VModal>
     </div>
   </fieldset>
 </template>

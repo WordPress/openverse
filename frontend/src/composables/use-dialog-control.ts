@@ -5,22 +5,24 @@ import {
   ref,
   Ref,
   SetupContext,
-  unref,
   watch,
 } from "vue"
 
 import { MaybeRefOrGetter, toValue } from "@vueuse/core"
 
 import { useBodyScrollLock } from "~/composables/use-body-scroll-lock"
+import { useDialogStack } from "~/composables/use-dialog-stack"
 
 type Fn = () => void
 export function useDialogControl({
+  id,
   visibleRef,
   nodeRef,
   lockBodyScroll,
   emit,
   deactivateFocusTrap,
 }: {
+  id: MaybeRefOrGetter<string | undefined>
   visibleRef?: Ref<boolean>
   nodeRef?: Ref<HTMLElement | null>
   lockBodyScroll?: ComputedRef<boolean> | boolean
@@ -59,7 +61,7 @@ export function useDialogControl({
     lock = bodyScroll.lock
     unlock = bodyScroll.unlock
   }
-  const shouldLockBodyScroll = computed(() => unref(lockBodyScroll) ?? false)
+  const shouldLockBodyScroll = computed(() => toValue(lockBodyScroll) ?? false)
   watch(shouldLockBodyScroll, (shouldLock) => {
     if (shouldLock) {
       if (internalVisibleRef.value) {
@@ -70,9 +72,13 @@ export function useDialogControl({
     }
   })
 
-  const open = () => (internalVisibleRef.value = true)
+  const open = () => {
+    internalVisibleRef.value = true
+    pushModalToStack()
+  }
 
   const close = () => {
+    popModalFromStack()
     const fn = toValue(deactivateFocusTrap)
     if (fn) {
       fn()
@@ -80,8 +86,28 @@ export function useDialogControl({
     internalVisibleRef.value = false
   }
 
+  const pushModalToStack = () => {
+    const { push } = useDialogStack()
+    const idValue = toValue(id)
+    if (idValue) {
+      push(idValue)
+    }
+  }
+
+  const popModalFromStack = () => {
+    const openModalStack = useDialogStack()
+    const idValue = toValue(id)
+    if (idValue && openModalStack.indexOf(idValue) > -1) {
+      openModalStack.pop()
+    }
+  }
+
   const onTriggerClick = () => {
-    internalVisibleRef.value = !internalVisibleRef.value
+    if (internalVisibleRef.value) {
+      close()
+    } else {
+      open()
+    }
   }
 
   return {

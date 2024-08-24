@@ -9,6 +9,8 @@ import { useDialogControl } from "~/composables/use-dialog-control"
 
 import { useUiStore } from "~/stores/ui"
 
+import { HOMEPAGE_CONTENT_SETTINGS_DIALOG } from "~/constants/dialogs"
+
 import VContentSettingsModalContent from "~/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue"
 import VLink from "~/components/VLink.vue"
 import VPopoverContent from "~/components/VPopover/VPopoverContent.vue"
@@ -68,6 +70,7 @@ const {
   onTriggerClick,
   triggerA11yProps,
 } = useDialogControl({
+  id: HOMEPAGE_CONTENT_SETTINGS_DIALOG,
   visibleRef: isContentSwitcherVisible,
   nodeRef,
   lockBodyScroll,
@@ -108,6 +111,7 @@ const {
       <template v-if="triggerElement">
         <VPopoverContent
           v-if="isLg"
+          :id="HOMEPAGE_CONTENT_SETTINGS_DIALOG"
           z-index="popover"
           :hide="closeContentSwitcher"
           :trap-focus="false"
@@ -124,6 +128,7 @@ const {
 
         <VContentSettingsModalContent
           v-else
+          :id="HOMEPAGE_CONTENT_SETTINGS_DIALOG"
           aria-labelledby="search-type-button"
           :close="closeContentSwitcher"
           :visible="isContentSwitcherVisible"

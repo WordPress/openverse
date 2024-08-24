@@ -1,6 +1,7 @@
-import { Ref, ref, watch } from "vue"
+import { type Ref, ref, watch } from "vue"
 
 import { contains, getDocument, isInDocument } from "~/utils/reakit-utils/dom"
+import { useDialogStack } from "~/composables/use-dialog-stack"
 
 interface Props {
   /**
@@ -65,6 +66,11 @@ export const useEventListenerOutside = ({
         }
         // Event on the trigger
         if (trigger && contains(trigger, target)) {
+          return
+        }
+        // Event is in the top-level dialog, so shouldn't be handled by the
+        // parent dialogs
+        if (useDialogStack().activeDialog.value !== container.id) {
           return
         }
 

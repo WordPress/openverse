@@ -7,6 +7,8 @@ import useSearchType from "~/composables/use-search-type"
 
 import { SearchType } from "~/constants/media"
 
+import { CONTENT_SETTINGS_DIALOG } from "~/constants/dialogs"
+
 import VButton from "~/components/VButton.vue"
 import VFilterTab from "~/components/VHeader/VHeaderMobile/VFilterTab.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
@@ -42,9 +44,7 @@ const props = withDefaults(
   }
 )
 
-defineEmits<{
-  select: [SearchType]
-}>()
+defineEmits<{ select: [SearchType] }>()
 
 const searchStore = useSearchStore()
 const content = useSearchType()
@@ -70,6 +70,7 @@ const clearFilters = () => {
 
 <template>
   <VModalContent
+    :id="CONTENT_SETTINGS_DIALOG"
     :aria-label="$t('header.aria.menu')"
     :hide-on-click-outside="true"
     :hide="close"

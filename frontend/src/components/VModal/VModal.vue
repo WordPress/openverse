@@ -11,7 +11,7 @@ import VModalContent from "~/components/VModal/VModalContent.vue"
  * NB: Most of these technically default to `undefined` so that the underlying `VModalContent`
  * default for each of them can take over.
  */
-withDefaults(
+const props = withDefaults(
   defineProps<{
     /**
      * Whether the popover should hide when the <kbd>Escape</kbd> key is pressed.
@@ -81,6 +81,11 @@ withDefaults(
      */
     mode?: ModalColorMode
     modalContentClasses?: string
+    /**
+     * The id used to keep track of the modal in the open dialog stack, to enable
+     * nested dialogs.
+     */
+    id: string
   }>(),
   {
     hideOnEsc: true,
@@ -123,6 +128,7 @@ const {
   triggerA11yProps,
   visible: visibleRef,
 } = useDialogControl({
+  id: props.id,
   lockBodyScroll: true,
   nodeRef,
   emit: emit as SetupContext["emit"],
@@ -152,6 +158,7 @@ defineExpose({
     </div>
     <VModalContent
       v-if="triggerRef"
+      :id="id"
       ref="modalContentRef"
       :visible="visibleRef"
       :trigger-element="triggerRef"
@@ -171,6 +178,9 @@ defineExpose({
         <slot name="top-bar" :close="hide" />
       </template>
       <template #title><slot name="title" /></template>
+      <template #close-button="{ close: hide }"
+        ><slot name="close-button" :close="hide"
+      /></template>
       <slot name="default" />
     </VModalContent>
   </div>
