@@ -115,7 +115,7 @@ from types import MappingProxyType
 import lxml.html as html
 
 from common.constants import AUDIO, IMAGE
-from common.extensions import EXTENSIONS
+from common.extensions import extract_filetype
 from common.licenses import LicenseInfo, get_license_info
 from common.loader import provider_details as prov
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
@@ -320,7 +320,7 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
         creator, creator_url = self.extract_creator_info(media_info)
         title = self.extract_title(media_info)
         filesize = media_info.get("size", 0)  # in bytes
-        filetype = self.extract_file_type(url, valid_media_type)
+        filetype, _ = extract_filetype(url)
         meta_data = self.create_meta_data_dict(record)
 
         record_data = {
@@ -532,28 +532,6 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
 
         categories_list = categories_string.split("|")
         return categories_list
-
-    @staticmethod
-    def extract_file_type(url, media_type):
-        """
-        Extract the filetype from extension in the media url.
-
-        In case of images, we check if the filetype is in the list of valid image
-        types, so we can ignore other media types considered as videos (eg: .ogv).
-        """
-        image_extensions = EXTENSIONS.get(IMAGE, {})
-        if filetype := url.split(".")[-1]:
-            filetype = filetype.lower()
-            if (
-                media_type == IMAGE and filetype in image_extensions
-            ) or media_type == AUDIO:
-                return filetype
-
-            logger.warning(
-                f"Invalid filetype for `{media_type}` media type: {filetype}"
-            )
-
-        return None
 
     @staticmethod
     def extract_license_info(media_info) -> LicenseInfo | None:
