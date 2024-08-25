@@ -21,11 +21,11 @@ const getTransport = (): Promise<Transport> => {
 
 const getClientAndNock = (
   credentials?: Exclude<
-    Parameters<typeof OpenverseClient>[0],
+    ConstructorParameters<typeof OpenverseClient>[0],
     undefined
   >["credentials"]
 ) => ({
-  client: OpenverseClient(
+  client: new OpenverseClient(
     {
       baseUrl: "https://nock.local/",
       credentials,
@@ -57,7 +57,7 @@ describe("OpenverseClient", () => {
           results: ["this would be an image, under normal circumstances..."],
         })
 
-      const images = await client("GET /v1/images/")
+      const images = await client.request("GET /v1/images/")
 
       expect(images.body.results[0]).toEqual(
         "this would be an image, under normal circumstances..."
@@ -96,8 +96,8 @@ describe("OpenverseClient", () => {
         })
 
       const [images, audio] = await Promise.all([
-        client("GET /v1/images/"),
-        client("GET /v1/audio/"),
+        client.request("GET /v1/images/"),
+        client.request("GET /v1/audio/"),
       ])
 
       expect(images.body.results[0]).toEqual(
@@ -164,24 +164,27 @@ describe("OpenverseClient", () => {
       // until the expiry threshold is passed. The single audio request will still match the first token.
       // Then we need to wait 3 seconds to ensure we're past the expiry of the first token
       // And the single image request will match the second token, triggered by the audio request
-      const images = await client("GET /v1/images/")
+      const images = await client.request("GET /v1/images/")
       expect(images.body.results[0]).toEqual(
         "this would be an image, under normal circumstances..."
       )
-      const audioTracks = await client("GET /v1/audio/")
+      const audioTracks = await client.request("GET /v1/audio/")
       expect(audioTracks.body.results[0]).toEqual(
         "this would be an audio track, under normal circumstances..."
       )
-      const singleAudio = await client("GET /v1/audio/{identifier}/", {
+      const singleAudio = await client.request("GET /v1/audio/{identifier}/", {
         identifier: "single-audio",
       })
       expect(singleAudio.body.id).toEqual("single-audio")
 
       await new Promise((res) => setTimeout(res, 3000))
 
-      const singleResult = await client("GET /v1/images/{identifier}/", {
-        identifier: "single-image",
-      })
+      const singleResult = await client.request(
+        "GET /v1/images/{identifier}/",
+        {
+          identifier: "single-image",
+        }
+      )
 
       expect(singleResult.body.id).toEqual("single-image")
       scope.done()
@@ -194,7 +197,7 @@ describe("OpenverseClient", () => {
       .get("/v1/images/stats/")
       .reply(200, [{ source_name: "flickr" }])
 
-    const response = await client("GET /v1/images/stats/")
+    const response = await client.request("GET /v1/images/stats/")
 
     expect(response).toEqual(
       expect.objectContaining({
@@ -223,7 +226,7 @@ describe("OpenverseClient", () => {
       .get("/v1/images/a-dog/thumb/")
       .reply(200, mockThumbnailBuffer)
 
-    const imageSearch = await client("GET /v1/images/", {
+    const imageSearch = await client.request("GET /v1/images/", {
       params: { q: "dogs" },
     })
 
@@ -245,9 +248,12 @@ describe("OpenverseClient", () => {
 
     const identifier = imageSearch.body.results[0].id
 
-    const thumbnail = await client("GET /v1/images/{identifier}/thumb/", {
-      identifier,
-    })
+    const thumbnail = await client.request(
+      "GET /v1/images/{identifier}/thumb/",
+      {
+        identifier,
+      }
+    )
 
     expect(thumbnail).toEqual(
       expect.objectContaining({
