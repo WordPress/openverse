@@ -2,6 +2,7 @@ import logging
 
 import pytest
 
+from common.extensions import InvalidFiletypeError
 from common.licenses import LicenseInfo
 from common.storage import audio
 from tests.dags.common.storage import test_media
@@ -179,6 +180,30 @@ def test_AudioStore_validate_filetype(filetype, url, expected_filetype):
     audio_store = audio.MockAudioStore("test_provider")
     actual_filetype = audio_store._validate_filetype(filetype, url)
     assert actual_filetype == expected_filetype
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        "https://example.com/non-audio.apng",
+        "https://example.com/non-audio.avif",
+        "https://example.com/non-audio.bmp",
+        "https://example.com/non-audio.djvu",
+        "https://example.com/non-audio.gif",
+        "https://example.com/non-audio.ICO",
+        "https://example.com/non-audio.jpg",
+        "https://example.com/non-audio.Jpeg",
+        "https://example.com/non-audio.png",
+        "https://example.com/non-audio.svg",
+        "https://example.com/non-audio.tif",
+        "https://example.com/non-audio.tiFF",
+        "https://example.com/non-audio.webp",
+    ],
+)
+def test_AudioStore_validate_filetype_raises_error_on_invalid_filetype(url):
+    image_store = audio.MockAudioStore("test_provider")
+    with pytest.raises(InvalidFiletypeError):
+        image_store._validate_filetype(filetype=None, url=url)
 
 
 @test_media.INT_MAX_PARAMETERIZATION

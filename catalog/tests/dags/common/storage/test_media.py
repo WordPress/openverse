@@ -9,6 +9,7 @@ from unittest.mock import patch
 import pytest
 
 from common import urls
+from common.extensions import InvalidFiletypeError
 from common.licenses import LicenseInfo
 from common.loader import provider_details as prov
 from common.storage import image, media
@@ -528,7 +529,6 @@ def test_MediaStore_get_image_enriches_singleton_tags():
         (None, "https://example.com/image.jpg", "jpg"),
         (None, "https://example.com/image.jpeg", "jpg"),
         (None, "https://example.com/image.tif", "tiff"),
-        # (None, "https://example.com/image.mp3", None),
         ("jpeg", "https://example.com/image.gif", "jpg"),
     ],
 )
@@ -627,6 +627,30 @@ def test_MediaStore_validate_filetype(filetype, url, expected_filetype):
     image_store = image.MockImageStore("test_provider")
     actual = image_store._validate_filetype(filetype=filetype, url=url)
     assert actual == expected_filetype
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        "https://example.com/non-image.aif",
+        "https://example.com/non-image.aiff",
+        "https://example.com/non-image.flac",
+        "https://example.com/non-image.m4a",
+        "https://example.com/non-image.mid",
+        "https://example.com/non-image.midi",
+        "https://example.com/non-image.mka",
+        "https://example.com/non-image.mp3",
+        "https://example.com/non-image.ogg",
+        "https://example.com/non-image.opus",
+        "https://example.com/non-image.wav",
+    ],
+)
+def test_MediaStore_validate_filetype_raises_error_on_invalid_filetype(url):
+    image_store = image.MockImageStore("test_provider")
+    msg = "Extracted media type `audio` does not match expected media type `image`."
+
+    with pytest.raises(InvalidFiletypeError, match=msg):
+        image_store._validate_filetype(filetype=None, url=url)
 
 
 @INT_MAX_PARAMETERIZATION

@@ -4,7 +4,11 @@ import os
 from datetime import datetime
 
 from common import urls
-from common.extensions import FILETYPE_EQUIVALENTS, extract_filetype
+from common.extensions import (
+    FILETYPE_EQUIVALENTS,
+    InvalidFiletypeError,
+    extract_filetype,
+)
 from common.loader import provider_details as prov
 from common.storage.tsv_columns import CURRENT_VERSION
 
@@ -112,8 +116,9 @@ class MediaStore(metaclass=abc.ABCMeta):
         - add `provider`,
         - add default `category`, if available.
 
-        Raises an error if missing any of the required fields:
-        `license_info`, `foreign_identifier`, `foreign_landing_url`, or `url`.
+        Raises an error if missing any of the required fields: `license_info`,
+        `foreign_identifier`, `foreign_landing_url`, or `url`. Or if an extracted
+        media type does not match the media type of the class.
         """
         for field in [
             "license_info",
@@ -317,10 +322,7 @@ class MediaStore(metaclass=abc.ABCMeta):
 
         filetype, extracted_media_type = extract_filetype(url)
         if extracted_media_type is not None and extracted_media_type != self.media_type:
-            raise ValueError(
-                f"Extracted media type `{extracted_media_type}` does not match "
-                f"expected media type `{self.media_type}`."
-            )
+            raise InvalidFiletypeError(extracted_media_type, self.media_type)
         return filetype
 
     @staticmethod

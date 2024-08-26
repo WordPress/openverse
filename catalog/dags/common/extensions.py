@@ -16,6 +16,18 @@ mimetypes.add_type("audio/midi", ".midi")
 mimetypes.add_type("audio/x-matroska", ".mka")
 
 
+class InvalidFiletypeError(Exception):
+    def __init__(self, actual_filetype: str, expected_filetype: str, message: str = ""):
+        self.actual_filetype = actual_filetype
+        self.expected_filetype = expected_filetype
+        if not message:
+            message = (
+                f"Extracted media type `{self.actual_filetype}` does not match "
+                f"expected media type `{self.expected_filetype}`."
+            )
+        super().__init__(message)
+
+
 def extract_filetype(url: str) -> tuple[str | None, str | None]:
     """
     Extract the filetype from a media url extension.
