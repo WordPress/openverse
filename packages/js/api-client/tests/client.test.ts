@@ -9,29 +9,13 @@ const mockThumbnailBuffer = fs.readFileSync(
   path.resolve(__dirname, "mock-thumbnail.bin")
 )
 
-import { OpenverseClient, Transport } from "@openverse/api-client"
+import { createClient, ClientCredentials } from "@openverse/api-client"
 
-const getTransport = (): Promise<Transport> => {
-  return import("cross-fetch").then((d) => ({
-    fetch: d.default,
-    getBinaryResponseBody: (res) => (res as Response).arrayBuffer(),
-    getJsonResponseBody: (res) => (res as Response).json(),
-  }))
-}
-
-const getClientAndNock = (
-  credentials?: Exclude<
-    ConstructorParameters<typeof OpenverseClient>[0],
-    undefined
-  >["credentials"]
-) => ({
-  client: new OpenverseClient(
-    {
-      baseUrl: "https://nock.local/",
-      credentials,
-    },
-    getTransport
-  ),
+const getClientAndNock = (credentials?: ClientCredentials) => ({
+  client: createClient({
+    baseUrl: "https://nock.local/",
+    credentials,
+  }),
   nock: rootNock("https://nock.local/"),
 })
 
@@ -57,9 +41,11 @@ describe("OpenverseClient", () => {
           results: ["this would be an image, under normal circumstances..."],
         })
 
-      const images = await client.request("GET /v1/images/")
+      const images = await client.GET("/v1/images/")
 
-      expect(images.body.results[0]).toEqual(
+      expect(images.error).toBeUndefined()
+
+      expect(images.data?.results[0]).toEqual(
         "this would be an image, under normal circumstances..."
       )
 
@@ -96,14 +82,17 @@ describe("OpenverseClient", () => {
         })
 
       const [images, audio] = await Promise.all([
-        client.request("GET /v1/images/"),
-        client.request("GET /v1/audio/"),
+        client.GET("/v1/images/"),
+        client.GET("/v1/audio/"),
       ])
 
-      expect(images.body.results[0]).toEqual(
+      expect(images.error).toBeUndefined()
+      expect(audio.error).toBeUndefined()
+
+      expect(images.data?.results[0]).toEqual(
         "this would be an image, under normal circumstances..."
       )
-      expect(audio.body.results[0]).toEqual(
+      expect(audio.data?.results[0]).toEqual(
         "this would be an audio track, under normal circumstances..."
       )
 
@@ -164,29 +153,32 @@ describe("OpenverseClient", () => {
       // until the expiry threshold is passed. The single audio request will still match the first token.
       // Then we need to wait 3 seconds to ensure we're past the expiry of the first token
       // And the single image request will match the second token, triggered by the audio request
-      const images = await client.request("GET /v1/images/")
-      expect(images.body.results[0]).toEqual(
+      const images = await client.GET("/v1/images/")
+      expect(images.error).toBeUndefined()
+      expect(images.data?.results[0]).toEqual(
         "this would be an image, under normal circumstances..."
       )
-      const audioTracks = await client.request("GET /v1/audio/")
-      expect(audioTracks.body.results[0]).toEqual(
+      const audioTracks = await client.GET("/v1/audio/")
+      expect(audioTracks.error).toBeUndefined()
+      expect(audioTracks.data?.results[0]).toEqual(
         "this would be an audio track, under normal circumstances..."
       )
-      const singleAudio = await client.request("GET /v1/audio/{identifier}/", {
-        identifier: "single-audio",
+      const singleAudio = await client.GET("/v1/audio/{identifier}/", {
+        params: { path: { identifier: "single-audio" } },
       })
-      expect(singleAudio.body.id).toEqual("single-audio")
+      expect(singleAudio.error).toBeUndefined()
+      expect(singleAudio.data?.id).toEqual("single-audio")
 
       await new Promise((res) => setTimeout(res, 3000))
 
-      const singleResult = await client.request(
-        "GET /v1/images/{identifier}/",
-        {
-          identifier: "single-image",
-        }
-      )
+      const singleResult = await client.GET("/v1/images/{identifier}/", {
+        params: {
+          path: { identifier: "single-image" },
+        },
+      })
 
-      expect(singleResult.body.id).toEqual("single-image")
+      expect(singleResult.error).toBeUndefined()
+      expect(singleResult.data?.id).toEqual("single-image")
       scope.done()
     })
   })
@@ -197,11 +189,11 @@ describe("OpenverseClient", () => {
       .get("/v1/images/stats/")
       .reply(200, [{ source_name: "flickr" }])
 
-    const response = await client.request("GET /v1/images/stats/")
+    const response = await client.GET("/v1/images/stats/")
 
     expect(response).toEqual(
       expect.objectContaining({
-        body: expect.arrayContaining([
+        data: expect.arrayContaining([
           expect.objectContaining({ source_name: "flickr" }),
         ]),
       })
@@ -224,19 +216,18 @@ describe("OpenverseClient", () => {
         ],
       })
       .get("/v1/images/a-dog/thumb/")
-      .reply(200, mockThumbnailBuffer)
+      .reply(200, mockThumbnailBuffer, { "Content-Type": "image/jpeg" })
 
-    const imageSearch = await client.request("GET /v1/images/", {
-      params: { q: "dogs" },
+    const imageSearch = await client.GET("/v1/images/", {
+      params: { query: { q: "dogs" } },
     })
 
     expect(imageSearch).toEqual(
       expect.objectContaining({
-        meta: expect.objectContaining({
+        response: expect.objectContaining({
           status: 200,
-          url: "https://nock.local/v1/images/?q=dogs",
         }),
-        body: expect.objectContaining({
+        data: expect.objectContaining({
           results: expect.arrayContaining([
             expect.objectContaining({
               id: "a-dog",
@@ -246,23 +237,14 @@ describe("OpenverseClient", () => {
       })
     )
 
-    const identifier = imageSearch.body.results[0].id
+    const identifier = imageSearch.data?.results[0].id as string
 
-    const thumbnail = await client.request(
-      "GET /v1/images/{identifier}/thumb/",
-      {
-        identifier,
-      }
-    )
+    const thumbnail = await client.GET("/v1/images/{identifier}/thumb/", {
+      params: { path: { identifier } },
+      parseAs: "stream",
+    })
 
-    expect(thumbnail).toEqual(
-      expect.objectContaining({
-        meta: expect.objectContaining({
-          status: 200,
-          url: `https://nock.local/v1/images/${identifier}/thumb/`,
-        }),
-      })
-    )
+    expect(thumbnail.response.status).toEqual(200)
 
     scope.done()
   })

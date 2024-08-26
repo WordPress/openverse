@@ -18,59 +18,67 @@ HTTP client library dependency.
 
 ## Usage
 
-Requests to the Openverse API are made through a function returned by
-`OpenverseClient`. The function accepts a string parameter representing the
-endpoint's method and route. TypeScript infers the possible query parameters for
-that endpoint, which are passed as the `params` property of the second argument.
+Create an Openverse API client using the `createClient` function exported by the
+package.
 
 ```ts
-import { OpenverseClient } from "@openverse/api-client"
+import { createClient } from "@openverse/api-client"
 
-const openverse = OpenverseClient()
+const openverse = createClient()
+```
 
-const images = await openverse("GET /v1/images/", {
+`createClient` accepts the following options:
+
+- `baseUrl`: The base URL for the Openverse API instance you wish to use. This
+  defaults to the public Openverse API.
+- `credentials`: An object definition optional credentials with which to
+  authenticate the client's requests. See the
+  ["Authentication" section](#authentication) for details of how this works when
+  supplied. If credentials are not passed to `createClient`, requests will
+  proceed anonymously.
+- `fetch`: The `fetch` instance to use for the client. Defaults to
+  `globalThis.fetch`.
+- `headers`: Headers to send with every request.
+
+For a description of how to use the request functions of the client, refer to
+[the documentation for the library used to generate this client, `openapi-fetch`](https://openapi-ts.dev/openapi-fetch/api#fetch-options).
+
+```ts
+const images = await openverse.GET("/v1/images/", {
   params: {
-    q: "dogs",
-    license: "by-nc-sa",
-    source: ["flickr", "wikimedia"],
+    query: {
+      q: "dogs",
+      license: "by-nc-sa",
+      source: ["flickr", "wikimedia"],
+    },
   },
 })
 
-images.body.results.forEach((image) => console.log(image.title))
+if (images.error) {
+  throw images.error
+}
+
+images.data.results.forEach((image) => console.log(image.title))
 ```
-
-All responses bear the following properties:
-
-- `body`: The API response. For JSON responses, this will be an object. For all
-  others (e.g., thumbnail requests), this will be an untouched `ReadableStream`
-  (`response.body` from `fetch`).
-- `meta`: An object containing the following information about the request:
-  - `headers`: Response headers
-  - `status`: The status of the response
-  - `url`: The final URL, including query parameters, the client made the
-    request with
-  - `request`: The `RequestInit` object passed to fetch, including `headers` and
-    `body`.
 
 ### Rate limiting
 
 The requester function does _not_ automatically handle rate limit back-off. To
 implement this yourself, check the rate limit headers from the response
-`meta.headers`.
+`response.headers`.
 
 ### Authentication
 
-By default, the `OpenverseClient` function will return an unauthenticated
-client.
+By default, the `createClient` function will return an unauthenticated client.
 
 To use an authenticated client, pass a `credentials` object containing
-`clientId` and `clientSecret` to the `OpenverseClient` function. The client will
+`clientId` and `clientSecret` to the `createClient` function. The client will
 automatically request tokens as needed, including upon expiration.
 
 ```ts
-import { OpenverseClient } from "@openverse/api-client"
+import { createClient } from "@openverse/api-client"
 
-const authenticatedOpenverse = OpenverseClient({
+const authenticatedOpenverse = createClient({
   credentials: {
     clientId: "...",
     clientSecret: "...",
@@ -78,50 +86,27 @@ const authenticatedOpenverse = OpenverseClient({
 })
 ```
 
-`OpenverseClient` automatically requests API tokens when authenticated,
-including eagerly refreshing tokens to avoid halting ongoing requests. This is
-safe, as the Openverse API does not immediately expire existing tokens when a
-new one issued. This also means you do not need to share the same token between
-multiple client instances (e.g., across multiple instances of the same
-application, as in an application server cluster).
-
-### Alternative Openverse API instances
-
-By default, the main Openverse API is used at https://api.openverse.org/. Other
-Openverse API instances may be used by passing `baseUrl` to the
-`OpenverseClient` function:
-
-```ts
-import { OpenverseClient } from "@openverse/api-client"
-
-const localhostOpenverse = OpenverseClient({
-  baseUrl: "localhost:50280",
-})
-```
-
-### Transports
-
-If you already rely on an HTTP client other than globally available fetch, you
-can pass a `getTransport` function as the second parameter to `OpenverseClient`.
-
-See the exported `Transport` type for a definition of what this function must
-return.
+The client automatically requests API tokens when authenticated, including
+eagerly refreshing tokens to avoid halting ongoing requests. This is safe, as
+the Openverse API does not immediately expire existing tokens when a new one
+issued. This also means you do not need to share the same token between multiple
+client instances (e.g., across multiple instances of the same application, as in
+an application server cluster).
 
 ## Development and implementation details
 
 The types used in this package for the Openverse REST API's route definitions
-(including request parameter and response types) are generated by a companion
-package to the Python `openverse-api-client` package. The `src/generated`
-directory contains these generated files.
+(including request parameter and response types) are generated based on the
+Openverse REST API's OpenAPI Schema. Generation is managed with a thin wrapper
+around [`openapi-typescript`](https://openapi-ts.dev/node).
 
-Refer to
-[the Python package's "Development and implementation details" documentation](/packages/python/api_client/index.md#development-and-implementation-details)
-for details on how type generation is implemented and maintained.
+Refer to <https://openapi-ts.dev/> for more details about the project and how it
+works.
 
 ## Versioning
 
-This package follows semantic versioning. Refer to the
-["Versioning" section of the related Python package how to interpret this with respect to changes in the Openverse API](/packages/python/api_client/index.md#versioning).
+This package follows semantic versioning. Version numbers correspond to the API
+of the package code, not the Openverse REST API.
 
 ## License
 

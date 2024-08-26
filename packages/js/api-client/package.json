@@ -1,7 +1,7 @@
 {
   "name": "@openverse/api-client",
-  "version": "0.0.1-a1",
-  "description": "",
+  "version": "0.0.1-a2",
+  "description": "API client for the Openverse REST API",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -16,31 +16,37 @@
     "build:cjs": "esbuild ./src/**/* --packages=external --sourcemap --format=cjs --out-extension:.js=.cjs --outdir=dist",
     "build:esm": "esbuild ./src/**/* --packages=external --sourcemap --format=esm --out-extension:.js=.mjs --outdir=dist",
     "build:types": "tsc -p ./tsconfig.prod.json",
-    "test:unit": "vitest run ./tests"
+    "test:unit": "vitest run ./tests",
+    "generate": "pnpm run generate:pull && pnpm run generate:format || pnpm run generate:lint",
+    "generate:pull": "node ./bin/generate.mjs",
+    "generate:format": "pre-commit run prettier --files ./src/generated/openverse.d.ts",
+    "generate:lint": "eslint ./src/generated/openverse.d.ts --fix"
   },
   "keywords": [
     "openverse",
     "creative commons"
   ],
-  "homepage": "https://sr.ht/~sara/openverse-api-client/#openverse-api-client",
+  "homepage": "https://docs.openverse.org/packages/js/api_client/index.html",
   "bugs": {
-    "email": "~sara/openverse-api-client@todo.sr.ht",
-    "url": "https://todo.sr.ht/~sara/openverse-api-client"
+    "url": "https://github.com/WordPress/openverse/issues"
   },
-  "author": "sarayourfriend <git@sarayourfriend.pictures>",
+  "author": "Openverse Contributors <openverse@wordpress.org>",
   "repository": {
     "type": "git",
-    "url": "https://git.sr.ht/~sara/openverse-api-client",
-    "directory": "packages/openverse-api-client"
+    "url": "https://github.com/WordPress/openverse",
+    "directory": "packages/js/openverse-api-client"
   },
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^20.11.30",
-    "cross-fetch": "^4.0.0",
     "esbuild": "^0.20.0",
     "nock": "14.0.0-beta.5",
+    "openapi-typescript": "^7.3.0",
     "typescript": "^5.3.3",
     "vite-tsconfig-paths": "^4.3.2",
     "vitest": "^1.4.0"
+  },
+  "dependencies": {
+    "openapi-fetch": "^0.11.1"
   }
 }

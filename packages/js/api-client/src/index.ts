@@ -1,2 +1,3 @@
-export { OpenverseClient, Transport } from "./client"
-export * from "./generated/models"
+export { createClient, type ClientOptions } from "./client"
+
+export type * from "./types"
