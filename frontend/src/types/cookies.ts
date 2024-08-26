@@ -3,6 +3,7 @@ import type { RealBreakpoint } from "~/constants/screens"
 import type { BannerId } from "~/types/banners"
 
 export type SnackbarState = "not_shown" | "visible" | "dismissed"
+export type ColorMode = "dark" | "light" | "system"
 
 const baseCookieOptions = {
   path: "/",
@@ -45,6 +46,8 @@ export interface OpenverseCookieState {
      * The list of ids of dismissed banners.
      */
     dismissedBanners?: BannerId[]
+    /* Whether the UI is using dark, light, or system mode */
+    colorMode: ColorMode
   }
   /**
    * The state of the persistent feature flags.
