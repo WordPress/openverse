@@ -1,60 +1,42 @@
-<script lang="ts">
-import { defineComponent, PropType } from "vue"
+<script setup lang="ts">
+/**
+ * This is the search type switcher button that appears in the header or the homepage search bar.
+ */
+import { useAttrs } from "vue"
 
 import type { SearchType } from "~/constants/media"
 
 import { warn } from "~/utils/console"
-
-import { defineEvent } from "~/types/emits"
 
 import { useHydrating } from "~/composables/use-hydrating"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VButton from "~/components/VButton.vue"
 
-/**
- * This is the search type switcher button that appears in the header or the homepage search bar.
- */
-export default defineComponent({
-  name: "VSearchTypeButton",
-  components: { VButton, VIcon },
-  props: {
+withDefaults(
+  defineProps<{
     /**
      * Whether to show the text label and the chevron down.
      */
-    showLabel: {
-      type: Boolean,
-      default: false,
-    },
-    searchType: {
-      type: String as PropType<SearchType>,
-      required: true,
-    },
-    icon: {
-      type: String,
-      required: true,
-    },
-    label: {
-      type: String,
-      required: true,
-    },
-  },
-  emits: {
-    click: defineEvent(),
-  },
-  setup(_, { attrs }) {
-    if (!attrs["aria-haspopup"] || attrs["aria-expanded"] === undefined) {
-      warn(
-        "You should provide `aria-haspopup` and `aria-expanded` props to VSearchTypeButton."
-      )
-    }
-    const { doneHydrating } = useHydrating()
+    showLabel?: boolean
+    searchType: SearchType
+    icon: string
+    label: string
+  }>(),
+  {
+    showLabel: false,
+  }
+)
 
-    return {
-      doneHydrating,
-    }
-  },
-})
+defineEmits<{ click: [] }>()
+
+const attrs = useAttrs()
+if (!attrs["aria-haspopup"] || attrs["aria-expanded"] === undefined) {
+  warn(
+    "You should provide `aria-haspopup` and `aria-expanded` props to VSearchTypeButton."
+  )
+}
+const { doneHydrating } = useHydrating()
 </script>
 
 <template>

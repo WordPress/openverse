@@ -27,7 +27,9 @@ const emit = defineEmits<{
 
 const contentMenuPopover = ref<InstanceType<typeof VPopover> | null>(null)
 
-const { getSearchTypeProps } = useSearchType()
+const { getSearchTypeProps } = useSearchType({
+  component: "VSearchTypePopover",
+})
 
 const searchTypeProps = computed(() => getSearchTypeProps())
 

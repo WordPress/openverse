@@ -1,18 +1,9 @@
-<script lang="ts">
-import { defineComponent } from "vue"
-
-import VSvg from "~/components/VSvg/VSvg.vue"
-
+<script setup lang="ts">
 /**
  * A simple Openverse logo component, visually hidden from screen-reader users.
  * Implementations should wrap this icon with appropriate sr-only text or an aria-label.
  */
-export default defineComponent({
-  name: "VBrand",
-  components: {
-    VSvg,
-  },
-})
+import VSvg from "~/components/VSvg/VSvg.vue"
 </script>
 
 <template>
