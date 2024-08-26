@@ -1,90 +1,56 @@
-<script lang="ts">
-import { computed, defineComponent, PropType } from "vue"
+<script setup lang="ts">
+import { useNuxtApp } from "#imports"
 
-import { useAnalytics } from "~/composables/use-analytics"
-
-import { useI18nResultsCount } from "~/composables/use-i18n-utilities"
-import type { SupportedMediaType } from "~/constants/media"
-
-import { defineEvent } from "~/types/emits"
+import { computed } from "vue"
 
 import useSearchType from "~/composables/use-search-type"
-
 import { useHydrating } from "~/composables/use-hydrating"
+import { useI18nResultsCount } from "~/composables/use-i18n-utilities"
+import type { SupportedMediaType } from "~/constants/media"
 
 import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
 
-export default defineComponent({
-  name: "VContentLink",
-  components: { VIcon, VButton },
-  props: {
-    /**
-     * One of the media types supported.
-     */
-    mediaType: {
-      type: String as PropType<SupportedMediaType>,
-      required: true,
-    },
-    /**
-     * Current search term for aria-label.
-     */
-    searchTerm: {
-      type: String,
-      required: true,
-    },
-    /**
-     * The number of results that the search returned. The link
-     * will be disabled if this value is zero.
-     */
-    resultsCount: {
-      type: Number,
-      required: true,
-    },
-    /**
-     * The route target of the link.
-     */
-    to: {
-      type: String,
-    },
-  },
-  emits: {
-    "shift-tab": defineEvent<[KeyboardEvent]>(),
-  },
-  setup(props) {
-    const { getI18nCount, getI18nContentLinkLabel } = useI18nResultsCount()
-    const resultsCountLabel = computed(() => getI18nCount(props.resultsCount))
+const props = defineProps<{
+  mediaType: SupportedMediaType
+  /**
+   * Current search term for aria-label.
+   */
+  searchTerm: string
+  /**
+   * The number of results that the search returned. The link
+   * will be disabled if this value is zero.
+   */
+  resultsCount: number
+  /**
+   * The route target of the link.
+   */
+  to?: string
+}>()
 
-    const resultsAriaLabel = computed(() =>
-      getI18nContentLinkLabel(
-        props.resultsCount,
-        props.searchTerm,
-        props.mediaType
-      )
-    )
+defineEmits<{
+  "shift-tab": [KeyboardEvent]
+}>()
 
-    const { activeType } = useSearchType()
-    const analytics = useAnalytics()
+const { getI18nCount, getI18nContentLinkLabel } = useI18nResultsCount()
+const resultsCountLabel = computed(() => getI18nCount(props.resultsCount))
 
-    const handleClick = () => {
-      analytics.sendCustomEvent("CHANGE_CONTENT_TYPE", {
-        previous: activeType.value,
-        next: props.mediaType,
-        component: "VContentLink",
-      })
-    }
+const resultsAriaLabel = computed(() =>
+  getI18nContentLinkLabel(props.resultsCount, props.searchTerm, props.mediaType)
+)
 
-    const { doneHydrating } = useHydrating()
+const { activeType } = useSearchType({ component: "VContentLink" })
+const { $sendCustomEvent } = useNuxtApp()
 
-    return {
-      resultsCountLabel,
-      resultsAriaLabel,
+const handleClick = () => {
+  $sendCustomEvent("CHANGE_CONTENT_TYPE", {
+    previous: activeType.value,
+    next: props.mediaType,
+    component: "VContentLink",
+  })
+}
 
-      handleClick,
-      doneHydrating,
-    }
-  },
-})
+const { doneHydrating } = useHydrating()
 </script>
 
 <template>

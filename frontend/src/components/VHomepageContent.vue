@@ -38,7 +38,7 @@ const searchTypeButtonRef = ref<InstanceType<typeof VSearchTypeButton> | null>(
 const searchBarRef = ref<InstanceType<typeof VStandaloneSearchBar> | null>(null)
 const nodeRef = computed(() => searchBarRef.value?.$el ?? null)
 
-const { getSearchTypeProps } = useSearchType()
+const { getSearchTypeProps } = useSearchType({ component: "VHomepageContent" })
 const uiStore = useUiStore()
 
 const searchTypeProps = computed(() => getSearchTypeProps())

@@ -1,22 +1,16 @@
-<script lang="ts">
-import { defineComponent, PropType } from "vue"
-
+<script setup lang="ts">
 import { useReducedMotion } from "~/composables/use-reduced-motion"
 
-export default defineComponent({
-  name: "VLogoLoader",
-  props: {
-    status: {
-      type: String as PropType<"loading" | "idle">,
-      default: "idle",
-    },
-  },
-  setup() {
-    const prefersReducedMotion = useReducedMotion()
+withDefaults(
+  defineProps<{
+    status: "loading" | "idle"
+  }>(),
+  {
+    status: "idle",
+  }
+)
 
-    return { prefersReducedMotion }
-  },
-})
+const prefersReducedMotion = useReducedMotion()
 </script>
 
 <template>
