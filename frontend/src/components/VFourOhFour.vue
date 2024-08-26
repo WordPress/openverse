@@ -1,7 +1,5 @@
-<script lang="ts">
+<script setup lang="ts">
 import { navigateTo, useHead } from "#imports"
-
-import { defineComponent } from "vue"
 
 import { useSearchStore } from "~/stores/search"
 
@@ -13,40 +11,25 @@ import VLink from "~/components/VLink.vue"
 import VStandaloneSearchBar from "~/components/VHeader/VSearchBar/VStandaloneSearchBar.vue"
 import VSvg from "~/components/VSvg/VSvg.vue"
 
-export default defineComponent({
-  name: "VFourOhFour",
-  components: {
-    VLink,
-    VStandaloneSearchBar,
-    VSvg,
-  },
-  props: ["error"],
-  setup() {
-    const searchStore = useSearchStore()
+defineProps<{ error: string }>()
 
-    const { sendCustomEvent } = useAnalytics()
+const searchStore = useSearchStore()
 
-    const handleSearch = (searchTerm: string) => {
-      sendCustomEvent("SUBMIT_SEARCH", {
-        searchType: ALL_MEDIA,
-        query: searchTerm,
-      })
+const { sendCustomEvent } = useAnalytics()
 
-      return navigateTo(
-        searchStore.updateSearchPath({ type: ALL_MEDIA, searchTerm })
-      )
-    }
+const handleSearch = (searchTerm: string) => {
+  sendCustomEvent("SUBMIT_SEARCH", {
+    searchType: ALL_MEDIA,
+    query: searchTerm,
+  })
 
-    useHead({
-      meta: [{ hid: "theme-color", name: "theme-color", content: "#ffe033" }],
-    })
+  return navigateTo(
+    searchStore.updateSearchPath({ type: ALL_MEDIA, searchTerm })
+  )
+}
 
-    return {
-      handleSearch,
-
-      skipToContentTargetId,
-    }
-  },
+useHead({
+  meta: [{ hid: "theme-color", name: "theme-color", content: "#ffe033" }],
 })
 </script>
 
