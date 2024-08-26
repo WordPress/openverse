@@ -32,10 +32,9 @@ export const openReportModal = (page: Page) =>
 
 const checkOption = async (page: Page, option: ReportReason) => {
   const name = t(`mediaDetails.contentReport.form.${option}.option`)
-  if (!(await page.getByRole("radio", { name }).isChecked())) {
-    // `.select()` doesn't work for radio buttons because Playwright
-    // incorrectly states that the element is covered by the icon SVG.
-    await page.getByText(name).click()
+  const radio = page.getByRole("radio", { name })
+  if (!(await radio.isChecked())) {
+    await radio.check()
   }
 }
 
