@@ -263,7 +263,7 @@ a.button {
   @apply border-bg-ring bg-default text-default hover:border-transparent-hover hover:focus-visible:border-tx;
 }
 .bordered-white-pressed {
-  @apply border-tx bg-tertiary text-over-dark hover:border-gray-11 hover:bg-tertiary-hover hover:focus-visible:border-tx;
+  @apply border-tx bg-tertiary text-over-dark hover:border-hover hover:bg-tertiary-hover hover:focus-visible:border-tx;
 }
 .bordered-gray {
   @apply border-default bg-default text-default hover:border-hover focus-visible:border-tx hover:focus-visible:border-tx;
@@ -278,7 +278,7 @@ a.button {
   @apply border-tx bg-tx text-default hover:bg-secondary-hover hover:text-over-dark;
 }
 .transparent-dark-pressed {
-  @apply border-tx bg-tertiary text-over-dark hover:border-gray-11;
+  @apply border-tx bg-tertiary text-over-dark hover:border-hover;
 }
 
 .icon-only {

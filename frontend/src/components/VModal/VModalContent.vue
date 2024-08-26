@@ -179,25 +179,30 @@ defineExpose({
         </header>
 
         <div
-          class="modal-content flex w-full flex-grow flex-col"
-          :class="{
-            'text-left align-bottom md:rounded-se-lg md:rounded-ss-lg':
-              variant === 'default',
-            'w-auto rounded': variant === 'centered',
-            'mt-auto w-full rounded-se-lg rounded-ss-lg bg-overlay':
-              variant === 'fit-content',
-            'flex w-full flex-col justify-between px-6 pb-10':
-              variant === 'full',
-            'overflow-y-hidden rounded-se-lg rounded-ss-lg':
-              variant === 'two-thirds',
-            'h-full': variant === 'mobile-input',
-            'bg-black text-default': mode === 'dark',
-            'bg-overlay text-default': mode === 'light',
-            'fallback-padding':
-              variant === 'fit-content' ||
-              variant === 'two-thirds' ||
-              variant === 'mobile-input',
-          }"
+          class="modal-content flex w-full flex-grow flex-col text-default"
+          :class="[
+            {
+              'text-left align-bottom md:rounded-se-lg md:rounded-ss-lg':
+                variant === 'default',
+              'w-auto rounded': variant === 'centered',
+              'mt-auto w-full rounded-se-lg rounded-ss-lg bg-overlay':
+                variant === 'fit-content',
+              'flex w-full flex-col justify-between px-6 pb-10':
+                variant === 'full',
+              'overflow-y-hidden rounded-se-lg rounded-ss-lg':
+                variant === 'two-thirds',
+              'h-full': variant === 'mobile-input',
+              'fallback-padding':
+                variant === 'fit-content' ||
+                variant === 'two-thirds' ||
+                variant === 'mobile-input',
+            },
+            variant === 'mobile-input'
+              ? 'bg-default'
+              : mode === 'dark'
+                ? 'bg-black'
+                : 'bg-overlay',
+          ]"
         >
           <slot />
         </div>
