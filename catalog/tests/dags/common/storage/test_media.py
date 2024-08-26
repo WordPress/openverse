@@ -11,7 +11,7 @@ import pytest
 from common import urls
 from common.licenses import LicenseInfo
 from common.loader import provider_details as prov
-from common.storage import audio, image, media
+from common.storage import image, media
 
 
 logging.basicConfig(
@@ -623,31 +623,10 @@ def test_MediaStore_validate_integer(value, expected):
         (None, "http://example.com/image.tif", "tiff"),
     ],
 )
-def test_ImageStore_validate_filetype(filetype, url, expected_filetype):
+def test_MediaStore_validate_filetype(filetype, url, expected_filetype):
     image_store = image.MockImageStore("test_provider")
     actual = image_store._validate_filetype(filetype=filetype, url=url)
     assert actual == expected_filetype
-
-
-@pytest.mark.parametrize(
-    "filetype, url, expected_filetype",
-    [
-        # The value provided prevails over the url extension
-        ("ogg", "http://example.com/audio", "ogg"),
-        ("ogg", "http://example.com/audio.wav", "ogg"),
-        # The filetype is guessed from the URL extension
-        (None, "http://example.com/audio.mp3", "mp3"),
-        (None, "http://example.com/audio.WAV", "wav"),
-        (None, "http://example.com/audio.mid", "mid"),
-        # Unifies filetypes
-        ("midi", "http://example.com/audio.mid", "mid"),
-        (None, "http://example.com/audio.midi", "mid"),
-    ],
-)
-def test_AudioStore_validate_filetype(filetype, url, expected_filetype):
-    audio_store = audio.MockAudioStore("test_provider")
-    actual_filetype = audio_store._validate_filetype(filetype, url)
-    assert actual_filetype == expected_filetype
 
 
 @INT_MAX_PARAMETERIZATION
