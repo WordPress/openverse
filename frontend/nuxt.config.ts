@@ -7,7 +7,6 @@ import type { LocaleObject } from "@nuxtjs/i18n"
 
 export default defineNuxtConfig({
   srcDir: "src/",
-  serverDir: "server/",
   devServer: {
     port: 8443,
     host: "0.0.0.0",
@@ -89,6 +88,9 @@ export default defineNuxtConfig({
       })),
     ],
   },
+  // serverHandlers: [
+  //   { route: "/healthcheck", handler: "~/server/healthcheck.ts" },
+  // ],
   tailwindcss: {
     cssPath: "~/styles/tailwind.css",
   },
