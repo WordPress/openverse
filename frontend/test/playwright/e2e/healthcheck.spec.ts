@@ -2,6 +2,7 @@ import { test, expect } from "@playwright/test"
 
 test("returns OK on healthcheck", async ({ page }) => {
   await page.goto("/healthcheck")
+  const body = page.locator("body")
 
-  expect(page.textContent("body")).toEqual("OK")
+  await expect(body).toHaveText("OK")
 })
