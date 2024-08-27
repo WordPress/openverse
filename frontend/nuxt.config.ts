@@ -88,9 +88,6 @@ export default defineNuxtConfig({
       })),
     ],
   },
-  // serverHandlers: [
-  //   { route: "/healthcheck", handler: "~/server/healthcheck.ts" },
-  // ],
   tailwindcss: {
     cssPath: "~/styles/tailwind.css",
   },
