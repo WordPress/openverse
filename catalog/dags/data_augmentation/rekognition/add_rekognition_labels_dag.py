@@ -10,6 +10,7 @@ import logging
 from datetime import timedelta
 
 from airflow.decorators import dag
+from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 
 from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
 from common.sql import run_sql
@@ -18,6 +19,7 @@ from data_augmentation.rekognition.add_rekognition_labels import (
     parse_and_insert_labels,
     resume_insertion,
 )
+from database.batched_update.constants import DAG_ID as BATCHED_UPDATE_DAG_ID
 
 
 logger = logging.getLogger(__name__)
@@ -62,8 +64,18 @@ def add_rekognition_labels():
         postgres_conn_id=POSTGRES_CONN_ID,
     )
 
+    batched_update = TriggerDagRunOperator(
+        task_id="trigger_batched_update",
+        trigger_dag_id=BATCHED_UPDATE_DAG_ID,
+        wait_for_completion=True,
+        execution_timeout=timedelta(hours=5),
+        retries=0,
+        conf=constants.BATCHED_UPDATE_CONFIG,
+    )
+
     check_for_resume >> [create_temp_table, insert_labels]
     create_temp_table >> create_temp_table_index >> insert_labels
+    insert_labels >> batched_update
 
 
 add_rekognition_labels()

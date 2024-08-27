@@ -1,4 +1,5 @@
 from datetime import timedelta
+from textwrap import dedent
 
 
 DAG_ID = "add_rekognition_labels"
@@ -38,3 +39,29 @@ SELECT_TEMP_TABLE_COUNT_QUERY = f"""
     FROM {TEMP_TABLE_NAME};
     """
 DROP_TABLE_QUERY = "DROP TABLE IF EXISTS {TEMP_TABLE_NAME} CASCADE;"
+BATCHED_UPDATE_CONFIG = {
+    "query_id": f"{DAG_ID}_insertion",
+    "table_name": "image",
+    "select_query": dedent(f"""\
+        WHERE identifier IN (SELECT identifier FROM {TEMP_TABLE_NAME})
+    """),
+    # Merge the tags from the temporary table with the existing tags.
+    # Taken from _merge_jsonb_arrays in common.storage.columns
+    "update_query": dedent(
+        f"SET updated_on = NOW(), "
+        f"""tags = COALESCE(
+           (
+             SELECT jsonb_agg(DISTINCT x)
+             FROM jsonb_array_elements({TEMP_TABLE_NAME}.tags || image.tags) t(x)
+           ),
+           image.tags,
+           {TEMP_TABLE_NAME}.tags
+        )
+        FROM {TEMP_TABLE_NAME}
+        """
+    ),
+    "additional_where": f"AND {TEMP_TABLE_NAME}.identifier = image.identifier",
+    "update_timeout": 60 * 60 * 5,
+    "dry_run": False,
+    "resume_update": False,
+}
