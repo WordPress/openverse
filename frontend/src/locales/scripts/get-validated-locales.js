@@ -32,7 +32,7 @@ const getValidatedLocales = async () => {
     // Check for a language in all three versions of the ISO 639 spec,
     // defaulting to the v1 two-character codes before checking for the
     // three-character codes in the v2 and v3 specs.
-    iso:
+    language:
       locale.langCodeIso_639_1 ??
       locale.langCodeIso_639_2 ??
       locale.langCodeIso_639_3 ??

@@ -7,7 +7,6 @@ import type { LocaleObject } from "@nuxtjs/i18n"
 
 export default defineNuxtConfig({
   srcDir: "src/",
-  serverDir: "server/",
   devServer: {
     port: 8443,
     host: "0.0.0.0",
@@ -100,7 +99,7 @@ export default defineNuxtConfig({
         code: "en", // unique identifier for the locale in Vue i18n
         dir: "ltr",
         file: "en.json",
-        iso: "en", // used for SEO purposes (html lang attribute)
+        language: "en", // used for SEO purposes (html lang attribute)
 
         /* Custom fields */
 
@@ -108,7 +107,7 @@ export default defineNuxtConfig({
         nativeName: "English",
       },
       ...locales,
-    ].filter((l) => Boolean(l.iso)) as LocaleObject[],
+    ].filter((l) => Boolean(l.language)) as LocaleObject[],
     lazy: true,
     langDir: "locales",
     defaultLocale: "en",
