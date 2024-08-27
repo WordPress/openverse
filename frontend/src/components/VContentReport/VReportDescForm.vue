@@ -1,48 +1,32 @@
-<script lang="ts">
-import { computed, defineComponent, PropType } from "vue"
+<script setup lang="ts">
+import { computed } from "vue"
 
-import { reasons, OTHER, ReportReason } from "~/constants/content-report"
-import { defineEvent } from "~/types/emits"
+import { OTHER, type ReportReason } from "~/constants/content-report"
 
-export default defineComponent({
-  name: "VReportDescForm",
-  model: {
-    prop: "content",
-    event: "update:content",
-  },
-  props: {
+const props = withDefaults(
+  defineProps<{
     /**
      * the contents of the textarea
      */
-    content: {
-      type: String,
-      default: "",
-    },
+    content?: string
     /**
      * the reason selected for reporting the content
      */
-    reason: {
-      type: String as PropType<ReportReason>,
-      validator: (val: ReportReason) => reasons.includes(val),
-    },
-  },
-  emits: {
-    "update:content": defineEvent<[string]>(),
-  },
-  setup(props, { emit }) {
-    const text = computed({
-      get: () => props.content,
-      set: (val) => emit("update:content", val),
-    })
+    reason: ReportReason
+  }>(),
+  {
+    content: "",
+  }
+)
 
-    const isRequired = computed(() => props.reason === OTHER)
+const emit = defineEmits<{ "update:content": [string] }>()
 
-    return {
-      isRequired,
-      text,
-    }
-  },
+const text = computed({
+  get: () => props.content,
+  set: (val) => emit("update:content", val),
 })
+
+const isRequired = computed(() => props.reason === OTHER)
 </script>
 
 <template>
