@@ -78,7 +78,7 @@ const handleSearch = (searchTerm: string) => {
 
 <template>
   <main
-    class="index flex w-full flex-shrink-0 flex-grow flex-col justify-center gap-6 px-6 sm:px-0 lg:h-full lg:flex-row lg:items-center lg:justify-between lg:gap-0"
+    class="index flex w-full flex-shrink-0 flex-grow flex-col justify-center gap-6 px-6 sm:px-0 lg:flex-row lg:items-center lg:justify-between lg:gap-0"
   >
     <VHomepageContent
       class="sm:px-14 md:px-20 lg:px-26 xl:w-[53.375rem] xl:pe-0"
