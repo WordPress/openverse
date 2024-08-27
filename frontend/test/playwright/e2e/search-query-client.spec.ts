@@ -10,6 +10,8 @@ import { mockProviderApis } from "~~/test/playwright/utils/route"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 
+import { getHeaderSearchbar } from "~~/test/playwright/utils/components"
+
 import { AUDIO, IMAGE } from "~/constants/media"
 
 /**
@@ -37,9 +39,7 @@ test.describe("search query on CSR", () => {
     test("q query parameter is set as the search term", async ({ page }) => {
       await goToSearchTerm(page, "cat", { mode: "CSR" })
 
-      await expect(page.locator('header input[type="search"]')).toHaveValue(
-        "cat"
-      )
+      await expect(getHeaderSearchbar(page)).toHaveValue("cat")
       await expect(page).toHaveURL("search?q=cat")
     })
 
@@ -48,9 +48,7 @@ test.describe("search query on CSR", () => {
     }) => {
       await goToSearchTerm(page, "cat", { searchType: AUDIO, mode: "CSR" })
 
-      await expect(page.locator('header input[type="search"]')).toHaveValue(
-        "cat"
-      )
+      await expect(getHeaderSearchbar(page)).toHaveValue("cat")
 
       await expect(page).toHaveURL("search/audio?q=cat")
     })

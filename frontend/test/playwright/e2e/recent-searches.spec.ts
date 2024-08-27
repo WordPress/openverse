@@ -7,7 +7,7 @@ import {
   searchFromHeader,
   sleep,
 } from "~~/test/playwright/utils/navigation"
-import { getH1 } from "~~/test/playwright/utils/components"
+import { getH1, skipToContentLink } from "~~/test/playwright/utils/components"
 import { t } from "~~/test/playwright/utils/i18n"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 
@@ -24,10 +24,7 @@ const clearButton = async (page: Page) =>
   page.locator(`[aria-label="${clearRecentLabel}"]`)
 const clickClear = async (page: Page) => (await clearButton(page)).click()
 
-const searchbarName = t("search.searchBarLabel").replace(
-  "{openverse}",
-  "Openverse"
-)
+const searchbarName = t("search.searchBarLabel")
 
 const recentSearches = (page: Page) =>
   page.locator('[data-testid="recent-searches"]')
@@ -46,7 +43,7 @@ const getFocusedElementName = async (page: Page) => {
 }
 
 const tabToSearchbar = async (page: Page) => {
-  await page.getByRole("link", { name: t("skipToContent") }).focus()
+  await skipToContentLink(page).focus()
 
   let focusedInputName = null
   while (focusedInputName !== searchbarName) {
@@ -104,7 +101,7 @@ breakpoints.describeMobileXsAndDesktop(({ breakpoint }) => {
     await openRecentSearches(page)
     const recentList = await page
       .locator(`[aria-label="${recentLabel}"]`)
-      .locator('[role="option"]')
+      .getByRole("option")
       .allTextContents()
     searches.reverse().forEach((term, idx) => {
       expect(recentList[idx].trim()).toEqual(term)

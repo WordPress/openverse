@@ -24,10 +24,12 @@ const getSensitiveToggle = (page: Page) => {
 const getFirstSensitiveResult = (page: Page) => {
   return page
     .getByRole("link", {
-      name: /This image may contain sensitive content/i,
+      name: t("sensitiveContent.title.image"),
     })
     .first()
 }
+const hideLabel = t("sensitiveContent.singleResult.hide")
+const showLabel = t("sensitiveContent.singleResult.show")
 
 test.describe("sensitive_results", () => {
   test.afterEach(async ({ context }) => {
@@ -67,7 +69,7 @@ test.describe("sensitive_results", () => {
     await goToSearchTerm(page, "cat")
     await getFirstSensitiveResult(page).click()
 
-    await page.getByRole("button", { name: /show content/i }).click()
+    await page.getByRole("button", { name: showLabel }).click()
 
     const unblurSensitiveResultEvent = analyticsEvents.find(
       (event) => event.n === "UNBLUR_SENSITIVE_RESULT"
@@ -86,8 +88,8 @@ test.describe("sensitive_results", () => {
     await goToSearchTerm(page, "cat")
     await getFirstSensitiveResult(page).click()
 
-    await page.getByRole("button", { name: /show content/i }).click()
-    await page.getByRole("button", { name: /hide content/i }).click()
+    await page.getByRole("button", { name: showLabel }).click()
+    await page.getByRole("button", { name: hideLabel }).click()
 
     const reblurSensitiveResultEvent = analyticsEvents.find(
       (event) => event.n === "REBLUR_SENSITIVE_RESULT"

@@ -69,7 +69,7 @@ export default defineComponent({
     />
     <VSvg
       name="radiomark"
-      class="radiomark absolute start-0 h-5 w-5 text-default opacity-0 transition-opacity"
+      class="radiomark pointer-events-none absolute start-0 h-5 w-5 text-default opacity-0 transition-opacity"
       width="20"
       height="20"
     />

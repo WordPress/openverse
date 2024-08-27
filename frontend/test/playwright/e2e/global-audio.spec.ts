@@ -37,10 +37,12 @@ test.describe("global audio", () => {
       // and confirm is still playing (or loading to play)
       const mainPlayerButton = page.locator(".main-track >> button").first()
 
-      await expect(mainPlayerButton).toHaveAttribute(
-        "aria-label",
-        /(Loading|Pause|Replay)/
+      const labels = ["loading", "pause", "replay"].map((l) =>
+        t(`playPause.${l}`)
       )
+      const labelPattern = new RegExp(`(${labels.join("|")})`, "i")
+
+      await expect(mainPlayerButton).toHaveAttribute("aria-label", labelPattern)
     })
 
     test("track can be closed while playing", async ({ page }) => {

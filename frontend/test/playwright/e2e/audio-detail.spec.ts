@@ -22,10 +22,10 @@ const goToCustomAudioPage = async (page: Page) => {
 }
 
 const errorPageHeading = (page: Page) => {
-  return getH1(page, /The content you’re looking for seems to have disappeared/)
+  return getH1(page, t("404.title"))
 }
 const getMainPlayButton = (page: Page) =>
-  page.getByRole("button", { name: "Play" }).first()
+  page.getByRole("button", { name: t("playPause.play") }).first()
 
 test.describe.configure({ mode: "parallel" })
 
@@ -46,7 +46,7 @@ test("sends GET_MEDIA event on CTA button click", async ({ context, page }) => {
 
   await goToCustomAudioPage(page)
   await openAndCloseExternalLink(page, {
-    name: new RegExp(t("audioDetails.weblink"), "i"),
+    name: t("audioDetails.weblink"),
   })
 
   const getMediaEvent = analyticsEvents.find((event) => event.n === "GET_MEDIA")
