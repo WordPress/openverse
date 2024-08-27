@@ -72,10 +72,7 @@ const imageCount = computed(() => columnCount.value * rowCount)
 
 <template>
   <!-- Wrapper element to center the grid if space is more than 5 columns. -->
-  <div
-    ref="el"
-    class="mx-10 me-12 flex flex-row items-center justify-end 2xl:justify-center"
-  >
+  <div ref="el" class="flex-row items-center justify-end 2xl:justify-center">
     <!-- Image grid only occupies as much width as needed. -->
     <div
       class="home-gallery inline-grid grid-flow-col grid-rows-3 gap-8"
