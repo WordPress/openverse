@@ -1,40 +1,15 @@
-<script lang="ts">
+<script setup lang="ts">
 /**
  * This component receives an array of images as a prop, and
  * is responsible for displaying them as a grid.
  */
-import { defineComponent, type PropType } from "vue"
 
-import type { ResultKind } from "~/types/result"
-import type { ImageDetail } from "~/types/media"
+import type { CollectionComponentProps } from "~/types/collection-component-props"
 
 import VImageCell from "~/components/VImageCell/VImageCell.vue"
 
-export default defineComponent({
-  name: "VImageCollection",
-  components: { VImageCell },
-  props: {
-    results: {
-      type: Array as PropType<ImageDetail[]>,
-      required: true,
-    },
-    kind: {
-      type: String as PropType<ResultKind>,
-      default: "search",
-    },
-    collectionLabel: {
-      type: String,
-      required: true,
-    },
-    searchTerm: {
-      type: String,
-      required: true,
-    },
-    relatedTo: {
-      type: String as PropType<string>,
-      default: "null",
-    },
-  },
+withDefaults(defineProps<CollectionComponentProps<"image">>(), {
+  relatedTo: "null",
 })
 </script>
 

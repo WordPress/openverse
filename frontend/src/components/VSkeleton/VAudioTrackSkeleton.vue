@@ -1,14 +1,7 @@
-<script lang="ts">
-import { defineComponent } from "vue"
-
-export default defineComponent({
-  name: "VAudioTrackSkeleton",
-  methods: {
-    getRandomSize(max = 250, min = 70) {
-      return Math.floor(Math.random() * (max - min) + min)
-    },
-  },
-})
+<script setup lang="ts">
+const getRandomSize = (max = 250, min = 70) => {
+  return Math.floor(Math.random() * (max - min) + min)
+}
 </script>
 
 <template>

@@ -1,36 +1,24 @@
-<script lang="ts">
-import { computed, defineComponent } from "vue"
-
-import { defineEvent } from "~/types/emits"
+<script setup lang="ts">
+import { computed } from "vue"
 
 const positionWithoutSidebar = "ltr:right-4 rtl:left-4"
 const positionWithSidebar = "ltr:right-[22rem] rtl:left-[22rem]"
 
-export default defineComponent({
-  name: "VScrollButton",
-  props: {
-    isFilterSidebarVisible: {
-      type: Boolean,
-      default: true,
-    },
-  },
-  emits: {
-    tab: defineEvent<[KeyboardEvent]>(),
-  },
-  setup(props) {
-    const hClass = computed(() =>
-      props.isFilterSidebarVisible
-        ? positionWithSidebar
-        : positionWithoutSidebar
-    )
-    const scrollToTop = (e: MouseEvent) => {
-      const element =
-        (e.currentTarget as HTMLElement)?.closest("#main-page") || window
-      element.scrollTo({ top: 0, left: 0, behavior: "smooth" })
-    }
-    return { hClass, scrollToTop }
-  },
-})
+const props = withDefaults(
+  defineProps<{ isFilterSidebarVisible?: boolean }>(),
+  { isFilterSidebarVisible: true }
+)
+
+defineEmits<{ tab: [KeyboardEvent] }>()
+
+const hClass = computed(() =>
+  props.isFilterSidebarVisible ? positionWithSidebar : positionWithoutSidebar
+)
+const scrollToTop = (e: MouseEvent) => {
+  const element =
+    (e.currentTarget as HTMLElement)?.closest("#main-page") || window
+  element.scrollTo({ top: 0, left: 0, behavior: "smooth" })
+}
 </script>
 
 <template>

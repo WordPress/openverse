@@ -4,12 +4,11 @@ import { useI18n, useNuxtApp } from "#imports"
 import { computed } from "vue"
 
 import type { AspectRatio, ImageDetail } from "~/types/media"
-import type { ResultKind } from "~/types/result"
+import type { SingleResultProps } from "~/types/collection-component-props"
 import { useImageCellSize } from "~/composables/use-image-cell-size"
+import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 
 import { IMAGE } from "~/constants/media"
-
-import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 
 import { useSearchStore } from "~/stores/search"
 
@@ -19,25 +18,20 @@ import VLink from "~/components/VLink.vue"
 import errorImage from "~/assets/image_not_available_placeholder.png"
 
 const props = withDefaults(
-  defineProps<{
-    image: ImageDetail
-    /**
-     * The search term is added to the URL to allow the user to
-     * navigate back/forward to the search results page.
-     */
-    searchTerm: string | null
-    /**
-     * All content view uses the square image cells, Image view
-     * uses the image's intrinsic size.
-     */
-    aspectRatio?: AspectRatio
-    kind?: ResultKind
-    relatedTo?: string
-  }>(),
+  defineProps<
+    SingleResultProps & {
+      image: ImageDetail
+      /**
+       * All content view uses the square image cells, Image view
+       * uses the image's intrinsic size.
+       */
+      aspectRatio?: AspectRatio
+    }
+  >(),
   {
-    aspectRatio: () => "square",
-    kind: () => "search",
-    relatedTo: () => "null",
+    aspectRatio: "square",
+    kind: "search",
+    relatedTo: "null",
   }
 )
 

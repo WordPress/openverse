@@ -1,52 +1,43 @@
-<script lang="ts">
+<script setup lang="ts">
 /**
  * Display placeholder elements while waiting for the actual elements to be
  * loaded in the results views.
  */
-import { computed, defineComponent, PropType } from "vue"
+import { computed } from "vue"
 
 import type { SupportedSearchType } from "~/constants/media"
 
 import VAudioTrackSkeleton from "~/components/VSkeleton/VAudioTrackSkeleton.vue"
 import VBone from "~/components/VSkeleton/VBone.vue"
 
-export default defineComponent({
-  name: "VGridSkeleton",
-  components: { VAudioTrackSkeleton, VBone },
-  props: {
-    isForTab: {
-      type: String as PropType<SupportedSearchType>,
-      default: "image",
-    },
-    numElems: {
-      type: Number,
-    },
-    isSidebarVisible: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  setup(props) {
-    function getRandomSize(max = 300, min = 100) {
-      return Math.floor(Math.random() * (max - min) + min)
-    }
+const props = withDefaults(
+  defineProps<{
+    isForTab?: SupportedSearchType
+    numElems?: number
+    isSidebarVisible?: boolean
+  }>(),
+  {
+    isForTab: "image",
+    isSidebarVisible: false,
+  }
+)
 
-    const elementCount = computed(() => {
-      // Calculate the default element count based on isForTab
-      if (props.numElems) {
-        return props.numElems
-      }
-      if (props.isForTab === "all") {
-        return 20
-      }
-      if (props.isForTab === "image") {
-        return 30
-      }
-      return 8
-    })
+function getRandomSize(max = 300, min = 100) {
+  return Math.floor(Math.random() * (max - min) + min)
+}
 
-    return { getRandomSize, elementCount }
-  },
+const elementCount = computed(() => {
+  // Calculate the default element count based on isForTab
+  if (props.numElems) {
+    return props.numElems
+  }
+  if (props.isForTab === "all") {
+    return 20
+  }
+  if (props.isForTab === "image") {
+    return 30
+  }
+  return 8
 })
 </script>
 

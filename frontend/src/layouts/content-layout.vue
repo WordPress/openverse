@@ -7,6 +7,7 @@ import { ShowScrollButtonKey } from "~/types/provides"
 
 import VFooter from "~/components/VFooter/VFooter.vue"
 import VHeader from "~/components/VHeader/VHeader.vue"
+import VScrollButton from "~/components/VScrollButton.vue"
 
 /**
  * This is the ContentLayout: the single result and the content pages.
@@ -41,6 +42,12 @@ provide(ShowScrollButtonKey, showScrollButton)
       <slot />
       <VFooter mode="internal" class="border-t border-default bg-default" />
     </div>
+
+    <VScrollButton
+      v-show="showScrollButton"
+      :is-filter-sidebar-visible="false"
+      data-testid="scroll-button"
+    />
   </div>
 </template>
 
