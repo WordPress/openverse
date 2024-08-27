@@ -27,6 +27,7 @@ Required Dagrun Configuration parameters:
 
 Optional params:
 
+* additional_where: a SQL `WHERE` clause to be appended to the `UPDATE`
 * dry_run: bool, whether to actually run the generated SQL. True by default.
 * batch_size: int number of records to process in each batch. By default, 10_000
 * update_timeout: int number of seconds to run an individual batch update before timing
@@ -137,6 +138,16 @@ DAG_CONFIG = dict(
             ),
             pattern="^SET updated_on = NOW()",
         ),
+        "additional_where": Param(
+            default="",
+            type="string",
+            description=(
+                "Additional `WHERE` clause to be appended to the `UPDATE` query. "
+                "Can be used when setting values based on an existing row in "
+                "an entirely separate table. (Note: this MUST start with `AND `)"
+            ),
+            pattern="^AND",
+        ),
         "batch_size": Param(
             default=constants.DEFAULT_BATCH_SIZE,
             type="integer",
@@ -224,6 +235,7 @@ def batched_update():
         table_name="{{ params.table_name }}",
         query_id="{{ params.query_id }}",
         update_query="{{ params.update_query }}",
+        additional_where="{{ params.additional_where }}",
         update_timeout="{{ params.update_timeout }}",
     )
 
