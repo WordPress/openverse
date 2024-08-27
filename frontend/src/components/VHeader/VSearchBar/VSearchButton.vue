@@ -30,6 +30,7 @@ const { doneHydrating } = useHydrating()
         'border-tx bg-secondary hover:bg-primary': route === 'search',
         'border-tx bg-primary text-over-dark hover:!bg-primary-hover':
           route === 'home',
+        'border-black': route === '404',
       },
     ]"
   >

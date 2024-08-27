@@ -2,8 +2,8 @@
 import {
   computed,
   onMounted,
-  useLocaleHead,
   useHead,
+  useLocaleHead,
   useRuntimeConfig,
 } from "#imports"
 
@@ -14,6 +14,8 @@ import { useLayout } from "~/composables/use-layout"
 import { useDarkMode } from "~/composables/use-dark-mode"
 
 import { meta as commonMeta } from "~/constants/meta"
+
+import { favicons } from "~/constants/favicons"
 
 import VSkipToContentButton from "~/components/VSkipToContentButton.vue"
 
@@ -38,29 +40,6 @@ const head = useLocaleHead({
   identifierAttribute: "id",
   addSeoAttributes: true,
 })
-
-const favicons = [
-  // SVG favicon
-  {
-    rel: "icon",
-    href: "/favicon.ico",
-  },
-  {
-    rel: "icon",
-    href: "/openverse-logo.svg",
-  },
-  // SVG favicon for Safari
-  {
-    rel: "mask-icon",
-    href: "/opvenverse-logo.svg",
-    color: "#30272E",
-  },
-  // Fallback iPhone Icon
-  {
-    rel: "apple-touch-icon",
-    href: "/openverse-logo-180.png",
-  },
-]
 
 useHead({
   bodyAttrs: { class: darkMode.cssClass },
