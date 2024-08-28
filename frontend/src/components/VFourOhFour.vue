@@ -11,7 +11,9 @@ import VLink from "~/components/VLink.vue"
 import VStandaloneSearchBar from "~/components/VHeader/VSearchBar/VStandaloneSearchBar.vue"
 import VSvg from "~/components/VSvg/VSvg.vue"
 
-defineProps<{ error: string }>()
+import type { NuxtError } from "#app"
+
+defineProps<{ error: NuxtError }>()
 
 const searchStore = useSearchStore()
 

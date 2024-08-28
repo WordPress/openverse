@@ -34,7 +34,7 @@ const props = withDefaults(
     /**
      * the z-index to apply to the tooltip content
      */
-    zIndex: ZIndex
+    zIndex?: ZIndex
   }>(),
   {
     placement: "bottom",
