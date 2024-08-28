@@ -32,28 +32,6 @@ def resume_insertion():
     return constants.NOTIFY_START_TASK_ID
 
 
-@task
-def notify_parse_complete(results: types.ParseResults):
-    message = f"""
-Rekognition label parsing complete :rocket:
-*Total processed:* {results.total_processed:,}
-*Total skipped:* {results.total_skipped:,}
-*Total failed:* {len(results.failed_records):,}
-"""
-    if 0 < len(results.failed_records) <= constants.MAX_FAILED_RECORDS:
-        message += "*Failed records sample*:\n"
-        message += "\n".join([f" - `{rec}`" for rec in results.failed_records[:5]])
-    elif len(results.failed_records) > constants.MAX_FAILED_RECORDS:
-        message += "_Too many failed records to capture in XComs, check the logs._"
-
-    slack.send_message(
-        message,
-        constants.DAG_ID,
-        constants.SLACK_USERNAME,
-        icon_emoji=constants.SLACK_ICON,
-    )
-
-
 def _process_labels(labels: list[types.Label]) -> list[types.MachineGeneratedTag]:
     tags = []
     for label in labels:
@@ -149,3 +127,25 @@ def parse_and_insert_labels(
         Variable.delete(constants.CURRENT_POS_VAR_NAME)
 
     return types.ParseResults(total_processed, total_skipped, failed_records)
+
+
+@task
+def notify_parse_complete(results: types.ParseResults):
+    message = f"""
+Rekognition label parsing complete :rocket:
+*Total processed:* {results.total_processed:,}
+*Total skipped:* {results.total_skipped:,}
+*Total failed:* {len(results.failed_records):,}
+"""
+    if 0 < len(results.failed_records) <= constants.MAX_FAILED_RECORDS:
+        message += "*Failed records sample*:\n"
+        message += "\n".join([f" - `{rec}`" for rec in results.failed_records[:5]])
+    elif len(results.failed_records) > constants.MAX_FAILED_RECORDS:
+        message += "_Too many failed records to capture in XComs, check the logs._"
+
+    slack.send_message(
+        message,
+        constants.DAG_ID,
+        constants.SLACK_USERNAME,
+        icon_emoji=constants.SLACK_ICON,
+    )
