@@ -12,6 +12,7 @@ import { IMAGE } from "~/constants/media"
 
 import { useSearchStore } from "~/stores/search"
 
+import VIcon from "~/components/VIcon/VIcon.vue"
 import VLicense from "~/components/VLicense/VLicense.vue"
 import VLink from "~/components/VLink.vue"
 
@@ -156,11 +157,8 @@ const { isHidden: shouldBlur } = useSensitiveMedia(props.image)
       >
         <img
           loading="lazy"
-          class="image col-span-full row-span-full block w-full overflow-hidden rounded-sm object-cover duration-200 motion-safe:transition-[filter,transform]"
-          :class="[
-            isSquare ? 'h-full' : 'margin-auto',
-            { 'scale-150 blur-image': shouldBlur },
-          ]"
+          class="image col-span-full row-span-full block w-full overflow-hidden rounded-sm object-cover"
+          :class="[isSquare ? 'h-full' : 'margin-auto']"
           :alt="
             shouldBlur ? `${$t('sensitiveContent.title.image')}` : image.title
           "
@@ -171,6 +169,14 @@ const { isHidden: shouldBlur } = useSensitiveMedia(props.image)
           @load="getImgDimension"
           @error="onImageLoadError($event)"
         />
+        <div
+          class="col-span-full row-span-full flex items-center justify-center bg-blur backdrop-blur-xl duration-200 motion-safe:transition-opacity"
+          :class="shouldBlur ? 'opacity-100' : 'opacity-0'"
+          data-testid="blur-overlay"
+          aria-hidden="true"
+        >
+          <VIcon name="eye-closed" />
+        </div>
         <figcaption
           class="col-span-full self-end justify-self-start rounded-sm bg-default text-default group-hover:visible group-focus-visible:visible"
           :class="
