@@ -93,7 +93,7 @@ const radius = (i: number, j: number) => {
     <!-- The element that blurs the programmatic thumbnail -->
     <div
       v-show="shouldBlur && !audio.thumbnail"
-      class="bg-blur absolute bg-complementary"
+      class="absolute bg-complementary"
     />
 
     <div v-show="audio.thumbnail && isOk" class="thumbnail absolute inset-0">

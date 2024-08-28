@@ -340,6 +340,7 @@ export default {
         error: "var(--color-bg-error)",
         disabled: "var(--color-bg-disabled)",
         zero: "var(--color-bg-zero)",
+        blur: "var(--color-bg-blur)",
       },
       borderColor: {
         default: "var(--color-border)",

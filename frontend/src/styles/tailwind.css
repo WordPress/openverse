@@ -9,6 +9,7 @@
 
   :root {
     --color-black: #000;
+    --color-black-72: #000000b8;
     --color-white: #fff;
     --color-yellow-3: #fde034;
     --color-pink-8: #ad1f85;
@@ -69,6 +70,7 @@
     --color-gray-12-80: #232323cc;
     --color-gray-12-90: #232323e5;
     --color-gray-13-0: #0d0d0d00;
+    --color-white-88: #ffffffe0;
     --color-white-0: #fff0;
     --color-info-1: #f5f7fb;
     --color-info-2: #e6edfc;
@@ -144,6 +146,7 @@
     --color-bg-error: var(--color-error-2);
     --color-bg-disabled: var(--color-gray-5);
     --color-bg-zero: var(--color-white-0);
+    --color-bg-blur: var(--color-white-88);
     --color-border: var(--color-gray-3);
     --color-border-hover: var(--color-gray-12);
     --color-border-secondary: var(--color-gray-12-20);
@@ -187,6 +190,7 @@
     --color-bg-error: var(--color-error-11);
     --color-bg-disabled: var(--color-gray-8);
     --color-bg-zero: var(--color-gray-13-0);
+    --color-bg-blur: var(--color-black-72);
     --color-border: var(--color-gray-11);
     --color-border-hover: var(--color-gray-1);
     --color-border-secondary: var(--color-gray-1-20);
