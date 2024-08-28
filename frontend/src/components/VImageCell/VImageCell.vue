@@ -178,12 +178,14 @@ const { isHidden: shouldBlur } = useSensitiveMedia(props.image)
           <VIcon name="eye-closed" />
         </div>
         <figcaption
-          class="col-span-full self-end justify-self-start rounded-sm bg-default text-default group-hover:visible group-focus-visible:visible"
-          :class="
+          class="z-10 col-span-full my-2 self-end justify-self-start rounded-sm text-default group-hover:visible group-focus-visible:visible"
+          :class="[
             isSquare
-              ? 'invisible row-span-full m-2 p-2'
-              : 'my-2 sm:invisible sm:row-span-full sm:m-2 sm:p-2'
-          "
+              ? 'invisible row-span-full p-2'
+              : 'sm:invisible sm:row-span-full sm:p-2',
+            shouldBlur ? 'sm:w-full sm:text-center' : 'bg-default',
+            !shouldBlur && (isSquare ? 'mx-2' : 'sm:mx-2'),
+          ]"
         >
           <h2 class="sr-only">
             {{
