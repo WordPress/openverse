@@ -13,6 +13,7 @@ from airflow.decorators import dag
 from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 
 from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
+from common.slack import notify_slack
 from common.sql import run_sql
 from data_augmentation.rekognition import constants
 from data_augmentation.rekognition.add_rekognition_labels import (
@@ -41,8 +42,27 @@ logger = logging.getLogger(__name__)
 def add_rekognition_labels():
     check_for_resume = resume_insertion()
 
+    notify_start = notify_slack.override(task_id=constants.NOTIFY_START_TASK_ID)(
+        text=f"Starting Rekognition label insertion\n"
+        f"{constants.TEMPLATE_SLACK_MESSAGE_CONFIG}",
+        dag_id=constants.DAG_ID,
+        username=constants.SLACK_USERNAME,
+        icon_emoji=constants.SLACK_ICON,
+    )
+
+    notify_resume = notify_slack.override(
+        task_id=constants.NOTIFY_RESUME_TASK_ID
+    )(
+        text="Resuming Rekognition label insertion "  # noqa: UP031
+        "from position: `{{ var.value.%s }}`\n%s"
+        % (constants.CURRENT_POS_VAR_NAME, constants.TEMPLATE_SLACK_MESSAGE_CONFIG),
+        dag_id=constants.DAG_ID,
+        username=constants.SLACK_USERNAME,
+        icon_emoji=constants.SLACK_ICON,
+    )
+
     create_temp_table = run_sql.override(
-        task_id=constants.CREATE_TEMP_TABLE_TASK_ID,
+        task_id="create_loading_table",
         execution_timeout=timedelta(minutes=1),
     )(sql_template=constants.CREATE_TEMP_TABLE_QUERY)
 
@@ -55,12 +75,9 @@ def add_rekognition_labels():
     # defining a default value in an obvious location
     insert_labels = parse_and_insert_labels(
         s3_bucket=constants.S3_BUCKET,
-        s3_prefix="{{ var.value.get('REKOGNITION_DATASET_PREFIX', '%s') }}"  # noqa: UP031
-        % constants.S3_FILE_PREFIX,  # noqa: UP031
-        in_memory_buffer_size="{{ var.value.get('REKOGNITION_MEMORY_BUFFER_SIZE', %s) }}"  # noqa: UP031
-        % constants.MEMORY_BUFFER_SIZE,  # noqa: UP031
-        file_buffer_size="{{ var.value.get('REKOGNITION_FILE_BUFFER_SIZE', %s) }}"  # noqa: UP031
-        % constants.FILE_BUFFER_SIZE,  # noqa: UP031
+        s3_prefix=constants.TEMPLATE_S3_PREFIX,
+        in_memory_buffer_size=constants.TEMPLATE_IN_MEMORY_BUFFER_SIZE,
+        file_buffer_size=constants.TEMPLATE_FILE_BUFFER_SIZE,
         postgres_conn_id=POSTGRES_CONN_ID,
     )
 
@@ -78,8 +95,9 @@ def add_rekognition_labels():
         execution_timeout=timedelta(minutes=1),
     )(sql_template=constants.DROP_TABLE_QUERY)
 
-    check_for_resume >> [create_temp_table, insert_labels]
-    create_temp_table >> create_temp_table_index >> insert_labels
+    check_for_resume >> [notify_start, notify_resume]
+    notify_start >> create_temp_table >> create_temp_table_index >> insert_labels
+    notify_resume >> insert_labels
     insert_labels >> batched_update >> drop_temp_table
 
 

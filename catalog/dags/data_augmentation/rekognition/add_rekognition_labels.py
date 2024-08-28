@@ -27,8 +27,8 @@ def resume_insertion():
     """
     if Variable.get(constants.CURRENT_POS_VAR_NAME, default_var=None):
         # Skip table creation and indexing
-        return constants.INSERT_LABELS_TASK_ID
-    return constants.CREATE_TEMP_TABLE_TASK_ID
+        return constants.NOTIFY_RESUME_TASK_ID
+    return constants.NOTIFY_START_TASK_ID
 
 
 def _process_labels(labels: list[types.Label]) -> list[types.MachineGeneratedTag]:
@@ -57,10 +57,7 @@ def _insert_tags(tags_buffer: types.TagsBuffer, postgres_conn_id: str):
     postgres.insert_rows(constants.TEMP_TABLE_NAME, tags_buffer, executemany=True)
 
 
-@task(
-    task_id=constants.INSERT_LABELS_TASK_ID,
-    trigger_rule=TriggerRule.NONE_FAILED_MIN_ONE_SUCCESS,
-)
+@task(trigger_rule=TriggerRule.NONE_FAILED_MIN_ONE_SUCCESS)
 def parse_and_insert_labels(
     s3_bucket: str,
     s3_prefix: str,

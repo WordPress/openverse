@@ -8,8 +8,8 @@ SLACK_ICON = ":robot:"
 PROVIDER = "rekognition"
 
 # Task IDs used for branching operator
-INSERT_LABELS_TASK_ID = "parse_and_insert_labels"
-CREATE_TEMP_TABLE_TASK_ID = "create_loading_table"
+NOTIFY_START_TASK_ID = "notify_start"
+NOTIFY_RESUME_TASK_ID = "notify_resume"
 
 # File location in S3, can be overridden by a Variable at runtime
 S3_BUCKET = "s3://migrated-cccatalog-archives"
@@ -65,3 +65,21 @@ BATCHED_UPDATE_CONFIG = {
     "dry_run": False,
     "resume_update": False,
 }
+
+# Templated variables for the DAG
+TEMPLATE_S3_PREFIX = (
+    "{{ var.value.get('REKOGNITION_DATASET_PREFIX', '%s') }}" % S3_FILE_PREFIX  # noqa: UP031
+)
+TEMPLATE_IN_MEMORY_BUFFER_SIZE = (
+    "{{ var.value.get('REKOGNITION_MEMORY_BUFFER_SIZE', %s) }}" % MEMORY_BUFFER_SIZE  # noqa: UP031
+)
+TEMPLATE_FILE_BUFFER_SIZE = (
+    "{{ var.value.get('REKOGNITION_FILE_BUFFER_SIZE', %s) }}" % FILE_BUFFER_SIZE  # noqa: UP031
+)
+
+TEMPLATE_SLACK_MESSAGE_CONFIG = f"""
+*Configuration*:
+ - S3 prefix: `{S3_BUCKET}/{TEMPLATE_S3_PREFIX}`
+ - In-memory buffer size: `{TEMPLATE_IN_MEMORY_BUFFER_SIZE}`
+ - File buffer size: `{TEMPLATE_FILE_BUFFER_SIZE}`
+"""
