@@ -15,7 +15,7 @@ CREATE_TEMP_TABLE_TASK_ID = "create_loading_table"
 S3_BUCKET = "s3://migrated-cccatalog-archives"
 S3_FILE_PREFIX = "kafka/image_analysis_labels-2020-12-17.txt"
 # Current position in the file
-CURRENT_POS_VAR_NAME = "rekognition_label_insertion_current_position"
+CURRENT_POS_VAR_NAME = "REKOGNITION_LABEL_INSERTION_CURRENT_POSITION"
 # In-memory buffer for records to insert into the temporary table
 MEMORY_BUFFER_SIZE = 1_000
 # In-memory buffer for reading from the file in S3

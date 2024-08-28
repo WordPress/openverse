@@ -111,6 +111,8 @@ def parse_and_insert_labels(
             tags_buffer.append((image_id, Json(tags)))
 
             if len(tags_buffer) >= in_memory_buffer_size:
+                current_pos = file.tell()
+                logger.info(f"Clearing buffer at position: {current_pos}")
                 _insert_tags(tags_buffer, postgres_conn_id)
                 Variable.set(
                     constants.CURRENT_POS_VAR_NAME,
