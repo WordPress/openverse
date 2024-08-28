@@ -8,6 +8,7 @@ from airflow.providers.amazon.aws.hooks.s3 import S3Hook
 from airflow.utils.trigger_rule import TriggerRule
 from psycopg2.extras import Json
 
+from common import slack
 from common.constants import AWS_CONN_ID
 from common.sql import PostgresHook
 from data_augmentation.rekognition import constants, types
@@ -29,6 +30,28 @@ def resume_insertion():
         # Skip table creation and indexing
         return constants.NOTIFY_RESUME_TASK_ID
     return constants.NOTIFY_START_TASK_ID
+
+
+@task
+def notify_parse_complete(results: types.ParseResults):
+    message = f"""
+Rekognition label parsing complete :rocket:
+*Total processed:* {results.total_processed:,}
+*Total skipped:* {results.total_skipped:,}
+*Total failed:* {len(results.failed_records):,}
+"""
+    if 0 < len(results.failed_records) <= constants.MAX_FAILED_RECORDS:
+        message += "*Failed records sample*:\n"
+        message += "\n".join([f" - `{rec}`" for rec in results.failed_records[:5]])
+    elif len(results.failed_records) > constants.MAX_FAILED_RECORDS:
+        message += "_Too many failed records to capture in XComs, check the logs._"
+
+    slack.send_message(
+        message,
+        constants.DAG_ID,
+        constants.SLACK_USERNAME,
+        icon_emoji=constants.SLACK_ICON,
+    )
 
 
 def _process_labels(labels: list[types.Label]) -> list[types.MachineGeneratedTag]:
@@ -64,7 +87,7 @@ def parse_and_insert_labels(
     in_memory_buffer_size: int,
     file_buffer_size: int,
     postgres_conn_id: str,
-) -> dict[str, list[str] | int]:
+) -> types.ParseResults:
     tags_buffer: types.TagsBuffer = []
     failed_records = []
     total_processed = 0
@@ -94,9 +117,9 @@ def parse_and_insert_labels(
                 labeled_image: types.LabeledImage = json.loads(blob)
             except json.JSONDecodeError:
                 logger.error(f"Failed to parse JSON: {blob}")
-                # Only track the first 100 failed records, if something
+                # Only track the first `n` failed records, if something
                 # is systematically wrong we don't want this getting massive
-                if len(failed_records) < 100:
+                if len(failed_records) <= constants.MAX_FAILED_RECORDS:
                     failed_records.append(blob)
                 continue
             image_id = labeled_image["image_uuid"]
@@ -125,8 +148,4 @@ def parse_and_insert_labels(
         # Clear the offset if we've finished processing the file
         Variable.delete(constants.CURRENT_POS_VAR_NAME)
 
-    return {
-        "total_processed": total_processed,
-        "total_skipped": total_skipped,
-        "failed_records": failed_records,
-    }
+    return types.ParseResults(total_processed, total_skipped, failed_records)

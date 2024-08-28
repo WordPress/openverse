@@ -21,6 +21,8 @@ MEMORY_BUFFER_SIZE = 1_000
 # In-memory buffer for reading from the file in S3
 # See: https://github.com/piskvorky/smart_open/blob/a55794dee992dcebc3de23143c2c4a43ed3cc183/smart_open/s3.py#L70
 FILE_BUFFER_SIZE = 5 * 1024 * 1024  # 5MB
+# Limit to the number of failed records to keep track of
+MAX_FAILED_RECORDS = 100
 
 # Timeout for inserting a batch of records into the temporary table
 INSERT_TIMEOUT = timedelta(minutes=2)

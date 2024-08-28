@@ -17,6 +17,7 @@ from common.slack import notify_slack
 from common.sql import run_sql
 from data_augmentation.rekognition import constants
 from data_augmentation.rekognition.add_rekognition_labels import (
+    notify_parse_complete,
     parse_and_insert_labels,
     resume_insertion,
 )
@@ -81,6 +82,8 @@ def add_rekognition_labels():
         postgres_conn_id=POSTGRES_CONN_ID,
     )
 
+    notify_parse_complete(insert_labels)
+
     batched_update = TriggerDagRunOperator(
         task_id="trigger_batched_update",
         trigger_dag_id=BATCHED_UPDATE_DAG_ID,
@@ -95,10 +98,17 @@ def add_rekognition_labels():
         execution_timeout=timedelta(minutes=1),
     )(sql_template=constants.DROP_TABLE_QUERY)
 
+    notify_complete = notify_slack.override(task_id="notify_complete")(
+        text="Finished Rekognition label insertion and batched update :check_tick:",
+        dag_id=constants.DAG_ID,
+        username=constants.SLACK_USERNAME,
+        icon_emoji=constants.SLACK_ICON,
+    )
+
     check_for_resume >> [notify_start, notify_resume]
     notify_start >> create_temp_table >> create_temp_table_index >> insert_labels
     notify_resume >> insert_labels
-    insert_labels >> batched_update >> drop_temp_table
+    insert_labels >> batched_update >> drop_temp_table >> notify_complete
 
 
 add_rekognition_labels()
