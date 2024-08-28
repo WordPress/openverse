@@ -1,5 +1,5 @@
-<script lang="ts">
-import { computed, defineComponent, PropType } from "vue"
+<script setup lang="ts">
+import { computed } from "vue"
 
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 
@@ -10,31 +10,12 @@ import { useSearchStore } from "~/stores/search"
 import VBackToSearchResultsLink from "~/components/VBackToSearchResultsLink.vue"
 import VHideButton from "~/components/VHideButton.vue"
 
-export default defineComponent({
-  name: "VSingleResultControls",
-  components: {
-    VBackToSearchResultsLink,
-    VHideButton,
-  },
-  props: {
-    media: {
-      type: Object as PropType<AudioDetail | ImageDetail>,
-      required: true,
-    },
-  },
-  setup(props) {
-    const searchStore = useSearchStore()
+const props = defineProps<{ media: AudioDetail | ImageDetail }>()
 
-    const backToSearchPath = computed(() => searchStore.backToSearchPath)
-    const { hide, canBeHidden } = useSensitiveMedia(props.media)
+const searchStore = useSearchStore()
 
-    return {
-      hide,
-      canBeHidden,
-      backToSearchPath,
-    }
-  },
-})
+const backToSearchPath = computed(() => searchStore.backToSearchPath)
+const { hide, canBeHidden } = useSensitiveMedia(props.media)
 </script>
 
 <template>
