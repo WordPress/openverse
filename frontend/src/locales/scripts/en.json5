@@ -1095,7 +1095,7 @@
       label: "Clear recent search '{entry}'",
     },
     none: "No recent searches to show.",
-    disclaimer: "Recent searches are saved on your device and never shared.",
+    disclaimer: "Recent searches are saved only on your device.",
   },
   report: {
     imageDetails: "See image details",
