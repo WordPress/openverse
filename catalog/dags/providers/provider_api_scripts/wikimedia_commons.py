@@ -115,7 +115,7 @@ from types import MappingProxyType
 import lxml.html as html
 
 from common.constants import AUDIO, IMAGE
-from common.extensions import extract_filetype
+from common.extensions import get_extension_from_mimetype
 from common.licenses import LicenseInfo, get_license_info
 from common.loader import provider_details as prov
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
@@ -162,7 +162,7 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
         query_no_popularity = "imageinfo"
 
         # All media info we care about
-        media_all = "url|user|dimensions|extmetadata|mediatype|size|metadata"
+        media_all = "url|user|dimensions|extmetadata|mediatype|mime|size|metadata"
         # Everything minus the metadata, which is only necessary for audio and can
         # balloon for PDFs which are considered images by Wikimedia
         media_no_metadata = "url|user|dimensions|extmetadata|mediatype|size"
@@ -320,7 +320,7 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
         creator, creator_url = self.extract_creator_info(media_info)
         title = self.extract_title(media_info)
         filesize = media_info.get("size", 0)  # in bytes
-        filetype, _ = extract_filetype(url)
+        filetype = self.extract_filetype(media_info)
         meta_data = self.create_meta_data_dict(record)
 
         record_data = {
@@ -464,6 +464,11 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
             f"valid mediatypes ({image_mediatypes}, {audio_mediatypes})"
         )
         return None
+
+    @staticmethod
+    def extract_filetype(media_info) -> str | None:
+        if mime_type := media_info.get("mime"):
+            return get_extension_from_mimetype(mime_type)
 
     @staticmethod
     def extract_audio_category(parsed_data):
