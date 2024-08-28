@@ -73,9 +73,14 @@ def add_rekognition_labels():
         conf=constants.BATCHED_UPDATE_CONFIG,
     )
 
+    drop_temp_table = run_sql.override(
+        task_id="drop_temp_table",
+        execution_timeout=timedelta(minutes=1),
+    )(sql_template=constants.DROP_TABLE_QUERY)
+
     check_for_resume >> [create_temp_table, insert_labels]
     create_temp_table >> create_temp_table_index >> insert_labels
-    insert_labels >> batched_update
+    insert_labels >> batched_update >> drop_temp_table
 
 
 add_rekognition_labels()
