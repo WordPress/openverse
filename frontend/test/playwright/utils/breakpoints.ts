@@ -51,10 +51,20 @@ interface Options {
    * @defaultValue true
    */
   uaMocking?: boolean
+  /**
+   * Disable animations to remove flakiness.
+   */
+  animations: "disabled"
+  /**
+   * To make sure caret blinking doesn't cause diffs.
+   */
+  caret: "hide"
 }
 
 const defaultOptions = Object.freeze({
   uaMocking: true,
+  animations: "disabled",
+  caret: "hide",
 })
 
 const makeBreakpointDescribe =
