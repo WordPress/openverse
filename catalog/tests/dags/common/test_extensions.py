@@ -25,6 +25,7 @@ from common import extensions
         ("https://example.com/audio.aiff", "audio", "aif"),
         ("https://example.com/audio.flac", "audio", "flac"),
         ("https://example.com/audio.m4a", "audio", "m4a"),
+        ("https://example.com/audio.m3u", "audio", "m3u"),
         ("https://example.com/audio.mid", "audio", "mid"),
         ("https://example.com/audio.midi", "audio", "mid"),
         ("https://example.com/audio.mka", "audio", "mka"),
@@ -47,3 +48,29 @@ def test_extract_filetype_returns_for_supported_media_type(
     actual_filetype, actual_media_type = extensions.extract_filetype(url)
     assert actual_filetype == expected_filetype
     assert actual_media_type == expected_media_type
+
+
+@pytest.mark.parametrize(
+    "input_mime, expected_value",
+    [
+        (None, None),
+        # Image file types
+        ("image/gif", "gif"),
+        ("image/jpeg", "jpg"),
+        ("image/svg+xml", "svg"),
+        ("image/x-ico", "ico"),
+        # Audio file types
+        ("audio/flac", "flac"),
+        ("audio/x-flac", "flac"),
+        ("audio/midi", "mid"),
+        ("audio/mp3", "mp3"),
+        ("audio/mpeg3", "mp3"),
+        ("audio/ogg", "oga"),
+        ("audio/opus", "opus"),
+        ("audio/wav", "wav"),
+        ("audio/x-wav", "wav"),
+        ("audio/x-matroska", "mka"),
+    ],
+)
+def test_get_extension_from_mimetype(input_mime, expected_value):
+    assert extensions.get_extension_from_mimetype(input_mime) == expected_value

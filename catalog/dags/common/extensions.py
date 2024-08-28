@@ -11,8 +11,31 @@ FILETYPE_EQUIVALENTS = {
     "midi": "mid",
 }
 
+# Partially taken from Wikimedia aliases
+# https://doc.wikimedia.org/mediawiki-core/master/php/MimeMap_8php_source.html
+MIME_TYPE_ALIASES = {
+    # Image aliases
+    "image/x-bmp": "image/bmp",
+    "image/x-ms-bmp": "image/bmp",
+    "image/x-png": "image/png",
+    "image/pjpeg": "image/jpeg",
+    "image/x-ico": "image/vnd.microsoft.icon",
+    "image/x-icon": "image/vnd.microsoft.icon",
+    "image/svg": "image/svg+xml",
+    # "image/x.djvu": "image/vnd.djvu",
+    # "image/x-djvu": "image/vnd.djvu",
+    "image/jpeg2000": "image/jp2",
+    "image/jpeg200-image": "image/jp2",
+    "image/x-jpeg200-image": "image/jp2",
+    # Audio aliases
+    "audio/mp3": "audio/mpeg",
+    "audio/mpeg3": "audio/mpeg",
+    "audio/x-flac": "audio/flac",
+    "audio/mid": "audio/midi",
+    "audio/wav": "audio/x-wav",
+    "audio/wave": "audio/x-wav",
+}
 
-mimetypes.add_type("image/x-ico", ".ico")
 
 mimetypes.add_type("audio/midi", ".mid")
 mimetypes.add_type("audio/midi", ".midi")
@@ -32,7 +55,10 @@ class InvalidFiletypeError(Exception):
         super().__init__(message)
 
 
-def get_extension_from_mimetype(mime_type: str) -> str | None:
+def get_extension_from_mimetype(mime_type: str | None) -> str | None:
+    if not mime_type:
+        return
+    mime_type = MIME_TYPE_ALIASES.get(mime_type, mime_type)
     ext = mimetypes.guess_extension(mime_type)
     # Removes the leading dot if there is an extension
     return ext[1:] if ext else None

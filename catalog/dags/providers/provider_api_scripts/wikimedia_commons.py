@@ -320,7 +320,7 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
         creator, creator_url = self.extract_creator_info(media_info)
         title = self.extract_title(media_info)
         filesize = media_info.get("size", 0)  # in bytes
-        filetype = self.extract_filetype(media_info)
+        filetype = get_extension_from_mimetype(media_info.get("mime"))
         meta_data = self.create_meta_data_dict(record)
 
         record_data = {
@@ -464,11 +464,6 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
             f"valid mediatypes ({image_mediatypes}, {audio_mediatypes})"
         )
         return None
-
-    @staticmethod
-    def extract_filetype(media_info) -> str | None:
-        if mime_type := media_info.get("mime"):
-            return get_extension_from_mimetype(mime_type)
 
     @staticmethod
     def extract_audio_category(parsed_data):
