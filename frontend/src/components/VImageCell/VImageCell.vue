@@ -190,11 +190,14 @@ const { isHidden: shouldBlur } = useSensitiveMedia(props.image)
               shouldBlur ? `${$t("sensitiveContent.title.image")}` : image.title
             }}
           </h2>
-          <VLicense
-            :license="image.license"
-            :hide-name="true"
-            class="text-secondary group-hover:text-default group-focus-visible:text-default sm:text-default"
-          />
+          <div
+            class="label-regular leading-none text-secondary group-hover:text-default group-focus-visible:text-default sm:text-default"
+          >
+            <template v-if="shouldBlur">
+              {{ $t("sensitiveContent.singleResult.title") }}
+            </template>
+            <VLicense v-else :license="image.license" :hide-name="true" />
+          </div>
         </figcaption>
       </figure>
     </VLink>
