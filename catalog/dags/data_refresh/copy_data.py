@@ -25,7 +25,7 @@ from common.constants import (
     PRODUCTION,
     Environment,
 )
-from common.sql import RETURN_ROW_COUNT, PostgresHook
+from common.sql import PostgresHook, run_sql
 from data_refresh import queries
 from data_refresh.data_refresh_types import DataRefreshConfig
 
@@ -37,27 +37,6 @@ DEFAULT_DATA_REFRESH_LIMIT = 10_000
 
 
 @task
-def _run_sql(
-    postgres_conn_id: str,
-    sql_template: str,
-    task: AbstractOperator = None,
-    timeout: float = None,
-    handler: callable = RETURN_ROW_COUNT,
-    **kwargs,
-):
-    query = sql_template.format(**kwargs)
-
-    postgres = PostgresHook(
-        postgres_conn_id=postgres_conn_id,
-        default_statement_timeout=(
-            timeout if timeout else PostgresHook.get_execution_timeout(task)
-        ),
-    )
-
-    return postgres.run(query, handler=handler)
-
-
-@task
 def initialize_fdw(
     upstream_conn_id: str,
     downstream_conn_id: str,
@@ -66,7 +45,7 @@ def initialize_fdw(
     """Create the FDW and prepare it for copying."""
     upstream_connection = Connection.get_connection_from_secrets(upstream_conn_id)
 
-    _run_sql.function(
+    run_sql.function(
         postgres_conn_id=downstream_conn_id,
         sql_template=queries.CREATE_FDW_QUERY,
         task=task,
@@ -181,7 +160,7 @@ def copy_data(
         LIMIT {limit};"""
         )
 
-    return _run_sql.function(
+    return run_sql.function(
         postgres_conn_id=postgres_conn_id,
         sql_template=sql_template,
         task=task,
@@ -223,7 +202,7 @@ def copy_upstream_table(
         upstream_table_name=upstream_table_name,
     )
 
-    create_temp_table = _run_sql.override(
+    create_temp_table = run_sql.override(
         task_id="create_temp_table",
         map_index_template="{{ task.op_kwargs['temp_table_name'] }}",
     )(
@@ -233,7 +212,7 @@ def copy_upstream_table(
         downstream_table_name=downstream_table_name,
     )
 
-    setup_id_columns = _run_sql.override(
+    setup_id_columns = run_sql.override(
         task_id="setup_id_columns",
         map_index_template="{{ task.op_kwargs['temp_table_name'] }}",
     )(
@@ -242,7 +221,7 @@ def copy_upstream_table(
         temp_table_name=temp_table_name,
     )
 
-    setup_tertiary_columns = _run_sql.override(
+    setup_tertiary_columns = run_sql.override(
         task_id="setup_tertiary_columns",
         map_index_template="{{ task.op_kwargs['temp_table_name'] }}",
     )(
@@ -262,7 +241,7 @@ def copy_upstream_table(
         columns=shared_cols,
     )
 
-    add_primary_key = _run_sql.override(
+    add_primary_key = run_sql.override(
         task_id="add_primary_key",
         map_index_template="{{ task.op_kwargs['temp_table_name'] }}",
     )(
@@ -293,7 +272,7 @@ def copy_upstream_tables(
     downstream_conn_id = POSTGRES_API_CONN_IDS.get(target_environment)
     upstream_conn_id = POSTGRES_CONN_ID
 
-    create_fdw = _run_sql.override(task_id="create_fdw")(
+    create_fdw = run_sql.override(task_id="create_fdw")(
         postgres_conn_id=downstream_conn_id,
         sql_template=queries.CREATE_FDW_EXTENSION_QUERY,
     )
@@ -313,7 +292,7 @@ def copy_upstream_tables(
         limit=limit,
     ).expand_kwargs([asdict(tm) for tm in data_refresh_config.table_mappings])
 
-    drop_fdw = _run_sql.override(task_id="drop_fdw")(
+    drop_fdw = run_sql.override(task_id="drop_fdw")(
         postgres_conn_id=downstream_conn_id,
         sql_template=queries.DROP_SERVER_QUERY,
     )
