@@ -54,7 +54,7 @@ from data_refresh.create_and_populate_filtered_index import (
 from data_refresh.create_and_promote_index import create_index
 from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS, DataRefreshConfig
 from data_refresh.distributed_reindex import perform_distributed_reindex
-from data_refresh.promote_table import generate_table_indices
+from data_refresh.promote_table import apply_constraints, generate_table_indices
 from data_refresh.reporting import report_record_difference
 
 
@@ -212,6 +212,11 @@ def create_data_refresh_dag(
             target_environment=target_environment,
         )
 
+        do_apply_constraints = apply_constraints(
+            data_refresh_config=data_refresh_config,
+            target_environment=target_environment,
+        )
+
         # Get the final number of records in the API table after the refresh
         after_record_count = es.get_record_count_group_by_sources.override(
             task_id="get_after_record_count", trigger_rule=TriggerRule.NONE_FAILED
@@ -244,6 +249,7 @@ def create_data_refresh_dag(
             >> filtered_index
             >> enable_alarms
             >> new_table_indices
+            >> do_apply_constraints
             >> after_record_count
             >> report_counts
         )
