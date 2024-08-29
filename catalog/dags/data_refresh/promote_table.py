@@ -28,6 +28,14 @@ class ConstraintInfo(NamedTuple):
     constraint_statement: str
 
 
+def fetch_all_tuples(cursor):
+    try:
+        rows = cursor.fetchall()
+        return [ConstraintInfo(row[0], row[1], row[2]) for row in rows]
+    except Exception as e:
+        raise ValueError("Unable to extract expected row data from cursor") from e
+
+
 def _transform_index_def(
     existing_index_def: str, temp_table_name: str, table_name: str
 ) -> str:
@@ -185,7 +193,7 @@ def remap_constraints_for_table(
             # If the constraint was a foreign key constraint, TODO
             if is_fk:
                 delete_orphans = _generate_delete_orphans(
-                    constraint_statement, constraint_table
+                    constraint_statement, constraint_table, temp_table_name
                 )
                 drop_orphans.append(delete_orphans)
 
@@ -250,7 +258,9 @@ def _remap_constraint(
     return alterations
 
 
-def _generate_delete_orphans(constraint_statement, constraint_table):
+def _generate_delete_orphans(
+    constraint_statement: str, constraint_table: str, temp_table_name: str
+):
     """
     Parse the foreign key statement and generate the deletion statement.
 
@@ -261,6 +271,19 @@ def _generate_delete_orphans(constraint_statement, constraint_table):
     `delete_records` DAG). It is necessary to DROP any records in related tables
     that have a foreign key reference to records that will no longer exist when
     the tables are swapped.
+
+    Example: if the following CONSTRAINT exists on the `imagelist_images` table:
+    `FOREIGN KEY (imagelist_id) REFERENCES imagelist(id) DEFERRABLE INITIALLY DEFERRED;`
+
+    Then the following DELETE statement will be generated to drop records from
+    `imagelist_images` which reference images that do not exist in the temp table:
+    ```
+    DELETE FROM imagelist_images AS fk_table
+    WHERE NOT EXISTS(
+        SELECT 1 FROM temp_import_image AS r
+        WHERE r.id = fk.imagelist_id
+    );
+    ```
     """
 
     # Example foreign key constraint statement:
@@ -273,15 +296,13 @@ def _generate_delete_orphans(constraint_statement, constraint_table):
     referenced_field_idx = tokens.index("REFERENCES") + 1
 
     foreign_key_field = tokens[foreign_key_field_idx].strip("()")
-    # We're getting image but we should be getting tmep_import_image
-    referenced_table, referenced_field = (
-        tokens[referenced_field_idx].strip(")").split("(")
-    )
+    # We will replace the referenced table with the temp table
+    _, referenced_field = tokens[referenced_field_idx].strip(")").split("(")
 
     return queries.DELETE_ORPHANS_QUERY.format(
         foreign_key_table=constraint_table,
         foreign_key_field=foreign_key_field,
-        referenced_table=referenced_table,
+        referenced_table=temp_table_name,
         referenced_field=referenced_field,
     )
 
@@ -290,14 +311,6 @@ def _generate_delete_orphans(constraint_statement, constraint_table):
 def apply_constraints_to_table(postgres_conn_id: str, constraints: list[str]):
     for constraint in constraints:
         run_sql.function(postgres_conn_id=postgres_conn_id, sql_template=constraint)
-
-
-def fetch_all_tuples(cursor):
-    try:
-        rows = cursor.fetchall()
-        return [ConstraintInfo(row[0], row[1], row[2]) for row in rows]
-    except Exception as e:
-        raise ValueError("Unable to extract expected row data from cursor") from e
 
 
 @task_group
