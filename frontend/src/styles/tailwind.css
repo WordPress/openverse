@@ -124,7 +124,7 @@
     --color-error-13: #1e0302;
   }
 
-  @media(prefers-color-scheme: light) {
+  @media (prefers-color-scheme: light) {
     :root {
       --color-bg: var(--color-white);
       --color-bg-surface: var(--color-gray-1);

@@ -15,8 +15,6 @@ import type { RealBreakpoint } from "~/constants/screens"
 import { ALL_SCREEN_SIZES } from "~/constants/screens"
 import { needsTranslationBanner } from "~/utils/translation-banner"
 
-import { useFeatureFlagStore } from "./feature-flag"
-
 const desktopBreakpoints: RealBreakpoint[] = ["2xl", "xl", "lg"]
 
 export type SnackbarState = "not_shown" | "visible" | "dismissed"
@@ -85,7 +83,7 @@ export const defaultUiState: UiState = {
 }
 
 export const useUiStore = defineStore("ui", {
-  state: (): UiState => defaultUiState,
+  state: (): UiState => ({ ...defaultUiState }),
 
   getters: {
     cookieState(state): OpenverseCookieState["ui"] {
@@ -126,14 +124,6 @@ export const useUiStore = defineStore("ui", {
      */
     shouldShowAnalyticsBanner(): boolean {
       return !this.dismissedBanners.includes("analytics")
-    },
-    currentColorMode(state): ColorMode {
-      const featureFlagStore = useFeatureFlagStore()
-      if (featureFlagStore.isOn("force_dark_mode")) {
-        return "dark"
-      }
-      // Return the cookie value otherwise
-      return state.colorMode
     },
   },
 
@@ -212,6 +202,9 @@ export const useUiStore = defineStore("ui", {
         "ui",
         persistentCookieOptions
       )
+
+      console.log(defaultPersistientCookieState.ui)
+      console.log(this.cookieState)
 
       uiCookie.value = {
         ...defaultPersistientCookieState.ui,

@@ -1,4 +1,5 @@
 import { computed, useUiStore } from "#imports"
+
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 export const DARK_MODE_CLASS = "dark-mode"
