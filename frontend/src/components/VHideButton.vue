@@ -1,32 +1,16 @@
-<script lang="ts">
-import { computed, defineComponent } from "vue"
+<script setup lang="ts">
+import { computed } from "vue"
 
 import { useUiStore } from "~/stores/ui"
-import { defineEvent } from "~/types/emits"
 
 import VButton from "~/components/VButton.vue"
 import VIconButton from "~/components/VIconButton/VIconButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
 
-export default defineComponent({
-  name: "VHideButton",
-  components: {
-    VButton,
-    VIconButton,
-    VIcon,
-  },
-  emits: {
-    click: defineEvent(),
-  },
-  setup() {
-    const uiStore = useUiStore()
-    const isMd = computed(() => uiStore.isBreakpoint("md"))
+defineEmits<{ click: [] }>()
 
-    return {
-      isMd,
-    }
-  },
-})
+const uiStore = useUiStore()
+const isMd = computed(() => uiStore.isBreakpoint("md"))
 </script>
 
 <template>

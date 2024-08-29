@@ -14,6 +14,7 @@ import VBrand from "~/components/VBrand/VBrand.vue"
 import VLanguageSelect from "~/components/VLanguageSelect/VLanguageSelect.vue"
 import VPageLinks from "~/components/VHeader/VPageLinks.vue"
 import VWordPressLink from "~/components/VHeader/VWordPressLink.vue"
+import { useFeatureFlagStore } from "#imports"
 
 /**
  * The footer is the section displayed at the bottom of a page. It can contain
@@ -72,10 +73,23 @@ export default defineComponent({
       "--link-col-height": Math.ceil(Object.keys(allPages).length / 2),
     }))
 
+    const featureFlagStore = useFeatureFlagStore()
+    const showToggle = computed(() =>
+      featureFlagStore.isOn("dark_mode_ui_toggle")
+    )
+    const colorMode = ref(uiStore.colorMode)
+    const handleColorModeChange = () => {
+      uiStore.setColorMode(colorMode.value)
+    }
+
     return {
       isContentMode,
       allPages,
       currentPage,
+
+      showToggle,
+      colorMode,
+      handleColorModeChange,
 
       footerEl,
       variantNames,
@@ -110,6 +124,17 @@ export default defineComponent({
 
     <!-- Locale chooser and WordPress affiliation graphic -->
     <div class="locale-and-wp flex flex-col justify-between">
+      <select
+        class="bg-tx"
+        v-if="showToggle"
+        v-model="colorMode"
+        @change="handleColorModeChange"
+        name="colorMode"
+      >
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+        <option value="system">System</option>
+      </select>
       <VLanguageSelect
         v-bind="languageProps"
         class="language max-w-full border-secondary"

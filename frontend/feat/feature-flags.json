@@ -39,6 +39,15 @@
       "defaultState": "off",
       "description": "Force the site to render in dark mode.",
       "storage": "session"
+    },
+    "dark_mode_ui_toggle": {
+      "status": {
+        "staging": "switchable",
+        "production": "disabled"
+      },
+      "defaultState": "off",
+      "description": "Display the UI toggle to change the site color theme and respect system preferences.",
+      "storage": "cookie"
     }
   },
   "groups": [

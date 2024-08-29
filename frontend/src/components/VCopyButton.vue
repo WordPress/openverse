@@ -1,75 +1,56 @@
-<script lang="ts">
+<script setup lang="ts">
 import Clipboard from "clipboard"
 
-import { defineComponent, onBeforeUnmount, onMounted, ref } from "vue"
+import { onBeforeUnmount, onMounted, ref } from "vue"
 
 import { useHydrating } from "~/composables/use-hydrating"
 
 import VButton from "~/components/VButton.vue"
 
-export default defineComponent({
-  name: "VCopyButton",
-  components: { VButton },
-  props: {
-    el: {
-      type: String,
-      required: true,
-    },
-    id: {
-      type: String,
-      required: true,
-    },
-  },
-  emits: ["copied", "copy-failed"],
-  setup(props, { emit }) {
-    const clipboard = ref<Clipboard | null>(null)
-    const success = ref(false)
+const props = defineProps<{ el: string; id: string }>()
 
-    function setFocusOnButton(): void {
-      const button = document.getElementById(props.id)
-      if (button) {
-        button.focus()
-      }
-    }
+const emit = defineEmits<{ copied: []; "copy-failed": [] }>()
 
-    const onCopySuccess = (e: Clipboard.Event) => {
-      success.value = true
-      emit("copied")
+const clipboard = ref<Clipboard | null>(null)
+const success = ref(false)
 
-      setTimeout(() => {
-        success.value = false
-      }, 2000)
+function setFocusOnButton(): void {
+  const button = document.getElementById(props.id)
+  if (button) {
+    button.focus()
+  }
+}
 
-      e.clearSelection()
+const onCopySuccess = (e: Clipboard.Event) => {
+  success.value = true
+  emit("copied")
 
-      /* Set the focus back on the button */
-      setFocusOnButton()
-    }
-    const onCopyError = (e: Clipboard.Event) => {
-      emit("copy-failed")
-      e.clearSelection()
+  setTimeout(() => {
+    success.value = false
+  }, 2000)
 
-      /* Restore focus on the button */
-      setFocusOnButton()
-    }
+  e.clearSelection()
 
-    onMounted(() => {
-      clipboard.value = new Clipboard(`#${props.id}`)
-      clipboard.value.on("success", onCopySuccess)
-      clipboard.value.on("error", onCopyError)
-    })
+  /* Set the focus back on the button */
+  setFocusOnButton()
+}
+const onCopyError = (e: Clipboard.Event) => {
+  emit("copy-failed")
+  e.clearSelection()
 
-    onBeforeUnmount(() => clipboard.value?.destroy())
+  /* Restore focus on the button */
+  setFocusOnButton()
+}
 
-    const { doneHydrating } = useHydrating()
-
-    return {
-      clipboard,
-      success,
-      doneHydrating,
-    }
-  },
+onMounted(() => {
+  clipboard.value = new Clipboard(`#${props.id}`)
+  clipboard.value.on("success", onCopySuccess)
+  clipboard.value.on("error", onCopyError)
 })
+
+onBeforeUnmount(() => clipboard.value?.destroy())
+
+const { doneHydrating } = useHydrating()
 </script>
 
 <template>

@@ -8,9 +8,9 @@ SLACK_USERNAME = "Upstream Batched Update"
 SLACK_ICON = ":database:"
 
 DEFAULT_BATCH_SIZE = 10_000
-DAGRUN_TIMEOUT = timedelta(days=31 * 3)
 SELECT_TIMEOUT = timedelta(hours=24)
-UPDATE_TIMEOUT = timedelta(days=30 * 3)  # 3 months
+UPDATE_TIMEOUT = timedelta(days=30)  # 1 month
+DAGRUN_TIMEOUT = UPDATE_TIMEOUT + SELECT_TIMEOUT
 
 # Task IDs used for branching operator
 GET_EXPECTED_COUNT_TASK_ID = "get_expected_update_count"

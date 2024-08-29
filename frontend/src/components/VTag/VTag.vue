@@ -1,18 +1,7 @@
-<script lang="ts">
-import { defineComponent } from "vue"
-
+<script setup lang="ts">
 import VButton from "~/components/VButton.vue"
 
-export default defineComponent({
-  name: "VTag",
-  components: { VButton },
-  props: {
-    href: {
-      type: String,
-      required: true,
-    },
-  },
-})
+defineProps<{ href: string }>()
 </script>
 
 <template>

@@ -5,10 +5,9 @@ import { defineStore } from "pinia"
 import { LocaleObject } from "@nuxtjs/i18n"
 
 import {
-  ColorMode,
+  defaultPersistientCookieState,
   OpenverseCookieState,
   persistentCookieOptions,
-  SnackbarState,
 } from "~/types/cookies"
 import type { BannerId } from "~/types/banners"
 
@@ -19,6 +18,15 @@ import { needsTranslationBanner } from "~/utils/translation-banner"
 import { useFeatureFlagStore } from "./feature-flag"
 
 const desktopBreakpoints: RealBreakpoint[] = ["2xl", "xl", "lg"]
+
+export type SnackbarState = "not_shown" | "visible" | "dismissed"
+export type ColorMode = "dark" | "light" | "system"
+
+export function isColorMode(value: undefined | string): value is ColorMode {
+  return (
+    typeof value === "string" && ["light", "dark", "system"].includes(value)
+  )
+}
 
 export interface UiState {
   /**
@@ -63,19 +71,21 @@ export interface UiState {
 
 export const breakpoints = Object.keys(ALL_SCREEN_SIZES)
 
+export const defaultUiState: UiState = {
+  instructionsSnackbarState: "not_shown",
+  innerFilterVisible: false,
+  isFilterDismissed: false,
+  isDesktopLayout: false,
+  breakpoint: "sm",
+  dismissedBanners: [],
+  shouldBlurSensitive: true,
+  revealedSensitiveResults: [],
+  headerHeight: 80,
+  colorMode: "system",
+}
+
 export const useUiStore = defineStore("ui", {
-  state: (): UiState => ({
-    instructionsSnackbarState: "not_shown",
-    innerFilterVisible: false,
-    isFilterDismissed: false,
-    isDesktopLayout: false,
-    breakpoint: "sm",
-    dismissedBanners: [],
-    shouldBlurSensitive: true,
-    revealedSensitiveResults: [],
-    headerHeight: 80,
-    colorMode: "system",
-  }),
+  state: (): UiState => defaultUiState,
 
   getters: {
     cookieState(state): OpenverseCookieState["ui"] {
@@ -187,6 +197,10 @@ export const useUiStore = defineStore("ui", {
         this.dismissedBanners = cookies.dismissedBanners
       }
 
+      if (isColorMode(cookies.colorMode)) {
+        this.setColorMode(cookies.colorMode)
+      }
+
       this.writeToCookie()
     },
     /**
@@ -199,14 +213,10 @@ export const useUiStore = defineStore("ui", {
         persistentCookieOptions
       )
 
-      if (
-        typeof uiCookie.value.colorMode === "string" &&
-        ["dark", "light", "system"].includes(uiCookie.value.colorMode)
-      ) {
-        this.colorMode = uiCookie.value.colorMode as ColorMode
+      uiCookie.value = {
+        ...defaultPersistientCookieState.ui,
+        ...this.cookieState,
       }
-
-      uiCookie.value = this.cookieState
     },
 
     /**
@@ -281,8 +291,9 @@ export const useUiStore = defineStore("ui", {
       this.shouldBlurSensitive = value
       this.revealedSensitiveResults = []
     },
-    setColorMode(preference: "dark" | "light" | "system") {
-      this.colorMode = preference
+    setColorMode(colorMode: ColorMode) {
+      this.colorMode = colorMode
+
       this.writeToCookie()
     },
     setHeaderHeight(height: number) {

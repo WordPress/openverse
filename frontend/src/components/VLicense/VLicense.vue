@@ -1,7 +1,11 @@
-<script lang="ts">
+<script setup lang="ts">
+/**
+ * Displays the icons for the license along with a readable display name for the
+ * license.
+ */
 import { useI18n } from "#imports"
 
-import { computed, defineComponent, PropType } from "vue"
+import { computed } from "vue"
 
 import type { License } from "~/constants/license"
 import { getFullLicenseName, getElements } from "~/utils/license"
@@ -9,55 +13,38 @@ import { camelCase } from "~/utils/case"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 
-/**
- * Displays the icons for the license along with a readable display name for the
- * license.
- */
-export default defineComponent({
-  name: "VLicense",
-  components: { VIcon },
-  props: {
+const props = withDefaults(
+  defineProps<{
     /**
      * the slug of the license
      * @values
      */
-    license: {
-      type: String as PropType<License>,
-      required: true,
-    },
+    license: License
     /**
      * Whether to display icons filled with a white background or leave them transparent.
      */
-    bgFilled: {
-      type: Boolean,
-      default: false,
-    },
+    bgFilled?: boolean
     /**
      * Either to show the license name next to the icons or hide it.
      */
-    hideName: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  setup(props) {
-    const i18n = useI18n({ useScope: "global" })
+    hideName?: boolean
+  }>(),
+  {
+    bgFilled: false,
+    hideName: false,
+  }
+)
 
-    const iconNames = computed(() => getElements(props.license))
-    const licenseName = computed(() => {
-      const licenseKey =
-        props.license === "sampling+" ? props.license : camelCase(props.license)
-      return {
-        readable: i18n.t(`licenseReadableNames.${licenseKey}`),
-        full: getFullLicenseName(props.license, "", i18n),
-      }
-    })
+const i18n = useI18n({ useScope: "global" })
 
-    return {
-      iconNames,
-      licenseName,
-    }
-  },
+const iconNames = computed(() => getElements(props.license))
+const licenseName = computed(() => {
+  const licenseKey =
+    props.license === "sampling+" ? props.license : camelCase(props.license)
+  return {
+    readable: i18n.t(`licenseReadableNames.${licenseKey}`),
+    full: getFullLicenseName(props.license, "", i18n),
+  }
 })
 </script>
 

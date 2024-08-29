@@ -1,7 +1,7 @@
-<script lang="ts">
+<script setup lang="ts">
 import { useI18n, useNuxtApp } from "#imports"
 
-import { defineComponent, ref, onMounted } from "vue"
+import { ref, onMounted } from "vue"
 
 import { loadScript } from "~/utils/load-script"
 
@@ -20,48 +20,39 @@ declare global {
   }
 }
 
-export default defineComponent({
-  props: {
-    uid: {
-      type: String,
-      required: true,
+const props = defineProps<{ uid: string }>()
+
+const emit = defineEmits<{ failure: [] }>()
+
+const { t } = useI18n({ useScope: "global" })
+const label = t("sketchfabIframeTitle", { sketchfab: "Sketchfab" })
+const node = ref<Element | undefined>()
+const { $sentry } = useNuxtApp()
+
+const initSketchfab = async () => {
+  await loadScript(sketchfabUrl)
+  if (typeof window.Sketchfab === "undefined") {
+    $sentry.captureMessage("Unable to find window.Sketchfab after loading")
+    return
+  }
+
+  if (!node.value) {
+    // This is impossible as far as I can tell as the
+    // function is only called in `onMounted`
+    return
+  }
+
+  const sf = new window.Sketchfab(node.value)
+  sf.init(props.uid, {
+    error: (e: unknown) => {
+      $sentry.captureException(e)
+      emit("failure")
     },
-  },
-  emits: ["failure"],
-  setup(props, { emit }) {
-    const { t } = useI18n({ useScope: "global" })
-    const label = t("sketchfabIframeTitle", { sketchfab: "Sketchfab" })
-    const node = ref<Element | undefined>()
-    const { $sentry } = useNuxtApp()
+  })
+}
 
-    const initSketchfab = async () => {
-      await loadScript(sketchfabUrl)
-      if (typeof window.Sketchfab === "undefined") {
-        $sentry.captureMessage("Unable to find window.Sketchfab after loading")
-        return
-      }
-
-      if (!node.value) {
-        // This is impossible as far as I can tell as the
-        // function is only called in `onMounted`
-        return
-      }
-
-      const sf = new window.Sketchfab(node.value)
-      sf.init(props.uid, {
-        error: (e: unknown) => {
-          $sentry.captureException(e)
-          emit("failure")
-        },
-      })
-    }
-
-    onMounted(() => {
-      initSketchfab()
-    })
-
-    return { node, label }
-  },
+onMounted(() => {
+  initSketchfab()
 })
 </script>
 
