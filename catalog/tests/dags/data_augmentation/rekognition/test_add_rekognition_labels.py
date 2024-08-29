@@ -66,11 +66,13 @@ def test_parse_and_insert_labels_parse(mock_variable, mock_insert_tags, mock_fil
     mock_variable.get.return_value = None
     mock_file.return_value.__enter__.return_value.readline.side_effect = [
         SAMPLE_JSON,
-        "this line should fail!" "",
+        '{"image_uuid": "b840de61-fb9d-4ec5-9572-8d778875869f", "response": {"Labels": []}}',
+        "this line should fail!",
+        "",
     ]
     actual = add_rekognition_labels.parse_and_insert_labels.function(**DEFAULT_ARGS)
 
-    assert actual == ParseResults(1, 0, [])
+    assert actual == ParseResults(3, 1, ["this line should fail!"])
     mock_insert_tags.assert_called_once()
     assert (
         # Check the first image UUID
@@ -85,14 +87,33 @@ def test_parse_and_insert_labels_parse(mock_variable, mock_insert_tags, mock_fil
     mock_variable.delete.assert_called_once()
 
 
+@pytest.mark.parametrize(
+    "known_offset, in_memory_buffer_size, expected_insert_call_count, expected_processed, expected_skipped",
+    [
+        (0, 100, 2, 200, 1),
+        (0, 10, 20, 200, 1),
+        # Known offsets based on actual results from testing
+        (231319, 100, 1, 75, 1),
+        (332571, 100, 1, 25, 1),
+    ],
+)
+@patch_insert_tags
+@patch_variable
 def test_parse_and_insert_labels_buffer_config(
-    in_memory_buffer_size, expected_insert_count
+    mock_variable,
+    mock_insert_tags,
+    known_offset,
+    in_memory_buffer_size,
+    expected_insert_call_count,
+    expected_processed,
+    expected_skipped,
 ):
+    mock_variable.get.return_value = known_offset
     actual = add_rekognition_labels.parse_and_insert_labels.function(
-        s3_bucket=constants.S3_BUCKET,
-        s3_prefix=TEST_PREFIX,
-        in_memory_buffer_size=1,
-        file_buffer_size=smart_open.s3.DEFAULT_BUFFER_SIZE,
-        postgres_conn_id="shim",
+        **{**DEFAULT_ARGS, "in_memory_buffer_size": in_memory_buffer_size}
     )
-    assert actual
+
+    assert actual == ParseResults(expected_processed, expected_skipped, [])
+    assert mock_insert_tags.call_count == expected_insert_call_count
+    assert mock_variable.set.call_count == expected_insert_call_count - 1
+    mock_variable.delete.assert_called_once()
