@@ -169,14 +169,14 @@ const { isHidden: shouldBlur } = useSensitiveMedia(props.image)
           @load="getImgDimension"
           @error="onImageLoadError($event)"
         />
-        <div
+        <span
           class="col-span-full row-span-full flex items-center justify-center bg-blur backdrop-blur-xl duration-200 motion-safe:transition-opacity"
           :class="shouldBlur ? 'opacity-100' : 'opacity-0'"
           data-testid="blur-overlay"
           aria-hidden="true"
         >
           <VIcon name="eye-closed" />
-        </div>
+        </span>
         <figcaption
           class="z-10 col-span-full my-2 self-end justify-self-start rounded-sm text-default group-hover:visible group-focus-visible:visible"
           :class="[
