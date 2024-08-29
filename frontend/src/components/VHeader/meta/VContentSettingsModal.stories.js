@@ -1,29 +1,44 @@
+import { h } from "vue"
+
+import { WithTeleportTarget } from "~~/.storybook/decorators/with-teleport-target"
+
 import VContentSettingsModalContent from "~/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue"
 
-const Template = (args) => ({
-  template: `<div><VContentSettingsModalContent v-bind="args" v-on="args" :close="args.close" /><div id="modal" /></div>`,
-  components: { VContentSettingsModalContent },
-  setup() {
-    return { args }
-  },
-})
-
-export default {
+const meta = {
   title: "Components/VHeader/VHeaderMobile/VContentSettingsModalContent",
-  components: VContentSettingsModalContent,
+  component: VContentSettingsModalContent,
+
+  parameters: {
+    height: "480px",
+  },
+
+  decorators: [WithTeleportTarget],
 
   argTypes: {
     visible: { type: "boolean" },
-    close: { action: "close" },
-    select: { action: "select" },
+
+    onClose: { action: "close" },
+
+    onSelect: { action: "select" },
   },
   args: {
     visible: true,
   },
 }
+export default meta
 
 export const Default = {
-  render: Template.bind({}),
-  height: "480px",
+  render: (args) => ({
+    components: { VContentSettingsModalContent },
+    setup() {
+      const close = () => console.log("close")
+
+      return () =>
+        h(VContentSettingsModalContent, {
+          ...args,
+          close,
+        })
+    },
+  }),
   name: "Default",
 }

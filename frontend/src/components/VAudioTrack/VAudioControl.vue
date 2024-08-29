@@ -52,7 +52,7 @@ const props = withDefaults(
      * The parent audio layout currently in use. The connections are determined
      * by the layout and the size of the button.
      */
-    layout: AudioLayout
+    layout?: AudioLayout
     /**
      * Whether the audio control button can be focused by using the `Tab` key
      */

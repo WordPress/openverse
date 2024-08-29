@@ -1,15 +1,30 @@
+import { h } from "vue"
+
 import { useSearchStore } from "~/stores/search"
 import { filterData, mediaFilterKeys } from "~/constants/filters"
 import { IMAGE } from "~/constants/media"
 
 import VFilterButton from "~/components/VHeader/VFilterButton.vue"
 
-const Template = (args, { argTypes }) => ({
-  template: `<div class="flex"><div id="wrapper" class="px-4 h-16 bg-surface flex align-center justify-center">
-  <VFilterButton v-bind="args" v-on="args" />
-  </div></div>`,
+const meta = {
+  title: "Components/VHeader/VFilterButton",
+  component: VFilterButton,
+
+  argTypes: {
+    pressed: { type: "boolean" },
+
+    appliedFilters: { type: "number" },
+
+    disabled: { type: "boolean" },
+
+    onToggle: { action: "toggle" },
+  },
+}
+
+export default meta
+
+const Template = (args) => ({
   components: { VFilterButton },
-  props: Object.keys(argTypes),
   setup() {
     const searchStore = useSearchStore()
     searchStore.setSearchType(IMAGE)
@@ -33,32 +48,19 @@ const Template = (args, { argTypes }) => ({
       }
     }
     applyNFilters(args.appliedFilters)
-    return { args }
+    return () =>
+      h("div", { class: "flex" }, [
+        h(
+          "div",
+          {
+            id: "wrapper",
+            class: "px-4 h-16 bg-surface flex align-center justify-center",
+          },
+          [h(VFilterButton, args)]
+        ),
+      ])
   },
 })
-
-export default {
-  title: "Components/VHeader/VFilterButton",
-  component: VFilterButton,
-
-  argTypes: {
-    pressed: {
-      type: "boolean",
-    },
-
-    appliedFilters: {
-      type: "number",
-    },
-
-    disabled: {
-      type: "boolean",
-    },
-
-    toggle: {
-      action: "toggle",
-    },
-  },
-}
 
 export const Default = {
   render: Template.bind({}),

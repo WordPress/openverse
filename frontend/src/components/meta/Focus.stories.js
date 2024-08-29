@@ -1,24 +1,26 @@
-import { WithScreenshotArea } from "~~/.storybook/decorators/with-screenshot-area"
+import { h } from "vue"
 
-const GetTemplate = (irrelevantClassNames) => (args) => ({
-  template: `
-    <div
-      class="h-30 w-30 flex items-center justify-center ${irrelevantClassNames}"
-      :class="args.classNames"
-      data-testid="focus-target"
-      tabindex="0"
-    >
-      Focus on me
-    </div>`,
-  setup() {
-    return { args }
-  },
-})
+import { WithScreenshotArea } from "~~/.storybook/decorators/with-screenshot-area"
 
 export default {
   title: "Meta/Focus",
   decorators: [WithScreenshotArea],
 }
+
+const GetTemplate = (irrelevantClassNames) => (args) => ({
+  setup() {
+    return () =>
+      h(
+        "div",
+        {
+          class: `h-30 w-30 flex items-center justify-center ${irrelevantClassNames} ${args.classNames.join(" ")}`,
+          "data-testid": "focus-target",
+          tabindex: "0",
+        },
+        "Focus on me"
+      )
+  },
+})
 
 export const SlimTransparent = {
   render: GetTemplate("border border-disabled hover:border-hover").bind({}),
@@ -48,7 +50,7 @@ export const SlimFilledBorderless = {
 }
 
 export const BoldFilled = {
-  render: GetTemplate("bg-complementary-3 text-default").bind({}),
+  render: GetTemplate("bg-complementary text-default").bind({}),
   name: "Bold filled",
 
   args: {
@@ -61,12 +63,12 @@ export const Colored = {
   name: "Colored",
 
   args: {
-    classNames: ["focus-slim-tx-bg-complementary-3"],
+    classNames: ["focus-slim-tx bg-complementary"],
   },
 
   parameters: {
     backgrounds: {
-      default: "Dark charcoal",
+      default: "dark",
     },
   },
 }

@@ -1,43 +1,52 @@
+import { defineComponent, h } from "vue"
+
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import VSearchTypePopover from "~/components/VContentSwitcher/VSearchTypePopover.vue"
 
-const Template = (args) => ({
-  template: `<VSearchTypePopover active-item="image" v-bind="args" v-on="args"/>`,
+const meta = {
+  title: "Components/VContentSwitcher/VSearchTypePopover",
+  component: VSearchTypePopover,
+
+  argTypes: {
+    additionalTypes: { control: { type: "boolean" } },
+    showLabel: { control: { type: "boolean" } },
+  },
+
+  parameters: {
+    height: "480px",
+  },
+}
+export default meta
+
+const VSearchTypePopoverWrapper = defineComponent({
+  name: "VSearchTypePopoverWrapper",
   components: { VSearchTypePopover },
-  setup() {
-    const featureFlagStore = useFeatureFlagStore()
-    featureFlagStore.toggleFeature(
+  props: {
+    additionalTypes: {
+      type: Boolean,
+      default: true,
+    },
+    showLabel: {
+      type: Boolean,
+      default: true,
+    },
+  },
+  setup(props) {
+    useFeatureFlagStore().toggleFeature(
       "additional_search_types",
-      args.additionalTypes ? "on" : "off"
+      props.additionalTypes ? "on" : "off"
     )
-    return { args }
+    return () => h(VSearchTypePopover, { showLabel: props.showLabel })
   },
 })
 
-export default {
-  title: "Components/VContentSwitcher/VSearchTypePopover",
-  components: VSearchTypePopover,
-
-  argTypes: {
-    select: {
-      action: "select",
-    },
-
-    additionalTypes: {
-      control: {
-        type: "boolean",
-      },
-    },
-  },
-
-  args: {
-    additionalTypes: false,
-  },
-}
-
 export const Default = {
-  render: Template.bind({}),
-  height: "480px",
+  render: (args) => ({
+    components: { VSearchTypePopoverWrapper },
+    setup() {
+      return () => h(VSearchTypePopoverWrapper, args)
+    },
+  }),
   name: "Default",
 }

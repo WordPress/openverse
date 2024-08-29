@@ -59,11 +59,11 @@ const handleSelection = () => {
 }
 
 /**
-     * On click, you get a `focus` and then a `click` event. We want to only focus
-     * _after_ the click event is finished(mouseup), or when the tab gets focus.
+* On click, you get a `focus` and then a `click` event. We want to only focus
+* _after_ the click event is finished(mouseup), or when the tab gets focus.
 
-     * @param event - we want to preventDefault for this mouse event
-     */
+* @param event - we want to preventDefault for this mouse event
+*/
 const handleMouseDown = (event: MouseEvent) => {
   event.preventDefault()
 }

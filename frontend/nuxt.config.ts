@@ -63,6 +63,7 @@ export default defineNuxtConfig({
     "@nuxtjs/i18n",
     "@nuxtjs/tailwindcss",
     "@nuxtjs/plausible",
+    "@nuxtjs/storybook",
     "@nuxt/test-utils/module",
     "@nuxtjs/sitemap",
     "@nuxtjs/robots",

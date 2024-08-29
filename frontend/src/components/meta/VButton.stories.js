@@ -1,3 +1,5 @@
+import { h } from "vue"
+
 import { buttonForms, buttonSizes, buttonVariants } from "~/types/button"
 import { capitalCase } from "~/utils/case"
 
@@ -12,68 +14,9 @@ const buttonVariantGroups = {
   ),
 }
 
-const Template = (args) => ({
-  template: `
-    <div class="flex"><div id="wrapper"
-        class="px-4 h-16 flex items-center justify-center"
-        :class="variant.startsWith('transparent') ? 'bg-surface': 'bg-default'">
-    <VButton :size="size" :variant="variant" v-bind="rest" class="description-bold" v-on="rest" href="/">
-      Code is Poetry
-    </VButton>
-    </div></div>
-  `,
-  components: { VButton },
-  setup() {
-    const { size, variant, ...rest } = args
-    return { size, variant, rest, args }
-  },
-})
-
-const TemplateWithIcons = (args) => ({
-  template: `
-<div class="flex flex-col items-center gap-4 flex-wrap">
-  <VButton :variant="args.variant" :size="args.size" :has-icon-start="true">
-    <VIcon name="replay" />Button
-  </VButton>
-  <VButton :variant="args.variant" :size="args.size" has-icon-end>
-    Button<VIcon name="external-link" />
-  </VButton>
-  <VButton :variant="args.variant" :size="args.size" has-icon-start has-icon-end>
-    <VIcon name="replay" />Button<VIcon name="external-link" />
-  </VButton>
-</div>`,
-  components: { VButton, VIcon },
-  setup() {
-    return { args }
-  },
-})
-
-const VariantsTemplate = (args) => ({
-  template: `
-<div class="flex gap-4 flex-wrap">
-  <VButton v-for="variant in variants"
-           :variant="variant"
-           :key="variant"
-           class="description-bold"
-           v-bind="buttonArgs">
-    {{ capitalize(variant) }}
-  </VButton>
-  </div>`,
-  components: { VButton },
-  methods: {
-    capitalize(str) {
-      return capitalCase(str)
-    },
-  },
-  setup() {
-    const { variants, ...buttonArgs } = args
-    return { variants, buttonArgs }
-  },
-})
-
 export default {
   title: "Components/VButton",
-  components: VButton,
+  component: VButton,
   parameters: {
     viewport: {
       defaultViewport: "sm",
@@ -83,45 +26,117 @@ export default {
     size: "medium",
   },
   argTypes: {
-    as: {
-      options: buttonForms,
-      control: {
-        type: "radio",
-      },
-    },
+    as: { options: buttonForms, control: { type: "radio" } },
 
-    variant: {
-      options: buttonVariants,
-    },
+    variant: { options: buttonVariants },
 
-    pressed: {
-      control: "boolean",
-    },
+    pressed: { control: "boolean" },
 
-    size: {
-      options: buttonSizes,
-      control: {
-        type: "radio",
-      },
-    },
+    size: { options: buttonSizes, control: { type: "radio" } },
 
-    disabled: {
-      control: "boolean",
-    },
+    disabled: { control: "boolean" },
 
-    focusableWhenDisabled: {
-      control: "boolean",
-    },
+    focusableWhenDisabled: { control: "boolean" },
 
-    type: {
-      control: "text",
-    },
+    type: { control: "text" },
 
-    click: {
-      action: "click",
-    },
+    onClick: { action: "click" },
+    onMouseDown: { action: "mousedown" },
+    onKeydown: { action: "keydown" },
+    onFocus: { action: "focus" },
+    onBlur: { action: "blur" },
   },
 }
+
+const Template = (args) => ({
+  components: { VButton },
+  setup() {
+    const { size, variant, ...rest } = args
+    return () =>
+      h("div", { class: "flex" }, [
+        h(
+          "div",
+          {
+            id: "wrapper",
+            class: [
+              "px-4 h-16 flex items-center justify-center",
+              variant.startsWith("transparent") ? "bg-surface" : "bg-default",
+            ],
+          },
+          [
+            h(
+              VButton,
+              {
+                size,
+                variant,
+                class: "description-bold",
+                href: "/",
+                ...rest,
+              },
+              () => "Code is Poetry"
+            ),
+          ]
+        ),
+      ])
+  },
+})
+
+const TemplateWithIcons = (args) => ({
+  components: { VButton, VIcon },
+  setup() {
+    return () =>
+      h("div", { class: "flex flex-col items-center gap-4 flex-wrap" }, [
+        h(
+          VButton,
+          { variant: args.variant, size: args.size, "has-icon-start": true },
+          () => [h(VIcon, { name: "replay" }), "Button"]
+        ),
+        h(
+          VButton,
+          { variant: args.variant, size: args.size, "has-icon-end": true },
+          () => ["Button", h(VIcon, { name: "external-link" })]
+        ),
+        h(
+          VButton,
+          {
+            variant: args.variant,
+            size: args.size,
+            "has-icon-start": true,
+            "has-icon-end": true,
+          },
+          () => [
+            h(VIcon, { name: "replay" }),
+            "Button",
+            h(VIcon, { name: "external-link" }),
+          ]
+        ),
+      ])
+  },
+})
+
+const VariantsTemplate = (args) => ({
+  components: { VButton },
+  setup() {
+    const { variants, ...buttonArgs } = args
+    return () =>
+      h(
+        "div",
+        { class: "flex gap-4 flex-wrap" },
+        variants.map((variant) =>
+          h(
+            VButton,
+            {
+              variant,
+              key: variant,
+              class: "description-bold",
+              ...buttonArgs,
+            },
+            () => capitalCase(variant)
+          )
+        )
+      )
+  },
+})
 
 export const Default = {
   render: Template.bind({}),

@@ -12,12 +12,11 @@ import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
 
 const props = defineProps<{
-  media: AudioDetail | ImageDetail
+  sensitivity: AudioDetail["sensitivity"] | ImageDetail["sensitivity"]
+  id: string
 }>()
 
-const emit = defineEmits<{
-  reveal: []
-}>()
+const emit = defineEmits<{ reveal: [] }>()
 
 const searchStore = useSearchStore()
 const backToSearchPath = computed(() => searchStore.backToSearchPath)
@@ -25,8 +24,8 @@ const backToSearchPath = computed(() => searchStore.backToSearchPath)
 const { $sendCustomEvent } = useNuxtApp()
 const handleBack = () => {
   $sendCustomEvent("GO_BACK_FROM_SENSITIVE_RESULT", {
-    id: props.media.id,
-    sensitivities: props.media.sensitivity.join(","),
+    id: props.id,
+    sensitivities: props.sensitivity.join(","),
   })
 }
 const handleShow = () => {
@@ -46,7 +45,7 @@ const handleShow = () => {
       <p class="mb-2">
         {{ $t("sensitiveContent.singleResult.explanation") }}
       </p>
-      <p v-for="reason in media.sensitivity" :key="reason">
+      <p v-for="reason in sensitivity" :key="reason">
         {{
           $t(`sensitiveContent.reasons.${camelCase(reason)}`, {
             openverse: "Openverse",

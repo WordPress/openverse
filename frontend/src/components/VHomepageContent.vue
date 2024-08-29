@@ -4,7 +4,6 @@ import { computed, ref } from "vue"
 import type { SearchType } from "~/constants/media"
 import { skipToContentTargetId } from "~/constants/window"
 
-import useSearchType from "~/composables/use-search-type"
 import { useDialogControl } from "~/composables/use-dialog-control"
 
 import { useUiStore } from "~/stores/ui"
@@ -38,10 +37,7 @@ const searchTypeButtonRef = ref<InstanceType<typeof VSearchTypeButton> | null>(
 const searchBarRef = ref<InstanceType<typeof VStandaloneSearchBar> | null>(null)
 const nodeRef = computed(() => searchBarRef.value?.$el ?? null)
 
-const { getSearchTypeProps } = useSearchType({ component: "VHomepageContent" })
 const uiStore = useUiStore()
-
-const searchTypeProps = computed(() => getSearchTypeProps())
 
 const isContentSwitcherVisible = ref(false)
 
@@ -103,7 +99,8 @@ const {
         id="search-type-button"
         ref="searchTypeButtonRef"
         class="ms-2 flex-none"
-        v-bind="{ ...triggerA11yProps, ...searchTypeProps }"
+        :search-type="searchType"
+        v-bind="triggerA11yProps"
         :show-label="isSm"
         aria-controls="content-switcher-popover"
         @click="onTriggerClick"

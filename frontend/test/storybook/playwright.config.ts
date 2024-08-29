@@ -1,6 +1,8 @@
 import type { PlaywrightTestConfig } from "@playwright/test"
 
 const config: PlaywrightTestConfig = {
+  snapshotPathTemplate:
+    "visual-regression/{testFileName}-snapshots/{arg}-linux.png",
   forbidOnly: !!process.env.CI,
   webServer: {
     command: "pnpm storybook",

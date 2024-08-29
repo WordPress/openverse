@@ -278,3 +278,12 @@ export type Metadata = {
   value: string
   source?: string
 }
+
+export type ReportableMedia = Pick<
+  AudioDetail | ImageDetail,
+  | "id"
+  | "frontendMediaType"
+  | "provider"
+  | "providerName"
+  | "foreign_landing_url"
+>

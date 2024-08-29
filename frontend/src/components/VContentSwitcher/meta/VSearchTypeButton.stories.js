@@ -1,47 +1,27 @@
+import { h } from "vue"
+
 import { searchTypes } from "~/constants/media"
-import useSearchType from "~/composables/use-search-type"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { ON } from "~/constants/feature-flag"
+
+import { WithTeleportTarget } from "~~/.storybook/decorators/with-teleport-target"
 
 import VSearchTypeButton from "~/components/VContentSwitcher/VSearchTypeButton.vue"
 
-const Template = (args) => ({
-  template: `<VSearchTypeButton v-bind="args" v-on="args" />`,
-  components: { VSearchTypeButton },
-  setup() {
-    const featureFlagStore = useFeatureFlagStore()
-    featureFlagStore.toggleFeature("additional_search_types", "on")
-    const st = useSearchType({ component: "VSearchTypeButton" })
-    st.setActiveType(args.searchType)
-    args["aria-haspopup"] = "dialog"
-    if (args.pressed) {
-      args["aria-expanded"] = true
-    }
-    const searchTypeProps = st.getSearchTypeProps(args.searchType)
-    return { args: { ...args, ...searchTypeProps } }
-  },
-})
-
-export default {
+const meta = {
   title: "Components/VContentSwitcher/VSearchTypeButton",
-  components: VSearchTypeButton,
+  component: VSearchTypeButton,
+  parameters: { height: "480px" },
+  decorators: [WithTeleportTarget],
 
   argTypes: {
-    searchType: {
-      options: searchTypes,
-      control: "select",
-    },
+    searchType: { options: searchTypes, control: "select" },
 
-    pressed: {
-      control: "boolean",
-    },
+    pressed: { control: "boolean" },
 
-    showLabel: {
-      control: "boolean",
-    },
+    showLabel: { control: "boolean" },
 
-    click: {
-      action: "click",
-    },
+    onClick: { action: "click" },
   },
 
   args: {
@@ -50,16 +30,23 @@ export default {
     showLabel: false,
   },
 }
+export default meta
+
+const Template = (args) => ({
+  components: { VSearchTypeButton },
+  setup() {
+    useFeatureFlagStore().toggleFeature("additional_search_types", ON)
+    return () => h(VSearchTypeButton, args)
+  },
+})
 
 export const Default = {
   render: Template.bind({}),
-  height: "480px",
   name: "Default",
 }
 
 export const LargePressedWithTextLabel = {
   render: Template.bind({}),
-  height: "480px",
   name: "Large pressed with text label",
 
   args: {

@@ -145,7 +145,7 @@ watch(error, (err) => {
       class="px-6 py-10 lg:px-10"
     />
     <template v-else-if="audio">
-      <VSafetyWall v-if="isHidden" :media="audio" @reveal="reveal" />
+      <VSafetyWall v-if="isHidden" v-bind="audio" @reveal="reveal" />
       <template v-else>
         <VSingleResultControls :media="audio" />
         <VAudioTrack

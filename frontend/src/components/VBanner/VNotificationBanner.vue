@@ -7,6 +7,8 @@ import { computed } from "vue"
 
 import type { BannerId } from "~/types/banners"
 
+import { BannerNature } from "~/constants/banners"
+
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
@@ -16,7 +18,7 @@ const props = withDefaults(
      * the semantic meaning of the banner; This can carry a positive, neutral
      * or negative connotation.
      */
-    nature?: "info" | "warning" | "success" | "error"
+    nature?: BannerNature
     /**
      * the color variant of the banner; The dark variant is intended for use on
      * bg-complementary pages.

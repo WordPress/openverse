@@ -1,24 +1,27 @@
+import { h } from "vue"
+
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useSearchStore } from "~/stores/search"
 
 import VExternalSourceList from "~/components/VExternalSearch/VExternalSourceList.vue"
 
+const meta = {
+  title: "Components/VExternalSourceList",
+  component: VExternalSourceList,
+}
+
+export default meta
+
 const Template = (args) => ({
-  template: `<VExternalSourceList search-term="cat" />`,
   components: { VExternalSourceList },
   setup() {
     const featureFlagStore = useFeatureFlagStore()
     featureFlagStore.toggleFeature("additional_search_types", "on")
     const searchStore = useSearchStore()
     searchStore.setSearchType(args.type)
-    return { args }
+    return () => h(VExternalSourceList, { "search-term": "cat" })
   },
 })
-
-export default {
-  title: "Components/VExternalSourceList",
-  component: VExternalSourceList,
-}
 
 export const Images = {
   render: Template.bind({}),
@@ -35,13 +38,11 @@ export const Audio = {
 export const Video = {
   render: Template.bind({}),
   name: "Video",
-
   args: { type: "video" },
 }
 
 export const Model_3D = {
   render: Template.bind({}),
   name: "3D models",
-
   args: { type: "model-3d" },
 }

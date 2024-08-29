@@ -241,7 +241,7 @@ watch(error, (err) => {
       class="px-6 py-10 lg:px-10"
     />
     <template v-else-if="image">
-      <VSafetyWall v-if="isHidden" :media="image" @reveal="reveal" />
+      <VSafetyWall v-if="isHidden" v-bind="image" @reveal="reveal" />
       <template v-else>
         <VSingleResultControls :media="image" />
         <figure

@@ -1,40 +1,21 @@
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { ref } from "vue"
 
 import useSearchType from "~/composables/use-search-type"
 
 import { SEARCH_TYPES_DIALOG } from "~/constants/dialogs"
-import type { SearchType } from "~/constants/media"
 
 import VPopover from "~/components/VPopover/VPopover.vue"
 import VSearchTypeButton from "~/components/VContentSwitcher/VSearchTypeButton.vue"
 import VSearchTypes from "~/components/VContentSwitcher/VSearchTypes.vue"
 
-withDefaults(
-  defineProps<{
-    showLabel?: boolean
-    placement?: "header" | "searchbar"
-  }>(),
-  {
-    showLabel: false,
-    placement: "header",
-  }
-)
-
-const emit = defineEmits<{
-  select: [SearchType]
-}>()
+withDefaults(defineProps<{ showLabel?: boolean }>(), { showLabel: false })
 
 const contentMenuPopover = ref<InstanceType<typeof VPopover> | null>(null)
 
-const { getSearchTypeProps } = useSearchType({
-  component: "VSearchTypePopover",
-})
+const { activeType: searchType } = useSearchType()
 
-const searchTypeProps = computed(() => getSearchTypeProps())
-
-const handleSelect = (searchType: SearchType) => {
-  emit("select", searchType)
+const handleSelect = () => {
   contentMenuPopover.value?.close()
 }
 </script>
@@ -51,7 +32,8 @@ const handleSelect = (searchType: SearchType) => {
     <template #trigger="{ a11yProps }">
       <VSearchTypeButton
         id="search-type-button"
-        v-bind="{ ...a11yProps, ...searchTypeProps }"
+        v-bind="a11yProps"
+        :search-type="searchType"
         :show-label="showLabel"
         aria-controls="content-switcher-popover"
       />
@@ -59,7 +41,7 @@ const handleSelect = (searchType: SearchType) => {
     <VSearchTypes
       id="content-switcher-popover"
       size="small"
-      :use-links="placement === 'header'"
+      :use-links="true"
       @select="handleSelect"
     />
   </VPopover>
