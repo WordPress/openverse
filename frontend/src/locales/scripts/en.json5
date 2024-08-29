@@ -1085,6 +1085,14 @@
   language: {
     language: "Language",
   },
+  theme: {
+    theme: "Theme",
+    choices: {
+      dark: "Dark",
+      light: "Light",
+      system: "System",
+    },
+  },
   recentSearches: {
     heading: "Recent searches",
     clear: {
