@@ -1095,7 +1095,7 @@
       label: "Clear recent search '{entry}'",
     },
     none: "No recent searches to show.",
-    disclaimer: "Openverse does not store your recent searches, this information is kept locally in your browser.",
+    disclaimer: "Recent searches are saved only on your device.",
   },
   report: {
     imageDetails: "See image details",
