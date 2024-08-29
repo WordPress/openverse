@@ -174,11 +174,14 @@ def remap_constraints_for_table(
 
         # Consider all constraints that either apply directly to the given table or
         # which may reference it from another table (foreign key constraints).
-        # Ignore PRIMARY KEY statements.
+        # Ignore PRIMARY KEY statements and UNIQUE statements, which are already
+        # enforced via the table indices copied in an earlier task
         is_fk = _is_foreign_key(constraint_statement, table_name)
         if (
-            constraint_table == table_name or is_fk
-        ) and "PRIMARY KEY" not in constraint_statement:
+            (constraint_table == table_name or is_fk)
+            and "PRIMARY_KEY" not in constraint_statement
+            and "UNIQUE" not in constraint_statement
+        ):
             # Generate the `ALTER TABLE...` statements needed to drop this constraint
             # from the live table and apply it to the temp table.
             alter_statements = _remap_constraint(
