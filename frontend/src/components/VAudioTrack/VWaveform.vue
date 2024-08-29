@@ -494,7 +494,7 @@ const seekTimeLeft = computed(() => ({
 .waveform {
   --v-background-color: var(
     --waveform-background-color,
-    theme("colors.gray.1")
+    theme("backgroundColor.default")
   );
 }
 

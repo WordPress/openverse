@@ -76,7 +76,7 @@ const getSwitchableInput = async (
   name: string,
   checked: boolean
 ) => {
-  const checkbox = page.locator(`input[type=checkbox]#${name}`).first()
+  const checkbox = page.getByRole("checkbox", { name }).first()
   await expect(checkbox).toBeEnabled()
   if (checked) {
     await expect(checkbox).toBeChecked()

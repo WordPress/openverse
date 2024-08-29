@@ -1,11 +1,10 @@
-<script lang="ts">
+<script setup lang="ts">
 import { useI18n } from "#imports"
 
-import { computed, defineComponent, PropType } from "vue"
+import { computed } from "vue"
 
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
-import { defineEvent } from "~/types/emits"
 
 import type { SupportedMediaType } from "~/constants/media"
 import type { Results } from "~/types/result"
@@ -16,54 +15,27 @@ import VLoadMore from "~/components/VLoadMore.vue"
 import VExternalSearchForm from "~/components/VExternalSearch/VExternalSearchForm.vue"
 import VContentLink from "~/components/VContentLink/VContentLink.vue"
 
-export default defineComponent({
-  name: "VSearchResults",
-  components: {
-    VContentLink,
-    VExternalSearchForm,
-    VLoadMore,
-    VMediaCollection,
-    VSearchResultsTitle,
-  },
-  props: {
-    searchTerm: {
-      type: String as PropType<string>,
-      required: true,
-    },
-    results: {
-      type: Object as PropType<Results>,
-      required: true,
-    },
-    isFetching: {
-      type: Boolean,
-      required: true,
-    },
-  },
-  emits: {
-    "load-more": defineEvent(),
-  },
-  setup(props) {
-    const { t } = useI18n()
-    const mediaStore = useMediaStore()
-    const searchStore = useSearchStore()
+const props = defineProps<{
+  searchTerm: string
+  results: Results
+  isFetching: boolean
+}>()
 
-    const collectionLabel = computed(() => {
-      return t(`browsePage.aria.resultsLabel.${props.results.type}`, {
-        query: props.searchTerm,
-      })
-    })
-    const contentLinkPath = (mediaType: SupportedMediaType) =>
-      searchStore.getSearchPath({ type: mediaType })
+defineEmits<{ "load-more": [] }>()
 
-    const resultCounts = computed(() => mediaStore.resultCountsPerMediaType)
+const { t } = useI18n()
+const mediaStore = useMediaStore()
+const searchStore = useSearchStore()
 
-    return {
-      collectionLabel,
-      contentLinkPath,
-      resultCounts,
-    }
-  },
+const collectionLabel = computed(() => {
+  return t(`browsePage.aria.resultsLabel.${props.results.type}`, {
+    query: props.searchTerm,
+  })
 })
+const contentLinkPath = (mediaType: SupportedMediaType) =>
+  searchStore.getSearchPath({ type: mediaType })
+
+const resultCounts = computed(() => mediaStore.resultCountsPerMediaType)
 </script>
 
 <template>

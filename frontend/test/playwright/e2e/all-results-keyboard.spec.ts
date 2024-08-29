@@ -61,7 +61,7 @@ test.describe("all results grid keyboard accessibility test", () => {
   }) => {
     await walkToType("audio", page)
 
-    await expect(page.locator("[role=alert]")).toBeVisible()
+    await expect(page.getByRole("alert")).toBeVisible()
   })
 
   test("should hide the instructions snackbar when interacted with audio", async ({
@@ -69,13 +69,13 @@ test.describe("all results grid keyboard accessibility test", () => {
   }) => {
     await walkToType("audio", page)
 
-    await expect(page.locator("[role=alert]")).toBeVisible()
+    await expect(page.getByRole("alert")).toBeVisible()
 
     const focusedResult = await locateFocusedResult(page)
     const playButton = await audio.getInactive(focusedResult)
     await playButton.click()
 
-    await expect(page.locator("[role=alert]")).toBeHidden()
+    await expect(page.getByRole("alert")).toBeHidden()
   })
 
   test("should allow toggling audio playback via play/pause click", async ({
@@ -94,7 +94,7 @@ test.describe("all results grid keyboard accessibility test", () => {
     expect(path).toMatch(/\/search\/?\?q=birds$/)
 
     const pauseButton = await audio.getActive(focusedResult)
-    pauseButton.click()
+    await pauseButton.click()
     await expect(playButton).toBeVisible()
   })
 

@@ -16,7 +16,6 @@ const imageObject = {
   id: "e9d97a98-621b-4ec2-bf70-f47a74380452",
   provider: "flickr",
 }
-
 const goToCustomImagePage = async (page: Page) => {
   // Test in a custom image detail page, it should apply the same for any image.
   await page.goto(`image/${imageObject.id}`)
@@ -26,7 +25,7 @@ const goToCustomImagePage = async (page: Page) => {
 const errorPageLocator = (page: Page) =>
   page.getByRole("heading", {
     level: 1,
-    name: /The content you’re looking for seems to have disappeared/,
+    name: new RegExp(t("404.title")),
   })
 
 test.describe.configure({ mode: "parallel" })
@@ -77,7 +76,7 @@ test("sends GET_MEDIA event on CTA button click", async ({ context, page }) => {
 
   await goToCustomImagePage(page)
 
-  await page.getByRole("link", { name: /get this image/i }).click()
+  await page.getByRole("link", { name: t("imageDetails.weblink") }).click()
 
   const getMediaEvent = analyticsEvents.find((event) => event.n === "GET_MEDIA")
 

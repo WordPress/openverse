@@ -1,5 +1,5 @@
-<script lang="ts">
-import { computed, defineComponent, type PropType } from "vue"
+<script setup lang="ts">
+import { computed } from "vue"
 import { storeToRefs } from "pinia"
 
 import { useUiStore } from "~/stores/ui"
@@ -10,41 +10,16 @@ import VImageCell from "~/components/VImageCell/VImageCell.vue"
 import VAudioResult from "~/components/VSearchResultsGrid/VAudioResult.vue"
 import VAudioInstructions from "~/components/VSearchResultsGrid/VAudioInstructions.vue"
 
-export default defineComponent({
-  name: "VAllResultsGrid",
-  components: {
-    VImageCell,
-    VAudioResult,
-    VAudioInstructions,
-  },
-  props: {
-    searchTerm: {
-      type: String,
-      required: true,
-    },
-    results: {
-      type: Array as PropType<(AudioDetail | ImageDetail)[]>,
-      required: true,
-    },
-    collectionLabel: {
-      type: String,
-      required: true,
-    },
-  },
-  setup() {
-    const uiStore = useUiStore()
-    const { isFilterVisible: isSidebarVisible } = storeToRefs(uiStore)
+defineProps<{
+  searchTerm: string
+  results: (AudioDetail | ImageDetail)[]
+  collectionLabel: string
+}>()
 
-    const isSm = computed(() => uiStore.isBreakpoint("sm"))
+const uiStore = useUiStore()
+const { isFilterVisible: isSidebarVisible } = storeToRefs(uiStore)
 
-    return {
-      isSidebarVisible,
-      isSm,
-
-      isDetail,
-    }
-  },
-})
+const isSm = computed(() => uiStore.isBreakpoint("sm"))
 </script>
 
 <template>
@@ -65,6 +40,7 @@ export default defineComponent({
           :key="item.id"
           :image="item"
           :search-term="searchTerm"
+          kind="search"
           aspect-ratio="square"
         />
         <VAudioResult

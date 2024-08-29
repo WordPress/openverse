@@ -1,26 +1,26 @@
 <script setup lang="ts">
 import {
   onMounted,
+  useDarkMode,
   useFeatureFlagStore,
+  useHead,
   useLocaleHead,
   useRoute,
+  useRuntimeConfig,
 } from "#imports"
 
 import { useLayout } from "~/composables/use-layout"
+
+import { meta as commonMeta } from "~/constants/meta"
+import { favicons } from "~/constants/favicons"
 
 import VFourOhFour from "~/components/VFourOhFour.vue"
 
 defineProps(["error"])
 
-const head = useLocaleHead({
-  addDirAttribute: true,
-  identifierAttribute: "id",
-  addSeoAttributes: true,
-})
-
-const { updateBreakpoint } = useLayout()
-
 const route = useRoute()
+const { updateBreakpoint } = useLayout()
+const config = useRuntimeConfig()
 
 /**
  * Update the breakpoint value in the cookie on mounted.
@@ -36,6 +36,37 @@ onMounted(() => {
 
 const featureFlagStore = useFeatureFlagStore()
 featureFlagStore.initFromQuery(route.query)
+
+const darkMode = useDarkMode()
+const head = useLocaleHead({
+  addDirAttribute: true,
+  identifierAttribute: "id",
+  addSeoAttributes: true,
+})
+
+useHead({
+  bodyAttrs: { class: darkMode.cssClass },
+  title: "Openly Licensed Images, Audio and More | Openverse",
+  meta: commonMeta,
+  link: [
+    ...favicons,
+    {
+      rel: "search",
+      type: "application/opensearchdescription+xml",
+      title: "Openverse",
+      href: "/opensearch.xml",
+    },
+    {
+      rel: "dns-prefetch",
+      href: config.public.apiUrl,
+    },
+    {
+      rel: "preconnect",
+      href: config.public.apiUrl,
+      crossorigin: "",
+    },
+  ],
+})
 </script>
 
 <template>

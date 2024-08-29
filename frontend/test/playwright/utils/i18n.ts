@@ -45,7 +45,8 @@ export const t = (
   } else if (dir === "rtl") {
     value = getNestedProperty(messages.rtl, path)
   }
-  return value === "" ? getNestedProperty(messages.ltr, path) : value
+  const result = value === "" ? getNestedProperty(messages.ltr, path) : value
+  return result.replace("{openverse}", "Openverse")
 }
 export const languageDirections = ["ltr", "rtl"] as const
 export type LanguageDirection = (typeof languageDirections)[number]

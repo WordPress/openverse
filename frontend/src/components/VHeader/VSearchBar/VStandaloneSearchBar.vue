@@ -16,7 +16,7 @@ withDefaults(
     /**
      * Search bar should not have a focus box when a popover is open.
      */
-    hasPopover: boolean
+    hasPopover?: boolean
   }>(),
   {
     route: "home",

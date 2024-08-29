@@ -1,14 +1,9 @@
-<script lang="ts">
-import { defineComponent } from "vue"
-
-export default defineComponent({
-  name: "VBone",
-  props: { shimmer: { type: Boolean, default: true } },
-})
+<script setup lang="ts">
+withDefaults(defineProps<{ shimmer?: boolean }>(), { shimmer: true })
 </script>
 
 <template>
-  <div :class="['bg-secondary', shimmer ? 'shimmering' : '']" />
+  <div :class="['bg-secondary', { shimmering: shimmer }]" />
 </template>
 
 <style scoped>
@@ -25,9 +20,9 @@ export default defineComponent({
   animation: shimmer 3s infinite linear;
   background: linear-gradient(
     to right,
-    theme("colors.gray.2") 4%,
-    theme("colors.gray.3") 25%,
-    theme("colors.gray.2") 36%
+    theme("backgroundColor.secondary") 4%,
+    theme("borderColor.default") 25%,
+    theme("backgroundColor.secondary") 36%
   );
   background-size: 1000px 100%;
 }

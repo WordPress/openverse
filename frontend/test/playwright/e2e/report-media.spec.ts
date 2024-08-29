@@ -12,6 +12,8 @@ import {
   expectEventPayloadToMatch,
 } from "~~/test/playwright/utils/analytics"
 
+import { t } from "~~/test/playwright/utils/i18n"
+
 import { supportedMediaTypes } from "~/constants/media"
 import type { ReportReason } from "~/constants/content-report"
 
@@ -23,8 +25,18 @@ test.describe.configure({ mode: "parallel" })
 
 const reportingEndpoint = "**/report/"
 
+const reportButtonLabel = t("mediaDetails.contentReport.long")
+
 export const openReportModal = (page: Page) =>
-  page.click('text="Report this content"')
+  page.getByRole("button", { name: reportButtonLabel }).click()
+
+const checkOption = async (page: Page, option: ReportReason) => {
+  const name = t(`mediaDetails.contentReport.form.${option}.option`)
+  const radio = page.getByRole("radio", { name })
+  if (!(await radio.isChecked())) {
+    await radio.check()
+  }
+}
 
 // Mock a successful reporting response
 export const mockReportingEndpoint = (context: BrowserContext) =>
@@ -40,7 +52,12 @@ export const mockReportingEndpoint = (context: BrowserContext) =>
 export const submitApiReport = (page: Page) =>
   Promise.all([
     page.waitForResponse(reportingEndpoint),
-    page.locator('button[type="submit"]:has-text("Report")').click(),
+    page
+      .getByRole("button", {
+        name: t("mediaDetails.contentReport.short"),
+        exact: true,
+      })
+      .click(),
   ]).then((res) => res[0])
 
 /**
@@ -56,10 +73,12 @@ const submitDmcaReport = async (page: Page, context: BrowserContext) => {
       body: "<div>Fake form!</div>",
     })
   })
-  await page.click('text="Infringes copyright"')
+  await checkOption(page, "dmca")
 
   const popupPromise = page.waitForEvent("popup")
-  await page.click('text="Open form"')
+  await page
+    .getByRole("link", { name: t("mediaDetails.contentReport.form.dmca.open") })
+    .click()
   const form = await popupPromise
   const formUrl: string = await form.evaluate("location.href")
 
@@ -69,16 +88,17 @@ const submitDmcaReport = async (page: Page, context: BrowserContext) => {
 
 // todo: Test a sensitive report with the optional description field
 const submitSensitiveContentReport = async (page: Page) => {
-  await page.click('text="Contains sensitive content"')
+  await checkOption(page, "sensitive")
   return (await submitApiReport(page)).status()
 }
 
 const submitOtherReport = async (page: Page) => {
-  await page.click('text="Other"')
-  await page.fill(
-    "text=Describe the issue",
-    'This is an example "Other" report submit by Playwright, our automated e2e test tool.'
-  )
+  await checkOption(page, "other")
+  await page
+    .getByRole("textbox")
+    .fill(
+      'This is an example "Other" report submit by Playwright, our automated e2e test tool.'
+    )
   return (await submitApiReport(page)).status()
 }
 
@@ -129,7 +149,9 @@ supportedMediaTypes.forEach((mediaType) => {
       expect(result).toEqual(reportResults[reportName as ReportReason])
 
       await page
-        .getByRole("dialog", { name: /report submitted successfully/ })
+        .getByRole("dialog", {
+          name: t("mediaDetails.contentReport.successTitle"),
+        })
         .isVisible()
 
       const reportMediaEvent = analyticsEvents.find(

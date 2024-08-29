@@ -1,50 +1,23 @@
-<script lang="ts">
-import { defineComponent, type PropType } from "vue"
-
+<script setup lang="ts">
 import { isSupportedMediaType } from "~/constants/media"
 
 import type { CollectionParams } from "~/types/search"
 import type { AudioResults, ImageResults } from "~/types/result"
 
-import { defineEvent } from "~/types/emits"
-
 import VCollectionHeader from "~/components/VCollectionHeader/VCollectionHeader.vue"
 import VMediaCollection from "~/components/VSearchResultsGrid/VMediaCollection.vue"
 import VLoadMore from "~/components/VLoadMore.vue"
 
-export default defineComponent({
-  name: "VCollectionResults",
-  components: { VLoadMore, VMediaCollection, VCollectionHeader },
-  props: {
-    collectionParams: {
-      type: Object as PropType<CollectionParams>,
-      required: true,
-    },
-    collectionLabel: {
-      type: String,
-      required: true,
-    },
-    results: {
-      type: Object as PropType<ImageResults | AudioResults>,
-      required: true,
-    },
-    isFetching: {
-      type: Boolean,
-      required: true,
-    },
-    searchTerm: {
-      type: String,
-      required: true,
-    },
-    creatorUrl: {
-      type: String,
-    },
-  },
-  emits: {
-    "load-more": defineEvent(),
-  },
-  methods: { isSupportedMediaType },
-})
+defineProps<{
+  collectionParams: CollectionParams
+  collectionLabel: string
+  results: ImageResults | AudioResults
+  isFetching: boolean
+  searchTerm: string
+  creatorUrl?: string
+}>()
+
+defineEmits<{ "load-more": [] }>()
 </script>
 
 <template>
