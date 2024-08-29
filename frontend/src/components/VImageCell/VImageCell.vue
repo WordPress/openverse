@@ -170,7 +170,7 @@ const { isHidden: shouldBlur } = useSensitiveMedia(props.image)
           @error="onImageLoadError($event)"
         />
         <span
-          class="col-span-full row-span-full flex items-center justify-center bg-blur backdrop-blur-xl duration-200 motion-safe:transition-opacity"
+          class="col-span-full row-span-full flex items-center justify-center bg-blur text-default backdrop-blur-xl duration-200 motion-safe:transition-opacity"
           :class="shouldBlur ? 'opacity-100' : 'opacity-0'"
           data-testid="blur-overlay"
           aria-hidden="true"
