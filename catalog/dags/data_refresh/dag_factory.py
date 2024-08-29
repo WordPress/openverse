@@ -54,7 +54,7 @@ from data_refresh.create_and_populate_filtered_index import (
 from data_refresh.create_and_promote_index import create_index
 from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS, DataRefreshConfig
 from data_refresh.distributed_reindex import perform_distributed_reindex
-from data_refresh.promote_table import apply_constraints, generate_table_indices
+from data_refresh.promote_table import promote_tables
 from data_refresh.reporting import report_record_difference
 
 
@@ -204,15 +204,8 @@ def create_data_refresh_dag(
             trigger_rule=TriggerRule.ALL_DONE,
         )
 
-        # TODO Promote
-        # (TaskGroup that reapplies constraints, promotes new tables and indices,
-        # deletes old ones)
-        new_table_indices = generate_table_indices(
-            data_refresh_config=data_refresh_config,
-            target_environment=target_environment,
-        )
-
-        do_apply_constraints = apply_constraints(
+        # Promote the API table
+        promote = promote_tables(
             data_refresh_config=data_refresh_config,
             target_environment=target_environment,
         )
@@ -248,8 +241,7 @@ def create_data_refresh_dag(
             >> reindex
             >> filtered_index
             >> enable_alarms
-            >> new_table_indices
-            >> do_apply_constraints
+            >> promote
             >> after_record_count
             >> report_counts
         )

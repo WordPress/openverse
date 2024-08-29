@@ -111,3 +111,13 @@ DELETE_ORPHANS_QUERY = dedent(
     );
     """
 )
+
+RENAME_INDEX_QUERY = "ALTER INDEX {old_name} RENAME TO {new_name};"
+
+GO_LIVE_QUERY = dedent(
+    """
+    DROP TABLE {table_name};
+    {restore_index_names}
+    ALTER TABLE {temp_table_name} RENAME TO {table_name};
+    """
+)

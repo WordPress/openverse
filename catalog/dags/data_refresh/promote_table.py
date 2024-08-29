@@ -76,7 +76,7 @@ def _transform_index_def(
 @task
 def transform_index_defs(
     existing_index_defs: list[str], temp_table_name: str, table_name: str
-):
+) -> list[TableIndex]:
     """
     Given a CREATE INDEX statement for an index on the existing media table, return a
     transformed statement that can be run to apply an identical index to the temp table.
@@ -101,111 +101,8 @@ def create_table_indices(postgres_conn_id: str, index_configs: list[TableIndex])
         )
 
 
-@task_group(group_id="regenerate_table_indices")
-def generate_table_indices_for_table(
-    downstream_table_name: str, temp_table_name: str, postgres_conn_id: str
-):
-    """
-    Apply all indices on the main media table to the temp table. Indices will be given
-    names prefixed with `temp_import_` in this step to avoid collisions, and renamed
-    later when the table is promoted.
-    """
-    # Get the CREATE statements for the indices applied to the live (old) table
-    existing_index_defs = run_sql.override(
-        task_id="get_existing_index_defs", trigger_rule=TriggerRule.NONE_FAILED
-    )(
-        postgres_conn_id=postgres_conn_id,
-        sql_template=queries.SELECT_TABLE_INDICES_QUERY,
-        handler=fetch_all,
-        table_name=downstream_table_name,
-    )
-
-    # Transform the CREATE statements so they can be used to apply identical indices
-    # to the temp table
-    new_index_configs = transform_index_defs(
-        temp_table_name=temp_table_name,
-        table_name=downstream_table_name,
-        existing_index_defs=existing_index_defs,
-    )
-
-    # Actually create the new indices on the temp table
-    create_table_indices(
-        postgres_conn_id=postgres_conn_id, index_configs=new_index_configs
-    )
-
-    # Return the information for the newly created indices, so that they can later
-    # be renamed to match the live index names
-    return new_index_configs
-
-
-@task_group
-def generate_table_indices(
-    data_refresh_config: DataRefreshConfig, target_environment: Environment
-):
-    downstream_conn_id = POSTGRES_API_CONN_IDS.get(target_environment)
-
-    generate_table_indices_for_table.partial(
-        postgres_conn_id=downstream_conn_id
-    ).expand_kwargs([asdict(tm) for tm in data_refresh_config.table_mappings])
-
-
 def _is_foreign_key(_statement, table):
     return f"REFERENCES {table}(" in _statement
-
-
-@task
-def remap_constraints_for_table(
-    all_constraints: list[ConstraintInfo], table_name: str, temp_table_name: str
-):
-    """
-    Produce `ALTER TABLE...` statements needed to drop constraints from the
-    live (old) tables and remap them to the temp tables.
-    """
-    # `ALTER TABLE...` statements for applying the new constraints
-    remap_constraints = []
-    # Statements for dropping records in related tables that reference records
-    # that exist in the current (live) media table but not the new one.
-    # These must be dropped before other constraints can be applied.
-    drop_orphans = []
-
-    for constraint in all_constraints:
-        constraint_statement = constraint.constraint_statement
-        constraint_table = constraint.constraint_table
-
-        # Consider all constraints that either apply directly to the given table or
-        # which may reference it from another table (foreign key constraints).
-        # Ignore PRIMARY KEY statements and UNIQUE statements, which are already
-        # enforced via the table indices copied in an earlier task
-        is_fk = _is_foreign_key(constraint_statement, table_name)
-        if (
-            (constraint_table == table_name or is_fk)
-            and "PRIMARY_KEY" not in constraint_statement
-            and "UNIQUE" not in constraint_statement
-        ):
-            # Generate the `ALTER TABLE...` statements needed to drop this constraint
-            # from the live table and apply it to the temp table.
-            alter_statements = _remap_constraint(
-                constraint.constraint_name,
-                constraint_table,
-                constraint_statement,
-                table_name,
-                temp_table_name,
-            )
-            remap_constraints.extend(alter_statements)
-
-            # If the constraint was a foreign key constraint, TODO
-            if is_fk:
-                delete_orphans = _generate_delete_orphans(
-                    constraint_statement, constraint_table, temp_table_name
-                )
-                drop_orphans.append(delete_orphans)
-
-    constraint_statements = []
-    # Drop orphans first
-    constraint_statements.extend(drop_orphans)
-    constraint_statements.extend(remap_constraints)
-
-    return constraint_statements
 
 
 def _remap_constraint(
@@ -223,21 +120,19 @@ def _remap_constraint(
             constraint_table=constraint_table, constraint_name=constraint_name
         )
     ]
+
     # If the constraint applied directly to the media table, then
     # we now apply it to the temp table
     if constraint_table == table_name:
         alterations.append(
             queries.ADD_CONSTRAINT_QUERY.format(
-                # TODO this is different than the ingestion server, which just applies it right back to the
-                # constraint table (which ought to be the old live table, from which we just dropped the
-                # constraint!) I think this is in error and only hasn't caused a problem because we don't
-                # actually have any constraints directly on the media tables, other than the primary keys.
+                constraint_name=constraint_name,
                 constraint_table=temp_table_name,
                 constraint_statement=constraint_statement,
             )
         )
 
-    # Constraint if a foreign key constraint which references the media table.
+    # Constraint is a foreign key constraint which references the media table.
     # Build the alter table statement for this case.
     else:
         tokens = constraint_statement.split(" ")
@@ -311,14 +206,106 @@ def _generate_delete_orphans(
 
 
 @task
+def generate_constraints_for_table(
+    all_constraints: list[ConstraintInfo], table_name: str, temp_table_name: str
+):
+    """
+    Produce `ALTER TABLE...` statements needed to drop constraints from the
+    live (old) tables and remap them to the temp tables.
+    """
+    # `ALTER TABLE...` statements for applying the new constraints
+    remap_constraints = []
+    # Statements for dropping records in related tables that reference records
+    # that exist in the current (live) media table but not the new one.
+    # These must be dropped before other constraints can be applied.
+    drop_orphans = []
+
+    for constraint in all_constraints:
+        constraint_statement = constraint.constraint_statement
+        constraint_table = constraint.constraint_table
+
+        # Consider all constraints that either apply directly to the given table or
+        # which may reference it from another table (foreign key constraints).
+        # Ignore PRIMARY KEY statements and UNIQUE statements, which are already
+        # enforced via the table indices copied in an earlier task
+        is_fk = _is_foreign_key(constraint_statement, table_name)
+        if (
+            (constraint_table == table_name or is_fk)
+            and "PRIMARY KEY" not in constraint_statement
+            and "UNIQUE" not in constraint_statement
+        ):
+            # Generate the `ALTER TABLE...` statements needed to drop this constraint
+            # from the live table and apply it to the temp table.
+            alter_statements = _remap_constraint(
+                constraint.constraint_name,
+                constraint_table,
+                constraint_statement,
+                table_name,
+                temp_table_name,
+            )
+            remap_constraints.extend(alter_statements)
+
+            # If the constraint was a foreign key constraint, TODO
+            if is_fk:
+                delete_orphans = _generate_delete_orphans(
+                    constraint_statement, constraint_table, temp_table_name
+                )
+                drop_orphans.append(delete_orphans)
+
+    constraint_statements = []
+    # Drop orphans first
+    constraint_statements.extend(drop_orphans)
+    constraint_statements.extend(remap_constraints)
+
+    return constraint_statements
+
+
+@task
 def apply_constraints_to_table(postgres_conn_id: str, constraints: list[str]):
     for constraint in constraints:
         run_sql.function(postgres_conn_id=postgres_conn_id, sql_template=constraint)
 
 
-@task_group
-def remap_and_apply_constraints_to_table(
-    downstream_table_name: str, temp_table_name: str, postgres_conn_id: str
+@task_group(group_id="remap_table_indices_to_table")
+def remap_table_indices_to_table(
+    table_name: str, temp_table_name: str, postgres_conn_id: str
+):
+    """
+    Apply all indices on the main media table to the temp table. Indices will be given
+    names prefixed with `temp_import_` in this step to avoid collisions, and renamed
+    later when the table is promoted.
+    """
+    # Get the CREATE statements for the indices applied to the live (old) table
+    existing_index_defs = run_sql.override(
+        task_id="get_existing_index_defs", trigger_rule=TriggerRule.NONE_FAILED
+    )(
+        postgres_conn_id=postgres_conn_id,
+        sql_template=queries.SELECT_TABLE_INDICES_QUERY,
+        handler=fetch_all,
+        table_name=table_name,
+    )
+
+    # Transform the CREATE statements so they can be used to apply identical indices
+    # to the temp table
+    new_index_configs = transform_index_defs(
+        temp_table_name=temp_table_name,
+        table_name=table_name,
+        existing_index_defs=existing_index_defs,
+    )
+
+    # Actually create the new indices on the temp table
+    create_table_indices(
+        postgres_conn_id=postgres_conn_id, index_configs=new_index_configs
+    )
+
+    # Return the information for the newly created indices, so that they can later
+    # be renamed to match the live index names
+    return new_index_configs
+
+
+@task_group(group_id="remap_table_constraints_to_table")
+def remap_table_constraints_to_table(
+    table_name: str, temp_table_name: str, postgres_conn_id: str
 ):
     all_constraints = run_sql.override(task_id="get_all_existing_constraints")(
         postgres_conn_id=postgres_conn_id,
@@ -326,10 +313,10 @@ def remap_and_apply_constraints_to_table(
         handler=fetch_all_tuples,
     )
 
-    # Filter out only those constraints which apply to this table.
-    remapped_constraints = remap_constraints_for_table(
+    # Generate SQL for remapping constraints from the table to the temp_table
+    remapped_constraints = generate_constraints_for_table(
         all_constraints=all_constraints,
-        table_name=downstream_table_name,
+        table_name=table_name,
         temp_table_name=temp_table_name,
     )
 
@@ -338,13 +325,75 @@ def remap_and_apply_constraints_to_table(
     )
 
 
-@task_group
-def apply_constraints(
+@task
+def get_go_live_query(
+    table_name: str, temp_table_name: str, index_mapping: list[TableIndex]
+):
+    """Get the query for replacing the original media table with the new temp table."""
+
+    # The remapped indices on the temp table all have temporary names to avoid
+    # naming collisions with the indices on the original table. Prepare the ALTER
+    # TABLE statements for restoring them to their original names once the original
+    # table is dropped.
+    restore_index_names = ("\n        ").join(
+        [
+            queries.RENAME_INDEX_QUERY.format(
+                old_name=index.temp_index_name, new_name=index.index_name
+            )
+            for index in index_mapping
+        ]
+    )
+
+    return queries.GO_LIVE_QUERY.format(
+        table_name=table_name,
+        temp_table_name=temp_table_name,
+        restore_index_names=restore_index_names,
+    )
+
+
+@task_group(group_id="promote_table")
+def promote_table(
+    postgres_conn_id: str,
+    downstream_table_name: str,
+    temp_table_name: str,
+):
+    # Recreate indices from the original table.
+    remap_table_indices = remap_table_indices_to_table(
+        postgres_conn_id=postgres_conn_id,
+        table_name=downstream_table_name,
+        temp_table_name=temp_table_name,
+    )
+
+    # Recreate constraints from the original table.
+    remap_table_constraints = remap_table_constraints_to_table(
+        postgres_conn_id=postgres_conn_id,
+        table_name=downstream_table_name,
+        temp_table_name=temp_table_name,
+    )
+
+    # Get the query to replace the current media table with the temp table.
+    go_live_query = get_go_live_query(
+        table_name=downstream_table_name,
+        temp_table_name=temp_table_name,
+        index_mapping=remap_table_indices,
+    )
+
+    # Run the promotion
+    run_sql.override(task_id="promote")(
+        postgres_conn_id=postgres_conn_id, sql_template=go_live_query
+    )
+
+    remap_table_indices >> remap_table_constraints >> go_live_query
+
+
+@task_group(group_id="promote_tables")
+def promote_tables(
     data_refresh_config: DataRefreshConfig, target_environment: Environment
 ):
-    """Apply the existing table constraints to the new temp table imported from upstream."""
+    """TODO. Promote the temporary table in the API database to the main one, and delete the original."""
+
     downstream_conn_id = POSTGRES_API_CONN_IDS.get(target_environment)
 
-    remap_and_apply_constraints_to_table.partial(
-        postgres_conn_id=downstream_conn_id
+    promote_table.partial(
+        postgres_conn_id=downstream_conn_id,
     ).expand_kwargs([asdict(tm) for tm in data_refresh_config.table_mappings])
