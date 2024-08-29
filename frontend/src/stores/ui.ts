@@ -63,7 +63,7 @@ export interface UiState {
   revealedSensitiveResults: string[]
   headerHeight: number
 
-  /* Whether the UI is using dark, light, or system mode */
+  /* The user-chosen color theme of the site. */
   colorMode: ColorMode
 }
 
@@ -202,9 +202,6 @@ export const useUiStore = defineStore("ui", {
         "ui",
         persistentCookieOptions
       )
-
-      console.log(defaultPersistientCookieState.ui)
-      console.log(this.cookieState)
 
       uiCookie.value = {
         ...defaultPersistientCookieState.ui,
