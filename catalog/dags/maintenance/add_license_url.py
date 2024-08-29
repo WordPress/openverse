@@ -136,7 +136,7 @@ def get_license_conf(license_info) -> dict:
             f"AND meta_data->>'license_url' IS NULL"
         ),
         # Merge existing metadata with the new license_url
-        "update_query": f"SET updated_on = NOW(), meta_data = ({Json(license_url_dict)}::jsonb || meta_data)",
+        "update_query": f"SET updated_on = NOW(), meta_data = (meta_data || {Json(license_url_dict)}::jsonb)",
         "update_timeout": 259200,  # 3 days in seconds
         "dry_run": False,
         "resume_update": False,
