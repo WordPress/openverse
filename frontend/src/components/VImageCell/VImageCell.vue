@@ -144,7 +144,7 @@ const { isHidden: shouldBlur } = useSensitiveMedia(props.image)
       itemprop="contentUrl"
       :title="contextSensitiveTitle"
       :href="imageLink"
-      class="group relative block w-full overflow-hidden rounded-sm text-gray-2 focus-visible:outline-3 focus-visible:outline-offset-4"
+      class="group relative block w-full overflow-hidden rounded-sm text-gray-2 hover:no-underline focus-visible:outline-3 focus-visible:outline-offset-4"
       :aria-label="contextSensitiveTitle"
       @mousedown="sendSelectSearchResultEvent"
     >
