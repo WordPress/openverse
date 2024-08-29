@@ -34,10 +34,12 @@ const props = withDefaults(
     fieldId: string
     labelText: string
     choices: Choice[]
+    showSelected?: boolean
   }>(),
   {
     modelValue: "",
     blankText: "",
+    showSelected: true,
   }
 )
 
@@ -85,8 +87,11 @@ const splitAttrs = computed(() => {
     <select
       :id="fieldId"
       v-model="selectValue"
-      class="flex h-[calc(theme(spacing.10)_-_2_*_theme(borderWidth.DEFAULT))] w-full appearance-none truncate bg-tx pe-10"
-      :class="hasStartContent ? 'ps-10' : 'ps-2'"
+      class="flex h-[calc(theme(spacing.10)_-_2_*_theme(borderWidth.DEFAULT))] appearance-none truncate bg-tx pe-10"
+      :class="[
+        showSelected ? 'w-full' : 'w-0',
+        hasStartContent ? 'ps-10' : 'ps-2',
+      ]"
       :name="fieldName"
       v-bind="splitAttrs.nonClassAttrs"
       :aria-label="labelText"
