@@ -1,5 +1,11 @@
 import * as uuid from "uuid"
+/** @import { ApiMedia } from "~/types/media" */
 
+/**
+ * Retrieve a sample audio object
+ *
+ * @returns {ApiMedia}
+ */
 export const getAudioObj = (overrides = {}) =>
   Object.assign(
     {
@@ -49,7 +55,7 @@ export const getAudioObj = (overrides = {}) =>
       related_url:
         "http://localhost:8000/v1/audio/e19345b8-6937-49f7-a0fd-03bf057efc28/recommendations",
       peaks: [],
-      unstable_sensitivity: [],
+      unstable__sensitivity: [],
     },
     overrides
   )

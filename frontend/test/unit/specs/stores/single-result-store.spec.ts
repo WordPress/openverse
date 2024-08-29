@@ -1,37 +1,60 @@
 // @vitest-environment jsdom
+
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
+
 import { createPinia, setActivePinia } from "~~/test/unit/test-utils/pinia"
 
 import { getAudioObj } from "~~/test/unit/fixtures/audio"
 
 import { image as imageObj } from "~~/test/unit/fixtures/image"
 
-import { AUDIO, IMAGE, supportedMediaTypes } from "~/constants/media"
+import {
+  AUDIO,
+  IMAGE,
+  SupportedMediaType,
+  supportedMediaTypes,
+} from "~/constants/media"
 import { useMediaStore } from "~/stores/media"
 import { useSingleResultStore } from "~/stores/media/single-result"
+import type { AudioDetail, ImageDetail } from "~/types/media"
 
-const detailData = {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const { unstable__sensitivity: _, ...audioObj } = getAudioObj()
+
+const detailData: {
+  [mediaType in SupportedMediaType]: AudioDetail | ImageDetail
+} = {
   [AUDIO]: {
-    ...getAudioObj(),
+    ...audioObj,
     title: "audioDetails",
     id: "audio1",
+    originalTitle: "text",
+    sensitivity: [],
+    isSensitive: false,
     frontendMediaType: AUDIO,
+    providerName: "",
+    sourceName: "",
   },
   [IMAGE]: {
     ...imageObj,
     title: "imageDetails",
     id: "image1",
+    originalTitle: "text",
+    sensitivity: [],
+    isSensitive: false,
     frontendMediaType: IMAGE,
   },
 }
-vi.mock("axios", async (importOriginal) => {
-  const actual = await importOriginal()
+
+vi.mock("axios", async () => {
+  const actual = await vi.importActual<typeof import("axios")>("axios")
   return {
     ...actual,
     isAxiosError: vi.fn((obj) => "response" in obj),
   }
 })
 
-const mockImplementation = (mediaType) => () =>
+const mockImplementation = (mediaType: SupportedMediaType) => () =>
   Promise.resolve(detailData[mediaType])
 const mockGetMediaDetailAudio = vi
   .fn()
@@ -41,8 +64,9 @@ const mockGetMediaDetailImage = vi
   .mockImplementation(mockImplementation(IMAGE))
 
 describe("Media Item Store", () => {
-  let singleResultStore = null
-  let mediaStore = null
+  let singleResultStore: ReturnType<typeof useSingleResultStore>
+  let mediaStore: ReturnType<typeof useMediaStore>
+
   const originalEnv = process.env
 
   beforeEach(() => {
