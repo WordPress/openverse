@@ -2,21 +2,25 @@
   "name": "@openverse/api-client",
   "version": "0.0.1-a2",
   "description": "API client for the Openverse REST API",
-  "main": "dist/index.cjs",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/cjs/index.d.ts",
   "sideEffects": false,
   "type": "module",
   "exports": {
-    "import": "./dist/index.mjs",
-    "require": "./dist/index.cjs"
+    "import": {
+      "default": "./dist/esm/index.js",
+      "types": "./dist/esm/index.d.ts"
+    },
+    "require": {
+      "default": "./dist/cjs/index.js",
+      "types": "./dist/cjs/index.d.ts"
+    }
   },
   "scripts": {
-    "build": "rm -rf dist && mkdir dist && pnpm run build:cjs && pnpm run build:esm && pnpm run build:types && pnpm pack && pnpm publish --dry-run --no-git-checks",
-    "build:cjs": "esbuild ./src/**/* --packages=external --sourcemap --format=cjs --out-extension:.js=.cjs --outdir=dist",
-    "build:esm": "esbuild ./src/**/* --packages=external --sourcemap --format=esm --out-extension:.js=.mjs --outdir=dist",
-    "build:types": "tsc -p ./tsconfig.prod.json",
-    "types": "tsc -p .",
+    "build": "rm -rf dist && mkdir dist && pnpm run build:rollup && pnpm pack && pnpm publish --dry-run --no-git-checks",
+    "build:rollup": "rollup --config rollup.config.ts --configPlugin typescript",
+    "types": "tsc -p . --noEmit",
     "test:unit": "vitest run",
     "generate": "node ./bin/generate.mjs"
   },
@@ -36,9 +40,10 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "esbuild": "^0.23.1",
+    "@rollup/plugin-typescript": "^11.1.6",
     "nock": "14.0.0-beta.11",
     "openapi-typescript": "^7.3.2",
+    "rollup": "^4.21.1",
     "typescript": "^5.5.4",
     "vite-tsconfig-paths": "^5.0.1",
     "vitest": "^2.0.5"

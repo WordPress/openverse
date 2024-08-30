@@ -52,6 +52,6 @@ const out = path.resolve(
   "..",
   "src",
   "generated",
-  "openverse.d.ts"
+  "openverse.ts"
 )
 fs.writeFileSync(out, lintedContents)
