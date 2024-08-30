@@ -308,6 +308,16 @@ prune delete="false":
     @just prune_node {{ delete }}
     @just prune_venv {{ delete }}
 
+########
+# Misc #
+########
+
+# Pull, build, and deploy all services
+deploy:
+    -git pull
+    @just pull
+    @just up
+
 #####################
 # Aliases/shortcuts #
 #####################
@@ -343,45 +353,3 @@ f:
 # alias for `pnpm --filter {package} run {script}`
 p package script +args="":
     pnpm --filter {{ package }} run {{ script }} {{ args }}
-
-# List directories containing pyproject.toml that match the pattern. Override `print_cmd` to `print0` if needed. See `man find` for details.
-@python-projects pattern +print_cmd="printf '%h\\n'":
-    # Ignore hidden files
-    # Match only files with the path pattern
-    # And only if they are named pyproject.toml
-    find . \
-        -not -path '*/[@.]*' \
-        -path '*/{{ pattern }}/*' \
-        -name 'pyproject.toml' \
-        -{{ print_cmd }};
-
-# Run a command inside the Python packages matching the pattern
-exec-python-projects pattern +cmd:
-    #! /usr/bin/env bash
-    for package in $(just python-projects {{ pattern }} | tr '\n' ' ');
-    do
-        # $package is relative to the CWD of `just python-projects`, which is the justfile directory
-        # so change back to that before cding to the package to ensure $package is a coherent relative path
-        cd {{ justfile_directory() }}
-        cd "$package"
-        {{ cmd }}
-    done
-
-# Run a PDM command inside the Python packages mattching the pattern
-@pdm pattern +pdm_command:
-    just exec-python-projects {{ pattern }} pdm {{ pdm_command }}
-
-# Run PDM scripts by name for all packages matching the pattern, ignoring matches if the script does not exist
-pdm-run pattern script +args="":
-    just exec-python-projects {{ pattern }} bash -c "'if pdm run -l | grep {{ script }} -q; then pdm run {{ script }} {{ args }}; fi'"
-
-# Run eslint with --fix and default file selection enabled; used to enable easy file overriding whilst retaining the defaults when running --all-files
-eslint *files="frontend automations/js packages/js .pnpmfile.cjs .eslintrc.js prettier.config.js tsconfig.base.json":
-    just p '@openverse/eslint-plugin' run build
-    pnpm exec eslint \
-        --ext .js,.ts,.vue,.json,.json5 \
-        --ignore-path .gitignore \
-        --ignore-path .eslintignore \
-        --max-warnings=0 \
-        --fix \
-        {{ files }}
