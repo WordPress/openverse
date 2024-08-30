@@ -205,9 +205,25 @@ def create_data_refresh_dag(
         )
 
         # Promote the API table
-        promote = promote_tables(
+        promote_table = promote_tables(
             data_refresh_config=data_refresh_config,
             target_environment=target_environment,
+        )
+
+        promote_index = es.point_alias.override(group_id="promote_index")(
+            es_host=es_host,
+            target_index=target_index,
+            target_alias=data_refresh_config.media_type,
+            should_delete_old_index=True,
+        )
+
+        promote_filtered_index = es.point_alias.override(
+            group_id="promote_filtered_index"
+        )(
+            es_host=es_host,
+            target_index=filtered_index,
+            target_alias=f"{data_refresh_config.media_type}-filtered",
+            should_delete_old_index=True,
         )
 
         # Get the final number of records in the API table after the refresh
@@ -241,13 +257,12 @@ def create_data_refresh_dag(
             >> reindex
             >> filtered_index
             >> enable_alarms
-            >> promote
+            >> promote_table
             >> after_record_count
             >> report_counts
         )
-        # filtered_index >> [enable_alarms, after_record_count]
-
-        # after_record_count >> report_counts
+        promote_table >> [promote_index, promote_filtered_index, after_record_count]
+        after_record_count >> report_counts
 
     return dag
 

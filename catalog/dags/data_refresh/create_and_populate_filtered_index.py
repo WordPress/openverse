@@ -112,3 +112,5 @@ def create_and_populate_filtered_index(
 
     sensitive_terms >> populate_filtered_index
     create_filtered_index >> populate_filtered_index >> refresh_index
+
+    return filtered_index_name
