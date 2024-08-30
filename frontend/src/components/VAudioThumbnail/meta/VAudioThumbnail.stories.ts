@@ -3,9 +3,14 @@ import { h } from "vue"
 
 import { getAudioObj } from "~~/test/unit/fixtures/audio"
 
+import { AudioDetail } from "~/types/media"
+
 import VAudioThumbnail from "~/components/VAudioThumbnail/VAudioThumbnail.vue"
 
-const sampleAudio = getAudioObj()
+const sampleAudio = getAudioObj() as Pick<
+  AudioDetail,
+  "title" | "creator" | "thumbnail"
+>
 
 const meta = {
   title: "Components/VAudioThumbnail",
