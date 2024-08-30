@@ -36,7 +36,7 @@ logger = logging.getLogger(__name__)
 DEFAULT_DATA_REFRESH_LIMIT = 10_000
 
 
-@task
+@task(max_active_tis_per_dagrun=1)
 def initialize_fdw(
     upstream_conn_id: str,
     downstream_conn_id: str,
@@ -57,7 +57,10 @@ def initialize_fdw(
     )
 
 
-@task(map_index_template="{{ task.op_kwargs['upstream_table_name'] }}")
+@task(
+    max_active_tis_per_dagrun=1,
+    map_index_template="{{ task.op_kwargs['upstream_table_name'] }}",
+)
 def create_schema(downstream_conn_id: str, upstream_table_name: str) -> str:
     """
     Create a new schema in the downstream DB through which the upstream table
@@ -101,7 +104,10 @@ def get_record_limit() -> int | None:
         return DEFAULT_DATA_REFRESH_LIMIT
 
 
-@task(map_index_template="{{ task.op_kwargs['upstream_table_name'] }}")
+@task(
+    max_active_tis_per_dagrun=1,
+    map_index_template="{{ task.op_kwargs['upstream_table_name'] }}",
+)
 def get_shared_columns(
     upstream_conn_id: str,
     downstream_conn_id: str,
