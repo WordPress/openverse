@@ -51,7 +51,7 @@ from data_refresh.copy_data import copy_upstream_tables
 from data_refresh.create_and_populate_filtered_index import (
     create_and_populate_filtered_index,
 )
-from data_refresh.create_and_promote_index import create_index
+from data_refresh.create_index import create_index
 from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS, DataRefreshConfig
 from data_refresh.distributed_reindex import perform_distributed_reindex
 from data_refresh.promote_table import promote_tables

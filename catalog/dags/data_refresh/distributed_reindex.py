@@ -15,6 +15,7 @@ from airflow.decorators import task, task_group
 from airflow.exceptions import AirflowSkipException
 from airflow.models.connection import Connection
 from airflow.providers.amazon.aws.hooks.ec2 import EC2Hook
+from airflow.providers.common.sql.hooks.sql import fetch_one_handler
 from airflow.sensors.base import PokeReturnValue
 from airflow.utils.trigger_rule import TriggerRule
 from requests import Response
@@ -28,7 +29,7 @@ from common.constants import (
 )
 from common.operators.http import TemplatedConnectionHttpOperator
 from common.sensors.http import TemplatedConnectionHttpSensor
-from common.sql import PGExecuteQueryOperator, single_value
+from common.sql import PGExecuteQueryOperator
 from data_refresh.constants import INDEXER_LAUNCH_TEMPLATES, INDEXER_WORKER_COUNTS
 from data_refresh.data_refresh_types import DataRefreshConfig
 
@@ -85,7 +86,7 @@ def response_check_wait_for_completion(response: Response) -> bool:
 
 @task
 def get_worker_params(
-    estimated_record_count: int,
+    id_range: tuple[int, int],
     environment: str,
     target_environment: Environment,
 ):
@@ -96,12 +97,15 @@ def get_worker_params(
         if environment == PRODUCTION
         else 1
     )
+
+    min_id, max_id = id_range
+    estimated_record_count = max_id - min_id + 1
     records_per_worker = math.floor(estimated_record_count / worker_count)
 
     return [
         {
-            "start_id": worker_index * records_per_worker,
-            "end_id": (1 + worker_index) * records_per_worker,
+            "start_id": min_id + worker_index * records_per_worker,
+            "end_id": min_id + (1 + worker_index) * records_per_worker,
         }
         for worker_index in range(worker_count)
     ]
@@ -364,15 +368,15 @@ def perform_distributed_reindex(
     data_refresh_config: DataRefreshConfig,
 ):
     """Perform the distributed reindex on a fleet of remote indexer workers."""
-    estimated_record_count = PGExecuteQueryOperator(
-        task_id="get_estimated_record_count",
+    id_range = PGExecuteQueryOperator(
+        task_id="get_record_id_range",
         conn_id=OPENLEDGER_API_CONN_ID,
         sql=dedent(
             f"""
-            SELECT max(id) FROM {data_refresh_config.table_mapping.temp_table_name};
+            SELECT min(id), max(id) FROM {data_refresh_config.table_mapping.temp_table_name};
             """
         ),
-        handler=single_value,
+        handler=fetch_one_handler,
         return_last=True,
         trigger_rule=TriggerRule.NONE_FAILED,
     )
@@ -383,12 +387,12 @@ def perform_distributed_reindex(
     )
 
     worker_params = get_worker_params(
-        estimated_record_count=estimated_record_count.output,
+        id_range=id_range.output,
         environment=environment,
         target_environment=target_environment,
     )
 
-    estimated_record_count >> worker_params
+    id_range >> worker_params
 
     perform_reindex = reindex.partial(
         data_refresh_config=data_refresh_config,
