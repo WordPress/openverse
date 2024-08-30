@@ -1,7 +1,7 @@
 """
-# Create and Promote Index
+# Create Index
 
-This file contains TaskGroups related to creating and promoting Elasticsearch indices
+This file contains TaskGroups related to creating Elasticsearch indices
 as part of the Data Refresh.
 """
 
