@@ -12,12 +12,20 @@ import {
   ALL_MEDIA,
   AUDIO,
   IMAGE,
+  SupportedMediaType,
   supportedMediaTypes,
   VIDEO,
 } from "~/constants/media"
 import { NO_RESULT } from "~/constants/errors"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { ON } from "~/constants/feature-flag"
+import { ImageDetail, Media } from "~/types/media"
+
+// Retrieve the type of the first argument to
+// useMediaStore.setMedia()
+type SetMediaParams = Parameters<
+  ReturnType<typeof useMediaStore>["setMedia"]
+>[0]
 
 const uuids = [
   "0dea3af1-27a4-4635-bab6-4b9fb76a59f5",
@@ -25,35 +33,43 @@ const uuids = [
   "fd527776-00f8-4000-9190-724fc4f07346",
   "81e551de-52ab-4852-90eb-bc3973c342a0",
 ]
-const items = (mediaType) =>
+const items = (mediaType: SupportedMediaType): Media[] =>
   uuids.map((uuid, i) => ({
     id: uuid,
     title: `${mediaType} ${i + 1}`,
     creator: `creator ${i + 1}`,
     tags: [],
+    sensitivity: [],
+    originalTitle: `Title ${i + 1}`,
+    url: "",
+    foreign_landing_url: "",
+    license: "by",
+    license_version: "4.0",
+    attribution: "",
+    frontendMediaType: mediaType,
+    provider: "",
+    source: "",
+    providerName: "",
+    sourceName: "",
+    detail_url: "",
+    related_url: "",
+    isSensitive: false,
   }))
 
 const audioItems = items(AUDIO)
 const imageItems = items(IMAGE)
-const testResultItems = (mediaType) =>
-  items(mediaType).reduce((acc, item) => {
+const testResultItems = (mediaType: SupportedMediaType) =>
+  items(mediaType).reduce<Record<string, Media>>((acc, item) => {
     acc[item.id] = item
     return acc
   }, {})
 
-const testResult = (mediaType) => ({
+const testResult = (mediaType: SupportedMediaType) => ({
   count: 240,
   items: testResultItems(mediaType),
   page: 2,
   pageCount: 20,
 })
-
-// const testApiResult = (mediaType) => ({
-//   count: 10001,
-//   results: items(mediaType),
-//   page: 2,
-//   pageCount: 20,
-// })
 
 describe("media store", () => {
   describe("state", () => {
@@ -105,7 +121,7 @@ describe("media store", () => {
 
     it("getItemById returns correct item", () => {
       const mediaStore = useMediaStore()
-      const expectedItem = { id: "foo", title: "ImageFoo" }
+      const expectedItem = imageItems[0]
       mediaStore.results.image.items = { foo: expectedItem }
       expect(mediaStore.getItemById(IMAGE, "foo")).toEqual(expectedItem)
     })
@@ -268,23 +284,30 @@ describe("media store", () => {
       const mediaStore = useMediaStore()
       const searchStore = useSearchStore()
       searchStore.setSearchType(ALL_MEDIA)
+
       mediaStore._updateFetchState(AUDIO, "end", {
+        code: "NO_RESULT",
         message: "Error",
+        requestKind: "search",
+        searchType: "audio",
         statusCode: 500,
       })
+
       mediaStore._updateFetchState(IMAGE, "end", {
+        code: "NO_RESULT",
         message: "Error",
-        statusCode: 500,
         requestKind: "search",
         searchType: IMAGE,
+        statusCode: 500,
       })
 
       expect(mediaStore.fetchState).toEqual({
         fetchingError: {
+          code: "NO_RESULT",
           message: "Error",
-          statusCode: 500,
           requestKind: "search",
-          searchType: IMAGE,
+          searchType: ALL_MEDIA,
+          statusCode: 500,
         },
         hasStarted: true,
         isFetching: false,
@@ -301,21 +324,13 @@ describe("media store", () => {
     it("setMedia updates state persisting images", () => {
       const mediaStore = useMediaStore()
 
-      const img1 = {
-        id: "81e551de-52ab-4852-90eb-bc3973c342a0",
-        title: "Foo",
-        creator: "foo",
-        tags: [],
-      }
-      const img2 = {
-        id: "0dea3af1-27a4-4635-bab6-4b9fb76a59f5",
-        title: "Bar",
-        creator: "bar",
-        tags: [],
-      }
+      const img1 = imageItems[0]
+      const img2 = imageItems[1]
+
       mediaStore.results.image.items = { [img1.id]: img1 }
-      const params = {
-        media: { [img2.id]: img2 },
+
+      const params: SetMediaParams = {
+        media: { [img2.id]: img2 as ImageDetail },
         mediaCount: 2,
         page: 2,
         pageCount: 1,
@@ -344,13 +359,13 @@ describe("media store", () => {
       }
       mediaStore.results.image.count = 10
 
-      const params = {
+      const params: SetMediaParams = {
         media: { [img.id]: img },
         mediaCount: 2,
+        mediaType: IMAGE,
         page: 2,
         pageCount: 1,
         shouldPersistMedia: false,
-        mediaType: IMAGE,
       }
       mediaStore.setMedia(params)
 
@@ -365,9 +380,14 @@ describe("media store", () => {
     it("setMedia updates state with default count and page", () => {
       const mediaStore = useMediaStore()
 
-      const img = { title: "Foo", creator: "bar", tags: [] }
-      mediaStore.results.image.items = ["img1"]
-      const params = { media: [img], mediaType: IMAGE }
+      const img = imageItems[0]
+      mediaStore.results.image.items = { [img.id]: img }
+      const params: SetMediaParams = {
+        media: { [img.id]: img },
+        mediaType: IMAGE,
+        shouldPersistMedia: false,
+        pageCount: 1,
+      }
 
       mediaStore.setMedia(params)
 
@@ -378,30 +398,34 @@ describe("media store", () => {
     it("clearMedia resets the results", () => {
       const mediaStore = useMediaStore()
       const searchStore = useSearchStore()
+
       searchStore.setSearchType(ALL_MEDIA)
+
       mediaStore.results.image.items = {
         ...mediaStore.results.image.items,
-        ...testResult(IMAGE),
+        ...testResult(IMAGE).items,
       }
       mediaStore.results.audio.items = {
         ...mediaStore.results.audio.items,
-        ...testResult(AUDIO),
+        ...testResult(AUDIO).items,
       }
 
       mediaStore.clearMedia()
+
       supportedMediaTypes.forEach((mediaType) => {
         expect(mediaStore.results[mediaType]).toEqual(initialResults)
       })
     })
 
     it("setMediaProperties merges the existing media item together with the properties passed in allowing overwriting", () => {
+      const hasLoaded = true
       const mediaStore = useMediaStore()
+
       mediaStore.results.audio = testResult(AUDIO)
 
       const existingMediaItem = deepClone(
         mediaStore.getItemById(AUDIO, uuids[0])
       )
-      const hasLoaded = Symbol()
       mediaStore.setMediaProperties(AUDIO, uuids[0], {
         hasLoaded,
       })

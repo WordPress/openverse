@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, useAttrs, useSlots } from "vue"
 
-import { defineEvent } from "~/types/emits"
 import type { ProperlyExtractPropTypes } from "~/types/prop-extraction"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
@@ -43,9 +42,7 @@ const props = withDefaults(
   }
 )
 
-const emit = defineEmits({
-  "update:modelValue": defineEvent<[string]>(),
-})
+const emit = defineEmits<{ "update:modelValue": [string] }>()
 
 const attrs = useAttrs()
 const slots = useSlots()

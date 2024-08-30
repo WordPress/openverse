@@ -1,15 +1,22 @@
 import { nextTick } from "vue"
 
-import { describe, expect, it } from "vitest"
+import { beforeEach, describe, expect, it } from "vitest"
 
 import { setActivePinia, createPinia } from "~~/test/unit/test-utils/pinia"
 
-import { filterData, mediaFilterKeys } from "~/constants/filters"
+import {
+  FilterCategory,
+  filterData,
+  initFilters,
+  mediaFilterKeys,
+} from "~/constants/filters"
 import {
   ALL_MEDIA,
   AUDIO,
   IMAGE,
   searchPath,
+  SearchType,
+  SupportedSearchType,
   supportedSearchTypes,
   VIDEO,
 } from "~/constants/media"
@@ -17,6 +24,12 @@ import { INCLUDE_SENSITIVE_QUERY_PARAM } from "~/constants/content-safety"
 
 import { computeQueryParams, useSearchStore } from "~/stores/search"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { FeatureState } from "~/constants/feature-flag"
+import { SearchFilterKeys, SearchQuery } from "~/types/search"
+
+function isSupportedSearchType(value: string): value is SupportedSearchType {
+  return supportedSearchTypes.includes(value as SupportedSearchType)
+}
 
 describe("Search Store", () => {
   beforeEach(() => {
@@ -45,12 +58,27 @@ describe("Search Store", () => {
       ${"off"}        | ${{ audioExtensions: ["mp3"] }}                | ${AUDIO}     | ${1}
     `(
       "returns correct filter status for $query and searchType $searchType",
-      ({ sensitivityFlag, query, searchType, filterCount }) => {
+      ({
+        sensitivityFlag,
+        query,
+        searchType,
+        filterCount,
+      }: {
+        sensitivityFlag: FeatureState
+        query: SearchQuery
+        searchType: SearchType
+        filterCount: number
+      }) => {
         const featureFlagStore = useFeatureFlagStore()
-        featureFlagStore.toggleFeature("fetch_sensitive", sensitivityFlag)
         const searchStore = useSearchStore()
+
+        featureFlagStore.toggleFeature("fetch_sensitive", sensitivityFlag)
         searchStore.setSearchType(searchType)
-        for (let [filterType, values] of Object.entries(query)) {
+
+        for (const [filterType, values] of Object.entries(query) as [
+          FilterCategory,
+          string[],
+        ][]) {
           values.forEach((val) =>
             searchStore.toggleFilter({ filterType, code: val })
           )
@@ -296,7 +324,13 @@ describe("Search Store", () => {
       ${[["sizes", "large"]]}                                               | ${["size", undefined]}
     `(
       "toggleFilter updates the query values to $query",
-      ({ filters, query }) => {
+      ({
+        filters,
+        query,
+      }: {
+        filters: [FilterCategory[]]
+        query: [SearchFilterKeys, string]
+      }) => {
         const searchStore = useSearchStore()
         for (const filterItem of filters) {
           const [filterType, code] = filterItem
@@ -308,7 +342,7 @@ describe("Search Store", () => {
 
     it.each([ALL_MEDIA, IMAGE, AUDIO, VIDEO])(
       "Clears filters when search type is %s",
-      (searchType) => {
+      (searchType: string) => {
         const searchStore = useSearchStore()
         const expectedQueryParams = { q: "cat" }
         searchStore.setSearchStateFromUrl({
@@ -320,7 +354,7 @@ describe("Search Store", () => {
             extension: "jpg,mp3",
           },
         })
-        if (supportedSearchTypes.includes(searchType)) {
+        if (isSupportedSearchType(searchType)) {
           // eslint-disable-next-line vitest/no-conditional-expect
           expect(searchStore.apiSearchQueryParams).not.toEqual(
             expectedQueryParams
@@ -341,7 +375,13 @@ describe("Search Store", () => {
       ${"sizes"}           | ${0}
     `(
       "toggleFilter updates $filterType filter state",
-      ({ filterType, codeIdx }) => {
+      ({
+        filterType,
+        codeIdx,
+      }: {
+        filterType: FilterCategory
+        codeIdx: number
+      }) => {
         const searchStore = useSearchStore()
 
         searchStore.toggleFilter({ filterType, codeIdx })
@@ -431,7 +471,15 @@ describe("Search Store", () => {
       ${"sizes"}           | ${"medium"}       | ${1}
     `(
       "toggleFilter should set filter '$code' of type '$filterType",
-      ({ filterType, code, idx }) => {
+      ({
+        filterType,
+        code,
+        idx,
+      }: {
+        filterType: FilterCategory
+        code: string
+        idx: number
+      }) => {
         const searchStore = useSearchStore()
         searchStore.toggleFilter({ filterType: filterType, code: code })
 
@@ -491,27 +539,42 @@ describe("Search Store", () => {
       ${ALL_MEDIA} | ${IMAGE}       | ${23}
     `(
       "changing searchType from $searchType clears all but $expectedFilterCount $nextSearchType filters",
-      async ({ searchType, nextSearchType, expectedFilterCount }) => {
+      async ({
+        searchType,
+        nextSearchType,
+        expectedFilterCount,
+      }: {
+        searchType: SearchType
+        nextSearchType: SearchType
+        expectedFilterCount: number
+      }) => {
         // We need to switch on the additional_search_types feature flag
         // to be able to switch to video.
         const featureFlagStore = useFeatureFlagStore()
-        featureFlagStore.toggleFeature("additional_search_types", "on")
-
         const searchStore = useSearchStore()
+
+        featureFlagStore.toggleFeature("additional_search_types", "on")
         searchStore.setSearchType(searchType)
 
         // Set all filters to checked
-        for (let ft in searchStore.filters) {
-          for (let f of searchStore.filters[ft]) {
-            searchStore.toggleFilter({ filterType: ft, code: f.code })
+        for (const ft in searchStore.filters) {
+          for (const f of searchStore.filters[ft as FilterCategory]) {
+            searchStore.toggleFilter({
+              filterType: ft as FilterCategory,
+              code: f.code,
+            })
           }
         }
         searchStore.setSearchType(nextSearchType)
+
         await nextTick()
 
         const checkedFilterCount = Object.keys(searchStore.filters)
           .map(
-            (key) => searchStore.filters[key].filter((f) => f.checked).length
+            (key) =>
+              searchStore.filters[key as FilterCategory].filter(
+                (f) => f.checked
+              ).length
           )
           .reduce((partialSum, count) => partialSum + count, 0)
         expect(checkedFilterCount).toEqual(expectedFilterCount)
@@ -553,7 +616,7 @@ describe("Search Store", () => {
           "bar",
         ])
         // TODO: Replace 4 with the useRuntimeConfig value
-        expect(searchStore.recentSearches.length).toEqual(parseInt(4))
+        expect(searchStore.recentSearches.length).toEqual(4)
       })
       it("can be cleared", () => {
         const searchStore = useSearchStore()
@@ -574,7 +637,7 @@ describe("Search Store", () => {
 
   describe("computeQueryParams", () => {
     it("should return only `q` if search type is not supported", () => {
-      const params = computeQueryParams(VIDEO, {}, "cat", "frontend")
+      const params = computeQueryParams(VIDEO, initFilters(), "cat", "frontend")
       expect(params).toEqual({ q: "cat" })
     })
 

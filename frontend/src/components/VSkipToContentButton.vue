@@ -1,17 +1,7 @@
-<script lang="ts">
+<script setup lang="ts">
 import { skipToContentTargetId } from "~/constants/window"
 
 import VButton from "~/components/VButton.vue"
-
-export default {
-  name: "VSkipToContentButton",
-  components: { VButton },
-  setup() {
-    return {
-      skipToContentTargetId,
-    }
-  },
-}
 </script>
 
 <template>

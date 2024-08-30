@@ -1,109 +1,87 @@
-<script lang="ts">
-import { defineComponent, type PropType, reactive, ref } from "vue"
+<script setup lang="ts">
+import { reactive, ref } from "vue"
 
 import { useProviderStore } from "~/stores/provider"
+import { useSearchStore } from "~/stores/search"
 import { useGetLocaleFormattedNumber } from "~/composables/use-get-locale-formatted-number"
 
 import type { SupportedMediaType } from "~/constants/media"
 import type { MediaProvider } from "~/types/media-provider"
 
-import { useSearchStore } from "~/stores/search"
-
 import TableSortIcon from "~/components/TableSortIcon.vue"
 import VLink from "~/components/VLink.vue"
 
-export default defineComponent({
-  name: "VSourcesTable",
-  components: {
-    TableSortIcon,
-    VLink,
-  },
-  props: {
-    media: {
-      type: String as PropType<SupportedMediaType>,
-      required: true,
-    },
-  },
-  setup(props) {
-    const providerStore = useProviderStore()
-    const searchStore = useSearchStore()
+const props = defineProps<{ media: SupportedMediaType }>()
 
-    const sorting = reactive({
-      direction: "asc",
-      field: "display_name" as keyof Omit<MediaProvider, "logo_url">,
-    })
+const providerStore = useProviderStore()
+const searchStore = useSearchStore()
 
-    // The providers in store are sorted by `source_name`, here we sort them by `display_name`.
-    const providers = ref<MediaProvider[]>(
-      providerStore.providers[props.media].sort(compareProviders)
-    )
-
-    function sortTable(field: keyof Omit<MediaProvider, "logo_url">) {
-      let direction = field === "media_count" ? "desc" : "asc"
-      if (field === sorting.field) {
-        direction = sorting.direction === "asc" ? "desc" : "asc"
-      }
-
-      sorting.direction = direction
-      sorting.field = field
-
-      const sortedProviders = providers.value.sort(compareProviders)
-
-      providers.value =
-        direction === "asc" ? sortedProviders : sortedProviders.reverse()
-    }
-
-    function cleanSourceUrlForPresentation(url: string) {
-      const stripProtocol = (s: string) => s.replace(/https?:\/\//, "")
-      const stripLeadingWww = (s: string) =>
-        s.startsWith("www.") ? s.replace("www.", "") : s
-      const removeAfterSlash = (s: string) => s.split("/")[0]
-
-      return removeAfterSlash(stripLeadingWww(stripProtocol(url)))
-    }
-
-    const getLocaleFormattedNumber = useGetLocaleFormattedNumber()
-
-    function compareProviders(prov1: MediaProvider, prov2: MediaProvider) {
-      let field1 = prov1[sorting.field]
-      let field2 = prov2[sorting.field]
-      if (sorting.field === "display_name") {
-        field1 = prov1[sorting.field].toLowerCase()
-        field2 = prov2[sorting.field].toLowerCase()
-      }
-
-      if (sorting.field === "source_url") {
-        field1 = cleanSourceUrlForPresentation(field1 as string)
-        field2 = cleanSourceUrlForPresentation(field2 as string)
-      }
-      if (field1 > field2) {
-        return 1
-      }
-      if (field1 < field2) {
-        return -1
-      }
-      return 0
-    }
-
-    const providerViewUrl = (provider: MediaProvider) => {
-      return searchStore.getCollectionPath({
-        type: props.media,
-        collectionParams: {
-          collection: "source",
-          source: provider.source_name,
-        },
-      })
-    }
-    return {
-      getLocaleFormattedNumber,
-      providers,
-      sorting,
-      sortTable,
-      cleanSourceUrlForPresentation,
-      providerViewUrl,
-    }
-  },
+const sorting = reactive({
+  direction: "asc",
+  field: "display_name" as keyof Omit<MediaProvider, "logo_url">,
 })
+
+// The providers in store are sorted by `source_name`, here we sort them by `display_name`.
+const providers = ref<MediaProvider[]>(
+  providerStore.providers[props.media].sort(compareProviders)
+)
+
+function sortTable(field: keyof Omit<MediaProvider, "logo_url">) {
+  let direction = field === "media_count" ? "desc" : "asc"
+  if (field === sorting.field) {
+    direction = sorting.direction === "asc" ? "desc" : "asc"
+  }
+
+  sorting.direction = direction
+  sorting.field = field
+
+  const sortedProviders = providers.value.sort(compareProviders)
+
+  providers.value =
+    direction === "asc" ? sortedProviders : sortedProviders.reverse()
+}
+
+function cleanSourceUrlForPresentation(url: string) {
+  const stripProtocol = (s: string) => s.replace(/https?:\/\//, "")
+  const stripLeadingWww = (s: string) =>
+    s.startsWith("www.") ? s.replace("www.", "") : s
+  const removeAfterSlash = (s: string) => s.split("/")[0]
+
+  return removeAfterSlash(stripLeadingWww(stripProtocol(url)))
+}
+
+const getLocaleFormattedNumber = useGetLocaleFormattedNumber()
+
+function compareProviders(prov1: MediaProvider, prov2: MediaProvider) {
+  let field1 = prov1[sorting.field]
+  let field2 = prov2[sorting.field]
+  if (sorting.field === "display_name") {
+    field1 = prov1[sorting.field].toLowerCase()
+    field2 = prov2[sorting.field].toLowerCase()
+  }
+
+  if (sorting.field === "source_url") {
+    field1 = cleanSourceUrlForPresentation(field1 as string)
+    field2 = cleanSourceUrlForPresentation(field2 as string)
+  }
+  if (field1 > field2) {
+    return 1
+  }
+  if (field1 < field2) {
+    return -1
+  }
+  return 0
+}
+
+const providerViewUrl = (provider: MediaProvider) => {
+  return searchStore.getCollectionPath({
+    type: props.media,
+    collectionParams: {
+      collection: "source",
+      source: provider.source_name,
+    },
+  })
+}
 </script>
 
 <template>

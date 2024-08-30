@@ -1,15 +1,5 @@
-<script lang="ts">
-import { defineComponent } from "vue"
-
-export default defineComponent({
-  name: "TableSortIcon",
-  props: {
-    active: {
-      type: Boolean,
-      required: true,
-    },
-  },
-})
+<script setup lang="ts">
+defineProps<{ active: boolean }>()
 </script>
 
 <template>
