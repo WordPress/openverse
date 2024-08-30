@@ -90,6 +90,8 @@ def create_table_indices(
             postgres_conn_id=postgres_conn_id, sql_template=index_config.index_def
         )
 
+    return index_configs
+
 
 def _is_foreign_key(_statement, table):
     return f"REFERENCES {table}(" in _statement
@@ -124,7 +126,7 @@ def remap_table_indices_to_table(
     )
 
     # Actually create the new indices on the temp table
-    create_table_indices(
+    indices = create_table_indices(
         postgres_conn_id=postgres_conn_id,
         table_name=table_name,
         index_configs=new_index_configs,
@@ -132,4 +134,4 @@ def remap_table_indices_to_table(
 
     # Return the information for the newly created indices, so that they can later
     # be renamed to match the live index names
-    return new_index_configs
+    return indices
