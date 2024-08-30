@@ -5,9 +5,9 @@ import { defineStore } from "pinia"
 import { LocaleObject } from "@nuxtjs/i18n"
 
 import {
+  defaultPersistientCookieState,
   OpenverseCookieState,
   persistentCookieOptions,
-  SnackbarState,
 } from "~/types/cookies"
 import type { BannerId } from "~/types/banners"
 
@@ -16,6 +16,15 @@ import { ALL_SCREEN_SIZES } from "~/constants/screens"
 import { needsTranslationBanner } from "~/utils/translation-banner"
 
 const desktopBreakpoints: RealBreakpoint[] = ["2xl", "xl", "lg"]
+
+export type SnackbarState = "not_shown" | "visible" | "dismissed"
+export type ColorMode = "dark" | "light" | "system"
+
+export function isColorMode(value: undefined | string): value is ColorMode {
+  return (
+    typeof value === "string" && ["light", "dark", "system"].includes(value)
+  )
+}
 
 export interface UiState {
   /**
@@ -53,22 +62,28 @@ export interface UiState {
   /* A list of sensitive single result UUIDs the user has opted-into seeing */
   revealedSensitiveResults: string[]
   headerHeight: number
+
+  /* The user-chosen color theme of the site. */
+  colorMode: ColorMode
 }
 
 export const breakpoints = Object.keys(ALL_SCREEN_SIZES)
 
+export const defaultUiState: UiState = {
+  instructionsSnackbarState: "not_shown",
+  innerFilterVisible: false,
+  isFilterDismissed: false,
+  isDesktopLayout: false,
+  breakpoint: "sm",
+  dismissedBanners: [],
+  shouldBlurSensitive: true,
+  revealedSensitiveResults: [],
+  headerHeight: 80,
+  colorMode: "system",
+}
+
 export const useUiStore = defineStore("ui", {
-  state: (): UiState => ({
-    instructionsSnackbarState: "not_shown",
-    innerFilterVisible: false,
-    isFilterDismissed: false,
-    isDesktopLayout: false,
-    breakpoint: "sm",
-    dismissedBanners: [],
-    shouldBlurSensitive: true,
-    revealedSensitiveResults: [],
-    headerHeight: 80,
-  }),
+  state: (): UiState => ({ ...defaultUiState }),
 
   getters: {
     cookieState(state): OpenverseCookieState["ui"] {
@@ -77,6 +92,7 @@ export const useUiStore = defineStore("ui", {
         isFilterDismissed: state.isFilterDismissed,
         breakpoint: state.breakpoint,
         dismissedBanners: Array.from(this.dismissedBanners),
+        colorMode: state.colorMode,
       }
     },
     areInstructionsVisible(state): boolean {
@@ -171,6 +187,10 @@ export const useUiStore = defineStore("ui", {
         this.dismissedBanners = cookies.dismissedBanners
       }
 
+      if (isColorMode(cookies.colorMode)) {
+        this.setColorMode(cookies.colorMode)
+      }
+
       this.writeToCookie()
     },
     /**
@@ -182,7 +202,11 @@ export const useUiStore = defineStore("ui", {
         "ui",
         persistentCookieOptions
       )
-      uiCookie.value = this.cookieState
+
+      uiCookie.value = {
+        ...defaultPersistientCookieState.ui,
+        ...this.cookieState,
+      }
     },
 
     /**
@@ -256,6 +280,11 @@ export const useUiStore = defineStore("ui", {
     setShouldBlurSensitive(value: boolean) {
       this.shouldBlurSensitive = value
       this.revealedSensitiveResults = []
+    },
+    setColorMode(colorMode: ColorMode) {
+      this.colorMode = colorMode
+
+      this.writeToCookie()
     },
     setHeaderHeight(height: number) {
       this.headerHeight = Math.max(height, 80)

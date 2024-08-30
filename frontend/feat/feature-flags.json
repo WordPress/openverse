@@ -46,7 +46,7 @@
         "production": "disabled"
       },
       "defaultState": "off",
-      "description": "Display the UI toggle to change the site color theme.",
+      "description": "Display the UI toggle to change the site color theme and respect system preferences.",
       "storage": "cookie"
     }
   },

@@ -124,7 +124,94 @@
     --color-error-13: #1e0302;
   }
 
-  :root,
+  @media (prefers-color-scheme: light) {
+    :root {
+      --color-bg: var(--color-white);
+      --color-bg-surface: var(--color-gray-1);
+      --color-bg-overlay: var(--color-white);
+      --color-bg-primary: var(--color-pink-8);
+      --color-bg-primary-hover: var(--color-pink-9);
+      --color-bg-secondary: var(--color-gray-2);
+      --color-bg-secondary-hover: var(--color-gray-12);
+      --color-bg-tertiary: var(--color-gray-12);
+      --color-bg-tertiary-hover: var(--color-gray-11);
+      --color-bg-transparent-hover: var(--color-gray-12-10);
+      --color-bg-complementary: var(--color-yellow-3);
+      --color-bg-warning: var(--color-warning-2);
+      --color-bg-info: var(--color-info-2);
+      --color-bg-success: var(--color-success-2);
+      --color-bg-error: var(--color-error-2);
+      --color-bg-disabled: var(--color-gray-5);
+      --color-bg-zero: var(--color-white-0);
+      --color-border: var(--color-gray-3);
+      --color-border-hover: var(--color-gray-12);
+      --color-border-secondary: var(--color-gray-12-20);
+      --color-border-secondary-hover: var(--color-gray-12);
+      --color-border-tertiary: var(--color-gray-12);
+      --color-border-transparent-hover: var(--color-gray-3);
+      --color-border-focus: var(--color-pink-8);
+      --color-border-bg-ring: var(--color-white);
+      --color-border-disabled: var(--color-gray-5);
+      --color-text: var(--color-gray-12);
+      --color-text-secondary: var(--color-gray-8);
+      --color-text-disabled: var(--color-gray-5);
+      --color-text-link: var(--color-pink-8);
+      --color-text-over-dark: var(--color-white);
+      --color-text-secondary-over-dark: var(--color-gray-5);
+      --color-icon-warning: var(--color-warning-8);
+      --color-icon-info: var(--color-info-8);
+      --color-icon-success: var(--color-success-8);
+      --color-icon-error: var(--color-error-8);
+      --color-wave-active: var(--color-yellow-9);
+      --color-wave-inactive: var(--color-gray-12-20);
+      --color-modal-layer: var(--color-gray-12-80);
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-bg: var(--color-gray-13);
+      --color-bg-surface: var(--color-gray-12);
+      --color-bg-overlay: var(--color-gray-11);
+      --color-bg-primary: var(--color-yellow-4);
+      --color-bg-primary-hover: var(--color-yellow-3);
+      --color-bg-secondary: var(--color-gray-11);
+      --color-bg-secondary-hover: var(--color-gray-1);
+      --color-bg-tertiary: var(--color-gray-1);
+      --color-bg-tertiary-hover: var(--color-gray-2);
+      --color-bg-transparent-hover: var(--color-gray-1-10);
+      --color-bg-complementary: var(--color-pink-9);
+      --color-bg-warning: var(--color-warning-11);
+      --color-bg-info: var(--color-info-11);
+      --color-bg-success: var(--color-success-11);
+      --color-bg-error: var(--color-error-11);
+      --color-bg-disabled: var(--color-gray-8);
+      --color-bg-zero: var(--color-gray-13-0);
+      --color-border: var(--color-gray-11);
+      --color-border-hover: var(--color-gray-1);
+      --color-border-secondary: var(--color-gray-1-20);
+      --color-border-secondary-hover: var(--color-gray-1);
+      --color-border-tertiary: var(--color-gray-1);
+      --color-border-transparent-hover: var(--color-gray-11);
+      --color-border-focus: var(--color-yellow-4);
+      --color-border-bg-ring: var(--color-gray-13);
+      --color-border-disabled: var(--color-gray-8);
+      --color-text: var(--color-gray-1);
+      --color-text-secondary: var(--color-gray-5);
+      --color-text-disabled: var(--color-gray-8);
+      --color-text-link: var(--color-yellow-4);
+      --color-text-over-dark: var(--color-gray-13);
+      --color-text-secondary-over-dark: var(--color-gray-8);
+      --color-icon-warning: var(--color-warning-5);
+      --color-icon-info: var(--color-info-5);
+      --color-icon-success: var(--color-success-5);
+      --color-icon-error: var(--color-error-5);
+      --color-wave-active: var(--color-pink-4);
+      --color-wave-inactive: var(--color-gray-1-30);
+      --color-modal-layer: var(--color-gray-12-60);
+    }
+  }
+
   :is(.light-mode),
   :is(.light-mode *) {
     --color-bg: var(--color-white);

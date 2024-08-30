@@ -4,6 +4,7 @@ import { definePageMeta } from "#imports"
 import { computed } from "vue"
 
 import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { isFlagName } from "~/types/feature-flag"
 import { SWITCHABLE, ON, OFF } from "~/constants/feature-flag"
 
 import VContentPage from "~/components/VContentPage.vue"
@@ -33,6 +34,9 @@ const handleChange = ({
   name: string
   checked?: boolean
 }) => {
+  if (!isFlagName(name)) {
+    return
+  }
   featureFlagStore.toggleFeature(name, checked ? ON : OFF)
 }
 

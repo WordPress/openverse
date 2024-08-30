@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest"
+import { describe, expect, test } from "vitest"
 
 import {
   DARK_MODE_CLASS,
@@ -7,29 +7,42 @@ import {
 } from "~/composables/use-dark-mode"
 import { OFF, ON } from "~/constants/feature-flag"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { useUiStore } from "~/stores/ui"
 
 describe("useDarkMode", () => {
-  it(`should report isDarkMode as true and cssClass as ${DARK_MODE_CLASS} when the feature flag is enabled`, () => {
-    const featureFlagStore = useFeatureFlagStore()
-    featureFlagStore.toggleFeature("force_dark_mode", ON)
+  test.each`
+    description                                     | featureFlags                                          | uiColorMode | expectedColorMode | expectedCssClass
+    ${"Force dark mode and disable toggling"}       | ${{ force_dark_mode: ON, dark_mode_ui_toggle: OFF }}  | ${"light"}  | ${"dark"}         | ${DARK_MODE_CLASS}
+    ${"Don't force dark mode and disable toggling"} | ${{ force_dark_mode: OFF, dark_mode_ui_toggle: OFF }} | ${"dark"}   | ${"light"}        | ${LIGHT_MODE_CLASS}
+    ${"Force dark mode and enable toggling"}        | ${{ force_dark_mode: ON, dark_mode_ui_toggle: ON }}   | ${"light"}  | ${"dark"}         | ${DARK_MODE_CLASS}
+    ${"Enable toggling, User preference: light"}    | ${{ force_dark_mode: OFF, dark_mode_ui_toggle: ON }}  | ${"light"}  | ${"light"}        | ${LIGHT_MODE_CLASS}
+    ${"Enable toggling, User preference: dark"}     | ${{ force_dark_mode: OFF, dark_mode_ui_toggle: ON }}  | ${"dark"}   | ${"dark"}         | ${DARK_MODE_CLASS}
+    ${"Enable toggling, User preference: system"}   | ${{ force_dark_mode: OFF, dark_mode_ui_toggle: ON }}  | ${"system"} | ${"system"}       | ${""}
+  `(
+    "$description: should report colorMode as $expectedColorMode and cssClass as $expectedCssClass",
+    ({ featureFlags, uiColorMode, expectedColorMode, expectedCssClass }) => {
+      const featureFlagStore = useFeatureFlagStore()
 
-    // Call the composable
-    const { isDarkMode, cssClass } = useDarkMode()
+      // Set the feature flags
+      featureFlagStore.toggleFeature(
+        "force_dark_mode",
+        featureFlags.force_dark_mode
+      )
+      featureFlagStore.toggleFeature(
+        "dark_mode_ui_toggle",
+        featureFlags.dark_mode_ui_toggle
+      )
 
-    // Assert the computed properties
-    expect(isDarkMode.value).toBe(true)
-    expect(cssClass.value).toBe(DARK_MODE_CLASS)
-  })
+      // Set the user preference for color mode
+      const uiStore = useUiStore()
+      uiStore.colorMode = uiColorMode
 
-  it(`should report isDarkMode as false and cssClass as ${LIGHT_MODE_CLASS} when the feature flag is disabled`, () => {
-    const featureFlagStore = useFeatureFlagStore()
-    featureFlagStore.toggleFeature("force_dark_mode", OFF)
+      // Call the composable
+      const { colorMode, cssClass } = useDarkMode()
 
-    // Call the composable
-    const { isDarkMode, cssClass } = useDarkMode()
-
-    // Assert the computed properties
-    expect(isDarkMode.value).toBe(false)
-    expect(cssClass.value).toBe(LIGHT_MODE_CLASS)
-  })
+      // Assert the computed properties
+      expect(colorMode.value).toBe(expectedColorMode)
+      expect(cssClass.value).toBe(expectedCssClass)
+    }
+  )
 })

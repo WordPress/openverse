@@ -1,11 +1,15 @@
 import { nextTick } from "vue"
 
+import { vi, describe, beforeEach, it, expect, test } from "vitest"
+
 import { setActivePinia, createPinia } from "~~/test/unit/test-utils/pinia"
 
-import { useUiStore } from "~/stores/ui"
+import { defaultUiState, UiState, useUiStore } from "~/stores/ui"
+import { BannerId } from "~/types/banners"
 
 vi.mock("~/types/cookies", async () => {
-  const actual = await vi.importActual("~/types/cookies")
+  const actual =
+    await vi.importActual<typeof import("~/types/cookies")>("~/types/cookies")
   return {
     ...actual,
     persistentCookieOptions: {
@@ -15,13 +19,7 @@ vi.mock("~/types/cookies", async () => {
   }
 })
 
-const initialState = {
-  instructionsSnackbarState: "not_shown",
-  innerFilterVisible: false,
-  isFilterDismissed: false,
-  isDesktopLayout: false,
-  dismissedBanners: [],
-}
+const initialState = defaultUiState
 
 const VISIBLE_AND_DISMISSED = {
   innerFilterVisible: true,
@@ -44,10 +42,11 @@ describe("Ui Store", () => {
   beforeEach(() => {
     setActivePinia(createPinia())
   })
+
   describe("state", () => {
     it("sets the initial state correctly", () => {
       const uiStore = useUiStore()
-      for (const key of Object.keys(initialState)) {
+      for (const key of Object.keys(initialState) as Array<keyof UiState>) {
         expect(uiStore[key]).toEqual(initialState[key])
       }
     })
@@ -103,7 +102,7 @@ describe("Ui Store", () => {
     it("initFromCookies sets initial state without cookie", () => {
       const uiStore = useUiStore()
       uiStore.initFromCookies({})
-      for (const key of Object.keys(initialState)) {
+      for (const key of Object.keys(initialState) as Array<keyof UiState>) {
         expect(uiStore[key]).toEqual(initialState[key])
       }
     })
@@ -113,9 +112,11 @@ describe("Ui Store", () => {
       uiStore.initFromCookies({
         breakpoint: "lg",
         isFilterDismissed: true,
+        colorMode: "system",
       })
 
       expect(uiStore.instructionsSnackbarState).toBe("not_shown")
+      expect(uiStore.colorMode).toBe("system")
       expect(uiStore.breakpoint).toBe("lg")
       expect(uiStore.isDesktopLayout).toBe(true)
       expect(uiStore.isFilterVisible).toBe(false)
@@ -124,12 +125,22 @@ describe("Ui Store", () => {
 
     it("initFromCookies sets initial state with a dismissed banner", () => {
       const uiStore = useUiStore()
-      const dismissedBanners = ["ru", "ar"]
+      const dismissedBanners: BannerId[] = ["translation-ru", "translation-ar"]
       uiStore.initFromCookies({
         dismissedBanners: dismissedBanners,
       })
 
       expect(uiStore.dismissedBanners).toEqual(dismissedBanners)
+    })
+
+    it("setColorMode correctly sets the color mode", () => {
+      const newColorMode = "light"
+      const uiStore = useUiStore()
+      const initialColorMode = uiStore.colorMode
+      uiStore.setColorMode(newColorMode)
+
+      expect(initialColorMode).toEqual(initialState.colorMode)
+      expect(uiStore.colorMode).toEqual(newColorMode)
     })
   })
 
