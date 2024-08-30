@@ -1,11 +1,15 @@
+// @vitest-environment jsdom
+
 import { beforeEach, describe, expect, it } from "vitest"
 
 import { setActivePinia, createPinia } from "~~/test/unit/test-utils/pinia"
 
+import type { MediaProvider } from "~/types/media-provider"
+
 import { AUDIO, IMAGE } from "~/constants/media"
 import { useProviderStore } from "~/stores/provider"
 
-const testProviders = [
+const testProviders: MediaProvider[] = [
   {
     source_name: "test_source",
     display_name: "",
@@ -28,8 +32,9 @@ const testProviders = [
     media_count: 154,
   },
 ]
+
 describe("provider store", () => {
-  let providerStore
+  let providerStore: ReturnType<typeof useProviderStore>
   beforeEach(() => {
     setActivePinia(createPinia())
     providerStore = useProviderStore()

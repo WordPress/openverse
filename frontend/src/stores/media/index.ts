@@ -369,8 +369,8 @@ export const useMediaStore = defineStore("media", {
     setMedia<T extends SupportedMediaType>(params: {
       mediaType: T
       media: Record<string, DetailFromMediaType<T>>
-      mediaCount: number
-      page: number
+      mediaCount?: number
+      page?: number
       pageCount: number
       shouldPersistMedia: boolean | undefined
     }) {
@@ -383,6 +383,7 @@ export const useMediaStore = defineStore("media", {
         shouldPersistMedia,
       } = params
       let mediaToSet
+
       if (shouldPersistMedia) {
         mediaToSet = { ...this.results[mediaType].items, ...media } as Record<
           string,
@@ -391,6 +392,7 @@ export const useMediaStore = defineStore("media", {
       } else {
         mediaToSet = media
       }
+
       const mediaPage = page || 1
       this.results[mediaType].items = mediaToSet
       this.results[mediaType].count = mediaCount || 0
