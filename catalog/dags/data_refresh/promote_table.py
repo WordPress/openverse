@@ -87,7 +87,10 @@ def promote_table(
 def promote_tables(
     data_refresh_config: DataRefreshConfig, target_environment: Environment
 ):
-    """TODO. Promote the temporary table in the API database to the main one, and delete the original."""
+    """
+    Promote the temporary table in the API database to the main one after remapping all
+    constraints and indices from the original table, then delete the original.
+    """
 
     downstream_conn_id = POSTGRES_API_CONN_IDS.get(target_environment)
 
