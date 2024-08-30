@@ -6,6 +6,10 @@ import type { OpenverseClient, ClientCredentials } from "./types"
 
 type OAuth2Token = components["schemas"]["OAuth2Token"]
 
+/**
+ * Get the timestamp as the number of seconds from the UNIX epoch.
+ * @returns the UNIX timestamp with a resolution of one second
+ */
 const currTimestamp = (): number => Math.floor(Date.now() / 1e3)
 export const EXPIRY_THRESHOLD = 5 // seconds
 
@@ -64,14 +68,6 @@ export class OpenverseAuthMiddleware implements Middleware {
     const apiToken = await this.getApiToken()
     request.headers.set("Authorization", `Bearer ${apiToken}`)
     return request
-  }
-
-  /**
-   * Get the timestamp as the number of seconds from the UNIX epoch.
-   * @returns the UNIX timestamp with a resolution of one second
-   */
-  get currTimestamp() {
-    return Math.floor(Date.now() / 1e3)
   }
 
   /**
