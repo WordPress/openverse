@@ -1,14 +1,7 @@
-<script lang="ts">
-import {
-  defineComponent,
-  ref,
-  PropType,
-  watch,
-  toRefs,
-  onBeforeUnmount,
-} from "vue"
+<script setup lang="ts">
+import { ref, watch, toRefs, onBeforeUnmount } from "vue"
 
-import { zIndexValidator } from "~/constants/z-indices"
+import type { ZIndex } from "~/constants/z-indices"
 
 import { useFloatingUi } from "~/composables/use-floating-ui"
 import { hasFocusWithin } from "~/utils/reakit-utils/focus"
@@ -17,126 +10,100 @@ import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
 import type { Placement, Strategy } from "@floating-ui/dom"
 
-export default defineComponent({
-  name: "VTooltip",
-  components: { VIconButton },
-  props: {
+const props = withDefaults(
+  defineProps<{
     /**
      * The placement of the tooltip relative to the trigger. Should be one of the options
      * for `placement` passed to floating-ui.
      *
      * @see https://floating-ui.com/docs/tutorial#placements
-     *
-     * @default 'bottom'
      */
-    placement: {
-      type: String as PropType<Placement>,
-      default: "bottom",
-    },
+    placement?: Placement
     /**
      * The positioning strategy of the tooltip. If your reference element is in a fixed container
      * use the fixed strategy; otherwise use the default, absolute strategy.
      *
      * @see https://floating-ui.com/docs/computeposition#strategy
-     *
-     * @default 'absolute'
      */
-    strategy: {
-      type: String as PropType<Strategy>,
-      default: "absolute",
-    },
+    strategy?: Strategy
     /**
      * The id of the element labelling the popover content.
      * The owning element must have `aria-describedby` set to this value.
      */
-    describedBy: {
-      type: String,
-      required: true,
-    },
+    describedBy: string
     /**
      * the z-index to apply to the tooltip content
      */
-    zIndex: {
-      type: [Number, String],
-      default: "popover", // named z-index
-      validator: zIndexValidator,
-    },
-  },
-  setup(props) {
-    const visibleRef = ref(false)
-    const triggerContainerRef = ref<HTMLElement | null>(null)
+    zIndex?: ZIndex
+  }>(),
+  {
+    placement: "bottom",
+    strategy: "absolute",
+    zIndex: "popover",
+  }
+)
 
-    const closeIfNeeded = () => {
-      if (triggerRef.value && !hasFocusWithin(triggerRef.value)) {
-        visibleRef.value = false
-      }
+const visibleRef = ref(false)
+const triggerContainerRef = ref<HTMLElement | null>(null)
+
+const closeIfNeeded = () => {
+  if (triggerRef.value && !hasFocusWithin(triggerRef.value)) {
+    visibleRef.value = false
+  }
+}
+
+const open = () => {
+  visibleRef.value = true
+}
+
+const listeners = {
+  mouseover: open,
+  mouseout: closeIfNeeded,
+  focus: open,
+  blur: closeIfNeeded,
+}
+
+const setTrigger = (triggerElement: HTMLElement) => {
+  triggerRef.value = triggerElement
+  for (const [event, listener] of Object.entries(listeners)) {
+    triggerElement.addEventListener(event, listener)
+  }
+}
+
+const triggerRef = ref<HTMLElement | null>(null)
+watch(triggerContainerRef, (container) => {
+  if (container) {
+    setTrigger(container.firstElementChild as HTMLElement)
+  }
+})
+
+onBeforeUnmount(() => {
+  if (triggerRef.value) {
+    for (const [event, listener] of Object.entries(listeners)) {
+      triggerRef.value.removeEventListener(event, listener)
     }
+  }
+})
 
-    const open = () => {
-      visibleRef.value = true
-    }
+const tooltipRef = ref<HTMLElement | null>(null)
+const propsRefs = toRefs(props)
 
-    const listeners = {
-      mouseover: open,
-      mouseout: closeIfNeeded,
-      focus: open,
-      blur: closeIfNeeded,
-    }
-
-    const setTrigger = (triggerElement: HTMLElement) => {
-      triggerRef.value = triggerElement
-      for (const [event, listener] of Object.entries(listeners)) {
-        triggerElement.addEventListener(event, listener)
-      }
-    }
-
-    const triggerRef = ref<HTMLElement | null>(null)
-    watch(triggerContainerRef, (container) => {
-      if (container) {
-        setTrigger(container.firstElementChild as HTMLElement)
-      }
-    })
-
-    onBeforeUnmount(() => {
-      if (triggerRef.value) {
-        for (const [event, listener] of Object.entries(listeners)) {
-          triggerRef.value.removeEventListener(event, listener)
-        }
-      }
-    })
-
-    const tooltipRef = ref<HTMLElement | null>(null)
-    const propsRefs = toRefs(props)
-
-    const { style } = useFloatingUi({
-      floatingElRef: tooltipRef,
-      floatingPropsRefs: {
-        placement: propsRefs.placement,
-        strategy: propsRefs.strategy,
-        clippable: ref(false),
-        visible: visibleRef,
-        triggerElement: triggerRef,
-      },
-    })
-
-    const handleEscape = () => {
-      if (visibleRef.value) {
-        visibleRef.value = false
-      }
-    }
-
-    return {
-      visibleRef,
-      triggerContainerRef,
-      triggerRef,
-      tooltipRef,
-      style,
-
-      open,
-      handleEscape,
-    }
+const { style } = useFloatingUi({
+  floatingElRef: tooltipRef,
+  floatingPropsRefs: {
+    placement: propsRefs.placement,
+    strategy: propsRefs.strategy,
+    clippable: ref(false),
+    visible: visibleRef,
+    triggerElement: triggerRef,
   },
 })
+
+const handleEscape = () => {
+  if (visibleRef.value) {
+    visibleRef.value = false
+  }
+}
 </script>
 
 <template>
