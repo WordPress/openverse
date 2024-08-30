@@ -119,15 +119,23 @@ export default defineComponent({
 
     <!-- Locale chooser and WordPress affiliation graphic -->
     <div class="locale-and-wp flex flex-col justify-between">
-      <VWordPressLink v-if="showThemeSwitcher" />
-      <div class="flex flex-row items-center gap-6">
+      <template v-if="showThemeSwitcher">
+        <VWordPressLink mode="light" />
+        <div class="flex flex-row items-center gap-6">
+          <VLanguageSelect
+            v-bind="languageProps"
+            class="language max-w-full border-secondary"
+          />
+          <VThemeSelect class="border-secondary" />
+        </div>
+      </template>
+      <template v-else>
         <VLanguageSelect
           v-bind="languageProps"
           class="language max-w-full border-secondary"
         />
-        <VThemeSelect v-if="showThemeSwitcher" class="border-secondary" />
-      </div>
-      <VWordPressLink v-if="!showThemeSwitcher" mode="light" />
+        <VWordPressLink mode="light" />
+      </template>
     </div>
   </footer>
 </template>
