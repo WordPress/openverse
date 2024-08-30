@@ -73,7 +73,7 @@ def _transform_index_def(
     return TableIndex(old_index_name, temp_index_name, " ".join(tokens))
 
 
-@task
+@task(map_index_template="{{ task.op_kwargs['table_name'] }}")
 def transform_index_defs(
     existing_index_defs: list[str], temp_table_name: str, table_name: str
 ) -> list[TableIndex]:
@@ -87,8 +87,11 @@ def transform_index_defs(
     ]
 
 
-@task
-def create_table_indices(postgres_conn_id: str, index_configs: list[TableIndex]):
+@task(map_index_template="{{ task.op_kwargs['table_name'] }}")
+def create_table_indices(
+    postgres_conn_id: str, table_name: str, index_configs: list[TableIndex]
+):
+    logger.info(f"Creating indices for `{table_name}`.'")
     for index_config in index_configs:
         if "(id)" in index_config.index_def:
             # Skip the primary key index, as this already exists
@@ -205,7 +208,7 @@ def _generate_delete_orphans(
     )
 
 
-@task
+@task(map_index_template="{{ task.op_kwargs['table_name'] }}")
 def generate_constraints_for_table(
     all_constraints: list[ConstraintInfo], table_name: str, temp_table_name: str
 ):
@@ -260,8 +263,11 @@ def generate_constraints_for_table(
     return constraint_statements
 
 
-@task
-def apply_constraints_to_table(postgres_conn_id: str, constraints: list[str]):
+@task(map_index_template="{{ task.op_kwargs['table_name'] }}")
+def apply_constraints_to_table(
+    postgres_conn_id: str, table_name: str, constraints: list[str]
+):
+    logger.info(f"Applying constraints for `{table_name}`.")
     for constraint in constraints:
         run_sql.function(postgres_conn_id=postgres_conn_id, sql_template=constraint)
 
@@ -283,6 +289,7 @@ def remap_table_indices_to_table(
         sql_template=queries.SELECT_TABLE_INDICES_QUERY,
         handler=fetch_all,
         table_name=table_name,
+        map_index_template=table_name,
     )
 
     # Transform the CREATE statements so they can be used to apply identical indices
@@ -295,7 +302,9 @@ def remap_table_indices_to_table(
 
     # Actually create the new indices on the temp table
     create_table_indices(
-        postgres_conn_id=postgres_conn_id, index_configs=new_index_configs
+        postgres_conn_id=postgres_conn_id,
+        table_name=table_name,
+        index_configs=new_index_configs,
     )
 
     # Return the information for the newly created indices, so that they can later
@@ -311,6 +320,7 @@ def remap_table_constraints_to_table(
         postgres_conn_id=postgres_conn_id,
         sql_template=queries.SELECT_ALL_CONSTRAINTS_QUERY,
         handler=fetch_all_tuples,
+        map_index_template=table_name,
     )
 
     # Generate SQL for remapping constraints from the table to the temp_table
@@ -321,7 +331,9 @@ def remap_table_constraints_to_table(
     )
 
     apply_constraints_to_table(
-        postgres_conn_id=postgres_conn_id, constraints=remapped_constraints
+        postgres_conn_id=postgres_conn_id,
+        table_name=table_name,
+        constraints=remapped_constraints,
     )
 
 
