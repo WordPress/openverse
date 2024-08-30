@@ -326,7 +326,6 @@ const handleTab = (
         ref="clearButtonRef"
         icon="close-small"
         :label="$t('browsePage.searchForm.clear')"
-        inner-area-classes="bg-default hover:bg-secondary"
         @click="clearSearchText"
         @keydown.tab.exact="handleTab($event, 'clear-input')"
       />

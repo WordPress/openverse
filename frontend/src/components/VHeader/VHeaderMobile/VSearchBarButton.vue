@@ -64,7 +64,7 @@ withDefaults(
   outline: none;
 }
 .transparent-dark {
-  @apply border-tx bg-tx text-default hover:text-over-dark group-hover/button:bg-tertiary;
+  @apply border-tx bg-tx text-default group-hover/button:bg-secondary;
 }
 .transparent-gray {
   @apply border-tx bg-tx text-default group-hover/button:bg-tertiary;
