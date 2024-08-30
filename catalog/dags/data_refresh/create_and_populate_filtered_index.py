@@ -61,6 +61,7 @@ def create_and_populate_filtered_index(
     es_host: str,
     media_type: MediaType,
     origin_index_name: str,
+    timeout: timedelta,
     destination_index_name: str | None = None,
 ):
     """
@@ -94,8 +95,8 @@ def create_and_populate_filtered_index(
         es_host=es_host,
         destination_index=filtered_index_name,
         source_index=origin_index_name,
-        timeout=timedelta(days=1),  # TODO
-        requests_per_second=20_000,  # TODO,
+        timeout=timeout,
+        requests_per_second="{{ var.value.get('ES_INDEX_THROTTLING_RATE', 20_000) }}",
         query={
             "bool": {
                 "must_not": [

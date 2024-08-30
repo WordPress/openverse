@@ -191,6 +191,7 @@ def create_data_refresh_dag(
             media_type=data_refresh_config.media_type,
             origin_index_name=target_index,
             destination_index_name=f"{target_index}-filtered",
+            timeout=data_refresh_config.create_filtered_index_timeout,
         )
 
         # Re-enable Cloudwatch alarms once reindexing is complete, even if it
