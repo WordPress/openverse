@@ -95,13 +95,15 @@ const getImgDimension = (event: Event) => {
   imgWidth.value = element.naturalWidth
 }
 
-const contextSensitiveTitle = computed(() => {
-  return shouldBlur.value
-    ? t("sensitiveContent.title.image")
-    : t("browsePage.aria.imageTitle", {
-        title: props.image.title,
-      })
+const imageTitle = t("browsePage.aria.imageTitle", {
+  title: props.image.title,
 })
+const contextSensitiveLabel = computed(() =>
+  shouldBlur.value ? t("sensitiveContent.title.image") : imageTitle
+)
+const contextSensitiveTitle = computed(() =>
+  shouldBlur.value ? undefined : imageTitle
+)
 
 const { $sendCustomEvent } = useNuxtApp()
 const searchStore = useSearchStore()
@@ -145,7 +147,7 @@ const { isHidden: shouldBlur } = useSensitiveMedia(props.image)
       :title="contextSensitiveTitle"
       :href="imageLink"
       class="group relative block w-full overflow-hidden rounded-sm text-gray-2 hover:no-underline focus-visible:outline-3 focus-visible:outline-offset-4"
-      :aria-label="contextSensitiveTitle"
+      :aria-label="contextSensitiveLabel"
       @mousedown="sendSelectSearchResultEvent"
     >
       <figure
