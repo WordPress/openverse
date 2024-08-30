@@ -59,6 +59,8 @@ def test_extract_filetype_returns_for_supported_media_type(
         ("image/jpeg", "jpg"),
         ("image/svg+xml", "svg"),
         ("image/x-ico", "ico"),
+        ("image/x.djvu", "djvu"),
+        ("image/x-djvu", "djvu"),
         # Audio file types
         ("audio/flac", "flac"),
         ("audio/x-flac", "flac"),
