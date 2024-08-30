@@ -9,7 +9,6 @@
   },
   "author": "Openverse <openverse@wordpress.org>",
   "scripts": {
-    "postinstall": "pnpm --filter './packages/js/*' run build",
     "prepare:nuxt": "pnpm --filter frontend run prepare:nuxt"
   },
   "packageManager": "pnpm@9.5.0",
