@@ -279,6 +279,24 @@ def drop_connection(worker_conn: str):
     session.commit()
 
 
+@task(trigger_rule=TriggerRule.NONE_FAILED)
+def report_reindexing_status():
+    """
+    Fail if the direct upstream tasks, which perform the actual reindexing,
+    fail. Otherwise simply pass.
+
+    This is necessary because we have some tasks after the reindex step
+    which always run even on reindexing failure (to drop the connection
+    and terminate the worker instance). However in the even of failures,
+    we still need the last task in the TaskGroup to be marked as `Failed`
+    or else subsequent tasks (like the promotion steps) will run. It is
+    not possible to set individual tasks within a TaskGroup as
+    directly upstream of later tasks; the last task in the TaskGroup
+    must fail.
+    """
+    logger.info("Reindexing completed successfully.")
+
+
 @task_group(group_id="reindex")
 def reindex(
     data_refresh_config: DataRefreshConfig,
@@ -350,11 +368,13 @@ def reindex(
         instance_id=instance_id,
     )
 
+    status = report_reindexing_status()
+
     drop_conn = drop_connection(worker_conn=worker_conn)
 
     instance_id >> [await_worker, instance_ip_address]
     worker_conn >> trigger_reindexing_task >> wait_for_reindexing_task
-    wait_for_reindexing_task >> [terminate_instance, drop_conn]
+    wait_for_reindexing_task >> [terminate_instance, drop_conn, status]
 
 
 @task_group(
