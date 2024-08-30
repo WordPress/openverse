@@ -61,6 +61,7 @@ describe("OpenverseClient", () => {
       const scope = nock
         .post("/v1/auth_tokens/token/", /test-secret/)
         .delay(1000)
+        // times=1 enforces that only a single auth token request is ever made, otherwise `nock` would raise an error
         .times(1)
         .reply(200, {
           access_token: "test-access-token",
@@ -86,6 +87,9 @@ describe("OpenverseClient", () => {
         client.GET("/v1/audio/"),
       ])
 
+      // The fact that both requests resolved to successful responses, which were
+      // predicated on the Authorization header's specific value, indicates that they
+      // blocked on the API token retrieval.
       expect(images.error).toBeUndefined()
       expect(audio.error).toBeUndefined()
 
@@ -97,6 +101,38 @@ describe("OpenverseClient", () => {
       )
 
       scope.done()
+    })
+
+    test("api token request failure does not proceed with request", async () => {
+      // Because this is a complex error-handling test, ensure the number of assertions
+      // are stable. This avoids false-positives.
+      // See warning at the end of this section of the vitest docs for more details:
+      // https://vitest.dev/api/expect.html#rejects
+      expect.assertions(3)
+
+      const { client, nock } = getClientAndNock({
+        clientId: "test",
+        clientSecret: "test-secret",
+      })
+
+      const scope = nock
+        .post("/v1/auth_tokens/token/", /test-secret/)
+        .times(1)
+        .reply(401, "Invalid credentials")
+
+      const requestPromise = client.GET("/v1/images/")
+
+      await expect(
+        () => requestPromise
+      ).rejects.toThrowErrorMatchingInlineSnapshot(
+        `[Error: Failed to retrieve Openverse API token for credentialed client. Check logs or \`cause\` for details.]`
+      )
+      expect(await requestPromise.catch((e) => e.cause.error)).toMatch(
+        /invalid credentials/i
+      )
+
+      // use expect instead of scope.done() alias so that expect.assertions tracks this
+      expect(scope.isDone()).toBe(true)
     })
 
     test("should send but not await token response if current token still within expiry threshold", async () => {

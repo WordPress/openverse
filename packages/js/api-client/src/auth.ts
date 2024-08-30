@@ -10,11 +10,44 @@ const currTimestamp = (): number => Math.floor(Date.now() / 1e3)
 export const EXPIRY_THRESHOLD = 5 // seconds
 
 export class OpenverseAuthMiddleware implements Middleware {
+  /**
+   * An Openverse REST API client.
+   *
+   * Used to perform the authentication workflow.
+   */
   client: OpenverseClient
+
+  /**
+   * Credentials for the Openverse API.
+   */
   credentials: ClientCredentials
+
+  /**
+   * The most recently retrieved API token.
+   */
   apiToken: OAuth2Token | null = null
-  requesting = false
+
+  /**
+   * Represents the requesting state of the auth middleware.
+   *
+   * When `null`, no request is underway. When it is a Promise,
+   * the Promise will resolve with `true` once the API token is available,
+   * or `false` if an error occurs.
+   *
+   * If the token request fails, it will throw.
+   *
+   * This is immediately set back to `null` once the request cycle is complete.
+   */
+  requesting: null | Promise<boolean> = null
+
+  /**
+   * The most recent API token request failure, if any.
+   */
   failure = null as unknown
+
+  /**
+   * The UNIX timestamp at which the current token will expire.
+   */
   tokenExpiry: number | null = null
 
   constructor(client: OpenverseClient, credentials: ClientCredentials) {
@@ -89,48 +122,41 @@ export class OpenverseAuthMiddleware implements Middleware {
    * The function is exposed primarily to make debugging the authentication
    * flow easier during development of applications using the API client.
    */
-  async refreshAuthentication() {
-    this.requesting = true
-    try {
-      const tokenResponse = await this.client.POST("/v1/auth_tokens/token/", {
-        body: {
-          grant_type: "client_credentials",
-          client_id: this.credentials.clientId,
-          client_secret: this.credentials.clientSecret,
-        },
-      })
+  refreshAuthentication() {
+    this.requesting = new Promise((resolve) => {
+      this.client
+        .POST("/v1/auth_tokens/token/", {
+          body: {
+            grant_type: "client_credentials",
+            client_id: this.credentials.clientId,
+            client_secret: this.credentials.clientSecret,
+          },
+        })
+        .then((tokenResponse) => {
+          if (!tokenResponse.response.ok || !tokenResponse.data) {
+            throw tokenResponse
+          }
 
-      if (tokenResponse.error) {
-        throw tokenResponse.error
-      }
+          this.tokenExpiry = currTimestamp() + tokenResponse.data.expires_in
 
-      this.tokenExpiry = currTimestamp() + tokenResponse.data.expires_in
+          this.apiToken = tokenResponse.data
 
-      this.apiToken = tokenResponse.data
+          // Clear any previous failures, given this request succeeded
+          this.failure = null
+          resolve(true)
+        })
+        .catch((e) => {
+          console.error("[openverse-api-client]: Token refresh failed!", e)
+          this.failure = e
+          resolve(false)
+        })
+    })
 
-      // Clear any previous failures, given this request succeeded
-      this.failure = null
-    } catch (e) {
-      console.error("[openverse-api-client]: Token refresh failed!", e)
-      // Fall back to `true` if for some reason `e` is falsy.
-      this.failure = e || true
-      throw e
-    } finally {
-      this.requesting = false
-    }
+    this.requesting.finally(() => {
+      this.requesting = null
+    })
 
-    return this.apiToken
-  }
-
-  /**
-   * Wait for the current API token refresh to finish.
-   */
-  private async awaitApiToken() {
-    // @todo: Maybe change this to some kind of callback registration that `refreshAuthentication`
-    // clears instead?
-    while (this.requesting) {
-      await new Promise((res) => setTimeout(res, 50))
-    }
+    return this.requesting
   }
 
   /**
@@ -149,13 +175,15 @@ export class OpenverseAuthMiddleware implements Middleware {
     }
 
     if (this.mustAwaitTokenRefresh()) {
-      await this.awaitApiToken()
+      await this.requesting
     }
 
-    if (!this.apiToken) {
-      throw new Error(
-        "Failed to retrieve Openverse API token for credentialed client. Check logs for details."
+    if (!this.apiToken || this.failure) {
+      const error = new Error(
+        "Failed to retrieve Openverse API token for credentialed client. Check logs or `cause` for details."
       )
+      error.cause = this.failure
+      throw error
     }
 
     return this.apiToken.access_token
