@@ -25,4 +25,5 @@ dev = [
 ]
 
 [tool.pdm.scripts]
+build = "{pdm} build"
 test = "pytest"
