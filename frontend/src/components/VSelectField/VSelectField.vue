@@ -86,7 +86,7 @@ const splitAttrs = computed(() => {
       v-model="selectValue"
       class="flex h-[calc(theme(spacing.10)_-_2_*_theme(borderWidth.DEFAULT))] appearance-none truncate bg-tx pe-10"
       :class="[
-        showSelected ? 'w-full' : 'w-0',
+        showSelected ? 'w-full' : 'w-0 max-w-0',
         hasStartContent ? 'ps-10' : 'ps-2',
       ]"
       :name="fieldName"
