@@ -3,8 +3,11 @@ import path from "node:path"
 
 import openapiTS, { astToString } from "openapi-typescript"
 
+import * as prettier from "prettier"
+import { ESLint } from "eslint"
+
 const ast = await openapiTS(new URL("https://api.openverse.org/v1/schema/"))
-const contents = astToString(ast)
+const cleanedContents = astToString(ast)
   // This tag doesn't exist in TSDoc
   .replace(/@description/g, "")
   // Escape `>`
@@ -20,6 +23,30 @@ const contents = astToString(ast)
     substring.replace(/\{/, "\\{").replace(/\}/, "\\}")
   )
 
+const prettierConfig = await prettier.resolveConfig(import.meta.url)
+
+if (!prettierConfig) {
+  throw new Error(
+    "Unable to resolve Prettier configuration location for `@openverse/api-client` type generation.",
+    import.meta.url
+  )
+}
+
+const formattedContents = await prettier.format(cleanedContents, {
+  ...prettierConfig,
+  parser: "typescript",
+})
+
+const eslint = new ESLint({ fix: true })
+
+// Supply a filePath so ESLint can guess which linters to apply
+const [{ output }] = await eslint.lintText(formattedContents, {
+  filePath: "openverse.d.ts",
+})
+
+// output is only defined if changes were made
+const lintedContents = output || formattedContents
+
 const out = path.resolve(
   import.meta.dirname,
   "..",
@@ -27,4 +54,4 @@ const out = path.resolve(
   "generated",
   "openverse.d.ts"
 )
-fs.writeFileSync(out, contents)
+fs.writeFileSync(out, lintedContents)

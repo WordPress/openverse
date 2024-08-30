@@ -18,10 +18,7 @@
     "build:types": "tsc -p ./tsconfig.prod.json",
     "types": "tsc -p .",
     "test:unit": "vitest run",
-    "generate": "pnpm run generate:pull && pnpm run generate:format || pnpm run generate:lint",
-    "generate:pull": "node ./bin/generate.mjs",
-    "generate:format": "pre-commit run prettier --files ./src/generated/openverse.d.ts",
-    "generate:lint": "eslint ./src/generated/openverse.d.ts --fix"
+    "generate": "node ./bin/generate.mjs"
   },
   "keywords": [
     "openverse",
