@@ -24,6 +24,6 @@
     "prettier": "3.3.3",
     "prettier-plugin-tailwindcss": "0.6.6",
     "typescript": "5.5.4",
-    "vue-tsc": "2.0.29"
+    "vue-tsc": "2.1.4"
   }
 }
