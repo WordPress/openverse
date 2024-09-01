@@ -41,7 +41,7 @@ jobs:
           echo "required_review_count=$(( pr_count * 1 ))" >> "$GITHUB_ENV"
       - name: Send notification
         id: slack
-        uses: slackapi/slack-github-action@v1.26.0
+        uses: slackapi/slack-github-action@v1.27.0
         with:
           # Note: We cannot use the YAML folded chomping block syntax here (`>`) because
           # GitHub Actions does not support it (they only support a subset of YAML):
