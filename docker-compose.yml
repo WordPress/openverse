@@ -91,7 +91,7 @@ services:
       - ingestion_server
       - catalog_indexer_worker
       - api
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.8.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.0
     ports:
       - "50292:9200"
     env_file:
