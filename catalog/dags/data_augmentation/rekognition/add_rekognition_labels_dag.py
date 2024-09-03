@@ -12,7 +12,8 @@ This DAG can be configured with the following Variables:
   The local testing file gets inserted into Minio automatically, so the suggested
   default to use in the `.env` file is `image_analysis_labels.jsonl`.
 - `REKOGNITION_MEMORY_BUFFER_SIZE`: The number of records to buffer in memory before
-  inserting into the temporary table. This should typically be a lower number.
+  inserting into the temporary table. This should typically be a lower number than the
+  file buffer size below.
 - `REKOGNITION_FILE_BUFFER_SIZE`: The size of the buffer to use when reading from the
   file in S3, in bytes. The higher this number is, the more is read into memory before
   being processed by the DAG (but the fewer calls that are made to S3).
