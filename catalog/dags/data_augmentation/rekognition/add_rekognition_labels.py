@@ -43,7 +43,7 @@ def _process_labels(labels: list[types.Label]) -> list[types.MachineGeneratedTag
                 "name": name,
                 # Confidence values need to be between 0 and 1
                 "accuracy": label["Confidence"] / 100,
-                "provider": constants.PROVIDER,
+                "provider": constants.REKOGNITION_PROVIDER,
             }
         )
     return tags

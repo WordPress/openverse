@@ -5,7 +5,7 @@ from textwrap import dedent
 DAG_ID = "add_rekognition_labels"
 SLACK_USERNAME = "Rekognition Label Insertion"
 SLACK_ICON = ":robot:"
-PROVIDER = "rekognition"
+REKOGNITION_PROVIDER = "rekognition"
 
 # Task IDs used for branching operator
 NOTIFY_START_TASK_ID = "notify_start"
