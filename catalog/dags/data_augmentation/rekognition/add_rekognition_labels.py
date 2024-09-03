@@ -95,10 +95,14 @@ def parse_and_insert_labels(
                 labeled_image: types.LabeledImage = json.loads(blob)
             except json.JSONDecodeError:
                 logger.error(f"Failed to parse JSON: {blob}")
-                # Only track the first `n` failed records, if something
-                # is systematically wrong we don't want this getting massive
-                if len(failed_records) <= constants.MAX_FAILED_RECORDS:
-                    failed_records.append(blob)
+                failed_records.append(blob)
+                # If this many failures occur, something is likely systematically wrong
+                if len(failed_records) >= constants.MAX_FAILED_RECORDS:
+                    raise ValueError(
+                        f"Over {constants.MAX_FAILED_RECORDS} failed records, "
+                        f"systematic failure may be present. "
+                        f"Check the logs to see what the issue may be."
+                    )
                 continue
             image_id = labeled_image["image_uuid"]
             raw_labels = labeled_image["response"]["Labels"]
@@ -126,7 +130,13 @@ def parse_and_insert_labels(
         # Clear the offset if we've finished processing the file
         Variable.delete(constants.CURRENT_POS_VAR_NAME)
 
-    return types.ParseResults(total_processed, total_skipped, failed_records)
+    return types.ParseResults(
+        total_processed,
+        total_skipped,
+        len(failed_records),
+        # Only share a sample of the failed records
+        failed_records[:5],
+    )
 
 
 @task
@@ -135,13 +145,11 @@ def notify_parse_complete(results: types.ParseResults):
 Rekognition label parsing complete :rocket:
 *Total processed:* {results.total_processed:,}
 *Total skipped:* {results.total_skipped:,}
-*Total failed:* {len(results.failed_records):,}
+*Total failed:* {results.total_failed:,}
 """
-    if 0 < len(results.failed_records) <= constants.MAX_FAILED_RECORDS:
+    if results.failed_records_sample:
         message += "*Failed records sample*:\n"
-        message += "\n".join([f" - `{rec}`" for rec in results.failed_records[:5]])
-    elif len(results.failed_records) > constants.MAX_FAILED_RECORDS:
-        message += "_Too many failed records to capture in XComs, check the logs._"
+        message += "\n".join([f" - `{rec}`" for rec in results.failed_records_sample])
 
     slack.send_message(
         message,

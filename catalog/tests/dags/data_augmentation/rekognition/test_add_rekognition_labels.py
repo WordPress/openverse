@@ -72,7 +72,7 @@ def test_parse_and_insert_labels_parse(mock_variable, mock_insert_tags, mock_fil
     ]
     actual = add_rekognition_labels.parse_and_insert_labels.function(**DEFAULT_ARGS)
 
-    assert actual == ParseResults(3, 1, ["this line should fail!"])
+    assert actual == ParseResults(3, 1, 1, ["this line should fail!"])
     mock_insert_tags.assert_called_once()
     assert (
         # Check the first image UUID
@@ -85,6 +85,19 @@ def test_parse_and_insert_labels_parse(mock_variable, mock_insert_tags, mock_fil
     # but it should have been deleted after the file was processed
     mock_variable.set.assert_not_called()
     mock_variable.delete.assert_called_once()
+
+
+@mock.patch("smart_open.open")
+@patch_insert_tags
+@patch_variable
+def test_parse_and_insert_labels_failure(mock_variable, mock_insert_tags, mock_file):
+    mock_variable.get.return_value = None
+    mock_file.return_value.__enter__.return_value.readline.side_effect = [
+        "this line should fail!"
+    ] * constants.MAX_FAILED_RECORDS + [""]
+
+    with pytest.raises(ValueError, match="systematic failure"):
+        add_rekognition_labels.parse_and_insert_labels.function(**DEFAULT_ARGS)
 
 
 @pytest.mark.parametrize(
@@ -113,7 +126,7 @@ def test_parse_and_insert_labels_buffer_config(
         **{**DEFAULT_ARGS, "in_memory_buffer_size": in_memory_buffer_size}
     )
 
-    assert actual == ParseResults(expected_processed, expected_skipped, [])
+    assert actual == ParseResults(expected_processed, expected_skipped, 0, [])
     assert mock_insert_tags.call_count == expected_insert_call_count
     assert mock_variable.set.call_count == expected_insert_call_count - 1
     mock_variable.delete.assert_called_once()

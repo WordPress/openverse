@@ -30,4 +30,5 @@ class MachineGeneratedTag(TypedDict):
 class ParseResults(NamedTuple):
     total_processed: int
     total_skipped: int
-    failed_records: list[str]
+    total_failed: int
+    failed_records_sample: list[str]
