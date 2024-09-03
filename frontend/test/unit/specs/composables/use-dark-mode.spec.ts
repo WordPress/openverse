@@ -1,3 +1,5 @@
+import { computed } from "#imports"
+
 import { describe, expect, test, vi } from "vitest"
 
 import { usePreferredColorScheme } from "@vueuse/core"
@@ -34,7 +36,9 @@ describe("useDarkMode", () => {
       expectedEffectiveColorMode,
       expectedCssClass,
     }) => {
-      usePreferredColorScheme.mockImplementation(() => ({ value: osColorMode }))
+      vi.mocked(usePreferredColorScheme).mockReturnValue(
+        computed(() => osColorMode)
+      )
 
       const featureFlagStore = useFeatureFlagStore()
 
