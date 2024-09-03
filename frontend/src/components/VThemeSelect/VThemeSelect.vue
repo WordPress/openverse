@@ -4,10 +4,9 @@ light, dark and system.
 -->
 
 <script setup lang="ts">
-import { useI18n } from "#imports"
+import { useI18n, useDarkMode } from "#imports"
 
 import { computed, type ComputedRef } from "vue"
-import { usePreferredColorScheme } from "@vueuse/core"
 
 import { useUiStore } from "~/stores/ui"
 
@@ -15,15 +14,6 @@ import VIcon from "~/components/VIcon/VIcon.vue"
 import VSelectField, {
   type Choice,
 } from "~/components/VSelectField/VSelectField.vue"
-
-/**
- * `ActualColorMode` is the evaluated form of `ColorMode`.
- *
- * It's value is the same as `ColorMode` for light and dark color modes
- * but for the system color mode, it evaluates to either depending on
- * the user's system theme.
- */
-type ActualColorMode = "light" | "dark"
 
 const i18n = useI18n({ useScope: "global" })
 const uiStore = useUiStore()
@@ -45,29 +35,15 @@ const colorMode = computed({
   },
 })
 
-/**
- * Get the user's preferred color scheme at the OS level. If the user
- * has not set an OS level preference, we fall back to light mode.
- */
-const preferredColorScheme: ComputedRef<ActualColorMode> = computed(() => {
-  const pref = usePreferredColorScheme()
-  return pref.value === "no-preference" ? "light" : pref.value
-})
-
-/**
- * Get the user's preferred color scheme at the app level. If the user
- * has set the color mode to "system", we fall back to the OS level
- * preference.
- */
-const actualColorMode: ComputedRef<ActualColorMode> = computed(() =>
-  colorMode.value === "system" ? preferredColorScheme.value : colorMode.value
-)
+const darkMode = useDarkMode()
 
 /**
  * The icon always reflects the actual theme applied to the site.
- * Therefore, it must be based on the value of `actualColorMode`.
+ * Therefore, it must be based on the value of `effectiveColorMode`.
  */
-const currentThemeIcon = computed(() => THEME_ICON_NAME[actualColorMode.value])
+const currentThemeIcon = computed(
+  () => THEME_ICON_NAME[darkMode.effectiveColorMode.value]
+)
 
 /**
  * The choices are computed because the text for the color mode choice
@@ -75,7 +51,7 @@ const currentThemeIcon = computed(() => THEME_ICON_NAME[actualColorMode.value])
  * the OS-level.
  */
 const choices: ComputedRef<Choice[]> = computed(() => {
-  const systemText = `${i18n.t(`theme.choices.system`)} (${THEME_TEXT[preferredColorScheme.value]})`
+  const systemText = `${i18n.t(`theme.choices.system`)} (${THEME_TEXT[darkMode.osColorMode.value]})`
   return [
     { key: "light", text: THEME_TEXT.light },
     { key: "dark", text: THEME_TEXT.dark },
