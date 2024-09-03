@@ -1,5 +1,7 @@
 import { computed, useUiStore } from "#imports"
 
+import { usePreferredColorScheme } from "@vueuse/core"
+
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 export const DARK_MODE_CLASS = "dark-mode"
@@ -22,11 +24,45 @@ export function useDarkMode() {
     featureFlagStore.isOn("dark_mode_ui_toggle")
   )
 
+  /**
+   * the color mode setting for the app;
+   *
+   * This can be one of "dark", "light" or "system". If the toggle
+   * feature is disabled, we default to "light".
+   */
   const colorMode = computed(() => {
     if (darkModeToggleable.value) {
       return uiStore.colorMode
     }
     return "light"
+  })
+
+  /**
+   * the color mode setting for the OS;
+   *
+   * This can be one of "dark" or "light". If the OS does not specify
+   * a preference, we default to "light".
+   */
+  const osColorMode = computed(() => {
+    const pref = usePreferredColorScheme()
+    return pref.value === "no-preference" ? "light" : pref.value
+  })
+
+  /**
+   * the effective color mode of the app;
+   *
+   * This can be one of "dark" or "light". This is a combination of the
+   * toggle feature flag, the user's preference at the app and OS levels
+   * and the default value of "light".
+   */
+  const effectiveColorMode = computed(() => {
+    if (!darkModeToggleable.value) {
+      return "light"
+    }
+    if (colorMode.value === "system") {
+      return osColorMode.value
+    }
+    return colorMode.value
   })
 
   const cssClass = computed(() => {
@@ -39,6 +75,8 @@ export function useDarkMode() {
 
   return {
     colorMode,
+    osColorMode,
+    effectiveColorMode,
     cssClass,
   }
 }
