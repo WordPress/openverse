@@ -9,4 +9,7 @@ declare module "@nuxtjs/i18n" {
   }
 }
 
+declare module "vue" {
+  export interface GlobalComponents {}
+}
 export {}
