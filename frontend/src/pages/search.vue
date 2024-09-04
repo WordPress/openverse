@@ -45,7 +45,6 @@ const mediaStore = useMediaStore()
 const searchStore = useSearchStore()
 
 const route = useRoute()
-const path = computed(() => route.path)
 
 const {
   searchTerm,
@@ -170,7 +169,7 @@ await useAsyncData(
     />
     <section v-else>
       <NuxtPage
-        :page-key="path"
+        :page-key="$route.path"
         :results="searchResults"
         :is-fetching="isFetching"
         :search-term="searchTerm"

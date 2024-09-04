@@ -128,10 +128,6 @@ export function recordError(
   }
 }
 
-export type ProcessFetchingError = (
-  ...[originalError, ...args]: Parameters<typeof normalizeFetchingError>
-) => FetchingError
-
 export default defineNuxtPlugin(async (nuxtApp) => {
   function processFetchingError(
     ...[originalError, ...args]: Parameters<typeof normalizeFetchingError>
