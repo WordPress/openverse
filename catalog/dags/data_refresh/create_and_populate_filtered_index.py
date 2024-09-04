@@ -13,7 +13,6 @@ import uuid
 from datetime import timedelta
 
 from airflow.decorators import task, task_group
-from airflow.operators.python import PythonOperator
 from airflow.providers.http.operators.http import HttpOperator
 from airflow.utils.trigger_rule import TriggerRule
 from requests import Response
@@ -30,17 +29,6 @@ SENSITIVE_TERMS_CONN_ID = "sensitive_terms"
 
 def response_filter_sensitive_terms_endpoint(response: Response) -> list[str]:
     return [term.decode("utf-8").strip() for term in response.iter_lines()]
-
-
-def get_sensitive_terms() -> HttpOperator | PythonOperator:
-    return HttpOperator(
-        task_id="get_sensitive_terms",
-        http_conn_id=SENSITIVE_TERMS_CONN_ID,
-        method="GET",
-        response_check=lambda response: response.status_code == 200,
-        response_filter=response_filter_sensitive_terms_endpoint,
-        trigger_rule=TriggerRule.NONE_FAILED,
-    )
 
 
 @task(trigger_rule=TriggerRule.NONE_FAILED)

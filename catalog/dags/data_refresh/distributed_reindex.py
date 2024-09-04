@@ -287,7 +287,7 @@ def report_reindexing_status():
 
     This is necessary because we have some tasks after the reindex step
     which always run even on reindexing failure (to drop the connection
-    and terminate the worker instance). However in the even of failures,
+    and terminate the worker instance). However in the event of failures,
     we still need the last task in the TaskGroup to be marked as `Failed`
     or else subsequent tasks (like the promotion steps) will run. It is
     not possible to set individual tasks within a TaskGroup as
