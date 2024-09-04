@@ -90,6 +90,8 @@ repos:
             "catalog/tests/dags/providers/provider_api_scripts/resources/**",
             "-S",
             "catalog/tests/dags/common/test_resources/**",
+            "-S",
+            "catalog/tests/s3-data/**",
             # Test locales are non-English and therefore should not be checked by codespell
             "-S",
             "frontend/test/locales/*.json",

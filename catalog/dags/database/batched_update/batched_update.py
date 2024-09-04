@@ -90,6 +90,7 @@ def update_batches(
     table_name: str,
     query_id: str,
     update_query: str,
+    additional_where: str,
     update_timeout: int,
     batch_start_var: str,
     postgres_conn_id: str = POSTGRES_CONN_ID,
@@ -122,6 +123,7 @@ def update_batches(
             timeout=update_timeout,
             table_name=table_name,
             update_query=update_query,
+            additional_where=additional_where,
             batch_start=batch_start,
             batch_end=batch_end,
         )

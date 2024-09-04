@@ -34,10 +34,10 @@ SELECT_TEMP_TABLE_COUNT_QUERY = """
 UPDATE_BATCH_QUERY = """
     UPDATE {table_name}
     {update_query}
-    WHERE identifier in (
+    WHERE {table_name}.identifier IN (
         SELECT identifier FROM {temp_table_name}
         WHERE row_id > {batch_start} AND row_id <= {batch_end}
         FOR UPDATE SKIP LOCKED
-    );
+    ) {additional_where};
     """
 DROP_TABLE_QUERY = "DROP TABLE IF EXISTS {temp_table_name} CASCADE;"

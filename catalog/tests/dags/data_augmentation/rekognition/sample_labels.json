@@ -1,0 +1,90 @@
+{
+  "image_uuid": "b840de61-fb9d-4ec5-9572-8d778875869f",
+  "response": {
+    "Labels": [
+      {
+        "Name": "Human",
+        "Confidence": 99.048286438,
+        "Instances": [],
+        "Parents": []
+      },
+      {
+        "Name": "Person",
+        "Confidence": 99.048286438,
+        "Instances": [
+          {
+            "BoundingBox": {
+              "Width": 0.5270285606,
+              "Height": 0.975887537,
+              "Left": 0.3445735276,
+              "Top": 0.0202232208
+            },
+            "Confidence": 96.4437713623
+          }
+        ],
+        "Parents": []
+      },
+      {
+        "Name": "Face",
+        "Confidence": 89.1981964111,
+        "Instances": [],
+        "Parents": [{ "Name": "Person" }]
+      },
+      {
+        "Name": "Boy",
+        "Confidence": 86.4682312012,
+        "Instances": [],
+        "Parents": [{ "Name": "Person" }]
+      },
+      {
+        "Name": "Video Gaming",
+        "Confidence": 75.4029388428,
+        "Instances": [],
+        "Parents": [{ "Name": "Person" }]
+      },
+      {
+        "Name": "Kid",
+        "Confidence": 70.4316711426,
+        "Instances": [],
+        "Parents": [{ "Name": "Person" }]
+      },
+      {
+        "Name": "Child",
+        "Confidence": 70.4316711426,
+        "Instances": [],
+        "Parents": [{ "Name": "Person" }]
+      },
+      {
+        "Name": "Girl",
+        "Confidence": 63.4806442261,
+        "Instances": [],
+        "Parents": [{ "Name": "Female" }, { "Name": "Person" }]
+      },
+      {
+        "Name": "Female",
+        "Confidence": 63.4806442261,
+        "Instances": [],
+        "Parents": [{ "Name": "Person" }]
+      },
+      {
+        "Name": "Game",
+        "Confidence": 56.2078933716,
+        "Instances": [],
+        "Parents": [{ "Name": "Person" }]
+      }
+    ],
+    "LabelModelVersion": "2.0",
+    "ResponseMetadata": {
+      "RequestId": "0e9cd4f1-055e-4d4f-af3b-9a1884268f68",
+      "HTTPStatusCode": 200,
+      "HTTPHeaders": {
+        "content-type": "application/x-amz-json-1.1",
+        "date": "Thu, 29 Oct 2020 19:46:03 GMT",
+        "x-amzn-requestid": "0e9cd4f1-055e-4d4f-af3b-9a1884268f68",
+        "content-length": "1109",
+        "connection": "keep-alive"
+      },
+      "RetryAttempts": 0
+    }
+  }
+}
