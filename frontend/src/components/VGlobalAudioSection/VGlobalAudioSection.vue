@@ -23,6 +23,7 @@ const route = useRoute()
 const activeMediaStore = useActiveMediaStore()
 const mediaStore = useMediaStore()
 const uiStore = useUiStore()
+const singleResultStore = useSingleResultStore()
 
 const activeAudio = useActiveAudio()
 
@@ -32,7 +33,6 @@ const getAudioItemById = (trackId: string): AudioDetail | null => {
   if (audioFromMediaStore) {
     return audioFromMediaStore as AudioDetail
   }
-  const singleResultStore = useSingleResultStore()
   if (singleResultStore.mediaId === trackId) {
     return singleResultStore.audio
   }
