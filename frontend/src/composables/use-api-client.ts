@@ -4,7 +4,10 @@ import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { createApiClient } from "~/data/api-service"
 
 export function useApiClient() {
-  const { $openverseApiToken: accessToken } = useNuxtApp()
+  const { $openverseApiToken } = useNuxtApp()
+  const accessToken =
+    typeof $openverseApiToken === "string" ? $openverseApiToken : undefined
+
   const featureFlagStore = useFeatureFlagStore()
 
   const fakeSensitive =

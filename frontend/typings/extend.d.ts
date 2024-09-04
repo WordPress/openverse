@@ -1,3 +1,5 @@
+import VueI18n from "~/vue-i18n"
+
 import type { Sentry } from "@sentry/node"
 
 declare module "h3" {
@@ -5,3 +7,11 @@ declare module "h3" {
     $sentry?: Sentry
   }
 }
+
+declare module "@vue/runtime-core" {
+  interface ComponentCustomProperties {
+    $t: typeof VueI18n.prototype.t
+  }
+}
+
+export {}
