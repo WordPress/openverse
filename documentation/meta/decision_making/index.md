@@ -1,4 +1,4 @@
-# Openverse Decision-Making Process
+# Openverse decision-making process
 
 This process is loosely based on the Sociocratic "consent decision-making"
 model, but is heavily adapted for an asynchronous context. The purpose of this

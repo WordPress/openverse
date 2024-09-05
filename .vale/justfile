@@ -7,22 +7,17 @@ NO_COLOR := "\\033[0m"
     printf "===================={{ NO_COLOR }}\n"
     just --list --unsorted
 
-# Build a local version of `openverse-vale:local` for testing
-build:
-    docker build . -t openverse-vale:local
-
 IGNORE_FILES_PATTERN := ".pnpm|changelogs|projects/proposals|node_modules|.?venv"
 
 # This recipe generates a list of Markdown and MDX files to be processed, excluding those
 # matched by the IGNORE_FILES_PATTERN. Files are listed relative to the parent directory
 # of the current working directory. If a custom separator is specified, newlines are
 # replaced with this separator before outputting the file list.
-@files separator="\n":
+_files separator="\n":
     #! /usr/bin/env sh
     files=$(
         find "$PWD/.." -type f \( -name "*.md" -o -name "*.mdx" \) \
-            | grep -vE "{{ IGNORE_FILES_PATTERN }}" \
-            | sed "s|$PWD/../||"
+            | grep -vE "{{ IGNORE_FILES_PATTERN }}"
     )
     if [ '{{ separator }}' != '\n' ]; then
         echo "$files" | tr '\n' '{{ separator }}'
@@ -30,12 +25,18 @@ IGNORE_FILES_PATTERN := ".pnpm|changelogs|projects/proposals|node_modules|.?venv
     fi
     echo "$files"
 
-# Run Vale configured for Openverse in Docker.
-# Using Docker avoids the need for contributors to install the Vale binary.
-#Configuration defaults to what is used for CI.
-run: build
-    docker run --rm \
-        -v $PWD/..:/src:rw,Z \
-        --workdir=/src \
-        openverse-vale:local \
-        {{ "`just files`" }}
+VALE_STYLES_PATH := "/opt/.local/share/vale/styles"
+
+@_link_openverse_styles:
+    mkdir -p {{ VALE_STYLES_PATH }}
+    [ ! -L {{ VALE_STYLES_PATH }}/config ] && ln -s "$(pwd)"/styles/config {{ VALE_STYLES_PATH }}/config || true
+    [ ! -L {{ VALE_STYLES_PATH }}/Openverse ] && ln -s "$(pwd)"/styles/Openverse {{ VALE_STYLES_PATH }}/Openverse || true
+
+# Run Vale configured for Openverse.
+@run: _link_openverse_styles
+    # Ensure vale is available
+    pdm install
+    # Sync to make sure styles are up to date (this is fast if they are already synced)
+    VALE_STYLES_PATH={{ VALE_STYLES_PATH }} pdm run vale sync
+    # Run vale :)
+    VALE_STYLES_PATH={{ VALE_STYLES_PATH }} pdm run vale {{ "`just _files`" }}
