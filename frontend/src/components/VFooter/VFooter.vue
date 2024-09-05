@@ -11,11 +11,13 @@ import useResizeObserver from "~/composables/use-resize-observer"
 import { SCREEN_SIZES } from "~/constants/screens"
 
 import { useUiStore } from "~/stores/ui"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import type { SelectFieldProps } from "~/components/VSelectField/VSelectField.vue"
 import VLink from "~/components/VLink.vue"
 import VBrand from "~/components/VBrand/VBrand.vue"
 import VLanguageSelect from "~/components/VLanguageSelect/VLanguageSelect.vue"
+import VThemeSelect from "~/components/VThemeSelect/VThemeSelect.vue"
 import VPageLinks from "~/components/VHeader/VPageLinks.vue"
 import VWordPressLink from "~/components/VHeader/VWordPressLink.vue"
 
@@ -41,6 +43,11 @@ const uiStore = useUiStore()
 const { all: allPages } = usePages()
 
 const isContentMode = computed(() => props.mode === "content")
+
+const featureFlagStore = useFeatureFlagStore()
+const showThemeSwitcher = computed(() =>
+  featureFlagStore.isOn("dark_mode_ui_toggle")
+)
 
 /** JS-based responsiveness */
 const footerEl = ref<HTMLElement | null>(null)
@@ -90,11 +97,25 @@ const linkColumnHeight = computed(() => ({
 
     <!-- Locale chooser and WordPress affiliation graphic -->
     <div class="locale-and-wp flex flex-col justify-between">
-      <VLanguageSelect
-        v-bind="languageProps"
-        class="language max-w-full border-secondary"
-      />
-      <VWordPressLink mode="light" />
+      <template v-if="showThemeSwitcher">
+        <VWordPressLink mode="light" />
+        <div class="flex flex-row items-center gap-6">
+          <VLanguageSelect
+            v-bind="languageProps"
+            class="language max-w-full border-secondary"
+          />
+          <ClientOnly>
+            <VThemeSelect class="border-secondary" />
+          </ClientOnly>
+        </div>
+      </template>
+      <template v-else>
+        <VLanguageSelect
+          v-bind="languageProps"
+          class="language max-w-full border-secondary"
+        />
+        <VWordPressLink mode="light" />
+      </template>
     </div>
   </footer>
 </template>
