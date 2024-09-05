@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2024-08-29T04:58:12+00:00\n"
+"POT-Creation-Date: 2024-09-05T12:01:07+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12,13 +12,13 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
-#: src/components/VFourOhFour.vue:71
+#: src/components/VFourOhFour.vue:56
 msgctxt "404.title"
 msgid "The content you’re looking for seems to have disappeared."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VFourOhFour.vue:75
+#: src/components/VFourOhFour.vue:60
 msgctxt "404.main"
 msgid "Go to ###link### or search for something similar from the field below."
 msgstr ""
@@ -34,7 +34,7 @@ msgid "An extensive library of free stock photos, images, and audio, available f
 msgstr ""
 
 #: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:300
-#: src/components/VHeader/VSearchBar/VSearchBar.vue:123
+#: src/components/VHeader/VSearchBar/VSearchBar.vue:116
 #: src/components/VHeader/VSearchBar/VStandaloneSearchBar.vue:68
 msgctxt "hero.search.placeholder"
 msgid "Search for content"
@@ -324,20 +324,20 @@ msgctxt "sources.singleName"
 msgid "Source"
 msgstr ""
 
-#: src/components/VSourcesTable.vue:124
-#: src/components/VSourcesTable.vue:175
+#: src/components/VSourcesTable.vue:102
+#: src/components/VSourcesTable.vue:153
 msgctxt "sources.providers.source"
 msgid "Source"
 msgstr ""
 
-#: src/components/VSourcesTable.vue:134
-#: src/components/VSourcesTable.vue:181
+#: src/components/VSourcesTable.vue:112
+#: src/components/VSourcesTable.vue:159
 msgctxt "sources.providers.domain"
 msgid "Domain"
 msgstr ""
 
-#: src/components/VSourcesTable.vue:144
-#: src/components/VSourcesTable.vue:187
+#: src/components/VSourcesTable.vue:122
+#: src/components/VSourcesTable.vue:165
 msgctxt "sources.providers.item"
 msgid "Total items"
 msgstr ""
@@ -408,7 +408,7 @@ msgctxt "sources.issueButton"
 msgid "Suggest a new source"
 msgstr ""
 
-#: src/components/VSourcesTable.vue:112
+#: src/components/VSourcesTable.vue:90
 msgctxt "sources.aria.table"
 msgid "sources table"
 msgstr ""
@@ -2291,7 +2291,7 @@ msgctxt "audioTrack.creator"
 msgid "by ###creator###"
 msgstr ""
 
-#: src/components/VGlobalAudioSection/VGlobalAudioSection.vue:158
+#: src/components/VGlobalAudioSection/VGlobalAudioSection.vue:143
 msgctxt "audioTrack.close"
 msgid "Close the audio player"
 msgstr ""
@@ -2319,7 +2319,7 @@ msgstr ""
 
 #. Do not translate words between ### ###.
 #: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:305
-#: src/components/VHeader/VSearchBar/VSearchBar.vue:125
+#: src/components/VHeader/VSearchBar/VSearchBar.vue:118
 #: src/components/VHeader/VSearchBar/VStandaloneSearchBar.vue:71
 msgctxt "search.searchBarLabel"
 msgid "Search for content in ###openverse###"
@@ -2483,12 +2483,12 @@ msgctxt "searchType.selectLabel"
 msgid "Select a content type: ###type###"
 msgstr ""
 
-#: src/components/VSkipToContentButton.vue:24
+#: src/components/VSkipToContentButton.vue:14
 msgctxt "skipToContent"
 msgid "Skip to content"
 msgstr ""
 
-#: src/pages/preferences.vue:53
+#: src/pages/preferences.vue:57
 msgctxt "prefPage.title"
 msgid "Preferences"
 msgstr ""
@@ -2525,7 +2525,7 @@ msgctxt "prefPage.switchable.desc"
 msgid "You can toggle these features on or off as you like and your preferences will be saved in a cookie."
 msgstr ""
 
-#: src/pages/preferences.vue:127
+#: src/pages/preferences.vue:131
 msgctxt "prefPage.storeState"
 msgid "Store state"
 msgstr ""
@@ -2572,6 +2572,27 @@ msgstr ""
 #: src/components/VLanguageSelect/VLanguageSelect.vue:41
 msgctxt "language.language"
 msgid "Language"
+msgstr ""
+
+#: src/components/VThemeSelect/VThemeSelect.vue:68
+#: src/components/VThemeSelect/VThemeSelect.vue:69
+msgctxt "theme.theme"
+msgid "Theme"
+msgstr ""
+
+#: src/components/VThemeSelect/VThemeSelect.vue:28
+msgctxt "theme.choices.dark"
+msgid "Dark"
+msgstr ""
+
+#: src/components/VThemeSelect/VThemeSelect.vue:27
+msgctxt "theme.choices.light"
+msgid "Light"
+msgstr ""
+
+#: src/components/VThemeSelect/VThemeSelect.vue:54
+msgctxt "theme.choices.system"
+msgid "System"
 msgstr ""
 
 #: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:368
@@ -2715,7 +2736,7 @@ msgctxt "collection.pageTitle.source.image"
 msgid "###source### images"
 msgstr ""
 
-#: src/components/VCollectionHeader/VCollectionHeader.vue:206
+#: src/components/VCollectionHeader/VCollectionHeader.vue:181
 msgctxt "collection.link.source"
 msgid "Open source site"
 msgstr ""
