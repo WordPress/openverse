@@ -261,8 +261,8 @@ def create_data_refresh_dag(
         # Note filtered_index must be directly upstream of promote_table to
         # ensure that table promotion does not run if there was an error during reindexing
         filtered_index >> [enable_alarms, promote_table]
-        promote_table >> [promote_index, promote_filtered_index, after_record_count]
-        after_record_count >> report_counts
+        promote_table >> [promote_index, promote_filtered_index]
+        promote_index >> after_record_count >> report_counts
 
     return dag
 
