@@ -68,7 +68,6 @@ body:
         - The script must use the ProviderDataIngester class in `catalog/dags/providers/provider_api_scripts/provider_data_ingester.py`.
         - The script must use the `ImageStore` or `AudioStore` class (Import this from `catalog/dags/provider_api_scripts/common/storage/image.py`).
         - The script should use the `DelayedRequester` class (Import this from `catalog/dags/provider_api_scripts/common/requester.py`).
-        - The script must not use anything from `catalog/dags/retired/providers/provider_api_scripts/modules/etlMods.py`, since that module is deprecated.
         - If the provider API has can be queried by 'upload date' or something similar, the script should take a `--date` parameter when run as a script, giving the date for which we should collect images. The form should be `YYYY-MM-DD` (so, the script can be run via `python my_favorite_provider.py --date 2018-01-01`).
         - The script must provide a main function that takes the same parameters as from the CLI. In our example from above, we'd then have a main function `my_favorite_provider.main(date)`. The main should do the same thing calling from the CLI would do.
         - The script *must* conform to [PEP8][pep8]. Please use `ov just lint` before committing.

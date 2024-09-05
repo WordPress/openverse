@@ -469,7 +469,7 @@ index during the data refresh process.
 
 #### Selection Criteria
 
-[`expire_old_images`](https://github.com/WordPress/openverse/tree/main/catalog/dags/retired/common/loader/sql.py)
+[`expire_old_images`](https://github.com/WordPress/openverse/tree/c517c26e2c2f785f70d36c1928343b66c0966f4b/catalog/dags/retired/common/loader/sql.py)
 DAG added in
 [Expiration of outdated images in the database](https://github.com/cc-archive/cccatalog/pull/483)
 was used to set `removed_from_source` to `True` for images that were updated
