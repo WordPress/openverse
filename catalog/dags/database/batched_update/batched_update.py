@@ -123,7 +123,7 @@ def update_batches(
             timeout=update_timeout,
             table_name=table_name,
             update_query=update_query,
-            additional_where=additional_where,
+            additional_where=additional_where or "",
             batch_start=batch_start,
             batch_end=batch_end,
         )

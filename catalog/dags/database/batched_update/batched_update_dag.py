@@ -139,8 +139,8 @@ DAG_CONFIG = dict(
             pattern="^SET updated_on = NOW()",
         ),
         "additional_where": Param(
-            default="",
-            type="string",
+            default=None,
+            type=["null", "string"],
             description=(
                 "Additional `WHERE` clause to be appended to the `UPDATE` query. "
                 "Can be used when setting values based on an existing row in "
