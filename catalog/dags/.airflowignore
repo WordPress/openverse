@@ -1,4 +1,3 @@
 # Ignore all non-DAG files
 common/
 providers/provider_api_scripts
-retired

@@ -53,7 +53,6 @@ known-first-party = [
   "maintenance",
   "oauth2",
   "providers",
-  "retired",
   "test",
 ]
 
