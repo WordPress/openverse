@@ -76,7 +76,9 @@ def parse_and_insert_labels(
         deserialize_json=True,
     )
 
-    s3_client = S3Hook(aws_conn_id=AWS_CONN_ID).get_client_type("s3")
+    # Create the client from the session so that Airflow doesn't override any
+    # defaults we want on the S3 client
+    s3_client = S3Hook(aws_conn_id=AWS_CONN_ID).get_session().client("s3")
     with smart_open.open(
         f"{s3_bucket}/{s3_prefix}",
         transport_params={"buffer_size": file_buffer_size, "client": s3_client},
