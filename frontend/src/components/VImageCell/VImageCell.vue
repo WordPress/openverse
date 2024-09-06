@@ -12,6 +12,7 @@ import { IMAGE } from "~/constants/media"
 
 import { useSearchStore } from "~/stores/search"
 
+import VIcon from "~/components/VIcon/VIcon.vue"
 import VLicense from "~/components/VLicense/VLicense.vue"
 import VLink from "~/components/VLink.vue"
 
@@ -94,13 +95,15 @@ const getImgDimension = (event: Event) => {
   imgWidth.value = element.naturalWidth
 }
 
-const contextSensitiveTitle = computed(() => {
-  return shouldBlur.value
-    ? t("sensitiveContent.title.image")
-    : t("browsePage.aria.imageTitle", {
-        title: props.image.title,
-      })
+const imageTitle = t("browsePage.aria.imageTitle", {
+  title: props.image.title,
 })
+const contextSensitiveLabel = computed(() =>
+  shouldBlur.value ? t("sensitiveContent.title.image") : imageTitle
+)
+const contextSensitiveTitle = computed(() =>
+  shouldBlur.value ? undefined : imageTitle
+)
 
 const { $sendCustomEvent } = useNuxtApp()
 const searchStore = useSearchStore()
@@ -143,8 +146,8 @@ const { isHidden: shouldBlur } = useSensitiveMedia(props.image)
       itemprop="contentUrl"
       :title="contextSensitiveTitle"
       :href="imageLink"
-      class="group relative block w-full overflow-hidden rounded-sm text-gray-2 focus-visible:outline-3 focus-visible:outline-offset-4"
-      :aria-label="contextSensitiveTitle"
+      class="group relative block w-full overflow-hidden rounded-sm text-gray-2 hover:no-underline focus-visible:outline-3 focus-visible:outline-offset-4"
+      :aria-label="contextSensitiveLabel"
       @mousedown="sendSelectSearchResultEvent"
     >
       <figure
@@ -156,11 +159,8 @@ const { isHidden: shouldBlur } = useSensitiveMedia(props.image)
       >
         <img
           loading="lazy"
-          class="image col-span-full row-span-full block w-full overflow-hidden rounded-sm object-cover duration-200 motion-safe:transition-[filter,transform]"
-          :class="[
-            isSquare ? 'h-full' : 'margin-auto',
-            { 'scale-150 blur-image': shouldBlur },
-          ]"
+          class="image col-span-full row-span-full block w-full overflow-hidden rounded-sm object-cover"
+          :class="[isSquare ? 'h-full' : 'margin-auto']"
           :alt="
             shouldBlur ? `${$t('sensitiveContent.title.image')}` : image.title
           "
@@ -171,24 +171,37 @@ const { isHidden: shouldBlur } = useSensitiveMedia(props.image)
           @load="getImgDimension"
           @error="onImageLoadError($event)"
         />
+        <span
+          class="col-span-full row-span-full flex items-center justify-center bg-blur text-default backdrop-blur-xl duration-200 motion-safe:transition-opacity"
+          :class="shouldBlur ? 'opacity-100' : 'opacity-0'"
+          data-testid="blur-overlay"
+          aria-hidden="true"
+        >
+          <VIcon name="eye-closed" />
+        </span>
         <figcaption
-          class="col-span-full self-end justify-self-start rounded-sm bg-default text-default group-hover:visible group-focus-visible:visible"
-          :class="
+          class="z-10 col-span-full my-2 self-end justify-self-start rounded-sm text-default group-hover:visible group-focus-visible:visible"
+          :class="[
             isSquare
-              ? 'invisible row-span-full m-2 p-2'
-              : 'my-2 sm:invisible sm:row-span-full sm:m-2 sm:p-2'
-          "
+              ? 'invisible row-span-full p-2'
+              : 'sm:invisible sm:row-span-full sm:p-2',
+            shouldBlur ? 'sm:w-full sm:text-center' : 'bg-default',
+            !shouldBlur && (isSquare ? 'mx-2' : 'sm:mx-2'),
+          ]"
         >
           <h2 class="sr-only">
             {{
               shouldBlur ? `${$t("sensitiveContent.title.image")}` : image.title
             }}
           </h2>
-          <VLicense
-            :license="image.license"
-            :hide-name="true"
-            class="text-secondary group-hover:text-default group-focus-visible:text-default sm:text-default"
-          />
+          <div
+            class="label-regular leading-none text-secondary group-hover:text-default group-focus-visible:text-default sm:text-default"
+          >
+            <template v-if="shouldBlur">
+              {{ $t("sensitiveContent.singleResult.title") }}
+            </template>
+            <VLicense v-else :license="image.license" :hide-name="true" />
+          </div>
         </figcaption>
       </figure>
     </VLink>
