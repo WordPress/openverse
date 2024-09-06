@@ -86,7 +86,7 @@ def get_record_limit() -> int | None:
     Airflow is running.
 
     If a limit is explicitly configured, it is always used. Otherwise, production
-    defaults to no limit, and all other environments default to 100,000.
+    defaults to no limit, and all other environments default to 10,000.
     """
     try:
         # If a limit is explicitly configured, always use it.
