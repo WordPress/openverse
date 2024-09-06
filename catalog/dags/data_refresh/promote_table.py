@@ -48,7 +48,7 @@ def get_go_live_query(
     )
 
 
-@task_group(group_id="promote_table")
+@task_group
 def promote_table(
     postgres_conn_id: str,
     downstream_table_name: str,
@@ -83,7 +83,7 @@ def promote_table(
     remap_table_indices >> remap_table_constraints >> go_live_query
 
 
-@task_group(group_id="promote_tables")
+@task_group
 def promote_tables(
     data_refresh_config: DataRefreshConfig, target_environment: Environment
 ):

@@ -25,7 +25,7 @@ class TableIndex(NamedTuple):
 
 def _transform_index_def(
     existing_index_def: str, temp_table_name: str, table_name: str
-) -> str:
+) -> TableIndex:
     """
     Given a CREATE INDEX statement for an index on the existing media table, return a
     transformed statement that can be run to apply an identical index to the temp table.
@@ -97,7 +97,7 @@ def _is_foreign_key(_statement, table):
     return f"REFERENCES {table}(" in _statement
 
 
-@task_group(group_id="remap_table_indices_to_table")
+@task_group
 def remap_table_indices_to_table(
     table_name: str, temp_table_name: str, postgres_conn_id: str
 ):

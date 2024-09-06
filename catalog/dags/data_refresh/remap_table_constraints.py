@@ -18,9 +18,9 @@ logger = logging.getLogger(__name__)
 
 
 class ConstraintInfo(NamedTuple):
-    constraint_table: str
-    constraint_name: str
-    constraint_statement: str
+    table: str
+    name: str
+    statement: str
 
 
 def fetch_all_tuples(cursor):
@@ -36,9 +36,7 @@ def _is_foreign_key(_statement, table):
 
 
 def _remap_constraint(
-    constraint_name: str,
-    constraint_table: str,
-    constraint_statement: str,
+    constraint: ConstraintInfo,
     table_name: str,
     temp_table_name: str,
 ) -> list[str]:
@@ -57,18 +55,18 @@ def _remap_constraint(
     # In all cases, drop the existing constraint
     alterations = [
         queries.DROP_CONSTRAINT_QUERY.format(
-            constraint_table=constraint_table, constraint_name=constraint_name
+            constraint_table=constraint.table, constraint_name=constraint.name
         )
     ]
 
     # If the constraint was applied directly to the media table, then
     # we now apply it to the temp table instead
-    if constraint_table == table_name:
+    if constraint.table == table_name:
         alterations.append(
             queries.ADD_CONSTRAINT_QUERY.format(
-                constraint_name=constraint_name,
+                constraint_name=constraint.name,
                 constraint_table=temp_table_name,
-                constraint_statement=constraint_statement,
+                constraint_statement=constraint.statement,
             )
         )
 
@@ -76,7 +74,7 @@ def _remap_constraint(
     # we add it back to its original table, but altered to reference the temp table
     # instead.
     else:
-        tokens = constraint_statement.split(" ")
+        tokens = constraint.statement.split(" ")
 
         # Point the constraint to the new table by replacing the referenced table name (always
         # appears after the word `REFERENCES`) with the temp table.
@@ -88,8 +86,8 @@ def _remap_constraint(
 
         alterations.append(
             queries.ADD_CONSTRAINT_QUERY.format(
-                constraint_table=constraint_table,
-                constraint_name=constraint_name,
+                constraint_table=constraint.table,
+                constraint_name=constraint.name,
                 constraint_statement=new_constraint_statement,
             )
         )
@@ -159,25 +157,20 @@ def generate_constraints_for_table(
     drop_orphans = []
 
     for constraint in all_constraints:
-        constraint_statement = constraint.constraint_statement
-        constraint_table = constraint.constraint_table
-
         # Consider all constraints that either apply directly to the given table or
         # which may reference it from another table (foreign key constraints).
         # Ignore PRIMARY KEY statements and UNIQUE statements, which are already
         # enforced via the table indices copied in an earlier task
-        is_fk = _is_foreign_key(constraint_statement, table_name)
+        is_fk = _is_foreign_key(constraint.statement, table_name)
         if (
-            (constraint_table == table_name or is_fk)
-            and "PRIMARY KEY" not in constraint_statement
-            and "UNIQUE" not in constraint_statement
+            (constraint.table == table_name or is_fk)
+            and "PRIMARY KEY" not in constraint.statement
+            and "UNIQUE" not in constraint.statement
         ):
             # Generate the `ALTER TABLE...` statements needed to drop this constraint
             # from the live table and apply it to the temp table.
             alter_statements = _remap_constraint(
-                constraint.constraint_name,
-                constraint_table,
-                constraint_statement,
+                constraint,
                 table_name,
                 temp_table_name,
             )
@@ -187,7 +180,7 @@ def generate_constraints_for_table(
             # to ensure no records persist which reference deleted media.
             if is_fk:
                 delete_orphans = _generate_delete_orphans(
-                    constraint_statement, constraint_table, temp_table_name
+                    constraint.statement, constraint.table, temp_table_name
                 )
                 drop_orphans.append(delete_orphans)
 
@@ -208,7 +201,7 @@ def apply_constraints_to_table(
         run_sql.function(postgres_conn_id=postgres_conn_id, sql_template=constraint)
 
 
-@task_group(group_id="remap_table_constraints_to_table")
+@task_group
 def remap_table_constraints_to_table(
     table_name: str, temp_table_name: str, postgres_conn_id: str
 ):
