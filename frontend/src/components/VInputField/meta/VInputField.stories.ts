@@ -52,7 +52,8 @@ export const VModel: Story = {
     components: { VInputField },
     setup() {
       const text = ref("Hello, World!")
-      const updateText = (value: string) => (text.value = value)
+      const updateText = (value: unknown) =>
+        (text.value = typeof value === "string" ? value : "")
       return () =>
         h(
           "div",
