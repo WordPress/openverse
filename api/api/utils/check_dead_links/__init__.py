@@ -44,11 +44,28 @@ _timeout = aiohttp.ClientTimeout(total=settings.LINK_VALIDATION_TIMEOUT_SECONDS)
 _ERROR_STATUS = -1
 
 
+# Used to filter network errors during liveness checks that we believe
+# we should get errors (rather than warnings) for, e.g., a Sentry issue.
+# As such, this should exclude errors where we don't think we have the
+# ability to control the outcome, whether now or in the future.
+# Some things, like SSL errors and timeouts, may be used for detecting
+# more confident liveness checks or useful catalog information in the future.
+# However, for now, we just need to avoid filling up our error backlog
+# with things we aren't able to actually do anything about right now.
+_NON_ACTIONABLE_NETWORK_EXCEPTIONS = (
+    aiohttp.ClientConnectorCertificateError,
+    aiohttp.ClientConnectorSSLError,
+    aiohttp.ClientConnectorError,
+    aiohttp.ServerDisconnectedError,
+    aiohttp.ClientOSError,
+)
+
+
 async def _head(
     url: str, session: aiohttp.ClientSession, provider: str
 ) -> tuple[str, int]:
     try:
-        response = await session.head(
+        async with session.head(
             url,
             allow_redirects=False,
             headers=HEADERS,
@@ -68,18 +85,25 @@ async def _head(
                     "provider": provider,
                 },
             },
-        )
-        status = response.status
+        ) as response:
+            status = response.status
+
     except (aiohttp.ClientError, asyncio.TimeoutError) as exception:
+        # only log non-timeout exceptions. Timeouts are more or less expected
+        # and we have means of visibility into them (e.g., querying for timings
+        # that exceed the timeout); they do _not_ need to be in the error log or go to Sentry
+        # The timeout exception class aiohttp uses is a subclass of `ClientError` and `asyncio.TimeoutError`,
+        # so we have to explicitly check that the error is _not_ an asyncio timeout error, not that it
+        # _is_ an aiohttp error. When it is a timeout error, it will be both `asyncio.TimeoutError` and
+        # `aiohttp.ClientError` because it's a subclass of both
         if not isinstance(exception, asyncio.TimeoutError):
-            # only log non-timeout exceptions. Timeouts are more or less expected
-            # and we have means of visibility into them (e.g., querying for timings
-            # that exceed the timeout); they do _not_ need to be in the error log or go to Sentry
-            # The timeout exception class aiohttp uses is a subclass of `ClientError` and `asyncio.TimeoutError`,
-            # so we have to explicitly check that the error is _not_ an asyncio timeout error, not that it
-            # _is_ an aiohttp error. When it is a timeout error, it will be both `asyncio.TimeoutError` and
-            # `aiohttp.ClientError` because it's a subclass of both
-            logger.error("dead_link_validation_error", exc_info=True, exc=exception)
+            if isinstance(exception, _NON_ACTIONABLE_NETWORK_EXCEPTIONS):
+                log = logger.warning
+            else:
+                # Only error log actionable exceptions
+                log = logger.error
+
+            log("dead_link_validation_error", exc_info=True, exc=exception)
 
         status = _ERROR_STATUS
 

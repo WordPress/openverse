@@ -1,4 +1,3 @@
-import asyncio
 from collections.abc import Callable
 from typing import Any
 
@@ -49,7 +48,7 @@ def test_handles_timeout(monkeypatch):
     start_slice = 0
 
     async def raise_timeout_error(*args, **kwargs):
-        raise asyncio.TimeoutError()
+        raise aiohttp.ServerTimeoutError()
 
     monkeypatch.setattr(aiohttp.ClientSession, "_request", raise_timeout_error)
     with capture_logs() as logs:

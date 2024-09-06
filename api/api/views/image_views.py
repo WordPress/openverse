@@ -87,9 +87,15 @@ class ImageViewSet(MediaViewSet):
 
         if not (image.height and image.width):
             session = await get_aiohttp_session()
-            image_file = await session.get(image.url, headers=self.OEMBED_HEADERS)
-            image_content = await image_file.content.read()
-            width, height = PILImage.open(io.BytesIO(image_content)).size
+
+            async with session.get(
+                image.url, headers=self.OEMBED_HEADERS
+            ) as image_file:
+                image_content = await image_file.content.read()
+
+            with PILImage.open(io.BytesIO(image_content)) as image_file:
+                width, height = image_file.size
+
             context |= {
                 "width": width,
                 "height": height,
@@ -209,3 +215,5 @@ class ImageViewSet(MediaViewSet):
             pil_img.save(destination, "jpeg", exif=exif_bytes)
         else:
             pil_img.save(destination, "jpeg")
+
+        pil_img.close()

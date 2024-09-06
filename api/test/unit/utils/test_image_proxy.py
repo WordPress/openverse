@@ -1,3 +1,4 @@
+import contextlib
 from dataclasses import replace
 from urllib.parse import urlencode
 from uuid import uuid4
@@ -263,8 +264,11 @@ def test_get_successful_forward_query_params(mock_image_data):
 @pytest.fixture
 def setup_request_exception(monkeypatch):
     def do(exc):
+        # ClientSession.get returns a context manager
+        @contextlib.asynccontextmanager
         async def raise_exc(*args, **kwargs):
             raise exc
+            yield
 
         monkeypatch.setattr(aiohttp.ClientSession, "get", raise_exc)
 
