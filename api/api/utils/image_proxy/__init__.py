@@ -10,7 +10,7 @@ from rest_framework.exceptions import UnsupportedMediaType
 import aiohttp
 import django_redis
 import structlog
-from aiohttp.client_exceptions import ClientResponseError
+from aiohttp import client_exceptions
 from asgiref.sync import sync_to_async
 from redis.client import Redis
 from redis.exceptions import ConnectionError
@@ -96,7 +96,7 @@ def _tally_response(
     media_info: MediaInfo,
     month: str,
     domain: str,
-    response: aiohttp.ClientResponse,
+    status_code: int,
 ):
     """
     Tally image proxy response.
@@ -106,13 +106,13 @@ def _tally_response(
     """
 
     with tallies_conn.pipeline() as tallies:
-        tallies.incr(f"thumbnail_response_code:{month}:{response.status}")
+        tallies.incr(f"thumbnail_response_code:{month}:{status_code}")
         tallies.incr(
-            f"thumbnail_response_code_by_domain:{domain}:" f"{month}:{response.status}"
+            f"thumbnail_response_code_by_domain:{domain}:" f"{month}:{status_code}"
         )
         tallies.incr(
             f"thumbnail_response_code_by_provider:{media_info.media_provider}:"
-            f"{month}:{response.status}"
+            f"{month}:{status_code}"
         )
         try:
             tallies.execute()
@@ -247,7 +247,7 @@ async def get(
     try:
         session = await get_aiohttp_session()
 
-        upstream_response = await session.get(
+        async with session.get(
             upstream_url,
             timeout=_UPSTREAM_TIMEOUT,
             params=params,
@@ -260,16 +260,17 @@ async def get(
                     "image_extension": image_extension,
                 },
             },
-        )
+        ) as upstream_response:
+            await _tally_response(
+                tallies, media_info, month, domain, upstream_response.status
+            )
 
-        await _tally_response(tallies, media_info, month, domain, upstream_response)
+            upstream_response.raise_for_status()
 
-        upstream_response.raise_for_status()
+            status_code = upstream_response.status
+            content_type = upstream_response.headers.get("Content-Type")
 
-        status_code = upstream_response.status
-        content_type = upstream_response.headers.get("Content-Type")
-
-        content = await upstream_response.content.read()
+            content = await upstream_response.content.read()
 
         return HttpResponse(
             content,
@@ -285,7 +286,7 @@ async def get(
         except ConnectionError:
             logger.warning("Redis connect failed, thumbnail errors not tallied.")
 
-        if isinstance(exc, ClientResponseError):
+        if isinstance(exc, aiohttp.ClientResponseError):
             status = exc.status
             await _tally_client_response_errors(tallies, month, domain, status)
             logger.warning(

@@ -1,3 +1,4 @@
+import asyncio
 import mimetypes
 from os.path import splitext
 from urllib.parse import urlparse
@@ -21,6 +22,25 @@ logger = structlog.get_logger(__name__)
 _HEAD_TIMEOUT = aiohttp.ClientTimeout(settings.THUMBNAIL_EXTENSION_REQUEST_TIMEOUT)
 
 
+# Used to filter network errors during extension checks that we believe
+# we should get errors (rather than warnings) for, e.g., a Sentry issue.
+# As such, this should exclude errors where we don't think we have the
+# ability to control the outcome, whether now or in the future.
+# Some things, like SSL errors and timeouts, may be used to inform liveness
+# checks or otherwise useful catalog information in the future.
+# However, for now, we just need to avoid filling up our error backlog
+# with things we aren't able to actually do anything about right now.
+_NON_ACTIONABLE_NETWORK_EXCEPTIONS = (
+    aiohttp.ClientConnectorCertificateError,
+    aiohttp.ClientConnectorSSLError,
+    aiohttp.ClientConnectorError,
+    aiohttp.ServerDisconnectedError,
+    aiohttp.ServerTimeoutError,
+    aiohttp.ClientOSError,
+    asyncio.TimeoutError,
+)
+
+
 async def get_image_extension(media_info: MediaInfo) -> str | None:
     image_url = media_info.image_url
 
@@ -41,7 +61,8 @@ async def get_image_extension(media_info: MediaInfo) -> str | None:
         # If the extension is still not present, try getting it from the content type
         try:
             session = await get_aiohttp_session()
-            response = await session.head(
+
+            async with session.head(
                 image_url,
                 raise_for_status=True,
                 timeout=_HEAD_TIMEOUT,
@@ -49,17 +70,29 @@ async def get_image_extension(media_info: MediaInfo) -> str | None:
                     "timing_event_name": "thumbnail_extension_request_timing",
                     "timing_event_ctx": {"provider": media_info.media_provider},
                 },
-            )
-
-            if response.headers and "Content-Type" in response.headers:
-                content_type = response.headers["Content-Type"]
-                ext = _get_file_extension_from_content_type(content_type)
-            else:
-                ext = None
+            ) as response:
+                if response.headers and "Content-Type" in response.headers:
+                    content_type = response.headers["Content-Type"]
+                    ext = _get_file_extension_from_content_type(content_type)
+                else:
+                    ext = None
 
             await _cache_extension(cache, key, ext)
         except Exception as exc:
-            logger.error("upstream_thumbnail_exception", exc=exc, exc_info=True)
+            # Aside from client errors, the timeout defined for `get_image_extension`
+            # is generous, and if the head request exceeds it, we're comfortable saying
+            # we'll skip generating this thumbnail. In the future, we might adjust
+            # timeouts with per-provider granularity, but for now, we just have to
+            # accept they will happen and are part of the set of non-actionable
+            # networking errors that we don't need to report as errors to Sentry.
+            if not isinstance(exc, asyncio.TimeoutError):
+                if isinstance(exc, _NON_ACTIONABLE_NETWORK_EXCEPTIONS):
+                    log = logger.warning
+                else:
+                    log = logger.error
+
+            log("upstream_thumbnail_exception", exc=exc, exc_info=True)
+
             raise UpstreamThumbnailException(
                 "Failed to render thumbnail due to inability to check media "
                 f"type. {exc}"
