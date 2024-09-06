@@ -14,6 +14,7 @@ from airflow import settings
 from airflow.decorators import task, task_group
 from airflow.exceptions import AirflowSkipException
 from airflow.models.connection import Connection
+from airflow.operators.empty import EmptyOperator
 from airflow.providers.amazon.aws.hooks.ec2 import EC2Hook
 from airflow.providers.common.sql.hooks.sql import fetch_one_handler
 from airflow.sensors.base import PokeReturnValue
@@ -279,8 +280,7 @@ def drop_connection(worker_conn: str):
     session.commit()
 
 
-@task(trigger_rule=TriggerRule.NONE_FAILED)
-def report_reindexing_status():
+def assert_reindexing_success() -> EmptyOperator:
     """
     Fail if the direct upstream tasks, which perform the actual reindexing,
     fail. Otherwise simply pass.
@@ -294,7 +294,9 @@ def report_reindexing_status():
     directly upstream of later tasks; the last task in the TaskGroup
     must fail.
     """
-    logger.info("Reindexing completed successfully.")
+    return EmptyOperator(
+        task_id="assert_reindexing_success", trigger_rule=TriggerRule.NONE_FAILED
+    )
 
 
 @task_group(group_id="reindex")
@@ -368,7 +370,7 @@ def reindex(
         instance_id=instance_id,
     )
 
-    status = report_reindexing_status()
+    status = assert_reindexing_success()
 
     drop_conn = drop_connection(worker_conn=worker_conn)
 
