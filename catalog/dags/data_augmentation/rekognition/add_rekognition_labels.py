@@ -55,7 +55,12 @@ def _insert_tags(tags_buffer: types.TagsBuffer, postgres_conn_id: str):
         postgres_conn_id=postgres_conn_id,
         default_statement_timeout=constants.INSERT_TIMEOUT,
     )
-    postgres.insert_rows(constants.TEMP_TABLE_NAME, tags_buffer, executemany=True)
+    postgres.insert_rows(
+        constants.TEMP_TABLE_NAME,
+        tags_buffer,
+        executemany=True,
+        replace=True,
+    )
 
 
 @task(trigger_rule=TriggerRule.NONE_FAILED_MIN_ONE_SUCCESS)
