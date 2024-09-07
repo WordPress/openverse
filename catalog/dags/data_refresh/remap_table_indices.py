@@ -54,7 +54,7 @@ def _transform_index_def(
     # Update the table name to the temp table. The table name always follows
     # the word 'ON' in the def, e.g. `ON public.audio`
     table_name_idx = tokens.index("ON") + 1
-    schema_name, table_name = tokens[table_name_idx].split(".")
+    schema_name, table_name = tokens[table_name_idx].split(".", maxsplit=1)
     tokens[table_name_idx] = f"{schema_name}.{temp_table_name}"
 
     return TableIndex(old_index_name, temp_index_name, " ".join(tokens))
