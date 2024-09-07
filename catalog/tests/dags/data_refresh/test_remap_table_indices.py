@@ -73,6 +73,21 @@ def test_transform_index_defs(existing_index_defs, expected_index_defs):
             ],
             [],
         ),
+        # Single index that should be remapped
+        (
+            [
+                TableIndex(
+                    "image_provider_7d11f847",
+                    "temp_import_image_provider_7d11f847",
+                    "CREATE INDEX temp_import_image_provider_7d11f847 ON"
+                    " public.temp_import_image USING btree (provider)",
+                ),
+            ],
+            [
+                "CREATE INDEX temp_import_image_provider_7d11f847 ON"
+                " public.temp_import_image USING btree (provider)",
+            ],
+        ),
         # If there are multiple indices, run_sql is called for all except the pk
         (
             [
@@ -104,7 +119,7 @@ def test_transform_index_defs(existing_index_defs, expected_index_defs):
         ),
     ],
 )
-def test(index_configs, expected_sql):
+def test_create_table_indices(index_configs, expected_sql):
     with patch("common.sql.run_sql.function") as run_sql_mock:
         create_table_indices.function(
             postgres_conn_id="test_id", index_configs=index_configs, table_name="image"
