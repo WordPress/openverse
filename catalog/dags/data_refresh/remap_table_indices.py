@@ -93,10 +93,6 @@ def create_table_indices(
     return index_configs
 
 
-def _is_foreign_key(_statement, table):
-    return f"REFERENCES {table}(" in _statement
-
-
 @task_group
 def remap_table_indices_to_table(
     table_name: str, temp_table_name: str, postgres_conn_id: str

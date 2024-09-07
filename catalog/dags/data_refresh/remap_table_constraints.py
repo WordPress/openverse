@@ -31,8 +31,8 @@ def fetch_all_tuples(cursor):
         raise ValueError("Unable to extract expected row data from cursor") from e
 
 
-def _is_foreign_key(_statement, table):
-    return f"REFERENCES {table}(" in _statement
+def _is_foreign_key(statement, table):
+    return f"REFERENCES {table}(" in statement
 
 
 def _remap_constraint(
