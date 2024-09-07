@@ -117,6 +117,9 @@ def create_api():
     _api.add_route("/healthcheck", HealthcheckResource())
     _api.add_route("/task", IndexingJobResource(task_tracker))
     _api.add_route("/task/{task_id}", TaskStatusResource(task_tracker))
+
+    # Used to serve the mock sensitive terms list. Intended for local testing
+    # only.
     _api.add_static_route("/static", (Path(".") / "static").absolute())
 
     return _api
