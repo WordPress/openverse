@@ -17,6 +17,8 @@ import structlog
 from drf_spectacular.utils import extend_schema
 from oauth2_provider.contrib.rest_framework.permissions import TokenHasScope
 from oauth2_provider.generators import generate_client_secret
+from oauth2_provider.models import AccessToken
+from oauth2_provider.signals import app_authorized
 from oauth2_provider.views import TokenView as BaseTokenView
 from redis.exceptions import ConnectionError
 
@@ -179,6 +181,17 @@ class TokenView(APIView, BaseTokenView):
             raise InvalidCredentials()
         data = json.loads(res.content)
         return Response(data, status=res.status_code)
+
+
+@app_authorized.connect
+def log_app_authorized(request, token: AccessToken, **kwargs):
+    application = token.application
+    logger.info(
+        "client_application_authorized",
+        application_id=application.id,
+        application_name=application.name,
+        application_verified=application.verified,
+    )
 
 
 @extend_schema(tags=["auth"])
