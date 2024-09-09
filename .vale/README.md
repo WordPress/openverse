@@ -1,9 +1,14 @@
 # Openverse Vale configuration
 
-Openverse runs Vale using Docker. This bypasses the need for contributors to
-install the Vale binary on their computers. It also prevents Vale styles getting
-downloaded into the repository in clear text, which is critical to avoid lists
-of sensitive terms being accidentally too-easily available.
+Openverse runs Vale using
+[Vale's PyPI distribution](https://pypi.org/project/vale/). This allows our Vale
+version to be tracked in this directory's `pyproject.toml`, meaning tools like
+Renovate will be aware of and update it automatically.
+
+This approach to running Vale is intended specifically for running inside `ov`,
+and will likely not work outside `ov`. Synced styles are kept in `ov`'s `opt`
+directory, which prevents downloaded styles from appearing within the project
+files on a contributor's computer.
 
 For more information about this motivation to avoid lists of sensitive terms in
 the Openverse monorepo, refer to the README at
@@ -15,15 +20,11 @@ To run Vale with Openverse's configuration, use the just recipe:
 ov just .vale/run
 ```
 
-This recipe _always_ builds Vale. The Openverse Vale docker image is fast to
-build, and the most expensive steps are cached. Docker will automatically reuse
-the pre-existing image unless there are changes to the Vale configuration.
-
-Typically it is unnecessary to run Vale directly, as pre-commit automatically
+Typically, it is unnecessary to run Vale directly, as pre-commit automatically
 runs Vale on each commit. You only need to run Vale directly when iterating on
 changes to Openverse's Vale configuration.
 
-Refer to the `VALE_FILES` variable [in the justfile](./justfile) to identify
-which files we currently check with Vale. A comment on the variable explains the
+Refer to the `_files` recipe [in the `justfile`](./justfile) to identify which
+files we currently check with Vale. A comment on the recipe explains the
 rationale for that choice. The list of files will ideally expand in the future
 to include all textual content in the repository.
