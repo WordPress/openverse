@@ -1,7 +1,5 @@
-<script lang="ts">
+<script setup lang="ts">
 import { navigateTo, useHead } from "#imports"
-
-import { defineComponent } from "vue"
 
 import { useSearchStore } from "~/stores/search"
 
@@ -13,40 +11,27 @@ import VLink from "~/components/VLink.vue"
 import VStandaloneSearchBar from "~/components/VHeader/VSearchBar/VStandaloneSearchBar.vue"
 import VSvg from "~/components/VSvg/VSvg.vue"
 
-export default defineComponent({
-  name: "VFourOhFour",
-  components: {
-    VLink,
-    VStandaloneSearchBar,
-    VSvg,
-  },
-  props: ["error"],
-  setup() {
-    const searchStore = useSearchStore()
+import type { NuxtError } from "#app"
 
-    const { sendCustomEvent } = useAnalytics()
+defineProps<{ error: NuxtError }>()
 
-    const handleSearch = (searchTerm: string) => {
-      sendCustomEvent("SUBMIT_SEARCH", {
-        searchType: ALL_MEDIA,
-        query: searchTerm,
-      })
+const searchStore = useSearchStore()
 
-      return navigateTo(
-        searchStore.updateSearchPath({ type: ALL_MEDIA, searchTerm })
-      )
-    }
+const { sendCustomEvent } = useAnalytics()
 
-    useHead({
-      meta: [{ hid: "theme-color", name: "theme-color", content: "#ffe033" }],
-    })
+const handleSearch = (searchTerm: string) => {
+  sendCustomEvent("SUBMIT_SEARCH", {
+    searchType: ALL_MEDIA,
+    query: searchTerm,
+  })
 
-    return {
-      handleSearch,
+  return navigateTo(
+    searchStore.updateSearchPath({ type: ALL_MEDIA, searchTerm })
+  )
+}
 
-      skipToContentTargetId,
-    }
-  },
+useHead({
+  meta: [{ hid: "theme-color", name: "theme-color", content: "#ffe033" }],
 })
 </script>
 

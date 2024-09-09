@@ -1,8 +1,5 @@
 import type { FeatureState } from "~/constants/feature-flag"
-import type { RealBreakpoint } from "~/constants/screens"
-import type { BannerId } from "~/types/banners"
-
-export type SnackbarState = "not_shown" | "visible" | "dismissed"
+import { UiState } from "~/stores/ui"
 
 const baseCookieOptions = {
   path: "/",
@@ -15,6 +12,12 @@ export const persistentCookieOptions = {
   maxAge: 60 * 60 * 24 * 60, // 60 days; Makes the cookie persistent.
 } as const
 
+export const defaultPersistientCookieState: OpenverseCookieState = {
+  ui: {
+    colorMode: "system",
+  },
+}
+
 export const sessionCookieOptions = {
   ...baseCookieOptions,
   maxAge: undefined, // these cookies are not persistent and will be deleted by the browser after the session.
@@ -24,28 +27,11 @@ export const sessionCookieOptions = {
  * The cookies that Openverse uses to store the UI state.
  */
 export interface OpenverseCookieState {
-  ui: {
-    /**
-     * The state of the instructions snackbar for audio component.
-     */
-    instructionsSnackbarState?: SnackbarState
-    /**
-     * Whether the filters were dismissed on desktop layout.
-     */
-    isFilterDismissed?: boolean
-    /**
-     * The screen's max-width breakpoint.
-     */
-    breakpoint?: RealBreakpoint
-    /**
-     * Whether the request user agent is mobile or not.
-     */
-    isMobileUa?: boolean
-    /**
-     * The list of ids of dismissed banners.
-     */
-    dismissedBanners?: BannerId[]
-  }
+  /**
+   * Values used to SSR the site,
+   * persisted by the ui store.
+   */
+  ui: Partial<UiState>
   /**
    * The state of the persistent feature flags.
    */

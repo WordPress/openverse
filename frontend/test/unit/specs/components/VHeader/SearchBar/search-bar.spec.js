@@ -7,52 +7,42 @@ import { render } from "~~/test/unit/test-utils/render"
 import { useMatchHomeRoute } from "~/composables/use-match-routes"
 
 import VSearchBar from "~/components/VHeader/VSearchBar/VSearchBar.vue"
-import { FIELD_SIZES } from "~/components/VInputField/VInputField.vue"
 
 vi.mock("~/composables/use-match-routes", () => ({
   useMatchHomeRoute: vi.fn(),
 }))
 
-const sizes = Object.keys(FIELD_SIZES)
 const defaultPlaceholder = "Enter search query"
 
 describe("VSearchBar", () => {
   let options
   beforeEach(() => {
     options = {
-      props: { placeholder: defaultPlaceholder, size: "medium" },
+      props: { placeholder: defaultPlaceholder },
     }
   })
 
-  it.each(sizes)(
-    'renders an input field with placeholder and type="search" (%s size)',
-    async (size) => {
-      useMatchHomeRoute.mockImplementation(() => false)
-      options.props.size = size
-      await render(VSearchBar, options)
+  it('renders an input field with placeholder and type="search"', async () => {
+    useMatchHomeRoute.mockImplementation(() => false)
+    await render(VSearchBar, options)
 
-      const inputElement = screen.getByPlaceholderText(defaultPlaceholder)
+    const inputElement = screen.getByPlaceholderText(defaultPlaceholder)
 
-      expect(inputElement.tagName).toBe("INPUT")
-      expect(inputElement).toHaveAttribute("type", "search")
-      expect(inputElement).toHaveAttribute("placeholder", defaultPlaceholder)
-    }
-  )
+    expect(inputElement.tagName).toBe("INPUT")
+    expect(inputElement).toHaveAttribute("type", "search")
+    expect(inputElement).toHaveAttribute("placeholder", defaultPlaceholder)
+  })
 
-  it.each(sizes)(
-    'renders a button with type="submit", ARIA label and SR text (%s size)',
-    async (size) => {
-      useMatchHomeRoute.mockImplementation(() => false)
-      options.props.size = size
-      await render(VSearchBar, options)
+  it('renders a button with type="submit", ARIA label and SR text', async () => {
+    useMatchHomeRoute.mockImplementation(() => false)
+    await render(VSearchBar, options)
 
-      const btnElement = screen.getByRole("button", { name: /search/i })
+    const btnElement = screen.getByRole("button", { name: /search/i })
 
-      expect(btnElement.tagName).toBe("BUTTON")
-      expect(btnElement).toHaveAttribute("type", "submit")
-      expect(btnElement).toHaveAttribute("aria-label", "Search")
-    }
-  )
+    expect(btnElement.tagName).toBe("BUTTON")
+    expect(btnElement).toHaveAttribute("type", "submit")
+    expect(btnElement).toHaveAttribute("aria-label", "Search")
+  })
 
   describe("placeholder", () => {
     it("should default to hero.search.placeholder", async () => {

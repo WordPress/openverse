@@ -293,7 +293,7 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
      * @param name - the name of the flag to toggle
      * @param targetState - the desired state of the feature flag
      */
-    toggleFeature(name: string, targetState: FeatureState) {
+    toggleFeature(name: FlagName, targetState: FeatureState) {
       if (!isFlagName(name)) {
         throw new Error(`Toggling invalid feature flag: ${name}`)
       }
@@ -315,7 +315,7 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
       storage.value = this.flags.analytics.state === ON ? null : true
     },
 
-    isSwitchable(name: string) {
+    isSwitchable(name: FlagName) {
       if (!isFlagName(name)) {
         throw new Error(`Invalid feature flag accessed: ${name}`)
       }
@@ -328,7 +328,7 @@ export const useFeatureFlagStore = defineStore(FEATURE_FLAG, {
      *
      * @returns `true` if the flag is on, false otherwise
      */
-    isOn(name: string) {
+    isOn(name: FlagName) {
       if (!isFlagName(name)) {
         throw new Error(`Invalid feature flag accessed: ${name}`)
       }

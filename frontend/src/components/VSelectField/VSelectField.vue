@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, useAttrs, useSlots } from "vue"
 
-import { defineEvent } from "~/types/emits"
 import type { ProperlyExtractPropTypes } from "~/types/prop-extraction"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
@@ -34,16 +33,16 @@ const props = withDefaults(
     fieldId: string
     labelText: string
     choices: Choice[]
+    showSelected?: boolean
   }>(),
   {
     modelValue: "",
     blankText: "",
+    showSelected: true,
   }
 )
 
-const emit = defineEmits({
-  "update:modelValue": defineEvent<[string]>(),
-})
+const emit = defineEmits<{ "update:modelValue": [string] }>()
 
 const attrs = useAttrs()
 const slots = useSlots()
@@ -73,7 +72,7 @@ const splitAttrs = computed(() => {
 
 <template>
   <div
-    class="relative m-0.5px box-content block w-fit overflow-hidden rounded-sm border border-default text-sm focus-within:m-0 focus-within:border-1.5 focus-within:border-focus hover:border-hover focus-within:hover:border-focus"
+    class="relative m-0.5px box-content block w-fit rounded-sm border border-default text-sm focus-within:m-0 focus-within:border-1.5 focus-within:border-focus hover:border-hover focus-within:hover:border-focus"
     :class="splitAttrs.classAttrs"
   >
     <div class="pointer-events-none absolute inset-y-0 start-2 my-auto h-fit">
@@ -85,8 +84,11 @@ const splitAttrs = computed(() => {
     <select
       :id="fieldId"
       v-model="selectValue"
-      class="flex h-[calc(theme(spacing.10)_-_2_*_theme(borderWidth.DEFAULT))] w-full appearance-none truncate bg-tx pe-10"
-      :class="hasStartContent ? 'ps-10' : 'ps-2'"
+      class="flex h-[calc(theme(spacing.10)_-_2_*_theme(borderWidth.DEFAULT))] appearance-none truncate bg-tx pe-10"
+      :class="[
+        showSelected ? 'w-full' : 'w-0 max-w-0',
+        hasStartContent ? 'ps-10' : 'ps-2',
+      ]"
       :name="fieldName"
       v-bind="splitAttrs.nonClassAttrs"
       :aria-label="labelText"

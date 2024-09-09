@@ -1,16 +1,5 @@
-<script lang="ts">
-import { defineComponent } from "vue"
-
+<script setup lang="ts">
 import { skipToContentTargetId } from "~/constants/window"
-
-export default defineComponent({
-  name: "VContentPage",
-  setup() {
-    return {
-      skipToContentTargetId,
-    }
-  },
-})
 </script>
 
 <template>

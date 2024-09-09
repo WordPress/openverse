@@ -1,5 +1,9 @@
-<script lang="ts">
-import { computed, defineComponent, PropType } from "vue"
+<script setup lang="ts">
+/**
+ * The icon-only version of VButton component. In some cases, VButton is replaced
+ * with VIconButton in small breakpoints.
+ */
+import { computed } from "vue"
 
 import type {
   ButtonConnections,
@@ -10,59 +14,31 @@ import type {
 import VIcon, { type IconProps } from "~/components/VIcon/VIcon.vue"
 import VButton from "~/components/VButton.vue"
 
-import type { TranslateResult } from "vue-i18n"
+const props = defineProps<{
+  /**
+   * The size of the button, matches the sizes of VButton component.
+   */
+  size: ButtonSize
+  /**
+   * The visual variant of the button, matches the variants of VButton component.
+   */
+  variant: ButtonVariant
+  /**
+   * Props to pass down to the `VIcon` component nested inside the button.
+   * See documentation on `VIcon`.
+   */
+  iconProps?: IconProps
+  /**
+   * Connections to pass down to the `VButton` component nested inside the button.
+   */
+  connections?: ButtonConnections[]
+  /**
+   * The label used for accessibility purposes.
+   */
+  label: string
+}>()
 
-/**
- * The icon-only version of VButton component. In some cases, VButton is replaced
- * with VIconButton in small breakpoints.
- */
-export default defineComponent({
-  name: "VIconButton",
-  components: { VIcon, VButton },
-  props: {
-    /**
-     * The size of the button, matches the sizes of VButton component.
-     */
-    size: {
-      type: String as PropType<ButtonSize>,
-      required: true,
-    },
-    /**
-     * The visual variant of the button, matches the variants of VButton component.
-     */
-    variant: {
-      type: String as PropType<ButtonVariant>,
-      required: true,
-    },
-    /**
-     * Props to pass down to the `VIcon` component nested inside the button.
-     * See documentation on `VIcon`.
-     */
-    iconProps: {
-      type: Object as PropType<IconProps>,
-      required: false,
-    },
-    /**
-     * Connections to pass down to the `VButton` component nested inside the button.
-     */
-    connections: {
-      type: Array as PropType<ButtonConnections[]>,
-    },
-    /**
-     * The label used for accessibility purposes.
-     */
-    label: {
-      type: [String, Object] as PropType<string | TranslateResult>,
-      required: true,
-    },
-  },
-  setup(props) {
-    const iconSize = computed(() => props.iconProps?.size ?? 6)
-    return {
-      iconSize,
-    }
-  },
-})
+const iconSize = computed(() => props.iconProps?.size ?? 6)
 </script>
 
 <template>

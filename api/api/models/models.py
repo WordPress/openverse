@@ -21,7 +21,7 @@ class ContentSource(models.Model):
     """
 
     source_identifier = models.CharField(
-        max_length=50, unique=True, db_column="provider_identifier"
+        max_length=80, unique=True, db_column="provider_identifier"
     )
     source_name = models.CharField(max_length=250, db_column="provider_name")
     created_on = models.DateTimeField(auto_now=False)

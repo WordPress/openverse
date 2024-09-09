@@ -1,5 +1,9 @@
-<script lang="ts">
-import { computed, defineComponent, PropType, ref } from "vue"
+<script setup lang="ts">
+/**
+ * The footer is the section displayed at the bottom of a page. It can contain
+ * some branding, links to other pages and an option to change the language.
+ */
+import { computed, ref } from "vue"
 
 import usePages from "~/composables/use-pages"
 import useResizeObserver from "~/composables/use-resize-observer"
@@ -7,82 +11,65 @@ import useResizeObserver from "~/composables/use-resize-observer"
 import { SCREEN_SIZES } from "~/constants/screens"
 
 import { useUiStore } from "~/stores/ui"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import type { SelectFieldProps } from "~/components/VSelectField/VSelectField.vue"
 import VLink from "~/components/VLink.vue"
 import VBrand from "~/components/VBrand/VBrand.vue"
 import VLanguageSelect from "~/components/VLanguageSelect/VLanguageSelect.vue"
+import VThemeSelect from "~/components/VThemeSelect/VThemeSelect.vue"
 import VPageLinks from "~/components/VHeader/VPageLinks.vue"
 import VWordPressLink from "~/components/VHeader/VWordPressLink.vue"
 
-/**
- * The footer is the section displayed at the bottom of a page. It can contain
- * some branding, links to other pages and an option to change the language.
- */
-export default defineComponent({
-  name: "VFooter",
-  components: {
-    VWordPressLink,
-    VPageLinks,
-    VLanguageSelect,
-    VLink,
-    VBrand,
-  },
-  props: {
+type FooterMode = "internal" | "content"
+
+const props = withDefaults(
+  defineProps<{
     /**
      * whether the footer is being rendered on a search page or an internal
      * page (about, feedback, etc.); This determines whether the Openverse
      * logo and other links are displayed.
      * Search pages use "content" footer.
      */
-    mode: {
-      type: String as PropType<"internal" | "content">,
-      required: false,
-    },
-    languageProps: {
-      type: Object as PropType<SelectFieldProps>,
-      default: () => ({}),
-    },
-  },
-  setup(props) {
-    const uiStore = useUiStore()
-    const { all: allPages, current: currentPage } = usePages()
+    mode: FooterMode
+    languageProps?: SelectFieldProps
+  }>(),
+  {
+    languageProps: () => ({}),
+  }
+)
 
-    const isContentMode = computed(() => props.mode === "content")
+const uiStore = useUiStore()
+const { all: allPages } = usePages()
 
-    /** JS-based responsiveness */
-    const footerEl = ref<HTMLElement | null>(null)
-    const initialWidth = SCREEN_SIZES[uiStore.breakpoint]
-    const { dimens: footerDimens } = useResizeObserver(footerEl, {
-      initialWidth,
-    })
+const isContentMode = computed(() => props.mode === "content")
 
-    /**
-     * Return a list of all breakpoints that are smaller than the current screen width. This allows us to use the smallest variant class to target CSS styles.
-     *
-     * I.e., with a width at 1200, the footer will have `footer-2xl footer-lg`. Using `footer-lg`, we can apply styles to both `footer-2xl` and `footer-lg`.
-     */
-    const variantNames = computed(() =>
-      Object.entries(SCREEN_SIZES)
-        .filter(([, val]) => footerDimens.value.width >= val)
-        .map(([key]) => `footer-${key}`)
-    )
+const featureFlagStore = useFeatureFlagStore()
+const showThemeSwitcher = computed(() =>
+  featureFlagStore.isOn("dark_mode_ui_toggle")
+)
 
-    const linkColumnHeight = computed(() => ({
-      "--link-col-height": Math.ceil(Object.keys(allPages).length / 2),
-    }))
-
-    return {
-      isContentMode,
-      allPages,
-      currentPage,
-
-      footerEl,
-      variantNames,
-      linkColumnHeight,
-    }
-  },
+/** JS-based responsiveness */
+const footerEl = ref<HTMLElement | null>(null)
+const initialWidth = SCREEN_SIZES[uiStore.breakpoint]
+const { dimens: footerDimens } = useResizeObserver(footerEl, {
+  initialWidth,
 })
+
+/**
+ * Return a list of all breakpoints that are smaller than the current screen width. This allows us to use the smallest variant class to target CSS styles.
+ *
+ * I.e., with a width at 1200, the footer will have `footer-2xl footer-lg`. Using `footer-lg`, we can apply styles to both `footer-2xl` and `footer-lg`.
+ */
+const variantNames = computed(() =>
+  Object.entries(SCREEN_SIZES)
+    .filter(([, val]) => footerDimens.value.width >= val)
+    .map(([key]) => `footer-${key}`)
+)
+
+const linkColumnHeight = computed(() => ({
+  "--link-col-height": Math.ceil(Object.keys(allPages).length / 2),
+}))
 </script>
 
 <template>
@@ -110,11 +97,25 @@ export default defineComponent({
 
     <!-- Locale chooser and WordPress affiliation graphic -->
     <div class="locale-and-wp flex flex-col justify-between">
-      <VLanguageSelect
-        v-bind="languageProps"
-        class="language max-w-full border-secondary"
-      />
-      <VWordPressLink mode="light" />
+      <template v-if="showThemeSwitcher">
+        <VWordPressLink mode="light" />
+        <div class="flex flex-row items-center gap-6">
+          <VLanguageSelect
+            v-bind="languageProps"
+            class="language max-w-full border-secondary"
+          />
+          <ClientOnly>
+            <VThemeSelect class="border-secondary" />
+          </ClientOnly>
+        </div>
+      </template>
+      <template v-else>
+        <VLanguageSelect
+          v-bind="languageProps"
+          class="language max-w-full border-secondary"
+        />
+        <VWordPressLink mode="light" />
+      </template>
     </div>
   </footer>
 </template>

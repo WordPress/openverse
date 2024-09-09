@@ -53,7 +53,7 @@ class ScienceMuseumDataIngester(ProviderDataIngester):
     get_response_json = backoff.on_exception(
         backoff.expo,
         HTTPError,
-        max_time=60 * 2,
+        max_time=60 * 30,  # 30 minutes
         # Only retry on 5XX errors
         giveup=lambda e: e.response.status_code not in {502, 503, 504},
     )(ProviderDataIngester.get_response_json)

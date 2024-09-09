@@ -45,6 +45,7 @@ known-first-party = [
   "ingestion_server",
   "indexer_worker",
   "common",
+  "data_augmentation",
   "data_refresh",
   "database",
   "elasticsearch_cluster",
@@ -52,7 +53,6 @@ known-first-party = [
   "maintenance",
   "oauth2",
   "providers",
-  "retired",
   "test",
 ]
 

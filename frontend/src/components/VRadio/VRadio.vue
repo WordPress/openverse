@@ -1,59 +1,39 @@
-<script lang="ts">
-import { computed, defineComponent } from "vue"
-
-import { defineEvent } from "~/types/emits"
-
-import VSvg from "~/components/VSvg/VSvg.vue"
+<script setup lang="ts">
 /**
  * Renders a radio input field, useful for choosing one of a few options that
  * can all be presented on the screen at once.
  */
-export default defineComponent({
-  name: "VRadio",
-  components: { VSvg },
-  inheritAttrs: false,
-  model: {
-    prop: "modelValue",
-    event: "change",
-  },
-  props: {
+import { computed } from "vue"
+
+import VSvg from "~/components/VSvg/VSvg.vue"
+
+defineOptions({ inheritAttrs: false })
+
+const emit = defineEmits<{ "update:modelValue": [string] }>()
+const props = withDefaults(
+  defineProps<{
     /**
-     * the input `id` property; This is used to connect the label to the radio.
+     * The input `id` property. This is used to connect the label to the radio.
      */
-    id: {
-      type: String,
-      required: true,
-    },
+    id: string
     /**
      * the value associated with this radio input
      */
-    value: {
-      type: String,
-      required: true,
-    },
+    value: string
     /**
      * the value of the `v-model` associated with the radio group
      */
-    modelValue: {
-      type: String,
-      default: "",
-    },
-  },
-  emits: {
-    "update:modelValue": defineEvent<[string]>(),
-  },
-  setup(props, { emit }) {
-    const isChecked = computed(() => props.value === props.modelValue)
-    const handleInput = () => {
-      emit("update:modelValue", props.value)
-    }
+    modelValue?: string
+  }>(),
+  {
+    modelValue: "",
+  }
+)
 
-    return {
-      isChecked,
-      handleInput,
-    }
-  },
-})
+const isChecked = computed(() => props.value === props.modelValue)
+const handleInput = () => {
+  emit("update:modelValue", props.value)
+}
 </script>
 
 <template>

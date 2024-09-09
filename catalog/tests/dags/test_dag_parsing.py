@@ -19,6 +19,7 @@ DAG_PATHS = [
     "data_refresh/dag_factory.py",
     "database/batched_update/batched_update_dag.py",
     "database/catalog_cleaner/catalog_cleaner.py",
+    "data_augmentation/rekognition/add_rekognition_labels_dag.py",
     "database/delete_records/delete_records_dag.py",
     "database/report_pending_reported_media.py",
     "database/staging_database_restore/staging_database_restore_dag.py",

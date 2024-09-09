@@ -202,9 +202,8 @@ catalog/                                # Primary code directory
 │   ├── oauth2/                         #   - DAGs & code for Oauth2 key management
 │   ├── providers/                      #   - DAGs & code for provider ingestion
 │   │   ├── provider_api_scripts/       #       - API access code specific to providers
-│   │   ├── provider_csv_load_scripts/  #       - Schema initialization SQL definitions for SQL-based providers
-│   │   │   └── *.py                    #       - DAG definition files for providers
-│   │   └── retired/                    #   - DAGs & code that is no longer needed but might be a useful guide for the future
+│   │   └── provider_csv_load_scripts/  #       - Schema initialization SQL definitions for SQL-based providers
+│   │       └── *.py                    #       - DAG definition files for providers
 │   ├── templates/                      # Templates for generating new provider code
 └── *                                   # Documentation, configuration files, and project requirements
 ```

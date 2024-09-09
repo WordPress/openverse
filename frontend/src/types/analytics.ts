@@ -9,6 +9,7 @@ import type { FilterCategory } from "~/constants/filters"
 import { ResultKind } from "~/types/result"
 import { RequestKind } from "~/types/fetch-state"
 import { Collection } from "~/types/search"
+import { License } from "~/constants/license"
 
 export type AudioInteraction = "play" | "pause" | "seek"
 export type AudioInteractionData = Exclude<
@@ -259,7 +260,7 @@ export type Events = {
    */
   VISIT_LICENSE_PAGE: {
     /** The slug of the license the user clicked on */
-    license: string
+    license: License
   }
   /**
    * Description: Whenever the user selects a result from the search results page.

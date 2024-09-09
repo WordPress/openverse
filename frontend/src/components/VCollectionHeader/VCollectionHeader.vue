@@ -1,5 +1,5 @@
-<script lang="ts">
-import { computed, defineComponent, type PropType } from "vue"
+<script setup lang="ts">
+import { computed } from "vue"
 
 import { useAnalytics } from "~/composables/use-analytics"
 
@@ -24,129 +24,104 @@ const icons = {
 /**
  * Renders the header of a tag/creator/source collection page.
  */
-export default defineComponent({
-  name: "VCollectionHeader",
-  components: { VScrollableLine, VIcon, VButton },
-  props: {
-    collectionParams: {
-      type: Object as PropType<CollectionParams>,
-      required: true,
-    },
-    creatorUrl: {
-      type: String,
-    },
-    mediaType: {
-      type: String as PropType<SupportedMediaType>,
-      required: true,
-    },
-  },
-  setup(props) {
-    const mediaStore = useMediaStore()
-    const providerStore = useProviderStore()
-    const searchStore = useSearchStore()
+const props = defineProps<{
+  mediaType: SupportedMediaType
+  collectionParams: CollectionParams
+  creatorUrl?: string
+}>()
 
-    const iconName = computed(() => icons[props.collectionParams.collection])
-    const collection = computed(() => props.collectionParams.collection)
+const mediaStore = useMediaStore()
+const providerStore = useProviderStore()
+const searchStore = useSearchStore()
 
-    const source = computed(() => {
-      if (props.collectionParams.collection === "tag") {
-        return {
-          name: "",
-          link: "",
-        }
-      }
-      return {
-        name: providerStore.getProviderName(
-          props.collectionParams.source,
-          props.mediaType
-        ),
-        link: providerStore.getSourceUrl(
-          props.collectionParams.source,
-          props.mediaType
-        ),
-      }
-    })
+const iconName = computed(() => icons[props.collectionParams.collection])
+const collection = computed(() => props.collectionParams.collection)
 
-    const title = computed(() => {
-      if (props.collectionParams.collection === "tag") {
-        return props.collectionParams.tag
-      } else if (props.collectionParams.collection === "creator") {
-        return props.collectionParams.creator
-      }
-      return source.value.name
-    })
-
-    const url = computed(() => {
-      if (props.collectionParams.collection === "tag") {
-        return undefined
-      } else if (props.collectionParams.collection === "creator") {
-        return props.creatorUrl
-      }
-      return source.value.link
-    })
-
-    const sourceCollectionLink = computed(() => {
-      if (props.collectionParams.collection !== "creator") {
-        return ""
-      }
-      return searchStore.getCollectionPath({
-        type: props.mediaType,
-        collectionParams: {
-          collection: "source",
-          source: props.collectionParams.source,
-        },
-      })
-    })
-
-    const showCollectionExternalLink = computed(() => {
-      return Boolean(props.collectionParams.collection !== "tag" && url.value)
-    })
-
-    const { getI18nCollectionResultCountLabel } = useI18nResultsCount()
-
-    const resultsLabel = computed(() => {
-      if (mediaStore.resultCount === 0 && mediaStore.fetchState.isFetching) {
-        return ""
-      }
-      const resultsCount = mediaStore.results[props.mediaType].count
-
-      return getI18nCollectionResultCountLabel(
-        resultsCount,
-        props.mediaType,
-        props.collectionParams.collection
-      )
-    })
-
-    const { sendCustomEvent } = useAnalytics()
-
-    const sendAnalyticsEvent = () => {
-      if (props.collectionParams.collection === "tag") {
-        return
-      }
-
-      const eventName =
-        props.collectionParams.collection === "creator"
-          ? "VISIT_CREATOR_LINK"
-          : "VISIT_SOURCE_LINK"
-      sendCustomEvent(eventName, {
-        url: url.value,
-        source: props.collectionParams.source,
-      })
-    }
-
+const source = computed(() => {
+  if (props.collectionParams.collection === "tag") {
     return {
-      collection,
-      title,
-      resultsLabel,
-      source,
-      url,
-      sourceCollectionLink,
-      showCollectionExternalLink,
-      iconName,
-      sendAnalyticsEvent,
+      name: "",
+      link: "",
     }
-  },
+  }
+  return {
+    name: providerStore.getProviderName(
+      props.collectionParams.source,
+      props.mediaType
+    ),
+    link: providerStore.getSourceUrl(
+      props.collectionParams.source,
+      props.mediaType
+    ),
+  }
 })
+
+const title = computed(() => {
+  if (props.collectionParams.collection === "tag") {
+    return props.collectionParams.tag
+  } else if (props.collectionParams.collection === "creator") {
+    return props.collectionParams.creator
+  }
+  return source.value.name
+})
+
+const url = computed(() => {
+  if (props.collectionParams.collection === "tag") {
+    return undefined
+  } else if (props.collectionParams.collection === "creator") {
+    return props.creatorUrl
+  }
+  return source.value.link
+})
+
+const sourceCollectionLink = computed(() => {
+  if (props.collectionParams.collection !== "creator") {
+    return ""
+  }
+  return searchStore.getCollectionPath({
+    type: props.mediaType,
+    collectionParams: {
+      collection: "source",
+      source: props.collectionParams.source,
+    },
+  })
+})
+
+const showCollectionExternalLink = computed(() => {
+  return Boolean(props.collectionParams.collection !== "tag" && url.value)
+})
+
+const { getI18nCollectionResultCountLabel } = useI18nResultsCount()
+
+const resultsLabel = computed(() => {
+  if (mediaStore.resultCount === 0 && mediaStore.fetchState.isFetching) {
+    return ""
+  }
+  const resultsCount = mediaStore.results[props.mediaType].count
+
+  return getI18nCollectionResultCountLabel(
+    resultsCount,
+    props.mediaType,
+    props.collectionParams.collection
+  )
+})
+
+const { sendCustomEvent } = useAnalytics()
+
+const sendAnalyticsEvent = () => {
+  if (props.collectionParams.collection === "tag") {
+    return
+  }
+
+  const eventName =
+    props.collectionParams.collection === "creator"
+      ? "VISIT_CREATOR_LINK"
+      : "VISIT_SOURCE_LINK"
+  sendCustomEvent(eventName, {
+    url: url.value,
+    source: props.collectionParams.source,
+  })
+}
 </script>
 
 <template>

@@ -9,6 +9,10 @@ import type { DeployEnv } from "~/constants/deploy-env"
 
 export type FlagName = keyof (typeof featureData)["features"]
 
+export function isFlagName(flag: string): flag is FlagName {
+  return flag in featureData.features
+}
+
 export type FlagStatusRecord = string | Partial<Record<DeployEnv, string>>
 /**
  * The record of a feature flag from the json file.

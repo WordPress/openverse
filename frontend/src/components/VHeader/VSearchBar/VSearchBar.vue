@@ -12,9 +12,7 @@ import { onClickOutside } from "@vueuse/core"
 
 import { useRecentSearches } from "~/composables/use-recent-searches"
 
-import VInputField, {
-  FIELD_SIZES,
-} from "~/components/VInputField/VInputField.vue"
+import VInputField from "~/components/VInputField/VInputField.vue"
 import VSearchButton from "~/components/VHeader/VSearchBar/VSearchButton.vue"
 import VRecentSearches from "~/components/VRecentSearches/VRecentSearches.vue"
 
@@ -26,12 +24,10 @@ const props = withDefaults(
      * the search query given as input to the field
      */
     modelValue?: string
-    size?: keyof typeof FIELD_SIZES
     placeholder?: string
   }>(),
   {
     modelValue: "",
-    size: "medium",
   }
 )
 
@@ -57,11 +53,8 @@ const handleSearch = () => {
 
 /* Recent searches */
 const recentClasses = computed(() => {
-  // Calculated by adding 8px to all heights defined in `VInputField.vue`.
-  const FIELD_OFFSETS = {
-    medium: "top-14",
-  } as const
-  return FIELD_OFFSETS[props.size]
+  // Calculated by adding 8px to the height of `VInputField.vue`.
+  return "top-14"
 })
 const focusInput = () => {
   inputFieldRef.value?.focusInput()
@@ -124,7 +117,6 @@ const nonClassAttrs = computed(() => {
         class="search-field flex-grow border-tx bg-secondary text-secondary focus-within:bg-default focus:border-focus group-hover:bg-secondary group-hover:text-default group-hover:focus-within:bg-default"
         :label-text="$t('search.searchBarLabel', { openverse: 'Openverse' })"
         :connection-sides="['end']"
-        :size="size"
         field-id="search-bar"
         type="search"
         autocomplete="off"

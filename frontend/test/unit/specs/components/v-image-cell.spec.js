@@ -36,9 +36,9 @@ describe("VImageCell", () => {
 
   it("is blurred when the image is sensitive", async () => {
     options.props.image.isSensitive = true
-    const { getByAltText } = await render(VImageCell, options)
-    const img = getByAltText("This image may contain sensitive content.")
-    expect(img).toHaveClass("blur-image")
+    const { getByTestId } = await render(VImageCell, options)
+    const overlay = getByTestId("blur-overlay")
+    expect(overlay).toBeVisible()
   })
 
   it("is does not contain title anywhere when the image is sensitive", async () => {

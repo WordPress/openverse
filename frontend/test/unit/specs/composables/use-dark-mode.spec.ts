@@ -1,4 +1,8 @@
-import { describe, it, expect } from "vitest"
+import { computed } from "#imports"
+
+import { describe, expect, test, vi } from "vitest"
+
+import { usePreferredColorScheme } from "@vueuse/core"
 
 import {
   DARK_MODE_CLASS,
@@ -7,29 +11,53 @@ import {
 } from "~/composables/use-dark-mode"
 import { OFF, ON } from "~/constants/feature-flag"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { useUiStore } from "~/stores/ui"
+
+vi.mock("@vueuse/core", () => ({
+  usePreferredColorScheme: vi.fn(),
+}))
 
 describe("useDarkMode", () => {
-  it(`should report isDarkMode as true and cssClass as ${DARK_MODE_CLASS} when the feature flag is enabled`, () => {
-    const featureFlagStore = useFeatureFlagStore()
-    featureFlagStore.toggleFeature("force_dark_mode", ON)
+  test.each`
+    description                                                | featureFlags                    | uiColorMode | osColorMode        | expectedColorMode | expectedEffectiveColorMode | expectedCssClass
+    ${"Toggle: off"}                                           | ${{ dark_mode_ui_toggle: OFF }} | ${"dark"}   | ${"dark"}          | ${"light"}        | ${"light"}                 | ${LIGHT_MODE_CLASS}
+    ${"Toggle: on, Preference: light"}                         | ${{ dark_mode_ui_toggle: ON }}  | ${"light"}  | ${"dark"}          | ${"light"}        | ${"light"}                 | ${LIGHT_MODE_CLASS}
+    ${"Toggle: on, Preference: dark"}                          | ${{ dark_mode_ui_toggle: ON }}  | ${"dark"}   | ${"light"}         | ${"dark"}         | ${"dark"}                  | ${DARK_MODE_CLASS}
+    ${"Toggle: on, Preference: system, System: light"}         | ${{ dark_mode_ui_toggle: ON }}  | ${"system"} | ${"light"}         | ${"system"}       | ${"light"}                 | ${""}
+    ${"Toggle: on, Preference: system, System: dark"}          | ${{ dark_mode_ui_toggle: ON }}  | ${"system"} | ${"dark"}          | ${"system"}       | ${"dark"}                  | ${""}
+    ${"Toggle: on, Preference: system, System: no-preference"} | ${{ dark_mode_ui_toggle: ON }}  | ${"system"} | ${"no-preference"} | ${"system"}       | ${"light"}                 | ${""}
+  `(
+    "$description: should report colorMode as $expectedColorMode, effectiveColorMode as $expectedEffectiveColorMode and cssClass as $expectedCssClass",
+    ({
+      featureFlags,
+      uiColorMode,
+      osColorMode,
+      expectedColorMode,
+      expectedEffectiveColorMode,
+      expectedCssClass,
+    }) => {
+      vi.mocked(usePreferredColorScheme).mockReturnValue(
+        computed(() => osColorMode)
+      )
 
-    // Call the composable
-    const { isDarkMode, cssClass } = useDarkMode()
+      const featureFlagStore = useFeatureFlagStore()
 
-    // Assert the computed properties
-    expect(isDarkMode.value).toBe(true)
-    expect(cssClass.value).toBe(DARK_MODE_CLASS)
-  })
+      featureFlagStore.toggleFeature(
+        "dark_mode_ui_toggle",
+        featureFlags.dark_mode_ui_toggle
+      )
 
-  it(`should report isDarkMode as false and cssClass as ${LIGHT_MODE_CLASS} when the feature flag is disabled`, () => {
-    const featureFlagStore = useFeatureFlagStore()
-    featureFlagStore.toggleFeature("force_dark_mode", OFF)
+      // Set the user preference for color mode
+      const uiStore = useUiStore()
+      uiStore.colorMode = uiColorMode
 
-    // Call the composable
-    const { isDarkMode, cssClass } = useDarkMode()
+      // Call the composable
+      const { colorMode, effectiveColorMode, cssClass } = useDarkMode()
 
-    // Assert the computed properties
-    expect(isDarkMode.value).toBe(false)
-    expect(cssClass.value).toBe(LIGHT_MODE_CLASS)
-  })
+      // Assert the computed properties
+      expect(colorMode.value).toBe(expectedColorMode)
+      expect(effectiveColorMode.value).toBe(expectedEffectiveColorMode)
+      expect(cssClass.value).toBe(expectedCssClass)
+    }
+  )
 })

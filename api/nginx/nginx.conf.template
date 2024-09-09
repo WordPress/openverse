@@ -22,9 +22,7 @@ log_format json_combined escape=json
     '"http_user_agent":"$http_user_agent",'
     '"http_x_forwarded_for":"$http_x_forwarded_for",'
     '"http_authorization":"$http_authorization",'
-    '"request_id":"$sent_http_x_request_id",'
-    '"client_application_name":"$sent_http_x_ov_client_application_name",'
-    '"client_application_verified":"$sent_http_x_ov_client_application_verified"'
+    '"request_id":"$sent_http_x_request_id"'
     '}';
 
 access_log  /var/log/nginx/access.log  json_combined;
