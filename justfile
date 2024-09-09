@@ -49,6 +49,7 @@ DC_USER := env_var_or_default("DC_USER", "opener")
 # Install Node.js dependencies for the entire monorepo
 node-install:
     pnpm i
+    pnpm --filter './packages/js/*' run build
     pnpm prepare:nuxt
     just frontend/run i18n:en
 
@@ -353,3 +354,14 @@ f:
 # alias for `pnpm --filter {package} run {script}`
 p package script +args="":
     pnpm --filter {{ package }} run {{ script }} {{ args }}
+
+# Run eslint with --fix and default file selection enabled; used to enable easy file overriding whilst retaining the defaults when running --all-files
+eslint *files="frontend automations/js packages/js .pnpmfile.cjs .eslintrc.js prettier.config.js tsconfig.base.json":
+    just p '@openverse/eslint-plugin' run build
+    pnpm exec eslint \
+        --ext .js,.ts,.vue,.json,.json5 \
+        --ignore-path .gitignore \
+        --ignore-path .eslintignore \
+        --max-warnings=0 \
+        --fix \
+        {{ files }}

@@ -1,0 +1,54 @@
+{
+  "name": "@openverse/api-client",
+  "version": "0.0.1-a2",
+  "description": "API client for the Openverse REST API",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/cjs/index.d.ts",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    "import": {
+      "default": "./dist/esm/index.js",
+      "types": "./dist/esm/index.d.ts"
+    },
+    "require": {
+      "default": "./dist/cjs/index.js",
+      "types": "./dist/cjs/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "rm -rf dist && mkdir dist && pnpm run build:rollup && pnpm pack && pnpm publish --dry-run --no-git-checks",
+    "build:rollup": "rollup --config rollup.config.ts --configPlugin typescript",
+    "types": "tsc -p . --noEmit",
+    "test:unit": "vitest run",
+    "generate": "node ./bin/generate.mjs"
+  },
+  "keywords": [
+    "openverse",
+    "creative commons"
+  ],
+  "homepage": "https://docs.openverse.org/packages/js/api_client/index.html",
+  "bugs": {
+    "url": "https://github.com/WordPress/openverse/issues"
+  },
+  "author": "Openverse Contributors <openverse@wordpress.org>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/WordPress/openverse",
+    "directory": "packages/js/openverse-api-client"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^11.1.6",
+    "nock": "14.0.0-beta.11",
+    "openapi-typescript": "^7.3.2",
+    "rollup": "^4.21.1",
+    "typescript": "^5.5.4",
+    "vite-tsconfig-paths": "^5.0.1",
+    "vitest": "^2.0.5"
+  },
+  "dependencies": {
+    "openapi-fetch": "^0.11.2"
+  }
+}
