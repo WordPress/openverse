@@ -5,7 +5,7 @@ import { defineStore } from "pinia"
 import type { FetchingError, FetchState } from "~/types/fetch-state"
 import type { Media } from "~/types/media"
 import type { SupportedMediaType } from "~/constants/media"
-import { createApiClient } from "~/data/api-service"
+import { useApiClient } from "~/composables/use-api-client"
 
 interface RelatedMediaState {
   mainMediaId: null | string
@@ -52,7 +52,7 @@ export const useRelatedMediaStore = defineStore("related-media", {
       this.mainMediaId = id
       this._startFetching()
       this.media = []
-      const client = createApiClient()
+      const client = useApiClient()
 
       try {
         this.media = await client.getRelatedMedia(mediaType, id)
