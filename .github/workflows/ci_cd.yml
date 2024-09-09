@@ -109,8 +109,8 @@ jobs:
       - name: Setup CI env
         uses: ./.github/actions/setup-env
         with:
-          # No Python setup is needed, the built-in Python runtime is okay.
-          setup_python: false
+          # PDM is needed to run Vale
+          setup_python: "true"
           # Node.js is needed by lint actions.
           install_recipe: "node-install"
 
