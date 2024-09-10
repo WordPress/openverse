@@ -357,7 +357,7 @@ p package script +args="":
 
 # Run eslint with --fix and default file selection enabled; used to enable easy file overriding whilst retaining the defaults when running --all-files
 eslint *files="frontend automations/js packages/js .pnpmfile.cjs .eslintrc.js prettier.config.js tsconfig.base.json":
-    just p '@openverse/eslint-plugin' run build
+    just p '@openverse/eslint-plugin' build
     pnpm exec eslint \
         --ext .js,.ts,.vue,.json,.json5 \
         --ignore-path .gitignore \
@@ -365,3 +365,7 @@ eslint *files="frontend automations/js packages/js .pnpmfile.cjs .eslintrc.js pr
         --max-warnings=0 \
         --fix \
         {{ files }}
+
+# Alias for `just packages/js/k6/run` or `just p k6 run`
+@k6 *args:
+    just packages/js/k6/run {{ args }}

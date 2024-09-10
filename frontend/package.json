@@ -41,7 +41,7 @@
     "test:storybook:local": "playwright test -c test/storybook",
     "test:storybook:debug": "PWDEBUG=1 pnpm test:storybook:local",
     "test:storybook:gen": "playwright codegen localhost:54000/",
-    "types": "vue-tsc -p .",
+    "types": "pnpm run prepare:nuxt && vue-tsc -p .",
     "i18n": "pnpm i18n:create-locales-list && pnpm i18n:get-translations && pnpm i18n:update-locales",
     "i18n:en": "pnpm i18n:get-translations --en-only",
     "i18n:copy-test-locales": "cp test/locales/**.json src/locales/ && mv src/locales/valid-locales.json src/locales/scripts/valid-locales.json",

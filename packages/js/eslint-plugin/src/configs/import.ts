@@ -35,8 +35,8 @@ export = {
             position: "before",
           },
           {
-            // Treat vue and composition-api as "builtin"
-            pattern: "(vue|@nuxtjs/composition-api)",
+            // Treat k6, vue and composition-api as "builtin"
+            pattern: "(k6|vue|@nuxtjs/composition-api)",
             group: "builtin",
             position: "before",
           },
