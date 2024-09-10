@@ -37,6 +37,7 @@ ENV PATH="${PNPM_BIN}:${N_PREFIX}/bin:${PDM_PYTHONS}:${HOME}/.local/bin:${PATH}"
 # - nodejs: language runtime (includes npm but not Corepack)
 # - docker*: used to interact with host Docker socket
 # - postgresql*: required to connect to PostgreSQL databases
+# - k6, words: used for load testing
 #
 # pipx dependencies:
 # - httpie: CLI HTTP client
@@ -50,6 +51,7 @@ ENV PATH="${PNPM_BIN}:${N_PREFIX}/bin:${PDM_PYTHONS}:${HOME}/.local/bin:${PATH}"
 RUN mkdir /pipx \
   && dnf -y install dnf-plugins-core \
   && dnf -y config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo \
+  && dnf -y install https://dl.k6.io/rpm/repo.rpm \
   && dnf -y install \
     git \
     g++ \
@@ -63,6 +65,7 @@ RUN mkdir /pipx \
     docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin \
     unzip \
     postgresql postgresql-devel \
+    k6 words \
   && dnf clean all \
   && pipx install --global \
     httpie \
