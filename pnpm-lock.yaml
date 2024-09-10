@@ -62,12 +62,6 @@ importers:
       '@floating-ui/dom':
         specifier: ^1.6.8
         version: 1.6.8
-      '@intlify/core-base':
-        specifier: 9.13.1
-        version: 9.13.1
-      '@intlify/message-compiler':
-        specifier: 9.13.1
-        version: 9.13.1
       '@nuxtjs/plausible':
         specifier: ^1.0.2
         version: 1.0.2(magicast@0.3.4)(rollup@4.21.2)(webpack-sources@3.2.3)
@@ -142,8 +136,8 @@ importers:
         specifier: ^3.14.1
         version: 3.14.1(@jest/globals@29.7.0)(@playwright/test@1.46.1)(@testing-library/vue@8.1.0(@vue/compiler-sfc@3.5.2)(vue@3.5.0(typescript@5.5.4)))(@vitest/ui@2.0.5(vitest@2.0.5))(@vue/test-utils@2.4.6)(h3@1.12.0)(jsdom@24.1.0)(magicast@0.3.4)(nitropack@2.9.7(encoding@0.1.13)(magicast@0.3.4)(webpack-sources@3.2.3))(playwright-core@1.46.1)(rollup@4.21.2)(vite@5.4.3(@types/node@22.5.1)(terser@5.31.0))(vitest@2.0.5(@types/node@22.5.1)(@vitest/ui@2.0.5)(jsdom@24.1.0)(terser@5.31.0))(vue-router@4.4.3(vue@3.5.0(typescript@5.5.4)))(vue@3.5.0(typescript@5.5.4))(webpack-sources@3.2.3)
       '@nuxtjs/i18n':
-        specifier: 8.3.1
-        version: 8.3.1(magicast@0.3.4)(rollup@4.21.2)(vue@3.5.0(typescript@5.5.4))(webpack-sources@3.2.3)
+        specifier: 8.5.2
+        version: 8.5.2(magicast@0.3.4)(rollup@4.21.2)(vue@3.5.0(typescript@5.5.4))(webpack-sources@3.2.3)
       '@nuxtjs/storybook':
         specifier: npm:@nuxtjs/storybook@nightly
         version: 8.3.0-28764731.a9bf66d(@babel/preset-env@7.25.4(@babel/core@7.24.7))(@types/node@22.5.1)(eslint@8.57.0)(magicast@0.3.4)(nuxt@3.13.1(@parcel/watcher@2.4.1)(@types/node@22.5.1)(encoding@0.1.13)(eslint@8.57.0)(ioredis@5.4.1)(magicast@0.3.4)(optionator@0.9.3)(rollup@4.21.2)(terser@5.31.0)(typescript@5.5.4)(vite@5.4.3(@types/node@22.5.1)(terser@5.31.0))(vue-tsc@2.1.4(typescript@5.5.4))(webpack-sources@3.2.3))(optionator@0.9.3)(rollup@4.21.2)(terser@5.31.0)(typescript@5.5.4)(vite@5.4.3(@types/node@22.5.1)(terser@5.31.0))(vue-tsc@2.1.4(typescript@5.5.4))(vue@3.5.0(typescript@5.5.4))(webpack-sources@3.2.3)
@@ -1781,8 +1775,8 @@ packages:
     peerDependencies:
       vue: ^3.3.4
 
-  '@nuxtjs/i18n@8.3.1':
-    resolution: {integrity: sha512-VHnnjFTTep2oC5++61WY06y4c/h943NyHQh1CRUJQvjsdbGSMX3WQjMGk+X05a3pyPFN70aq0YbgtsEoEoTEjQ==}
+  '@nuxtjs/i18n@8.5.2':
+    resolution: {integrity: sha512-x5AZAd2sfvL3cYfpwCMQn7DyiwWCTPZSciiMWcfWQunin1V5toyzQRKjztvA6lh2iVOyeZF9bJpCkHG+UkOlkA==}
     engines: {node: ^14.16.0 || >=16.11.0}
 
   '@nuxtjs/plausible@1.0.2':
@@ -9915,7 +9909,7 @@ snapshots:
       - vue-tsc
       - webpack-sources
 
-  '@nuxtjs/i18n@8.3.1(magicast@0.3.4)(rollup@4.21.2)(vue@3.5.0(typescript@5.5.4))(webpack-sources@3.2.3)':
+  '@nuxtjs/i18n@8.5.2(magicast@0.3.4)(rollup@4.21.2)(vue@3.5.0(typescript@5.5.4))(webpack-sources@3.2.3)':
     dependencies:
       '@intlify/h3': 0.5.0
       '@intlify/shared': 9.13.1

@@ -3,7 +3,7 @@ export interface I18nLocaleProps {
   name: string
   wpLocale?: string
   file?: string
-  iso?: string
+  language?: string
   dir?: string
   translated?: number
 }

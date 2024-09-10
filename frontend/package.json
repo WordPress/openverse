@@ -61,8 +61,6 @@
   },
   "dependencies": {
     "@floating-ui/dom": "^1.6.8",
-    "@intlify/core-base": "9.13.1",
-    "@intlify/message-compiler": "9.13.1",
     "@nuxtjs/plausible": "^1.0.2",
     "@nuxtjs/robots": "^4.0.2",
     "@nuxtjs/sitemap": "^5.3.5",
@@ -89,7 +87,7 @@
   "devDependencies": {
     "@babel/parser": "^7.24.8",
     "@nuxt/test-utils": "^3.14.1",
-    "@nuxtjs/i18n": "8.3.1",
+    "@nuxtjs/i18n": "8.5.2",
     "@nuxtjs/storybook": "npm:@nuxtjs/storybook@nightly",
     "@playwright/test": "1.46.1",
     "@storybook-vue/nuxt": "npm:@storybook-vue/nuxt@nightly",
