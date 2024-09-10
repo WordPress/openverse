@@ -365,3 +365,7 @@ eslint *files="frontend automations/js packages/js .pnpmfile.cjs .eslintrc.js pr
         --max-warnings=0 \
         --fix \
         {{ files }}
+
+# Alias for `just packages/js/k6/run` or `just p k6 run`
+@k6 *args:
+    just packages/js/k6/run {{ args }}

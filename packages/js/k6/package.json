@@ -1,0 +1,20 @@
+{
+  "name": "@openverse/k6",
+  "version": "0.0.0",
+  "description": "Openverse K6 load testing scripts",
+  "scripts": {
+    "build": "rollup --config rollup.config.ts --configPlugin typescript",
+    "types": "tsc -p . --noEmit",
+    "run": "just run"
+  },
+  "keywords": [],
+  "author": "Openverse Contributors <openverse@wordpress.org>",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@types/k6": "^0.53.1",
+    "glob": "^11.0.0",
+    "rollup": "^4.21.1",
+    "typescript": "^5.6.2"
+  }
+}

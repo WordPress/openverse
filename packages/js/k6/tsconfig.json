@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "target": "ESNext" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
+    "module": "ESNext" /* Specify what module code is generated. */,
+    "moduleResolution": "Bundler" /* Specify how TypeScript looks up a file from a given module specifier. */,
+
+    "noEmit": true,
+    "allowJs": true,
+    "removeComments": false,
+
+    "paths": {
+      // TypeScript can already do this, but we need explicit mappings here for
+      // the ESLint import/resolve rule to know that k6 is actually resolveable.
+      "k6": ["./node_modules/@types/k6/index.d.ts"],
+      "k6/*": ["./node_modules/@types/k6/*"]
+    },
+
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+
+    "skipLibCheck": true
+  },
+  "exclude": ["./dist/**"]
+}
