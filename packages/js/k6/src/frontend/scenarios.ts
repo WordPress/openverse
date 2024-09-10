@@ -86,8 +86,11 @@ const createScenario = (
     executor: "per-vu-iterations",
     env,
     exec: funcName,
-    vus: 5,
-    iterations: 40,
+    // k6 CLI flags do not allow override scenario options, so we need to add our own
+    // Ideally we would use default
+    // https://community.grafana.com/t/overriding-vus-individual-scenario/98923
+    vus: parseFloat(__ENV.scenario_vus) || 5,
+    iterations: parseFloat(__ENV.scenario_iterations) || 40,
   }
 }
 
@@ -152,5 +155,6 @@ export function getOptions(group: keyof typeof SCENARIO_GROUPS): Options {
       projectId: PROJECT_ID,
       name: `Frontend ${group} ${FRONTEND_URL}`,
     },
+    userAgent: "OpenverseK6/1.0; https://docs.openverse.org",
   } satisfies Options
 }

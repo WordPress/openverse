@@ -14,18 +14,6 @@ const WORDS = open("/usr/share/dict/words")
 
 export const getRandomWord = () => randomItem(WORDS)
 
-export const REQUEST_HEADERS = {
-  Authorization: `Bearer ${__ENV.ACCESS_TOKEN}`,
-  "User-Agent": "k6",
-}
-
-export const getUrlBatch = (urls: string[], type: string = "detail_url") => {
-  return urls.map((u) => {
-    const params = { headers: REQUEST_HEADERS, tags: { name: type } }
-    return ["GET", u, null, params]
-  })
-}
-
 export const makeResponseFailedCheck = (param: string, page: string) => {
   return (response: Response, action: string) => {
     const requestDetail = `${param ? `for param "${param} "` : ""}at page ${page} for ${action}`
