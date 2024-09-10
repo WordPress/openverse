@@ -13,10 +13,9 @@ import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 
 const props = defineProps<{
   /**
-   * The details of the audio whose artwork is to be shown. The properties
-   * `thumbnail`, `title` and `creator` are used.
+   * The details of the audio whose artwork is to be shown.
    */
-  audio: AudioDetail
+  audio: Pick<AudioDetail, "thumbnail" | "title" | "creator">
 }>()
 
 const { audio } = toRefs(props)

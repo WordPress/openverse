@@ -41,16 +41,14 @@ describe("useSearchType", () => {
   it("should return correct props for active search type when type is not passed", async () => {
     const { getSearchTypeProps } = useSearchType()
 
-    const { icon, label } = getSearchTypeProps()
-    expect(icon).toEqual(ALL_MEDIA)
+    const { label } = getSearchTypeProps()
     expect(label).toBe("All content")
   })
 
   it("should return correct props when type is passed", async () => {
     const { getSearchTypeProps } = useSearchType()
 
-    const { icon, label } = getSearchTypeProps(AUDIO)
-    expect(icon).toEqual(AUDIO)
+    const { label } = getSearchTypeProps(AUDIO)
     expect(label).toBe("Audio")
   })
 })

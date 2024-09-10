@@ -1,8 +1,8 @@
 import { useI18n } from "#imports"
 
-import { ref, watch, onMounted, reactive } from "vue"
+import { ref, watch, onMounted, reactive, h } from "vue"
 
-import { useEffect } from "@storybook/client-api"
+import { useEffect } from "@storybook/preview-api"
 
 const languageDirection = reactive({ value: "ltr" })
 
@@ -12,16 +12,17 @@ export const WithRTL = (story, context) => {
   }, [context.globals.languageDirection])
 
   return {
-    template: `<div ref="element"><story /></div>`,
     components: { story },
     setup() {
       const element = ref()
-      const { i18n } = useI18n({ useScope: "global" })
+      const i18n = useI18n({ useScope: "global" })
+
       onMounted(() => {
         watch(
           languageDirection,
-          (direction) => {
-            i18n.localeProperties.dir = direction.value
+          async (direction) => {
+            await i18n.setLocale(direction.value === "rtl" ? "ar" : "en")
+
             if (element.value) {
               element.value.ownerDocument.documentElement.setAttribute(
                 "dir",
@@ -32,7 +33,7 @@ export const WithRTL = (story, context) => {
           { immediate: true }
         )
       })
-      return { element }
+      return () => h("div", { ref: element }, [h(story())])
     },
   }
 }

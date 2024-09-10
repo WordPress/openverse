@@ -1,9 +1,11 @@
 import type { PlaywrightTestConfig } from "@playwright/test"
 
 const config: PlaywrightTestConfig = {
+  snapshotPathTemplate:
+    "visual-regression/{testFileName}-snapshots/{arg}-linux.png",
   forbidOnly: !!process.env.CI,
   webServer: {
-    command: "pnpm storybook",
+    command: "pnpm prod:storybook",
     timeout: 60_000 * 5, // 5 minutes
     url: "http://localhost:54000/iframe.html?id=introduction-openverse-ui--page",
     reuseExistingServer: !process.env.CI || process.env.PWDEBUG === "1",

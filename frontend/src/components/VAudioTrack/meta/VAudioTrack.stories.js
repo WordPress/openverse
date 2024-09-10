@@ -1,4 +1,4 @@
-import { computed } from "vue"
+import { computed, h } from "vue"
 
 import { useProviderStore } from "~/stores/provider"
 import { audioLayouts, audioSizes } from "~/constants/audio"
@@ -60,8 +60,28 @@ const providerStorePatch = {
   sourceNames: { audio: ["wikimedia_audio"] },
 }
 
+export default {
+  title: "Components/Audio track",
+  component: VAudioTrack,
+
+  argTypes: {
+    format: { options: ["mp3", "ogg", "flac", "wav"], control: "select" },
+
+    layout: { options: audioLayouts, control: "select" },
+
+    size: { options: audioSizes, control: "select" },
+
+    audio: { control: false },
+  },
+
+  args: {
+    format: "mp3",
+    layout: "full",
+    size: "m",
+  },
+}
+
 const Template = (args) => ({
-  template: `<VAudioTrack v-bind="args" :audio="audioObj"/>`,
   components: { VAudioTrack },
   setup() {
     const providerStore = useProviderStore()
@@ -70,60 +90,30 @@ const Template = (args) => ({
       ...commonAttrs(),
       ...formatExamples[args.format],
     }))
-    return { args, audioObj }
+    return () => h(VAudioTrack, { ...args, audio: audioObj.value })
   },
 })
 
 const Multiple = () => ({
-  template: `
-    <div>
-      <VAudioTrack
-        v-for="(audio, key) in formatExamples"
-        :key="key"
-        class="mb-8"
-        :audio="audioObj(audio)"
-        layout="row"/>
-    </div>
-  `,
   components: { VAudioTrack },
   setup() {
     const providerStore = useProviderStore()
     providerStore.$patch(providerStorePatch)
     const audioObj = (audio) => ({ ...commonAttrs(), ...audio })
-    return { formatExamples, audioObj }
+    return () =>
+      h(
+        "div",
+        Object.entries(formatExamples).map(([key, audio]) =>
+          h(VAudioTrack, {
+            key,
+            class: "mb-8",
+            audio: audioObj(audio),
+            layout: "row",
+          })
+        )
+      )
   },
 })
-
-export default {
-  title: "Components/Audio track",
-  component: VAudioTrack,
-
-  argTypes: {
-    format: {
-      options: ["mp3", "ogg", "flac", "wav"],
-      control: "select",
-    },
-
-    layout: {
-      options: audioLayouts,
-      control: "select",
-    },
-
-    size: {
-      options: audioSizes,
-      control: "select",
-    },
-
-    audio: {
-      control: false,
-    },
-  },
-  args: {
-    format: "mp3",
-    layout: "full",
-    size: "m",
-  },
-}
 
 export const FullMedium = {
   render: Template.bind({}),

@@ -4,7 +4,7 @@ import { ref } from "vue"
 import { WIP } from "~/constants/content-report"
 import { CONTENT_REPORT_DIALOG } from "~/constants/dialogs"
 import { useContentReport } from "~/composables/use-content-report"
-import type { AudioDetail, ImageDetail } from "~/types/media"
+import type { ReportableMedia } from "~/types/media"
 
 import VContentReportButton from "~/components/VContentReport/VContentReportButton.vue"
 import VContentReportForm from "~/components/VContentReport/VContentReportForm.vue"
@@ -14,7 +14,7 @@ defineProps<{
   /**
    * The media item to report. This can either be an audio track or an image.
    */
-  media: AudioDetail | ImageDetail
+  media: ReportableMedia
 }>()
 
 const modalRef = ref<InstanceType<typeof VModal> | null>(null)

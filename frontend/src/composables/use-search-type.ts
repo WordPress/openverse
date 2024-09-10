@@ -32,6 +32,8 @@ const labels = {
   [MODEL_3D]: "searchType.model3d",
 } as const
 
+export const searchTypeLabels = labels
+
 export default function useSearchType({
   component = "Unknown",
 }: { component?: string } = {}) {
@@ -80,7 +82,6 @@ export default function useSearchType({
     const type = searchType ?? activeType.value
     return {
       label: t(labels[type]),
-      icon: icons[type],
       searchType: type,
     }
   }

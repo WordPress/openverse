@@ -2,7 +2,7 @@ import { test, expect, type Page, type Locator } from "@playwright/test"
 
 const checkPageLoaded = async (page: Page) => {
   await expect(
-    page.getByRole("button", { name: "Canvas", exact: true })
+    page.getByRole("button", { name: "Remount component" })
   ).toBeVisible()
 }
 
@@ -19,8 +19,13 @@ type StoryProblems = {
 
 const ignoredProblems = [
   /\[Plausible] Ignoring event because website is running locally/,
-  /Refused to set unsafe header "User-Agent"/,
   /Failed to load resource: net::ERR_CONNECTION_REFUSED/,
+  /Sentry DSN wasn't provided/,
+  // Errors from the Storybook nuxt module
+  // TypeError or Va
+  /\[nuxt] error caught during app initialization \w*: Cannot read properties of undefined \(reading 'cdnURL'\)/,
+  /Failed to load resource: the server responded with a status of 404 \(Not Found\)/,
+  /\[Vue Router warn]: Record with path "\/iframe\.html" is either missing a "component\(s\)" or "children" property/,
 ]
 
 const checkLink = async (page: Page, link: Locator) => {

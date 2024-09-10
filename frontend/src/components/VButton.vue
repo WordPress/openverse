@@ -125,7 +125,17 @@ const props = withDefaults(
   }
 )
 
-const comp = computed(() => (props.as === "VLink" ? VLink : props.as))
+const buttonComponent = computed(() =>
+  props.as === "VLink" ? VLink : props.as
+)
+
+defineEmits<{
+  click: [MouseEvent]
+  mousedown: [MouseEvent]
+  keydown: [KeyboardEvent]
+  focus: [FocusEvent]
+  blur: [FocusEvent]
+}>()
 
 const attrs = useAttrs()
 const typeAttribute = computed<ButtonType | undefined>(() =>
@@ -196,7 +206,7 @@ watch(
 
 <template>
   <Component
-    :is="comp"
+    :is="buttonComponent"
     :type="typeAttribute"
     class="group/button button flex appearance-none items-center justify-center rounded-sm no-underline"
     :class="[
@@ -216,6 +226,11 @@ watch(
     :aria-pressed="pressed"
     :aria-disabled="ariaDisabled"
     :disabled="disabledAttribute"
+    @click="$emit('click', $event)"
+    @mousedown="$emit('mousedown', $event)"
+    @keydown="$emit('keydown', $event)"
+    @focus="$emit('focus', $event)"
+    @blur="$emit('blur', $event)"
   >
     <!--
       @slot The content of the button

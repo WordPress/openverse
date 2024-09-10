@@ -32,7 +32,9 @@ const goAndWaitForSvg = async (
   page: Page,
   args: Record<string, string | number | boolean>
 ) => {
-  const url = urlWithArgs(args)
+  const { appliedFilterCount, isSelected } = args
+  const selectedId = isSelected ? "filters" : "tab1"
+  const url = urlWithArgs({ appliedFilterCount, selectedId })
   if (args.appliedFilterCount === 0) {
     await waitForResponse(page, url, /\.svg/)
     await expect(page.locator(`${filtersTab} svg`)).toBeVisible()

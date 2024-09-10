@@ -2,26 +2,25 @@
 /**
  * This is the search type switcher button that appears in the header or the homepage search bar.
  */
-import { useAttrs } from "vue"
+import { computed, useAttrs } from "vue"
 
 import type { SearchType } from "~/constants/media"
 
 import { warn } from "~/utils/console"
 
+import useSearchType from "~/composables/use-search-type"
 import { useHydrating } from "~/composables/use-hydrating"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VButton from "~/components/VButton.vue"
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
+    searchType: SearchType
     /**
      * Whether to show the text label and the chevron down.
      */
     showLabel?: boolean
-    searchType: SearchType
-    icon: string
-    label: string
   }>(),
   {
     showLabel: false,
@@ -36,6 +35,9 @@ if (!attrs["aria-haspopup"] || attrs["aria-expanded"] === undefined) {
     "You should provide `aria-haspopup` and `aria-expanded` props to VSearchTypeButton."
   )
 }
+const label = computed(
+  () => useSearchType().getSearchTypeProps(props.searchType).label
+)
 const { doneHydrating } = useHydrating()
 </script>
 

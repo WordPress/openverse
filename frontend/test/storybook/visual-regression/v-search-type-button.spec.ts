@@ -2,21 +2,26 @@ import { expect, type Page, test } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import { makeUrlWithArgs } from "~~/test/storybook/utils/args"
-import { waitForResponse } from "~~/test/storybook/utils/response"
+import { t } from "~~/test/playwright/utils/i18n"
 
 const urlWithArgs = makeUrlWithArgs(
   "components-vcontentswitcher-vsearchtypebutton--default"
 )
 
-const searchTypeButtonLocator = 'button[aria-haspopup="dialog"]'
-const getIcon = (page: Page) =>
-  page.locator(`${searchTypeButtonLocator} svg`).first()
-
+const searchTypeButtonName = t("searchType.selectLabel").replace(
+  "{type}",
+  "All"
+)
+const getSearchTypeButton = (page: Page) =>
+  page.getByRole("button", { name: searchTypeButtonName })
 test.describe.configure({ mode: "parallel" })
 
 const goAndWaitForSvg = async (page: Page, url: string) => {
-  await waitForResponse(page, url, /\.svg/)
-  await expect(getIcon(page)).toBeVisible()
+  await page.goto(url)
+  await page.getByRole("button", { name: "Render Story" }).click()
+
+  await expect(getSearchTypeButton(page)).toBeVisible()
+  await expect(getSearchTypeButton(page).locator("svg").first()).toBeVisible()
 }
 
 const buttonKinds = ["icon", "withTextLabel"] as const
@@ -33,7 +38,7 @@ test.describe("VSearchTypeButton", () => {
           const url = urlWithArgs({ showLabel, pressed: state === "pressed" })
           await goAndWaitForSvg(page, url)
 
-          await expect(page.locator(searchTypeButtonLocator)).toHaveScreenshot(
+          await expect(getSearchTypeButton(page)).toHaveScreenshot(
             `${snapshotName}-at-rest-${breakpoint}.png`
           )
         })
@@ -41,9 +46,9 @@ test.describe("VSearchTypeButton", () => {
         test(`hovered ${state} ${buttonName}`, async ({ page }) => {
           const url = urlWithArgs({ showLabel, pressed: state === "pressed" })
           await goAndWaitForSvg(page, url)
-          await page.hover(searchTypeButtonLocator)
+          await getSearchTypeButton(page).hover()
 
-          await expect(page.locator(searchTypeButtonLocator)).toHaveScreenshot(
+          await expect(getSearchTypeButton(page)).toHaveScreenshot(
             `${snapshotName}-hovered-${breakpoint}.png`
           )
         })

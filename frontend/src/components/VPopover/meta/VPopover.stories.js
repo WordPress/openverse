@@ -1,3 +1,5 @@
+import { h } from "vue"
+
 import VPopover from "~/components/VPopover/VPopover.vue"
 import VButton from "~/components/VButton.vue"
 
@@ -16,114 +18,125 @@ const popoverPlacements = [
   "right-end",
 ]
 
-const DefaultPopoverStory = (args) => ({
-  template: `
-    <div>
-      <p>
-        This story is configured to log when the popover opens or closes. Inspect the Actions tab to observe this behavior.
-      </p>
-      <div tabindex="0">Focusable external area</div>
-      <VPopover v-bind="args" v-on="args" v-for="item in args.popoverItems" :key="item" class="mb-2">
-        <template #trigger="{ visible, a11yProps }">
-          <VButton :pressed="visible" variant="filled-pink-8" size="medium" v-bind="a11yProps">{{
-              visible ? 'Close' : 'Open'
-           }}</VButton>
-        </template>
-        <div class="py-1 px-2">Code is Poetry</div>
-      </VPopover>
-    </div>
-  `,
-  components: { VPopover, VButton },
-  setup() {
-    return { args }
-  },
-})
-
-const ControlStory = (args) => ({
-  template: `
-    <VPopover v-bind="args" v-on="args">
-      <template #trigger="{ visible, a11yProps }">
-        <VButton :pressed="visible" variant="filled-pink-8" size="medium" v-bind="a11yProps">{{
-            visible ? 'Close' : 'Open'
-        }}</VButton>
-      </template>
-      <template #default="{ close }">
-        <div class="p-4">
-        <VButton variant="filled-gray" size="medium"  @click="close">Close popover</VButton>
-        </div>
-      </template>
-    </VPopover>
-  `,
-  components: { VPopover, VButton },
-  setup() {
-    return { args }
-  },
-})
-
 export default {
   title: "Components/VPopover",
   components: VPopover,
 
   argTypes: {
-    hideOnEsc: {
-      control: {
-        type: "boolean",
-      },
-    },
+    hideOnEsc: { control: { type: "boolean" } },
 
-    hideOnClickOutside: {
-      control: {
-        type: "boolean",
-      },
-    },
+    hideOnClickOutside: { control: { type: "boolean" } },
 
-    autoFocusOnShow: {
-      control: {
-        type: "boolean",
-      },
-    },
+    autoFocusOnShow: { control: { type: "boolean" } },
 
-    autoFocusOnHide: {
-      control: {
-        type: "boolean",
-      },
-    },
+    autoFocusOnHide: { control: { type: "boolean" } },
 
-    placement: {
-      options: [...popoverPlacements],
+    placement: { options: [...popoverPlacements], control: { type: "radio" } },
 
-      control: {
-        type: "radio",
-      },
-    },
+    label: { control: { type: "text" } },
 
-    label: {
-      control: {
-        type: "text",
-      },
-    },
+    labelledBy: { control: { type: "text" } },
 
-    labelledBy: {
-      control: {
-        type: "text",
-      },
-    },
+    onClose: { action: "close" },
 
-    close: {
-      action: "close",
-    },
+    onOpen: { action: "open" },
 
-    open: {
-      action: "open",
-    },
-
-    popoverItems: {
-      control: {
-        type: "number",
-      },
-    },
+    popoverItems: { control: { type: "number" } },
+  },
+  args: {
+    id: "popover-story",
+    hideOnEsc: true,
+    hideOnClickOutside: true,
+    autoFocusOnShow: true,
+    autoFocusOnHide: true,
+    placement: "bottom",
+    label: "Code is Poetry",
+    labelledBy: "popover-story",
   },
 }
+
+const DefaultPopoverStory = (args) => ({
+  components: { VPopover, VButton },
+  setup() {
+    return () =>
+      h("div", [
+        h(
+          "p",
+          "This story is configured to log when the popover opens or closes. Inspect the Actions tab to observe this behavior."
+        ),
+        h("div", { tabindex: "0" }, "Focusable external area"),
+        ...Array(args.popoverItems)
+          .fill()
+          .map((_, item) =>
+            h(
+              VPopover,
+              {
+                ...args,
+                key: item,
+                class: "mb-2",
+                onClose: args.onClose,
+                onOpen: args.onOpen,
+              },
+              {
+                trigger: ({ visible, a11yProps }) =>
+                  h(
+                    VButton,
+                    {
+                      pressed: visible,
+                      variant: "filled-pink-8",
+                      size: "medium",
+                      ...a11yProps,
+                    },
+                    () => (visible ? "Close" : "Open")
+                  ),
+                default: () =>
+                  h("div", { class: "py-1 px-2" }, "Code is Poetry"),
+              }
+            )
+          ),
+      ])
+  },
+})
+
+const ControlStory = (args) => ({
+  components: { VPopover, VButton },
+  setup() {
+    return () =>
+      h(
+        VPopover,
+        {
+          ...args,
+          onClose: args.onClose,
+          onOpen: args.onOpen,
+        },
+        {
+          trigger: ({ visible, a11yProps }) =>
+            h(
+              VButton,
+              {
+                pressed: visible,
+                variant: "filled-pink-8",
+                size: "medium",
+                ...a11yProps,
+              },
+              () => (visible ? "Close" : "Open")
+            ),
+          default: ({ close }) =>
+            h("div", { class: "p-4" }, [
+              h(
+                VButton,
+                {
+                  variant: "filled-gray",
+                  size: "medium",
+                  onClick: close,
+                },
+                () => "Close popover"
+              ),
+            ]),
+        }
+      )
+  },
+})
 
 export const Default = {
   render: DefaultPopoverStory.bind({}),

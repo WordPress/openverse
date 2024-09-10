@@ -16,7 +16,7 @@ import {
   type ReportStatus,
 } from "~/constants/content-report"
 
-import type { AudioDetail, ImageDetail } from "~/types/media"
+import type { ReportableMedia } from "~/types/media"
 
 import { mediaSlug } from "~/utils/query-utils"
 
@@ -27,7 +27,7 @@ import VReportDescForm from "~/components/VContentReport/VReportDescForm.vue"
 import VLink from "~/components/VLink.vue"
 
 const props = defineProps<{
-  media: AudioDetail | ImageDetail
+  media: ReportableMedia
   status: ReportStatus
   allowCancel: boolean
 }>()

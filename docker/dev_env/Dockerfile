@@ -56,6 +56,7 @@ RUN mkdir /pipx \
     just \
     jq \
     which \
+    xdg-utils \
     nodejs npm \
     python3.12 python3.12-devel pipx \
     libffi-devel \

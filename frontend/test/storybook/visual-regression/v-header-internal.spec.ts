@@ -33,13 +33,10 @@ test.describe("VHeaderInternal", () => {
         test(`mobile header closed`, async ({ page }) => {
           await page.goto(pageUrl(dir))
 
-          // Ensure fonts are loaded before taking the snapshot
-          const responsePromise = page.waitForResponse(/var\.woff2/)
           await page.locator('button[aria-haspopup="dialog"]').click()
-          await responsePromise
 
           await page
-            .getByRole("button", { name: t("modal.closePagesMenu") })
+            .getByRole("button", { name: t("modal.closePagesMenu", dir) })
             .click()
 
           await page.mouse.move(0, 150)
@@ -51,13 +48,10 @@ test.describe("VHeaderInternal", () => {
       })
 
       breakpoints.describeEachMobile(({ expectSnapshot }) => {
-        test(`mobil header with open modal`, async ({ page }) => {
+        test(`mobile header with open modal`, async ({ page }) => {
           await page.goto(pageUrl(dir))
 
-          // Ensure fonts are loaded before taking the snapshot
-          const responsePromise = page.waitForResponse(/var\.woff2/)
           await page.locator('button[aria-haspopup="dialog"]').click()
-          await responsePromise
           // Mouse stays over the button, so the close button is hovered.
           // To prevent this, move the mouse away.
           await page.mouse.move(0, 0)
