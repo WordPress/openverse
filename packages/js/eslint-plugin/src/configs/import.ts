@@ -28,9 +28,15 @@ export = {
           "type",
         ],
         pathGroups: [
+          // Treat #imports as "builtin"
           {
-            // Treat vue, imports, composition-api, and k6 as "builtin"
-            pattern: "(#imports|k6|vue|@nuxtjs/composition-api)",
+            pattern: "#imports",
+            group: "builtin",
+            position: "before",
+          },
+          {
+            // Treat k6, vue and composition-api as "builtin"
+            pattern: "(k6|vue|@nuxtjs/composition-api)",
             group: "builtin",
             position: "before",
           },
@@ -68,7 +74,11 @@ export = {
         pathGroupsExcludedImportTypes: ["builtin"],
       },
     ],
-    "import/extensions": ["error", { js: "never", mjs: "never", ts: "never" }],
+    "import/extensions": [
+      "error",
+      "always",
+      { js: "never", mjs: "never", ts: "never" },
+    ],
   },
   overrides: [
     {
@@ -90,12 +100,6 @@ export = {
             project: "packages/js/*/tsconfig.json",
           },
         },
-      },
-    },
-    {
-      files: ["packages/js/k6/**"],
-      settings: {
-        "import/extensions": ["error", "ignorePackages"],
       },
     },
     {
