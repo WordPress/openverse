@@ -36,7 +36,7 @@
         "staging": "switchable",
         "production": "disabled"
       },
-      "defaultState": "off",
+      "defaultState": "on",
       "description": "Display the UI toggle to change the site color theme and respect system preferences.",
       "storage": "cookie"
     }
