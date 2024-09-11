@@ -31,6 +31,11 @@ for (const contentPage of contentPages) {
           await preparePageForTests(page, breakpoint)
 
           await page.goto(pathWithDir(contentPage, dir))
+          // Ensure the page is hydrated
+          await expect(page.locator("#language")).toHaveValue(
+            dir === "ltr" ? "en" : "ar"
+          )
+
           // Make sure header is not hovered on
           await page.mouse.move(150, 150)
           await expectSnapshot(
