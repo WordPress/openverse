@@ -7,6 +7,8 @@ import { defineConfig } from "rollup"
 import { glob } from "glob"
 
 import typescript from "@rollup/plugin-typescript"
+import { nodeResolve } from "@rollup/plugin-node-resolve"
+import commonjs from "@rollup/plugin-commonjs"
 
 function getConfig(testFile: string) {
   return defineConfig({
@@ -18,7 +20,7 @@ function getConfig(testFile: string) {
       preserveModules: true,
       preserveModulesRoot: "src",
     },
-    plugins: [typescript()],
+    plugins: [typescript(), nodeResolve(), commonjs()],
   })
 }
 

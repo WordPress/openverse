@@ -1,8 +1,7 @@
-import { group } from "k6"
-import exec from "k6/execution"
-import http from "k6/http"
+import { check } from "k6"
 
-import { getRandomWord, makeResponseFailedCheck } from "../utils.js"
+import { getRandomWord } from "../utils.js"
+import { http } from "../http.js"
 
 import { FRONTEND_URL, PROJECT_ID } from "./constants.js"
 
@@ -10,23 +9,10 @@ import type { Options, Scenario } from "k6/options"
 
 const STATIC_PAGES = ["about", "sources", "privacy", "sensitive-content"]
 const TEST_LOCALES = ["en", "ru", "es", "fa"]
-const TEST_PARAMS = "&license=by&extension=jpg,mp3&source=flickr,jamendo"
+const TEST_PARAMS = "license=by&extension=jpg,mp3&source=flickr,jamendo"
 
 const localePrefix = (locale: string) => {
   return locale === "en" ? "" : locale + "/"
-}
-
-const visitUrl = (url: string, action: Action) => {
-  // eslint-disable-next-line import/no-named-as-default-member
-  const response = http.get(url, {
-    headers: { "User-Agent": "OpenverseLoadTesting" },
-  })
-  const checkResponseFailed = makeResponseFailedCheck("", url)
-  if (checkResponseFailed(response, action)) {
-    console.error(`Failed URL: ${url}`)
-    return 0
-  }
-  return 1
 }
 
 const parseEnvLocales = (locales: string) => {
@@ -35,40 +21,55 @@ const parseEnvLocales = (locales: string) => {
 
 export function visitStaticPages() {
   const locales = parseEnvLocales(__ENV.LOCALES)
-  console.log(
-    `VU: ${exec.vu.idInTest}  -  ITER: ${exec.vu.iterationInInstance}`
-  )
+  const ovGroup = `visit static pages for locales ${locales}`
+
   for (const locale of locales) {
-    group(`visit static pages for locale ${locale}`, () => {
-      for (const page of STATIC_PAGES) {
-        visitUrl(
-          `${FRONTEND_URL}${localePrefix(locale)}${page}`,
-          "visitStaticPages"
+    for (const page of STATIC_PAGES) {
+      const url = new URL(`${localePrefix(locale)}${page}`, FRONTEND_URL)
+      const response = http.get(url.toString(), { tags: { ovGroup } })
+      const result = check(
+        response,
+        { "status was 200": (r) => r.status === 200 },
+        { ovGroup }
+      )
+
+      if (!result) {
+        console.error(
+          `Request failed ⨯ ${url}: ${response.status}\n${response.body}`
         )
       }
-    })
+    }
   }
 }
 
 export function visitSearchPages() {
   const locales = parseEnvLocales(__ENV.LOCALES)
-  const params = __ENV.PARAMS
-  const paramsString = params ? ` with params ${params}` : ""
-  console.log(
-    `VU: ${exec.vu.idInTest}  -  ITER: ${exec.vu.iterationInInstance}`
-  )
-  group(`search for random word on locales ${locales}${paramsString}`, () => {
-    for (const MEDIA_TYPE of ["image", "audio"]) {
-      for (const locale of locales) {
-        const q = getRandomWord()
-        return visitUrl(
-          `${FRONTEND_URL}${localePrefix(locale)}search/${MEDIA_TYPE}?q=${q}${params}`,
-          "visitSearchPages"
+  const ovGroup = `search for random word on locales ${locales}`
+
+  for (const MEDIA_TYPE of ["image", "audio"]) {
+    for (const locale of locales) {
+      const url = new URL(
+        `${localePrefix(locale)}search/${MEDIA_TYPE}`,
+        FRONTEND_URL
+      )
+      const params = new URLSearchParams(__ENV.PARAMS)
+      params.append("q", getRandomWord())
+      url.search = params.toString()
+
+      const response = http.get(url.toString(), { tags: { ovGroup } })
+      const result = check(
+        response,
+        { "status was 200": (r) => r.status === 200 },
+        { ovGroup }
+      )
+
+      if (!result) {
+        console.error(
+          `Request failed ⨯ ${url}: ${response.status}\n${response.body}`
         )
       }
     }
-    return undefined
-  })
+  }
 }
 
 const actions = {
@@ -95,7 +96,7 @@ const createScenario = (
 }
 
 export const SCENARIOS = {
-  staticPages: createScenario({ LOCALES: "en" }, "visitStaticPages"),
+  englishStaticPages: createScenario({ LOCALES: "en" }, "visitStaticPages"),
   localeStaticPages: createScenario(
     { LOCALES: TEST_LOCALES.join(",") },
     "visitStaticPages"
@@ -129,14 +130,14 @@ function getScenarios(
 
 export const SCENARIO_GROUPS = {
   all: getScenarios([
-    "staticPages",
+    "englishStaticPages",
     "localeStaticPages",
     "englishSearchPages",
     "localesSearchPages",
     "englishSearchPagesWithFilters",
     "localesSearchPagesWithFilters",
   ]),
-  "static-en": getScenarios(["staticPages"]),
+  "static-en": getScenarios(["englishStaticPages"]),
   "static-locales": getScenarios(["localeStaticPages"]),
   "search-en": getScenarios([
     "englishSearchPages",
