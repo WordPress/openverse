@@ -133,16 +133,16 @@ EXPECTED_BATCH_DATA = [
 MOCK_RECORD_DATA_LIST = [
     {
         "foreign_identifier": 101,
-        "foreign_landing_url": "https://clevelandart.org/art/1335.1917",
+        "foreign_landing_url": "https://commons.wikimedia.org/w/index.php?curid=120786580",
         "media_type": "audio",
         "license_info": LICENSE_INFO,
-        "url": "https://openaccess-cdn.clevelandart.org/1335.1917/1335.1917_web.jpg",  # noqa: E501
+        "url": "https://upload.wikimedia.org/wikipedia/commons/4/4e/Nl-Javaanse_herten.ogg",  # noqa: E501
     },
     {
         "foreign_identifier": 100,
-        "foreign_landing_url": "https://clevelandart.org/art/1916.586.a",
+        "foreign_landing_url": "https://commons.wikimedia.org/w/index.php?curid=81754323",
         "media_type": "image",
         "license_info": LICENSE_INFO,
-        "url": "https://openaccess-cdn.clevelandart.org/1916.586.a/1916.586.a_web.jpg",  # noqa: E501
+        "url": "https://upload.wikimedia.org/wikipedia/commons/2/25/20120925_PlozevetBretagne_LoneTree_DSC07971_PtrQs.jpg",  # noqa: E501
     },
 ]

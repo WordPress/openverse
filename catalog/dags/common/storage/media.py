@@ -4,7 +4,11 @@ import os
 from datetime import datetime
 
 from common import urls
-from common.extensions import extract_filetype
+from common.extensions import (
+    FILETYPE_EQUIVALENTS,
+    InvalidFiletypeError,
+    extract_filetype,
+)
 from common.loader import provider_details as prov
 from common.storage.tsv_columns import CURRENT_VERSION
 
@@ -39,7 +43,6 @@ TAG_CONTAINS_DENYLIST = {
 COMMON_CRAWL = "commoncrawl"
 PROVIDER_API = "provider_api"
 
-FILETYPE_EQUIVALENTS = {"jpeg": "jpg", "tif": "tiff"}
 PG_INTEGER_MAXIMUM = 2147483647
 
 
@@ -113,8 +116,10 @@ class MediaStore(metaclass=abc.ABCMeta):
         - add `provider`,
         - add default `category`, if available.
 
-        Raises an error if missing any of the required fields:
-        `license_info`, `foreign_identifier`, `foreign_landing_url`, or `url`.
+        Raises an error if missing any of the required fields: `license_info`,
+        `foreign_identifier`, `foreign_landing_url`, or `url`. Or if an extracted
+        media type (guessed from extension in the URL) does not match the media type
+        of the class when the API does not return the filetype.
         """
         for field in [
             "license_info",
@@ -304,17 +309,22 @@ class MediaStore(metaclass=abc.ABCMeta):
 
     def _validate_filetype(self, filetype: str | None, url: str) -> str | None:
         """
-        Extract filetype from the media URL if filetype is None.
+        Extract filetype from the media URL if filetype is None, check that it
+        corresponds to the media type of the class, and normalize filetypes
+        that have variants such as jpg/jpeg and tiff/tif.
 
-        Unifies filetypes that have variants such as jpg/jpeg and tiff/tif.
         :param filetype: Optional filetype string.
+        :param url: The direct URL to the media.
         :return: filetype string or None
         """
-        if filetype is None:
-            filetype = extract_filetype(url, self.media_type)
-        if self.media_type != "image":
-            return filetype
-        return FILETYPE_EQUIVALENTS.get(filetype, filetype)
+        if filetype is not None:
+            filetype = filetype.lower()
+            return FILETYPE_EQUIVALENTS.get(filetype, filetype)
+
+        filetype, extracted_media_type = extract_filetype(url)
+        if extracted_media_type is not None and extracted_media_type != self.media_type:
+            raise InvalidFiletypeError(extracted_media_type, self.media_type)
+        return filetype
 
     @staticmethod
     def _validate_integer(value: int | None) -> int | None:
