@@ -320,6 +320,7 @@ export default {
         disabled: "var(--color-text-disabled)",
         link: "var(--color-text-link)",
         "over-dark": "var(--color-text-over-dark)",
+        "over-negative": "var(--color-text-over-negative)",
         "secondary-over-dark": "var(--color-text-secondary-over-dark)",
       },
       backgroundColor: {

@@ -159,6 +159,7 @@
       --color-text-disabled: var(--color-gray-5);
       --color-text-link: var(--color-pink-8);
       --color-text-over-dark: var(--color-white);
+      --color-text-over-negative: var(--color-gray-1);
       --color-text-secondary-over-dark: var(--color-gray-5);
       --color-icon-warning: var(--color-warning-8);
       --color-icon-info: var(--color-info-8);
@@ -167,6 +168,8 @@
       --color-wave-active: var(--color-yellow-9);
       --color-wave-inactive: var(--color-gray-12-20);
       --color-modal-layer: var(--color-gray-12-80);
+      --color-new-highlight: var(--color-pink-6);
+      --color-gray-new-highlight: var(--color-gray-12-20);
     }
   }
 
@@ -203,6 +206,7 @@
       --color-text-disabled: var(--color-gray-8);
       --color-text-link: var(--color-yellow-4);
       --color-text-over-dark: var(--color-gray-13);
+      --color-text-over-negative: var(--color-gray-12);
       --color-text-secondary-over-dark: var(--color-gray-8);
       --color-icon-warning: var(--color-warning-5);
       --color-icon-info: var(--color-info-5);
@@ -211,6 +215,8 @@
       --color-wave-active: var(--color-pink-4);
       --color-wave-inactive: var(--color-gray-1-30);
       --color-modal-layer: var(--color-gray-12-60);
+      --color-new-highlight: var(--color-yellow-3);
+      --color-gray-new-highlight: var(--color-gray-1-20);
     }
   }
 
@@ -248,6 +254,7 @@
     --color-text-disabled: var(--color-gray-5);
     --color-text-link: var(--color-pink-8);
     --color-text-over-dark: var(--color-white);
+    --color-text-over-negative: var(--color-gray-1);
     --color-text-secondary-over-dark: var(--color-gray-5);
     --color-icon-warning: var(--color-warning-8);
     --color-icon-info: var(--color-info-8);
@@ -256,6 +263,8 @@
     --color-wave-active: var(--color-yellow-9);
     --color-wave-inactive: var(--color-gray-12-20);
     --color-modal-layer: var(--color-gray-12-80);
+    --color-new-highlight: var(--color-pink-6);
+    --color-gray-new-highlight: var(--color-gray-12-20);
   }
 
   :is(.dark-mode *),
@@ -292,6 +301,7 @@
     --color-text-disabled: var(--color-gray-8);
     --color-text-link: var(--color-yellow-4);
     --color-text-over-dark: var(--color-gray-13);
+    --color-text-over-negative: var(--color-gray-12);
     --color-text-secondary-over-dark: var(--color-gray-8);
     --color-icon-warning: var(--color-warning-5);
     --color-icon-info: var(--color-info-5);
@@ -300,6 +310,8 @@
     --color-wave-active: var(--color-pink-4);
     --color-wave-inactive: var(--color-gray-1-30);
     --color-modal-layer: var(--color-gray-12-60);
+    --color-new-highlight: var(--color-yellow-3);
+    --color-gray-new-highlight: var(--color-gray-1-20);
   }
 
   body {
