@@ -399,6 +399,16 @@ export default {
           },
         },
       }),
+      keyframes: {
+        "new-highlight": {
+          "0%,100%": { "--deg": "0deg" },
+          "50%": { "--deg": "50deg" },
+          "99.99%": { "--deg": "360deg" },
+        },
+      },
+      animation: {
+        "new-highlight": "new-highlight 5s linear infinite",
+      },
     },
   },
   plugins: [
