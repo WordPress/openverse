@@ -31,6 +31,7 @@ const initialState: UiState = {
   revealedSensitiveResults: [],
   headerHeight: 80,
   colorMode: "system",
+  isDarkModeSeen: false,
 }
 
 const VISIBLE_AND_DISMISSED = {

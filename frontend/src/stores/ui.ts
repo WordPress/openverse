@@ -65,6 +65,8 @@ export interface UiState {
 
   /* The user-chosen color theme of the site. */
   colorMode: ColorMode
+  /** whether the user has seen the dark mode toggle */
+  isDarkModeSeen: boolean
 }
 
 export const breakpoints = Object.keys(ALL_SCREEN_SIZES)
@@ -81,6 +83,7 @@ export const useUiStore = defineStore("ui", {
     revealedSensitiveResults: [],
     headerHeight: 80,
     colorMode: "system",
+    isDarkModeSeen: false,
   }),
 
   getters: {
@@ -91,6 +94,7 @@ export const useUiStore = defineStore("ui", {
         breakpoint: state.breakpoint,
         dismissedBanners: Array.from(this.dismissedBanners),
         colorMode: state.colorMode,
+        isDarkModeSeen: state.isDarkModeSeen,
       }
     },
     areInstructionsVisible(state): boolean {
@@ -189,6 +193,10 @@ export const useUiStore = defineStore("ui", {
         this.setColorMode(cookies.colorMode)
       }
 
+      if (typeof cookies.isDarkModeSeen === "boolean") {
+        this.isDarkModeSeen = cookies.isDarkModeSeen
+      }
+
       this.writeToCookie()
     },
     /**
@@ -281,6 +289,11 @@ export const useUiStore = defineStore("ui", {
     },
     setColorMode(colorMode: ColorMode) {
       this.colorMode = colorMode
+
+      this.writeToCookie()
+    },
+    setIsDarkModeSeen(value: boolean) {
+      this.isDarkModeSeen = value
 
       this.writeToCookie()
     },
