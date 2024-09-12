@@ -118,7 +118,8 @@ class MediaStore(metaclass=abc.ABCMeta):
 
         Raises an error if missing any of the required fields: `license_info`,
         `foreign_identifier`, `foreign_landing_url`, or `url`. Or if an extracted
-        media type does not match the media type of the class.
+        media type (guessed from extension in the URL) does not match the media type
+        of the class when the API does not return the filetype.
         """
         for field in [
             "license_info",
@@ -308,9 +309,9 @@ class MediaStore(metaclass=abc.ABCMeta):
 
     def _validate_filetype(self, filetype: str | None, url: str) -> str | None:
         """
-        Extract filetype from the media URL if filetype is None and check
-        that it corresponds to the media type of the class, while also unifies
-        filetypes that have variants such as jpg/jpeg and tiff/tif.
+        Extract filetype from the media URL if filetype is None, check that it
+        corresponds to the media type of the class, and normalize filetypes
+        that have variants such as jpg/jpeg and tiff/tif.
 
         :param filetype: Optional filetype string.
         :param url: The direct URL to the media.
