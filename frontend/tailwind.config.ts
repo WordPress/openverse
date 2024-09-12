@@ -341,6 +341,7 @@ export default {
         disabled: "var(--color-bg-disabled)",
         zero: "var(--color-bg-zero)",
         blur: "var(--color-bg-blur)",
+        "curr-page": "var(--color-bg-curr-page)",
       },
       borderColor: {
         default: "var(--color-border)",

@@ -109,6 +109,8 @@ provide(ShowScrollButtonKey, showScrollButton)
 }
 .app {
   grid-template-areas: "header" "main";
+  /* This is used by some elements. */
+  --color-bg-curr-page: var(--color-bg);
 }
 .header-el {
   grid-area: header;
