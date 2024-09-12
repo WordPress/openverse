@@ -37,15 +37,17 @@ for (const dir of languageDirections) {
         await page.mouse.move(0, 0)
       })
 
-      test(`${dir} full page`, async ({ page }) => {
-        await expectSnapshot(`index-${dir}`, page)
+      test("full page", async ({ page }) => {
+        await expectSnapshot(page, "index", page, { dir })
       })
 
       test.describe("search input", () => {
         test("unfocused", async ({ page }) => {
           await expectSnapshot(
-            `unfocused-search-${dir}`,
-            page.locator("form:has(input)")
+            page,
+            `unfocused-search`,
+            page.locator("form:has(input)"),
+            { dir }
           )
         })
 
@@ -53,15 +55,17 @@ for (const dir of languageDirections) {
           await page.focus("input")
           await hideInputCursors(page)
           await expectSnapshot(
-            `focused-search-${dir}`,
-            page.locator("form:has(input)")
+            page,
+            "focused-search",
+            page.locator("form:has(input)"),
+            { dir }
           )
         })
 
         test("content switcher open", async ({ page }) => {
           await page.locator("#search-type-button").click()
 
-          await expectSnapshot(`content-switcher-open-${dir}`, page)
+          await expectSnapshot(page, "content-switcher-open", page, { dir })
         })
       })
     })
@@ -79,8 +83,10 @@ for (const dir of languageDirections) {
       await page.locator("#search-type-button").click()
 
       await expectSnapshot(
-        `content-switcher-with-external-sources-open-${dir}`,
-        page
+        page,
+        "content-switcher-with-external-sources-open",
+        page,
+        { dir }
       )
     })
   })

@@ -3,10 +3,12 @@ import { VIEWPORTS } from "~/constants/screens"
 import { WithUiStore } from "~~/.storybook/decorators/with-ui-store"
 import { WithRTL } from "~~/.storybook/decorators/with-rtl"
 
+import { WithThemeSwitcher } from "~~/.storybook/decorators/with-theme-switcher"
+
 import type { Preview } from "@storybook/vue3"
 
 const preview: Preview = {
-  decorators: [WithRTL, WithUiStore],
+  decorators: [WithRTL, WithUiStore, WithThemeSwitcher],
   globalTypes: {
     languageDirection: {
       name: "RTL",

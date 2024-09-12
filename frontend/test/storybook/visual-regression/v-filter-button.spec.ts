@@ -18,6 +18,7 @@ test.describe("VFilterButton", () => {
       test(`resting, ${filterCount} filters`, async ({ page }) => {
         await gotoWithArgs(page, { appliedFilters: filterCount })
         await expectSnapshot(
+          page,
           `filter-button-at-rest-${filterCount}-checked`,
           page.locator(wrapper)
         )
@@ -29,6 +30,7 @@ test.describe("VFilterButton", () => {
         })
         await page.locator("button", { hasText: "Filter" }).hover()
         await expectSnapshot(
+          page,
           `filter-button-hovered-${filterCount}-checked`,
           page.locator(wrapper)
         )
@@ -38,6 +40,7 @@ test.describe("VFilterButton", () => {
         await gotoWithArgs(page, { appliedFilters: filterCount })
         await page.locator("button", { hasText: "Filter" }).focus()
         await expectSnapshot(
+          page,
           `filter-button-focused-${filterCount}-checked`,
           page.locator(wrapper)
         )
@@ -52,6 +55,7 @@ test.describe("VFilterButton", () => {
         await page.locator("button", { hasText: "Filter" }).focus()
         await page.locator("button", { hasText: "Filter" }).hover()
         await expectSnapshot(
+          page,
           `filter-button-focused-${filterCount}-checked`,
           page.locator(wrapper)
         )
@@ -64,6 +68,7 @@ test.describe("VFilterButton", () => {
         })
         await sleep(500)
         await expectSnapshot(
+          page,
           `filter-button-pressed-${filterCount}-checked`,
           page.locator(wrapper)
         )
@@ -76,6 +81,7 @@ test.describe("VFilterButton", () => {
         })
         await page.locator("button", { hasText: "Filter" }).hover()
         await expectSnapshot(
+          page,
           `filter-button-pressed-hovered-${filterCount}-checked`,
           page.locator(wrapper)
         )
@@ -88,6 +94,7 @@ test.describe("VFilterButton", () => {
         })
         await page.locator("button", { hasText: "Filter" }).focus()
         await expectSnapshot(
+          page,
           `filter-button-pressed-focused-${filterCount}-checked`,
           page.locator(wrapper)
         )

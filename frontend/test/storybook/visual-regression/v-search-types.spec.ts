@@ -17,17 +17,17 @@ test.describe("VSearchTypes", () => {
       await expect(page.getByRole("radio").nth(0)).toBeEnabled()
     })
     test("medium resting", async ({ page }) => {
-      await expectSnapshot("v-search-types-medium-at-rest", page)
+      await expectSnapshot(page, "v-search-types-medium-at-rest", page)
     })
 
     test("medium images hovered", async ({ page }) => {
       await page.hover(audioButtonLocator)
-      await expectSnapshot("v-search-types-medium-images-hovered", page)
+      await expectSnapshot(page, "v-search-types-medium-images-hovered", page)
     })
 
     test("medium focused", async ({ page }) => {
       await page.keyboard.press("Tab")
-      await expectSnapshot("v-search-types-medium-focused", page)
+      await expectSnapshot(page, "v-search-types-medium-focused", page)
     })
   })
 
@@ -39,17 +39,17 @@ test.describe("VSearchTypes", () => {
     })
 
     test("small resting", async ({ page }) => {
-      await expectSnapshot("v-search-types-small-at-rest", page)
+      await expectSnapshot(page, "v-search-types-small-at-rest", page)
     })
 
     test("small images hovered", async ({ page }) => {
       await page.hover(audioButtonLocator)
-      await expectSnapshot("v-search-types-small-images-hovered", page)
+      await expectSnapshot(page, "v-search-types-small-images-hovered", page)
     })
 
     test("small focused", async ({ page }) => {
       await page.keyboard.press("Tab")
-      await expectSnapshot("v-search-types-small-focused", page)
+      await expectSnapshot(page, "v-search-types-small-focused", page)
     })
   })
 })

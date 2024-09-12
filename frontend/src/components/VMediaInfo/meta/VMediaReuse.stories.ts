@@ -3,7 +3,6 @@ import { h } from "vue"
 import { ImageDetail } from "~/types/media"
 
 import VMediaReuse from "~/components/VMediaInfo/VMediaReuse.vue"
-import VLanguageSelect from "~/components/VLanguageSelect/VLanguageSelect.vue"
 
 import type { Meta, StoryObj } from "@storybook/vue3"
 
@@ -35,13 +34,9 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   render: (args) => ({
-    components: { VMediaReuse, VLanguageSelect },
+    components: { VMediaReuse },
     setup() {
-      return () =>
-        h("div", { class: "flex flex-col gap-y-2" }, [
-          h(VLanguageSelect),
-          h(VMediaReuse, args),
-        ])
+      return () => h(VMediaReuse, args)
     },
   }),
   name: "VMediaReuse",

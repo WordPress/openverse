@@ -39,6 +39,7 @@ test.describe("VImageCell", () => {
         await goAndWaitForImage(page, { aspectRatio: ratio })
 
         await expectSnapshot(
+          page,
           `v-image-cell-${ratio}-loaded`,
           page.locator(screenshotEl)
         )
@@ -50,6 +51,7 @@ test.describe("VImageCell", () => {
         await page.focus(imageCell)
 
         await expectSnapshot(
+          page,
           `v-image-cell-${ratio}-focused`,
           page.locator(screenshotEl)
         )
@@ -61,6 +63,7 @@ test.describe("VImageCell", () => {
         await page.hover(imageCell)
 
         await expectSnapshot(
+          page,
           `v-image-cell-${ratio}-hovered`,
           page.locator(screenshotEl)
         )
@@ -74,6 +77,7 @@ test.describe("VImageCell", () => {
         await page.locator(imageCell).click()
 
         await expectSnapshot(
+          page,
           `v-image-cell-${ratio}-focused-hovered`,
           page.locator(screenshotEl)
         )
