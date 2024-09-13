@@ -64,6 +64,10 @@ const setSearchType = (type: SearchType) => {
   }
 }
 
+const showThemeSwitcher = computed(() =>
+  featureFlagStore.isOn("dark_mode_ui_toggle")
+)
+
 const handleSearch = (searchTerm: string) => {
   sendCustomEvent("SUBMIT_SEARCH", {
     searchType: searchType.value,
@@ -86,7 +90,10 @@ const handleSearch = (searchTerm: string) => {
     <div
       class="flex flex-grow flex-col items-center justify-center xl:h-[33rem] xl:items-start"
     >
-      <VDarkModeFeatureNotice v-if="!isDarkModeSeen" class="xl:ms-26" />
+      <VDarkModeFeatureNotice
+        v-if="showThemeSwitcher && !isDarkModeSeen"
+        class="xl:ms-26"
+      />
 
       <VHomepageContent
         class="my-auto sm:px-14 md:px-20 lg:px-26 xl:w-[53.375rem] xl:pe-0"
