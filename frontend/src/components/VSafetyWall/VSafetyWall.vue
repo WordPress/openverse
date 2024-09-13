@@ -94,10 +94,3 @@ const handleShow = () => {
     </section>
   </div>
 </template>
-
-<style scoped>
-#safety-wall {
-  background: no-repeat url(~/assets/safety-bg.png);
-  background-size: 100% 100%;
-}
-</style>
