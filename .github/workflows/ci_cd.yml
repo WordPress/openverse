@@ -668,6 +668,98 @@ jobs:
         env:
           DEPLOYMENT_ENV: production
 
+  nuxt-load-test:
+    name: Load test local frontend
+    runs-on: ubuntu-latest
+    needs:
+      - nuxt-build
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          setup_python: false
+          install_recipe: node-install
+          locales: "test"
+
+      - name: Build and start Nuxt
+        run: |
+          just frontend/run build
+
+          # Separate build from start (rather than using `prod` script) so we can fork
+          # without throwing away logs if the build fails
+          # Forking to the background leaves Nuxt to start up, and in the meantime we can setup k6
+          just frontend/run start &
+
+      - name: Setup k6
+        uses: grafana/setup-k6-action@v1
+
+      - name: Wait for local Nuxt to be available
+        # 2 seconds, this step will fail if Nuxt never becomes available
+        run: npx wait-port -t 2000 http://127.0.0.1:8443/healthcheck
+
+      - name: Run k6 frontend all against local Nuxt
+        # k6-summary.txt is the text summary K6 outputs, which gets posted in
+        # a GitHub comment, but also tee'd so it's visible in the action output
+        # k6-summary.json is a structured version of k6-summary.txt, uploaded as artefact for reference
+        # k6-console.log are the console logs, printed after k6 finishes running
+        run: |
+          just k6 frontend all \
+            -e FRONTEND_URL=http://127.0.0.1:8443/ \
+            --summary-export /tmp/k6-summary.json \
+            --console-output /tmp/k6-console.log \
+            | tee /tmp/k6-summary.txt
+
+      - name: Print k6 logs output
+        run: cat /tmp/k6-console.log
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: k6-output
+          path: /tmp/k6-*
+
+      - name: Make comment body
+        shell: python
+        run: |
+          from pathlib import Path
+          summary_lines = Path("/tmp/k6-summary.txt").read_text().strip().split("\n")
+          # This is the start of the k6 ascii art, at which point we need to start keeping the lines
+          # Before this line the output is script building
+          k6_output_start_idx = summary_lines.index("          /\\      |‾‾| /‾‾/   /‾‾/   ")
+          summary = "\n".join(summary_lines[k6_output_start_idx:])
+          Path("/tmp/k6-summary-cleaned.txt").write_text(f"""
+          ## Latest k6 run output
+
+          ```
+          ${summary}
+          ```
+
+          <small>This comment will automatically update with new output each time k6 runs for this PR</small>
+          """)
+
+      - uses: peter-evans/find-comment@v3
+        id: k6-summary-comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-includes: Latest k6 run output
+
+      - name: Post comment summary
+        uses: peter-evans/create-or-update-comment@v4
+        # Do not comment on forks
+        if: |
+          github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.owner.login == 'WordPress' &&
+          github.actor != 'dependabot[bot]'
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          edit-mode: replace
+          body-path: /tmp/k6-summary-cleaned.txt
+          comment-id: ${{ steps.k6-summary-comment.outputs.comment-id }}
+
   nuxt-checks:
     name: Run Nuxt checks
     if: |
@@ -1181,6 +1273,18 @@ jobs:
             }
           wait_time: 60 # check every minute
           max_time: 1800 # allow up to 30 minutes for a deployment
+
+      - name: Setup k6
+        uses: grafana/setup-k6-action@v1
+
+      - name: Run k6 script
+        env:
+          K6_CLOUD_TOKEN: ${{ secrets.GC_K6_TOKEN }}
+          K6_SIGNING_SECRET: ${{ secrets.K6_SIGNING_SECRET }}
+        run: |
+          just k6 frontend all --out cloud \
+            -e FRONTEND_URL=https://staging.openverse.org/ \
+            -e signing_secret="$K6_SIGNING_SECRET"
 
   deploy-api:
     name: Deploy staging API
