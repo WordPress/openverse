@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { ref, watch, computed } from "vue"
+import { ref, watch } from "vue"
 
 import { useSprite } from "~/composables/use-sprite"
-import { useDarkMode } from "~/composables/use-dark-mode"
-
 /**
  * Vendored from SVG Sprite Module https://github.com/nuxt-modules/svg-sprite
  * The module had problem with handling the source code that is inside `/src` directory.
@@ -54,8 +52,6 @@ const props = withDefaults(
   }
 )
 
-const { effectiveColorMode } = useDarkMode()
-
 if (!props.viewBox.split(" ").every((v) => !isNaN(parseInt(v)))) {
   throw new Error(
     `Invalid viewBox "${props.viewBox}" for icon "${props.name}".`
@@ -70,20 +66,14 @@ const icon = ref({
   class: "",
 })
 
-const iconName = computed(() => {
-  let name = props.name.includes("/") ? props.name : `icons/${props.name}`
-  if (name.startsWith("licenses")) {
-    name = `${name}-${effectiveColorMode.value}`
-  }
-  return name
-})
-
-icon.value = useSprite(iconName.value)
+icon.value = useSprite(
+  props.name.includes("/") ? props.name : `icons/${props.name}`
+)
 
 watch(
-  () => [props.name, effectiveColorMode.value],
-  () => {
-    icon.value = useSprite(iconName.value)
+  () => props.name,
+  (name) => {
+    icon.value = useSprite(name)
   }
 )
 </script>
