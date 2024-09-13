@@ -33,7 +33,7 @@ breakpoints.describeXl(({ breakpoint, expectSnapshot }) => {
       await page.goto(`/image/${imageId}`)
       // eslint-disable-next-line playwright/no-networkidle
       await page.waitForLoadState("networkidle")
-      await expectSnapshot("generic-error", page, { fullPage: true })
+      await expectSnapshot("generic-error-ltr", page, { fullPage: true })
     })
   }
 
@@ -57,7 +57,7 @@ breakpoints.describeXl(({ breakpoint, expectSnapshot }) => {
       // eslint-disable-next-line playwright/no-networkidle
       await page.waitForLoadState("networkidle")
 
-      await expectSnapshot("generic-error", page, { fullPage: true })
+      await expectSnapshot("generic-error-ltr", page, { fullPage: true })
     })
   }
 })
@@ -76,7 +76,7 @@ for (const searchType of supportedSearchTypes) {
       await preparePageForTests(page, breakpoint)
       await goToSearchTerm(page, `SearchPage500error`, { searchType })
 
-      await expectSnapshot("generic-error", page, {
+      await expectSnapshot("generic-error-ltr", page, {
         fullPage: true,
       })
     })
@@ -100,7 +100,7 @@ for (const searchType of supportedSearchTypes) {
             searchType,
           })
 
-          await expectSnapshot("generic-error", page, { fullPage: true })
+          await expectSnapshot(`generic-error-${dir}`, page, { fullPage: true })
         })
       }
 

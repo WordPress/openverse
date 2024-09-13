@@ -1,14 +1,13 @@
-import { Page, test, expect } from "@playwright/test"
+import { expect, test } from "@playwright/test"
 
 import { makeGotoWithArgs } from "~~/test/storybook/utils/args"
-
-const expectSnapshot = async (name: string, page: Page) => {
-  expect(await page.screenshot()).toMatchSnapshot({ name: `${name}.png` })
-}
+import { expectSnapshot } from "~~/test/storybook/utils/expect-snapshot"
 
 test.describe("VLanguageSelect", () => {
   test("default", async ({ page }) => {
     await makeGotoWithArgs("components-vlanguageselect--default")(page)
-    await expectSnapshot("vlanguageselect-default", page)
+    // Make sure the component is rendered and hydrated
+    await expect(page.getByRole("combobox").nth(0)).toBeEnabled()
+    await expectSnapshot("vlanguageselect", page.locator(".screenshot-area"))
   })
 })

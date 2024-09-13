@@ -17,7 +17,7 @@ type ExpectSnapshot = <T extends ScreenshotAble>(
 
 type BreakpointBlock = (options: {
   getConfigValues: (name: string) => {
-    name: `${typeof name}-${Breakpoint}.png`
+    name: `${typeof name}-${Breakpoint}-light.png`
   }
   breakpoint: Breakpoint
   expectSnapshot: ExpectSnapshot
@@ -88,7 +88,7 @@ const makeBreakpointDescribe =
       })
 
       const getConfigValues = (name: string) => ({
-        name: `${name}-${breakpoint}.png` as const,
+        name: `${name}-${breakpoint}-light.png` as const,
       })
 
       const expectSnapshot = async <T extends ScreenshotAble>(
@@ -99,10 +99,8 @@ const makeBreakpointDescribe =
       ) => {
         const { name: snapshotName } = getConfigValues(name)
         return expect(await screenshotAble.screenshot(options)).toMatchSnapshot(
-          {
-            name: snapshotName,
-            ...snapshotOptions,
-          }
+          snapshotName,
+          snapshotOptions
         )
       }
 

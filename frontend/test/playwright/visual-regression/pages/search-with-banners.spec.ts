@@ -19,6 +19,6 @@ breakpoints.describeEvery(({ breakpoint, expectSnapshot }) => {
   })
 
   test("page with all banners", async ({ page }) => {
-    await expectSnapshot(`page-with-all-banners`, page)
+    await expectSnapshot("page-with-all-banners", page)
   })
 })

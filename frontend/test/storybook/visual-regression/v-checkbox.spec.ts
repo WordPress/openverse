@@ -15,7 +15,7 @@ test.describe("v-checkbox", () => {
     })
 
     test("hover", async ({ page }) => {
-      const checkbox = page.locator('input[type="checkbox"]')
+      const checkbox = page.getByRole("checkbox")
       await checkbox.hover()
       expect(
         await page.locator(".screenshot-area").screenshot()
@@ -23,7 +23,7 @@ test.describe("v-checkbox", () => {
     })
 
     test("focused", async ({ page }) => {
-      const checkbox = page.locator('input[type="checkbox"]')
+      const checkbox = page.getByRole("checkbox")
       await checkbox.focus()
       expect(
         await page.locator(".screenshot-area").screenshot()
@@ -33,7 +33,7 @@ test.describe("v-checkbox", () => {
     })
 
     test("disabled", async ({ page }) => {
-      const checkbox = page.locator('input[type="checkbox"]')
+      const checkbox = page.getByRole("checkbox")
       await checkbox.evaluate((checkbox) => {
         ;(checkbox as HTMLInputElement).disabled = true
       })

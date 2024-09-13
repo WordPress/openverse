@@ -79,7 +79,9 @@ test.describe("layout color is set correctly", () => {
       await page.waitForURL(/ar\/search/)
       await expect(getH1(page, "Cat")).toBeVisible()
 
-      expect(await page.screenshot()).toMatchSnapshot("search-page-rtl-lg.png")
+      expect(await page.screenshot()).toMatchSnapshot(
+        "search-page-rtl-lg-light.png"
+      )
     })
 
     test("change language on homepage and go to content page", async ({
@@ -97,7 +99,7 @@ test.describe("layout color is set correctly", () => {
       await page.mouse.move(100, 100)
 
       expect(await page.screenshot({ fullPage: true })).toMatchSnapshot(
-        "about-ltr-lg.png",
+        "about-ltr-lg-light.png",
         { maxDiffPixelRatio: 0.01 }
       )
     })
