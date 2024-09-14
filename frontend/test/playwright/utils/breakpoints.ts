@@ -1,25 +1,14 @@
-import { test, Expect, Page, Locator } from "@playwright/test"
+import { test } from "@playwright/test"
 
 import type { LanguageDirection } from "~~/test/playwright/utils/i18n"
 
-import { expectSnapshot as innerExpectSnapshot } from "~~/test/playwright/utils/expect-snapshot"
+import {
+  type ExpectSnapshot,
+  expectSnapshot as innerExpectSnapshot,
+} from "~~/test/playwright/utils/expect-snapshot"
 
 import { VIEWPORTS } from "~/constants/screens"
 import type { Breakpoint } from "~/constants/screens"
-
-type ScreenshotAble = Page | Locator
-
-type ExpectSnapshot = <T extends ScreenshotAble>(
-  page: Page,
-  name: string,
-  s: T,
-  config?: {
-    dir?: LanguageDirection
-    options?: Parameters<T["screenshot"]>[0]
-    snapshotOptions?: Parameters<ReturnType<Expect>["toMatchSnapshot"]>[0]
-    useColorMode?: boolean
-  }
-) => Promise<Buffer | void>
 
 type BreakpointBlock = (options: {
   breakpoint: Breakpoint
@@ -95,11 +84,11 @@ const makeBreakpointDescribe =
         return `${name}${dirString}-${breakpoint}` as const
       }
 
-      const expectSnapshot = async <T extends ScreenshotAble>(
-        page: Page,
-        name: string,
-        screenshotAble: T,
-        options: Parameters<ExpectSnapshot>[3] = {}
+      const expectSnapshot: ExpectSnapshot = async (
+        page,
+        name,
+        screenshotAble,
+        options = {}
       ) => {
         const snapshotName = getSnapshotName(name, options.dir)
         return innerExpectSnapshot(page, snapshotName, screenshotAble, options)

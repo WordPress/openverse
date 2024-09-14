@@ -47,7 +47,7 @@ for (const mediaType of supportedMediaTypes) {
           page,
           {
             dir,
-            options: { fullPage: true },
+            screenshotOptions: { fullPage: true },
             snapshotOptions: { maxDiffPixelRatio: 0.01 },
           }
         )
@@ -70,7 +70,7 @@ for (const dir of languageDirections) {
       await sleep(500)
       await expectSnapshot(page, "full-page-report", page, {
         dir,
-        options: { fullPage: true },
+        screenshotOptions: { fullPage: true },
         snapshotOptions: { maxDiffPixelRatio: undefined, maxDiffPixels: 2 },
       })
     })
