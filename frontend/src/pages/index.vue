@@ -88,7 +88,7 @@ const handleSearch = (searchTerm: string) => {
     class="index flex w-full flex-shrink-0 flex-grow flex-col justify-center gap-6 px-6 sm:px-0 xl:flex-row xl:items-center xl:gap-0"
   >
     <div
-      class="flex flex-grow flex-col items-center justify-center xl:h-[33rem] xl:items-start"
+      class="flex flex-grow flex-col items-center justify-center gap-6 xl:h-[33rem] xl:items-start"
     >
       <VDarkModeFeatureNotice
         v-if="showThemeSwitcher && !isDarkModeSeen"
