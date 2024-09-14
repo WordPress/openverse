@@ -2,6 +2,7 @@ import { expect, type Page, test } from "@playwright/test"
 
 import { makeUrlWithArgs } from "~~/test/storybook/utils/args"
 import { waitForResponse } from "~~/test/storybook/utils/response"
+import { expectSnapshot } from "~~/test/storybook/utils/expect-snapshot"
 
 const urlWithArgs = makeUrlWithArgs(
   "components-vheader-vheadermobile-vfiltertab--default"
@@ -52,8 +53,9 @@ test.describe("VFilterTab", () => {
       await goAndWaitForSvg(page, { appliedFilterCount, isSelected: true })
       await focusFiltersTab(page)
 
-      expect(await page.locator(wrapper).screenshot()).toMatchSnapshot(
-        `filter-tab-focused-${appliedFilterCount}.png`
+      await expectSnapshot(
+        `filter-tab-focused-${appliedFilterCount}`,
+        page.locator(wrapper)
       )
     })
 
@@ -64,8 +66,9 @@ test.describe("VFilterTab", () => {
       await focusFiltersTab(page)
       await hoverFiltersTab(page)
 
-      expect(await page.locator(wrapper).screenshot()).toMatchSnapshot(
-        `filter-tab-focused-hovered-${appliedFilterCount}.png`
+      await expectSnapshot(
+        `filter-tab-focused-hovered-${appliedFilterCount}`,
+        page.locator(wrapper)
       )
     })
 
@@ -76,8 +79,9 @@ test.describe("VFilterTab", () => {
       }) => {
         await goAndWaitForSvg(page, { appliedFilterCount, isSelected })
 
-        expect(await page.locator(wrapper).screenshot()).toMatchSnapshot(
-          `filter-tab-resting-${selected}-${appliedFilterCount}.png`
+        await expectSnapshot(
+          `filter-tab-resting-${selected}-${appliedFilterCount}`,
+          page.locator(wrapper)
         )
       })
 
@@ -87,8 +91,9 @@ test.describe("VFilterTab", () => {
         await goAndWaitForSvg(page, { appliedFilterCount, isSelected })
         await hoverFiltersTab(page)
 
-        expect(await page.locator(wrapper).screenshot()).toMatchSnapshot(
-          `filter-tab-hovered-${selected}-${appliedFilterCount}.png`
+        await expectSnapshot(
+          `filter-tab-hovered-${selected}-${appliedFilterCount}`,
+          page.locator(wrapper)
         )
       })
     }

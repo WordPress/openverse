@@ -1,5 +1,7 @@
 import { h, ref } from "vue"
 
+import { WithScreenshotArea } from "~~/.storybook/decorators/with-screenshot-area"
+
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VSelectField from "~/components/VSelectField/VSelectField.vue"
 
@@ -19,6 +21,7 @@ const baseArgs = {
 const meta = {
   title: "Components/VSelectField",
   component: VSelectField,
+  decorators: [WithScreenshotArea],
 
   argTypes: {
     "onUpdate:modelValue": {
