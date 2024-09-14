@@ -15,25 +15,25 @@ const handleClick = (e: MouseEvent) => {
 </script>
 
 <template>
-  <div
-    class="border-gradient flex h-10 flex-row items-center gap-2 rounded-full border border-double border-tx bg-origin-border pe-4 ps-2 sm:w-[23.125rem]"
+  <VLink
+    :href="seeMoreHref"
+    class="border-gradient group flex h-10 flex-row items-center gap-2 rounded-full border border-double border-tx bg-origin-border pe-4 ps-2 hover:no-underline sm:w-[23.125rem]"
+    @click="handleClick"
   >
     <div
       class="flex h-6 items-center rounded-full bg-primary px-2 text-xs font-semibold uppercase text-over-negative"
     >
       {{ $t("notification.new") }}
     </div>
-    <div class="label-regular flex-grow">
+    <div class="label-regular flex-grow text-default">
       <!-- @slot Content goes here. -->
       <slot />
     </div>
-    <VLink
-      :href="seeMoreHref"
-      class="label-bold cursor-pointer text-default"
-      @click="handleClick"
-      >{{ $t("notification.more") }}</VLink
+    <span
+      class="label-bold text-default group-hover:underline group-focus:underline"
+      >{{ $t("notification.more") }}</span
     >
-  </div>
+  </VLink>
 </template>
 
 <style>
