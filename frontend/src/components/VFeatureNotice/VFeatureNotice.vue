@@ -16,7 +16,7 @@ const handleClick = (e: MouseEvent) => {
 
 <template>
   <div
-    class="border-gradient flex h-10 w-[23.125rem] flex-row items-center gap-2 rounded-full border border-double border-tx bg-origin-border pe-4 ps-2"
+    class="border-gradient flex h-10 flex-row items-center gap-2 rounded-full border border-double border-tx bg-origin-border pe-4 ps-2 sm:w-[23.125rem]"
   >
     <div
       class="flex h-6 items-center rounded-full bg-primary px-2 text-xs font-semibold uppercase text-over-negative"

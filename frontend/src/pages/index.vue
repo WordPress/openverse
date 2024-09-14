@@ -92,7 +92,7 @@ const handleSearch = (searchTerm: string) => {
     >
       <VDarkModeFeatureNotice
         v-if="showThemeSwitcher && !isDarkModeSeen"
-        class="xl:ms-26"
+        class="sm:mx-14 md:mx-20 lg:mx-26 xl:me-0"
       />
 
       <VHomepageContent
