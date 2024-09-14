@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test"
+import { test } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import {
@@ -29,7 +29,7 @@ test.describe("VHeaderInternal", () => {
         })
       })
 
-      breakpoints.describeXs(({ breakpoint }) => {
+      breakpoints.describeXs(({ expectSnapshot }) => {
         test(`mobile header closed`, async ({ page }) => {
           await page.goto(pageUrl(dir))
 
@@ -41,8 +41,9 @@ test.describe("VHeaderInternal", () => {
 
           await page.mouse.move(0, 150)
 
-          await expect(page.locator(headerSelector)).toHaveScreenshot(
-            `mobile-header-internal-closed-${dir}-${breakpoint}.png`
+          await expectSnapshot(
+            `mobile-header-internal-closed-${dir}`,
+            page.locator(headerSelector)
           )
         })
       })

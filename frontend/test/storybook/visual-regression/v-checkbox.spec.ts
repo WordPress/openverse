@@ -1,4 +1,6 @@
-import { test, expect } from "@playwright/test"
+import { test } from "@playwright/test"
+
+import { expectSnapshot } from "~~/test/storybook/utils/expect-snapshot"
 
 test.describe.configure({ mode: "parallel" })
 
@@ -9,86 +11,57 @@ test.describe("v-checkbox", () => {
     })
 
     test("default", async ({ page }) => {
-      expect(
-        await page.locator(".screenshot-area").screenshot()
-      ).toMatchSnapshot({ name: "default.png" })
+      await expectSnapshot("default", page.locator(".screenshot-area"))
     })
 
     test("hover", async ({ page }) => {
-      const checkbox = page.locator('input[type="checkbox"]')
+      const checkbox = page.getByRole("checkbox")
       await checkbox.hover()
-      expect(
-        await page.locator(".screenshot-area").screenshot()
-      ).toMatchSnapshot({ name: "hover.png" })
+      await expectSnapshot("hover", page.locator(".screenshot-area"))
     })
 
     test("focused", async ({ page }) => {
-      const checkbox = page.locator('input[type="checkbox"]')
+      const checkbox = page.getByRole("checkbox")
       await checkbox.focus()
-      expect(
-        await page.locator(".screenshot-area").screenshot()
-      ).toMatchSnapshot({
-        name: "focused.png",
-      })
+      await expectSnapshot("focused", page.locator(".screenshot-area"))
     })
 
     test("disabled", async ({ page }) => {
-      const checkbox = page.locator('input[type="checkbox"]')
+      const checkbox = page.getByRole("checkbox")
       await checkbox.evaluate((checkbox) => {
         ;(checkbox as HTMLInputElement).disabled = true
       })
-      expect(
-        await page.locator(".screenshot-area").screenshot()
-      ).toMatchSnapshot({
-        name: "disabled.png",
-      })
+      await expectSnapshot("disabled", page.locator(".screenshot-area"))
     })
 
     test("on", async ({ page }) => {
-      const checkbox = page.locator('input[type="checkbox"]')
+      const checkbox = page.getByRole("checkbox")
       await checkbox.click()
-      expect(
-        await page.locator(".screenshot-area").screenshot()
-      ).toMatchSnapshot({ name: "on.png" })
+      await expectSnapshot("on", page.locator(".screenshot-area"))
     })
 
     test("on focused", async ({ page }) => {
-      const checkbox = page.locator('input[type="checkbox"]')
+      const checkbox = page.getByRole("checkbox")
       await checkbox.focus()
       await page.keyboard.press("Space")
-      expect(
-        await page.locator(".screenshot-area").screenshot()
-      ).toMatchSnapshot({
-        name: "on-focused.png",
-      })
+      await expectSnapshot("on-focused", page.locator(".screenshot-area"))
     })
 
     test("on disabled", async ({ page }) => {
-      const checkbox = page.locator('input[type="checkbox"]')
+      const checkbox = page.getByRole("checkbox")
       await checkbox.click()
       await checkbox.evaluate((checkbox) => {
         ;(checkbox as HTMLInputElement).disabled = true
       })
-      expect(
-        await page.locator(".screenshot-area").screenshot()
-      ).toMatchSnapshot({
-        name: "on-disabled.png",
-      })
+      await expectSnapshot("on-disabled", page.locator(".screenshot-area"))
     })
 
     test("on-and-off", async ({ page }) => {
       // toggle on and off again
-      const checkbox = page.locator('input[type="checkbox"]')
+      const checkbox = page.getByRole("checkbox")
       await checkbox.click()
-      // `force: true` is required because the `input`'s pointer events are actually intercepted by the visual SVG.
-      // We still want to check that it works though as that does mimic the user behavior of checking directly on the checkbox.
-      // eslint-disable-next-line playwright/no-force-option
-      await checkbox.click({ force: true })
-      expect(
-        await page.locator(".screenshot-area").screenshot()
-      ).toMatchSnapshot({
-        name: "on-and-off.png",
-      })
+      await checkbox.click()
+      await expectSnapshot("default", page.locator(".screenshot-area"))
     })
   })
 })

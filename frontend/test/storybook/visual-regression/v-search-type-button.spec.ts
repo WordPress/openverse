@@ -1,8 +1,8 @@
 import { expect, type Page, test } from "@playwright/test"
 
-import breakpoints from "~~/test/playwright/utils/breakpoints"
 import { makeUrlWithArgs } from "~~/test/storybook/utils/args"
 import { t } from "~~/test/playwright/utils/i18n"
+import { expectSnapshot } from "~~/test/storybook/utils/expect-snapshot"
 
 const urlWithArgs = makeUrlWithArgs(
   "components-vcontentswitcher-vsearchtypebutton--default"
@@ -33,25 +33,25 @@ test.describe("VSearchTypeButton", () => {
 
     for (const state of ["non-pressed", "pressed"] as const) {
       const snapshotName = `v-search-type-button-${buttonName}${state === "pressed" ? "-pressed" : ""}`
-      breakpoints.describeMd(({ breakpoint }) => {
-        test(`resting ${state} ${buttonName}`, async ({ page }) => {
-          const url = urlWithArgs({ showLabel, pressed: state === "pressed" })
-          await goAndWaitForSvg(page, url)
+      test(`resting ${state} ${buttonName}`, async ({ page }) => {
+        const url = urlWithArgs({ showLabel, pressed: state === "pressed" })
+        await goAndWaitForSvg(page, url)
 
-          await expect(getSearchTypeButton(page)).toHaveScreenshot(
-            `${snapshotName}-at-rest-${breakpoint}.png`
-          )
-        })
+        await expectSnapshot(
+          `${snapshotName}-at-rest`,
+          getSearchTypeButton(page)
+        )
+      })
 
-        test(`hovered ${state} ${buttonName}`, async ({ page }) => {
-          const url = urlWithArgs({ showLabel, pressed: state === "pressed" })
-          await goAndWaitForSvg(page, url)
-          await getSearchTypeButton(page).hover()
+      test(`hovered ${state} ${buttonName}`, async ({ page }) => {
+        const url = urlWithArgs({ showLabel, pressed: state === "pressed" })
+        await goAndWaitForSvg(page, url)
+        await getSearchTypeButton(page).hover()
 
-          await expect(getSearchTypeButton(page)).toHaveScreenshot(
-            `${snapshotName}-hovered-${breakpoint}.png`
-          )
-        })
+        await expectSnapshot(
+          `${snapshotName}-hovered`,
+          getSearchTypeButton(page)
+        )
       })
     }
   }

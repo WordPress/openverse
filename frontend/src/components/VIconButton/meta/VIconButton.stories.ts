@@ -2,6 +2,8 @@ import { h } from "vue"
 
 import { baseButtonSizes, baseButtonVariants } from "~/types/button"
 
+import { WithScreenshotArea } from "~~/.storybook/decorators/with-screenshot-area"
+
 import VIconButton from "~/components/VIconButton/VIconButton.vue"
 
 import type { Meta, StoryObj } from "@storybook/vue3"
@@ -9,6 +11,7 @@ import type { Meta, StoryObj } from "@storybook/vue3"
 const meta = {
   title: "Components/VIconButton",
   component: VIconButton,
+  decorators: [WithScreenshotArea],
 
   argTypes: {
     size: {

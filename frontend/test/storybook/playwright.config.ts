@@ -1,8 +1,6 @@
-import type { PlaywrightTestConfig } from "@playwright/test"
+import { defineConfig } from "@playwright/test"
 
-const config: PlaywrightTestConfig = {
-  snapshotPathTemplate:
-    "visual-regression/{testFileName}-snapshots/{arg}-linux.png",
+export default defineConfig({
   forbidOnly: !!process.env.CI,
   webServer: {
     command: "pnpm prod:storybook",
@@ -21,6 +19,4 @@ const config: PlaywrightTestConfig = {
       maxDiffPixelRatio: 0.01,
     },
   },
-}
-
-export default config
+})

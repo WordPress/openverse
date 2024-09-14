@@ -42,7 +42,7 @@ for (const mediaType of supportedMediaTypes) {
         // This will include the "Back to results" link.
         await openFirstResult(page, mediaType, dir)
         await expectSnapshot(
-          `${mediaType}-${dir}-from-search-results-with-additional-search-views`,
+          `${mediaType}-from-search-results-with-additional-search-views-${dir}`,
           page,
           { fullPage: true },
           { maxDiffPixelRatio: 0.01 }
@@ -65,7 +65,7 @@ for (const dir of languageDirections) {
       // Wait for the language select to hydrate.
       await sleep(500)
       await expectSnapshot(
-        `${dir}-full-page-report`,
+        `full-page-report-${dir}`,
         page,
         { fullPage: true },
         { maxDiffPixelRatio: undefined, maxDiffPixels: 2 }
