@@ -39,6 +39,15 @@ const setLanguageDirection = async (
   }
 }
 
+/**
+ * TODO: Remove this when the theme selector is no longer highlighted.
+ */
+const disableNewHighlights = async (page: Page) => {
+  await page.locator("#theme").click()
+  await page.locator("#theme").blur()
+  await page.mouse.move(0, 0)
+}
+
 test.describe.configure({ mode: "parallel" })
 
 test.describe("VFooter", () => {
@@ -49,6 +58,7 @@ test.describe("VFooter", () => {
           await page.goto(storyUrl(footerKind, dir))
 
           await setLanguageDirection(page, dir, footerKind)
+          await disableNewHighlights(page)
 
           await expectSnapshot(
             `footer-${footerKind}-${dir}`,
