@@ -74,14 +74,14 @@ const splitAttrs = computed(() => {
 </script>
 
 <template>
-  <div class="relative">
+  <div class="relative m-0.5px">
     <div
       v-if="showNewHighlight"
       class="new-highlight absolute -inset-1.5px animate-new-highlight rounded-[calc(0.125rem_+_1.5px)]"
       aria-hidden="true"
     ></div>
     <div
-      class="relative m-0.5px box-content block w-fit rounded-sm border bg-curr-page text-sm focus-within:m-0 focus-within:border-1.5 focus-within:border-focus hover:border-hover focus-within:hover:border-focus"
+      class="relative box-content block w-fit rounded-sm border bg-curr-page text-sm focus-within:m-0 focus-within:border-1.5 focus-within:border-focus hover:border-hover focus-within:hover:border-focus"
       :class="[
         splitAttrs.classAttrs,
         showNewHighlight ? 'border-tx' : 'border-default',
