@@ -190,11 +190,11 @@ export const useUiStore = defineStore("ui", {
       }
 
       if (isColorMode(cookies.colorMode)) {
-        this.setColorMode(cookies.colorMode)
+        this.setColorMode(cookies.colorMode, false)
       }
 
       if (typeof cookies.isDarkModeSeen === "boolean") {
-        this.isDarkModeSeen = cookies.isDarkModeSeen
+        this.setIsDarkModeSeen(cookies.isDarkModeSeen, false)
       }
 
       this.writeToCookie()
@@ -287,15 +287,33 @@ export const useUiStore = defineStore("ui", {
       this.shouldBlurSensitive = value
       this.revealedSensitiveResults = []
     },
-    setColorMode(colorMode: ColorMode) {
+
+    /**
+     * Update the user's preferred color mode.
+     *
+     * @param colorMode - the user's preferred color mode.
+     * @param saveToCookie - whether to save the new breakpoint in the cookie.
+     */
+    setColorMode(colorMode: ColorMode, saveToCookie = true) {
       this.colorMode = colorMode
 
-      this.writeToCookie()
+      if (saveToCookie) {
+        this.writeToCookie()
+      }
     },
-    setIsDarkModeSeen(value: boolean) {
+
+    /**
+     * Update the value of whether the user has seen dark mode.
+     *
+     * @param value - the new value of whether the user has seen dark mode
+     * @param saveToCookie - whether to save the new breakpoint in the cookie.
+     */
+    setIsDarkModeSeen(value: boolean, saveToCookie = true) {
       this.isDarkModeSeen = value
 
-      this.writeToCookie()
+      if (saveToCookie) {
+        this.writeToCookie()
+      }
     },
     setHeaderHeight(height: number) {
       this.headerHeight = Math.max(height, 80)
