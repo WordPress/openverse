@@ -342,7 +342,7 @@ export default {
         disabled: "var(--color-bg-disabled)",
         zero: "var(--color-bg-zero)",
         blur: "var(--color-bg-blur)",
-        "curr-page": "var(--color-bg-curr-page)",
+        "curr-page": "var(--color-bg-curr-page, var(--color-bg))",
       },
       borderColor: {
         default: "var(--color-border)",
