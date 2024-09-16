@@ -98,7 +98,7 @@ const { doneHydrating } = useHydrating()
       </span>
     </VSearchBar>
 
-    <VSearchTypePopover :show-label="isXl" placement="header" />
+    <VSearchTypePopover :show-label="isXl" />
 
     <VFilterButton
       ref="filterButtonRef"
