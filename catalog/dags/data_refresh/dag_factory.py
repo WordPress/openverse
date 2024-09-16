@@ -48,9 +48,13 @@ from common.sensors.single_run_external_dags_sensor import SingleRunExternalDAGs
 from common.sensors.utils import wait_for_external_dags_with_tag
 from data_refresh.alter_data import alter_table_data
 from data_refresh.copy_data import copy_upstream_tables
-from data_refresh.create_and_promote_index import create_index
+from data_refresh.create_and_populate_filtered_index import (
+    create_and_populate_filtered_index,
+)
+from data_refresh.create_index import create_index
 from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS, DataRefreshConfig
 from data_refresh.distributed_reindex import perform_distributed_reindex
+from data_refresh.promote_table import promote_tables
 from data_refresh.reporting import report_record_difference
 
 
@@ -174,13 +178,21 @@ def create_data_refresh_dag(
 
         # Populate the Elasticsearch index.
         reindex = perform_distributed_reindex(
+            es_host=es_host,
             environment="{{ var.value.ENVIRONMENT }}",
             target_environment=target_environment,
             target_index=target_index,
             data_refresh_config=data_refresh_config,
         )
 
-        # TODO create_and_populate_filtered_index
+        # Create and populate the filtered index
+        filtered_index = create_and_populate_filtered_index(
+            es_host=es_host,
+            media_type=data_refresh_config.media_type,
+            origin_index_name=target_index,
+            destination_index_name=f"{target_index}-filtered",
+            timeout=data_refresh_config.create_filtered_index_timeout,
+        )
 
         # Re-enable Cloudwatch alarms once reindexing is complete, even if it
         # failed.
@@ -193,9 +205,27 @@ def create_data_refresh_dag(
             trigger_rule=TriggerRule.ALL_DONE,
         )
 
-        # TODO Promote
-        # (TaskGroup that reapplies constraints, promotes new tables and indices,
-        # deletes old ones)
+        # Promote the API table
+        promote_table = promote_tables(
+            data_refresh_config=data_refresh_config,
+            target_environment=target_environment,
+        )
+
+        promote_index = es.point_alias.override(group_id="promote_index")(
+            es_host=es_host,
+            target_index=target_index,
+            target_alias=data_refresh_config.media_type,
+            should_delete_old_index=True,
+        )
+
+        promote_filtered_index = es.point_alias.override(
+            group_id="promote_filtered_index"
+        )(
+            es_host=es_host,
+            target_index=filtered_index,
+            target_alias=f"{data_refresh_config.media_type}-filtered",
+            should_delete_old_index=True,
+        )
 
         # Get the final number of records in the API table after the refresh
         after_record_count = es.get_record_count_group_by_sources.override(
@@ -226,9 +256,13 @@ def create_data_refresh_dag(
             >> target_index
             >> disable_alarms
             >> reindex
+            >> filtered_index
         )
-        reindex >> [enable_alarms, after_record_count]
-        after_record_count >> report_counts
+        # Note filtered_index must be directly upstream of promote_table to
+        # ensure that table promotion does not run if there was an error during reindexing
+        filtered_index >> [enable_alarms, promote_table]
+        promote_table >> [promote_index, promote_filtered_index]
+        promote_index >> after_record_count >> report_counts
 
     return dag
 

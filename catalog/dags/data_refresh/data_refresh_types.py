@@ -75,10 +75,13 @@ class DataRefreshConfig:
                                        the distributed reindex
     index_readiness_timeout:           timedelta expressing amount of time it may take
                                        to await a healthy ES index after reindexing
+    create_filtered_index_timeout:     timedelta expressing amount of time it may take to await
+                                       the creation of the filtered index
     concurrency_check_poke_interval:   int number of seconds to wait between
                                        checks to see if conflicting DAGs are running
     reindex_poke_interval:             int number of seconds to wait between checks to see if
                                        the reindexing task has completed
+
     doc_md:                            str used for the DAG's documentation markdown
     """
 
@@ -94,6 +97,7 @@ class DataRefreshConfig:
     copy_data_timeout: timedelta = timedelta(hours=1)
     indexer_worker_timeout: timedelta = timedelta(hours=12)
     index_readiness_timeout: timedelta = timedelta(days=1)
+    create_filtered_index_timeout: timedelta = timedelta(days=1)
     concurrency_check_poke_interval: int = REFRESH_POKE_INTERVAL
     reindex_poke_interval: int = REFRESH_POKE_INTERVAL
 
