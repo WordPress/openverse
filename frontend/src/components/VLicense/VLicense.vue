@@ -7,6 +7,8 @@ import { useI18n } from "#imports"
 
 import { computed } from "vue"
 
+import { useDarkMode } from "~/composables/use-dark-mode"
+
 import type { License } from "~/constants/license"
 import { getFullLicenseName, getElements } from "~/utils/license"
 import { camelCase } from "~/utils/case"
@@ -35,6 +37,8 @@ const props = withDefaults(
   }
 )
 
+const { effectiveColorMode } = useDarkMode()
+
 const i18n = useI18n({ useScope: "global" })
 
 const iconNames = computed(() => getElements(props.license))
@@ -56,7 +60,7 @@ const licenseName = computed(() => {
         :key="name"
         :class="{ 'license-bg text-black': bgFilled }"
         view-box="0 0 30 30"
-        :name="`licenses/${name}`"
+        :name="`licenses/${name}-${effectiveColorMode}`"
         :size="4"
       />
     </div>

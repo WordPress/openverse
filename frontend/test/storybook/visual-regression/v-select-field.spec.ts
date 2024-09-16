@@ -1,24 +1,15 @@
-import { Page, test, expect } from "@playwright/test"
+import { test, expect } from "@playwright/test"
 
 import { makeGotoWithArgs } from "~~/test/storybook/utils/args"
+import { expectSnapshot } from "~~/test/storybook/utils/expect-snapshot"
 
-const expectSnapshot = async (name: string, page: Page) => {
-  expect(await page.screenshot()).toMatchSnapshot({ name: `${name}.png` })
+for (const slug of ["default", "with-icon", "without-border"]) {
+  test(`vselectfield-${slug}`, async ({ page }) => {
+    await makeGotoWithArgs(`components-vselectfield--${slug}`)(page)
+    await expect(page.getByRole("combobox").nth(0)).toBeEnabled()
+    await expectSnapshot(
+      `vselectfield-${slug}`,
+      page.locator(".screenshot-area")
+    )
+  })
 }
-
-test.describe("VSelectField", () => {
-  test("default", async ({ page }) => {
-    await makeGotoWithArgs("components-vselectfield--default")(page)
-    await expectSnapshot("vselectfield-default", page)
-  })
-
-  test("with icon", async ({ page }) => {
-    await makeGotoWithArgs("components-vselectfield--with-icon")(page)
-    await expectSnapshot("vselectfield-with-icon", page)
-  })
-
-  test("without border", async ({ page }) => {
-    await makeGotoWithArgs("components-vselectfield--without-border")(page)
-    await expectSnapshot("vselectfield-without-border", page)
-  })
-})

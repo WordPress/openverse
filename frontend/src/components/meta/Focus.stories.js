@@ -57,18 +57,3 @@ export const BoldFilled = {
     classNames: ["focus-bold-filled"],
   },
 }
-
-export const Colored = {
-  render: GetTemplate("bg-tertiary text-over-dark border border-tx").bind({}),
-  name: "Colored",
-
-  args: {
-    classNames: ["focus-slim-tx bg-complementary"],
-  },
-
-  parameters: {
-    backgrounds: {
-      default: "dark",
-    },
-  },
-}

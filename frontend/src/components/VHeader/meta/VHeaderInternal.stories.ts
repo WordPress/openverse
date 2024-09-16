@@ -18,7 +18,7 @@ export const Default: Story = {
     setup() {
       return () =>
         h("div", { id: "teleports" }, [
-          h("div", { class: "fixed inset-0 w-full h-full" }, [
+          h("div", { class: "fixed inset-0 w-full h-full bg-default" }, [
             h(VHeaderInternal, args),
           ]),
         ])

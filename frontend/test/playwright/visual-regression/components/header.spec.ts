@@ -18,7 +18,7 @@ test.describe.configure({ mode: "parallel" })
 const headerSelector = ".main-header"
 
 for (const dir of languageDirections) {
-  test.describe(`header-${dir}`, () => {
+  test.describe(dir, () => {
     breakpoints.describeEvery(({ breakpoint, expectSnapshot }) => {
       test.beforeEach(async ({ page }) => {
         await preparePageForTests(page, breakpoint, { dismissFilter: false })

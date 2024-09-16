@@ -1,4 +1,4 @@
-import { test } from "@playwright/test"
+import { expect, test } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 
@@ -13,6 +13,8 @@ test.describe("VSearchTypes", () => {
   breakpoints.describeMd(({ expectSnapshot }) => {
     test.beforeEach(async ({ page }) => {
       await page.goto(`${defaultUrl}&args=size%3Amedium`)
+      // Ensure the search types have been hydrated
+      await expect(page.getByRole("radio").nth(0)).toBeEnabled()
     })
     test("medium resting", async ({ page }) => {
       await expectSnapshot("v-search-types-medium-at-rest", page)
@@ -32,6 +34,8 @@ test.describe("VSearchTypes", () => {
   breakpoints.describeXl(({ expectSnapshot }) => {
     test.beforeEach(async ({ page }) => {
       await page.goto(`${defaultUrl}&args=size%3Asmall`)
+      // Ensure the search types have been hydrated
+      await expect(page.getByRole("radio").nth(0)).toBeEnabled()
     })
 
     test("small resting", async ({ page }) => {

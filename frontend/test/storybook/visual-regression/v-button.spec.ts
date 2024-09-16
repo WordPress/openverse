@@ -1,6 +1,8 @@
-import { expect, test } from "@playwright/test"
+import { test } from "@playwright/test"
 
 import { makeGotoWithArgs } from "~~/test/storybook/utils/args"
+
+import { expectSnapshot } from "~~/test/storybook/utils/expect-snapshot"
 
 import { buttonVariants } from "~/types/button"
 
@@ -17,34 +19,29 @@ test.describe("VButton", () => {
   for (const variant of nonPressedVariants) {
     test(`${variant} resting`, async ({ page }) => {
       await gotoWithArgs(page, { variant })
-      expect(await page.locator(wrapperLocator).screenshot()).toMatchSnapshot({
-        name: `${variant}-resting.png`,
-      })
+      await expectSnapshot(`${variant}-resting`, page.locator(wrapperLocator))
     })
 
     test(`${variant} hovered`, async ({ page }) => {
       await gotoWithArgs(page, { variant })
       await page.hover(buttonLocator)
-      expect(await page.locator(wrapperLocator).screenshot()).toMatchSnapshot({
-        name: `${variant}-hovered.png`,
-      })
+      await expectSnapshot(`${variant}-hovered`, page.locator(wrapperLocator))
     })
 
     test(`${variant} focused`, async ({ page }) => {
       await gotoWithArgs(page, { variant })
       await page.focus(buttonLocator)
-      expect(await page.locator(wrapperLocator).screenshot()).toMatchSnapshot({
-        name: `${variant}-focused.png`,
-      })
+      await expectSnapshot(`${variant}-focused`, page.locator(wrapperLocator))
     })
 
     test(`${variant} focused hovered`, async ({ page }) => {
       await gotoWithArgs(page, { variant })
       await page.focus(buttonLocator)
       await page.hover(buttonLocator)
-      expect(await page.locator(wrapperLocator).screenshot()).toMatchSnapshot({
-        name: `${variant}-focused-hovered.png`,
-      })
+      await expectSnapshot(
+        `${variant}-focused-hovered`,
+        page.locator(wrapperLocator)
+      )
     })
   }
 })

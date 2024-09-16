@@ -2,6 +2,7 @@ import logging
 
 import pytest
 
+from common.extensions import InvalidFiletypeError
 from common.licenses import LicenseInfo
 from common.storage import audio
 from tests.dags.common.storage import test_media
@@ -61,7 +62,7 @@ def test_AudioStore_add_item_adds_realistic_audio_to_buffer():
     audio_store.add_item(
         foreign_identifier="01",
         foreign_landing_url="https://audios.org/audio01",
-        url="https://audios.org/audio01.jpg",
+        url="https://audios.org/audio01.mp3",
         license_info=license_info,
         ingestion_type="provider_api",
     )
@@ -73,25 +74,25 @@ def test_AudioStore_add_item_adds_multiple_audios_to_buffer():
     audio_store.add_item(
         foreign_identifier="01",
         foreign_landing_url="https://audios.org/audio01",
-        url="https://audios.org/audio01.jpg",
+        url="https://audios.org/audio01.mp3",
         license_info=PD_LICENSE_INFO,
     )
     audio_store.add_item(
         foreign_identifier="02",
         foreign_landing_url="https://audios.org/audio02",
-        url="https://audios.org/audio02.jpg",
+        url="https://audios.org/audio02.mp3",
         license_info=PD_LICENSE_INFO,
     )
     audio_store.add_item(
         foreign_identifier="03",
         foreign_landing_url="https://audios.org/audio03",
-        url="https://audios.org/audio03.jpg",
+        url="https://audios.org/audio03.mp3",
         license_info=PD_LICENSE_INFO,
     )
     audio_store.add_item(
         foreign_identifier="04",
         foreign_landing_url="https://audios.org/audio04",
-        url="https://audios.org/audio04.jpg",
+        url="https://audios.org/audio04.mp3",
         license_info=PD_LICENSE_INFO,
     )
     assert len(audio_store._media_buffer) == 4
@@ -105,25 +106,25 @@ def test_AudioStore_add_item_flushes_buffer(tmpdir):
     audio_store.add_item(
         foreign_identifier="01",
         foreign_landing_url="https://audios.org/audio01",
-        url="https://audios.org/audio01.jpg",
+        url="https://audios.org/audio01.mp3",
         license_info=PD_LICENSE_INFO,
     )
     audio_store.add_item(
         foreign_identifier="02",
         foreign_landing_url="https://audios.org/audio02",
-        url="https://audios.org/audio02.jpg",
+        url="https://audios.org/audio02.mp3",
         license_info=PD_LICENSE_INFO,
     )
     audio_store.add_item(
         foreign_identifier="03",
         foreign_landing_url="https://audios.org/audio03",
-        url="https://audios.org/audio03.jpg",
+        url="https://audios.org/audio03.mp3",
         license_info=PD_LICENSE_INFO,
     )
     audio_store.add_item(
         foreign_identifier="04",
         foreign_landing_url="https://audios.org/audio04",
-        url="https://audios.org/audio04.jpg",
+        url="https://audios.org/audio04.mp3",
         license_info=PD_LICENSE_INFO,
     )
     assert len(audio_store._media_buffer) == 1
@@ -142,22 +143,67 @@ def test_AudioStore_produces_correct_total_audios():
     audio_store.add_item(
         foreign_identifier="01",
         foreign_landing_url="https://audios.org/audio01",
-        url="https://audios.org/audio01.jpg",
+        url="https://audios.org/audio01.mp3",
         license_info=PD_LICENSE_INFO,
     )
     audio_store.add_item(
         foreign_identifier="02",
         foreign_landing_url="https://audios.org/audio02",
-        url="https://audios.org/audio02.jpg",
+        url="https://audios.org/audio02.mp3",
         license_info=PD_LICENSE_INFO,
     )
     audio_store.add_item(
         foreign_identifier="03",
         foreign_landing_url="https://audios.org/audio03",
-        url="https://audios.org/audio03.jpg",
+        url="https://audios.org/audio03.mp3",
         license_info=PD_LICENSE_INFO,
     )
     assert audio_store.total_items == 3
+
+
+@pytest.mark.parametrize(
+    "filetype, url, expected_filetype",
+    [
+        # The value provided prevails over the url extension
+        ("ogg", "http://example.com/audio", "ogg"),
+        ("ogg", "http://example.com/audio.wav", "ogg"),
+        # The filetype is guessed from the URL extension
+        (None, "http://example.com/audio.mp3", "mp3"),
+        (None, "http://example.com/audio.WAV", "wav"),
+        (None, "http://example.com/audio.mid", "mid"),
+        # Unifies filetypes
+        ("midi", "http://example.com/audio.mid", "mid"),
+        (None, "http://example.com/audio.midi", "mid"),
+    ],
+)
+def test_AudioStore_validate_filetype(filetype, url, expected_filetype):
+    audio_store = audio.MockAudioStore("test_provider")
+    actual_filetype = audio_store._validate_filetype(filetype, url)
+    assert actual_filetype == expected_filetype
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        "https://example.com/non-audio.apng",
+        "https://example.com/non-audio.avif",
+        "https://example.com/non-audio.bmp",
+        "https://example.com/non-audio.djvu",
+        "https://example.com/non-audio.gif",
+        "https://example.com/non-audio.ICO",
+        "https://example.com/non-audio.jpg",
+        "https://example.com/non-audio.Jpeg",
+        "https://example.com/non-audio.png",
+        "https://example.com/non-audio.svg",
+        "https://example.com/non-audio.tif",
+        "https://example.com/non-audio.tiFF",
+        "https://example.com/non-audio.webp",
+    ],
+)
+def test_AudioStore_validate_filetype_raises_error_on_invalid_filetype(url):
+    image_store = audio.MockAudioStore("test_provider")
+    with pytest.raises(InvalidFiletypeError):
+        image_store._validate_filetype(filetype=None, url=url)
 
 
 @test_media.INT_MAX_PARAMETERIZATION

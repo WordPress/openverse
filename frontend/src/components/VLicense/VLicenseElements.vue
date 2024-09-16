@@ -4,6 +4,7 @@ import { useI18n } from "#imports"
 import { computed } from "vue"
 
 import type { License } from "~/constants/license"
+import { useDarkMode } from "~/composables/use-dark-mode"
 import { useUiStore } from "~/stores/ui"
 import { camelCase } from "~/utils/case"
 import { getElements } from "~/utils/license"
@@ -26,6 +27,8 @@ const props = withDefaults(
     size: "big",
   }
 )
+
+const { effectiveColorMode } = useDarkMode()
 
 const i18n = useI18n({ useScope: "global" })
 const elementNames = computed(() =>
@@ -51,7 +54,7 @@ const getLicenseDescription = (element: string) => {
       <VIcon
         view-box="0 0 30 30"
         :size="isSmall || isMobile ? 5 : 6"
-        :name="`licenses/${element}`"
+        :name="`licenses/${element}-${effectiveColorMode}`"
       />
       <span v-if="elementNames.length > 1" class="sr-only">{{
         element.toUpperCase()
