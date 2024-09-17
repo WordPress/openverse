@@ -328,6 +328,11 @@
   input[type="search"]::-webkit-search-results-decoration {
     -webkit-appearance: none;
   }
+
+  /* Completely remove the outline; to be replaced with a different focus ring */
+  .outline-style-none {
+    outline-style: none;
+  }
 }
 /*
 Text styles from Figma, @see
