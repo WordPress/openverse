@@ -15,8 +15,7 @@ const hClass = computed(() =>
   props.isFilterSidebarVisible ? positionWithSidebar : positionWithoutSidebar
 )
 const scrollToTop = (e: MouseEvent) => {
-  const element =
-    (e.currentTarget as HTMLElement)?.closest("#main-page") || window
+  const element = document.querySelector("#main-page") || window
   element.scrollTo({ top: 0, left: 0, behavior: "smooth" })
 }
 </script>
