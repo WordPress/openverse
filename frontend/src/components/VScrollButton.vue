@@ -22,15 +22,18 @@ const hClass = computed(() =>
   props.isFilterSidebarVisible ? positionWithSidebar : positionWithoutSidebar
 )
 const scrollToTop = (e: MouseEvent) => {
-  const element =
-    (e.currentTarget as HTMLElement)?.closest("#main-page") || window
+  const mainPage = document.getElementById("main-page")
+  const element = mainPage || window
   element.scrollTo({ top: 0, left: 0, behavior: "smooth" })
 
   sendCustomEvent("BACK_TO_TOP", {
     query: searchStore.searchTerm,
     page: mediaStore.currentPage,
-    scrollPixels: document.getElementById("main-page").scrollTop, // Sorry!
-    maxScroll: document.getElementById("main-page").scrollTopMax,
+    scrollPixels: mainPage?.scrollTop || 0,
+    maxScroll:
+      mainPage && "scrollTopMax" in mainPage
+        ? (mainPage.scrollTopMax as number)
+        : 0,
   })
 }
 </script>

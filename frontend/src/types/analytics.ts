@@ -109,11 +109,11 @@ export type Events = {
     /** The search query */
     query: string
     /** The current page of results the user is on. */
-    page: string
+    page: number
     /** The number of pixels the user has scrolled. */
-    scrollPixels: number
+    scrollPixels: number | undefined
     /** The maximum number of pixels the user has scrolled on this pageload. */
-    maxScroll: number
+    maxScroll: number | undefined
   }
   /**
    * Description: Whenever the user scrolls to the end of the results page.
