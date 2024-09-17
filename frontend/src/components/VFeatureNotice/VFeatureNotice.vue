@@ -17,7 +17,7 @@ const handleClick = (e: MouseEvent) => {
 <template>
   <VLink
     :href="seeMoreHref"
-    class="border-gradient group flex h-10 w-full flex-row items-center gap-2 rounded-full border border-double border-tx bg-origin-border pe-4 ps-2 hover:no-underline sm:w-[23.125rem]"
+    class="group flex h-10 w-full flex-row items-center gap-2 rounded-full border border-secondary pe-4 ps-2 hover:no-underline sm:w-[23.125rem]"
     @click="handleClick"
   >
     <div
@@ -35,23 +35,3 @@ const handleClick = (e: MouseEvent) => {
     >
   </VLink>
 </template>
-
-<style>
-/**
- * To get the border gradient we use two backgrounds:
- * - one gradient sized to the border box
- * - one flat color sized to the padding box
- */
-.border-gradient {
-  background-image: linear-gradient(
-      var(--color-bg-curr-page),
-      var(--color-bg-curr-page)
-    ),
-    linear-gradient(
-      to right,
-      var(--color-new-highlight),
-      var(--color-gray-new-highlight)
-    );
-  background-clip: padding-box, border-box;
-}
-</style>
