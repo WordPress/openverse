@@ -1,7 +1,8 @@
 import { check } from "k6"
 
-import { getRandomWord } from "../utils.js"
 import { http } from "../http.js"
+import { makeResponseFailedCheck } from "../utils.js"
+import { getRandomQueryTerm } from "../sample-query-terms.js"
 
 import { FRONTEND_URL, PROJECT_ID } from "./constants.js"
 
@@ -53,7 +54,7 @@ export function visitSearchPages() {
         FRONTEND_URL
       )
       const params = new URLSearchParams(__ENV.PARAMS)
-      params.append("q", getRandomWord())
+      params.append("q", getRandomQueryTerm())
       url.search = params.toString()
 
       const response = http.get(url.toString(), { tags: { ovGroup } })
