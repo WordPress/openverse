@@ -136,7 +136,7 @@ redirects = {
     "packages/openverse_attribution/index": "/packages/python/openverse_attribution/index.html",
 }
 
-if "changelogs" not in exclude_patterns:
+if "changelogs" in exclude_patterns:
     # temporary placeholder for now
     redirects["changelogs/"] = (
         "/general/contribution/github_contribution_practices.html"
