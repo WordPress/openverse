@@ -81,9 +81,6 @@ const {
     >
       {{ $t("hero.subtitle") }}
     </h1>
-    <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
-    <p class="sr-only">Testing Nuxt 3</p>
-    <!-- eslint-enable -->
 
     <p class="text-base leading-relaxed">
       {{ $t("hero.description") }}
