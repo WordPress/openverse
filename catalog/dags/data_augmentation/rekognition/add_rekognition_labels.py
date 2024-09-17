@@ -60,6 +60,8 @@ def _insert_tags(tags_buffer: types.TagsBuffer, postgres_conn_id: str):
         tags_buffer,
         executemany=True,
         replace=True,
+        target_fields=["identifier", "tags"],
+        replace_index="identifier",
     )
 
 
