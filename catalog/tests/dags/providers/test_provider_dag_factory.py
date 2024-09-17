@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 from unittest import mock
 
 import pytest
@@ -131,7 +131,7 @@ def test_apply_configuration_overrides():
     # Create a mock DAG
     dag = DAG(
         dag_id="test_dag",
-        start_date=datetime(1970, 1, 1),
+        schedule=None,
         default_args={"execution_timeout": timedelta(hours=1)},
     )
     with dag:
