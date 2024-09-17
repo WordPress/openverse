@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
+import { useAnalytics } from "~/composables/use-analytics"
+import { useSearchStore } from "~/stores/search"
+import { useMediaStore } from "~/stores/media"
+
 const positionWithoutSidebar = "ltr:right-4 rtl:left-4"
 const positionWithSidebar = "ltr:right-[22rem] rtl:left-[22rem]"
 
@@ -9,6 +13,9 @@ const props = withDefaults(
   { isFilterSidebarVisible: true }
 )
 
+const { sendCustomEvent } = useAnalytics()
+const searchStore = useSearchStore()
+const mediaStore = useMediaStore()
 defineEmits<{ tab: [KeyboardEvent] }>()
 
 const hClass = computed(() =>
@@ -18,6 +25,13 @@ const scrollToTop = (e: MouseEvent) => {
   const element =
     (e.currentTarget as HTMLElement)?.closest("#main-page") || window
   element.scrollTo({ top: 0, left: 0, behavior: "smooth" })
+
+  sendCustomEvent("BACK_TO_TOP", {
+    query: searchStore.searchTerm,
+    page: mediaStore.currentPage,
+    scrollPixels: document.getElementById("main-page").scrollTop, // Sorry!
+    maxScroll: document.getElementById("main-page").scrollTopMax,
+  })
 }
 </script>
 

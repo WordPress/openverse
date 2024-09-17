@@ -102,6 +102,20 @@ export type Events = {
     searchType: SearchType
   }
   /**
+   * Description: The user clicks on the "back to top" caret button in the bottom-right of
+   * the search results page.
+   */
+  BACK_TO_TOP: {
+    /** The search query */
+    query: string
+    /** The current page of results the user is on. */
+    page: string
+    /** The number of pixels the user has scrolled. */
+    scrollPixels: number
+    /** The maximum number of pixels the user has scrolled on this pageload. */
+    maxScroll: number
+  }
+  /**
    * Description: Whenever the user scrolls to the end of the results page.
    * Useful to evaluate how often users load more results or click
    * on the external sources dropdown.
