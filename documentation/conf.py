@@ -1,3 +1,4 @@
+import os
 import sys
 from pathlib import Path
 
@@ -43,7 +44,6 @@ todo_include_todos = True
 
 source_suffix = {".rst": "restructuredtext", ".md": "markdown"}
 
-import os
 
 # CI will be True if the CI environment variable is defined, otherwise False
 CI = os.getenv("CI") is not None
@@ -56,7 +56,9 @@ _default_exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", ".venv", "READM
 
 # If INCLUDE_CHANGELOGS is True, no additional patterns are excluded, so changelogs will be included.
 # If INCLUDE_CHANGELOGS is False, "changelogs" will be added to the exclusion list.
-exclude_patterns = _default_exclude_patterns + ([] if INCLUDE_CHANGELOGS else ["changelogs"])
+exclude_patterns = _default_exclude_patterns + (
+    [] if INCLUDE_CHANGELOGS else ["changelogs"]
+)
 
 # Result: exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", ".venv", "README.md"]
 # If INCLUDE_CHANGELOGS is False, the result will also include "changelogs".
@@ -136,6 +138,8 @@ redirects = {
 
 if "changelogs" not in exclude_patterns:
     # temporary placeholder for now
-    redirects["changelogs/"] = "/general/contribution/github_contribution_practices.html"
+    redirects["changelogs/"] = (
+        "/general/contribution/github_contribution_practices.html"
+    )
 
 myst_enable_extensions = ["linkify"]
