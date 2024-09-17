@@ -43,7 +43,25 @@ todo_include_todos = True
 
 source_suffix = {".rst": "restructuredtext", ".md": "markdown"}
 
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", ".venv", "README.md"]
+
+import os
+
+# CI will be True if the CI environment variable is defined, otherwise False
+CI = os.getenv("CI") is not None
+
+# INCLUDE_CHANGELOGS will be True if the INCLUDE_CHANGELOGS environment variable is set to a truthy value.
+# If INCLUDE_CHANGELOGS is not set, it will fall back to the value of CI.
+INCLUDE_CHANGELOGS = bool(os.getenv("INCLUDE_CHANGELOGS", CI))
+
+_default_exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", ".venv", "README.md"]
+
+# If INCLUDE_CHANGELOGS is True, no additional patterns are excluded, so changelogs will be included.
+# If INCLUDE_CHANGELOGS is False, "changelogs" will be added to the exclusion list.
+exclude_patterns = _default_exclude_patterns + ([] if INCLUDE_CHANGELOGS else ["changelogs"])
+
+# Result: exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", ".venv", "README.md"]
+# If INCLUDE_CHANGELOGS is False, the result will also include "changelogs".
+
 suppress_warnings = [
     # Pygments does not fully support language features we use
     # in code blocks in the documentation. Unfortunately the best
@@ -115,5 +133,10 @@ redirects = {
     "packages/eslint_plugin/no-unexplained-disabled-test": "/packages/js/eslint_plugin/no-unexplained-disabled-test.html",
     "packages/openverse_attribution/index": "/packages/python/openverse_attribution/index.html",
 }
+
+# Check if "changelogs" is not excluded, and add a redirect for them
+if "changelogs" in exclude_patterns:
+    # temporary placeholder page
+    redirects["changelogs/"] = "/general/contribution/dev_flow.html"
 
 myst_enable_extensions = ["linkify"]
