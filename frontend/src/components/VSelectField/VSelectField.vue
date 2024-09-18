@@ -83,7 +83,7 @@ const splitAttrs = computed(() => {
   >
     <div
       v-if="showNewHighlight"
-      class="new-highlight pointer-events-none absolute -inset-1.5px animate-new-highlight rounded rounded-sm border-1.5 border-tx group-focus-within/select:hidden group-hover/select:hidden"
+      class="new-highlight pointer-events-none absolute -inset-1.5px animate-new-highlight rounded-sm border-1.5 border-tx group-focus-within/select:hidden group-hover/select:hidden"
       aria-hidden="true"
     />
     <div class="pointer-events-none absolute inset-y-0 start-2 my-auto h-fit">
