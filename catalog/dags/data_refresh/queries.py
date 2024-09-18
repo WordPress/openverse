@@ -80,3 +80,44 @@ ADVANCED_COPY_DATA_QUERY = dedent(
 ADD_PRIMARY_KEY_QUERY = "ALTER TABLE {temp_table_name} ADD PRIMARY KEY (id);"
 
 DROP_SERVER_QUERY = "DROP SERVER upstream CASCADE;"
+
+SELECT_TABLE_INDICES_QUERY = (
+    "SELECT indexdef FROM pg_indexes WHERE tablename='{table_name}';"
+)
+
+SELECT_ALL_CONSTRAINTS_QUERY = dedent(
+    """
+    SELECT conrelid::regclass AS table, conname, pg_get_constraintdef(c.oid)
+    FROM pg_constraint AS c
+    JOIN pg_namespace AS n
+    ON n.oid = c.connamespace
+    AND n.nspname = 'public'
+    ORDER BY conrelid::regclass::text, contype DESC;
+    """
+)
+
+ADD_CONSTRAINT_QUERY = "ALTER TABLE {constraint_table} ADD CONSTRAINT {constraint_name} {constraint_statement};"
+
+DROP_CONSTRAINT_QUERY = (
+    "ALTER TABLE {constraint_table} DROP CONSTRAINT {constraint_name};"
+)
+
+DELETE_ORPHANS_QUERY = dedent(
+    """
+    DELETE FROM {foreign_key_table} AS fk_table
+    WHERE NOT EXISTS(
+        SELECT 1 FROM {referenced_table} AS r
+        WHERE r.{referenced_field} = fk_table.{foreign_key_field}
+    );
+    """
+)
+
+RENAME_INDEX_QUERY = "ALTER INDEX {old_name} RENAME TO {new_name};"
+
+GO_LIVE_QUERY = dedent(
+    """
+    DROP TABLE {table_name};
+    {restore_index_names}
+    ALTER TABLE {temp_table_name} RENAME TO {table_name};
+    """
+)

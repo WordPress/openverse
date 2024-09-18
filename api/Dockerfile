@@ -4,27 +4,6 @@
 ARG API_PY_VERSION
 
 ##################
-# Audio waveform #
-##################
-
-# Pull image `realies/audiowaveform` from Docker Hub and alias as `awf`
-FROM docker.io/realies/audiowaveform:1.10.1 AS awf
-
-# Identify dependencies of the `audiowaveform` binary and move them to `/deps`,
-# while retaining their folder structure
-
-# Enable pipefail before `RUN` that contains pipes
-SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
-
-# The script is intentionally single quoted below so that it is not
-# expanded too eagerly and in the wrong context.
-# hadolint ignore=SC2016
-RUN ldd /usr/local/bin/audiowaveform \
-    | tr -s '[:blank:]' '\n' \
-    | grep '^/' \
-    | xargs -I % sh -c 'mkdir -p $(dirname deps%); cp % deps%;'
-
-##################
 # Python builder #
 ##################
 
@@ -81,28 +60,25 @@ COPY api/utils/fonts/SourceSansPro-Bold.ttf /usr/share/fonts/truetype/SourceSans
 # Copy virtualenv from the builder image
 COPY --from=builder /.venv /.venv
 
-# Copy `audiowaveform` dependencies. This is unreliable as we use
-# The `latest` version of the audiowaveform image which may introduce
-# dependency changes which *could* have a different directory structure.
-# If this step is failing, try adding the logging in this commit to help
-# update the dependency paths:
-# https://github.com/WordPress/openverse/commit/6cd8e3944a1d4ba7a3e80705b969a6a50eb75b5a
-COPY --from=awf /deps/lib/ /lib/
-COPY --from=awf /deps/usr/ /usr/
-
-# Copy `audiowaveform` binary
-COPY --from=awf /usr/local/bin/audiowaveform /usr/local/bin
+ARG BUILDARCH
+ARG AUDIOWAVEFORM_RELEASE=1.10.1
+ARG AUDIOWAVEFORM_DEB=audiowaveform_${AUDIOWAVEFORM_RELEASE}-1-12_${BUILDARCH}.deb
 
 # - Install system packages needed for running Python dependencies
 #   - libexempi8: required for watermarking
 # - Create directory for dumping API logs
+# - apt --fix-broken install required to install missing dependencies for audiowaveform and audiowaveform itself
+#   dpkg -i marks the dependencies for installation, apt-get installs them
+#   we need to ignore error output from dpkg -i for this reason
 RUN apt-get update \
   && apt-get install -yqq --no-install-recommends \
     curl \
     libexempi8 \
     postgresql-client \
+  && curl -sLO https://github.com/bbc/audiowaveform/releases/download/${AUDIOWAVEFORM_RELEASE}/${AUDIOWAVEFORM_DEB} \
+  && (dpkg -i ${AUDIOWAVEFORM_DEB} || apt-get --fix-broken -y --no-install-recommends install) \
   && apt-get autoremove -y \
-  && rm -rf /var/lib/apt/lists/* \
+  && rm -rf /var/lib/apt/lists/* ${AUDIOWAVEFORM_DEB} \
   && mkdir -p /var/log/openverse_api/openverse_api.log
 
 # Create a folder for placing static files

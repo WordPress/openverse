@@ -5,7 +5,7 @@
 groups = ["default", "dev", "overrides", "test"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:56b7ee9bb04cad671dd572c9e57b807fa3e3abb4fdf8233665bdc952b9b5a1d1"
+content_hash = "sha256:cbd8d79a6080fa3f047a2343718794ef8934a69f5a3984cad305254ac0d4e75c"
 
 [[metadata.targets]]
 requires_python = "==3.11.*"
@@ -459,18 +459,19 @@ files = [
 
 [[package]]
 name = "django-oauth-toolkit"
-version = "2.3.0"
+version = "3.0.1"
+requires_python = ">=3.8"
 summary = "OAuth2 Provider for Django"
 groups = ["default"]
 dependencies = [
-    "django!=4.0.0,>=2.2",
-    "jwcrypto>=0.8.0",
-    "oauthlib>=3.1.0",
+    "django>=4.2",
+    "jwcrypto>=1.5.0",
+    "oauthlib>=3.2.2",
     "requests>=2.13.0",
 ]
 files = [
-    {file = "django-oauth-toolkit-2.3.0.tar.gz", hash = "sha256:cf1cb1a5744672e6bd7d66b4a110a463bcef9cf5ed4f27e29682cc6a4d0df1ed"},
-    {file = "django_oauth_toolkit-2.3.0-py3-none-any.whl", hash = "sha256:47dfeab97ec21496f307c2cf3468e64ca08897fa499bf3104366d32005c9111d"},
+    {file = "django_oauth_toolkit-3.0.1-py3-none-any.whl", hash = "sha256:3ef00b062a284f2031b0732b32dc899e3bbf0eac221bbb1cffcb50b8932e55ed"},
+    {file = "django_oauth_toolkit-3.0.1.tar.gz", hash = "sha256:7200e4a9fb229b145a6d808cbf0423b6d69a87f68557437733eec3c0cf71db02"},
 ]
 
 [[package]]

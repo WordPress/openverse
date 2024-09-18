@@ -74,43 +74,41 @@ const splitAttrs = computed(() => {
 </script>
 
 <template>
-  <div class="relative m-0.5px">
+  <div
+    class="group/select relative m-0.5px box-content block w-fit rounded-sm border text-sm focus-within:m-0 focus-within:border-1.5 focus-within:border-focus hover:border-hover focus-within:hover:border-focus"
+    :class="[
+      splitAttrs.classAttrs,
+      showNewHighlight ? 'border-tx' : 'border-default',
+    ]"
+  >
     <div
       v-if="showNewHighlight"
-      class="new-highlight absolute -inset-1.5px animate-new-highlight rounded-[calc(0.125rem_+_1.5px)]"
+      class="new-highlight pointer-events-none absolute -inset-1.5px animate-new-highlight rounded rounded-sm border-1.5 border-tx group-focus-within/select:hidden group-hover/select:hidden"
       aria-hidden="true"
-    ></div>
-    <div
-      class="relative box-content block w-fit rounded-sm border bg-curr-page text-sm focus-within:m-0 focus-within:border-1.5 focus-within:border-focus hover:border-hover focus-within:hover:border-focus"
-      :class="[
-        splitAttrs.classAttrs,
-        showNewHighlight ? 'border-tx' : 'border-default',
-      ]"
-    >
-      <div class="pointer-events-none absolute inset-y-0 start-2 my-auto h-fit">
-        <slot name="start" />
-      </div>
-      <div class="pointer-events-none absolute inset-y-0 end-2 my-auto h-fit">
-        <VIcon name="caret-down" />
-      </div>
-      <select
-        :id="fieldId"
-        v-model="selectValue"
-        class="flex h-[calc(theme(spacing.10)_-_2_*_theme(borderWidth.DEFAULT))] appearance-none truncate bg-tx pe-10"
-        :class="[
-          showSelected ? 'w-full' : 'w-0 max-w-0',
-          hasStartContent ? 'ps-10' : 'ps-2',
-        ]"
-        :name="fieldName"
-        v-bind="splitAttrs.nonClassAttrs"
-        :aria-label="labelText"
-      >
-        <option v-if="blankText" disabled value="">{{ blankText }}</option>
-        <option v-for="choice in choices" :key="choice.key" :value="choice.key">
-          {{ choice.text }}
-        </option>
-      </select>
+    />
+    <div class="pointer-events-none absolute inset-y-0 start-2 my-auto h-fit">
+      <slot name="start" />
     </div>
+    <div class="pointer-events-none absolute inset-y-0 end-2 my-auto h-fit">
+      <VIcon name="caret-down" />
+    </div>
+    <select
+      :id="fieldId"
+      v-model="selectValue"
+      class="outline-style-none flex h-[calc(theme(spacing.10)_-_2_*_theme(borderWidth.DEFAULT))] appearance-none truncate bg-tx pe-10"
+      :class="[
+        showSelected ? 'w-full' : 'w-0 max-w-0',
+        hasStartContent ? 'ps-10' : 'ps-2',
+      ]"
+      :name="fieldName"
+      v-bind="splitAttrs.nonClassAttrs"
+      :aria-label="labelText"
+    >
+      <option v-if="blankText" disabled value="">{{ blankText }}</option>
+      <option v-for="choice in choices" :key="choice.key" :value="choice.key">
+        {{ choice.text }}
+      </option>
+    </select>
   </div>
 </template>
 
@@ -122,10 +120,14 @@ const splitAttrs = computed(() => {
 }
 
 .new-highlight {
-  background: linear-gradient(
-    var(--deg),
-    var(--color-gray-new-highlight),
-    var(--color-new-highlight)
-  );
+  background:
+    linear-gradient(var(--color-bg-curr-page), var(--color-bg-curr-page))
+      content-box,
+    linear-gradient(
+        var(--deg),
+        var(--color-gray-new-highlight),
+        var(--color-new-highlight)
+      )
+      border-box;
 }
 </style>

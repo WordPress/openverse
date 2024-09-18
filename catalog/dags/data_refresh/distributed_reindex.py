@@ -14,11 +14,14 @@ from airflow import settings
 from airflow.decorators import task, task_group
 from airflow.exceptions import AirflowSkipException
 from airflow.models.connection import Connection
+from airflow.operators.empty import EmptyOperator
 from airflow.providers.amazon.aws.hooks.ec2 import EC2Hook
+from airflow.providers.common.sql.hooks.sql import fetch_one_handler
 from airflow.sensors.base import PokeReturnValue
 from airflow.utils.trigger_rule import TriggerRule
 from requests import Response
 
+from common import elasticsearch as es
 from common.constants import (
     AWS_CONN_ID,
     OPENLEDGER_API_CONN_ID,
@@ -27,7 +30,7 @@ from common.constants import (
 )
 from common.operators.http import TemplatedConnectionHttpOperator
 from common.sensors.http import TemplatedConnectionHttpSensor
-from common.sql import PGExecuteQueryOperator, single_value
+from common.sql import PGExecuteQueryOperator
 from data_refresh.constants import INDEXER_LAUNCH_TEMPLATES, INDEXER_WORKER_COUNTS
 from data_refresh.data_refresh_types import DataRefreshConfig
 
@@ -84,7 +87,7 @@ def response_check_wait_for_completion(response: Response) -> bool:
 
 @task
 def get_worker_params(
-    estimated_record_count: int,
+    id_range: tuple[int, int],
     environment: str,
     target_environment: Environment,
 ):
@@ -95,12 +98,15 @@ def get_worker_params(
         if environment == PRODUCTION
         else 1
     )
+
+    min_id, max_id = id_range
+    estimated_record_count = max_id - min_id + 1
     records_per_worker = math.floor(estimated_record_count / worker_count)
 
     return [
         {
-            "start_id": worker_index * records_per_worker,
-            "end_id": (1 + worker_index) * records_per_worker,
+            "start_id": min_id + worker_index * records_per_worker,
+            "end_id": min_id + (1 + worker_index) * records_per_worker,
         }
         for worker_index in range(worker_count)
     ]
@@ -274,6 +280,25 @@ def drop_connection(worker_conn: str):
     session.commit()
 
 
+def assert_reindexing_success() -> EmptyOperator:
+    """
+    Fail if the direct upstream tasks, which perform the actual reindexing,
+    fail. Otherwise simply pass.
+
+    This is necessary because we have some tasks after the reindex step
+    which always run even on reindexing failure (to drop the connection
+    and terminate the worker instance). However in the event of failures,
+    we still need the last task in the TaskGroup to be marked as `Failed`
+    or else subsequent tasks (like the promotion steps) will run. It is
+    not possible to set individual tasks within a TaskGroup as
+    directly upstream of later tasks; the last task in the TaskGroup
+    must fail.
+    """
+    return EmptyOperator(
+        task_id="assert_reindexing_success", trigger_rule=TriggerRule.NONE_FAILED
+    )
+
+
 @task_group(group_id="reindex")
 def reindex(
     data_refresh_config: DataRefreshConfig,
@@ -345,32 +370,35 @@ def reindex(
         instance_id=instance_id,
     )
 
+    status = assert_reindexing_success()
+
     drop_conn = drop_connection(worker_conn=worker_conn)
 
     instance_id >> [await_worker, instance_ip_address]
     worker_conn >> trigger_reindexing_task >> wait_for_reindexing_task
-    wait_for_reindexing_task >> [terminate_instance, drop_conn]
+    wait_for_reindexing_task >> [terminate_instance, drop_conn, status]
 
 
 @task_group(
     group_id="run_distributed_reindex",
 )
 def perform_distributed_reindex(
+    es_host: str,
     environment: str,
     target_environment: Environment,
     target_index: str,
     data_refresh_config: DataRefreshConfig,
 ):
     """Perform the distributed reindex on a fleet of remote indexer workers."""
-    estimated_record_count = PGExecuteQueryOperator(
-        task_id="get_estimated_record_count",
+    id_range = PGExecuteQueryOperator(
+        task_id="get_record_id_range",
         conn_id=OPENLEDGER_API_CONN_ID,
         sql=dedent(
             f"""
-            SELECT max(id) FROM {data_refresh_config.table_mapping.temp_table_name};
+            SELECT min(id), max(id) FROM {data_refresh_config.table_mapping.temp_table_name};
             """
         ),
-        handler=single_value,
+        handler=fetch_one_handler,
         return_last=True,
         trigger_rule=TriggerRule.NONE_FAILED,
     )
@@ -381,17 +409,28 @@ def perform_distributed_reindex(
     )
 
     worker_params = get_worker_params(
-        estimated_record_count=estimated_record_count.output,
+        id_range=id_range.output,
         environment=environment,
         target_environment=target_environment,
     )
 
-    estimated_record_count >> worker_params
+    id_range >> worker_params
 
-    reindex.partial(
+    perform_reindex = reindex.partial(
         data_refresh_config=data_refresh_config,
         target_index=target_index,
         launch_template_version_number=launch_template_version_number,
         environment=environment,
         target_environment=target_environment,
     ).expand_kwargs(worker_params)
+
+    # Refresh the index at the end, in order to make the documents available for
+    # filtered index creation
+    refresh_index = es.refresh_index.override(
+        trigger_rule=TriggerRule.NONE_FAILED,
+    )(
+        es_host=es_host,
+        index_name=target_index,
+    )
+
+    perform_reindex >> refresh_index

@@ -40,6 +40,14 @@ def single_value(cursor):
         raise ValueError("Unable to extract expected row data from cursor") from e
 
 
+def fetch_all(cursor):
+    try:
+        rows = cursor.fetchall()
+        return [row[0] for row in rows]
+    except Exception as e:
+        raise ValueError("Unable to extract expected row data from cursor") from e
+
+
 class PostgresHook(UpstreamPostgresHook):
     """
     PostgresHook that sets the database timeout on any query to match the airflow task
