@@ -88,7 +88,7 @@ const {
 
     <VStandaloneSearchBar
       ref="searchBarRef"
-      class="mt-4 md:mt-6"
+      class="mt-4 md:mt-6 xl:max-w-[43.75rem]"
       :has-popover="!!triggerElement && isContentSwitcherVisible"
       @submit="handleSearch"
     >
