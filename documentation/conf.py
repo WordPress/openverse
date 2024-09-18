@@ -107,6 +107,10 @@ githubusermention = True
 # so the prefix should be the root
 notfound_urls_prefix = "/"
 
+nitpick_ignore_regex = (
+    () if INCLUDE_CHANGELOGS else (("myst", ".*/changelogs/index.*"),)
+)
+
 redirects = {
     "meta/traffic/index": "/meta/monitoring/traffic/index.html",
     "meta/traffic/runbooks/identifying-and-blocking-traffic-anomalies": "/meta/monitoring/traffic/runbooks/identifying-and-blocking-traffic-anomalies.html",  # noqa: E501
@@ -138,8 +142,6 @@ redirects = {
 
 if "changelogs" in exclude_patterns:
     # temporary placeholder for now
-    redirects["changelogs/"] = (
-        "/general/contribution/github_contribution_practices.html"
-    )
+    redirects["changelogs/index"] = "/meta/missing_changelogs.html"
 
 myst_enable_extensions = ["linkify"]
