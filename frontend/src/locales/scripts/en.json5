@@ -37,6 +37,11 @@
       link: "the privacy page",
       close: "Close the analytics notice banner.",
     },
+    darkMode: {
+      text: "Dark mode is now available.",
+    },
+    new: "New",
+    more: "See more",
   },
   header: {
     homeLink: "{openverse} Home",

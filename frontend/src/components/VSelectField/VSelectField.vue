@@ -34,11 +34,14 @@ const props = withDefaults(
     labelText: string
     choices: Choice[]
     showSelected?: boolean
+    /** whether to show a glowing pink outline, indicating a new feature */
+    showNewHighlight?: boolean
   }>(),
   {
     modelValue: "",
     blankText: "",
     showSelected: true,
+    showHighlight: false,
   }
 )
 
@@ -72,9 +75,17 @@ const splitAttrs = computed(() => {
 
 <template>
   <div
-    class="relative m-0.5px box-content block w-fit rounded-sm border border-default text-sm focus-within:m-0 focus-within:border-1.5 focus-within:border-focus hover:border-hover focus-within:hover:border-focus"
-    :class="splitAttrs.classAttrs"
+    class="group/select relative m-0.5px box-content block w-fit rounded-sm border text-sm focus-within:m-0 focus-within:border-1.5 focus-within:border-focus hover:border-hover focus-within:hover:border-focus"
+    :class="[
+      splitAttrs.classAttrs,
+      showNewHighlight ? 'border-tx' : 'border-default',
+    ]"
   >
+    <div
+      v-if="showNewHighlight"
+      class="new-highlight pointer-events-none absolute -inset-1.5px animate-new-highlight rounded-sm border-1.5 border-tx group-focus-within/select:hidden group-hover/select:hidden"
+      aria-hidden="true"
+    />
     <div class="pointer-events-none absolute inset-y-0 start-2 my-auto h-fit">
       <slot name="start" />
     </div>
@@ -100,3 +111,23 @@ const splitAttrs = computed(() => {
     </select>
   </div>
 </template>
+
+<style>
+@property --deg {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.new-highlight {
+  background:
+    linear-gradient(var(--color-bg-curr-page), var(--color-bg-curr-page))
+      content-box,
+    linear-gradient(
+        var(--deg),
+        var(--color-gray-new-highlight),
+        var(--color-new-highlight)
+      )
+      border-box;
+}
+</style>

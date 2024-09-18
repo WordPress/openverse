@@ -320,6 +320,7 @@ export default {
         disabled: "var(--color-text-disabled)",
         link: "var(--color-text-link)",
         "over-dark": "var(--color-text-over-dark)",
+        "over-negative": "var(--color-text-over-negative)",
         "secondary-over-dark": "var(--color-text-secondary-over-dark)",
       },
       backgroundColor: {
@@ -341,6 +342,7 @@ export default {
         disabled: "var(--color-bg-disabled)",
         zero: "var(--color-bg-zero)",
         blur: "var(--color-bg-blur)",
+        "curr-page": "var(--color-bg-curr-page, var(--color-bg))",
       },
       borderColor: {
         default: "var(--color-border)",
@@ -397,6 +399,16 @@ export default {
           },
         },
       }),
+      keyframes: {
+        "new-highlight": {
+          "0%,100%": { "--deg": "0deg" },
+          "50%": { "--deg": "50deg" },
+          "99.99%": { "--deg": "360deg" },
+        },
+      },
+      animation: {
+        "new-highlight": "new-highlight 5s linear infinite",
+      },
     },
   },
   plugins: [

@@ -16,6 +16,7 @@ import { useSearchStore } from "~/stores/search"
 import { useUiStore } from "~/stores/ui"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 
+import VDarkModeFeatureNotice from "~/components/VFeatureNotice/VDarkModeFeatureNotice.vue"
 import VHomeGallery from "~/components/VHomeGallery/VHomeGallery.vue"
 import VHomepageContent from "~/components/VHomepageContent.vue"
 
@@ -48,6 +49,8 @@ onMounted(() => {
 
 const isXl = computed(() => uiStore.isBreakpoint("xl"))
 
+const isDarkModeSeen = computed(() => uiStore.isDarkModeSeen)
+
 const searchType = ref<SearchType>(ALL_MEDIA)
 
 const setSearchType = (type: SearchType) => {
@@ -60,6 +63,10 @@ const setSearchType = (type: SearchType) => {
     searchType.value = type
   }
 }
+
+const showThemeSwitcher = computed(() =>
+  featureFlagStore.isOn("dark_mode_ui_toggle")
+)
 
 const handleSearch = (searchTerm: string) => {
   sendCustomEvent("SUBMIT_SEARCH", {
@@ -78,14 +85,23 @@ const handleSearch = (searchTerm: string) => {
 
 <template>
   <main
-    class="index flex w-full flex-shrink-0 flex-grow flex-col justify-center gap-6 px-6 sm:px-0 lg:flex-row lg:items-center lg:justify-between lg:gap-0"
+    class="index flex w-full flex-shrink-0 flex-grow flex-col justify-center gap-6 px-6 sm:px-0 xl:flex-row xl:items-center xl:gap-0"
   >
-    <VHomepageContent
-      class="sm:px-14 md:px-20 lg:px-26 xl:w-[53.375rem] xl:pe-0"
-      :handle-search="handleSearch"
-      :search-type="searchType"
-      :set-search-type="setSearchType"
-    />
+    <div
+      class="flex flex-grow flex-col items-center justify-center gap-6 xl:h-[33rem] xl:flex-grow-0 xl:items-start"
+    >
+      <VDarkModeFeatureNotice
+        v-if="showThemeSwitcher && !isDarkModeSeen"
+        class="sm:mx-14 md:mx-20 lg:mx-26 xl:me-0"
+      />
+
+      <VHomepageContent
+        class="my-auto sm:px-14 md:px-20 lg:px-26 xl:w-[53.375rem] xl:pe-0"
+        :handle-search="handleSearch"
+        :search-type="searchType"
+        :set-search-type="setSearchType"
+      />
+    </div>
 
     <!-- Image carousel -->
     <VHomeGallery v-if="isXl" class="mx-10 me-12 flex h-full flex-grow" />
