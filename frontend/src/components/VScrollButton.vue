@@ -22,7 +22,7 @@ defineEmits<{ tab: [KeyboardEvent] }>()
 const hClass = computed(() =>
   props.isFilterSidebarVisible ? positionWithSidebar : positionWithoutSidebar
 )
-const scrollToTop = (e: MouseEvent) => {
+const scrollToTop = (_: MouseEvent) => {
   const mainPage = document.getElementById("main-page")
   const element = mainPage || window
   element.scrollTo({ top: 0, left: 0, behavior: "smooth" })
