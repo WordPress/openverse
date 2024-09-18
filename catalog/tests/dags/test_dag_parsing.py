@@ -37,6 +37,7 @@ DAG_PATHS = [
     "maintenance/flickr_audit_sub_provider_workflow.py",
     "maintenance/pr_review_reminders/pr_review_reminders_dag.py",
     "maintenance/rotate_db_snapshots.py",
+    "maintenance/rotate_envfiles.py",
     "oauth2/authorize_dag.py",
     "oauth2/token_refresh_dag.py",
     "popularity/popularity_refresh_dag_factory.py",
