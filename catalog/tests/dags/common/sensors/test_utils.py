@@ -9,11 +9,13 @@ from common.sensors.utils import _get_most_recent_dag_run
 
 
 TEST_DAG_ID = "data_refresh_dag_factory_test_dag"
-TEST_DAG = DAG(TEST_DAG_ID, default_args={"owner": "airflow"})
+TEST_DAG = DAG(TEST_DAG_ID, schedule=None, default_args={"owner": "airflow"})
 
 
 def _create_dagrun(start_date, sample_dag_id_fixture, conf={}):
-    return DAG(sample_dag_id_fixture, default_args={"owner": "airflow"}).create_dagrun(
+    return DAG(
+        sample_dag_id_fixture, schedule=None, default_args={"owner": "airflow"}
+    ).create_dagrun(
         start_date=start_date,
         execution_date=start_date,
         data_interval=(start_date, start_date),
