@@ -12,7 +12,7 @@ const imageCell = "a[itemprop='contentUrl']"
 const imageCellImage = `${imageCell} img`
 // Necessary to make sure we can capture the focus state, which
 // exceeds the bounds of the actual component
-const screenshotEl = ".sb-main-padded"
+const screenshotEl = ".image-wrapper"
 
 const urlWithArgs = makeUrlWithArgs("components-vimagecell--default")
 
