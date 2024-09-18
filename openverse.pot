@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2024-09-05T12:01:07+00:00\n"
+"POT-Creation-Date: 2024-09-18T19:28:32+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -23,31 +23,31 @@ msgctxt "404.main"
 msgid "Go to ###link### or search for something similar from the field below."
 msgstr ""
 
-#: src/components/VHomepageContent.vue:86
+#: src/components/VHomepageContent.vue:82
 msgctxt "hero.subtitle"
 msgid "Explore more than 800 million creative works"
 msgstr ""
 
-#: src/components/VHomepageContent.vue:93
+#: src/components/VHomepageContent.vue:86
 msgctxt "hero.description"
 msgid "An extensive library of free stock photos, images, and audio, available for free use."
 msgstr ""
 
-#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:300
-#: src/components/VHeader/VSearchBar/VSearchBar.vue:116
 #: src/components/VHeader/VSearchBar/VStandaloneSearchBar.vue:68
+#: src/components/VHeader/VSearchBar/VSearchBar.vue:116
+#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:300
 msgctxt "hero.search.placeholder"
 msgid "Search for content"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VHomepageContent.vue:145
+#: src/components/VHomepageContent.vue:139
 msgctxt "hero.disclaimer.content"
 msgid "All ###openverse### content is under a ###license### or is in the public domain."
 msgstr ""
 
 #. Interpolated into hero.disclaimer.content: _{license}_ part of "All Openverse content is under a {license} or is in the public domain."
-#: src/components/VHomepageContent.vue:156
+#: src/components/VHomepageContent.vue:150
 msgctxt "hero.disclaimer.license"
 msgid "Creative Commons license"
 msgstr ""
@@ -86,9 +86,24 @@ msgctxt "notification.analytics.close"
 msgid "Close the analytics notice banner."
 msgstr ""
 
+#: src/components/VFeatureNotice/VDarkModeFeatureNotice.vue:19
+msgctxt "notification.darkMode.text"
+msgid "Dark mode is now available."
+msgstr ""
+
+#: src/components/VFeatureNotice/VFeatureNotice.vue:26
+msgctxt "notification.new"
+msgid "New"
+msgstr ""
+
+#: src/components/VFeatureNotice/VFeatureNotice.vue:34
+msgctxt "notification.more"
+msgid "See more"
+msgstr ""
+
 #. Do not translate words between ### ###.
-#: src/components/VHeader/VHomeLink.vue:28
 #: src/components/VHeader/VLogoButton.vue:18
+#: src/components/VHeader/VHomeLink.vue:28
 msgctxt "header.homeLink"
 msgid "###openverse### Home"
 msgstr ""
@@ -1444,8 +1459,8 @@ msgctxt "filterList.hide"
 msgid "Hide filters"
 msgstr ""
 
-#: src/components/VFilters/VSearchGridFilter.vue:91
 #: src/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue:147
+#: src/components/VFilters/VSearchGridFilter.vue:91
 msgctxt "filterList.clear"
 msgid "Clear filters"
 msgstr ""
@@ -1581,7 +1596,6 @@ msgctxt "browsePage.searchForm.button"
 msgid "Search"
 msgstr ""
 
-#: src/components/VHeader/meta/VSearchBarButton.stories.js:39
 #: src/components/VHeader/VHeaderDesktop.vue:88
 #: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:328
 msgctxt "browsePage.searchForm.clear"
@@ -1649,7 +1663,7 @@ msgid "search by creator"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VImageCell/VImageCell.vue:100
+#: src/components/VImageCell/VImageCell.vue:98
 msgctxt "browsePage.aria.imageTitle"
 msgid "Image: ###title###"
 msgstr ""
@@ -1980,8 +1994,8 @@ msgctxt "mediaDetails.contentReport.short"
 msgid "Report"
 msgstr ""
 
-#: src/components/VContentReport/VContentReportButton.vue:22
 #: src/components/VContentReport/VContentReportModal.vue:42
+#: src/components/VContentReport/VContentReportButton.vue:22
 msgctxt "mediaDetails.contentReport.long"
 msgid "Report this content"
 msgstr ""
@@ -2079,7 +2093,7 @@ msgid "Something went wrong, please try again after some time."
 msgstr ""
 
 #: src/components/VBackToSearchResultsLink.vue:44
-#: src/components/VSafetyWall/VSafetyWall.vue:82
+#: src/components/VSafetyWall/VSafetyWall.vue:81
 msgctxt "singleResult.back"
 msgid "Back to results"
 msgstr ""
@@ -2234,14 +2248,14 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAudioThumbnail/VAudioThumbnail.vue:28
+#: src/components/VAudioThumbnail/VAudioThumbnail.vue:27
 msgctxt "audioThumbnail.alt"
 msgid "Cover art for \"###title###\" by ###creator###"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VAudioTrack/VAudioTrack.vue:445
 #: src/components/VAudioTrack/VGlobalAudioTrack.vue:37
+#: src/components/VAudioTrack/VAudioTrack.vue:445
 msgctxt "audioTrack.ariaLabel"
 msgid "Audio: ###title###"
 msgstr ""
@@ -2318,9 +2332,9 @@ msgid "Search"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:305
-#: src/components/VHeader/VSearchBar/VSearchBar.vue:118
 #: src/components/VHeader/VSearchBar/VStandaloneSearchBar.vue:71
+#: src/components/VHeader/VSearchBar/VSearchBar.vue:118
+#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:305
 msgctxt "search.searchBarLabel"
 msgid "Search for content in ###openverse###"
 msgstr ""
@@ -2395,7 +2409,7 @@ msgctxt "modal.closePagesMenu"
 msgid "Close the pages menu"
 msgstr ""
 
-#: src/components/VBanner/VNotificationBanner.vue:96
+#: src/components/VBanner/VNotificationBanner.vue:98
 msgctxt "modal.closeBanner"
 msgid "Close the banner"
 msgstr ""
@@ -2449,7 +2463,7 @@ msgctxt "searchType.model3d"
 msgid "3D Models"
 msgstr ""
 
-#: src/components/VContentSwitcher/VSearchTypePopover.vue:46
+#: src/components/VContentSwitcher/VSearchTypePopover.vue:27
 msgctxt "searchType.label"
 msgid "Type of content to search"
 msgstr ""
@@ -2478,7 +2492,7 @@ msgid "See all audio tracks"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VContentSwitcher/VSearchTypeButton.vue:50
+#: src/components/VContentSwitcher/VSearchTypeButton.vue:52
 msgctxt "searchType.selectLabel"
 msgid "Select a content type: ###type###"
 msgstr ""
@@ -2574,8 +2588,8 @@ msgctxt "language.language"
 msgid "Language"
 msgstr ""
 
-#: src/components/VThemeSelect/VThemeSelect.vue:68
-#: src/components/VThemeSelect/VThemeSelect.vue:69
+#: src/components/VThemeSelect/VThemeSelect.vue:73
+#: src/components/VThemeSelect/VThemeSelect.vue:74
 msgctxt "theme.theme"
 msgid "Theme"
 msgstr ""
@@ -2590,14 +2604,14 @@ msgctxt "theme.choices.light"
 msgid "Light"
 msgstr ""
 
-#: src/components/VThemeSelect/VThemeSelect.vue:54
+#: src/components/VThemeSelect/VThemeSelect.vue:59
 msgctxt "theme.choices.system"
 msgid "System"
 msgstr ""
 
-#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:368
 #: src/components/VRecentSearches/VRecentSearches.vue:63
 #: src/components/VRecentSearches/VRecentSearches.vue:81
+#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:367
 msgctxt "recentSearches.heading"
 msgid "Recent searches"
 msgstr ""
@@ -2633,17 +2647,17 @@ msgctxt "report.imageDetails"
 msgid "See image details"
 msgstr ""
 
-#: src/components/VImageCell/VImageCell.vue:99
+#: src/components/VImageCell/VImageCell.vue:102
 #: src/components/VImageCell/VImageCell.vue:165
-#: src/components/VImageCell/VImageCell.vue:184
+#: src/components/VImageCell/VImageCell.vue:194
 msgctxt "sensitiveContent.title.image"
 msgid "This image may contain sensitive content."
 msgstr ""
 
-#: src/components/VAudioThumbnail/VAudioThumbnail.vue:27
-#: src/components/VAudioTrack/layouts/VBoxLayout.vue:38
-#: src/components/VAudioTrack/layouts/VGlobalLayout.vue:32
 #: src/components/VAudioTrack/layouts/VRowLayout.vue:66
+#: src/components/VAudioTrack/layouts/VGlobalLayout.vue:32
+#: src/components/VAudioTrack/layouts/VBoxLayout.vue:38
+#: src/components/VAudioThumbnail/VAudioThumbnail.vue:26
 msgctxt "sensitiveContent.title.audio"
 msgid "This audio track may contain sensitive content."
 msgstr ""
@@ -2653,7 +2667,8 @@ msgctxt "sensitiveContent.creator"
 msgid "Creator"
 msgstr ""
 
-#: src/components/VSafetyWall/VSafetyWall.vue:44
+#: src/components/VSafetyWall/VSafetyWall.vue:43
+#: src/components/VImageCell/VImageCell.vue:201
 msgctxt "sensitiveContent.singleResult.title"
 msgid "Sensitive content"
 msgstr ""
@@ -2664,24 +2679,24 @@ msgctxt "sensitiveContent.singleResult.hide"
 msgid "Hide content"
 msgstr ""
 
-#: src/components/VSafetyWall/VSafetyWall.vue:91
+#: src/components/VSafetyWall/VSafetyWall.vue:90
 msgctxt "sensitiveContent.singleResult.show"
 msgid "Show content"
 msgstr ""
 
-#: src/components/VSafetyWall/VSafetyWall.vue:47
+#: src/components/VSafetyWall/VSafetyWall.vue:46
 msgctxt "sensitiveContent.singleResult.explanation"
 msgid "This work is marked as sensitive for the following reasons:"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VSafetyWall/VSafetyWall.vue:56
+#: src/components/VSafetyWall/VSafetyWall.vue:55
 msgctxt "sensitiveContent.singleResult.learnMore"
 msgid "###link### about how ###openverse### handles sensitive content."
 msgstr ""
 
 #. Interpolated into sensitiveContent.singleResult.learnMore: _{link}_ part of "_{link}_ about how Openverse handles sensitive content."
-#: src/components/VSafetyWall/VSafetyWall.vue:65
+#: src/components/VSafetyWall/VSafetyWall.vue:64
 msgctxt "sensitiveContent.singleResult.link"
 msgid "Learn more"
 msgstr ""
