@@ -1,13 +1,13 @@
 import functools
-from inspect import _ParameterKind, signature
-from typing import Any
+from inspect import Parameter, signature
+from typing import Any, Callable
 
 from common.constants import SQL_INFO_BY_MEDIA_TYPE
 
 
 def setup_kwargs_for_media_type(
     values_by_media_type: dict[str, Any], kwarg_name: str
-) -> callable:
+) -> Callable:
     """
     Create a decorator which provides media_type-specific information as parameters
     for the called function. The called function must itself have a media_type kwarg,
@@ -31,7 +31,7 @@ def setup_kwargs_for_media_type(
     media type.
     """
 
-    def wrap(func: callable) -> callable:
+    def wrap(func: Callable) -> Callable:
         """
         Provide the appropriate value for the media_type passed in the called function.
         If the called function is already explicitly passed a value for `kwarg_name`,
@@ -42,7 +42,7 @@ def setup_kwargs_for_media_type(
         # cannot allow the value to be supplied as a positional argument.
         if (
             media_type := signature(func).parameters.get("media_type")
-        ) is None or media_type.kind != _ParameterKind.KEYWORD_ONLY:
+        ) is None or media_type.kind != Parameter.KEYWORD_ONLY:
             raise Exception(
                 f"Improperly configured function `{func.__qualname__}`:"
                 " `media_type` must be a keyword-only argument."
@@ -75,6 +75,37 @@ def setup_kwargs_for_media_type(
     return wrap
 
 
-def setup_sql_info_for_media_type(func: callable) -> callable:
+def setup_sql_info_for_media_type(func: Callable) -> Callable:
     """Provide media-type-specific SQLInfo as a kwarg to the decorated function."""
     return setup_kwargs_for_media_type(SQL_INFO_BY_MEDIA_TYPE, "sql_info")(func)
+
+
+def inject(
+    kwarg_name: str, get_default: Callable[[Callable, tuple, dict], Any]
+) -> Callable[[Callable], Callable]:
+    """
+    Provide dynamic default values for function keyword arguments.
+
+    To ensure valid usage, this utility enforces that the wrapped function
+    **must** declare the argument as keyword only.
+    """
+
+    def wrap(func: Callable):
+        sig = signature(func)
+        if sig.parameters[kwarg_name].kind != Parameter.KEYWORD_ONLY:
+            raise ValueError(
+                f"Cannot reliably inject keyword argument {kwarg_name} into function "
+                f"{func.__qualname__} because {kwarg_name} is not declared as a "
+                "keyword-only argument."
+            )
+
+        @functools.wraps(func)
+        def wrapped(*args, **kwargs):
+            if kwarg_name not in kwargs:
+                kwargs.setdefault(kwarg_name, get_default(func, args, kwargs))
+
+            return wrap(*args, **kwargs)
+
+        return wrapped
+
+    return wrap
