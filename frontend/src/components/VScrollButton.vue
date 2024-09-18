@@ -16,6 +16,7 @@ const props = withDefaults(
 const { sendCustomEvent } = useAnalytics()
 const searchStore = useSearchStore()
 const mediaStore = useMediaStore()
+
 defineEmits<{ tab: [KeyboardEvent] }>()
 
 const hClass = computed(() =>
