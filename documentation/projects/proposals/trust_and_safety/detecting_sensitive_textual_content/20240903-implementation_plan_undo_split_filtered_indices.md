@@ -49,18 +49,34 @@ sensitive textual content in the indexer worker, rather than using the
 Elasticsearch reindex API and Elasticsearch text queries.
 
 The indexer worker will create
-[a new `sensitivity` field for each Elasticsearch document](https://github.com/WordPress/openverse/blob/df57ab3eb6586502995d6fa70cf417352ec68402/ingestion_server/ingestion_server/elasticsearch_models.py#L78-L128).
-The field will be a keyword-list field, to match the `unstable__sensitivity`
-field in the API. The valid keywords
-[will match those used by the API](https://github.com/WordPress/openverse/blob/46a42f7e2c2409d7a8377ce188f4fafb96d5fdec/api/api/constants/sensitivity.py#L1-L12):
+[a new `sensitivity` object field for each Elasticsearch document](https://github.com/WordPress/openverse/blob/df57ab3eb6586502995d6fa70cf417352ec68402/ingestion_server/ingestion_server/elasticsearch_models.py#L78-L128).
+The field will be a nested object of boolean fields. The valid
+[property names will match those used by the API](https://github.com/WordPress/openverse/blob/46a42f7e2c2409d7a8377ce188f4fafb96d5fdec/api/api/constants/sensitivity.py#L1-L12)[^provider-supplied-sensitivity]:
 
 - `sensitive_text`: included for a document when the title, tags, or description
   of the work include any of the sensitive terms.
 - `user_reported_sensitivity`: included for a document there is a confirmed
   sensitive content report for the work.
 
+Additionally, a denormalised field `sensitivity.any` will be added to simplify
+our current most-common query case, where we query for works that have no known
+sensitivity designations.
+
+Maintaining the denormalised field and its upstream fields ensures we can use
+this data both at query and read time to effectively communicate the known
+sensitivity designations for a given work, with no additional computation needed
+at query time.
+
 Details of the programming logic for each are covered in the
 [step details section](#step-details).
+
+[^provider-supplied-sensitivity]:
+    [Please see the note in the linked code above regarding provider supplied sensitivity](https://github.com/WordPress/openverse/blob/46a42f7e2c2409d7a8377ce188f4fafb96d5fdec/api/api/constants/sensitivity.py#L4-L7).
+    This plan makes no explicit consideration for provider supplied sensitivity.
+    However, I believe the approach described in this plan increases, or at
+    least maintains, our flexibility in the event it becomes relevant (i.e., we
+    start intentionally ingesting works explicitly designated as sensitive or
+    mature by the source).
 
 ```{admonition} Rationale for a new index field
 :class: hint
@@ -70,17 +86,17 @@ textual content, we can somewhat simplify the overall handling of sensitive
 works in search by approaching this problem with both modes of sensitivity in
 mind. The current approach to searching non-sensitive works is to search the
 filtered index _and_ exclude works[^must-not] where `mature=true`. By switching
-to a single field populated with the sensitivity designations, we can simplify
-the search for non-sensitive works by filtering for when the `sensitivity` field
-is empty.
+to a single object populated with the individual sensitivity designations, with the
+denormalised `any`, we can simplify the search for non-sensitive works by filtering
+for when the `sensitivity.any` field is false. We will effectively be able to swap out
+the existing `must_not: mature=true` aspect for `must_not: sensitivity.any=true`.
 ```
 
 [^must-not]:
     We use the boolean `must_not` with a match query to exclude works.
     Elasticsearch turns the match query into a Lucene `TermQuery`. Elasticsearch
     prefers “positive” queries, so this is faster than a `filter` for
-    `mature:false`. We will use `must_not` with an exists query to exclude based
-    on the presence of `sensitivity` entries.
+    `mature:false`.
 
 Once the `sensitivity` field is available in the index, we will update the API
 to query based on that rather than switching indices and using the `mature`
@@ -156,174 +172,19 @@ utilisation, without entering a situation where rollback is extremely difficult.
 
 ### Initial query performance analysis
 
-Based on the requirement to not negatively affect overall search performance, I
-wanted to make sure there weren't any obvious or glaring problems with using the
-field-exists approach.
-
-Whereas querying the `mature` field for a boolean value is a `match` field
-query, querying the existence of a field uses `exists`. We do not have anything
-directly analogous to try with in our existing data set. However, we do have
-works with no tags. Therefore, I decided to attempt a comparison of queries for
-works with no tags and `mature=false` works.
-
-Compare these two queries.
-
-<details>
-<summary>The proposed approach: <code>must_not exists:sensitivity</code></summary>
-
-```json
-// POST image/_search
-{
-  "from": 0,
-  "highlight": {
-    "fields": {
-      "description": {},
-      "tags.name": {},
-      "title": {}
-    },
-    "order": "score"
-  },
-  "query": {
-    "bool": {
-      "must": [
-        {
-          "simple_query_string": {
-            "default_operator": "AND",
-            "fields": ["title", "description", "tags.name"],
-            "flags": "AND|NOT|PHRASE|WHITESPACE",
-            "query": "water"
-          }
-        }
-      ],
-      "must_not": [
-        {
-          "exists": {
-            "field": "tags.name"
-          }
-        }
-      ],
-      "should": [
-        {
-          "simple_query_string": {
-            "boost": 10000,
-            "fields": ["title"],
-            "flags": "AND|NOT|PHRASE|WHITESPACE",
-            "query": "water"
-          }
-        },
-        {
-          "rank_feature": {
-            "boost": 10000,
-            "field": "standardized_popularity"
-          }
-        }
-      ]
-    }
-  },
-  "size": 20
-}
-```
-
-</details>
-
-<details>
-
-<summary>Our current mature-filter query: <code>must_not mature=false</code></summary>
-
-```json
-// POST image/_search
-{
-  "from": 0,
-  "highlight": {
-    "fields": {
-      "description": {},
-      "tags.name": {},
-      "title": {}
-    },
-    "order": "score"
-  },
-  "query": {
-    "bool": {
-      "must": [
-        {
-          "simple_query_string": {
-            "default_operator": "AND",
-            "fields": ["title", "description", "tags.name"],
-            "flags": "AND|NOT|PHRASE|WHITESPACE",
-            "query": "water"
-          }
-        }
-      ],
-      "must_not": [
-        {
-          "term": {
-            "mature": true
-          }
-        }
-      ],
-      "should": [
-        {
-          "simple_query_string": {
-            "boost": 10000,
-            "fields": ["title"],
-            "flags": "AND|NOT|PHRASE|WHITESPACE",
-            "query": "water"
-          }
-        },
-        {
-          "rank_feature": {
-            "boost": 10000,
-            "field": "standardized_popularity"
-          }
-        }
-      ]
-    }
-  },
-  "size": 20
-}
-```
-
-</details>
-
-I was worried that a boolean query would perform much better. In fact, if you
-remove all other aspects of the query (the actual text-search parts), it does
-seem to indicate that an exists query is much slower than the boolean match
-query. Crucially, however, if you use a real query from our application as a
-starting point, **there appears to be zero performance difference between the
-two**.
-
-It's hard to give hard numbers, because I didn't write a script to analyse this
-and executed the queries and looked at the results by hand. But, executing both
-queries against the staging cluster resulted in the similar "took" results.
-Regardless of the approach, "took" was always usually between 39 and 51. Even
-when I changed the search term to try to avoid the query cache, both appeared to
-perform identically.
-
-However, there were instances where the tags-exists-based query was faster, by
-around 4 times. That, I believe, is due to the difference in the output of the
-two queries. The tag-exists-based query was naturally spending less time
-fetching the list of tags for each document, as none of the results had tags.
-The mature-boolean-based query, however had tags in almost every result in the
-first 20 which were requested, and so did have to spend time fetching tags for
-each document.
-
-The differences between the `tags` field and the proposed `sensitivity` field
-make it hard to do an ahead-of-time comparison. However, as I've said above, I
-think this broad (and admittedly naïve!) performance analysis is sufficient to
-allow us to move forward with implementing the list approach to begin with. If
-we encounter a performance issue, we can easily collapse the list into a
-`has_sensitivty` boolean for when we just want to exclude anything with a
-sensitivity designation.
+The new approach, querying `must_not: sensitivity.any=true`, has identical
+query-time performance implications as the `must_not: mature=true` query.
+Therefore, there is no need to attempt a direct comparison of the query formats.
 
 ```{note}
-[Please see the note in the linked code above regarding provider
-supplied sensitivity](https://github.com/WordPress/openverse/blob/46a42f7e2c2409d7a8377ce188f4fafb96d5fdec/api/api/constants/sensitivity.py#L4-L7).
+A previous version of this implementation plan suggested using a keyword-list
+field. That version of the plan included a surface-level exploration of the differences
+between the must-not boolean-terms query and a must-not exists query. That
+is no longer relevant for the sensitivity-as-object based approach now recommended,
+but for posterity, it can be found in the commit history of the repository
+at this commit:
 
-This plan makes no explicit consideration for provider supplied sensitivity.
-However, I believe the approach described in this plan increases, or at
-least maintains, our flexibility in the event it becomes relevant (i.e.,
-we start intentionally ingesting works explicitly designated as sensitive
-or mature by the source).
+<https://github.com/WordPress/openverse/blob/d616bf80fb3267887ae02bd27488e78e6508e2a7/documentation/projects/proposals/trust_and_safety/detecting_sensitive_textual_content/20240903-implementation_plan_undo_split_filtered_indices.md#initial-query-performance-analysis>
 ```
 
 ## Expected Outcomes
@@ -396,7 +257,7 @@ These steps must be completed in sequence. Steps with multiple PRs may be
 completed simultaneously to each other. Overall, this plan should result in
 about 5 main pull requests.
 
-1. Generate a usable `sensitivity` field for Elasticsearch documents (1 PR)
+1. Generate usable `sensitivity` fields for Elasticsearch documents (1 PR)
 1. Update API with new query method (behind feature flag) (2 PRs, one for
    search, one for moderation tools)
 1. Turn on feature flag in production and observe (1 minor infrastructure PR)
@@ -436,14 +297,26 @@ Complete the following in a single PR:
         `@functools.cache`. The function will read `SENSITIVE_TERMS_LOC` and
         split the result on newline and return a tuple of compiled sensitive
         term regexes. The regexes will target sensitive terms that are
-        surrounded by word boundaries.
-        [Refer to this demonstration on Regexer using the mock term "water" and the expression `\bwater\b`](https://regexr.com/85gtv).
+        surrounded by word boundaries, whitespace, or the start/end of strings.
+        To accomplish this in Python, we will use the regex
+        `r"(\A|\b|\s){sensitive_term}(\Z|\b|\s)"` with the case-insensitive flag
+        turned on.
+        - We cannot merely use `\b` (word boundary) because it considers any
+          non-alphanumeric character a word boundary. That means sensitive terms
+          starting or ending with special characters like `@` or `$` would not
+          match.
+        - `\s` expands the matches to include special characters, and preserves
+          `\b`'s boundary matching when appropriate.
+        - `\A` and `\Z` cover the start and end of a string respectively, for
+          when the term starts or ends with a special character. They cannot be
+          used alone because we need to match terms within larger strings.
         - Using a regex is unfortunately necessary to ensure we do not have
           false-positives on non-sensitive terms in sub-portions of words, as
           with location names like
-          [Shitterton in Dorset County, UK](https://en.wikipedia.org/wiki/Shitterton).
-          This is a minimum consideration we should give in light of our
-          acknowledgement that text-based matching
+          [Shitterton in Dorset County, UK](https://en.wikipedia.org/wiki/Shitterton),
+          which would arise if we did a simple `term in string` check. This is a
+          minimum consideration we should give in light of our acknowledgement
+          that text-based matching
           [is not perfect](./20230309-implementation_plan_sensitive_terms_list.md#this-will-not-be-perfect).
         - The use of compiled regexes makes caching the result especially
           important so that regex compilation is not unnecessarily repeated
@@ -476,18 +349,22 @@ Complete the following in a single PR:
         field, immediately return true. We only need to test terms until we find
         one matching term, so it is safe to break the loop early once we find
         one.
-    - Update `get_instance_attrs` to create a new `sensitivity` list field. If
-      the call to `Model::get_text_sensitivity` is true, include
-      `sensitive_text` in the list. Additionally, if `row[schema["mature"]]` is
-      true, add `user_reported_sensitivity` to the list.
-- Update the index mappings to add the new `sensitivity` field set to
-  `{"type": "keyword"}`.
+    - Update `get_instance_attrs` to create a new `sensitivity` dictionary
+      field. Set the key `sensitive_text` to the result of
+      `Model::get_text_sensitivity`. Set the key `user_reported_sensitivity` to
+      the value of `row[schema["mature"]]`. Finally, set the key `any` to
+      `sensitive_text or user_reported_sensitivity`.
+- Update the index mappings in to add the new `sensitivity` field set to
+  `{"properties": {"sensitive_text": {"type": "boolean"}, "user_reported_sensitivity": {"type": "boolean"}, "any": {"type": "boolean"}}}`.
 
-After merging the PR, run the staging data refresh and confirm the new field
-appears in new indices and is queryable (manually run queries against it). It is
-not necessary to manually run the production data refresh, and it is highly
-unlikely we will complete, review, and merge the API work before a production
-data refresh runs.
+After merging the PR, run the staging data refresh and confirm the new
+sensitivity fields appear in new indices and is queryable (manually run queries
+against them). It is not necessary to manually run the production data refresh,
+and it is highly unlikely we will complete, review, and merge the API work
+before a production data refresh runs. In other words, we do not need to
+manually run a production data refresh, because one will surely happen before we
+are ready to deploy the API changes. If not, step 3 includes a check to wait for
+the production data refresh before enabling the changes in the API.
 
 ### Step 2: Update the API to use the new field (behind a feature flag)
 
@@ -503,13 +380,14 @@ Complete the following in two PRs.
     - Update `search_controller.build_search_query` to also check the feature
       flag. When it is false, use the existing `mature` based strategy for
       handling `include_sensitive_results`. When it is true and
-      `include_sensitive_results` is false, add a new `must_not` entry with an
-      exists query on the `sensitivity` field.
+      `include_sensitive_results` is false, use `sensitivity.any` instead of the
+      existing `mature` field. Follow existing logic for when
+      `include_sensitive_results` is true.
     - Finally, update `search_controller.query_media` to check the feature flag,
       and when true, bypass the `SearchContext.build` call and create
       `SearchContext` directly, as described below.
       - Retaining the `result_ids` list, create the `SearchContext` with
-        `SearchContext(result_ids, {result.identifier for result in results if result.sensitivity})`.
+        `SearchContext(result_ids, {result.identifier for result in results if result.sensitivity.sensitive_text})`.
       - While this change to a single index and building the sensitivity list
         upstream of the API allows us to eventually remove `SearchContext`, we
         will retain it for now and mock its usage. This allows us to avoid
@@ -520,23 +398,22 @@ Complete the following in two PRs.
         remove `SearchContext` altogether. Details for this are in the
         [clean-up section](#step-4-clean-up).
 - Second PR: moderation
-  - Update `AbstractSensitiveMedia._bulk_update_es` to pass a script update that
-    append `user_reported_sensitivity` to the `sensitivity` list, or creates the
-    list if needed.
-    - Refer to
-      [the Elasticsearch documentation on updates for examples of scripted updates](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-update.html#update-api-example).
-    - [Refer to the following section for an example script to work from](#bulk-update-painless-script).
+  - Update `AbstractSensitiveMedia._bulk_update_es` to update
+    `sensitivity.user_reported_sensitivity` and `sensitivity.any` to `true`,
+    alongside the existing update to `mature`
     - This should happen in addition to the `mature` update that already exists,
       but **must not be conditional on the `USE_INDEX_BASED_SENSITIVTY` feature
       flag**. It cannot be conditional in order to truly support the feature
       flag's accuracy in search results. If we toggle the flag on/off/on before
-      a data refresh runs, the `sensitivity` list must still get updated with
-      user-reported sensitivity. Otherwise, when the feature goes back on, the
-      `sensitivity` list would not reflect the fact that those works had been
-      reviewed and confirmed as sensitive. In that case, they would start
-      reappearing in default search results (non-sensitive search).
-  - Update `MediaListAdmin.has_sensitive_text` to check the `sensitivity` field
-    of the Elasticsearch document if `USE_INDEX_BASED_SENSITIVITY` is true.
+      a data refresh runs, the `sensitivity` fields must still get updated with
+      user-reported sensitivity. Otherwise, when the feature goes back on,
+      `sensitivity.user_reported_sensitivty/any` would not reflect the fact that
+      those works had been reviewed and confirmed as sensitive. In that case,
+      they would start reappearing in default search results (non-sensitive
+      search).
+  - Update `MediaListAdmin.has_sensitive_text` to check
+    `sensitivity.sensitive_text` of the Elasticsearch document if
+    `USE_INDEX_BASED_SENSITIVITY` is true.
     - The method currently uses a term query to get the result with the
       identifier.
       [We should refactor this to use a single document `get` query by `id`](https://www.elastic.co/guide/en/elasticsearch/client/python-api/current/examples.html#ex-get).
@@ -547,54 +424,6 @@ Complete the following in two PRs.
     - When `USE_INDEX_BASED_SENSITIVITY` is true, query the "full" index instead
       of the filtered index.
 
-#### Bulk update Painless script
-
-The following script works to safely add a designation to the sensitivity list:
-
-```json
-{
-  "script": {
-    "source": "if (Objects.isNull(ctx._source.sensitivity)) { ctx._source.sensitivity = new String[] {params.designation} } else if (!ctx._source.sensitivity.contains(params.designation)) { ctx._source.sensitivity.add(params.designation) }",
-    "lang": "painless",
-    "params": {
-      "designation": "user_reported_sensitivity"
-    }
-  }
-}
-```
-
-We will store the script as a Python multi-line string to aid with readability
-and maintenance. The Elasticsearch REST API will accept this string as-is, and
-we do not need to modify it to remove newlines. Add the following to
-`constants.sensitivity`:
-
-```py
-ADD_SENSITIVITY_DESIGNATION_PAINLESS = """
-if (Objects.isNull(ctx._source.sensitivity)) {
-    ctx._source.sensitivity = new String[] {params.designation}
-} else if (!ctx._source.sensitivity.contains(params.designation)) {
-    ctx._source.sensitivity.add(params.designation)
-}
-"""
-
-def add_sensitivity_designation_script_query(designation):
-    return {
-        "script": {
-            "source": ADD_SENSITIVITY_DESIGNATION_PAINLESS,
-            "lang": "painless",
-            "params": {
-                "designation": designation,
-            },
-        },
-    }
-```
-
-The API unit tests run against the real Elasticsearch cluster, so the result of
-running the script as part of the sensitive-media document update should be
-"painless"[^😛] to test.
-
-[^😛]: 😛
-
 ### Step 3: Turn on feature flag in live environments and observe
 
 Set `USE_INDEX_BASED_SENSITIVITY` to `True` in staging and redeploy. Confirm
@@ -604,14 +433,21 @@ moderation features by confirming a sensitivity report in staging and making
 sure the work is updated with `user_reported_sensitivity`.
 
 If the production data refresh has not yet run, wait for it to run on its
-regular cadence, and confirm the new `sensivitiy` field as we did in staging in
+regular cadence, and confirm the new `sensivitiy` fields as we did in staging in
 step 1.
 
 After confirming the production indices, set `USE_INDEX_BASED_SENSITIVITY` to
-`True` in production and redeploy. Monitor production API search times as well
-as resource usage. Monitor the production Elasticsearch cluster health in
-Kibana, and check I/O operations for the data nodes. You may also check overall
-disk operations for the entire cluster in CloudWatch.
+`True` in production and redeploy. Follow the same tests as listed above for
+staging, but ask someone from the content moderation team to find a user
+sensitivity report to confirm, and then ask them to check that the document in
+ES has `sensitivity.user_reported_sensitive=true`. You may do this yourself, if
+you feel comfortable, but it is best practice to defer to the content moderation
+team to ensure the safety of everyone on the team.
+
+Monitor production API search times as well as resource usage. Monitor the
+production Elasticsearch cluster health in Kibana, and check I/O operations for
+the data nodes. You may also check overall disk operations for the entire
+cluster in CloudWatch.
 
 ### Step 4: Clean up
 
@@ -638,10 +474,8 @@ disk operations for the entire cluster in CloudWatch.
   `build_search_query`.
 - Update `MediaView::get_db_results` to merge `sensitivity` from the
   Elasticsearch `Hit` onto the Django model for each result.
-- Update `MediaSerializer::unstable__sensitivity` to merely return `sensitivity`
-  from the object:
-  - Change the field to a `serializers.ListField` and delete
-    `get_unstable__sensitivity`.
+- Update `MediaSerializer::unstable__sensitivity` to create the `sensitivity`
+  list from the object's merged `sensitivity` dictionary taken from the `Hit`:
 - Remove the feature flag.
 - As with the data refresh changes, implement these in a single PR if possible,
   to ensure the easiest possible revert if needed.
@@ -750,7 +584,7 @@ in the indexer worker, so that we could benefit from the indexer worker's
 significant compute and memory resources without interrupting other Airflow
 work, while still gaining these benefits. I did not see any existing mechanism
 for accomplishing this kind of Postgres update in the indexer workers, but I'm
-sure [the reviewers](#reviewers) are well equipped to correct me on this.
+sure [the reviewers](#reviewers) are well-equipped to correct me on this.
 Crucially, even if the capability does not currently exist, if we can add it
 without significantly increasing this project's complexity, it would be worth
 considering.
@@ -765,6 +599,120 @@ example, if we were able to use the Kubernetes executor). I'm resistant to using
 a remote operator for this single task, rather than rolling it into our existing
 pseudo-remote operator of the indexer worker, because of the cost changes we
 would incur by doing so.
+
+### Move sensitive text detection to ingestion, supported by an occasional refresh DAG to backfill existing records
+
+Staci and I evaluated this option in depth, over the course of a roughly 90
+minute discussion, which built off of prior written discussions.
+
+We evaluated the following approaches, and found all of them to either be wholly
+unsuitable, or so complex that any conceivable benefit was nullified by the
+complexity.
+
+In general, the main complexity we encountered was in needing to at some point
+or another maintain two separate sensitive term checks and identifiable results
+of those checks. This is required because ingestion is happening essentially at
+all times, and to avoid creating a dependency on the data refresh to the
+sensitive terms refresh (which would be triggered whenever the sensitive terms
+list changed), we would need ingestion DAGs to derive sensitivity for both the
+old version of the list, and the new version of the list. A hypothetical
+sensitive terms refresh DAG would do the work of adding the sensitive terms
+designation derived from the new list to all pre-existing works. In the
+meantime, any data refresh that runs, could continue to use the designation
+derived from the old list.
+
+We would use the commit SHA from the sensitive-terms repository to indicate the
+"version" used to derive given textual sensitivity designation. For example,
+this could be a new jsonb column `sensitivity` that contained an object of the
+interface:
+
+```ts
+interface SensitivityColumn {
+  text: {
+    [commitSha: string]: boolean
+  }
+}
+```
+
+The data refresh would be aware of the "current" commit SHA to check, which
+would only switch over to the new list's SHA once the refresh was complete and
+all works had a designation based on the new SHA.
+
+The primary difficult in this is the significant potential for race conditions,
+about which Staci and I spent most of the time trying to solve. The problem is
+making sure all works are covered with the new check. If ingesters are
+immediately responsive to new versions of the list being made available to them
+by the DAG, then they would have partial ingestions, where one portion of the
+ingested works were ingested with only the old list, and the later portion both
+lists. Because works only have UUIDs created after they are upserted into the
+media tables, there is no way to retroactively identify those works. For
+example, we could not add the sensitive terms around the clean-data step,
+because again, if the new terms list becomes available immediately after that
+(or right after upsert), there's no easy way to find out which records are now
+missing the new designation. Given that the refresh DAG would use the
+batched-update DAG, and that the batched-update DAG selects the records to work
+on once at the start (rather than offsetting a select query run for each batch),
+it would be working off a snapshot of works before any new works are ingested.
+That means it wouldn't naturally pick up the new works as not having the new
+designation.
+
+The solution Staci and I arrived at was to have ingesters only pull the
+sensitive terms list version(s) they should process once at the beginning of
+their run. This ensures any ingesters that start with only the old version
+available, complete their entire run with the old version, but new ones start
+using both versions. Then, the refresh DAG would create the new terms list
+first, and then pull a list of active ingester DAG runs. It would then wait for
+only those specific DAG runs to finish before starting the batched update
+process. That way, the snapshot of works it is working from, is guaranteed to be
+all the works that were ingested without any awareness of the batched update.
+That means the select query for the batched update can in fact select based on
+`sensitivity->text->[new-list-sha]`. This eliminates the race condition.
+
+Solving this race condition, whilst difficult to parse out at first, does not
+create too much complexity. But, it is undeniably more complex than the indexer
+worker approach. The indexer worker does not need to make any concessions
+whatsoever to race conditions: it has none to contend with.
+
+However, this alone was not enough to make the sensitive terms check viable in
+catalogue. We also needed to make it possible to do the sensitive terms check in
+Python. The motivation for this was to avoid gnarly string escape and Unicode
+issues if we tried to write the check in PL/pgSQL. Likewise, in order to make
+the list available to Postgres, we would need to load the sensitive terms list
+into a table. To obscure the terms to avoid unintended exposure to the list, we
+would need to base64 encode it, incurring a decoding cost (not to mention the
+query cost) for each call to the PL/pgSQL function.
+
+We came up with some methods to make it possible to use a Python function in
+`update_batches`. Specifically, we would do something like:
+
+- Convert `update_batches` to a task-group factory function
+- Provide a new parameter of a Python function to call to generate the
+  `update_query` based on the subset of rows. It would be passed the SQL to
+  select the rows, and be responsible for building the `update_query` string
+  based on whatever it wanted to do with the rows. This Python function would be
+  used in a `PythonOperator` and would default to simple function that returns
+  the `update_query` string passed to the task-group factory (this covers the
+  existing use cases). Each batch of `update_batches` would call the
+  `PythonOperator` and then execute the SQL based on its result.
+
+This might be worth doing in the future, but will not be part of this particular
+project.
+
+In general, even though it was _possible_ to move sensitive text detection to
+ingestion, with a refresh to backfill and update when the list changes, we could
+not find any immediate benefit to doing so. The main obvious one was to avoid
+unnecessarily re-checking works in each data refresh. However, there are methods
+we could use to cache the result of a sensitive text check for the indexer
+worker to reuse. Furthermore, we already do re-check every work each time (in
+the Elasticsearch `reindex` query to create the filtered index), so the
+performance characteristics are no different by doing so in the indexer worker.
+There also still remained the issue of not overloading the Airflow EC2 instance
+with such potentially long-running a Python-heavy computation tasks like the
+sensitive text refresh would require. The indexer workers exist to offload these
+kinds of heavy transformations for a reason, and without being able to easily
+and confidently offload the sensitive terms check to Postgres, the performance
+impact on our Airflow box is hard to precisely anticipate and therefore
+impossible to accept ahead of time.
 
 ## Design
 
