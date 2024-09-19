@@ -1,7 +1,6 @@
 import { check } from "k6"
 
 import { http } from "../http.js"
-import { makeResponseFailedCheck } from "../utils.js"
 import { getRandomQueryTerm } from "../sample-query-terms.js"
 
 import { FRONTEND_URL, PROJECT_ID } from "./constants.js"
@@ -158,5 +157,8 @@ export function getOptions(group: keyof typeof SCENARIO_GROUPS): Options {
       name: `Frontend ${group} ${FRONTEND_URL}`,
     },
     userAgent: "OpenverseK6/1.0; https://docs.openverse.org",
+    thresholds: {
+      http_req_failed: ["rate<0.01"],
+    },
   } satisfies Options
 }
