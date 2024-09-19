@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
-import { useAnalytics } from "~/composables/use-analytics"
+import { useNuxtApp } from "#imports"
 import { useSearchStore } from "~/stores/search"
 import { useMediaStore } from "~/stores/media"
 
@@ -13,7 +13,7 @@ const props = withDefaults(
   { isFilterSidebarVisible: true }
 )
 
-const { sendCustomEvent } = useAnalytics()
+const { $sendCustomEvent } = useNuxtApp()
 const searchStore = useSearchStore()
 const mediaStore = useMediaStore()
 
@@ -27,7 +27,7 @@ const scrollToTop = () => {
   const element = mainPage || window
   element.scrollTo({ top: 0, left: 0, behavior: "smooth" })
 
-  sendCustomEvent("BACK_TO_TOP", {
+  $sendCustomEvent("BACK_TO_TOP", {
     query: searchStore.searchTerm,
     page: mediaStore.currentPage,
     scrollPixels: mainPage?.scrollTop || 0,
