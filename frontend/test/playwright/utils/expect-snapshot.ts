@@ -18,6 +18,7 @@ export type ExpectSnapshotOptions = {
   dir?: LanguageDirection
   useColorMode?: boolean
 }
+
 export type ExpectSnapshot = <T extends Locator | Page>(
   page: Page,
   name: ReturnType<typeof getSnapshotBaseName>,
