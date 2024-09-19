@@ -11,7 +11,8 @@ export const Z_INDICES = Object.freeze({
   50: "50",
   // Named indices
   popover: "50",
-  snackbar: "10",
+  "focus-ring": "10",
+  snackbar: "20",
   "global-audio": "20",
 } as const)
 

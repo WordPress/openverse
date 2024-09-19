@@ -98,6 +98,12 @@ export default {
       pink: shadeScale("pink"),
       yellow: shadeScale("yellow"),
 
+      // Focus ring colors
+      focus: {
+        DEFAULT: "var(--color-border-focus)",
+        yellow: "var(--color-yellow-3)",
+      },
+
       // Special keywords
       tx: "transparent",
       curr: "currentColor",
@@ -166,6 +172,8 @@ export default {
       0: "0px",
       1: "1px",
       2: "2px",
+      4: "4px",
+      8: "8px",
     },
     fontSize: {
       // Deprecated
@@ -294,10 +302,10 @@ export default {
       },
       boxShadow: {
         ring: "inset 0 0 0 1px white",
-        "ring-1.5": "inset 0 0 0 1.5px white",
+        "ring-1.5": "inset 0 0 0 1.5px var(--color-bg-curr-page)",
         "el-2": "0 0.125rem 0.25rem rgba(0, 0, 0, 0.1)",
-        "slim-filled": "inset 0 0 0 1.5px white",
-        "bold-filled": "inset 0 0 0 3px white",
+        "slim-filled": "inset 0 0 0 1.5px var(--color-bg-curr-page)",
+        "bold-filled": "inset 0 0 0 3px var(--color-bg-curr-page)",
       },
       borderRadius: {
         inherit: "inherit",
@@ -352,7 +360,7 @@ export default {
           ])
         ),
         {
-          values: { ...theme("colors"), DEFAULT: theme("borderColor.focus") },
+          values: { ...theme("colors.focus") },
         }
       )
     }),
