@@ -10,7 +10,7 @@
  */
 import { useNuxtApp } from "#imports"
 
-import { computed } from "vue"
+import { computed, useAttrs } from "vue"
 
 import { useAnalytics } from "~/composables/use-analytics"
 
@@ -112,12 +112,29 @@ const handleClick = (e: MouseEvent) => {
     url: props.href,
   })
 }
+const defaultRounded = "rounded-sm"
+const attrs = useAttrs()
+
+// Add `rounded-sm` class to links that don't have a rounded class.
+const roundedClass = computed(() => {
+  if (
+    !attrs.class ||
+    typeof attrs.class !== "string" ||
+    !attrs.class.includes("rounded-")
+  ) {
+    return defaultRounded
+  }
+  return ""
+})
 </script>
 
 <!-- eslint-disable vue/no-restricted-syntax -->
 <template>
   <NuxtLink
-    :class="{ 'inline-flex w-max items-center gap-x-2': showExternalIcon }"
+    :class="[
+      roundedClass,
+      { 'inline-flex w-max items-center gap-x-2': showExternalIcon },
+    ]"
     :aria-disabled="!to"
     v-bind="linkProps"
     :to="to"

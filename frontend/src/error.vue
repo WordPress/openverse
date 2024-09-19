@@ -94,8 +94,14 @@ useHead({
         <NuxtLayout name="default">
           <VFourOhFour class="flex-grow" :error="error" />
         </NuxtLayout>
-        <div id="modal"></div>
       </Body>
     </Html>
   </div>
 </template>
+
+<style>
+body {
+  /* This is used by some elements. */
+  --color-bg-curr-page: var(--color-bg-complementary);
+}
+</style>
