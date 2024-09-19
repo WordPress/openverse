@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
-import { useNuxtApp } from "#imports"
+import { useNuxtApp, useRoute } from "#imports"
 import { useSearchStore } from "~/stores/search"
 import { useMediaStore } from "~/stores/media"
 
@@ -13,11 +13,20 @@ const props = withDefaults(
   { isFilterSidebarVisible: true }
 )
 
+const route = useRoute()
 const { $sendCustomEvent } = useNuxtApp()
 const searchStore = useSearchStore()
 const mediaStore = useMediaStore()
 
 defineEmits<{ tab: [KeyboardEvent] }>()
+
+const ANALYTICS_ROUTES = [
+  "search__image",
+  "search__audio",
+  "search",
+  "image__collection",
+  "audio_collection",
+]
 
 const hClass = computed(() =>
   props.isFilterSidebarVisible ? positionWithSidebar : positionWithoutSidebar
@@ -27,15 +36,17 @@ const scrollToTop = () => {
   const element = mainPage || window
   element.scrollTo({ top: 0, left: 0, behavior: "smooth" })
 
-  $sendCustomEvent("BACK_TO_TOP", {
-    query: searchStore.searchTerm,
-    page: mediaStore.currentPage,
-    scrollPixels: mainPage?.scrollTop || 0,
-    maxScroll:
-      mainPage && "scrollTopMax" in mainPage
-        ? (mainPage.scrollTopMax as number)
-        : 0,
-  })
+  if (ANALYTICS_ROUTES.some((r) => route.name?.toString().startsWith(r))) {
+    $sendCustomEvent("BACK_TO_TOP", {
+      query: searchStore.searchTerm,
+      page: mediaStore.currentPage,
+      scrollPixels: mainPage?.scrollTop || 0,
+      maxScroll:
+        mainPage && "scrollTopMax" in mainPage
+          ? (mainPage.scrollTopMax as number)
+          : 0,
+    })
+  }
 }
 </script>
 
