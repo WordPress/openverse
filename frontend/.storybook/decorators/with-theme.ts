@@ -1,5 +1,5 @@
 import { watch, onMounted, reactive, h } from "vue"
-import { useEffect } from "@storybook/preview-api"
+import { useEffect, useGlobals } from "@storybook/preview-api"
 
 import { EffectiveColorMode } from "~/types/ui"
 
@@ -8,12 +8,15 @@ import { useUiStore } from "~/stores/ui"
 
 import VThemeSelect from "~/components/VThemeSelect/VThemeSelect.vue"
 
-const themeState = reactive<{ value: EffectiveColorMode }>({ value: "light" })
+type ThemeCssClass = `${EffectiveColorMode}-mode`
+const cssClassToTheme = (
+  cssClass: ThemeCssClass | undefined
+): EffectiveColorMode | undefined => cssClass?.split("-")[0]
+const isEffectiveColorMode = (
+  value: string | undefined
+): value is EffectiveColorMode => ["light", "dark"].includes(value)
 
-const setElementTheme = (
-  el: HTMLElement,
-  cssClass: `${EffectiveColorMode}-mode`
-) => {
+const setElementTheme = (el: HTMLElement, cssClass: ThemeCssClass) => {
   if (cssClass === "dark-mode") {
     el.classList.add("dark-mode")
     el.classList.remove("light-mode")
@@ -22,6 +25,7 @@ const setElementTheme = (
     el.classList.remove("dark-mode")
   }
 }
+const themeState = reactive<{ value: EffectiveColorMode }>({ value: "light" })
 
 /**
  * Decorator to add the Storybook theme switcher to the addon toolbar, and the Openverse
@@ -30,10 +34,13 @@ const setElementTheme = (
  * so we need to add the theme switcher to the bottom of the screen.
  * The state of both is kept in sync.
  */
-export const WithTheme = (story, context) => {
+export const WithTheme = (story) => {
+  const [globals, updateGlobals] = useGlobals()
+  themeState.value = globals.theme
+
   useEffect(() => {
-    themeState.value = context.globals.theme
-  }, [context.globals.theme])
+    themeState.value = globals.theme
+  }, [globals.theme])
 
   return {
     components: { story },
@@ -41,26 +48,30 @@ export const WithTheme = (story, context) => {
       const { cssClass } = useDarkMode()
       const uiStore = useUiStore()
 
+      watch(
+        themeState,
+        (newTheme) => {
+          if (isEffectiveColorMode(newTheme.value)) {
+            uiStore.setColorMode(newTheme.value)
+          }
+        },
+        { immediate: true }
+      )
+
+      watch(
+        cssClass,
+        (newCssClass) => {
+          setElementTheme(document.body, newCssClass)
+          const theme = cssClassToTheme(newCssClass)
+          if (theme) {
+            updateGlobals({ theme })
+          }
+        },
+        { immediate: true }
+      )
+
       onMounted(() => {
         document.body.classList.add("bg-default")
-
-        watch(
-          themeState,
-          (newTheme) => {
-            if (["light", "dark"].includes(newTheme.value)) {
-              uiStore.setColorMode(newTheme.value)
-            }
-          },
-          { immediate: true }
-        )
-
-        watch(
-          cssClass,
-          (newCssClass) => {
-            setElementTheme(document.body, newCssClass)
-          },
-          { immediate: true }
-        )
       })
 
       // Set the height to the full height of the Storybook iframe minus the padding
