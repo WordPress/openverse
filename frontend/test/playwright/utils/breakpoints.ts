@@ -1,24 +1,16 @@
-import { test, expect, Expect } from "@playwright/test"
+import { test } from "@playwright/test"
+
+import type { LanguageDirection } from "~~/test/playwright/utils/i18n"
+
+import {
+  type ExpectSnapshot,
+  expectSnapshot as innerExpectSnapshot,
+} from "~~/test/playwright/utils/expect-snapshot"
 
 import { VIEWPORTS } from "~/constants/screens"
 import type { Breakpoint } from "~/constants/screens"
 
-type ScreenshotAble = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  screenshot(...args: any[]): Promise<Buffer>
-}
-
-type ExpectSnapshot = <T extends ScreenshotAble>(
-  name: string,
-  s: T,
-  options?: Parameters<T["screenshot"]>[0],
-  snapshotOptions?: Parameters<ReturnType<Expect>["toMatchSnapshot"]>[0]
-) => Promise<Buffer | void>
-
 type BreakpointBlock = (options: {
-  getConfigValues: (name: string) => {
-    name: `${typeof name}-${Breakpoint}-light.png`
-  }
   breakpoint: Breakpoint
   expectSnapshot: ExpectSnapshot
 }) => void
@@ -87,24 +79,22 @@ const makeBreakpointDescribe =
         userAgent: options.uaMocking ? mockUaStrings[breakpoint] : undefined,
       })
 
-      const getConfigValues = (name: string) => ({
-        name: `${name}-${breakpoint}-light.png` as const,
-      })
-
-      const expectSnapshot = async <T extends ScreenshotAble>(
-        name: string,
-        screenshotAble: T,
-        options?: Parameters<T["screenshot"]>[0],
-        snapshotOptions?: Parameters<ReturnType<Expect>["toMatchSnapshot"]>[0]
-      ) => {
-        const { name: snapshotName } = getConfigValues(name)
-        return expect(await screenshotAble.screenshot(options)).toMatchSnapshot(
-          snapshotName,
-          snapshotOptions
-        )
+      const getSnapshotName = (name: string, dir?: LanguageDirection) => {
+        const dirString = dir ? (`-${dir}` as const) : ""
+        return `${name}${dirString}-${breakpoint}` as const
       }
 
-      _block({ breakpoint, getConfigValues, expectSnapshot })
+      const expectSnapshot: ExpectSnapshot = async (
+        page,
+        name,
+        screenshotAble,
+        options = {}
+      ) => {
+        const snapshotName = getSnapshotName(name, options.dir)
+        return innerExpectSnapshot(page, snapshotName, screenshotAble, options)
+      }
+
+      _block({ breakpoint, expectSnapshot })
     })
   }
 

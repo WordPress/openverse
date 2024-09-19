@@ -32,7 +32,7 @@ for (const dir of languageDirections) {
       // To make the tests consistent, set the played area to the same position
       await page.mouse.click(170, 650)
 
-      await expectSnapshot(`global-audio-player-on-search-${dir}`, page)
+      await expectSnapshot(page, "global-audio-player-on-search", page, { dir })
     })
   })
 }

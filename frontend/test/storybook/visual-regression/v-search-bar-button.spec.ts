@@ -1,6 +1,6 @@
 import { test } from "@playwright/test"
 
-import { expectSnapshot } from "~~/test/storybook/utils/expect-snapshot"
+import { expectSnapshot } from "~~/test/playwright/utils/expect-snapshot"
 
 test.describe.configure({ mode: "parallel" })
 const wrapperLocator = ".wrapper"
@@ -12,6 +12,7 @@ test.describe("VSearchBarButton", () => {
   })
   test("Clear and back buttons resting", async ({ page }) => {
     await expectSnapshot(
+      page,
       "clear-and-back-buttons-resting",
       page.locator(wrapperLocator)
     )
@@ -19,18 +20,34 @@ test.describe("VSearchBarButton", () => {
 
   test(`Back button hovered`, async ({ page }) => {
     await page.hover(".wrapper>button:nth-child(1)")
-    await expectSnapshot("back-button-hovered", page.locator(wrapperLocator))
+    await expectSnapshot(
+      page,
+      "back-button-hovered",
+      page.locator(wrapperLocator)
+    )
   })
   test(`Back button focused`, async ({ page }) => {
     await page.focus(".wrapper>button:nth-child(1)")
-    await expectSnapshot("back-button-focused", page.locator(wrapperLocator))
+    await expectSnapshot(
+      page,
+      "back-button-focused",
+      page.locator(wrapperLocator)
+    )
   })
   test(`Clear button hovered`, async ({ page }) => {
     await page.hover(".wrapper>button:nth-child(2)")
-    await expectSnapshot("clear-button-hovered", page.locator(wrapperLocator))
+    await expectSnapshot(
+      page,
+      "clear-button-hovered",
+      page.locator(wrapperLocator)
+    )
   })
   test(`Clear button focused`, async ({ page }) => {
     await page.hover(".wrapper>button:nth-child(2)")
-    await expectSnapshot("clear-button-focused", page.locator(wrapperLocator))
+    await expectSnapshot(
+      page,
+      "clear-button-focused",
+      page.locator(wrapperLocator)
+    )
   })
 })

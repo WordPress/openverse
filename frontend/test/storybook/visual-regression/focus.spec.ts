@@ -1,6 +1,6 @@
 import { test, Page } from "@playwright/test"
 
-import { expectSnapshot } from "~~/test/storybook/utils/expect-snapshot"
+import { expectScreenshotAreaSnapshot } from "~~/test/playwright/utils/expect-snapshot"
 
 const goTo = async (page: Page, slug: string) => {
   await page.goto(`/iframe.html?id=meta-focus--${slug}`)
@@ -20,7 +20,8 @@ test.describe("Focus", () => {
     test(`focus-${slug}`, async ({ page }) => {
       await goTo(page, slug)
       await page.focus('[data-testid="focus-target"]')
-      await expectSnapshot(`focus-${slug}`, page.locator(".screenshot-area"))
+
+      await expectScreenshotAreaSnapshot(page, `focus-${slug}`)
     })
   }
 })

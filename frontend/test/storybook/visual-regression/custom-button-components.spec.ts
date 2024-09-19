@@ -14,19 +14,31 @@ test.describe("VLoadMore button", () => {
   breakpoints.describeMobileAndDesktop(({ expectSnapshot }) => {
     test("resting", async ({ page }) => {
       await gotoWithArgs(page)
-      await expectSnapshot("v-load-more-resting", page.locator(wrapperLocator))
+      await expectSnapshot(
+        page,
+        "v-load-more-resting",
+        page.locator(wrapperLocator)
+      )
     })
 
     test("hovered", async ({ page }) => {
       await gotoWithArgs(page)
       await page.getByRole("button").hover()
-      await expectSnapshot("v-load-more-hovered", page.locator(wrapperLocator))
+      await expectSnapshot(
+        page,
+        "v-load-more-hovered",
+        page.locator(wrapperLocator)
+      )
     })
 
     test("focused", async ({ page }) => {
       await gotoWithArgs(page)
       await page.getByRole("button").focus()
-      await expectSnapshot("v-load-more-focused", page.locator(wrapperLocator))
+      await expectSnapshot(
+        page,
+        "v-load-more-focused",
+        page.locator(wrapperLocator)
+      )
     })
 
     test("focused hovered", async ({ page }) => {
@@ -34,6 +46,7 @@ test.describe("VLoadMore button", () => {
       await page.getByRole("button").focus()
       await page.getByRole("button").hover()
       await expectSnapshot(
+        page,
         "v-load-more-focused-hovered",
         page.locator(wrapperLocator)
       )

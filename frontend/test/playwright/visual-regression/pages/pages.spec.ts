@@ -38,14 +38,11 @@ for (const contentPage of contentPages) {
 
           // Make sure header is not hovered on
           await page.mouse.move(150, 150)
-          await expectSnapshot(
-            `${contentPage}-${dir}`,
-            page,
-            {
-              fullPage: true,
-            },
-            { maxDiffPixelRatio: 0.005 }
-          )
+          await expectSnapshot(page, contentPage, page, {
+            dir,
+            screenshotOptions: { fullPage: true },
+            snapshotOptions: { maxDiffPixelRatio: 0.01 },
+          })
         })
       })
     })

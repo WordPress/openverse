@@ -2,12 +2,27 @@ import { VIEWPORTS } from "~/constants/screens"
 
 import { WithUiStore } from "~~/.storybook/decorators/with-ui-store"
 import { WithRTL } from "~~/.storybook/decorators/with-rtl"
+import { WithTheme } from "~~/.storybook/decorators/with-theme"
 
 import type { Preview } from "@storybook/vue3"
 
 const preview: Preview = {
-  decorators: [WithRTL, WithUiStore],
+  decorators: [WithRTL, WithUiStore, WithTheme],
   globalTypes: {
+    theme: {
+      name: "Theme",
+      description: "Color theme",
+      table: {
+        defaultValue: { summary: "light" },
+      },
+      toolbar: {
+        icon: "circlehollow",
+        items: [
+          { value: "light", title: "Light" },
+          { value: "dark", title: "Dark" },
+        ],
+      },
+    },
     languageDirection: {
       name: "RTL",
       description: "Simulate an RTL language.",
@@ -25,7 +40,6 @@ const preview: Preview = {
   },
   parameters: {
     backgrounds: {
-      default: "light",
       values: [
         { name: "light", value: "#ffffff" },
         { name: "dark", value: "#0d0d0d" },
@@ -41,6 +55,11 @@ const preview: Preview = {
         date: /Date$/,
       },
     },
+  },
+  initialGlobals: {
+    theme: "light",
+    languageDirection: "ltr",
+    backgrounds: { value: "light" },
   },
 }
 

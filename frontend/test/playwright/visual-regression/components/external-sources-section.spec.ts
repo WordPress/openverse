@@ -40,10 +40,16 @@ for (const dir of languageDirections) {
           await page.mouse.move(0, 0)
 
           await expectSnapshot(
-            `external-${mediaType}-sources-popover-${dir}`,
+            page,
+            `external-${mediaType}-sources-popover`,
             page.getByRole("dialog"),
-            {},
-            { maxDiffPixelRatio: 0.01, maxDiffPixels: undefined }
+            {
+              dir,
+              snapshotOptions: {
+                maxDiffPixelRatio: 0.01,
+                maxDiffPixels: undefined,
+              },
+            }
           )
         })
       }

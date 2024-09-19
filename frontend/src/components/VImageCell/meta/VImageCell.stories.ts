@@ -19,7 +19,9 @@ export const Default: Story = {
     components: { VImageCell },
     setup() {
       return () =>
-        h("ol", { class: "flex flex-wrap gap-4" }, [h(VImageCell, args)])
+        h("div", { class: "p-2 image-wrapper max-w-80" }, [
+          h("ol", { class: "flex flex-wrap gap-4" }, [h(VImageCell, args)]),
+        ])
     },
   }),
   name: "VImageCell",
