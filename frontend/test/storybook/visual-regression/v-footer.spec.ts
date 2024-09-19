@@ -20,8 +20,9 @@ const storyUrl = (
  * TODO: Remove this when the theme selector is no longer highlighted.
  */
 const disableNewHighlights = async (page: Page) => {
-  await page.locator("#theme").click()
-  await page.locator("#theme").blur()
+  const themeSwitcher = page.locator("#theme").nth(0)
+  await themeSwitcher.click()
+  await themeSwitcher.blur()
   await page.mouse.move(0, 0)
 }
 
