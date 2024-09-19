@@ -98,6 +98,12 @@ export default {
       pink: shadeScale("pink"),
       yellow: shadeScale("yellow"),
 
+      // Focus ring colors
+      focus: {
+        DEFAULT: "var(--color-border-focus)",
+        yellow: "var(--color-yellow-3",
+      },
+
       // Special keywords
       tx: "transparent",
       curr: "currentColor",
@@ -352,7 +358,7 @@ export default {
           ])
         ),
         {
-          values: { ...theme("colors"), DEFAULT: theme("borderColor.focus") },
+          values: { ...theme("colors.focus") },
         }
       )
     }),
