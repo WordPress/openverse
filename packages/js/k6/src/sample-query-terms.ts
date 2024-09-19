@@ -1,6 +1,4 @@
-// @ts-expect-error https://github.com/grafana/k6-template-typescript/issues/16
-// eslint-disable-next-line import/extensions, import/no-unresolved
-import { randomItem } from "https://jslib.k6.io/k6-utils/1.2.0/index.js"
+import { randomItem } from "./jslib-shim"
 
 export const SAMPLE_QUERY_TERMS = [
   "cat",
