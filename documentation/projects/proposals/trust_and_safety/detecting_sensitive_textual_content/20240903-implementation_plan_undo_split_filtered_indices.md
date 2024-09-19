@@ -95,6 +95,13 @@ removing the filtered index management from the data refresh, and removing the
 API code that utilises it. Neither of these appear to have much complexity. Both
 are described in detail in the [step-by-step section](#step-by-step-plan).
 
+Clean-up will occur only after two full production data refreshes have occurred
+with the new code fully available and enabled. This is to ensure we have
+sufficiently exercised the new approach during the data refresh and at query
+time before starting to take actions that will make rolling back more
+cumbersome. Two full production data refreshes will encompass 2 weeks at the
+minimum, but will more likely represent a period of 3 weeks.
+
 ### Evaluating the performance of the new approach
 
 We should make an effort to compare the new approach to the old. There are two
