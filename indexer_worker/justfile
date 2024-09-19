@@ -33,8 +33,9 @@ install *args="--dev":
 ######
 
 # Bring up services specific to the indexer worker profile
+[positional-arguments]
 up *flags:
-    env COMPOSE_PROFILES="catalog_indexer_worker" just ../up {{ flags }}
+    env COMPOSE_PROFILES="catalog_indexer_worker" just ../up "$@"
 
 wait-up: up
     just wait
@@ -77,9 +78,12 @@ curl-post data host="localhost:50281":
 # Tests #
 #########
 
+# Run indexer worker tests in the container
+[positional-arguments]
 test *args: wait-up
-    just ../exec catalog_indexer_worker pytest {{ args }}
+    just ../exec catalog_indexer_worker pytest "$@"
 
 # Run indexer-worker tests locally
+[positional-arguments]
 test-local *args:
-    pdm run pytest {{ args }}
+    pdm run pytest "$@"

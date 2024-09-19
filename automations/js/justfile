@@ -10,8 +10,9 @@ NO_COLOR := "\\033[0m"
     just --list --unsorted
 
 # Run a script
+[positional-arguments]
 run script *args:
-    pnpm --filter automations exec node src/{{ script }} {{ args }}
+    pnpm --filter automations exec node src/{{ script }} "${@:2}"
 
 #################
 # Weekly report #
@@ -26,14 +27,15 @@ report:
 ##########
 
 render-release-drafter:
-    #! /usr/bin/env sh
+    #! /usr/bin/env bash
     render_release_drafter() {
         slug=$1
         name=$2
+        confjson=$(printf '{"app": "%s"}' "$name")
         just run render-jinja.js \
             templates/release-drafter.yml.jinja \
-            .github/release-drafter-$slug.yml \
-            "'{ \"app\": \"$name\" }'"
+            .github/release-drafter-"$slug".yml \
+            "$confjson"
     }
     render_release_drafter api API
     render_release_drafter ingestion_server "Ingestion Server"

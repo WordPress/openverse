@@ -56,12 +56,14 @@ install *args: check-py-version
 ######
 
 # Bring up services specific to the catalog profile
+[positional-arguments]
 up *flags:
-    env COMPOSE_PROFILES="catalog" just ../up {{ flags }}
+    env COMPOSE_PROFILES="catalog" just ../up "$@"
 
 # Bring up services specific to the catalog profile, except Airflow
+[positional-arguments]
 up-deps *flags:
-    env COMPOSE_PROFILES="catalog_dependencies" just ../up {{ flags }}
+    env COMPOSE_PROFILES="catalog_dependencies" just ../up "$@"
 
 # Load sample data into upstream DB
 init: up
@@ -111,8 +113,9 @@ test-session:
     just _mount-test bash
 
 # Run pytest in a test container under `SERVICE`
+[positional-arguments]
 test *args:
-    just _mount-test "bash -c \'pytest {{ args }}\'"
+    just _mount-test "bash -c \'pytest ""$@""\'"
 
 #############
 # Utilities #
