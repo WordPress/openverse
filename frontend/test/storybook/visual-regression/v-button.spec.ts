@@ -22,7 +22,8 @@ test.describe("VButton", () => {
       await expectSnapshot(
         page,
         `${variant}-resting`,
-        page.locator(wrapperLocator)
+        page.locator(wrapperLocator),
+        { snapshotOptions: { maxDiffPixelRatio: 0 } }
       )
     })
 
@@ -32,7 +33,8 @@ test.describe("VButton", () => {
       await expectSnapshot(
         page,
         `${variant}-hovered`,
-        page.locator(wrapperLocator)
+        page.locator(wrapperLocator),
+        { snapshotOptions: { maxDiffPixelRatio: 0 } }
       )
     })
 
@@ -42,7 +44,8 @@ test.describe("VButton", () => {
       await expectSnapshot(
         page,
         `${variant}-focused`,
-        page.locator(wrapperLocator)
+        page.locator(wrapperLocator),
+        { snapshotOptions: { maxDiffPixelRatio: 0 } }
       )
     })
 
@@ -53,7 +56,8 @@ test.describe("VButton", () => {
       await expectSnapshot(
         page,
         `${variant}-focused-hovered`,
-        page.locator(wrapperLocator)
+        page.locator(wrapperLocator),
+        { snapshotOptions: { maxDiffPixelRatio: 0 } }
       )
     })
   }

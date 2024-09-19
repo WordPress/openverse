@@ -17,7 +17,8 @@ test.describe("VLoadMore button", () => {
       await expectSnapshot(
         page,
         "v-load-more-resting",
-        page.locator(wrapperLocator)
+        page.locator(wrapperLocator),
+        { snapshotOptions: { maxDiffPixelRatio: 0 } }
       )
     })
 
@@ -27,7 +28,8 @@ test.describe("VLoadMore button", () => {
       await expectSnapshot(
         page,
         "v-load-more-hovered",
-        page.locator(wrapperLocator)
+        page.locator(wrapperLocator),
+        { snapshotOptions: { maxDiffPixelRatio: 0 } }
       )
     })
 
@@ -37,7 +39,8 @@ test.describe("VLoadMore button", () => {
       await expectSnapshot(
         page,
         "v-load-more-focused",
-        page.locator(wrapperLocator)
+        page.locator(wrapperLocator),
+        { snapshotOptions: { maxDiffPixelRatio: 0 } }
       )
     })
 
@@ -48,7 +51,8 @@ test.describe("VLoadMore button", () => {
       await expectSnapshot(
         page,
         "v-load-more-focused-hovered",
-        page.locator(wrapperLocator)
+        page.locator(wrapperLocator),
+        { snapshotOptions: { maxDiffPixelRatio: 0 } }
       )
     })
   })
