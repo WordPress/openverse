@@ -14,7 +14,7 @@ withDefaults(
   <VLink
     href="https://wordpress.org"
     :aria-label="$t('footer.wordpressAffiliation', { wordpress: 'WordPress' })"
-    class="focus-visible:ring-border-focus text-default hover:no-underline focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring focus-visible:ring-offset-1 focus-visible:ring-offset-tx"
+    class="text-default hover:no-underline"
   >
     <i18n-t
       scope="global"

@@ -116,7 +116,7 @@ const onChange = () => {
         class="me-3 block appearance-none border border-tertiary bg-default transition-colors duration-100 checked:bg-tertiary disabled:border-disabled disabled:bg-secondary checked:disabled:border-disabled checked:disabled:bg-disabled"
         :class="
           isSwitch
-            ? ['h-4.5', 'w-9', 'rounded-full', 'focus-slim-offset']
+            ? ['h-4.5', 'w-9', '!rounded-full', 'focus-slim-offset']
             : [
                 'h-5',
                 'w-5',
