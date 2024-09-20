@@ -2,6 +2,8 @@ import { expect } from "@playwright/test"
 
 import { type LanguageDirection, t } from "~~/test/playwright/utils/i18n"
 
+import { sleep } from "~~/test/playwright/utils/navigation"
+
 import type { Breakpoint } from "~/constants/screens"
 
 import type {
@@ -80,9 +82,7 @@ export const expectSnapshot: ExpectSnapshot = async (
   // Hide the theme switcher before taking the screenshot.
   screenshotOptions = {
     ...(screenshotOptions ?? {}),
-    style: `#storybook-theme-switcher {
-              visibility: hidden;
-            }`,
+    style: `#storybook-theme-switcher { visibility: hidden; }`,
   }
 
   expect
@@ -93,6 +93,9 @@ export const expectSnapshot: ExpectSnapshot = async (
     return
   }
   await turnOnDarkMode(page, dir ?? "ltr")
+
+  // Wait for the theme to change.
+  await sleep(100)
 
   expect(await screenshotAble.screenshot(screenshotOptions)).toMatchSnapshot(
     getSnapshotName(name, "dark"),
