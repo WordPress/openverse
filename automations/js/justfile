@@ -12,6 +12,7 @@ NO_COLOR := "\\033[0m"
 # Run a script
 [positional-arguments]
 run script *args:
+    #! /usr/bin/env bash
     pnpm --filter automations exec node src/{{ script }} "${@:2}"
 
 #################
