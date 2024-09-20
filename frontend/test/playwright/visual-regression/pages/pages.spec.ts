@@ -11,6 +11,7 @@ import {
   getH1,
   getHomepageSearchButton,
   getLanguageSelect,
+  getLoadMoreButton,
 } from "~~/test/playwright/utils/components"
 
 test.describe.configure({ mode: "parallel" })
@@ -75,6 +76,7 @@ test.describe("layout color is set correctly", () => {
 
       await page.waitForURL(/ar\/search/)
       await expect(getH1(page, "Cat")).toBeVisible()
+      await expect(getLoadMoreButton(page, "rtl")).toBeEnabled()
 
       expect(await page.screenshot()).toMatchSnapshot(
         "search-page-rtl-lg-light.png"

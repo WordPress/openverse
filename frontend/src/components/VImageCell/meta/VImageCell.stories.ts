@@ -49,9 +49,6 @@ export const Default: Story = {
     searchTerm: "test",
     relatedTo: "fake-uuid",
 
-    image: {
-      ...image,
-      thumbnail: "/openverse-default.jpg",
-    },
+    image,
   },
 }
