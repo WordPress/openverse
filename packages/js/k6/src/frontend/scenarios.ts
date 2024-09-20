@@ -1,7 +1,10 @@
 import { check } from "k6"
 
 import { http } from "../http.js"
-import { getRandomQueryTerm } from "../sample-query-terms.js"
+import {
+  getRandomQueryTerm,
+  SAMPLE_QUERY_TERMS,
+} from "../sample-query-terms.js"
 
 import { FRONTEND_URL, PROJECT_ID } from "./constants.js"
 
@@ -48,25 +51,39 @@ export function visitSearchPages() {
 
   for (const MEDIA_TYPE of ["image", "audio"]) {
     for (const locale of locales) {
-      const url = new URL(
-        `${localePrefix(locale)}search/${MEDIA_TYPE}`,
-        FRONTEND_URL
-      )
-      const params = new URLSearchParams(__ENV.PARAMS)
-      params.append("q", getRandomQueryTerm())
-      url.search = params.toString()
-
-      const response = http.get(url.toString(), { tags: { ovGroup } })
-      const result = check(
-        response,
-        { "status was 200": (r) => r.status === 200 },
-        { ovGroup }
-      )
-
-      if (!result) {
-        console.error(
-          `Request failed ⨯ ${url}: ${response.status}\n${response.body}`
+      const doSearch = (queryTerm: string) => {
+        const url = new URL(
+          `${localePrefix(locale)}search/${MEDIA_TYPE}`,
+          FRONTEND_URL
         )
+        const params = new URLSearchParams(__ENV.PARAMS)
+        params.append("q", queryTerm)
+        url.search = params.toString()
+
+        const response = http.get(url.toString(), { tags: { ovGroup } })
+        const result = check(
+          response,
+          { "status was 200": (r) => r.status === 200 },
+          { ovGroup }
+        )
+
+        if (!result) {
+          console.error(
+            `Request failed ⨯ ${url}: ${response.status}\n${response.body}`
+          )
+        }
+      }
+
+      if (__ENV.search_all_sample_query_terms) {
+        // This option should only be used when generating talkback tapes for the sample queries
+        // Otherwise, just use `getRandomQueryTerm` and make a specific number of intentional queries
+        // If consistency is needed, use a pseudo-random number generator to pick a consistently-random
+        // sample query term based on information from k6/exec (e.g., vu + scenario)
+        for (const queryTerm of SAMPLE_QUERY_TERMS) {
+          doSearch(queryTerm)
+        }
+      } else {
+        doSearch(getRandomQueryTerm())
       }
     }
   }

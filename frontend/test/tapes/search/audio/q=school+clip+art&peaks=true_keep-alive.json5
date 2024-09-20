@@ -1,0 +1,175 @@
+{
+    meta: {
+        createdAt: '2024-09-20T02:47:11.648Z',
+        host: 'https://api.openverse.org',
+        resHumanReadable: true,
+        resUncompressed: true,
+    },
+    req: {
+        headers: {
+            connection: 'keep-alive',
+        },
+        url: '/v1/audio/?q=school+clip+art&peaks=true',
+        method: 'GET',
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            date: [
+                'Fri, 20 Sep 2024 02:47:11 GMT',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            'transfer-encoding': [
+                'chunked',
+            ],
+            connection: [
+                'keep-alive',
+            ],
+            vary: [
+                'Accept-Encoding, Accept, Authorization, origin',
+            ],
+            allow: [
+                'GET, HEAD, OPTIONS',
+            ],
+            'x-ratelimit-limit-anon_burst': [
+                '20/min',
+            ],
+            'x-ratelimit-available-anon_burst': [
+                '14',
+            ],
+            'x-ratelimit-limit-anon_sustained': [
+                '200/day',
+            ],
+            'x-ratelimit-available-anon_sustained': [
+                '194',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'referrer-policy': [
+                'same-origin',
+            ],
+            'cross-origin-opener-policy': [
+                'same-origin',
+            ],
+            'x-request-id': [
+                'bd58d5bc-366e-4551-b1f4-52aa4e208b10',
+            ],
+            'content-encoding': [
+                'gzip',
+            ],
+            'cf-cache-status': [
+                'HIT',
+            ],
+            age: [
+                '84290',
+            ],
+            'last-modified': [
+                'Thu, 19 Sep 2024 03:22:21 GMT',
+            ],
+            server: [
+                'cloudflare',
+            ],
+            'cf-ray': [
+                '8c5e7d49dde4274b-ADL',
+            ],
+        },
+        body: {
+            result_count: 1,
+            page_count: 1,
+            page_size: 20,
+            page: 1,
+            results: [
+                {
+                    id: '3ab495f2-32a1-4aab-bc5a-a13e45c74b12',
+                    title: 'miromuseunwalkaround.aif',
+                    indexed_on: '2024-05-21T15:00:07.873258Z',
+                    foreign_landing_url: 'https://freesound.org/people/happyband/sounds/69882',
+                    url: 'https://cdn.freesound.org/previews/69/69882_425517-hq.mp3',
+                    creator: 'happyband',
+                    creator_url: 'https://freesound.org/people/happyband',
+                    license: 'sampling+',
+                    license_version: '1.0',
+                    license_url: 'https://creativecommons.org/licenses/sampling+/1.0/',
+                    provider: 'freesound',
+                    source: 'freesound',
+                    category: null,
+                    genres: null,
+                    filesize: 4794845,
+                    filetype: 'mp3',
+                    tags: [
+                        {
+                            name: 'art',
+                            accuracy: null,
+                            unstable__provider: 'freesound',
+                        },
+                        {
+                            name: 'gallery',
+                            accuracy: null,
+                            unstable__provider: 'freesound',
+                        },
+                        {
+                            name: 'interior',
+                            accuracy: null,
+                            unstable__provider: 'freesound',
+                        },
+                        {
+                            name: 'joan',
+                            accuracy: null,
+                            unstable__provider: 'freesound',
+                        },
+                        {
+                            name: 'miro',
+                            accuracy: null,
+                            unstable__provider: 'freesound',
+                        },
+                        {
+                            name: 'museum',
+                            accuracy: null,
+                            unstable__provider: 'freesound',
+                        },
+                    ],
+                    alt_files: [
+                        {
+                            url: 'https://freesound.org/apiv2/sounds/69882/download/',
+                            bit_rate: 0,
+                            filesize: 56066048,
+                            filetype: 'aiff',
+                            sample_rate: 44100,
+                        },
+                    ],
+                    attribution: '"miromuseunwalkaround.aif" by happyband is licensed under CC Sampling+ 1.0. To view a copy of this license, visit https://creativecommons.org/licenses/sampling+/1.0/.',
+                    fields_matched: [
+                        'description',
+                        'tags.name',
+                    ],
+                    mature: false,
+                    audio_set: {
+                        title: 'Barcelona - Public Interiors',
+                        foreign_landing_url: 'https://freesound.org/apiv2/packs/4431/',
+                        creator: 'happyband',
+                        creator_url: 'https://freesound.org/people/happyband/',
+                        url: null,
+                        filesize: null,
+                        filetype: null,
+                    },
+                    duration: 211888,
+                    bit_rate: 128000,
+                    sample_rate: null,
+                    thumbnail: null,
+                    detail_url: 'http://localhost:49153/v1/audio/3ab495f2-32a1-4aab-bc5a-a13e45c74b12/',
+                    related_url: 'http://localhost:49153/v1/audio/3ab495f2-32a1-4aab-bc5a-a13e45c74b12/related/',
+                    waveform: 'http://localhost:49153/v1/audio/3ab495f2-32a1-4aab-bc5a-a13e45c74b12/waveform/',
+                    peaks: [],
+                    unstable__sensitivity: [],
+                },
+            ],
+        },
+    },
+}

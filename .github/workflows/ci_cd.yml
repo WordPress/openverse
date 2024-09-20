@@ -683,19 +683,20 @@ jobs:
         with:
           setup_python: false
           install_recipe: node-install
-          locales: "test"
+          locales: "production"
 
-      - name: Build and start Nuxt
+      - name: Build and run Nuxt and Talkback
         run: |
           just frontend/run build
-
-          # Separate build from start (rather than using `prod` script) so we can fork
-          # without throwing away logs if the build fails
-          # Forking to the background leaves Nuxt to start up, and in the meantime we can setup k6
-          just frontend/run start &
+          just frontend/run talkback &
+          env NUXT_PUBLIC_API_URL=http://127.0.0.1:49153/ just frontend/run start &
 
       - name: Setup k6
         uses: grafana/setup-k6-action@v1
+
+      - name: Wait for local Talkback to be available
+        # 10 seconds, talkback has a slow startup; this step will fail if Talkback never becomes available
+        run: npx wait-port -t 10000 :49153
 
       - name: Wait for local Nuxt to be available
         # 2 seconds, this step will fail if Nuxt never becomes available
@@ -719,7 +720,7 @@ jobs:
           from pathlib import Path
           summary = Path("/tmp/k6-summary.txt").read_text()
           Path("/tmp/k6-summary-comment.txt").write_text(f"""
-          ## Latest k6 run output
+          ## Latest k6 run output[^update]
 
           ```
           ${summary}

@@ -18,6 +18,24 @@ For example, to run all frontend scenarios:
 ov run frontend all
 ```
 
+When developing and testing changes, it's recommended to run k6 scripts only
+against your local services. For this reason, the scripts default to using
+localhost URLs for the service in test.
+
+To prevent your local frontend from experiencing throttling, run it alongside
+talkback. Start and leave talkback running in one terminal like so:
+
+```shell
+ov just p frontend talkback
+```
+
+And in another terminal, build and run the frontend, with the API URL option
+pointed at the talkback instance:
+
+```shell
+ov just p frontend build && ov env NUXT_PUBLIC_API_URL=http://localhost:49153/ just p frontend start
+```
+
 ## Development tips and guidelines
 
 - Code is written in TypeScript. k6's
