@@ -99,13 +99,14 @@ pgcli db_user_pass="deploy" db_name="openledger": up
 #########
 
 # Run a command in a test container under `SERVICE`
-_mount-test command: up-deps
+[positional-arguments]
+_mount-test *command: up-deps
     env DC_USER="airflow" just ../run \
         -e AIRFLOW_VAR_INGESTION_LIMIT=1000000 \
         -w /opt/airflow/catalog \
-        --volume \'{{ justfile_directory() }}/../docker\':/opt/airflow/docker/ \
+        --volume {{ justfile_directory() }}/../docker:/opt/airflow/docker/ \
         {{ SERVICE }} \
-        {{ command }}
+        "$@"
 
 # Launch a Bash shell in a test container under `SERVICE`
 # Run pytest with `--pdb` to workaround xdist breaking pdb.set_trace()
@@ -115,7 +116,7 @@ test-session:
 # Run pytest in a test container under `SERVICE`
 [positional-arguments]
 test *args:
-    just _mount-test "bash -c \'pytest ""$@""\'"
+    just _mount-test bash -c "pytest $@"
 
 #############
 # Utilities #
