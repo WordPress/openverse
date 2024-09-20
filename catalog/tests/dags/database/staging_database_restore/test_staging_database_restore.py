@@ -104,7 +104,7 @@ def test_get_staging_db_details(details, mock_rds_hook):
 
 def test_make_rename_task_group():
     rule = TriggerRule.NONE_FAILED
-    with DAG(dag_id="test_make_rename_task_group", start_date=datetime(1970, 1, 1)):
+    with DAG(dag_id="test_make_rename_task_group", schedule=None):
         group = staging_database_restore.make_rename_task_group("dibble", "crim", rule)
     assert group.group_id == "rename_dibble_to_crim"
     rename, await_rename = list(group)

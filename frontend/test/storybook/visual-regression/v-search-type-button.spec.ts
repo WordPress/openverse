@@ -2,7 +2,7 @@ import { expect, type Page, test } from "@playwright/test"
 
 import { makeUrlWithArgs } from "~~/test/storybook/utils/args"
 import { t } from "~~/test/playwright/utils/i18n"
-import { expectSnapshot } from "~~/test/storybook/utils/expect-snapshot"
+import { expectSnapshot } from "~~/test/playwright/utils/expect-snapshot"
 
 const urlWithArgs = makeUrlWithArgs(
   "components-vcontentswitcher-vsearchtypebutton--default"
@@ -38,6 +38,7 @@ test.describe("VSearchTypeButton", () => {
         await goAndWaitForSvg(page, url)
 
         await expectSnapshot(
+          page,
           `${snapshotName}-at-rest`,
           getSearchTypeButton(page)
         )
@@ -49,6 +50,7 @@ test.describe("VSearchTypeButton", () => {
         await getSearchTypeButton(page).hover()
 
         await expectSnapshot(
+          page,
           `${snapshotName}-hovered`,
           getSearchTypeButton(page)
         )

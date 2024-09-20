@@ -55,7 +55,7 @@ logger = logging.getLogger(__name__)
     default_args={
         **DAG_DEFAULT_ARGS,
         "retries": 0,
-        "execution_timeout": timedelta(hours=5),
+        "execution_timeout": timedelta(days=7),
     },
     render_template_as_native_obj=True,
 )
@@ -107,7 +107,7 @@ def add_rekognition_labels():
         task_id="trigger_batched_update",
         trigger_dag_id=BATCHED_UPDATE_DAG_ID,
         wait_for_completion=True,
-        execution_timeout=timedelta(hours=5),
+        execution_timeout=timedelta(days=1),
         retries=0,
         conf=constants.BATCHED_UPDATE_CONFIG,
     )

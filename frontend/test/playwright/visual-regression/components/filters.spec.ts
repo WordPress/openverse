@@ -26,13 +26,14 @@ for (const dir of languageDirections) {
         await filters.open(page, dir)
       })
       test(`filters modal none selected - ${dir}`, async ({ page }) => {
-        const snapshotName = `${getFiltersName(breakpoint)}-${dir}`
-
         await expectSnapshot(
-          snapshotName,
+          page,
+          getFiltersName(breakpoint),
           isDesktop ? page.locator(".sidebar") : page,
-          {},
-          { maxDiffPixels: 2, maxDiffPixelRatio: undefined }
+          {
+            dir,
+            snapshotOptions: { maxDiffPixels: 2, maxDiffPixelRatio: undefined },
+          }
         )
       })
 
@@ -40,14 +41,17 @@ for (const dir of languageDirections) {
         const firstFilter = page.getByRole("checkbox").first()
         await firstFilter.check()
 
-        const snapshotName = `${getFiltersName(breakpoint)}-checked-${dir}`
+        const snapshotName = `${getFiltersName(breakpoint)}-checked`
 
         await firstFilter.hover()
         await expectSnapshot(
+          page,
           snapshotName,
           isDesktop ? page.locator(".sidebar") : page,
-          {},
-          { maxDiffPixels: 2, maxDiffPixelRatio: undefined }
+          {
+            dir,
+            snapshotOptions: { maxDiffPixels: 2, maxDiffPixelRatio: undefined },
+          }
         )
       })
     }

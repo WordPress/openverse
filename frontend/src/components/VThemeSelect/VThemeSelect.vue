@@ -35,6 +35,11 @@ const colorMode = computed({
   },
 })
 
+const isDarkModeSeen = computed(() => uiStore.isDarkModeSeen)
+const setIsDarkModeSeen = () => {
+  uiStore.setIsDarkModeSeen(true)
+}
+
 const darkMode = useDarkMode()
 
 /**
@@ -68,6 +73,8 @@ const choices: ComputedRef<Choice[]> = computed(() => {
     :blank-text="$t('theme.theme')"
     :label-text="$t('theme.theme')"
     :show-selected="false"
+    :show-new-highlight="!isDarkModeSeen"
+    @click="setIsDarkModeSeen"
   >
     <template #start>
       <VIcon :name="currentThemeIcon" />

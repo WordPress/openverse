@@ -31,7 +31,7 @@ test.describe("VMediaLicense", () => {
     breakpoints.describeMobileAndDesktop(({ expectSnapshot }) => {
       test(name, async ({ page }) => {
         await goTo(page, slug)
-        await expectSnapshot(name, page.locator(".media-attribution"))
+        await expectSnapshot(page, name, page.locator(".media-attribution"))
       })
     })
   }

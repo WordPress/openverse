@@ -23,8 +23,10 @@ test.describe("VHeaderInternal", () => {
           await page.goto(pageUrl(dir))
           await page.mouse.move(0, 150)
           await expectSnapshot(
-            `desktop-header-internal-${dir}`,
-            page.locator(headerSelector)
+            page,
+            `desktop-header-internal`,
+            page.locator(headerSelector),
+            { dir }
           )
         })
       })
@@ -42,8 +44,10 @@ test.describe("VHeaderInternal", () => {
           await page.mouse.move(0, 150)
 
           await expectSnapshot(
-            `mobile-header-internal-closed-${dir}`,
-            page.locator(headerSelector)
+            page,
+            `mobile-header-internal-closed`,
+            page.locator(headerSelector),
+            { dir }
           )
         })
       })
@@ -57,7 +61,9 @@ test.describe("VHeaderInternal", () => {
           // To prevent this, move the mouse away.
           await page.mouse.move(0, 0)
 
-          await expectSnapshot(`mobile-header-internal-open-${dir}`, page)
+          await expectSnapshot(page, `mobile-header-internal-open`, page, {
+            dir,
+          })
         })
       })
     })

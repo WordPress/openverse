@@ -17,6 +17,7 @@ test.describe("VSafetyWall", () => {
   breakpoints.describeEvery(({ expectSnapshot }) => {
     test("Renders the wall correctly for sensitive media", async ({ page }) => {
       await expectSnapshot(
+        page,
         `v-safetywall-default`,
         page.locator(safetyWallLocator)
       )

@@ -33,7 +33,9 @@ breakpoints.describeXl(({ breakpoint, expectSnapshot }) => {
       await page.goto(`/image/${imageId}`)
       // eslint-disable-next-line playwright/no-networkidle
       await page.waitForLoadState("networkidle")
-      await expectSnapshot("generic-error-ltr", page, { fullPage: true })
+      await expectSnapshot(page, "generic-error-ltr", page, {
+        screenshotOptions: { fullPage: true },
+      })
     })
   }
 
@@ -57,7 +59,9 @@ breakpoints.describeXl(({ breakpoint, expectSnapshot }) => {
       // eslint-disable-next-line playwright/no-networkidle
       await page.waitForLoadState("networkidle")
 
-      await expectSnapshot("generic-error-ltr", page, { fullPage: true })
+      await expectSnapshot(page, "generic-error-ltr", page, {
+        screenshotOptions: { fullPage: true },
+      })
     })
   }
 })
@@ -76,8 +80,8 @@ for (const searchType of supportedSearchTypes) {
       await preparePageForTests(page, breakpoint)
       await goToSearchTerm(page, `SearchPage500error`, { searchType })
 
-      await expectSnapshot("generic-error-ltr", page, {
-        fullPage: true,
+      await expectSnapshot(page, "generic-error-ltr", page, {
+        screenshotOptions: { fullPage: true },
       })
     })
   })
@@ -100,7 +104,12 @@ for (const searchType of supportedSearchTypes) {
             searchType,
           })
 
-          await expectSnapshot(`generic-error-${dir}`, page, { fullPage: true })
+          await expectSnapshot(page, "generic-error", page, {
+            dir,
+            screenshotOptions: {
+              fullPage: true,
+            },
+          })
         })
       }
 
@@ -115,10 +124,12 @@ for (const searchType of supportedSearchTypes) {
         await page.mouse.move(0, 82)
 
         await expectSnapshot(
+          page,
           `search-result-${
             searchType === ALL_MEDIA ? "image" : searchType
-          }-no-results-${dir}`,
-          page.locator("#main-page")
+          }-no-results`,
+          page.locator("#main-page"),
+          { dir }
         )
       })
 
@@ -133,11 +144,11 @@ for (const searchType of supportedSearchTypes) {
         await page.mouse.move(0, 82)
 
         await expectSnapshot(
-          `search-result-timeout-${dir}`,
+          page,
+          "search-result-timeout",
           page.locator("#main-page"),
-          {},
           // Timeout pages attribution has icons that don't always load from CC site
-          { maxDiffPixelRatio: 0.01 }
+          { dir, snapshotOptions: { maxDiffPixelRatio: 0.01 } }
         )
       })
     }

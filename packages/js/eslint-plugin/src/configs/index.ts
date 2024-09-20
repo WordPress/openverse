@@ -102,6 +102,7 @@ export const project: TSESLint.Linter.ConfigType = {
               "expectEventPayloadToMatch",
               // Shared assertion for visual regression tests
               "expectSnapshot",
+              "expectScreenshotAreaSnapshot",
             ],
           },
         ],

@@ -37,6 +37,7 @@ def create_dag(
 ):
     with DAG(
         f"{sample_dag_id_fixture}_{dag_id}",
+        schedule=None,
         default_args={
             "owner": "airflow",
             "start_date": DEFAULT_DATE,
@@ -91,6 +92,7 @@ def test_fails_if_external_dag_does_not_exist(clean_db, setup_pool):
     ):
         dag = DAG(
             "test_missing_dag_error",
+            schedule=None,
             default_args={
                 "owner": "airflow",
                 "start_date": DEFAULT_DATE,
@@ -134,6 +136,7 @@ def test_fails_if_external_dag_missing_sensor_task(clean_db, setup_pool):
     with pytest.raises(AirflowException, match=error_msg):
         dag = DAG(
             "test_missing_task_error",
+            schedule=None,
             default_args={
                 "owner": "airflow",
                 "start_date": DEFAULT_DATE,
@@ -182,6 +185,7 @@ def test_succeeds_if_no_running_dags(
     # Create the Test DAG and sensor with dependent dag Ids
     dag = DAG(
         "test_dag_success",
+        schedule=None,
         default_args={
             "owner": "airflow",
             "start_date": DEFAULT_DATE,
@@ -233,6 +237,7 @@ def test_retries_if_running_dags_with_completed_sensor_task(
     # Create the Test DAG and sensor and set up dependent dag Ids
     dag = DAG(
         "test_dag_failure",
+        schedule=None,
         default_args={
             "owner": "airflow",
             "start_date": DEFAULT_DATE,

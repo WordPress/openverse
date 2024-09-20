@@ -1,8 +1,8 @@
 import { test } from "@playwright/test"
 
-test.describe.configure({ mode: "parallel" })
-
 import breakpoints from "~~/test/playwright/utils/breakpoints"
+
+test.describe.configure({ mode: "parallel" })
 
 const natures = ["info", "warning", "error", "success"] as const
 const variants = ["regular", "dark"] as const
@@ -23,6 +23,7 @@ test.describe("VNotificationBanner", () => {
         test(`notificationbanner-${nature}-${variant}`, async ({ page }) => {
           await page.goto(pageUrl(nature, variant))
           await expectSnapshot(
+            page,
             `notificationbanner-${nature}-${variant}`,
             page.locator("section")
           )

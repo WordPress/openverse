@@ -29,8 +29,10 @@ for (const dir of languageDirections) {
       test("filters open", async ({ page }) => {
         await page.mouse.move(0, 150)
         await expectSnapshot(
-          `filters-open-${dir}`,
-          page.locator(headerSelector)
+          page,
+          "filters-open",
+          page.locator(headerSelector),
+          { dir }
         )
       })
 
@@ -45,22 +47,28 @@ for (const dir of languageDirections) {
         test("resting", async ({ page }) => {
           // Make sure the header is not hovered on
           await page.mouse.move(0, 150)
-          await expectSnapshot(`resting-${dir}`, page.locator(headerSelector))
+          await expectSnapshot(page, "resting", page.locator(headerSelector), {
+            dir,
+          })
         })
 
         test("scrolled", async ({ page }) => {
           await scrollToBottom(page)
           await page.mouse.move(0, 150)
           await sleep(200)
-          await expectSnapshot(`scrolled-${dir}`, page.locator(headerSelector))
+          await expectSnapshot(page, "scrolled", page.locator(headerSelector), {
+            dir,
+          })
         })
 
         test("searchbar hovered", async ({ page }) => {
           await page.hover("input")
           await hideInputCursors(page)
           await expectSnapshot(
-            `searchbar-hovered-${dir}`,
-            page.locator(headerSelector)
+            page,
+            "searchbar-hovered",
+            page.locator(headerSelector),
+            { dir }
           )
         })
 
@@ -74,7 +82,7 @@ for (const dir of languageDirections) {
           const locator = isMobileBreakpoint(breakpoint)
             ? page
             : page.locator(headerSelector)
-          await expectSnapshot(`searchbar-active-${dir}`, locator)
+          await expectSnapshot(page, "searchbar-active", locator, { dir })
         })
       })
     })

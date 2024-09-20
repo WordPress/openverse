@@ -65,6 +65,8 @@ export interface UiState {
 
   /* The user-chosen color theme of the site. */
   colorMode: ColorMode
+  /** whether the user has seen the dark mode toggle */
+  isDarkModeSeen: boolean
 }
 
 export const breakpoints = Object.keys(ALL_SCREEN_SIZES)
@@ -81,6 +83,7 @@ export const useUiStore = defineStore("ui", {
     revealedSensitiveResults: [],
     headerHeight: 80,
     colorMode: "system",
+    isDarkModeSeen: false,
   }),
 
   getters: {
@@ -91,6 +94,7 @@ export const useUiStore = defineStore("ui", {
         breakpoint: state.breakpoint,
         dismissedBanners: Array.from(this.dismissedBanners),
         colorMode: state.colorMode,
+        isDarkModeSeen: state.isDarkModeSeen,
       }
     },
     areInstructionsVisible(state): boolean {
@@ -186,7 +190,11 @@ export const useUiStore = defineStore("ui", {
       }
 
       if (isColorMode(cookies.colorMode)) {
-        this.setColorMode(cookies.colorMode)
+        this.setColorMode(cookies.colorMode, false)
+      }
+
+      if (typeof cookies.isDarkModeSeen === "boolean") {
+        this.setIsDarkModeSeen(cookies.isDarkModeSeen, false)
       }
 
       this.writeToCookie()
@@ -279,10 +287,33 @@ export const useUiStore = defineStore("ui", {
       this.shouldBlurSensitive = value
       this.revealedSensitiveResults = []
     },
-    setColorMode(colorMode: ColorMode) {
+
+    /**
+     * Update the user's preferred color mode.
+     *
+     * @param colorMode - the user's preferred color mode.
+     * @param saveToCookie - whether to save the new breakpoint in the cookie.
+     */
+    setColorMode(colorMode: ColorMode, saveToCookie = true) {
       this.colorMode = colorMode
 
-      this.writeToCookie()
+      if (saveToCookie) {
+        this.writeToCookie()
+      }
+    },
+
+    /**
+     * Update the value of whether the user has seen dark mode.
+     *
+     * @param value - the new value of whether the user has seen dark mode
+     * @param saveToCookie - whether to save the new breakpoint in the cookie.
+     */
+    setIsDarkModeSeen(value: boolean, saveToCookie = true) {
+      this.isDarkModeSeen = value
+
+      if (saveToCookie) {
+        this.writeToCookie()
+      }
     },
     setHeaderHeight(height: number) {
       this.headerHeight = Math.max(height, 80)

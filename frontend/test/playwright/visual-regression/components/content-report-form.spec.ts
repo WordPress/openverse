@@ -46,8 +46,8 @@ test.describe("content report form", () => {
 
       await button.click()
 
-      await expectSnapshot("content-report", page, undefined, {
-        maxDiffPixelRatio: 0.1,
+      await expectSnapshot(page, "content-report", page, {
+        snapshotOptions: { maxDiffPixelRatio: 0.1 },
       })
     })
   })
