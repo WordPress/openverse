@@ -136,7 +136,12 @@ precommit:
 # Run pre-commit to lint and reformat files
 [positional-arguments]
 lint hook="" *files="": precommit
-    python3 pre-commit.pyz run {{ hook }} {{ if files == "" { "--all-files" } else { "--files {{ files }}" } }}
+    #! /usr/bin/env bash
+    if [[ "$files" ]]; then
+        python3 pre-commit.pyz run {{ hook }} --files "${@:2}"
+    else
+        python3 pre-commit.pyz run {{ hook }} --all-files
+    fi
 
 # Run codeowners validator locally. Only enable experimental hooks if there are no uncommitted changes.
 lint-codeowners checks="stable":
@@ -254,7 +259,7 @@ dup app:
 # Recreate all volumes and containers from scratch
 recreate:
     just down -v
-    just up "--force-recreate --build"
+    just up --force-recreate --build
     just init
 
 # Bust pnpm cache and reinstall Node.js dependencies
