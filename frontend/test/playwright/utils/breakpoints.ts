@@ -93,7 +93,8 @@ const makeBreakpointDescribe =
         const snapshotName = getSnapshotName(name, options.dir)
         return innerExpectSnapshot(page, snapshotName, screenshotAble, {
           ...options,
-          useColorMode: snapshotName.includes("-2xl"),
+          useColorMode:
+            snapshotName.includes("-2xl") || snapshotName.includes("-xl"),
         })
       }
 
