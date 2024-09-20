@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import { useNuxtApp, useRoute } from "#imports"
+
 import { computed } from "vue"
 
-import { useNuxtApp, useRoute } from "#imports"
 import { useSearchStore } from "~/stores/search"
 import { useMediaStore } from "~/stores/media"
 
