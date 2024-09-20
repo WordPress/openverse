@@ -37,11 +37,7 @@ const props = withDefaults(
 )
 
 const toAbsolutePath = (url: string, prefix = "https://") => {
-  if (
-    url.startsWith("http://") ||
-    url.startsWith("https://") ||
-    url === "/openverse-default.jpg"
-  ) {
+  if (url.startsWith("http://") || url.startsWith("https://")) {
     return url
   }
   return `${prefix}${url}`
