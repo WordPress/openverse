@@ -26,7 +26,7 @@ const port = 49153
 const host = "https://api.openverse.org"
 
 const urlPatterns = {
-  search: /\/(?<mediaType>images|audio|video|model-3d)\/*\?(?<query>[\w&=+]+)/,
+  search: /\/(?<mediaType>images|audio|video|model-3d)\/*\?(?<query>.*?)$/u,
   thumb:
     /\/(?<mediaType>images|audio|video|model-3d)\/(?<uuid>[\w-]{32,})\/thumb/,
   related:
@@ -164,6 +164,11 @@ const opts = /** @type {Partial<TalkbackOptions>} */ ({
   summary: false,
   tapeNameGenerator,
   tapeDecorator,
+  responseDecorator: (tape, req, context) => {
+    // Log responses to make debugging easier
+    console.log(req.method, req.url, tape.res?.status, context.id)
+    return tape
+  },
 })
 
 const server = talkback(opts)

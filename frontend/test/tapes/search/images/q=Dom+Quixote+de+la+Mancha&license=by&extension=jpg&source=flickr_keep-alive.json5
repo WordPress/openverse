@@ -1,0 +1,269 @@
+{
+    meta: {
+        createdAt: '2024-09-20T02:47:11.648Z',
+        host: 'https://api.openverse.org',
+        resHumanReadable: true,
+        resUncompressed: true,
+    },
+    req: {
+        headers: {
+            connection: 'keep-alive',
+        },
+        url: '/v1/images/?q=Dom+Quixote+de+la+Mancha&license=by&extension=jpg&source=flickr',
+        method: 'GET',
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            date: [
+                'Fri, 20 Sep 2024 02:47:11 GMT',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            'transfer-encoding': [
+                'chunked',
+            ],
+            connection: [
+                'keep-alive',
+            ],
+            vary: [
+                'Accept-Encoding, Accept, Authorization, origin',
+            ],
+            allow: [
+                'GET, HEAD, OPTIONS',
+            ],
+            'x-ratelimit-limit-anon_burst': [
+                '20/min',
+            ],
+            'x-ratelimit-available-anon_burst': [
+                '17',
+            ],
+            'x-ratelimit-limit-anon_sustained': [
+                '200/day',
+            ],
+            'x-ratelimit-available-anon_sustained': [
+                '194',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'referrer-policy': [
+                'same-origin',
+            ],
+            'cross-origin-opener-policy': [
+                'same-origin',
+            ],
+            'x-request-id': [
+                '19a9e838-0f41-4a1e-b7ac-4d23c2c8d5b9',
+            ],
+            'content-encoding': [
+                'gzip',
+            ],
+            'cf-cache-status': [
+                'HIT',
+            ],
+            age: [
+                '1149',
+            ],
+            'last-modified': [
+                'Fri, 20 Sep 2024 02:28:02 GMT',
+            ],
+            server: [
+                'cloudflare',
+            ],
+            'cf-ray': [
+                '8c5e7d49df11274a-ADL',
+            ],
+        },
+        body: {
+            result_count: 1,
+            page_count: 1,
+            page_size: 20,
+            page: 1,
+            results: [
+                {
+                    id: '804216ba-8b3f-46b1-8e22-2e6b7ae5f3a9',
+                    title: '000742 - Alcalá de Henares',
+                    indexed_on: '2016-11-17T15:07:01.088819Z',
+                    foreign_landing_url: 'https://www.flickr.com/photos/12066793@N05/2992443258',
+                    url: 'https://live.staticflickr.com/3151/2992443258_c7882e2d3e_b.jpg',
+                    creator: 'M.Peinado',
+                    creator_url: 'https://www.flickr.com/photos/12066793@N05',
+                    license: 'by',
+                    license_version: '2.0',
+                    license_url: 'https://creativecommons.org/licenses/by/2.0/',
+                    provider: 'flickr',
+                    source: 'flickr',
+                    category: null,
+                    filesize: null,
+                    filetype: null,
+                    tags: [
+                        {
+                            name: '2008',
+                            accuracy: null,
+                            unstable__provider: 'flickr',
+                        },
+                        {
+                            name: '26102008',
+                            accuracy: null,
+                            unstable__provider: 'flickr',
+                        },
+                        {
+                            name: 'alcalu00e1dehenares',
+                            accuracy: null,
+                            unstable__provider: 'flickr',
+                        },
+                        {
+                            name: 'canon',
+                            accuracy: null,
+                            unstable__provider: 'flickr',
+                        },
+                        {
+                            name: 'canoneos1000d',
+                            accuracy: null,
+                            unstable__provider: 'flickr',
+                        },
+                        {
+                            name: 'capilladeloidor',
+                            accuracy: null,
+                            unstable__provider: 'flickr',
+                        },
+                        {
+                            name: 'cervantes',
+                            accuracy: null,
+                            unstable__provider: 'flickr',
+                        },
+                        {
+                            name: 'comunidaddemadrid',
+                            accuracy: null,
+                            unstable__provider: 'flickr',
+                        },
+                        {
+                            name: 'elquijote',
+                            accuracy: null,
+                            unstable__provider: 'flickr',
+                        },
+                        {
+                            name: 'espau00f1a',
+                            accuracy: null,
+                            unstable__provider: 'flickr',
+                        },
+                        {
+                            name: 'libro',
+                            accuracy: null,
+                            unstable__provider: 'flickr',
+                        },
+                        {
+                            name: 'migueldecervanes',
+                            accuracy: null,
+                            unstable__provider: 'flickr',
+                        },
+                        {
+                            name: 'octubrede2008',
+                            accuracy: null,
+                            unstable__provider: 'flickr',
+                        },
+                        {
+                            name: 'quijote',
+                            accuracy: null,
+                            unstable__provider: 'flickr',
+                        },
+                        {
+                            name: 'quixote',
+                            accuracy: null,
+                            unstable__provider: 'flickr',
+                        },
+                        {
+                            name: 'spain',
+                            accuracy: null,
+                            unstable__provider: 'flickr',
+                        },
+                        {
+                            name: 'book',
+                            accuracy: 0.94322,
+                            unstable__provider: 'clarifai',
+                        },
+                        {
+                            name: 'book bindings',
+                            accuracy: 0.98257,
+                            unstable__provider: 'clarifai',
+                        },
+                        {
+                            name: 'business',
+                            accuracy: 0.93809,
+                            unstable__provider: 'clarifai',
+                        },
+                        {
+                            name: 'document',
+                            accuracy: 0.98539,
+                            unstable__provider: 'clarifai',
+                        },
+                        {
+                            name: 'education',
+                            accuracy: 0.94498,
+                            unstable__provider: 'clarifai',
+                        },
+                        {
+                            name: 'indoors',
+                            accuracy: 0.9152,
+                            unstable__provider: 'clarifai',
+                        },
+                        {
+                            name: 'literature',
+                            accuracy: 0.90133,
+                            unstable__provider: 'clarifai',
+                        },
+                        {
+                            name: 'page',
+                            accuracy: 0.96564,
+                            unstable__provider: 'clarifai',
+                        },
+                        {
+                            name: 'paper',
+                            accuracy: 0.99239,
+                            unstable__provider: 'clarifai',
+                        },
+                        {
+                            name: 'poetry',
+                            accuracy: 0.94088,
+                            unstable__provider: 'clarifai',
+                        },
+                        {
+                            name: 'text',
+                            accuracy: 0.93652,
+                            unstable__provider: 'clarifai',
+                        },
+                        {
+                            name: 'wood',
+                            accuracy: 0.93356,
+                            unstable__provider: 'clarifai',
+                        },
+                        {
+                            name: 'writing',
+                            accuracy: 0.9693,
+                            unstable__provider: 'clarifai',
+                        },
+                    ],
+                    attribution: '"000742 - Alcalá de Henares" by M.Peinado is licensed under CC BY 2.0. To view a copy of this license, visit https://creativecommons.org/licenses/by/2.0/.',
+                    fields_matched: [
+                        'description',
+                        'title',
+                        'tags.name',
+                    ],
+                    mature: false,
+                    height: 683,
+                    width: 1024,
+                    thumbnail: 'http://localhost:49153/v1/images/804216ba-8b3f-46b1-8e22-2e6b7ae5f3a9/thumb/',
+                    detail_url: 'http://localhost:49153/v1/images/804216ba-8b3f-46b1-8e22-2e6b7ae5f3a9/',
+                    related_url: 'http://localhost:49153/v1/images/804216ba-8b3f-46b1-8e22-2e6b7ae5f3a9/related/',
+                    unstable__sensitivity: [],
+                },
+            ],
+        },
+    },
+}
