@@ -6,6 +6,40 @@ import { Z_INDICES } from "./src/constants/z-indices"
 
 import type { Config } from "tailwindcss"
 
+/**
+ * Create a scale of shades for the given color.
+ *
+ * The scale will have the specified number of points, indexed from 1.
+ *
+ * @param color - the color to generate the scale for
+ * @param points - the number of points to have in the scale
+ * @returns - the object mapping an index to the color CSS variable
+ */
+export const shadeScale = (color: string, points = 13) =>
+  Object.fromEntries(
+    Array.from({ length: points }, (_, idx) => [
+      idx + 1,
+      `var(--color-${color}-${idx + 1})`,
+    ])
+  )
+
+/**
+ * Create a scale of opacities for the given color.
+ *
+ * The scale will have opacities from 10% to 90%, in 10% increments. Use
+ * the regular color for 100% opacity and `tx` for 0% opacity.
+ *
+ * @param color - the color to generate the scale for
+ * @returns - the object mapping an opacity to the color CSS variable
+ */
+export const opacityScale = (color: string) =>
+  Object.fromEntries(
+    Array.from({ length: 9 }, (_, idx) => [
+      (idx + 1) * 10,
+      `var(--color-${color}-${(idx + 1) * 10})`,
+    ])
+  )
+
 export default {
   darkMode: [
     "variant",
@@ -38,145 +72,31 @@ export default {
         inactive: "var(--color-wave-inactive)",
       },
       "modal-layer": "var(--color-modal-layer)",
-      info: {
-        1: "var(--color-info-1)",
-        2: "var(--color-info-2)",
-        3: "var(--color-info-3)",
-        4: "var(--color-info-4)",
-        5: "var(--color-info-5)",
-        6: "var(--color-info-6)",
-        7: "var(--color-info-7)",
-        8: "var(--color-info-8)",
-        9: "var(--color-info-9)",
-        10: "var(--color-info-10)",
-        11: "var(--color-info-11)",
-        12: "var(--color-info-12)",
-        13: "var(--color-info-13)",
-      },
-      warning: {
-        1: "var(--color-warning-1)",
-        2: "var(--color-warning-2)",
-        3: "var(--color-warning-3)",
-        4: "var(--color-warning-4)",
-        5: "var(--color-warning-5)",
-        6: "var(--color-warning-6)",
-        7: "var(--color-warning-7)",
-        8: "var(--color-warning-8)",
-        9: "var(--color-warning-9)",
-        10: "var(--color-warning-10)",
-        11: "var(--color-warning-11)",
-        12: "var(--color-warning-12)",
-        13: "var(--color-warning-13)",
-      },
-      success: {
-        1: "var(--color-success-1)",
-        2: "var(--color-success-2)",
-        3: "var(--color-success-3)",
-        4: "var(--color-success-4)",
-        5: "var(--color-success-5)",
-        6: "var(--color-success-6)",
-        7: "var(--color-success-7)",
-        8: "var(--color-success-8)",
-        9: "var(--color-success-9)",
-        10: "var(--color-success-10)",
-        11: "var(--color-success-11)",
-        12: "var(--color-success-12)",
-        13: "var(--color-success-13)",
-      },
-      error: {
-        1: "var(--color-error-1)",
-        2: "var(--color-error-2)",
-        3: "var(--color-error-3)",
-        4: "var(--color-error-4)",
-        5: "var(--color-error-5)",
-        6: "var(--color-error-6)",
-        7: "var(--color-error-7)",
-        8: "var(--color-error-8)",
-        9: "var(--color-error-9)",
-        10: "var(--color-error-10)",
-        11: "var(--color-error-11)",
-        12: "var(--color-error-12)",
-        13: "var(--color-error-13)",
-      },
+
+      // Semantic colors
+
+      info: shadeScale("info"),
+      warning: shadeScale("warning"),
+      success: shadeScale("success"),
+      error: shadeScale("error"),
+
+      // Grayscale
+
       black: "var(--color-black)",
-      gray: {
-        DEFAULT: "var(--color-gray)",
-        "dark-gray": "var(--color-dark-gray)",
-        "light-gray": "var(--color-light-gray)",
-        1: "var(--color-gray-1)",
-        2: "var(--color-gray-2)",
-        3: "var(--color-gray-3)",
-        4: "var(--color-gray-4)",
-        5: "var(--color-gray-5)",
-        6: "var(--color-gray-6)",
-        7: "var(--color-gray-7)",
-        8: "var(--color-gray-8)",
-        9: "var(--color-gray-9)",
-        10: "var(--color-gray-10)",
-        11: "var(--color-gray-11)",
-        12: "var(--color-gray-12)",
-        13: "var(--color-gray-13)",
-      },
+      white: "var(--color-white)",
+      gray: shadeScale("gray"),
+
+      // Opacities of grayscale
+
       "gray-opacity": {
-        1: {
-          10: "var(--color-gray-1-10)",
-          20: "var(--color-gray-1-20)",
-          30: "var(--color-gray-1-30)",
-          40: "var(--color-gray-1-40)",
-          50: "var(--color-gray-1-50)",
-          60: "var(--color-gray-1-60)",
-          70: "var(--color-gray-1-70)",
-          80: "var(--color-gray-1-80)",
-          90: "var(--color-gray-1-90)",
-        },
-        12: {
-          10: "var(--color-gray-12-10)",
-          20: "var(--color-gray-12-20)",
-          30: "var(--color-gray-12-30)",
-          40: "var(--color-gray-12-40)",
-          50: "var(--color-gray-12-50)",
-          60: "var(--color-gray-12-60)",
-          70: "var(--color-gray-12-70)",
-          80: "var(--color-gray-12-80)",
-          90: "var(--color-gray-12-90)",
-        },
-        13: {
-          0: "var(--color-gray-13-0)",
-        },
+        1: opacityScale("gray-1"),
+        12: opacityScale("gray-12"),
       },
-      white: {
-        DEFAULT: "var(--color-white)",
-        0: "var(--color-white-0)",
-      },
-      pink: {
-        1: "var(--color-pink-1)",
-        2: "var(--color-pink-2)",
-        3: "var(--color-pink-3)",
-        4: "var(--color-pink-4)",
-        5: "var(--color-pink-5)",
-        6: "var(--color-pink-6)",
-        7: "var(--color-pink-7)",
-        8: "var(--color-pink-8)",
-        9: "var(--color-pink-9)",
-        10: "var(--color-pink-10)",
-        11: "var(--color-pink-11)",
-        12: "var(--color-pink-12)",
-        13: "var(--color-pink-13)",
-      },
-      yellow: {
-        1: "var(--color-yellow-1)",
-        2: "var(--color-yellow-2)",
-        3: "var(--color-yellow-3)",
-        4: "var(--color-yellow-4)",
-        5: "var(--color-yellow-5)",
-        7: "var(--color-yellow-7)",
-        8: "var(--color-yellow-8)",
-        9: "var(--color-yellow-9)",
-        10: "var(--color-yellow-10)",
-        11: "var(--color-yellow-11)",
-        12: "var(--color-yellow-12)",
-        13: "var(--color-yellow-13)",
-      },
+
+      // Accent colors
+
+      pink: shadeScale("pink"),
+      yellow: shadeScale("yellow"),
 
       // Special keywords
       tx: "transparent",
@@ -340,7 +260,6 @@ export default {
         success: "var(--color-bg-success)",
         error: "var(--color-bg-error)",
         disabled: "var(--color-bg-disabled)",
-        zero: "var(--color-bg-zero)",
         blur: "var(--color-bg-blur)",
         "curr-page": "var(--color-bg-curr-page, var(--color-bg))",
       },
