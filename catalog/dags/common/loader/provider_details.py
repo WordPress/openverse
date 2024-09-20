@@ -64,6 +64,9 @@ FLICKR_SUB_PROVIDERS = {
     "east_riding": {"138361426@N08"},  # East Riding Archives
     "archief_alkmaar": {"98304311@N03"},  # Regionaal Archief Alkmaar Commons
     "bib_gulbenkian": {"26577438@N06"},  # Gulbenkian Art Library
+    "katmai_nps": {
+        "99350217@N03"
+    },  # Katmai National Park and Preserve (i.e., Fat Bear Week)
 }
 
 FLICKR_PHOTO_URL_BASE = "https://www.flickr.com/photos/"
