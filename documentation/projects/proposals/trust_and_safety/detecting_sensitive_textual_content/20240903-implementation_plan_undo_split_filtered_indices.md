@@ -111,6 +111,8 @@ removing the filtered index management from the data refresh, and removing the
 API code that utilises it. Neither of these appear to have much complexity. Both
 are described in detail in the [step-by-step section](#step-by-step-plan).
 
+### When to start clean-up
+
 Clean-up will occur only after two full production data refreshes have occurred
 with the new code fully available and enabled. This is to ensure we have
 sufficiently exercised the new approach during the data refresh and at query
@@ -276,84 +278,106 @@ For each step description, ensure the heading includes an obvious reference to t
 
 Complete the following in a single PR:
 
-- Indexer worker field generation:
-  - Retrieve the sensitive terms list from the GitHub URL (see data refresh for
-    reference) and make the list available to the indexer processes without
-    requiring subsequent outbound requests for the list.
-    - Create a new Python module in the indexer worker, `sensitive_terms.py`. It
-      will export the following:
-      - A constant `SENSITIVE_TERMS_LOC` set to
-        `Path(__file__).parent / "sensitive_terms.txt"`. Indexer workers are
-        ephemeral, so it is safe to write to disk without risking accidental
-        reuse across runs.
-      - A function `retrieve_sensitive_terms` which retrieves the sensitive
-        terms list from the network location and saves it to disk at
-        `SENSITIVE_TERMS_LOC`. This function should check an environment
-        variable for the network location of the sensitive terms list. If that
-        variable is undefined, it should simply write the mock sensitive terms
-        ("water", "running", and "bird") to the disk location as a
-        newline-delimited list.
-      - A function `get_sensitive_terms`, which will be wrapped in
-        `@functools.cache`. The function will read `SENSITIVE_TERMS_LOC` and
-        split the result on newline and return a tuple of compiled sensitive
-        term regexes. The regexes will target sensitive terms that are
-        surrounded by word boundaries, whitespace, or the start/end of strings.
-        To accomplish this in Python, we will use the regex
-        `r"(\A|\b|\s){sensitive_term}(\Z|\b|\s)"` with the case-insensitive flag
-        turned on.
-        - We cannot merely use `\b` (word boundary) because it considers any
-          non-alphanumeric character a word boundary. That means sensitive terms
-          starting or ending with special characters like `@` or `$` would not
-          match.
-        - `\s` expands the matches to include special characters, and preserves
-          `\b`'s boundary matching when appropriate.
-        - `\A` and `\Z` cover the start and end of a string respectively, for
-          when the term starts or ends with a special character. They cannot be
-          used alone because we need to match terms within larger strings.
-        - Using a regex is unfortunately necessary to ensure we do not have
-          false-positives on non-sensitive terms in sub-portions of words, as
-          with location names like
-          [Shitterton in Dorset County, UK](https://en.wikipedia.org/wiki/Shitterton),
-          which would arise if we did a simple `term in string` check. This is a
-          minimum consideration we should give in light of our acknowledgement
-          that text-based matching
-          [is not perfect](./20230309-implementation_plan_sensitive_terms_list.md#this-will-not-be-perfect).
-        - The use of compiled regexes makes caching the result especially
-          important so that regex compilation is not unnecessarily repeated
-          within a single indexer worker subprocess.
-        - We should start with a single regex per term. In the future, we can
-          consider combining slices of the sensitive terms list into larger
-          regex statements, and evaluate whether this performs better or worse
-          for our corpus. For now, we will keep it as simple as possible, with a
-          single regex per term. It does not change the downstream code to do
-          so, and introduces fewer complications with respect to regex
-          construction.
-    - The indexer worker will call `retrieve_sensitive_terms` on service
-      startup. Add this to `api.create_api`. This populates the file to disk.
-    - Because each indexer worker spawns multiple multiprocessing processes,
+To set up the sensitive terms list for use in the indexer worker, we will
+retrieve the sensitive terms list from the GitHub URL (see data refresh for
+reference) and make the list available to the indexer processes without
+requiring subsequent outbound requests for the
+list[^multiprocessing-future-proofed]:
+
+[^multiprocessing-future-proofed]:
+    These steps work from the assumption that an indexer worker may spawn
+    multiple concurrent Python multiprocessing processes, which the indexer
+    worker refers to as "tasks". While we do not currently utilise this
+    functionality—that is, each `distributed_index` of the data refresh only
+    calls `POST /task` once per indexer worker, and the indexer worker spawns a
+    single multiprocessing process to handle the batch it is assigned—this plan
+    is written to be future proofed in the event that we do utilise
+    multiprocessing on the indexer worker to run multiple batches per worker.
+
+- Create a new Python module in the indexer worker, `sensitive_terms.py`. It
+  will export the following:
+  - A function `retrieve_sensitive_terms` which accepts an argument
+    `target_index` and retrieves the sensitive terms list from the network
+    location and saves it to disk at
+    `Path(__file__).parent / f"sensitive_terms-{target_index}.txt"`. This
+    function should check an environment variable for the network location of
+    the sensitive terms list. If that variable is undefined, it should simply
+    write the mock sensitive terms ("water", "running", and "bird") to the disk
+    location as a newline-delimited list.
+    - The function should check whether the file location already exists, which
+      would indicate the terms list was already pulled for the target index. If
+      that is the case, then return early and do not re-pull the list.
+    - This ensures any given target index uses the same sensitive terms query,
+      even if multiple tasks are issued to the indexer worker. In other words,
+      it only pulls the sensitive terms list once for a target index, and reuses
+      it to service all requests against the same target index.
+    - The indexer worker will call `retrieve_sensitive_terms` when handling
+      `POST /task` and pass the `target_index` retrieved from the request body.
+      Add the call to `retrieve_sensitive_terms` early in
+      `api.IndexingJobResource::on_post`.
+    - This ensures the file is populated to disk as early as possible, before
+      any indexing jobs are actually spawned.
+  - A function `get_sensitive_terms`, which will be wrapped in
+    `@functools.cache`. The function will read `SENSITIVE_TERMS_LOC` and split
+    the result on newline and return a tuple of compiled sensitive term regexes.
+    - The regexes will target sensitive terms that are surrounded by word
+      boundaries, whitespace, or the start/end of strings. To accomplish this in
+      Python, we will use the regex `r"(\A|\b|\s){sensitive_term}(\Z|\b|\s)"`
+      with the case-insensitive flag turned on.
+      - We cannot merely use `\b` (word boundary) because it considers any
+        non-alphanumeric character a word boundary. That means sensitive terms
+        starting or ending with special characters like `@` or `$` would not
+        match.
+      - `\s` expands the matches to include special characters, and preserves
+        `\b`'s boundary matching when appropriate.
+      - `\A` and `\Z` cover the start and end of a string respectively, for when
+        the term starts or ends with a special character. They cannot be used
+        alone because we need to match terms within larger strings.
+      - Using a regex is unfortunately necessary to ensure we do not have
+        false-positives on non-sensitive terms in sub-portions of words, as with
+        location names like
+        [Shitterton in Dorset County, UK](https://en.wikipedia.org/wiki/Shitterton),
+        which would arise if we did a simple `term in string` check. This is a
+        minimum consideration we should give in light of our acknowledgement
+        that text-based matching
+        [is not perfect](./20230309-implementation_plan_sensitive_terms_list.md#this-will-not-be-perfect).
+      - The use of compiled regexes makes caching the result especially
+        important so that regex compilation is not unnecessarily repeated within
+        a single indexer worker subprocess.
+      - We should start with a single regex per term. In the future, we can
+        consider combining slices of the sensitive terms list into larger regex
+        statements, and evaluate whether this performs better or worse for our
+        corpus. For now, we will keep it as simple as possible, with a single
+        regex per term. It does not change the downstream code to do so, and
+        introduces fewer complications with respect to regex construction.
+    - Because each indexer worker can spawn multiple multiprocessing processes,
       each of which have independent Python interpreters, we rely on
       `functools.cache` to ensure each subprocess only has to parse
       `get_sensitive_terms` once, regardless of the number of documents it
       processes. This also ensures the list is available to `get_instance_attrs`
       and related functions without needing to pass it around as a new argument
       from somewhere "below" `launch_reindex` in the call stack for document
-      processing.
-  - The primary logic will live as an extension to the indexer worker's static
-    `elasticsearch_models.Model::get_instance_attrs`.
-    - Add a new static method
-      `elasticsearch_models.Model::get_text_sensitivity`.
-      - This method will use `sensitive_terms.get_sensitive_terms` to retrieve
-        the sensitive terms tuple.
-      - Iterating through the sensitive term regexes and test the title,
-        description, and each tag against the regex. If the term is in any
-        field, immediately return true. We only need to test terms until we find
-        one matching term, so it is safe to break the loop early once we find
-        one.
-    - Update `get_instance_attrs` to create a new `sensitivity` dictionary
-      field. Set the key `sensitive_text` to the result of
-      `Model::get_text_sensitivity`. Set the key `user_reported_sensitivity` to
-      the value of `row[schema["mature"]]`. Finally, set the key `any` to
-      `sensitive_text or user_reported_sensitivity`.
+      processing, and does so without us needing to write the very same logic
+      caching logic that `functools.cache` uses.
+
+Now that the sensitive terms list is available as a list of regexes, implement
+the primary logic for deriving the new fields:
+
+- Add a new static method `elasticsearch_models.Model::get_text_sensitivity`.
+  - This method will use `sensitive_terms.get_sensitive_terms` to retrieve the
+    sensitive terms tuple.
+  - Iterating through the sensitive term regexes and test the title,
+    description, and each tag against the regex. If the term is in any field,
+    immediately return true. We only need to test terms until we find one
+    matching term, so it is safe to break the loop early once we find one.
+- Update `elasticsearch_models.Model::get_instance_attrs` to create a new
+  `sensitivity` dictionary field. Set the key `sensitive_text` to the result of
+  `Model::get_text_sensitivity`. Set the key `user_reported_sensitivity` to the
+  value of `row[schema["mature"]]`. Finally, set the key `any` to
+  `sensitive_text or user_reported_sensitivity`.
+
+Finally, add the new fields to the index settings.
+
 - Update the index mappings in to add the new `sensitivity` field set to
   `{"properties": {"sensitive_text": {"type": "boolean"}, "user_reported_sensitivity": {"type": "boolean"}, "any": {"type": "boolean"}}}`.
 
@@ -370,59 +394,60 @@ the production data refresh before enabling the changes in the API.
 
 Complete the following in two PRs.
 
-- First PR: search
-  - Add a new feature-flag environment variable `USE_INDEX_BASED_SENSITIVITY`
-    that defaults to false.
-  - Update search for the new query approach:
-    - Modify `search_controller.get_index` to check the feature flag and return
-      the unfiltered index when it is true. Otherwise, it should follow its
-      existing logic.
-    - Update `search_controller.build_search_query` to also check the feature
-      flag. When it is false, use the existing `mature` based strategy for
-      handling `include_sensitive_results`. When it is true and
-      `include_sensitive_results` is false, use `sensitivity.any` instead of the
-      existing `mature` field. Follow existing logic for when
-      `include_sensitive_results` is true.
-    - Finally, update `search_controller.query_media` to check the feature flag,
-      and when true, bypass the `SearchContext.build` call and create
-      `SearchContext` directly, as described below.
-      - Retaining the `result_ids` list, create the `SearchContext` with
-        `SearchContext(result_ids, {result.identifier for result in results if result.sensitivity.sensitive_text})`.
-      - While this change to a single index and building the sensitivity list
-        upstream of the API allows us to eventually remove `SearchContext`, we
-        will retain it for now and mock its usage. This allows us to avoid
-        needing to add the same feature flag checks in `MediaView` and
-        `MediaSerializer`. Instead, we can leave those alone for now, and the
-        same `sensitivity` list will continue to be populated by the serializer.
-        Once we confirm this feature and enter the clean-up phase, we will
-        remove `SearchContext` altogether. Details for this are in the
-        [clean-up section](#step-4-clean-up).
-- Second PR: moderation
-  - Update `AbstractSensitiveMedia._bulk_update_es` to update
-    `sensitivity.user_reported_sensitivity` and `sensitivity.any` to `true`,
-    alongside the existing update to `mature`
-    - This should happen in addition to the `mature` update that already exists,
-      but **must not be conditional on the `USE_INDEX_BASED_SENSITIVTY` feature
-      flag**. It cannot be conditional in order to truly support the feature
-      flag's accuracy in search results. If we toggle the flag on/off/on before
-      a data refresh runs, the `sensitivity` fields must still get updated with
-      user-reported sensitivity. Otherwise, when the feature goes back on,
-      `sensitivity.user_reported_sensitivty/any` would not reflect the fact that
-      those works had been reviewed and confirmed as sensitive. In that case,
-      they would start reappearing in default search results (non-sensitive
-      search).
-  - Update `MediaListAdmin.has_sensitive_text` to check
-    `sensitivity.sensitive_text` of the Elasticsearch document if
-    `USE_INDEX_BASED_SENSITIVITY` is true.
-    - The method currently uses a term query to get the result with the
-      identifier.
-      [We should refactor this to use a single document `get` query by `id`](https://www.elastic.co/guide/en/elasticsearch/client/python-api/current/examples.html#ex-get).
-      Elasticsearch document `id` matches the Django model's `pk`. Doing so
-      should improve the retrieval speed, and reduces the result to a single
-      document, which makes reading the `sensitivity` field when retrieving it
-      much easier.
-    - When `USE_INDEX_BASED_SENSITIVITY` is true, query the "full" index instead
-      of the filtered index.
+#### First PR, **search**:
+
+- Add a new feature-flag environment variable `USE_INDEX_BASED_SENSITIVITY` that
+  defaults to false.
+- Update search for the new query approach:
+  - Modify `search_controller.get_index` to check the feature flag and return
+    the unfiltered index when it is true. Otherwise, it should follow its
+    existing logic.
+  - Update `search_controller.build_search_query` to also check the feature
+    flag. When it is false, use the existing `mature` based strategy for
+    handling `include_sensitive_results`. When it is true and
+    `include_sensitive_results` is false, use `sensitivity.any` instead of the
+    existing `mature` field. Follow existing logic for when
+    `include_sensitive_results` is true.
+  - Finally, update `search_controller.query_media` to check the feature flag,
+    and when true, bypass the `SearchContext.build` call and create
+    `SearchContext` directly, as described below.
+    - Retaining the `result_ids` list, create the `SearchContext` with
+      `SearchContext(result_ids, {result.identifier for result in results if result.sensitivity.sensitive_text})`.
+    - While this change to a single index and building the sensitivity list
+      upstream of the API allows us to eventually remove `SearchContext`, we
+      will retain it for now and mock its usage. This allows us to avoid needing
+      to add the same feature flag checks in `MediaView` and `MediaSerializer`.
+      Instead, we can leave those alone for now, and the same `sensitivity` list
+      will continue to be populated by the serializer. Once we confirm this
+      feature and enter the clean-up phase, we will remove `SearchContext`
+      altogether. Details for this are in the
+      [clean-up section](#step-4-clean-up).
+
+#### Second PR, **moderation**:
+
+- Update `AbstractSensitiveMedia._bulk_update_es` to update
+  `sensitivity.user_reported_sensitivity` and `sensitivity.any` to `true`,
+  alongside the existing update to `mature`
+  - This should happen in addition to the `mature` update that already exists,
+    but **must not be conditional on the `USE_INDEX_BASED_SENSITIVTY` feature
+    flag**. It cannot be conditional in order to truly support the feature
+    flag's accuracy in search results. If we toggle the flag on/off/on before a
+    data refresh runs, the `sensitivity` fields must still get updated with
+    user-reported sensitivity. Otherwise, when the feature goes back on,
+    `sensitivity.user_reported_sensitivty/any` would not reflect the fact that
+    those works had been reviewed and confirmed as sensitive. In that case, they
+    would start reappearing in default search results (non-sensitive search).
+- Update `MediaListAdmin.has_sensitive_text` to check
+  `sensitivity.sensitive_text` of the Elasticsearch document if
+  `USE_INDEX_BASED_SENSITIVITY` is true.
+  - The method currently uses a term query to get the result with the
+    identifier.
+    [We should refactor this to use a single document `get` query by `id`](https://www.elastic.co/guide/en/elasticsearch/client/python-api/current/examples.html#ex-get).
+    Elasticsearch document `id` matches the Django model's `pk`. Doing so should
+    improve the retrieval speed, and reduces the result to a single document,
+    which makes reading the `sensitivity` field when retrieving it much easier.
+  - When `USE_INDEX_BASED_SENSITIVITY` is true, query the "full" index instead
+    of the filtered index.
 
 ### Step 3: Turn on feature flag in live environments and observe
 
@@ -451,7 +476,10 @@ cluster in CloudWatch.
 
 ### Step 4: Clean up
 
-1. Data refresh
+Refer to the note about when to start clean up in
+[the overview](#when-to-start-clean-up).
+
+#### Data refresh
 
 - This essentially involves undoing
   [the filtered-index creation aspects added to the new data refresh in this PR](https://github.com/WordPress/openverse/pull/4833).
@@ -467,7 +495,7 @@ cluster in CloudWatch.
   mappings and remove the `raw` versions of `title`, `description`, and
   `tags.name`.
 
-1. API code
+#### API code
 
 - Remove `search_controller.get_index` and its usage.
 - Remove mature content exclusion based on the `mature` boolean from
