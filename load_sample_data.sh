@@ -135,35 +135,21 @@ just docker/es/delete-index image-init
 just docker/es/delete-index image-init-filtered
 
 # Ingest and index the data
-just ingestion_server/ingest-upstream "audio" "init"
-just docker/es/wait-for-index "audio-init"
-just docker/es/wait-for-count "audio-init"
-just ingestion_server/promote "audio" "init" "audio"
+# Enable the staging data refresh dags, if they are not already.
+# These DAGs are on a None schedule so no scheduled runs will be
+# triggered.
+just catalog/cli airflow dags unpause staging_audio_data_refresh
+just catalog/cli airflow dags unpause staging_image_data_refresh
+# Trigger the data refresh dags at the same time. The DAGs will manage
+# concurrency issues.
+just catalog/cli airflow dags trigger staging_audio_data_refresh --conf '{"index_suffix": "init"}'
+just catalog/cli airflow dags trigger staging_image_data_refresh --conf '{"index_suffix": "init"}'
+# Wait for all relevant indices to be created and promoted
 just docker/es/wait-for-index "audio"
 just docker/es/wait-for-count "audio"
-just ingestion_server/create-and-populate-filtered-index "audio" "init"
-just docker/es/wait-for-index "audio-init-filtered"
-just ingestion_server/point-alias "audio" "init-filtered" "audio-filtered"
 just docker/es/wait-for-index "audio-filtered" "audio-init-filtered"
-
-# Image ingestion is flaky; but usually works on the next attempt
-set +e
-while true; do
-  just ingestion_server/ingest-upstream "image" "init"
-  if just docker/es/wait-for-index "image-init"; then
-    break
-  fi
-  ((c++)) && ((c == 3)) && break
-done
-set -e
-
-just docker/es/wait-for-count "image-init"
-just ingestion_server/promote "image" "init" "image"
 just docker/es/wait-for-index "image"
 just docker/es/wait-for-count "image"
-just ingestion_server/create-and-populate-filtered-index "image" "init"
-just docker/es/wait-for-index "image-init-filtered"
-just ingestion_server/point-alias "image" "init-filtered" "image-filtered"
 just docker/es/wait-for-index "image-filtered" "image-init-filtered"
 
 #########
