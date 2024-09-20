@@ -96,7 +96,8 @@ const makeBreakpointDescribe =
           useColorMode:
             snapshotName.includes("-2xl") ||
             snapshotName.includes("-xl") ||
-            snapshotName.includes("-lg"),
+            snapshotName.includes("-lg") ||
+            snapshotName.includes("-sm"),
         })
       }
 
