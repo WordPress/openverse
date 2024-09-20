@@ -14,7 +14,7 @@ IGNORE_FILES_PATTERN := ".pnpm|changelogs|projects/proposals|node_modules|.?venv
 # of the current working directory. If a custom separator is specified, newlines are
 # replaced with this separator before outputting the file list.
 _files separator="\n":
-    #! /usr/bin/env sh
+    #! /usr/bin/env bash
     files=$(
         find "$PWD/.." -type f \( -name "*.md" -o -name "*.mdx" \) \
             | grep -vE "{{ IGNORE_FILES_PATTERN }}"
