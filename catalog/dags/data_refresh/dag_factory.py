@@ -43,6 +43,7 @@ from common.constants import (
     DAG_DEFAULT_ARGS,
     DATA_REFRESH_POOL,
     ENVIRONMENTS,
+    PRODUCTION,
     Environment,
 )
 from common.sensors.constants import ES_CONCURRENCY_TAGS
@@ -131,7 +132,9 @@ def create_data_refresh_dag(
         dagrun_timeout=data_refresh_config.dag_timeout,
         default_args=default_args,
         start_date=data_refresh_config.start_date,
-        schedule=data_refresh_config.schedule,
+        schedule=(
+            data_refresh_config.schedule if target_environment == PRODUCTION else None
+        ),
         max_active_runs=1,
         catchup=False,
         doc_md=__doc__,

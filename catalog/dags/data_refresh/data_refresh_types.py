@@ -63,7 +63,7 @@ class DataRefreshConfig:
                                        airflow.dag.DAG __init__ method.
     start_date:                        datetime.datetime giving the
                                        first valid logical date of the DAG.
-    schedule:                          string giving the schedule on which the DAG
+    schedule:                          string giving the schedule on which the production DAG
                                        should be run.  Passed to the
                                        airflow.dag.DAG __init__ method.
     dag_timeout:                       timedelta expressing the amount of time the entire
