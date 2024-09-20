@@ -8,6 +8,9 @@ const meta = {
 
   parameters: {
     height: "480px",
+    viewport: {
+      defaultViewport: "sm",
+    },
   },
 
   argTypes: {
@@ -29,7 +32,15 @@ export const Default = {
   render: (args) => ({
     components: { VSearchTypes },
     setup() {
-      return () => h(VSearchTypes, args)
+      return () =>
+        h(
+          "div",
+          {
+            style: args.size === "small" ? "width: max-content;" : "",
+            class: "wrapper p-2",
+          },
+          [h(VSearchTypes, args)]
+        )
     },
   }),
   name: "Default",
