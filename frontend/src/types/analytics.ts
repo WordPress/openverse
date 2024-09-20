@@ -106,15 +106,19 @@ export type Events = {
    * the search results page.
    */
   BACK_TO_TOP: {
-    /** The search query */
+    /** The media type being searched */
+    searchType: SupportedSearchType
+    /** The kind of search reached (a collection, a standard search view, etc.)  */
+    kind: ResultKind
+    /** The search term */
     query: string
     /** The current page of results the user is on. */
-    page: number
+    resultPage: number
     /** The number of pixels the user has scrolled. */
-    scrollPixels: number | undefined
+    scrollPixels: number
     /** The maximum number of pixels the user has scrolled on this pageload. */
-    maxScroll: number | undefined
-  }
+    maxScroll: number
+  } & CollectionProperties
   /**
    * Description: Whenever the user scrolls to the end of the results page.
    * Useful to evaluate how often users load more results or click

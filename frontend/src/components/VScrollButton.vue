@@ -5,6 +5,9 @@ import { useNuxtApp, useRoute } from "#imports"
 import { useSearchStore } from "~/stores/search"
 import { useMediaStore } from "~/stores/media"
 
+import type { ResultKind } from "~/types/result"
+import type { Collection } from "~/types/search"
+
 const positionWithoutSidebar = "ltr:right-4 rtl:left-4"
 const positionWithSidebar = "ltr:right-[22rem] rtl:left-[22rem]"
 
@@ -37,14 +40,26 @@ const scrollToTop = () => {
   element.scrollTo({ top: 0, left: 0, behavior: "smooth" })
 
   if (ANALYTICS_ROUTES.some((r) => route.name?.toString().startsWith(r))) {
+    const kind: ResultKind =
+      searchStore.strategy === "default" ? "search" : "collection"
+    const collectionType = (searchStore.collectionValue as Collection) ?? "null"
+
     $sendCustomEvent("BACK_TO_TOP", {
+      searchType:
+        searchStore.searchType === "model-3d" ||
+        searchStore.searchType === "video"
+          ? "all"
+          : searchStore.searchType,
+      kind,
       query: searchStore.searchTerm,
-      page: mediaStore.currentPage,
-      scrollPixels: mainPage?.scrollTop || 0,
+      resultPage: mediaStore.currentPage,
+      scrollPixels: mainPage?.scrollTop || -1,
       maxScroll:
         mainPage && "scrollTopMax" in mainPage
           ? (mainPage.scrollTopMax as number)
-          : 0,
+          : -1,
+      collectionType,
+      collectionValue: searchStore.collectionValue ?? "null",
     })
   }
 }
