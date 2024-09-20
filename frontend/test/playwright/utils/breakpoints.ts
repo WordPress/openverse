@@ -97,7 +97,8 @@ const makeBreakpointDescribe =
             snapshotName.includes("-2xl") ||
             snapshotName.includes("-xl") ||
             snapshotName.includes("-lg") ||
-            snapshotName.includes("-sm"),
+            snapshotName.includes("-sm") ||
+            snapshotName.includes("-xs"),
         })
       }
 
