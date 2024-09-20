@@ -8,12 +8,18 @@
   }
 
   :root {
+    /* Absolute colors */
+
     --color-black: #000;
-    --color-black-72: #000000b8;
     --color-white: #fff;
-    --color-yellow-3: #fde034;
-    --color-pink-8: #ad1f85;
-    --color-gray: #232323;
+
+    /* Opacities of absolute colors */
+
+    --color-black-72: #000000b8;
+    --color-white-72: #ffffffb8;
+
+    /* Grayscale */
+
     --color-gray-1: #f7f7f7;
     --color-gray-2: #ededed;
     --color-gray-3: #dfdfdf;
@@ -27,6 +33,9 @@
     --color-gray-11: #363636;
     --color-gray-12: #232323;
     --color-gray-13: #0d0d0d;
+
+    /* Accent colors */
+
     --color-pink-1: #fcf4fa;
     --color-pink-2: #f9e7f3;
     --color-pink-3: #f9d2ec;
@@ -34,13 +43,16 @@
     --color-pink-5: #eb7dc8;
     --color-pink-6: #eb3bbf;
     --color-pink-7: #d028a3;
+    --color-pink-8: #ad1f85;
     --color-pink-9: #911a71;
     --color-pink-10: #79165d;
     --color-pink-11: #5e1241;
     --color-pink-12: #3e0c2a;
     --color-pink-13: #1b0410;
+
     --color-yellow-1: #fff9d4;
     --color-yellow-2: #feefa0;
+    --color-yellow-3: #fde034;
     --color-yellow-4: #e5c428;
     --color-yellow-5: #c7a714;
     --color-yellow-6: #ad9011;
@@ -51,6 +63,9 @@
     --color-yellow-11: #4a300c;
     --color-yellow-12: #331d05;
     --color-yellow-13: #180801;
+
+    /* Opacities of grayscale */
+
     --color-gray-1-10: #f7f7f71a;
     --color-gray-1-20: #f7f7f733;
     --color-gray-1-30: #f7f7f74d;
@@ -60,6 +75,7 @@
     --color-gray-1-70: #f7f7f7b2;
     --color-gray-1-80: #f7f7f7cc;
     --color-gray-1-90: #f7f7f7e5;
+
     --color-gray-12-10: #2323231a;
     --color-gray-12-20: #23232333;
     --color-gray-12-30: #2323234d;
@@ -69,9 +85,9 @@
     --color-gray-12-70: #232323b2;
     --color-gray-12-80: #232323cc;
     --color-gray-12-90: #232323e5;
-    --color-gray-13-0: #0d0d0d00;
-    --color-white-72: #ffffffb8;
-    --color-white-0: #fff0;
+
+    /* Semantic colors */
+
     --color-info-1: #f5f7fb;
     --color-info-2: #e6edfc;
     --color-info-3: #d3dffb;
@@ -85,6 +101,7 @@
     --color-info-11: #192f73;
     --color-info-12: #122047;
     --color-info-13: #060c1c;
+
     --color-warning-1: #fcf6f0;
     --color-warning-2: #faead9;
     --color-warning-3: #f9d9b4;
@@ -98,6 +115,7 @@
     --color-warning-11: #4b2f05;
     --color-warning-12: #341e00;
     --color-warning-13: #160a00;
+
     --color-success-1: #f1fbef;
     --color-success-2: #dff5db;
     --color-success-3: #caeac1;
@@ -111,6 +129,7 @@
     --color-success-11: #104200;
     --color-success-12: #072c00;
     --color-success-13: #021200;
+
     --color-error-1: #fdf5f3;
     --color-error-2: #fee7e4;
     --color-error-3: #f9d6d0;
@@ -144,7 +163,6 @@
       --color-bg-success: var(--color-success-2);
       --color-bg-error: var(--color-error-2);
       --color-bg-disabled: var(--color-gray-5);
-      --color-bg-zero: var(--color-white-0);
       --color-border: var(--color-gray-3);
       --color-border-hover: var(--color-gray-12);
       --color-border-secondary: var(--color-gray-12-20);
@@ -191,7 +209,6 @@
       --color-bg-success: var(--color-success-11);
       --color-bg-error: var(--color-error-11);
       --color-bg-disabled: var(--color-gray-8);
-      --color-bg-zero: var(--color-gray-13-0);
       --color-border: var(--color-gray-11);
       --color-border-hover: var(--color-gray-1);
       --color-border-secondary: var(--color-gray-1-20);
@@ -238,7 +255,6 @@
     --color-bg-success: var(--color-success-2);
     --color-bg-error: var(--color-error-2);
     --color-bg-disabled: var(--color-gray-5);
-    --color-bg-zero: var(--color-white-0);
     --color-bg-blur: var(--color-white-72);
     --color-border: var(--color-gray-3);
     --color-border-hover: var(--color-gray-12);
@@ -285,7 +301,6 @@
     --color-bg-success: var(--color-success-11);
     --color-bg-error: var(--color-error-11);
     --color-bg-disabled: var(--color-gray-8);
-    --color-bg-zero: var(--color-gray-13-0);
     --color-bg-blur: var(--color-black-72);
     --color-border: var(--color-gray-11);
     --color-border-hover: var(--color-gray-1);
