@@ -164,6 +164,7 @@
       --color-bg-success: var(--color-success-2);
       --color-bg-error: var(--color-error-2);
       --color-bg-disabled: var(--color-gray-5);
+      --color-bg-blur: var(--color-white-72);
 
       /* Borders */
       --color-border: var(--color-gray-3);
@@ -221,6 +222,7 @@
       --color-bg-success: var(--color-success-11);
       --color-bg-error: var(--color-error-11);
       --color-bg-disabled: var(--color-gray-8);
+      --color-bg-blur: var(--color-black-72);
 
       /* Borders */
       --color-border: var(--color-gray-11);
