@@ -3,9 +3,11 @@
  * Display placeholder elements while waiting for the actual elements to be
  * loaded in the results views.
  */
-import { computed } from "vue"
+import { computed, inject, ref } from "vue"
 
 import type { SupportedSearchType } from "~/constants/media"
+
+import { IsSidebarVisibleKey } from "~/types/provides"
 
 import VAudioTrackSkeleton from "~/components/VSkeleton/VAudioTrackSkeleton.vue"
 import VBone from "~/components/VSkeleton/VBone.vue"
@@ -14,11 +16,9 @@ const props = withDefaults(
   defineProps<{
     isForTab?: SupportedSearchType
     numElems?: number
-    isSidebarVisible?: boolean
   }>(),
   {
     isForTab: "image",
-    isSidebarVisible: false,
   }
 )
 
@@ -39,6 +39,8 @@ const elementCount = computed(() => {
   }
   return 8
 })
+
+const isSidebarVisible = inject(IsSidebarVisibleKey, ref(false))
 </script>
 
 <template>
