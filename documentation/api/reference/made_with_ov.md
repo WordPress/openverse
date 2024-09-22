@@ -90,6 +90,7 @@ to power its [image search](https://www.mojeek.com/images) feature.
 Sutori integrates with Openverse to provide direct access to our vast catalog of images from their media uploader tool.
 
 **Available media:** images
+
 ![Mojeek image search](/_static/openverse_sutori.png)
 
 - [Homepage](https://www.sutori.com/)
