@@ -88,11 +88,10 @@ to power its [image search](https://www.mojeek.com/images) feature.
 
 [Sutori](https://www.sutori.com/) is a collaborative instruction and
 presentation tool for the classroom. Sutori integrates with Openverse to provide
-direct access to our vast catalog of images from their media uploader tool.this
-is the them annouceing the intergrateion
+direct access to our vast catalog of images from their media uploader tool.
+
+[Refer to Sutori's announcement of Openverse image search integration for further details](https://headwayapp.co/sutori-updates/millions-of-free-educational-resources-299145)
 
 **Available media:** images
 
-![Mojeek image search](/_static/openverse_sutori.png)
-
-[Sutori integration](https://help.sutori.com/en/articles/6825001-release-notes-may-2022)
+![Openverse image search in Sutori](/_static/openverse_sutori.png)
