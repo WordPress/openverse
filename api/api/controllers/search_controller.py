@@ -302,13 +302,7 @@ def build_search_query(
 
         search_queries["must"].append(Q("simple_query_string", **base_query_kwargs))
         # Boost exact matches on the title
-        exact_match_boost = Q(
-            "match_phrase",
-            title = {
-                "query":query,
-                "boost":10000
-            }
-        )
+        exact_match_boost = Q("match_phrase", title={"query": query, "boost": 10000})
         search_queries["should"].append(exact_match_boost)
     else:
         for field, field_name in [
