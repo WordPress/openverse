@@ -45,8 +45,8 @@ The following are DAGs grouped by their primary tag:
 | [`create_filtered_image_index`](#create_filtered_media_type_index)      | `None`            |
 | [`production_audio_data_refresh`](#environment_media_type_data_refresh) | `0 0 * * 1`       |
 | [`production_image_data_refresh`](#environment_media_type_data_refresh) | `0 0 * * 1`       |
-| [`staging_audio_data_refresh`](#environment_media_type_data_refresh)    | `0 0 * * 1`       |
-| [`staging_image_data_refresh`](#environment_media_type_data_refresh)    | `0 0 * * 1`       |
+| [`staging_audio_data_refresh`](#environment_media_type_data_refresh)    | `None`            |
+| [`staging_image_data_refresh`](#environment_media_type_data_refresh)    | `None`            |
 | [`audio_data_refresh`](#media_type_data_refresh)                        | `0 0 * * 1`       |
 | [`image_data_refresh`](#media_type_data_refresh)                        | `0 0 * * 1`       |
 
