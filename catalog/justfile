@@ -56,12 +56,14 @@ install *args: check-py-version
 ######
 
 # Bring up services specific to the catalog profile
+[positional-arguments]
 up *flags:
-    env COMPOSE_PROFILES="catalog" just ../up {{ flags }}
+    env COMPOSE_PROFILES="catalog" just ../up "$@"
 
 # Bring up services specific to the catalog profile, except Airflow
+[positional-arguments]
 up-deps *flags:
-    env COMPOSE_PROFILES="catalog_dependencies" just ../up {{ flags }}
+    env COMPOSE_PROFILES="catalog_dependencies" just ../up "$@"
 
 # Load sample data into upstream DB
 init: up
@@ -82,11 +84,12 @@ shell:
     env DC_USER="airflow" just ../exec {{ SERVICE }} /bin/bash
 
 # Launch an IPython shell in a new container under `SERVICE`
+[positional-arguments]
 ipython *args: up-deps
     env DC_USER="airflow" just ../run \
         --workdir /opt/airflow/catalog/dags \
         {{ SERVICE }} \
-        bash -c \'ipython {{ args }}\'
+        bash -c "ipython ${@:2}"
 
 # Launch a `pgcli` shell in the PostgreSQL container
 pgcli db_user_pass="deploy" db_name="openledger": up
@@ -97,13 +100,14 @@ pgcli db_user_pass="deploy" db_name="openledger": up
 #########
 
 # Run a command in a test container under `SERVICE`
-_mount-test command: up-deps
+[positional-arguments]
+_mount-test *command: up-deps
     env DC_USER="airflow" just ../run \
         -e AIRFLOW_VAR_INGESTION_LIMIT=1000000 \
         -w /opt/airflow/catalog \
-        --volume \'{{ justfile_directory() }}/../docker\':/opt/airflow/docker/ \
+        --volume {{ justfile_directory() }}/../docker:/opt/airflow/docker/ \
         {{ SERVICE }} \
-        {{ command }}
+        "$@"
 
 # Launch a Bash shell in a test container under `SERVICE`
 # Run pytest with `--pdb` to workaround xdist breaking pdb.set_trace()
@@ -111,8 +115,9 @@ test-session:
     just _mount-test bash
 
 # Run pytest in a test container under `SERVICE`
+[positional-arguments]
 test *args:
-    just _mount-test "bash -c \'pytest {{ args }}\'"
+    just _mount-test bash -c "pytest $@"
 
 #############
 # Utilities #
@@ -120,7 +125,7 @@ test *args:
 
 # Generate the documentation (either "dag" or "media-props")
 generate-docs doc="dag" fail_on_diff="false":
-    #!/bin/bash
+    #! /usr/bin/env bash
     set -e
     if [ "{{ doc }}" == "dag" ]; then
         SCRIPT_PATH="catalog/utilities/dag_doc_gen/dag_doc_generation.py"
@@ -136,18 +141,20 @@ generate-docs doc="dag" fail_on_diff="false":
         echo "Invalid documentation type specified, use \`dag\` or \`media-props\`. Exiting."
         exit 1
     fi
+
     GENERATED_ABS_PATH="/opt/airflow/catalog/${GENERATED_REL_PATH}"
     just ../run \
       --volume {{ justfile_directory() }}/../docker:/opt/airflow/docker/ \
       -e PYTHONPATH=/opt/airflow/catalog:/opt/airflow/catalog/dags \
       {{ SERVICE }} \
-      "bash -c 'python $SCRIPT_PATH && chmod 666 $GENERATED_ABS_PATH'"
+      bash -c "python $SCRIPT_PATH && chmod 666 $GENERATED_ABS_PATH"
+
     TEMP="documentation/meta/temp"
-    mv ../catalog/$GENERATED_REL_PATH ../$TEMP.md
+    mv ../catalog/"$GENERATED_REL_PATH" ../"$TEMP".md
     echo "Moved the generated file to ../$TEMP.md"
     echo -n "Running linting..."
     # Linting step afterwards is necessary since the generated output differs greatly from what prettier expects
-    just ../lint prettier $TEMP.md &>/dev/null || true
+    just ../lint prettier "$TEMP".md &>/dev/null || true
     echo "Linting done!"
 
     echo -n "Replacing linted md <hr> '---' with '----' required by sphinx..."

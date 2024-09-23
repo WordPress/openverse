@@ -10,8 +10,10 @@ NO_COLOR := "\\033[0m"
     just --list --unsorted
 
 # Run a script
+[positional-arguments]
 run script *args:
-    pnpm --filter automations exec node src/{{ script }} {{ args }}
+    #! /usr/bin/env bash
+    pnpm --filter automations exec node src/{{ script }} "${@:2}"
 
 #################
 # Weekly report #
@@ -25,21 +27,14 @@ report:
 # Render #
 ##########
 
-render-release-drafter:
-    #! /usr/bin/env sh
-    render_release_drafter() {
-        slug=$1
-        name=$2
-        just run render-jinja.js \
-            templates/release-drafter.yml.jinja \
-            .github/release-drafter-$slug.yml \
-            "'{ \"app\": \"$name\" }'"
-    }
-    render_release_drafter api API
-    render_release_drafter ingestion_server "Ingestion Server"
-    render_release_drafter frontend Frontend
-    render_release_drafter catalog Catalog
+_render slug name:
+    just run render-jinja.js \
+        templates/release-drafter.yml.jinja \
+        .github/release-drafter-{{ slug }}.yml \
+        '{"app": "{{ name }}"}'
 
-# Render all templates (shortcut for easy iteration)
-render-templates:
-    just render-release-drafter
+render-release-drafter:
+    just _render api API
+    just _render ingestion_server "Ingestion Server"
+    just _render frontend Frontend
+    just _render catalog Catalog

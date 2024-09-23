@@ -4,9 +4,6 @@ set dotenv-load := false
 # @ - Quiet recipes (https://github.com/casey/just#quiet-recipes)
 # _ - Private recipes (https://github.com/casey/just#private-recipes)
 
-IS_PROD := env_var_or_default("PROD", env_var_or_default("IS_PROD", ""))
-# `PROD_ENV` can be "ingestion_server" or "catalog"
-PROD_ENV := env_var_or_default("PROD_ENV", "")
 IS_CI := env_var_or_default("CI", "")
 DC_USER := env_var_or_default("DC_USER", "opener")
 
@@ -171,14 +168,7 @@ lint-codeowners checks="stable":
 # Docker #
 ##########
 
-DOCKER_FILE := "-f " + (
-    if IS_PROD == "true" {
-        if PROD_ENV == "ingestion_server" { "ingestion_server/docker-compose.yml" }
-        else if PROD_ENV == "catalog" { "catalog/docker-compose.yml" }
-        else { "docker-compose.yml" }
-    }
-    else { "docker-compose.yml" }
-)
+DOCKER_FILE := "-f docker-compose.yml"
 EXEC_DEFAULTS := if IS_CI == "" { "" } else { "-T" }
 
 export CATALOG_PY_VERSION := `just catalog/py-version`
@@ -207,13 +197,15 @@ versions:
     EOF
 
 # Run `docker compose` configured with the correct files and environment
+[positional-arguments]
 dc *args:
     @{{ if IS_CI != "" { "just env" } else { "true" } }}
-    env COMPOSE_PROFILES="{{ env_var_or_default("COMPOSE_PROFILES", "api,ingestion_server,frontend,catalog") }}" docker compose {{ DOCKER_FILE }} {{ args }}
+    env COMPOSE_PROFILES="{{ env_var_or_default("COMPOSE_PROFILES", "api,ingestion_server,frontend,catalog") }}" docker compose {{ DOCKER_FILE }} "$@"
 
 # Build all (or specified) services
+[positional-arguments]
 build *args:
-    just dc build {{ args }}
+    just dc build "$@"
 
 # List all services and their URLs and ports
 @ps:
@@ -223,11 +215,12 @@ build *args:
 
 # Also see `up` recipe in sub-justfiles
 # Bring all Docker services up, in all profiles
+[positional-arguments]
 up *flags: env && ps
     #!/usr/bin/env bash
     set -eo pipefail
     while true; do
-      if just dc up {{ if IS_CI != "" { "--quiet-pull" } else { "" } }} -d {{ flags }} ; then
+      if just dc up {{ if IS_CI != "" { "--quiet-pull" } else { "" } }} -d "$@" ; then
         break
       fi
       ((c++)) && ((c==3)) && break
@@ -249,8 +242,9 @@ init:
     just frontend/init
 
 # Take all Docker services down, in all profiles
+[positional-arguments]
 down *flags:
-    just dc down {{ flags }}
+    just dc down "$@"
 
 # Take all services down then call the specified app's up recipe. ex.: `just dup catalog` is useful for restarting the catalog with new environment variables
 dup app:
@@ -259,7 +253,7 @@ dup app:
 # Recreate all volumes and containers from scratch
 recreate:
     just down -v
-    just up "--force-recreate --build"
+    just up --force-recreate --build
     just init
 
 # Bust pnpm cache and reinstall Node.js dependencies
@@ -277,12 +271,14 @@ attach service:
     docker attach $(just dc ps | awk '{print $1}' | grep {{ service }})
 
 # Execute statement in service containers using Docker Compose
+[positional-arguments]
 exec +args:
-    just dc exec -u {{ env_var_or_default("DC_USER", "root") }} {{ EXEC_DEFAULTS }} {{ args }}
+    just dc exec -u {{ env_var_or_default("DC_USER", "root") }} {{ EXEC_DEFAULTS }} "$@"
 
 # Execute statement in a new service container using Docker Compose
+[positional-arguments]
 run +args:
-    just dc run --rm -u {{ env_var_or_default("DC_USER", "root") }} {{ EXEC_DEFAULTS }} "{{ args }}"
+    just dc run --rm -u {{ env_var_or_default("DC_USER", "root") }} {{ EXEC_DEFAULTS }} "$@"
 
 # Execute pgcli against one of the database instances
 _pgcli container db_user_pass db_name db_host db_port="5432":
@@ -352,20 +348,31 @@ f:
     just frontend/run dev
 
 # alias for `pnpm --filter {package} run {script}`
-p package script +args="":
-    pnpm --filter {{ package }} run {{ script }} {{ args }}
+[positional-arguments]
+p package script *args:
+    pnpm --filter {{ package }} run {{ script }} "${@:3}"
 
 # Run eslint with --fix and default file selection enabled; used to enable easy file overriding whilst retaining the defaults when running --all-files
-eslint *files="frontend automations/js packages/js .pnpmfile.cjs .eslintrc.js prettier.config.js tsconfig.base.json":
+[positional-arguments]
+eslint *args:
+    #! /usr/bin/env bash
     just p '@openverse/eslint-plugin' build
+    if [[ "$@" ]]; then
+        files=("$@")
+    else
+        # default files
+        files=(frontend automations/js packages/js .pnpmfile.cjs .eslintrc.js prettier.config.js tsconfig.base.json)
+    fi
+
     pnpm exec eslint \
         --ext .js,.ts,.vue,.json,.json5 \
         --ignore-path .gitignore \
         --ignore-path .eslintignore \
         --max-warnings=0 \
         --fix \
-        {{ files }}
+        "${files[@]}"
 
 # Alias for `just packages/js/k6/run` or `just p k6 run`
+[positional-arguments]
 @k6 *args:
-    just packages/js/k6/run {{ args }}
+    just packages/js/k6/run "$@"

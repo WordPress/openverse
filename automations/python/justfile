@@ -11,9 +11,11 @@ NO_COLOR := "\\033[0m"
 
 
 # Install dependencies
+[positional-arguments]
 install *args:
-    pdm install {{ args }}
+    pdm install "$@"
 
 # Run a script
+[positional-arguments]
 run script *args:
-    pdm run {{ script }} {{ args }}
+    pdm run "$@"
