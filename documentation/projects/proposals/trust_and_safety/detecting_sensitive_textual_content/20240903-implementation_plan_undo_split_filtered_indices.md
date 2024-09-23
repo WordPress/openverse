@@ -11,7 +11,7 @@
 
 - [ ] @dhruvkb (API familiarity, especially in code that interacts with ES
       during moderation)
-- [ ] @stacimc (Data refresh and ingestion worker expertise)
+- [x] @stacimc (Data refresh and ingestion worker expertise)
 
 ## Project links
 
