@@ -85,7 +85,7 @@ const handleSearch = (searchTerm: string) => {
 
 <template>
   <main
-    class="index flex w-full flex-shrink-0 flex-grow flex-col justify-center gap-6 px-6 sm:px-0 xl:flex-row xl:items-center xl:gap-0"
+    class="index flex w-full flex-shrink-0 flex-grow flex-col justify-center gap-6 px-6 sm:px-0 xl:flex-row xl:items-center xl:justify-between xl:gap-0"
   >
     <div
       class="flex flex-grow flex-col items-center justify-center gap-6 xl:h-[33rem] xl:flex-grow-0 xl:items-start"
