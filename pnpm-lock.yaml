@@ -59,6 +59,9 @@ importers:
 
   frontend:
     dependencies:
+      '@ariakit/core':
+        specifier: ^0.4.10
+        version: 0.4.10
       '@floating-ui/dom':
         specifier: ^1.6.8
         version: 1.6.8
@@ -397,6 +400,9 @@ packages:
 
   '@antfu/utils@0.7.10':
     resolution: {integrity: sha512-+562v9k4aI80m1+VuMHehNJWLOFjBnXn3tdOitzD0il5b7smkSBal4+a3oKiQTbrwMmN/TBUMDvbdoWDehgOww==}
+
+  '@ariakit/core@0.4.10':
+    resolution: {integrity: sha512-mX3EabQbfVh5uTjsTJ3+gjj7KGdTNhIN0qZHJd5Z2iPUnKl9NBy23Lgu6PEskpVsKAZ3proirjguD7U9fKMs/A==}
 
   '@babel/code-frame@7.24.7':
     resolution: {integrity: sha512-BcYH1CVJBO9tvyIZ2jVeXgSIMvGZ2FDRvDdOIVQyuklNKSsx+eppDEBq/g47Ayw+RqNFE+URvOShmf+f/qwAlA==}
@@ -8256,6 +8262,8 @@ snapshots:
       '@jridgewell/trace-mapping': 0.3.25
 
   '@antfu/utils@0.7.10': {}
+
+  '@ariakit/core@0.4.10': {}
 
   '@babel/code-frame@7.24.7':
     dependencies:
