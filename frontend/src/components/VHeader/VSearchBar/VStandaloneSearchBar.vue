@@ -50,13 +50,13 @@ defineExpose({ focusInput })
   <form
     action="/search"
     role="search"
-    class="search-bar group flex h-14 flex-row items-center rounded-sm border-tx bg-default sm:h-16"
+    class="search-bar group flex h-14 flex-row items-center rounded-sm border-tx bg-default sm:h-16 dark:bg-overlay dark:focus-within:bg-default"
     @submit.prevent="handleSearch"
   >
     <div
       class="input-field search-field group flex h-full flex-grow items-center overflow-hidden rounded-sm rounded-e-none border border-e-0 p-0.5px pe-2 focus-within:border-1.5 focus-within:border-e-0 focus-within:p-0 focus-within:pe-2"
       :class="[
-        route === 'home' ? 'border-tx' : 'border-black',
+        route === 'home' ? 'border-tx' : 'border-black dark:border-tx',
         hasPopover ? 'focus-within:border-tx' : 'focus-within:border-focus',
       ]"
     >
@@ -66,7 +66,7 @@ defineExpose({ focusInput })
         type="search"
         name="q"
         :placeholder="$t('hero.search.placeholder')"
-        class="paragraph-large md:label-regular ms-4 h-full w-full appearance-none rounded-none bg-tx leading-none text-default placeholder-gray-8 focus-visible:outline-none"
+        class="paragraph-large md:label-regular focus-visible:outline-style-none ms-4 h-full w-full appearance-none rounded-none bg-tx leading-none text-default placeholder-gray-8 dark:placeholder-gray-4"
         :aria-label="
           $t('search.searchBarLabel', {
             openverse: 'Openverse',
