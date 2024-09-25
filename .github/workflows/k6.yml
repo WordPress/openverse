@@ -1,14 +1,6 @@
 name: Run k6 scenario
 
 on:
-  # temporary for testing
-  # replace the following:
-  # - ${{ 'frontend'}} -> ${{ inputs.namespace }}
-  # - ${{ 'search-en'}} -> ${{ inputs.scenario }}
-  # - ${{ 'https://staging.openverse.org/'}} -> ${{ inputs.service_url }}
-  # - ${{ 'https://staging.openverse.org/'}} -> ${{ inputs.service_url }}
-  pull_request:
-
   workflow_dispatch:
     inputs:
       namespace:
@@ -32,14 +24,14 @@ on:
         type: boolean
         default: false
 
-run-name: k6 run ${{ 'frontend' }} ${{ 'search-en' }} ${{ 'https://staging.openverse.org' }} report=${{ true }}
+run-name: k6 run ${{ inputs.namespace }} ${{ inputs.scenario }} ${{ inputs.service_url }} report=${{ inputs.report }}
 
 # Disallow running multiple load tests at once against the same service
-concurrency: ${{ github.workflow }}-${{ 'https://staging.openverse.org' }}
+concurrency: ${{ github.workflow }}-${{ inputs.service_url }}
 
 jobs:
   run-k6:
-    name: "Run k6 ${{ 'frontend' }} ${{ 'search-en' }} ${{ 'https://staging.openverse.org' }} report=${{ true }}"
+    name: "Run k6 ${{ inputs.namespace }} ${{ inputs.scenario }} ${{ inputs.service_url }} report=${{ inputs.report }}"
     runs-on: ubuntu-latest
 
     steps:
@@ -55,18 +47,19 @@ jobs:
       - name: Setup k6
         uses: grafana/setup-k6-action@v1
 
-      - name: k6 run ${{ 'frontend' }} ${{ 'search-en' }} ${{ 'https://staging.openverse.org' }}
+      - name: k6 run ${{ inputs.namespace }} ${{ inputs.scenario }} ${{ inputs.service_url }}
         env:
           K6_CLOUD_TOKEN: ${{ secrets.GC_K6_TOKEN }}
           K6_SIGNING_SECRET: ${{ secrets.K6_SIGNING_SECRET }}
         run: |
-          just k6 ${{ 'frontend' }} ${{ 'search-en' }} \
-            ${{ true && '-o cloud' || ''}} \
+          just k6 ${{ inputs.namespace }} ${{ inputs.scenario }} \
+            ${{ inputs.report && '-o cloud' || ''}} \
             -e signing_secret="$K6_SIGNING_SECRET" \
-            -e service_url=${{ 'https://staging.openverse.org' }} \
+            -e service_url=${{ inputs.service_url }} \
             -e text_summary=/tmp/k6-summary.txt
 
       - name: Upload artifacts
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: k6-output
