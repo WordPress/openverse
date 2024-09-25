@@ -1,0 +1,12 @@
+# Disable XPack
+# https://www.elastic.co/guide/en/elasticsearch/reference/5.3/docker.html#_security_note
+xpack.security.enabled: false
+
+discovery.type: single-node
+
+network.host: 0.0.0.0
+network.bind_host: 0.0.0.0
+network.publish_host: 0.0.0.0
+
+http.cors.enabled: true
+http.cors.allow-origin: "/.*/"
