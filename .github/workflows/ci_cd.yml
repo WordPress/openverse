@@ -470,6 +470,21 @@ jobs:
         with:
           install: true
 
+      - name: Build catalog dev image
+        uses: docker/build-push-action@v5
+        with:
+          context: catalog
+          target: cat
+          push: false
+          load: true
+          tags: openverse-catalog
+          cache-from: type=gha,scope=catalog_dev
+          cache-to: type=gha,scope=catalog_dev
+          build-args: |
+            CATALOG_PY_VERSION=${{ steps.prepare-build-args.outputs.catalog_py_version }}
+            CATALOG_AIRFLOW_VERSION=${{ steps.prepare-build-args.outputs.catalog_airflow_version }}
+            REQUIREMENTS_FILE=requirements-dev.txt
+
       - name: Build API dev image
         uses: docker/build-push-action@v5
         with:
@@ -485,6 +500,9 @@ jobs:
             SEMANTIC_VERSION=${{ needs.get-image-tag.outputs.image_tag }}
             API_PY_VERSION=${{ steps.prepare-build-args.outputs.api_py_version }}
             PDM_INSTALL_ARGS=--dev
+
+      - name: Start Catalog
+        run: just catalog/up
 
       - name: Start API, ingest and index test data
         run: just api/init
