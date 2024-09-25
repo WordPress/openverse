@@ -1312,6 +1312,22 @@ jobs:
           wait_time: 60 # check every minute
           max_time: 1800 # allow up to 30 minutes for a deployment
 
+      - name: Trigger staging k6 load test
+        uses: convictional/trigger-workflow-and-wait@v1.6.5
+        with:
+          owner: WordPress
+          repo: openverse
+          token: ${{ secrets.ACCESS_TOKEN }}
+          workflow_file_name: k6.yml
+          wait_interval: 60
+          client_payload: |
+            {
+              "namespace": "frontend",
+              "scenario": "all",
+              "service_url": "https://staging.openverse.org/",
+              "report": true
+            }
+
   deploy-api:
     name: Deploy staging API
     runs-on: ubuntu-latest
