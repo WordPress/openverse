@@ -1,4 +1,4 @@
-import { test } from "@playwright/test"
+import { expect, test, type Page } from "@playwright/test"
 
 import {
   filters,
@@ -7,7 +7,11 @@ import {
 } from "~~/test/playwright/utils/navigation"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 
-import { languageDirections } from "~~/test/playwright/utils/i18n"
+import {
+  type LanguageDirection,
+  languageDirections,
+  t,
+} from "~~/test/playwright/utils/i18n"
 
 import type { Breakpoint } from "~/constants/screens"
 
@@ -15,6 +19,20 @@ test.describe.configure({ mode: "parallel" })
 
 const getFiltersName = (breakpoint: Breakpoint) =>
   breakpoint === "lg" ? "filters-sidebar" : "filters-modal"
+
+const checkModalRendered = async (
+  page: Page,
+  isDesktop: boolean,
+  dir: LanguageDirection
+) => {
+  if (isDesktop) {
+    return true
+  }
+  const seeResultsButton = page.getByRole("button", {
+    name: t("header.seeResults", dir),
+  })
+  await expect(seeResultsButton).toBeEnabled()
+}
 
 for (const dir of languageDirections) {
   breakpoints.describeEachBreakpoint(["xs", "sm", "md", "lg"])(
@@ -25,7 +43,9 @@ for (const dir of languageDirections) {
         await goToSearchTerm(page, "birds", { dir })
         await filters.open(page, dir)
       })
-      test(`filters modal none selected - ${dir}`, async ({ page }) => {
+      test(`filters none selected - ${dir}`, async ({ page }) => {
+        await checkModalRendered(page, isDesktop, dir)
+
         await expectSnapshot(
           page,
           getFiltersName(breakpoint),
@@ -37,9 +57,10 @@ for (const dir of languageDirections) {
         )
       })
 
-      test(`filters modal 1 filter selected - ${dir}`, async ({ page }) => {
+      test(`filters 1 filter selected - ${dir}`, async ({ page }) => {
         const firstFilter = page.getByRole("checkbox").first()
         await firstFilter.check()
+        await checkModalRendered(page, isDesktop, dir)
 
         const snapshotName = `${getFiltersName(breakpoint)}-checked`
 

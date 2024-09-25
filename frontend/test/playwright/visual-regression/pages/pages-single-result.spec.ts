@@ -1,4 +1,4 @@
-import { test } from "@playwright/test"
+import { expect, test } from "@playwright/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import {
@@ -9,7 +9,7 @@ import {
   sleep,
 } from "~~/test/playwright/utils/navigation"
 
-import { languageDirections } from "~~/test/playwright/utils/i18n"
+import { languageDirections, t } from "~~/test/playwright/utils/i18n"
 
 import { supportedMediaTypes } from "~/constants/media"
 
@@ -41,6 +41,13 @@ for (const mediaType of supportedMediaTypes) {
 
         // This will include the "Back to results" link.
         await openFirstResult(page, mediaType, dir)
+        // Wait for the rendering to finish.
+        await expect(
+          page.getByRole("link", {
+            name: t(`${mediaType}Details.weblink`, dir),
+          })
+        ).toBeEnabled()
+
         await expectSnapshot(
           page,
           `${mediaType}-from-search-results-with-additional-search-views`,
