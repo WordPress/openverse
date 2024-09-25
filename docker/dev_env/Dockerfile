@@ -31,6 +31,7 @@ ENV PATH="${PNPM_BIN}:${N_PREFIX}/bin:${PDM_PYTHONS}:${HOME}/.local/bin:${PATH}"
 # - just: command runner
 # - jq: JSON processor
 # - which: locate a program file in `PATH`
+# - tree: list files in a tree
 # - python*: required by some Python libraries for compilation during installation
 # - libffi*: required for the Python package cffi
 # - pipx: Python CLI app installer
@@ -58,6 +59,7 @@ RUN mkdir /pipx \
     just \
     jq \
     which \
+    tree \
     xdg-utils \
     nodejs npm \
     python3.12 python3.12-devel pipx \
