@@ -457,7 +457,7 @@ jobs:
         uses: ./.github/actions/load-img
         with:
           run_id: ${{ github.run_id }}
-          setup_images: upstream_db ingestion_server
+          setup_images: upstream_db ingestion_server catalog
 
       # Sets build args specifying versions needed to build Docker image.
       - name: Prepare build args
