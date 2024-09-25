@@ -94,8 +94,12 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.8.2
     ports:
       - "50292:9200"
-    env_file:
-      - docker/es/env.docker
+    environment:
+      # Elasticsearch will reserve 50-60% of available system memory
+      # if left to its own devices. Setting this to half a GB is sufficient
+      # for local testing and prevent ES from hogging such a significant
+      # amount of system memory.
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
     healthcheck:
       test:
         [
@@ -111,6 +115,7 @@ services:
         hard: 65536
     volumes:
       - es-data:/usr/share/elasticsearch/data
+      - ./docker/es/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
 
 volumes:
   api-postgres:
