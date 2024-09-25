@@ -1,5 +1,6 @@
 # Build and run K6 script by namespace and scenario
 [positional-arguments]
 run namespace scenario *extra_args:
+    #! /usr/bin/env bash
     pnpm run build --input src/{{ namespace }}/{{ scenario }}.test.ts
     k6 run "${@:3}" ./dist/{{ namespace }}/{{ scenario }}.test.js
