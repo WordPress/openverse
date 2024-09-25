@@ -470,21 +470,6 @@ jobs:
         with:
           install: true
 
-      - name: Build catalog dev image
-        uses: docker/build-push-action@v5
-        with:
-          context: catalog
-          target: cat
-          push: false
-          load: true
-          tags: openverse-catalog
-          cache-from: type=gha,scope=catalog_dev
-          cache-to: type=gha,scope=catalog_dev
-          build-args: |
-            CATALOG_PY_VERSION=${{ steps.prepare-build-args.outputs.catalog_py_version }}
-            CATALOG_AIRFLOW_VERSION=${{ steps.prepare-build-args.outputs.catalog_airflow_version }}
-            REQUIREMENTS_FILE=requirements-dev.txt
-
       - name: Build API dev image
         uses: docker/build-push-action@v5
         with:
