@@ -101,7 +101,7 @@ export default {
       // Focus ring colors
       focus: {
         DEFAULT: "var(--color-border-focus)",
-        yellow: "var(--color-yellow-3",
+        yellow: "var(--color-yellow-3)",
       },
 
       // Special keywords
