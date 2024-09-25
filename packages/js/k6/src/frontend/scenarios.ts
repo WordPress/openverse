@@ -11,7 +11,7 @@ import { FRONTEND_URL, PROJECT_ID } from "./constants.js"
 import type { Options, Scenario } from "k6/options"
 
 const STATIC_PAGES = ["about", "sources", "privacy", "sensitive-content"]
-const TEST_LOCALES = ["en", "ru", "es", "fa"]
+const TEST_LOCALES = ["en", "ru", "es", "ar"]
 const TEST_PARAMS = "license=by&extension=jpg,mp3&source=flickr,jamendo"
 
 const localePrefix = (locale: string) => {
