@@ -668,6 +668,86 @@ jobs:
         env:
           DEPLOYMENT_ENV: production
 
+  nuxt-load-test:
+    name: Load test local frontend
+    runs-on: ubuntu-latest
+    needs:
+      - nuxt-build
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          setup_python: false
+          install_recipe: node-install
+          locales: "test"
+
+      - name: Build and run Nuxt and Talkback
+        run: |
+          just frontend/run build
+          just frontend/run talkback &
+          env NUXT_PUBLIC_API_URL=http://127.0.0.1:49153/ just frontend/run start &
+
+      - name: Setup k6
+        uses: grafana/setup-k6-action@v1
+
+      - name: Wait for local Talkback to be available
+        # 10 seconds, talkback has a slow startup; this step will fail if Talkback never becomes available
+        run: npx wait-port -t 10000 :49153
+
+      - name: Wait for local Nuxt to be available
+        # 2 seconds, this step will fail if Nuxt never becomes available
+        run: npx wait-port -t 2000 http://127.0.0.1:8443/healthcheck
+
+      - name: Run k6 frontend all against local Nuxt
+        run: |
+          just k6 frontend all \
+            -e FRONTEND_URL=http://127.0.0.1:8443/ \
+            -e text_summary=/tmp/k6-summary.txt
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: k6-output
+          path: /tmp/k6-summary.txt
+
+      - name: Make comment body
+        shell: python
+        run: |
+          from pathlib import Path
+          summary = Path("/tmp/k6-summary.txt").read_text()
+          Path("/tmp/k6-summary-comment.txt").write_text(f"""
+          ## Latest k6 run output[^update]
+
+          ```
+          ${summary}
+          ```
+
+          [^update]: This comment will automatically update with new output each time k6 runs for this PR
+          """)
+
+      - uses: peter-evans/find-comment@v3
+        id: k6-summary-comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-includes: Latest k6 run output
+
+      - name: Post comment summary
+        uses: peter-evans/create-or-update-comment@v4
+        # Do not comment on forks
+        if: |
+          github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.owner.login == 'WordPress' &&
+          github.actor != 'dependabot[bot]'
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          edit-mode: replace
+          body-path: /tmp/k6-summary-comment.txt
+          comment-id: ${{ steps.k6-summary-comment.outputs.comment-id }}
+
   nuxt-checks:
     name: Run Nuxt checks
     if: |
@@ -1181,6 +1261,18 @@ jobs:
             }
           wait_time: 60 # check every minute
           max_time: 1800 # allow up to 30 minutes for a deployment
+
+      - name: Setup k6
+        uses: grafana/setup-k6-action@v1
+
+      - name: Run k6 script
+        env:
+          K6_CLOUD_TOKEN: ${{ secrets.GC_K6_TOKEN }}
+          K6_SIGNING_SECRET: ${{ secrets.K6_SIGNING_SECRET }}
+        run: |
+          just k6 frontend all --out cloud \
+            -e FRONTEND_URL=https://staging.openverse.org/ \
+            -e signing_secret="$K6_SIGNING_SECRET"
 
   deploy-api:
     name: Deploy staging API

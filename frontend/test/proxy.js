@@ -26,7 +26,7 @@ const port = 49153
 const host = "https://api.openverse.org"
 
 const urlPatterns = {
-  search: /\/(?<mediaType>images|audio|video|model-3d)\/*\?(?<query>[\w&=+]+)/,
+  search: /\/(?<mediaType>images|audio|video|model-3d)\/*\?(?<query>.*?)$/u,
   thumb:
     /\/(?<mediaType>images|audio|video|model-3d)\/(?<uuid>[\w-]{32,})\/thumb/,
   related:
@@ -100,6 +100,8 @@ const getBodyUtil = (tape) =>
     tape.res?.headers["content-encoding"]?.includes(key)
   )?.[1] ?? BodyUtils.default
 
+const MAX_PEAKS = 200
+
 /**
  * Transform any response values to use the talkback
  * proxy instead of pointing directly upstream for
@@ -142,10 +144,33 @@ const tapeDecorator = (tape) => {
   const bodyUtil = getBodyUtil(tape)
   const responseBody = bodyUtil.read(tape.res.body).toString()
 
-  const fixedResponseBody = responseBody.replace(
+  let fixedResponseBody = responseBody.replace(
     /https?:\/\/api.openverse.org/g,
     `http://localhost:${port}`
   )
+
+  if (
+    tape.req.url.includes("/audio/") &&
+    !tape.req.url.includes("/audio/stats")
+  ) {
+    const responseBodyJson = JSON.parse(fixedResponseBody)
+
+    // The search or related requests
+    if (responseBodyJson.results) {
+      responseBodyJson.results.map((result) => {
+        if (result.peaks && result.peaks.length > MAX_PEAKS) {
+          result.peaks = result.peaks.slice(0, MAX_PEAKS)
+        }
+      })
+      // The single result requests
+    } else if (
+      responseBodyJson.peaks &&
+      responseBodyJson.peaks.length > MAX_PEAKS
+    ) {
+      responseBodyJson.peaks = responseBodyJson.peaks.slice(0, MAX_PEAKS)
+    }
+    fixedResponseBody = JSON.stringify(responseBodyJson)
+  }
 
   tape.res.body = Buffer.from(bodyUtil.save(fixedResponseBody))
   return tape
@@ -164,6 +189,11 @@ const opts = /** @type {Partial<TalkbackOptions>} */ ({
   summary: false,
   tapeNameGenerator,
   tapeDecorator,
+  responseDecorator: (tape, req, context) => {
+    // Log responses to make debugging easier
+    console.log(req.method, req.url, tape.res?.status, context.id)
+    return tape
+  },
 })
 
 const server = talkback(opts)
