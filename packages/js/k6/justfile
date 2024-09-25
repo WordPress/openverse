@@ -4,3 +4,8 @@ run namespace scenario *extra_args:
     #! /usr/bin/env bash
     pnpm run build --input src/{{ namespace }}/{{ scenario }}.test.ts
     k6 run "${@:3}" ./dist/{{ namespace }}/{{ scenario }}.test.js
+
+# List namespaces and scenarios
+@ls:
+    echo "Openverse k6 namespaces and scenarios"
+    tree src -P '*.test.ts' --noreport | cut -c 5- | sed 's/\.test\.ts//'
