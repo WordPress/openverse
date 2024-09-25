@@ -284,8 +284,7 @@ class DeletedAudio(AbstractDeletedMedia):
     )
 
     class Meta:
-        verbose_name = "deleted audio track"
-        verbose_name_plural = "deleted audio tracks"
+        verbose_name_plural = "Deleted audio"
 
 
 class SensitiveAudio(AbstractSensitiveMedia):
@@ -392,6 +391,7 @@ class AudioList(AbstractMediaList):
 
     class Meta:
         db_table = "audiolist"
+        
 
     def save(self, *args, **kwargs):
         self.slug = uuslug(self.title, instance=self)
