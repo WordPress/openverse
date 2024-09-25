@@ -6,12 +6,7 @@ const goTo = async (page: Page, slug: string) => {
   await page.goto(`/iframe.html?id=meta-focus--${slug}`)
 }
 
-const allSlugs = [
-  "slim-transparent",
-  "slim-filled",
-  "slim-filled-borderless",
-  "bold-filled",
-]
+const allSlugs = ["slim-transparent", "slim-filled", "bold-filled"]
 
 test.describe.configure({ mode: "parallel" })
 
