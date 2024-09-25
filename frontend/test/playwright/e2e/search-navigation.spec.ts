@@ -65,12 +65,13 @@ test.describe("search history navigation", () => {
     }) => {
       await goToSearchTerm(page, "galah")
       await (await getContentLink(page, IMAGE)).click()
+      await page.waitForURL(/\/search\/image\?/)
 
       // There are no content links on single media type search pages
       await expect(await getContentLink(page, IMAGE)).toBeHidden()
-      expect(page.url()).toContain("/search/image")
 
-      await page.goBack({ waitUntil: "networkidle" })
+      await page.goBack()
+      await page.waitForURL(/\/search\?q=galah/)
 
       await expect(await getContentLink(page, IMAGE)).toBeVisible()
       await expect(await getContentLink(page, AUDIO)).toBeVisible()
