@@ -739,7 +739,7 @@ jobs:
           ## Latest k6 run output[^update]
 
           ```
-          ${summary}
+          {summary}
           ```
 
           [^update]: This comment will automatically update with new output each time k6 runs for this PR
