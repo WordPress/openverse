@@ -1034,10 +1034,13 @@ jobs:
         run: just frontend/run build
         env:
           DEPLOYMENT_ENV: production
+          NODE_ENV: production
 
       - name: Run Lighthouse CI
         id: lhci-autorun
         # Lighthouse CI runs the webserver for us, as configured in lighthouserc
+        env:
+          NODE_ENV: production
         run: |
           pnpm --package=@lhci/cli dlx lhci autorun --config .github/.lighthouserc.yml
 
