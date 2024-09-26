@@ -229,6 +229,9 @@ jobs:
       - name: Initialize ov
         run: |
           echo "Initializing ov on ${{ matrix.os }}"
+          export PATH="$PATH:/Applications/Docker.app/Contents/Resources/bin/"
+          docker --version
+          ./ov build
           ./ov init
 
   ###########
