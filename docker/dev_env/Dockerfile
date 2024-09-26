@@ -15,7 +15,7 @@ ENV HOME="/opt"
 # location where PDM installs Python interpreters
 ENV PDM_PYTHONS="${HOME}/pdm/bin"
 # location where `n` installs Node.js versions
-ENV N_PREFIX="${HOME}/n"
+ENV N_PREFIX="${HOME}"
 
 ENV PIPX_GLOBAL_HOME=/pipx
 

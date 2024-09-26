@@ -213,6 +213,24 @@ jobs:
         run: |
           echo '${{ matrix.image }} artifact ID is ${{ steps.upload-img.outputs.artifact-id }}'
 
+  ######
+  # ov #
+  ######
+  test-ov:
+    name: Run OV tests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Initialize ov
+        run: |
+          echo "Initializing ov on ${{ matrix.os }}"
+          ./ov init
+
   ###########
   # Catalog #
   ###########
