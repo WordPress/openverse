@@ -350,6 +350,7 @@ f:
 # alias for `pnpm --filter {package} run {script}`
 [positional-arguments]
 p package script *args:
+    #!/usr/bin/env bash
     pnpm --filter {{ package }} run {{ script }} "${@:3}"
 
 # Run eslint with --fix and default file selection enabled; used to enable easy file overriding whilst retaining the defaults when running --all-files
