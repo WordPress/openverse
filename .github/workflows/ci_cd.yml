@@ -1038,6 +1038,8 @@ jobs:
 
       - name: Run Lighthouse CI
         # Lighthouse CI runs the webserver for us, as configured in lighthouserc
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
         run: |
           pnpm --package=@lhci/cli dlx lhci autorun --config .github/.lighthouserc.yml
 
