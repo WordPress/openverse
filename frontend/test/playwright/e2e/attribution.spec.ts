@@ -17,13 +17,16 @@ const copyAttribution = async (
 ) => {
   const formatPattern = new RegExp(formatTitle[formatId], "i")
 
+  // Ensure the page is fully hydrated before interacting with it.
+  const copyButton = getCopyButton(page)
+  await expect(copyButton).toBeEnabled()
+
   await page.getByRole("tab", { name: formatPattern }).click()
 
   await expect(
     page.getByRole("tabpanel", { name: formatPattern })
   ).toBeVisible()
 
-  const copyButton = getCopyButton(page)
   await expect(copyButton).toHaveAttribute("id", `copyattr-${formatId}`)
   await copyButton.click()
 
