@@ -7,7 +7,6 @@ const activeDevelopmentStatuses = [
   "🚀 In Kickoff",
   "💬 In RFC",
   "🚧 In Progress",
-  "🚢 Shipped",
 ]
 
 const GET_PROJECT_CARDS = `
