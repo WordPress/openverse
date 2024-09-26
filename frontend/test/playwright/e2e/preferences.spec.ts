@@ -1,4 +1,4 @@
-import { test, expect, Page } from "@playwright/test"
+import { expect, Page, test } from "@playwright/test"
 
 import { preparePageForTests } from "~~/test/playwright/utils/navigation"
 
@@ -114,7 +114,11 @@ test.describe("switchable features", () => {
     }) => {
       await page.goto(`/preferences`)
       const featureFlag = await getSwitchableInput(page, name, checked)
+
       await featureFlag.click()
+
+      // Ensure the feature flag is updated
+      await getSwitchableInput(page, name, !checked)
 
       const storageCookie = { cookie: "features", session: "sessionFeatures" }[
         featureData.features[name as FlagName].storage as "cookie" | "session"
