@@ -9,4 +9,3 @@ ci:
     # (https://github.com/GoogleChrome/lighthouse-ci/issues/1072)
     # or we spin up our own Openverse lhci server
     target: "filesystem"
-    outputDir: "/tmp/lhci"

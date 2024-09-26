@@ -1036,15 +1036,17 @@ jobs:
           DEPLOYMENT_ENV: production
 
       - name: Run Lighthouse CI
+        id: lhci-autorun
         # Lighthouse CI runs the webserver for us, as configured in lighthouserc
         run: |
           pnpm --package=@lhci/cli dlx lhci autorun --config .github/.lighthouserc.yml
 
-      - name: Upload Lighthouse CI run artifacts
-        uses: actions/upload-artifact@v4
+      - name: Display Report
+        if: always()
+        uses: jackywithawhitedog/lighthouse-viewer-action@v2
         with:
-          name: lhci
-          path: /tmp/lhci/
+          resultsPath: .lighthouseci
+          lighthouseOutcome: ${{ steps.lhci-autorun.outcome }}
 
   #################
   # Documentation #
