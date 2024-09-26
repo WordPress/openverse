@@ -1,0 +1,8 @@
+ci:
+  collect:
+    url:
+      - http://127.0.0.1:8443/
+    startServerCommand: "just p frontend start"
+    startServerReadyPattern: "Listening on http"
+  upload:
+    target: "temporary-public-storage"

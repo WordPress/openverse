@@ -1014,6 +1014,33 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           body: ${{ steps.help-body.outputs.help_body }}
 
+  lighthouse-ci:
+    name: Collect Lighthouse CI results
+    runs-on: ubuntu-latest
+    # add back after testing
+    # needs:
+    #   - nuxt-build
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          setup_python: false
+          install_recipe: node-install
+
+      - name: Run build
+        run: just frontend/run build
+        env:
+          DEPLOYMENT_ENV: production
+
+      - name: Run Lighthouse CI
+        # Lighthouse CI runs the webserver for us, as configured in lighthouserc
+        run: |
+          pnpm --package=@lhci/cli dlx lhci autorun --config .github/.lighthouserc.yml
+
   #################
   # Documentation #
   #################
