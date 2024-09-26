@@ -1017,9 +1017,8 @@ jobs:
   lighthouse-ci:
     name: Collect Lighthouse CI results
     runs-on: ubuntu-latest
-    # add back after testing
-    # needs:
-    #   - nuxt-build
+    needs:
+      - nuxt-build
 
     steps:
       - name: Checkout repository
