@@ -6,6 +6,25 @@ CACHE_SERVICE_NAME="${CACHE_SERVICE_NAME:-cache}"
 UPSTREAM_DB_SERVICE_NAME="${UPSTREAM_DB_SERVICE_NAME:-upstream_db}"
 DB_SERVICE_NAME="${DB_SERVICE_NAME:-db}"
 
+# Detect whether the `AIRFLOW_CONN_SENSITIVE_TERMS` is set
+# `true` resolves to an empty string, and prevents the script from failing
+# due to `set -e` and grep's non-zero status code if the pattern isn't found
+has_sensitive_terms_airflow_conn=$(grep "AIRFLOW_CONN_SENSITIVE_TERMS" catalog/.env || true)
+
+# Temporary measure to prevent errors in the data refresh portion of the script
+# when the AIRFLOW_CONN_SENSITIVE_TERMS is not defined in the .env file, by
+# detecting when the variable is missing and populating it with the default from
+# the template. This is only necessary temporarily, pending the work to undo the
+# split indices for sensitive text detection
+# (https://github.com/WordPress/openverse/pull/4904/files)
+if [[ ! $has_sensitive_terms_airflow_conn ]]; then
+  echo "Adding new Airflow connection environment variable required for sample data loading"
+  grep "AIRFLOW_CONN_SENSITIVE_TERMS" catalog/env.template >>catalog/.env
+
+  echo "Restarting Airflow to populate the new connection variable"
+  just dc restart webserver scheduler triggerer
+fi
+
 while getopts 'c' OPTION; do
   case "$OPTION" in
   c)
