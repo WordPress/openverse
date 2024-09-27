@@ -5,11 +5,11 @@ CREATE_FDW_EXTENSION_QUERY = "CREATE EXTENSION IF NOT EXISTS postgres_fdw"
 
 CREATE_FDW_QUERY = dedent(
     """
-    DROP SERVER IF EXISTS upstream CASCADE;
-    CREATE SERVER upstream FOREIGN DATA WRAPPER postgres_fdw
+    DROP SERVER IF EXISTS {fdw_name} CASCADE;
+    CREATE SERVER {fdw_name} FOREIGN DATA WRAPPER postgres_fdw
         OPTIONS (host '{host}', dbname '{dbname}', port '{port}');
 
-    CREATE USER MAPPING IF NOT EXISTS FOR deploy SERVER upstream
+    CREATE USER MAPPING IF NOT EXISTS FOR deploy SERVER {fdw_name}
         OPTIONS (user '{user}', password '{password}');
     """
 )
@@ -20,7 +20,7 @@ CREATE_SCHEMA_QUERY = dedent(
     CREATE SCHEMA {schema_name} AUTHORIZATION deploy;
 
     IMPORT FOREIGN SCHEMA public LIMIT TO ({upstream_table_name})
-        FROM SERVER upstream INTO {schema_name};
+        FROM SERVER {fdw_name} INTO {schema_name};
     """
 )
 
@@ -79,7 +79,7 @@ ADVANCED_COPY_DATA_QUERY = dedent(
 
 ADD_PRIMARY_KEY_QUERY = "ALTER TABLE {temp_table_name} ADD PRIMARY KEY (id);"
 
-DROP_SERVER_QUERY = "DROP SERVER upstream CASCADE;"
+DROP_SERVER_QUERY = "DROP SERVER {fdw_name} CASCADE;"
 
 SELECT_TABLE_INDICES_QUERY = (
     "SELECT indexdef FROM pg_indexes WHERE tablename='{table_name}';"
