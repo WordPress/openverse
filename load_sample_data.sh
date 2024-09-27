@@ -101,9 +101,9 @@ if created:
   print('Setting up Content Moderators group')
   for model, perms in model_perms_map.items():
     for perm in perms:
-      name = f'Can {crud_perm_map[perm]} {model}'
+      name = f'{crud_perm_map[perm]}_{model}'
       print(f'Adding permission to moderators group: {name}')
-      model_add_perm = Permission.objects.get(name=name)
+      model_add_perm = Permission.objects.get(codename=name)
       mod_group.permissions.add(model_add_perm)
   mod_group.save()
   mod_group.user_set.add(User.objects.get(username='moderator'))
