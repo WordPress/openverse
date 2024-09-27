@@ -161,8 +161,8 @@ just catalog/cli airflow dags unpause staging_audio_data_refresh
 just catalog/cli airflow dags unpause staging_image_data_refresh
 # Trigger the data refresh dags at the same time. The DAGs will manage
 # concurrency issues.
-just catalog/cli airflow dags trigger staging_audio_data_refresh --conf '{"index_suffix": "init"}'
-just catalog/cli airflow dags trigger staging_image_data_refresh --conf '{"index_suffix": "init"}'
+just catalog/cli airflow dags trigger staging_audio_data_refresh --conf '{"index_suffix": "init", "allow_concurrent_data_refreshes": true}'
+just catalog/cli airflow dags trigger staging_image_data_refresh --conf '{"index_suffix": "init", "allow_concurrent_data_refreshes": true}'
 # Wait for all relevant indices to be created and promoted
 just docker/es/wait-for-index "audio"
 just docker/es/wait-for-count "audio"

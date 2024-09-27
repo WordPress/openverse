@@ -70,12 +70,14 @@ def wait_for_conflicting_dags(
     data_refresh_config: DataRefreshConfig,
     external_dag_ids: list[str],
     concurrency_tag: str,
+    allow_concurrent_data_refreshes: bool,
 ):
     # Wait to ensure that no other Data Refresh DAGs are running.
     SingleRunExternalDAGsSensor(
         task_id="wait_for_data_refresh",
         external_dag_ids=external_dag_ids,
         check_existence=True,
+        allow_concurrent_runs=allow_concurrent_data_refreshes,
         poke_interval=data_refresh_config.concurrency_check_poke_interval,
         mode="reschedule",
         pool=DATA_REFRESH_POOL,
@@ -152,7 +154,17 @@ def create_data_refresh_dag(
                     "Optional suffix appended to the `media_type` in the Elasticsearch index"
                     " name. If not supplied, a uuid is used."
                 ),
-            )
+            ),
+            "allow_concurrent_data_refreshes": Param(
+                default=False,
+                type="boolean",
+                description=(
+                    "Whether to allow multiple data refresh DAGs for the given environment"
+                    " to run concurrently. This setting should be enabled with extreme"
+                    " caution, as reindexing multiple large Elasticsearch indices"
+                    " simultaneously should be avoided."
+                ),
+            ),
         },
     )
 
@@ -169,7 +181,10 @@ def create_data_refresh_dag(
         )
 
         wait_for_dags = wait_for_conflicting_dags(
-            data_refresh_config, external_dag_ids, concurrency_tag
+            data_refresh_config,
+            external_dag_ids,
+            concurrency_tag,
+            "{{ params.allow_concurrent_data_refreshes }}",
         )
 
         copy_data = copy_upstream_tables(
