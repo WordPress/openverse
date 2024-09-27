@@ -7,6 +7,8 @@ import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { isFlagName } from "~/types/feature-flag"
 import { SWITCHABLE, ON, OFF } from "~/constants/feature-flag"
 
+import { useHydrating } from "~/composables/use-hydrating"
+
 import VContentPage from "~/components/VContentPage.vue"
 import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"
 
@@ -50,6 +52,8 @@ const flagsBySwitchable = computed(() => {
 const featureGroups = computed(() => {
   return featureFlagStore.getFeatureGroups()
 })
+
+const doneHydrating = computed(() => useHydrating())
 </script>
 
 <template>
@@ -86,6 +90,7 @@ const featureGroups = computed(() => {
             class="flex-row items-center"
             :checked="flag.state === ON"
             is-switch
+            :disabled="!doneHydrating"
             @change="handleChange"
             >{{ $t(`prefPage.features.${flag.name}`) }}</VCheckbox
           >
