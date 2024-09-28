@@ -4,6 +4,8 @@ import { preparePageForTests } from "~~/test/playwright/utils/navigation"
 
 import featureData from "~~/feat/feature-flags.json"
 
+import { expectCheckboxState } from "~~/test/playwright/utils/assertions"
+
 import type {
   FeatureFlag,
   FeatureFlagRecord,
@@ -11,17 +13,6 @@ import type {
 } from "~/types/feature-flag"
 import { DISABLED, FLAG_STATUSES, FlagStatus } from "~/constants/feature-flag"
 import { DEPLOY_ENVS, DeployEnv } from "~/constants/deploy-env"
-
-const getFeatureCookies = async (page: Page, cookieName: string) => {
-  const cookies = await page.context().cookies()
-  const cookieValue = cookies.find(
-    (cookie) => cookie.name === cookieName
-  )?.value
-  if (!cookieValue) {
-    return {}
-  }
-  return JSON.parse(decodeURIComponent(cookieValue))
-}
 
 const getFlagStatus = (
   flag: FeatureFlagRecord,
@@ -74,14 +65,12 @@ const features = getFeaturesToTest()
 const getSwitchableInput = async (
   page: Page,
   name: string,
-  checked: boolean
+  checked: boolean | undefined
 ) => {
-  const checkbox = page.getByRole("checkbox", { name }).first()
+  const checkbox = page.getByRole("checkbox", { name, checked }).first()
   await expect(checkbox).toBeEnabled()
-  if (checked) {
-    await expect(checkbox).toBeChecked()
-  } else {
-    await expect(checkbox).not.toBeChecked()
+  if (!checked) {
+    await expect(checkbox).not.toHaveAttribute("checked")
   }
   return checkbox
 }
@@ -92,21 +81,15 @@ test.describe("switchable features", () => {
   })
 
   for (const [name, defaultState] of Object.entries(features)) {
-    const checked = defaultState === "on"
+    const checked = defaultState === "on" || undefined
+    const checkedAfterToggle = !checked ? true : undefined
 
     test(`can switch ${name} from ${defaultState}`, async ({ page }) => {
       await page.goto(`/preferences`)
       const featureFlag = await getSwitchableInput(page, name, checked)
       await featureFlag.click()
 
-      // eslint-disable-next-line playwright/no-conditional-in-test
-      if (checked) {
-        // eslint-disable-next-line playwright/no-conditional-expect
-        await expect(featureFlag).not.toBeChecked()
-      } else {
-        // eslint-disable-next-line playwright/no-conditional-expect
-        await expect(featureFlag).toBeChecked()
-      }
+      await expectCheckboxState(page, name, !checked)
     })
 
     test(`switching ${name} from ${defaultState} saves state in a cookie`, async ({
@@ -120,11 +103,13 @@ test.describe("switchable features", () => {
       // Ensure the feature flag is updated
       await getSwitchableInput(page, name, !checked)
 
-      const storageCookie = { cookie: "features", session: "sessionFeatures" }[
-        featureData.features[name as FlagName].storage as "cookie" | "session"
-      ]
-      const featureCookie = await getFeatureCookies(page, storageCookie)
-      expect(featureCookie[name]).toEqual(defaultState === "on" ? "off" : "on")
+      await page.goto(`/preferences`)
+
+      // Cookies are not visible to the user, so we are checking that the feature flag
+      // state is saved and restored when the page is reloaded.
+      // If the feature flag is off, the checkbox checked status before user interaction will be undefined,
+      // @see https://playwright.dev/docs/api/class-page#page-get-by-role (options.checked section)
+      await expectCheckboxState(page, name, checkedAfterToggle)
     })
   }
 })

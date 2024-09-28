@@ -103,6 +103,8 @@ export const project: TSESLint.Linter.ConfigType = {
               // Shared assertion for visual regression tests
               "expectSnapshot",
               "expectScreenshotAreaSnapshot",
+              // Shared assertion for checkbox state
+              "expectCheckboxState",
             ],
           },
         ],
