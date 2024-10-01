@@ -159,17 +159,17 @@ class StockSnapDataIngester(ProviderDataIngester):
         if len(tags) > 0:
             img_title = " ".join(tags)
             return img_title.title()
-        
-    # Add a backoff on every request 
-    # for 5XX error codes. 
-    # See: https://github.com/WordPress/openverse/issues/4878 
+
+    # Add a backoff on every request
+    # for 5XX error codes.
+    # See: https://github.com/WordPress/openverse/issues/4878
     @backoff.on_exception(
-        backoff.expo, 
-        HTTPError,   
+        backoff.expo,
+        HTTPError,
         #30 minutes
         max_time=60 * 30,
-        # Only retry for 5xx errors 
-        giveup=lambda e: e.response.status_code not in {502, 503, 504}, 
+        # Only retry for 5xx errors
+        giveup=lambda e: e.response.status_code not in {502, 503, 504},
     )
     def _get_filesize(self, image_url):
         """Get the size of the image in bytes."""
