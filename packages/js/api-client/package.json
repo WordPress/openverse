@@ -43,7 +43,7 @@
     "@rollup/plugin-typescript": "^11.1.6",
     "nock": "14.0.0-beta.15",
     "openapi-typescript": "^7.3.2",
-    "rollup": "^4.21.1",
+    "rollup": "^4.22.4",
     "typescript": "^5.5.4",
     "vite-tsconfig-paths": "^5.0.1",
     "vitest": "^2.0.5"
