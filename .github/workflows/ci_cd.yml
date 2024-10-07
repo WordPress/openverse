@@ -731,6 +731,7 @@ jobs:
 
       - uses: peter-evans/find-comment@v3
         id: k6-summary-comment
+        if: github.event_name == 'pull_request'
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body-includes: Latest k6 run output
