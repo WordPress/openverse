@@ -6,5 +6,11 @@ export const expectCheckboxState = async (
   checked: boolean | undefined
 ) => {
   const checkbox = page.getByRole("checkbox", { name, checked }).first()
-  return await expect(checkbox).toBeEnabled()
+  await expect(checkbox).toBeEnabled()
+  if (checked) {
+    await expect(checkbox).toBeChecked()
+  } else {
+    console.log(`Expecting checkbox ${name} checked state to be ${checked}`)
+    await expect(checkbox).not.toBeChecked()
+  }
 }

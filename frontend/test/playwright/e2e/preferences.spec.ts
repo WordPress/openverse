@@ -1,4 +1,4 @@
-import { expect, Page, test } from "@playwright/test"
+import { type Page, test } from "@playwright/test"
 
 import { preparePageForTests } from "~~/test/playwright/utils/navigation"
 
@@ -11,8 +11,12 @@ import type {
   FeatureFlagRecord,
   FlagName,
 } from "~/types/feature-flag"
-import { DISABLED, FLAG_STATUSES, FlagStatus } from "~/constants/feature-flag"
-import { DEPLOY_ENVS, DeployEnv } from "~/constants/deploy-env"
+import {
+  DISABLED,
+  FLAG_STATUSES,
+  type FlagStatus,
+} from "~/constants/feature-flag"
+import { DEPLOY_ENVS, type DeployEnv } from "~/constants/deploy-env"
 
 const getFlagStatus = (
   flag: FeatureFlagRecord,
@@ -67,12 +71,8 @@ const getSwitchableInput = async (
   name: string,
   checked: boolean | undefined
 ) => {
-  const checkbox = page.getByRole("checkbox", { name, checked }).first()
-  await expect(checkbox).toBeEnabled()
-  if (!checked) {
-    await expect(checkbox).not.toHaveAttribute("checked")
-  }
-  return checkbox
+  await expectCheckboxState(page, name, checked)
+  return page.getByRole("checkbox", { name, checked }).first()
 }
 
 test.describe("switchable features", () => {
@@ -87,7 +87,7 @@ test.describe("switchable features", () => {
     test(`can switch ${name} from ${defaultState}`, async ({ page }) => {
       await page.goto(`/preferences`)
       const featureFlag = await getSwitchableInput(page, name, checked)
-      await featureFlag.click()
+      await featureFlag.setChecked(!checked)
 
       await expectCheckboxState(page, name, !checked)
     })
@@ -98,17 +98,15 @@ test.describe("switchable features", () => {
       await page.goto(`/preferences`)
       const featureFlag = await getSwitchableInput(page, name, checked)
 
-      await featureFlag.click()
-
+      await featureFlag.setChecked(!checked)
       // Ensure the feature flag is updated
-      await getSwitchableInput(page, name, !checked)
-
-      await page.goto(`/preferences`)
+      await expectCheckboxState(page, name, !checked)
 
       // Cookies are not visible to the user, so we are checking that the feature flag
       // state is saved and restored when the page is reloaded.
       // If the feature flag is off, the checkbox checked status before user interaction will be undefined,
       // @see https://playwright.dev/docs/api/class-page#page-get-by-role (options.checked section)
+      await page.goto(`/preferences`)
       await expectCheckboxState(page, name, checkedAfterToggle)
     })
   }
