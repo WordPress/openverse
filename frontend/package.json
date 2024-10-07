@@ -65,7 +65,7 @@
     "@nuxtjs/robots": "^4.0.2",
     "@nuxtjs/sitemap": "^5.3.5",
     "@nuxtjs/tailwindcss": "^6.12.1",
-    "@pinia/nuxt": "0.5.1",
+    "@pinia/nuxt": "0.5.5",
     "@sentry/node": "^8.26.0",
     "@sentry/vue": "^8.26.0",
     "@tailwindcss/typography": "^0.5.13",
