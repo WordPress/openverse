@@ -245,8 +245,8 @@ importers:
         specifier: ^11.1.6
         version: 11.1.6(rollup@4.21.2)(tslib@2.6.2)(typescript@5.5.4)
       nock:
-        specifier: 14.0.0-beta.11
-        version: 14.0.0-beta.11
+        specifier: 14.0.0-beta.15
+        version: 14.0.0-beta.15
       openapi-typescript:
         specifier: ^7.3.2
         version: 7.3.2(encoding@0.1.13)(typescript@5.5.4)
@@ -1665,6 +1665,7 @@ packages:
   '@koa/router@12.0.1':
     resolution: {integrity: sha512-ribfPYfHb+Uw3b27Eiw6NPqjhIhTpVFzEWLwyc/1Xp+DCdwRRyIlAUODX+9bPARF6aQtUu1+/PHzdNvRzcs/+Q==}
     engines: {node: '>= 12'}
+    deprecated: Use v12.0.2 or higher to fix the vulnerability issue
 
   '@kwsites/file-exists@1.1.1':
     resolution: {integrity: sha512-m9/5YGR18lIwxSFDwfE3oA7bWuq9kdau6ugN4H2rJeyhFQZcG9AgSHkQtSD15a8WvTgfz9aikZMrKPHvbpqFiw==}
@@ -1697,8 +1698,8 @@ packages:
     resolution: {integrity: sha512-sTGoeZnjI8N4KS+sW2AN95gDBErhAguvkw/tWdCjeM8bvxpz5lqrnd0vOJABA1A+Ic3zED7PYoLP/RANLgVotA==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
-  '@mswjs/interceptors@0.34.3':
-    resolution: {integrity: sha512-UPi1V51c4+PVVG1lhVK2i29aOyBqXvBF8WBvlXIp2Q0vTVKrm20x2voLfunVC3N5wzocxEoHJyOwAXNdoMqy3Q==}
+  '@mswjs/interceptors@0.36.4':
+    resolution: {integrity: sha512-ktzj7bra4HatOGqXw/PXyresXxFtnZa570rm4olAyf9HbvNdEWRkQl81ykmJK0nCHxNndmh2zQ84TBYKFDM+sg==}
     engines: {node: '>=18'}
 
   '@netlify/functions@2.8.1':
@@ -4443,6 +4444,7 @@ packages:
   eslint@8.57.0:
     resolution: {integrity: sha512-dZ6+mexnaTIbSBZWgou51U6OmzIhYM2VcNdtiTtI7qPNZm35Akpr0f6vtw3w1Kmn5PYo+tZVfh13WrhpS6oLqQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
 
   esm-resolve@1.0.11:
@@ -5879,8 +5881,8 @@ packages:
       xml2js:
         optional: true
 
-  nock@14.0.0-beta.11:
-    resolution: {integrity: sha512-tmImk6btCUcCFHXkhqZnuSe4e/4M/YYs8qYaQGdjZSBloTXgQyuPrgjzn45zmFWpK2bDSEtIcF8olFdFxRaA1g==}
+  nock@14.0.0-beta.15:
+    resolution: {integrity: sha512-rp72chatxoZbR/2cYHwtb+IX6n6kkanYKGN2PKn4c12JBrj9n4xGUKFykuQHB+Gkz3fynlikFbMH2LI6VoebuQ==}
     engines: {node: '>= 18'}
 
   node-addon-api@3.2.1:
@@ -9670,7 +9672,7 @@ snapshots:
       got: 11.8.6
       os-filter-obj: 2.0.0
 
-  '@mswjs/interceptors@0.34.3':
+  '@mswjs/interceptors@0.36.4':
     dependencies:
       '@open-draft/deferred-promise': 2.2.0
       '@open-draft/logger': 0.3.0
@@ -15128,9 +15130,9 @@ snapshots:
       - uWebSockets.js
       - webpack-sources
 
-  nock@14.0.0-beta.11:
+  nock@14.0.0-beta.15:
     dependencies:
-      '@mswjs/interceptors': 0.34.3
+      '@mswjs/interceptors': 0.36.4
       json-stringify-safe: 5.0.1
       propagate: 2.0.1
 
