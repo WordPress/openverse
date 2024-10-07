@@ -714,7 +714,20 @@ jobs:
           name: k6-output
           path: /tmp/k6-summary.txt
 
+      - name: Check if comment needs to be posted
+        # Do not post comments on forks, or when merging a PR
+        id: set-post-comment
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" && \
+                "${{ github.event.pull_request.head.repo.owner.login }}" == "WordPress" && \
+                "${{ github.actor }}" != "dependabot[bot]" ]]; then
+            echo "post_comment=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "post_comment=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Make comment body
+        if: steps.set-post-comment.outputs.post_comment == 'true'
         shell: python
         run: |
           from pathlib import Path
@@ -730,6 +743,7 @@ jobs:
           """)
 
       - uses: peter-evans/find-comment@v3
+        if: steps.set-post-comment.outputs.post_comment == 'true'
         id: k6-summary-comment
         with:
           issue-number: ${{ github.event.pull_request.number }}
@@ -737,11 +751,7 @@ jobs:
 
       - name: Post comment summary
         uses: peter-evans/create-or-update-comment@v4
-        # Do not comment on forks
-        if: |
-          github.event_name == 'pull_request' &&
-          github.event.pull_request.head.repo.owner.login == 'WordPress' &&
-          github.actor != 'dependabot[bot]'
+        if: steps.set-post-comment.outputs.post_comment == 'true'
         with:
           issue-number: ${{ github.event.pull_request.number }}
           edit-mode: replace
