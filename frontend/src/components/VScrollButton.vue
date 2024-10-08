@@ -24,45 +24,50 @@ const mediaStore = useMediaStore()
 
 defineEmits<{ tab: [KeyboardEvent] }>()
 
+const SEARCH_ROUTES = ["search-image", "search-audio", "search"]
 const ANALYTICS_ROUTES = [
-  "search__image",
-  "search__audio",
-  "search",
-  "image__collection",
-  "audio_collection",
+  ...SEARCH_ROUTES,
+  "image-collection",
+  "audio-collection",
 ]
 
 const hClass = computed(() =>
   props.isFilterSidebarVisible ? positionWithSidebar : positionWithoutSidebar
 )
 const scrollToTop = () => {
+  const routeName = route.name?.toString().split("__")[0]
+
+  if (!routeName || !ANALYTICS_ROUTES.includes(routeName)) {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
+    return
+  }
+
+  const isSearchRoute = routeName && SEARCH_ROUTES.includes(routeName)
+
   const mainPage = document.getElementById("main-page")
-  const element = mainPage || window
+
+  const scrollPixels = isSearchRoute ? mainPage?.scrollTop : window.scrollY
+  const maxScroll = isSearchRoute
+    ? mainPage?.scrollHeight
+    : document.body.scrollHeight
+
+  const element = isSearchRoute ? mainPage || window : window
   element.scrollTo({ top: 0, left: 0, behavior: "smooth" })
 
-  if (ANALYTICS_ROUTES.some((r) => route.name?.toString().startsWith(r))) {
-    const kind: ResultKind =
-      searchStore.strategy === "default" ? "search" : "collection"
-    const collectionType = (searchStore.collectionValue as Collection) ?? "null"
+  const kind: ResultKind =
+    searchStore.strategy === "default" ? "search" : "collection"
+  const collectionType = (searchStore.collectionValue as Collection) ?? "null"
 
-    $sendCustomEvent("BACK_TO_TOP", {
-      searchType:
-        searchStore.searchType === "model-3d" ||
-        searchStore.searchType === "video"
-          ? "all"
-          : searchStore.searchType,
-      kind,
-      query: searchStore.searchTerm,
-      resultPage: mediaStore.currentPage,
-      scrollPixels: mainPage?.scrollTop || -1,
-      maxScroll:
-        mainPage && "scrollTopMax" in mainPage
-          ? (mainPage.scrollTopMax as number)
-          : -1,
-      collectionType,
-      collectionValue: searchStore.collectionValue ?? "null",
-    })
-  }
+  $sendCustomEvent("BACK_TO_TOP", {
+    searchType: mediaStore._searchType,
+    kind,
+    query: searchStore.searchTerm,
+    resultPage: mediaStore.currentPage,
+    scrollPixels: scrollPixels ?? -1,
+    maxScroll: maxScroll ?? -1,
+    collectionType,
+    collectionValue: searchStore.collectionValue ?? "null",
+  })
 }
 </script>
 
