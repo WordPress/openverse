@@ -10,7 +10,6 @@ export const expectCheckboxState = async (
   if (checked) {
     await expect(checkbox).toBeChecked()
   } else {
-    console.log(`Expecting checkbox ${name} checked state to be ${checked}`)
     await expect(checkbox).not.toBeChecked()
   }
 }

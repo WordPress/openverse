@@ -75,6 +75,30 @@ const getSwitchableInput = async (
   return page.getByRole("checkbox", { name, checked }).first()
 }
 
+const toggleChecked = async (
+  page: Page,
+  name: string,
+  originalChecked: boolean | undefined
+) => {
+  const featureFlag = await getSwitchableInput(page, name, originalChecked)
+  await featureFlag.setChecked(!originalChecked)
+
+  // If the switch knob wasn't rendered yet, wait for it to be rendered.
+  // The knob's color is `bg-default` when off and `bg-tertiary` when on.
+  await page.evaluate(
+    async ([name, className]) => {
+      const knobClasses = document
+        .querySelector(`${name}`)
+        ?.parentElement?.querySelector("span")?.className
+
+      if (!knobClasses?.includes(className)) {
+        setTimeout(() => {}, 200)
+      }
+    },
+    [name, !originalChecked ? "bg-tertiary" : "bg-default"] as const
+  )
+}
+
 test.describe("switchable features", () => {
   test.beforeEach(async ({ page }) => {
     await preparePageForTests(page, "xl")
@@ -86,8 +110,8 @@ test.describe("switchable features", () => {
 
     test(`can switch ${name} from ${defaultState}`, async ({ page }) => {
       await page.goto(`/preferences`)
-      const featureFlag = await getSwitchableInput(page, name, checked)
-      await featureFlag.setChecked(!checked)
+
+      await toggleChecked(page, name, checked)
 
       await expectCheckboxState(page, name, !checked)
     })
@@ -96,10 +120,8 @@ test.describe("switchable features", () => {
       page,
     }) => {
       await page.goto(`/preferences`)
-      const featureFlag = await getSwitchableInput(page, name, checked)
 
-      await featureFlag.setChecked(!checked)
-      // Ensure the feature flag is updated
+      await toggleChecked(page, name, checked)
       await expectCheckboxState(page, name, !checked)
 
       // Cookies are not visible to the user, so we are checking that the feature flag
