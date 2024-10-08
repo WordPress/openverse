@@ -212,8 +212,25 @@ def test_succeeds_if_no_running_dags(
     "ignore:This class is deprecated. Please use "
     "`airflow.utils.task_group.TaskGroup`.:airflow.exceptions.RemovedInAirflow3Warning"
 )
+@pytest.mark.parametrize(
+    "allow_concurrent_runs, expected_message",
+    [
+        (False, "1 DAGs are in the running state"),
+        (
+            True,
+            "`allow_concurrent_runs` is enabled. Returning without checking for"
+            " running DAGs.",
+        ),
+    ],
+)
 def test_retries_if_running_dags_with_completed_sensor_task(
-    caplog, sample_dag_id_fixture, sample_pool_fixture, clean_db, setup_pool
+    allow_concurrent_runs,
+    expected_message,
+    caplog,
+    sample_dag_id_fixture,
+    sample_pool_fixture,
+    clean_db,
+    setup_pool,
 ):
     # Create a DAG in the 'running' state
     running_dag = create_dag("running_dag", sample_dag_id_fixture, sample_pool_fixture)
@@ -236,7 +253,7 @@ def test_retries_if_running_dags_with_completed_sensor_task(
 
     # Create the Test DAG and sensor and set up dependent dag Ids
     dag = DAG(
-        "test_dag_failure",
+        f"test_dag_failure_with_allow_concurrent_runs_{allow_concurrent_runs}",
         schedule=None,
         default_args={
             "owner": "airflow",
@@ -249,6 +266,7 @@ def test_retries_if_running_dags_with_completed_sensor_task(
             f"{sample_dag_id_fixture}_success_dag",
             f"{sample_dag_id_fixture}_running_dag",
         ],
+        allow_concurrent_runs=allow_concurrent_runs,
         poke_interval=5,
         mode="reschedule",
         dag=dag,
@@ -263,4 +281,4 @@ def test_retries_if_running_dags_with_completed_sensor_task(
             f"{sample_dag_id_fixture}_success_dag', '{sample_dag_id_fixture}_running_dag'] ..."
             in caplog.text
         )
-        assert "1 DAGs are in the running state" in caplog.text
+        assert expected_message in caplog.text

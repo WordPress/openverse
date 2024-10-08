@@ -237,13 +237,14 @@ def get_instance_ip_address(
 )
 def create_connection(
     instance_id: str,
+    media_type: str,
     server: str,
 ):
     """
     Create an Airflow Connection for the given indexer worker and persist it. It will
     later be dropped in a cleanup task.
     """
-    worker_conn_id = f"indexer_worker_{instance_id or 'localhost'}"
+    worker_conn_id = f"indexer_worker_{instance_id or media_type}"
 
     # Create the Connection
     logger.info(f"Creating connection with id {worker_conn_id}")
@@ -333,6 +334,7 @@ def reindex(
 
     worker_conn = create_connection(
         instance_id=instance_id,
+        media_type=data_refresh_config.media_type,
         server=instance_ip_address,
     )
 

@@ -21,6 +21,8 @@ class SingleRunExternalDAGsSensor(BaseSensorOperator):
     :param external_dag_ids: A list of dag_ids that you want to wait for
     :param check_existence: Set to `True` to check if the external DAGs exist,
     and immediately cease waiting if not (default value: False).
+    :param allow_concurrent_runs: Used to force the Sensor to pass, even
+    if there are concurrent runs.
     """
 
     def __init__(
@@ -28,12 +30,16 @@ class SingleRunExternalDAGsSensor(BaseSensorOperator):
         *,
         external_dag_ids: Iterable[str],
         check_existence: bool = False,
+        allow_concurrent_runs: bool = False,
         **kwargs,
     ):
         super().__init__(**kwargs)
         self.external_dag_ids = external_dag_ids
         self.check_existence = check_existence
-        self._has_checked_existence = False
+        self.allow_concurrent_runs = allow_concurrent_runs
+
+        # Used to ensure some checks are only evaluated on the first poke
+        self._has_checked_params = False
 
     @provide_session
     def poke(self, context, session=None):
@@ -42,8 +48,20 @@ class SingleRunExternalDAGsSensor(BaseSensorOperator):
             self.external_dag_ids,
         )
 
-        if self.check_existence:
-            self._check_for_existence(session=session)
+        if not self._has_checked_params:
+            if self.allow_concurrent_runs:
+                self.log.info(
+                    "`allow_concurrent_runs` is enabled. Returning without"
+                    " checking for running DAGs."
+                )
+                return True
+
+            if self.check_existence:
+                self._check_for_existence(session=session)
+
+            # Only check DAG existence and `allow_concurrent_runs`
+            # on the first execution.
+            self._has_checked_params = True
 
         count_running = self.get_count(session)
 
@@ -51,10 +69,6 @@ class SingleRunExternalDAGsSensor(BaseSensorOperator):
         return count_running == 0
 
     def _check_for_existence(self, session) -> None:
-        # Check DAG existence only once, on the first execution.
-        if self._has_checked_existence:
-            return
-
         for dag_id in self.external_dag_ids:
             dag_to_wait = (
                 session.query(DagModel).filter(DagModel.dag_id == dag_id).first()
@@ -72,7 +86,6 @@ class SingleRunExternalDAGsSensor(BaseSensorOperator):
                     f"The external DAG {dag_id} does not have a task "
                     f"with id {self.task_id}."
                 )
-        self._has_checked_existence = True
 
     def get_count(self, session) -> int:
         # Get the count of running DAGs. A DAG is considered 'running' if

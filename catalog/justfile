@@ -83,6 +83,11 @@ recreate:
 shell:
     env DC_USER="airflow" just ../exec {{ SERVICE }} /bin/bash
 
+# Run an Airflow CLI command and then exit
+[positional-arguments]
+cli *args:
+    env DC_USER="airflow" just ../exec {{ SERVICE }} "$@"
+
 # Launch an IPython shell in a new container under `SERVICE`
 [positional-arguments]
 ipython *args: up-deps

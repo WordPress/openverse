@@ -40,15 +40,18 @@ DEFAULT_DATA_REFRESH_LIMIT = 10_000
 def initialize_fdw(
     upstream_conn_id: str,
     downstream_conn_id: str,
+    media_type: str,
     task: AbstractOperator = None,
 ):
     """Create the FDW and prepare it for copying."""
     upstream_connection = Connection.get_connection_from_secrets(upstream_conn_id)
+    fdw_name = f"upstream_{media_type}"
 
     run_sql.function(
         postgres_conn_id=downstream_conn_id,
         sql_template=queries.CREATE_FDW_QUERY,
         task=task,
+        fdw_name=fdw_name,
         host=upstream_connection.host,
         port=upstream_connection.port,
         dbname=upstream_connection.schema,
@@ -56,12 +59,16 @@ def initialize_fdw(
         password=upstream_connection.password,
     )
 
+    return fdw_name
+
 
 @task(
     max_active_tis_per_dagrun=1,
     map_index_template="{{ task.op_kwargs['upstream_table_name'] }}",
 )
-def create_schema(downstream_conn_id: str, upstream_table_name: str) -> str:
+def create_schema(
+    downstream_conn_id: str, upstream_table_name: str, fdw_name: str
+) -> str:
     """
     Create a new schema in the downstream DB through which the upstream table
     can be accessed. Returns the schema name.
@@ -73,7 +80,9 @@ def create_schema(downstream_conn_id: str, upstream_table_name: str) -> str:
     schema_name = f"upstream_{upstream_table_name}_schema"
     downstream_pg.run(
         queries.CREATE_SCHEMA_QUERY.format(
-            schema_name=schema_name, upstream_table_name=upstream_table_name
+            fdw_name=fdw_name,
+            schema_name=schema_name,
+            upstream_table_name=upstream_table_name,
         )
     )
     return schema_name
@@ -183,6 +192,7 @@ def copy_data(
 def copy_upstream_table(
     upstream_conn_id: str,
     downstream_conn_id: str,
+    fdw_name: str,
     timeout: timedelta,
     limit: int,
     upstream_table_name: str,
@@ -206,6 +216,7 @@ def copy_upstream_table(
     schema = create_schema(
         downstream_conn_id=downstream_conn_id,
         upstream_table_name=upstream_table_name,
+        fdw_name=fdw_name,
     )
 
     create_temp_table = run_sql.override(
@@ -286,6 +297,7 @@ def copy_upstream_tables(
     init_fdw = initialize_fdw(
         upstream_conn_id=upstream_conn_id,
         downstream_conn_id=downstream_conn_id,
+        media_type=data_refresh_config.media_type,
     )
 
     limit = get_record_limit()
@@ -294,6 +306,7 @@ def copy_upstream_tables(
     copy_tables = copy_upstream_table.partial(
         upstream_conn_id=upstream_conn_id,
         downstream_conn_id=downstream_conn_id,
+        fdw_name=init_fdw,
         timeout=data_refresh_config.copy_data_timeout,
         limit=limit,
     ).expand_kwargs([asdict(tm) for tm in data_refresh_config.table_mappings])
@@ -301,6 +314,7 @@ def copy_upstream_tables(
     drop_fdw = run_sql.override(task_id="drop_fdw")(
         postgres_conn_id=downstream_conn_id,
         sql_template=queries.DROP_SERVER_QUERY,
+        fdw_name=init_fdw,
     )
 
     # Set up dependencies

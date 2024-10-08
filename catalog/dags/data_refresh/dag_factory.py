@@ -27,11 +27,13 @@ https://github.com/WordPress/openverse-catalog/issues/453)
 """
 
 import logging
+import uuid
 from collections.abc import Sequence
 from itertools import product
 
 from airflow import DAG
-from airflow.decorators import task_group
+from airflow.decorators import task, task_group
+from airflow.models.param import Param
 from airflow.operators.python import PythonOperator
 from airflow.utils.trigger_rule import TriggerRule
 
@@ -41,6 +43,7 @@ from common.constants import (
     DAG_DEFAULT_ARGS,
     DATA_REFRESH_POOL,
     ENVIRONMENTS,
+    PRODUCTION,
     Environment,
 )
 from common.sensors.constants import ES_CONCURRENCY_TAGS
@@ -50,10 +53,11 @@ from data_refresh.alter_data import alter_table_data
 from data_refresh.copy_data import copy_upstream_tables
 from data_refresh.create_and_populate_filtered_index import (
     create_and_populate_filtered_index,
+    get_filtered_index_name,
 )
-from data_refresh.create_index import create_index
 from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS, DataRefreshConfig
 from data_refresh.distributed_reindex import perform_distributed_reindex
+from data_refresh.es_mapping import index_settings
 from data_refresh.promote_table import promote_tables
 from data_refresh.reporting import report_record_difference
 
@@ -66,12 +70,14 @@ def wait_for_conflicting_dags(
     data_refresh_config: DataRefreshConfig,
     external_dag_ids: list[str],
     concurrency_tag: str,
+    allow_concurrent_data_refreshes: bool,
 ):
     # Wait to ensure that no other Data Refresh DAGs are running.
     SingleRunExternalDAGsSensor(
         task_id="wait_for_data_refresh",
         external_dag_ids=external_dag_ids,
         check_existence=True,
+        allow_concurrent_runs=allow_concurrent_data_refreshes,
         poke_interval=data_refresh_config.concurrency_check_poke_interval,
         mode="reschedule",
         pool=DATA_REFRESH_POOL,
@@ -89,6 +95,12 @@ def wait_for_conflicting_dags(
         # was handled in the previous task.
         excluded_dag_ids=external_dag_ids,
     )
+
+
+@task
+def generate_index_name(media_type: str, index_suffix: str) -> str:
+    suffix = index_suffix or uuid.uuid4().hex
+    return f"{media_type}-{suffix}"
 
 
 def create_data_refresh_dag(
@@ -122,7 +134,9 @@ def create_data_refresh_dag(
         dagrun_timeout=data_refresh_config.dag_timeout,
         default_args=default_args,
         start_date=data_refresh_config.start_date,
-        schedule=data_refresh_config.schedule,
+        schedule=(
+            data_refresh_config.schedule if target_environment == PRODUCTION else None
+        ),
         max_active_runs=1,
         catchup=False,
         doc_md=__doc__,
@@ -132,6 +146,26 @@ def create_data_refresh_dag(
             concurrency_tag,
         ],
         render_template_as_native_obj=True,
+        params={
+            "index_suffix": Param(
+                default=None,
+                type=["null", "string"],
+                description=(
+                    "Optional suffix appended to the `media_type` in the Elasticsearch index"
+                    " name. If not supplied, a uuid is used."
+                ),
+            ),
+            "allow_concurrent_data_refreshes": Param(
+                default=False,
+                type="boolean",
+                description=(
+                    "Whether to allow multiple data refresh DAGs for the given environment"
+                    " to run concurrently. This setting should be enabled with extreme"
+                    " caution, as reindexing multiple large Elasticsearch indices"
+                    " simultaneously should be avoided."
+                ),
+            ),
+        },
     )
 
     with dag:
@@ -147,7 +181,10 @@ def create_data_refresh_dag(
         )
 
         wait_for_dags = wait_for_conflicting_dags(
-            data_refresh_config, external_dag_ids, concurrency_tag
+            data_refresh_config,
+            external_dag_ids,
+            concurrency_tag,
+            "{{ params.allow_concurrent_data_refreshes }}",
         )
 
         copy_data = copy_upstream_tables(
@@ -160,10 +197,19 @@ def create_data_refresh_dag(
             data_refresh_config=data_refresh_config,
         )
 
+        target_index_name = generate_index_name(
+            media_type=data_refresh_config.media_type,
+            index_suffix="{{ params.index_suffix }}",
+        )
+
         # Create a new temporary index based off the configuration of the existing media index.
         # This will later replace the live index.
-        target_index = create_index(
-            data_refresh_config=data_refresh_config, es_host=es_host
+        target_index = es.create_index(
+            index_config={
+                "index": target_index_name,
+                "body": index_settings(data_refresh_config.media_type),
+            },
+            es_host=es_host,
         )
 
         # Disable Cloudwatch alarms that are noisy during the reindexing steps of a
@@ -181,16 +227,21 @@ def create_data_refresh_dag(
             es_host=es_host,
             environment="{{ var.value.ENVIRONMENT }}",
             target_environment=target_environment,
-            target_index=target_index,
+            target_index=target_index_name,
             data_refresh_config=data_refresh_config,
+        )
+
+        filtered_index_name = get_filtered_index_name(
+            media_type=data_refresh_config.media_type,
+            destination_index_name=f"{target_index_name}-filtered",
         )
 
         # Create and populate the filtered index
         filtered_index = create_and_populate_filtered_index(
             es_host=es_host,
             media_type=data_refresh_config.media_type,
-            origin_index_name=target_index,
-            destination_index_name=f"{target_index}-filtered",
+            origin_index_name=target_index_name,
+            filtered_index_name=filtered_index_name,
             timeout=data_refresh_config.create_filtered_index_timeout,
         )
 
@@ -213,7 +264,7 @@ def create_data_refresh_dag(
 
         promote_index = es.point_alias.override(group_id="promote_index")(
             es_host=es_host,
-            target_index=target_index,
+            target_index=target_index_name,
             target_alias=data_refresh_config.media_type,
             should_delete_old_index=True,
         )
@@ -222,7 +273,7 @@ def create_data_refresh_dag(
             group_id="promote_filtered_index"
         )(
             es_host=es_host,
-            target_index=filtered_index,
+            target_index=filtered_index_name,
             target_alias=f"{data_refresh_config.media_type}-filtered",
             should_delete_old_index=True,
         )
@@ -253,9 +304,11 @@ def create_data_refresh_dag(
             >> wait_for_dags
             >> copy_data
             >> alter_data
+            >> target_index_name
             >> target_index
             >> disable_alarms
             >> reindex
+            >> filtered_index_name
             >> filtered_index
         )
         # Note filtered_index must be directly upstream of promote_table to

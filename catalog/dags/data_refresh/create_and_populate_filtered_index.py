@@ -49,17 +49,13 @@ def create_and_populate_filtered_index(
     es_host: str,
     media_type: MediaType,
     origin_index_name: str,
+    filtered_index_name: str,
     timeout: timedelta,
-    destination_index_name: str | None = None,
 ):
     """
     Create and populate a filtered index based on the given origin index, excluding
     documents with sensitive terms.
     """
-    filtered_index_name = get_filtered_index_name(
-        media_type=media_type, destination_index_name=destination_index_name
-    )
-
     create_filtered_index = es.create_index.override(
         trigger_rule=TriggerRule.NONE_FAILED,
     )(
@@ -76,7 +72,6 @@ def create_and_populate_filtered_index(
         method="GET",
         response_check=lambda response: response.status_code == 200,
         response_filter=response_filter_sensitive_terms_endpoint,
-        trigger_rule=TriggerRule.NONE_FAILED,
     )
 
     populate_filtered_index = es.trigger_and_wait_for_reindex(
@@ -99,7 +94,5 @@ def create_and_populate_filtered_index(
 
     refresh_index = es.refresh_index(es_host=es_host, index_name=filtered_index_name)
 
-    sensitive_terms >> populate_filtered_index
-    create_filtered_index >> populate_filtered_index >> refresh_index
-
-    return filtered_index_name
+    # sensitive_terms >> populate_filtered_index
+    create_filtered_index >> sensitive_terms >> populate_filtered_index >> refresh_index

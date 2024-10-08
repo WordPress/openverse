@@ -8,7 +8,6 @@ import logging
 from typing import NamedTuple
 
 from airflow.decorators import task, task_group
-from airflow.utils.trigger_rule import TriggerRule
 
 from common.sql import fetch_all, run_sql
 from data_refresh import queries
@@ -103,9 +102,7 @@ def remap_table_indices_to_table(
     later when the table is promoted.
     """
     # Get the CREATE statements for the indices applied to the live (old) table
-    existing_index_defs = run_sql.override(
-        task_id="get_existing_index_defs", trigger_rule=TriggerRule.NONE_FAILED
-    )(
+    existing_index_defs = run_sql.override(task_id="get_existing_index_defs")(
         postgres_conn_id=postgres_conn_id,
         sql_template=queries.SELECT_TABLE_INDICES_QUERY,
         handler=fetch_all,

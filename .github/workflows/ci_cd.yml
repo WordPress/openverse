@@ -457,7 +457,7 @@ jobs:
         uses: ./.github/actions/load-img
         with:
           run_id: ${{ github.run_id }}
-          setup_images: upstream_db ingestion_server
+          setup_images: upstream_db ingestion_server catalog
 
       # Sets build args specifying versions needed to build Docker image.
       - name: Prepare build args
@@ -485,6 +485,9 @@ jobs:
             SEMANTIC_VERSION=${{ needs.get-image-tag.outputs.image_tag }}
             API_PY_VERSION=${{ steps.prepare-build-args.outputs.api_py_version }}
             PDM_INSTALL_ARGS=--dev
+
+      - name: Start Catalog
+        run: just catalog/up
 
       - name: Start API, ingest and index test data
         run: just api/init

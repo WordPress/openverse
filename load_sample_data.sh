@@ -6,6 +6,25 @@ CACHE_SERVICE_NAME="${CACHE_SERVICE_NAME:-cache}"
 UPSTREAM_DB_SERVICE_NAME="${UPSTREAM_DB_SERVICE_NAME:-upstream_db}"
 DB_SERVICE_NAME="${DB_SERVICE_NAME:-db}"
 
+# Detect whether the `AIRFLOW_CONN_SENSITIVE_TERMS` is set
+# `true` resolves to an empty string, and prevents the script from failing
+# due to `set -e` and grep's non-zero status code if the pattern isn't found
+has_sensitive_terms_airflow_conn=$(grep "AIRFLOW_CONN_SENSITIVE_TERMS" catalog/.env || true)
+
+# Temporary measure to prevent errors in the data refresh portion of the script
+# when the AIRFLOW_CONN_SENSITIVE_TERMS is not defined in the .env file, by
+# detecting when the variable is missing and populating it with the default from
+# the template. This is only necessary temporarily, pending the work to undo the
+# split indices for sensitive text detection
+# (https://github.com/WordPress/openverse/pull/4904/files)
+if [[ ! $has_sensitive_terms_airflow_conn ]]; then
+  echo "Adding new Airflow connection environment variable required for sample data loading"
+  grep "AIRFLOW_CONN_SENSITIVE_TERMS" catalog/env.template >>catalog/.env
+
+  echo "Restarting Airflow to populate the new connection variable"
+  just dc restart webserver scheduler triggerer
+fi
+
 while getopts 'c' OPTION; do
   case "$OPTION" in
   c)
@@ -135,35 +154,21 @@ just docker/es/delete-index image-init
 just docker/es/delete-index image-init-filtered
 
 # Ingest and index the data
-just ingestion_server/ingest-upstream "audio" "init"
-just docker/es/wait-for-index "audio-init"
-just docker/es/wait-for-count "audio-init"
-just ingestion_server/promote "audio" "init" "audio"
+# Enable the staging data refresh dags, if they are not already.
+# These DAGs are on a None schedule so no scheduled runs will be
+# triggered.
+just catalog/cli airflow dags unpause staging_audio_data_refresh
+just catalog/cli airflow dags unpause staging_image_data_refresh
+# Trigger the data refresh dags at the same time. The DAGs will manage
+# concurrency issues.
+just catalog/cli airflow dags trigger staging_audio_data_refresh --conf '{"index_suffix": "init", "allow_concurrent_data_refreshes": true}'
+just catalog/cli airflow dags trigger staging_image_data_refresh --conf '{"index_suffix": "init", "allow_concurrent_data_refreshes": true}'
+# Wait for all relevant indices to be created and promoted
 just docker/es/wait-for-index "audio"
 just docker/es/wait-for-count "audio"
-just ingestion_server/create-and-populate-filtered-index "audio" "init"
-just docker/es/wait-for-index "audio-init-filtered"
-just ingestion_server/point-alias "audio" "init-filtered" "audio-filtered"
 just docker/es/wait-for-index "audio-filtered" "audio-init-filtered"
-
-# Image ingestion is flaky; but usually works on the next attempt
-set +e
-while true; do
-  just ingestion_server/ingest-upstream "image" "init"
-  if just docker/es/wait-for-index "image-init"; then
-    break
-  fi
-  ((c++)) && ((c == 3)) && break
-done
-set -e
-
-just docker/es/wait-for-count "image-init"
-just ingestion_server/promote "image" "init" "image"
 just docker/es/wait-for-index "image"
 just docker/es/wait-for-count "image"
-just ingestion_server/create-and-populate-filtered-index "image" "init"
-just docker/es/wait-for-index "image-init-filtered"
-just ingestion_server/point-alias "image" "init-filtered" "image-filtered"
 just docker/es/wait-for-index "image-filtered" "image-init-filtered"
 
 #########
