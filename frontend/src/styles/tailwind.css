@@ -258,6 +258,8 @@
       --color-modal-layer: var(--color-gray-12-60);
       --color-new-highlight: var(--color-yellow-3);
       --color-gray-new-highlight: var(--color-gray-1-20);
+      --color-skeleton-base: var(--color-gray-2);
+      --color-skeleton-secondary: var(--color-gray-3);
     }
   }
 
@@ -316,6 +318,8 @@
     --color-modal-layer: var(--color-gray-12-80);
     --color-new-highlight: var(--color-pink-6);
     --color-gray-new-highlight: var(--color-gray-12-20);
+    --color-skeleton-base: var(--color-gray-2);
+    --color-skeleton-secondary: var(--color-gray-3);
   }
 
   :is(.dark-mode *),
@@ -373,6 +377,8 @@
     --color-modal-layer: var(--color-gray-12-60);
     --color-new-highlight: var(--color-yellow-3);
     --color-gray-new-highlight: var(--color-gray-1-20);
+    --color-skeleton-base: var(--color-gray-11);
+    --color-skeleton-secondary: var(--color-gray-10);
   }
 
   body {
