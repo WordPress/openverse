@@ -1,0 +1,91 @@
+{
+    meta: {
+        createdAt: '2024-09-20T02:47:12.888Z',
+        host: 'https://api.openverse.org',
+        resHumanReadable: true,
+        resUncompressed: true,
+    },
+    req: {
+        headers: {
+            connection: 'keep-alive',
+        },
+        url: '/v1/audio/?q=windy+day+music&license=by&extension=mp3&source=jamendo&peaks=true',
+        method: 'GET',
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            date: [
+                'Fri, 20 Sep 2024 02:47:12 GMT',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            'transfer-encoding': [
+                'chunked',
+            ],
+            connection: [
+                'keep-alive',
+            ],
+            vary: [
+                'Accept, Authorization, origin, Accept-Encoding',
+            ],
+            allow: [
+                'GET, HEAD, OPTIONS',
+            ],
+            'x-ratelimit-limit-anon_burst': [
+                '20/min',
+            ],
+            'x-ratelimit-available-anon_burst': [
+                '9',
+            ],
+            'x-ratelimit-limit-anon_sustained': [
+                '200/day',
+            ],
+            'x-ratelimit-available-anon_sustained': [
+                '186',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'referrer-policy': [
+                'same-origin',
+            ],
+            'cross-origin-opener-policy': [
+                'same-origin',
+            ],
+            'x-request-id': [
+                '07ca5f41-272f-461d-8776-7c83e66f04ee',
+            ],
+            'cf-cache-status': [
+                'HIT',
+            ],
+            age: [
+                '75604',
+            ],
+            'last-modified': [
+                'Thu, 19 Sep 2024 05:47:08 GMT',
+            ],
+            server: [
+                'cloudflare',
+            ],
+            'cf-ray': [
+                '8c5e7d51989f274b-ADL',
+            ],
+            'content-encoding': [
+                'br',
+            ],
+        },
+        body: {
+            result_count: 0,
+            page_count: 0,
+            page_size: 20,
+            page: 1,
+            results: [],
+        },
+    },
+}

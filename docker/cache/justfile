@@ -14,8 +14,9 @@ NO_COLOR := "\\033[0m"
 #######
 
 # Open the Redis CLI as an interactive REPL
+[positional-arguments]
 cli *args:
-    just ../../exec cache redis-cli {{ args }}
+    just ../../exec cache redis-cli "$@"
 
 # Delete all data cached in Redis
 flushall:

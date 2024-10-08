@@ -45,12 +45,14 @@ install *args:
 ######
 
 # Bring up services specific to the API profile
+[positional-arguments]
 up *flags:
-    env COMPOSE_PROFILES="api" just ../up {{ flags }}
+    env COMPOSE_PROFILES="api" just ../up "$@"
 
 # Bring up services specific to the API profile, in addition to the API server
+[positional-arguments]
 up-extra *flags:
-    env COMPOSE_PROFILES="api,api_extra" just ../up {{ flags }}
+    env COMPOSE_PROFILES="api,api_extra" just ../up "$@"
 
 # Wait for all profile services to be up
 wait-up: up
@@ -103,12 +105,14 @@ pgcli db_user_pass="deploy" db_name="openledger": up
 #########################
 
 # Run Django administrative commands locally
-dj-local +args="":
-    pdm run python manage.py {{ args }}
+[positional-arguments]
+dj-local *args:
+    pdm run python manage.py "$@"
 
 # Run Django administrative commands inside the Docker container
-dj +args="": wait-up
-    env DC_USER="{{ env_var_or_default("DC_USER", "opener") }}" just ../exec web python manage.py {{ args }}
+[positional-arguments]
+dj *args: wait-up
+    env DC_USER="{{ env_var_or_default("DC_USER", "opener") }}" just ../exec web python manage.py "$@"
 
 # Get IPython shell inside the Docker container
 ipython:
@@ -152,12 +156,14 @@ generate-docs doc="media-props" fail_on_diff="true":
 #########
 
 # Run API tests inside the Docker container
+[positional-arguments]
 test *args: wait-up
-    env DC_USER="opener" just ../exec web pytest {{ args }}
+    env DC_USER="opener" just ../exec web pytest "$@"
 
 # Run API tests locally
+[positional-arguments]
 test-local *args:
-    pdm run pytest {{ args }}
+    pdm run pytest "$@"
 
 # Run smoke test for the API docs
 doc-test: wait-up

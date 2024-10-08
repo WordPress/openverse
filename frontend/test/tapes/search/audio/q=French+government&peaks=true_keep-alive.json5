@@ -1,0 +1,127 @@
+{
+    meta: {
+        createdAt: '2024-09-20T02:47:11.902Z',
+        host: 'https://api.openverse.org',
+        resHumanReadable: true,
+        resUncompressed: true,
+    },
+    req: {
+        headers: {
+            connection: 'keep-alive',
+        },
+        url: '/v1/audio/?q=French+government&peaks=true',
+        method: 'GET',
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            date: [
+                'Fri, 20 Sep 2024 02:47:11 GMT',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            'transfer-encoding': [
+                'chunked',
+            ],
+            connection: [
+                'keep-alive',
+            ],
+            vary: [
+                'Accept-Encoding, Accept, Authorization, origin',
+            ],
+            allow: [
+                'GET, HEAD, OPTIONS',
+            ],
+            'x-ratelimit-limit-anon_burst': [
+                '20/min',
+            ],
+            'x-ratelimit-available-anon_burst': [
+                '18',
+            ],
+            'x-ratelimit-limit-anon_sustained': [
+                '200/day',
+            ],
+            'x-ratelimit-available-anon_sustained': [
+                '167',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'referrer-policy': [
+                'same-origin',
+            ],
+            'cross-origin-opener-policy': [
+                'same-origin',
+            ],
+            'x-request-id': [
+                '06c7f031-6bae-4565-8534-09be63812c2e',
+            ],
+            'content-encoding': [
+                'gzip',
+            ],
+            'cf-cache-status': [
+                'HIT',
+            ],
+            age: [
+                '1143',
+            ],
+            'last-modified': [
+                'Fri, 20 Sep 2024 02:28:08 GMT',
+            ],
+            server: [
+                'cloudflare',
+            ],
+            'cf-ray': [
+                '8c5e7d4b6844274b-ADL',
+            ],
+        },
+        body: {
+            result_count: 1,
+            page_count: 1,
+            page_size: 20,
+            page: 1,
+            results: [
+                {
+                    id: '6eb77d7f-2973-415c-8b36-f0f3f02e8734',
+                    title: 'Sint Maarten National Anthem (Instrumental) Oh Sweet Sint Maarten Land',
+                    indexed_on: '2024-03-31T13:21:48.763271Z',
+                    foreign_landing_url: 'https://commons.wikimedia.org/w/index.php?curid=70955809',
+                    url: 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Sint_Maarten_National_Anthem_%28Instrumental%29_Oh_Sweet_Sint_Maarten_Land.ogg',
+                    creator: 'Feroze Ahmad 2',
+                    creator_url: 'https://commons.wikimedia.org/wiki/User:Feroze_Ahmad_2',
+                    license: 'by-sa',
+                    license_version: '4.0',
+                    license_url: 'https://creativecommons.org/licenses/by-sa/4.0/',
+                    provider: 'wikimedia_audio',
+                    source: 'wikimedia_audio',
+                    category: null,
+                    genres: null,
+                    filesize: 1059105,
+                    filetype: 'ogg',
+                    tags: [],
+                    alt_files: null,
+                    attribution: '"Sint Maarten National Anthem (Instrumental) Oh Sweet Sint Maarten Land" by Feroze Ahmad 2 is licensed under CC BY-SA 4.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-sa/4.0/.',
+                    fields_matched: [
+                        'description',
+                    ],
+                    mature: false,
+                    audio_set: null,
+                    duration: 61138,
+                    bit_rate: 192000,
+                    sample_rate: 44100,
+                    thumbnail: null,
+                    detail_url: 'http://localhost:49153/v1/audio/6eb77d7f-2973-415c-8b36-f0f3f02e8734/',
+                    related_url: 'http://localhost:49153/v1/audio/6eb77d7f-2973-415c-8b36-f0f3f02e8734/related/',
+                    waveform: 'http://localhost:49153/v1/audio/6eb77d7f-2973-415c-8b36-f0f3f02e8734/waveform/',
+                    peaks: [],
+                    unstable__sensitivity: [],
+                },
+            ],
+        },
+    },
+}

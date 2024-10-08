@@ -72,8 +72,9 @@ live port="50230": clean
     pdm run sphinx-autobuild -b html . _serve/ --port {{ port }}
 
 # Compile the documentation into a static site
+[positional-arguments]
 build *args: clean
-    pdm run sphinx-build {{ args }} -b html . _build/
+    pdm run sphinx-build "$@" -b html . _build/
 
 # Serve the compiled docs using a simple HTTP server
 serve port="50231":

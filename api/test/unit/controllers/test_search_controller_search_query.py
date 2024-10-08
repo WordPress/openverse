@@ -91,11 +91,11 @@ def test_create_search_query_q_search_no_filters(media_type_config, anon_request
         ],
         "should": [
             {
-                "simple_query_string": {
-                    "boost": 10000,
-                    "fields": ["title"],
-                    "query": "cat",
-                    "flags": DEFAULT_SQS_FLAGS,
+                "match_phrase": {
+                    "title": {
+                        "query": "cat",
+                        "boost": 10000,
+                    }
                 }
             },
             {"rank_feature": {"boost": 10000, "field": "standardized_popularity"}},
@@ -129,11 +129,11 @@ def test_create_search_query_q_search_with_quotes_adds_raw_suffix(
         ],
         "should": [
             {
-                "simple_query_string": {
-                    "boost": 10000,
-                    "fields": ["title"],
-                    "query": "The cutest cat",
-                    "flags": DEFAULT_SQS_FLAGS,
+                "match_phrase": {
+                    "title": {
+                        "query": '"The cutest cat"',
+                        "boost": 10000,
+                    }
                 }
             },
             {"rank_feature": {"boost": 10000, "field": "standardized_popularity"}},
@@ -185,11 +185,11 @@ def test_create_search_query_q_search_with_filters(
         ],
         "should": [
             {
-                "simple_query_string": {
-                    "boost": 10000,
-                    "fields": ["title"],
-                    "query": "cat",
-                    "flags": DEFAULT_SQS_FLAGS,
+                "match_phrase": {
+                    "title": {
+                        "query": "cat",
+                        "boost": 10000,
+                    }
                 }
             },
             {"rank_feature": {"boost": 10000, "field": "standardized_popularity"}},

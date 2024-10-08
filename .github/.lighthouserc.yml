@@ -1,0 +1,11 @@
+ci:
+  collect:
+    url:
+      - http://127.0.0.1:8443/
+    startServerCommand: "just p frontend start"
+    startServerReadyPattern: "Listening on http"
+  upload:
+    # temporary target until either temporary-public-storage is back
+    # (https://github.com/GoogleChrome/lighthouse-ci/issues/1072)
+    # or we spin up our own Openverse lhci server
+    target: "filesystem"

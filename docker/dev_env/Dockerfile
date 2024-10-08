@@ -37,7 +37,7 @@ ENV PATH="${PNPM_BIN}:${N_PREFIX}/bin:${PDM_PYTHONS}:${HOME}/.local/bin:${PATH}"
 # - nodejs: language runtime (includes npm but not Corepack)
 # - docker*: used to interact with host Docker socket
 # - postgresql*: required to connect to PostgreSQL databases
-# - k6, words: used for load testing
+# - k6: used for load testing
 #
 # pipx dependencies:
 # - httpie: CLI HTTP client
@@ -65,7 +65,7 @@ RUN mkdir /pipx \
     docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin \
     unzip \
     postgresql postgresql-devel \
-    k6 words \
+    k6 \
   && dnf clean all \
   && pipx install --global \
     httpie \
