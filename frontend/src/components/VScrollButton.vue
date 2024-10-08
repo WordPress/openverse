@@ -1,5 +1,10 @@
 <script setup lang="ts">
+import { useNuxtApp, useRoute } from "#imports"
+
 import { computed } from "vue"
+
+import { useSearchStore } from "~/stores/search"
+import { useMediaStore } from "~/stores/media"
 
 const positionWithoutSidebar = "ltr:right-4 rtl:left-4"
 const positionWithSidebar = "ltr:right-[22rem] rtl:left-[22rem]"
@@ -9,15 +14,49 @@ const props = withDefaults(
   { isFilterSidebarVisible: true }
 )
 
+const route = useRoute()
+const { $sendCustomEvent } = useNuxtApp()
+const searchStore = useSearchStore()
+const mediaStore = useMediaStore()
+
 defineEmits<{ tab: [KeyboardEvent] }>()
+
+const SEARCH_ROUTES = ["search-image", "search-audio", "search"]
+const ANALYTICS_ROUTES = [
+  ...SEARCH_ROUTES,
+  "image-collection",
+  "audio-collection",
+]
 
 const hClass = computed(() =>
   props.isFilterSidebarVisible ? positionWithSidebar : positionWithoutSidebar
 )
-const scrollToTop = (e: MouseEvent) => {
-  const element =
-    (e.currentTarget as HTMLElement)?.closest("#main-page") || window
+const scrollToTop = () => {
+  const routeName = route.name?.toString().split("__")[0]
+
+  if (!routeName || !ANALYTICS_ROUTES.includes(routeName)) {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
+    return
+  }
+
+  const isSearchRoute = routeName && SEARCH_ROUTES.includes(routeName)
+
+  const mainPage = document.getElementById("main-page")
+
+  const scrollPixels = isSearchRoute ? mainPage?.scrollTop : window.scrollY
+  const maxScroll = isSearchRoute
+    ? mainPage?.scrollHeight
+    : document.body.scrollHeight
+
+  const element = isSearchRoute ? mainPage || window : window
   element.scrollTo({ top: 0, left: 0, behavior: "smooth" })
+
+  $sendCustomEvent("BACK_TO_TOP", {
+    ...searchStore.searchParamsForEvent,
+    resultPage: mediaStore.currentPage,
+    scrollPixels: scrollPixels ?? -1,
+    maxScroll: maxScroll ?? -1,
+  })
 }
 </script>
 

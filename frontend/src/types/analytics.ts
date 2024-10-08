@@ -24,11 +24,17 @@ export type AudioComponent =
   | "VAllResultsGrid"
 
 /**
- * Common properties related to searches
- * on collection pages, added in the
- * "Additional Search Views" project.
+ * Common properties for search and collection events.
  */
-type CollectionProperties = {
+export type SearchParamsForEvent = {
+  kind: "search" | "collection"
+  searchType: SupportedSearchType
+  query: string
+
+  /**
+   * Common properties related to searches on collection pages, added in the
+   * "Additional Search Views" project.
+   */
   /** If a collection page, the type of collection */
   collectionType: Collection | "null"
   /** A string representing a unique identifier for the collection */
@@ -102,6 +108,18 @@ export type Events = {
     searchType: SearchType
   }
   /**
+   * Description: The user clicks on the "back to top" caret button in the bottom-right of
+   * the search results page.
+   */
+  BACK_TO_TOP: {
+    /** The current page of results the user is on. */
+    resultPage: number
+    /** The number of pixels the user has scrolled. */
+    scrollPixels: number
+    /** The maximum number of pixels the user has scrolled on this page load. */
+    maxScroll: number
+  } & SearchParamsForEvent
+  /**
    * Description: Whenever the user scrolls to the end of the results page.
    * Useful to evaluate how often users load more results or click
    * on the external sources dropdown.
@@ -114,15 +132,9 @@ export type Events = {
    *   - Do users find a result before reaching the end of the results?
    */
   REACH_RESULT_END: {
-    /** The media type being searched */
-    searchType: SupportedSearchType
-    /** The kind of search reached (a collection, a standard search view, etc.)  */
-    kind: ResultKind
-    /** The search term */
-    query: string
     /** The current page of results the user is on. */
     resultPage: number
-  } & CollectionProperties
+  } & SearchParamsForEvent
   /**
    * Description: The user clicks the CTA button to the external source to use the image
    * Questions:
@@ -269,7 +281,7 @@ export type Events = {
    *   - How often do searches lead to clicking a result?
    *   - Are there popular searches that do not result in result selection?
    */
-  SELECT_SEARCH_RESULT: {
+  SELECT_SEARCH_RESULT: Omit<SearchParamsForEvent, "searchType" | "kind"> & {
     /** The unique ID of the media */
     id: string
     /** If the result is a related result, provide the ID of the 'original' result */
@@ -280,13 +292,11 @@ export type Events = {
     mediaType: SearchType
     /** The slug (not the prettified name) of the provider */
     provider: string
-    /** The search term */
-    query: string
     /** the reasons for why this result is considered sensitive */
     sensitivities: string
     /** whether the result was blurred or visible when selected by the user */
     isBlurred: boolean | "null"
-  } & CollectionProperties
+  }
   /**
    * Description: When a user opens the external sources popover.
    * Questions:
@@ -312,16 +322,10 @@ export type Events = {
    *     from anyway?
    */
   LOAD_MORE_RESULTS: {
-    /** The media type being searched */
-    searchType: SearchType
-    /** The kind of search (a collection, a standard search view, etc.)  */
-    kind: ResultKind
-    /** The search term */
-    query: string
     /** The current page of results the user is on,
      * *before* loading more results.. */
     resultPage: number
-  } & CollectionProperties
+  } & SearchParamsForEvent
   /**
    * Description: Whenever the user sets a filter. Filter category and key are the values used in code, not the user-facing filter labels.
    * Questions:

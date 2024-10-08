@@ -46,6 +46,7 @@ import type {
   CollectionParams,
   PaginatedCollectionQuery,
 } from "~/types/search"
+import { SearchParamsForEvent } from "~/types/analytics"
 
 import type { LocationQuery, RouteLocationNormalized } from "vue-router"
 
@@ -238,6 +239,17 @@ export const useSearchStore = defineStore("search", {
         case "tag": {
           return this.collectionParams.tag
         }
+      }
+    },
+    searchParamsForEvent(): SearchParamsForEvent {
+      return {
+        kind: this.strategy === "default" ? "search" : "collection",
+        query: this.searchTerm,
+        searchType: isSearchTypeSupported(this.searchType)
+          ? this.searchType
+          : ALL_MEDIA,
+        collectionType: this.collectionParams?.collection ?? "null",
+        collectionValue: this.collectionValue ?? "null",
       }
     },
   },
