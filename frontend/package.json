@@ -61,7 +61,7 @@
   },
   "dependencies": {
     "@floating-ui/dom": "^1.6.8",
-    "@nuxtjs/plausible": "^1.0.2",
+    "@nuxtjs/plausible": "^1.0.3",
     "@nuxtjs/robots": "^4.0.2",
     "@nuxtjs/sitemap": "^5.3.5",
     "@nuxtjs/tailwindcss": "^6.12.1",
