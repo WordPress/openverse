@@ -102,6 +102,7 @@ export default defineNuxtConfig({
         dir: "ltr",
         file: "en.json",
         language: "en", // used for SEO purposes (html lang attribute)
+        isCatchallLocale: true, // the catchall locale for `en` locales
 
         /* Custom fields */
 
