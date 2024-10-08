@@ -6,9 +6,6 @@ import { computed } from "vue"
 import { useSearchStore } from "~/stores/search"
 import { useMediaStore } from "~/stores/media"
 
-import type { ResultKind } from "~/types/result"
-import type { Collection } from "~/types/search"
-
 const positionWithoutSidebar = "ltr:right-4 rtl:left-4"
 const positionWithSidebar = "ltr:right-[22rem] rtl:left-[22rem]"
 
@@ -54,19 +51,11 @@ const scrollToTop = () => {
   const element = isSearchRoute ? mainPage || window : window
   element.scrollTo({ top: 0, left: 0, behavior: "smooth" })
 
-  const kind: ResultKind =
-    searchStore.strategy === "default" ? "search" : "collection"
-  const collectionType = (searchStore.collectionValue as Collection) ?? "null"
-
   $sendCustomEvent("BACK_TO_TOP", {
-    searchType: mediaStore._searchType,
-    kind,
-    query: searchStore.searchTerm,
+    ...searchStore.searchParamsForEvent,
     resultPage: mediaStore.currentPage,
     scrollPixels: scrollPixels ?? -1,
     maxScroll: maxScroll ?? -1,
-    collectionType,
-    collectionValue: searchStore.collectionValue ?? "null",
   })
 }
 </script>

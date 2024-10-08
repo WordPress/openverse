@@ -8,8 +8,6 @@ import { useElementVisibility } from "@vueuse/core"
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 
-import type { ResultKind } from "~/types/result"
-import type { Collection } from "~/types/search"
 import type { SingleResultProps } from "~/types/collection-component-props"
 import type { SupportedSearchType } from "~/constants/media"
 
@@ -36,16 +34,9 @@ const { $sendCustomEvent } = useNuxtApp()
 const { currentPage } = storeToRefs(mediaStore)
 
 const eventPayload = computed(() => {
-  let kind: ResultKind =
-    searchStore.strategy === "default" ? "search" : "collection"
-  const collectionType = (searchStore.collectionValue as Collection) ?? "null"
   return {
-    searchType: props.searchType,
-    query: props.searchTerm,
+    ...searchStore.searchParamsForEvent,
     resultPage: currentPage.value || 1,
-    kind,
-    collectionType,
-    collectionValue: searchStore.collectionValue ?? "null",
   }
 })
 
