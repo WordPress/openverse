@@ -87,7 +87,7 @@
   "devDependencies": {
     "@babel/parser": "^7.24.8",
     "@nuxt/test-utils": "^3.14.1",
-    "@nuxtjs/i18n": "8.5.2",
+    "@nuxtjs/i18n": "8.5.5",
     "@nuxtjs/storybook": "npm:@nuxtjs/storybook@nightly",
     "@playwright/test": "1.46.1",
     "@storybook-vue/nuxt": "npm:@storybook-vue/nuxt@nightly",
