@@ -87,12 +87,19 @@ const toggleChecked = async (
   // The knob's color is `bg-default` when off and `bg-tertiary` when on.
   await page.evaluate(
     async ([name, className]) => {
-      const knobClasses = document
-        .querySelector(`${name}`)
-        ?.parentElement?.querySelector("span")?.className
+      const getKnobClasses = () => {
+        return (
+          document
+            .getElementById(`#${name}`)
+            ?.parentElement?.querySelector("span")?.className ?? ""
+        )
+      }
 
-      if (!knobClasses?.includes(className)) {
-        setTimeout(() => {}, 200)
+      for (const waitTime of [100, 200, 500]) {
+        if (getKnobClasses().includes(className)) {
+          return
+        }
+        await new Promise((resolve) => setTimeout(resolve, waitTime))
       }
     },
     [name, !originalChecked ? "bg-tertiary" : "bg-default"] as const
