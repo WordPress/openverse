@@ -42,7 +42,7 @@ export default defineNuxtConfig({
       },
       plausible: {
         ignoredHostnames: ["localhost", "staging.openverse.org"],
-        logIgnoredEvents: false,
+        logIgnoredEvents: true,
         apiHost: "http://localhost:50290",
         domain: "localhost",
       },
