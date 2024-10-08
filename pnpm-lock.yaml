@@ -75,8 +75,8 @@ importers:
         specifier: ^6.12.1
         version: 6.12.1(magicast@0.3.4)(rollup@4.22.4)(webpack-sources@3.2.3)
       '@pinia/nuxt':
-        specifier: 0.5.1
-        version: 0.5.1(magicast@0.3.4)(rollup@4.22.4)(typescript@5.5.4)(vue@3.5.0(typescript@5.5.4))(webpack-sources@3.2.3)
+        specifier: 0.5.5
+        version: 0.5.5(magicast@0.3.4)(rollup@4.22.4)(typescript@5.5.4)(vue@3.5.0(typescript@5.5.4))(webpack-sources@3.2.3)
       '@sentry/node':
         specifier: ^8.26.0
         version: 8.26.0
@@ -2262,8 +2262,8 @@ packages:
     resolution: {integrity: sha512-HNjmfLQEVRZmHRET336f20H/8kOozUGwk7yajvsonjNxbj2wBTK1WsQuHkD5yYh9RxFGL2EyDHryOihOwUoKDA==}
     engines: {node: '>= 10.0.0'}
 
-  '@pinia/nuxt@0.5.1':
-    resolution: {integrity: sha512-6wT6TqY81n+7/x3Yhf0yfaJVKkZU42AGqOR0T3+UvChcaOJhSma7OWPN64v+ptYlznat+fS1VTwNAcbi2lzHnw==}
+  '@pinia/nuxt@0.5.5':
+    resolution: {integrity: sha512-wjxS7YqIesh4OLK+qE3ZjhdOJ5pYZQ+VlEmZNtTwzQn1Kavei/khovx7mzXVXNA/mvSPXVhb9xBzhyS3XMURtw==}
 
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
@@ -6465,6 +6465,18 @@ packages:
 
   pinia@2.1.7:
     resolution: {integrity: sha512-+C2AHFtcFqjPih0zpYuvof37SFxMQ7OEG2zV9jRI12i9BOy3YQVAHwdKtyyc8pDcDyIc33WCIsZaCFWU7WWxGQ==}
+    peerDependencies:
+      '@vue/composition-api': ^1.4.0
+      typescript: '>=4.4.4'
+      vue: ^2.6.14 || ^3.3.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+      typescript:
+        optional: true
+
+  pinia@2.2.4:
+    resolution: {integrity: sha512-K7ZhpMY9iJ9ShTC0cR2+PnxdQRuwVIsXDO/WIEV/RnMC/vmSoKDTKW/exNQYPI+4ij10UjXqdNiEHwn47McANQ==}
     peerDependencies:
       '@vue/composition-api': ^1.4.0
       typescript: '>=4.4.4'
@@ -10945,10 +10957,10 @@ snapshots:
       '@parcel/watcher-win32-ia32': 2.4.1
       '@parcel/watcher-win32-x64': 2.4.1
 
-  '@pinia/nuxt@0.5.1(magicast@0.3.4)(rollup@4.22.4)(typescript@5.5.4)(vue@3.5.0(typescript@5.5.4))(webpack-sources@3.2.3)':
+  '@pinia/nuxt@0.5.5(magicast@0.3.4)(rollup@4.22.4)(typescript@5.5.4)(vue@3.5.0(typescript@5.5.4))(webpack-sources@3.2.3)':
     dependencies:
       '@nuxt/kit': 3.13.1(magicast@0.3.4)(rollup@4.22.4)(webpack-sources@3.2.3)
-      pinia: 2.1.7(typescript@5.5.4)(vue@3.5.0(typescript@5.5.4))
+      pinia: 2.2.4(typescript@5.5.4)(vue@3.5.0(typescript@5.5.4))
     transitivePeerDependencies:
       - '@vue/composition-api'
       - magicast
@@ -16164,6 +16176,14 @@ snapshots:
   pify@4.0.1: {}
 
   pinia@2.1.7(typescript@5.5.4)(vue@3.5.0(typescript@5.5.4)):
+    dependencies:
+      '@vue/devtools-api': 6.6.3
+      vue: 3.5.0(typescript@5.5.4)
+      vue-demi: 0.14.10(vue@3.5.0(typescript@5.5.4))
+    optionalDependencies:
+      typescript: 5.5.4
+
+  pinia@2.2.4(typescript@5.5.4)(vue@3.5.0(typescript@5.5.4)):
     dependencies:
       '@vue/devtools-api': 6.6.3
       vue: 3.5.0(typescript@5.5.4)
