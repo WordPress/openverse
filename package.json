@@ -23,5 +23,12 @@
     "prettier-plugin-tailwindcss": "0.6.8",
     "typescript": "5.5.4",
     "vue-tsc": "2.1.6"
+  },
+  "pnpm": {
+    "overrides": {
+      "@storybook/builder-vite": "8.3.0-alpha.3",
+      "@storybook/vue3": "8.3.0-alpha.3",
+      "@storybook/vue3-vite": "8.3.0-alpha.3"
+    }
   }
 }
