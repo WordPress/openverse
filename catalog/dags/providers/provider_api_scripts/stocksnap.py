@@ -167,9 +167,9 @@ class StockSnapDataIngester(ProviderDataIngester):
         backoff.expo,
         HTTPError,
         # 30 minutes
-        max_time = 60 * 30,
+        max_time=60 * 30,
         # Only retry for 5xx errors
-        giveup = lambda e: e.response.status_code not in {502, 503, 504},
+        giveup=lambda e: e.response.status_code not in {502, 503, 504},
     )
     def _get_filesize(self, image_url):
         """Get the size of the image in bytes."""
