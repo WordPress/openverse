@@ -126,4 +126,16 @@ export default defineNuxtConfig({
     trailingSlash: false,
     vueI18n: "./src/vue-i18n",
   },
+  /**
+   * Workaround for https://github.com/nuxt-modules/storybook/issues/776
+   * TODO: remove after Storybook v8.4 is released.
+   */
+  storybook: {
+    port: 54000,
+  },
+  vite: {
+    optimizeDeps: {
+      include: ["jsdoc-type-pratt-parser"],
+    },
+  },
 })
