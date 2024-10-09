@@ -1,27 +1,22 @@
-import { expect, Page, test } from "@playwright/test"
+import { type Page, test } from "@playwright/test"
 
 import { preparePageForTests } from "~~/test/playwright/utils/navigation"
 
 import featureData from "~~/feat/feature-flags.json"
+
+import { expectCheckboxState } from "~~/test/playwright/utils/assertions"
 
 import type {
   FeatureFlag,
   FeatureFlagRecord,
   FlagName,
 } from "~/types/feature-flag"
-import { DISABLED, FLAG_STATUSES, FlagStatus } from "~/constants/feature-flag"
-import { DEPLOY_ENVS, DeployEnv } from "~/constants/deploy-env"
-
-const getFeatureCookies = async (page: Page, cookieName: string) => {
-  const cookies = await page.context().cookies()
-  const cookieValue = cookies.find(
-    (cookie) => cookie.name === cookieName
-  )?.value
-  if (!cookieValue) {
-    return {}
-  }
-  return JSON.parse(decodeURIComponent(cookieValue))
-}
+import {
+  DISABLED,
+  FLAG_STATUSES,
+  type FlagStatus,
+} from "~/constants/feature-flag"
+import { DEPLOY_ENVS, type DeployEnv } from "~/constants/deploy-env"
 
 const getFlagStatus = (
   flag: FeatureFlagRecord,
@@ -74,16 +69,41 @@ const features = getFeaturesToTest()
 const getSwitchableInput = async (
   page: Page,
   name: string,
-  checked: boolean
+  checked: boolean | undefined
 ) => {
-  const checkbox = page.getByRole("checkbox", { name }).first()
-  await expect(checkbox).toBeEnabled()
-  if (checked) {
-    await expect(checkbox).toBeChecked()
-  } else {
-    await expect(checkbox).not.toBeChecked()
-  }
-  return checkbox
+  await expectCheckboxState(page, name, checked)
+  return page.getByRole("checkbox", { name, checked }).first()
+}
+
+const toggleChecked = async (
+  page: Page,
+  name: string,
+  originalChecked: boolean | undefined
+) => {
+  const featureFlag = await getSwitchableInput(page, name, originalChecked)
+  await featureFlag.setChecked(!originalChecked)
+
+  // If the switch knob wasn't rendered yet, wait for it to be rendered.
+  // The knob's color is `bg-default` when off and `bg-tertiary` when on.
+  await page.evaluate(
+    async ([name, className]) => {
+      const getKnobClasses = () => {
+        return (
+          document
+            .getElementById(`#${name}`)
+            ?.parentElement?.querySelector("span")?.className ?? ""
+        )
+      }
+
+      for (const waitTime of [100, 200, 500]) {
+        if (getKnobClasses().includes(className)) {
+          return
+        }
+        await new Promise((resolve) => setTimeout(resolve, waitTime))
+      }
+    },
+    [name, !originalChecked ? "bg-tertiary" : "bg-default"] as const
+  )
 }
 
 test.describe("switchable features", () => {
@@ -92,39 +112,31 @@ test.describe("switchable features", () => {
   })
 
   for (const [name, defaultState] of Object.entries(features)) {
-    const checked = defaultState === "on"
+    const checked = defaultState === "on" || undefined
+    const checkedAfterToggle = !checked ? true : undefined
 
     test(`can switch ${name} from ${defaultState}`, async ({ page }) => {
       await page.goto(`/preferences`)
-      const featureFlag = await getSwitchableInput(page, name, checked)
-      await featureFlag.click()
 
-      // eslint-disable-next-line playwright/no-conditional-in-test
-      if (checked) {
-        // eslint-disable-next-line playwright/no-conditional-expect
-        await expect(featureFlag).not.toBeChecked()
-      } else {
-        // eslint-disable-next-line playwright/no-conditional-expect
-        await expect(featureFlag).toBeChecked()
-      }
+      await toggleChecked(page, name, checked)
+
+      await expectCheckboxState(page, name, !checked)
     })
 
     test(`switching ${name} from ${defaultState} saves state in a cookie`, async ({
       page,
     }) => {
       await page.goto(`/preferences`)
-      const featureFlag = await getSwitchableInput(page, name, checked)
 
-      await featureFlag.click()
+      await toggleChecked(page, name, checked)
+      await expectCheckboxState(page, name, !checked)
 
-      // Ensure the feature flag is updated
-      await getSwitchableInput(page, name, !checked)
-
-      const storageCookie = { cookie: "features", session: "sessionFeatures" }[
-        featureData.features[name as FlagName].storage as "cookie" | "session"
-      ]
-      const featureCookie = await getFeatureCookies(page, storageCookie)
-      expect(featureCookie[name]).toEqual(defaultState === "on" ? "off" : "on")
+      // Cookies are not visible to the user, so we are checking that the feature flag
+      // state is saved and restored when the page is reloaded.
+      // If the feature flag is off, the checkbox checked status before user interaction will be undefined,
+      // @see https://playwright.dev/docs/api/class-page#page-get-by-role (options.checked section)
+      await page.goto(`/preferences`)
+      await expectCheckboxState(page, name, checkedAfterToggle)
     })
   }
 })
