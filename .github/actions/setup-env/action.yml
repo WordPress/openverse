@@ -34,7 +34,9 @@ runs:
       with:
         # Ensure that it matches the `requires-python` field in various
         # `pyproject.toml` files.
-        python-version: "3.12"
+        python-version: |
+          3.11
+          3.12
 
     - name: Setup global Python deps
       if: inputs.setup_python == 'true'
