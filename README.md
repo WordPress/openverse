@@ -88,3 +88,7 @@ previous team members @ryanmerkley, @janetpkr, @lizadaly, @sebworks, @pa-w,
 @kgodey, @annatuma, @mathemancer, @aldenstpage, @brenoferreira, and @sclachar,
 along with their
 [community of volunteers](https://opensource.creativecommons.org/community/community-team/).
+
+We would also like to thank our former maintainers @AetherUnbound,
+@sarayourfriend and @zackkrida for their invaluable contributions to Openverse,
+which have shaped the project and made it what it is today.
