@@ -102,28 +102,27 @@ echo "
 from django.contrib.auth.models import User, Group, Permission
 crud_perm_map = {'C': 'add', 'R': 'view', 'U': 'change', 'D': 'delete'}
 model_perms_map = {
-  'image': 'R',
   'audio': 'R',
-  'image report': 'R',
-  'audio report': 'R',
-  'sensitive image': 'R',
-  'sensitive audio': 'R',
-  'deleted image': 'R',
-  'deleted audio': 'R',
-  'image decision': 'CR',
-  'audio decision': 'CR',
-  'image decision through': 'R',
-  'audio decision through': 'R',
+  'deletedaudio': 'R',
+  'sensitiveaudio': 'R',
+  'audioreport': 'R',
+  'audiodecision': 'CR',
+  'audiodecisionthrough': 'R',
+  'image': 'R',
+  'deletedimage': 'R',
+  'sensitiveimage': 'R',
+  'imagereport': 'R',
+  'imagedecision': 'CR',
+  'imagedecisionthrough': 'R',
 }
-
 mod_group, created = Group.objects.get_or_create(name='Content Moderators')
 if created:
   print('Setting up Content Moderators group')
   for model, perms in model_perms_map.items():
     for perm in perms:
-      name = f'Can {crud_perm_map[perm]} {model}'
+      name = f'{crud_perm_map[perm]}_{model}'
       print(f'Adding permission to moderators group: {name}')
-      model_add_perm = Permission.objects.get(name=name)
+      model_add_perm = Permission.objects.get(codename=name)
       mod_group.permissions.add(model_add_perm)
   mod_group.save()
   mod_group.user_set.add(User.objects.get(username='moderator'))
