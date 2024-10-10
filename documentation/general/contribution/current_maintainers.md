@@ -7,11 +7,8 @@ and are the primary shepherds for the Openverse project.
 
 ## Maintainers (alphabetical by username)
 
-- @aetherunbound
 - @dhruvkb
 - @fcoveram
 - @krysal
 - @obulat
-- @sarayourfriend
 - @stacimc
-- @zackkrida
