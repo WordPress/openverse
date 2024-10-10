@@ -137,7 +137,7 @@ repos:
         language: system
         pass_filenames: false
         stages:
-          - push
+          - pre-push
 
       - id: render-release-drafter
         name: render-release-drafter
