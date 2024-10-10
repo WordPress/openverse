@@ -20,11 +20,21 @@ const setElementTheme = (el: HTMLElement, cssClass: ThemeCssClass) => {
   if (cssClass === "dark-mode") {
     el.classList.add("dark-mode")
     el.classList.remove("light-mode")
+    document.documentElement.style.setProperty(
+      "--color-bg-curr-page",
+      "#0d0d0d"
+    )
   } else {
     el.classList.add("light-mode")
     el.classList.remove("dark-mode")
+
+    document.documentElement.style.setProperty(
+      "--color-bg-curr-page",
+      "#ffffff"
+    )
   }
 }
+
 const themeState = reactive<{ value: EffectiveColorMode }>({ value: "light" })
 
 /**
