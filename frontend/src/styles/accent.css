@@ -4,6 +4,7 @@ body * {
 }
 
 :focus-visible {
+  outline-style: solid;
   outline-color: theme("borderColor.focus");
 }
 
