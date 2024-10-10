@@ -32,10 +32,11 @@ runs:
       if: inputs.setup_python == 'true'
       uses: actions/setup-python@v5
       with:
-        # Ensure that it matches `python_version` field in the following files:
-        # - `automations/python/Pipfile`
-        # - `dead_links/Pipfile`
-        python-version: "3.11"
+        # Ensure that it matches the `requires-python` field in various
+        # `pyproject.toml` files.
+        python-version: |
+          3.11
+          3.12
 
     - name: Setup global Python deps
       if: inputs.setup_python == 'true'
