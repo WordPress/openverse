@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[38],{"./src/locales/bcc.json":function(module){module.exports=JSON.parse("{}")}}]);

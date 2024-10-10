@@ -1,0 +1,27 @@
+# 2023.07.19.19.15.39
+
+## New Features
+
+- Add sensitivity toggles in filter sidebar and modal
+  ([#2672](https://github.com/WordPress/openverse/pull/2672)) by @dhruvkb
+
+## Improvements
+
+- Remove CC referral banner
+  ([#2667](https://github.com/WordPress/openverse/pull/2667)) by @obulat
+
+## Internal Improvements
+
+- Fix error tests ([#2659](https://github.com/WordPress/openverse/pull/2659)) by
+  @obulat
+
+## Bug Fixes
+
+- Update Vueuse ([#2674](https://github.com/WordPress/openverse/pull/2674)) by
+  @obulat
+- Fix header bottom border when scrolled
+  ([#2644](https://github.com/WordPress/openverse/pull/2644)) by @obulat
+- Prevent hovering in the external-sources VR test
+  ([#2666](https://github.com/WordPress/openverse/pull/2666)) by @obulat
+- Add resize observer to ignored errors in Sentry
+  ([#2645](https://github.com/WordPress/openverse/pull/2645)) by @heyligerjon
