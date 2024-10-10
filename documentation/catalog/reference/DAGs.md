@@ -86,6 +86,7 @@ The following are DAGs grouped by their primary tag:
 | [`flickr_audit_sub_provider_workflow`](#flickr_audit_sub_provider_workflow) | `@monthly`        |
 | [`pr_review_reminders`](#pr_review_reminders)                               | `0 0 * * 1-5`     |
 | [`rotate_db_snapshots`](#rotate_db_snapshots)                               | `0 0 * * 6`       |
+| [`rotate_envfiles`](#rotate_envfiles)                                       | `@daily`          |
 
 ### Oauth
 
@@ -183,6 +184,7 @@ The following is documentation associated with each DAG (where available):
 1.  [`recreate_image_popularity_calculation`](#recreate_media_type_popularity_calculation)
 1.  [`report_pending_reported_media`](#report_pending_reported_media)
 1.  [`rotate_db_snapshots`](#rotate_db_snapshots)
+1.  [`rotate_envfiles`](#rotate_envfiles)
 1.  [`science_museum_workflow`](#science_museum_workflow)
 1.  [`smithsonian_workflow`](#smithsonian_workflow)
 1.  [`smk_workflow`](#smk_workflow)
@@ -1071,6 +1073,27 @@ Requires two variables:
 
 `CATALOG_RDS_DB_IDENTIFIER`: The "DBIdentifier" of the RDS DB instance.
 `CATALOG_RDS_SNAPSHOTS_TO_RETAIN`: How many historical snapshots to retain.
+
+----
+
+### `rotate_envfiles`
+
+Check daily for envfiles in need of removal, following standard criteria for
+each service.
+
+Manages envfiles based on references in tags of task definitions and launch
+templates. Envfiles are deleted from S3 if they are not referenced by the 3 most
+recent task definitions or launch templates for a given service.
+
+It does this by constructing a list of "recent" envfiles, and then deleting
+objects from the envfile buckets that are not in the list of recent envfiles.
+
+Resources that reference envfiles are tagged in the form `envfile:<container>`
+with the value set to the hash of the envfile referenced by that
+resource/version.
+
+For the sake of brevity, this module uses "lt" as an abbreviation for launch
+template and "task def" as an abbreviation for task definition.
 
 ----
 
