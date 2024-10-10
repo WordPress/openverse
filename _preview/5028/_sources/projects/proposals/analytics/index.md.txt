@@ -1,8 +1,0 @@
-# Analytics
-
-```{toctree}
-:titlesonly:
-:glob:
-
-*
-```

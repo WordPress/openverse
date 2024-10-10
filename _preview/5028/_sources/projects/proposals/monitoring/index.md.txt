@@ -1,8 +1,0 @@
-# Monitoring
-
-```{toctree}
-:titlesonly:
-:glob:
-
-*
-```
