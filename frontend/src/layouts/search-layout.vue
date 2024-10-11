@@ -89,9 +89,9 @@ provide(ShowScrollButtonKey, showScrollButton)
 
     <div
       id="main-page"
-      class="main-page flex h-full w-full min-w-0 flex-col justify-between overflow-y-auto"
+      class="main-page z-30 -mt-1 flex h-full w-full min-w-0 flex-col justify-between overflow-y-auto pt-1 md:z-auto md:mt-0 md:pt-0"
     >
-      <slot />
+      <slot class="mt-1 md:mt-0" />
       <VFooter mode="content" class="border-t border-default bg-default" />
     </div>
 

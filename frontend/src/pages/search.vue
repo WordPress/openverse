@@ -50,7 +50,6 @@ const {
   searchTerm,
   searchType,
   apiSearchQueryParams: query,
-  searchTypeIsSupported: supported,
 } = storeToRefs(searchStore)
 
 const { fetchState } = storeToRefs(mediaStore)
@@ -167,16 +166,15 @@ await useAsyncData(
       :fetching-error="fetchingError"
       class="w-full py-10"
     />
-    <section v-else>
+    <div v-else>
       <NuxtPage
         :page-key="$route.path"
         :results="searchResults"
         :is-fetching="isFetching"
         :search-term="searchTerm"
-        :supported="supported"
         :handle-load-more="handleLoadMore"
         data-testid="search-results"
       />
-    </section>
+    </div>
   </div>
 </template>
