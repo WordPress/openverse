@@ -250,6 +250,8 @@ class Audio(AudioFileMixin, AbstractMedia):
 
     class Meta(AbstractMedia.Meta):
         db_table = "audio"
+        verbose_name = "audio track"
+        verbose_name_plural = "audio tracks"
 
     def get_absolute_url(self):
         """Enable the "View on site" link in the Django Admin."""
@@ -282,7 +284,8 @@ class DeletedAudio(AbstractDeletedMedia):
     )
 
     class Meta:
-        verbose_name_plural = "Deleted audio"
+        verbose_name = "deleted audio track"
+        verbose_name_plural = "deleted audio tracks"
 
 
 class SensitiveAudio(AbstractSensitiveMedia):
@@ -309,7 +312,8 @@ class SensitiveAudio(AbstractSensitiveMedia):
 
     class Meta:
         db_table = "api_matureaudio"
-        verbose_name_plural = "Sensitive audio"
+        verbose_name = "sensitive audio track"
+        verbose_name_plural = "sensitive audio tracks"
 
 
 class AudioReport(AbstractMediaReport):
