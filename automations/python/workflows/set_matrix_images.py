@@ -104,7 +104,13 @@ if "indexer_worker" in changes:
     build_matrix["image"] |= {"upstream_db", "catalog_indexer_worker", "api"}
     publish_matrix["image"].add("catalog_indexer_worker")
 if "api" in changes:
-    build_matrix["image"] |= {"upstream_db", "ingestion_server", "api", "api_nginx"}
+    build_matrix["image"] |= {
+        "upstream_db",
+        "ingestion_server",
+        "api",
+        "api_nginx",
+        "catalog",
+    }
     publish_matrix["image"] |= {"api", "api_nginx"}
 if "frontend" in changes:
     build_matrix["image"] |= {"frontend", "frontend_nginx"}
