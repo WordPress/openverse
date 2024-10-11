@@ -45,7 +45,7 @@ const { doneHydrating } = useHydrating()
   <VButton
     class="min-w-12 gap-x-2"
     :class="{ '!px-3': showLabel }"
-    variant="bordered-white"
+    variant="bordered-tx"
     :icon-only="!showLabel"
     :disabled="!doneHydrating"
     size="large"

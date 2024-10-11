@@ -122,6 +122,7 @@ const props = withDefaults(
     hasIconStart: false,
     hasIconEnd: false,
     iconOnly: false,
+    pressed: undefined,
   }
 )
 
@@ -152,7 +153,9 @@ const isActive = computed(() => {
 const variantClass = computed(() => {
   if (
     isActive.value &&
-    ["bordered-white", "transparent-dark"].includes(props.variant)
+    ["bordered-white", "bordered-tx", "transparent-dark"].includes(
+      props.variant
+    )
   ) {
     return `${props.variant}-pressed`
   }
@@ -283,6 +286,13 @@ a.button {
 .bordered-gray {
   @apply border-default bg-default text-default hover:border-hover focus-visible:border-tx hover:focus-visible:border-tx;
 }
+.bordered-tx {
+  @apply border-tx bg-tx text-default hover:border-transparent-hover hover:focus-visible:border-tx dark:hover:border-[--color-gray-9];
+}
+.bordered-tx-pressed {
+  @apply border-tx bg-tertiary text-over-dark hover:border-hover;
+}
+
 .transparent-tx {
   @apply border-tx;
 }
