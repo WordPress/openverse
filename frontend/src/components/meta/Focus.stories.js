@@ -54,6 +54,6 @@ export const BoldFilled = {
   name: "Bold filled",
 
   args: {
-    classNames: ["focus-bold-filled"],
+    classNames: ["focus-visible:focus-bold-filled"],
   },
 }

@@ -430,7 +430,7 @@ const layoutBasedProps = computed(() =>
         class: [
           "cursor-pointer",
           {
-            "focus-bold-filled": props.layout === "box",
+            "focus-visible:focus-bold-filled": props.layout === "box",
             "focus-slim-tx": props.layout === "row",
           },
         ],

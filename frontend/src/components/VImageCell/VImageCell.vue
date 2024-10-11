@@ -149,8 +149,8 @@ const { isHidden: shouldBlur } = useSensitiveMedia(props.image)
       class="image-link group relative block w-full overflow-hidden rounded-sm text-gray-2 hover:no-underline"
       :class="
         isSquare
-          ? 'focus-bold-filled'
-          : 'focus-slim-tx focus-visible:-m-2 focus-visible:w-[calc(100%+theme(spacing.4))] focus-visible:p-2'
+          ? 'focus-visible:focus-bold-filled'
+          : 'focus-slim-tx focus-visible:-m-2 focus-visible:w-[calc(100%+theme(spacing.4))] focus-visible:p-2 sm:focus-visible:m-0 sm:focus-visible:w-full sm:focus-visible:p-0 focus-visible:sm:focus-bold-filled'
       "
       :aria-label="contextSensitiveLabel"
       @mousedown="sendSelectSearchResultEvent"
