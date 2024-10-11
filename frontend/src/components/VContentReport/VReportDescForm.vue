@@ -40,7 +40,7 @@ const isRequired = computed(() => props.reason === OTHER)
     <textarea
       id="description"
       v-model="text"
-      class="mt-2 h-20 w-full border border-default p-2 placeholder-gray-8"
+      class="placeholder-text-secondary mt-2 h-20 w-full rounded-sm border border-tertiary bg-default p-2 text-default focus-visible:border-focus disabled:bg-surface"
       :placeholder="$t(`mediaDetails.contentReport.form.${reason}.placeholder`)"
       :required="isRequired"
       :minlength="isRequired ? 20 : 0"
