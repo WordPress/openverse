@@ -7,6 +7,8 @@ import { useAnalytics } from "~/composables/use-analytics"
 import { ALL_MEDIA } from "~/constants/media"
 import { skipToContentTargetId } from "~/constants/window"
 
+import AHeadingLevel from "~/components/ariakit/heading/AHeadingLevel.vue"
+import AHeading from "~/components/ariakit/heading/AHeading.vue"
 import VLink from "~/components/VLink.vue"
 import VStandaloneSearchBar from "~/components/VHeader/VSearchBar/VStandaloneSearchBar.vue"
 import VSvg from "~/components/VSvg/VSvg.vue"
@@ -47,14 +49,15 @@ useHead({
     >
       <!-- Push content by 1/4th height without absolute positioning. -->
       <div class="spacer grow" />
-      <main
+      <AHeadingLevel
         :id="skipToContentTargetId"
+        as="main"
         tabindex="-1"
         class="z-10 grow-[3] space-y-4 lg:space-y-6"
       >
-        <h1 class="heading-5 lg:heading-2 mb-6 lg:mb-10 lg:leading-tight">
+        <AHeading class="heading-5 lg:heading-2 mb-6 lg:mb-10 lg:leading-tight">
           {{ $t("404.title") }}
-        </h1>
+        </AHeading>
         <p class="sr-only">{{ error }}</p>
         <p class="label-bold lg:heading-6">
           <i18n-t scope="global" keypath="404.main" tag="span">
@@ -68,7 +71,7 @@ useHead({
           </i18n-t>
         </p>
         <VStandaloneSearchBar route="404" @submit="handleSearch" />
-      </main>
+      </AHeadingLevel>
     </div>
   </div>
 </template>
