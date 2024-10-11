@@ -28,11 +28,11 @@ export default {
   argTypes: {
     as: { options: buttonForms, control: { type: "radio" } },
 
-    variant: { options: buttonVariants },
+    variant: { options: buttonVariants, control: { type: "select" } },
 
     pressed: { control: "boolean" },
 
-    size: { options: buttonSizes, control: { type: "radio" } },
+    size: { options: buttonSizes, control: { type: "select" } },
 
     disabled: { control: "boolean" },
 

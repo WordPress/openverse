@@ -9,6 +9,7 @@ export const baseButtonVariants = [
   "filled-white",
   "bordered-white",
   "bordered-gray",
+  "bordered-tx",
   "transparent-tx",
   "transparent-gray",
   "transparent-dark",
