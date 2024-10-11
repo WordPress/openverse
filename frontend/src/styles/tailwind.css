@@ -173,13 +173,14 @@
       --color-border-secondary-hover: var(--color-gray-12);
       --color-border-tertiary: var(--color-gray-12);
       --color-border-transparent-hover: var(--color-gray-3);
+      --color-border-overlay: var(--color-gray-3);
       --color-border-focus: var(--color-pink-8);
       --color-border-bg-ring: var(--color-white);
       --color-border-disabled: var(--color-gray-5);
 
       /* Text */
       --color-text: var(--color-gray-12);
-      --color-text-secondary: var(--color-gray-8);
+      --color-text-secondary: var(--color-gray-9);
       --color-text-disabled: var(--color-gray-5);
       --color-text-link: var(--color-pink-8);
       --color-text-over-dark: var(--color-white);
@@ -237,7 +238,7 @@
 
       /* Text */
       --color-text: var(--color-gray-1);
-      --color-text-secondary: var(--color-gray-5);
+      --color-text-secondary: var(--color-gray-4);
       --color-text-disabled: var(--color-gray-8);
       --color-text-link: var(--color-yellow-4);
       --color-text-over-dark: var(--color-gray-13);
@@ -291,13 +292,14 @@
     --color-border-secondary-hover: var(--color-gray-12);
     --color-border-tertiary: var(--color-gray-12);
     --color-border-transparent-hover: var(--color-gray-3);
+    --color-border-overlay: var(--color-gray-3);
     --color-border-focus: var(--color-pink-8);
     --color-border-bg-ring: var(--color-white);
     --color-border-disabled: var(--color-gray-5);
 
     /* Text */
     --color-text: var(--color-gray-12);
-    --color-text-secondary: var(--color-gray-8);
+    --color-text-secondary: var(--color-gray-9);
     --color-text-disabled: var(--color-gray-5);
     --color-text-link: var(--color-pink-8);
     --color-text-over-dark: var(--color-white);
@@ -350,13 +352,14 @@
     --color-border-secondary-hover: var(--color-gray-1);
     --color-border-tertiary: var(--color-gray-1);
     --color-border-transparent-hover: var(--color-gray-11);
+    --color-border-overlay: var(--color-gray-10);
     --color-border-focus: var(--color-yellow-4);
     --color-border-bg-ring: var(--color-gray-13);
     --color-border-disabled: var(--color-gray-8);
 
     /* Text */
     --color-text: var(--color-gray-1);
-    --color-text-secondary: var(--color-gray-5);
+    --color-text-secondary: var(--color-gray-4);
     --color-text-disabled: var(--color-gray-8);
     --color-text-link: var(--color-yellow-4);
     --color-text-over-dark: var(--color-gray-13);
