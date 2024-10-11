@@ -111,7 +111,7 @@
     "vitest-dom": "^0.1.1",
     "vue": "3.5.0",
     "vue-router": "^4.4.0",
-    "vue-tsc": "2.1.4",
+    "vue-tsc": "2.1.6",
     "storybook": "8.2.9",
     "@storybook/vue3": "8.2.9",
     "@storybook/addon-links": "8.2.9",
