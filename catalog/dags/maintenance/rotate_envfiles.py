@@ -146,7 +146,7 @@ def retrieve_recent_task_definition_envfiles(
     ]
 
     logger.info(
-        "Found %s 'real' task definition families to check for envfiles: %s",
+        "Found %s 'real' task definition families to check for envfiles: %s.",
         len(real_families),
         ", ".join(real_families),
     )
@@ -214,10 +214,10 @@ def identify_stale_envfiles(
                 stale_envfiles[env].add(obj["Key"])
 
         logger.info(
-            "Found %s stale %s envfiles: %s",
+            "Found %s stale %s envfiles:\n\t%s",
             len(stale_envfiles[env]),
             env,
-            ", ".join(stale_envfiles[env]),
+            ",\n\t".join(stale_envfiles[env]),
         )
 
     return stale_envfiles
@@ -236,16 +236,16 @@ def delete_stale_envfiles(
     deleted_objects: dict[str, list[str]] = {}
     for env, envfiles in envfiles_to_delete.items():
         if not envfiles:
-            logger.info("No envfiles to delete for %s", env)
+            logger.info("No envfiles to delete for %s.", env)
             continue
 
         bucket = f"openverse-{env}-environment-files"
         delete_request = {"Objects": [{"Key": envfile} for envfile in envfiles]}
         if not is_deletion_enabled:
             logger.info(
-                "Envfile deletion disabled. The following files would have been deleted from %s: %s",
+                "Envfile deletion disabled. The following files would have been deleted from %s:\n\t%s",
                 bucket,
-                ", ".join(envfiles),
+                ",\n\t".join(envfiles),
             )
             continue
 
@@ -267,7 +267,7 @@ def delete_stale_envfiles(
         if deleted := delete_response.get("Deleted", []):
             deleted_objects[env] = [obj["Key"] for obj in deleted]
             logger.info(
-                "Deleted the following objects: %s", "; ".join(deleted_objects[env])
+                "Deleted the following objects: %s", ";\n\t".join(deleted_objects[env])
             )
 
     return deleted_objects
