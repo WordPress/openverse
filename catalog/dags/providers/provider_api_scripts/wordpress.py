@@ -70,7 +70,6 @@ class WordPressDataIngester(ProviderDataIngester):
             self.current_page = prev_query_params["page"] + 1
 
         return {
-            "format": "json",
             "page": self.current_page,
             "per_page": self.batch_limit,
             "_embed": "true",

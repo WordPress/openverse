@@ -29,13 +29,13 @@ def test_get_query_params_returns_defaults_and_sets_total_pages():
     with patch.object(wp.delayed_requester, "head", return_value=mock_head_request):
         actual_result = wp.get_next_query_params({})
 
-    expected_result = {"format": "json", "page": 1, "per_page": 100, "_embed": "true"}
+    expected_result = {"page": 1, "per_page": 100, "_embed": "true"}
     assert actual_result == expected_result
     assert wp.total_pages == 5
 
 
 def test_get_query_params_increments_current_page(ingester):
-    expected_result = {"format": "json", "page": 3, "per_page": 100, "_embed": "true"}
+    expected_result = {"page": 3, "per_page": 100, "_embed": "true"}
     actual_result = ingester.get_next_query_params({**expected_result, "page": 2})
     assert actual_result == expected_result
 
