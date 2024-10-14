@@ -430,7 +430,7 @@ const layoutBasedProps = computed(() =>
         class: [
           "cursor-pointer",
           {
-            "focus-bold-filled": props.layout === "box",
+            "focus-visible:focus-bold-filled": props.layout === "box",
             "focus-slim-tx": props.layout === "row",
           },
         ],
@@ -497,7 +497,8 @@ const handleWaveformBlur = () => {
   <Component
     :is="isComposite ? VLink : 'div'"
     v-bind="containerAttributes"
-    class="audio-track group block overflow-hidden rounded-sm ring-pink-8 hover:no-underline"
+    class="audio-track group block overflow-hidden rounded-sm hover:no-underline"
+    :class="{ 'audio-link': isComposite && layout === 'box' }"
     :aria-label="ariaLabel"
     :role="isComposite ? 'application' : undefined"
     @keydown.shift.tab.exact="$emit('shift-tab', $event)"

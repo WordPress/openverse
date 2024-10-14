@@ -14,7 +14,10 @@ withDefaults(defineProps<CollectionComponentProps<"image">>(), {
 </script>
 
 <template>
-  <ol class="image-grid flex flex-wrap gap-4" :aria-label="collectionLabel">
+  <ol
+    class="image-grid flex flex-wrap gap-6 sm:gap-4"
+    :aria-label="collectionLabel"
+  >
     <VImageCell
       v-for="image in results"
       :key="image.id"
