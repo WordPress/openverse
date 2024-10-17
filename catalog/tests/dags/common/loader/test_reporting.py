@@ -7,6 +7,7 @@ from common.loader.reporting import (
     RecordMetrics,
     clean_duration,
     clean_record_counts,
+    detect_missing_records,
     report_completion,
     skip_report_completion,
 )
@@ -36,6 +37,37 @@ def test_report_completion(should_send_message):
         )
         # Send message is only called if `should_send_message` is True.
         send_message_mock.called = should_send_message
+
+
+@pytest.mark.parametrize(
+    "dated, record_counts_by_media_type, expected_result",
+    [
+        # True if non-dated, and no media types have records upserted
+        (False, {"image": RecordMetrics(0, 0, 0, 0)}, True),
+        (
+            False,
+            {"image": RecordMetrics(0, 0, 0, 0), "audio": RecordMetrics(0, 0, 0, 0)},
+            True,
+        ),
+        # Handles null counts
+        (False, {"image": None}, True),
+        # Handles null upserted counts
+        (False, {"image": RecordMetrics(None, 0, 0, 0)}, True),
+        # False if _any_ media type had records upserted
+        (False, {"image": RecordMetrics(100, 0, 0, 0)}, False),
+        (
+            False,
+            {"image": RecordMetrics(0, 0, 0, 0), "audio": RecordMetrics(100, 0, 0, 0)},
+            False,
+        ),
+        # Always False if DAG is dated
+        (True, {"image": RecordMetrics(100, 0, 0, 0)}, False),
+        (True, {"image": None}, False),
+        (True, {"image": RecordMetrics(None, 0, 0, 0)}, False),
+    ],
+)
+def test_detect_missing_records(dated, record_counts_by_media_type, expected_result):
+    assert detect_missing_records(dated, record_counts_by_media_type) == expected_result
 
 
 def _make_report_completion_contents_data(media_type: str):
@@ -158,6 +190,9 @@ def test_report_completion_contents(
     with mock.patch("common.loader.reporting.send_message"):
         record_counts_by_media_type = {**audio_data, **image_data}
         should_skip = skip_report_completion(None, record_counts_by_media_type)
+        should_alert_missing_records = detect_missing_records(
+            dated, record_counts_by_media_type
+        )
         try:
             message = report_completion(
                 "jamendo_workflow",
@@ -171,10 +206,22 @@ def test_report_completion_contents(
         except AirflowSkipException:
             assert should_skip, "AirflowSkipException raised unexpectedly"
             return
+        except ValueError:
+            assert should_alert_missing_records, "ValueError raised unexpectedly"
+            return
+
+        # Assert that if we were supposed to skip or alert missing records, we did not
+        # get this far
+        assert not should_skip, "Completion was reported when it should have skipped."
+        assert (
+            not should_alert_missing_records
+        ), "Completion was reported instead of alerting missing records."
+
         for expected in [audio_expected, image_expected]:
             assert (
                 expected in message
             ), "Completion message doesn't contain expected text"
+
         # Split message into "sections"
         parts = message.strip().split("\n")
         # Get the date section
@@ -216,16 +263,23 @@ def test_report_completion_contents_with_lists(
         record_counts_by_media_type = [
             {**audio, **image} for audio, image in zip(audio_data, image_data)
         ]
-
-        message = report_completion(
-            "Jamendo",
-            ["audio", "image"],
-            None,
-            record_counts_by_media_type,
-            dated,
-            date_range_start,
-            date_range_end,
+        should_alert_missing_records = detect_missing_records(
+            dated, clean_record_counts(record_counts_by_media_type, ["audio", "image"])
         )
+
+        try:
+            message = report_completion(
+                "Jamendo",
+                ["audio", "image"],
+                None,
+                record_counts_by_media_type,
+                dated,
+                date_range_start,
+                date_range_end,
+            )
+        except ValueError:
+            assert should_alert_missing_records, "ValueError raised unexpectedly"
+            return
 
         for expected in [audio_expected, image_expected]:
             assert (

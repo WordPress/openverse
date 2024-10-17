@@ -365,6 +365,7 @@ def create_report_load_completion(
         task_id="report_load_completion",
         python_callable=reporting.report_completion,
         op_kwargs=op_kwargs,
+        retries=0,
         trigger_rule=TriggerRule.ALL_DONE,
     )
 
