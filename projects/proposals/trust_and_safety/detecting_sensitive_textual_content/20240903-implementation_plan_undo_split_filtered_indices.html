@@ -1,0 +1,1774 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../../../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../../../../genindex.html" /><link rel="search" title="Search" href="../../../../search.html" /><link rel="next" title="Trust and Safety" href="../index.html" /><link rel="prev" title="2023-05-06 Implementation Plan: Fetching, blurring sensitive results" href="20230506-implementation_plan_frontend_blurring_sensitive.html" />
+
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/><!-- Generated with Sphinx 7.3.7 and Furo 2024.04.27 -->
+        <title>2024-09-03 Implementation Plan: Undo the split indices for filtered textual sensitivity - Openverse documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=437aa6ec" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css?v=36a5483c" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../../index.html"><div class="brand">Openverse  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo only-light" src="../../../../_static/logo_light.svg" alt="Light Logo"/>
+    <img class="sidebar-logo only-dark" src="../../../../_static/logo_dark.svg" alt="Dark Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../../../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../api/index.html">Django API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Django API</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../api/guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Guides</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/guides/quickstart.html">API quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/guides/test.html">Testing guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/guides/documentation.html">API Documentation Guidelines</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../api/reference/index.html">Reference</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/reference/made_with_ov.html">Made with Openverse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/reference/search_algorithm.html">Search Algorithm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/reference/authentication_and_throttling.html">Authentication and Throttling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/reference/healthcheck.html">Django Healthcheck</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../automations/index.html">Automations</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Automations</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../automations/guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Guides</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../automations/guides/quickstart.html">Quickstart Guide</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../automations/reference/index.html">Reference</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../automations/reference/python_scripts.html">Python Scripts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../automations/reference/project_automations.html">Project Automations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../catalog/index.html">Airflow Catalog</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of Airflow Catalog</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../catalog/guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of Guides</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../catalog/guides/quickstart.html">Catalog quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../catalog/guides/adding_a_new_provider.html">Openverse Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../catalog/guides/dag_testing.html">Running DAGs locally</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../catalog/reference/index.html">Reference</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../catalog/reference/DAGs.html">DAGs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../changelogs/index.html">Changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of Changelogs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../changelogs/api/index.html">API changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle navigation of API changelogs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.10.14.15.38.39.html">2024.10.14.15.38.39</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.09.16.09.52.36.html">2024.09.16.09.52.36</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.09.09.05.40.22.html">2024.09.09.05.40.22</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.09.06.08.57.05.html">2024.09.06.08.57.05</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.08.16.21.27.09.html">2024.08.16.21.27.09</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.08.14.16.29.10.html">2024.08.14.16.29.10</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.08.14.10.34.40.html">2024.08.14.10.34.40</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.08.12.17.31.11.html">2024.08.12.17.31.11</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.08.05.16.42.20.html">2024.08.05.16.42.20</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.07.30.17.36.41.html">2024.07.30.17.36.41</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.07.23.07.16.35.html">2024.07.23.07.16.35</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.07.20.10.58.11.html">2024.07.20.10.58.11</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.07.15.03.59.12.html">2024.07.15.03.59.12</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.07.01.20.35.48.html">2024.07.01.20.35.48</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.06.24.18.01.42.html">2024.06.24.18.01.42</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.06.17.15.33.56.html">2024.06.17.15.33.56</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.06.07.17.19.06.html">2024.06.07.17.19.06</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.06.03.15.35.02.html">2024.06.03.15.35.02</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.05.28.21.25.54.html">2024.05.28.21.25.54</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.05.27.15.21.38.html">2024.05.27.15.21.38</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.05.23.15.02.00.html">2024.05.23.15.02.00</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.05.20.15.14.53.html">2024.05.20.15.14.53</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.05.13.15.19.42.html">2024.05.13.15.19.42</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.05.07.23.56.36.html">2024.05.07.23.56.36</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.05.06.19.44.35.html">2024.05.06.19.44.35</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.05.01.13.59.00.html">2024.05.01.13.59.00</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.04.22.15.11.09.html">2024.04.22.15.11.09</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.04.15.17.18.29.html">2024.04.15.17.18.29</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.04.09.03.50.11.html">2024.04.09.03.50.11</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.04.02.05.06.52.html">2024.04.02.05.06.52</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.04.01.17.07.10.html">2024.04.01.17.07.10</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.03.25.15.22.26.html">2024.03.25.15.22.26</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.03.18.15.51.25.html">2024.03.18.15.51.25</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.03.13.17.10.22.html">2024.03.13.17.10.22</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.03.11.15.26.16.html">2024.03.11.15.26.16</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.03.04.15.15.13.html">2024.03.04.15.15.13</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.02.28.16.32.28.html">2024.02.28.16.32.28</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.02.20.22.54.08.html">2024.02.20.22.54.08</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.02.13.05.45.50.html">2024.02.13.05.45.50</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.02.05.20.34.01.html">2024.02.05.20.34.01</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.01.29.19.36.26.html">2024.01.29.19.36.26</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.01.16.17.28.14.html">2024.01.16.17.28.14</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.01.08.20.06.53.html">2024.01.08.20.06.53</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2024.01.01.19.52.14.html">2024.01.01.19.52.14</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.12.26.05.11.22.html">2023.12.26.05.11.22</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.12.18.17.56.24.html">2023.12.18.17.56.24</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.12.11.19.20.45.html">2023.12.11.19.20.45</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.12.04.19.51.23.html">2023.12.04.19.51.23</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.11.29.22.20.31.html">2023.11.29.22.20.31</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.11.27.05.10.48.html">2023.11.27.05.10.48</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.11.20.09.32.25.html">2023.11.20.09.32.25</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.11.14.23.44.01.html">2023.11.14.23.44.01</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.11.13.22.18.21.html">2023.11.13.22.18.21</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.11.01.21.27.09.html">2023.11.01.21.27.09</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.10.30.16.26.21.html">2023.10.30.16.26.21</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.10.23.11.40.59.html">2023.10.23.11.40.59</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.10.18.15.25.27.html">2023.10.18.15.25.27</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.10.11.04.49.20.html">2023.10.11.04.49.20</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.10.10.21.08.33.html">2023.10.10.21.08.33</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.10.10.18.42.39.html">2023.10.10.18.42.39</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.10.06.17.13.36.html">2023.10.06.17.13.36</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.09.30.00.15.32.html">2023.09.30.00.15.32</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.09.28.00.26.34.html">2023.09.28.00.26.34</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.09.25.21.34.44.html">2023.09.25.21.34.44</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.09.20.11.16.51.html">2023.09.20.11.16.51</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.09.20.07.37.52.html">2023.09.20.07.37.52</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.09.19.08.13.24.html">2023.09.19.08.13.24</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.09.15.19.15.58.html">2023.09.15.19.15.58</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.09.11.16.56.52.html">2023.09.11.16.56.52</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.09.04.19.52.19.html">2023.09.04.19.52.19</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.08.28.20.43.01.html">2023.08.28.20.43.01</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.08.22.04.57.04.html">2023.08.22.04.57.04</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.08.14.16.35.15.html">2023.08.14.16.35.15</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.08.08.22.22.02.html">2023.08.08.22.22.02</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.07.24.20.47.04.html">2023.07.24.20.47.04</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.07.17.21.05.23.html">2023.07.17.21.05.23</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.07.10.08.44.19.html">2023.07.10.08.44.19</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.07.03.17.52.00.html">2023.07.03.17.52.00</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.06.28.19.49.58.html">2023.06.28.19.49.58</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.06.28.02.17.04.html">2023.06.28.02.17.04</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.06.26.20.33.46.html">2023.06.26.20.33.46</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.06.19.17.48.39.html">2023.06.19.17.48.39</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.06.13.00.21.51.html">2023.06.13.00.21.51</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.06.05.15.04.02.html">2023.06.05.15.04.02</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.06.01.01.50.43.html">2023.06.01.01.50.43</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.05.30.17.57.04.html">2023.05.30.17.57.04</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.05.30.12.02.04.html">2023.05.30.12.02.04</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.05.19.22.08.07.html">2023.05.19.22.08.07</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.05.19.18.58.25.html">2023.05.19.18.58.25</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.05.19.17.16.50.html">2023.05.19.17.16.50</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.05.15.21.51.49.html">2023.05.15.21.51.49</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.05.02.21.26.28.html">2023.05.02.21.26.28</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.04.27.07.29.23.html">2023.04.27.07.29.23</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.04.23.23.22.14.html">2023.04.23.23.22.14</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.04.19.00.01.39.html">2023.04.19.00.01.39</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.04.18.15.27.15.html">2023.04.18.15.27.15</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/api/2023.04.12.23.29.59.html">2023.04.12.23.29.59</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../changelogs/catalog/index.html">Catalog changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle navigation of Catalog changelogs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/catalog/2024.10.17.13.59.15.html">2024.10.17.13.59.15</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/catalog/2024.09.09.23.00.57.html">2024.09.09.23.00.57</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/catalog/2024.09.04.19.31.19.html">2024.09.04.19.31.19</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/catalog/2024.08.22.20.53.01.html">2024.08.22.20.53.01</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/catalog/2024.08.15.16.49.58.html">2024.08.15.16.49.58</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/catalog/2024.07.19.17.07.23.html">2024.07.19.17.07.23</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/catalog/2024.06.17.15.33.56.html">2024.06.17.15.33.56</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/catalog/2024.04.18.23.30.21.html">2024.04.18.23.30.21</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/catalog/2024.03.22.17.45.11.html">2024.03.22.17.45.11</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/catalog/2024.03.06.16.40.36.html">2024.03.06.16.40.36</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/catalog/2024.01.25.17.42.59.html">2024.01.25.17.42.59</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/catalog/2024.01.04.20.39.50.html">2024.01.04.20.39.50</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/catalog/2023.12.20.22.19.13.html">2023.12.20.22.19.13</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/catalog/2023.11.29.15.35.59.html">2023.11.29.15.35.59</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/catalog/2023.11.14.18.24.16.html">2023.11.14.18.24.16</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/catalog/2023.10.06.18.29.33.html">2023.10.06.18.29.33</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/catalog/2023.08.30.17.30.22.html">2023.08.30.17.30.22</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/catalog/2023.07.20.15.07.11.html">2023.07.20.15.07.11</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/catalog/2023.06.19.17.21.41.html">2023.06.19.17.21.41</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/catalog/2023.06.08.16.52.36.html">2023.06.08.16.52.36</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/catalog/2023.05.16.22.14.49.html">2023.05.16.22.14.49</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/catalog/2023.04.27.02.43.13.html">2023.04.27.02.43.13</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../changelogs/frontend/index.html">Frontend changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle navigation of Frontend changelogs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.10.14.15.38.39.html">2024.10.14.15.38.39</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.09.25.05.33.23.html">2024.09.25.05.33.23</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.09.16.09.52.36.html">2024.09.16.09.52.36</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.09.09.05.40.19.html">2024.09.09.05.40.19</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.09.05.07.51.39.html">2024.09.05.07.51.39</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.09.04.18.01.14.html">2024.09.04.18.01.14</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.09.01.19.19.29.html">2024.09.01.19.19.29</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.08.26.14.55.41.html">2024.08.26.14.55.41</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.08.16.21.27.06.html">2024.08.16.21.27.06</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.08.12.10.29.09.html">2024.08.12.10.29.09</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.08.06.13.48.44.html">2024.08.06.13.48.44</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.07.30.16.33.18.html">2024.07.30.16.33.18</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.07.30.12.38.56.html">2024.07.30.12.38.56</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.07.26.14.38.19.html">2024.07.26.14.38.19</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.07.20.10.58.11.html">2024.07.20.10.58.11</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.07.15.03.59.13.html">2024.07.15.03.59.13</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.07.01.20.35.48.html">2024.07.01.20.35.48</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.06.26.17.18.17.html">2024.06.26.17.18.17</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.06.24.18.01.44.html">2024.06.24.18.01.44</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.06.17.15.33.55.html">2024.06.17.15.33.55</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.06.07.17.19.06.html">2024.06.07.17.19.06</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.06.03.15.35.03.html">2024.06.03.15.35.03</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.05.27.15.21.40.html">2024.05.27.15.21.40</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.05.20.15.14.53.html">2024.05.20.15.14.53</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.05.13.17.18.44.html">2024.05.13.17.18.44</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.05.07.16.44.22.html">2024.05.07.16.44.22</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.04.25.15.32.08.html">2024.04.25.15.32.08</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.04.24.12.19.32.html">2024.04.24.12.19.32</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.04.22.15.11.07.html">2024.04.22.15.11.07</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.04.15.15.20.23.html">2024.04.15.15.20.23</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.04.13.16.19.50.html">2024.04.13.16.19.50</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.04.09.03.50.12.html">2024.04.09.03.50.12</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.04.01.17.07.11.html">2024.04.01.17.07.11</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.03.25.15.22.24.html">2024.03.25.15.22.24</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.03.18.15.51.41.html">2024.03.18.15.51.41</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.03.11.15.25.54.html">2024.03.11.15.25.54</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.03.04.15.15.07.html">2024.03.04.15.15.07</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.02.26.18.58.35.html">2024.02.26.18.58.35</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.02.19.15.45.00.html">2024.02.19.15.45.00</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.02.12.23.34.43.html">2024.02.12.23.34.43</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.02.05.18.10.41.html">2024.02.05.18.10.41</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.01.29.19.41.17.html">2024.01.29.19.41.17</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.01.08.19.12.18.html">2024.01.08.19.12.18</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2024.01.01.19.52.49.html">2024.01.01.19.52.49</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.12.11.19.44.28.html">2023.12.11.19.44.28</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.12.04.19.35.53.html">2023.12.04.19.35.53</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.11.27.19.20.44.html">2023.11.27.19.20.44</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.11.20.09.09.57.html">2023.11.20.09.09.57</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.11.14.19.30.29.html">2023.11.14.19.30.29</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.11.06.20.32.30.html">2023.11.06.20.32.30</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.11.01.00.18.44.html">2023.11.01.00.18.44</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.10.30.16.27.33.html">2023.10.30.16.27.33</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.10.09.17.18.13.html">2023.10.09.17.18.13</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.09.25.22.11.48.html">2023.09.25.22.11.48</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.09.18.10.25.25.html">2023.09.18.10.25.25</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.09.11.17.34.23.html">2023.09.11.17.34.23</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.09.05.17.09.13.html">2023.09.05.17.09.13</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.09.04.20.20.34.html">2023.09.04.20.20.34</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.08.28.19.38.22.html">2023.08.28.19.38.22</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.08.22.06.04.39.html">2023.08.22.06.04.39</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.08.14.16.26.44.html">2023.08.14.16.26.44</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.08.08.21.19.44.html">2023.08.08.21.19.44</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.07.28.23.42.26.html">2023.07.28.23.42.26</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.07.24.21.23.45.html">2023.07.24.21.23.45</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.07.20.17.25.42.html">2023.07.20.17.25.42</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.07.19.19.15.39.html">2023.07.19.19.15.39</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.07.17.21.49.20.html">2023.07.17.21.49.20</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.07.10.08.29.25.html">2023.07.10.08.29.25</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.07.06.14.52.49.html">2023.07.06.14.52.49</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.07.05.17.56.39.html">2023.07.05.17.56.39</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.07.03.18.19.32.html">2023.07.03.18.19.32</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.06.26.20.22.48.html">2023.06.26.20.22.48</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.06.19.17.31.24.html">2023.06.19.17.31.24</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.06.13.00.28.40.html">2023.06.13.00.28.40</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.06.05.14.48.06.html">2023.06.05.14.48.06</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.05.23.17.02.26.html">2023.05.23.17.02.26</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.05.22.15.55.57.html">2023.05.22.15.55.57</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.05.15.22.13.27.html">2023.05.15.22.13.27</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.05.02.19.17.32.html">2023.05.02.19.17.32</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/frontend/2023.04.23.23.07.51.html">2023.04.23.23.07.51</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../changelogs/ingestion_server/index.html">Ingestion server changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle navigation of Ingestion server changelogs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/ingestion_server/2024.09.09.05.40.20.html">2024.09.09.05.40.20</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/ingestion_server/2024.08.15.17.06.40.html">2024.08.15.17.06.40</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/ingestion_server/2024.07.19.17.07.25.html">2024.07.19.17.07.25</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/ingestion_server/2024.06.28.20.22.20.html">2024.06.28.20.22.20</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/ingestion_server/2024.06.13.17.07.56.html">2024.06.13.17.07.56</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/ingestion_server/2024.05.27.13.36.10.html">2024.05.27.13.36.10</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/ingestion_server/2024.05.20.19.47.22.html">2024.05.20.19.47.22</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/ingestion_server/2024.05.10.03.01.22.html">2024.05.10.03.01.22</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/ingestion_server/2024.04.18.16.49.08.html">2024.04.18.16.49.08</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/ingestion_server/2024.04.04.14.33.24.html">2024.04.04.14.33.24</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/ingestion_server/2024.03.06.16.40.36.html">2024.03.06.16.40.36</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/ingestion_server/2024.02.28.18.32.08.html">2024.02.28.18.32.08</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/ingestion_server/2024.02.07.18.41.16.html">2024.02.07.18.41.16</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/ingestion_server/2024.01.18.18.31.08.html">2024.01.18.18.31.08</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/ingestion_server/2023.12.12.17.23.14.html">2023.12.12.17.23.14</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/ingestion_server/2023.12.06.19.13.35.html">2023.12.06.19.13.35</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/ingestion_server/2023.11.14.18.39.29.html">2023.11.14.18.39.29</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/ingestion_server/2023.10.25.06.38.07.html">2023.10.25.06.38.07</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/ingestion_server/2023.10.19.06.08.15.html">2023.10.19.06.08.15</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/ingestion_server/2023.10.06.18.02.20.html">2023.10.06.18.02.20</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/ingestion_server/2023.09.29.17.40.50.html">2023.09.29.17.40.50</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/ingestion_server/2023.09.05.18.56.18.html">2023.09.05.18.56.18</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/ingestion_server/2023.08.29.17.36.35.html">2023.08.29.17.36.35</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/ingestion_server/2023.07.21.20.19.21.html">2023.07.21.20.19.21</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/ingestion_server/2023.07.05.17.46.34.html">2023.07.05.17.46.34</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/ingestion_server/2023.06.13.00.25.04.html">2023.06.13.00.25.04</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/ingestion_server/2023.06.07.17.56.30.html">2023.06.07.17.56.30</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/ingestion_server/2023.05.17.22.57.37.html">2023.05.17.22.57.37</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../changelogs/ingestion_server/2023.05.03.22.29.52.html">2023.05.03.22.29.52</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../frontend/index.html">Nuxt frontend</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle navigation of Nuxt frontend</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../frontend/guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle navigation of Guides</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../frontend/guides/quickstart.html">Frontend quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../frontend/guides/test.html">Running frontend tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../frontend/guides/analytics.html">Analytics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../frontend/guides/icons.html">SVG Icon Sprites in Openverse Frontend</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../frontend/guides/translate.html">Translate</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../frontend/reference/index.html">Reference</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle navigation of Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../frontend/reference/i18n.html">Internationalization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../frontend/reference/feature_flags.html">Feature flags</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../frontend/reference/testing_guidelines.html">Testing Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../frontend/reference/miscellaneous.html">Miscellaneous notes on the frontend</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../frontend/reference/healthcheck.html">Nuxt Healthcheck</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../frontend/reference/nginx.html">Frontend reverse proxy</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../general/index.html">General development guidelines</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle navigation of General development guidelines</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../general/contributing.html">Get started with contributions</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><div class="visually-hidden">Toggle navigation of Get started with contributions</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../general/contribution/github_contribution_practices.html">GitHub contribution practices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../general/contribution/dev_flow.html">Development workflow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../general/contribution/current_maintainers.html">Current maintainers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../general/contribution/communication_aliases.html">Communication aliases</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../general/contribution/becoming_a_committer.html">Becoming a Committer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../general/contribution/maintainer_tasks.html">Regular maintainer tasks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../general/contribution/codespell.html">Codespell Configuration : spellcheck pre-commit hook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../general/contribution/good_first_and_help_wanted_issues.html">Maintainer guidelines for “Good first” and “Help wanted” issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../general/general_setup.html">General setup guide</a><input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" role="switch" type="checkbox"/><label for="toctree-checkbox-20"><div class="visually-hidden">Toggle navigation of General setup guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../frontend/guides/quickstart.html">Frontend quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/guides/quickstart.html">API quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../catalog/guides/quickstart.html">Catalog quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ingestion_server/guides/quickstart.html">Ingestion server quickstart guide</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../general/run.html">Run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../general/test.html">Test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../general/zero_downtime_database_management.html">Zero Downtime and Database Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../general/logging.html">Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../general/stack.html">Stack</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../ingestion_server/index.html">Ingestion server</a><input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" role="switch" type="checkbox"/><label for="toctree-checkbox-21"><div class="visually-hidden">Toggle navigation of Ingestion server</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../ingestion_server/guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-22" name="toctree-checkbox-22" role="switch" type="checkbox"/><label for="toctree-checkbox-22"><div class="visually-hidden">Toggle navigation of Guides</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ingestion_server/guides/quickstart.html">Ingestion server quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ingestion_server/guides/config.html">Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ingestion_server/guides/mapping.html">Mapping database tables to Elasticsearch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ingestion_server/guides/test.html">Testing guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ingestion_server/guides/migrate.html">Index migration runbook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ingestion_server/guides/upgrade.html">Manual index upgrade runbook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ingestion_server/guides/troubleshoot.html">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../ingestion_server/reference/index.html">Reference</a><input class="toctree-checkbox" id="toctree-checkbox-23" name="toctree-checkbox-23" role="switch" type="checkbox"/><label for="toctree-checkbox-23"><div class="visually-hidden">Toggle navigation of Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ingestion_server/reference/elasticsearch.html">Elasticsearch and Indexing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ingestion_server/reference/safety.html">Safety and Security Considerations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ingestion_server/reference/notifications.html">Notifications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ingestion_server/reference/data_refresh.html">Data Refresh Limit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../ingestion_server/reference/task_api.html">Ingestion server API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../meta/index.html">Managing the Openverse</a><input class="toctree-checkbox" id="toctree-checkbox-24" name="toctree-checkbox-24" role="switch" type="checkbox"/><label for="toctree-checkbox-24"><div class="visually-hidden">Toggle navigation of Managing the Openverse</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../meta/brand/index.html">Brand assets</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../meta/incidents/index.html">Responding to Incidents</a><input class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" role="switch" type="checkbox"/><label for="toctree-checkbox-25"><div class="visually-hidden">Toggle navigation of Responding to Incidents</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../../meta/incidents/runbooks/index.html">Runbooks</a><input class="toctree-checkbox" id="toctree-checkbox-26" name="toctree-checkbox-26" role="switch" type="checkbox"/><label for="toctree-checkbox-26"><div class="visually-hidden">Toggle navigation of Runbooks</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../meta/incidents/runbooks/incident_response_runbook.html">Incident Response Runbook</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../meta/project_boards/index.html">Project boards</a><input class="toctree-checkbox" id="toctree-checkbox-27" name="toctree-checkbox-27" role="switch" type="checkbox"/><label for="toctree-checkbox-27"><div class="visually-hidden">Toggle navigation of Project boards</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../meta/project_boards/issues.html">Issues project: Openverse Backlog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../meta/project_boards/prs.html">PR project: Openverse PRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../meta/project_boards/projects.html">Project project: Openverse Project Tracker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../meta/project_boards/discussions.html">Discussion project: Openverse Discussions</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../meta/ci_cd/index.html">CI + CD workflow</a><input class="toctree-checkbox" id="toctree-checkbox-28" name="toctree-checkbox-28" role="switch" type="checkbox"/><label for="toctree-checkbox-28"><div class="visually-hidden">Toggle navigation of CI + CD workflow</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../meta/ci_cd/actions.html">Actions</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../../meta/ci_cd/jobs/index.html">Jobs</a><input class="toctree-checkbox" id="toctree-checkbox-29" name="toctree-checkbox-29" role="switch" type="checkbox"/><label for="toctree-checkbox-29"><div class="visually-hidden">Toggle navigation of Jobs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../meta/ci_cd/jobs/preparation.html">Preparation jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../meta/ci_cd/jobs/frontend.html">Frontend jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../meta/ci_cd/jobs/packages.html">Packages jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../meta/ci_cd/jobs/docker.html">Docker jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../meta/ci_cd/jobs/catalog.html">Catalog jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../meta/ci_cd/jobs/ingestion_server.html">Ingestion server jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../meta/ci_cd/jobs/api.html">API jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../meta/ci_cd/jobs/documentation.html">Documentation jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../meta/ci_cd/jobs/deployment.html">Deployment jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../meta/ci_cd/jobs/notification.html">Notification jobs</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../meta/ci_cd/flow.html">Flow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../meta/ci_cd/proof_of_functionality.html">Proof-of-functionality</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../meta/ci_cd/artifacts.html">Artifacts</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../meta/decision_making/index.html">Openverse decision-making process</a><input class="toctree-checkbox" id="toctree-checkbox-30" name="toctree-checkbox-30" role="switch" type="checkbox"/><label for="toctree-checkbox-30"><div class="visually-hidden">Toggle navigation of Openverse decision-making process</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../meta/decision_making/process_description.html">Process description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../meta/decision_making/how_to_use.html">How to follow the process in different settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../meta/decision_making/additional_practices.html">Additional practices</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../meta/documentation/index.html">Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-31" name="toctree-checkbox-31" role="switch" type="checkbox"/><label for="toctree-checkbox-31"><div class="visually-hidden">Toggle navigation of Documentation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../meta/documentation/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../meta/documentation/guidelines.html">Documentation guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../meta/documentation/adding_docs.html">Adding a new documentation page</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../meta/documentation/extensions.html">Sphinx extensions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../meta/documentation/review.html">Documentation proofreading and review</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../meta/monitoring/index.html">Monitoring the Openverse</a><input class="toctree-checkbox" id="toctree-checkbox-32" name="toctree-checkbox-32" role="switch" type="checkbox"/><label for="toctree-checkbox-32"><div class="visually-hidden">Toggle navigation of Monitoring the Openverse</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../../meta/monitoring/traffic/index.html">Traffic Management</a><input class="toctree-checkbox" id="toctree-checkbox-33" name="toctree-checkbox-33" role="switch" type="checkbox"/><label for="toctree-checkbox-33"><div class="visually-hidden">Toggle navigation of Traffic Management</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../meta/monitoring/traffic/runbooks/identifying-and-blocking-traffic-anomalies.html">Identifying and Blocking Traffic Anomalies in Cloudflare</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../meta/monitoring/cloudwatch_logs/index.html">Log querying</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../../meta/monitoring/runbooks/index.html">Runbooks</a><input class="toctree-checkbox" id="toctree-checkbox-34" name="toctree-checkbox-34" role="switch" type="checkbox"/><label for="toctree-checkbox-34"><div class="visually-hidden">Toggle navigation of Runbooks</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../meta/monitoring/runbooks/api_http_2xx_under_threshold.html">Run Book: API Production HTTP 2XX responses count under threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../meta/monitoring/runbooks/api_http_5xx_above_threshold.html">Run Book: API Production HTTP 5XX responses count above threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../meta/monitoring/runbooks/api_avg_response_time_above_threshold.html">Run Book: API Production Average Response Time above threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../meta/monitoring/runbooks/api_avg_response_time_anomaly.html">Run Book: API Production Average Response Time anomaly</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../meta/monitoring/runbooks/api_p99_response_time_above_threshold.html">Run Book: API Production P99 Response Time above threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../meta/monitoring/runbooks/api_p99_response_time_anomaly.html">Run Book: API Production P99 Response Time anomaly</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../meta/monitoring/runbooks/api_request_count_anomaly.html">Run Book: API Production Request Count anomalously high</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../meta/monitoring/runbooks/nuxt_http_2xx_under_threshold.html">Run Book: Nuxt 2XX responses count under threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../meta/monitoring/runbooks/nuxt_http_5xx_above_threshold.html">Run Book: Nuxt 5XX responses count above threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../meta/monitoring/runbooks/nuxt_avg_response_time_above_threshold.html">Run Book: Nuxt Production Average Response Time above threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../meta/monitoring/runbooks/nuxt_avg_response_time_anomaly.html">Run Book: Nuxt Production Average Response Time anomalously high</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../meta/monitoring/runbooks/nuxt_p99_response_time_above_threshold.html">Run Book: Nuxt Production P99 Response Time above threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../meta/monitoring/runbooks/nuxt_p99_response_time_anomaly.html">Run Book: Nuxt Production P99 Response Time anomalously high</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../meta/monitoring/runbooks/nuxt_request_count_anomaly.html">Run Book: Nuxt Request Count anomalously high</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../meta/monitoring/runbooks/unhealthy_ecs_hosts.html">Run Book: Unhealthy hosts for ECS service</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../meta/maintenance/index.html">Openverse Infrastructure Maintenance</a><input class="toctree-checkbox" id="toctree-checkbox-35" name="toctree-checkbox-35" role="switch" type="checkbox"/><label for="toctree-checkbox-35"><div class="visually-hidden">Toggle navigation of Openverse Infrastructure Maintenance</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../meta/maintenance/elasticsearch_cluster.html">Elasticsearch cluster maintenance</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../meta/media_properties/index.html">Media properties</a><input class="toctree-checkbox" id="toctree-checkbox-36" name="toctree-checkbox-36" role="switch" type="checkbox"/><label for="toctree-checkbox-36"><div class="visually-hidden">Toggle navigation of Media properties</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../meta/media_properties/catalog.html">Catalog Media Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../meta/media_properties/api.html">API Media Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../meta/media_properties/frontend.html">Frontend Media Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../meta/media_properties/etls.html">Extract-Transform-Load flows</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../meta/release_and_deployment/index.html">Releasing and deploying code</a><input class="toctree-checkbox" id="toctree-checkbox-37" name="toctree-checkbox-37" role="switch" type="checkbox"/><label for="toctree-checkbox-37"><div class="visually-hidden">Toggle navigation of Releasing and deploying code</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../meta/release_and_deployment/runbooks/api.html">API deployment runbook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../meta/release_and_deployment/runbooks/catalog.html">Catalog deployment runbook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../meta/release_and_deployment/runbooks/frontend.html">Frontend deployment runbook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../meta/release_and_deployment/runbooks/ingestion_server.html">Ingestion server deployment runbook</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../packages/index.html">Subpackages</a><input class="toctree-checkbox" id="toctree-checkbox-38" name="toctree-checkbox-38" role="switch" type="checkbox"/><label for="toctree-checkbox-38"><div class="visually-hidden">Toggle navigation of Subpackages</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../packages/js/api_client/index.html"><code class="docutils literal notranslate"><span class="pre">@openverse/api-client</span></code></a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../packages/js/eslint_plugin/index.html"><code class="docutils literal notranslate"><span class="pre">@openverse/eslint-plugin</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-39" name="toctree-checkbox-39" role="switch" type="checkbox"/><label for="toctree-checkbox-39"><div class="visually-hidden">Toggle navigation of @openverse/eslint-plugin</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../packages/js/eslint_plugin/analytics_configuration.html"><code class="docutils literal notranslate"><span class="pre">analytics-configuration</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../packages/js/eslint_plugin/no-unexplained-disabled-test.html"><code class="docutils literal notranslate"><span class="pre">no-unexplained-disabled-test</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../packages/python/openverse_attribution/index.html"><code class="docutils literal notranslate"><span class="pre">openverse-attribution</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../../../index.html">Projects</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-40" name="toctree-checkbox-40" role="switch" type="checkbox"/><label for="toctree-checkbox-40"><div class="visually-hidden">Toggle navigation of Projects</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../planning.html">Project Planning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../templates/implementation_plan.html">Template: Implementation Plan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../templates/index.html">Template: Project Directory <code class="docutils literal notranslate"><span class="pre">index.md</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../templates/project_proposal.html">Template: Project Proposal</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../yearly_planning/index.html">Yearly Planning</a><input class="toctree-checkbox" id="toctree-checkbox-41" name="toctree-checkbox-41" role="switch" type="checkbox"/><label for="toctree-checkbox-41"><div class="visually-hidden">Toggle navigation of Yearly Planning</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../yearly_planning/process_outline.html">Yearly Planning: Process Outline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../yearly_planning/project_themes.html">Project Themes</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../3d_model_support/index.html">3D Model Support</a><input class="toctree-checkbox" id="toctree-checkbox-42" name="toctree-checkbox-42" role="switch" type="checkbox"/><label for="toctree-checkbox-42"><div class="visually-hidden">Toggle navigation of 3D Model Support</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../3d_model_support/20220221-project_proposal.html">2022-02-21 Project Proposal: 3D model support</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../additional_search_views/index.html">Additional Search Views</a><input class="toctree-checkbox" id="toctree-checkbox-43" name="toctree-checkbox-43" role="switch" type="checkbox"/><label for="toctree-checkbox-43"><div class="visually-hidden">Toggle navigation of Additional Search Views</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../additional_search_views/20230424-project_proposal_additional_search_views.html">2023-04-24 Project Proposal: Additional search views</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../additional_search_views/20230719-implementation_plan_additional_search_views.html">2023-07-20 Implementation Plan: Additional Search Views</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../additional_search_views/SUPERSEDED-20230719-implementation_plan_additional_search_views.html">SUPERSEDED 2023-07-20 Implementation Plan: Additional Search Views</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../analytics/index.html">Analytics</a><input class="toctree-checkbox" id="toctree-checkbox-44" name="toctree-checkbox-44" role="switch" type="checkbox"/><label for="toctree-checkbox-44"><div class="visually-hidden">Toggle navigation of Analytics</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../analytics/20221006-implementation_plan_frontend.html">2022-10-06 Implementation Plan: Frontend event tracking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../analytics/20230307-backend_service.html">2023-03-07 Implementation Plan: Analytics backend and visualisation service</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../core_user_interface_improvement/index.html">Core User Interface Improvements</a><input class="toctree-checkbox" id="toctree-checkbox-45" name="toctree-checkbox-45" role="switch" type="checkbox"/><label for="toctree-checkbox-45"><div class="visually-hidden">Toggle navigation of Core User Interface Improvements</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../core_user_interface_improvement/20230314-project_proposal_core_ui_improvement.html">2023-03-14 Project Proposal: Core UI Improvement</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../dark_mode/index.html">Dark Mode</a><input class="toctree-checkbox" id="toctree-checkbox-46" name="toctree-checkbox-46" role="switch" type="checkbox"/><label for="toctree-checkbox-46"><div class="visually-hidden">Toggle navigation of Dark Mode</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../dark_mode/20240313-project_proposal_dark_mode.html">2024-03-13 Project Proposal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../dark_mode/20240325-implementation_plan_dark_mode.html">2024-03-25 Implementation Plan: Dark Mode</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../data_normalization/index.html">Data Normalization</a><input class="toctree-checkbox" id="toctree-checkbox-47" name="toctree-checkbox-47" role="switch" type="checkbox"/><label for="toctree-checkbox-47"><div class="visually-hidden">Toggle navigation of Data Normalization</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../data_normalization/20240227-implementation_plan_catalog_data_cleaning.html">2024-02-27 Implementation Plan: Catalog Data Cleaning</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../document_all_media_properties/index.html">Document all media properties</a><input class="toctree-checkbox" id="toctree-checkbox-48" name="toctree-checkbox-48" role="switch" type="checkbox"/><label for="toctree-checkbox-48"><div class="visually-hidden">Toggle navigation of Document all media properties</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../document_all_media_properties/20230307-project_proposal.html">2023-03-07 Project proposal for Document all media properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../document_all_media_properties/20230426-implementation_plan_documenting_media_properties.html">2023-04-26 Implementation Plan: Document all media properties in the catalog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../document_all_media_properties/20240313-implementation_plan_document_media_properties_api.html">2024-03-25 Implementation Plan: Document all media properties in the API</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../document_all_media_properties/samples/index.html">Samples</a><input class="toctree-checkbox" id="toctree-checkbox-49" name="toctree-checkbox-49" role="switch" type="checkbox"/><label for="toctree-checkbox-49"><div class="visually-hidden">Toggle navigation of Samples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../document_all_media_properties/samples/openverse_media_properties.html">Openverse Media Properties</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../document_all_media_properties/samples/sample_media_properties.html">sample_media_properties.md</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../document_all_media_properties/samples/sample_postamble.html">sample_postamble.md</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../document_all_media_properties/samples/sample_preamble.html">sample_preamble.md</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../document_all_media_properties/samples/index.html">Samples</a><input class="toctree-checkbox" id="toctree-checkbox-50" name="toctree-checkbox-50" role="switch" type="checkbox"/><label for="toctree-checkbox-50"><div class="visually-hidden">Toggle navigation of Samples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../document_all_media_properties/samples/openverse_media_properties.html">Openverse Media Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../document_all_media_properties/samples/sample_media_properties.html">sample_media_properties.md</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../document_all_media_properties/samples/sample_postamble.html">sample_postamble.md</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../document_all_media_properties/samples/sample_preamble.html">sample_preamble.md</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../feature_flags/index.html">Feature Flags</a><input class="toctree-checkbox" id="toctree-checkbox-51" name="toctree-checkbox-51" role="switch" type="checkbox"/><label for="toctree-checkbox-51"><div class="visually-hidden">Toggle navigation of Feature Flags</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../feature_flags/20220309-project_proposal.html">2022-03-09 Project Proposal: Feature flags</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../frontend_ui_state_cookie/index.html">Frontend UI State Cookie</a><input class="toctree-checkbox" id="toctree-checkbox-52" name="toctree-checkbox-52" role="switch" type="checkbox"/><label for="toctree-checkbox-52"><div class="visually-hidden">Toggle navigation of Frontend UI State Cookie</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../frontend_ui_state_cookie/20220218-project_proposal.html">2022-02-18 Project Propsal: Frontend UI State Cookie</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../infrastructure_improvements/index.html">Openverse Infrastructure</a><input class="toctree-checkbox" id="toctree-checkbox-53" name="toctree-checkbox-53" role="switch" type="checkbox"/><label for="toctree-checkbox-53"><div class="visually-hidden">Toggle navigation of Openverse Infrastructure</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../infrastructure_improvements/20240105_implementation_plan_move_remaining_services_to_openverse_org.html">2024-01-05 Implementation Plan: Finish moving all services to <code class="docutils literal notranslate"><span class="pre">openverse.org</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../ingestion_server_removal/index.html">Ingestion server removal</a><input class="toctree-checkbox" id="toctree-checkbox-54" name="toctree-checkbox-54" role="switch" type="checkbox"/><label for="toctree-checkbox-54"><div class="visually-hidden">Toggle navigation of Ingestion server removal</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../ingestion_server_removal/20240319-project_proposal.html">2024-03-19 Project Proposal: Removal of the Ingestion Server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ingestion_server_removal/20240328-implementation_plan_ingestion_server_removal.html">2024-03-28 Implementation Plan: Ingestion Server Removal</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../monitoring/index.html">Monitoring</a><input class="toctree-checkbox" id="toctree-checkbox-55" name="toctree-checkbox-55" role="switch" type="checkbox"/><label for="toctree-checkbox-55"><div class="visually-hidden">Toggle navigation of Monitoring</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../monitoring/20220307-project_proposal.html">2022-03-07 Project Proposal: Monitoring</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../monitoring/20230606_implementation_plan_ecs_alarms.html">2023-06-06 Implementation Plan: Baseline Alarms for ECS Services</a><input class="toctree-checkbox" id="toctree-checkbox-56" name="toctree-checkbox-56" role="switch" type="checkbox"/><label for="toctree-checkbox-56"><div class="visually-hidden">Toggle navigation of 2023-06-06 Implementation Plan: Baseline Alarms for ECS Services</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../monitoring/run_book_samples/stable_run_book_sample.html">Stable Run Book Sample</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../monitoring/run_book_samples/unstable_run_book_sample.html">Unstable Run Book Sample</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../monorepo/index.html">Monorepo</a><input class="toctree-checkbox" id="toctree-checkbox-57" name="toctree-checkbox-57" role="switch" type="checkbox"/><label for="toctree-checkbox-57"><div class="visually-hidden">Toggle navigation of Monorepo</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../monorepo/20221124-project_proposal.html">2022-11-24 Project Proposal: Monorepo</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../nuxt_3_migration/index.html">Nuxt 3 Migration</a><input class="toctree-checkbox" id="toctree-checkbox-58" name="toctree-checkbox-58" role="switch" type="checkbox"/><label for="toctree-checkbox-58"><div class="visually-hidden">Toggle navigation of Nuxt 3 Migration</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../nuxt_3_migration/20230604-project_proposal_nuxt_3_migration.html">2023-06-02 Project Proposal</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../popularity_optimizations/index.html">Popularity Calculation Optimizations</a><input class="toctree-checkbox" id="toctree-checkbox-59" name="toctree-checkbox-59" role="switch" type="checkbox"/><label for="toctree-checkbox-59"><div class="visually-hidden">Toggle navigation of Popularity Calculation Optimizations</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../popularity_optimizations/20230406-project_proposal_popularity_optimizations.html">2023-04-06 Project Proposal: Popularity Calculation Optimizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../popularity_optimizations/20230420-implementation_plan_popularity_optimizations.html">Implementation Plan: Decoupling Popularity Calculations from the Data Refresh</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../project_improvement/index.html">Project board improvements</a><input class="toctree-checkbox" id="toctree-checkbox-60" name="toctree-checkbox-60" role="switch" type="checkbox"/><label for="toctree-checkbox-60"><div class="visually-hidden">Toggle navigation of Project board improvements</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../project_improvement/20230913-project_proposal_project_improvements.html">2023-09-13 Project proposal: Project board improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../project_improvement/20230914-implementation_plan_project_automations.html">2023-09-14 Implementation plan: Project automations</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../publish_dataset/index.html">Providing and maintaining an Openverse image dataset</a><input class="toctree-checkbox" id="toctree-checkbox-61" name="toctree-checkbox-61" role="switch" type="checkbox"/><label for="toctree-checkbox-61"><div class="visually-hidden">Toggle navigation of Providing and maintaining an Openverse image dataset</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../publish_dataset/20230706-project_proposal_openverse_dataset.html">2023-07-06 Project Proposal: Providing and maintaining an Openverse image dataset</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../python_packaging/index.html">Python packaging and code sharing</a><input class="toctree-checkbox" id="toctree-checkbox-62" name="toctree-checkbox-62" role="switch" type="checkbox"/><label for="toctree-checkbox-62"><div class="visually-hidden">Toggle navigation of Python packaging and code sharing</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../python_packaging/20240412-implementation_plan_switching_to_a_new_python_package_manager.html">2024-04-12 Implementation Plan: Switching to a new Python package manager</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../rekognition_data/index.html">Rekognition Data Incorporation</a><input class="toctree-checkbox" id="toctree-checkbox-63" name="toctree-checkbox-63" role="switch" type="checkbox"/><label for="toctree-checkbox-63"><div class="visually-hidden">Toggle navigation of Rekognition Data Incorporation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../rekognition_data/20240320-project_proposal_rekognition_data.html">2024-03-20 Project Proposal: Incorporate Rekognition data into the Catalog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../rekognition_data/20240423-implementation_plan_machine_generated_tags_api.html">2024-04-23 Implementation Plan: Machine-generated tags in the API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../rekognition_data/20240510-implementation_plan_machine_generated_tags_frontend.html">2024-05-08 Implementation Plan: Machine-generated tags in the frontend</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../rekognition_data/20240530-implementation_plan_augment_catalog_with_rekognition_tags.html">2024-05-30 Implementation Plan: Augment the catalog database with suitable Rekognition tags</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../rekognition_data/appendix/appendix.html">Appendix</a><input class="toctree-checkbox" id="toctree-checkbox-64" name="toctree-checkbox-64" role="switch" type="checkbox"/><label for="toctree-checkbox-64"><div class="visually-hidden">Toggle navigation of Appendix</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../rekognition_data/appendix/rekognition_labels.html">Rekognition Labels</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../search_relevancy_sandbox/index.html">Search Relevancy Sandbox</a><input class="toctree-checkbox" id="toctree-checkbox-65" name="toctree-checkbox-65" role="switch" type="checkbox"/><label for="toctree-checkbox-65"><div class="visually-hidden">Toggle navigation of Search Relevancy Sandbox</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../search_relevancy_sandbox/20230331-project_proposal_search_relevancy_sandbox.html">2023-03-31 Project Proposal: Search relevancy sandbox</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../search_relevancy_sandbox/20230406-implementation_plan_update_staging_database.html">2023-04-06 Implementation Plan: Update Staging Database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../search_relevancy_sandbox/20230518-implementation_plan_staging_index_rapid_iteration.html">2023-05-18 Implementation Plan: Rapid iteration of ingestion server index configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../search_relevancy_sandbox/20230530-implementation_plan_staging_elasticsearch_reindex_dags.html">2023-06-08 Implementation Plan: Staging Elasticsearch Reindex DAGs</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../content_report_moderation/index.html">Sensitive Content Report Moderation Initial Practices</a><input class="toctree-checkbox" id="toctree-checkbox-66" name="toctree-checkbox-66" role="switch" type="checkbox"/><label for="toctree-checkbox-66"><div class="visually-hidden">Toggle navigation of Sensitive Content Report Moderation Initial Practices</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../content_report_moderation/20230411-project_proposal_content_report_moderation.html">2023-04-11 Project Proposal: Sensitive content report moderation: initial practices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../content_report_moderation/20230517-implementation_plan_mature_copy_change.html">2023-05-17 Implementation Plan: Copy updates <code class="docutils literal notranslate"><span class="pre">mature</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">sensitive</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../content_report_moderation/20231208-implementation_plan_django_admin_moderator_access.html">2023-12-08 Implementation Plan: Django admin tools and access control for moderators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../content_report_moderation/20240122-implementation_plan_bulk_moderation_actions.html">2024-01-22 Implementation Plan: Bulk Moderation Actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../content_report_moderation/20240122-implementation_plan_moderation_metrics.html">2024-01-22 Implementation Plan: Moderation response times</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current has-children"><a class="reference internal" href="index.html">Detecting and Blurring Sensitive Textual Content</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-67" name="toctree-checkbox-67" role="switch" type="checkbox"/><label for="toctree-checkbox-67"><div class="visually-hidden">Toggle navigation of Detecting and Blurring Sensitive Textual Content</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="20230309-implementation_plan_sensitive_terms_list.html">2023-03-09 Implementation Plan: Sensitive Terms List</a></li>
+<li class="toctree-l3"><a class="reference internal" href="20230309-project_proposal_detecting_sensitive_textual_content.html">2023-03-09 Project Proposal: Detecting sensitive textual content and blurring all sensitive results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="20230330-implementation_plan_filtering_and_designating_results_with_sensitive_textual_content.html">2023-03-30 Implementation Plan: Filtering and designating results with sensitive textual content</a></li>
+<li class="toctree-l3"><a class="reference internal" href="20230506-implementation_plan_frontend_blurring_sensitive.html">2023-05-06 Implementation Plan: Fetching, blurring sensitive results</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">2024-09-03 Implementation Plan: Undo the split indices for filtered textual sensitivity</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current has-children"><a class="reference internal" href="../index.html">Trust and Safety</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-68" name="toctree-checkbox-68" role="switch" type="checkbox"/><label for="toctree-checkbox-68"><div class="visually-hidden">Toggle navigation of Trust and Safety</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../20230109-trust_and_safety_preliminary_overview_and_exploration.html">2023-01-09 Initial Overview and User Stories</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../content_report_moderation/index.html">Sensitive Content Report Moderation Initial Practices</a><input class="toctree-checkbox" id="toctree-checkbox-69" name="toctree-checkbox-69" role="switch" type="checkbox"/><label for="toctree-checkbox-69"><div class="visually-hidden">Toggle navigation of Sensitive Content Report Moderation Initial Practices</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../content_report_moderation/20230411-project_proposal_content_report_moderation.html">2023-04-11 Project Proposal: Sensitive content report moderation: initial practices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../content_report_moderation/20230517-implementation_plan_mature_copy_change.html">2023-05-17 Implementation Plan: Copy updates <code class="docutils literal notranslate"><span class="pre">mature</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">sensitive</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../content_report_moderation/20231208-implementation_plan_django_admin_moderator_access.html">2023-12-08 Implementation Plan: Django admin tools and access control for moderators</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../content_report_moderation/20240122-implementation_plan_bulk_moderation_actions.html">2024-01-22 Implementation Plan: Bulk Moderation Actions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../content_report_moderation/20240122-implementation_plan_moderation_metrics.html">2024-01-22 Implementation Plan: Moderation response times</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current has-children"><a class="reference internal" href="index.html">Detecting and Blurring Sensitive Textual Content</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-70" name="toctree-checkbox-70" role="switch" type="checkbox"/><label for="toctree-checkbox-70"><div class="visually-hidden">Toggle navigation of Detecting and Blurring Sensitive Textual Content</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="20230309-implementation_plan_sensitive_terms_list.html">2023-03-09 Implementation Plan: Sensitive Terms List</a></li>
+<li class="toctree-l4"><a class="reference internal" href="20230309-project_proposal_detecting_sensitive_textual_content.html">2023-03-09 Project Proposal: Detecting sensitive textual content and blurring all sensitive results</a></li>
+<li class="toctree-l4"><a class="reference internal" href="20230330-implementation_plan_filtering_and_designating_results_with_sensitive_textual_content.html">2023-03-30 Implementation Plan: Filtering and designating results with sensitive textual content</a></li>
+<li class="toctree-l4"><a class="reference internal" href="20230506-implementation_plan_frontend_blurring_sensitive.html">2023-05-06 Implementation Plan: Fetching, blurring sensitive results</a></li>
+<li class="toctree-l4 current current-page"><a class="current reference internal" href="#">2024-09-03 Implementation Plan: Undo the split indices for filtered textual sensitivity</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../visual_regression_testing/index.html">Visual Regression Testing</a><input class="toctree-checkbox" id="toctree-checkbox-71" name="toctree-checkbox-71" role="switch" type="checkbox"/><label for="toctree-checkbox-71"><div class="visually-hidden">Toggle navigation of Visual Regression Testing</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../visual_regression_testing/20220217-implementation_plan.html">2022-02-17 Implementation Plan: Visual regression testing</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../vuex_to_pina_conversion/index.html">Pinia Conversion</a><input class="toctree-checkbox" id="toctree-checkbox-72" name="toctree-checkbox-72" role="switch" type="checkbox"/><label for="toctree-checkbox-72"><div class="visually-hidden">Toggle navigation of Pinia Conversion</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../vuex_to_pina_conversion/20220223-project_proposal.html">2022-02-23 Project Proposal: Vuex to Pinia conversion</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../terms_of_service.html">Openverse Terms of Service</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">External links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://openverse.org">Openverse</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/WordPress/openverse">GitHub</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/WordPress/openverse/edit/main/documentation/projects/proposals/trust_and_safety/detecting_sensitive_textual_content/20240903-implementation_plan_undo_split_filtered_indices.md" title="Edit this page">
+    <svg aria-hidden="true" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
+      <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
+    </svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="implementation-plan-undo-the-split-indices-for-filtered-textual-sensitivity">
+<h1>2024-09-03 Implementation Plan: Undo the split indices for filtered textual sensitivity<a class="headerlink" href="#implementation-plan-undo-the-split-indices-for-filtered-textual-sensitivity" title="Link to this heading">¶</a></h1>
+<p><strong>Author</strong>: <a class="reference external" href="https://github.com/sarayourfriend" title="sarayourfriend on GitHub">&#64;sarayourfriend</a></p>
+<!-- See the implementation plan guide for more information: https://github.com/WordPress/openverse/tree/19791f51c063d0979112f4b9f4eeace04c8cf5ff/docs/projects#implementation-plans-status-in-rfc -->
+<!-- This template is exhaustive and may include sections which aren't relevant to your project. Feel free to remove any sections which would not be useful to have. -->
+<section id="reviewers">
+<h2>Reviewers<a class="headerlink" href="#reviewers" title="Link to this heading">¶</a></h2>
+<!-- Choose two people at your discretion who make sense to review this based on their existing expertise. Check in to make sure folks aren't currently reviewing more than one other proposal or RFC. -->
+<ul class="simple">
+<li><p>[x] <a class="reference external" href="https://github.com/dhruvkb" title="dhruvkb on GitHub">&#64;dhruvkb</a> (API familiarity, especially in code that interacts with ES
+during moderation)</p></li>
+<li><p>[x] <a class="reference external" href="https://github.com/stacimc" title="stacimc on GitHub">&#64;stacimc</a> (Data refresh and ingestion worker expertise)</p></li>
+</ul>
+</section>
+<section id="project-links">
+<h2>Project links<a class="headerlink" href="#project-links" title="Link to this heading">¶</a></h2>
+<!-- Enumerate any references to other documents/pages, including milestones and other plans -->
+<p>This implementation exists as a one-off modification to our textual sensitivity
+detection, and does not have a corresponding project proposal.
+<a class="reference external" href="https://github.com/WordPress/openverse/issues/3336">Refer to this GitHub issue requesting the implementation plan for discussion of the motivation for this change</a>.</p>
+<p><strong>Before reading this plan</strong>, please review
+<a class="reference internal" href="20230330-implementation_plan_filtering_and_designating_results_with_sensitive_textual_content.html"><span class="std std-doc">the original implementation plan for the split-index approach</span></a>.
+This document assumes familiarity with the details of the original plan and does
+not review them in detail.</p>
+<p>When this plan uses the phrase “the sensitive terms” or “sensitive terms list”,
+it refers to
+<a class="reference internal" href="20230309-implementation_plan_sensitive_terms_list.html"><span class="std std-doc">the newline-delimited list of sensitive terms described in this related IP</span></a>.
+<strong>This plan does not mention any specific sensitive terms</strong>, it is not necessary
+to know the specific terms list to review this plan. However, it may be helpful
+to know that the list is nearly 2000 lines long and is UTF-8 encoded.</p>
+<p>Finally, this plan assumes that by the time it is relevant to consider it, the
+<a class="reference external" href="https://github.com/WordPress/openverse/issues/3925">project to remove the ingestion server</a>
+will be complete. Therefore, this plan gives no consideration to the ingestion
+server. It only considers the indexer worker and the new fully
+Airflow-controlled data refresh implemented by the linked project.</p>
+</section>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
+<!-- An overview of the implementation plan, if necessary. Save any specific steps for the section(s) below. -->
+<p>This plan proposes changing our sensitive text detection strategy to accommodate
+a single index per media type. The proposed method involves searching for
+sensitive textual content in the indexer worker, rather than using the
+Elasticsearch reindex API and Elasticsearch text queries.</p>
+<p>The indexer worker will create
+<a class="reference external" href="https://github.com/WordPress/openverse/blob/df57ab3eb6586502995d6fa70cf417352ec68402/ingestion_server/ingestion_server/elasticsearch_models.py#L78-L128">a new <code class="docutils literal notranslate"><span class="pre">sensitivity</span></code> object field for each Elasticsearch document</a>.
+The field will be a nested object of boolean fields. The valid
+<a class="reference external" href="https://github.com/WordPress/openverse/blob/46a42f7e2c2409d7a8377ce188f4fafb96d5fdec/api/api/constants/sensitivity.py#L1-L12">property names will match those used by the API</a><a class="footnote-reference brackets" href="#provider-supplied-sensitivity" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">sensitive_text</span></code>: included for a document when the title, tags, or description
+of the work include any of the sensitive terms.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">user_reported_sensitivity</span></code>: included for a document there is a confirmed
+sensitive content report for the work.</p></li>
+</ul>
+<p>Additionally, a denormalised field <code class="docutils literal notranslate"><span class="pre">sensitivity.any</span></code> will be added to simplify
+our current most-common query case, where we query for works that have no known
+sensitivity designations.</p>
+<p>Maintaining the denormalised field and its upstream fields ensures we can use
+this data both at query and read time to effectively communicate the known
+sensitivity designations for a given work, with no additional computation needed
+at query time.</p>
+<p>Details of the programming logic for each are covered in the
+<a class="reference internal" href="#step-details">step details section</a>.</p>
+<div class="hint admonition">
+<p class="admonition-title">Rationale for a new index field</p>
+<p>While the filtered index currently exists to represent works free of sensitive
+textual content, we can somewhat simplify the overall handling of sensitive
+works in search by approaching this problem with both modes of sensitivity in
+mind. The current approach to searching non-sensitive works is to search the
+filtered index <em>and</em> exclude works<a class="footnote-reference brackets" href="#must-not" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> where <code class="docutils literal notranslate"><span class="pre">mature=true</span></code>. By switching
+to a single object populated with the individual sensitivity designations, with the
+denormalised <code class="docutils literal notranslate"><span class="pre">any</span></code>, we can simplify the search for non-sensitive works by filtering
+for when the <code class="docutils literal notranslate"><span class="pre">sensitivity.any</span></code> field is false. We will effectively be able to swap out
+the existing <code class="docutils literal notranslate"><span class="pre">must_not:</span> <span class="pre">mature=true</span></code> aspect for <code class="docutils literal notranslate"><span class="pre">must_not:</span> <span class="pre">sensitivity.any=true</span></code>.</p>
+</div>
+<p>Once the <code class="docutils literal notranslate"><span class="pre">sensitivity</span></code> field is available in the index, we will update the API
+to query based on that rather than switching indices and using the <code class="docutils literal notranslate"><span class="pre">mature</span></code>
+approach. The API will use a feature flag to determine which querying approach
+to use. This makes it easy for us to switch to the old querying approach in case
+of failure, without needing to roll back or revert code, which could impact
+other ongoing projects.</p>
+<p>Finally, once we have confidence the new approach is working, we begin the phase
+of cleaning up the multi-index approach. There are two major parts to this:
+removing the filtered index management from the data refresh, and removing the
+API code that utilises it. Neither of these appear to have much complexity. Both
+are described in detail in the <a class="reference internal" href="#step-by-step-plan">step-by-step section</a>.</p>
+<section id="when-to-start-clean-up">
+<h3>When to start clean-up<a class="headerlink" href="#when-to-start-clean-up" title="Link to this heading">¶</a></h3>
+<p>Clean-up will occur only after two full production data refreshes have occurred
+with the new code fully available and enabled. This is to ensure we have
+sufficiently exercised the new approach during the data refresh and at query
+time before starting to take actions that will make rolling back more
+cumbersome. Two full production data refreshes will encompass 2 weeks at the
+minimum, but will more likely represent a period of 3 weeks.</p>
+</section>
+<section id="evaluating-the-performance-of-the-new-approach">
+<h3>Evaluating the performance of the new approach<a class="headerlink" href="#evaluating-the-performance-of-the-new-approach" title="Link to this heading">¶</a></h3>
+<p>We should make an effort to compare the new approach to the old. There are two
+methods we can use, one which seems intuitive but that I believe will not work,
+and another which I believe will work, and which I propose we follow.</p>
+<p>To attempt a simultaneous comparison of the two strategies, we could do the
+following: preserve the ability for both strategies in the API, and direct a
+portion of search requests to the new method. Using a new, temporary response
+header, expose the search method used for the request in the Nginx logs. That
+will enable us to query Logs Insights and determine whether there is a
+meaningful difference in the average, median, p95, and p99 search timings for
+the two methods over the same time period. This is an “ad-hoc” approach to
+compensate
+<a class="reference external" href="https://github.com/WordPress/openverse/issues/421">for the lack of an existing A/B experimentation framework</a>.</p>
+<p>However, this presents a problem: it does not compare the final outcome of this
+plan with the current state of things. The motivation for removing the filtered
+index is predicated on the idea that moving to a single index will improve
+Elasticsearch’s ability to utilise its query cache and reduce disk operations.
+If we are simultaneously using the single and multi-index approaches, the
+behaviour of the cluster and application will not reflect the reduction in disk
+operations or increase in cache utilisation. That is because the thing causing
+the current behaviour will still be operating. In fact, trying both
+simultaneously would probably make things worse for all queries across the
+board. We would be sending rather different types of queries, still to multiple
+indices, thereby reducing Elasticsearch’s opportunity for cache utilisation and
+thus increasing its disk operations.</p>
+<p>To actually implement a simultaneous comparison, I hypothesise that we would
+need to have identically resourced clusters, one for executing the new type of
+query, and one for the old type. I believe because the performance question in
+this plan has to do with reducing disk operations and increasing cache
+utilisation, that the metrics are unique from relevance optimisations, which we
+would be able to measure side by side.</p>
+<p>While possible in theory, it is too complex!</p>
+<p>Instead, I believe we should use a regular feature-flag approach as described
+above, and compare the performance of the new approach in isolation. Any
+significant negative impact will be immediately evident. Provided we don’t see
+an immediate issue, we can evaluate the performance of the new querying approach
+for as long as we like (I propose at least two weeks), before we remove the
+filtered index and the API code that uses it.</p>
+<p>The original issue makes clear that we can see the improvement that using a
+single index makes without needing to remove the additional indices, because the
+results described by issue were collected while both indices were available on
+the cluster. That fact makes this a viable approach. It means we can reliably
+see if we’ve achieved the goal of reduced disk operations and increased cache
+utilisation, without entering a situation where rollback is extremely difficult.</p>
+</section>
+<section id="initial-query-performance-analysis">
+<h3>Initial query performance analysis<a class="headerlink" href="#initial-query-performance-analysis" title="Link to this heading">¶</a></h3>
+<p>The new approach, querying <code class="docutils literal notranslate"><span class="pre">must_not:</span> <span class="pre">sensitivity.any=true</span></code>, has identical
+query-time performance implications as the <code class="docutils literal notranslate"><span class="pre">must_not:</span> <span class="pre">mature=true</span></code> query.
+Therefore, there is no need to attempt a direct comparison of the query formats.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A previous version of this implementation plan suggested using a keyword-list
+field. That version of the plan included a surface-level exploration of the differences
+between the must-not boolean-terms query and a must-not exists query. That
+is no longer relevant for the sensitivity-as-object based approach now recommended,
+but for posterity, it can be found in the commit history of the repository
+at this commit:</p>
+<p><a class="reference external" href="https://github.com/WordPress/openverse/blob/d616bf80fb3267887ae02bd27488e78e6508e2a7/documentation/projects/proposals/trust_and_safety/detecting_sensitive_textual_content/20240903-implementation_plan_undo_split_filtered_indices.md#initial-query-performance-analysis">https://github.com/WordPress/openverse/blob/d616bf80fb3267887ae02bd27488e78e6508e2a7/documentation/projects/proposals/trust_and_safety/detecting_sensitive_textual_content/20240903-implementation_plan_undo_split_filtered_indices.md#initial-query-performance-analysis</a></p>
+</div>
+</section>
+</section>
+<section id="expected-outcomes">
+<h2>Expected Outcomes<a class="headerlink" href="#expected-outcomes" title="Link to this heading">¶</a></h2>
+<!-- List any succinct expected products from this implementation plan. -->
+<p>I’ve copied these lists of requirements/not-requirements from
+<a class="reference external" href="https://github.com/WordPress/openverse/issues/3336#issuecomment-2288432417">this comment of mine in the issue for this IP</a>.</p>
+<p>Requirements:</p>
+<ul class="simple">
+<li><p><strong>A single index rather than a filtered and unfiltered index</strong>. This is the
+main requirement.</p></li>
+<li><p>Arbitrary changes to the list of sensitive terms continue to be reflected in
+search within one data refresh cycle</p>
+<ul>
+<li><p>Keeping it “within one data refresh cycle” means the responsiveness to
+changes does not go down, but doesn’t preclude it somehow becoming faster
+than one data refresh cycle, if for some reason that’s possible.</p></li>
+</ul>
+</li>
+<li><p>No ambiguity between the existing <code class="docutils literal notranslate"><span class="pre">mature</span></code> field and however we indicate
+textual sensitivity in the index.</p></li>
+<li><p>No negative change in search performance (i.e., cannot make search worse off
+after this).</p></li>
+<li><p>Including or excluding results with sensitive terms must not affect ranking.</p></li>
+</ul>
+<p>Not requirements:</p>
+<ul class="simple">
+<li><p>That textual sensitivity designation exists in the catalogue, as opposed to
+only in Elasticsearch (it is not currently the case and making that a
+requirement would, strictly speaking, expand the scope of the project).</p></li>
+<li><p>Excluding a subset of “safe” providers from sensitive text
+scanning<a class="footnote-reference brackets" href="#exclude-source-subset" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.</p></li>
+<li><p>Avoid unnecessary re-evaluation, e.g., by skipping evaluation for works where
+their metadata has not changed since the last time they were evaluated against
+the current sensitive terms list<a class="footnote-reference brackets" href="#avoid-unnecessary-reevaluation" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>.</p></li>
+</ul>
+<p>Not being a requirement does not exclude the possibility of the thing, if it
+turns out that works in our favour. I just want to make sure the scope of
+<em>requirements</em> is clear. The last two would be nice to have improvements, and
+may or may not be easy to implement, and if they do not end up part of this
+project, I will definitely create issues for each of them afterwards.</p>
+</section>
+<section id="step-by-step-plan">
+<h2>Step-by-step plan<a class="headerlink" href="#step-by-step-plan" title="Link to this heading">¶</a></h2>
+<!--
+List the ordered steps of the plan in the form of imperative-tone issue titles.
+
+The goal of this section is to give a high-level view of the order of implementation any relationships like
+blockages or other dependencies that exist between steps of the plan. Link each step to the step description
+in the following section.
+
+If special deployments are required between steps, explicitly note them here. Additionally, highlight key
+milestones like when a feature flag could be made available in a particular environment.
+-->
+<p>These steps must be completed in sequence. Steps with multiple PRs may be
+completed simultaneously to each other. Overall, this plan should result in
+about 5 main pull requests.</p>
+<ol class="arabic simple">
+<li><p>Generate usable <code class="docutils literal notranslate"><span class="pre">sensitivity</span></code> fields for Elasticsearch documents (1 PR)</p></li>
+<li><p>Update API with new query method (behind feature flag) (2 PRs, one for
+search, one for moderation tools)</p></li>
+<li><p>Turn on feature flag in production and observe (1 minor infrastructure PR)</p></li>
+<li><p>Clean up (2 PRs)</p></li>
+</ol>
+</section>
+<section id="step-details">
+<h2>Step details<a class="headerlink" href="#step-details" title="Link to this heading">¶</a></h2>
+<!--
+Describe all of the implementation steps listed in the "step-by-step plan" in detail.
+
+For each step description, ensure the heading includes an obvious reference to the step as described in the
+"step-by-step plan" section above.
+-->
+<section id="step-1-generate-usable-sensitivity-field-for-elasticsearch-documents">
+<h3>Step 1: Generate usable <code class="docutils literal notranslate"><span class="pre">sensitivity</span></code> field for Elasticsearch documents<a class="headerlink" href="#step-1-generate-usable-sensitivity-field-for-elasticsearch-documents" title="Link to this heading">¶</a></h3>
+<p>Complete the following in a single PR:</p>
+<p>To set up the sensitive terms list for use in the indexer worker, we will
+retrieve the sensitive terms list from the GitHub URL (see data refresh for
+reference) and make the list available to the indexer processes without
+requiring subsequent outbound requests for the
+list<a class="footnote-reference brackets" href="#multiprocessing-future-proofed" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>:</p>
+<ul class="simple">
+<li><p>Create a new Python module in the indexer worker, <code class="docutils literal notranslate"><span class="pre">sensitive_terms.py</span></code>. It
+will export the following:</p>
+<ul>
+<li><p>A function <code class="docutils literal notranslate"><span class="pre">retrieve_sensitive_terms</span></code> which accepts an argument
+<code class="docutils literal notranslate"><span class="pre">target_index</span></code> and retrieves the sensitive terms list from the network
+location and saves it to disk at
+<code class="docutils literal notranslate"><span class="pre">Path(__file__).parent</span> <span class="pre">/</span> <span class="pre">f&quot;sensitive_terms-{target_index}.txt&quot;</span></code>. This
+function should check an environment variable for the network location of
+the sensitive terms list. If that variable is undefined, it should simply
+write the mock sensitive terms (“water”, “running”, and “bird”) to the disk
+location as a newline-delimited list.</p>
+<ul>
+<li><p>The function should check whether the file location already exists, which
+would indicate the terms list was already pulled for the target index. If
+that is the case, then return early and do not re-pull the list.</p></li>
+<li><p>This ensures any given target index uses the same sensitive terms query,
+even if multiple tasks are issued to the indexer worker. In other words,
+it only pulls the sensitive terms list once for a target index, and reuses
+it to service all requests against the same target index.</p></li>
+<li><p>The indexer worker will call <code class="docutils literal notranslate"><span class="pre">retrieve_sensitive_terms</span></code> when handling
+<code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/task</span></code> and pass the <code class="docutils literal notranslate"><span class="pre">target_index</span></code> retrieved from the request body.
+Add the call to <code class="docutils literal notranslate"><span class="pre">retrieve_sensitive_terms</span></code> early in
+<code class="docutils literal notranslate"><span class="pre">api.IndexingJobResource::on_post</span></code>.</p></li>
+<li><p>This ensures the file is populated to disk as early as possible, before
+any indexing jobs are actually spawned.</p></li>
+</ul>
+</li>
+<li><p>A function <code class="docutils literal notranslate"><span class="pre">get_sensitive_terms</span></code>, which will be wrapped in
+<code class="docutils literal notranslate"><span class="pre">&#64;functools.cache</span></code>. The function will read <code class="docutils literal notranslate"><span class="pre">SENSITIVE_TERMS_LOC</span></code> and split
+the result on newline and return a tuple of compiled sensitive term regexes.</p>
+<ul>
+<li><p>The regexes will target sensitive terms that are surrounded by word
+boundaries, whitespace, or the start/end of strings. To accomplish this in
+Python, we will use the regex <code class="docutils literal notranslate"><span class="pre">r&quot;(\A|\b|\s){sensitive_term}(\Z|\b|\s)&quot;</span></code>
+with the case-insensitive flag turned on.</p>
+<ul>
+<li><p>We cannot merely use <code class="docutils literal notranslate"><span class="pre">\b</span></code> (word boundary) because it considers any
+non-alphanumeric character a word boundary. That means sensitive terms
+starting or ending with special characters like <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> or <code class="docutils literal notranslate"><span class="pre">$</span></code> would not
+match.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">\s</span></code> expands the matches to include special characters, and preserves
+<code class="docutils literal notranslate"><span class="pre">\b</span></code>’s boundary matching when appropriate.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">\A</span></code> and <code class="docutils literal notranslate"><span class="pre">\Z</span></code> cover the start and end of a string respectively, for when
+the term starts or ends with a special character. They cannot be used
+alone because we need to match terms within larger strings.</p></li>
+<li><p>Using a regex is unfortunately necessary to ensure we do not have
+false-positives on non-sensitive terms in sub-portions of words, as with
+location names like
+<a class="reference external" href="https://en.wikipedia.org/wiki/Shitterton">Shitterton in Dorset County, UK</a>,
+which would arise if we did a simple <code class="docutils literal notranslate"><span class="pre">term</span> <span class="pre">in</span> <span class="pre">string</span></code> check. This is a
+minimum consideration we should give in light of our acknowledgement
+that text-based matching
+<a class="reference internal" href="20230309-implementation_plan_sensitive_terms_list.html#this-will-not-be-perfect"><span class="std std-ref">is not perfect</span></a>.</p></li>
+<li><p>The use of compiled regexes makes caching the result especially
+important so that regex compilation is not unnecessarily repeated within
+a single indexer worker subprocess.</p></li>
+<li><p>We should start with a single regex per term. In the future, we can
+consider combining slices of the sensitive terms list into larger regex
+statements, and evaluate whether this performs better or worse for our
+corpus. For now, we will keep it as simple as possible, with a single
+regex per term. It does not change the downstream code to do so, and
+introduces fewer complications with respect to regex construction.</p></li>
+</ul>
+</li>
+<li><p>Because each indexer worker can spawn multiple multiprocessing processes,
+each of which have independent Python interpreters, we rely on
+<code class="docutils literal notranslate"><span class="pre">functools.cache</span></code> to ensure each subprocess only has to parse
+<code class="docutils literal notranslate"><span class="pre">get_sensitive_terms</span></code> once, regardless of the number of documents it
+processes. This also ensures the list is available to <code class="docutils literal notranslate"><span class="pre">get_instance_attrs</span></code>
+and related functions without needing to pass it around as a new argument
+from somewhere “below” <code class="docutils literal notranslate"><span class="pre">launch_reindex</span></code> in the call stack for document
+processing, and does so without us needing to write the very same logic
+caching logic that <code class="docutils literal notranslate"><span class="pre">functools.cache</span></code> uses.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Now that the sensitive terms list is available as a list of regexes, implement
+the primary logic for deriving the new fields:</p>
+<ul class="simple">
+<li><p>Add a new static method <code class="docutils literal notranslate"><span class="pre">elasticsearch_models.Model::get_text_sensitivity</span></code>.</p>
+<ul>
+<li><p>This method will use <code class="docutils literal notranslate"><span class="pre">sensitive_terms.get_sensitive_terms</span></code> to retrieve the
+sensitive terms tuple.</p></li>
+<li><p>Iterating through the sensitive term regexes and test the title,
+description, and each tag against the regex. If the term is in any field,
+immediately return true. We only need to test terms until we find one
+matching term, so it is safe to break the loop early once we find one.</p></li>
+</ul>
+</li>
+<li><p>Update <code class="docutils literal notranslate"><span class="pre">elasticsearch_models.Model::get_instance_attrs</span></code> to create a new
+<code class="docutils literal notranslate"><span class="pre">sensitivity</span></code> dictionary field. Set the key <code class="docutils literal notranslate"><span class="pre">sensitive_text</span></code> to the result of
+<code class="docutils literal notranslate"><span class="pre">Model::get_text_sensitivity</span></code>. Set the key <code class="docutils literal notranslate"><span class="pre">user_reported_sensitivity</span></code> to the
+value of <code class="docutils literal notranslate"><span class="pre">row[schema[&quot;mature&quot;]]</span></code>. Finally, set the key <code class="docutils literal notranslate"><span class="pre">any</span></code> to
+<code class="docutils literal notranslate"><span class="pre">sensitive_text</span> <span class="pre">or</span> <span class="pre">user_reported_sensitivity</span></code>.</p></li>
+</ul>
+<p>Finally, add the new fields to the index settings.</p>
+<ul class="simple">
+<li><p>Update the index mappings in to add the new <code class="docutils literal notranslate"><span class="pre">sensitivity</span></code> field set to
+<code class="docutils literal notranslate"><span class="pre">{&quot;properties&quot;:</span> <span class="pre">{&quot;sensitive_text&quot;:</span> <span class="pre">{&quot;type&quot;:</span> <span class="pre">&quot;boolean&quot;},</span> <span class="pre">&quot;user_reported_sensitivity&quot;:</span> <span class="pre">{&quot;type&quot;:</span> <span class="pre">&quot;boolean&quot;},</span> <span class="pre">&quot;any&quot;:</span> <span class="pre">{&quot;type&quot;:</span> <span class="pre">&quot;boolean&quot;}}}</span></code>.</p></li>
+</ul>
+<p>After merging the PR, run the staging data refresh and confirm the new
+sensitivity fields appear in new indices and is queryable (manually run queries
+against them). It is not necessary to manually run the production data refresh,
+and it is highly unlikely we will complete, review, and merge the API work
+before a production data refresh runs. In other words, we do not need to
+manually run a production data refresh, because one will surely happen before we
+are ready to deploy the API changes. If not, step 3 includes a check to wait for
+the production data refresh before enabling the changes in the API.</p>
+</section>
+<section id="step-2-update-the-api-to-use-the-new-field-behind-a-feature-flag">
+<h3>Step 2: Update the API to use the new field (behind a feature flag)<a class="headerlink" href="#step-2-update-the-api-to-use-the-new-field-behind-a-feature-flag" title="Link to this heading">¶</a></h3>
+<p>Complete the following in two PRs.</p>
+<section id="first-pr-search">
+<h4>First PR, <strong>search</strong>:<a class="headerlink" href="#first-pr-search" title="Link to this heading">¶</a></h4>
+<ul class="simple">
+<li><p>Add a new feature-flag environment variable <code class="docutils literal notranslate"><span class="pre">USE_INDEX_BASED_SENSITIVITY</span></code> that
+defaults to false.</p></li>
+<li><p>Update search for the new query approach:</p>
+<ul>
+<li><p>Modify <code class="docutils literal notranslate"><span class="pre">search_controller.get_index</span></code> to check the feature flag and return
+the unfiltered index when it is true. Otherwise, it should follow its
+existing logic.</p></li>
+<li><p>Update <code class="docutils literal notranslate"><span class="pre">search_controller.build_search_query</span></code> to also check the feature
+flag. When it is false, use the existing <code class="docutils literal notranslate"><span class="pre">mature</span></code> based strategy for
+handling <code class="docutils literal notranslate"><span class="pre">include_sensitive_results</span></code>. When it is true and
+<code class="docutils literal notranslate"><span class="pre">include_sensitive_results</span></code> is false, use <code class="docutils literal notranslate"><span class="pre">sensitivity.any</span></code> instead of the
+existing <code class="docutils literal notranslate"><span class="pre">mature</span></code> field. Follow existing logic for when
+<code class="docutils literal notranslate"><span class="pre">include_sensitive_results</span></code> is true.</p></li>
+<li><p>Finally, update <code class="docutils literal notranslate"><span class="pre">search_controller.query_media</span></code> to check the feature flag,
+and when true, bypass the <code class="docutils literal notranslate"><span class="pre">SearchContext.build</span></code> call and create
+<code class="docutils literal notranslate"><span class="pre">SearchContext</span></code> directly, as described below.</p>
+<ul>
+<li><p>Retaining the <code class="docutils literal notranslate"><span class="pre">result_ids</span></code> list, create the <code class="docutils literal notranslate"><span class="pre">SearchContext</span></code> with
+<code class="docutils literal notranslate"><span class="pre">SearchContext(result_ids,</span> <span class="pre">{result.identifier</span> <span class="pre">for</span> <span class="pre">result</span> <span class="pre">in</span> <span class="pre">results</span> <span class="pre">if</span> <span class="pre">result.sensitivity.sensitive_text})</span></code>.</p></li>
+<li><p>While this change to a single index and building the sensitivity list
+upstream of the API allows us to eventually remove <code class="docutils literal notranslate"><span class="pre">SearchContext</span></code>, we
+will retain it for now and mock its usage. This allows us to avoid needing
+to add the same feature flag checks in <code class="docutils literal notranslate"><span class="pre">MediaView</span></code> and <code class="docutils literal notranslate"><span class="pre">MediaSerializer</span></code>.
+Instead, we can leave those alone for now, and the same <code class="docutils literal notranslate"><span class="pre">sensitivity</span></code> list
+will continue to be populated by the serializer. Once we confirm this
+feature and enter the clean-up phase, we will remove <code class="docutils literal notranslate"><span class="pre">SearchContext</span></code>
+altogether. Details for this are in the
+<a class="reference internal" href="#step-4-clean-up">clean-up section</a>.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="second-pr-moderation">
+<h4>Second PR, <strong>moderation</strong>:<a class="headerlink" href="#second-pr-moderation" title="Link to this heading">¶</a></h4>
+<ul class="simple">
+<li><p>Update <code class="docutils literal notranslate"><span class="pre">AbstractSensitiveMedia._bulk_update_es</span></code> to update
+<code class="docutils literal notranslate"><span class="pre">sensitivity.user_reported_sensitivity</span></code> and <code class="docutils literal notranslate"><span class="pre">sensitivity.any</span></code> to <code class="docutils literal notranslate"><span class="pre">true</span></code>,
+alongside the existing update to <code class="docutils literal notranslate"><span class="pre">mature</span></code></p>
+<ul>
+<li><p>This should happen in addition to the <code class="docutils literal notranslate"><span class="pre">mature</span></code> update that already exists,
+but <strong>must not be conditional on the <code class="docutils literal notranslate"><span class="pre">USE_INDEX_BASED_SENSITIVTY</span></code> feature
+flag</strong>. It cannot be conditional in order to truly support the feature
+flag’s accuracy in search results. If we toggle the flag on/off/on before a
+data refresh runs, the <code class="docutils literal notranslate"><span class="pre">sensitivity</span></code> fields must still get updated with
+user-reported sensitivity. Otherwise, when the feature goes back on,
+<code class="docutils literal notranslate"><span class="pre">sensitivity.user_reported_sensitivty/any</span></code> would not reflect the fact that
+those works had been reviewed and confirmed as sensitive. In that case, they
+would start reappearing in default search results (non-sensitive search).</p></li>
+</ul>
+</li>
+<li><p>Update <code class="docutils literal notranslate"><span class="pre">MediaListAdmin.has_sensitive_text</span></code> to check
+<code class="docutils literal notranslate"><span class="pre">sensitivity.sensitive_text</span></code> of the Elasticsearch document if
+<code class="docutils literal notranslate"><span class="pre">USE_INDEX_BASED_SENSITIVITY</span></code> is true.</p>
+<ul>
+<li><p>The method currently uses a term query to get the result with the
+identifier.
+<a class="reference external" href="https://www.elastic.co/guide/en/elasticsearch/client/python-api/current/examples.html#ex-get">We should refactor this to use a single document <code class="docutils literal notranslate"><span class="pre">get</span></code> query by <code class="docutils literal notranslate"><span class="pre">id</span></code></a>.
+Elasticsearch document <code class="docutils literal notranslate"><span class="pre">id</span></code> matches the Django model’s <code class="docutils literal notranslate"><span class="pre">pk</span></code>. Doing so should
+improve the retrieval speed, and reduces the result to a single document,
+which makes reading the <code class="docutils literal notranslate"><span class="pre">sensitivity</span></code> field when retrieving it much easier.</p></li>
+<li><p>When <code class="docutils literal notranslate"><span class="pre">USE_INDEX_BASED_SENSITIVITY</span></code> is true, query the “full” index instead
+of the filtered index.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="step-3-turn-on-feature-flag-in-live-environments-and-observe">
+<h3>Step 3: Turn on feature flag in live environments and observe<a class="headerlink" href="#step-3-turn-on-feature-flag-in-live-environments-and-observe" title="Link to this heading">¶</a></h3>
+<p>Set <code class="docutils literal notranslate"><span class="pre">USE_INDEX_BASED_SENSITIVITY</span></code> to <code class="docutils literal notranslate"><span class="pre">True</span></code> in staging and redeploy. Confirm
+search against the new indices created with the staging data refresh works,
+including sensitive and non-sensitive queries. Also test and verify the
+moderation features by confirming a sensitivity report in staging and making
+sure the work is updated with <code class="docutils literal notranslate"><span class="pre">user_reported_sensitivity</span></code>.</p>
+<p>If the production data refresh has not yet run, wait for it to run on its
+regular cadence, and confirm the new <code class="docutils literal notranslate"><span class="pre">sensivitiy</span></code> fields as we did in staging in
+step 1.</p>
+<p>After confirming the production indices, set <code class="docutils literal notranslate"><span class="pre">USE_INDEX_BASED_SENSITIVITY</span></code> to
+<code class="docutils literal notranslate"><span class="pre">True</span></code> in production and redeploy. Follow the same tests as listed above for
+staging, but ask someone from the content moderation team to find a user
+sensitivity report to confirm, and then ask them to check that the document in
+ES has <code class="docutils literal notranslate"><span class="pre">sensitivity.user_reported_sensitive=true</span></code>. You may do this yourself, if
+you feel comfortable, but it is best practice to defer to the content moderation
+team to ensure the safety of everyone on the team.</p>
+<p>Monitor production API search times as well as resource usage. Monitor the
+production Elasticsearch cluster health in Kibana, and check I/O operations for
+the data nodes. You may also check overall disk operations for the entire
+cluster in CloudWatch.</p>
+</section>
+<section id="step-4-clean-up">
+<h3>Step 4: Clean up<a class="headerlink" href="#step-4-clean-up" title="Link to this heading">¶</a></h3>
+<p>Refer to the note about when to start clean up in
+<a class="reference internal" href="#when-to-start-clean-up">the overview</a>.</p>
+<section id="data-refresh">
+<h4>Data refresh<a class="headerlink" href="#data-refresh" title="Link to this heading">¶</a></h4>
+<ul class="simple">
+<li><p>This essentially involves undoing
+<a class="reference external" href="https://github.com/WordPress/openverse/pull/4833">the filtered-index creation aspects added to the new data refresh in this PR</a>.</p></li>
+<li><p>Note that that PR includes fixes for other parts of the new data refresh, and
+so cannot merely be reverted to accomplish this task. Luckily, it still
+shouldn’t be too much trouble.</p></li>
+<li><p>Delete <code class="docutils literal notranslate"><span class="pre">create_and_populate_filtered_index</span></code> and its usage.</p></li>
+<li><p>Remove filtered index promotion (task group ID <code class="docutils literal notranslate"><span class="pre">promote_filtered_index</span></code>).</p></li>
+<li><p>Update the DAG flow accordingly.</p></li>
+<li><p>This should ideally be implemented in a single PR to make it as easy as
+possible to revert, should the need arise.</p></li>
+<li><p>We can, at this point, also delete the <code class="docutils literal notranslate"><span class="pre">mature</span></code> field from the Elasticsearch
+mappings and remove the <code class="docutils literal notranslate"><span class="pre">raw</span></code> versions of <code class="docutils literal notranslate"><span class="pre">title</span></code>, <code class="docutils literal notranslate"><span class="pre">description</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">tags.name</span></code>.</p></li>
+</ul>
+</section>
+<section id="api-code">
+<h4>API code<a class="headerlink" href="#api-code" title="Link to this heading">¶</a></h4>
+<ul class="simple">
+<li><p>Remove <code class="docutils literal notranslate"><span class="pre">search_controller.get_index</span></code> and its usage.</p></li>
+<li><p>Remove mature content exclusion based on the <code class="docutils literal notranslate"><span class="pre">mature</span></code> boolean from
+<code class="docutils literal notranslate"><span class="pre">build_search_query</span></code>.</p></li>
+<li><p>Update <code class="docutils literal notranslate"><span class="pre">MediaView::get_db_results</span></code> to merge <code class="docutils literal notranslate"><span class="pre">sensitivity</span></code> from the
+Elasticsearch <code class="docutils literal notranslate"><span class="pre">Hit</span></code> onto the Django model for each result.</p></li>
+<li><p>Update <code class="docutils literal notranslate"><span class="pre">MediaSerializer::unstable__sensitivity</span></code> to create the <code class="docutils literal notranslate"><span class="pre">sensitivity</span></code>
+list from the object’s merged <code class="docutils literal notranslate"><span class="pre">sensitivity</span></code> dictionary taken from the <code class="docutils literal notranslate"><span class="pre">Hit</span></code>:</p></li>
+<li><p>Remove the feature flag.</p></li>
+<li><p>As with the data refresh changes, implement these in a single PR if possible,
+to ensure the easiest possible revert if needed.</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading">¶</a></h2>
+<section id="feature-flags">
+<h3>Feature flags<a class="headerlink" href="#feature-flags" title="Link to this heading">¶</a></h3>
+<!-- List feature flags/environment variables that will be utilised in the development of this plan. -->
+<p>One new API environment variable will act as the feature flag:
+<code class="docutils literal notranslate"><span class="pre">USE_INDEX_BASED_SENSITIVITY</span></code></p>
+</section>
+<section id="infrastructure">
+<h3>Infrastructure<a class="headerlink" href="#infrastructure" title="Link to this heading">¶</a></h3>
+<!-- Describe any infrastructure that will need to be provisioned or modified. In particular, identify associated potential cost changes. -->
+<p>There are no infrastructure changes required for this, aside from updating
+environment variables.</p>
+<p>The intentional increase in indexer worker resource usage should not increase
+costs directly. However, the complexity of sensitive text designation exists no
+matter where it goes in our compute pipeline. In the indexer workers, it will
+naturally extend the time each worker spends on any given document. As such, the
+overall amount of time the indexer workers are running will increase, and so
+will their cost to us. Elsewhere, for example, in the Airflow local executor, we
+would pay for it in decreased resources available for other tasks, extending the
+time of those tasks, and potentially decreasing the scheduler’s stability (if
+resource usage increases a lot).</p>
+</section>
+<section id="tools-packages">
+<h3>Tools &amp; packages<a class="headerlink" href="#tools-packages" title="Link to this heading">¶</a></h3>
+<!-- Describe any tools or packages which this work might depend on. If multiple options are available, try to list as many as are reasonable with your own recommendation. -->
+<p>We do not require any new tools or packages to implement this change.</p>
+</section>
+<section id="other-projects-or-work">
+<h3>Other projects or work<a class="headerlink" href="#other-projects-or-work" title="Link to this heading">¶</a></h3>
+<!-- Note any projects this plan depends on. -->
+<p>As mentioned in <a class="reference internal" href="#project-links">the project links</a>, this plan assumes
+<a class="reference external" href="https://github.com/WordPress/openverse/issues/3925">the removal of the ingestion server</a>
+is finished by the time this plan makes modifications to the data refresh and
+indexer worker.</p>
+</section>
+</section>
+<section id="alternatives">
+<h2>Alternatives<a class="headerlink" href="#alternatives" title="Link to this heading">¶</a></h2>
+<!-- Describe any alternatives considered and why they were not chosen or recommended. -->
+<section id="elasticsearch-ingest-pipeline">
+<h3>Elasticsearch ingest pipeline<a class="headerlink" href="#elasticsearch-ingest-pipeline" title="Link to this heading">¶</a></h3>
+<p>I spent a few days experimenting with and trying to see whether an ingest
+pipeline would be a viable way to approach the creation of the sensitivity list
+for this project. I believe it is generally viable, and I was able to make it
+work locally with our local sample data and the full sensitive terms list. I
+wrote about my evaluation of the ingest pipeline approach in these three
+comments on the implementation plan issue:</p>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="https://github.com/WordPress/openverse/issues/3336#issuecomment-2316894501">Describing the approach in general and initial testing</a></p></li>
+<li><p><a class="reference external" href="https://github.com/WordPress/openverse/issues/3336#issuecomment-2325659270">Further local testing with the complete sensitive terms list</a></p></li>
+<li><p><a class="reference external" href="https://github.com/WordPress/openverse/issues/3336#issuecomment-2325684604">Testing the ingest pipeline in staging</a></p></li>
+</ol>
+<p>Ultimately, despite ingest pipelines working fine to create the sensitivity
+designations list, I don’t think it’s the right approach for us. As noted in the
+final comment, whilst dedicated ingest nodes are not required to work with
+ingest pipelines, a cluster still needs at least one node with the ingest role
+to run ingest pipelines (it just isn’t required to be those nodes’ only role).
+In order to service that requirement, we would need to introduce a new
+complexity into our Elasticsearch cluster. We do not have the capacity (time and
+knowledge) to fulfil this requirement. Therefore, we should not use
+Elasticsearch ingest pipelines to generate the sensitivity designation.</p>
+</section>
+<section id="move-sensitive-text-detection-earlier-in-the-data-refresh-pipeline">
+<h3>Move sensitive text detection earlier in the data refresh pipeline<a class="headerlink" href="#move-sensitive-text-detection-earlier-in-the-data-refresh-pipeline" title="Link to this heading">¶</a></h3>
+<p>Rather than detect sensitive text in the indexer worker when creating the
+Elasticsearch documents, we could attempt to insert the sensitivity list into
+the API database when we create the API tables from the catalogue tables. I
+chose against recommending this because running several hundred regular
+expressions in a loop will be resource intensive. We currently use the local
+executor for Airflow, and such intense processing would likely be problematic
+for our Airflow instance as it tries to complete other tasks as well. Placing
+the regex execution in the indexer worker allows us to take advantage of the
+indexer workers’ provisioned CPU resources (which are under utilised overall at
+only 25% when last evaluated in March of this year, as discussed in the
+<a class="reference internal" href="../../ingestion_server_removal/20240328-implementation_plan_ingestion_server_removal.html#approach-to-the-distributed-reindex"><span class="std std-ref">ingestion server removal IP</span></a>).</p>
+<p>Ideally, the list of specific sensitivity designations would exist only in the
+API database and Elasticsearch would only be required to track a boolean
+indicating whether any sensitivity designation exists at all. This would
+simplify the following aspects of the plan:</p>
+<ul class="simple">
+<li><p>We would not need to use a script update to add to the sensitivity designation
+list in the Elasticsearch document. We would be able to use a simple <code class="docutils literal notranslate"><span class="pre">doc</span></code>
+update to set a <code class="docutils literal notranslate"><span class="pre">sensitive</span></code> boolean as needed. We could even skip the update
+for documents when moderating user reports if the document already has
+<code class="docutils literal notranslate"><span class="pre">sensitive=true</span></code> due to sensitive text.</p></li>
+<li><p>We would not need to query Elasticsearch in the media report admin to
+determine whether a work has sensitive text, as it would already be on the
+work.</p></li>
+<li><p>Search could use simple boolean query against the <code class="docutils literal notranslate"><span class="pre">sensitive</span></code> field instead of
+the slightly more complex negated exists against the <code class="docutils literal notranslate"><span class="pre">sensitivity</span></code> keyword
+list field.</p></li>
+</ul>
+<p>I tried to determine whether there was a method of adding the <code class="docutils literal notranslate"><span class="pre">sensitivity</span></code> list
+in the indexer worker, so that we could benefit from the indexer worker’s
+significant compute and memory resources without interrupting other Airflow
+work, while still gaining these benefits. I did not see any existing mechanism
+for accomplishing this kind of Postgres update in the indexer workers, but I’m
+sure <a class="reference internal" href="#reviewers">the reviewers</a> are well-equipped to correct me on this.
+Crucially, even if the capability does not currently exist, if we can add it
+without significantly increasing this project’s complexity, it would be worth
+considering.</p>
+<p>Additionally, if we were able to use remote compute resources to execute
+individual tasks without the complexity that comes with using remote operators
+(i.e., if we were using a remote executor), we could also consider doing this in
+the data refresh tasks that build the new API tables. The road to that solution
+is much more complex than this, though. It also remains an available option
+should our Airflow infrastructure gain this capability in the future (for
+example, if we were able to use the Kubernetes executor). I’m resistant to using
+a remote operator for this single task, rather than rolling it into our existing
+pseudo-remote operator of the indexer worker, because of the cost changes we
+would incur by doing so.</p>
+</section>
+<section id="move-sensitive-text-detection-to-ingestion-supported-by-an-occasional-refresh-dag-to-backfill-existing-records">
+<h3>Move sensitive text detection to ingestion, supported by an occasional refresh DAG to backfill existing records<a class="headerlink" href="#move-sensitive-text-detection-to-ingestion-supported-by-an-occasional-refresh-dag-to-backfill-existing-records" title="Link to this heading">¶</a></h3>
+<p>Staci and I evaluated this option in depth, over the course of a roughly 90
+minute discussion, which built off of prior written discussions.</p>
+<p>We evaluated the following approaches, and found all of them to either be wholly
+unsuitable, or so complex that any conceivable benefit was nullified by the
+complexity.</p>
+<p>In general, the main complexity we encountered was in needing to at some point
+or another maintain two separate sensitive term checks and identifiable results
+of those checks. This is required because ingestion is happening essentially at
+all times, and to avoid creating a dependency on the data refresh to the
+sensitive terms refresh (which would be triggered whenever the sensitive terms
+list changed), we would need ingestion DAGs to derive sensitivity for both the
+old version of the list, and the new version of the list. A hypothetical
+sensitive terms refresh DAG would do the work of adding the sensitive terms
+designation derived from the new list to all pre-existing works. In the
+meantime, any data refresh that runs, could continue to use the designation
+derived from the old list.</p>
+<p>We would use the commit SHA from the sensitive-terms repository to indicate the
+“version” used to derive given textual sensitivity designation. For example,
+this could be a new jsonb column <code class="docutils literal notranslate"><span class="pre">sensitivity</span></code> that contained an object of the
+interface:</p>
+<div class="highlight-ts notranslate"><div class="highlight"><pre><span></span><span class="kd">interface</span><span class="w"> </span><span class="nx">SensitivityColumn</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">[</span><span class="nx">commitSha</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The data refresh would be aware of the “current” commit SHA to check, which
+would only switch over to the new list’s SHA once the refresh was complete and
+all works had a designation based on the new SHA.</p>
+<p>The primary difficult in this is the significant potential for race conditions,
+about which Staci and I spent most of the time trying to solve. The problem is
+making sure all works are covered with the new check. If ingesters are
+immediately responsive to new versions of the list being made available to them
+by the DAG, then they would have partial ingestions, where one portion of the
+ingested works were ingested with only the old list, and the later portion both
+lists. Because works only have UUIDs created after they are upserted into the
+media tables, there is no way to retroactively identify those works. For
+example, we could not add the sensitive terms around the clean-data step,
+because again, if the new terms list becomes available immediately after that
+(or right after upsert), there’s no easy way to find out which records are now
+missing the new designation. Given that the refresh DAG would use the
+batched-update DAG, and that the batched-update DAG selects the records to work
+on once at the start (rather than offsetting a select query run for each batch),
+it would be working off a snapshot of works before any new works are ingested.
+That means it wouldn’t naturally pick up the new works as not having the new
+designation.</p>
+<p>The solution Staci and I arrived at was to have ingesters only pull the
+sensitive terms list version(s) they should process once at the beginning of
+their run. This ensures any ingesters that start with only the old version
+available, complete their entire run with the old version, but new ones start
+using both versions. Then, the refresh DAG would create the new terms list
+first, and then pull a list of active ingester DAG runs. It would then wait for
+only those specific DAG runs to finish before starting the batched update
+process. That way, the snapshot of works it is working from, is guaranteed to be
+all the works that were ingested without any awareness of the batched update.
+That means the select query for the batched update can in fact select based on
+<code class="docutils literal notranslate"><span class="pre">sensitivity-&gt;text-&gt;[new-list-sha]</span></code>. This eliminates the race condition.</p>
+<p>Solving this race condition, whilst difficult to parse out at first, does not
+create too much complexity. But, it is undeniably more complex than the indexer
+worker approach. The indexer worker does not need to make any concessions
+whatsoever to race conditions: it has none to contend with.</p>
+<p>However, this alone was not enough to make the sensitive terms check viable in
+catalogue. We also needed to make it possible to do the sensitive terms check in
+Python. The motivation for this was to avoid gnarly string escape and Unicode
+issues if we tried to write the check in PL/pgSQL. Likewise, in order to make
+the list available to Postgres, we would need to load the sensitive terms list
+into a table. To obscure the terms to avoid unintended exposure to the list, we
+would need to base64 encode it, incurring a decoding cost (not to mention the
+query cost) for each call to the PL/pgSQL function.</p>
+<p>We came up with some methods to make it possible to use a Python function in
+<code class="docutils literal notranslate"><span class="pre">update_batches</span></code>. Specifically, we would do something like:</p>
+<ul class="simple">
+<li><p>Convert <code class="docutils literal notranslate"><span class="pre">update_batches</span></code> to a task-group factory function</p></li>
+<li><p>Provide a new parameter of a Python function to call to generate the
+<code class="docutils literal notranslate"><span class="pre">update_query</span></code> based on the subset of rows. It would be passed the SQL to
+select the rows, and be responsible for building the <code class="docutils literal notranslate"><span class="pre">update_query</span></code> string
+based on whatever it wanted to do with the rows. This Python function would be
+used in a <code class="docutils literal notranslate"><span class="pre">PythonOperator</span></code> and would default to simple function that returns
+the <code class="docutils literal notranslate"><span class="pre">update_query</span></code> string passed to the task-group factory (this covers the
+existing use cases). Each batch of <code class="docutils literal notranslate"><span class="pre">update_batches</span></code> would call the
+<code class="docutils literal notranslate"><span class="pre">PythonOperator</span></code> and then execute the SQL based on its result.</p></li>
+</ul>
+<p>This might be worth doing in the future, but will not be part of this particular
+project.</p>
+<p>In general, even though it was <em>possible</em> to move sensitive text detection to
+ingestion, with a refresh to backfill and update when the list changes, we could
+not find any immediate benefit to doing so. The main obvious one was to avoid
+unnecessarily re-checking works in each data refresh. However, there are methods
+we could use to cache the result of a sensitive text check for the indexer
+worker to reuse. Furthermore, we already do re-check every work each time (in
+the Elasticsearch <code class="docutils literal notranslate"><span class="pre">reindex</span></code> query to create the filtered index), so the
+performance characteristics are no different by doing so in the indexer worker.
+There also still remained the issue of not overloading the Airflow EC2 instance
+with such potentially long-running a Python-heavy computation tasks like the
+sensitive text refresh would require. The indexer workers exist to offload these
+kinds of heavy transformations for a reason, and without being able to easily
+and confidently offload the sensitive terms check to Postgres, the performance
+impact on our Airflow box is hard to precisely anticipate and therefore
+impossible to accept ahead of time.</p>
+</section>
+</section>
+<section id="design">
+<h2>Design<a class="headerlink" href="#design" title="Link to this heading">¶</a></h2>
+<!-- Note any design requirements for this plan. -->
+<p>There are no interface changes for this plan.</p>
+</section>
+<section id="blockers">
+<h2>Blockers<a class="headerlink" href="#blockers" title="Link to this heading">¶</a></h2>
+<!-- What hard blockers exist that prevent further work on this project? -->
+<p>See <a class="reference internal" href="#other-projects-or-work">the section on other projects</a> regarding this
+plans relationship to the removal of the ingestion server.</p>
+</section>
+<section id="api-version-changes">
+<h2>API version changes<a class="headerlink" href="#api-version-changes" title="Link to this heading">¶</a></h2>
+<!-- Explore or mention any changes to the API versioning scheme. -->
+<p>No API version changes.</p>
+</section>
+<section id="accessibility">
+<h2>Accessibility<a class="headerlink" href="#accessibility" title="Link to this heading">¶</a></h2>
+<!-- Are there specific accessibility concerns relevant to this plan? Do you expect new UI elements that would need particular care to ensure they're implemented in an accessible way? Consider also low-spec device and slow internet accessibility, if relevant. -->
+<p>None.</p>
+</section>
+<section id="rollback">
+<h2>Rollback<a class="headerlink" href="#rollback" title="Link to this heading">¶</a></h2>
+<!-- How do we roll back this solution in the event of failure? Are there any steps that can not easily be rolled back? -->
+<p>Before we get to the clean-up step, everything should either have no effect on
+existing functionality (new Elasticsearch document field) or can be toggled by
+the <a class="reference internal" href="#feature-flags">feature flag</a>.</p>
+<p>Once we get to the clean-up step, we will start to need to revert or do full
+rollbacks if required. The plan should be safe enough such that we won’t start
+the clean-up step without having verified that the new approach works. Clean-up
+will (mostly) be removing the old unused code and simplifying some downstream
+effects of the old approach based on the new approach.</p>
+</section>
+<section id="privacy">
+<h2>Privacy<a class="headerlink" href="#privacy" title="Link to this heading">¶</a></h2>
+<!-- How does this approach protect users' privacy? -->
+<p>There are no changes to privacy.</p>
+</section>
+<section id="localisation">
+<h2>Localisation<a class="headerlink" href="#localisation" title="Link to this heading">¶</a></h2>
+<!-- Any translation or regional requirements? Any differing legal requirements based on user location? -->
+<p>We do not require any localisation for this project.</p>
+</section>
+<section id="risks">
+<h2>Risks<a class="headerlink" href="#risks" title="Link to this heading">¶</a></h2>
+<!-- What risks are we taking with this solution? Are there risks that once taken can’t be undone?-->
+<p>The primary risk is the indexer worker performance when executing the sensitive
+term regexes. Following that, there is a risk that search performance will not
+go well with the <code class="docutils literal notranslate"><span class="pre">exists</span></code> query.</p>
+</section>
+<section id="prior-art">
+<h2>Prior art<a class="headerlink" href="#prior-art" title="Link to this heading">¶</a></h2>
+<!-- Include links to documents and resources that you used when coming up with your solution. Credit people who have contributed to the solution that you wish to acknowledge. -->
+<p><a class="reference external" href="https://github.com/WordPress/openverse/issues/3336#issuecomment-2288432417">I did a bit of exploring of different approaches before being assigned this implementation plan, and wrote about them in this GitHub comment</a>.</p>
+<p>All the other implementation plans and project proposals in the
+<a class="reference internal" href="../index.html"><span class="std std-doc">trust and safety category</span></a> are significant in considering how to
+approach this and set precedences that need to be followed or considered for a
+comprehensive plan.</p>
+<hr class="footnotes docutils" />
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="provider-supplied-sensitivity" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://github.com/WordPress/openverse/blob/46a42f7e2c2409d7a8377ce188f4fafb96d5fdec/api/api/constants/sensitivity.py#L4-L7">Please see the note in the linked code above regarding provider supplied sensitivity</a>.
+This plan makes no explicit consideration for provider supplied sensitivity.
+However, I believe the approach described in this plan increases, or at
+least maintains, our flexibility in the event it becomes relevant (i.e., we
+start intentionally ingesting works explicitly designated as sensitive or
+mature by the source).</p>
+</aside>
+<aside class="footnote brackets" id="must-not" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p>We use the boolean <code class="docutils literal notranslate"><span class="pre">must_not</span></code> with a match query to exclude works.
+Elasticsearch turns the match query into a Lucene <code class="docutils literal notranslate"><span class="pre">TermQuery</span></code>. Elasticsearch
+prefers “positive” queries, so this is faster than a <code class="docutils literal notranslate"><span class="pre">filter</span></code> for
+<code class="docutils literal notranslate"><span class="pre">mature:false</span></code>.</p>
+</aside>
+<aside class="footnote brackets" id="exclude-source-subset" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
+<p>This IP should make this an easy change in the future, if we decide to do
+it. We would just skip the sensitive text detection if the <code class="docutils literal notranslate"><span class="pre">source</span></code> field
+was in the list of sources to ignore.</p>
+</aside>
+<aside class="footnote brackets" id="avoid-unnecessary-reevaluation" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">4</a><span class="fn-bracket">]</span></span>
+<p>This IP should also make <em>this</em> an easy change. We could cache the sensitive
+text scan based on a combined hash of
+<code class="docutils literal notranslate"><span class="pre">{title}{description}{&quot;&quot;.join(tags)}{sensitive_terms_hash}</span></code>. This could be
+even simpler if we know that <code class="docutils literal notranslate"><span class="pre">updated_at</span></code> on the work is reliable. If it is,
+then we could just cache based on that and a hash of the terms list, rather
+than needing to hash the potentially large text blob of title, description,
+and tags.</p>
+</aside>
+<aside class="footnote brackets" id="multiprocessing-future-proofed" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">5</a><span class="fn-bracket">]</span></span>
+<p>These steps work from the assumption that an indexer worker may spawn
+multiple concurrent Python multiprocessing processes, which the indexer
+worker refers to as “tasks”. While we do not currently utilise this
+functionality—that is, each <code class="docutils literal notranslate"><span class="pre">distributed_index</span></code> of the data refresh only
+calls <code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/task</span></code> once per indexer worker, and the indexer worker spawns a
+single multiprocessing process to handle the batch it is assigned—this plan
+is written to be future proofed in the event that we do utilise
+multiprocessing on the indexer worker to run multiple batches per worker.</p>
+</aside>
+</aside>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="../index.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Trust and Safety</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="20230506-implementation_plan_frontend_blurring_sensitive.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">2023-05-06 Implementation Plan: Fetching, blurring sensitive results</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/WordPress/openverse" aria-label="GitHub"><svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">2024-09-03 Implementation Plan: Undo the split indices for filtered textual sensitivity</a><ul>
+<li><a class="reference internal" href="#reviewers">Reviewers</a></li>
+<li><a class="reference internal" href="#project-links">Project links</a></li>
+<li><a class="reference internal" href="#overview">Overview</a><ul>
+<li><a class="reference internal" href="#when-to-start-clean-up">When to start clean-up</a></li>
+<li><a class="reference internal" href="#evaluating-the-performance-of-the-new-approach">Evaluating the performance of the new approach</a></li>
+<li><a class="reference internal" href="#initial-query-performance-analysis">Initial query performance analysis</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#expected-outcomes">Expected Outcomes</a></li>
+<li><a class="reference internal" href="#step-by-step-plan">Step-by-step plan</a></li>
+<li><a class="reference internal" href="#step-details">Step details</a><ul>
+<li><a class="reference internal" href="#step-1-generate-usable-sensitivity-field-for-elasticsearch-documents">Step 1: Generate usable <code class="docutils literal notranslate"><span class="pre">sensitivity</span></code> field for Elasticsearch documents</a></li>
+<li><a class="reference internal" href="#step-2-update-the-api-to-use-the-new-field-behind-a-feature-flag">Step 2: Update the API to use the new field (behind a feature flag)</a><ul>
+<li><a class="reference internal" href="#first-pr-search">First PR, <strong>search</strong>:</a></li>
+<li><a class="reference internal" href="#second-pr-moderation">Second PR, <strong>moderation</strong>:</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#step-3-turn-on-feature-flag-in-live-environments-and-observe">Step 3: Turn on feature flag in live environments and observe</a></li>
+<li><a class="reference internal" href="#step-4-clean-up">Step 4: Clean up</a><ul>
+<li><a class="reference internal" href="#data-refresh">Data refresh</a></li>
+<li><a class="reference internal" href="#api-code">API code</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#dependencies">Dependencies</a><ul>
+<li><a class="reference internal" href="#feature-flags">Feature flags</a></li>
+<li><a class="reference internal" href="#infrastructure">Infrastructure</a></li>
+<li><a class="reference internal" href="#tools-packages">Tools &amp; packages</a></li>
+<li><a class="reference internal" href="#other-projects-or-work">Other projects or work</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#alternatives">Alternatives</a><ul>
+<li><a class="reference internal" href="#elasticsearch-ingest-pipeline">Elasticsearch ingest pipeline</a></li>
+<li><a class="reference internal" href="#move-sensitive-text-detection-earlier-in-the-data-refresh-pipeline">Move sensitive text detection earlier in the data refresh pipeline</a></li>
+<li><a class="reference internal" href="#move-sensitive-text-detection-to-ingestion-supported-by-an-occasional-refresh-dag-to-backfill-existing-records">Move sensitive text detection to ingestion, supported by an occasional refresh DAG to backfill existing records</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#design">Design</a></li>
+<li><a class="reference internal" href="#blockers">Blockers</a></li>
+<li><a class="reference internal" href="#api-version-changes">API version changes</a></li>
+<li><a class="reference internal" href="#accessibility">Accessibility</a></li>
+<li><a class="reference internal" href="#rollback">Rollback</a></li>
+<li><a class="reference internal" href="#privacy">Privacy</a></li>
+<li><a class="reference internal" href="#localisation">Localisation</a></li>
+<li><a class="reference internal" href="#risks">Risks</a></li>
+<li><a class="reference internal" href="#prior-art">Prior art</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/scripts/furo.js?v=4e2eecee"></script>
+    <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+    </body>
+</html>

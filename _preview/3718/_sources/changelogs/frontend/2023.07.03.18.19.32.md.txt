@@ -1,0 +1,26 @@
+# 2023.07.03.18.19.32
+
+## New Features
+
+- Analytics Event: `LOAD_MORE_RESULTS`
+  ([#2449](https://github.com/WordPress/openverse/pull/2449)) by @zackkrida
+- Add OPEN_PAGES_MENU event
+  ([#2398](https://github.com/WordPress/openverse/pull/2398)) by @zackkrida
+- Analytics: Add REACH_RESULT_END event
+  ([#2454](https://github.com/WordPress/openverse/pull/2454)) by @obulat
+- Add TOGGLE_FILTER_SIDEBAR analytics event
+  ([#2405](https://github.com/WordPress/openverse/pull/2405)) by @zackkrida
+
+## Improvements
+
+- Add VIEW_EXTERNAL_SOURCES event
+  ([#2450](https://github.com/WordPress/openverse/pull/2450)) by @zackkrida
+- Count docs in index when loading sample data
+  ([#2491](https://github.com/WordPress/openverse/pull/2491)) by @dhruvkb
+
+## Bug Fixes
+
+- Fix frontend Sentry configuration
+  ([#2510](https://github.com/WordPress/openverse/pull/2510)) by @sarayourfriend
+- Update internal header snapshots
+  ([#2495](https://github.com/WordPress/openverse/pull/2495)) by @dhruvkb

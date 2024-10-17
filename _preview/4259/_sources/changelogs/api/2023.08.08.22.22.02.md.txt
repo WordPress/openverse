@@ -1,0 +1,28 @@
+# 2023.08.08.22.22.02
+
+## New Features
+
+- Add popularity refresh DAGs
+  ([#2592](https://github.com/WordPress/openverse/pull/2592)) by @stacimc
+
+## Internal Improvements
+
+- Bump cryptography from 41.0.2 to 41.0.3 in /api
+  ([#2771](https://github.com/WordPress/openverse/pull/2771)) by @dependabot
+- Bump django-redis from 5.2.0 to 5.3.0 in /api
+  ([#2761](https://github.com/WordPress/openverse/pull/2761)) by @dependabot
+- Bump gevent from 22.10.2 to 23.7.0 in /api
+  ([#2757](https://github.com/WordPress/openverse/pull/2757)) by @dependabot
+- Bump gunicorn from 20.1.0 to 21.2.0 in /api
+  ([#2762](https://github.com/WordPress/openverse/pull/2762)) by @dependabot
+- Bump hvac from 1.1.0 to 1.1.1 in /api
+  ([#2758](https://github.com/WordPress/openverse/pull/2758)) by @dependabot
+- bump django-cors-headers from 4.1.0 to 4.2.0 in /api
+  ([#2763](https://github.com/WordPress/openverse/pull/2763)) by @dependabot
+- Bump certifi from 2023.5.7 to 2023.7.22 in /api
+  ([#2717](https://github.com/WordPress/openverse/pull/2717)) by @dependabot
+
+## Bug Fixes
+
+- Re-add request ID tracking to API middleware
+  ([#2726](https://github.com/WordPress/openverse/pull/2726)) by @AetherUnbound

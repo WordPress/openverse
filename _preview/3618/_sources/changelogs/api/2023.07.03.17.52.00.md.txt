@@ -1,0 +1,23 @@
+# 2023.07.03.17.52.00
+
+## Improvements
+
+- Add upstream URL when sending Photon request exceptions to Sentry
+  ([#2509](https://github.com/WordPress/openverse/pull/2509)) by @krysal
+- Count docs in index when loading sample data
+  ([#2491](https://github.com/WordPress/openverse/pull/2491)) by @dhruvkb
+
+## Internal Improvements
+
+- Add upstream URL when sending Photon request exceptions to Sentry
+  ([#2509](https://github.com/WordPress/openverse/pull/2509)) by @krysal
+- Bump drf-spectacular from 0.26.2 to 0.26.3 in /api
+  ([#2520](https://github.com/WordPress/openverse/pull/2520)) by @dependabot
+- Bump pytest from 7.3.1 to 7.4.0 in /api
+  ([#2522](https://github.com/WordPress/openverse/pull/2522)) by @dependabot
+- Bump fakeredis from 2.13.0 to 2.15.0 in /api
+  ([#2523](https://github.com/WordPress/openverse/pull/2523)) by @dependabot
+- Bump django-cors-headers from 4.0.0 to 4.1.0 in /api
+  ([#2521](https://github.com/WordPress/openverse/pull/2521)) by @dependabot
+- Add tzinfo in factory generated access tokens
+  ([#2497](https://github.com/WordPress/openverse/pull/2497)) by @stacimc
