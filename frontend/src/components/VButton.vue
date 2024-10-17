@@ -297,10 +297,10 @@ a.button {
   @apply border-tx;
 }
 .transparent-gray {
-  @apply border-tx bg-tx text-default hover:bg-secondary disabled:text-disabled;
+  @apply border-tx bg-tx text-default hover:bg-transparent-hover disabled:text-disabled;
 }
 .transparent-dark {
-  @apply border-tx bg-tx text-default hover:bg-secondary-hover hover:text-over-dark;
+  @apply border-tx bg-tx text-default hover:bg-tertiary hover:text-over-dark;
 }
 .transparent-dark-pressed {
   @apply border-tx bg-tertiary text-over-dark hover:border-hover;
