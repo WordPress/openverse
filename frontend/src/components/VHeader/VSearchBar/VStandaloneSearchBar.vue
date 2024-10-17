@@ -54,7 +54,7 @@ defineExpose({ focusInput })
     @submit.prevent="handleSearch"
   >
     <div
-      class="input-field search-field group flex h-full flex-grow items-center overflow-hidden rounded-sm rounded-e-none border border-e-0 p-0.5px pe-2"
+      class="input-field search-field group flex h-full flex-grow items-center overflow-hidden rounded-sm rounded-e-none border p-0.5px pe-2"
       :class="[
         route === 'home' ? 'border-tx' : 'border-black dark:border-tx',
         { 'has-popover': hasPopover },
@@ -82,7 +82,7 @@ defineExpose({ focusInput })
 
 <style scoped>
 .input-field:has(#search-bar:focus-visible) {
-  @apply border-1.5 border-e-0 border-focus p-0 pe-2;
+  @apply border-1.5 border-focus p-0 pe-2;
 }
 
 .input-field.has-popover:has(#search-bar:focus-visible) {
