@@ -64,6 +64,10 @@ for (const dir of languageDirections) {
 
         test("content switcher open", async ({ page }) => {
           await page.locator("#search-type-button").click()
+          // eslint-disable-next-line playwright/no-conditional-in-test
+          if (["lg", "xl", "2xl"].includes("breakpoint")) {
+            await page.locator("#search-type-button").hover()
+          }
 
           await expectSnapshot(page, "content-switcher-open", page, { dir })
         })
