@@ -530,6 +530,12 @@ def execute_search(
 
 
 def get_sources(index):
+    """
+    Given an index, find all available data sources and return their counts.
+
+    :param index: An Elasticsearch index, such as `'image'`.
+    :return: A dictionary mapping sources to the count of their images.`
+    """    
     source_cache_name = "sources-" + index
     try:
         sources = cache.get(key=source_cache_name)
