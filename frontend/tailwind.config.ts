@@ -354,6 +354,7 @@ export default {
           ].map((item) => [
             item,
             (value) => ({
+              "--tw-ring-offset-color": "var(--color-bg-curr-page)",
               "--tw-ring-color": value,
               "--tw-outline-color": value,
             }),
