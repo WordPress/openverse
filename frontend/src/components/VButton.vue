@@ -306,6 +306,20 @@ a.button {
   @apply border-tx bg-tertiary text-over-dark hover:border-hover;
 }
 
+.filled-pink-8[aria-disabled="true"],
+.filled-gray[aria-disabled="true"],
+.filled-dark[aria-disabled="true"] {
+  @apply bg-disabled;
+}
+.filled-pink-8[aria-disabled="true"],
+.filled-dark[aria-disabled="true"] {
+  @apply text-over-negative;
+}
+.filled-gray[aria-disabled="true"],
+.filled-white[aria-disabled="true"] {
+  @apply text-disabled;
+}
+
 .icon-only {
   @apply flex-none;
 }
