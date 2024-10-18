@@ -537,25 +537,11 @@ def get_sources(index):
     :return: A dictionary mapping sources to the count of their images.`
     """
     source_cache_name = "sources-" + index
-    cache_fetch_failed = False
     try:
         sources = cache.get(key=source_cache_name)
-    except ValueError:
-        cache_fetch_failed = True
-        sources = None
-        logger.warning("Source cache fetch failed due to corruption")
     except ConnectionError:
-        cache_fetch_failed = True
-        sources = None
         logger.warning("Redis connect failed, cannot get cached sources.")
-
-    if isinstance(sources, list) or cache_fetch_failed:
         sources = None
-        try:
-            # Invalidate old source format.
-            cache.delete(key=source_cache_name)
-        except ConnectionError:
-            logger.warning("Redis connect failed, cannot invalidate cached sources.")
 
     if not sources:
         # Don't increase `size` without reading this issue first:
@@ -570,7 +556,7 @@ def get_sources(index):
                         "size": size,
                         "order": {"_key": "desc"},
                     }
-                }
+                },
             },
         }
         try:
@@ -583,16 +569,18 @@ def get_sources(index):
             buckets = results["aggregations"]["unique_sources"]["buckets"]
         except NotFoundError:
             buckets = [{"key": "none_found", "doc_count": 0}]
-        sources = {result["key"]: result["doc_count"] for result in buckets}
+        sources = {bucket["key"]: bucket["doc_count"] for bucket in buckets}
 
         try:
             cache.set(
-                key=source_cache_name, timeout=SOURCE_CACHE_TIMEOUT, value=sources
+                key=source_cache_name,
+                timeout=SOURCE_CACHE_TIMEOUT,
+                value=sources,
             )
         except ConnectionError:
             logger.warning("Redis connect failed, cannot cache sources.")
 
-    sources = {source: int(doc_count) for source, doc_count in sources.items()}
+    sources = {source: int(count) for source, count in sources.items()}
     return sources
 
 
