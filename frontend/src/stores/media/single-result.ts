@@ -58,7 +58,11 @@ export const useSingleResultStore = defineStore("single-result", {
     },
 
     _updateFetchState(action: "start" | "end", option?: FetchingError) {
-      action === "start" ? this._startFetching() : this._endFetching(option)
+      if (action === "start") {
+        this._startFetching()
+      } else {
+        this._endFetching(option)
+      }
     },
 
     reset() {

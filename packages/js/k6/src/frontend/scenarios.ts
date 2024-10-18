@@ -89,6 +89,7 @@ export function visitSearchPages() {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const actions = {
   visitStaticPages,
   visitSearchPages,

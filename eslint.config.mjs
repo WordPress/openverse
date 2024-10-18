@@ -7,7 +7,6 @@ import { config as defineConfig } from "typescript-eslint"
 import { includeIgnoreFile } from "@eslint/compat"
 import openverse from "@openverse/eslint-plugin"
 
-// @ts-ignore
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const gitignoreFiles = [
@@ -36,8 +35,11 @@ const eslintIgnores = [
 let ignoreConfigs = gitignoreFiles
   .map((gitignoreFile) => includeIgnoreFile(gitignoreFile))
   .reduce(
-    (acc, gitignoreFile, index) => {
-      return { ...acc, ignores: acc.ignores.concat(gitignoreFile.ignores) }
+    (acc, gitignoreFile) => {
+      return {
+        ...acc,
+        ignores: (acc.ignores ?? []).concat(gitignoreFile.ignores ?? []),
+      }
     },
     { name: "openverse:ignore-files", ignores: eslintIgnores }
   )
