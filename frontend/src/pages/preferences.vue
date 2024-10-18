@@ -124,7 +124,7 @@ const doneHydrating = computed(() => useHydrating())
             @change="handleChange"
           >
             <div>
-              <strong>{{ flag.name }}</strong>
+              <strong>{{ flag.name }}{{ `: ${flag.state}` }}</strong>
               <br />
               {{ flag.description }}
             </div>

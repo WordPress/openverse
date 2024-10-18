@@ -1,4 +1,4 @@
-import { type Page, test } from "@playwright/test"
+import { type Page, expect, test } from "@playwright/test"
 
 import { preparePageForTests } from "~~/test/playwright/utils/navigation"
 
@@ -81,29 +81,12 @@ const toggleChecked = async (
   originalChecked: boolean | undefined
 ) => {
   const featureFlag = await getSwitchableInput(page, name, originalChecked)
-  await featureFlag.setChecked(!originalChecked)
+  const expectedChecked = !originalChecked
+  await featureFlag.setChecked(expectedChecked)
 
-  // If the switch knob wasn't rendered yet, wait for it to be rendered.
-  // The knob's color is `bg-default` when off and `bg-tertiary` when on.
-  await page.evaluate(
-    async ([name, className]) => {
-      const getKnobClasses = () => {
-        return (
-          document
-            .getElementById(`#${name}`)
-            ?.parentElement?.querySelector("span")?.className ?? ""
-        )
-      }
+  const expectedText = `${name}: ${expectedChecked ? "on" : "off"}`
 
-      for (const waitTime of [100, 200, 500]) {
-        if (getKnobClasses().includes(className)) {
-          return
-        }
-        await new Promise((resolve) => setTimeout(resolve, waitTime))
-      }
-    },
-    [name, !originalChecked ? "bg-tertiary" : "bg-default"] as const
-  )
+  await expect(page.getByText(expectedText).first()).toBeVisible()
 }
 
 test.describe("switchable features", () => {
