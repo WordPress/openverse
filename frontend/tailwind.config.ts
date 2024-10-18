@@ -340,7 +340,7 @@ export default {
     },
   },
   plugins: [
-    require("@tailwindcss/typography"),
+    require("@tailwindcss/typography"), // eslint-disable-line @typescript-eslint/no-require-imports
     // Focus styles
     // This plugin has related stylesheets in `src/styles/tailwind.css`.
     plugin(({ matchUtilities, theme }) => {
