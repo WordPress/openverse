@@ -82,9 +82,11 @@ export const useProviderStore = defineStore("provider", {
       action: "start" | "end",
       option?: FetchingError
     ) {
-      action === "start"
-        ? this._startFetching(mediaType)
-        : this._endFetching(mediaType, option)
+      if (action === "start") {
+        this._startFetching(mediaType)
+      } else {
+        this._endFetching(mediaType, option)
+      }
     },
 
     _getProvider(providerCode: string, mediaType: SupportedMediaType) {

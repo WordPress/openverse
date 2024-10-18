@@ -285,7 +285,6 @@ describe("Ui Store", () => {
 
       expect(uiStore.dismissedBanners).toEqual(expectedState)
       if (areCookiesSet) {
-        // eslint-disable-next-line vitest/no-conditional-expect
         expect(dismissedBannersCookie).toEqual(expectedState)
       }
     }
