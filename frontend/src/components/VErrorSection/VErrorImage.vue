@@ -28,7 +28,7 @@ const i18n = useI18n({ useScope: "global" })
 
 const images = Object.fromEntries(
   imageInfo.errors.map((errorItem) => {
-    let image = errorItem.image
+    const image = errorItem.image
     const errorImage: ErrorImage = {
       ...image,
       originalTitle: image.title,
