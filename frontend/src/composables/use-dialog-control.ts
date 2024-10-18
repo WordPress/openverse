@@ -40,7 +40,11 @@ export function useDialogControl({
   watch(internalVisibleRef, (visible, _, onCleanup) => {
     triggerA11yProps["aria-expanded"] = visible
     if (shouldLockBodyScroll.value) {
-      visible ? lock() : unlock()
+      if (visible) {
+        lock()
+      } else {
+        unlock()
+      }
     }
     emit(visible ? "open" : "close")
     onCleanup(() => {

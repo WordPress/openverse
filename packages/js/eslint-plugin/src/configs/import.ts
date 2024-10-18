@@ -135,5 +135,11 @@ export default tseslint.config(
       "import/export": "off",
       "import/no-unresolved": "off",
     },
+  },
+  {
+    files: ["**/*.mjs"],
+    rules: {
+      "import/extensions": "off",
+    },
   }
 )
