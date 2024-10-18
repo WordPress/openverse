@@ -6,4 +6,4 @@ export default {
   "analytics-configuration": analyticsConfiguration,
   "no-unexplained-disabled-test": noUnexplainedDisabledTest,
   "translation-strings": translationStrings,
-}
+} as const
