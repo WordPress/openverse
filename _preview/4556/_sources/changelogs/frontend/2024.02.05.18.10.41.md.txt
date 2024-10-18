@@ -1,0 +1,11 @@
+# 2024.02.05.18.10.41
+
+## New Features
+
+- Add the ToS to the navigation bar
+  ([#3727](https://github.com/WordPress/openverse/pull/3727)) by @AetherUnbound
+
+## Improvements
+
+- Use new favicon ([#3724](https://github.com/WordPress/openverse/pull/3724)) by
+  @sarayourfriend

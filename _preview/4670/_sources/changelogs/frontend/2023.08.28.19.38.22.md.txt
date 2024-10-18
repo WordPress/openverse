@@ -1,0 +1,27 @@
+# 2023.08.28.19.38.22
+
+## New Features
+
+- Add `VCollectionHeader` component
+  ([#2734](https://github.com/WordPress/openverse/pull/2734)) by @obulat
+- Add blurring to the global audio player
+  ([#2854](https://github.com/WordPress/openverse/pull/2854)) by @dhruvkb
+
+## Improvements
+
+- Update Tailwind `rounded-md`
+  ([#2863](https://github.com/WordPress/openverse/pull/2863)) by @obulat
+- Add codespell pre-commit hook
+  ([#2855](https://github.com/WordPress/openverse/pull/2855)) by @sarayourfriend
+
+## Internal Improvements
+
+- Refactor search.vue and add it to tsconfig
+  ([#2866](https://github.com/WordPress/openverse/pull/2866)) by @obulat
+- Update VSearchBarButton to use VButton instead of VIconButton
+  ([#2724](https://github.com/WordPress/openverse/pull/2724)) by @obulat
+
+## Bug Fixes
+
+- Escape HTML in media title and creator
+  ([#2852](https://github.com/WordPress/openverse/pull/2852)) by @dhruvkb

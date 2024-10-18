@@ -1,0 +1,1 @@
+import{t as c}from"./BNurbrIm.js";import"./CFMQYC2y.js";const r="local",e="staging",g="production",p=[r,e,g],o=s=>{var t,n;return((n=(t=c())==null?void 0:t.$config)==null?void 0:n.public.deploymentEnv)===r?console[s]:()=>{}},i=o("warn"),u=o("log"),d=o("log");o("error");export{p as D,d,u as l,i as w};

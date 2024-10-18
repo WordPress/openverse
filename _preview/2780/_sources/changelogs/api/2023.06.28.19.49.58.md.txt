@@ -1,0 +1,6 @@
+# 2023.06.28.19.49.58
+
+## Bug Fixes
+
+- Filter single media views for hidden providers
+  ([#2487](https://github.com/WordPress/openverse/pull/2487)) by @sarayourfriend
