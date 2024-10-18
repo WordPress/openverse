@@ -8,7 +8,7 @@ import {
   getMockTokenResponse,
 } from "~~/test/unit/specs/utils/api-token/setup"
 
-import { getApiAccessToken } from "~/plugins/api-token.server"
+import { getApiAccessToken } from "~/plugins/01.api-token.server"
 
 vi.resetModules()
 

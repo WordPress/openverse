@@ -12,7 +12,10 @@ import {
   iAmATeapotError,
 } from "~~/test/unit/specs/utils/api-token/setup"
 
-import { expiryThreshold, getApiAccessToken } from "~/plugins/api-token.server"
+import {
+  expiryThreshold,
+  getApiAccessToken,
+} from "~/plugins/01.api-token.server"
 
 vi.resetModules()
 

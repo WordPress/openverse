@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { getApiAccessToken } from "~/plugins/api-token.server"
+import { getApiAccessToken } from "~/plugins/01.api-token.server"
 
 describe("missing client credentials", () => {
   describe("completely missing", () => {
