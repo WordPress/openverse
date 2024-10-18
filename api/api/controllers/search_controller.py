@@ -28,7 +28,7 @@ from api.controllers.elasticsearch.helpers import (
 from api.utils import tallies
 from api.utils.check_dead_links import check_dead_links
 from api.utils.dead_link_mask import get_query_hash
-from api.utils.text import SearchContext
+from api.utils.search_context import SearchContext
 
 
 # Using TYPE_CHECKING to avoid circular imports when importing types
@@ -460,9 +460,9 @@ def query_media(
     )
 
     result_ids = [result.identifier for result in results]
-    text = SearchContext.build(result_ids, origin_index)
+    search_context = SearchContext.build(result_ids, origin_index)
 
-    return results, page_count, result_count, text.asdict()
+    return results, page_count, result_count, search_context.asdict()
 
 
 def tally_results(
