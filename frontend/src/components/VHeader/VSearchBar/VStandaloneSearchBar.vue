@@ -50,14 +50,16 @@ defineExpose({ focusInput })
   <form
     action="/search"
     role="search"
-    class="search-bar group flex h-14 flex-row items-center rounded-sm border-tx bg-default sm:h-16"
+    class="search-bar group flex h-14 flex-row items-center rounded-sm border-tx bg-default sm:h-16 dark:bg-overlay"
     @submit.prevent="handleSearch"
   >
     <div
-      class="input-field search-field group flex h-full flex-grow items-center overflow-hidden rounded-sm rounded-e-none border border-e-0 p-0.5px pe-2 focus-within:border-1.5 focus-within:border-e-0 focus-within:p-0 focus-within:pe-2"
+      class="input-field search-field group flex h-full flex-grow items-center overflow-hidden rounded-sm rounded-e-none border p-0.5px"
       :class="[
-        route === 'home' ? 'border-tx' : 'border-black',
-        hasPopover ? 'focus-within:border-tx' : 'focus-within:border-focus',
+        route === 'home'
+          ? 'border-tx pe-[7px]'
+          : 'border-1.5 border-e-0 border-black pe-[7.5px] dark:border-tx',
+        { 'has-popover': hasPopover },
       ]"
     >
       <input
@@ -66,7 +68,7 @@ defineExpose({ focusInput })
         type="search"
         name="q"
         :placeholder="$t('hero.search.placeholder')"
-        class="paragraph-large md:label-regular ms-4 h-full w-full appearance-none rounded-none bg-tx leading-none text-default placeholder-gray-8 focus-visible:outline-none"
+        class="paragraph-large md:label-regular focus-visible:outline-style-none ms-4 h-full w-full appearance-none rounded-none bg-tx leading-none text-default placeholder-gray-8 dark:placeholder-gray-4"
         :aria-label="
           $t('search.searchBarLabel', {
             openverse: 'Openverse',
@@ -79,3 +81,13 @@ defineExpose({ focusInput })
     <VSearchButton :route="route" />
   </form>
 </template>
+
+<style scoped>
+.input-field:has(#search-bar:focus-visible) {
+  @apply border-1.5 border-focus p-0 pe-2;
+}
+
+.input-field.has-popover:has(#search-bar:focus-visible) {
+  @apply border-tx;
+}
+</style>

@@ -109,7 +109,7 @@ const splitAttrs = computed(() => {
       {
         [`${contextProps.direction}-bordered`]: contextProps.bordered,
         [`${contextProps.direction}-popover-item`]: isInPopover,
-        'border border-default': contextProps.bordered,
+        'border border-overlay': contextProps.bordered,
         'has-check': contextProps.showCheck,
         'font-semibold': selected && !contextProps.showCheck,
         'bg-transparent':

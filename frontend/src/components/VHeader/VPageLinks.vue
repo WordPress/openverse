@@ -77,10 +77,10 @@ const externalIconSize = computed(() => (props.isInModal ? 6 : 4))
   <ul v-else>
     <li v-for="page in allPages" :key="page.id">
       <VLink
-        class="flex flex-row rounded-sm hover:underline focus-visible:outline-none focus-visible:ring focus-visible:ring-offset-tx disabled:text-disabled"
+        class="flex flex-row rounded-sm hover:underline disabled:text-disabled"
         :class="[
           { 'font-semibold': currentPage === page.id },
-          { 'focus-visible:ring-border-focus text-default': mode === 'light' },
+          { 'text-default': mode === 'light' },
           navLinkClasses,
         ]"
         :href="page.link"

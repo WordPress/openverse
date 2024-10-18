@@ -278,6 +278,7 @@ export default {
         "secondary-hover": "var(--color-border-secondary-hover)",
         tertiary: "var(--color-border-tertiary)",
         "transparent-hover": "var(--color-border-transparent-hover)",
+        overlay: "var(--color-border-overlay)",
         focus: "var(--color-border-focus)",
         "bg-ring": "var(--color-border-bg-ring)",
         disabled: "var(--color-border-disabled)",
@@ -354,6 +355,7 @@ export default {
           ].map((item) => [
             item,
             (value) => ({
+              "--tw-ring-offset-color": "var(--color-bg-curr-page)",
               "--tw-ring-color": value,
               "--tw-outline-color": value,
             }),

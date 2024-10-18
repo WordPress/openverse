@@ -36,7 +36,12 @@ const headerComponent = computed(() => {
   }[props.kind]
 })
 
-const bg = computed(() => `bg-${props.color}`)
+const bg = computed(() => {
+  if (props.color === "default") {
+    return "bg-default"
+  }
+  return "bg-complementary dark:bg-default"
+})
 </script>
 
 <template>
