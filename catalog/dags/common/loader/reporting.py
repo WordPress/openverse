@@ -74,7 +74,7 @@ def clean_duration(duration: float | list[float] | None) -> str | None:
 def clean_record_counts(
     record_counts_by_media_type: MediaTypeRecordMetrics | list[MediaTypeRecordMetrics],
     media_types: Sequence[str],
-) -> dict[str, RecordMetrics]:
+) -> MediaTypeRecordMetrics:
     # If a list of record_counts dicts is provided, sum all of the individual values
     if isinstance(record_counts_by_media_type, list):
         return {
@@ -89,16 +89,43 @@ def clean_record_counts(
 
 def skip_report_completion(
     duration: str | None,
-    record_counts_by_media_type: dict[str, RecordMetrics],
+    record_counts_by_media_type: MediaTypeRecordMetrics,
 ) -> bool:
+    """
+    Detect if report_completion should be skipped by determining if there was
+    an upstream failure that prevented rows from being ingested; in this case, the
+    error will have already been reported to Slack instead.
+    """
     return (
         # Duration must be provided and be a value greater than 1 second
         duration is None or duration in ("inf", "less than 1 sec")
     ) and (
         # Record counts by media type must be provided and at least one value must
-        # be truthy (i.e. not None)
+        # be truthy (i.e. not None). Note that if there was no error during
+        # ingestion, and the provider simply ingested 0 records, this
+        # condition will not be True.
         not record_counts_by_media_type
         or all([val is None for val in record_counts_by_media_type.values()])
+    )
+
+
+def detect_missing_records(
+    dated: bool,
+    record_counts_by_media_type: MediaTypeRecordMetrics,
+) -> bool:
+    """
+    Detect when a DAG unexpectedly upserts 0 records, and may require further
+    investigation. This is used to detect cases where a DAG may break silently,
+    preventing records from being ingested but not causing any Airflow errors.
+
+    Presently, this detects the simple case where a non-dated DAG (which should
+    be ingesting _all_ records for its provider) upserts 0 records.
+    """
+    return not dated and all(
+        [
+            not count or not count.upserted
+            for count in record_counts_by_media_type.values()
+        ]
     )
 
 
@@ -132,6 +159,8 @@ def report_completion(
           within the catalog database.
         - `date_range`: The range of time this ingestion covers. If the ingestion covers
           the entire provided dataset, "all" is provided
+
+    If the DAG is a non-dated DAG and yet upserted 0 records, an error is raised.
     """
     is_aggregate_duration = isinstance(duration, list)
 
@@ -187,6 +216,12 @@ def report_completion(
             " It does not include loading time and does not account for data"
             " pulls that may happen concurrently._"
         )
+
+    # Raise an error to alert maintainers of a possible broken DAG, if non-dated
+    # and 0 records were upserted. We raise an error only after building the message,
+    # so that duplicate counts/etc are available in the logs.
+    if detect_missing_records(dated, record_counts_by_media_type):
+        raise ValueError("No records were ingested.")
 
     send_message(message, dag_id=dag_id, username="Airflow DAG Load Data Complete")
     return message
