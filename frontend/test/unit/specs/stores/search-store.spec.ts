@@ -355,7 +355,6 @@ describe("Search Store", () => {
           },
         })
         if (isSupportedSearchType(searchType)) {
-          // eslint-disable-next-line vitest/no-conditional-expect
           expect(searchStore.apiSearchQueryParams).not.toEqual(
             expectedQueryParams
           )

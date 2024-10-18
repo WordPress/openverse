@@ -424,6 +424,7 @@ eslint *args:
     pnpm exec eslint \
         --max-warnings=0 \
         --no-warn-ignored \
+        --fix \
         "${files[@]}"
 
 # Alias for `just packages/js/k6/run` or `just p k6 run`
