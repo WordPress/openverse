@@ -16,14 +16,14 @@ export const noUnexplainedDisabledTest = OpenverseRule<[], MessageIds>({
     docs: {
       description:
         "Disabled tests must have an issue comment with a GitHub link preceding them.",
-      recommended: "recommended",
+      recommended: true,
     },
     schema: [],
     messages,
   },
   defaultOptions: [],
   create(context) {
-    const sourceCode = context.getSourceCode()
+    const sourceCode = context.sourceCode
 
     const hasIssueCommentWithLink = (node: TSESTree.Node) => {
       const commentsBeforeNode = sourceCode.getCommentsBefore(node)
