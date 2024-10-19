@@ -91,15 +91,7 @@ const makeBreakpointDescribe =
         options = {}
       ) => {
         const snapshotName = getSnapshotName(name, options.dir)
-        return innerExpectSnapshot(page, snapshotName, screenshotAble, {
-          ...options,
-          useColorMode:
-            snapshotName.includes("-2xl") ||
-            snapshotName.includes("-xl") ||
-            snapshotName.includes("-lg") ||
-            snapshotName.includes("-sm") ||
-            snapshotName.includes("-xs"),
-        })
+        return innerExpectSnapshot(page, snapshotName, screenshotAble, options)
       }
 
       _block({ breakpoint, expectSnapshot })
