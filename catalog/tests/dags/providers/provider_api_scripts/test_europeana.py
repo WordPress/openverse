@@ -287,6 +287,33 @@ def test_get_image_dimensions(item_data, expected, record_builder):
 @pytest.mark.parametrize(
     "item_data, expected",
     [
+        # Single creator in a list
+        pytest.param({"dcCreator": ["Chandler"]}, "Chandler", id="single_creator"),
+        # Multiple creators in a list
+        pytest.param(
+            {"dcCreator": ["Chandler", "Joey"]},
+            "Chandler, Joey",
+            id="multiple_creators",
+        ),
+        # Empty creator list
+        pytest.param({"dcCreator": []}, None, id="empty_creator_list"),
+        # Missing dcCreator key
+        pytest.param({}, None, id="no_dcCreator"),
+        # dcCreator is a string
+        pytest.param({"dcCreator": "Chandler"}, "Chandler", id="dcCreator_string"),
+        # dcCreator is None
+        pytest.param({"dcCreator": None}, None, id="dcCreator_none"),
+        # Empty string in creator list
+        pytest.param({"dcCreator": [""]}, "", id="empty_string_in_list"),
+    ],
+)
+def test_get_creator(item_data, expected, record_builder):
+    assert record_builder._get_creator(item_data) == expected
+
+
+@pytest.mark.parametrize(
+    "item_data, expected",
+    [
         pytest.param(ITEM_HAPPY_WEBRESOURCE, "jpeg", id="happy_path"),
         pytest.param({"ebucoreHasMimeType": "image-jpeg"}, "image-jpeg", id="no_slash"),
         pytest.param({"ebucoreHasMimeType": "gibberish"}, "gibberish", id="gibberish"),
