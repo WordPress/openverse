@@ -20,3 +20,10 @@
 ;; packages/js/eslint-plugin/configs/vue.ts
 ;; `te` gets matched with `the` and others
 const i18nDestructureRules = ["t", "tc", "te", "td", "d", "n"].map(
+
+;; catalog/tests/dags/providers/provider_api_scripts/test_europeana.py
+;; lod refers to a legitimate part of a URL, likely meaning 
+;;"Linked Open Data" (LOD), which is commonly used in metadata contexts
+"http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent2, "
+"http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent3, "
+"http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent4"
