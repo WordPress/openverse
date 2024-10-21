@@ -68,7 +68,7 @@ class EuropeanaRecordBuilder:
                 "foreign_identifier": self._get_foreign_identifier(data),
                 "meta_data": self._get_meta_data_dict(data),
                 "title": self._get_title(data),
-                "creator": self._get_creator(item_data),
+                "creator": self._get_creator(data),
                 "license_info": self._get_license_info(data),
                 "filetype": self._get_filetype(item_data),
                 "filesize": self._get_filesize(item_data),
@@ -158,11 +158,15 @@ class EuropeanaRecordBuilder:
     def _get_filesize(self, item_data: dict) -> int:
         return item_data.get("ebucoreFileByteSize")
 
-    def _get_creator(self, item_data: dict) -> str | None:
-        creators = item_data.get("dcCreator", [])
-        if not creators:
-            return None
-        return creators if isinstance(creators, str) else ", ".join(creators)
+    def _get_creator(self, data: dict) -> str | None:
+        creators = data.get("dcCreator", [])
+        if isinstance(creators, list):
+            if not creators:  # Explicitly handle empty list
+                return None
+            return ", ".join(creators)
+        elif isinstance(creators, str):
+            return creators
+        return None
 
     def _get_meta_data_dict(self, data: dict) -> dict:
         meta_data = {

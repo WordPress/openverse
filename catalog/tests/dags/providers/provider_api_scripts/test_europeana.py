@@ -186,6 +186,12 @@ def test_record_builder_get_record_data(ingester, record_builder):
         "description": "Sello en seco: España artística y monumental.",
     }
 
+    expected_creator = (
+        "http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent2, "
+        "http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent3, "
+        "http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent4"
+    )
+
     assert record_data == {
         "foreign_landing_url": (
             "http://bibliotecadigital.jcyl.es/i18n/consulta/registro.cmd?" "id=26229"
@@ -207,6 +213,7 @@ def test_record_builder_get_record_data(ingester, record_builder):
         "filesize": 36272,
         "filetype": "jpeg",
         "thumbnail_url": "https://api.europeana.eu/api/v2/thumbnail-by-url.json?uri=http%3A%2F%2Fbibliotecadigital.jcyl.es%2Fi18n%2Fcatalogo_imagenes%2Fimagen_id.cmd%3FidImagen%3D102620362&type=IMAGE",
+        "creator": expected_creator,
     }
 
 
