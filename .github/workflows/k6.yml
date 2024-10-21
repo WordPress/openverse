@@ -1,0 +1,66 @@
+name: Run k6 scenario
+
+on:
+  workflow_dispatch:
+    inputs:
+      namespace:
+        description: '"namespace" of the k6 test scenario to run.'
+        required: true
+        type: choice
+        # frontend is the only one so far, but we will add API back to the k6 tests at some point
+        options:
+          - frontend
+      scenario:
+        description: "The k6 scenario to run; availability differs per namespace. Run `ov j packages/js/k6/ls` for a list of all k6 scenarios for each namespace."
+        required: true
+        type: string
+      service_url:
+        description: "The service against which to run the k6 scenario."
+        required: true
+        type: string
+      report:
+        description: "Whether to report the run results to Grafana Cloud k6"
+        required: false
+        type: boolean
+        default: false
+
+run-name: k6 run ${{ inputs.namespace }} ${{ inputs.scenario }} ${{ inputs.service_url }} report=${{ inputs.report }}
+
+# Disallow running multiple load tests at once against the same service
+concurrency: ${{ github.workflow }}-${{ inputs.service_url }}
+
+jobs:
+  run-k6:
+    name: "Run k6 ${{ inputs.namespace }} ${{ inputs.scenario }} ${{ inputs.service_url }} report=${{ inputs.report }}"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          setup_python: false
+          install_recipe: node-install
+
+      - name: Setup k6
+        uses: grafana/setup-k6-action@v1
+
+      - name: k6 run ${{ inputs.namespace }} ${{ inputs.scenario }} ${{ inputs.service_url }}
+        env:
+          K6_CLOUD_TOKEN: ${{ secrets.GC_K6_TOKEN }}
+          K6_SIGNING_SECRET: ${{ secrets.K6_SIGNING_SECRET }}
+        run: |
+          just k6 ${{ inputs.namespace }} ${{ inputs.scenario }} \
+            ${{ inputs.report && '-o cloud' || ''}} \
+            -e signing_secret="$K6_SIGNING_SECRET" \
+            -e service_url=${{ inputs.service_url }} \
+            -e text_summary=/tmp/k6-summary.txt
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: k6-output
+          path: /tmp/k6-summary.txt

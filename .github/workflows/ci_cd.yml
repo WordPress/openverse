@@ -708,7 +708,7 @@ jobs:
       - name: Run k6 frontend all against local Nuxt
         run: |
           just k6 frontend all \
-            -e FRONTEND_URL=http://127.0.0.1:8443/ \
+            -e service_url=http://127.0.0.1:8443/ \
             -e text_summary=/tmp/k6-summary.txt
 
       - name: Upload artifacts
@@ -739,7 +739,7 @@ jobs:
           ## Latest k6 run output[^update]
 
           ```
-          ${summary}
+          {summary}
           ```
 
           [^update]: This comment will automatically update with new output each time k6 runs for this PR
@@ -1311,6 +1311,25 @@ jobs:
             }
           wait_time: 60 # check every minute
           max_time: 1800 # allow up to 30 minutes for a deployment
+
+      - name: Trigger staging k6 load test
+        uses: convictional/trigger-workflow-and-wait@v1.6.5
+        with:
+          owner: WordPress
+          repo: openverse
+          token: ${{ secrets.ACCESS_TOKEN }}
+          workflow_file_name: k6.yml
+          wait_interval: 60
+          # TODO: Set to true once we see that this test is stable, and we can fail the deployment if it fails.
+          # @see https://github.com/WordPress/openverse/pull/4991
+          propagate_failure: false
+          client_payload: |
+            {
+              "namespace": "frontend",
+              "scenario": "all",
+              "service_url": "https://staging.openverse.org/",
+              "report": true
+            }
 
   deploy-api:
     name: Deploy staging API
