@@ -1,3 +1,4 @@
+![17295211675315362815822275414255](https://github.com/user-attachments/assets/7f1888b6-2135-404f-a212-ba8ae157aeeb)
 # GitHub contribution practices
 
 Here are some of the practices we follow at Openverse when it comes to GitHub
