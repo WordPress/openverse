@@ -1317,7 +1317,7 @@ jobs:
         with:
           owner: WordPress
           repo: openverse
-          token: ${{ secrets.ACCESS_TOKEN }}
+          github_token: ${{ secrets.ACCESS_TOKEN }}
           workflow_file_name: k6.yml
           wait_interval: 60
           # TODO: Set to true once we see that this test is stable, and we can fail the deployment if it fails.
