@@ -1320,6 +1320,8 @@ jobs:
           token: ${{ secrets.ACCESS_TOKEN }}
           workflow_file_name: k6.yml
           wait_interval: 60
+          # TODO: Set to true once we see that this test is stable, and we can fail the deployment if it fails.
+          # @see https://github.com/WordPress/openverse/pull/4991
           propagate_failure: false
           client_payload: |
             {
