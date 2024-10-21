@@ -12,8 +12,7 @@
 
 /frontend/           @WordPress/openverse-frontend
 /packages/js/        @WordPress/openverse-frontend
-/.eslintignore       @WordPress/openverse-frontend
-/.eslintrc.js        @WordPress/openverse-frontend
+/eslint.config.mjs   @WordPress/openverse-frontend
 /.npmrc              @WordPress/openverse-frontend
 /.pnpmfile.cjs       @WordPress/openverse-frontend
 /.prettierignore     @WordPress/openverse-frontend

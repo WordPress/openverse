@@ -86,7 +86,7 @@ const getFocusDirection = (
 }
 
 const handleKeyDown = (event: KeyboardEvent) => {
-  let list = tabContext.tabs.value
+  const list = tabContext.tabs.value
     .map((tab) => getDomElement(tab))
     .filter(Boolean) as HTMLElement[]
   const tabControlKeys = [

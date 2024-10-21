@@ -69,7 +69,7 @@ export const analyticsConfiguration = OpenverseRule<Options, MessageIds>({
   meta: {
     docs: {
       description: "Ensure correct Openverse analytics event configuration",
-      recommended: "recommended",
+      recommended: true,
     },
     type: "problem",
     messages,

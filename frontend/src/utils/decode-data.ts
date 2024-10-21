@@ -6,7 +6,7 @@ const encodeGroup = (prefix: string, group: string) => {
     const encoded = String.fromCharCode(parseInt(group, 16))
     encodeURIComponent(encoded)
     return decodeURI(encoded)
-  } catch (e) {
+  } catch {
     return prefix + group
   }
 }

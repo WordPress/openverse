@@ -108,7 +108,7 @@ const scroll = (to: "start" | "end") => {
 
   showScrollButton[to === "start" ? "end" : "start"] = true
 
-  let distToSide = getDistToSide(to, dir.value, innerContainer)
+  const distToSide = getDistToSide(to, dir.value, innerContainer)
   let adjustedScrollStep = scrollStep
 
   // If the scroll step is larger than the distance to the side, scroll
@@ -127,7 +127,7 @@ const scroll = (to: "start" | "end") => {
     adjustedScrollStep = -adjustedScrollStep
   }
 
-  let left = to === "start" ? -adjustedScrollStep : adjustedScrollStep
+  const left = to === "start" ? -adjustedScrollStep : adjustedScrollStep
   buttonsRef.value?.scrollBy({ left, behavior: "smooth" })
 }
 

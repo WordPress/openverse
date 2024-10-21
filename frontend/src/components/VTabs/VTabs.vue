@@ -81,7 +81,7 @@ const tabGroupContext: TabsState = {
     }
   },
   unregisterTab(tab: (typeof tabs)["value"][number]) {
-    let idx = tabs.value.indexOf(tab)
+    const idx = tabs.value.indexOf(tab)
     if (idx !== -1) {
       tabs.value.splice(idx, 1)
     }
@@ -92,7 +92,7 @@ const tabGroupContext: TabsState = {
     }
   },
   unregisterPanel(panel: (typeof panels)["value"][number]) {
-    let idx = panels.value.indexOf(panel)
+    const idx = panels.value.indexOf(panel)
     if (idx !== -1) {
       panels.value.splice(idx, 1)
     }
