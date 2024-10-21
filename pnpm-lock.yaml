@@ -87,8 +87,8 @@ importers:
         specifier: ^0.5.13
         version: 0.5.13(tailwindcss@3.4.6)
       '@vueuse/core':
-        specifier: ^10.11.0
-        version: 10.11.0(vue@3.5.0(typescript@5.6.3))
+        specifier: ^11.0.0
+        version: 11.1.0(vue@3.5.0(typescript@5.6.3))
       '@wordpress/is-shallow-equal':
         specifier: ^5.3.0
         version: 5.3.0
@@ -3334,14 +3334,14 @@ packages:
   '@vue/test-utils@2.4.6':
     resolution: {integrity: sha512-FMxEjOpYNYiFe0GkaHsnJPXFHxQ6m4t8vI/ElPGpMWxZKpmRvQ33OIrvRXemy6yha03RxhOlQuy+gZMC3CQSow==}
 
-  '@vueuse/core@10.11.0':
-    resolution: {integrity: sha512-x3sD4Mkm7PJ+pcq3HX8PLPBadXCAlSDR/waK87dz0gQE+qJnaaFhc/dZVfJz+IUYzTMVGum2QlR7ImiJQN4s6g==}
+  '@vueuse/core@11.1.0':
+    resolution: {integrity: sha512-P6dk79QYA6sKQnghrUz/1tHi0n9mrb/iO1WTMk/ElLmTyNqgDeSZ3wcDf6fRBGzRJbeG1dxzEOvLENMjr+E3fg==}
 
-  '@vueuse/metadata@10.11.0':
-    resolution: {integrity: sha512-kQX7l6l8dVWNqlqyN3ePW3KmjCQO3ZMgXuBMddIu83CmucrsBfXlH+JoviYyRBws/yLTQO8g3Pbw+bdIoVm4oQ==}
+  '@vueuse/metadata@11.1.0':
+    resolution: {integrity: sha512-l9Q502TBTaPYGanl1G+hPgd3QX5s4CGnpXriVBR5fEZ/goI6fvDaVmIl3Td8oKFurOxTmbXvBPSsgrd6eu6HYg==}
 
-  '@vueuse/shared@10.11.0':
-    resolution: {integrity: sha512-fyNoIXEq3PfX1L3NkNhtVQUSRtqYwJtJg+Bp9rIzculIZWHTkKSysujrOk2J+NrRulLTQH9+3gGSfYLWSEWU1A==}
+  '@vueuse/shared@11.1.0':
+    resolution: {integrity: sha512-YUtIpY122q7osj+zsNMFAfMTubGz0sn5QzE5gPzAIiCmtt2ha3uQUY1+JPyL4gRCTsLPX82Y9brNbo/aqlA91w==}
 
   '@wordpress/is-shallow-equal@5.3.0':
     resolution: {integrity: sha512-sZ+fypqjYX0/DTAKsm1G9ND9Wn4d3Ju4lI7SLSmCKdUL5EPY3g/2LpKQKDqljh9m6Ex5NWp2XfU8UVXpkEfbMQ==}
@@ -12579,19 +12579,19 @@ snapshots:
       js-beautify: 1.15.1
       vue-component-type-helpers: 2.1.6
 
-  '@vueuse/core@10.11.0(vue@3.5.0(typescript@5.6.3))':
+  '@vueuse/core@11.1.0(vue@3.5.0(typescript@5.6.3))':
     dependencies:
       '@types/web-bluetooth': 0.0.20
-      '@vueuse/metadata': 10.11.0
-      '@vueuse/shared': 10.11.0(vue@3.5.0(typescript@5.6.3))
+      '@vueuse/metadata': 11.1.0
+      '@vueuse/shared': 11.1.0(vue@3.5.0(typescript@5.6.3))
       vue-demi: 0.14.10(vue@3.5.0(typescript@5.6.3))
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
 
-  '@vueuse/metadata@10.11.0': {}
+  '@vueuse/metadata@11.1.0': {}
 
-  '@vueuse/shared@10.11.0(vue@3.5.0(typescript@5.6.3))':
+  '@vueuse/shared@11.1.0(vue@3.5.0(typescript@5.6.3))':
     dependencies:
       vue-demi: 0.14.10(vue@3.5.0(typescript@5.6.3))
     transitivePeerDependencies:
