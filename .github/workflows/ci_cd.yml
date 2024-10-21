@@ -1320,6 +1320,7 @@ jobs:
           token: ${{ secrets.ACCESS_TOKEN }}
           workflow_file_name: k6.yml
           wait_interval: 60
+          propagate_failure: false
           client_payload: |
             {
               "namespace": "frontend",
