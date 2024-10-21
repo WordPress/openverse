@@ -1,0 +1,11 @@
+# 2024.03.25.15.22.26
+
+## New Features
+
+- Add accesstoken and ThrottledApplication to admin panel
+  ([#3836](https://github.com/WordPress/openverse/pull/3836)) by @bjornthiberg
+
+## Internal Improvements
+
+- Bump jwcrypto from 1.5.4 to 1.5.6 in /api
+  ([#3953](https://github.com/WordPress/openverse/pull/3953)) by @dependabot

@@ -1,0 +1,507 @@
+{
+  "appType": "custom",
+  "base": "./",
+  "build": {
+    "assetsDir": "_nuxt/",
+    "copyPublicDir": false,
+    "emptyOutDir": false,
+    "manifest": "manifest.json",
+    "outDir": "/home/runner/work/openverse/openverse/frontend/.nuxt/dist/client",
+    "rollupOptions": {
+      "input": {
+        "entry": "/home/runner/work/openverse/openverse/node_modules/.pnpm/nuxt@3.13.1_@parcel+watcher@2.4.1_@types+node@22.5.1_encoding@0.1.13_eslint@8.57.0_ioredis@5._rp6i6xovbwmocdg3an6ofz5f7a/node_modules/nuxt/dist/app/entry.js"
+      },
+      "output": {
+        "chunkFileNames": "_nuxt/[hash].js",
+        "entryFileNames": "_nuxt/[hash].js"
+      }
+    },
+    "sourcemap": false
+  },
+  "cacheDir": "/home/runner/work/openverse/openverse/frontend/node_modules/.cache/vite/client",
+  "clearScreen": true,
+  "configFile": false,
+  "css": {
+    "devSourcemap": false,
+    "postcss": {
+      "plugins": [
+        {
+          "postcssPlugin": "tailwindcss/nesting"
+        },
+        {
+          "plugins": [
+            null
+          ],
+          "postcssPlugin": "tailwindcss"
+        },
+        {
+          "options": {
+          },
+          "postcssPlugin": "autoprefixer"
+        },
+        {
+          "plugins": [
+            {
+              "postcssPlugin": "postcss-discard-comments"
+            },
+            {
+              "postcssPlugin": "postcss-minify-gradients"
+            },
+            {
+              "postcssPlugin": "postcss-reduce-initial"
+            },
+            {
+              "postcssPlugin": "postcss-svgo"
+            },
+            {
+              "postcssPlugin": "postcss-normalize-display-values"
+            },
+            {
+              "postcssPlugin": "postcss-reduce-transforms"
+            },
+            {
+              "postcssPlugin": "postcss-colormin"
+            },
+            {
+              "postcssPlugin": "postcss-normalize-timing-functions"
+            },
+            {
+              "postcssPlugin": "postcss-calc"
+            },
+            {
+              "postcssPlugin": "postcss-convert-values"
+            },
+            {
+              "postcssPlugin": "postcss-ordered-values"
+            },
+            {
+              "postcssPlugin": "postcss-minify-selectors"
+            },
+            {
+              "postcssPlugin": "postcss-minify-params"
+            },
+            {
+              "postcssPlugin": "postcss-normalize-charset"
+            },
+            {
+              "postcssPlugin": "postcss-discard-overridden"
+            },
+            {
+              "postcssPlugin": "postcss-normalize-string"
+            },
+            {
+              "postcssPlugin": "postcss-normalize-unicode"
+            },
+            {
+              "postcssPlugin": "postcss-minify-font-values"
+            },
+            {
+              "postcssPlugin": "postcss-normalize-url"
+            },
+            {
+              "postcssPlugin": "postcss-normalize-repeat-style"
+            },
+            {
+              "postcssPlugin": "postcss-normalize-positions"
+            },
+            {
+              "postcssPlugin": "postcss-normalize-whitespace"
+            },
+            {
+              "postcssPlugin": "postcss-merge-longhand"
+            },
+            {
+              "postcssPlugin": "postcss-discard-duplicates"
+            },
+            {
+              "postcssPlugin": "postcss-merge-rules"
+            },
+            {
+              "postcssPlugin": "postcss-discard-empty"
+            },
+            {
+              "postcssPlugin": "postcss-unique-selectors"
+            },
+            {
+              "postcssPlugin": "css-declaration-sorter"
+            },
+            {
+              "postcssPlugin": "cssnano-util-raw-cache"
+            }
+          ],
+          "version": "8.4.45"
+        }
+      ]
+    }
+  },
+  "customLogger": {
+    "hasWarned": false
+  },
+  "define": {
+    "__DEBUG__": "false",
+    "__NUXT_ASYNC_CONTEXT__": false,
+    "__NUXT_VERSION__": "\"3.13.1\"",
+    "__VUE_PROD_HYDRATION_MISMATCH_DETAILS__": false,
+    "import.meta.browser": true,
+    "import.meta.client": true,
+    "import.meta.dev": false,
+    "import.meta.nitro": false,
+    "import.meta.prerender": false,
+    "import.meta.server": false,
+    "import.meta.test": false,
+    "import.meta.vitest": "undefined",
+    "module.hot": false,
+    "process.browser": true,
+    "process.client": true,
+    "process.dev": false,
+    "process.env.NODE_ENV": "\"production\"",
+    "process.nitro": false,
+    "process.prerender": false,
+    "process.server": false,
+    "process.test": false
+  },
+  "esbuild": {
+    "jsxFactory": "h",
+    "jsxFragment": "Fragment",
+    "tsconfigRaw": "{}"
+  },
+  "experimental": {
+  },
+  "logLevel": "info",
+  "mode": "production",
+  "optimizeDeps": {
+    "entries": [
+      "/home/runner/work/openverse/openverse/node_modules/.pnpm/nuxt@3.13.1_@parcel+watcher@2.4.1_@types+node@22.5.1_encoding@0.1.13_eslint@8.57.0_ioredis@5._rp6i6xovbwmocdg3an6ofz5f7a/node_modules/nuxt/dist/app/entry.js"
+    ],
+    "exclude": [
+      "vue-demi",
+      "vue-i18n",
+      "vue",
+      "@vue/runtime-core",
+      "@vue/runtime-dom",
+      "@vue/reactivity",
+      "@vue/shared",
+      "@vue/devtools-api",
+      "vue-router",
+      "vue-demi",
+      "nuxt",
+      "nuxt/app",
+      "@unhead/vue",
+      "consola",
+      "defu",
+      "devalue",
+      "h3",
+      "hookable",
+      "klona",
+      "ofetch",
+      "pathe",
+      "ufo",
+      "unctx",
+      "unenv"
+    ],
+    "include": [
+      "@nuxtjs/storybook > @storybook-vue/nuxt > @storybook/vue3 > lodash/kebabCase"
+    ]
+  },
+  "plugins": [
+    {
+      "api": {
+        "options": {
+          "compiler": null,
+          "cssDevSourcemap": false,
+          "customElement": {
+          },
+          "features": {
+            "propsDestructure": false
+          },
+          "include": {
+          },
+          "isProduction": true,
+          "root": "/home/runner/work/openverse/openverse/frontend",
+          "script": {
+            "hoistStatic": {
+            }
+          },
+          "sourceMap": true,
+          "template": {
+            "compilerOptions": {
+            },
+            "transformAssetUrls": {
+              "image": [
+                "xlink:href",
+                "href"
+              ],
+              "img": [
+                "src"
+              ],
+              "source": [
+                "src"
+              ],
+              "use": [
+                "xlink:href",
+                "href"
+              ],
+              "video": [
+                "src",
+                "poster"
+              ]
+            }
+          }
+        },
+        "version": "5.1.3"
+      },
+      "name": "vite:vue"
+    },
+    {
+      "name": "vite:vue-jsx"
+    },
+    {
+      "load": {
+        "enforce": "pre"
+      },
+      "name": "nuxt:vite-public-dir-resolution",
+      "resolveId": {
+        "enforce": "post"
+      },
+      "vite": {
+        "load": {
+          "enforce": "pre"
+        },
+        "resolveId": {
+          "enforce": "post"
+        }
+      }
+    },
+    {
+      "enforce": "post",
+      "name": "nuxt:composable-keys"
+    },
+    {
+      "name": "replace"
+    },
+    {
+      "name": "virtual"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata"
+    },
+    {
+      "enforce": "post",
+      "name": "nuxt:resolve-bare-imports"
+    },
+    {
+      "name": "nuxt:prehydrate-transform"
+    },
+    {
+      "enforce": "pre",
+      "name": "nuxt:layer-aliasing",
+      "resolveId": {
+        "order": "pre"
+      },
+      "vite": {
+        "resolveId": {
+          "order": "pre"
+        }
+      }
+    },
+    {
+      "enforce": "pre",
+      "name": "nuxt:server-devonly:transform"
+    },
+    {
+      "enforce": "pre",
+      "name": "unplugin-vue-i18n",
+      "vite": {
+      }
+    },
+    {
+      "enforce": "pre",
+      "name": "nuxtjs:i18n-macros-transform"
+    },
+    {
+      "enforce": "post",
+      "name": "nuxtjs:i18n-resource"
+    },
+    {
+      "enforce": "post",
+      "name": "nuxtjs:i18n-meta-deprecation"
+    },
+    {
+      "enforce": "pre",
+      "name": "nuxt:vitest:nuxt-root-stub",
+      "vite": {
+      }
+    },
+    {
+      "enforce": "post",
+      "name": "nuxt:imports-transform"
+    },
+    {
+      "enforce": "post",
+      "name": "unctx:transform"
+    },
+    {
+      "enforce": "post",
+      "handleHotUpdate": {
+        "order": "pre"
+      },
+      "name": "nuxt:pages-macros-transform",
+      "vite": {
+        "handleHotUpdate": {
+          "order": "pre"
+        }
+      }
+    },
+    {
+      "apply": "serve",
+      "enforce": "post",
+      "name": "nuxt:dev-style-ssr"
+    },
+    {
+      "enforce": "post",
+      "name": "nuxt:runtime-paths-dep"
+    },
+    {
+      "enforce": "post",
+      "name": "nuxt:vite-node-server"
+    },
+    {
+      "name": "nuxt:chunk-error"
+    },
+    {
+      "enforce": "pre",
+      "name": "nuxt:import-protection"
+    },
+    {
+      "enforce": "post",
+      "name": "nuxt:route-injection-plugin"
+    },
+    {
+      "name": "nuxt:components:imports"
+    },
+    {
+      "enforce": "post",
+      "name": "nuxt:components-loader"
+    },
+    {
+      "name": "nuxt-server-component-hmr"
+    },
+    {
+      "enforce": "post",
+      "name": "nuxt:tree-shake-composables:transform"
+    },
+    {
+      "name": "replace"
+    },
+    {
+      "name": "ssr-styles",
+      "resolveId": {
+        "order": "pre"
+      }
+    }
+  ],
+  "publicDir": false,
+  "resolve": {
+    "alias": {
+      "#app": "/home/runner/work/openverse/openverse/node_modules/.pnpm/nuxt@3.13.1_@parcel+watcher@2.4.1_@types+node@22.5.1_encoding@0.1.13_eslint@8.57.0_ioredis@5._rp6i6xovbwmocdg3an6ofz5f7a/node_modules/nuxt/dist/app",
+      "#app-manifest": "/home/runner/work/openverse/openverse/frontend/.nuxt/manifest/meta/storybook.json",
+      "#build": "/home/runner/work/openverse/openverse/frontend/.nuxt",
+      "#build/plugins": "/home/runner/work/openverse/openverse/frontend/.nuxt/plugins/client",
+      "#i18n": "/home/runner/work/openverse/openverse/node_modules/.pnpm/@nuxtjs+i18n@8.5.5_magicast@0.3.4_rollup@4.22.4_vue@3.5.0_typescript@5.6.3__webpack-sources@3.2.3/node_modules/@nuxtjs/i18n/dist/runtime/composables/index.js",
+      "#imports": "/home/runner/work/openverse/openverse/frontend/.nuxt/imports",
+      "#internal/nitro": "/home/runner/work/openverse/openverse/frontend/.nuxt/nitro.client.mjs",
+      "#internal/nuxt/paths": "/home/runner/work/openverse/openverse/frontend/.nuxt/paths.mjs",
+      "#sitemap": "/home/runner/work/openverse/openverse/node_modules/.pnpm/@nuxtjs+sitemap@6.1.2_h3@1.12.0_magicast@0.3.4_rollup@4.22.4_vite@5.4.3_@types+node@22.5.1_te_6nyvpn5po4r3kzvzvcldvegeu4/node_modules/@nuxtjs/sitemap/dist/runtime/types",
+      "#vue-router": "vue-router",
+      "@": "/home/runner/work/openverse/openverse/frontend/src",
+      "@@": "/home/runner/work/openverse/openverse/frontend",
+      "@intlify/core": "/home/runner/work/openverse/openverse/node_modules/.pnpm/@intlify+core@9.13.1/node_modules/@intlify/core/dist/core.node.mjs",
+      "@intlify/core-base": "/home/runner/work/openverse/openverse/node_modules/.pnpm/@intlify+core-base@9.13.1/node_modules/@intlify/core-base/dist/core-base.mjs",
+      "@intlify/message-compiler": "/home/runner/work/openverse/openverse/node_modules/.pnpm/@intlify+message-compiler@9.13.1/node_modules/@intlify/message-compiler/dist/message-compiler.mjs",
+      "@intlify/shared": "/home/runner/work/openverse/openverse/node_modules/.pnpm/@intlify+shared@9.13.1/node_modules/@intlify/shared/dist/shared.mjs",
+      "@intlify/utils/h3": "/home/runner/work/openverse/openverse/node_modules/.pnpm/@intlify+utils@0.12.0/node_modules/@intlify/utils/dist/h3.mjs",
+      "@vue/composition-api": "/home/runner/work/openverse/openverse/node_modules/.pnpm/nuxt@3.13.1_@parcel+watcher@2.4.1_@types+node@22.5.1_encoding@0.1.13_eslint@8.57.0_ioredis@5._rp6i6xovbwmocdg3an6ofz5f7a/node_modules/nuxt/dist/app/compat/capi",
+      "abort-controller": "unenv/runtime/mock/empty",
+      "assets": "/home/runner/work/openverse/openverse/frontend/src/assets",
+      "is-https": "/home/runner/work/openverse/openverse/node_modules/.pnpm/is-https@4.0.0/node_modules/is-https/dist/index.mjs",
+      "pinia": "/home/runner/work/openverse/openverse/node_modules/.pnpm/pinia@2.1.7_typescript@5.6.3_vue@3.5.0_typescript@5.6.3_/node_modules/pinia/dist/pinia.mjs",
+      "public": "/home/runner/work/openverse/openverse/frontend/src/public",
+      "ufo": "/home/runner/work/openverse/openverse/node_modules/.pnpm/ufo@1.5.4/node_modules/ufo/dist/index.mjs",
+      "vue-demi": "/home/runner/work/openverse/openverse/node_modules/.pnpm/nuxt@3.13.1_@parcel+watcher@2.4.1_@types+node@22.5.1_encoding@0.1.13_eslint@8.57.0_ioredis@5._rp6i6xovbwmocdg3an6ofz5f7a/node_modules/nuxt/dist/app/compat/vue-demi",
+      "vue-i18n": "/home/runner/work/openverse/openverse/node_modules/.pnpm/vue-i18n@9.13.1_vue@3.5.0_typescript@5.6.3_/node_modules/vue-i18n/dist/vue-i18n.mjs",
+      "web-streams-polyfill/ponyfill/es2018": "unenv/runtime/mock/empty",
+      "~": "/home/runner/work/openverse/openverse/frontend/src",
+      "~~": "/home/runner/work/openverse/openverse/frontend"
+    },
+    "dedupe": [
+      "vue-router",
+      "vue"
+    ],
+    "extensions": [
+      ".mjs",
+      ".js",
+      ".ts",
+      ".jsx",
+      ".tsx",
+      ".json",
+      ".vue"
+    ]
+  },
+  "root": "/home/runner/work/openverse/openverse/frontend/src",
+  "server": {
+    "cors": false,
+    "fs": {
+      "allow": [
+        "/home/runner/work/openverse/openverse",
+        "/home/runner/work/openverse/openverse/frontend/.nuxt",
+        "/home/runner/work/openverse/openverse/frontend/src",
+        "/home/runner/work/openverse/openverse/frontend",
+        "/home/runner/work/openverse/openverse",
+        "/home/runner/work/openverse/openverse/frontend/node_modules"
+      ]
+    },
+    "hmr": false,
+    "middlewareMode": true,
+    "warmup": {
+      "clientFiles": [
+        "/home/runner/work/openverse/openverse/node_modules/.pnpm/nuxt@3.13.1_@parcel+watcher@2.4.1_@types+node@22.5.1_encoding@0.1.13_eslint@8.57.0_ioredis@5._rp6i6xovbwmocdg3an6ofz5f7a/node_modules/nuxt/dist/app/entry.js"
+      ]
+    }
+  },
+  "vue": {
+    "features": {
+      "propsDestructure": false
+    },
+    "isProduction": true,
+    "script": {
+      "hoistStatic": {
+      }
+    },
+    "template": {
+      "compilerOptions": {
+      },
+      "transformAssetUrls": {
+        "image": [
+          "xlink:href",
+          "href"
+        ],
+        "img": [
+          "src"
+        ],
+        "source": [
+          "src"
+        ],
+        "use": [
+          "xlink:href",
+          "href"
+        ],
+        "video": [
+          "src",
+          "poster"
+        ]
+      }
+    }
+  },
+  "vueJsx": {
+  }
+}
