@@ -20,6 +20,7 @@ runs:
     - name: Build Storybook
       shell: bash
       run: |
+        just frontend/run i18n:copy-test-locales
         just frontend/run storybook:build
         cp frontend/src/public/favicon_storybook.svg frontend/storybook-static/favicon.svg
 

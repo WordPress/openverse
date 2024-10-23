@@ -1,0 +1,13 @@
+diff --git a/dist/index.cjs b/dist/index.cjs
+index dd26e192ce843b43c1401c6a58e54892f468cf58..85171facdc19f0e0550c5f224ef12c6172e66b95 100644
+--- a/dist/index.cjs
++++ b/dist/index.cjs
+@@ -3,7 +3,7 @@
+ const acorn = require('acorn');
+ const node_module = require('node:module');
+ const fs = require('node:fs');
+-const ufo = require('ufo');
++const ufo = require('ufo/dist/index.cjs');
+ const pathe = require('pathe');
+ const pkgTypes = require('pkg-types');
+ const node_url = require('node:url');
