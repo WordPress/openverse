@@ -130,8 +130,10 @@ describe("AudioTrack", () => {
 
       // Only the UnknownError should be sent to Sentry.
       if (errorType === "UnknownError") {
+        // eslint-disable-next-line vitest/no-conditional-expect
         expect(captureExceptionMock).toHaveBeenCalledWith(playError)
       } else {
+        // eslint-disable-next-line vitest/no-conditional-expect
         expect(captureExceptionMock).not.toHaveBeenCalled()
       }
     }
