@@ -81,7 +81,7 @@ const activeButtonsTemplate = () => ({
         "div",
         {
           class:
-            "wrapper rounded-sm bg-default flex justify-between ring ring-pink-8-8",
+            "wrapper rounded-sm bg-default flex justify-between ring ring-focus",
         },
         [
           h(VSearchBarButton, {
