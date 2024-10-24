@@ -127,7 +127,7 @@ function getInterfaceFields(node, ast) {
 function extractComments(node, ast) {
   const fullText = node.getFullText(ast)
 
-  let commentRanges = ts.getLeadingCommentRanges(fullText, 0)
+  const commentRanges = ts.getLeadingCommentRanges(fullText, 0)
   if (!commentRanges) {
     return undefined
   }
@@ -140,8 +140,8 @@ function extractComments(node, ast) {
     return undefined
   }
 
-  let links = []
-  let text = comments
+  const links = []
+  const text = comments
     .at(-1) // retain only the last doc comment
     .split("\n")
     .map((line) =>

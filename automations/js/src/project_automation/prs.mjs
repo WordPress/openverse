@@ -41,7 +41,7 @@ async function syncReviews(core, pr, prBoard, prCard) {
 async function syncIssues(core, pr, backlogBoard, destColumn) {
   core.info(`Synchronizing issues for PR ${pr.nodeId}.`)
 
-  for (let linkedIssue of pr.linkedIssues) {
+  for (const linkedIssue of pr.linkedIssues) {
     core.info(`Syncing issue ${linkedIssue.id}.`)
 
     // Create new, or get the existing, card for the current issue.

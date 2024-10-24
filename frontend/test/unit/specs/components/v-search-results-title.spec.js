@@ -20,7 +20,7 @@ const DEFAULT_PROPS = {
  */
 function getScenarios() {
   const counts = [0, 10, 4300, 240, 240]
-  let scenarios = []
+  const scenarios = []
   counts.forEach((count) => {
     counts.forEach((innerCount) => {
       scenarios.push({

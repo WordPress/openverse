@@ -7,7 +7,7 @@ import { render } from "~~/test/unit/test-utils/render"
 import VLicense from "~/components/VLicense/VLicense.vue"
 
 describe("VLicense", () => {
-  let options = {
+  const options = {
     props: {
       license: "by",
     },

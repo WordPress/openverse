@@ -32,7 +32,7 @@ const eslintIgnores = [
   "packages/**/dist/**",
 ]
 
-let ignoreConfigs = gitignoreFiles
+const ignoreConfigs = gitignoreFiles
   .map((gitignoreFile) => includeIgnoreFile(gitignoreFile))
   .reduce(
     (acc, gitignoreFile) => {
