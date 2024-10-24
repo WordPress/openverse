@@ -91,8 +91,14 @@ def retrieve_recent_launch_template_envfiles(
         for lt_version in lt_versions["LaunchTemplateVersions"]:
             lt_data = lt_version["LaunchTemplateData"]
             if "TagSpecifications" not in lt_data:
+                lt_id_version = (
+                    f"{lt_version['LaunchTemplateId']}:{lt_version['VersionNumber']}"
+                )
                 logger.warning(
-                    "Skipping %s due to lack of tag specifications. This is probably because the launch template was created before tag specifications were properly configured."
+                    "Skipping %s due to lack of tag specifications. This is probably "
+                    "because the launch template was created before tag "
+                    "specifications were properly configured.",
+                    lt_id_version,
                 )
                 continue
 
@@ -105,8 +111,9 @@ def retrieve_recent_launch_template_envfiles(
                 None,
             )
             if instance_tag_spec is None:
-                # We've already checked if tag specs existed above. If the instance tags don't exist but other tag specs do
-                # then there's a larger problem that requires investigation.
+                # We've already checked if tag specs existed above. If the instance
+                # tags don't exist but other tag specs do then there's a larger
+                # problem that requires investigation.
                 raise ValueError(
                     f"Unable to find instance tags for launch template {lt_name}"
                 )
