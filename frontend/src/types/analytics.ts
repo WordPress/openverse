@@ -53,6 +53,7 @@ export type SearchParamsForEvent = {
  * - Questions that are answered by the event must be listed as bullet points.
  */
 export type Events = {
+  EMPTY_EVENT: {},
   /**
    * Description: A search performed by the user
    * Questions:
@@ -62,6 +63,7 @@ export type Events = {
    *   - Do most users search from the homepage, or internal searchbar?
    */
   SUBMIT_SEARCH: {
+    width: number
     /** The media type being searched */
     searchType: SearchType
     /** The search term */
