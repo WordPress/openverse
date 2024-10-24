@@ -21,7 +21,7 @@ const getClientAndNock = (credentials?: ClientCredentials) => ({
 
 describe("OpenverseClient", () => {
   describe("api token refresh", async () => {
-    test.skip("should automatically refresh api token before sending final request", async () => {
+    test("should automatically refresh api token before sending final request", async () => {
       const { client, nock } = getClientAndNock({
         clientId: "test",
         clientSecret: "test-secret",
