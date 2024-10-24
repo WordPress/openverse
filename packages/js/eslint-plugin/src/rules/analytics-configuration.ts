@@ -40,14 +40,8 @@ const isTypeAnnotationEmpty = (node: TSESTree.TSPropertySignature): boolean => {
     return true
   }
 
-  if (
-    innerTypeAnnotation.type === "TSNullKeyword" ||
-    innerTypeAnnotation.type === "TSUndefinedKeyword"
-  ) {
-    return true
-  }
-
-  return false
+  return innerTypeAnnotation.type === "TSNullKeyword" ||
+    innerTypeAnnotation.type === "TSUndefinedKeyword";
 }
 
 const getPropertyName = (node: TSESTree.TSPropertySignature): string => {
