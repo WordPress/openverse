@@ -4,20 +4,18 @@ import eslint from "@eslint/js"
 
 export default tseslint.config(
   {
-    name: "vue-typescript",
     plugins: {
       "@typescript-eslint": plugin,
       tsdoc: tsdocPlugin,
     },
+  },
+  {
+    name: "vue-typescript",
     files: ["**/*.ts", "**/*.js", "**/*.mjs", "**/*.vue"],
+    extends: [eslint.configs.recommended, ...tsConfigs.recommended],
     rules: {
       "@typescript-eslint/no-require-imports": ["off"],
     },
-  },
-  {
-    name: "openverse:js-files",
-    files: ["**/*.js", "**/*.mjs", "*.mjs", "*.js"],
-    extends: [eslint.configs.recommended],
   },
   {
     name: "tsdoc-syntax-no-require-imports",

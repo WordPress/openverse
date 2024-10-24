@@ -63,7 +63,7 @@ describe("unsuccessful token retrieval", () => {
     expect(token1).toBeUndefined()
 
     await getApiAccessToken()
-    let { $openverseApiToken: token2 } = app
+    const { $openverseApiToken: token2 } = app
     expect(process.tokenData.accessToken).toBeFalsy()
     expect(process.tokenData.accessTokenExpiry).toBeFalsy()
     expect(token2).toEqual("")

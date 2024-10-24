@@ -88,7 +88,7 @@ const getItemsHtml = (title, items) => {
   ].sort()
 
   // Aggregate items by stack
-  let itemsByStack = {}
+  const itemsByStack = {}
 
   for (const stack of stacks) {
     const stackName = stack.split(":")[1].trim()

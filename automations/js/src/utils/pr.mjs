@@ -155,7 +155,7 @@ export class PullRequest {
       DISMISSED: 0,
       PENDING: 0,
     }
-    for (let reviewState of this.reviewStates) {
+    for (const reviewState of this.reviewStates) {
       reviewCounts[reviewState] += 1
     }
     return reviewCounts
