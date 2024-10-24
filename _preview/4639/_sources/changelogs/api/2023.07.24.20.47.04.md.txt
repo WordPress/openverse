@@ -1,0 +1,13 @@
+# 2023.07.24.20.47.04
+
+## Internal Improvements
+
+- Bump aiohttp from 3.8.4 to 3.8.5 in /api
+  ([#2685](https://github.com/WordPress/openverse/pull/2685)) by @dependabot
+- Add explicit gunicorn configuration for the API so logging is consistent
+  ([#2648](https://github.com/WordPress/openverse/pull/2648)) by @AetherUnbound
+
+## Bug Fixes
+
+- Add explicit gunicorn configuration for the API so logging is consistent
+  ([#2648](https://github.com/WordPress/openverse/pull/2648)) by @AetherUnbound

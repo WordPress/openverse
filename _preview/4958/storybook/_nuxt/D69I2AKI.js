@@ -1,0 +1,1 @@
+import{_ as e}from"./C2lBk38O.js";import{d as o,I as s,E as a,D as n}from"./lKNUlTH_.js";const t={class:"flex h-[1em] flex-row items-center gap-x-[0.4em]","aria-hidden":"true"},i=o({__name:"VBrand",setup(r){return(c,m)=>(n(),s("span",t,[a(e,{class:"h-full w-auto",viewBox:"0 0 50 42",name:"logo"}),a(e,{class:"h-full w-auto",viewBox:"0 0 215 42",name:"brand"})]))}});export{i as _};
