@@ -35,7 +35,7 @@ test.describe("all results grid analytics test", () => {
     await goToSearchTerm(page, "birds")
   })
 
-  test.skip("sends SELECT_SEARCH_RESULT event when audio result is selected", async ({
+  test("sends SELECT_SEARCH_RESULT event when audio result is selected", async ({
     context,
     page,
   }) => {
