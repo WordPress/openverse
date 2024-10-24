@@ -39,7 +39,7 @@ const urlPatterns = {
  * @returns {{match: ({groups}|*), type: string}|null}
  */
 const findTypeMatch = (urlString) => {
-  for (let [matchName, matchPattern] of Object.entries(urlPatterns)) {
+  for (const [matchName, matchPattern] of Object.entries(urlPatterns)) {
     const patternMatch = urlString.match(matchPattern)
     if (patternMatch && patternMatch.groups) {
       return { type: matchName, match: patternMatch }

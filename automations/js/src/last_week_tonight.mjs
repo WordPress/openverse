@@ -35,6 +35,7 @@ if (!(pat && username && password)) process.exit(1)
 /* Read GitHub information from the data files */
 
 const githubDataFile = resolve("../data/github.yml") // resolved from `package.json`
+// eslint-disable-next-line import/no-named-as-default-member
 const githubInfo = yaml.load(readFileSync(githubDataFile))
 const org = githubInfo.org
 const repos = Object.values(githubInfo.repos)
@@ -87,7 +88,7 @@ const getItemsHtml = (title, items) => {
   ].sort()
 
   // Aggregate items by stack
-  let itemsByStack = {}
+  const itemsByStack = {}
 
   for (const stack of stacks) {
     const stackName = stack.split(":")[1].trim()

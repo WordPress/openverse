@@ -5,7 +5,6 @@ import { createApp } from "vue"
 
 import VLink from "~/components/VLink.vue"
 
-// eslint-disable-next-line vue/one-component-per-file
 const RouterLinkStub = createApp({}).component("RouterLink", {
   template: "<a :href='href'><slot /></a>",
   props: ["to"],
@@ -46,7 +45,6 @@ describe("VLink", () => {
     ${"http://localhost"}
   `("VLink handles click", async ({ href }) => {
     const createVLinkWrapper = (href) =>
-      // eslint-disable-next-line vue/one-component-per-file
       createApp({}).component("VLinkWrapper", {
         components: { VLink },
         data: () => ({ text: "Link Text" }),

@@ -1,4 +1,5 @@
 import { readFileSync } from "fs"
+
 import { PullRequest } from "./utils/pr.mjs"
 import { IdSet } from "./utils/id_set.mjs"
 
@@ -40,12 +41,12 @@ function getLabelsFromChanges(allLabels, changes) {
  * @returns {boolean} whether the list of labels covers all requirements
  */
 function getIsFullyLabeled(labels) {
-  for (let req of exactlyOne) {
+  for (const req of exactlyOne) {
     if (labels.filter((label) => label.name.includes(req)).length !== 1) {
       return false
     }
   }
-  for (let req of atleastOne) {
+  for (const req of atleastOne) {
     if (labels.filter((label) => label.name.includes(req)).length < 1) {
       return false
     }
@@ -133,7 +134,7 @@ export const main = async (octokit, core) => {
   // For each label that we only need one of, we check if the PR already has
   // such a label. If not, we check if the label pool contains any valid labels
   // and add the first one we find.
-  for (let rule of exactlyOne) {
+  for (const rule of exactlyOne) {
     if (finalLabels.items.some((label) => label.name.includes(rule))) {
       core.info(`PR already has a "${rule}" label.`)
       continue
@@ -147,7 +148,7 @@ export const main = async (octokit, core) => {
 
   // For each label that we need at least one of, we add all the valid labels
   // from the label pool. Our ID set implementation will weed out duplicates.
-  for (let rule of atleastOne) {
+  for (const rule of atleastOne) {
     const validLabels = labelPool.filter((label) => label.name.includes(rule))
     core.info(
       `Adding labels "${validLabels

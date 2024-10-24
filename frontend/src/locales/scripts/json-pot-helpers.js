@@ -100,13 +100,13 @@ const getComment = (entry) => {
   }
 
   // comments given by the programmer, directed at the translator (#.)
-  let vars = checkStringForVars(entry.value)
+  const vars = checkStringForVars(entry.value)
   if (vars) {
     comment.push(vars)
   }
 
   // comments containing references to the program’s source code (#:)
-  let refComments = getRefComments(entry.lineage)
+  const refComments = getRefComments(entry.lineage)
   if (refComments.length) {
     comment.push(...refComments)
   }
@@ -128,8 +128,8 @@ const toPot = (entry) => {
   }
 
   // string-string type mapping
-  let poEntry = []
-  let comment = getComment(entry)
+  const poEntry = []
+  const comment = getComment(entry)
   if (comment) {
     poEntry.push(comment)
   }

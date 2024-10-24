@@ -34,7 +34,7 @@ const stubs = {
 describe("AudioTrack", () => {
   let options = null
   let props = null
-  let captureExceptionMock = vi.fn()
+  const captureExceptionMock = vi.fn()
 
   beforeEach(() => {
     props = {
@@ -164,8 +164,8 @@ describe("AudioTrack", () => {
     options.props.audio.isSensitive = true
     options.props.layout = "row"
     const screen = await render(VAudioTrack, options)
-    let { title, creator } = options.props.audio
-    let match = RegExp(`(${title}|${creator})`)
+    const { title, creator } = options.props.audio
+    const match = RegExp(`(${title}|${creator})`)
     expect(screen.queryAllByText(match)).toEqual([])
     expect(screen.queryAllByTitle(match)).toEqual([])
     expect(screen.queryAllByAltText(match)).toEqual([])

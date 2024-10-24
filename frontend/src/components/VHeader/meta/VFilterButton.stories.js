@@ -35,7 +35,7 @@ const Template = (args) => ({
       // Skip license type filters as they can disable license filters
       let filterTypeIdx = 1
       for (let i = 0; i < filterCount; i++) {
-        let filterType = filterTypes[filterTypeIdx]
+        const filterType = filterTypes[filterTypeIdx]
         searchStore.toggleFilter({
           filterType,
           codeIdx: filterIdx,

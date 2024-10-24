@@ -68,7 +68,7 @@ export const main = async (octokit, core) => {
     infraLabels.map((label) => [label.name, label])
   )
 
-  for (let label of monoLabels) {
+  for (const label of monoLabels) {
     if (exclusions.some((rule) => label.name.match(rule))) {
       core.info(`Label "${label.name}" is excluded from sync.`)
       continue

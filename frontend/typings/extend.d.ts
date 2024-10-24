@@ -15,7 +15,9 @@ import type {
 } from "vue"
 
 declare module "@vue/runtime-core" {
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   interface ComponentCustomProperties extends _ComponentCustomProperties {}
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   interface ComponentCustomOptions extends _ComponentCustomOptions {}
 }
 
