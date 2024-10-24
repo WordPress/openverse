@@ -88,15 +88,15 @@ const handleSearch = (searchTerm: string) => {
     class="index flex w-full flex-shrink-0 flex-grow flex-col justify-center gap-6 px-6 sm:px-0 xl:flex-row xl:items-center xl:justify-between xl:gap-0"
   >
     <div
-      class="flex flex-grow flex-col items-center justify-center gap-6 xl:h-[33rem] xl:flex-grow-0 xl:items-start"
+      class="grid flex-grow place-items-center justify-center gap-6 xl:h-[33rem] xl:flex-grow-0 xl:items-start"
     >
       <VDarkModeFeatureNotice
         v-if="showThemeSwitcher && !isDarkModeSeen"
-        class="sm:mx-14 md:mx-20 lg:mx-26 xl:me-0"
+        class="notice self-start lg:ms-26 xl:justify-self-start"
       />
 
       <VHomepageContent
-        class="my-auto sm:px-14 md:px-20 lg:px-26 xl:w-[53.375rem] xl:pe-0"
+        class="page-content my-auto sm:px-14 md:px-20 lg:px-26 xl:w-[53.375rem] xl:pe-0"
         :handle-search="handleSearch"
         :search-type="searchType"
         :set-search-type="setSearchType"
@@ -109,6 +109,10 @@ const handleSearch = (searchTerm: string) => {
 </template>
 
 <style>
+.page-content,
+.notice {
+  grid-area: 1/1;
+}
 @screen lg {
   .homepage-images {
     transform: translateY(-7.143vh);
