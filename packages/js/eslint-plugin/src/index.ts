@@ -30,24 +30,9 @@ const plugin = {
 Object.assign(plugin.configs, {
   project: tseslint.config(
     {
-      name: "@openverse/eslint-plugin",
-      plugins: {
-        "@openverse": plugin,
-      },
-      rules: {
-        "@openverse/analytics-configuration": [
-          "error",
-          {
-            reservedPropNames: ["width", "height"],
-          },
-        ],
-        "@openverse/no-unexplained-disabled-test": ["error"],
-        "@openverse/translation-strings": ["error"],
-      },
-    },
-    {
       name: "openverse:common-config",
       plugins: {
+        "@openverse": plugin,
         unicorn: unicornPlugin,
         playwright: playwrightPlugin,
       },
@@ -66,6 +51,14 @@ Object.assign(plugin.configs, {
         },
       },
       rules: {
+        "@openverse/analytics-configuration": [
+          "error",
+          {
+            reservedPropNames: ["width", "height"],
+          },
+        ],
+        "@openverse/no-unexplained-disabled-test": ["error"],
+        "@openverse/translation-strings": ["error"],
         "no-console": "off",
         "unicorn/filename-case": ["error", { case: "kebabCase" }],
         "unicorn/switch-case-braces": ["error"],
@@ -91,7 +84,8 @@ Object.assign(plugin.configs, {
           ...vitestPlugin.environments.env.globals,
         },
       },
-      files: ["packages/js/**/*/test"],
+      files: ["packages/js/**/*/test/**"],
+      extends: [vitestPlugin.configs.recommended],
       rules: {
         // Superseded by `@openverse/no-unexplained-disabled-test`
         "vitest/no-disabled-test": "off",
@@ -106,11 +100,18 @@ Object.assign(plugin.configs, {
         },
       },
       files: ["frontend/test/unit/**"],
+      extends: [vitestPlugin.configs.recommended],
       rules: {
+        "vitest/consistent-test-filename": [
+          "error",
+          { pattern: ".*\\.spec\\.(ts|js)$" },
+        ],
+        "vitest/no-focused-tests": ["error"],
+        "vitest/no-conditional-expect": ["error"],
         "import/no-named-as-default-member": ["off"],
         "@intlify/vue-i18n/no-raw-text": ["off"],
         // Superseded by `@openverse/no-unexplained-disabled-test`
-        "vitest/no-disabled-test": "off",
+        "vitest/no-disabled-test": ["off"],
         "no-restricted-imports": [
           "error",
           {
