@@ -1312,6 +1312,22 @@ jobs:
           wait_time: 60 # check every minute
           max_time: 1800 # allow up to 30 minutes for a deployment
 
+      - name: Trigger staging Playwright smoketests
+        uses: convictional/trigger-workflow-and-wait@v1.6.5
+        with:
+          owner: WordPress
+          repo: openverse
+          github_token: ${{ secrets.ACCESS_TOKEN }}
+          workflow_file_name: playwright_deployment_smoketest.yml
+          wait_interval: 60
+          # TODO: Set to true once we see that this test is stable, and we can fail the deployment if it fails.
+          # @see https://github.com/WordPress/openverse/pull/4991
+          propagate_failure: false
+          client_payload: |
+            {
+              "service_url": "https://staging.openverse.org/"
+            }
+
       - name: Trigger staging k6 load test
         uses: convictional/trigger-workflow-and-wait@v1.6.5
         with:

@@ -6,7 +6,9 @@
  * When pending: does not show 'No images', Safer Browsing, search rating or error message
  * On error: shows error message
  */
-import { expect, test } from "@playwright/test"
+import { expect } from "@playwright/test"
+
+import { test } from "~~/test/playwright/utils/test"
 
 import {
   collectAnalyticsEvents,

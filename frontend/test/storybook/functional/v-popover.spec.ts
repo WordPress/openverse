@@ -1,4 +1,6 @@
-import { expect, test } from "@playwright/test"
+import { expect } from "@playwright/test"
+
+import { test } from "~~/test/playwright/utils/test"
 
 const popoverStory =
   "/iframe.html?id=components-vpopover--control&viewMode=story"

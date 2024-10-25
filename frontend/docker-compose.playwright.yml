@@ -20,3 +20,5 @@ services:
       - DEBUG=pw:webserver
       - UPDATE_TAPES=${UPDATE_TAPES:-false}
       - FASTSTART=${FASTSTART:-false}
+      - PLAYWRIGHT_BASE_URL=${PLAYWRIGHT_BASE_URL:-}
+      - HMAC_SIGNING_SECRET=${HMAC_SIGNING_SECRET:-}

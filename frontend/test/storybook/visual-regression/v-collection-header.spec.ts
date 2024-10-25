@@ -1,4 +1,6 @@
-import { expect, test } from "@playwright/test"
+import { expect } from "@playwright/test"
+
+import { test } from "~~/test/playwright/utils/test"
 
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import { dirParam } from "~~/test/storybook/utils/args"
