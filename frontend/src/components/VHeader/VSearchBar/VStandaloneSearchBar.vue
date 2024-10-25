@@ -48,18 +48,17 @@ defineExpose({ focusInput })
 <template>
   <!-- Form action is a fallback for when JavaScript is disabled. -->
   <form
+    id="search-form"
     action="/search"
     role="search"
-    class="search-bar group flex h-14 flex-row items-center rounded-sm border-tx bg-default sm:h-16 dark:bg-overlay"
+    class="group flex h-14 flex-row items-center rounded-sm border-tx bg-default sm:h-16 dark:bg-overlay"
     @submit.prevent="handleSearch"
   >
     <div
-      class="input-field search-field group flex h-full flex-grow items-center overflow-hidden rounded-sm rounded-e-none border p-0.5px"
+      class="input-field search-field group flex h-full flex-grow items-center overflow-hidden rounded-sm rounded-e-none border-1.5 border-e-0 pe-2"
       :class="[
-        route === 'home'
-          ? 'border-tx pe-[7px]'
-          : 'border-1.5 border-e-0 border-black pe-[7.5px] dark:border-tx',
-        { 'has-popover': hasPopover },
+        route === 'home' ? 'border-tx' : 'border-black dark:border-tx',
+        { 'has-popover': hasPopover, black: route !== 'home' },
       ]"
     >
       <input
@@ -68,7 +67,7 @@ defineExpose({ focusInput })
         type="search"
         name="q"
         :placeholder="$t('hero.search.placeholder')"
-        class="paragraph-large md:label-regular focus-visible:outline-style-none ms-4 h-full w-full appearance-none rounded-none bg-tx leading-none text-default placeholder-gray-8 dark:placeholder-gray-4"
+        class="paragraph-large md:label-regular focus-visible:outline-style-none ms-4 h-full w-full appearance-none rounded-none bg-tx leading-none text-default placeholder-default"
         :aria-label="
           $t('search.searchBarLabel', {
             openverse: 'Openverse',
@@ -84,10 +83,13 @@ defineExpose({ focusInput })
 
 <style scoped>
 .input-field:has(#search-bar:focus-visible) {
-  @apply border-1.5 border-focus p-0 pe-2;
+  @apply border-focus;
 }
 
 .input-field.has-popover:has(#search-bar:focus-visible) {
+  @apply border-tx;
+}
+#search-form:has(button[type="submit"]:focus) .input-field.black {
   @apply border-tx;
 }
 </style>

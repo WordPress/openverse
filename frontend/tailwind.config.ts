@@ -109,6 +109,9 @@ export default {
       curr: "currentColor",
       current: "currentColor",
     },
+    placeholderColor: {
+      default: "var(--color-text-secondary)",
+    },
     spacing: {
       // Constants
       "0.5px": "0.5px",

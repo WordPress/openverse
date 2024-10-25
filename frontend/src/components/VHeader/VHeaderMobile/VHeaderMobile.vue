@@ -271,7 +271,7 @@ const handleTab = (
       class="search-bar group flex h-12 w-full flex-row items-center overflow-hidden rounded-sm"
       :class="
         isSearchBarActive || isInputFocused
-          ? 'bg-default ring ring-pink-8'
+          ? 'bg-default ring ring-focus'
           : 'bg-surface'
       "
       @submit.prevent="handleFormSubmit"
@@ -299,7 +299,7 @@ const handleTab = (
         name="q"
         :placeholder="$t('hero.search.placeholder')"
         type="search"
-        class="search-field ms-1 h-full w-full flex-grow appearance-none rounded-none border-tx bg-tx text-2xl text-secondary placeholder-gray-8 hover:text-default hover:placeholder-gray-12 focus-visible:outline-none"
+        class="search-field ms-1 h-full w-full flex-grow appearance-none rounded-none border-tx bg-tx text-2xl text-secondary placeholder-default hover:text-default focus-visible:outline-none"
         :value="localSearchTerm"
         :aria-label="
           $t('search.searchBarLabel', {

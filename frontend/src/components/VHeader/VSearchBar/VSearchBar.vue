@@ -114,7 +114,7 @@ const nonClassAttrs = computed(() => {
         v-bind="nonClassAttrs"
         v-model="modelMedium"
         :placeholder="placeholder || $t('hero.search.placeholder')"
-        class="search-field flex-grow border-tx bg-secondary text-secondary focus-within:bg-default focus:border-focus group-hover:bg-secondary group-hover:text-default group-hover:focus-within:bg-default"
+        class="search-field flex-grow border-tx bg-secondary text-secondary focus-within:bg-default focus-visible:border-focus group-hover:text-default"
         :label-text="$t('search.searchBarLabel', { openverse: 'Openverse' })"
         :connection-sides="['end']"
         field-id="search-bar"

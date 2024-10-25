@@ -41,7 +41,7 @@ withDefaults(
 <template>
   <VButton :aria-label="label" size="large" variant="plain--avoid" icon-only>
     <span
-      class="relative flex h-8 w-8 flex-none items-center justify-center rounded-sm border border-tx group-focus-visible/button:ring group-focus-visible/button:ring-pink-8 group-active/button:ring group-active/button:ring-pink-8"
+      class="relative flex h-8 w-8 flex-none items-center justify-center rounded-sm border border-tx group-focus-visible/button:ring group-focus-visible/button:ring-focus group-active/button:ring group-active/button:ring-focus"
       :class="variant"
     >
       <VIcon

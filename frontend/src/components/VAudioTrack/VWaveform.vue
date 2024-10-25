@@ -366,7 +366,7 @@ const seekTimeLeft = computed(() => ({
       <!-- Stroke is calculated from the centre of the path -->
       <rect
         v-if="waveformDimens.width && waveformDimens.height"
-        class="stroke-pink-8"
+        class="stroke-focus"
         x="0.75"
         y="0.75"
         :width="waveformDimens.width - 1.5"
@@ -377,7 +377,7 @@ const seekTimeLeft = computed(() => ({
       />
       <rect
         v-if="waveformDimens.width && waveformDimens.height"
-        class="stroke-white"
+        class="stroke-white dark:stroke-black"
         x="2"
         y="2"
         :width="waveformDimens.width - 4"
@@ -431,7 +431,7 @@ const seekTimeLeft = computed(() => ({
     <!-- Focus bar -->
     <div
       v-if="isInteractive && isSeeking"
-      class="absolute top-0 z-20 hidden h-full flex-col items-center justify-between bg-black group-focus/waveform:flex group-focus:flex"
+      class="absolute top-0 z-20 hidden h-full flex-col items-center justify-between bg-black group-focus/waveform:flex group-focus:flex dark:bg-white"
       :style="{ width: `${barWidth}px`, left: `${progressBarWidth}px` }"
     >
       <div
@@ -440,7 +440,7 @@ const seekTimeLeft = computed(() => ({
           bottom: ['translate-y-1/2'],
         }"
         :key="name"
-        class="h-2 w-2 transform rounded-full bg-black"
+        class="h-2 w-2 transform rounded-full bg-black dark:bg-white"
         :class="classes"
       >
         &nbsp;
