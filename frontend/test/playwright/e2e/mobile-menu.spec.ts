@@ -1,4 +1,6 @@
-import { test, expect, type Page } from "@playwright/test"
+import { expect, type Page } from "@playwright/test"
+
+import { test } from "~~/test/playwright/utils/test"
 
 import {
   goToSearchTerm,
