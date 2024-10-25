@@ -24,7 +24,7 @@ from requests import Response
 from common import elasticsearch as es
 from common.constants import (
     AWS_CONN_ID,
-    OPENLEDGER_API_CONN_ID,
+    POSTGRES_API_CONN_IDS,
     PRODUCTION,
     Environment,
 )
@@ -394,7 +394,7 @@ def perform_distributed_reindex(
     """Perform the distributed reindex on a fleet of remote indexer workers."""
     id_range = PGExecuteQueryOperator(
         task_id="get_record_id_range",
-        conn_id=OPENLEDGER_API_CONN_ID,
+        conn_id=POSTGRES_API_CONN_IDS.get(target_environment),
         sql=dedent(
             f"""
             SELECT min(id), max(id) FROM {data_refresh_config.table_mapping.temp_table_name};
