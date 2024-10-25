@@ -236,6 +236,7 @@ def get_instance_ip_address(
     trigger_rule=TriggerRule.NONE_FAILED
 )
 def create_connection(
+    environment: str,
     instance_id: str,
     media_type: str,
     server: str,
@@ -246,9 +247,15 @@ def create_connection(
     """
     worker_conn_id = f"indexer_worker_{instance_id or media_type}"
 
+    # TODO: Locally we use 8003 to avoid collision with the legacy indexer worker that's
+    # part of the ingestion server. When the ingestion server and legacy data refresh are
+    # removed, we should modify the local environment to use 8002 here as well and
+    # avoid having to do this check.
+    port = "8003" if environment != PRODUCTION else "8002"
+
     # Create the Connection
     logger.info(f"Creating connection with id {worker_conn_id}")
-    worker_conn = Connection(conn_id=worker_conn_id, uri=f"http://{server}:8003/")
+    worker_conn = Connection(conn_id=worker_conn_id, uri=f"http://{server}:{port}/")
     session = settings.Session()
     session.add(worker_conn)
     session.commit()
@@ -333,6 +340,7 @@ def reindex(
     )
 
     worker_conn = create_connection(
+        environment=environment,
         instance_id=instance_id,
         media_type=data_refresh_config.media_type,
         server=instance_ip_address,
