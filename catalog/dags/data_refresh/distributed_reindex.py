@@ -384,7 +384,7 @@ def reindex(
 
     drop_conn = drop_connection(worker_conn=worker_conn)
 
-    instance_id >> [await_worker, instance_ip_address]
+    instance_id >> await_worker >> [instance_ip_address, worker_conn]
     worker_conn >> trigger_reindexing_task >> wait_for_reindexing_task
     wait_for_reindexing_task >> [terminate_instance, drop_conn, status]
 
