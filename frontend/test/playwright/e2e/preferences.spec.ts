@@ -1,4 +1,6 @@
-import { type Page, expect, test } from "@playwright/test"
+import { type Page, expect } from "@playwright/test"
+
+import { test } from "~~/test/playwright/utils/test"
 
 import { preparePageForTests } from "~~/test/playwright/utils/navigation"
 

@@ -19,27 +19,37 @@ export const API_URL = "http://localhost:49153/"
  */
 const pwCommand = process.env.FASTSTART !== "false" ? "dev" : "prod:playwright"
 
+const localBaseURL = "http://localhost:8443"
+const baseURL = process.env.PLAYWRIGHT_BASE_URL || localBaseURL
+
+// Only run the local webserver if the baseURL is the local
+// In other words, don't bother running the webserver if the test target is a live environment
+const webServer =
+  baseURL === localBaseURL
+    ? {
+        command: `pnpm exec npm-run-all -p -r talkback ${pwCommand}`,
+        timeout: process.env.CI ? 60_000 * 5 : 60_000 * 10, // 5 minutes in CI, 10 in other envs
+        port: 8443,
+        reuseExistingServer: !process.env.CI || process.env.PWDEBUG === "1",
+        env: {
+          UPDATE_TAPES: UPDATE_TAPES,
+          NUXT_PUBLIC_API_URL: API_URL,
+          // Must be true for seo tests to receive appropriate values
+          NUXT_PUBLIC_SITE_INDEXABLE: "true",
+          NUXT_PUBLIC_DEPLOYMENT_ENV: STAGING,
+          NUXT_PUBLIC_PLAUSIBLE_DOMAIN: "localhost",
+          NUXT_PUBLIC_PLAUSIBLE_API_HOST: "http://localhost:50290",
+          NUXT_PUBLIC_PLAUSIBLE_AUTO_PAGEVIEWS: "false",
+          NUXT_PUBLIC_PLAUSIBLE_IGNORED_HOSTNAMES: "[]",
+        },
+      }
+    : undefined
+
 const config: PlaywrightTestConfig = {
   forbidOnly: !!process.env.CI,
-  webServer: {
-    command: `pnpm exec npm-run-all -p -r talkback ${pwCommand}`,
-    timeout: process.env.CI ? 60_000 * 5 : 60_000 * 10, // 5 minutes in CI, 10 in other envs
-    port: 8443,
-    reuseExistingServer: !process.env.CI || process.env.PWDEBUG === "1",
-    env: {
-      UPDATE_TAPES: UPDATE_TAPES,
-      NUXT_PUBLIC_API_URL: API_URL,
-      // Must be true for seo tests to receive appropriate values
-      NUXT_PUBLIC_SITE_INDEXABLE: "true",
-      NUXT_PUBLIC_DEPLOYMENT_ENV: STAGING,
-      NUXT_PUBLIC_PLAUSIBLE_DOMAIN: "localhost",
-      NUXT_PUBLIC_PLAUSIBLE_API_HOST: "http://localhost:50290",
-      NUXT_PUBLIC_PLAUSIBLE_AUTO_PAGEVIEWS: "false",
-      NUXT_PUBLIC_PLAUSIBLE_IGNORED_HOSTNAMES: "[]",
-    },
-  },
+  webServer,
   use: {
-    baseURL: "http://localhost:8443",
+    baseURL,
     trace: "retain-on-failure",
   },
   timeout: 60 * 1e3,
@@ -51,8 +61,11 @@ const config: PlaywrightTestConfig = {
    * and then reuse it for the others. If we run with a single worker when updating
    * tapes then we can avoid this problem. Defaulting to `undefined` means the
    * Playwright default of using 1/2 of the number of CPU cores continues to work otherwise.
+   *
+   * Also: when running Playwright against a live environment, only use a single worker
+   * to avoid the test also becoming a load test.
    */
-  workers: UPDATE_TAPES === "true" ? 1 : undefined,
+  workers: UPDATE_TAPES === "true" || baseURL !== localBaseURL ? 1 : undefined,
 }
 
 export default config

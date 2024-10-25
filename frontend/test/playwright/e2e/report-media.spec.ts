@@ -1,4 +1,6 @@
-import { test, expect, Page, BrowserContext } from "@playwright/test"
+import { expect, Page, BrowserContext } from "@playwright/test"
+
+import { test } from "~~/test/playwright/utils/test"
 
 import { mockProviderApis } from "~~/test/playwright/utils/route"
 import {

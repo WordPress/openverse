@@ -1,4 +1,6 @@
-import { test, Page } from "@playwright/test"
+import { Page } from "@playwright/test"
+
+import { test } from "~~/test/playwright/utils/test"
 
 import { expectScreenshotAreaSnapshot } from "~~/test/playwright/utils/expect-snapshot"
 
