@@ -6,7 +6,6 @@ services:
       args:
         - PLAYWRIGHT_VERSION=${PLAYWRIGHT_VERSION}
     volumes:
-      - ../node_modules:/node_modules:rw,Z
       - .:/frontend:rw,Z
     user: ${USER_ID}
     working_dir: /frontend
