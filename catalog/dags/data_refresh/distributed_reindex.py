@@ -195,7 +195,10 @@ def wait_for_worker(
 
     result = ec2_hook.conn.describe_instance_status(InstanceIds=[instance_id])
 
-    instance_status = result.get("InstanceStatuses", [])[0]
+    logger.info(result)
+
+    instance_statuses = result.get("InstanceStatuses", [])
+    instance_status = instance_statuses[0] if instance_statuses else {}
     state = instance_status.get("InstanceState", {}).get("Name")
     status = next(
         (
