@@ -1,8 +1,6 @@
 name: Run Playwright smoketests
 
 on:
-  pull_request:
-
   workflow_dispatch:
     inputs:
       service_url:
@@ -10,14 +8,14 @@ on:
         required: true
         type: string
 
-run-name: Playwright smoketests ${{ inputs.service_url || 'https://staging.openverse.org' }}
+run-name: Playwright smoketests ${{ inputs.service_url }}
 
 # Disallow running multiple smoketests at once against the same service
-concurrency: ${{ github.workflow }}-${{ inputs.service_url || 'https://staging.openverse.org' }}
+concurrency: ${{ github.workflow }}-${{ inputs.service_url }}
 
 jobs:
   smoketests:
-    name: "Playwright smoketests ${{ inputs.service_url || 'https://staging.openverse.org' }}"
+    name: "Playwright smoketests ${{ inputs.service_url }}"
     runs-on: ubuntu-latest
 
     steps:
@@ -34,7 +32,7 @@ jobs:
         env:
           # The secret name is k6 but it's usable for anything sending HMAC signed requests
           HMAC_SIGNING_SECRET: ${{ secrets.K6_SIGNING_SECRET }}
-          PLAYWRIGHT_BASE_URL: ${{ inputs.service_url || 'https://staging.openverse.org' }}
+          PLAYWRIGHT_BASE_URL: ${{ inputs.service_url }}
         run: |
           just p frontend test:playwright --grep '@deployment-smoketest'
 
