@@ -129,7 +129,7 @@ def get_launch_template_version_number(
         raise AirflowSkipException("Skipping instance creation in local environment.")
 
     launch_templates = ec2_hook.conn.describe_launch_templates(
-        LaunchTemplateNames=INDEXER_LAUNCH_TEMPLATES.get(target_environment)
+        LaunchTemplateNames=[INDEXER_LAUNCH_TEMPLATES.get(target_environment)]
     )
     return launch_templates.get("LaunchTemplates")[0].get("LatestVersionNumber")
 
