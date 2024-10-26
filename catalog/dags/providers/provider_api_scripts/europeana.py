@@ -158,6 +158,7 @@ class EuropeanaRecordBuilder:
     def _get_filesize(self, item_data: dict) -> int:
         return item_data.get("ebucoreFileByteSize")
 
+    @staticmethod
     def _get_creator(self, data: dict) -> str | None:
         creators = data.get("dcCreator", [])
         if isinstance(creators, list):
