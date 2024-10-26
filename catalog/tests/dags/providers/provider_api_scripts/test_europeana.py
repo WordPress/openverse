@@ -186,11 +186,8 @@ def test_record_builder_get_record_data(ingester, record_builder):
         "description": "Sello en seco: España artística y monumental.",
     }
 
-    expected_creator = (
-        "http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent2, "
-        "http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent3, "
-        "http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent4"
-    )
+    expected_creator = "http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent2,http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent3,http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent4"
+    
 
     assert record_data == {
         "foreign_landing_url": (
@@ -299,7 +296,7 @@ def test_get_image_dimensions(item_data, expected, record_builder):
         # Multiple creators in a list
         pytest.param(
             {"dcCreator": ["Chandler", "Joey"]},
-            "Chandler, Joey",
+            "Chandler,Joey",
             id="multiple_creators",
         ),
         # Empty creator list
