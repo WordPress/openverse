@@ -32,9 +32,9 @@ distribution = false
 [tool.pdm.dev-dependencies]
 dev = [
     "ipython~=8.16",
-    "pytest~=7.4",
+    "pytest~=8.3",
     "pytest-order~=1.1",
-    "pytest-sugar~=0.9",
+    "pytest-sugar~=1.0",
     "remote-pdb~=2.1",
     "pook~=2.0",
 ]
