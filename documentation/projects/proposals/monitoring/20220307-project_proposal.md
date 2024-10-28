@@ -137,7 +137,7 @@ example, may not be able to implement all or any of these.
 ## How we will gather metrics
 
 `django-prometheus` exports Prometheus metrics from a Django app and covers all
-the information we'd want, at least to start off with.
+the information we'd want, at least to start off with[^0].
 
 There is not a real equivalent for Nuxt so we'll have to write our own either
 from scratch or based on the ones that already exist. It would be nice to do
@@ -159,9 +159,9 @@ up-front that we can anticipate wanting monitors for.
   - Note, queries are rarely that intuitive to write and have at least two
     moving parts that dictate how the alarm works, the query and then the alarm
     condition.
-- Each view has a version of the above relative to request frequency. Views with
-  lower overall requests per second will require longer windows of time before
-  alerting. We could also configure something like
+- Each view[^1] has a version of the above relative to request frequency. Views
+  with lower overall requests per second will require longer windows of time
+  before alerting. We could also configure something like
   `view_request_count > threshold && view_5xx_count == view_request_count` to
   filter out cases where only a small number of requests have occurred against a
   view that happened to fail; though this is risky. I think in those cases we'd

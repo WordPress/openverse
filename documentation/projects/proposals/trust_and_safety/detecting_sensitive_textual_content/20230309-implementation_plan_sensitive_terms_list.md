@@ -45,7 +45,7 @@ around what constitutes "sensitive content" for Openverse users.
 
 ### Maintenance of the list
 
-The list be will be maintained by a subset of Openeverse contributors who are
+The list be will be maintained by a subset of Openverse contributors who are
 comfortable reading these strings, but also making judgments about which should
 be included. This work may involve fielding pull requests and feedback from the
 community, along with researching unfamiliar sensitive terms to determine their
@@ -174,7 +174,7 @@ work will always be based on the following assumptions:
    will use other means to explicitly block or remove content. Removing
    sensitive content can, in many cases, be its own form of harm. A quote From
    the research paper "On the Dangers of Stochastic Parrots: Can Language Models
-   Be Too Big? 🦜"[1] illustrates this well:
+   Be Too Big? 🦜"[^1] illustrates this well:
 
    “If we filter out the discourse of marginalized populations, we fail to
    provide training data that reclaims slurs and otherwise describes
