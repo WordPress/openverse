@@ -78,7 +78,7 @@
     "focus-trap": "^7.5.4",
     "focus-visible": "^5.2.0",
     "pinia": "2.2.4",
-    "postcss-focus-visible": "^9.0.1",
+    "postcss-focus-visible": "^10.0.0",
     "rfdc": "^1.4.1",
     "seeded-rand": "^2.0.1",
     "throttle-debounce": "^5.0.2",
