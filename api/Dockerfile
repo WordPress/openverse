@@ -22,7 +22,7 @@ RUN apt-get update \
     python3-dev \
   && apt-get autoremove -y \
   && rm -rf /var/lib/apt/lists/* \
-  && pip install pdm~=2.17
+  && pip install pdm~=2.19
 
 # Copy subpackages from additional build-context 'packages'
 # hadolint ignore=DL3022
