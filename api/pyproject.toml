@@ -50,20 +50,20 @@ overrides = [
 ]
 dev = [
   "ipython >=8.22.1, <9",
-  "pgcli >=3.5.0, <4",
+  "pgcli >=4.1, <5",
   "remote-pdb >=2.1.0, <3",
-  "setuptools >=69.5.1,<70",
+  "setuptools >=75.2,<76",
 ]
 test = [
   "factory-boy >=3.3.0, <4",
   "fakeredis >=2.21.3, <3",
   "freezegun >=1.4.0, <2",
   "pook >=2, <3",
-  "pytest >=7.4.4, <8",
+  "pytest >=8.3.3, <9",
   "pytest-django >=4.8.0, <5",
   "pytest-pook>=1.0.0",
   "pytest-raises >=0.11, <0.12",
-  "pytest-sugar >=0.9.7, <0.10",
+  "pytest-sugar >=1, <1.1",
   "schemathesis >=3.25.6, <4",
 ]
 
