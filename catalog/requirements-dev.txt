@@ -3,6 +3,7 @@
 -r requirements-prod.txt
 
 flaky==3.8.1
+freezegun==1.5.1
 ipython
 pook==2.0.0
 pytest-env

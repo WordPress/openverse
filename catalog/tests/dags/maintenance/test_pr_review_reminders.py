@@ -2,6 +2,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 
 import pytest
+from freezegun import freeze_time
 from requests import HTTPError, Request, Response
 
 from maintenance.pr_review_reminders.pr_review_reminders import (
@@ -147,8 +148,9 @@ def github(monkeypatch):
 
 
 @pytest.fixture(autouse=True)
-def freeze_friday(freeze_time):
-    freeze_time.freeze(FRIDAY)
+def freeze_friday():
+    with freeze_time(FRIDAY):
+        yield
 
 
 def _setup_branch_protection(github: dict, pr: dict, min_required_approvals: int = 2):
