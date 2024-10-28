@@ -163,8 +163,8 @@ class EuropeanaRecordBuilder:
         creators = data.get("dcCreator", [])
         if not creators:
             return None
-        if isinstance(creators, list):
-            return ", ".join(creators)
+        if isinstance(creators, list) and (creator_list := [c for c in creators if c]):
+            return ", ".join(creator_list)
         elif isinstance(creators, str):
             return creators
         return None
