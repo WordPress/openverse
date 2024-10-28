@@ -1,8 +1,4 @@
 {
-  // WordPress/openverse specific configuration goes in this file
-  // See .github/global-renovate.json5 for configuration of the Renovate application itself
-
-  // pnpmfile.cjs required for lock file updates (including checksum), and so must not be ignored
   ignoreScripts: false,
   packageRules: [
     {
@@ -56,11 +52,11 @@
     },
     {
       groupName: "tailwind",
-      matchPackagePatterns: ["tailwindcss"],
+      matchPackageNames: ["/tailwindcss/"],
     },
     {
       groupName: "@testing-library",
-      matchPackagePrefixes: ["@testing-library"],
+      matchPackageNames: ["@testing-library{/,}**"],
     },
   ],
 }
