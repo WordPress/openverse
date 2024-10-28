@@ -164,7 +164,7 @@ class EuropeanaRecordBuilder:
         if isinstance(creators, list):
             if not creators:
                 return None
-            return ",".join(creators)
+            return ", ".join(creators)
         elif isinstance(creators, str):
             return creators
         return None
