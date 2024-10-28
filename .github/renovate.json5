@@ -56,11 +56,11 @@
     },
     {
       groupName: "tailwind",
-      matchPackagePatterns: ["tailwindcss"],
+      matchPackageNames: ["/tailwindcss/"],
     },
     {
       groupName: "@testing-library",
-      matchPackagePrefixes: ["@testing-library"],
+      matchPackageNames: ["@testing-library{/,}**"],
     },
   ],
 }
