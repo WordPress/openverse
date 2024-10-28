@@ -295,7 +295,7 @@ def test_get_image_dimensions(item_data, expected, record_builder):
         # Multiple creators in a list
         pytest.param(
             {"dcCreator": ["Chandler", "Joey"]},
-            "Chandler,Joey",
+            "Chandler, Joey",
             id="multiple_creators",
         ),
         # Empty creator list
