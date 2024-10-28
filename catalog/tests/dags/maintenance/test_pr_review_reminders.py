@@ -1,8 +1,8 @@
 from collections import defaultdict
 from datetime import datetime, timedelta
 
-from freezegun import freeze_time
 import pytest
+from freezegun import freeze_time
 from requests import HTTPError, Request, Response
 
 from maintenance.pr_review_reminders.pr_review_reminders import (
