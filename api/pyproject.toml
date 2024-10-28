@@ -26,7 +26,7 @@ dependencies = [
     "django-uuslug >=2.0.0, <3",
     "djangorestframework >=3.14.0, <4",
     "drf-spectacular >=0.27.1, <0.28",
-    "elasticsearch==8.13.0",
+    "elasticsearch >=8.13.0, <9",
     "elasticsearch-dsl >=8.12.0, <9",
     "future >=0.18.3, <0.19",
     "limit >=0.2.3, <0.3",
@@ -38,7 +38,6 @@ dependencies = [
     "uvicorn[standard] >=0.30, <0.31",
     "openverse-attribution @ file:///${PROJECT_ROOT}/../packages/python/openverse-attribution",
     "structlog-sentry>=2.1.0",
-    "pook==2.0.0",
 ]
 
 [tool.pdm]
@@ -50,10 +49,11 @@ overrides = [
   "-e openverse-attribution @ file:///${PROJECT_ROOT}/../packages/python/openverse-attribution"
 ]
 dev = [
-  "ipython >=8.22.1, <9",
-  "pgcli >=4.1, <5",
-  "remote-pdb >=2.1.0, <3",
-  "setuptools >=75.2,<76",
+    "ipython >=8.22.1, <9",
+    "pgcli >=4.1, <5",
+    "remote-pdb >=2.1.0, <3",
+    "setuptools >=75.2,<76",
+    "watchfiles>=0.24.0",
 ]
 test = [
   "factory-boy >=3.3.0, <4",
