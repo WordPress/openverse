@@ -161,9 +161,9 @@ class EuropeanaRecordBuilder:
     @staticmethod
     def _get_creator(data: dict) -> str | None:
         creators = data.get("dcCreator", [])
+        if not creators:
+            return None
         if isinstance(creators, list):
-            if not creators:
-                return None
             return ", ".join(creators)
         elif isinstance(creators, str):
             return creators
