@@ -43,18 +43,18 @@ let setBlurSensitive = (data: { checked?: boolean }) => {
   $sendCustomEvent("TOGGLE_BLUR_SENSITIVE", { checked })
 }
 
-const toggles = [
+const toggles = computed(() => [
   {
     name: "fetchSensitive",
-    state: fetchSensitive,
+    state: fetchSensitive.value,
     switchFn: setFetchSensitive,
   },
   {
     name: "blurSensitive",
-    state: blurSensitive,
+    state: blurSensitive.value,
     switchFn: setBlurSensitive,
   },
-]
+])
 
 const isDisabled = (name: string) =>
   name === "blurSensitive" && !fetchSensitive.value
@@ -86,7 +86,7 @@ const isDisabled = (name: string) =>
             :id="toggle.name"
             class="flex-row-reverse justify-between"
             :value="toggle.name"
-            :checked="toggle.state.value"
+            :checked="toggle.state"
             :disabled="isDisabled(toggle.name)"
             is-switch
             @change="toggle.switchFn"

@@ -253,7 +253,10 @@ const handleTab = (
 ) => {
   if (isRecentVisible.value) {
     event.preventDefault()
-    focusIn(recentSearchesRef.value?.$el, 1)
+    const element = recentSearchesRef.value?.$el
+    if (element) {
+      focusIn(element, 1)
+    }
   } else if (button === "content-settings") {
     handleTabOut("forward")
   }
