@@ -12,7 +12,7 @@ services:
       - ingestion_server
       - api
       - catalog_indexer_worker
-    image: docker.io/postgres:13.10-alpine
+    image: docker.io/postgres:13.16-alpine
     ports:
       - "50254:5432"
     volumes:
@@ -50,7 +50,7 @@ services:
   plausible_db:
     profiles:
       - frontend
-    image: docker.io/postgres:13.10-alpine
+    image: docker.io/postgres:13.16-alpine
     expose:
       - "5432"
     volumes:
