@@ -298,16 +298,18 @@ def test_get_image_dimensions(item_data, expected, record_builder):
             "Chandler, Joey",
             id="multiple_creators",
         ),
-        # Empty creator list
-        pytest.param({"dcCreator": []}, None, id="empty_creator_list"),
-        # Missing dcCreator key
-        pytest.param({}, None, id="no_dcCreator"),
         # dcCreator is a string
         pytest.param({"dcCreator": "Chandler"}, "Chandler", id="dcCreator_string"),
         # dcCreator is None
         pytest.param({"dcCreator": None}, None, id="dcCreator_none"),
+        # dcCreator is an empty string
+        pytest.param({"dcCreator": ""}, None, id="dcCreator_empty_string"),
+        # Empty creator list
+        pytest.param({"dcCreator": []}, None, id="empty_creator_list"),
         # Empty string in creator list
-        pytest.param({"dcCreator": [""]}, "", id="empty_string_in_list"),
+        pytest.param({"dcCreator": [""]}, None, id="empty_string_in_list"),
+        # Missing dcCreator key
+        pytest.param({}, None, id="no_dcCreator"),
     ],
 )
 def test_get_creator(item_data, expected, record_builder):
