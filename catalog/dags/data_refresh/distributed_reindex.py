@@ -182,6 +182,19 @@ def create_worker(
     return instances[0]["InstanceId"]
 
 
+def _get_reachability_status(instance_data, status_type):
+    status_data = instance_data.get(status_type, {})
+    reachability_status = next(
+        (
+            status.get("Status")
+            for status in status_data.get("Details", [])
+            if status.get("Name") == "reachability"
+        ),
+        None,
+    )
+    return reachability_status == "passed" and status_data.get("Status") == "ok"
+
+
 @task.sensor(poke_interval=60, timeout=3600, mode="reschedule")
 @setup_ec2_hook
 def wait_for_worker(
@@ -194,24 +207,22 @@ def wait_for_worker(
         raise AirflowSkipException("Skipping instance creation in local environment.")
 
     result = ec2_hook.conn.describe_instance_status(InstanceIds=[instance_id])
-
     logger.info(result)
 
-    instance_statuses = result.get("InstanceStatuses", [])
+    instance_statuses = result.get("InstanceStatuses")
     instance_status = instance_statuses[0] if instance_statuses else {}
+
     state = instance_status.get("InstanceState", {}).get("Name")
-    status = next(
-        (
-            status.get("Status")
-            for status in instance_status.get("InstanceStatus", {}).get("Details", [])
-            if status.get("Name") == "reachability"
-        ),
-        None,
+    is_reachable = all(
+        [
+            _get_reachability_status(instance_status, status_type)
+            for status_type in ["InstanceStatus", "SystemStatus", "AttachedEbsStatus"]
+        ]
     )
 
     return PokeReturnValue(
         # Sensor completes only when the instance is running and has finished initializing
-        is_done=(state == "running" and status == "ok")
+        is_done=(state == "running" and is_reachable)
     )
 
 
