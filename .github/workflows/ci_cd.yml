@@ -179,7 +179,7 @@ jobs:
           install: true
 
       - name: Build image `${{ matrix.image }}`
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ${{ matrix.context }}
           target: ${{ matrix.target }}
@@ -259,7 +259,7 @@ jobs:
           install: true
 
       - name: Build catalog dev image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: catalog
           target: cat
@@ -356,7 +356,7 @@ jobs:
           install: true
 
       - name: Build indexer worker dev image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: indexer_worker
           target: indexer_worker
@@ -471,7 +471,7 @@ jobs:
           install: true
 
       - name: Build API dev image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: api
           target: api
