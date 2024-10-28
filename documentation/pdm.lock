@@ -3,12 +3,12 @@
 
 [metadata]
 groups = ["default", "dev"]
-strategy = ["cross_platform", "inherit_metadata"]
+strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:bea673196f890f6f8c28fcb515fc9a15dc0f757dfd7b90992096f31fceeb08e3"
+content_hash = "sha256:6d7495f60bf6599d21be383505ba90031e3ed5e58cb5086b6a9ac039b98c2ebc"
 
 [[metadata.targets]]
-requires_python = "==3.11.*"
+requires_python = "==3.12.*"
 
 [[package]]
 name = "alabaster"
@@ -484,7 +484,7 @@ files = [
 
 [[package]]
 name = "sphinx-notfound-page"
-version = "1.0.0"
+version = "1.0.4"
 requires_python = ">=3.8"
 summary = "Sphinx extension to build a 404 page with absolute URLs"
 groups = ["dev"]
@@ -492,8 +492,8 @@ dependencies = [
     "sphinx>=5",
 ]
 files = [
-    {file = "sphinx_notfound_page-1.0.0-py3-none-any.whl", hash = "sha256:40a5741a6b07245a08fe55dbbd603ad6719e191b1419ab2e5337c706ebd16554"},
-    {file = "sphinx_notfound_page-1.0.0.tar.gz", hash = "sha256:14cd388956de5cdf8710ab4ff31776ef8d85759c4f46014ee30f368e83bd3a3b"},
+    {file = "sphinx_notfound_page-1.0.4-py3-none-any.whl", hash = "sha256:f7c26ae0df3cf3d6f38f56b068762e6203d0ebb7e1c804de1059598d7dd8b9d8"},
+    {file = "sphinx_notfound_page-1.0.4.tar.gz", hash = "sha256:2a52f49cd367b5c4e64072de1591cc367714098500abf4ecb9a3ecb4fec25aae"},
 ]
 
 [[package]]
