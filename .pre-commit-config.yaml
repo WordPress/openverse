@@ -23,7 +23,7 @@ repos:
         language: system
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
+    rev: v5.0.0
     hooks:
       - id: trailing-whitespace
         args: [--markdown-linebreak-ext=md]
@@ -154,7 +154,7 @@ repos:
         files: (.vale/.*|.mdx?)$
 
   - repo: https://github.com/renovatebot/pre-commit-hooks
-    rev: 37.440.7
+    rev: 38.132.3
     hooks:
       - id: renovate-config-validator
         args:
