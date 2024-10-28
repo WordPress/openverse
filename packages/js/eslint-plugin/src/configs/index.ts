@@ -108,6 +108,16 @@ export const project: TSESLint.Linter.ConfigType = {
             ],
           },
         ],
+
+        "no-restricted-imports": [
+          "error",
+          {
+            name: "@playwright/test",
+            importNames: ["test"],
+            message:
+              "Import test from `~~/test/playwright/utils/test` to ensure global fixtures are used.",
+          },
+        ],
       },
     },
     {

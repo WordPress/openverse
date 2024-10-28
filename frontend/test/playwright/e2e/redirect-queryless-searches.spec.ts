@@ -3,7 +3,9 @@
  * redirect to the homepage.
  */
 
-import { test, expect } from "@playwright/test"
+import { expect } from "@playwright/test"
+
+import { test } from "~~/test/playwright/utils/test"
 
 import { searchTypes, searchPath } from "~/constants/media"
 

@@ -1,4 +1,4 @@
-import { test } from "@playwright/test"
+import { test } from "~~/test/playwright/utils/test"
 
 import type { LanguageDirection } from "~~/test/playwright/utils/i18n"
 

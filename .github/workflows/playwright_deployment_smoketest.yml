@@ -1,0 +1,44 @@
+name: Run Playwright smoketests
+
+on:
+  workflow_dispatch:
+    inputs:
+      service_url:
+        description: "The service against which to run the Playwright smoketests."
+        required: true
+        type: string
+
+run-name: Playwright smoketests ${{ inputs.service_url }}
+
+# Disallow running multiple smoketests at once against the same service
+concurrency: ${{ github.workflow }}-${{ inputs.service_url }}
+
+jobs:
+  smoketests:
+    name: "Playwright smoketests ${{ inputs.service_url }}"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup CI env
+        uses: ./.github/actions/setup-env
+        with:
+          setup_python: false
+          install_recipe: node-install
+
+      - name: Run playwright
+        env:
+          # The secret name is k6 but it's usable for anything sending HMAC signed requests
+          HMAC_SIGNING_SECRET: ${{ secrets.K6_SIGNING_SECRET }}
+          PLAYWRIGHT_BASE_URL: ${{ inputs.service_url }}
+        run: |
+          just p frontend test:playwright --grep '@deployment-smoketest'
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        id: test-results
+        with:
+          name: test_results
+          path: frontend/test-results
