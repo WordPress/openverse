@@ -11,6 +11,19 @@ export const firstParam = (
   return params ?? null
 }
 
+export function getNumber(
+  params: LocationQueryValue | LocationQueryValue[] | undefined
+): number {
+  const value = firstParam(params)
+  return value ? parseInt(value, 10) : -1
+}
+
+export function getString(
+  params: LocationQueryValue | LocationQueryValue[] | undefined
+): string {
+  return firstParam(params) ?? ""
+}
+
 export const validateUUID = (id: string | undefined | null) => {
   if (!id) {
     return false
