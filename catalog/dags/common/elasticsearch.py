@@ -186,6 +186,7 @@ def trigger_and_wait_for_reindex(
         es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
 
         response = es_conn.tasks.get(task_id=task_id)
+        logger.info(response)
 
         count = response.get("task", {}).get("status", {}).get("total")
         if expected_docs and count != expected_docs:
