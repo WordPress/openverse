@@ -18,7 +18,7 @@ defineEmits<{
     <VLink
       v-if="datum.url"
       :href="datum.url"
-      class="focus-visible:ring-border-focus flex text-link focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring focus-visible:ring-offset-1"
+      class="flex text-link focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring focus-visible:ring-focus focus-visible:ring-offset-1"
       :send-external-link-click-event="false"
       @click="$emit('click', datum.source)"
       ><span
