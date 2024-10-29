@@ -186,6 +186,8 @@ def test_record_builder_get_record_data(ingester, record_builder):
         "description": "Sello en seco: España artística y monumental.",
     }
 
+    expected_creator = "http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent2, http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent3, http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent4"  # codespell:ignore
+
     assert record_data == {
         "foreign_landing_url": (
             "http://bibliotecadigital.jcyl.es/i18n/consulta/registro.cmd?" "id=26229"
@@ -207,6 +209,7 @@ def test_record_builder_get_record_data(ingester, record_builder):
         "filesize": 36272,
         "filetype": "jpeg",
         "thumbnail_url": "https://api.europeana.eu/api/v2/thumbnail-by-url.json?uri=http%3A%2F%2Fbibliotecadigital.jcyl.es%2Fi18n%2Fcatalogo_imagenes%2Fimagen_id.cmd%3FidImagen%3D102620362&type=IMAGE",
+        "creator": expected_creator,
     }
 
 
@@ -282,6 +285,35 @@ def test_get_image_url_empty(data, record_builder):
 )
 def test_get_image_dimensions(item_data, expected, record_builder):
     assert record_builder._get_image_dimensions(item_data) == expected
+
+
+@pytest.mark.parametrize(
+    "item_data, expected",
+    [
+        # Single creator in a list
+        pytest.param({"dcCreator": ["Chandler"]}, "Chandler", id="single_creator"),
+        # Multiple creators in a list
+        pytest.param(
+            {"dcCreator": ["Chandler", "Joey"]},
+            "Chandler, Joey",
+            id="multiple_creators",
+        ),
+        # dcCreator is a string
+        pytest.param({"dcCreator": "Chandler"}, "Chandler", id="dcCreator_string"),
+        # dcCreator is None
+        pytest.param({"dcCreator": None}, None, id="dcCreator_none"),
+        # dcCreator is an empty string
+        pytest.param({"dcCreator": ""}, None, id="dcCreator_empty_string"),
+        # Empty creator list
+        pytest.param({"dcCreator": []}, None, id="empty_creator_list"),
+        # Empty string in creator list
+        pytest.param({"dcCreator": [""]}, None, id="empty_string_in_list"),
+        # Missing dcCreator key
+        pytest.param({}, None, id="no_dcCreator"),
+    ],
+)
+def test_get_creator(item_data, expected, record_builder):
+    assert record_builder._get_creator(item_data) == expected
 
 
 @pytest.mark.parametrize(
