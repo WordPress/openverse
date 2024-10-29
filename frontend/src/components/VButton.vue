@@ -225,7 +225,7 @@ watch(
         border: !isPlainDangerous,
         'focus-visible:outline-tx': isPlainDangerous,
         'focus-slim-filled': isFocusSlimFilled,
-        'focus-slim-tx': isFocusSlimTx,
+        'focus-visible:focus-slim-tx': isFocusSlimTx,
       },
     ]"
     :aria-pressed="pressed"

@@ -99,16 +99,12 @@ export default {
       pink: shadeScale("pink"),
       yellow: shadeScale("yellow"),
 
-      // Focus ring colors
-      focus: {
-        DEFAULT: "var(--color-border-focus)",
-        yellow: "var(--color-yellow-3)",
-      },
-
       // Special keywords
       tx: "transparent",
       curr: "currentColor",
       current: "currentColor",
+
+      contrast: "var(--color-contrast, var(--color-text))",
     },
     placeholderColor: {
       default: "var(--color-text-secondary)",
@@ -171,6 +167,12 @@ export default {
       1.5: "1.5px",
       2: "2px",
       3: "3px",
+    },
+    outlineColor: {
+      focus: "var(--color-border-focus)",
+    },
+    ringColor: {
+      focus: "var(--color-border-focus)",
     },
     ringOffsetWidth: {
       0: "0px",
@@ -254,6 +256,7 @@ export default {
         "over-dark": "var(--color-text-over-dark)",
         "over-negative": "var(--color-text-over-negative)",
         "secondary-over-dark": "var(--color-text-secondary-over-dark)",
+        contrast: "var(--color-contrast, var(--color-text))",
       },
       backgroundColor: {
         default: "var(--color-bg)",
@@ -360,7 +363,7 @@ export default {
             item,
             (value) => ({
               "--tw-ring-offset-color": "var(--color-bg-curr-page)",
-              "--tw-ring-color": value,
+              "--tw-ring-color": `var(--color-accent, var(${value}))`,
               "--tw-outline-color": value,
             }),
           ])

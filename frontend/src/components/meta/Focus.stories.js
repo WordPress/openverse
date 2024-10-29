@@ -27,7 +27,7 @@ export const SlimTransparent = {
   name: "Slim transparent",
 
   args: {
-    classNames: ["focus-slim-tx"],
+    classNames: ["focus-visible:focus-slim-tx"],
   },
 }
 
