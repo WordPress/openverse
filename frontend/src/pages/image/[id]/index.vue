@@ -22,6 +22,7 @@ import { useAnalytics } from "~/composables/use-analytics"
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 import { useSingleResultPageMeta } from "~/composables/use-single-result-page-meta"
 import { usePageRobotsRule } from "~/composables/use-page-robots-rule"
+import { useRouteResultParams } from "~/composables/use-route-result-params"
 
 import VBone from "~/components/VSkeleton/VBone.vue"
 import VMediaReuse from "~/components/VMediaInfo/VMediaReuse.vue"
@@ -99,10 +100,10 @@ const showLoadingState = computed(() => {
 
 const { sendCustomEvent } = useAnalytics()
 
-const handleRightClick = (id: string) => {
-  sendCustomEvent("RIGHT_CLICK_IMAGE", {
-    id,
-  })
+const { resultParams } = useRouteResultParams()
+
+const handleRightClick = () => {
+  sendCustomEvent("RIGHT_CLICK_IMAGE", resultParams.value)
 }
 
 const { reveal, isHidden } = useSensitiveMedia(image.value)
@@ -262,7 +263,7 @@ watch(error, (err) => {
             :height="image.height ?? 0"
             @load="onImageLoaded"
             @error="onImageError"
-            @contextmenu="handleRightClick(image.id)"
+            @contextmenu="handleRightClick"
           />
           <div
             v-if="sketchFabUid"

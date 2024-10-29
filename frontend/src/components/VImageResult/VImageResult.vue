@@ -25,12 +25,14 @@ const props = withDefaults(
        * uses the image's intrinsic size.
        */
       aspectRatio?: AspectRatio
+      position?: number
     }
   >(),
   {
     aspectRatio: "square",
     kind: "search",
     relatedTo: "null",
+    position: -1,
   }
 )
 
@@ -61,7 +63,7 @@ const imageUrl = computed(() => {
 })
 
 const imageLink = computed(() => {
-  return `/image/${props.image.id}/${singleResultQuery(props.searchTerm)}`
+  return `/image/${props.image.id}/${singleResultQuery(props.searchTerm, props.position)}`
 })
 
 /**
@@ -116,6 +118,7 @@ const sendSelectSearchResultEvent = (event: MouseEvent) => {
     kind: props.kind,
     mediaType: IMAGE,
     provider: props.image.provider,
+    position: props.position,
     relatedTo: props.relatedTo ?? "null",
     sensitivities: props.image.sensitivity?.join(",") ?? "",
     isBlurred: shouldBlur.value ?? "null",
