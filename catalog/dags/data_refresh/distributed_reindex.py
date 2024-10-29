@@ -283,7 +283,7 @@ def terminate_indexer_worker(
         raise AirflowSkipException(
             "Skipping instance termination in local environment."
         )
-    return ec2_hook.conn.terminate_instances(instance_ids=[instance_id])
+    return ec2_hook.conn.terminate_instances(InstanceIds=[instance_id])
 
 
 @task(trigger_rule=TriggerRule.ALL_DONE)
