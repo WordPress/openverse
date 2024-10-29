@@ -186,7 +186,7 @@ def test_record_builder_get_record_data(ingester, record_builder):
         "description": "Sello en seco: España artística y monumental.",
     }
 
-    expected_creator = "http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent2,http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent3,http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent4"  # codespell:ignore
+    expected_creator = "http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent2, http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent3, http://hispana.mcu.es/lod/oai:bibliotecadigital.jcyl.es:26229#ent4"  # codespell:ignore
 
     assert record_data == {
         "foreign_landing_url": (
