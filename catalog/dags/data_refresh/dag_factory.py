@@ -243,6 +243,7 @@ def create_data_refresh_dag(
             origin_index_name=target_index_name,
             filtered_index_name=filtered_index_name,
             timeout=data_refresh_config.create_filtered_index_timeout,
+            poke_interval=data_refresh_config.reindex_poke_interval,
         )
 
         # Re-enable Cloudwatch alarms once reindexing is complete, even if it
