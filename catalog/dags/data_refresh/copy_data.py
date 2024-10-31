@@ -310,7 +310,7 @@ def copy_upstream_tables(
         downstream_conn_id=downstream_conn_id,
         fdw_name=init_fdw,
         copy_timeout=data_refresh_config.copy_data_timeout,
-        primary_key_timeout=data_refresh_config.primary_key_timeout,
+        primary_key_timeout=data_refresh_config.add_primary_key_timeout,
         limit=limit,
     ).expand_kwargs([asdict(tm) for tm in data_refresh_config.table_mappings])
 
