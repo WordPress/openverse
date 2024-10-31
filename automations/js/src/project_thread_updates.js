@@ -61,8 +61,7 @@ const GET_PROJECT_CARDS = `
  */
 module.exports = async ({ github, core }) => {
   try {
-    // eslint-disable-next-line no-constant-binary-expression
-    const isDryRun = process.env.DRY_RUN === "true" ?? false
+    const isDryRun = process.env.DRY_RUN === "true"
 
     const currentDate = new Date()
     // Create a date by subtracting DAYS_UPDATED_WITHIN days
