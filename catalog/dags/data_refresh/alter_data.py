@@ -124,7 +124,7 @@ def get_alter_batches(
     return [(x, x + batch_size - 1) for x in range(start, stop, batch_size)]
 
 
-@task
+@task(max_active_tis_per_dagrun=2)
 def alter_data_batch(
     batch: tuple[int, int],
     temp_table: str,
@@ -203,7 +203,8 @@ def alter_table_data(
     )
 
     alter_data = alter_data_batch.partial(
-        temp_table=temp_table, postgres_conn_id=postgres_conn_id
+        temp_table=temp_table,
+        postgres_conn_id=postgres_conn_id,
     ).expand(batch=batches)
 
     report(alter_data)
