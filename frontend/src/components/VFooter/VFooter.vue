@@ -104,9 +104,7 @@ const linkColumnHeight = computed(() => ({
             v-bind="languageProps"
             class="language max-w-full border-secondary"
           />
-          <ClientOnly>
-            <VThemeSelect class="border-secondary" />
-          </ClientOnly>
+          <VThemeSelect class="border-secondary" />
         </div>
       </template>
       <template v-else>
