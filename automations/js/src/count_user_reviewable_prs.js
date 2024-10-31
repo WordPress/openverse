@@ -59,7 +59,7 @@ query ($repoOwner: String!, $repo: String!, $cursor: String) {
   try {
     let hasNextPage = true
     let cursor = null
-    let reviewablePrs = []
+    const reviewablePrs = []
     const pullRequest = context.payload.pull_request
     const result = {
       pr_count: 0,

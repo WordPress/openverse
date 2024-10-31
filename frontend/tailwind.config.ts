@@ -1,3 +1,4 @@
+import tailwindcssTypography from "@tailwindcss/typography"
 import defaultTheme from "tailwindcss/defaultTheme"
 import plugin from "tailwindcss/plugin"
 
@@ -343,7 +344,7 @@ export default {
     },
   },
   plugins: [
-    require("@tailwindcss/typography"),
+    tailwindcssTypography,
     // Focus styles
     // This plugin has related stylesheets in `src/styles/tailwind.css`.
     plugin(({ matchUtilities, theme }) => {

@@ -28,10 +28,10 @@ function kebabToCamel(input) {
  * @param {unknown} value - The value to set at the path.
  */
 exports.setToValue = function setValue(obj, path, value) {
-  var a = path.split(".")
-  var o = obj
+  const a = path.split(".")
+  let o = obj
   while (a.length - 1) {
-    var n = a.shift()
+    const n = a.shift()
     if (!(n in o)) {
       o[n] = {}
     }
@@ -64,7 +64,7 @@ exports.setToValue = function setValue(obj, path, value) {
  * @param {object} deprecatedKeys - object to store deprecated kebab-cased keys and number of replacements.
  * @return {any} the sanitised JSON object
  */
-let replacePlaceholders = (json, locale, deprecatedKeys) => {
+const replacePlaceholders = (json, locale, deprecatedKeys) => {
   if (json === null) {
     return null
   }
@@ -105,7 +105,7 @@ let replacePlaceholders = (json, locale, deprecatedKeys) => {
       console.warn(`Found {} in ${locale} translation strings: ${replaced}`)
       replaced = ""
     }
-    let withoutOpenverseChannel = replaced.replace("#openverse", "")
+    const withoutOpenverseChannel = replaced.replace("#openverse", "")
     if (withoutOpenverseChannel.includes("#")) {
       console.warn(
         `Found left-over # in ${locale} translation strings: ${replaced}`
@@ -114,10 +114,10 @@ let replacePlaceholders = (json, locale, deprecatedKeys) => {
     }
     return replaced
   }
-  let currentJson = { ...json }
+  const currentJson = { ...json }
 
   for (const row of Object.entries(currentJson)) {
-    let [key, value] = row
+    const [key, value] = row
     currentJson[key] = replacePlaceholders(value, locale, deprecatedKeys)
   }
   return currentJson

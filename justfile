@@ -418,14 +418,12 @@ eslint *args:
         files=("$@")
     else
         # default files
-        files=(frontend automations/js packages/js .pnpmfile.cjs .eslintrc.js prettier.config.js tsconfig.base.json)
+        files=(frontend automations/js packages/js .pnpmfile.cjs eslint.config.mjs prettier.config.js tsconfig.base.json)
     fi
 
     pnpm exec eslint \
-        --ext .js,.ts,.vue,.json,.json5 \
-        --ignore-path .gitignore \
-        --ignore-path .eslintignore \
         --max-warnings=0 \
+        --no-warn-ignored \
         --fix \
         "${files[@]}"
 

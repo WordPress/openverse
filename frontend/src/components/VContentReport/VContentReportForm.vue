@@ -83,7 +83,7 @@ const handleSubmit = async (event: Event) => {
       },
     })
     updateStatus(SENT)
-  } catch (error) {
+  } catch {
     updateStatus(FAILED)
   }
 }

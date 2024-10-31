@@ -61,7 +61,7 @@ const GET_PROJECT_CARDS = `
  */
 module.exports = async ({ github, core }) => {
   try {
-    const isDryRun = process.env.DRY_RUN === "true" ?? false
+    const isDryRun = process.env.DRY_RUN === "true"
 
     const currentDate = new Date()
     // Create a date by subtracting DAYS_UPDATED_WITHIN days

@@ -1,18 +1,14 @@
 import { RuleTester } from "@typescript-eslint/rule-tester"
 
-import openverseEslintPlugin from "@openverse/eslint-plugin"
+import jsoncParser from "jsonc-eslint-parser"
+
+import { translationStrings } from "../../src/rules/translation-strings"
 
 const maxLength = 20
 
-const tester = new RuleTester({
-  parser: "jsonc-eslint-parser",
-  rules: {
-    "@openverse/translation-strings": ["error"],
-  },
-})
-
 const baseTestCase = {
   filename: "en.json5",
+  languageOptions: { parser: jsoncParser },
   options: [
     {
       maxLength,
@@ -20,15 +16,13 @@ const baseTestCase = {
   ] as const,
 }
 
-tester.run(
-  "@openverse/translation-strings",
-  openverseEslintPlugin.rules["translation-strings"],
-  {
-    invalid: [
-      {
-        ...baseTestCase,
-        name: "Disallow strings longer than configured max length",
-        code: `
+const tester = new RuleTester()
+tester.run("translation-strings", translationStrings, {
+  invalid: [
+    {
+      ...baseTestCase,
+      name: "Disallow strings longer than configured max length",
+      code: `
           {
             hello: {
               world: {
@@ -43,28 +37,28 @@ tester.run(
             }
           }
         `,
-        errors: [{ messageId: "maxLengthExceeded", data: { maxLength } }],
-      },
-      {
-        ...baseTestCase,
-        name: "Disallow strings longer than configured max length, less property nesting",
-        code: `
+      errors: [{ messageId: "maxLengthExceeded", data: { maxLength } }],
+    },
+    {
+      ...baseTestCase,
+      name: "Disallow strings longer than configured max length, less property nesting",
+      code: `
         {
           tooLong: "${new Array(maxLength + 1).fill("word").join(" ")}"
         }`,
-        errors: [
-          {
-            messageId: "maxLengthExceeded",
-            data: { maxLength },
-          },
-        ],
-      },
-    ],
-    valid: [
-      {
-        ...baseTestCase,
-        name: "Does not exceed configured max length",
-        code: `
+      errors: [
+        {
+          messageId: "maxLengthExceeded",
+          data: { maxLength },
+        },
+      ],
+    },
+  ],
+  valid: [
+    {
+      ...baseTestCase,
+      name: "Does not exceed configured max length",
+      code: `
           {
             hello: {
               world: {
@@ -79,11 +73,12 @@ tester.run(
             }
           }
         `,
-      },
-      {
-        filename: "notEnjson5.json5",
-        name: "Ignores files that are not en.json5",
-        code: `
+    },
+    {
+      filename: "notEnjson5.json5",
+      name: "Ignores files that are not en.json5",
+      languageOptions: { parser: jsoncParser },
+      code: `
         {
           hello: {
             world: {
@@ -93,7 +88,6 @@ tester.run(
             }
           }
         }`,
-      },
-    ],
-  }
-)
+    },
+  ],
+})
