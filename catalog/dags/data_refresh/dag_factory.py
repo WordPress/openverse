@@ -295,6 +295,7 @@ def create_data_refresh_dag(
                 "after": after_record_count,
                 "media_type": data_refresh_config.media_type,
                 "dag_id": data_refresh_config.dag_id,
+                "env": target_environment,
             },
         )
 
