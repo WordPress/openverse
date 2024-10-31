@@ -33,7 +33,7 @@ const metadata = computed<null | Metadata[]>(() => {
 </script>
 
 <template>
-  <section class="flex flex-col gap-y-6 md:gap-y-8">
+  <section class="flex flex-col gap-y-6 text-secondary md:gap-y-8">
     <header class="flex flex-row items-center justify-between">
       <h2 class="heading-6 md:heading-5">
         {{ $t(`mediaDetails.${media.frontendMediaType}Info`) }}
