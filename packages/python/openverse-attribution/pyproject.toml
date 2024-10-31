@@ -8,7 +8,7 @@ authors = [
   {name = "Openverse", email = "openverse@wordpress.org" },
 ]
 
-requires-python = "==3.11.*"
+requires-python = "==3.12.*"
 
 [build-system]
 requires = ["pdm-backend"]
