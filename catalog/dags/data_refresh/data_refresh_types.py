@@ -125,9 +125,9 @@ DATA_REFRESH_CONFIGS = {
         dag_timeout=timedelta(days=4),
         copy_data_timeout=timedelta(hours=12),
         concurrency_check_poke_interval=int(
-            os.getenv("DATA_REFRESH_POKE_INTERVAL", 60)
+            os.getenv("DATA_REFRESH_POKE_INTERVAL", 60 * 5)
         ),
-        reindex_poke_interval=int(os.getenv("DATA_REFRESH_POKE_INTERVAL", 60)),
+        reindex_poke_interval=int(os.getenv("DATA_REFRESH_POKE_INTERVAL", 60 * 10)),
     ),
     AUDIO: DataRefreshConfig(
         media_type=AUDIO,
@@ -149,6 +149,6 @@ DATA_REFRESH_CONFIGS = {
         concurrency_check_poke_interval=int(
             os.getenv("DATA_REFRESH_POKE_INTERVAL", 60 * 30)
         ),
-        reindex_poke_interval=int(os.getenv("DATA_REFRESH_POKE_INTERVAL", 60)),
+        reindex_poke_interval=int(os.getenv("DATA_REFRESH_POKE_INTERVAL", 60 * 5)),
     ),
 }
