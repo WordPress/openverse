@@ -155,6 +155,8 @@ lint-codeowners checks="stable":
 # Smart copy .env files from templates
 _env src dest:
     #!/usr/bin/env python3
+    import datetime
+    import filecmp
     from pathlib import Path
     import shutil
 
@@ -162,8 +164,14 @@ _env src dest:
     dest = Path("{{ dest }}")
     print(f"Creating {dest} from {src}.")
 
-    # If there is no existing env file, only copy the template.
-    if not dest.exists():
+    if dest.exists() and not filecmp.cmp(src, dest):
+        # If there is an existing env file, back it up.
+        ts = datetime.datetime.now().strftime("%Y-%m-%d")
+        bkp = dest.with_suffix(f"{dest.suffix}.bkp-{ts}")
+        print(f"Backing up existing {dest} to {bkp}.")
+        shutil.copy(dest, bkp)
+    else:
+        # If there is no existing env file, only copy the template.
         shutil.copy(src, dest)
         exit(0)
 
