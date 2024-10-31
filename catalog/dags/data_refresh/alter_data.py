@@ -199,7 +199,7 @@ def alter_table_data(
 
     batches = get_alter_batches(
         estimated_record_count.output,
-        batch_size="{{ var.value.get('DATA_REFRESH_ALTER_BATCH_SIZE', none) }}",
+        batch_size=data_refresh_config.alter_data_batch_size,
     )
 
     alter_data = alter_data_batch.partial(
