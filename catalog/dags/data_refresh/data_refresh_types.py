@@ -95,6 +95,7 @@ class DataRefreshConfig:
     default_args: dict = field(default_factory=dict)
     dag_timeout: timedelta = timedelta(days=1)
     copy_data_timeout: timedelta = timedelta(hours=1)
+    add_primary_key_timeout: timedelta = timedelta(hours=1)
     indexer_worker_timeout: timedelta = timedelta(hours=12)
     index_readiness_timeout: timedelta = timedelta(days=1)
     create_filtered_index_timeout: timedelta = timedelta(days=1)
@@ -124,6 +125,8 @@ DATA_REFRESH_CONFIGS = {
         ),
         dag_timeout=timedelta(days=4),
         copy_data_timeout=timedelta(hours=12),
+        add_primary_key_timeout=timedelta(hours=12),
+        indexer_worker_timeout=timedelta(days=1),
         concurrency_check_poke_interval=int(
             os.getenv("DATA_REFRESH_POKE_INTERVAL", 60)
         ),

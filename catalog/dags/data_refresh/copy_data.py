@@ -193,7 +193,8 @@ def copy_upstream_table(
     upstream_conn_id: str,
     downstream_conn_id: str,
     fdw_name: str,
-    timeout: timedelta,
+    copy_timeout: timedelta,
+    primary_key_timeout: timedelta,
     limit: int,
     upstream_table_name: str,
     downstream_table_name: str,
@@ -247,7 +248,7 @@ def copy_upstream_table(
         temp_table_name=temp_table_name,
     )
 
-    copy = copy_data.override(execution_timeout=timeout)(
+    copy = copy_data.override(execution_timeout=copy_timeout)(
         postgres_conn_id=downstream_conn_id,
         limit=limit,
         sql_template=copy_data_query,
@@ -261,6 +262,7 @@ def copy_upstream_table(
     add_primary_key = run_sql.override(
         task_id="add_primary_key",
         map_index_template="{{ task.op_kwargs['temp_table_name'] }}",
+        execution_timeout=primary_key_timeout,
     )(
         postgres_conn_id=downstream_conn_id,
         sql_template=queries.ADD_PRIMARY_KEY_QUERY,
@@ -307,7 +309,8 @@ def copy_upstream_tables(
         upstream_conn_id=upstream_conn_id,
         downstream_conn_id=downstream_conn_id,
         fdw_name=init_fdw,
-        timeout=data_refresh_config.copy_data_timeout,
+        copy_timeout=data_refresh_config.copy_data_timeout,
+        primary_key_timeout=data_refresh_config.add_primary_key_timeout,
         limit=limit,
     ).expand_kwargs([asdict(tm) for tm in data_refresh_config.table_mappings])
 
