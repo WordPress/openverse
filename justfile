@@ -152,17 +152,73 @@ lint-codeowners checks="stable":
 # Init #
 ########
 
+# Smart copy .env files from templates
+_env src dest:
+    #!/usr/bin/env python3
+    import datetime
+    import filecmp
+    from pathlib import Path
+    import shutil
+
+    src = Path("{{ src }}")
+    dest = Path("{{ dest }}")
+    print(f"Creating {dest} from {src}.")
+
+    if dest.exists() and not filecmp.cmp(src, dest):
+        # If there is an existing env file, back it up.
+        ts = datetime.datetime.now().strftime("%Y-%m-%d")
+        bkp = dest.with_suffix(f"{dest.suffix}.bkp-{ts}")
+        print(f"Backing up existing {dest} to {bkp}.")
+        shutil.copy(dest, bkp)
+    else:
+        # If there is no existing env file, only copy the template.
+        shutil.copy(src, dest)
+        exit(0)
+
+    # Read existing env file and store contents.
+    existing_env = {
+        key: value
+        for line in dest.read_text().splitlines()
+        if line and not line.startswith("#")
+        for key, _, value in [line.partition("=")]
+        if key and value
+    }
+
+    with dest.open("w") as dest_file:
+        for line in src.read_text().splitlines():
+            # Write comments and empty lines unchanged.
+            if not line or line.startswith("#"):
+                dest_file.write(f"{line}\n")
+                continue
+
+            key, _, value = line.partition("=")
+
+            # If existing value is changed, keep the existing value.
+            existing_value = existing_env.pop(key, None)
+            if existing_value and existing_value != value:
+                print(f"{key}={existing_value} (existing)")
+                value = existing_value
+
+            dest_file.write(f"{key}={value}\n")
+
+        # Keep extra variables that are not in the env template.
+        if len(existing_env):
+            dest_file.write("\n# Preserved variables\n")
+            for key, value in existing_env.items():
+                print(f"{key}={value} (preserved)")
+                dest_file.write(f"{key}={value}\n")
+
 # Create .env files from templates
 @env:
     # Root
-    ([ ! -f .env ] && cp env.template .env) || true
+    just _env env.template .env
     # Docker
-    ([ ! -f docker/minio/.env ] && cp docker/minio/env.template docker/minio/.env) || true
+    just _env docker/minio/env.template docker/minio/.env
     # First-party services
-    ([ ! -f catalog/.env ] && cp catalog/env.template catalog/.env) || true
-    ([ ! -f ingestion_server/.env ] && cp ingestion_server/env.template ingestion_server/.env) || true
-    ([ ! -f indexer_worker/.env ] && cp indexer_worker/env.template indexer_worker/.env)   || true
-    ([ ! -f api/.env ] && cp api/env.template api/.env) || true
+    just _env catalog/env.template catalog/.env
+    just _env ingestion_server/env.template ingestion_server/.env
+    just _env indexer_worker/env.template indexer_worker/.env
+    just _env api/env.template api/.env
 
 ##########
 # Docker #
