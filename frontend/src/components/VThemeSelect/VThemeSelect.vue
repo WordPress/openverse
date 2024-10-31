@@ -29,7 +29,7 @@ const THEME_TEXT = {
   system: i18n.t(`theme.choices.system`),
 }
 
-const colorMode: Ref<ColorMode | undefined> = ref(undefined)
+const colorMode: Ref<ColorMode> = ref(uiStore.colorMode)
 const handleUpdateModelValue = (value: string) => {
   uiStore.setColorMode(value as ColorMode)
 }
