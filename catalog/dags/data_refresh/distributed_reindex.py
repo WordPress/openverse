@@ -261,15 +261,9 @@ def create_connection(
     """
     worker_conn_id = f"indexer_worker_{instance_id or media_type}"
 
-    # TODO: Locally we use 8003 to avoid collision with the legacy indexer worker that's
-    # part of the ingestion server. When the ingestion server and legacy data refresh are
-    # removed, we should modify the local environment to use 8002 here as well and
-    # avoid having to do this check.
-    port = "8003" if environment != PRODUCTION else "8002"
-
     # Create the Connection
     logger.info(f"Creating connection with id {worker_conn_id}")
-    worker_conn = Connection(conn_id=worker_conn_id, uri=f"http://{server}:{port}/")
+    worker_conn = Connection(conn_id=worker_conn_id, uri=f"http://{server}:8003/")
     session = settings.Session()
     session.add(worker_conn)
     session.commit()
@@ -289,7 +283,7 @@ def terminate_indexer_worker(
         raise AirflowSkipException(
             "Skipping instance termination in local environment."
         )
-    return ec2_hook.conn.terminate_instances(instance_ids=[instance_id])
+    return ec2_hook.conn.terminate_instances(InstanceIds=[instance_id])
 
 
 @task(trigger_rule=TriggerRule.ALL_DONE)

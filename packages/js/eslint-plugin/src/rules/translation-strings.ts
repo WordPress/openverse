@@ -22,7 +22,7 @@ export const translationStrings = OpenverseRule<Options, MessageIds>({
     docs: {
       description:
         "Prevent translation strings difficult for translators to handle",
-      recommended: "recommended",
+      recommended: true,
     },
     type: "problem",
     messages,
@@ -42,7 +42,7 @@ export const translationStrings = OpenverseRule<Options, MessageIds>({
   create(context, [options]) {
     return {
       "JSONProperty[value.type='JSONLiteral']"(node: AST.JSONProperty): void {
-        const isEnJson5 = context.getFilename().endsWith("en.json5")
+        const isEnJson5 = context.filename.endsWith("en.json5")
         if (!isEnJson5) {
           return
         }

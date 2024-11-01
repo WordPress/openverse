@@ -18,7 +18,9 @@ def report_status(media_type: str, message: str, dag_id: str):
     return message
 
 
-def report_record_difference(before: dict, after: dict, media_type: str, dag_id: str):
+def report_record_difference(
+    before: dict, after: dict, media_type: str, dag_id: str, env: str
+):
     all_keys = before.keys() | after.keys()
     total_before = sum(before.values())
     total_after = sum(after.values())
@@ -37,7 +39,7 @@ def report_record_difference(before: dict, after: dict, media_type: str, dag_id:
 
     message = dedent(
         f"""
-        Data refresh for {media_type} complete! :tada:
+        {env.capitalize()} data refresh for {media_type} complete! :tada:
         _Note: All values are retrieved from elasticsearch_
         *Record count difference for `{media_type}`*: {total_before:,} → {total_after:,}
         *Change*: {count_diff:+,} ({percent_diff:+}% Δ)
@@ -46,6 +48,8 @@ def report_record_difference(before: dict, after: dict, media_type: str, dag_id:
     )
     message += breakdown_message
     slack.send_message(
-        text=message, dag_id=dag_id, username="Data refresh record difference"
+        text=message,
+        dag_id=dag_id,
+        username=f"{env.capitalize()} data refresh record difference",
     )
     return message

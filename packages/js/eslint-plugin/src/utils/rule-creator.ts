@@ -1,6 +1,12 @@
 import { ESLintUtils } from "@typescript-eslint/utils"
 
-export const OpenverseRule = ESLintUtils.RuleCreator(
+export interface OpenverseDocs {
+  description: string
+  recommended?: boolean
+  requiresTypeChecking?: boolean
+}
+
+export const OpenverseRule = ESLintUtils.RuleCreator<OpenverseDocs>(
   (ruleName) =>
     `https://docs.openverse.org/packages/js/eslint_plugin/${ruleName.replaceAll(
       "-",

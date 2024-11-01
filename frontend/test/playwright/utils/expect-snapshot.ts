@@ -96,7 +96,7 @@ export const expectSnapshot: ExpectSnapshot = async (
   await turnOnDarkMode(page, dir ?? "ltr")
 
   // Wait for the theme to change.
-  await sleep(100)
+  await sleep(200)
 
   expect(await screenshotAble.screenshot(screenshotOptions)).toMatchSnapshot(
     getSnapshotName(name, "dark"),

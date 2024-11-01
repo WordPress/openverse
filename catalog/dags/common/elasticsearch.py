@@ -143,6 +143,7 @@ def trigger_and_wait_for_reindex(
     max_docs: int | None = None,
     refresh: bool = True,
     slices: Union[int, Literal["auto"]] = "auto",
+    poke_interval: int = REFRESH_POKE_INTERVAL,
 ):
     @task
     def trigger_reindex(
@@ -186,6 +187,7 @@ def trigger_and_wait_for_reindex(
         es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
 
         response = es_conn.tasks.get(task_id=task_id)
+        logger.info(response)
 
         count = response.get("task", {}).get("status", {}).get("total")
         if expected_docs and count != expected_docs:
@@ -207,7 +209,7 @@ def trigger_and_wait_for_reindex(
         slices,
     )
 
-    wait_for_reindex_task = wait_for_reindex(
+    wait_for_reindex_task = wait_for_reindex.override(poke_interval=poke_interval)(
         task_id=trigger_reindex_task, expected_docs=max_docs, es_host=es_host
     )
 

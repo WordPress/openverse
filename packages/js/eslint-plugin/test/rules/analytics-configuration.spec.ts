@@ -1,13 +1,8 @@
 import { RuleTester } from "@typescript-eslint/rule-tester"
 
-import openverseEslintPlugin from "@openverse/eslint-plugin"
+import { analyticsConfiguration } from "../../src/rules/analytics-configuration"
 
-const tester = new RuleTester({
-  parser: "@typescript-eslint/parser",
-  rules: {
-    "@openverse/analytics-configuration": ["error"],
-  },
-})
+const tester = new RuleTester()
 
 const baseTestCase = {
   filename: "types/analytics.ts",
@@ -44,111 +39,108 @@ const validPayloadValueTypes = ["string", "number", "boolean"]
 
 const mockReservedPropNames = ["timestamp", "ua"]
 
-tester.run(
-  "@openverse/analytics-configuration",
-  openverseEslintPlugin.rules["analytics-configuration"],
-  {
-    invalid: [
-      ...invalidEventNames.map(
-        (eventName) =>
-          ({
-            ...baseTestCase,
-            name: `Disallow event names not in screaming snake case: ${eventName}`,
-            code: `
+tester.run("analytics-configuration", analyticsConfiguration, {
+  invalid: [
+    ...invalidEventNames.map(
+      (eventName) =>
+        ({
+          ...baseTestCase,
+          name: `Disallow event names not in screaming snake case: ${eventName}`,
+          code: `
         export type Events = {
           ${eventName}: never
         }
       `,
-            errors: [
-              {
-                messageId: "eventNameFormat",
-                data: { eventName: eventName.replace(/'/g, "") },
-              },
-            ],
-          }) as const
-      ),
-      ...invalidPayloadTypes.map(
-        (payloadType) =>
-          ({
-            ...baseTestCase,
-            name: `Disallow ${payloadType} as payload types.`,
-            code: `
+          errors: [
+            {
+              messageId: "eventNameFormat",
+              data: { eventName: eventName.replace(/'/g, "") },
+            },
+          ],
+        }) as const
+    ),
+    ...invalidPayloadTypes.map(
+      (payloadType) =>
+        ({
+          ...baseTestCase,
+          name: `Disallow ${payloadType} as payload types.`,
+          code: `
         export type Events = {
           EVENT_NAME: ${payloadType}
         }
       `,
-            errors: [{ messageId: "emptyPayloadType" }],
-          }) as const
-      ),
-      ...mockReservedPropNames.map(
-        (propName) =>
-          ({
-            ...baseTestCase,
-            options: [
-              {
-                reservedPropNames: mockReservedPropNames,
-              },
-            ],
-            name: `Disallow reserved prop name ${propName} (configured via rule test options)`,
-            code: `
+          errors: [{ messageId: "emptyPayloadType" }],
+        }) as const
+    ),
+    ...mockReservedPropNames.map(
+      (propName) =>
+        ({
+          ...baseTestCase,
+          options: [
+            {
+              reservedPropNames: mockReservedPropNames,
+            },
+          ],
+          name: `Disallow reserved prop name ${propName} (configured via rule test options)`,
+          code: `
         export type Events = {
           EVENT_NAME: {
             ${propName}: number
           }
         }
       `,
-            errors: [
-              { messageId: "reservedPayloadPropNames", data: { propName } },
-            ],
-          }) as const
-      ),
-      ...invalidPayloadValueTypes.map(
-        (payloadPropType) =>
-          ({
-            ...baseTestCase,
-            name: `Disallow ${payloadPropType} payload prop type`,
-            code: `
+          errors: [
+            { messageId: "reservedPayloadPropNames", data: { propName } },
+          ],
+        }) as const
+    ),
+    ...invalidPayloadValueTypes.map(
+      (payloadPropType) =>
+        ({
+          ...baseTestCase,
+          name: `Disallow ${payloadPropType} payload prop type`,
+          code: `
         export type Events = {
           EVENT_NAME: {
             payloadProp: ${payloadPropType}
           }
         }
       `,
-            errors: [{ messageId: "invalidPayloadFormat" }],
-          }) as const
-      ),
-    ],
-    valid: [
-      ...validEventNames.map(
-        (eventName) =>
-          ({
-            ...baseTestCase,
-            name: `Allow screaming snake case variations: ${eventName}`,
-            code: `
+          errors: [{ messageId: "invalidPayloadFormat" }],
+        }) as const
+    ),
+  ],
+  valid: [
+    ...validEventNames.map(
+      (eventName) =>
+        ({
+          ...baseTestCase,
+          name: `Allow screaming snake case variations: ${eventName}`,
+          code: `
         export type Events = {
           ${eventName}: never
         }
       `,
-          }) as const
-      ),
-      {
-        ...baseTestCase,
-        name: "Use `never` for empty payloads.",
-        code: `
+        }) as const
+    ),
+    {
+      ...baseTestCase,
+      name: "Use `never` for empty payloads.",
+      code: `
         export type Events = {
           EVENT_NAME: never
         }
       `,
-      },
-      {
-        ...baseTestCase,
-        options: [
-          {
-            reservedPropNames: mockReservedPropNames,
-          },
-        ],
-        name: "Allow other prop names even if some are reserved",
-        code: `
+    },
+    {
+      ...baseTestCase,
+      options: [
+        {
+          reservedPropNames: mockReservedPropNames,
+        },
+      ],
+      name: "Allow other prop names even if some are reserved",
+      code: `
         export type Events = {
           EVENT_NAME: {
             not_reserved: string
@@ -156,21 +148,20 @@ tester.run(
           }
         }
       `,
-      },
-      ...validPayloadValueTypes.map(
-        (payloadPropType) =>
-          ({
-            ...baseTestCase,
-            name: `Allow payload prop type ${payloadPropType}`,
-            code: `
+    },
+    ...validPayloadValueTypes.map(
+      (payloadPropType) =>
+        ({
+          ...baseTestCase,
+          name: `Allow payload prop type ${payloadPropType}`,
+          code: `
         export type Events = {
           EVENT_NAME: {
             prop: ${payloadPropType}
           }
         }
       `,
-          }) as const
-      ),
-    ],
-  }
-)
+        }) as const
+    ),
+  ],
+})

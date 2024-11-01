@@ -46,6 +46,7 @@ from common.constants import (
     AUDIO,
     DAG_DEFAULT_ARGS,
     MEDIA_TYPES,
+    REFRESH_POKE_INTERVAL,
     STAGING,
 )
 from common.sensors.constants import STAGING_ES_CONCURRENCY_TAG
@@ -158,6 +159,7 @@ def create_proportional_by_source_staging_index():
         # Do not refresh the index after each partial reindex
         refresh=False,
         es_host=es_host,
+        poke_interval=REFRESH_POKE_INTERVAL,
     ).expand_kwargs(desired_source_counts)
 
     refresh_destination_index = es.refresh_index(

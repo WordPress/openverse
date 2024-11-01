@@ -6,9 +6,9 @@ light, dark and system.
 <script setup lang="ts">
 import { useI18n, useDarkMode } from "#imports"
 
-import { computed, type ComputedRef } from "vue"
+import { computed, ref, onMounted, watch, type Ref } from "vue"
 
-import { useUiStore } from "~/stores/ui"
+import { useUiStore, type ColorMode } from "~/stores/ui"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VSelectField, {
@@ -26,14 +26,13 @@ const THEME_ICON_NAME = Object.freeze({
 const THEME_TEXT = {
   light: i18n.t(`theme.choices.light`),
   dark: i18n.t(`theme.choices.dark`),
+  system: i18n.t(`theme.choices.system`),
 }
 
-const colorMode = computed({
-  get: () => uiStore.colorMode,
-  set: (value) => {
-    uiStore.setColorMode(value)
-  },
-})
+const colorMode: Ref<ColorMode> = ref(uiStore.colorMode)
+const handleUpdateModelValue = (value: string) => {
+  uiStore.setColorMode(value as ColorMode)
+}
 
 const isDarkModeSeen = computed(() => uiStore.isDarkModeSeen)
 const setIsDarkModeSeen = () => {
@@ -46,28 +45,35 @@ const darkMode = useDarkMode()
  * The icon always reflects the actual theme applied to the site.
  * Therefore, it must be based on the value of `effectiveColorMode`.
  */
-const currentThemeIcon = computed(
-  () => THEME_ICON_NAME[darkMode.effectiveColorMode.value]
-)
+const currentThemeIcon: Ref<"sun" | "moon" | undefined> = ref(undefined)
 
 /**
  * The choices are computed because the text for the color mode choice
  * "system" is dynamic and reflects the user's preferred color scheme at
  * the OS-level.
  */
-const choices: ComputedRef<Choice[]> = computed(() => {
-  const systemText = `${i18n.t(`theme.choices.system`)} (${THEME_TEXT[darkMode.osColorMode.value]})`
-  return [
-    { key: "light", text: THEME_TEXT.light },
-    { key: "dark", text: THEME_TEXT.dark },
-    { key: "system", text: systemText },
-  ]
-})
+const choices: Ref<Choice[]> = ref([
+  { key: "light", text: THEME_TEXT.light },
+  { key: "dark", text: THEME_TEXT.dark },
+  { key: "system", text: THEME_TEXT.system },
+])
+
+const updateRefs = () => {
+  colorMode.value = uiStore.colorMode
+  currentThemeIcon.value = THEME_ICON_NAME[darkMode.effectiveColorMode.value]
+  choices.value[2].text = `${THEME_TEXT.system} (${THEME_TEXT[darkMode.osColorMode.value]})`
+}
+
+onMounted(updateRefs)
+watch(
+  () => [darkMode.effectiveColorMode.value, darkMode.osColorMode.value],
+  updateRefs
+)
 </script>
 
 <template>
   <VSelectField
-    v-model="colorMode"
+    :model-value="colorMode"
     field-id="theme"
     :choices="choices"
     :blank-text="$t('theme.theme')"
@@ -75,9 +81,10 @@ const choices: ComputedRef<Choice[]> = computed(() => {
     :show-selected="false"
     :show-new-highlight="!isDarkModeSeen"
     @click="setIsDarkModeSeen"
+    @update:model-value="handleUpdateModelValue"
   >
     <template #start>
-      <VIcon :name="currentThemeIcon" />
+      <VIcon v-if="currentThemeIcon" :name="currentThemeIcon" />
     </template>
   </VSelectField>
 </template>

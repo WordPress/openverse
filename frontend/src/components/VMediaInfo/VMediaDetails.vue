@@ -20,7 +20,7 @@ const metadata = computed<null | Metadata[]>(() => {
   if (!props.media) {
     return null
   }
-  let imageInfo =
+  const imageInfo =
     props.media.frontendMediaType === IMAGE
       ? {
           width: props.media.width,

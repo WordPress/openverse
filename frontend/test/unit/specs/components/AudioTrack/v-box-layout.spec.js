@@ -7,7 +7,7 @@ import VBoxLayout from "~/components/VAudioTrack/layouts/VBoxLayout.vue"
 
 describe("VBoxLayout", () => {
   let options = null
-  let props = {
+  const props = {
     audio: getAudioObj(),
     size: "m",
   }

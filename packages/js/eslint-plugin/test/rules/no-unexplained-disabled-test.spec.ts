@@ -1,13 +1,8 @@
 import { RuleTester } from "@typescript-eslint/rule-tester"
 
-import openverseEslintPlugin from "@openverse/eslint-plugin"
+import { noUnexplainedDisabledTest } from "../../src/rules/no-unexplained-disabled-test"
 
-const tester = new RuleTester({
-  parser: "@typescript-eslint/parser",
-  rules: {
-    "@openverse/no-unexplained-disabled-test": ["error"],
-  },
-})
+const tester = new RuleTester()
 
 const invalidTestCases = [
   {
@@ -174,11 +169,7 @@ const validTestCases = [
 ]
 
 // Run the tests
-tester.run(
-  "@openverse/no-unexplained-disabled-test",
-  openverseEslintPlugin.rules["no-unexplained-disabled-test"],
-  {
-    valid: validTestCases,
-    invalid: invalidTestCases,
-  }
-)
+tester.run("no-unexplained-disabled-test", noUnexplainedDisabledTest, {
+  valid: validTestCases,
+  invalid: invalidTestCases,
+})

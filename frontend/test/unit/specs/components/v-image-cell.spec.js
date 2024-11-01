@@ -44,7 +44,7 @@ describe("VImageCell", () => {
   it("is does not contain title anywhere when the image is sensitive", async () => {
     options.props.image.isSensitive = true
     const screen = await render(VImageCell, options)
-    let match = RegExp(image.title)
+    const match = RegExp(image.title)
     expect(screen.queryAllByText(match)).toEqual([])
     expect(screen.queryAllByTitle(match)).toEqual([])
     expect(screen.queryAllByAltText(match)).toEqual([])

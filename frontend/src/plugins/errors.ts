@@ -1,6 +1,6 @@
 import { defineNuxtPlugin } from "#imports"
 
-import axios from "axios"
+import { isAxiosError } from "axios"
 
 import { ERR_UNKNOWN, ErrorCode, errorCodes } from "~/constants/errors"
 import type { FetchingError, RequestKind } from "~/types/fetch-state"
@@ -45,7 +45,7 @@ export function normalizeFetchingError(
     code: ERR_UNKNOWN,
   }
 
-  if (!axios.isAxiosError(error)) {
+  if (!isAxiosError(error)) {
     fetchingError.message = (error as Error).message
     return fetchingError
   }
