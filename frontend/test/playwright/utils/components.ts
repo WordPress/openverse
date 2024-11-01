@@ -46,3 +46,9 @@ export const getHeaderSearchbar = (
   page: Page,
   dir: LanguageDirection = "ltr"
 ) => page.getByRole("combobox", { name: t("search.searchBarLabel", dir) })
+
+const themeSelectLabel = (dir: LanguageDirection) => t("theme.theme", dir)
+// In Storybook, the footer story has two theme switchers (one in the footer, and one
+// is from the story decorator), so we need to select a single one.
+export const getThemeSwitcher = (page: Page, dir: LanguageDirection) =>
+  page.getByLabel(themeSelectLabel(dir)).first()

@@ -34,47 +34,46 @@ const checkModalRendered = async (
     name: t("header.seeResults", dir),
   })
   await expect(seeResultsButton).toBeEnabled()
+  await expect(page.getByText(t("header.loading", dir))).toBeHidden()
 }
+
+const snapshotOptions = { maxDiffPixels: 2, maxDiffPixelRatio: undefined }
 
 for (const dir of languageDirections) {
   breakpoints.describeEachBreakpoint(["xs", "sm", "md", "lg"])(
     ({ breakpoint, expectSnapshot }) => {
       const isDesktop = breakpoint === "lg"
+      const filterLocator = isDesktop ? "complementary" : "dialog"
       test.beforeEach(async ({ page }) => {
         await preparePageForTests(page, breakpoint)
-        await goToSearchTerm(page, "birds", { dir })
-        await filters.open(page, dir)
       })
       test(`filters none selected - ${dir}`, async ({ page }) => {
+        await goToSearchTerm(page, "birds", { dir })
+        await filters.open(page, dir)
         await checkModalRendered(page, isDesktop, dir)
 
         await expectSnapshot(
           page,
           getFiltersName(breakpoint),
-          isDesktop ? page.locator(".sidebar") : page,
-          {
-            dir,
-            snapshotOptions: { maxDiffPixels: 2, maxDiffPixelRatio: undefined },
-          }
+          page.getByRole(filterLocator),
+          { dir, snapshotOptions }
         )
       })
 
       test(`filters 1 filter selected - ${dir}`, async ({ page }) => {
-        const firstFilter = page.getByRole("checkbox").first()
-        await firstFilter.check()
+        await goToSearchTerm(page, "birds", {
+          dir,
+          query: "license_type=commercial",
+        })
+        await filters.open(page, dir)
+
         await checkModalRendered(page, isDesktop, dir)
 
-        const snapshotName = `${getFiltersName(breakpoint)}-checked`
-
-        await firstFilter.hover()
         await expectSnapshot(
           page,
-          snapshotName,
-          isDesktop ? page.locator(".sidebar") : page,
-          {
-            dir,
-            snapshotOptions: { maxDiffPixels: 2, maxDiffPixelRatio: undefined },
-          }
+          `${getFiltersName(breakpoint)}-checked`,
+          page.getByRole(filterLocator),
+          { dir, snapshotOptions }
         )
       })
     }
