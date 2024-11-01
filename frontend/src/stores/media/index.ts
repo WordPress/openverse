@@ -488,7 +488,7 @@ export const useMediaStore = defineStore("media", {
           $sendCustomEvent("GET_SEARCH_RESULTS", {
             mediaType: mediaType,
             query: queryParams.q,
-            resultsCount: mediaCount
+            resultsCount: mediaCount,
           })
         }
 

@@ -78,7 +78,7 @@ export type Events = {
     /** the media type being searched */
     mediaType: SupportedMediaType
     /** The search term */
-    query: string,
+    query: string
     /** The number of results found for this search */
     resultsCount: number
   }
