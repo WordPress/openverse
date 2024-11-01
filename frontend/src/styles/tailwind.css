@@ -232,6 +232,7 @@
       --color-border-secondary-hover: var(--color-gray-1);
       --color-border-tertiary: var(--color-gray-1);
       --color-border-transparent-hover: var(--color-gray-11);
+      --color-border-overlay: var(--color-gray-10);
       --color-border-focus: var(--color-yellow-4);
       --color-border-bg-ring: var(--color-gray-13);
       --color-border-disabled: var(--color-gray-8);

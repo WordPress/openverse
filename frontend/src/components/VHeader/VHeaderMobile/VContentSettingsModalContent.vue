@@ -116,7 +116,7 @@ const clearFilters = () => {
           @click="close"
         />
       </template>
-      <VTabPanel id="content-settings">
+      <VTabPanel id="content-settings" class="border-overlay">
         <VSearchTypes
           size="medium"
           :use-links="useLinks"
@@ -124,7 +124,7 @@ const clearFilters = () => {
         />
       </VTabPanel>
       <!-- Horizontal padding removed to display divider. -->
-      <VTabPanel v-if="showFilters" id="filters" class="px-0">
+      <VTabPanel v-if="showFilters" id="filters" class="border-overlay px-0">
         <VSearchGridFilter
           class="px-6"
           :show-filter-header="false"
