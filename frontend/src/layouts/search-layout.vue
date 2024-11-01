@@ -47,7 +47,7 @@ const showScrollButton = ref(false)
  *
  * Note: template refs do not work in a Nuxt layout, so we get the `main-page` element using `document.getElementById`.
  */
-let mainPageElement = ref<HTMLElement | null>(null)
+const mainPageElement = ref<HTMLElement | null>(null)
 
 const { y: mainPageY } = useScroll(mainPageElement)
 watch(mainPageY, (y) => {

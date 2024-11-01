@@ -22,8 +22,8 @@ const sensitivityPath = computed(() => localePath("/sensitive-content"))
 const featureFlagStore = useFeatureFlagStore()
 const { $sendCustomEvent } = useNuxtApp()
 
-let fetchSensitive = computed(() => featureFlagStore.isOn("fetch_sensitive"))
-let setFetchSensitive = (data: Omit<CheckboxAttrs, "disabled">) => {
+const fetchSensitive = computed(() => featureFlagStore.isOn("fetch_sensitive"))
+const setFetchSensitive = (data: Omit<CheckboxAttrs, "disabled">) => {
   const checked = data.checked ?? false
   featureFlagStore.toggleFeature("fetch_sensitive", checked ? ON : OFF)
   $sendCustomEvent("TOGGLE_FETCH_SENSITIVE", { checked })
@@ -36,8 +36,8 @@ let setFetchSensitive = (data: Omit<CheckboxAttrs, "disabled">) => {
 }
 
 const uiStore = useUiStore()
-let blurSensitive = computed(() => uiStore.shouldBlurSensitive)
-let setBlurSensitive = (data: { checked?: boolean }) => {
+const blurSensitive = computed(() => uiStore.shouldBlurSensitive)
+const setBlurSensitive = (data: { checked?: boolean }) => {
   const checked = data.checked ?? false
   uiStore.setShouldBlurSensitive(checked)
   $sendCustomEvent("TOGGLE_BLUR_SENSITIVE", { checked })

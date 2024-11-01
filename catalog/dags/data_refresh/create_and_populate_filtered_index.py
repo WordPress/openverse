@@ -51,6 +51,7 @@ def create_and_populate_filtered_index(
     origin_index_name: str,
     filtered_index_name: str,
     timeout: timedelta,
+    poke_interval: int,
 ):
     """
     Create and populate a filtered index based on the given origin index, excluding
@@ -90,6 +91,7 @@ def create_and_populate_filtered_index(
             }
         },
         refresh=False,
+        poke_interval=poke_interval,
     )
 
     refresh_index = es.refresh_index(es_host=es_host, index_name=filtered_index_name)

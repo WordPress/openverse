@@ -105,7 +105,12 @@ const splitAttrs = computed(() => {
       :aria-label="labelText"
     >
       <option v-if="blankText" disabled value="">{{ blankText }}</option>
-      <option v-for="choice in choices" :key="choice.key" :value="choice.key">
+      <option
+        v-for="choice in choices"
+        :key="choice.key"
+        :value="choice.key"
+        :selected="choice.key === selectValue ? true : undefined"
+      >
         {{ choice.text }}
       </option>
     </select>
