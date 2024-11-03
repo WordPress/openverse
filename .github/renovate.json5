@@ -62,5 +62,13 @@
       groupName: "@testing-library",
       matchPackageNames: ["@testing-library{/,}**"],
     },
+    {
+      groupName: "pinia",
+      matchPackageNames: ["pinia", "@pinia/nuxt"],
+    },
+    {
+      groupName: "vitest",
+      matchPackageNames: ["{@,}vitest{/,}**"],
+    },
   ],
 }
