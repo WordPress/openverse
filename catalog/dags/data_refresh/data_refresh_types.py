@@ -10,6 +10,8 @@ from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from typing import Optional
 
+from airflow.models import Variable
+
 from common.constants import (
     AUDIO,
     DATA_REFRESH_ALTER_BATCH_SIZE,
@@ -137,8 +139,10 @@ DATA_REFRESH_CONFIGS = {
         copy_data_timeout=timedelta(hours=12),
         add_primary_key_timeout=timedelta(hours=12),
         # Larger batches for image data refresh to avoid overloading XCOMs
-        alter_data_batch_size=int(
-            os.getenv("DATA_REFRESH_ALTER_BATCH_SIZE", 1_000_000)
+        alter_data_batch_size=Variable.get(
+            "IMAGE_DATA_REFRESH_ALTER_BATCH_SIZE",
+            default_var=DATA_REFRESH_ALTER_BATCH_SIZE,
+            deserialize_json=True,
         ),
         indexer_worker_timeout=timedelta(days=1),
         concurrency_check_poke_interval=int(
