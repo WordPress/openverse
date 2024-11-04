@@ -3,7 +3,7 @@
   "description": "Openverse frontend",
   "private": true,
   "version": "2.2.1",
-  "packageManager": "pnpm@9.12.2",
+  "packageManager": "pnpm@9.12.3",
   "scripts": {
     "predev": "pnpm install && pnpm i18n:en",
     "dev": "run-p dev:only 'i18n:en --watch'",
