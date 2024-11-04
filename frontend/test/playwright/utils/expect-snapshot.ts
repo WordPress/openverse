@@ -4,6 +4,8 @@ import { type LanguageDirection, t } from "~~/test/playwright/utils/i18n"
 
 import { sleep } from "~~/test/playwright/utils/navigation"
 
+import { getThemeSwitcher } from "~~/test/playwright/utils/components"
+
 import type { Breakpoint } from "~/constants/screens"
 
 import type {
@@ -35,17 +37,11 @@ export type ExpectScreenshotAreaSnapshot = (
 ) => Promise<void>
 
 type EffectiveColorMode = "dark" | "light"
-const themeSelectLabel = (dir: LanguageDirection) => t("theme.theme", dir)
 const themeOption = (colorMode: EffectiveColorMode, dir: LanguageDirection) =>
   t(`theme.choices.${colorMode}`, dir)
 
 export const turnOnDarkMode = async (page: Page, dir: LanguageDirection) => {
-  // In Storybook, the footer story has two theme switchers (one in the footer, and one
-  // is from the story decorator), so we need to select a single one.
-  await page
-    .getByLabel(themeSelectLabel(dir))
-    .nth(0)
-    .selectOption(themeOption("dark", dir))
+  await getThemeSwitcher(page, dir).selectOption(themeOption("dark", dir))
 }
 
 type SnapshotNameOptions = {
@@ -96,7 +92,7 @@ export const expectSnapshot: ExpectSnapshot = async (
   await turnOnDarkMode(page, dir ?? "ltr")
 
   // Wait for the theme to change.
-  await sleep(200)
+  await sleep(100)
 
   expect(await screenshotAble.screenshot(screenshotOptions)).toMatchSnapshot(
     getSnapshotName(name, "dark"),
