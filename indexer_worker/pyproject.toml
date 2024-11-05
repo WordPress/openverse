@@ -23,7 +23,7 @@ dependencies = [
     "python-decouple ~= 3.8",
     "PyYAML ~= 6.0",
     "tldextract ~= 5.0",
-    "sentry-sdk[falcon] ~= 1.44",
+    "sentry-sdk[falcon] ~=2.18",
 ]
 
 [tool.pdm]
