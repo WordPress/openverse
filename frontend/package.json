@@ -103,7 +103,7 @@
     "chokidar": "^3.6.0",
     "core-js": "^3.37.1",
     "eslint-plugin-jsonc": "^2.16.0",
-    "jsdom": "^24.1.0",
+    "jsdom": "^25.0.0",
     "node-html-parser": "^6.1.13",
     "npm-run-all2": "^7.0.0",
     "nuxt": "3.13.2",
