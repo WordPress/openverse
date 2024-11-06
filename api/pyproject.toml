@@ -53,6 +53,9 @@ dev = [
     "pgcli >=4.1, <5",
     "remote-pdb >=2.1.0, <3",
     "setuptools >=75.2,<76",
+    # FIXME: Should be removed when Python build issues are resolved,
+    # FIXME: since we don't explicitly use this library.
+    # FIXME: https://github.com/WordPress/openverse/issues/5146
     "watchfiles>=0.24.0",
 ]
 test = [
