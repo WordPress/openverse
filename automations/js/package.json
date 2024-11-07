@@ -11,7 +11,7 @@
     "nunjucks": "^3.2.4"
   },
   "devDependencies": {
-    "@actions/core": "^1.10.0",
+    "@actions/core": "^1.11.1",
     "@actions/github": "^6.0.0"
   }
 }
