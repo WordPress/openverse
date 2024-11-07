@@ -483,6 +483,15 @@ export const useMediaStore = defineStore("media", {
         }
         const mediaCount = data.result_count
         let errorData: FetchingError | undefined
+
+        if (page == 1) {
+          $sendCustomEvent("GET_SEARCH_RESULTS", {
+            mediaType: mediaType,
+            query: queryParams.q,
+            resultsCount: mediaCount,
+          })
+        }
+
         /**
          * When there are no results for a query, the API returns a 200 response.
          * In such cases, we show the "No results" client error page.
