@@ -11,4 +11,3 @@ and are the primary shepherds for the Openverse project.
 - @fcoveram
 - @krysal
 - @obulat
-- @stacimc

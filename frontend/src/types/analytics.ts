@@ -68,6 +68,21 @@ export type Events = {
     query: string
   }
   /**
+   * Description: Records the results returned for a user's search query
+   * Questions:
+   *   - What popular searches yield no results?
+   *   - How often are searches returning fewer than one page of results?
+   *   - How many results do most searches yield?
+   */
+  GET_SEARCH_RESULTS: {
+    /** the media type being searched */
+    mediaType: SupportedMediaType
+    /** The search term */
+    query: string
+    /** The number of results found for this search */
+    resultsCount: number
+  }
+  /**
    * Description: The user clicks on one of the images in the gallery on the homepage.
    * Questions:
    * - Do users know homepage images are links?

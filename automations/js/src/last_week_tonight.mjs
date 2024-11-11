@@ -8,6 +8,7 @@ import { resolve } from "path"
 
 import yaml from "js-yaml"
 import axios from "axios"
+// eslint-disable-next-line import/no-unresolved
 import { Octokit } from "@octokit/rest"
 
 import { escapeHtml } from "./utils/html.mjs"
