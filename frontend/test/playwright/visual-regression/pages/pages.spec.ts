@@ -44,7 +44,7 @@ for (const contentPage of contentPages) {
           await expectSnapshot(page, contentPage, page, {
             dir,
             screenshotOptions: { fullPage: true },
-            snapshotOptions: { maxDiffPixelRatio: 0.01 },
+            snapshotOptions: { maxDiffPixelRatio: 0.0 },
           })
         })
       })
