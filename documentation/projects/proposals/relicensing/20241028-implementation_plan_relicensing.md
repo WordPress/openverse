@@ -1,6 +1,6 @@
 # 2024-10-28 Implementation Plan: Relicensing
 
-**Author**: @username
+**Author**: @dhruvkb
 
 <!-- See the implementation plan guide for more information: https://github.com/WordPress/openverse/tree/19791f51c063d0979112f4b9f4eeace04c8cf5ff/docs/projects#implementation-plans-status-in-rfc -->
 <!-- This template is exhaustive and may include sections which aren't relevant to your project. Feel free to remove any sections which would not be useful to have. -->
@@ -16,7 +16,7 @@
 
 <!-- Enumerate any references to other documents/pages, including milestones and other plans -->
 
-- [Project Thread]()
+- <s>Project Thread</s>
 - [Project Proposal](/projects/proposals/relicensing/20241028-project_proposal.md)
 
 ## Overview
@@ -30,6 +30,34 @@ This implementation plan
   license.
 - lists the ideal license for each code block.
 - documents the process we will use to change the license.
+
+There are a few approaches that we can take here but the simplest would be to
+relicense the software directly. See alternatives [below](#alternatives).
+
+> In the case of a permissive software license, a new license (including
+> proprietary licenses) can be applied to the project and it can be
+> redistributed under those terms.
+>
+> - [Drew deVault's blog](https://drewdevault.com/2023/07/04/Dont-sign-a-CLA-2.html)
+
+Since Openverse is licensed under the permissive MIT license, it is possible for
+us to unilaterally and directly change the license. This would be logically
+equivalent to a new project that builds upon all of Openverse's code but under a
+GNU license.
+
+The code prior to the license change commit would continue to be available in
+the repository's history and will remain MIT licensed. It would allow people who
+disagree, or cannot comply, with the GNU licenses to be able to use code from
+before the license change under the terms of the MIT license.
+
+By doing so, we are not betraying the trust of the contributors who have
+contributed to the project as their contributions will continue to be
+open-source. We did not have a CLA and will not add one.
+
+> Thus, the absence of a CLA combined with the use of a copyleft license serves
+> as a strong promise about the future of the project.
+>
+> - [Drew deVault's blog](https://drewdevault.com/2023/07/04/Dont-sign-a-CLA-2.html)
 
 ## Expected Outcomes
 
@@ -54,7 +82,7 @@ milestones like when a feature flag could be made available in a particular envi
 1. Determine code blocks.
 2. Determine the goals for these blocks from the license.
 3. Determine new licenses.
-4. Create migration plan for changing the license.
+4. Institute code freeze.
 5. Apply new licenses.
 
 ## Step details
@@ -112,41 +140,16 @@ The Openverse monorepo consists of the following code blocks.
   The GNU GPL license is a good fit for the rest of the codebase, since there
   are no special requirements for this code (unlike apps and libs).
 
-### Create migration plan for changing the license
+### Institute code freeze
 
-There are a few approaches that we can take here but the simplest would be to
-relicense the software directly.
+We need to institute a code freeze because we need to add the commit hash of the
+last commit that will be under the MIT license to the `LICENSING.md` file.
 
-> In the case of a permissive software license, a new license (including
-> proprietary licenses) can be applied to the project and it can be
-> redistributed under those terms.
->
-> - [Drew deVault's blog](https://drewdevault.com/2023/07/04/Dont-sign-a-CLA-2.html)
+Any PRs opened before the code freeze can take one of three routes.
 
-Since Openverse is licensed under the permissive MIT license, it is possible for
-us to unilaterally and directly change the license. This would be logically
-equivalent to a new project that builds upon all of Openverse's code but under a
-GNU license.
-
-The code prior to the license change commit would continue to be available in
-the repository's history and will remain MIT licensed. It would allow people who
-disagree, or cannot comply, with the GNU licenses to be able to use code from
-before the license change under the terms of the MIT license.
-
-By doing so, we are not betraying the trust of the contributors who have
-contributed to the project as their contributions will continue to be
-open-source. We did not have a CLA and will not add one.
-
-> Thus, the absence of a CLA combined with the use of a copyleft license serves
-> as a strong promise about the future of the project.
->
-> - [Drew deVault's blog](https://drewdevault.com/2023/07/04/Dont-sign-a-CLA-2.html)
-
-```{note}
-All open PRs must either affirm that their contributions are valid under the new
-license or be closed without merging. Alternatively they should be merged before
-the transition and the code will effectively be governed by the MIT license.
-```
+- Be merged before the license transition and be covered by the MIT license
+- Reaffirm that they are compatible with the GNU license family and be merged.
+- Be closed without being merged.
 
 ### Apply new licenses
 
@@ -156,27 +159,29 @@ the following steps.
 #### Add a `LICENSING.md` file
 
 The purpose of this file is to explain what licenses apply to which code block
-and how they are cascaded. It should look like this
+and how they are cascaded. It should look like this template (3 fields need to
+be filled out):
 
 ```md
-License names used in this document are as per
-[SPDX License List](https://spdx.org/licenses/).
+The default license for this project is
+[GPL-3.0-or-later](https://spdx.org/licenses/GPL-3.0-or-later.html).
 
-The default license for this project is [GPL-3.0-or-later](LICENSE).
-
-### LGPL-3.0-or-later
-
-The following libraries are licensed under LGPL-3.0-or-later and not under the
-default license.
+The following libraries are licensed under
+[LGPL-3.0-or-later](https://spdx.org/licenses/LGPL-3.0-or-later.html) and not
+under the default license.
 
 - <libraries' names go here>
 
-### AGPL-3.0-or-later
-
-The following applications are licensed under AGPL-3.0-or-later and not under
-the default license.
+The following applications are licensed under
+[AGPL-3.0-or-later](https://spdx.org/licenses/AGPL-3.0-or-later.html) and not
+under the default license.
 
 - <applications' names go here>
+
+## History
+
+All code before <commit> is available under
+[MIT](https://spdx.org/licenses/MIT.html).
 ```
 
 #### Add/update `LICENSE` files
