@@ -243,7 +243,7 @@ The following communication will be needed
   I do not anticipate any negative reactions because, unlike the license changes
   at Elasticseach, Redis and others, we are not making the project closed-source
   but rather making it more open-source
-  ([in a sense](drewdevault.com/2024/04/19/2024-04-19-copyleft-is-not-restrictive.html))
+  ([in a sense](https://drewdevault.com/2024/04/19/2024-04-19-copyleft-is-not-restrictive.html))
   by adding stronger copyleft protections.
 
 - new licenses
