@@ -32,11 +32,13 @@ distribution = false
 [tool.pdm.dev-dependencies]
 dev = [
     "ipython~=8.16",
+    "remote-pdb~=2.1",
+]
+test = [
+    "pook~=2.0",
     "pytest~=8.3",
     "pytest-order~=1.1",
     "pytest-sugar~=1.0",
-    "remote-pdb~=2.1",
-    "pook~=2.0",
 ]
 
 [build-system]
