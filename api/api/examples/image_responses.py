@@ -96,8 +96,10 @@ image_detail_200_example = base_image
 image_detail_404_example = {"detail": "Not found."}
 
 image_related_200_example = {
-    "result_count": 10000,
+    "result_count": 1,
     "page_count": 1,
+    "page_size": 20,
+    "page": 1,
     "results": [
         {
             "title": "exam tactics",

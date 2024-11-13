@@ -107,8 +107,10 @@ audio_detail_200_example = base_audio
 audio_detail_404_example = {"detail": "Not found."}
 
 audio_related_200_example = {
-    "result_count": 10000,
+    "result_count": 1,
     "page_count": 1,
+    "page_size": 20,
+    "page": 1,
     "results": [
         {
             "title": "File:Mozart - Eine kleine Nachtmusik - 1. Allegro.ogg",
