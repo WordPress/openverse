@@ -1,4 +1,4 @@
-from psycopg2.sql import SQL, Identifier, Literal
+from psycopg.sql import SQL, Identifier, Literal
 
 
 def get_existence_queries(model_name: str, table_name: str) -> tuple[SQL, SQL]:

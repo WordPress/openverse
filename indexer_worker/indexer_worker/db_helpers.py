@@ -2,7 +2,7 @@ import logging as log
 import time
 from typing import NamedTuple
 
-import psycopg2
+import psycopg
 from decouple import config
 
 
@@ -43,10 +43,10 @@ def database_connect(
     """
     while True:
         try:
-            conn = psycopg2.connect(**dbconfig._asdict(), connect_timeout=timeout)
+            conn = psycopg.connect(**dbconfig._asdict(), connect_timeout=timeout)
             if autocommit:
                 conn.set_session(autocommit=True)
-        except psycopg2.OperationalError as e:
+        except psycopg.OperationalError as e:
             if not attempt_reconnect:
                 return None
             log.exception(e)
