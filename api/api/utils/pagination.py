@@ -81,7 +81,7 @@ class StandardPagination(PageNumberPagination):
                         "code": "partially invalid request parameter",
                         "message": (
                             "Some of the request parameters were bad, "
-                            "but we processed the request anywhere. "
+                            "but we were able to process the request. "
                             "Here's some information that might help you "
                             "fix the problem for future requests."
                         ),
