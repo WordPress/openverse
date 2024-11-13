@@ -60,14 +60,6 @@ base_image = {
     "unstable__sensitivity": [],
 }
 
-detailed_image = base_image | {
-    "attribution": '"Tree Bark Photo" by Tim Sullivan is marked with CC0 1.0. To view the terms, visit https://creativecommons.org/publicdomain/zero/1.0/.',  # noqa: E501
-    "height": 4016,
-    "filesize": 896128,
-    "filetype": "jpg",
-    "width": 6016,
-}
-
 image_search_200_example = {
     "result_count": 1,
     "page_count": 1,
@@ -99,7 +91,7 @@ image_stats_200_example = [
     },
 ]
 
-image_detail_200_example = detailed_image
+image_detail_200_example = base_image
 
 image_detail_404_example = {"detail": "Not found."}
 
