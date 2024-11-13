@@ -93,7 +93,7 @@ def get_examples(code, serializer, example):
     ):
         example = APIExceptionOpenApiSerializerExtension.exception_example(serializer)
     elif example:
-        example = example["application/json"]
+        example = example
     else:
         return []
 
