@@ -80,7 +80,7 @@ stats = custom_extend_schema(
         By using this endpoint, you can obtain info about content sources such
         as {fields_to_md(SourceSerializer.Meta.fields)}.""",
     res={
-        200: (SourceSerializer(many=True), image_stats_200_example),
+        200: (SourceSerializer(many=True), image_stats_200_example[0]),
         401: (AuthenticationFailed, None),
     },
     eg=[image_stats_curl],
