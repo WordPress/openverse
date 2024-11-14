@@ -1,3 +1,11 @@
+---
+myst:
+  html_meta:
+    "description lang=en": >-
+      Openverse is a search engine for openly licensed media. These are the docs
+      for people who are helping build and maintain Openverse.
+---
+
 <img src="https://raw.githubusercontent.com/WordPress/openverse/main/documentation/meta/brand/banner.svg" width="100%" alt="Openverse"/>
 
 [Openverse](https://openverse.org) is a search engine for openly licensed media.
