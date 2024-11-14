@@ -61,7 +61,7 @@ search = custom_extend_schema(
     desc=image_search_description,
     params=serializer,
     res={
-        200: (ImageSerializer, image_search_200_example),
+        200: (ImageSerializer, image_search_200_example["results"][0]),
         400: (ValidationError, image_search_400_example),
         401: (NotAuthenticated, None),
     },
@@ -80,7 +80,7 @@ stats = custom_extend_schema(
         By using this endpoint, you can obtain info about content sources such
         as {fields_to_md(SourceSerializer.Meta.fields)}.""",
     res={
-        200: (SourceSerializer(many=True), image_stats_200_example),
+        200: (SourceSerializer(many=True), image_stats_200_example[0]),
         401: (AuthenticationFailed, None),
     },
     eg=[image_stats_curl],
@@ -107,7 +107,7 @@ related = custom_extend_schema(
         By using this endpoint, you can get the details of related images such as
         {fields_to_md(ImageSerializer.Meta.fields)}.""",
     res={
-        200: (ImageSerializer, image_related_200_example),
+        200: (ImageSerializer(many=True), image_related_200_example["results"][0]),
         401: (AuthenticationFailed, None),
         404: (NotFound, image_related_404_example),
     },

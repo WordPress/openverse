@@ -28,10 +28,10 @@ def execute_request(request):
 @pytest.mark.parametrize("in_val, out_val", list(audio_mappings.items()))
 def test_audio_success_examples(in_val, out_val):
     res = execute_request(in_val)
-    assert res == out_val["application/json"]
+    assert res == out_val
 
 
 @pytest.mark.parametrize("in_val, out_val", list(image_mappings.items()))
 def test_image_success_examples(in_val, out_val):
     res = execute_request(in_val)
-    assert res == out_val["application/json"]
+    assert res == out_val
