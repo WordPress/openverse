@@ -133,12 +133,23 @@ The Openverse monorepo consists of the following code blocks.
 - Libraries
 
   The GNU LGPL license allows our libs to be used universally in both free as
-  well as non-free environments.
+  well as non-free environments. Our goal is the proliferation of good
+  attribution practices and making the Openverse API easily accessible.
+
+  > using the Lesser GPL permits use of the library in proprietary programs
+  >
+  > - [FSF](https://www.gnu.org/licenses/why-not-lgpl.html#:~:text=using%20the%20Lesser%20GPL%20permits%20use%20of%20the%20library%20in%20proprietary%20programs)
 
 - Applications
 
   The GNU AGPL license requires derivatives of the API and frontend, which are
   accessed over a network to also share source code, which is want we want.
+
+  > if you run a modified program on a server and let other users communicate
+  > with it there, your server must also allow them to download the source code
+  > corresponding to the modified version running there
+  >
+  > - [FSF](https://www.gnu.org/licenses/why-affero-gpl.html#:~:text=if%20you%20run%20a%20modified%20program%20on%20a%20server%20and%20let%20other%20users%20communicate%20with%20it%20there%2C%20your%20server%20must%20also%20allow%20them%20to%20download%20the%20source%20code%20corresponding%20to%20the%20modified%20version%20running%20there)
 
 - Everything else
 
