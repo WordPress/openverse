@@ -19,8 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       EVENT_ACTION: ${{ github.event.action }}
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
     steps:
       - name: Write payload to file
         uses: actions/github-script@v7
@@ -53,4 +51,6 @@ jobs:
       - name: Send Slack notification
         uses: slackapi/slack-github-action@v2
         with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
           payload-file-path: /tmp/pr_ping_payload.json

@@ -16,13 +16,13 @@ jobs:
       discussion_title: ${{ format('{0}', github.event.discussion.title) }}
       discussion_author: ${{ github.event.discussion.user.login }}
       discussion_repo: ${{ github.event.repository.full_name }}
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
     steps:
       - name: Send notification for new discussion
         id: slack
         uses: slackapi/slack-github-action@v2
         with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
           payload: |
             {
              "text": "New discussion opened by ${{ env.discussion_author }} in ${{ env.discussion_repo }}: #${{ env.discussion_number }} - ${{ env.discussion_title }}",

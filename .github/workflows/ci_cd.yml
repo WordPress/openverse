@@ -1449,7 +1449,6 @@ jobs:
       - name: Send report
         uses: slackapi/slack-github-action@v2
         with:
+          webhook: ${{ secrets.SLACK_OV_ALERTS_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
           payload: ${{ steps.report.outputs.payload }}
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_OV_ALERTS_WEBHOOK_URL }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
