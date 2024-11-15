@@ -68,7 +68,7 @@ test = [
   "pytest-pook>=1.0.0",
   "pytest-raises >=0.11, <0.12",
   "pytest-sugar >=1, <1.1",
-  "schemathesis >=3.25.6, <4",
+  "schemathesis >=3.38.6, <4",
 ]
 
 [tool.pytest.ini_options]
