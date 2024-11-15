@@ -83,11 +83,6 @@ filterwarnings = [
     # without being interrupted by these warnings.
     "ignore:Unverified HTTPS request",
 
-    # Ignore warnings about the upcoming change in the default value of 'USE_TZ' setting in Django 5.0.
-    # Reason: The reason this warning is suppressed is actually because we already set USE_TZ to True.
-    # Since no changes are required on our part, we can safely ignore this to declutter the logs.
-    "ignore:The default value of USE_TZ will change from False to True in Django 5.0",
-
     # Ignore warnings coming from schemathesis.
     # Reason: These are warnings raised by the library itself and are not relevant to our codebase.
     "ignore:jsonschema.RefResolver is deprecated as of v4.18.0",
