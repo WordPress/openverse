@@ -52,7 +52,9 @@ before the license change under the terms of the MIT license.
 
 By doing so, we are not betraying the trust of the contributors who have
 contributed to the project as their contributions will continue to be
-open-source. We did not have a CLA and will not add one.
+open-source. We did not have a contributor license agreement (CLA) and will not
+add one. It is generally regarded negatively and indicates that the project can
+migrate to becoming closed-source in the future.
 
 > Thus, the absence of a CLA combined with the use of a copyleft license serves
 > as a strong promise about the future of the project.
