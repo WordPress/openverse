@@ -77,14 +77,19 @@ DJANGO_SETTINGS_MODULE = "conf.settings"
 pythonpath = "."
 
 filterwarnings = [
-  # Ignore warnings related to unverified HTTPS requests.
-  # Reason: This warning is suppressed to avoid raising warnings when making HTTP requests
-  # to servers with invalid or self-signed SSL certificates. It allows the tests to proceed
-  # without being interrupted by these warnings.
-  "ignore:Unverified HTTPS request",
+    # Ignore warnings related to unverified HTTPS requests.
+    # Reason: This warning is suppressed to avoid raising warnings when making HTTP requests
+    # to servers with invalid or self-signed SSL certificates. It allows the tests to proceed
+    # without being interrupted by these warnings.
+    "ignore:Unverified HTTPS request",
 
-  # Ignore warnings about the upcoming change in the default value of 'USE_TZ' setting in Django 5.0.
-  # Reason: The reason this warning is suppressed is actually because we already set USE_TZ to True.
-  # Since no changes are required on our part, we can safely ignore this to declutter the logs.
-  "ignore:The default value of USE_TZ will change from False to True in Django 5.0",
+    # Ignore warnings about the upcoming change in the default value of 'USE_TZ' setting in Django 5.0.
+    # Reason: The reason this warning is suppressed is actually because we already set USE_TZ to True.
+    # Since no changes are required on our part, we can safely ignore this to declutter the logs.
+    "ignore:The default value of USE_TZ will change from False to True in Django 5.0",
+
+    # Ignore warnings coming from schemathesis.
+    # Reason: These are warnings raised by the library itself and are not relevant to our codebase.
+    "ignore:jsonschema.RefResolver is deprecated as of v4.18.0",
+    "ignore:jsonschema.exceptions.RefResolutionError is deprecated as of version 4.18.0.",
 ]
