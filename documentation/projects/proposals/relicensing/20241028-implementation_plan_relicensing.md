@@ -117,13 +117,16 @@ The Openverse monorepo consists of the following code blocks.
 - Libraries
 
   We want our libraries to be used as broadly as possible, in both free as well
-  as non-free software.
+  as non-free software. The libraries encourage good practices in terms of API
+  usage and attribution and so we do not want to limit them to just free
+  software.
 
 - Applications
 
   We want our applications to be open-source, and forks of these applications to
-  be open-source as well. We want these protections to apply even when these
-  applications are accessed over the Internet.
+  be open-source as well. We do not want to discourage free software derivatives
+  of Openverse. We want GPL protections to apply even when these applications
+  are accessed over the Internet.
 
 ### Determine new licenses
 
