@@ -156,6 +156,11 @@ The Openverse monorepo consists of the following code blocks.
   The GNU GPL license is a good fit for the rest of the codebase, since there
   are no special requirements for this code (unlike apps and libs).
 
+I have audited the licenses of our dependencies (specifically those of the API
+and frontend) and they are compatible with us switching to the AGPL license.
+Additionally Airflow is licensed under the Apache license which is also
+compatible with us relicensing to GPL.
+
 ### Institute code freeze
 
 We need to institute a code freeze because we need to add the commit hash of the
