@@ -5,7 +5,7 @@ description = "API for the Openverse project"
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
-  {name = "Openverse Contributors", email = "openverse@wordpress.org"},
+    {name = "Openverse Contributors", email = "openverse@wordpress.org"},
 ]
 
 requires-python = "==3.12.*"
@@ -46,7 +46,7 @@ distribution = false
 [tool.pdm.dev-dependencies]
 # These packages override their main counterparts with an editable installation.
 overrides = [
-  "-e openverse-attribution @ file:///${PROJECT_ROOT}/../packages/python/openverse-attribution"
+    "-e openverse-attribution @ file:///${PROJECT_ROOT}/../packages/python/openverse-attribution"
 ]
 dev = [
     "ipython >=8.22.1, <9",
@@ -59,16 +59,16 @@ dev = [
     "watchfiles>=0.24.0",
 ]
 test = [
-  "factory-boy >=3.3.0, <4",
-  "fakeredis >=2.21.3, <3",
-  "freezegun >=1.4.0, <2",
-  "pook >=2, <3",
-  "pytest >=8.3.3, <9",
-  "pytest-django >=4.8.0, <5",
-  "pytest-pook>=1.0.0",
-  "pytest-raises >=0.11, <0.12",
-  "pytest-sugar >=1, <1.1",
-  "schemathesis >=3.25.6, <4",
+    "factory-boy >=3.3.0, <4",
+    "fakeredis >=2.21.3, <3",
+    "freezegun >=1.4.0, <2",
+    "pook >=2, <3",
+    "pytest >=8.3.3, <9",
+    "pytest-django >=4.8.0, <5",
+    "pytest-pook>=1.0.0",
+    "pytest-raises >=0.11, <0.12",
+    "pytest-sugar >=1, <1.1",
+    "schemathesis >=3.38.6, <4",
 ]
 
 [tool.pytest.ini_options]
@@ -77,14 +77,14 @@ DJANGO_SETTINGS_MODULE = "conf.settings"
 pythonpath = "."
 
 filterwarnings = [
-  # Ignore warnings related to unverified HTTPS requests.
-  # Reason: This warning is suppressed to avoid raising warnings when making HTTP requests
-  # to servers with invalid or self-signed SSL certificates. It allows the tests to proceed
-  # without being interrupted by these warnings.
-  "ignore:Unverified HTTPS request",
+    # Ignore warnings related to unverified HTTPS requests.
+    # Reason: This warning is suppressed to avoid raising warnings when making HTTP requests
+    # to servers with invalid or self-signed SSL certificates. It allows the tests to proceed
+    # without being interrupted by these warnings.
+    "ignore:Unverified HTTPS request",
 
-  # Ignore warnings about the upcoming change in the default value of 'USE_TZ' setting in Django 5.0.
-  # Reason: The reason this warning is suppressed is actually because we already set USE_TZ to True.
-  # Since no changes are required on our part, we can safely ignore this to declutter the logs.
-  "ignore:The default value of USE_TZ will change from False to True in Django 5.0",
+    # Ignore warnings coming from schemathesis.
+    # Reason: These are warnings raised by the library itself and are not relevant to our codebase.
+    "ignore:jsonschema.RefResolver is deprecated as of v4.18.0",
+    "ignore:jsonschema.exceptions.RefResolutionError is deprecated as of version 4.18.0.",
 ]

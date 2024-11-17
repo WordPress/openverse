@@ -35,7 +35,6 @@ def unreachable_oauth_cache(unreachable_django_cache, monkeypatch):
     yield cache
 
 
-@pytest.mark.django_db
 @pytest.fixture
 def test_auth_tokens_registration(api_client):
     data = {
@@ -53,7 +52,6 @@ def test_auth_tokens_registration(api_client):
     return res_data
 
 
-@pytest.mark.django_db
 @pytest.fixture
 def test_auth_token_exchange(api_client, test_auth_tokens_registration):
     api_client_id = test_auth_tokens_registration["client_id"]

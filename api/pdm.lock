@@ -5,7 +5,7 @@
 groups = ["default", "dev", "overrides", "test"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:15a9263f5e3e619c09b6e1ce224fd11c843815f45496fa1b9261365d4161fb8e"
+content_hash = "sha256:99df69ada4a7606d30e3d7a2361fbe60bf129873d408d905644ed6d60af06a2b"
 
 [[metadata.targets]]
 requires_python = "==3.12.*"
@@ -1711,7 +1711,7 @@ files = [
 
 [[package]]
 name = "schemathesis"
-version = "3.38.3"
+version = "3.38.6"
 requires_python = ">=3.8"
 summary = "Property-based testing framework for Open API and GraphQL based apps"
 groups = ["test"]
@@ -1740,8 +1740,8 @@ dependencies = [
     "yarl<2.0,>=1.5",
 ]
 files = [
-    {file = "schemathesis-3.38.3-py3-none-any.whl", hash = "sha256:31a1765bed73767f10204b8e145347ce9bae7070e9dcccbe239c9ff8341f615b"},
-    {file = "schemathesis-3.38.3.tar.gz", hash = "sha256:cb50aaf40a0d05d441937220678cdc23ab64a3d6256bcb9852d6d298a3fb25fe"},
+    {file = "schemathesis-3.38.6-py3-none-any.whl", hash = "sha256:5d294c7bd353c20565a72c3dbd23319a6b6305f29e0abc6e2bc278454ada1d19"},
+    {file = "schemathesis-3.38.6.tar.gz", hash = "sha256:c05beea65de8e1659625fcf0624c898781ebaecc63ffc1f1a5dfc15bf5a4b266"},
 ]
 
 [[package]]
