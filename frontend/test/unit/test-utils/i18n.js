@@ -1,5 +1,7 @@
 import { createI18n } from "vue-i18n"
 
+import { computed } from "vue"
+
 import messages from "~/locales/en.json"
 
 const globalizedI18n = () => {
@@ -12,7 +14,7 @@ const globalizedI18n = () => {
     },
   })
   i18n.t = i18n.global.t
-  i18n.localeProperties = { code: "en", dir: "ltr" }
+  i18n.localeProperties = computed(() => ({ code: "en", dir: "ltr" }))
   return i18n
 }
 

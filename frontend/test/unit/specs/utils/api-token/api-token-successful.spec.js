@@ -51,7 +51,7 @@ describe.sequential("api-token", () => {
   })
 
   describe("successful token retrieval", () => {
-    // https://github.com/wordpress/openverse/issues/411
+    // https://github.com/wordpress/openverse/issues/5171
     it.skip("should save the token into the process and inject into the context", async () => {
       const mockTokenResponse = getMockTokenResponse()
       axios.post.mockImplementationOnce(() =>
@@ -67,7 +67,7 @@ describe.sequential("api-token", () => {
       })
     })
 
-    // https://github.com/wordpress/openverse/issues/411
+    // https://github.com/wordpress/openverse/issues/5171
     it.skip("should re-retrieve the token when about to expire", async () => {
       const mockTokenResponse = getMockTokenResponse(expiryThreshold - 1)
       const nextMockTokenResponse = getMockTokenResponse()
@@ -89,7 +89,7 @@ describe.sequential("api-token", () => {
       })
     })
 
-    // https://github.com/wordpress/openverse/issues/411
+    // https://github.com/wordpress/openverse/issues/5171
     it.skip("should not request a new token if the token is not about to expire", async () => {
       const mockTokenResponse = getMockTokenResponse(twelveHoursInSeconds)
       const nextMockTokenResponse = getMockTokenResponse()

@@ -4,8 +4,6 @@ import { createApp } from "vue"
 
 import { render } from "~~/test/unit/test-utils/render"
 
-import { i18n } from "~~/test/unit/test-utils/i18n"
-
 import { useSearchStore } from "~/stores/search"
 
 import VSafetyWall from "~/components/VSafetyWall/VSafetyWall.vue"
@@ -25,17 +23,15 @@ describe("VSafetyWall.vue", () => {
   beforeEach(() => {
     options = {
       global: {
-        plugins: [i18n],
         stubs: { RouterLink: RouterLinkStub },
       },
       props: {
-        media: {
-          sensitivity: [
-            "sensitive_text",
-            "provider_supplied_sensitive",
-            "user_reported_sensitive",
-          ],
-        },
+        sensitivity: [
+          "sensitive_text",
+          "provider_supplied_sensitive",
+          "user_reported_sensitive",
+        ],
+        id: "123",
       },
     }
   })

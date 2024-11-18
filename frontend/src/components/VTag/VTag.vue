@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import VButton from "~/components/VButton.vue"
 
-defineProps<{ href: string }>()
+const props = defineProps<{ href: string }>()
 </script>
 
 <template>
@@ -10,7 +10,7 @@ defineProps<{ href: string }>()
     size="small"
     variant="filled-gray"
     class="label-bold"
-    v-bind="$props"
+    v-bind="props"
     ><slot
   /></VButton>
 </template>

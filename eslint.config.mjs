@@ -54,8 +54,6 @@ const eslintIgnores = [
   "frontend/.output/**",
   "frontend/.remake/**",
   "frontend/src/locales/*.json",
-  // Vendored module. See explanation in file
-  "frontend/test/unit/test-utils/render-suspended.ts",
   "**/coverage/**",
   "frontend/test/tapes/**",
   "frontend/storybook-static/**",

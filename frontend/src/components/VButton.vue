@@ -191,6 +191,10 @@ const disabledAttribute = computed<true | undefined>(() => {
   return (trulyDisabled && supportsDisabledAttribute.value) || undefined
 })
 
+const linkProps = computed(() =>
+  props.as === "VLink" ? { href: attrs.href } : {}
+)
+
 watch(
   () => props.as,
   (as) => {
@@ -229,6 +233,7 @@ watch(
     :aria-pressed="pressed"
     :aria-disabled="ariaDisabled"
     :disabled="disabledAttribute"
+    v-bind="linkProps"
     @click="$emit('click', $event)"
     @mousedown="$emit('mousedown', $event)"
     @keydown="$emit('keydown', $event)"

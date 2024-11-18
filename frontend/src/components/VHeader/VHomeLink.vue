@@ -15,7 +15,7 @@ withDefaults(
      *
      * @default 'light'
      */
-    variant: "light" | "dark"
+    variant?: "light" | "dark"
   }>(),
   { variant: "light" }
 )
