@@ -3,8 +3,7 @@
  * For any changes made here, please make the corresponding changes in the
  * backend, or open an issue to track it.
  */
-
-import { useI18n } from "#imports"
+import enJson from "~~/i18n/locales/en.json"
 
 import type { Media } from "~/types/media"
 import {
@@ -14,7 +13,7 @@ import {
 } from "~/utils/license"
 import type { LicenseElement } from "~/constants/license"
 
-import enJson from "~/locales/en.json"
+import type { Composer } from "vue-i18n"
 
 /* Helper functions */
 
@@ -196,13 +195,13 @@ export interface AttributionOptions {
  * Get the HTML markup for properly attributing the given media item.
  *
  * @param mediaItem - the media item being attributed
- * @param i18n - the i18n instance to access translations
+ * @param t - the i18n `t` function to access translations
  * @param includePreview - whether to include the preview markup in the HTML
  * @returns the HTML markup of the attribution
  */
 export const getAttribution = (
   mediaItem: AttributableMedia,
-  i18n: ReturnType<typeof useI18n> | null = null,
+  t: Composer["t"] | null = null,
   { includeIcons, isPlaintext, isXml }: AttributionOptions = {
     isPlaintext: false,
     includeIcons: true,
@@ -216,8 +215,12 @@ export const getAttribution = (
   const isPd = isPublicDomain(mediaItem.license)
 
   const i18nBase = "mediaDetails.reuse.credit"
-  const tFn = i18n
-    ? (key: string, values?: unknown) => i18n.t(`${i18nBase}.${key}`, values)
+
+  const tFn = t
+    ? (key: string, values?: Record<string, unknown>) =>
+        values
+          ? t(`${i18nBase}.${key}`, values as Record<string, unknown>)
+          : t(`${i18nBase}.${key}`)
     : fakeT
 
   /* Title */
@@ -238,7 +241,7 @@ export const getAttribution = (
   const fullLicenseName = getFullLicenseName(
     mediaItem.license,
     mediaItem.license_version,
-    i18n
+    t
   )
   let licenseIcons = ""
   if (includeIcons && mediaItem.license) {

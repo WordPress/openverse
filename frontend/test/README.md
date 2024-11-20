@@ -1,7 +1,7 @@
 # /locales/ directory
 
 Normally when you build Openverse, you download the updated information about
-locales and translation files to `src/locales` folder. To prevent too many
+locales and translation files to `i18n/locales` folder. To prevent too many
 requests during CI, we save the locale files that are necessary to run the app
 during Playwright tests.
 

@@ -39,7 +39,7 @@ const getValidatedLocales = async () => {
     translated: locale.translated,
   }))
   for (const locale of allLocales) {
-    const fileLocation = `${process.cwd()}/src/locales/${locale.file}`
+    const fileLocation = `${process.cwd()}/i18n/locales/${locale.file}`
     if (fs.existsSync(fileLocation)) {
       if (Object.keys(JSON.parse(fs.readFileSync(fileLocation))).length) {
         result.translated.push(locale)
@@ -59,7 +59,7 @@ try {
     const fileName = "valid-locales.json"
     const valid = locales.translated
     fs.writeFileSync(
-      process.cwd() + `/src/locales/scripts/` + fileName,
+      process.cwd() + `/i18n/locales/scripts/` + fileName,
       JSON.stringify(valid, null, 2) + "\n"
     )
 
@@ -68,14 +68,14 @@ try {
     )
     const untranslatedFileName = "untranslated-locales.json"
     fs.writeFileSync(
-      process.cwd() + `/src/locales/scripts/` + untranslatedFileName,
+      process.cwd() + `/i18n/locales/scripts/` + untranslatedFileName,
       JSON.stringify(locales.untranslated, null, 2) + "\n"
     )
 
     console.log(`Found ${locales.invalid.length} invalid locales.`)
     const invalidFileName = "invalid-locales.json"
     fs.writeFileSync(
-      process.cwd() + `/src/locales/scripts/` + invalidFileName,
+      process.cwd() + `/i18n/locales/scripts/` + invalidFileName,
       JSON.stringify(locales.invalid, null, 2) + "\n"
     )
 

@@ -139,7 +139,7 @@ exports.writeLocaleFile = (locale, rawTranslations, deprecatedKeys) => {
   )
 
   return writeFile(
-    process.cwd() + `/src/locales/${locale}.json`,
+    process.cwd() + `/i18n/locales/${locale}.json`,
     JSON.stringify(translations, null, 2) + os.EOL
   )
 }

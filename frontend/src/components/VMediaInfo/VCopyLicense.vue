@@ -16,9 +16,9 @@ const props = defineProps<{ media: Media }>()
 
 const richRef = ref<HTMLElement | null>(null)
 
-const i18n = useI18n({ useScope: "global" })
+const { t } = useI18n({ useScope: "global" })
 const getAttributionMarkup = (options?: AttributionOptions) =>
-  getAttribution(props.media, i18n, options)
+  getAttribution(props.media, t, options)
 
 const { $sendCustomEvent } = useNuxtApp()
 

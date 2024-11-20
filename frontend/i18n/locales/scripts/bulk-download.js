@@ -22,7 +22,7 @@ const fetchBulkJed1x = async () => {
     params: { "export-format": "jed1x" },
     responseType: "stream",
   })
-  const destPath = process.cwd() + "/src/locales/openverse.zip"
+  const destPath = process.cwd() + "/i18n/locales/openverse.zip"
   await pipeline(res.data, createWriteStream(destPath))
   return destPath
 }

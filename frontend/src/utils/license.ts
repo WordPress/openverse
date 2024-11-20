@@ -3,9 +3,6 @@
  * For any changes made here, please make the corresponding changes in the
  * backend, or open an issue to track it.
  */
-
-import { useI18n } from "#imports"
-
 import type {
   License,
   LicenseVersion,
@@ -18,25 +15,27 @@ import {
 } from "~/constants/license"
 import { camelCase } from "~/utils/case"
 
+import type { Composer } from "vue-i18n"
+
 /**
  * Get the full name of the license in a displayable format from the license
  * slug and version.
  *
  * @param license - the slug of the license
  * @param licenseVersion - the version number of the license
- * @param i18n - the i18n instance to access translations
+ * @param t - the t i18n function to access translations
  * @returns the full name of the license
  */
 export const getFullLicenseName = (
   license: License,
   licenseVersion: LicenseVersion = "", // unknown version
-  i18n: ReturnType<typeof useI18n> | null = null
+  t: Composer["t"] | null = null
 ): string => {
   let licenseName
 
   // PDM has no abbreviation
-  if (license === "pdm" && i18n) {
-    licenseName = i18n.t(`licenseReadableNames.${camelCase(license)}`)
+  if (license === "pdm" && !!t) {
+    licenseName = t(`licenseReadableNames.${camelCase(license)}`)
   } else {
     licenseName = license.toUpperCase().replace("SAMPLING", "Sampling")
   }

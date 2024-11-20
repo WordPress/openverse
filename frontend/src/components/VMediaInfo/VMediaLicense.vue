@@ -16,16 +16,16 @@ const props = defineProps<{
   licenseUrl: string
 }>()
 
-const i18n = useI18n({ useScope: "global" })
+const { t } = useI18n({ useScope: "global" })
 const { $sendCustomEvent } = useNuxtApp()
 
 const isLicense = computed(() => isLicenseFn(props.license))
 const headerText = computed(() => {
   const licenseOrTool = isLicense.value ? "license" : "tool"
-  return i18n.t(`mediaDetails.reuse.${licenseOrTool}Header`)
+  return t(`mediaDetails.reuse.${licenseOrTool}Header`)
 })
 const fullLicenseName = computed(() =>
-  getFullLicenseName(props.license, props.licenseVersion, i18n)
+  getFullLicenseName(props.license, props.licenseVersion, t)
 )
 
 const sendVisitLicensePage = () => {

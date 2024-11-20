@@ -1,27 +1,24 @@
-import { useI18n } from "#imports"
-
 import { capitalCase } from "~/utils/case"
 import type { AudioDetail, ImageDetail, Metadata } from "~/types/media"
 import { AUDIO, IMAGE } from "~/constants/media"
 
 import { useProviderStore } from "~/stores/provider"
 
-const getImageType = (
-  imageType: string | undefined,
-  i18n: ReturnType<typeof useI18n>
-) => {
+import type { Composer } from "vue-i18n"
+
+const getImageType = (imageType: string | undefined, t: Composer["t"]) => {
   if (imageType) {
     if (imageType.split("/").length > 1) {
       return imageType.split("/")[1]
     }
     return imageType
   }
-  return i18n.t("mediaDetails.information.unknown")
+  return t("mediaDetails.information.unknown")
 }
 
-const getAudioType = (audio: AudioDetail, i18n: ReturnType<typeof useI18n>) => {
+const getAudioType = (audio: AudioDetail, t: Composer["t"]) => {
   if (!audio.alt_files) {
-    return audio.filetype ?? i18n.t("mediaDetails.information.unknown")
+    return audio.filetype ?? t("mediaDetails.information.unknown")
   }
   const altFormats = audio.alt_files
     .map((altFile) => altFile.filetype)
@@ -35,7 +32,7 @@ const getAudioType = (audio: AudioDetail, i18n: ReturnType<typeof useI18n>) => {
 
 export const getMediaMetadata = (
   media: AudioDetail | ImageDetail,
-  i18n: ReturnType<typeof useI18n>,
+  t: Composer["t"],
   imageInfo?: { width?: number; height?: number; type?: string }
 ) => {
   const metadata: Metadata[] = []
@@ -62,7 +59,7 @@ export const getMediaMetadata = (
   if (media.category) {
     metadata.push({
       label: "mediaDetails.information.category",
-      value: i18n.t(
+      value: t(
         `filters.${media.frontendMediaType}Categories.${media.category}`
       ),
     })
@@ -70,8 +67,8 @@ export const getMediaMetadata = (
 
   const mediaTypeString =
     media.frontendMediaType === IMAGE
-      ? getImageType(imageInfo?.type, i18n)
-      : getAudioType(media, i18n)
+      ? getImageType(imageInfo?.type, t)
+      : getAudioType(media, t)
   metadata.push({
     label: "mediaDetails.information.type",
     value: mediaTypeString.toUpperCase(),
@@ -80,7 +77,7 @@ export const getMediaMetadata = (
   if (media.frontendMediaType === IMAGE) {
     metadata.push({
       label: "imageDetails.information.dimensions",
-      value: `${i18n.t("imageDetails.information.sizeInPixels", {
+      value: `${t("imageDetails.information.sizeInPixels", {
         width: imageInfo?.width,
         height: imageInfo?.height,
       })}`,

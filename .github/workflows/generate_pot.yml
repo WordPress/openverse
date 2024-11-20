@@ -4,7 +4,7 @@ on:
   push:
     # The workflow will only run when both filters are satisfied.
     paths:
-      - frontend/src/locales/scripts/en.json5
+      - frontend/i18n/data/en.json5
     branches:
       - main
 

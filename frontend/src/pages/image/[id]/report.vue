@@ -28,13 +28,13 @@ definePageMeta({
   }),
 })
 
-const i18n = useI18n({ useScope: "global" })
+const { t } = useI18n({ useScope: "global" })
 const singleResultStore = useSingleResultStore()
 
 const image = computed(() => singleResultStore.image)
 const attributionMarkup = computed(() =>
   image.value
-    ? getAttribution(image.value, i18n, {
+    ? getAttribution(image.value, t, {
         includeIcons: false,
       })
     : ""

@@ -18,7 +18,7 @@ export default tseslint.config(
     files: ["*.vue", "**/*.vue"],
     settings: {
       "vue-i18n": {
-        localeDir: "./frontend/src/locales/*.{json}",
+        localeDir: "./frontend/i18n/locales/*.{json}",
         messageSyntaxVersion: "^9.0.0",
       },
     },
@@ -147,7 +147,7 @@ export default tseslint.config(
     name: "openverse:vue:json-i18n-settings",
     settings: {
       "vue-i18n": {
-        localeDir: "./frontend/src/locales/*.{json}",
+        localeDir: "./frontend/i18n/locales/*.json",
         messageSyntaxVersion: "^9.0.0",
       },
     },
@@ -155,20 +155,9 @@ export default tseslint.config(
   },
   {
     name: "openverse:vue:i18n-translation-strings",
-    files: ["frontend/src/locales/en.json5", "frontend/test/locales/*.json"],
-
-    extends: [...eslintPluginVueI18n.configs["flat/recommended"]],
+    files: ["frontend/i18n/data/en.json5", "frontend/test/locales/*.json"],
     rules: {
       "@openverse/translation-strings": ["error"],
-    },
-  },
-  {
-    name: "openverse:case:locales-exceptions",
-    files: [
-      "frontend/src/locales/scripts/en.json5",
-      "frontend/test/locales/*.json",
-    ],
-    rules: {
       "jsonc/key-name-casing": [
         "error",
         {
@@ -182,7 +171,7 @@ export default tseslint.config(
   },
   {
     name: "openverse:locales-quotes",
-    files: ["frontend/src/locales/scripts/en.json5"],
+    files: ["frontend/i18n/data/en.json5"],
     rules: {
       "jsonc/quote-props": "off",
       "jsonc/quotes": "off",

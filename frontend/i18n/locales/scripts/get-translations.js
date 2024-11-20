@@ -16,7 +16,7 @@ const { parseJson } = require("./read-i18n")
 const writeEnglish = () => {
   const rootEntry = parseJson("en.json5")
   writeFileSync(
-    process.cwd() + "/src/locales/en.json",
+    process.cwd() + "/i18n/locales/en.json",
     JSON.stringify(rootEntry, null, 2) + os.EOL
   )
   console.log("Successfully saved English translation to en.json.")
@@ -26,7 +26,7 @@ writeEnglish()
 if (process.argv.includes("--watch")) {
   console.log("Watching en.json5 for changes...")
   chokidar
-    .watch(process.cwd() + "/src/locales/scripts/en.json5")
+    .watch(process.cwd() + "/i18n/data/en.json5")
     .on("all", (event, path) => {
       console.log(`Event '${event}' for file ${path}`)
       writeEnglish()
@@ -46,7 +46,7 @@ if (!process.argv.includes("--en-only")) {
 } else {
   // Create valid-locales.json if it doesn't exist. It is required for Nuxt to build the app.
   const validLocalesFilePath =
-    process.cwd() + "/src/locales/scripts/valid-locales.json"
+    process.cwd() + "/i18n/locales/scripts/valid-locales.json"
   if (!existsSync(validLocalesFilePath)) {
     writeFileSync(validLocalesFilePath, "[]")
     console.log("Created empty valid-locales.json.")

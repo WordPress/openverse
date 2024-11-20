@@ -45,10 +45,10 @@ const Template: Omit<Story, "args"> = {
         },
         sourceNames: { audio: [testAudio.source], image: [testImage.source] },
       })
-      const i18n = useI18n({ useScope: "global" })
+      const { t } = useI18n({ useScope: "global" })
       const data = [
         {
-          metadata: getMediaMetadata(testImage, i18n, {
+          metadata: getMediaMetadata(testImage, t, {
             width: testImage.width,
             height: testImage.height,
             type: testImage.filetype,
@@ -56,7 +56,7 @@ const Template: Omit<Story, "args"> = {
           media: testImage,
         },
         {
-          metadata: getMediaMetadata(testAudio, i18n),
+          metadata: getMediaMetadata(testAudio, t),
           media: testAudio,
         },
       ]

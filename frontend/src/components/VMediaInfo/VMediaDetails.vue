@@ -14,7 +14,7 @@ import VMediaTags from "~/components/VMediaInfo/VMediaTags.vue"
 
 const props = defineProps<{ media: AudioDetail | ImageDetail }>()
 
-const i18n = useI18n({ useScope: "global" })
+const { t } = useI18n({ useScope: "global" })
 
 const metadata = computed<null | Metadata[]>(() => {
   if (!props.media) {
@@ -28,7 +28,7 @@ const metadata = computed<null | Metadata[]>(() => {
           type: props.media.filetype,
         }
       : {}
-  return getMediaMetadata(props.media, i18n, imageInfo)
+  return getMediaMetadata(props.media, t, imageInfo)
 })
 </script>
 

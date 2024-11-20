@@ -39,15 +39,15 @@ const props = withDefaults(
 
 const { effectiveColorMode } = useDarkMode()
 
-const i18n = useI18n({ useScope: "global" })
+const { t } = useI18n({ useScope: "global" })
 
 const iconNames = computed(() => getElements(props.license))
 const licenseName = computed(() => {
   const licenseKey =
     props.license === "sampling+" ? props.license : camelCase(props.license)
   return {
-    readable: i18n.t(`licenseReadableNames.${licenseKey}`),
-    full: getFullLicenseName(props.license, "", i18n),
+    readable: t(`licenseReadableNames.${licenseKey}`),
+    full: getFullLicenseName(props.license, "", t),
   }
 })
 </script>

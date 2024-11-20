@@ -24,7 +24,7 @@ const props = defineProps<{
   errorCode: "NO_RESULT" | "SERVER_TIMEOUT"
 }>()
 
-const i18n = useI18n({ useScope: "global" })
+const { t } = useI18n({ useScope: "global" })
 
 const images = Object.fromEntries(
   imageInfo.errors.map((errorItem) => {
@@ -38,7 +38,7 @@ const images = Object.fromEntries(
       license_version: image.license_version as LicenseVersion,
       frontendMediaType: "image",
     }
-    errorImage.attribution = getAttribution(errorImage, i18n)
+    errorImage.attribution = getAttribution(errorImage, t)
     return [errorItem.error, errorImage]
   })
 )
