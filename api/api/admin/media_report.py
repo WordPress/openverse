@@ -499,6 +499,8 @@ class MediaListAdmin(BulkModerationMixin, admin.ModelAdmin):
     change_list_template = "admin/api/media/change_list.html"
     list_display = ("identifier",)
     list_display_links = ("identifier",)
+    list_per_page = 15
+    list_max_show_all = 50
     search_fields = (None,)  # Search functionality is overridden below.
     search_help_text = format_html(
         """
