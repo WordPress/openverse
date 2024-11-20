@@ -3,29 +3,13 @@ import esMessages from "~~/test/locales/es.json"
 import ruMessages from "~~/test/locales/ru.json"
 import enMessages from "~~/i18n/locales/en.json"
 
-const messages: Record<string, Record<string, unknown>> = {
+const messages: Record<string, Record<string, string>> = {
   ltr: enMessages,
   rtl: rtlMessages,
   es: esMessages,
   ru: ruMessages,
 }
-const getNestedProperty = (
-  obj: Record<string, unknown>,
-  path: string
-): string => {
-  const value = path
-    .split(".")
-    .reduce((acc: string | Record<string, unknown>, part) => {
-      if (typeof acc === "string") {
-        return acc
-      }
-      if (Object.keys(acc as Record<string, unknown>).includes(part)) {
-        return (acc as Record<string, string | Record<string, unknown>>)[part]
-      }
-      return ""
-    }, obj)
-  return typeof value === "string" ? value : JSON.stringify(value)
-}
+
 /**
  * Simplified i18n t function that returns English messages for `ltr` and Arabic for `rtl`.
  * It can handle nested labels that use the dot notation ('header.title').
@@ -38,14 +22,19 @@ export const t = (
   dir: LanguageDirection = "ltr",
   locale?: "es" | "ru"
 ): string => {
-  let value = ""
-  if (locale) {
-    value = getNestedProperty(messages[locale], path)
-  } else if (dir === "rtl") {
-    value = getNestedProperty(messages.rtl, path)
+  const value = locale
+    ? messages[locale][path]
+    : messages[dir][path]
+      ? messages[dir][path]
+      : messages.ltr[path]
+
+  if (!value) {
+    throw new Error(
+      `Missing translation for "${path}" (locale ${locale}, dir ${dir})`
+    )
   }
-  const result = value === "" ? getNestedProperty(messages.ltr, path) : value
-  return result.replace("{openverse}", "Openverse")
+
+  return value.replace("{openverse}", "Openverse")
 }
 export const languageDirections = ["ltr", "rtl"] as const
 export type LanguageDirection = (typeof languageDirections)[number]

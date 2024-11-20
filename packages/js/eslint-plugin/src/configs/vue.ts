@@ -18,7 +18,7 @@ export default tseslint.config(
     files: ["*.vue", "**/*.vue"],
     settings: {
       "vue-i18n": {
-        localeDir: "./frontend/i18n/locales/*.{json}",
+        localeDir: "./frontend/i18n/locales/*.json",
         messageSyntaxVersion: "^9.0.0",
       },
     },
@@ -158,12 +158,11 @@ export default tseslint.config(
     files: ["frontend/i18n/data/en.json5", "frontend/test/locales/*.json"],
     rules: {
       "@openverse/translation-strings": ["error"],
-      "jsonc/key-name-casing": [
+      "@openverse/key-name-casing": [
         "error",
         {
-          camelCase: true,
-          "kebab-case": false,
-          snake_case: true, // for err_* keys
+          camelCaseWithDot: true,
+          snake_case_with_dot: true, // for err_* keys
           ignores: ["ncSampling+", "sampling+"],
         },
       ],

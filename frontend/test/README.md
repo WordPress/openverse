@@ -5,7 +5,7 @@ locales and translation files to `i18n/locales` folder. To prevent too many
 requests during CI, we save the locale files that are necessary to run the app
 during Playwright tests.
 
-1. `scripts/valid-locales.json` contains a list of valid locales with properties
+1. `valid-locales.json` contains a list of valid locales with properties
    including their translation status (the percentage of strings that are
    translated).
 2. `es.json` is the `es` locale file used for search navigation tests

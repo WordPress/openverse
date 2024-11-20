@@ -28,13 +28,12 @@ describe("getAttribution", () => {
     expect(attributionP.textContent?.trim()).toEqual(attributionText)
   })
 
-  // TODO: fix fakeT function
   it("returns attribution for media without i18n", async () => {
-    // const attributionText = '"Title" by Creator is marked with PDM 1.0 .'
+    const attributionText = '"Title" by Creator is marked with PDM 1.0 .'
     console.log(getAttribution(mediaItem, null))
     document.body.innerHTML = getAttribution(mediaItem, null)
     const attributionP = document.getElementsByClassName("attribution")[0]
-    expect(attributionP.textContent?.trim()).toBe("")
+    expect(attributionP.textContent?.trim()).toBe(attributionText)
   })
 
   it("uses generic title if not known", async () => {
