@@ -26,6 +26,7 @@ from api.models import (
     AudioDecision,
     AudioDecisionThrough,
     AudioReport,
+    ContentSource,
     DeletedAudio,
     DeletedImage,
     Image,
@@ -168,6 +169,30 @@ class PredeterminedOrderChangelist(ChangeList):
 
     def _get_default_ordering(self):
         return []
+
+
+def get_source_filter(media_type: str):
+    class SourceFilter(admin.SimpleListFilter):
+        """
+        Custom filter for source field in admin list view to prevent Django
+        from performing expensive `DISTINCT` query on media tables.
+        """
+
+        title = "source"
+        parameter_name = "source"
+
+        def lookups(self, request, model_admin):
+            return ContentSource.objects.filter(media_type=media_type).values_list(
+                "source_identifier", "source_name"
+            )
+
+        def queryset(self, request, queryset):
+            value = self.value()
+            if value is not None:
+                queryset = queryset.filter(source=value)
+            return queryset
+
+    return SourceFilter
 
 
 def get_pending_record_filter(media_type: str):
@@ -528,8 +553,7 @@ class MediaListAdmin(BulkModerationMixin, admin.ModelAdmin):
 
     def get_list_filter(self, request):
         return (
-            "source",
-            "provider",
+            get_source_filter(self.media_type),
             get_pending_record_filter(self.media_type),
         )
 
@@ -865,10 +889,6 @@ class MediaReportAdmin(admin.ModelAdmin):
         "description",
         "is_pending",
         "media_id",  # used because ``media_obj`` does not render a link
-    )
-    list_filter = (
-        "reason",
-        ("decision", admin.EmptyFieldListFilter),  # ~is_pending
     )
     search_fields = ("description", *_production_deferred("media_obj__identifier"))
 
