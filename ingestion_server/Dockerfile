@@ -1,4 +1,5 @@
 # syntax=docker/dockerfile:1
+# check=skip=InvalidDefaultArgInFrom
 
 # Automatically build image using Python version specified in the `Pipfile`.
 ARG INGESTION_PY_VERSION
