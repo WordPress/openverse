@@ -5,7 +5,7 @@
 ;; The release-drafter/release-drafter configuration variable name cannot be changed
           commitish: main
 
-;; frontend/src/locales/scripts/en.json5
+;; frontend/i18n/data/en.json5
 ;; Prettier insists we escape a single quote rather than the double quotes and codespell
 ;; does not understand the escaped `\'t` as "couldn't". It instead just sees "couldn".
     heading: 'We couldn\'t find anything for "{query}".',
@@ -16,7 +16,3 @@
 ;; block of Dutch text.
         "Identificatie Titel(s):  Allegorie op kunstenaar Francesco Mazzoli, "
         "bekend als Parmigianino"
-
-;; packages/js/eslint-plugin/configs/vue.ts
-;; `te` gets matched with `the` and others
-const i18nDestructureRules = ["t", "tc", "te", "td", "d", "n"].map(

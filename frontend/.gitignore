@@ -18,6 +18,16 @@ coverage
 *.pot
 
 # Downloaded translation files
+i18n/locales/openverse.zip
+i18n/locales/*.json
+i18n/locales/scripts/valid-locales.json
+i18n/locales/scripts/untranslated-locales.json
+i18n/locales/scripts/invalid-locales.json
+i18n/locales/scripts/wp-locales.json
+i18n/data/valid-locales.json
+i18n/data/untranslated-locales.json
+i18n/locales/scripts/*.json
+# The old downloaded translation files. Can be deleted after the i18n folder changes are merged
 src/locales/openverse.zip
 src/locales/*.json
 src/locales/scripts/valid-locales.json

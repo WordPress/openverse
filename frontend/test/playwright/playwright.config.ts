@@ -41,6 +41,8 @@ const webServer =
           NUXT_PUBLIC_PLAUSIBLE_API_HOST: "http://localhost:50290",
           NUXT_PUBLIC_PLAUSIBLE_AUTO_PAGEVIEWS: "false",
           NUXT_PUBLIC_PLAUSIBLE_IGNORED_HOSTNAMES: "[]",
+          // Necessary for i18n tests
+          NUXT_PUBLIC_I18N_BASE_URL: "https://openverse.org",
         },
       }
     : undefined

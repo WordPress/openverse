@@ -182,7 +182,10 @@ const parseObjProperty = (node) => {
 const parseJson = (filename) =>
   parseObjProperty({
     value: babel.parseExpression(
-      fs.readFileSync(path.join(__dirname, filename), "utf-8")
+      fs.readFileSync(
+        path.join(__dirname, "..", "..", "data", filename),
+        "utf-8"
+      )
     ),
   })
 

@@ -35,11 +35,7 @@ const headerHeight = computed(() => {
   return `--header-height: ${uiStore.headerHeight}px`
 })
 
-const head = useLocaleHead({
-  addDirAttribute: true,
-  identifierAttribute: "id",
-  addSeoAttributes: true,
-})
+const head = useLocaleHead({ dir: true, key: "id", seo: true })
 
 useHead({
   bodyAttrs: { class: darkMode.cssClass },
@@ -78,7 +74,7 @@ onMounted(() => {
 
 <template>
   <div>
-    <Html :lang="head.htmlAttrs.lang" :dir="head.htmlAttrs.dir">
+    <Html :lang="head.htmlAttrs?.lang" :dir="head.htmlAttrs?.dir">
       <Head>
         <template v-for="link in head.link" :key="link.id">
           <Link

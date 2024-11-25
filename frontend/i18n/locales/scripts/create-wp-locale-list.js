@@ -110,7 +110,7 @@ async function getWpLocaleData() {
 getWpLocaleData()
   .then((data) => {
     try {
-      const fileName = process.cwd() + "/src/locales/scripts/wp-locales.json"
+      const fileName = process.cwd() + "/i18n/locales/scripts/wp-locales.json"
       fs.writeFileSync(fileName, JSON.stringify(data, null, 2) + "\n")
       console.log(`Successfully wrote locales list file to ${fileName}`)
     } catch (err) {

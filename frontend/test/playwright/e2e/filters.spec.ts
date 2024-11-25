@@ -21,7 +21,7 @@ import {
 
 import { t } from "~~/test/playwright/utils/i18n"
 
-import enMessages from "~/locales/en.json"
+import enMessages from "~~/i18n/locales/en.json"
 
 import {
   supportedSearchTypes,

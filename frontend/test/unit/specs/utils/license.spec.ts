@@ -5,6 +5,8 @@ import { i18n } from "~~/test/unit/test-utils/i18n"
 import { getFullLicenseName, getElements } from "~/utils/license"
 import type { License, LicenseVersion } from "~/constants/license"
 
+const t = i18n.t
+
 describe("getFullLicenseName", () => {
   it.each`
     license           | licenseVersion | sendI18n | fullName
@@ -29,7 +31,7 @@ describe("getFullLicenseName", () => {
       fullName: string
     }) => {
       expect(
-        getFullLicenseName(license, licenseVersion, sendI18n ? i18n : null)
+        getFullLicenseName(license, licenseVersion, sendI18n ? t : null)
       ).toBe(fullName)
     }
   )

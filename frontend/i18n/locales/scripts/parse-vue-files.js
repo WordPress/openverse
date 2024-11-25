@@ -6,7 +6,10 @@ const path = require("path")
 
 const glob = require("glob")
 
-const BASE_PATH = path.dirname(path.dirname(__dirname))
+const BASE_PATH = path.join(
+  path.dirname(path.dirname(path.dirname(__dirname))),
+  "src"
+)
 
 function readVueFiles(src) {
   const targetFiles = glob.sync(src)
@@ -14,8 +17,8 @@ function readVueFiles(src) {
   if (targetFiles.length === 0) {
     throw new Error("vueFiles glob has no files.")
   }
-  // Now that the script are inside `src/locales/scripts`,
-  // to get relative URL, the script needs to go up 3 levels
+  // Now that the script are inside `i18n/locales/scripts`,
+  // to get relative URL, the script needs to go up 4 levels
   return targetFiles.map((f) => {
     const fileName = path.relative(process.cwd(), f.replace(BASE_PATH, "src"))
     return {

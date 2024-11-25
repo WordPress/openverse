@@ -23,14 +23,14 @@ export const useCollection = <T extends SupportedMediaType>({
   const media = ref(mediaStore.resultItems[mediaType]) as Ref<ResultType[]>
   const creatorUrl = ref<string>()
 
-  const i18n = useI18n({ useScope: "global" })
+  const { t } = useI18n({ useScope: "global" })
 
   const collectionLabel = computed(() => {
     if (!collectionParams.value) {
       return ""
     }
     const { collection, ...params } = collectionParams.value
-    return i18n.t(`collection.ariaLabel.${collection}.image`, { ...params })
+    return t(`collection.ariaLabel.${collection}.image`, { ...params })
   })
 
   const fetchMedia = async (
@@ -59,7 +59,7 @@ export const useCollection = <T extends SupportedMediaType>({
   const { pageTitle } = useCollectionMeta({
     collectionParams,
     mediaType,
-    i18n,
+    t,
   })
 
   return {
