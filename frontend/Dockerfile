@@ -1,4 +1,5 @@
 # syntax=docker/dockerfile:1
+# check=skip=InvalidDefaultArgInFrom
 
 # Automatically build image using Node.js version specified in `package.json`.
 ARG FRONTEND_NODE_VERSION

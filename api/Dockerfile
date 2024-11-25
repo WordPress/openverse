@@ -1,4 +1,5 @@
 # syntax=docker/dockerfile:1
+# check=skip=InvalidDefaultArgInFrom
 
 # Automatically build image using Python version specified in `pyproject.toml`
 ARG API_PY_VERSION

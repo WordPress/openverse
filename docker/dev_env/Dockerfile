@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1
+
 FROM docker.io/library/fedora:40
 
 # We want to keep all important things in `/opt` as we will preserve the
