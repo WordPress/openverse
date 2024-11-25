@@ -44,7 +44,6 @@ for (const contentPage of contentPages) {
           await expectSnapshot(page, contentPage, page, {
             dir,
             screenshotOptions: { fullPage: true },
-            snapshotOptions: { maxDiffPixelRatio: 0.01 },
           })
         })
       })
@@ -100,8 +99,7 @@ test.describe("layout color is set correctly", () => {
       await page.mouse.move(100, 100)
 
       expect(await page.screenshot({ fullPage: true })).toMatchSnapshot(
-        "about-ltr-lg-light.png",
-        { maxDiffPixelRatio: 0.01 }
+        "about-ltr-lg-light.png"
       )
     })
   })
