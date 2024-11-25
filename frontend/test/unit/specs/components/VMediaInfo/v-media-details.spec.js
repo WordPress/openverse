@@ -28,7 +28,7 @@ describe("VMediaDetails", () => {
     }
   })
 
-  // https://github.com/wordpress/openverse/issues/411
+  // https://github.com/wordpress/openverse/issues/5171
   it.skip("renders the album title", async () => {
     await render(VMediaDetails, options)
 
@@ -39,27 +39,27 @@ describe("VMediaDetails", () => {
     )
   })
 
-  // https://github.com/wordpress/openverse/issues/411
+  // https://github.com/wordpress/openverse/issues/5171
   it.skip("hides the album title tag when it does not exists", async () => {
     options.props.media.audio_set = null
     await render(VMediaDetails, options)
     expect(screen.queryByText("Album")).toBeNull()
   })
 
-  // https://github.com/wordpress/openverse/issues/411
+  // https://github.com/wordpress/openverse/issues/5171
   it.skip("displays the main filetype when no alternative files are available", async () => {
     await render(VMediaDetails, options)
     expect(screen.queryByText("MP32")).toBeVisible()
   })
 
-  // https://github.com/wordpress/openverse/issues/411
+  // https://github.com/wordpress/openverse/issues/5171
   it.skip("displays multiple filetypes when they are available in alt_files", async () => {
     options.props.media.alt_files = [{ filetype: "wav" }, { filetype: "ogg" }]
     await render(VMediaDetails, options)
     expect(screen.queryByText("MP32, WAV, OGG")).toBeVisible()
   })
 
-  // https://github.com/wordpress/openverse/issues/411
+  // https://github.com/wordpress/openverse/issues/5171
   it.skip("displays only distinct filetypes", async () => {
     options.props.media.alt_files = [{ filetype: "ogg" }, { filetype: "ogg" }]
     await render(VMediaDetails, options)

@@ -60,109 +60,85 @@ base_image = {
     "unstable__sensitivity": [],
 }
 
-detailed_image = base_image | {
-    "attribution": '"Tree Bark Photo" by Tim Sullivan is marked with CC0 1.0. To view the terms, visit https://creativecommons.org/publicdomain/zero/1.0/.',  # noqa: E501
-    "height": 4016,
-    "filesize": 896128,
-    "filetype": "jpg",
-    "width": 6016,
-}
-
 image_search_200_example = {
-    "application/json": {
-        "result_count": 1,
-        "page_count": 1,
-        "page_size": 20,
-        "page": 1,
-        "results": [base_image | {"fields_matched": ["title"]}],
-    },
+    "result_count": 1,
+    "page_count": 1,
+    "page_size": 20,
+    "page": 1,
+    "results": [base_image | {"fields_matched": ["title"]}],
 }
 
 image_search_400_example = {
-    "application/json": {
-        "error": "InputError",
-        "detail": "Invalid input given for fields. 'license' -> License 'PDMNBCG' does not exist.",  # noqa: E501
-        "fields": ["license"],
-    }
+    "error": "InputError",
+    "detail": "Invalid input given for fields. 'license' -> License 'PDMNBCG' does not exist.",  # noqa: E501
+    "fields": ["license"],
 }
 
-image_stats_200_example = {
-    "application/json": [
-        {
-            "source_name": "flickr",
-            "display_name": "Flickr",
-            "source_url": "https://www.flickr.com",
-            "logo_url": None,
-            "media_count": 2500,
-        },
-        {
-            "source_name": "stocksnap",
-            "display_name": "StockSnap",
-            "source_url": "https://stocksnap.io",
-            "logo_url": None,
-            "media_count": 2500,
-        },
-    ]
-}
+image_stats_200_example = [
+    {
+        "source_name": "flickr",
+        "display_name": "Flickr",
+        "source_url": "https://www.flickr.com",
+        "logo_url": None,
+        "media_count": 2500,
+    },
+    {
+        "source_name": "stocksnap",
+        "display_name": "StockSnap",
+        "source_url": "https://stocksnap.io",
+        "logo_url": None,
+        "media_count": 2500,
+    },
+]
 
-image_detail_200_example = {"application/json": detailed_image}
+image_detail_200_example = base_image
 
-image_detail_404_example = {"application/json": {"detail": "Not found."}}
+image_detail_404_example = {"detail": "Not found."}
 
 image_related_200_example = {
-    "application/json": {
-        "result_count": 10000,
-        "page_count": 1,
-        "results": [
-            {
-                "title": "exam tactics",
-                "id": "610756ec-ae31-4d5e-8f03-8cc52f31b71d",
-                "creator": "Sean MacEntee",
-                "creator_url": "https://www.flickr.com/photos/18090920@N07",
-                "tags": [{"name": "exam"}, {"name": "tactics"}],
-                "url": "https://live.staticflickr.com/4065/4459771899_07595dc42e.jpg",  # noqa: E501
-                "thumbnail": f"{ORIGIN}/v1/thumbs/610756ec-ae31-4d5e-8f03-8cc52f31b71d",  # noqa: E501
-                "provider": "flickr",
-                "source": "flickr",
-                "license": "by",
-                "license_version": "2.0",
-                "license_url": "https://creativecommons.org/licenses/by/2.0/",
-                "foreign_landing_url": "https://www.flickr.com/photos/18090920@N07/4459771899",  # noqa: E501
-                "detail_url": f"{ORIGIN}/v1/images/610756ec-ae31-4d5e-8f03-8cc52f31b71d",  # noqa: E501
-                "related_url": f"{ORIGIN}/v1/recommendations/images/610756ec-ae31-4d5e-8f03-8cc52f31b71d",  # noqa: E501
-            }
-        ],
-    }
+    "result_count": 1,
+    "page_count": 1,
+    "page_size": 20,
+    "page": 1,
+    "results": [
+        {
+            "title": "exam tactics",
+            "id": "610756ec-ae31-4d5e-8f03-8cc52f31b71d",
+            "creator": "Sean MacEntee",
+            "creator_url": "https://www.flickr.com/photos/18090920@N07",
+            "tags": [{"name": "exam"}, {"name": "tactics"}],
+            "url": "https://live.staticflickr.com/4065/4459771899_07595dc42e.jpg",  # noqa: E501
+            "thumbnail": f"{ORIGIN}/v1/thumbs/610756ec-ae31-4d5e-8f03-8cc52f31b71d",  # noqa: E501
+            "provider": "flickr",
+            "source": "flickr",
+            "license": "by",
+            "license_version": "2.0",
+            "license_url": "https://creativecommons.org/licenses/by/2.0/",
+            "foreign_landing_url": "https://www.flickr.com/photos/18090920@N07/4459771899",  # noqa: E501
+            "detail_url": f"{ORIGIN}/v1/images/610756ec-ae31-4d5e-8f03-8cc52f31b71d",  # noqa: E501
+            "related_url": f"{ORIGIN}/v1/recommendations/images/610756ec-ae31-4d5e-8f03-8cc52f31b71d",  # noqa: E501
+        }
+    ],
 }
 
-image_related_404_example = {
-    "application/json": {"detail": "An internal server error occurred."}
-}
+image_related_404_example = {"detail": "An internal server error occurred."}
 
 image_oembed_200_example = {
-    "application/json": {
-        "version": "1.0",
-        "type": "photo",
-        "width": 6016,
-        "height": 4016,
-        "title": "Tree Bark Photo",
-        "author_name": "Tim Sullivan",
-        "author_url": "https://www.secretagencygroup.com",
-        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
-    }
+    "version": "1.0",
+    "type": "photo",
+    "width": 6016,
+    "height": 4016,
+    "title": "Tree Bark Photo",
+    "author_name": "Tim Sullivan",
+    "author_url": "https://www.secretagencygroup.com",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
 }
 
-image_oembed_404_example = {
-    "application/json": {"detail": "An internal server error occurred."}
-}
-image_oembed_400_example = {
-    "application/json": {"detail": {"url": ["Could not parse identifier from URL."]}}
-}
+image_oembed_404_example = {"detail": "An internal server error occurred."}
+image_oembed_400_example = {"detail": {"url": ["Could not parse identifier from URL."]}}
 
 image_complain_201_example = {
-    "application/json": {
-        "identifier": identifier,
-        "reason": "mature",
-        "description": "Image contains sensitive content",
-    }
+    "identifier": identifier,
+    "reason": "mature",
+    "description": "Image contains sensitive content",
 }

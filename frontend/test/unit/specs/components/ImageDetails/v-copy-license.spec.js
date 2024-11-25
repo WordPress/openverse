@@ -22,7 +22,6 @@ describe("VCopyLicense", () => {
         creator_url: "http://creator.com",
         frontendMediaType: "image",
       },
-      fullLicenseName: "LICENSE",
     }
     options = { props }
   })

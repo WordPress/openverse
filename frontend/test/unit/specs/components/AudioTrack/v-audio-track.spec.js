@@ -1,10 +1,8 @@
 import { fireEvent } from "@testing-library/vue"
 
-import { createApp } from "vue"
+import { createApp, nextTick } from "vue"
 
 import { render } from "~~/test/unit/test-utils/render"
-
-import { i18n } from "~~/test/unit/test-utils/i18n"
 import { getAudioObj } from "~~/test/unit/fixtures/audio"
 
 import { useActiveMediaStore } from "~/stores/active-media"
@@ -24,6 +22,7 @@ const RouterLinkStub = createApp({}).component("RouterLink", {
     },
   },
 })._context.components.RouterLink
+
 const stubs = {
   VLicense: true,
   VWaveform: true,
@@ -31,10 +30,23 @@ const stubs = {
   RouterLink: RouterLinkStub,
 }
 
+const captureExceptionMock = vi.fn()
+
+vi.mock("#app", async () => {
+  const original = await import("#app")
+  return {
+    ...original,
+    useNuxtApp: vi.fn(() => ({
+      $sentry: {
+        captureException: captureExceptionMock,
+      },
+    })),
+  }
+})
+
 describe("AudioTrack", () => {
   let options = null
   let props = null
-  const captureExceptionMock = vi.fn()
 
   beforeEach(() => {
     props = {
@@ -54,7 +66,6 @@ describe("AudioTrack", () => {
     options = {
       props: props,
       global: {
-        plugins: [i18n],
         stubs,
       },
     }
@@ -94,8 +105,7 @@ describe("AudioTrack", () => {
     expect(creator).toBeTruthy()
   })
 
-  // https://github.com/wordpress/openverse/issues/411
-  it.skip.each`
+  it.each`
     errorType              | errorText
     ${"NotAllowedError"}   | ${/Reproduction not allowed./i}
     ${"NotSupportedError"} | ${/This audio format is not supported by your browser./i}
@@ -111,19 +121,22 @@ describe("AudioTrack", () => {
 
       vi.clearAllMocks()
 
-      const pauseStub = vi
-        .spyOn(window.HTMLMediaElement.prototype, "pause")
-        .mockImplementation(() => undefined)
-
+      const pauseStub = vi.fn(() => undefined)
+      const playStub = vi.fn(() => Promise.reject(playError))
       const playError = new DOMException("msg", errorType)
 
-      const playStub = vi
-        .spyOn(window.HTMLMediaElement.prototype, "play")
-        .mockImplementation(() => Promise.reject(playError))
+      vi.spyOn(window.HTMLMediaElement.prototype, "pause").mockImplementation(
+        pauseStub
+      )
+
+      vi.spyOn(window.HTMLMediaElement.prototype, "play").mockImplementation(
+        playStub
+      )
 
       const { getByRole, getByText } = await render(VAudioTrack, options)
 
-      await fireEvent.click(getByRole("button"))
+      await fireEvent.click(getByRole("button", { name: /play/i }))
+      await nextTick()
       expect(playStub).toHaveBeenCalledTimes(1)
       expect(pauseStub).toHaveBeenCalledTimes(1)
       expect(getByText(errorText)).toBeVisible()

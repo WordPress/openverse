@@ -6,8 +6,6 @@ import { createApp } from "vue"
 
 import { render } from "~~/test/unit/test-utils/render"
 
-import { i18n } from "~~/test/unit/test-utils/i18n"
-
 import VContentLink from "~/components/VContentLink/VContentLink.vue"
 
 const RouterLinkStub = createApp({}).component("RouterLink", {
@@ -26,7 +24,6 @@ describe("VContentLink", () => {
   beforeEach(() => {
     options = {
       global: {
-        plugins: [i18n],
         stubs: { RouterLink: RouterLinkStub },
       },
       props: {

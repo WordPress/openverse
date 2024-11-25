@@ -49,7 +49,7 @@ describe("unsuccessful token retrieval", () => {
     }
     process.tokenFetching = defaultPromise
   })
-  // https://github.com/wordpress/openverse/issues/411
+  // https://github.com/wordpress/openverse/issues/5171
   it.skip("should empty the token data", async () => {
     const app = useNuxtApp()
     const firstTokenResponse = getMockTokenResponse(expiryThreshold - 1)
@@ -69,7 +69,7 @@ describe("unsuccessful token retrieval", () => {
     expect(token2).toEqual("")
   })
 
-  // https://github.com/wordpress/openverse/issues/411
+  // https://github.com/wordpress/openverse/issues/5171
   it.skip("should properly release the mutex and allow for subsequent requests to retry the token refresh", async () => {
     const firstTokenResponse = getMockTokenResponse(expiryThreshold - 1)
     const finalTokenResponse = getMockTokenResponse()

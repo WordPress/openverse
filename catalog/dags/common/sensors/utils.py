@@ -64,7 +64,7 @@ def get_dags_with_concurrency_tag(
     return [id for id in dag_ids if id not in {*excluded_dag_ids, running_dag_id}]
 
 
-@task
+@task(map_index_template="{{ task.op_kwargs['external_dag_id'] }}")
 def wait_for_external_dag(
     external_dag_id: str,
     task_id: str | None = None,

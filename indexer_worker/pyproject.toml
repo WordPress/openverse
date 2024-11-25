@@ -19,7 +19,7 @@ dependencies = [
     "filelock ~= 3.13",
     "gunicorn ~= 22.0",
     "jsonschema ~= 4.19",
-    "psycopg2 ~= 2.9",
+    "psycopg >=3.2.3, <4",
     "python-decouple ~= 3.8",
     "PyYAML ~= 6.0",
     "tldextract ~= 5.0",
@@ -32,11 +32,13 @@ distribution = false
 [tool.pdm.dev-dependencies]
 dev = [
     "ipython~=8.16",
+    "remote-pdb~=2.1",
+]
+test = [
+    "pook~=2.0",
     "pytest~=8.3",
     "pytest-order~=1.1",
     "pytest-sugar~=1.0",
-    "remote-pdb~=2.1",
-    "pook~=2.0",
 ]
 
 [build-system]

@@ -9,7 +9,6 @@ import VInputField from "~/components/VInputField/VInputField.vue"
 const props = {
   fieldId: "input-id",
   labelText: "Label",
-  size: "medium",
 }
 
 describe("VInputField", () => {

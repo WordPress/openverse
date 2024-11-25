@@ -21,10 +21,11 @@ describe("VTag", () => {
     expect(link.href).toEqual("https://example.com/")
   })
 
-  // https://github.com/wordpress/openverse/issues/411
-  it.skip("renders slot content", async () => {
+  it("renders slot content", async () => {
     const slotText = "Slot test"
-    options.slots = { default: () => `<div>${slotText}</div>` }
+    // Using a non-function value for the slot causes a Vue warning,
+    // but a function value is not rendered correctly by the unit tests.
+    options.slots = { default: `<div>${slotText}</div>` }
 
     await render(VTag, options)
     expect(screen.getByText(slotText)).toBeDefined()

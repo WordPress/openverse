@@ -2,7 +2,6 @@ import { createApp } from "vue"
 
 import { image } from "~~/test/unit/fixtures/image"
 import { render } from "~~/test/unit/test-utils/render"
-import { i18n } from "~~/test/unit/test-utils/i18n"
 
 import VImageCell from "~/components/VImageCell/VImageCell.vue"
 
@@ -21,13 +20,13 @@ describe("VImageCell", () => {
   beforeEach(() => {
     options = {
       global: {
-        plugins: [i18n],
         stubs: {
           RouterLink: RouterLinkStub,
         },
       },
       props: {
         image,
+        kind: "search",
         searchTerm: "cat",
         relatedTo: null,
       },
