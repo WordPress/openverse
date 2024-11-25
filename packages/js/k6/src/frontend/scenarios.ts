@@ -113,7 +113,7 @@ const createScenario = (
     // Ideally we would use default
     // https://community.grafana.com/t/overriding-vus-individual-scenario/98923
     timeUnit: __ENV.scenario_time_utin || "1m",
-    rate: parseInt(__ENV.scenario_rate) || 10,
+    rate: parseInt(__ENV.scenario_rate) || 3,
     duration: __ENV.scenario_duration || "4m",
     preAllocatedVUs: 100,
     maxVUs: 200,
