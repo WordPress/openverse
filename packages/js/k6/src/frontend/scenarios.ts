@@ -115,8 +115,8 @@ const createScenario = (
     timeUnit: __ENV.scenario_time_utin || "1m",
     rate: parseInt(__ENV.scenario_rate) || 3,
     duration: __ENV.scenario_duration || "4m",
-    preAllocatedVUs: 100,
-    maxVUs: 200,
+    preAllocatedVUs: 10,
+    maxVUs: 20,
   }
 }
 
