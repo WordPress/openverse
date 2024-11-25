@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2024-09-18T19:28:32+00:00\n"
+"POT-Creation-Date: 2024-11-25T16:11:05+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -33,9 +33,9 @@ msgctxt "hero.description"
 msgid "An extensive library of free stock photos, images, and audio, available for free use."
 msgstr ""
 
-#: src/components/VHeader/VSearchBar/VStandaloneSearchBar.vue:68
+#: src/components/VHeader/VSearchBar/VStandaloneSearchBar.vue:69
 #: src/components/VHeader/VSearchBar/VSearchBar.vue:116
-#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:300
+#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:303
 msgctxt "hero.search.placeholder"
 msgid "Search for content"
 msgstr ""
@@ -156,12 +156,12 @@ msgctxt "header.filterButton.withCount"
 msgid "Filters (###count###)"
 msgstr ""
 
-#: src/components/VHeader/VHeaderMobile/VShowResultsButton.vue:72
+#: src/components/VHeader/VHeaderMobile/VShowResultsButton.vue:75
 msgctxt "header.seeResults"
 msgid "See results"
 msgstr ""
 
-#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:288
+#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:291
 msgctxt "header.backButton"
 msgid "Go back"
 msgstr ""
@@ -1527,12 +1527,12 @@ msgctxt "browsePage.contentLink.audio.countMore"
 msgid "See the top ###localeCount### audio tracks found for ###query###."
 msgstr ""
 
-#: src/components/VLoadMore.vue:89
+#: src/components/VLoadMore.vue:80
 msgctxt "browsePage.load"
 msgid "Load more results"
 msgstr ""
 
-#: src/components/VLoadMore.vue:89
+#: src/components/VLoadMore.vue:80
 msgctxt "browsePage.loading"
 msgid "Loading..."
 msgstr ""
@@ -1597,7 +1597,7 @@ msgid "Search"
 msgstr ""
 
 #: src/components/VHeader/VHeaderDesktop.vue:88
-#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:328
+#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:331
 msgctxt "browsePage.searchForm.clear"
 msgid "Clear"
 msgstr ""
@@ -1638,7 +1638,7 @@ msgctxt "browsePage.aria.close"
 msgid "close"
 msgstr ""
 
-#: src/components/VScrollButton.vue:26
+#: src/components/VScrollButton.vue:65
 msgctxt "browsePage.aria.scroll"
 msgid "scroll to top"
 msgstr ""
@@ -1663,7 +1663,7 @@ msgid "search by creator"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VImageCell/VImageCell.vue:98
+#: src/components/VImageCell/VImageCell.vue:94
 msgctxt "browsePage.aria.imageTitle"
 msgid "Image: ###title###"
 msgstr ""
@@ -2332,9 +2332,9 @@ msgid "Search"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VHeader/VSearchBar/VStandaloneSearchBar.vue:71
+#: src/components/VHeader/VSearchBar/VStandaloneSearchBar.vue:72
 #: src/components/VHeader/VSearchBar/VSearchBar.vue:118
-#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:305
+#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:308
 msgctxt "search.searchBarLabel"
 msgid "Search for content in ###openverse###"
 msgstr ""
@@ -2502,7 +2502,7 @@ msgctxt "skipToContent"
 msgid "Skip to content"
 msgstr ""
 
-#: src/pages/preferences.vue:57
+#: src/pages/preferences.vue:61
 msgctxt "prefPage.title"
 msgid "Preferences"
 msgstr ""
@@ -2539,7 +2539,7 @@ msgctxt "prefPage.switchable.desc"
 msgid "You can toggle these features on or off as you like and your preferences will be saved in a cookie."
 msgstr ""
 
-#: src/pages/preferences.vue:131
+#: src/pages/preferences.vue:136
 msgctxt "prefPage.storeState"
 msgid "Store state"
 msgstr ""
@@ -2573,7 +2573,7 @@ msgstr ""
 
 #. Do not translate words between ### ###.
 #: src/components/VHeader/VWordPressLink.vue:16
-#: src/components/VHeader/VWordPressLink.vue:19
+#: src/components/VHeader/VWordPressLink.vue:24
 msgctxt "footer.wordpressAffiliation"
 msgid "Part of the ###wordpress### project"
 msgstr ""
@@ -2588,8 +2588,8 @@ msgctxt "language.language"
 msgid "Language"
 msgstr ""
 
-#: src/components/VThemeSelect/VThemeSelect.vue:73
-#: src/components/VThemeSelect/VThemeSelect.vue:74
+#: src/components/VThemeSelect/VThemeSelect.vue:83
+#: src/components/VThemeSelect/VThemeSelect.vue:84
 msgctxt "theme.theme"
 msgid "Theme"
 msgstr ""
@@ -2604,14 +2604,14 @@ msgctxt "theme.choices.light"
 msgid "Light"
 msgstr ""
 
-#: src/components/VThemeSelect/VThemeSelect.vue:59
+#: src/components/VThemeSelect/VThemeSelect.vue:29
 msgctxt "theme.choices.system"
 msgid "System"
 msgstr ""
 
 #: src/components/VRecentSearches/VRecentSearches.vue:63
 #: src/components/VRecentSearches/VRecentSearches.vue:81
-#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:367
+#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:370
 msgctxt "recentSearches.heading"
 msgid "Recent searches"
 msgstr ""
@@ -2647,9 +2647,9 @@ msgctxt "report.imageDetails"
 msgid "See image details"
 msgstr ""
 
-#: src/components/VImageCell/VImageCell.vue:102
-#: src/components/VImageCell/VImageCell.vue:165
-#: src/components/VImageCell/VImageCell.vue:194
+#: src/components/VImageCell/VImageCell.vue:98
+#: src/components/VImageCell/VImageCell.vue:172
+#: src/components/VImageCell/VImageCell.vue:201
 msgctxt "sensitiveContent.title.image"
 msgid "This image may contain sensitive content."
 msgstr ""
@@ -2668,7 +2668,7 @@ msgid "Creator"
 msgstr ""
 
 #: src/components/VSafetyWall/VSafetyWall.vue:43
-#: src/components/VImageCell/VImageCell.vue:201
+#: src/components/VImageCell/VImageCell.vue:208
 msgctxt "sensitiveContent.singleResult.title"
 msgid "Sensitive content"
 msgstr ""
