@@ -33,7 +33,7 @@ vi.mock("#app/nuxt", async () => {
   }
 })
 
-// https://github.com/wordpress/openverse/issues/411
+// https://github.com/wordpress/openverse/issues/5171
 it.skip("subsequent requests should all block on the same token retrieval promise", async () => {
   /**
    * This test is pretty complicated because we need to simulate

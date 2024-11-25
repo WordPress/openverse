@@ -36,6 +36,7 @@ export default tseslint.config(
     ],
     rules: {
       // Vue rules
+      "vue/no-required-prop-with-default": "error",
       /**
        * Custom rule to disallow raw `<a></a>` tag usage.
        * Learn more about vue-eslint-parser's AST syntax:

@@ -3,7 +3,7 @@ import { useReducedMotion } from "~/composables/use-reduced-motion"
 
 withDefaults(
   defineProps<{
-    status: "loading" | "idle"
+    status?: "loading" | "idle"
   }>(),
   {
     status: "idle",

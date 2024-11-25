@@ -4,7 +4,7 @@ import VSvg from "~/components/VSvg/VSvg.vue"
 
 withDefaults(
   defineProps<{
-    mode: "dark" | "light"
+    mode?: "dark" | "light"
   }>(),
   { mode: "light" }
 )

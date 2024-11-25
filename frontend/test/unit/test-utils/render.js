@@ -1,7 +1,8 @@
 import { defu } from "defu"
 
+import { renderSuspended } from "@nuxt/test-utils/runtime"
+
 import { i18n } from "~~/test/unit/test-utils/i18n"
-import { renderSuspended } from "~~/test/unit/test-utils/render-suspended"
 
 export const render = async (Component, options = {}) => {
   options = defu(options, {
