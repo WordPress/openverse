@@ -66,6 +66,11 @@ const config: PlaywrightTestConfig = {
    * to avoid the test also becoming a load test.
    */
   workers: UPDATE_TAPES === "true" || baseURL !== localBaseURL ? 1 : undefined,
+  expect: {
+    toMatchSnapshot: {
+      threshold: 0.1,
+    },
+  },
 }
 
 export default config
