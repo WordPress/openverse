@@ -267,6 +267,9 @@ The following communication will be needed
   ([in a sense](https://drewdevault.com/2024/04/19/2024-04-19-copyleft-is-not-restrictive.html))
   by adding stronger copyleft protections.
 
+  If concerns or objections are raised by this communication, we will convene a
+  discussion to address and potentially adjust the relicensing strategy.
+
 - new licenses
 
   This should be communicated out once the license change commit is merged.
