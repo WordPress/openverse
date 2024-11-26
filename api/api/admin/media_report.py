@@ -525,7 +525,7 @@ class MediaListAdmin(BulkModerationMixin, admin.ModelAdmin):
     list_display = ("identifier",)
     list_display_links = ("identifier",)
     list_per_page = 15
-    list_max_show_all = 50
+    show_full_result_count = False
     search_fields = (None,)  # Search functionality is overridden below.
     search_help_text = format_html(
         """
