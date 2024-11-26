@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, inject, onMounted, onUnmounted, ref } from "vue"
 
-import { tabsContextKey, type TabsState } from "~/types/tabs"
-import { keycodes } from "~/constants/key-codes"
+import { keycodes } from "#shared/constants/key-codes"
+import { tabsContextKey, type TabsState } from "#shared/types/tabs"
 import { getDomElement } from "~/utils/dom"
 import { Focus, focusIn } from "~/utils/focus-management"
 

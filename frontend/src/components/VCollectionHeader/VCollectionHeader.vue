@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
-import { useAnalytics } from "~/composables/use-analytics"
-
+import type { SupportedMediaType } from "#shared/constants/media"
+import type { CollectionParams } from "#shared/types/search"
 import { useMediaStore } from "~/stores/media"
 import { useProviderStore } from "~/stores/provider"
 import { useSearchStore } from "~/stores/search"
-import type { CollectionParams } from "~/types/search"
-import type { SupportedMediaType } from "~/constants/media"
-
+import { useAnalytics } from "~/composables/use-analytics"
 import { useI18nResultsCount } from "~/composables/use-i18n-utilities"
 
 import VIcon from "~/components/VIcon/VIcon.vue"

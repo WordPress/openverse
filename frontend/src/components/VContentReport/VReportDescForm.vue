@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
-import { OTHER, type ReportReason } from "~/constants/content-report"
+import { OTHER, type ReportReason } from "#shared/constants/content-report"
 
 const props = withDefaults(
   defineProps<{

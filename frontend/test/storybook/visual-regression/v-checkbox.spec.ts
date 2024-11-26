@@ -1,5 +1,4 @@
 import { test } from "~~/test/playwright/utils/test"
-
 import { expectScreenshotAreaSnapshot } from "~~/test/playwright/utils/expect-snapshot"
 
 test.describe.configure({ mode: "parallel" })

@@ -1,7 +1,5 @@
 import { Page } from "@playwright/test"
-
 import { test } from "~~/test/playwright/utils/test"
-
 import { expectScreenshotAreaSnapshot } from "~~/test/playwright/utils/expect-snapshot"
 
 const goTo = async (page: Page, slug: string) => {

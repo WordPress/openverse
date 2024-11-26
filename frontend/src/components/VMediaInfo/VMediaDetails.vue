@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { useI18n } from "#imports"
-
 import { computed } from "vue"
 
-import type { AudioDetail, ImageDetail, Metadata } from "~/types/media"
-import { IMAGE } from "~/constants/media"
-
+import { IMAGE } from "#shared/constants/media"
+import type { AudioDetail, ImageDetail, Metadata } from "#shared/types/media"
 import { getMediaMetadata } from "~/utils/metadata"
 
 import VContentReportModal from "~/components/VContentReport/VContentReportModal.vue"

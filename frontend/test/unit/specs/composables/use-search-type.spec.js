@@ -1,10 +1,8 @@
 import { beforeEach, describe, expect, it } from "vitest"
-
 import { createPinia, setActivePinia } from "~~/test/unit/test-utils/pinia"
 
+import { ALL_MEDIA, AUDIO, IMAGE } from "#shared/constants/media"
 import useSearchType from "~/composables/use-search-type"
-
-import { ALL_MEDIA, AUDIO, IMAGE } from "~/constants/media"
 
 describe("useSearchType", () => {
   beforeEach(() => {

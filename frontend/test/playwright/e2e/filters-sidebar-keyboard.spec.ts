@@ -1,19 +1,16 @@
 import { expect, Page } from "@playwright/test"
-
 import { test } from "~~/test/playwright/utils/test"
-
 import {
   goToSearchTerm,
   preparePageForTests,
 } from "~~/test/playwright/utils/navigation"
-
 import {
   LanguageDirection,
   languageDirections,
   t,
 } from "~~/test/playwright/utils/i18n"
 
-import { keycodes } from "~/constants/key-codes"
+import { keycodes } from "#shared/constants/key-codes"
 
 const isFilterButtonFocused = async (page: Page) => {
   return page.evaluate(() => document.activeElement?.id === "filter-button")

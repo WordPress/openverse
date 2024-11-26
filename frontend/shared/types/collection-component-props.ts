@@ -1,6 +1,6 @@
-import { type SupportedSearchType, IMAGE, AUDIO } from "~/constants/media"
-import type { AudioDetail, ImageDetail } from "~/types/media"
-import type { ResultKind, Results } from "~/types/result"
+import { type SupportedSearchType, IMAGE, AUDIO } from "#shared/constants/media"
+import type { AudioDetail, ImageDetail } from "#shared/types/media"
+import type { ResultKind, Results } from "#shared/types/result"
 
 export type SingleResultProps = {
   kind: ResultKind

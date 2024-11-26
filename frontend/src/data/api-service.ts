@@ -1,17 +1,17 @@
-import { decodeMediaData, useRuntimeConfig } from "#imports"
+import { useRuntimeConfig } from "#imports"
 
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios"
 
-import { debug, warn } from "~/utils/console"
-
-import { mediaSlug } from "~/utils/query-utils"
-import { AUDIO, SupportedMediaType } from "~/constants/media"
-import type { Events } from "~/types/analytics"
-import type { Media } from "~/types/media"
+import { AUDIO, type SupportedMediaType } from "#shared/constants/media"
+import { mediaSlug } from "#shared/utils/query-utils"
+import type { Events } from "#shared/types/analytics"
+import type { Media } from "#shared/types/media"
 import type {
   PaginatedCollectionQuery,
   PaginatedSearchQuery,
-} from "~/types/search"
+} from "#shared/types/search"
+import { debug, warn } from "~/utils/console"
+import { decodeMediaData } from "~/utils/decode-media-data"
 
 const DEFAULT_REQUEST_TIMEOUT = 30000
 

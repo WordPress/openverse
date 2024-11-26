@@ -1,4 +1,4 @@
-import { SupportedMediaType } from "~/constants/media"
+import { SupportedMediaType } from "#shared/constants/media"
 
 import type { LocationQueryValue } from "vue-router"
 

@@ -3,9 +3,8 @@
  * Renders the explanation of the license passed to it by breaking it down to
  * its constituent clauses.
  */
-import { getLicenseUrl, isLicense } from "~/utils/license"
-
-import type { License } from "~/constants/license"
+import type { License } from "#shared/constants/license"
+import { getLicenseUrl, isLicense } from "#shared/utils/license"
 
 import VLicenseElements from "~/components/VLicense/VLicenseElements.vue"
 import VLink from "~/components/VLink.vue"

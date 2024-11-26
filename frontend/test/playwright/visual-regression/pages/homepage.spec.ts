@@ -1,7 +1,5 @@
 import { Page } from "@playwright/test"
-
 import { test } from "~~/test/playwright/utils/test"
-
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import { hideInputCursors } from "~~/test/playwright/utils/page"
 import {

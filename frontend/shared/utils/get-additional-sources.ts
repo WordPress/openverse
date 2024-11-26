@@ -1,7 +1,6 @@
-import type { MediaType } from "~/constants/media"
-import type { PaginatedSearchQuery } from "~/types/search"
-
-import { MODEL_3D } from "~/constants/media"
+import type { MediaType } from "#shared/constants/media"
+import { MODEL_3D } from "#shared/constants/media"
+import type { PaginatedSearchQuery } from "#shared/types/search"
 
 /**
  * Describes the query format used by the URL builder functions of additional

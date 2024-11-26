@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import { useI18n, useNuxtApp, useRoute } from "#imports"
-
 import { computed, onMounted, ref, watch } from "vue"
+
 import { storeToRefs } from "pinia"
 import { useElementVisibility } from "@vueuse/core"
 
+import type { SupportedSearchType } from "#shared/constants/media"
+import type { SingleResultProps } from "#shared/types/collection-component-props"
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
-
-import type { SingleResultProps } from "~/types/collection-component-props"
-import type { SupportedSearchType } from "~/constants/media"
 
 import VButton from "~/components/VButton.vue"
 

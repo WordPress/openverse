@@ -1,10 +1,8 @@
 import { test } from "~~/test/playwright/utils/test"
-
 import { makeGotoWithArgs } from "~~/test/storybook/utils/args"
-
 import { expectSnapshot } from "~~/test/playwright/utils/expect-snapshot"
 
-import { buttonVariants } from "~/types/button"
+import { buttonVariants } from "#shared/types/button"
 
 const buttonLocator = "text=Code is Poetry"
 const wrapperLocator = "#wrapper"

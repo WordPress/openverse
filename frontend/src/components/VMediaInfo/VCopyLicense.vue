@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { useI18n, useNuxtApp } from "#imports"
-
 import { onBeforeUnmount, onMounted, ref } from "vue"
 
-import { AttributionOptions, getAttribution } from "~/utils/attribution-html"
-import type { Media } from "~/types/media"
+import {
+  AttributionOptions,
+  getAttribution,
+} from "#shared/utils/attribution-html"
+import type { Media } from "#shared/types/media"
 
 import VTabs from "~/components/VTabs/VTabs.vue"
 import VTab from "~/components/VTabs/VTab.vue"

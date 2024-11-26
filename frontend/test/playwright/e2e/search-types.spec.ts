@@ -1,7 +1,5 @@
 import { expect, Page } from "@playwright/test"
-
 import { test } from "~~/test/playwright/utils/test"
-
 import {
   changeSearchType,
   goToSearchTerm,
@@ -10,7 +8,7 @@ import {
 import { mockProviderApis } from "~~/test/playwright/utils/route"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 
-import { searchPath } from "~/constants/media"
+import { searchPath } from "#shared/constants/media"
 
 /**
  * Using SSR:

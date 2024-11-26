@@ -5,13 +5,11 @@
  * of the container upto a max of 5.
  */
 import { useLocalePath, useRouter } from "#imports"
-
 import { computed, ref } from "vue"
 
+import type { GallerySet } from "#shared/types/home-gallery"
 import { useReducedMotion } from "~/composables/use-reduced-motion"
 import useResizeObserver from "~/composables/use-resize-observer"
-
-import type { GallerySet } from "~/types/home-gallery"
 
 import VGalleryImage from "~/components/VHomeGallery/VGalleryImage.vue"
 

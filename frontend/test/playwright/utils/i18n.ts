@@ -1,7 +1,6 @@
 import rtlMessages from "~~/test/locales/ar.json"
 import esMessages from "~~/test/locales/es.json"
 import ruMessages from "~~/test/locales/ru.json"
-
 import enMessages from "~~/i18n/locales/en.json"
 
 const messages: Record<string, Record<string, unknown>> = {

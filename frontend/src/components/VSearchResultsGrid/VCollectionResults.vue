@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { isSupportedMediaType } from "~/constants/media"
-
-import type { CollectionParams } from "~/types/search"
-import type { AudioResults, ImageResults } from "~/types/result"
+import { isSupportedMediaType } from "#shared/constants/media"
+import type { CollectionParams } from "#shared/types/search"
+import type { AudioResults, ImageResults } from "#shared/types/result"
 
 import VCollectionHeader from "~/components/VCollectionHeader/VCollectionHeader.vue"
 import VMediaCollection from "~/components/VSearchResultsGrid/VMediaCollection.vue"

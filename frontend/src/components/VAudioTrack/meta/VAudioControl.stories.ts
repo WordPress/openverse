@@ -1,10 +1,10 @@
-import { Meta, StoryObj } from "@storybook/vue3"
-
 import { h } from "vue"
 
-import { audioStatuses } from "~/constants/audio"
+import { audioStatuses } from "#shared/constants/audio"
 
 import VAudioControl from "~/components/VAudioTrack/VAudioControl.vue"
+
+import type { Meta, StoryObj } from "@storybook/vue3"
 
 const meta = {
   title: "Components/Audio track/Audio control",

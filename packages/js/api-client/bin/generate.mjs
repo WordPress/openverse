@@ -2,7 +2,6 @@ import fs from "node:fs"
 import path from "node:path"
 
 import openapiTS, { astToString } from "openapi-typescript"
-
 import * as prettier from "prettier"
 import { ESLint } from "eslint"
 

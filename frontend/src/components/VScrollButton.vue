@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useNuxtApp, useRoute } from "#imports"
-
 import { computed } from "vue"
 
 import { useSearchStore } from "~/stores/search"

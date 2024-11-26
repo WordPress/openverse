@@ -2,14 +2,14 @@
  * Contains utilities related to content safety.
  */
 
-import { hash, rand as prng } from "~/utils/prng"
-import { log } from "~/utils/console"
 import {
   USER_REPORTED,
   PROVIDER_SUPPLIED,
   TEXT_FILTERED,
   Sensitivity,
-} from "~/constants/content-safety"
+} from "#shared/constants/content-safety"
+import { hash, rand as prng } from "#shared/utils/prng"
+import { log } from "~/utils/console"
 
 /**
  * Get an array of randomly selected sensitive content flags for an item with

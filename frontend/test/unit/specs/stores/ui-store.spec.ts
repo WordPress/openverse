@@ -1,15 +1,15 @@
 import { nextTick } from "vue"
 
 import { vi, describe, beforeEach, it, expect, test } from "vitest"
-
 import { setActivePinia, createPinia } from "~~/test/unit/test-utils/pinia"
 
-import { defaultUiState, UiState, useUiStore } from "~/stores/ui"
-import { BannerId } from "~/types/banners"
+import type { BannerId } from "#shared/types/banners"
+import { type UiState, defaultUiState, useUiStore } from "~/stores/ui"
 
-vi.mock("~/types/cookies", async () => {
-  const actual =
-    await vi.importActual<typeof import("~/types/cookies")>("~/types/cookies")
+vi.mock("#shared/types/cookies", async () => {
+  const actual = await vi.importActual<typeof import("#shared/types/cookies")>(
+    "#shared/types/cookies"
+  )
   return {
     ...actual,
     persistentCookieOptions: {

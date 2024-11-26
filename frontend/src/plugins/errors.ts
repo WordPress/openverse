@@ -2,10 +2,9 @@ import { defineNuxtPlugin } from "#imports"
 
 import { isAxiosError } from "axios"
 
-import { ERR_UNKNOWN, ErrorCode, errorCodes } from "~/constants/errors"
-import type { FetchingError, RequestKind } from "~/types/fetch-state"
-import type { SupportedSearchType } from "~/constants/media"
-
+import { ERR_UNKNOWN, ErrorCode, errorCodes } from "#shared/constants/errors"
+import type { SupportedSearchType } from "#shared/constants/media"
+import type { FetchingError, RequestKind } from "#shared/types/fetch-state"
 import { debug } from "~/utils/console"
 
 import type { NuxtApp } from "#app"

@@ -1,9 +1,7 @@
 import { describe, expect, it } from "vitest"
-
 import { setActivePinia, createPinia } from "~~/test/unit/test-utils/pinia"
 
-import { AUDIO } from "~/constants/media"
-
+import { AUDIO } from "#shared/constants/media"
 import { useActiveMediaStore } from "~/stores/active-media"
 
 const initialState = { type: null, id: null, status: "ejected", message: null }

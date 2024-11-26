@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue"
 
+import type { SupportedMediaType } from "#shared/constants/media"
+import type { MediaProvider } from "#shared/types/media-provider"
 import { useProviderStore } from "~/stores/provider"
 import { useSearchStore } from "~/stores/search"
 import { useGetLocaleFormattedNumber } from "~/composables/use-get-locale-formatted-number"
-
-import type { SupportedMediaType } from "~/constants/media"
-import type { MediaProvider } from "~/types/media-provider"
 
 import TableSortIcon from "~/components/TableSortIcon.vue"
 import VLink from "~/components/VLink.vue"

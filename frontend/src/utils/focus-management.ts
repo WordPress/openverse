@@ -1,7 +1,7 @@
 // Credit: https://github.com/tailwindlabs/headlessui/blob/main/packages/%40headlessui-vue/src/utils/focus-management.ts
-import { getDomElement } from "~/utils/dom"
-
 import type { Ref } from "vue"
+
+import { getDomElement } from "~/utils/dom"
 
 function getOwnerDocument<T extends Element | Ref<Element | null>>(
   element: T | null | undefined

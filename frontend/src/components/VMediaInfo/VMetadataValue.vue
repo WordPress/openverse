@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Metadata } from "~/types/media"
+import type { Metadata } from "#shared/types/media"
 
 import VLink from "~/components/VLink.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"

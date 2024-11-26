@@ -1,5 +1,5 @@
-import { clientSideErrorCodes, NO_RESULT } from "~/constants/errors"
-import type { FetchingError } from "~/types/fetch-state"
+import { clientSideErrorCodes, NO_RESULT } from "#shared/constants/errors"
+import type { FetchingError } from "#shared/types/fetch-state"
 
 const NON_RETRYABLE_ERROR_CODES = [429, 500, 404] as const
 const isNonRetryableErrorStatusCode = (statusCode: number | undefined) => {

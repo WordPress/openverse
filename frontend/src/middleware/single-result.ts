@@ -1,19 +1,14 @@
-import {
-  createError,
-  defineNuxtRouteMiddleware,
-  firstParam,
-  handledClientSide,
-  showError,
-} from "#imports"
+import { createError, defineNuxtRouteMiddleware, showError } from "#imports"
 
-import { RouteLocationNormalized } from "vue-router"
-
+import { AUDIO, IMAGE, supportedMediaTypes } from "#shared/constants/media"
+import { getRouteNameString } from "#shared/utils/route-utils"
+import { firstParam } from "#shared/utils/query-utils"
+import { handledClientSide } from "#shared/utils/errors"
 import { useSingleResultStore } from "~/stores/media/single-result"
 import { useSearchStore } from "~/stores/search"
-
-import { AUDIO, IMAGE, supportedMediaTypes } from "~/constants/media"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
-import { getRouteNameString } from "~/utils/route-utils"
+
+import type { RouteLocationNormalized } from "vue-router"
 
 const searchPaths = [
   ...supportedMediaTypes.map((type) => `search-${type}`),

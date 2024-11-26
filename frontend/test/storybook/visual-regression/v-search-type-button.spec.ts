@@ -1,7 +1,5 @@
 import { expect, type Page } from "@playwright/test"
-
 import { test } from "~~/test/playwright/utils/test"
-
 import { makeUrlWithArgs } from "~~/test/storybook/utils/args"
 import { t } from "~~/test/playwright/utils/i18n"
 import { expectSnapshot } from "~~/test/playwright/utils/expect-snapshot"

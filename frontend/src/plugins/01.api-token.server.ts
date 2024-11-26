@@ -1,7 +1,6 @@
 import { defineNuxtPlugin, useRuntimeConfig } from "#imports"
 
 import { Mutex, MutexInterface } from "async-mutex"
-
 import axios from "axios"
 
 import { debug, warn } from "~/utils/console"

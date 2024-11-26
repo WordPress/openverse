@@ -1,7 +1,6 @@
 import { createApp } from "vue"
 
 import { describe, expect, it } from "vitest"
-
 import { render } from "~~/test/unit/test-utils/render"
 
 import { useGetLocaleFormattedNumber } from "~/composables/use-get-locale-formatted-number"

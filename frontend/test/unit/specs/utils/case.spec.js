@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { camelCase, capitalCase } from "~/utils/case"
+import { camelCase, capitalCase } from "#shared/utils/case"
 
 describe("camelCase", () => {
   it.each`

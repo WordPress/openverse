@@ -1,7 +1,5 @@
 import { screen } from "@testing-library/vue"
-
 import { beforeEach, describe, expect, it, vi } from "vitest"
-
 import { render } from "~~/test/unit/test-utils/render"
 
 import { useMatchHomeRoute } from "~/composables/use-match-routes"

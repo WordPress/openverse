@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { useNuxtApp } from "#imports"
-
 import { computed } from "vue"
 
+import { camelCase } from "#shared/utils/case"
+import type { AudioDetail, ImageDetail } from "#shared/types/media"
 import { useSearchStore } from "~/stores/search"
-import { camelCase } from "~/utils/case"
-import type { AudioDetail, ImageDetail } from "~/types/media"
 
 import VLink from "~/components/VLink.vue"
 import VButton from "~/components/VButton.vue"

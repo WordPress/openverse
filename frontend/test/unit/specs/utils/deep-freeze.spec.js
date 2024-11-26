@@ -1,4 +1,4 @@
-import { deepFreeze } from "~/utils/deep-freeze"
+import { deepFreeze } from "#shared/utils/deep-freeze"
 
 describe("deepFreeze", () => {
   it("should freeze shallow arrays", async () => {

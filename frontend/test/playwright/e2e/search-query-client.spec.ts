@@ -1,7 +1,5 @@
 import { expect } from "@playwright/test"
-
 import { test } from "~~/test/playwright/utils/test"
-
 import {
   changeSearchType,
   goToSearchTerm,
@@ -9,12 +7,10 @@ import {
   searchFromHeader,
 } from "~~/test/playwright/utils/navigation"
 import { mockProviderApis } from "~~/test/playwright/utils/route"
-
 import breakpoints from "~~/test/playwright/utils/breakpoints"
-
 import { getHeaderSearchbar } from "~~/test/playwright/utils/components"
 
-import { AUDIO, IMAGE } from "~/constants/media"
+import { AUDIO, IMAGE } from "#shared/constants/media"
 
 /**
  * When navigating to the search page on the client side:

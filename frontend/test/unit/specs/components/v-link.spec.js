@@ -1,7 +1,7 @@
-import { beforeEach, describe, expect, it } from "vitest"
-
-import { fireEvent, render, screen } from "@testing-library/vue"
 import { createApp } from "vue"
+
+import { beforeEach, describe, expect, it } from "vitest"
+import { fireEvent, render, screen } from "@testing-library/vue"
 
 import VLink from "~/components/VLink.vue"
 

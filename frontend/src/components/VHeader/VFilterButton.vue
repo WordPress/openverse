@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useI18n } from "#imports"
-
 import { computed } from "vue"
 
 import { useSearchStore } from "~/stores/search"

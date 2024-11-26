@@ -4,7 +4,7 @@
 
 import { BrowserContext, expect } from "@playwright/test"
 
-import type { EventName, Events } from "~/types/analytics"
+import type { EventName, Events } from "#shared/types/analytics"
 
 export type EventResponse<T extends EventName> = {
   n: T

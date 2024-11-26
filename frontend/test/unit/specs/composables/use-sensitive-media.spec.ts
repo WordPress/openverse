@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
+import type { Sensitivity } from "#shared/constants/content-safety"
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
-import type { Sensitivity } from "~/constants/content-safety"
 
 let mockUseUiStore = {
   shouldBlurSensitive: true,

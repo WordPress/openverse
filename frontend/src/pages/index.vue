@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { definePageMeta, navigateTo, useHead } from "#imports"
-
 import { computed, onMounted, ref } from "vue"
 
 import {
@@ -8,13 +7,12 @@ import {
   isAdditionalSearchType,
   isSupportedMediaType,
   SearchType,
-} from "~/constants/media"
-import { useAnalytics } from "~/composables/use-analytics"
-
+} from "#shared/constants/media"
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 import { useUiStore } from "~/stores/ui"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { useAnalytics } from "~/composables/use-analytics"
 
 import VDarkModeFeatureNotice from "~/components/VFeatureNotice/VDarkModeFeatureNotice.vue"
 import VHomeGallery from "~/components/VHomeGallery/VHomeGallery.vue"

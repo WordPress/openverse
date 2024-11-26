@@ -1,10 +1,10 @@
 import { computed } from "vue"
-
-import { useProviderStore } from "~/stores/provider"
-import type { SupportedMediaType } from "~/constants/media"
-import type { CollectionParams } from "~/types/search"
-
 import type { ComputedRef } from "vue"
+
+import type { SupportedMediaType } from "#shared/constants/media"
+import type { CollectionParams } from "#shared/types/search"
+import { useProviderStore } from "~/stores/provider"
+
 import type { Composer } from "vue-i18n"
 
 export const useCollectionMeta = ({

@@ -1,7 +1,5 @@
 import { expect } from "@playwright/test"
-
 import { test } from "~~/test/playwright/utils/test"
-
 import {
   filters,
   goToSearchTerm,
@@ -11,17 +9,14 @@ import {
 } from "~~/test/playwright/utils/navigation"
 import { mockProviderApis } from "~~/test/playwright/utils/route"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
-
 import {
   getBackToSearchLink,
   getHeaderSearchbar,
 } from "~~/test/playwright/utils/components"
-
 import { getContentLink } from "~~/test/playwright/utils/search-results"
-
 import { t } from "~~/test/playwright/utils/i18n"
 
-import { AUDIO, IMAGE } from "~/constants/media"
+import { AUDIO, IMAGE } from "#shared/constants/media"
 
 test.describe.configure({ mode: "parallel" })
 

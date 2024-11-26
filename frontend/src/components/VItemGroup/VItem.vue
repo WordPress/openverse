@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import { inject, ref, computed, watch, useAttrs } from "vue"
 
-import { warn } from "~/utils/console"
-
 import {
   type VIemGroupContext,
   type VIemGroupFocusContext,
   VItemGroupContextKey,
   VItemGroupFocusContextKey,
-} from "~/types/item-group"
-import { VPopoverContentContextKey } from "~/types/provides"
+} from "#shared/types/item-group"
+import { VPopoverContentContextKey } from "#shared/types/provides"
+import { warn } from "~/utils/console"
 
 import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"

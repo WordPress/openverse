@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { useElementSize } from "@vueuse/core"
 import { computed, ref, watch } from "vue"
+
+import { useElementSize } from "@vueuse/core"
 
 import { useUiStore } from "~/stores/ui"
 

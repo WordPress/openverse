@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
+import type { SearchType } from "#shared/constants/media"
 import useSearchType from "~/composables/use-search-type"
-import type { SearchType } from "~/constants/media"
 
 import VItemGroup from "~/components/VItemGroup/VItemGroup.vue"
 import VSearchTypeItem from "~/components/VContentSwitcher/VSearchTypeItem.vue"

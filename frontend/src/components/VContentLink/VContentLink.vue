@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { useNuxtApp } from "#imports"
-
 import { computed } from "vue"
 
+import type { SupportedMediaType } from "#shared/constants/media"
 import useSearchType from "~/composables/use-search-type"
 import { useHydrating } from "~/composables/use-hydrating"
 import { useI18nResultsCount } from "~/composables/use-i18n-utilities"
-import type { SupportedMediaType } from "~/constants/media"
 
 import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"

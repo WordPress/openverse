@@ -6,7 +6,7 @@ import {
   LICENSE_VERSIONS,
   PUBLIC_DOMAIN_MARKS,
   DEPRECATED_CC_LICENSES,
-} from "~/constants/license"
+} from "#shared/constants/license"
 
 import VMediaLicense from "~/components/VMediaInfo/VMediaLicense.vue"
 

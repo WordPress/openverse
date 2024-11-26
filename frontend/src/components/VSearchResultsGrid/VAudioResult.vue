@@ -1,19 +1,16 @@
 <script setup lang="ts">
 import { useNuxtApp } from "#imports"
-
 import { toRefs } from "vue"
 
-import { useAudioSnackbar } from "~/composables/use-audio-snackbar"
-import { useSensitiveMedia } from "~/composables/use-sensitive-media"
-import { AUDIO } from "~/constants/media"
-
-import type { AudioInteractionData } from "~/types/analytics"
-import type { AudioLayout, AudioSize } from "~/constants/audio"
-import type { AudioTrackClickEvent } from "~/types/events"
-import type { AudioDetail } from "~/types/media"
-import type { SingleResultProps } from "~/types/collection-component-props"
-
+import { AUDIO } from "#shared/constants/media"
+import type { AudioLayout, AudioSize } from "#shared/constants/audio"
+import type { AudioInteractionData } from "#shared/types/analytics"
+import type { AudioTrackClickEvent } from "#shared/types/events"
+import type { AudioDetail } from "#shared/types/media"
+import type { SingleResultProps } from "#shared/types/collection-component-props"
 import { useSearchStore } from "~/stores/search"
+import { useSensitiveMedia } from "~/composables/use-sensitive-media"
+import { useAudioSnackbar } from "~/composables/use-audio-snackbar"
 
 import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"
 

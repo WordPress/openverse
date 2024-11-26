@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { computed } from "vue"
+
 import { storeToRefs } from "pinia"
 
+import {
+  type AudioDetail,
+  type ImageDetail,
+  isDetail,
+} from "#shared/types/media"
 import { useUiStore } from "~/stores/ui"
-
-import { type AudioDetail, type ImageDetail, isDetail } from "~/types/media"
 
 import VImageCell from "~/components/VImageCell/VImageCell.vue"
 import VAudioResult from "~/components/VSearchResultsGrid/VAudioResult.vue"

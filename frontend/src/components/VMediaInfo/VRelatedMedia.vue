@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { firstParam, useI18n, useRoute } from "#imports"
-
+import { useRoute, useI18n } from "#imports"
 import { computed, watch } from "vue"
 
+import type { SupportedMediaType } from "#shared/constants/media"
+import { firstParam } from "#shared/utils/query-utils"
+import type { AudioResults, ImageResults } from "#shared/types/result"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
-
-import type { SupportedMediaType } from "~/constants/media"
-import type { AudioResults, ImageResults } from "~/types/result"
 
 import VMediaCollection from "~/components/VSearchResultsGrid/VMediaCollection.vue"
 

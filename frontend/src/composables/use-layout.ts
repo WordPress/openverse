@@ -1,7 +1,7 @@
 import { useWindowSize, watchDebounced } from "@vueuse/core"
 
-import type { RealBreakpoint } from "~/constants/screens"
-import { ALL_SCREEN_SIZES } from "~/constants/screens"
+import type { RealBreakpoint } from "#shared/constants/screens"
+import { ALL_SCREEN_SIZES } from "#shared/constants/screens"
 import { useUiStore } from "~/stores/ui"
 
 const widthToBreakpoint = (width: number): RealBreakpoint => {

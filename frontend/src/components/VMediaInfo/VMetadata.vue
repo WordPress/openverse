@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { firstParam, useNuxtApp, useRoute } from "#imports"
-
+import { useNuxtApp, useRoute } from "#imports"
 import { computed } from "vue"
 
-import type { Metadata } from "~/types/media"
+import { firstParam } from "#shared/utils/query-utils"
+import type { Metadata } from "#shared/types/media"
 import { useUiStore } from "~/stores/ui"
 
 import VMetadataValue from "~/components/VMediaInfo/VMetadataValue.vue"

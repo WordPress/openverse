@@ -1,19 +1,18 @@
 <script setup lang="ts">
 import { useNuxtApp } from "#imports"
-
 import { provide, ref, readonly } from "vue"
 
-import { keycodes } from "~/constants/key-codes"
-import { ensureFocus } from "~/utils/reakit-utils/focus"
+import { keycodes } from "#shared/constants/key-codes"
 import type {
   ItemGroupDirection,
   ItemGroupSize,
   ItemGroupType,
-} from "~/types/item-group"
+} from "#shared/types/item-group"
 import {
   VItemGroupContextKey,
   VItemGroupFocusContextKey,
-} from "~/types/item-group"
+} from "#shared/types/item-group"
+import { ensureFocus } from "~/utils/reakit-utils/focus"
 
 const arrows = [
   keycodes.ArrowUp,

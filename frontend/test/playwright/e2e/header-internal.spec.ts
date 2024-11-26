@@ -1,7 +1,5 @@
 import { expect, Page } from "@playwright/test"
-
 import { test } from "~~/test/playwright/utils/test"
-
 import {
   isDialogOpen,
   openAndCloseExternalLink,

@@ -2,11 +2,9 @@ import { computed, unref, Ref } from "vue"
 
 import { useNuxtApp } from "#app"
 
-import type { Media } from "~/types/media"
-
+import type { SensitiveMediaVisibility } from "#shared/constants/content-safety"
+import type { Media } from "#shared/types/media"
 import { useUiStore } from "~/stores/ui"
-
-import type { SensitiveMediaVisibility } from "~/constants/content-safety"
 
 type SensitiveFields = Pick<Media, "id" | "sensitivity" | "isSensitive">
 

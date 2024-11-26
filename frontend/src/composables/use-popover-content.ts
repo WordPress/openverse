@@ -1,12 +1,10 @@
 import { computed, ref } from "vue"
+import type { Ref, ToRefs, SetupContext } from "vue"
 
 import { useFloatingUi } from "~/composables/use-floating-ui"
-
 import { useDialogContent } from "~/composables/use-dialog-content"
 
 import type { Properties as CSSProperties } from "csstype"
-
-import type { Ref, ToRefs, SetupContext } from "vue"
 import type { Placement, Strategy } from "@floating-ui/dom"
 
 export type PopoverContentProps = {

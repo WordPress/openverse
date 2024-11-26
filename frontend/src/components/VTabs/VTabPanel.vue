@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, inject, onMounted, onUnmounted, ref } from "vue"
 
-import { tabsContextKey } from "~/types/tabs"
+import { tabsContextKey } from "#shared/types/tabs"
 
 const props = defineProps<{
   /**

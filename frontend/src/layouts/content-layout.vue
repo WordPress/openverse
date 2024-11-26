@@ -3,7 +3,7 @@ import { computed, provide, ref, watch } from "vue"
 
 import { useWindowScroll } from "@vueuse/core"
 
-import { ShowScrollButtonKey } from "~/types/provides"
+import { ShowScrollButtonKey } from "#shared/types/provides"
 
 import VFooter from "~/components/VFooter/VFooter.vue"
 import VHeader from "~/components/VHeader/VHeader.vue"

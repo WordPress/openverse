@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { onMounted } from "vue"
 
+import { useUiStore } from "~/stores/ui"
 import { useAnalytics } from "~/composables/use-analytics"
 import { useExternalSources } from "~/composables/use-external-sources"
-import { useUiStore } from "~/stores/ui"
 
 import VButton from "~/components/VButton.vue"
 

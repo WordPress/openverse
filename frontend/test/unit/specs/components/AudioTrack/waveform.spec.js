@@ -3,7 +3,7 @@ import { render } from "~~/test/unit/test-utils/render"
 
 import VWaveform from "~/components/VAudioTrack/VWaveform.vue"
 
-vi.mock("~/utils/resampling", () => {
+vi.mock("#shared/utils/resampling", () => {
   return {
     downsampleArray: vi.fn((data) => data),
     upsampleArray: vi.fn((data) => data),

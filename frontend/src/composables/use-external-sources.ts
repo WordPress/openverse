@@ -1,13 +1,13 @@
 import { computed } from "vue"
 
-import { useFeatureFlagStore } from "~/stores/feature-flag"
-import { useSearchStore } from "~/stores/search"
 import {
   IMAGE,
   isAdditionalSearchType,
   isSupportedMediaType,
-} from "~/constants/media"
-import { getAdditionalSources } from "~/utils/get-additional-sources"
+} from "#shared/constants/media"
+import { getAdditionalSources } from "#shared/utils/get-additional-sources"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { useSearchStore } from "~/stores/search"
 
 /**
  * This component uses `useStore` composables, and should only be called from within a component's setup function.

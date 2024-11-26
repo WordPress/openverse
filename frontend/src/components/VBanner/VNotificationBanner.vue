@@ -5,9 +5,8 @@
  */
 import { computed } from "vue"
 
-import type { BannerId } from "~/types/banners"
-
-import { BannerNature } from "~/constants/banners"
+import { BannerNature } from "#shared/constants/banners"
+import type { BannerId } from "#shared/types/banners"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VIconButton from "~/components/VIconButton/VIconButton.vue"

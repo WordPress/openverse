@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { useI18n, useNuxtApp } from "#imports"
-
 import { computed } from "vue"
 
-import { getFullLicenseName, isLicense as isLicenseFn } from "~/utils/license"
-
-import type { License, LicenseVersion } from "~/constants/license"
+import type { License, LicenseVersion } from "#shared/constants/license"
+import {
+  getFullLicenseName,
+  isLicense as isLicenseFn,
+} from "#shared/utils/license"
 
 import VLicenseElements from "~/components/VLicense/VLicenseElements.vue"
 import VLink from "~/components/VLink.vue"

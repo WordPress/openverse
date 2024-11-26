@@ -1,6 +1,6 @@
 import { defineComponent, h, PropType } from "vue"
 
-import { SENSITIVITIES, Sensitivity } from "~/constants/content-safety"
+import { SENSITIVITIES, Sensitivity } from "#shared/constants/content-safety"
 
 import VSafetyWall from "~/components/VSafetyWall/VSafetyWall.vue"
 

@@ -6,9 +6,8 @@ import { toRefs, ref, computed, useAttrs } from "vue"
 
 import { useElementSize } from "@vueuse/core"
 
+import type { ModalColorMode, ModalVariant } from "#shared/types/modal"
 import { useDialogContent } from "~/composables/use-dialog-content"
-
-import type { ModalColorMode, ModalVariant } from "~/types/modal"
 
 import VIconButton from "~/components/VIconButton/VIconButton.vue"
 

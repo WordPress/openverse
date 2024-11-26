@@ -1,7 +1,5 @@
 import { expect, Page } from "@playwright/test"
-
 import { test } from "~~/test/playwright/utils/test"
-
 import {
   filters,
   goToSearchTerm,
@@ -14,7 +12,7 @@ import {
   expectEventPayloadToMatch,
 } from "~~/test/playwright/utils/analytics"
 
-import { INCLUDE_SENSITIVE_QUERY_PARAM } from "~/constants/content-safety"
+import { INCLUDE_SENSITIVE_QUERY_PARAM } from "#shared/constants/content-safety"
 
 test.describe.configure({ mode: "parallel" })
 

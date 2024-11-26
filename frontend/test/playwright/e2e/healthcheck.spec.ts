@@ -1,5 +1,4 @@
 import { expect } from "@playwright/test"
-
 import { test } from "~~/test/playwright/utils/test"
 
 test("returns OK on healthcheck", async ({ page }) => {

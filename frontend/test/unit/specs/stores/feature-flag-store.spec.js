@@ -1,9 +1,8 @@
 import { beforeEach, describe, expect, vi } from "vitest"
-
 import { setActivePinia, createPinia } from "~~/test/unit/test-utils/pinia"
 
+import { OFF, COOKIE, SESSION } from "#shared/constants/feature-flag"
 import { initializeFlagState, useFeatureFlagStore } from "~/stores/feature-flag"
-import { OFF, COOKIE, SESSION } from "~/constants/feature-flag"
 
 vi.mock("~~/feat/feature-flags.json", () => ({
   default: {

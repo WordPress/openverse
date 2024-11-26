@@ -1,8 +1,7 @@
 import { useLocalePath, useRoute } from "#imports"
-
 import { computed } from "vue"
 
-import { getRouteNameString } from "~/utils/route-utils"
+import { getRouteNameString } from "#shared/utils/route-utils"
 
 export default function usePages() {
   const localePath = useLocalePath()

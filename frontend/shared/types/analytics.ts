@@ -3,13 +3,13 @@ import type {
   SearchType,
   SupportedMediaType,
   SupportedSearchType,
-} from "~/constants/media"
-import type { ReportReason } from "~/constants/content-report"
-import type { FilterCategory } from "~/constants/filters"
-import { ResultKind } from "~/types/result"
-import { RequestKind } from "~/types/fetch-state"
-import { Collection } from "~/types/search"
-import { License } from "~/constants/license"
+} from "#shared/constants/media"
+import type { ReportReason } from "#shared/constants/content-report"
+import type { FilterCategory } from "#shared/constants/filters"
+import type { License } from "#shared/constants/license"
+import type { ResultKind } from "#shared/types/result"
+import type { RequestKind } from "#shared/types/fetch-state"
+import type { Collection } from "#shared/types/search"
 
 export type AudioInteraction = "play" | "pause" | "seek"
 export type AudioInteractionData = Exclude<

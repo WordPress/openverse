@@ -1,9 +1,12 @@
 import { useNuxtApp } from "#imports"
 
+import { ALL_MEDIA, AUDIO, IMAGE } from "#shared/constants/media"
+import type {
+  SupportedMediaType,
+  SupportedSearchType,
+} from "#shared/constants/media"
+import type { Collection } from "#shared/types/search"
 import { useGetLocaleFormattedNumber } from "~/composables/use-get-locale-formatted-number"
-import { ALL_MEDIA, AUDIO, IMAGE } from "~/constants/media"
-import type { SupportedMediaType, SupportedSearchType } from "~/constants/media"
-import type { Collection } from "~/types/search"
 
 type KeyCollection = {
   zero: string

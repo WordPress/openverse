@@ -1,17 +1,16 @@
 import { computed } from "#imports"
 
 import { describe, expect, test, vi } from "vitest"
-
 import { usePreferredColorScheme } from "@vueuse/core"
 
+import { OFF, ON } from "#shared/constants/feature-flag"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { useUiStore } from "~/stores/ui"
 import {
   DARK_MODE_CLASS,
   LIGHT_MODE_CLASS,
   useDarkMode,
 } from "~/composables/use-dark-mode"
-import { OFF, ON } from "~/constants/feature-flag"
-import { useFeatureFlagStore } from "~/stores/feature-flag"
-import { useUiStore } from "~/stores/ui"
 
 vi.mock("@vueuse/core", () => ({
   usePreferredColorScheme: vi.fn(),

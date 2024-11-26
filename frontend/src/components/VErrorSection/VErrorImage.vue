@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { useI18n } from "#imports"
-
 import { computed } from "vue"
 
-import type { License, LicenseVersion } from "~/constants/license"
-import { AttributableMedia, getAttribution } from "~/utils/attribution-html"
+import type { License, LicenseVersion } from "#shared/constants/license"
+import {
+  AttributableMedia,
+  getAttribution,
+} from "#shared/utils/attribution-html"
 
 import imageInfo from "~/assets/error_images.json"
 

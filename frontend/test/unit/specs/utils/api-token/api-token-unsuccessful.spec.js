@@ -1,9 +1,7 @@
 import { useNuxtApp } from "#imports"
 
 import { describe, expect, it, vi } from "vitest"
-
 import axios from "axios"
-
 import {
   defaultConfig,
   defaultPromise,

@@ -21,7 +21,7 @@ export default tseslint.config(
       "import/order": [
         "error",
         {
-          "newlines-between": "always-and-inside-groups",
+          "newlines-between": "always",
           groups: [
             "builtin",
             "external",
@@ -40,9 +40,24 @@ export default tseslint.config(
               position: "before",
             },
             {
-              // Treat k6, vue and composition-api as "builtin"
-              pattern: "(k6|vue|@nuxtjs/composition-api)",
+              // Treat k6 and vue as "builtin"
+              pattern: "{k6,vue}",
               group: "builtin",
+              position: "before",
+            },
+            {
+              pattern: "#shared/constants/**",
+              group: "internal",
+              position: "before",
+            },
+            {
+              pattern: "#shared/utils/**",
+              group: "internal",
+              position: "before",
+            },
+            {
+              pattern: "#shared/types/**",
+              group: "internal",
               position: "before",
             },
             {
@@ -52,9 +67,24 @@ export default tseslint.config(
               position: "after",
             },
             {
+              pattern: "~/{utils,constants,data,types}/**",
+              group: "internal",
+              position: "after",
+            },
+            {
+              pattern: "~/stores/**",
+              group: "internal",
+              position: "after",
+            },
+            {
+              pattern: "~/composables/**",
+              group: "internal",
+              position: "after",
+            },
+            {
               // Treat components as their own group and move to the end of the internal imports list
               pattern: "~/components/**",
-              group: "internal",
+              group: "object",
               position: "after",
             },
             /**
@@ -76,6 +106,7 @@ export default tseslint.config(
               position: "after",
             },
           ],
+          distinctGroup: false,
           pathGroupsExcludedImportTypes: ["builtin"],
         },
       ],

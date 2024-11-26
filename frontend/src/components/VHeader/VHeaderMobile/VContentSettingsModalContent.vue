@@ -1,13 +1,10 @@
 <script setup lang="ts">
 import { computed, ref } from "vue"
 
+import { SearchType } from "#shared/constants/media"
+import { CONTENT_SETTINGS_DIALOG } from "#shared/constants/dialogs"
 import { useSearchStore } from "~/stores/search"
-
 import useSearchType from "~/composables/use-search-type"
-
-import { SearchType } from "~/constants/media"
-
-import { CONTENT_SETTINGS_DIALOG } from "~/constants/dialogs"
 
 import VButton from "~/components/VButton.vue"
 import VFilterTab from "~/components/VHeader/VHeaderMobile/VFilterTab.vue"

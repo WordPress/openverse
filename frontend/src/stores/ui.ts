@@ -1,19 +1,17 @@
 import { useCookie } from "#imports"
 
+import { LocaleObject } from "@nuxtjs/i18n"
 import { defineStore } from "pinia"
 
-import { LocaleObject } from "@nuxtjs/i18n"
-
+import type { RealBreakpoint } from "#shared/constants/screens"
+import { ALL_SCREEN_SIZES } from "#shared/constants/screens"
+import { needsTranslationBanner } from "#shared/utils/translation-banner"
+import type { BannerId } from "#shared/types/banners"
 import {
   defaultPersistientCookieState,
-  OpenverseCookieState,
+  type OpenverseCookieState,
   persistentCookieOptions,
-} from "~/types/cookies"
-import type { BannerId } from "~/types/banners"
-
-import type { RealBreakpoint } from "~/constants/screens"
-import { ALL_SCREEN_SIZES } from "~/constants/screens"
-import { needsTranslationBanner } from "~/utils/translation-banner"
+} from "#shared/types/cookies"
 
 const desktopBreakpoints: RealBreakpoint[] = ["2xl", "xl", "lg"]
 

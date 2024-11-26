@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { useI18n } from "#imports"
-
 import { computed } from "vue"
 
-import type { BannerId } from "~/types/banners"
-
-import { createTranslationLink } from "~/utils/translation-banner"
+import { createTranslationLink } from "#shared/utils/translation-banner"
+import type { BannerId } from "#shared/types/banners"
 
 import VLink from "~/components/VLink.vue"
 import VNotificationBanner from "~/components/VBanner/VNotificationBanner.vue"

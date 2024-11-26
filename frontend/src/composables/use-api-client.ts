@@ -1,7 +1,7 @@
 import { useNuxtApp } from "#imports"
 
-import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { createApiClient } from "~/data/api-service"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 export function useApiClient() {
   const { $openverseApiToken: accessToken } = useNuxtApp()

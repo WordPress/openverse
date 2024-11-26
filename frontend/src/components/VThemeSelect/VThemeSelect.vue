@@ -4,11 +4,11 @@ light, dark and system.
 -->
 
 <script setup lang="ts">
-import { useI18n, useDarkMode } from "#imports"
-
+import { useI18n } from "#imports"
 import { computed, ref, onMounted, watch, type Ref } from "vue"
 
 import { useUiStore, type ColorMode } from "~/stores/ui"
+import { useDarkMode } from "~/composables/use-dark-mode"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VSelectField, {

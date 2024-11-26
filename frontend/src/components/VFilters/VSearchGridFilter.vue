@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { useI18n, useNuxtApp } from "#imports"
-
 import { computed } from "vue"
+
 import { storeToRefs } from "pinia"
 
+import type { FilterCategory } from "#shared/constants/filters"
 import { useSearchStore } from "~/stores/search"
-
-import type { FilterCategory } from "~/constants/filters"
 
 import VFilterChecklist from "~/components/VFilters/VFilterChecklist.vue"
 import VButton from "~/components/VButton.vue"

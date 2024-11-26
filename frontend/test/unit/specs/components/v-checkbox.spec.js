@@ -1,8 +1,7 @@
 import { createApp } from "vue"
+
 import { fireEvent, screen } from "@testing-library/vue"
-
 import { describe, expect, it } from "vitest"
-
 import { render } from "~~/test/unit/test-utils/render"
 
 import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"

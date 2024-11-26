@@ -1,5 +1,5 @@
-import type { ErrorCode } from "~/constants/errors"
-import type { SupportedSearchType } from "~/constants/media"
+import type { ErrorCode } from "#shared/constants/errors"
+import type { SupportedSearchType } from "#shared/constants/media"
 
 /**
  * Describes the kind of API request that was made.

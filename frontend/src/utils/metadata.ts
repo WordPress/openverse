@@ -1,7 +1,6 @@
-import { capitalCase } from "~/utils/case"
-import type { AudioDetail, ImageDetail, Metadata } from "~/types/media"
-import { AUDIO, IMAGE } from "~/constants/media"
-
+import { AUDIO, IMAGE } from "#shared/constants/media"
+import { capitalCase } from "#shared/utils/case"
+import type { AudioDetail, ImageDetail, Metadata } from "#shared/types/media"
 import { useProviderStore } from "~/stores/provider"
 
 import type { Composer } from "vue-i18n"

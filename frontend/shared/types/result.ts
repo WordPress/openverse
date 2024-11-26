@@ -1,5 +1,5 @@
-import { ALL_MEDIA, AUDIO, IMAGE } from "~/constants/media"
-import { AudioDetail, ImageDetail } from "~/types/media"
+import { ALL_MEDIA, AUDIO, IMAGE } from "#shared/constants/media"
+import type { AudioDetail, ImageDetail } from "#shared/types/media"
 
 export type ResultKind = "search" | "related" | "collection"
 export type ImageResults = {

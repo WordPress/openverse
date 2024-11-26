@@ -1,6 +1,6 @@
 import { h, ref } from "vue"
 
-import { itemGroupDirections } from "~/types/item-group"
+import { itemGroupDirections } from "#shared/types/item-group"
 
 import VItemGroup from "~/components/VItemGroup/VItemGroup.vue"
 import VItem from "~/components/VItemGroup/VItem.vue"

@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { useI18n, useNuxtApp } from "#imports"
-
 import { ref, onMounted } from "vue"
 
-import { loadScript } from "~/utils/load-script"
+import { loadScript } from "#shared/utils/load-script"
 
 const sketchfabUrl =
   "https://static.sketchfab.com/api/sketchfab-viewer-1.10.1.js"
