@@ -6,10 +6,9 @@ For more information on how deployments work, please see the [general deployment
 
 ## Setup
 
-Check [the running DAGs][dags_running] in Airflow to make sure no DAGs are
-running.
-
-[dags_running]: https://airflow.openverse.org/home?status=active&lastrun=running
+Check
+<a href="https://airflow.openverse.org/home?status=active&lastrun=running">the
+running DAGs</a> in Airflow to make sure no DAGs are running.
 
 ```{caution}
 It is possible to perform a deploy if the image and audio refresh DAGs are
