@@ -1,4 +1,4 @@
-set dotenv-load := false
+set dotenv-load := true
 
 # Meaning of Just prefixes:
 # @ - Quiet recipes (https://github.com/casey/just#quiet-recipes)
@@ -209,7 +209,12 @@ _env src dest:
                 dest_file.write(f"{key}={value}\n")
 
 # Create .env files from templates
-@env:
+env:
+    #!/usr/bin/env sh
+    if {{ env_var_or_default("SKIP_DOTENV_FILES_RECREATION", "false") }} ; then
+        echo "Skipping .env files (re)creation."
+        exit 0
+    fi
     # Root
     just _env env.template .env
     # Docker
