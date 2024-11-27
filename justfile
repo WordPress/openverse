@@ -1,4 +1,4 @@
-set dotenv-load := false
+set dotenv-load := true
 
 # Meaning of Just prefixes:
 # @ - Quiet recipes (https://github.com/casey/just#quiet-recipes)
