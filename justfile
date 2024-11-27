@@ -209,16 +209,21 @@ _env src dest:
                 dest_file.write(f"{key}={value}\n")
 
 # Create .env files from templates
-@env:
-    # Root
-    just _env env.template .env
-    # Docker
-    just _env docker/minio/env.template docker/minio/.env
-    # First-party services
-    just _env catalog/env.template catalog/.env
-    just _env ingestion_server/env.template ingestion_server/.env
-    just _env indexer_worker/env.template indexer_worker/.env
-    just _env api/env.template api/.env
+env:
+    #!/usr/bin/env sh
+    if ! {{ env_var_or_default("SKIP_DOTENV_FILES_RECREATION", "false") }} ; then
+        # Root
+        just _env env.template .env
+        # Docker
+        just _env docker/minio/env.template docker/minio/.env
+        # First-party services
+        just _env catalog/env.template catalog/.env
+        just _env ingestion_server/env.template ingestion_server/.env
+        just _env indexer_worker/env.template indexer_worker/.env
+        just _env api/env.template api/.env
+    else
+        echo "Skipping .env files (re)creation."
+    fi
 
 ##########
 # Docker #
