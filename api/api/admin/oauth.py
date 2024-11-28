@@ -40,6 +40,7 @@ class ThrottledApplicationAdmin(admin.ModelAdmin):
 
     search_fields = ("client_id", "name", "rate_limit_model", "privileges")
     list_display = ("client_id", "name", "created", "rate_limit_model", "privileges")
+    list_filter = ("rate_limit_model", "verified")
     ordering = ("-created",)
 
     readonly_fields = (
