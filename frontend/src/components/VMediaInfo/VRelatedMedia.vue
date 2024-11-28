@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useRoute, useI18n, firstParam } from "#imports"
+import { firstParam, useI18n, useRoute } from "#imports"
 
 import { computed, watch } from "vue"
 
@@ -66,11 +66,7 @@ const collectionLabel = computed(() => {
     :aria-label="collectionLabel"
   >
     <template #header>
-      <h2
-        id="related-heading"
-        class="heading-6 mb-6"
-        :class="results.type === 'image' ? 'md:heading-5' : 'lg:heading-6'"
-      >
+      <h2 id="related-heading" class="heading-6 md:heading-5 mb-6">
         {{ collectionLabel }}
       </h2>
     </template>
