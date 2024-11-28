@@ -3,67 +3,38 @@ import { JSONProperty } from "jsonc-eslint-parser/lib/parser/ast"
 
 import { OpenverseRule } from "../utils/rule-creator"
 
-export type CasingKind = "camelCaseWithDot" | "snake_case_with_dot"
-
-export const allowedCaseOptions: CasingKind[] = [
-  "camelCaseWithDot",
-  "snake_case_with_dot",
-]
-
-const checkersMap = {
-  camelCaseWithDot: isCamelCase,
-  snake_case_with_dot: isSnakeCase,
-}
+type CaseFormat = "camelCaseWithDot" | "snake_case_with_dot"
 
 /**
- * Checks whether the given string has symbols.
+ * Validates if a string matches the specified case format
  */
-function hasSymbols(str: string) {
-  return /[\u0021-\u0023\u0025-\u002c./\u003a-\u0040\u005b-\u005e`\u007b-\u007d]/u.test(
-    str
-  ) // without " ", "$", "-" and "_"
-}
-/**
- * Checks whether the given string has upper.
- */
-function hasUpper(str: string) {
-  return /[A-Z]/u.test(str)
-}
-/**
- * Checks whether the given string is camelCase.
- */
-export function isCamelCase(str: string): boolean {
-  return !(hasSymbols(str) || /^[A-Z]/u.test(str) || /[\s\-_]/u.test(str))
+function isValidCase(str: string, format: CaseFormat): boolean {
+  const patterns = {
+    camelCaseWithDot: /^[a-z][a-zA-Z0-9]*$/,
+    snake_case_with_dot: /^[a-z0-9]+(_[a-z0-9]+)*$/,
+  }
+
+  if (str.includes(".")) {
+    return str.split(".").every((part) => {
+      if (/^\d+$/.test(part)) {
+        return true
+      }
+      return patterns[format].test(part)
+    })
+  }
+  return patterns[format].test(str)
 }
 
-/**
- * Checks whether the given string is snake_case.
- */
-export function isSnakeCase(str: string): boolean {
-  return !(hasUpper(str) || hasSymbols(str) || /-|__|\s/u.test(str))
-}
-
-/**
- * Return case checker ('camelCaseWithDot', 'snake_case_with_dot')
- */
-export function getChecker(name: "camelCaseWithDot"): (str: string) => boolean {
-  return checkersMap[name]
-}
-
-type Option = {
-  [key in CasingKind]?: boolean
-} & {
+type RuleOptions = {
+  camelCaseWithDot?: boolean
+  snake_case_with_dot?: boolean
   ignores?: string[]
 }
 
-type MessageIds = "incorrectKeyNameComment"
-
-const messages = {
-  incorrectKeyNameComment:
-    "Property name `{{name}}` must match one of the following formats: {{formats}}",
-} as const
-
-export const keyNameCasing = OpenverseRule<Option[], MessageIds>({
+export const keyNameCasing = OpenverseRule<
+  [RuleOptions],
+  "incorrectKeyNameComment"
+>({
   name: "key-name-casing",
   meta: {
     docs: {
@@ -73,27 +44,21 @@ export const keyNameCasing = OpenverseRule<Option[], MessageIds>({
       {
         type: "object",
         properties: {
-          camelCaseWithDot: {
-            type: "boolean",
-            default: true,
-          },
-          snake_case_with_dot: {
-            type: "boolean",
-            default: true,
-          },
+          camelCaseWithDot: { type: "boolean", default: true },
+          snake_case_with_dot: { type: "boolean", default: true },
           ignores: {
             type: "array",
-            items: {
-              type: "string",
-            },
+            items: { type: "string" },
             uniqueItems: true,
-            additionalItems: false,
           },
         },
         additionalProperties: false,
       },
     ],
-    messages,
+    messages: {
+      incorrectKeyNameComment:
+        "Property name `{{name}}` must match one of the following formats: {{formats}}",
+    },
     type: "suggestion",
   },
   defaultOptions: [
@@ -107,36 +72,19 @@ export const keyNameCasing = OpenverseRule<Option[], MessageIds>({
     if (!(sourceCode.parserServices as SourceCode.ParserServices).isJSON) {
       return {}
     }
-    const option: Option = { ...context.options[0] }
-    if (option.camelCaseWithDot !== false) {
-      option.camelCaseWithDot = true
-    }
-    const ignores = option.ignores
-      ? option.ignores.map((ignore) => new RegExp(ignore))
-      : []
-    const formats = Object.keys(option)
-      .filter((key): key is "camelCaseWithDot" =>
-        allowedCaseOptions.includes(key as "camelCaseWithDot")
-      )
-      .filter((key) => option[key])
 
-    const checkers: ((str: string) => boolean)[] = formats.map(getChecker)
+    const options = { ...context.options[0] }
+    const ignores = options.ignores?.map((pattern) => new RegExp(pattern)) || []
+    const enabledFormats = (
+      ["camelCaseWithDot", "snake_case_with_dot"] as const
+    ).filter((format) => options[format] !== false)
 
-    /**
-     * Check whether a given name is a valid.
-     */
-    function isValid(name: string): boolean {
-      if (ignores.some((regex) => regex.test(name))) {
+    function isValidName(name: string): boolean {
+      if (!enabledFormats.length || ignores.some((regex) => regex.test(name))) {
         return true
       }
-      if (!checkers.length) {
-        return true
-      }
-      if (name.includes(".")) {
-        const parts = name.split(".")
-        return parts.every((part) => checkers.some((c) => c(part)))
-      }
-      return checkers.length ? checkers.some((c) => c(name)) : true
+
+      return enabledFormats.some((format) => isValidCase(name, format))
     }
 
     return {
@@ -145,13 +93,14 @@ export const keyNameCasing = OpenverseRule<Option[], MessageIds>({
           node.key.type === "JSONLiteral" && typeof node.key.value === "string"
             ? node.key.value
             : sourceCode.text.slice(...node.key.range)
-        if (!isValid(name)) {
+
+        if (!isValidName(name)) {
           context.report({
             loc: node.key.loc,
             messageId: "incorrectKeyNameComment",
             data: {
               name,
-              formats: formats.join(", "),
+              formats: enabledFormats.join(", "),
             },
           })
         }

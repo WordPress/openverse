@@ -162,8 +162,20 @@ export default tseslint.config(
         "error",
         {
           camelCaseWithDot: true,
-          snake_case_with_dot: true, // for err_* keys
-          ignores: ["ncSampling+", "sampling+"],
+          // keys that still have snake_case_with_dot are in `ignores` to prevent accidentally adding more such mixed keys
+          snake_case_with_dot: false,
+          ignores: [
+            "ncSampling+",
+            "sampling+",
+            "sound_effect",
+            "digitized_artwork",
+            "err_network",
+            "err_decode",
+            "err_unallowed",
+            "err_unknown",
+            "err_unsupported",
+            "err_aborted",
+          ],
         },
       ],
     },
