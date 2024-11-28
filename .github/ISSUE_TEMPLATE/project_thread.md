@@ -12,9 +12,11 @@ title: "<Replace this with actual title>"
 ## Documents
 
 <!-- Please link to these documents once they are written. -->
+<!-- Once a document is merged, please update the link to point at the published document on our documentation site: https://docs.openverse.org/projects/index.html -->
 
 - [ ] Project Proposal
 - [ ] Implementation Plan(s)
+
 
 ## Milestones/Issues
 
