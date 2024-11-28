@@ -26,12 +26,12 @@
     "typescript-eslint": "^8.12.2",
     "vue-tsc": "2.1.10"
   },
-  "resolutions": {
-    "vite": "^6.0.1"
-  },
   "pnpm": {
     "overrides": {
-      "vite": "^6.0.1"
+      "vite": "^6.0.1",
+      "@intlify/core-base": "10.0.5",
+      "@intlify/message-compiler": "10.0.5",
+      "@intlify/shared": "10.0.5"
     }
   }
 }
