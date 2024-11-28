@@ -2,6 +2,7 @@ import io
 
 from django.conf import settings
 from django.http.response import FileResponse, HttpResponse
+from django.shortcuts import aget_object_or_404
 from rest_framework.decorators import action
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
@@ -31,7 +32,6 @@ from api.serializers.image_serializers import (
 )
 from api.utils import image_proxy
 from api.utils.aiohttp import get_aiohttp_session
-from api.utils.asyncio import aget_object_or_404
 from api.utils.watermark import UpstreamWatermarkException, watermark
 from api.views.media_views import MediaViewSet
 
