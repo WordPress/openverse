@@ -4,7 +4,7 @@ import { vi, describe, beforeEach, it, expect, test } from "vitest"
 
 import { setActivePinia, createPinia } from "~~/test/unit/test-utils/pinia"
 
-import { UiState, useUiStore } from "~/stores/ui"
+import { defaultUiState, UiState, useUiStore } from "~/stores/ui"
 import { BannerId } from "~/types/banners"
 
 vi.mock("~/types/cookies", async () => {
@@ -19,20 +19,7 @@ vi.mock("~/types/cookies", async () => {
   }
 })
 
-// Should mirror the "state" property of useUiStore
-const initialState: UiState = {
-  instructionsSnackbarState: "not_shown",
-  innerFilterVisible: false,
-  isFilterDismissed: false,
-  isDesktopLayout: false,
-  breakpoint: "sm",
-  dismissedBanners: [],
-  shouldBlurSensitive: true,
-  revealedSensitiveResults: [],
-  headerHeight: 80,
-  colorMode: "system",
-  isDarkModeSeen: false,
-}
+const initialState = defaultUiState
 
 const VISIBLE_AND_DISMISSED = {
   innerFilterVisible: true,
