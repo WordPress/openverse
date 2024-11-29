@@ -55,6 +55,7 @@ jobs:
           just k6 ${{ inputs.namespace }} ${{ inputs.scenario }} \
             ${{ inputs.report && '-o cloud' || ''}} \
             -e signing_secret="$K6_SIGNING_SECRET" \
+            -e scenario_duration="6m" \
             -e service_url=${{ inputs.service_url }} \
             -e text_summary=/tmp/k6-summary.txt
 
