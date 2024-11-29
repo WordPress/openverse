@@ -71,20 +71,22 @@ export interface UiState {
 
 export const breakpoints = Object.keys(ALL_SCREEN_SIZES)
 
+export const defaultUiState: UiState = {
+  instructionsSnackbarState: "not_shown",
+  innerFilterVisible: false,
+  isFilterDismissed: false,
+  isDesktopLayout: false,
+  breakpoint: "sm",
+  dismissedBanners: [],
+  shouldBlurSensitive: true,
+  revealedSensitiveResults: [],
+  headerHeight: 80,
+  colorMode: "system",
+  isDarkModeSeen: false,
+}
+
 export const useUiStore = defineStore("ui", {
-  state: (): UiState => ({
-    instructionsSnackbarState: "not_shown",
-    innerFilterVisible: false,
-    isFilterDismissed: false,
-    isDesktopLayout: false,
-    breakpoint: "sm",
-    dismissedBanners: [],
-    shouldBlurSensitive: true,
-    revealedSensitiveResults: [],
-    headerHeight: 80,
-    colorMode: "system",
-    isDarkModeSeen: false,
-  }),
+  state: (): UiState => ({ ...defaultUiState }),
 
   getters: {
     cookieState(state): OpenverseCookieState["ui"] {
