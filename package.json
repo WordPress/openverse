@@ -31,7 +31,8 @@
       "vite": "^6.0.1",
       "@intlify/core-base": "10.0.5",
       "@intlify/message-compiler": "10.0.5",
-      "@intlify/shared": "10.0.5"
+      "@intlify/shared": "10.0.5",
+      "@vue/compiler-sfc": "3.5.13"
     }
   }
 }
