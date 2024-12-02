@@ -258,8 +258,8 @@ importers:
         specifier: ^12.0.0
         version: 12.1.1(rollup@4.22.4)(tslib@2.6.2)(typescript@5.6.3)
       nock:
-        specifier: 14.0.0-beta.15
-        version: 14.0.0-beta.15
+        specifier: 14.0.0-beta.18
+        version: 14.0.0-beta.18
       openapi-typescript:
         specifier: ^7.3.2
         version: 7.3.2(encoding@0.1.13)(typescript@5.6.3)
@@ -1359,8 +1359,8 @@ packages:
     resolution: {integrity: sha512-sTGoeZnjI8N4KS+sW2AN95gDBErhAguvkw/tWdCjeM8bvxpz5lqrnd0vOJABA1A+Ic3zED7PYoLP/RANLgVotA==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
-  '@mswjs/interceptors@0.36.4':
-    resolution: {integrity: sha512-ktzj7bra4HatOGqXw/PXyresXxFtnZa570rm4olAyf9HbvNdEWRkQl81ykmJK0nCHxNndmh2zQ84TBYKFDM+sg==}
+  '@mswjs/interceptors@0.36.10':
+    resolution: {integrity: sha512-GXrJgakgJW3DWKueebkvtYgGKkxA7s0u5B0P5syJM5rvQUnrpLPigvci8Hukl7yEM+sU06l+er2Fgvx/gmiRgg==}
     engines: {node: '>=18'}
 
   '@netlify/functions@2.8.1':
@@ -5581,8 +5581,8 @@ packages:
       xml2js:
         optional: true
 
-  nock@14.0.0-beta.15:
-    resolution: {integrity: sha512-rp72chatxoZbR/2cYHwtb+IX6n6kkanYKGN2PKn4c12JBrj9n4xGUKFykuQHB+Gkz3fynlikFbMH2LI6VoebuQ==}
+  nock@14.0.0-beta.18:
+    resolution: {integrity: sha512-pG+QkbovRb8XMdSTnV/GgFWdwWAv2y7bWMzdCQnk2gQ3JjrpHgBAd0V8IIIhSBLJVvrOAqhSBsZrxSntISvXjA==}
     engines: {node: '>= 18'}
 
   node-addon-api@3.2.1:
@@ -8769,7 +8769,7 @@ snapshots:
       got: 11.8.6
       os-filter-obj: 2.0.0
 
-  '@mswjs/interceptors@0.36.4':
+  '@mswjs/interceptors@0.36.10':
     dependencies:
       '@open-draft/deferred-promise': 2.2.0
       '@open-draft/logger': 0.3.0
@@ -14225,9 +14225,9 @@ snapshots:
       - supports-color
       - uWebSockets.js
 
-  nock@14.0.0-beta.15:
+  nock@14.0.0-beta.18:
     dependencies:
-      '@mswjs/interceptors': 0.36.4
+      '@mswjs/interceptors': 0.36.10
       json-stringify-safe: 5.0.1
       propagate: 2.0.1
 
