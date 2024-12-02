@@ -5,7 +5,7 @@
 groups = ["default", "dev", "overrides", "test"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:bf20ad5f79c2d5b9707e0eac87f65cd9fca51934123d555de6cb964ae9307ab1"
+content_hash = "sha256:0ccb45f2f3acade4e0e80b7fd1bfb3f157fea437c5a98584084a070d783359e7"
 
 [[metadata.targets]]
 requires_python = "==3.12.*"
@@ -501,19 +501,19 @@ files = [
 
 [[package]]
 name = "django-structlog"
-version = "8.0.0"
-requires_python = ">=3.8"
+version = "9.0.0"
+requires_python = ">=3.9"
 summary = "Structured Logging for Django"
 groups = ["default"]
 dependencies = [
     "asgiref>=3.6.0",
     "django-ipware>=6.0.2",
-    "django>=3.2",
+    "django>=4.2",
     "structlog>=21.4.0",
 ]
 files = [
-    {file = "django-structlog-8.0.0.tar.gz", hash = "sha256:e439ae173d8d852b5f991ff7528d8ce5b0ae003cc6ea513215334b3204aee09c"},
-    {file = "django_structlog-8.0.0-py3-none-any.whl", hash = "sha256:8431db72e9093850f4ec952a74768619667ff43987e1559526de39a82e5869a7"},
+    {file = "django_structlog-9.0.0-py3-none-any.whl", hash = "sha256:8c32097b3f09b2727b746d6cdf4f50565c62fd040b3a0c98cb731de0b380b854"},
+    {file = "django_structlog-9.0.0.tar.gz", hash = "sha256:0ada1ac0fa4e90a499fc9ce22fc164830304e7219cab12d3b5ef9c2f2967ff5b"},
 ]
 
 [[package]]
@@ -1913,13 +1913,13 @@ files = [
 
 [[package]]
 name = "structlog"
-version = "24.1.0"
+version = "24.4.0"
 requires_python = ">=3.8"
 summary = "Structured Logging for Python"
 groups = ["default"]
 files = [
-    {file = "structlog-24.1.0-py3-none-any.whl", hash = "sha256:3f6efe7d25fab6e86f277713c218044669906537bb717c1807a09d46bca0714d"},
-    {file = "structlog-24.1.0.tar.gz", hash = "sha256:41a09886e4d55df25bdcb9b5c9674bccfab723ff43e0a86a1b7b236be8e57b16"},
+    {file = "structlog-24.4.0-py3-none-any.whl", hash = "sha256:597f61e80a91cc0749a9fd2a098ed76715a1c8a01f73e336b746504d1aad7610"},
+    {file = "structlog-24.4.0.tar.gz", hash = "sha256:b27bfecede327a6d2da5fbc96bd859f114ecc398a6389d664f62085ee7ae6fc4"},
 ]
 
 [[package]]
