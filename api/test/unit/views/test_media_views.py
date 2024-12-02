@@ -24,13 +24,17 @@ def test_list_query_count(api_client, media_type_config):
         num_results,
         {},  # search_context
     )
-    with patch(
-        "api.views.media_views.search_controller",
-        query_media=MagicMock(return_value=controller_ret),
-    ), patch(
-        "api.serializers.media_serializers.search_controller",
-        get_sources=MagicMock(return_value={}),
-    ), pytest_django.asserts.assertNumQueries(1):
+    with (
+        patch(
+            "api.views.media_views.search_controller",
+            query_media=MagicMock(return_value=controller_ret),
+        ),
+        patch(
+            "api.serializers.media_serializers.search_controller",
+            get_sources=MagicMock(return_value={}),
+        ),
+        pytest_django.asserts.assertNumQueries(1),
+    ):
         res = api_client.get(f"/v1/{media_type_config.url_prefix}/")
 
     assert res.status_code == 200

@@ -1,6 +1,6 @@
 import json
+from collections.abc import Sequence
 from functools import update_wrapper
-from typing import Sequence
 
 from django import forms
 from django.conf import settings

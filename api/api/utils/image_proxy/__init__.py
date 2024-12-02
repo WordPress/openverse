@@ -1,6 +1,5 @@
-from datetime import timedelta
 from functools import wraps
-from typing import Literal, Type
+from typing import Literal
 from urllib.parse import urlparse
 
 from django.conf import settings
@@ -10,7 +9,6 @@ from rest_framework.exceptions import UnsupportedMediaType
 import aiohttp
 import django_redis
 import structlog
-from aiohttp import client_exceptions
 from asgiref.sync import sync_to_async
 from redis.client import Redis
 from redis.exceptions import ConnectionError
@@ -130,7 +128,8 @@ def _tally_client_response_errors(tallies, month: str, domain: str, status: int)
         logger.warning("Redis connect failed, thumbnail HTTP errors not tallied.")
 
 
-# thmbfail == THuMBnail FAILures; this key path will exist for every thumbnail requested, so it needs to be space efficient
+# thmbfail == THuMBnail FAILures; this key path will exist for every thumbnail
+# requested, so it needs to be space efficient
 FAILURE_CACHE_KEY_TEMPLATE = "thmbfail:{ident}"
 
 
