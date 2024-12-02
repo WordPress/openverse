@@ -98,7 +98,12 @@ if "catalog" in changes:
     build_matrix["image"] |= {"upstream_db", "catalog"}
     publish_matrix["image"].add("catalog")
 if "ingestion_server" in changes:
-    build_matrix["image"] |= {"upstream_db", "ingestion_server", "api"}
+    build_matrix["image"] |= {
+        "upstream_db",
+        "ingestion_server",
+        "api",
+        "catalog",
+    }
     publish_matrix["image"].add("ingestion_server")
 if "indexer_worker" in changes:
     build_matrix["image"] |= {"upstream_db", "catalog_indexer_worker", "api"}
