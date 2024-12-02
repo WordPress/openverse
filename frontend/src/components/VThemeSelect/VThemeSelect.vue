@@ -21,7 +21,7 @@ const uiStore = useUiStore()
 const THEME_ICON_NAME = Object.freeze({
   light: "sun",
   dark: "moon",
-  system: "duotone"
+  system: "duotone",
 })
 
 const THEME_TEXT = {
@@ -64,10 +64,7 @@ const updateRefs = () => {
 }
 
 onMounted(updateRefs)
-watch(
-  () => [darkMode.colorMode.value, darkMode.osColorMode.value],
-  updateRefs
-)
+watch(() => [darkMode.colorMode.value, darkMode.osColorMode.value], updateRefs)
 </script>
 
 <template>
