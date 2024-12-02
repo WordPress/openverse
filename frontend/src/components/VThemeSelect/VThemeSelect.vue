@@ -43,8 +43,8 @@ const setIsDarkModeSeen = () => {
 const darkMode = useDarkMode()
 
 /**
- * The icon always reflects the actual theme applied to the site.
- * Therefore, it must be based on the value of `effectiveColorMode`.
+ * The icon always reflects the user's preferred color theme. Therefore,
+ * it must be based on the value of `colorMode`.
  */
 const currentThemeIcon: Ref<"sun" | "moon" | "duotone"> = ref(
   THEME_ICON_NAME[darkMode.colorMode.value]
