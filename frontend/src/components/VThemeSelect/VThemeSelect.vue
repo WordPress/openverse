@@ -21,6 +21,7 @@ const uiStore = useUiStore()
 const THEME_ICON_NAME = Object.freeze({
   light: "sun",
   dark: "moon",
+  system: "duotone",
 })
 
 const THEME_TEXT = {
@@ -41,14 +42,8 @@ const setIsDarkModeSeen = () => {
 
 const darkMode = useDarkMode()
 
-/**
- * The icon always reflects the actual theme applied to the site.
- * Therefore, it must be based on the value of `effectiveColorMode`.
- */
-const currentThemeIcon: Ref<"sun" | "moon" | undefined> = ref(
-  darkMode.effectiveColorMode.value
-    ? THEME_ICON_NAME[darkMode.effectiveColorMode.value]
-    : undefined
+const currentThemeIcon: Ref<"sun" | "moon" | "duotone"> = ref(
+  THEME_ICON_NAME[darkMode.colorMode.value]
 )
 
 /**
@@ -64,15 +59,12 @@ const choices: Ref<Choice[]> = ref([
 
 const updateRefs = () => {
   colorMode.value = uiStore.colorMode
-  currentThemeIcon.value = THEME_ICON_NAME[darkMode.effectiveColorMode.value]
+  currentThemeIcon.value = THEME_ICON_NAME[darkMode.colorMode.value]
   choices.value[2].text = `${THEME_TEXT.system} (${THEME_TEXT[darkMode.osColorMode.value]})`
 }
 
 onMounted(updateRefs)
-watch(
-  () => [darkMode.effectiveColorMode.value, darkMode.osColorMode.value],
-  updateRefs
-)
+watch(() => [darkMode.colorMode.value, darkMode.osColorMode.value], updateRefs)
 </script>
 
 <template>
@@ -88,7 +80,7 @@ watch(
     @update:model-value="handleUpdateModelValue"
   >
     <template #start>
-      <VIcon v-if="currentThemeIcon" :name="currentThemeIcon" />
+      <VIcon :name="currentThemeIcon" />
     </template>
   </VSelectField>
 </template>
