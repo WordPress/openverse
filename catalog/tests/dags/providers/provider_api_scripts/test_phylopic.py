@@ -23,8 +23,9 @@ get_json = make_resource_json_func("phylopic")
 
 
 def test__get_initial_query_params():
-    with patch.object(pp, "get_response_json", return_value={}), pytest.raises(
-        Exception
+    with (
+        patch.object(pp, "get_response_json", return_value={}),
+        pytest.raises(Exception),
     ):
         pp._get_initial_query_params()
 

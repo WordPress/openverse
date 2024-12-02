@@ -54,7 +54,7 @@ GITHUB_API_URL = "https://api.github.com/repos/{0.project}/issues/{1}"
 class IssueTrackerBuildEnvironment(BuildEnvironment):
     tracker_config: "TrackerConfig"
     issuetracker_cache: "IssueTrackerCache"
-    github_rate_limit: t.Tuple[float, bool]
+    github_rate_limit: tuple[float, bool]
 
 
 class Issue(t.NamedTuple):
@@ -64,7 +64,7 @@ class Issue(t.NamedTuple):
     closed: bool
 
 
-IssueTrackerCache = t.Dict[str, Issue]
+IssueTrackerCache = dict[str, Issue]
 
 
 @dataclasses.dataclass
@@ -355,7 +355,7 @@ def lookup_github_issue(
     return None
 
 
-BUILTIN_ISSUE_TRACKERS: t.Dict[str, t.Any] = {
+BUILTIN_ISSUE_TRACKERS: dict[str, t.Any] = {
     "github": lookup_github_issue,
 }
 
@@ -371,7 +371,7 @@ def connect_builtin_tracker(app: Sphinx) -> None:
         app.connect("issuetracker-lookup-issue", tracker)
 
 
-def setup(app: Sphinx) -> t.Dict[str, t.Any]:
+def setup(app: Sphinx) -> dict[str, t.Any]:
     app.add_event("issuetracker-lookup-issue")
     app.connect("builder-inited", connect_builtin_tracker)
     app.add_config_value("issuetracker", None, "env")

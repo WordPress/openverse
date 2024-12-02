@@ -31,8 +31,9 @@ def test_generate_markdown_doc(props_source_mock):
     preamble_mock = "Preamble Content"
     postamble_mock = "Postamble Content"
 
-    with patch(f"{MODULE}.PREAMBLE", preamble_mock), patch(
-        f"{MODULE}.POSTAMBLE", postamble_mock
+    with (
+        patch(f"{MODULE}.PREAMBLE", preamble_mock),
+        patch(f"{MODULE}.POSTAMBLE", postamble_mock),
     ):
         result = generate_markdown_doc()
 

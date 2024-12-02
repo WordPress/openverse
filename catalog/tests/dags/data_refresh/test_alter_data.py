@@ -80,9 +80,10 @@ def test_alter_data_batch():
         (51, "bbb", True),
         (52, "ccc", False),
     ]
-    with mock.patch("data_refresh.alter_data.PostgresHook") as HookMock, mock.patch(
-        "data_refresh.alter_data.generate_tag_updates"
-    ) as tag_updates_mock:
+    with (
+        mock.patch("data_refresh.alter_data.PostgresHook") as HookMock,
+        mock.patch("data_refresh.alter_data.generate_tag_updates") as tag_updates_mock,
+    ):
         mock_pg = HookMock.return_value
         mock_pg.run.return_value = sample_data
         mock_cursor = (

@@ -1,10 +1,10 @@
 # Type definitions for the sample data
-from typing import NamedTuple, Type, TypedDict
+from typing import NamedTuple, TypedDict
 
 from psycopg2.extras import Json
 
 
-TagsBuffer: Type = list[tuple[str, Json]]
+TagsBuffer: type = list[tuple[str, Json]]
 
 
 class Label(TypedDict, total=False):

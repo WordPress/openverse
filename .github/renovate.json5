@@ -36,6 +36,10 @@
       addLabels: ["🧱 stack: documentation"],
     },
     {
+      matchFileNames: ["docker/dev_env/**"],
+      addLabels: ["🧱 stack: mgmt"],
+    },
+    {
       groupName: "python dev dependencies",
       matchDepTypes: [
         "tool.pdm.dev-dependencies",
