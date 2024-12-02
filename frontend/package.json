@@ -3,7 +3,7 @@
   "description": "Openverse frontend",
   "private": true,
   "version": "2.2.1",
-  "packageManager": "pnpm@9.14.3",
+  "packageManager": "pnpm@9.14.4",
   "scripts": {
     "predev": "pnpm install && pnpm i18n:en",
     "dev": "run-p dev:only 'i18n:en --watch'",
@@ -81,7 +81,7 @@
     "rfdc": "^1.4.1",
     "seeded-rand": "^2.0.1",
     "throttle-debounce": "^5.0.2",
-    "uuid": "^10.0.0"
+    "uuid": "^11.0.0"
   },
   "devDependencies": {
     "@babel/parser": "^7.24.8",

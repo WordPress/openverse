@@ -33,8 +33,8 @@ importers:
         specifier: 3.3.3
         version: 3.3.3
       prettier-plugin-tailwindcss:
-        specifier: 0.6.8
-        version: 0.6.8(prettier@3.3.3)
+        specifier: 0.6.9
+        version: 0.6.9(prettier@3.3.3)
       typescript:
         specifier: 5.6.3
         version: 5.6.3
@@ -139,8 +139,8 @@ importers:
         specifier: ^5.0.2
         version: 5.0.2
       uuid:
-        specifier: ^10.0.0
-        version: 10.0.0
+        specifier: ^11.0.0
+        version: 11.0.3
     devDependencies:
       '@babel/parser':
         specifier: ^7.24.8
@@ -258,8 +258,8 @@ importers:
         specifier: ^12.0.0
         version: 12.1.1(rollup@4.22.4)(tslib@2.6.2)(typescript@5.6.3)
       nock:
-        specifier: 14.0.0-beta.15
-        version: 14.0.0-beta.15
+        specifier: 14.0.0-beta.18
+        version: 14.0.0-beta.18
       openapi-typescript:
         specifier: ^7.3.2
         version: 7.3.2(encoding@0.1.13)(typescript@5.6.3)
@@ -1359,8 +1359,8 @@ packages:
     resolution: {integrity: sha512-sTGoeZnjI8N4KS+sW2AN95gDBErhAguvkw/tWdCjeM8bvxpz5lqrnd0vOJABA1A+Ic3zED7PYoLP/RANLgVotA==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
-  '@mswjs/interceptors@0.36.4':
-    resolution: {integrity: sha512-ktzj7bra4HatOGqXw/PXyresXxFtnZa570rm4olAyf9HbvNdEWRkQl81ykmJK0nCHxNndmh2zQ84TBYKFDM+sg==}
+  '@mswjs/interceptors@0.36.10':
+    resolution: {integrity: sha512-GXrJgakgJW3DWKueebkvtYgGKkxA7s0u5B0P5syJM5rvQUnrpLPigvci8Hukl7yEM+sU06l+er2Fgvx/gmiRgg==}
     engines: {node: '>=18'}
 
   '@netlify/functions@2.8.1':
@@ -5581,8 +5581,8 @@ packages:
       xml2js:
         optional: true
 
-  nock@14.0.0-beta.15:
-    resolution: {integrity: sha512-rp72chatxoZbR/2cYHwtb+IX6n6kkanYKGN2PKn4c12JBrj9n4xGUKFykuQHB+Gkz3fynlikFbMH2LI6VoebuQ==}
+  nock@14.0.0-beta.18:
+    resolution: {integrity: sha512-pG+QkbovRb8XMdSTnV/GgFWdwWAv2y7bWMzdCQnk2gQ3JjrpHgBAd0V8IIIhSBLJVvrOAqhSBsZrxSntISvXjA==}
     engines: {node: '>= 18'}
 
   node-addon-api@3.2.1:
@@ -6274,8 +6274,8 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
 
-  prettier-plugin-tailwindcss@0.6.8:
-    resolution: {integrity: sha512-dGu3kdm7SXPkiW4nzeWKCl3uoImdd5CTZEJGxyypEPL37Wj0HT2pLqjrvSei1nTeuQfO4PUfjeW5cTUNRLZ4sA==}
+  prettier-plugin-tailwindcss@0.6.9:
+    resolution: {integrity: sha512-r0i3uhaZAXYP0At5xGfJH876W3HHGHDp+LCRUJrs57PBeQ6mYHMwr25KH8NPX44F2yGTvdnH7OqCshlQx183Eg==}
     engines: {node: '>=14.21.3'}
     peerDependencies:
       '@ianvs/prettier-plugin-sort-imports': '*'
@@ -7413,8 +7413,8 @@ packages:
     resolution: {integrity: sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==}
     engines: {node: '>= 0.4.0'}
 
-  uuid@10.0.0:
-    resolution: {integrity: sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==}
+  uuid@11.0.3:
+    resolution: {integrity: sha512-d0z310fCWv5dJwnX1Y/MncBAqGMKEzlBb1AOf7z9K8ALnd0utBX/msg/fA0+sbyN1ihbMsLhrBlnl1ak7Wa0rg==}
     hasBin: true
 
   uuid@9.0.1:
@@ -8769,7 +8769,7 @@ snapshots:
       got: 11.8.6
       os-filter-obj: 2.0.0
 
-  '@mswjs/interceptors@0.36.4':
+  '@mswjs/interceptors@0.36.10':
     dependencies:
       '@open-draft/deferred-promise': 2.2.0
       '@open-draft/logger': 0.3.0
@@ -14225,9 +14225,9 @@ snapshots:
       - supports-color
       - uWebSockets.js
 
-  nock@14.0.0-beta.15:
+  nock@14.0.0-beta.18:
     dependencies:
-      '@mswjs/interceptors': 0.36.4
+      '@mswjs/interceptors': 0.36.10
       json-stringify-safe: 5.0.1
       propagate: 2.0.1
 
@@ -15013,7 +15013,7 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier-plugin-tailwindcss@0.6.8(prettier@3.3.3):
+  prettier-plugin-tailwindcss@0.6.9(prettier@3.3.3):
     dependencies:
       prettier: 3.3.3
 
@@ -16272,7 +16272,7 @@ snapshots:
 
   utils-merge@1.0.1: {}
 
-  uuid@10.0.0: {}
+  uuid@11.0.3: {}
 
   uuid@9.0.1: {}
 
