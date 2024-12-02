@@ -886,18 +886,21 @@ def test_get_sources_returns_stats(is_cache_reachable, cache_name, request, capl
     if is_cache_reachable:
         cache.set("sources-multimedia", value={"source_1": "1000", "source_2": "1000"})
 
-    with capture_logs() as cap_logs, patch(
-        "api.controllers.search_controller.get_raw_es_response",
-        return_value={
-            "aggregations": {
-                "unique_sources": {
-                    "buckets": [
-                        {"key": "source_1", "doc_count": 1000},
-                        {"key": "source_2", "doc_count": 1000},
-                    ]
+    with (
+        capture_logs() as cap_logs,
+        patch(
+            "api.controllers.search_controller.get_raw_es_response",
+            return_value={
+                "aggregations": {
+                    "unique_sources": {
+                        "buckets": [
+                            {"key": "source_1", "doc_count": 1000},
+                            {"key": "source_2", "doc_count": 1000},
+                        ]
+                    }
                 }
-            }
-        },
+            },
+        ),
     ):
         assert search_controller.get_sources("multimedia") == {
             "source_1": 1000,

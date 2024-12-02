@@ -58,10 +58,13 @@ def test_alert_new_unit_codes():
 def test_validate_unit_codes_from_api_raises_exception(
     new_unit_codes, outdated_unit_codes
 ):
-    with patch.object(ingester, "_get_unit_codes_from_api"), patch.object(
-        ingester,
-        "_get_new_and_outdated_unit_codes",
-        return_value=(new_unit_codes, outdated_unit_codes),
+    with (
+        patch.object(ingester, "_get_unit_codes_from_api"),
+        patch.object(
+            ingester,
+            "_get_new_and_outdated_unit_codes",
+            return_value=(new_unit_codes, outdated_unit_codes),
+        ),
     ):
         message = "^\n\\*Updates needed to the SMITHSONIAN_SUB_PROVIDERS dictionary\\**"
         with pytest.raises(AirflowException, match=message):
@@ -69,8 +72,11 @@ def test_validate_unit_codes_from_api_raises_exception(
 
 
 def test_validate_unit_codes_from_api():
-    with patch.object(ingester, "_get_unit_codes_from_api"), patch.object(
-        ingester, "_get_new_and_outdated_unit_codes", return_value=(set(), set())
+    with (
+        patch.object(ingester, "_get_unit_codes_from_api"),
+        patch.object(
+            ingester, "_get_new_and_outdated_unit_codes", return_value=(set(), set())
+        ),
     ):
         # Validation should run without raising an exception
         ingester.validate_unit_codes_from_api()
