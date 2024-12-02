@@ -81,7 +81,7 @@
     "rfdc": "^1.4.1",
     "seeded-rand": "^2.0.1",
     "throttle-debounce": "^5.0.2",
-    "uuid": "^10.0.0"
+    "uuid": "^11.0.0"
   },
   "devDependencies": {
     "@babel/parser": "^7.24.8",
