@@ -106,14 +106,17 @@ const createScenario = (
   funcName: Action
 ): Scenario => {
   return {
-    executor: "per-vu-iterations",
+    executor: "constant-arrival-rate",
     env,
     exec: funcName,
     // k6 CLI flags do not allow override scenario options, so we need to add our own
     // Ideally we would use default
     // https://community.grafana.com/t/overriding-vus-individual-scenario/98923
-    vus: parseFloat(__ENV.scenario_vus) || 5,
-    iterations: parseFloat(__ENV.scenario_iterations) || 40,
+    timeUnit: __ENV.scenario_time_utin || "1m",
+    rate: parseInt(__ENV.scenario_rate) || 3,
+    duration: __ENV.scenario_duration || "4m",
+    preAllocatedVUs: 10,
+    maxVUs: 20,
   }
 }
 
