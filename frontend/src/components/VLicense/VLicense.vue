@@ -7,7 +7,7 @@ import { useI18n } from "#imports"
 import { computed } from "vue"
 
 import type { License } from "#shared/constants/license"
-import { getFullLicenseName, getElements } from "#shared/utils/license"
+import { getFullLicenseName } from "#shared/utils/license"
 import { camelCase } from "#shared/utils/case"
 import { useIconNames } from "~/composables/use-icon-names"
 

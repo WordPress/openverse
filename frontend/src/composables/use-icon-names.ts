@@ -1,8 +1,7 @@
-import { getElements } from "#imports"
-
 import { computed, onMounted, ref, watch } from "vue"
 
-import type { License } from "~/constants/license"
+import type { License } from "#shared/constants/license"
+import { getElements } from "#shared/utils/license"
 import { useDarkMode } from "~/composables/use-dark-mode"
 
 /**
