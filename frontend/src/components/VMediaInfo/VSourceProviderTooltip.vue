@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { useI18n } from "#imports"
-
 import { computed } from "vue"
 
-import { Metadata } from "~/types/media"
+import type { Metadata } from "#shared/types/media"
 
 import VTooltip from "~/components/VTooltip/VTooltip.vue"
 

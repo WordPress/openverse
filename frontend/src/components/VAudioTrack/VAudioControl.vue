@@ -3,11 +3,15 @@
  * Displays the control for switching between the playing and paused states of
  * a media file.
  */
+
 import { computed } from "vue"
 
-import { AudioLayout, AudioStatus, statusVerbMap } from "~/constants/audio"
-import type { ButtonConnections } from "~/types/button"
-
+import {
+  AudioLayout,
+  AudioStatus,
+  statusVerbMap,
+} from "#shared/constants/audio"
+import type { ButtonConnections } from "#shared/types/button"
 import { useHydrating } from "~/composables/use-hydrating"
 
 import VIconButton from "~/components/VIconButton/VIconButton.vue"

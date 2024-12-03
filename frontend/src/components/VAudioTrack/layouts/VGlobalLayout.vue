@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { toRefs } from "vue"
 
-import type { AudioDetail } from "~/types/media"
-
+import type { AudioDetail } from "#shared/types/media"
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 
 import VAudioThumbnail from "~/components/VAudioThumbnail/VAudioThumbnail.vue"

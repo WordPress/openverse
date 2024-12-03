@@ -1,11 +1,10 @@
-import { deepClone } from "~/utils/clone"
+import { AUDIO, IMAGE } from "#shared/constants/media"
+import { filterData, initFilters } from "#shared/constants/filters"
+import { deepClone } from "#shared/utils/clone"
 import {
   filtersToQueryData,
   queryToFilterData,
-} from "~/utils/search-query-transform"
-import { AUDIO, IMAGE } from "~/constants/media"
-
-import { filterData, initFilters } from "~/constants/filters"
+} from "#shared/utils/search-query-transform"
 
 describe("searchQueryTransform", () => {
   it("converts initial filters to query data", () => {

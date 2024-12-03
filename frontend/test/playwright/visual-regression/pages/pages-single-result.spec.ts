@@ -1,7 +1,5 @@
 import { expect } from "@playwright/test"
-
 import { test } from "~~/test/playwright/utils/test"
-
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import {
   goToSearchTerm,
@@ -10,10 +8,9 @@ import {
   preparePageForTests,
   sleep,
 } from "~~/test/playwright/utils/navigation"
-
 import { languageDirections, t } from "~~/test/playwright/utils/i18n"
 
-import { supportedMediaTypes } from "~/constants/media"
+import { supportedMediaTypes } from "#shared/constants/media"
 
 test.describe.configure({ mode: "parallel" })
 

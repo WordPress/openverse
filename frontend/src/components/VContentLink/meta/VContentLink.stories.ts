@@ -1,6 +1,6 @@
 import { h } from "vue"
 
-import { SupportedMediaType } from "~/constants/media"
+import { SupportedMediaType } from "#shared/constants/media"
 
 import VContentLink from "~/components/VContentLink/VContentLink.vue"
 

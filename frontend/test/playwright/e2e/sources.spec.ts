@@ -1,7 +1,5 @@
 import { expect } from "@playwright/test"
-
 import { test } from "~~/test/playwright/utils/test"
-
 import { getH1 } from "~~/test/playwright/utils/components"
 import { preparePageForTests } from "~~/test/playwright/utils/navigation"
 import { t } from "~~/test/playwright/utils/i18n"

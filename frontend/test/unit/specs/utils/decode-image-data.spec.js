@@ -1,7 +1,7 @@
 import { createPinia, setActivePinia } from "~~/test/unit/test-utils/pinia"
 
+import { IMAGE } from "#shared/constants/media"
 import { decodeMediaData } from "~/utils/decode-media-data"
-import { IMAGE } from "~/constants/media"
 
 const requiredFields = {
   id: "id",

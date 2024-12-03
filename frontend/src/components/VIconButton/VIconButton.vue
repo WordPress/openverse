@@ -9,7 +9,7 @@ import type {
   ButtonConnections,
   ButtonSize,
   ButtonVariant,
-} from "~/types/button"
+} from "#shared/types/button"
 
 import VIcon, { type IconProps } from "~/components/VIcon/VIcon.vue"
 import VButton from "~/components/VButton.vue"

@@ -1,5 +1,4 @@
 import { test } from "~~/test/playwright/utils/test"
-
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 
 test.describe.configure({ mode: "parallel" })

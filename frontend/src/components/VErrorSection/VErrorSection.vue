@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { defineAsyncComponent } from "#imports"
-
 import { computed } from "vue"
 
-import { ECONNABORTED, NO_RESULT, SERVER_TIMEOUT } from "~/constants/errors"
-
-import type { FetchingError } from "~/types/fetch-state"
+import {
+  ECONNABORTED,
+  NO_RESULT,
+  SERVER_TIMEOUT,
+} from "#shared/constants/errors"
+import type { FetchingError } from "#shared/types/fetch-state"
 
 const VNoResults = defineAsyncComponent(
   () => import("~/components/VErrorSection/VNoResults.vue")

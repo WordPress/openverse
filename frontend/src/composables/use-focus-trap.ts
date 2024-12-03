@@ -1,7 +1,6 @@
 // Copied from https://github.com/vueuse/vueuse/blob/91ec77418298eb252899125ab37c160718a3e078/packages/integrations/useFocusTrap/index.ts
 // Importing it directly from the vueuse/integration causes an import error
 import { tryOnScopeDispose, unrefElement } from "@vueuse/core"
-
 import { ref, watch } from "vue-demi"
 import { createFocusTrap } from "focus-trap"
 

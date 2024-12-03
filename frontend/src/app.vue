@@ -7,15 +7,12 @@ import {
   useRuntimeConfig,
 } from "#imports"
 
+import { meta as commonMeta } from "#shared/constants/meta"
+import { favicons } from "#shared/constants/favicons"
 import { useUiStore } from "~/stores/ui"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
-
 import { useLayout } from "~/composables/use-layout"
 import { useDarkMode } from "~/composables/use-dark-mode"
-
-import { meta as commonMeta } from "~/constants/meta"
-
-import { favicons } from "~/constants/favicons"
 
 import VSkipToContentButton from "~/components/VSkipToContentButton.vue"
 

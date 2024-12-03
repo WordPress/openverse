@@ -5,8 +5,7 @@
  */
 import { ref, computed, SetupContext } from "vue"
 
-import { type ZIndex, zIndexValidator } from "~/constants/z-indices"
-
+import { type ZIndex, zIndexValidator } from "#shared/constants/z-indices"
 import { useDialogControl } from "~/composables/use-dialog-control"
 
 import VPopoverContent from "~/components/VPopover/VPopoverContent.vue"

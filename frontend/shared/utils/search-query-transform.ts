@@ -5,24 +5,22 @@ import {
   FilterItem,
   Filters,
   mediaFilterKeys,
-} from "~/constants/filters"
+} from "#shared/constants/filters"
 import {
   ALL_MEDIA,
   mediaTypes,
   SearchType,
   SupportedSearchType,
   supportedSearchTypes,
-} from "~/constants/media"
-import { INCLUDE_SENSITIVE_QUERY_PARAM } from "~/constants/content-safety"
-import { deepClone } from "~/utils/clone"
-
-import {
+} from "#shared/constants/media"
+import { INCLUDE_SENSITIVE_QUERY_PARAM } from "#shared/constants/content-safety"
+import { deepClone } from "#shared/utils/clone"
+import { firstParam } from "#shared/utils/query-utils"
+import type {
   SearchFilterKeys,
   PaginatedSearchQuery,
   SearchFilterQuery,
-} from "~/types/search"
-
-import { firstParam } from "~/utils/query-utils"
+} from "#shared/types/search"
 
 import type { LocationQuery } from "vue-router"
 

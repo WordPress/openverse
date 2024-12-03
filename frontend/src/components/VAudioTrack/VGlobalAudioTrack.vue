@@ -4,18 +4,15 @@
  * controls to play, pause or seek to a point on the track.
  */
 import { useI18n, useNuxtApp } from "#imports"
-
 import { computed, ref, watch } from "vue"
 
-import { useActiveAudio } from "~/composables/use-active-audio"
-import { defaultRef } from "~/composables/default-ref"
-
+import type { AudioStatus } from "#shared/constants/audio"
+import type { AudioInteraction } from "#shared/types/analytics"
+import type { AudioDetail } from "#shared/types/media"
 import { useActiveMediaStore } from "~/stores/active-media"
 import { useMediaStore } from "~/stores/media"
-
-import type { AudioInteraction } from "~/types/analytics"
-import type { AudioDetail } from "~/types/media"
-import type { AudioStatus } from "~/constants/audio"
+import { useActiveAudio } from "~/composables/use-active-audio"
+import { defaultRef } from "~/composables/default-ref"
 
 import VAudioControl from "~/components/VAudioTrack/VAudioControl.vue"
 import VWaveform from "~/components/VAudioTrack/VWaveform.vue"

@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { provide, ref, toRefs, useAttrs } from "vue"
+import type { SetupContext } from "vue"
 
+import type { ZIndex } from "#shared/constants/z-indices"
+import { VPopoverContentContextKey } from "#shared/types/provides"
 import { usePopoverContent } from "~/composables/use-popover-content"
 
-import type { ZIndex } from "~/constants/z-indices"
-
-import { VPopoverContentContextKey } from "~/types/provides"
-
 import type { Placement, Strategy } from "@floating-ui/dom"
-import type { SetupContext } from "vue"
 
 const props = withDefaults(
   defineProps<{

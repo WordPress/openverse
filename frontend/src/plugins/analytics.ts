@@ -1,6 +1,6 @@
 import { defineNuxtPlugin, useTrackEvent } from "#imports"
 
-import type { SendCustomEvent } from "~/types/analytics"
+import type { SendCustomEvent } from "#shared/types/analytics"
 import { useUiStore } from "~/stores/ui"
 
 export default defineNuxtPlugin(() => {

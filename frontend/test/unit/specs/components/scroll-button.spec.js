@@ -1,5 +1,4 @@
 import { screen } from "@testing-library/vue"
-
 import { render } from "~~/test/unit/test-utils/render"
 
 import VScrollButton from "~/components/VScrollButton.vue"

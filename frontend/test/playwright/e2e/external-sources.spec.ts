@@ -1,13 +1,10 @@
 import { expect } from "@playwright/test"
-
 import { test } from "~~/test/playwright/utils/test"
-
 import {
   goToSearchTerm,
   openAndCloseExternalLink,
   preparePageForTests,
 } from "~~/test/playwright/utils/navigation"
-
 import {
   collectAnalyticsEvents,
   expectEventPayloadToMatch,

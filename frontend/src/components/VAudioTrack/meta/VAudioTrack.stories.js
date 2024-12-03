@@ -1,14 +1,14 @@
 import { computed, h } from "vue"
 
+import { audioLayouts, audioSizes } from "#shared/constants/audio"
 import { useProviderStore } from "~/stores/provider"
-import { audioLayouts, audioSizes } from "~/constants/audio"
-
-import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"
 
 import flacWaveform from "./flac-waveform.json"
 import mp3Waveform from "./mp3-waveform.json"
 import oggWaveform from "./ogg-waveform.json"
 import wavWaveform from "./wav-waveform.json"
+
+import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"
 
 const commonAttrs = () => ({
   id: Math.floor(Math.random() * 1e9).toString(),

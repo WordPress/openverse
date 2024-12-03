@@ -1,11 +1,11 @@
-import { useCollectionMeta, useI18n, useRoute } from "#imports"
-
+import { useI18n, useRoute } from "#imports"
 import { computed, Ref, ref, watch } from "vue"
 
-import { SupportedMediaType } from "~/constants/media"
+import type { SupportedMediaType } from "#shared/constants/media"
+import type { AudioDetail, ImageDetail } from "#shared/types/media"
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
-import type { AudioDetail, ImageDetail } from "~/types/media"
+import { useCollectionMeta } from "~/composables/use-collection-meta"
 
 export const useCollection = <T extends SupportedMediaType>({
   mediaType,

@@ -1,16 +1,13 @@
 <script setup lang="ts">
 import { defineNuxtRouteMiddleware, definePageMeta, useI18n } from "#imports"
-
 import { computed } from "vue"
 
-import { IMAGE } from "~/constants/media"
-import { skipToContentTargetId } from "~/constants/window"
-
-import { useContentReport } from "~/composables/use-content-report"
+import { IMAGE } from "#shared/constants/media"
+import { skipToContentTargetId } from "#shared/constants/window"
+import { getAttribution } from "#shared/utils/attribution-html"
+import { firstParam } from "#shared/utils/query-utils"
 import { useSingleResultStore } from "~/stores/media/single-result"
-
-import { getAttribution } from "~/utils/attribution-html"
-import { firstParam } from "~/utils/query-utils"
+import { useContentReport } from "~/composables/use-content-report"
 
 import VButton from "~/components/VButton.vue"
 import VContentReportForm from "~/components/VContentReport/VContentReportForm.vue"

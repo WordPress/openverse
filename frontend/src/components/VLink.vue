@@ -9,7 +9,6 @@
  * External links use `a` element, and open in the same tab.
  */
 import { useNuxtApp } from "#imports"
-
 import { computed, useAttrs } from "vue"
 
 import { useAnalytics } from "~/composables/use-analytics"

@@ -1,6 +1,6 @@
 import { h } from "vue"
 
-import { ImageDetail } from "~/types/media"
+import type { ImageDetail } from "#shared/types/media"
 
 import VMediaReuse from "~/components/VMediaInfo/VMediaReuse.vue"
 

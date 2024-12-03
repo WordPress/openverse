@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useNuxtApp } from "#imports"
 
-import type { GallerySet } from "~/types/home-gallery"
+import type { GallerySet } from "#shared/types/home-gallery"
 
 const props = defineProps<{
   idx: number

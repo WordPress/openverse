@@ -2,7 +2,6 @@
 import {
   createError,
   definePageMeta,
-  isSearchTypeSupported,
   navigateTo,
   showError,
   useAsyncData,
@@ -10,22 +9,20 @@ import {
   useNuxtApp,
   useRoute,
 } from "#imports"
-
 import { computed, ref, watch } from "vue"
-import { watchDebounced } from "@vueuse/core"
 
+import { watchDebounced } from "@vueuse/core"
 import { storeToRefs } from "pinia"
 
+import { ALL_MEDIA } from "#shared/constants/media"
+import { skipToContentTargetId } from "#shared/constants/window"
+import { areQueriesEqual } from "#shared/utils/search-query-transform"
+import { handledClientSide, isRetriable } from "#shared/utils/errors"
+import type { Results } from "#shared/types/result"
 import { searchMiddleware } from "~/middleware/search"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useMediaStore } from "~/stores/media"
-import { useSearchStore } from "~/stores/search"
-import { ALL_MEDIA } from "~/constants/media"
-
-import { skipToContentTargetId } from "~/constants/window"
-import type { Results } from "~/types/result"
-import { areQueriesEqual } from "~/utils/search-query-transform"
-import { handledClientSide, isRetriable } from "~/utils/errors"
+import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
 
 import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
 

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useNuxtApp, useRuntimeConfig } from "#imports"
-
 import { computed, ref } from "vue"
 
 import { ofetch } from "ofetch"
@@ -14,11 +13,9 @@ import {
   DMCA_FORM_URL,
   type ReportReason,
   type ReportStatus,
-} from "~/constants/content-report"
-
-import type { ReportableMedia } from "~/types/media"
-
-import { mediaSlug } from "~/utils/query-utils"
+} from "#shared/constants/content-report"
+import { mediaSlug } from "#shared/utils/query-utils"
+import type { ReportableMedia } from "#shared/types/media"
 
 import VButton from "~/components/VButton.vue"
 import VRadio from "~/components/VRadio/VRadio.vue"

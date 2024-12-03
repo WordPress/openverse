@@ -1,10 +1,8 @@
 import { navigateTo } from "#imports"
-
 import { computed, watch } from "vue"
 
 import { useSearchStore } from "~/stores/search"
 import { useMediaStore } from "~/stores/media"
-
 import { useI18nResultsCount } from "~/composables/use-i18n-utilities"
 import { useMatchSearchRoutes } from "~/composables/use-match-routes"
 import { useAnalytics } from "~/composables/use-analytics"

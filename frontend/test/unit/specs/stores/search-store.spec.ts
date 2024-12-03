@@ -1,31 +1,29 @@
 import { nextTick } from "vue"
 
 import { beforeEach, describe, expect, it } from "vitest"
-
 import { setActivePinia, createPinia } from "~~/test/unit/test-utils/pinia"
 
 import {
-  FilterCategory,
+  type FilterCategory,
   filterData,
   initFilters,
   mediaFilterKeys,
-} from "~/constants/filters"
+} from "#shared/constants/filters"
 import {
   ALL_MEDIA,
   AUDIO,
   IMAGE,
   searchPath,
-  SearchType,
-  SupportedSearchType,
+  type SearchType,
+  type SupportedSearchType,
   supportedSearchTypes,
   VIDEO,
-} from "~/constants/media"
-import { INCLUDE_SENSITIVE_QUERY_PARAM } from "~/constants/content-safety"
-
+} from "#shared/constants/media"
+import { INCLUDE_SENSITIVE_QUERY_PARAM } from "#shared/constants/content-safety"
+import type { FeatureState } from "#shared/constants/feature-flag"
+import type { SearchFilterKeys, SearchQuery } from "#shared/types/search"
 import { computeQueryParams, useSearchStore } from "~/stores/search"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
-import { FeatureState } from "~/constants/feature-flag"
-import { SearchFilterKeys, SearchQuery } from "~/types/search"
 
 function isSupportedSearchType(value: string): value is SupportedSearchType {
   return supportedSearchTypes.includes(value as SupportedSearchType)

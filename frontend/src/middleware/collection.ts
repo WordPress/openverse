@@ -2,23 +2,21 @@ import { createError, defineNuxtRouteMiddleware } from "#imports"
 
 import { isShallowEqualObjects } from "@wordpress/is-shallow-equal"
 
-import { useMediaStore } from "~/stores/media"
-import { useProviderStore } from "~/stores/provider"
-import { useSearchStore } from "~/stores/search"
-
-import { queryDictionaryToQueryParams } from "~/utils/search-query-transform"
 import {
   isSupportedMediaType,
   type SupportedMediaType,
-} from "~/constants/media"
+} from "#shared/constants/media"
+import { queryDictionaryToQueryParams } from "#shared/utils/search-query-transform"
+import { getRouteNameString } from "#shared/utils/route-utils"
 import type {
   CollectionParams,
   CreatorCollection,
   SourceCollection,
   TagCollection,
-} from "~/types/search"
-
-import { getRouteNameString } from "~/utils/route-utils"
+} from "#shared/types/search"
+import { useMediaStore } from "~/stores/media"
+import { useProviderStore } from "~/stores/provider"
+import { useSearchStore } from "~/stores/search"
 
 import type { RouteLocationNormalized } from "vue-router"
 

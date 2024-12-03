@@ -1,8 +1,6 @@
 import { screen } from "@testing-library/vue"
 import { default as userEvent } from "@testing-library/user-event"
-
 import { beforeEach, describe, expect, it } from "vitest"
-
 import { render } from "~~/test/unit/test-utils/render"
 
 import { useProviderStore } from "~/stores/provider"

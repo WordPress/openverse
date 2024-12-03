@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { definePageMeta, useHead, useNuxtApp } from "#imports"
 
-import { supportedMediaTypes } from "~/constants/media"
+import { supportedMediaTypes } from "#shared/constants/media"
 
 import VButton from "~/components/VButton.vue"
 import VLink from "~/components/VLink.vue"

@@ -3,12 +3,11 @@
  * Displays the cover art for the audio in a square aspect ratio.
  */
 import { useI18n } from "#imports"
-
 import { toRefs, ref, onMounted } from "vue"
 
-import { rand, hash } from "~/utils/prng"
-import { lerp, dist, bezier, Point } from "~/utils/math"
-import type { AudioDetail } from "~/types/media"
+import { rand, hash } from "#shared/utils/prng"
+import { lerp, dist, bezier, Point } from "#shared/utils/math"
+import type { AudioDetail } from "#shared/types/media"
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 
 const props = defineProps<{

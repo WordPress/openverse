@@ -3,10 +3,9 @@ import { useI18n } from "#imports"
 import { image as testImage } from "~~/test/unit/fixtures/image"
 import { getAudioObj } from "~~/test/unit/fixtures/audio"
 
+import type { AudioDetail } from "#shared/types/media"
 import { getMediaMetadata } from "~/utils/metadata"
 import { useProviderStore } from "~/stores/provider"
-
-import { AudioDetail } from "~/types/media"
 
 import VMetadata from "~/components/VMediaInfo/VMetadata.vue"
 import VLanguageSelect from "~/components/VLanguageSelect/VLanguageSelect.vue"

@@ -1,15 +1,12 @@
 import { test } from "~~/test/playwright/utils/test"
-
 import {
   goToSearchTerm,
   preparePageForTests,
 } from "~~/test/playwright/utils/navigation"
-
 import breakpoints from "~~/test/playwright/utils/breakpoints"
-
 import { languageDirections, t } from "~~/test/playwright/utils/i18n"
 
-import { supportedMediaTypes } from "~/constants/media"
+import { supportedMediaTypes } from "#shared/constants/media"
 
 test.describe.configure({ mode: "parallel" })
 

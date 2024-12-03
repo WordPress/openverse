@@ -1,5 +1,4 @@
 import { screen } from "@testing-library/vue"
-
 import { getAudioObj } from "~~/test/unit/fixtures/audio"
 import { render } from "~~/test/unit/test-utils/render"
 

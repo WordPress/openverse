@@ -2,16 +2,6 @@ import { useNuxtApp } from "#imports"
 
 import { defineStore } from "pinia"
 
-import { warn } from "~/utils/console"
-import { hash, rand as prng } from "~/utils/prng"
-import { isRetriable } from "~/utils/errors"
-import type {
-  AudioDetail,
-  DetailFromMediaType,
-  ImageDetail,
-  Media,
-} from "~/types/media"
-import type { FetchingError, FetchState } from "~/types/fetch-state"
 import {
   ALL_MEDIA,
   AUDIO,
@@ -19,12 +9,21 @@ import {
   isAdditionalSearchType,
   SupportedMediaType,
   supportedMediaTypes,
-} from "~/constants/media"
-import { NO_RESULT } from "~/constants/errors"
+} from "#shared/constants/media"
+import { NO_RESULT } from "#shared/constants/errors"
+import { hash, rand as prng } from "#shared/utils/prng"
+import { isRetriable } from "#shared/utils/errors"
+import { deepFreeze } from "#shared/utils/deep-freeze"
+import type {
+  AudioDetail,
+  DetailFromMediaType,
+  ImageDetail,
+  Media,
+} from "#shared/types/media"
+import type { FetchingError, FetchState } from "#shared/types/fetch-state"
+import { warn } from "~/utils/console"
 import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
-import { deepFreeze } from "~/utils/deep-freeze"
-
 import { useApiClient } from "~/composables/use-api-client"
 
 interface SearchFetchState extends Omit<FetchState, "hasStarted"> {

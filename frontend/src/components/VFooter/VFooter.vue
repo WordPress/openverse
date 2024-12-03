@@ -5,13 +5,11 @@
  */
 import { computed, ref } from "vue"
 
-import usePages from "~/composables/use-pages"
-import useResizeObserver from "~/composables/use-resize-observer"
-
-import { SCREEN_SIZES } from "~/constants/screens"
-
+import { SCREEN_SIZES } from "#shared/constants/screens"
 import { useUiStore } from "~/stores/ui"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
+import usePages from "~/composables/use-pages"
+import useResizeObserver from "~/composables/use-resize-observer"
 
 import type { SelectFieldProps } from "~/components/VSelectField/VSelectField.vue"
 import VLink from "~/components/VLink.vue"

@@ -1,19 +1,15 @@
 import { expect, Page } from "@playwright/test"
-
 import { test } from "~~/test/playwright/utils/test"
-
 import { mockProviderApis } from "~~/test/playwright/utils/route"
 import {
   goToSearchTerm,
   preparePageForTests,
   selectHomepageSearchType,
 } from "~~/test/playwright/utils/navigation"
-
 import {
   collectAnalyticsEvents,
   expectEventPayloadToMatch,
 } from "~~/test/playwright/utils/analytics"
-
 import { t } from "~~/test/playwright/utils/i18n"
 
 import {
@@ -21,7 +17,7 @@ import {
   AUDIO,
   searchPath,
   supportedSearchTypes,
-} from "~/constants/media"
+} from "#shared/constants/media"
 
 test.describe.configure({ mode: "parallel" })
 const searchTypePopover = "[aria-labelledby='search-type-button'] > div"

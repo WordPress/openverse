@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { ref, watch, toRefs, onBeforeUnmount } from "vue"
 
-import type { ZIndex } from "~/constants/z-indices"
-
-import { useFloatingUi } from "~/composables/use-floating-ui"
+import type { ZIndex } from "#shared/constants/z-indices"
 import { hasFocusWithin } from "~/utils/reakit-utils/focus"
+import { useFloatingUi } from "~/composables/use-floating-ui"
 
 import VIconButton from "~/components/VIconButton/VIconButton.vue"
 

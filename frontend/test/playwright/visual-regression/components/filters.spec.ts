@@ -1,21 +1,18 @@
 import { expect, type Page } from "@playwright/test"
-
 import { test } from "~~/test/playwright/utils/test"
-
 import {
   filters,
   goToSearchTerm,
   preparePageForTests,
 } from "~~/test/playwright/utils/navigation"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
-
 import {
   type LanguageDirection,
   languageDirections,
   t,
 } from "~~/test/playwright/utils/i18n"
 
-import type { Breakpoint } from "~/constants/screens"
+import type { Breakpoint } from "#shared/constants/screens"
 
 test.describe.configure({ mode: "parallel" })
 

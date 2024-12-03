@@ -1,15 +1,12 @@
 <script setup lang="ts">
 import { definePageMeta, useAsyncData, useHead } from "#imports"
 
+import { skipToContentTargetId } from "#shared/constants/window"
+import { AUDIO } from "#shared/constants/media"
+import type { CollectionParams } from "#shared/types/search"
 import { collectionMiddleware } from "~/middleware/collection"
-
-import { skipToContentTargetId } from "~/constants/window"
-
 import { useCollection } from "~/composables/use-collection"
 import { usePageRobotsRule } from "~/composables/use-page-robots-rule"
-import { AUDIO } from "~/constants/media"
-
-import { CollectionParams } from "~/types/search"
 
 import VCollectionResults from "~/components/VSearchResultsGrid/VCollectionResults.vue"
 

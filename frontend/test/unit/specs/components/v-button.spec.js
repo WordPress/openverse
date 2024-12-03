@@ -1,9 +1,7 @@
-import { screen } from "@testing-library/vue"
-
-import { describe, expect, it } from "vitest"
-
 import { nextTick } from "vue"
 
+import { screen } from "@testing-library/vue"
+import { describe, expect, it } from "vitest"
 import { render } from "~~/test/unit/test-utils/render"
 
 import VButton from "~/components/VButton.vue"

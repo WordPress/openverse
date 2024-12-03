@@ -4,10 +4,9 @@
  */
 
 import { expect } from "@playwright/test"
-
 import { test } from "~~/test/playwright/utils/test"
 
-import { searchTypes, searchPath } from "~/constants/media"
+import { searchTypes, searchPath } from "#shared/constants/media"
 
 test.describe.configure({ mode: "parallel" })
 

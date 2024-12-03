@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { useI18n } from "#imports"
-
 import { computed } from "vue"
 
-import type { License } from "~/constants/license"
-import { useDarkMode } from "~/composables/use-dark-mode"
+import type { License } from "#shared/constants/license"
+import { camelCase } from "#shared/utils/case"
+import { getElements } from "#shared/utils/license"
 import { useUiStore } from "~/stores/ui"
-import { camelCase } from "~/utils/case"
-import { getElements } from "~/utils/license"
+import { useIconNames } from "~/composables/use-icon-names"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 
@@ -28,12 +27,15 @@ const props = withDefaults(
   }
 )
 
-const { effectiveColorMode } = useDarkMode()
-
 const i18n = useI18n({ useScope: "global" })
 const elementNames = computed(() =>
   getElements(props.license).filter((icon) => icon !== "cc")
 )
+
+const { iconNames } = useIconNames({
+  license: props.license,
+  filterOutCc: true,
+})
 
 const isSmall = computed(() => props.size === "small")
 const uiStore = useUiStore()
@@ -47,14 +49,14 @@ const getLicenseDescription = (element: string) => {
 <template>
   <ul class="flex flex-col gap-y-2 md:gap-y-4">
     <li
-      v-for="element in elementNames"
+      v-for="(element, idx) in elementNames"
       :key="element"
       class="flex items-center gap-x-3 text-sm md:text-base"
     >
       <VIcon
         view-box="0 0 30 30"
         :size="isSmall || isMobile ? 5 : 6"
-        :name="`licenses/${element}-${effectiveColorMode}`"
+        :name="iconNames[idx]"
       />
       <span v-if="elementNames.length > 1" class="sr-only">{{
         element.toUpperCase()

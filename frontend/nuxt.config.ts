@@ -1,6 +1,6 @@
 import { defineNuxtConfig } from "nuxt/config"
 
-import { disallowedBots } from "./src/constants/disallowed-bots"
+import { disallowedBots } from "./shared/constants/disallowed-bots"
 import locales from "./i18n/locales/scripts/valid-locales.json"
 
 import type { LocaleObject } from "@nuxtjs/i18n"

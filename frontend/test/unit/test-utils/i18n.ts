@@ -1,7 +1,6 @@
-import { createI18n } from "vue-i18n"
-
 import { computed } from "vue"
 
+import { createI18n } from "vue-i18n"
 import messages from "~~/i18n/locales/en.json"
 
 const globalizedI18n = () => {

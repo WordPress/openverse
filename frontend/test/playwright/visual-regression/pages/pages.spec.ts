@@ -1,12 +1,9 @@
 import { expect } from "@playwright/test"
-
 import { test } from "~~/test/playwright/utils/test"
-
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import {
   pathWithDir,
   preparePageForTests,
-  sleep,
 } from "~~/test/playwright/utils/navigation"
 import { languageDirections, t } from "~~/test/playwright/utils/i18n"
 import {
@@ -89,13 +86,19 @@ test.describe("layout color is set correctly", () => {
     }) => {
       await page.goto("/ar")
 
-      // wait for hydration
-      await sleep(500)
-      await getLanguageSelect(page, "rtl").selectOption("en")
+      const searchButton = getHomepageSearchButton(page, "rtl")
+      const languageSelect = getLanguageSelect(page, "rtl")
+
+      // Wait for hydration
+      await expect(searchButton).toBeEnabled()
+      await languageSelect.selectOption("en")
 
       await page
         .getByRole("link", { name: t("navigation.about", "ltr") })
         .click()
+
+      await page.waitForURL(/about/)
+      await expect(getH1(page, t("about.title"))).toBeVisible()
       await page.mouse.move(100, 100)
 
       expect(await page.screenshot({ fullPage: true })).toMatchSnapshot(

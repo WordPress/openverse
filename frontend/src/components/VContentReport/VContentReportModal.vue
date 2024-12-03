@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from "vue"
 
-import { WIP } from "~/constants/content-report"
-import { CONTENT_REPORT_DIALOG } from "~/constants/dialogs"
+import { WIP } from "#shared/constants/content-report"
+import { CONTENT_REPORT_DIALOG } from "#shared/constants/dialogs"
+import type { ReportableMedia } from "#shared/types/media"
 import { useContentReport } from "~/composables/use-content-report"
-import type { ReportableMedia } from "~/types/media"
 
 import VContentReportButton from "~/components/VContentReport/VContentReportButton.vue"
 import VContentReportForm from "~/components/VContentReport/VContentReportForm.vue"

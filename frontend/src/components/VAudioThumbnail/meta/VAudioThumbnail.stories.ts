@@ -1,9 +1,9 @@
-import { Meta, type StoryObj } from "@storybook/vue3"
 import { h } from "vue"
 
+import { Meta, type StoryObj } from "@storybook/vue3"
 import { getAudioObj } from "~~/test/unit/fixtures/audio"
 
-import { AudioDetail } from "~/types/media"
+import type { AudioDetail } from "#shared/types/media"
 
 import VAudioThumbnail from "~/components/VAudioThumbnail/VAudioThumbnail.vue"
 

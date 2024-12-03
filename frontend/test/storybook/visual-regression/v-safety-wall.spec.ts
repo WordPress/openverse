@@ -1,5 +1,4 @@
 import { test } from "~~/test/playwright/utils/test"
-
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 
 // Only used to isolate part of the Storybook frame;

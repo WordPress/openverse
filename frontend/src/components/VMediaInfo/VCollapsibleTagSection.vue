@@ -1,15 +1,13 @@
 <script setup lang="ts">
 import { useI18n, useNuxtApp } from "#imports"
-
 import { computed, nextTick, onMounted, ref } from "vue"
 
 import { useResizeObserver, watchDebounced } from "@vueuse/core"
 
-import type { Tag } from "~/types/media"
-import type { SupportedMediaType } from "~/constants/media"
-import { useSearchStore } from "~/stores/search"
-
+import type { SupportedMediaType } from "#shared/constants/media"
+import type { Tag } from "#shared/types/media"
 import { focusElement } from "~/utils/focus-management"
+import { useSearchStore } from "~/stores/search"
 
 import VTag from "~/components/VTag/VTag.vue"
 import VButton from "~/components/VButton.vue"

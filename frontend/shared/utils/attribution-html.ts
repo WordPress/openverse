@@ -5,13 +5,13 @@
  */
 import enJson from "~~/i18n/locales/en.json"
 
-import type { Media } from "~/types/media"
+import type { LicenseElement } from "#shared/constants/license"
 import {
   getElements,
   getFullLicenseName,
   isPublicDomain,
-} from "~/utils/license"
-import type { LicenseElement } from "~/constants/license"
+} from "#shared/utils/license"
+import type { Media } from "#shared/types/media"
 
 import type { Composer } from "vue-i18n"
 

@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { useAnalytics } from "~/composables/use-analytics"
-
 import { useSearchStore } from "~/stores/search"
+import { useAnalytics } from "~/composables/use-analytics"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VButton from "~/components/VButton.vue"

@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { useLocalePath } from "#imports"
-
 import { computed } from "vue"
 
-import type { SupportedMediaType } from "~/constants/media"
-import type { Tag } from "~/types/media"
+import type { SupportedMediaType } from "#shared/constants/media"
+import type { Tag } from "#shared/types/media"
 
 import VCollapsibleTagSection from "~/components/VMediaInfo/VCollapsibleTagSection.vue"
 import VLink from "~/components/VLink.vue"

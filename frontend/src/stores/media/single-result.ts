@@ -2,19 +2,16 @@ import { useNuxtApp } from "#imports"
 
 import { defineStore } from "pinia"
 
+import type { SupportedMediaType } from "#shared/constants/media"
+import { validateUUID } from "#shared/utils/query-utils"
+import { isDetail, isMediaDetail } from "#shared/types/media"
 import type {
   AudioDetail,
   DetailFromMediaType,
   ImageDetail,
-} from "~/types/media"
-import { isDetail, isMediaDetail } from "~/types/media"
-
-import type { SupportedMediaType } from "~/constants/media"
-
+} from "#shared/types/media"
+import type { FetchingError, FetchState } from "#shared/types/fetch-state"
 import { useMediaStore } from "~/stores/media/index"
-import { validateUUID } from "~/utils/query-utils"
-
-import { FetchingError, FetchState } from "~/types/fetch-state"
 import { useApiClient } from "~/composables/use-api-client"
 
 export type MediaItemState = {

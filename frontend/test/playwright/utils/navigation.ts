@@ -1,10 +1,11 @@
 import { expect } from "@playwright/test"
-
+import featureData from "~~/feat/feature-flags.json"
 import { LanguageDirection, t } from "~~/test/playwright/utils/i18n"
 
-import featureData from "~~/feat/feature-flags.json"
-
-import type { SupportedMediaType, SupportedSearchType } from "~/constants/media"
+import type {
+  SupportedMediaType,
+  SupportedSearchType,
+} from "#shared/constants/media"
 import {
   ALL_MEDIA,
   AUDIO,
@@ -12,10 +13,9 @@ import {
   MODEL_3D,
   searchPath,
   VIDEO,
-} from "~/constants/media"
-
-import type { Breakpoint } from "~/constants/screens"
-import { keycodes } from "~/constants/key-codes"
+} from "#shared/constants/media"
+import type { Breakpoint } from "#shared/constants/screens"
+import { keycodes } from "#shared/constants/key-codes"
 
 import type { BrowserContext, Locator, Page } from "@playwright/test"
 

@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { definePageMeta, useHead, useNuxtApp } from "#imports"
-
 import { computed } from "vue"
 
+import { ON, OFF } from "#shared/constants/feature-flag"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
-import { ON, OFF } from "~/constants/feature-flag"
 
 import VLink from "~/components/VLink.vue"
 import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"

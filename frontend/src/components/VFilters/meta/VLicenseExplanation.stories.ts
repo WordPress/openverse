@@ -1,6 +1,6 @@
 import { h } from "vue"
 
-import { ALL_LICENSES } from "~/constants/license"
+import { ALL_LICENSES } from "#shared/constants/license"
 
 import VLicenseExplanation from "~/components/VFilters/VLicenseExplanation.vue"
 

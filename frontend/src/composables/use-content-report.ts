@@ -1,8 +1,7 @@
 import { useI18n } from "#imports"
-
 import { computed, ref } from "vue"
 
-import { type ReportStatus, SENT, WIP } from "~/constants/content-report"
+import { type ReportStatus, SENT, WIP } from "#shared/constants/content-report"
 
 export const useContentReport = () => {
   const status = ref<ReportStatus>(WIP)

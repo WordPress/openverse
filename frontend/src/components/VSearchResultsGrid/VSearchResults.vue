@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import { useI18n } from "#imports"
-
 import { computed } from "vue"
 
+import type { SupportedMediaType } from "#shared/constants/media"
+import type { Results } from "#shared/types/result"
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
-
-import type { SupportedMediaType } from "~/constants/media"
-import type { Results } from "~/types/result"
 
 import VSearchResultsTitle from "~/components/VSearchResultsTitle.vue"
 import VMediaCollection from "~/components/VSearchResultsGrid/VMediaCollection.vue"

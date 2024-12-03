@@ -1,5 +1,4 @@
 import { expect, Locator, Page } from "@playwright/test"
-
 import { LanguageDirection, t } from "~~/test/playwright/utils/i18n"
 
 import {
@@ -7,7 +6,7 @@ import {
   AudioStatusVerb,
   inactiveAudioStatus,
   statusVerbMap,
-} from "~/constants/audio"
+} from "#shared/constants/audio"
 
 const getPossibleAudioActions = async (
   context: Locator,

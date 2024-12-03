@@ -33,11 +33,15 @@ def test_assign_work(estimated_records, record_limit, workers, expected_ranges):
         estimated_records
     ]
     # Enable pook & mock other internal functions
-    with pook.use(), mock.patch(
-        "ingestion_server.distributed_reindex_scheduler.get_record_limit"
-    ) as mock_get_record_limit, mock.patch(
-        "ingestion_server.distributed_reindex_scheduler._wait_for_healthcheck"
-    ) as mock_wait_for_healthcheck:
+    with (
+        pook.use(),
+        mock.patch(
+            "ingestion_server.distributed_reindex_scheduler.get_record_limit"
+        ) as mock_get_record_limit,
+        mock.patch(
+            "ingestion_server.distributed_reindex_scheduler._wait_for_healthcheck"
+        ) as mock_wait_for_healthcheck,
+    ):
         mock_wait_for_healthcheck.return_value = True
         mock_get_record_limit.return_value = record_limit
 
@@ -68,9 +72,12 @@ def test_assign_work(estimated_records, record_limit, workers, expected_ranges):
 def test_assign_work_workers_fail():
     mock_db = mock.MagicMock()
     mock_db.cursor.return_value.__enter__.return_value.fetchone.return_value = [100]
-    with mock.patch(
-        "ingestion_server.distributed_reindex_scheduler._wait_for_healthcheck"
-    ) as mock_wait_for_healthcheck, pook.use(False):
+    with (
+        mock.patch(
+            "ingestion_server.distributed_reindex_scheduler._wait_for_healthcheck"
+        ) as mock_wait_for_healthcheck,
+        pook.use(False),
+    ):
         mock_wait_for_healthcheck.return_value = False
 
         with pytest.raises(ValueError, match="Some workers didn't respond"):

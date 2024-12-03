@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
+import type { AudioDetail, ImageDetail } from "#shared/types/media"
 import { useSearchStore } from "~/stores/search"
-import type { AudioDetail, ImageDetail } from "~/types/media"
 
 import VSourceCreatorButton from "~/components/VMediaInfo/VByLine/VSourceCreatorButton.vue"
 import VScrollableLine from "~/components/VScrollableLine.vue"

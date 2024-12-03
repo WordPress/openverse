@@ -1,14 +1,11 @@
 import { expect } from "@playwright/test"
-
 import { test } from "~~/test/playwright/utils/test"
-
 import audio from "~~/test/playwright/utils/audio"
 import {
   goToSearchTerm,
   preparePageForTests,
   skipToContent,
 } from "~~/test/playwright/utils/navigation"
-
 import {
   getContentLink,
   locateFocusedResult,
@@ -16,8 +13,8 @@ import {
   walkToType,
 } from "~~/test/playwright/utils/search-results"
 
-import { keycodes } from "~/constants/key-codes"
-import { SupportedMediaType } from "~/constants/media"
+import type { SupportedMediaType } from "#shared/constants/media"
+import { keycodes } from "#shared/constants/key-codes"
 
 test.describe.configure({ mode: "parallel" })
 

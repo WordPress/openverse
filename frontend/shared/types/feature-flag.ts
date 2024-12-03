@@ -4,8 +4,8 @@ import type {
   FeatureState,
   FlagStatus,
   Storage,
-} from "~/constants/feature-flag"
-import type { DeployEnv } from "~/constants/deploy-env"
+} from "#shared/constants/feature-flag"
+import type { DeployEnv } from "#shared/constants/deploy-env"
 
 export type FlagName = keyof (typeof featureData)["features"]
 

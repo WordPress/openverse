@@ -1,15 +1,11 @@
 import { expect } from "@playwright/test"
-
 import { test } from "~~/test/playwright/utils/test"
-
 import breakpoints from "~~/test/playwright/utils/breakpoints"
-
 import { preparePageForTests } from "~~/test/playwright/utils/navigation"
-
 import { skipToContentLink } from "~~/test/playwright/utils/components"
 
-import { keycodes } from "~/constants/key-codes"
-import { skipToContentTargetId } from "~/constants/window"
+import { skipToContentTargetId } from "#shared/constants/window"
+import { keycodes } from "#shared/constants/key-codes"
 
 test.describe.configure({ mode: "parallel" })
 

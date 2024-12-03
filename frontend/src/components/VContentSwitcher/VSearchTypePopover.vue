@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue"
 
+import { SEARCH_TYPES_DIALOG } from "#shared/constants/dialogs"
 import useSearchType from "~/composables/use-search-type"
-
-import { SEARCH_TYPES_DIALOG } from "~/constants/dialogs"
 
 import VPopover from "~/components/VPopover/VPopover.vue"
 import VSearchTypeButton from "~/components/VContentSwitcher/VSearchTypeButton.vue"

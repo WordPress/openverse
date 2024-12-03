@@ -1,18 +1,17 @@
 <script setup lang="ts">
 import {
   onMounted,
-  useDarkMode,
-  useFeatureFlagStore,
   useHead,
   useLocaleHead,
   useRoute,
   useRuntimeConfig,
 } from "#imports"
 
+import { meta as commonMeta } from "#shared/constants/meta"
+import { favicons } from "#shared/constants/favicons"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { useDarkMode } from "~/composables/use-dark-mode"
 import { useLayout } from "~/composables/use-layout"
-
-import { meta as commonMeta } from "~/constants/meta"
-import { favicons } from "~/constants/favicons"
 
 import VFourOhFour from "~/components/VFourOhFour.vue"
 

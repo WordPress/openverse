@@ -3,13 +3,13 @@
 // The source code of this package is parsed to create the media properties
 // documentation by the script `scripts/document-media.js`.
 
-import type { SupportedMediaType } from "~/constants/media"
-import type { License, LicenseVersion } from "~/constants/license"
+import type { SupportedMediaType } from "#shared/constants/media"
+import type { License, LicenseVersion } from "#shared/constants/license"
 import {
   SENSITIVITY_RESPONSE_PARAM,
   Sensitivity,
-} from "~/constants/content-safety"
-import { AUDIO, IMAGE } from "~/constants/media"
+} from "#shared/constants/content-safety"
+import { AUDIO, IMAGE } from "#shared/constants/media"
 
 export interface Tag {
   name: string

@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, SetupContext } from "vue"
 
-import type { ModalColorMode, ModalVariant } from "~/types/modal"
-
+import type { ModalColorMode, ModalVariant } from "#shared/types/modal"
 import { useDialogControl } from "~/composables/use-dialog-control"
 
 import VModalContent from "~/components/VModal/VModalContent.vue"

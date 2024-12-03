@@ -1,6 +1,6 @@
 import { computed, Ref, ref } from "vue"
 
-import type { ImageDimensions } from "~/types/media"
+import type { ImageDimensions } from "#shared/types/media"
 
 const minAspect = 3 / 4
 const maxAspect = 16 / 9

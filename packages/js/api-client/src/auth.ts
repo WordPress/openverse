@@ -1,7 +1,5 @@
 import type { Middleware } from "openapi-fetch"
-
 import type { components } from "./generated/openverse"
-
 import type { OpenverseClient, ClientCredentials } from "./types"
 
 type OAuth2Token = components["schemas"]["OAuth2Token"]

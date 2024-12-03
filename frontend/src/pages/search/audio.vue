@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { AudioResults } from "~/types/result"
+import type { AudioResults } from "#shared/types/result"
 
 import VSearchResults from "~/components/VSearchResultsGrid/VSearchResults.vue"
 

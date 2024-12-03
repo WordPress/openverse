@@ -1,8 +1,13 @@
-import { ALL_MEDIA, AUDIO, IMAGE, VIDEO, MODEL_3D } from "~/constants/media"
-import { ACTIVE_LICENSES } from "~/constants/license"
-import { deepFreeze } from "~/utils/deep-freeze"
-
-import type { SearchType } from "~/constants/media"
+import {
+  ALL_MEDIA,
+  AUDIO,
+  IMAGE,
+  VIDEO,
+  MODEL_3D,
+} from "#shared/constants/media"
+import { ACTIVE_LICENSES } from "#shared/constants/license"
+import type { SearchType } from "#shared/constants/media"
+import { deepFreeze } from "#shared/utils/deep-freeze"
 
 export interface FilterItem {
   code: string

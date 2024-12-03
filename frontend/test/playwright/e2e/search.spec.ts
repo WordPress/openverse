@@ -7,9 +7,7 @@
  * On error: shows error message
  */
 import { expect } from "@playwright/test"
-
 import { test } from "~~/test/playwright/utils/test"
-
 import {
   collectAnalyticsEvents,
   expectEventPayloadToMatch,

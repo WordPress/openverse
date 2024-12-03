@@ -1,28 +1,26 @@
 <script setup lang="ts">
-import { firstParam, focusIn, useNuxtApp, useRoute, useRouter } from "#imports"
-
+import { focusIn, useNuxtApp, useRoute, useRouter } from "#imports"
 import { computed, nextTick, ref, SetupContext, watch } from "vue"
+
 import { onClickOutside } from "@vueuse/core"
 
+import {
+  CONTENT_SETTINGS_DIALOG,
+  RECENT_SEARCHES_DIALOG,
+} from "#shared/constants/dialogs"
+import { skipToContentTargetId } from "#shared/constants/window"
+import { firstParam } from "#shared/utils/query-utils"
 import {
   ensureFocus,
   getAllTabbableIn,
   getFirstTabbableIn,
 } from "~/utils/reakit-utils/focus"
-
+import { useMediaStore } from "~/stores/media"
+import { useSearchStore } from "~/stores/search"
 import { useDialogControl } from "~/composables/use-dialog-control"
 import { useSearch } from "~/composables/use-search"
 import { useHydrating } from "~/composables/use-hydrating"
 import { useRecentSearches } from "~/composables/use-recent-searches"
-
-import { useMediaStore } from "~/stores/media"
-import { useSearchStore } from "~/stores/search"
-
-import {
-  CONTENT_SETTINGS_DIALOG,
-  RECENT_SEARCHES_DIALOG,
-} from "~/constants/dialogs"
-import { skipToContentTargetId } from "~/constants/window"
 
 import VLogoButton from "~/components/VHeader/VLogoButton.vue"
 import VContentSettingsModalContent from "~/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue"

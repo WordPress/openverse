@@ -1,11 +1,11 @@
-import { decodeData as decodeString } from "~/utils/decode-data"
-import { SENSITIVITY_RESPONSE_PARAM } from "~/constants/content-safety"
-import { AUDIO, IMAGE, MODEL_3D, VIDEO } from "~/constants/media"
-import type { ApiMedia, Media, Tag } from "~/types/media"
-import type { MediaType } from "~/constants/media"
+import { SENSITIVITY_RESPONSE_PARAM } from "#shared/constants/content-safety"
+import { AUDIO, IMAGE, MODEL_3D, VIDEO } from "#shared/constants/media"
+import type { MediaType } from "#shared/constants/media"
+import { decodeData as decodeString } from "#shared/utils/decode-data"
+import { capitalCase } from "#shared/utils/case"
+import { getFakeSensitivities } from "#shared/utils/content-safety"
+import type { ApiMedia, Media, Tag } from "#shared/types/media"
 import { useProviderStore } from "~/stores/provider"
-import { capitalCase } from "~/utils/case"
-import { getFakeSensitivities } from "~/utils/content-safety"
 
 const mediaTypeExtensions: Record<MediaType, string[]> = {
   [IMAGE]: ["jpg", "jpeg", "png", "gif", "svg"],

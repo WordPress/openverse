@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { decodeData } from "~/utils/decode-data"
+import { decodeData } from "#shared/utils/decode-data"
 
 describe("decodeData", () => {
   it("returns empty string for empty string", async () => {
