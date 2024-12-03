@@ -6,7 +6,6 @@ import { watch } from "chokidar"
 
 import { prettify, writeJson } from "./utils.mjs"
 import { downloadTranslations, writeEnglish } from "./translations.mjs"
-
 import {
   enJson5 as enJson5File,
   i18nDataDir,

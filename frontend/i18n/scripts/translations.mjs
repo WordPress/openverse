@@ -5,7 +5,8 @@ import { pipeline } from "stream/promises"
 import AdmZip from "adm-zip"
 import json5 from "json5"
 
-import { i18nHeaders } from "./constants.mjs"
+import { userAgentHeader } from "../../shared/constants/user-agent.mjs"
+
 import { kebabToCamel, prettify, readToJson, writeJson } from "./utils.mjs"
 import {
   enJson as enJsonFile,
@@ -18,7 +19,7 @@ const NGX_URL =
 
 const fetchBulkNgx = async () => {
   const zipPath = join(localesDir, "openverse.zip")
-  const res = await fetch(NGX_URL, { headers: i18nHeaders })
+  const res = await fetch(NGX_URL, { headers: userAgentHeader })
 
   if (!res.ok) {
     throw new Error(

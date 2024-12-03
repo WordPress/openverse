@@ -9,8 +9,9 @@
 import { join } from "path"
 import { copyFileSync, existsSync, readdirSync } from "fs"
 
+import { userAgentHeader } from "../../shared/constants/user-agent.mjs"
+
 import { readToJson, snakeToCamel } from "./utils.mjs"
-import { i18nHeaders } from "./constants.mjs"
 import { i18nDataDir, localesDir, testLocalesDir } from "./paths.mjs"
 
 const base_url =
@@ -58,7 +59,7 @@ const PROPERTY_PATTERNS = createPropertyRePatterns()
  */
 async function fetchLocalesPhpFile() {
   try {
-    const res = await fetch(base_url, { headers: i18nHeaders })
+    const res = await fetch(base_url, { headers: userAgentHeader })
     return await res.text()
   } catch (error) {
     console.error("Failed to fetch locales.php from GlotPress", error)
