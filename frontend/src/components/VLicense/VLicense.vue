@@ -7,10 +7,10 @@ import { useI18n } from "#imports"
 
 import { computed } from "vue"
 
-import { useDarkMode } from "~/composables/use-dark-mode"
+import { useIconNames } from "~/composables/use-icon-names"
 
 import type { License } from "~/constants/license"
-import { getFullLicenseName, getElements } from "~/utils/license"
+import { getFullLicenseName } from "~/utils/license"
 import { camelCase } from "~/utils/case"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
@@ -37,11 +37,13 @@ const props = withDefaults(
   }
 )
 
-const { effectiveColorMode } = useDarkMode()
-
 const { t } = useI18n({ useScope: "global" })
 
-const iconNames = computed(() => getElements(props.license))
+const { iconNames } = useIconNames({
+  license: props.license,
+  filterOutCc: false,
+})
+
 const licenseName = computed(() => {
   const licenseKey =
     props.license === "sampling+" ? props.license : camelCase(props.license)
@@ -60,7 +62,7 @@ const licenseName = computed(() => {
         :key="name"
         :class="{ 'license-bg text-black': bgFilled }"
         view-box="0 0 30 30"
-        :name="`licenses/${name}-${effectiveColorMode}`"
+        :name="name"
         :size="4"
       />
     </div>

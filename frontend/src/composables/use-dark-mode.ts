@@ -65,6 +65,15 @@ export function useDarkMode() {
     return colorMode.value
   })
 
+  /**
+   * The server does not have access to media queries, so the `system` color mode defaults to "light".
+   */
+  const serverColorMode = computed(() => {
+    return !darkModeToggleable.value || colorMode.value === "system"
+      ? "light"
+      : colorMode.value
+  })
+
   const cssClass = computed(() => {
     return {
       light: LIGHT_MODE_CLASS,
@@ -77,6 +86,7 @@ export function useDarkMode() {
     colorMode,
     osColorMode,
     effectiveColorMode,
+    serverColorMode,
     cssClass,
   }
 }
