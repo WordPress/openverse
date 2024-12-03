@@ -66,5 +66,10 @@
       groupName: "@testing-library",
       matchPackageNames: ["@testing-library{/,}**"],
     },
+    {
+      matchPackageNames: ["/elasticsearch/", "/postgres/", "/redis/"],
+      matchManagers: ["docker-compose", "dockerfile"],
+      enabled: false,
+    },
   ],
 }
