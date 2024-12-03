@@ -18,11 +18,11 @@ ENV PIP_NO_COLOR=1
 # - Install system packages needed for building Python dependencies
 # - Install PDM to install Python dependencies
 RUN apt-get update \
-    && apt-get install -yqq --no-install-recommends \
-      python3-dev \
+    && apt-get install -yqq --no-install-recommends python3-dev \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/* \
-    && pip install pdm~=2.14
+    && pip install --upgrade pip \
+    && pip install pdm~=2.21
 
 # Copy the Pipenv files into the container
 COPY pyproject.toml pdm.lock /

@@ -19,11 +19,11 @@ ENV PIP_NO_COLOR=1
 # - Create a virtualenv inside `/venv`
 # - Install PDM to install Python dependencies
 RUN apt-get update \
-  && apt-get install -yqq --no-install-recommends \
-    python3-dev \
+  && apt-get install -yqq --no-install-recommends python3-dev \
   && apt-get autoremove -y \
   && rm -rf /var/lib/apt/lists/* \
-  && pip install pdm~=2.19
+  && pip install --upgrade pip \
+  && pip install pdm~=2.21
 
 # Copy subpackages from additional build-context 'packages'
 # hadolint ignore=DL3022
