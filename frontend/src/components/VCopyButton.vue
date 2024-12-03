@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import Clipboard from "clipboard"
-
 import { onBeforeUnmount, onMounted, ref } from "vue"
+
+import Clipboard from "clipboard"
 
 import { useHydrating } from "~/composables/use-hydrating"
 

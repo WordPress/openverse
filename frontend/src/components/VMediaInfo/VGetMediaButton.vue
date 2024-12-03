@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useNuxtApp } from "#imports"
 
-import type { SupportedMediaType } from "~/constants/media"
-import type { Media } from "~/types/media"
+import type { SupportedMediaType } from "#shared/constants/media"
+import type { Media } from "#shared/types/media"
 
 import VButton from "~/components/VButton.vue"
 

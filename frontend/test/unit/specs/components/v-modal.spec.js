@@ -1,3 +1,5 @@
+import { ref, computed, createApp } from "vue"
+
 import {
   afterAll,
   beforeAll,
@@ -7,11 +9,8 @@ import {
   it,
   vi,
 } from "vitest"
-
-import { ref, computed, createApp } from "vue"
 import { screen } from "@testing-library/vue"
 import { default as userEvent } from "@testing-library/user-event"
-
 import { render } from "~~/test/unit/test-utils/render"
 
 import VModal from "~/components/VModal/VModal.vue"

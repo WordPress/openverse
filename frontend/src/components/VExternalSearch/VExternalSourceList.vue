@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useAnalytics } from "~/composables/use-analytics"
-
 import { useExternalSources } from "~/composables/use-external-sources"
 
 import VButton from "~/components/VButton.vue"

@@ -11,7 +11,7 @@ const ts = require("typescript")
 const analyticsTypesModule = path.resolve(
   __dirname,
   "..",
-  "src",
+  "shared",
   "types",
   "analytics.ts"
 )

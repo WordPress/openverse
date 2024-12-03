@@ -1,7 +1,7 @@
 import { h } from "vue"
 
-import { buttonForms, buttonSizes, buttonVariants } from "~/types/button"
-import { capitalCase } from "~/utils/case"
+import { capitalCase } from "#shared/utils/case"
+import { buttonForms, buttonSizes, buttonVariants } from "#shared/types/button"
 
 import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"

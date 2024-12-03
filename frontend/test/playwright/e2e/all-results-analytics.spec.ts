@@ -1,7 +1,5 @@
 import { expect } from "@playwright/test"
-
 import { test } from "~~/test/playwright/utils/test"
-
 import {
   getFirstResult,
   goToSearchTerm,
@@ -12,10 +10,9 @@ import {
   collectAnalyticsEvents,
   expectEventPayloadToMatch,
 } from "~~/test/playwright/utils/analytics"
-
 import { t } from "~~/test/playwright/utils/i18n"
 
-import { AUDIO, IMAGE } from "~/constants/media"
+import { AUDIO, IMAGE } from "#shared/constants/media"
 
 test.describe.configure({ mode: "parallel" })
 

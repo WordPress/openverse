@@ -1,6 +1,6 @@
 import { h } from "vue"
 
-import { audioFeatures } from "~/constants/audio"
+import { audioFeatures } from "#shared/constants/audio"
 
 import VWaveform from "~/components/VAudioTrack/VWaveform.vue"
 

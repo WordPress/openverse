@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ImageResults } from "~/types/result"
+import type { ImageResults } from "#shared/types/result"
 
 import VSearchResults from "~/components/VSearchResultsGrid/VSearchResults.vue"
 

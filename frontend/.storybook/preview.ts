@@ -1,5 +1,4 @@
-import { VIEWPORTS } from "~/constants/screens"
-
+import { VIEWPORTS } from "#shared/constants/screens"
 import { WithUiStore } from "~~/.storybook/decorators/with-ui-store"
 import { WithRTL } from "~~/.storybook/decorators/with-rtl"
 import { WithTheme } from "~~/.storybook/decorators/with-theme"

@@ -1,19 +1,15 @@
 import * as tseslint from "typescript-eslint"
-
 import unicornPlugin from "eslint-plugin-unicorn"
 import playwrightPlugin from "eslint-plugin-playwright"
 // @ts-expect-error Vitest is an ECMAScript module, and this file will produce `require` calls
 import vitestPlugin from "@vitest/eslint-plugin"
 import jsoncPlugin from "eslint-plugin-jsonc"
 import eslintCommentsConfigs from "@eslint-community/eslint-plugin-eslint-comments/configs"
-
 import prettierConfig from "eslint-config-prettier"
-
 import globals from "globals"
 
 import typescriptConfig from "./configs/typescript"
 import importConfig from "./configs/import"
-
 import vueConfig from "./configs/vue"
 import rules from "./rules"
 

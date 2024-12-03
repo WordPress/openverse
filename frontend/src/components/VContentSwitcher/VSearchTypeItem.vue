@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
-import { BETA, contentStatus, SearchType } from "~/constants/media"
+import { BETA, contentStatus, SearchType } from "#shared/constants/media"
 import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
 import useSearchType from "~/composables/use-search-type"
 

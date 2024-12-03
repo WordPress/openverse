@@ -1,16 +1,13 @@
 <script setup lang="ts">
 import { useI18n, useNuxtApp } from "#imports"
-
 import { computed } from "vue"
 
-import type { AspectRatio, ImageDetail } from "~/types/media"
-import type { SingleResultProps } from "~/types/collection-component-props"
+import { IMAGE } from "#shared/constants/media"
+import type { AspectRatio, ImageDetail } from "#shared/types/media"
+import type { SingleResultProps } from "#shared/types/collection-component-props"
+import { useSearchStore } from "~/stores/search"
 import { useImageCellSize } from "~/composables/use-image-cell-size"
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
-
-import { IMAGE } from "~/constants/media"
-
-import { useSearchStore } from "~/stores/search"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 import VLicense from "~/components/VLicense/VLicense.vue"

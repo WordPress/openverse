@@ -1,5 +1,4 @@
 import { ref, onMounted, onBeforeUnmount } from "vue"
-
 import type { Ref } from "vue"
 
 interface Options {

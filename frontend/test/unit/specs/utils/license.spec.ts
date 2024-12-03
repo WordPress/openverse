@@ -1,9 +1,8 @@
 import { expect, it, describe } from "vitest"
-
 import { i18n } from "~~/test/unit/test-utils/i18n"
 
-import { getFullLicenseName, getElements } from "~/utils/license"
-import type { License, LicenseVersion } from "~/constants/license"
+import type { License, LicenseVersion } from "#shared/constants/license"
+import { getFullLicenseName, getElements } from "#shared/utils/license"
 
 const t = i18n.t
 

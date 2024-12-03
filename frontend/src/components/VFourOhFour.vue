@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { navigateTo, useHead } from "#imports"
 
+import { ALL_MEDIA } from "#shared/constants/media"
+import { skipToContentTargetId } from "#shared/constants/window"
 import { useSearchStore } from "~/stores/search"
-
 import { useAnalytics } from "~/composables/use-analytics"
-import { ALL_MEDIA } from "~/constants/media"
-import { skipToContentTargetId } from "~/constants/window"
 
 import VLink from "~/components/VLink.vue"
 import VStandaloneSearchBar from "~/components/VHeader/VSearchBar/VStandaloneSearchBar.vue"

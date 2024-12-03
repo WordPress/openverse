@@ -1,11 +1,10 @@
 // @vitest-environment jsdom
-import { AxiosError } from "axios"
 
+import { AxiosError } from "axios"
 import { createPinia, setActivePinia } from "~~/test/unit/test-utils/pinia"
 
+import { AUDIO, IMAGE } from "#shared/constants/media"
 import { useMediaStore } from "~/stores/media"
-import { AUDIO, IMAGE } from "~/constants/media"
-
 import { useSearchStore } from "~/stores/search"
 
 const mocks = vi.hoisted(() => {

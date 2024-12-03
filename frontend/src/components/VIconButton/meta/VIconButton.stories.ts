@@ -1,7 +1,6 @@
 import { h } from "vue"
 
-import { baseButtonSizes, baseButtonVariants } from "~/types/button"
-
+import { baseButtonSizes, baseButtonVariants } from "#shared/types/button"
 import { WithScreenshotArea } from "~~/.storybook/decorators/with-screenshot-area"
 
 import VIconButton from "~/components/VIconButton/VIconButton.vue"

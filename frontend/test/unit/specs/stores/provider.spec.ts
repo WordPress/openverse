@@ -1,12 +1,10 @@
 // @vitest-environment jsdom
 
 import { beforeEach, describe, expect, it } from "vitest"
-
 import { setActivePinia, createPinia } from "~~/test/unit/test-utils/pinia"
 
-import type { MediaProvider } from "~/types/media-provider"
-
-import { AUDIO, IMAGE } from "~/constants/media"
+import { AUDIO, IMAGE } from "#shared/constants/media"
+import type { MediaProvider } from "#shared/types/media-provider"
 import { useProviderStore } from "~/stores/provider"
 
 const testProviders: MediaProvider[] = [

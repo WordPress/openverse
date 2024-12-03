@@ -1,23 +1,19 @@
 import { expect, Page, BrowserContext } from "@playwright/test"
-
 import { test } from "~~/test/playwright/utils/test"
-
 import { mockProviderApis } from "~~/test/playwright/utils/route"
 import {
   goToSearchTerm,
   openFirstResult,
   preparePageForTests,
 } from "~~/test/playwright/utils/navigation"
-
 import {
   collectAnalyticsEvents,
   expectEventPayloadToMatch,
 } from "~~/test/playwright/utils/analytics"
-
 import { t } from "~~/test/playwright/utils/i18n"
 
-import { supportedMediaTypes } from "~/constants/media"
-import type { ReportReason } from "~/constants/content-report"
+import type { ReportReason } from "#shared/constants/content-report"
+import { supportedMediaTypes } from "#shared/constants/media"
 
 test.describe.configure({ mode: "parallel" })
 

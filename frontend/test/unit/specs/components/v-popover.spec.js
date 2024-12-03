@@ -1,9 +1,8 @@
 import { createApp, nextTick } from "vue"
+
 import { screen } from "@testing-library/vue"
 import { default as userEvent } from "@testing-library/user-event"
-
 import { describe, expect, it } from "vitest"
-
 import { render } from "~~/test/unit/test-utils/render"
 
 import VButton from "~/components/VButton.vue"

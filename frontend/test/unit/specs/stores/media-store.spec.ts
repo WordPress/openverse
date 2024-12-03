@@ -1,25 +1,22 @@
 import { expect, describe, it, beforeEach } from "vitest"
-
 import { setActivePinia, createPinia } from "~~/test/unit/test-utils/pinia"
-
 import { image as imageObject } from "~~/test/unit/fixtures/image"
 
-import { deepClone } from "~/utils/clone"
-
-import { initialResults, useMediaStore } from "~/stores/media"
-import { useSearchStore } from "~/stores/search"
 import {
   ALL_MEDIA,
   AUDIO,
   IMAGE,
-  SupportedMediaType,
+  type SupportedMediaType,
   supportedMediaTypes,
   VIDEO,
-} from "~/constants/media"
-import { NO_RESULT } from "~/constants/errors"
+} from "#shared/constants/media"
+import { NO_RESULT } from "#shared/constants/errors"
+import { ON } from "#shared/constants/feature-flag"
+import { deepClone } from "#shared/utils/clone"
+import { ImageDetail, Media } from "#shared/types/media"
+import { initialResults, useMediaStore } from "~/stores/media"
+import { useSearchStore } from "~/stores/search"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
-import { ON } from "~/constants/feature-flag"
-import { ImageDetail, Media } from "~/types/media"
 
 // Retrieve the type of the first argument to
 // useMediaStore.setMedia()

@@ -4,10 +4,8 @@
  */
 import { computed, useAttrs } from "vue"
 
-import type { SearchType } from "~/constants/media"
-
+import type { SearchType } from "#shared/constants/media"
 import { warn } from "~/utils/console"
-
 import useSearchType from "~/composables/use-search-type"
 import { useHydrating } from "~/composables/use-hydrating"
 

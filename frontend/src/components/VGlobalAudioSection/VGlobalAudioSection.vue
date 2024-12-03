@@ -1,19 +1,15 @@
 <script setup lang="ts">
 import { useRoute } from "#imports"
-
 import { watch, computed } from "vue"
 
-import { AUDIO } from "~/constants/media"
-import { useActiveAudio } from "~/composables/use-active-audio"
-
+import { AUDIO } from "#shared/constants/media"
+import { getRouteNameString } from "#shared/utils/route-utils"
+import type { AudioDetail } from "#shared/types/media"
 import { useActiveMediaStore } from "~/stores/active-media"
 import { useMediaStore } from "~/stores/media"
 import { useSingleResultStore } from "~/stores/media/single-result"
 import { useUiStore } from "~/stores/ui"
-
-import type { AudioDetail } from "~/types/media"
-
-import { getRouteNameString } from "~/utils/route-utils"
+import { useActiveAudio } from "~/composables/use-active-audio"
 
 import VIconButton from "~/components/VIconButton/VIconButton.vue"
 import VGlobalAudioTrack from "~/components/VAudioTrack/VGlobalAudioTrack.vue"

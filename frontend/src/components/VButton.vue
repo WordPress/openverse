@@ -1,17 +1,15 @@
 <script setup lang="ts">
 import { watch, computed, useAttrs } from "vue"
 
-import { warn } from "~/utils/console"
-
+import { skipToContentTargetId } from "#shared/constants/window"
 import type {
   ButtonConnections,
   ButtonForm,
   ButtonSize,
   ButtonType,
   ButtonVariant,
-} from "~/types/button"
-
-import { skipToContentTargetId } from "~/constants/window"
+} from "#shared/types/button"
+import { warn } from "~/utils/console"
 
 import VLink from "~/components/VLink.vue"
 

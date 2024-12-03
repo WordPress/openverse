@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, provide, ref } from "vue"
 
-import { tabsContextKey } from "~/types/tabs"
-import type { TabsState, TabVariant } from "~/types/tabs"
+import { tabsContextKey } from "#shared/types/tabs"
+import type { TabsState, TabVariant } from "#shared/types/tabs"
 
 /**
  * VTabs is an accessible implementation of tabs component that displays one panel at a time.

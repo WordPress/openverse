@@ -1,8 +1,7 @@
 import { useI18n } from "#imports"
-
 import { computed, ToRefs, ref } from "vue"
 
-import { keycodes } from "~/constants/key-codes"
+import { keycodes } from "#shared/constants/key-codes"
 
 export interface UseSeekableOptions
   extends ToRefs<{

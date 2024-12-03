@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Media } from "~/types/media"
+import type { Media } from "#shared/types/media"
 
 import VCopyLicense from "~/components/VMediaInfo/VCopyLicense.vue"
 import VMediaLicense from "~/components/VMediaInfo/VMediaLicense.vue"

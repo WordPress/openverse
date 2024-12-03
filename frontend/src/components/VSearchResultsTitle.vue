@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { useI18n } from "#imports"
-
 import { computed } from "vue"
 
-import type { SupportedMediaType, SupportedSearchType } from "~/constants/media"
-
+import type {
+  SupportedMediaType,
+  SupportedSearchType,
+} from "#shared/constants/media"
 import { useGetLocaleFormattedNumber } from "~/composables/use-get-locale-formatted-number"
 import { getCountKey } from "~/composables/use-i18n-utilities"
 

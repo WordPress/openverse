@@ -1,7 +1,5 @@
 import { expect, Page } from "@playwright/test"
-
 import { test } from "~~/test/playwright/utils/test"
-
 import {
   changeSearchType,
   goToSearchTerm,
@@ -9,18 +7,13 @@ import {
   filters,
   preparePageForTests,
 } from "~~/test/playwright/utils/navigation"
-
 import { mockProviderApis } from "~~/test/playwright/utils/route"
-
 import breakpoints from "~~/test/playwright/utils/breakpoints"
-
 import {
   collectAnalyticsEvents,
   expectEventPayloadToMatch,
 } from "~~/test/playwright/utils/analytics"
-
 import { t } from "~~/test/playwright/utils/i18n"
-
 import enMessages from "~~/i18n/locales/en.json"
 
 import {
@@ -29,7 +22,7 @@ import {
   IMAGE,
   AUDIO,
   SupportedMediaType,
-} from "~/constants/media"
+} from "#shared/constants/media"
 
 test.describe.configure({ mode: "parallel" })
 

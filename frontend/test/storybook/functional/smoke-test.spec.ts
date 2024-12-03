@@ -1,5 +1,4 @@
 import { expect, type Page, type Locator } from "@playwright/test"
-
 import { test } from "~~/test/playwright/utils/test"
 
 const checkPageLoaded = async (page: Page) => {

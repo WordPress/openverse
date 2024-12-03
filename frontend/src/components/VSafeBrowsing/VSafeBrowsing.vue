@@ -5,12 +5,11 @@
  * accidental exposure or showing them directly.
  */
 import { useLocalePath, useNuxtApp } from "#imports"
-
 import { computed } from "vue"
 
+import { ON, OFF } from "#shared/constants/feature-flag"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useUiStore } from "~/stores/ui"
-import { ON, OFF } from "~/constants/feature-flag"
 
 import VCheckbox, { CheckboxAttrs } from "~/components/VCheckbox/VCheckbox.vue"
 import VLink from "~/components/VLink.vue"

@@ -1,8 +1,9 @@
-import { computed, useUiStore } from "#imports"
+import { computed } from "#imports"
 
 import { usePreferredColorScheme } from "@vueuse/core"
 
 import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { useUiStore } from "~/stores/ui"
 
 export const DARK_MODE_CLASS = "dark-mode"
 export const LIGHT_MODE_CLASS = "light-mode"

@@ -1,9 +1,7 @@
-import { screen } from "@testing-library/vue"
-
-import { beforeEach, describe, expect, it } from "vitest"
-
 import { createApp } from "vue"
 
+import { screen } from "@testing-library/vue"
+import { beforeEach, describe, expect, it } from "vitest"
 import { render } from "~~/test/unit/test-utils/render"
 
 import VContentLink from "~/components/VContentLink/VContentLink.vue"

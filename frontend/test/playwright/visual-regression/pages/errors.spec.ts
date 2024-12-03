@@ -1,17 +1,14 @@
 import { test } from "~~/test/playwright/utils/test"
-
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import {
   goToSearchTerm,
   preparePageForTests,
   sleep,
 } from "~~/test/playwright/utils/navigation"
-
 import { setViewportToFullHeight } from "~~/test/playwright/utils/viewport"
-
 import { languageDirections } from "~~/test/playwright/utils/i18n"
 
-import { ALL_MEDIA, supportedSearchTypes } from "~/constants/media"
+import { ALL_MEDIA, supportedSearchTypes } from "#shared/constants/media"
 
 test.describe.configure({ mode: "parallel" })
 

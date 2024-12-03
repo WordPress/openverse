@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
-import { timeFmt } from "~/utils/time-fmt"
-import type { AudioDetail } from "~/types/media"
-import { audioFeatures, type AudioSize } from "~/constants/audio"
-
-import { useSensitiveMedia } from "~/composables/use-sensitive-media"
-
+import { audioFeatures, type AudioSize } from "#shared/constants/audio"
+import { timeFmt } from "#shared/utils/time-fmt"
+import type { AudioDetail } from "#shared/types/media"
 import { useUiStore } from "~/stores/ui"
+import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 
 import VAudioThumbnail from "~/components/VAudioThumbnail/VAudioThumbnail.vue"
 import VLicense from "~/components/VLicense/VLicense.vue"

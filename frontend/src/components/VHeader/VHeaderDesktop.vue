@@ -3,27 +3,22 @@
  * The desktop search header.
  */
 import { useNuxtApp } from "#imports"
-
 import { computed, inject, ref } from "vue"
+import type { Ref } from "vue"
 
+import { IsSidebarVisibleKey } from "#shared/types/provides"
+import { ensureFocus } from "~/utils/reakit-utils/focus"
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 import { useUiStore } from "~/stores/ui"
-
-import { IsSidebarVisibleKey } from "~/types/provides"
-
 import { useSearch } from "~/composables/use-search"
 import { useHydrating } from "~/composables/use-hydrating"
-
-import { ensureFocus } from "~/utils/reakit-utils/focus"
 
 import VFilterButton from "~/components/VHeader/VFilterButton.vue"
 import VSearchBar from "~/components/VHeader/VSearchBar/VSearchBar.vue"
 import VLogoButton from "~/components/VHeader/VLogoButton.vue"
 import VSearchBarButton from "~/components/VHeader/VHeaderMobile/VSearchBarButton.vue"
 import VSearchTypePopover from "~/components/VContentSwitcher/VSearchTypePopover.vue"
-
-import type { Ref } from "vue"
 
 const filterButtonRef = ref<InstanceType<typeof VFilterButton> | null>(null)
 const searchBarRef = ref<InstanceType<typeof VSearchBar> | null>(null)

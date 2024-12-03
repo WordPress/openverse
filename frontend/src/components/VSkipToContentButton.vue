@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { skipToContentTargetId } from "~/constants/window"
+import { skipToContentTargetId } from "#shared/constants/window"
 
 import VButton from "~/components/VButton.vue"
 </script>

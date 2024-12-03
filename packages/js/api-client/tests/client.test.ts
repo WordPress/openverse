@@ -1,15 +1,13 @@
 import fs from "node:fs"
-
 import path from "node:path"
 
-import { describe, test, expect } from "vitest"
 import rootNock from "nock"
+import { describe, test, expect } from "vitest"
+import { createClient, ClientCredentials } from "@openverse/api-client"
 
 const mockThumbnailBuffer = fs.readFileSync(
   path.resolve(__dirname, "mock-thumbnail.bin")
 )
-
-import { createClient, ClientCredentials } from "@openverse/api-client"
 
 const getClientAndNock = (credentials?: ClientCredentials) => ({
   client: createClient({

@@ -3,10 +3,25 @@
  * Displays the waveform and basic information about the track, along with
  * controls to play, pause or seek to a point on the track.
  */
-import { firstParam, useI18n, useRoute } from "#imports"
-
+import { useI18n, useRoute } from "#imports"
 import { computed, onUnmounted, ref, watch } from "vue"
 
+import { AUDIO } from "#shared/constants/media"
+import {
+  activeAudioStatus,
+  AudioLayout,
+  AudioSize,
+  AudioStatus,
+} from "#shared/constants/audio"
+import { firstParam } from "#shared/utils/query-utils"
+import type {
+  AudioInteraction,
+  AudioInteractionData,
+} from "#shared/types/analytics"
+import type { AudioDetail } from "#shared/types/media"
+import type { AudioTrackClickEvent } from "#shared/types/events"
+import { useActiveMediaStore } from "~/stores/active-media"
+import { useMediaStore } from "~/stores/media"
 import { useActiveAudio } from "~/composables/use-active-audio"
 import { defaultRef } from "~/composables/default-ref"
 import { useSeekable } from "~/composables/use-seekable"
@@ -15,21 +30,6 @@ import {
   useMatchSearchRoutes,
   useMatchSingleResultRoutes,
 } from "~/composables/use-match-routes"
-
-import { useActiveMediaStore } from "~/stores/active-media"
-import { useMediaStore } from "~/stores/media"
-
-import { AUDIO } from "~/constants/media"
-import {
-  activeAudioStatus,
-  AudioLayout,
-  AudioSize,
-  AudioStatus,
-} from "~/constants/audio"
-
-import type { AudioInteraction, AudioInteractionData } from "~/types/analytics"
-import type { AudioDetail } from "~/types/media"
-import type { AudioTrackClickEvent } from "~/types/events"
 
 import VAudioControl from "~/components/VAudioTrack/VAudioControl.vue"
 import VWaveform from "~/components/VAudioTrack/VWaveform.vue"

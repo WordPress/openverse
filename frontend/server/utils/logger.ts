@@ -1,6 +1,6 @@
 import { consola } from "consola"
 
-import { LOCAL, PRODUCTION, STAGING } from "~/constants/deploy-env"
+import { LOCAL, PRODUCTION, STAGING } from "#shared/constants/deploy-env"
 
 /**
  * This logger is used only in the Nitro server.

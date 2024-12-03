@@ -1,5 +1,5 @@
 import * as uuid from "uuid"
-/** @import { ApiMedia } from "~/types/media" */
+/** @import { ApiMedia } from "#shared/types/media" */
 
 /**
  * Retrieve a sample audio object

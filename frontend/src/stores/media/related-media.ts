@@ -2,9 +2,9 @@ import { useNuxtApp } from "#imports"
 
 import { defineStore } from "pinia"
 
-import type { FetchingError, FetchState } from "~/types/fetch-state"
-import type { Media } from "~/types/media"
-import type { SupportedMediaType } from "~/constants/media"
+import type { SupportedMediaType } from "#shared/constants/media"
+import type { FetchingError, FetchState } from "#shared/types/fetch-state"
+import type { Media } from "#shared/types/media"
 import { useApiClient } from "~/composables/use-api-client"
 
 interface RelatedMediaState {

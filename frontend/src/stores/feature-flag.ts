@@ -2,16 +2,8 @@ import { tryUseNuxtApp, useCookie } from "#imports"
 
 import { defineStore } from "pinia"
 import { useStorage } from "@vueuse/core"
-
 import featureData from "~~/feat/feature-flags.json"
 
-import { warn } from "~/utils/console"
-
-import type {
-  FeatureFlag,
-  FeatureFlagRecord,
-  FlagName,
-} from "~/types/feature-flag"
 import {
   COOKIE,
   DISABLED,
@@ -23,14 +15,19 @@ import {
   ON,
   SESSION,
   SWITCHABLE,
-} from "~/constants/feature-flag"
-import { DEPLOY_ENVS, DeployEnv } from "~/constants/deploy-env"
-
+} from "#shared/constants/feature-flag"
+import { DEPLOY_ENVS, DeployEnv } from "#shared/constants/deploy-env"
+import type {
+  FeatureFlag,
+  FeatureFlagRecord,
+  FlagName,
+} from "#shared/types/feature-flag"
 import {
-  OpenverseCookieState,
+  type OpenverseCookieState,
   persistentCookieOptions,
   sessionCookieOptions,
-} from "~/types/cookies"
+} from "#shared/types/cookies"
+import { warn } from "~/utils/console"
 
 import type { LocationQuery, LocationQueryValue } from "vue-router"
 

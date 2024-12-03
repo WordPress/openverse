@@ -1,10 +1,9 @@
 import { h } from "vue"
 
-import { searchTypes } from "~/constants/media"
-import { useFeatureFlagStore } from "~/stores/feature-flag"
-import { ON } from "~/constants/feature-flag"
-
+import { searchTypes } from "#shared/constants/media"
+import { ON } from "#shared/constants/feature-flag"
 import { WithTeleportTarget } from "~~/.storybook/decorators/with-teleport-target"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 
 import VSearchTypeButton from "~/components/VContentSwitcher/VSearchTypeButton.vue"
 

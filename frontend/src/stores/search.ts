@@ -1,11 +1,8 @@
 import { useNuxtApp, useRuntimeConfig } from "#imports"
+import type { Ref } from "vue"
 
 import { defineStore } from "pinia"
-
 import { useStorage } from "@vueuse/core"
-
-import { deepClone } from "~/utils/clone"
-import type { DeepWriteable } from "~/types/utils"
 
 import {
   ALL_MEDIA,
@@ -18,13 +15,7 @@ import {
   supportedSearchTypes,
   isAdditionalSearchType,
   searchPath,
-} from "~/constants/media"
-import {
-  filtersToQueryData,
-  queryDictionaryToQueryParams,
-  pathToSearchType,
-  queryToFilterData,
-} from "~/utils/search-query-transform"
+} from "#shared/constants/media"
 import {
   FilterCategory,
   FilterItem,
@@ -32,25 +23,29 @@ import {
   filterData,
   mediaFilterKeys,
   mediaUniqueFilterKeys,
-} from "~/constants/filters"
-import { INCLUDE_SENSITIVE_QUERY_PARAM } from "~/constants/content-safety"
-
-import { useProviderStore } from "~/stores/provider"
-import { useFeatureFlagStore } from "~/stores/feature-flag"
-import { useMediaStore } from "~/stores/media"
-
+} from "#shared/constants/filters"
+import { INCLUDE_SENSITIVE_QUERY_PARAM } from "#shared/constants/content-safety"
+import { deepClone } from "#shared/utils/clone"
+import {
+  filtersToQueryData,
+  queryDictionaryToQueryParams,
+  pathToSearchType,
+  queryToFilterData,
+} from "#shared/utils/search-query-transform"
+import type { DeepWriteable } from "#shared/types/utils"
 import type {
   SearchQuery,
   SearchStrategy,
   PaginatedSearchQuery,
   CollectionParams,
   PaginatedCollectionQuery,
-} from "~/types/search"
-import { SearchParamsForEvent } from "~/types/analytics"
+} from "#shared/types/search"
+import { SearchParamsForEvent } from "#shared/types/analytics"
+import { useProviderStore } from "~/stores/provider"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { useMediaStore } from "~/stores/media"
 
 import type { LocationQuery, RouteLocationNormalized } from "vue-router"
-
-import type { Ref } from "vue"
 
 export const isSearchTypeSupported = (
   st: SearchType

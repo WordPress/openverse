@@ -1,12 +1,10 @@
 <script setup lang="ts">
 import { useI18n } from "#imports"
 
+import type { FilterItem, FilterCategory } from "#shared/constants/filters"
+import type { License } from "#shared/constants/license"
+import { getElements } from "#shared/utils/license"
 import { useSearchStore } from "~/stores/search"
-
-import type { FilterItem, FilterCategory } from "~/constants/filters"
-import type { License } from "~/constants/license"
-
-import { getElements } from "~/utils/license"
 
 import VButton from "~/components/VButton.vue"
 import VCheckbox from "~/components/VCheckbox/VCheckbox.vue"

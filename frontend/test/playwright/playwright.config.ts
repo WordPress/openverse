@@ -1,4 +1,4 @@
-import { STAGING } from "~/constants/deploy-env"
+import { STAGING } from "#shared/constants/deploy-env"
 
 import type { PlaywrightTestConfig } from "@playwright/test"
 

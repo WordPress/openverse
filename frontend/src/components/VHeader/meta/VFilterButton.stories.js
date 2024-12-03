@@ -1,8 +1,8 @@
 import { h } from "vue"
 
+import { filterData, mediaFilterKeys } from "#shared/constants/filters"
+import { IMAGE } from "#shared/constants/media"
 import { useSearchStore } from "~/stores/search"
-import { filterData, mediaFilterKeys } from "~/constants/filters"
-import { IMAGE } from "~/constants/media"
 
 import VFilterButton from "~/components/VHeader/VFilterButton.vue"
 

@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { computed, onMounted, provide, ref, watch } from "vue"
-import { useScroll } from "@vueuse/core"
 
-import { useUiStore } from "~/stores/ui"
-import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
+import { useScroll } from "@vueuse/core"
 
 import {
   IsHeaderScrolledKey,
   IsSidebarVisibleKey,
   ShowScrollButtonKey,
-} from "~/types/provides"
+} from "#shared/types/provides"
+import { useUiStore } from "~/stores/ui"
+import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
 
 import VFooter from "~/components/VFooter/VFooter.vue"
 import VSearchGridFilter from "~/components/VFilters/VSearchGridFilter.vue"

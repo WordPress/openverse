@@ -4,14 +4,12 @@
  * license.
  */
 import { useI18n } from "#imports"
-
 import { computed } from "vue"
 
+import type { License } from "#shared/constants/license"
+import { getFullLicenseName } from "#shared/utils/license"
+import { camelCase } from "#shared/utils/case"
 import { useIconNames } from "~/composables/use-icon-names"
-
-import type { License } from "~/constants/license"
-import { getFullLicenseName } from "~/utils/license"
-import { camelCase } from "~/utils/case"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 

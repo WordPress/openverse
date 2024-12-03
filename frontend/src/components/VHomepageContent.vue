@@ -1,14 +1,11 @@
 <script setup lang="ts">
 import { computed, ref } from "vue"
 
-import type { SearchType } from "~/constants/media"
-import { skipToContentTargetId } from "~/constants/window"
-
-import { useDialogControl } from "~/composables/use-dialog-control"
-
+import type { SearchType } from "#shared/constants/media"
+import { skipToContentTargetId } from "#shared/constants/window"
+import { HOMEPAGE_CONTENT_SETTINGS_DIALOG } from "#shared/constants/dialogs"
 import { useUiStore } from "~/stores/ui"
-
-import { HOMEPAGE_CONTENT_SETTINGS_DIALOG } from "~/constants/dialogs"
+import { useDialogControl } from "~/composables/use-dialog-control"
 
 import VContentSettingsModalContent from "~/components/VHeader/VHeaderMobile/VContentSettingsModalContent.vue"
 import VLink from "~/components/VLink.vue"

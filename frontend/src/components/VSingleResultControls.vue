@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
-import { useSensitiveMedia } from "~/composables/use-sensitive-media"
-
-import type { AudioDetail, ImageDetail } from "~/types/media"
-
+import type { AudioDetail, ImageDetail } from "#shared/types/media"
 import { useSearchStore } from "~/stores/search"
+import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 
 import VBackToSearchResultsLink from "~/components/VBackToSearchResultsLink.vue"
 import VHideButton from "~/components/VHideButton.vue"

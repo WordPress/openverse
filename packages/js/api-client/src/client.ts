@@ -3,7 +3,6 @@ import _createClient, {
 } from "openapi-fetch"
 
 import { paths } from "./generated/openverse"
-
 import { OpenverseAuthMiddleware } from "./auth"
 
 import type { ClientCredentials, OpenverseClient } from "./types"

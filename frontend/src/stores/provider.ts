@@ -2,17 +2,15 @@ import { useNuxtApp } from "#imports"
 
 import { defineStore } from "pinia"
 
-import { capitalCase } from "~/utils/case"
 import {
   AUDIO,
   IMAGE,
   type SupportedMediaType,
   supportedMediaTypes,
-} from "~/constants/media"
-
-import type { MediaProvider } from "~/types/media-provider"
-import type { FetchingError, FetchState } from "~/types/fetch-state"
-
+} from "#shared/constants/media"
+import { capitalCase } from "#shared/utils/case"
+import type { MediaProvider } from "#shared/types/media-provider"
+import type { FetchingError, FetchState } from "#shared/types/fetch-state"
 import { useApiClient } from "~/composables/use-api-client"
 
 export interface ProviderState {

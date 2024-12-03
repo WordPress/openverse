@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
+import type { CollectionComponentProps } from "#shared/types/collection-component-props"
 import { useUiStore } from "~/stores/ui"
-
-import type { CollectionComponentProps } from "~/types/collection-component-props"
 
 import VAudioResult from "~/components/VSearchResultsGrid/VAudioResult.vue"
 import VAudioInstructions from "~/components/VSearchResultsGrid/VAudioInstructions.vue"

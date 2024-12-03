@@ -1,10 +1,10 @@
 import { watch, onMounted, reactive, h } from "vue"
+
 import { useEffect, useGlobals } from "@storybook/preview-api"
 
-import { EffectiveColorMode } from "~/types/ui"
-
-import { useDarkMode } from "~/composables/use-dark-mode"
+import { EffectiveColorMode } from "#shared/types/ui"
 import { useUiStore } from "~/stores/ui"
+import { useDarkMode } from "~/composables/use-dark-mode"
 
 import VThemeSelect from "~/components/VThemeSelect/VThemeSelect.vue"
 

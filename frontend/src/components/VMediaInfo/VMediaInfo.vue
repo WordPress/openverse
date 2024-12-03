@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Media } from "~/types/media"
+import type { Media } from "#shared/types/media"
 
 import VByLine from "~/components/VMediaInfo/VByLine/VByLine.vue"
 

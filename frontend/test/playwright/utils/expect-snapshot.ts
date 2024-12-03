@@ -1,12 +1,9 @@
 import { expect } from "@playwright/test"
-
 import { type LanguageDirection, t } from "~~/test/playwright/utils/i18n"
-
 import { sleep } from "~~/test/playwright/utils/navigation"
-
 import { getThemeSwitcher } from "~~/test/playwright/utils/components"
 
-import type { Breakpoint } from "~/constants/screens"
+import type { Breakpoint } from "#shared/constants/screens"
 
 import type {
   Expect,
@@ -41,7 +38,9 @@ const themeOption = (colorMode: EffectiveColorMode, dir: LanguageDirection) =>
   t(`theme.choices.${colorMode}`, dir)
 
 export const turnOnDarkMode = async (page: Page, dir: LanguageDirection) => {
-  await getThemeSwitcher(page, dir).selectOption(themeOption("dark", dir))
+  const themeSwitcher = getThemeSwitcher(page, dir)
+  await themeSwitcher.selectOption(themeOption("dark", dir))
+  await expect(themeSwitcher).toHaveValue("dark")
 }
 
 type SnapshotNameOptions = {

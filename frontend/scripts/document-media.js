@@ -182,7 +182,7 @@ function extractComments(node, ast) {
  * @returns {ts.SourceFile} the AST for the media types file
  */
 function getAst() {
-  const tsFilePath = path.resolve(__dirname, "../src/types/media.ts")
+  const tsFilePath = path.resolve(__dirname, "../shared/types/media.ts")
   console.log(`Parsing ${tsFilePath}.`)
 
   return ts.createSourceFile(

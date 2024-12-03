@@ -1,5 +1,4 @@
 import { Page } from "@playwright/test"
-
 import { LanguageDirection, t } from "~~/test/playwright/utils/i18n"
 
 export const getCopyButton = (page: Page, dir: LanguageDirection = "ltr") =>

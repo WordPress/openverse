@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { AudioDetail } from "~/types/media"
-import { audioFeatures, AudioSize, AudioStatus } from "~/constants/audio"
+import { audioFeatures, AudioSize, AudioStatus } from "#shared/constants/audio"
+import type { AudioDetail } from "#shared/types/media"
 
 import VGetMediaButton from "~/components/VMediaInfo/VGetMediaButton.vue"
 import VMediaInfo from "~/components/VMediaInfo/VMediaInfo.vue"

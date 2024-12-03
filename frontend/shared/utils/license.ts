@@ -7,13 +7,13 @@ import type {
   License,
   LicenseVersion,
   LicenseElement,
-} from "~/constants/license"
+} from "#shared/constants/license"
 import {
   CC_LICENSES,
   DEPRECATED_CC_LICENSES,
   PUBLIC_DOMAIN_MARKS,
-} from "~/constants/license"
-import { camelCase } from "~/utils/case"
+} from "#shared/constants/license"
+import { camelCase } from "#shared/utils/case"
 
 import type { Composer } from "vue-i18n"
 

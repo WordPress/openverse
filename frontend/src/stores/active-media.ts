@@ -1,10 +1,9 @@
 import { defineStore } from "pinia"
-
 import { useNuxtApp } from "#app"
 
-import type { SupportedMediaType } from "~/constants/media"
-import type { Media } from "~/types/media"
-import { audioErrorMessages } from "~/constants/audio"
+import type { SupportedMediaType } from "#shared/constants/media"
+import { audioErrorMessages } from "#shared/constants/audio"
+import type { Media } from "#shared/types/media"
 import { warn } from "~/utils/console"
 
 export type MediaStatus = "ejected" | "playing" | "paused" // 'ejected' means player is closed

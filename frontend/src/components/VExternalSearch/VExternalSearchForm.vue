@@ -1,17 +1,14 @@
 <script setup lang="ts">
 import { useNuxtApp } from "#imports"
-
 import { computed, ref } from "vue"
 
 import { storeToRefs } from "pinia"
 
+import { EXTERNAL_SEARCH_DIALOG } from "#shared/constants/dialogs"
 import { useUiStore } from "~/stores/ui"
 import { useSearchStore } from "~/stores/search"
 import { useMediaStore } from "~/stores/media"
-
 import { useExternalSources } from "~/composables/use-external-sources"
-
-import { EXTERNAL_SEARCH_DIALOG } from "~/constants/dialogs"
 
 import VExternalSourceList from "~/components/VExternalSearch/VExternalSourceList.vue"
 import VButton from "~/components/VButton.vue"

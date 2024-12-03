@@ -1,7 +1,6 @@
-import { fireEvent, waitFor } from "@testing-library/vue"
-
 import { createApp } from "vue"
 
+import { fireEvent, waitFor } from "@testing-library/vue"
 import { render } from "~~/test/unit/test-utils/render"
 
 import { useSearchStore } from "~/stores/search"

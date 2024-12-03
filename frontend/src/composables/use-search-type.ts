@@ -1,5 +1,4 @@
 import { useNuxtApp } from "#imports"
-
 import { computed, ref } from "vue"
 
 import {
@@ -11,8 +10,7 @@ import {
   additionalSearchTypes,
   supportedSearchTypes,
   type SearchType,
-} from "~/constants/media"
-
+} from "#shared/constants/media"
 import { useSearchStore } from "~/stores/search"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 

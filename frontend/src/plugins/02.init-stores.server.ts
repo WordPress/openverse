@@ -1,10 +1,9 @@
 import { defineNuxtPlugin, useCookie } from "#imports"
 
+import type { OpenverseCookieState } from "#shared/types/cookies"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useUiStore } from "~/stores/ui"
 import { useProviderStore } from "~/stores/provider"
-
-import type { OpenverseCookieState } from "~/types/cookies"
 
 /**
  * Initialize the feature flag, ui and provider stores.

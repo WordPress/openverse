@@ -1,4 +1,4 @@
-import type { FeatureState } from "~/constants/feature-flag"
+import type { FeatureState } from "#shared/constants/feature-flag"
 import { UiState } from "~/stores/ui"
 
 const baseCookieOptions = {

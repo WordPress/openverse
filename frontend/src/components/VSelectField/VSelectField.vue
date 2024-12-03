@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, useAttrs, useSlots } from "vue"
 
-import type { ProperlyExtractPropTypes } from "~/types/prop-extraction"
+import type { ProperlyExtractPropTypes } from "#shared/types/prop-extraction"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 

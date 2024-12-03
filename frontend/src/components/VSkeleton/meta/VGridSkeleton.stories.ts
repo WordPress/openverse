@@ -1,4 +1,4 @@
-import { supportedSearchTypes } from "~/constants/media"
+import { supportedSearchTypes } from "#shared/constants/media"
 
 import VGridSkeleton from "~/components/VSkeleton/VGridSkeleton.vue"
 

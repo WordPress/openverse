@@ -1,7 +1,13 @@
 import { describe, expect, it } from "vitest"
 
-import { getAdditionalSources } from "~/utils/get-additional-sources"
-import { AUDIO, IMAGE, MediaType, MODEL_3D, VIDEO } from "~/constants/media"
+import {
+  AUDIO,
+  IMAGE,
+  MediaType,
+  MODEL_3D,
+  VIDEO,
+} from "#shared/constants/media"
+import { getAdditionalSources } from "#shared/utils/get-additional-sources"
 
 /**
  * These tests do not test the health or uptime of URLS, only that a valid URL

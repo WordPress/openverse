@@ -1,12 +1,9 @@
 import { useI18n } from "#imports"
-
 import { computed, ref, watch } from "vue"
-
-import { createDetailPageMeta } from "~/utils/og"
-
-import type { AudioDetail, ImageDetail } from "~/types/media"
-
 import type { Ref } from "vue"
+
+import { createDetailPageMeta } from "#shared/utils/og"
+import type { AudioDetail, ImageDetail } from "#shared/types/media"
 
 export const useSingleResultPageMeta = (
   media: Ref<AudioDetail | ImageDetail | null>

@@ -1,15 +1,12 @@
 import { ref } from "vue"
+import type { Ref, SetupContext } from "vue"
 
+import type { DialogElements, DialogOptions } from "#shared/types/modal"
+import { warn } from "~/utils/console"
 import { useFocusOnShow } from "~/composables/use-focus-on-show"
 import { useFocusOnHide } from "~/composables/use-focus-on-hide"
 import { useHideOnClickOutside } from "~/composables/use-hide-on-click-outside"
 import { useFocusOnBlur } from "~/composables/use-focus-on-blur"
-
-import { warn } from "~/utils/console"
-
-import type { DialogElements, DialogOptions } from "~/types/modal"
-
-import type { Ref, SetupContext } from "vue"
 
 type Props = {
   dialogElements: DialogElements

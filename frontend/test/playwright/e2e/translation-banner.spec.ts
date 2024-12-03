@@ -1,7 +1,5 @@
 import { expect } from "@playwright/test"
-
 import { test } from "~~/test/playwright/utils/test"
-
 import { preparePageForTests } from "~~/test/playwright/utils/navigation"
 
 // Do not use one of the test locales, as those all have "complete" generated translations

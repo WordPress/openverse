@@ -1,30 +1,26 @@
 <script setup lang="ts">
 import {
   definePageMeta,
-  firstParam,
-  handledClientSide,
   showError,
   useAsyncData,
   useHead,
   useNuxtApp,
   useRoute,
-  validateUUID,
 } from "#imports"
+import { computed, ref, watch } from "vue"
 
 import axios from "axios"
 
-import { computed, ref, watch } from "vue"
-
-import { IMAGE } from "~/constants/media"
-import { skipToContentTargetId } from "~/constants/window"
-import type { ImageDetail } from "~/types/media"
+import { IMAGE } from "#shared/constants/media"
+import { skipToContentTargetId } from "#shared/constants/window"
+import { firstParam, validateUUID } from "#shared/utils/query-utils"
+import { handledClientSide } from "#shared/utils/errors"
+import type { ImageDetail } from "#shared/types/media"
+import singleResultMiddleware from "~/middleware/single-result"
+import { useSingleResultStore } from "~/stores/media/single-result"
 import { useAnalytics } from "~/composables/use-analytics"
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
 import { useSingleResultPageMeta } from "~/composables/use-single-result-page-meta"
-
-import { useSingleResultStore } from "~/stores/media/single-result"
-import singleResultMiddleware from "~/middleware/single-result"
-
 import { usePageRobotsRule } from "~/composables/use-page-robots-rule"
 
 import VBone from "~/components/VSkeleton/VBone.vue"

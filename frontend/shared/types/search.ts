@@ -1,4 +1,4 @@
-import { INCLUDE_SENSITIVE_QUERY_PARAM } from "~/constants/content-safety"
+import { INCLUDE_SENSITIVE_QUERY_PARAM } from "#shared/constants/content-safety"
 
 export type Collection = "tag" | "creator" | "source"
 export type SearchStrategy = "default" | Collection

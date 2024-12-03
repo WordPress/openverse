@@ -1,6 +1,6 @@
 import { h } from "vue"
 
-import { ECONNABORTED, ERR_UNKNOWN, NO_RESULT } from "~/constants/errors"
+import { ECONNABORTED, ERR_UNKNOWN, NO_RESULT } from "#shared/constants/errors"
 
 import VErrorSection from "~/components/VErrorSection/VErrorSection.vue"
 

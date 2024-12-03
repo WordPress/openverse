@@ -5,15 +5,12 @@
  */
 import { computed, ref, toRef } from "vue"
 
-import { downsampleArray, upsampleArray } from "~/utils/resampling"
-import { timeFmt } from "~/utils/time-fmt"
+import type { AudioFeature } from "#shared/constants/audio"
+import { downsampleArray, upsampleArray } from "#shared/utils/resampling"
+import { timeFmt } from "#shared/utils/time-fmt"
+import { hash, rand as prng } from "#shared/utils/prng"
 import { useSeekable } from "~/composables/use-seekable"
-
-import type { AudioFeature } from "~/constants/audio"
-
 import useResizeObserver from "~/composables/use-resize-observer"
-
-import { hash, rand as prng } from "~/utils/prng"
 
 /**
  * If the duration is above this threshold, the progress timestamp will show ms.

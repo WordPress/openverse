@@ -1,9 +1,8 @@
 import { computed, nextTick, ref, type Ref, watch } from "vue"
 
-import { keycodes } from "~/constants/key-codes"
+import { keycodes } from "#shared/constants/key-codes"
+import { cyclicShift } from "#shared/utils/math"
 import { useSearchStore } from "~/stores/search"
-
-import { cyclicShift } from "~/utils/math"
 
 type VerticalArrow = typeof keycodes.ArrowUp | typeof keycodes.ArrowDown
 type VerticalArrowEvent = KeyboardEvent & { key: VerticalArrow }

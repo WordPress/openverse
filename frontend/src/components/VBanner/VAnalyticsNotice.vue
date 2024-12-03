@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useLocalePath } from "#imports"
-
 import { computed } from "vue"
 
 import VLink from "~/components/VLink.vue"

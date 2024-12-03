@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import {
   definePageMeta,
-  firstParam,
-  handledClientSide,
   showError,
   useAsyncData,
   useHead,
@@ -10,20 +8,18 @@ import {
   useRoute,
   useSingleResultPageMeta,
 } from "#imports"
-
 import { computed, ref, watch } from "vue"
 
-import { AUDIO } from "~/constants/media"
-import { skipToContentTargetId } from "~/constants/window"
-import type { AudioDetail } from "~/types/media"
-import type { AudioInteractionData } from "~/types/analytics"
-import { validateUUID } from "~/utils/query-utils"
-
+import { AUDIO } from "#shared/constants/media"
+import { skipToContentTargetId } from "#shared/constants/window"
+import { firstParam, validateUUID } from "#shared/utils/query-utils"
+import { handledClientSide } from "#shared/utils/errors"
+import type { AudioDetail } from "#shared/types/media"
+import type { AudioInteractionData } from "#shared/types/analytics"
+import singleResultMiddleware from "~/middleware/single-result"
+import { useSingleResultStore } from "~/stores/media/single-result"
 import { useAnalytics } from "~/composables/use-analytics"
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
-import { useSingleResultStore } from "~/stores/media/single-result"
-import singleResultMiddleware from "~/middleware/single-result"
-
 import { usePageRobotsRule } from "~/composables/use-page-robots-rule"
 
 import VAudioTrack from "~/components/VAudioTrack/VAudioTrack.vue"

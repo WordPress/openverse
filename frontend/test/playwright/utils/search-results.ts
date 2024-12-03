@@ -1,9 +1,8 @@
 import { expect, Page } from "@playwright/test"
-
 import { skipToContent } from "~~/test/playwright/utils/navigation"
 
-import { keycodes } from "~/constants/key-codes"
-import type { SupportedMediaType } from "~/constants/media"
+import { keycodes } from "#shared/constants/key-codes"
+import type { SupportedMediaType } from "#shared/constants/media"
 
 export const walkToNextOfType = async (type: "image" | "audio", page: Page) => {
   const isActiveElementOfType = () => {

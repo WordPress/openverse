@@ -1,16 +1,15 @@
 import {
   navigateTo,
   defineNuxtRouteMiddleware,
-  firstParam,
-  handledClientSide,
   createError,
   useNuxtApp,
   showError,
 } from "#imports"
 
+import { skipToContentTargetId } from "#shared/constants/window"
+import { firstParam } from "#shared/utils/query-utils"
+import { handledClientSide } from "#shared/utils/errors"
 import { useMediaStore } from "~/stores/media"
-import { skipToContentTargetId } from "~/constants/window"
-
 import { useSearchStore } from "~/stores/search"
 
 export const searchMiddleware = defineNuxtRouteMiddleware(async (to) => {

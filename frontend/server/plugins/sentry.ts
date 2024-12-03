@@ -2,7 +2,6 @@ import { useRuntimeConfig, useAppConfig } from "#imports"
 
 import { defineNitroPlugin } from "nitropack/runtime"
 import * as Sentry from "@sentry/node"
-
 import { logger } from "~~/server/utils/logger"
 
 export default defineNitroPlugin((nitroApp) => {

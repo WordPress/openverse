@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { useI18n } from "#imports"
-
 import { computed } from "vue"
 
-import type { License } from "~/constants/license"
-import { useIconNames } from "~/composables/use-icon-names"
+import type { License } from "#shared/constants/license"
+import { camelCase } from "#shared/utils/case"
+import { getElements } from "#shared/utils/license"
 import { useUiStore } from "~/stores/ui"
-import { camelCase } from "~/utils/case"
-import { getElements } from "~/utils/license"
+import { useIconNames } from "~/composables/use-icon-names"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
 

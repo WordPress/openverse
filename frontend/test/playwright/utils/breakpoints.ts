@@ -1,14 +1,12 @@
 import { test } from "~~/test/playwright/utils/test"
-
 import type { LanguageDirection } from "~~/test/playwright/utils/i18n"
-
 import {
   type ExpectSnapshot,
   expectSnapshot as innerExpectSnapshot,
 } from "~~/test/playwright/utils/expect-snapshot"
 
-import { VIEWPORTS } from "~/constants/screens"
-import type { Breakpoint } from "~/constants/screens"
+import type { Breakpoint } from "#shared/constants/screens"
+import { VIEWPORTS } from "#shared/constants/screens"
 
 type BreakpointBlock = (options: {
   breakpoint: Breakpoint

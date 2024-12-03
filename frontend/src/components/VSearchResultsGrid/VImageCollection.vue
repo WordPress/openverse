@@ -4,7 +4,7 @@
  * is responsible for displaying them as a grid.
  */
 
-import type { CollectionComponentProps } from "~/types/collection-component-props"
+import type { CollectionComponentProps } from "#shared/types/collection-component-props"
 
 import VImageCell from "~/components/VImageCell/VImageCell.vue"
 

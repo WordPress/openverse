@@ -1,21 +1,17 @@
 import { expect, Page } from "@playwright/test"
-
 import { test } from "~~/test/playwright/utils/test"
-
 import {
   goToSearchTerm,
   preparePageForTests,
   renderModes,
 } from "~~/test/playwright/utils/navigation"
-
 import {
   collectAnalyticsEvents,
   expectEventPayloadToMatch,
 } from "~~/test/playwright/utils/analytics"
-
 import { getLoadMoreButton } from "~~/test/playwright/utils/components"
 
-import { AUDIO, IMAGE, SupportedMediaType } from "~/constants/media"
+import { AUDIO, IMAGE, type SupportedMediaType } from "#shared/constants/media"
 
 test.describe.configure({ mode: "parallel" })
 

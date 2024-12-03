@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { DMCA_FORM_URL } from "~/constants/content-report"
+import { DMCA_FORM_URL } from "#shared/constants/content-report"
 
 import VLink from "~/components/VLink.vue"
 

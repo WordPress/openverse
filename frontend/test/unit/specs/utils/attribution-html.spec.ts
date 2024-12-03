@@ -1,9 +1,8 @@
 import { describe, expect, it } from "vitest"
-
 import { i18n } from "~~/test/unit/test-utils/i18n"
 
-import type { AttributableMedia } from "~/utils/attribution-html"
-import { getAttribution } from "~/utils/attribution-html"
+import type { AttributableMedia } from "#shared/utils/attribution-html"
+import { getAttribution } from "#shared/utils/attribution-html"
 
 const t = i18n.t
 

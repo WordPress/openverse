@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
-import type { MediaCollectionComponentProps } from "~/types/collection-component-props"
-import { ALL_MEDIA, AUDIO, IMAGE } from "~/constants/media"
+import { ALL_MEDIA, AUDIO, IMAGE } from "#shared/constants/media"
+import type { MediaCollectionComponentProps } from "#shared/types/collection-component-props"
 
 import VGridSkeleton from "~/components/VSkeleton/VGridSkeleton.vue"
 import VAllResultsGrid from "~/components/VSearchResultsGrid/VAllResultsGrid.vue"

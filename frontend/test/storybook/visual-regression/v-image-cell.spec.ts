@@ -1,10 +1,8 @@
 import { test } from "~~/test/playwright/utils/test"
-
 import breakpoints from "~~/test/playwright/utils/breakpoints"
-
 import { makeUrlWithArgs } from "~~/test/storybook/utils/args"
 
-import type { AspectRatio } from "~/types/media"
+import type { AspectRatio } from "#shared/types/media"
 
 const imageCell = "a[itemprop='contentUrl']"
 

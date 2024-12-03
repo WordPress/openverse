@@ -1,24 +1,20 @@
 import { type Page, expect } from "@playwright/test"
-
 import { test } from "~~/test/playwright/utils/test"
-
 import { preparePageForTests } from "~~/test/playwright/utils/navigation"
-
 import featureData from "~~/feat/feature-flags.json"
-
 import { expectCheckboxState } from "~~/test/playwright/utils/assertions"
 
-import type {
-  FeatureFlag,
-  FeatureFlagRecord,
-  FlagName,
-} from "~/types/feature-flag"
+import { DEPLOY_ENVS, type DeployEnv } from "#shared/constants/deploy-env"
 import {
   DISABLED,
   FLAG_STATUSES,
   type FlagStatus,
-} from "~/constants/feature-flag"
-import { DEPLOY_ENVS, type DeployEnv } from "~/constants/deploy-env"
+} from "#shared/constants/feature-flag"
+import type {
+  FeatureFlag,
+  FeatureFlagRecord,
+  FlagName,
+} from "#shared/types/feature-flag"
 
 const getFlagStatus = (
   flag: FeatureFlagRecord,

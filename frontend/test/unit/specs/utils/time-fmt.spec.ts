@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { timeFmt } from "~/utils/time-fmt"
+import { timeFmt } from "#shared/utils/time-fmt"
 
 describe("timeFmt", () => {
   it("omits hours if zero", async () => {

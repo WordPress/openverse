@@ -3,11 +3,11 @@
  * Display placeholder elements while waiting for the actual elements to be
  * loaded in the results views.
  */
+
 import { computed, inject, ref } from "vue"
 
-import type { SupportedSearchType } from "~/constants/media"
-
-import { IsSidebarVisibleKey } from "~/types/provides"
+import type { SupportedSearchType } from "#shared/constants/media"
+import { IsSidebarVisibleKey } from "#shared/types/provides"
 
 import VAudioTrackSkeleton from "~/components/VSkeleton/VAudioTrackSkeleton.vue"
 import VBone from "~/components/VSkeleton/VBone.vue"

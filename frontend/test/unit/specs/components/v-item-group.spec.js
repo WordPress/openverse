@@ -1,7 +1,7 @@
 import { createApp, ref } from "vue"
+
 import { screen } from "@testing-library/vue"
 import { default as userEvent } from "@testing-library/user-event"
-
 import { render } from "~~/test/unit/test-utils/render"
 
 import VItemGroup from "~/components/VItemGroup/VItemGroup.vue"

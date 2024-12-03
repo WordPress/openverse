@@ -1,14 +1,10 @@
 import { expect, Page } from "@playwright/test"
-
 import { test } from "~~/test/playwright/utils/test"
-
 import breakpoints from "~~/test/playwright/utils/breakpoints"
-
 import {
   type LanguageDirection,
   languageDirections,
 } from "~~/test/playwright/utils/i18n"
-
 import { dirParam } from "~~/test/storybook/utils/args"
 
 const footerKinds = ["internal", "content"] as const

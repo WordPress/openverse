@@ -1,12 +1,10 @@
 <script setup lang="ts">
 import { defineAsyncComponent, useNuxtApp } from "#imports"
-
 import { computed } from "vue"
 
+import type { TranslationBannerId, BannerId } from "#shared/types/banners"
 import { useUiStore } from "~/stores/ui"
 import usePages from "~/composables/use-pages"
-
-import type { TranslationBannerId, BannerId } from "~/types/banners"
 
 import type { LocaleObject } from "@nuxtjs/i18n"
 

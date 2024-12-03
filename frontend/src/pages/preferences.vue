@@ -1,12 +1,10 @@
 <script setup lang="ts">
 import { definePageMeta } from "#imports"
-
 import { computed } from "vue"
 
+import { SWITCHABLE, ON, OFF } from "#shared/constants/feature-flag"
+import { isFlagName } from "#shared/types/feature-flag"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
-import { isFlagName } from "~/types/feature-flag"
-import { SWITCHABLE, ON, OFF } from "~/constants/feature-flag"
-
 import { useHydrating } from "~/composables/use-hydrating"
 
 import VContentPage from "~/components/VContentPage.vue"

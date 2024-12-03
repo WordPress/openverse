@@ -3,8 +3,8 @@
  * A link to a collection page, either a source or a creator.
  */
 import { useI18n } from "#imports"
-
 import { computed, onMounted, reactive, ref } from "vue"
+
 import { useElementSize, useScroll, watchDebounced } from "@vueuse/core"
 
 import VScroller from "~/components/VMediaInfo/VByLine/VScroller.vue"

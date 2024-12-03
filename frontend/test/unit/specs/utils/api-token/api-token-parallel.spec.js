@@ -1,7 +1,5 @@
 import { expect, it, vi } from "vitest"
-
 import axios from "axios"
-
 import {
   defaultConfig,
   frozenSeconds,

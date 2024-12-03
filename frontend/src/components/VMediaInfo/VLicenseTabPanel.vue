@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useNuxtApp } from "#imports"
 
-import type { MediaType } from "~/constants/media"
+import type { MediaType } from "#shared/constants/media"
 
 import VCopyButton from "~/components/VCopyButton.vue"
 import VTabPanel from "~/components/VTabs/VTabPanel.vue"

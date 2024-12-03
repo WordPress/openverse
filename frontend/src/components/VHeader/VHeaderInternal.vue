@@ -1,14 +1,11 @@
 <script setup lang="ts">
 import { useNuxtApp, useRoute } from "#imports"
-
 import { computed, ref, SetupContext, watch } from "vue"
 
+import { PAGES_DIALOG } from "#shared/constants/dialogs"
+import { useUiStore } from "~/stores/ui"
 import { useDialogControl } from "~/composables/use-dialog-control"
 import { useHydrating } from "~/composables/use-hydrating"
-
-import { useUiStore } from "~/stores/ui"
-
-import { PAGES_DIALOG } from "~/constants/dialogs"
 
 import VHomeLink from "~/components/VHeader/VHomeLink.vue"
 import VPageLinks from "~/components/VHeader/VPageLinks.vue"

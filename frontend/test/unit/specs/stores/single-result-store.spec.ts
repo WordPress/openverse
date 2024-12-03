@@ -1,11 +1,8 @@
 // @vitest-environment jsdom
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-
 import { createPinia, setActivePinia } from "~~/test/unit/test-utils/pinia"
-
 import { getAudioObj } from "~~/test/unit/fixtures/audio"
-
 import { image as imageObj } from "~~/test/unit/fixtures/image"
 
 import {
@@ -13,10 +10,10 @@ import {
   IMAGE,
   SupportedMediaType,
   supportedMediaTypes,
-} from "~/constants/media"
+} from "#shared/constants/media"
+import type { AudioDetail, ImageDetail } from "#shared/types/media"
 import { useMediaStore } from "~/stores/media"
 import { useSingleResultStore } from "~/stores/media/single-result"
-import type { AudioDetail, ImageDetail } from "~/types/media"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { unstable__sensitivity: _, ...audioObj } = getAudioObj()

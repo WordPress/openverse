@@ -1,6 +1,6 @@
 import { h, provide, ref } from "vue"
 
-import { IsSidebarVisibleKey } from "~/types/provides"
+import { IsSidebarVisibleKey } from "#shared/types/provides"
 
 import VHeaderDesktop from "~/components/VHeader/VHeaderDesktop.vue"
 

@@ -1,7 +1,5 @@
 import { expect } from "@playwright/test"
-
 import { test } from "~~/test/playwright/utils/test"
-
 import {
   currentContentType,
   filters,
@@ -10,13 +8,11 @@ import {
   searchTypeNames,
 } from "~~/test/playwright/utils/navigation"
 import { mockProviderApis } from "~~/test/playwright/utils/route"
-
 import breakpoints from "~~/test/playwright/utils/breakpoints"
-
 import { getHeaderSearchbar } from "~~/test/playwright/utils/components"
 import { t } from "~~/test/playwright/utils/i18n"
 
-import { ALL_MEDIA, AUDIO, IMAGE } from "~/constants/media"
+import { ALL_MEDIA, AUDIO, IMAGE } from "#shared/constants/media"
 
 /**
  * URL is correctly converted into search state:

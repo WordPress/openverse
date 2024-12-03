@@ -1,6 +1,6 @@
 import { h } from "vue"
 
-import { bannerNature } from "~/constants/banners"
+import { bannerNature } from "#shared/constants/banners"
 
 import VNotificationBanner from "~/components/VBanner/VNotificationBanner.vue"
 

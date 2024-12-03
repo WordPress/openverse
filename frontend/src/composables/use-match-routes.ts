@@ -1,10 +1,13 @@
 import { useRoute, useRouter } from "#imports"
-
 import { ref, Ref } from "vue"
 
-import { ALL_MEDIA, searchTypes, supportedSearchTypes } from "~/constants/media"
+import {
+  ALL_MEDIA,
+  searchTypes,
+  supportedSearchTypes,
+} from "#shared/constants/media"
+import { getRouteNameString } from "#shared/utils/route-utils"
 import usePages from "~/composables/use-pages"
-import { getRouteNameString } from "~/utils/route-utils"
 
 /**
  * Reactive property that returns true only on the matching routes.
