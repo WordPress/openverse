@@ -53,9 +53,9 @@ RUN apt-get update \
 # this step here while we're doing it for the output directory
 # RUN useradd -m ov_user
 RUN mkdir -p ${OUTPUT_DIR} /home/airflow/.cache && \
-    chown airflow ${OUTPUT_DIR} /home/airflow/.cache
+    chown ov_user ${OUTPUT_DIR} /home/airflow/.cache
 
-USER airflow
+USER ov_user
 
 WORKDIR  ${AIRFLOW_HOME}
 # Always add the prod req because the dev reqs depend on it for deduplication
