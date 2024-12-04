@@ -19,10 +19,13 @@ services:
         - PDM_INSTALL_ARGS=--dev
     image: openverse-api:${API_PDM_HASH:-latest}
     pull_policy: never
+    # During debugging, use the following command to override.
+    # command: python -Xfrozen_modules=off -m debugpy --listen 0.0.0.0:5678 run.py
     volumes:
       - .:/api:z
       - ../packages/python:/packages/python:z
     ports:
+      # - "50256:5678" # Uncomment this to map port for debugging.
       - "50280:50280"
     depends_on:
       - db
