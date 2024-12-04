@@ -11,7 +11,7 @@ reporoot = Path(__file__).parents[2]
 from_lang = "en"
 
 # Must be generated using `ov just p frontend i18n:en`
-from_json_path = reporoot / "frontend" / "src" / "locales" / "en.json"
+from_json_path = reporoot / "frontend" / "i18n" / "locales" / "en.json"
 
 to_langs = ["ar", "es"]
 to_json_paths = {

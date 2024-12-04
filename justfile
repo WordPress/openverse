@@ -57,7 +57,7 @@ locales mode="test":
     if [ "{{ mode }}" = "production" ]; then
         just frontend/run i18n
     elif [ "{{ mode }}" = "test" ]; then
-        just frontend/run i18n:copy-test-locales
+        just frontend/run i18n:test
     else
         echo "Invalid mode {{ mode }}. Using only the `en` locale. To set up more locales, use 'production' or 'test'."
     fi

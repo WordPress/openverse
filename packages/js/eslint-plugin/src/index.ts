@@ -20,6 +20,7 @@ const plugin = {
     "analytics-configuration": rules["analytics-configuration"],
     "no-unexplained-disabled-test": rules["no-unexplained-disabled-test"],
     "translation-strings": rules["translation-strings"],
+    "key-name-casing": rules["key-name-casing"],
   },
 }
 

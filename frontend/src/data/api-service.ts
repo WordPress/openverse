@@ -3,6 +3,7 @@ import { useRuntimeConfig } from "#imports"
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios"
 
 import { AUDIO, type SupportedMediaType } from "#shared/constants/media"
+import { userAgentHeader } from "#shared/constants/user-agent.mjs"
 import { mediaSlug } from "#shared/utils/query-utils"
 import type { Events } from "#shared/types/analytics"
 import type { Media } from "#shared/types/media"
@@ -45,8 +46,6 @@ export interface MediaResult<
   results: T
 }
 
-const userAgent =
-  "Openverse/0.1 (https://openverse.org; openverse@wordpress.org)"
 /**
  * Decodes the text data to avoid encoding problems.
  * Also, converts the results from an array of media
@@ -145,13 +144,11 @@ export const createApiClient = ({
   const baseUrl =
     useRuntimeConfig().public.apiUrl ?? "https://api.openverse.org/"
 
-  const headers: AxiosRequestConfig["headers"] = {}
-  if (import.meta.server) {
-    headers["User-Agent"] = userAgent
+  const headers: AxiosRequestConfig["headers"] = {
+    ...(import.meta.server ? userAgentHeader : {}),
+    ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
   }
-  if (accessToken) {
-    headers["Authorization"] = `Bearer ${accessToken}`
-  }
+
   const axiosParams: AxiosRequestConfig = {
     baseURL: isVersioned ? `${baseUrl}v1/` : baseUrl,
     timeout: DEFAULT_REQUEST_TIMEOUT,

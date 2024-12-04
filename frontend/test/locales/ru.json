@@ -1,326 +1,152 @@
 {
-  "hero": {
-    "disclaimer": {
-      "license": "лицензией Creative Commons"
-    },
-    "search": {
-      "placeholder": "Поиск содержимого"
-    },
-    "aria": {
-      "searchType": "Тип поиска",
-      "search": "поиск"
-    },
-    "licenseFilter": {
-      "label": "Я хочу что-то, что можно"
-    }
-  },
-  "audioDetails": {
-    "information": "Информация об аудио",
-    "table": {
-      "genre": "Жанр",
-      "filetype": "Формат",
-      "sampleRate": "Частота дискретизации",
-      "category": "Тип",
-      "album": "Альбом"
-    },
-    "relatedAudios": "Похожее аудио",
-    "genreLabel": "Жанр"
-  },
-  "mediaDetails": {
-    "contentReport": {
-      "short": "Пожаловаться",
-      "form": {
-        "sensitive": {
-          "subLabel": "Необязательно",
-          "option": "Содержит конфиденциальный контент",
-          "placeholder": "По желанию укажите описание"
-        },
-        "other": {
-          "placeholder": "Введите не менее 20 символов.",
-          "subLabel": "Обязательно",
-          "note": "Опишите проблему.",
-          "option": "Прочее"
-        },
-        "cancel": "Отмена",
-        "question": "В чём причина?",
-        "submit": "Пожаловаться"
-      },
-      "success": {
-        "note": "Спасибо, что сообщили об этом содержимом. Мы рекомендуем сделать то же самое в его источнике, {source}.",
-        "title": "Жалоба отправлена"
-      },
-      "failure": {
-        "note": "Что-то пошло не так. Пожалуйста, повторите попытку позже.",
-        "title": "Жалоба не может быть отправлена"
-      }
-    },
-    "reuse": {
-      "tool": {
-        "content": "Узнайте больше про инструмент {link}"
-      },
-      "copyLicense": {
-        "title": "Поблагодарить автора",
-        "html": "HTML"
-      },
-      "image": "Изображение",
-      "audio": "Звук",
-      "title": "Повторно используемое содержимое",
-      "attribution": "Это изображение отмечено как использующее лицензию {link}.",
-      "toolHeader": "Public Domain",
-      "licenseHeader": "Лицензия"
-    },
-    "loading": "Загрузка...",
-    "sourceLabel": "Источник",
-    "providerLabel": "Поставщик"
-  },
-  "header": {
-    "filterButton": {
-      "withCount": "{count} Фильтр|{count} Фильтра|{count} Фильтров"
-    },
-    "aria": {
-      "search": "поиск",
-      "srSearch": "кнопка поиска",
-      "menu": "меню",
-      "primary": "основное"
-    },
-    "placeholder": "Поиск по всему содержимому",
-    "notification": {
-      "okay": "ОК",
-      "dismiss": "Закрыть"
-    },
-    "aboutTab": "О нас"
-  },
-  "filters": {
-    "licenses": {
-      "title": "Лицензии",
-      "byNcNd": "BY-NC-ND",
-      "byNcSa": "BY-NC-SA",
-      "byNd": "BY-ND",
-      "byNc": "BY-NC",
-      "bySa": "BY-SA",
-      "by": "BY",
-      "pdm": "Public Domain Mark",
-      "cc0": "CC0"
-    },
-    "aria": {
-      "removeFilter": "Очистить фильтр {label}"
-    },
-    "licenseTypes": {
-      "title": "Использование",
-      "modification": "Изменить или адаптировать",
-      "commercial": "Использовать в коммерческих целях"
-    },
-    "imageProviders": {
-      "title": "Источник"
-    },
-    "audioProviders": {
-      "title": "Источник"
-    },
-    "audioCategories": {
-      "title": "Категория аудиозаписей",
-      "podcast": "Подкасты",
-      "sound": "Звуковые эффекты",
-      "music": "Музыка"
-    },
-    "imageCategories": {
-      "title": "Тип изображения",
-      "illustration": "Иллюстрации",
-      "photograph": "Фотографии"
-    },
-    "audioExtensions": {
-      "title": "Тип файла",
-      "flac": "FLAC",
-      "ogg": "OGG",
-      "mp3": "MP3"
-    },
-    "imageExtensions": {
-      "title": "Тип файла",
-      "svg": "SVG",
-      "gif": "GIF",
-      "png": "PNG",
-      "jpg": "JPEG"
-    },
-    "aspectRatios": {
-      "title": "Формат кадра",
-      "square": "Квадрат",
-      "wide": "Широкий",
-      "tall": "Высокий"
-    },
-    "sizes": {
-      "title": "Размер изображения",
-      "large": "Большой",
-      "medium": "Средний",
-      "small": "Небольшой"
-    },
-    "mature": {
-      "title": "Настройки поиска",
-      "enable": "Показывать содержимое для взрослых"
-    },
-    "durations": {
-      "medium": "Средняя",
-      "title": "Продолжительность",
-      "long": "Длинные",
-      "short": "Короткие"
-    },
-    "creator": {
-      "title": "Поиск по автору"
-    },
-    "title": "Фильтры",
-    "filterBy": "Фильтровать по"
-  },
-  "filterList": {
-    "filterBy": "Фильтр по",
-    "categoryAria": "Список фильтров для категории {categoryName}",
-    "show": "Показать результаты",
-    "clear": "Очистить фильтры",
-    "hide": "Скрыть фильтры"
-  },
-  "searchType": {
-    "heading": "Типы содержимого",
-    "all": "Всё содержимое",
-    "video": "Видео",
-    "audio": "Аудио",
-    "image": "Изображения"
-  },
-  "modal": {
-    "close": "Закрыть"
-  },
-  "licenseReadableNames": {
-    "pdm": "Знак общественного достояния"
-  },
-  "search": {
-    "search": "Поиск"
-  },
-  "sources": {
-    "title": "Источники",
-    "providers": {
-      "source": "Источник"
-    },
-    "issueButton": "Предложить новый источник",
-    "ccContent": {
-      "smithsonian": "Смитсоновский институт",
-      "europeanaApi": "API Europeana"
-    },
-    "singleName": "Источник"
-  },
-  "searchGuide": {
-    "exact": {
-      "ariaLabel": "в кавычках, Клод Моне",
-      "claudeMonet": "\"Клод Моне\""
-    }
-  },
-  "browsePage": {
-    "searchRating": {
-      "content": "Эти результаты релевантны?",
-      "feedbackThanks": "Спасибо за ваш отзыв!",
-      "no": "Нет",
-      "yes": "Да"
-    },
-    "searchForm": {
-      "button": "Поиск",
-      "video": "видео",
-      "collectionPlaceholder": "Искать в этой коллекции"
-    },
-    "allResultCount": "{localeCount} результат|{localeCount} результата|{localeCount} результатов",
-    "allNoResults": "Нет результатов",
-    "aria": {
-      "relevance": {
-        "no": "результат релевантен? ответ: нет",
-        "yes": "результат релевантен? ответ: да"
-      },
-      "removeFilter": "удалить фильтр",
-      "scroll": "прокрутить наверх"
-    },
-    "fetchingError": "Ошибка при получении {type}:",
-    "licenseDescription": {
-      "sa": "Адаптации должны распространяться на тех же условиях.",
-      "nd": "Адаптация или производные работы не разрешаются.",
-      "nc": "Только для некоммерческого использования."
-    },
-    "load": "Загрузить ещё результаты",
-    "allResultCountMore": "Более {localeCount} результата|Более {localeCount} результатов|Более {localeCount} результатов"
-  },
-  "imageDetails": {
-    "information": {
-      "source": "Источник",
-      "provider": "Поставщик",
-      "pixels": "пикс.",
-      "dimensions": "Размеры",
-      "type": "Тип"
-    },
-    "aria": {
-      "creatorUrl": "Автор {creator}"
-    },
-    "relatedImages": "Связанные изображения"
-  },
-  "externalSources": {
-    "card": {
-      "checkboxes": {
-        "title": "Использование"
-      }
-    },
-    "form": {
-      "noResultsTitle": "Не найдено {type} по запросу \"{query}\".",
-      "caption": "Нажмите на источники ниже для прямого поиска в других коллекциях {type} с лицензиями CC.{break}Использование фильтров не поддерживается в {filter}.",
-      "supportedTitle": "Не нашли то, что вы искали? Попробуйте дополнительные источники {type}."
-    }
-  },
-  "downloadButton": {
-    "download": "Скачать",
-    "aria": {
-      "dropdownLabel": "Выберите формат файла для скачивания"
-    }
-  },
+  "hero.disclaimer.license": "лицензией Creative Commons",
+  "hero.search.placeholder": "Поиск содержимого",
+  "audioDetails.table.genre": "Жанр",
+  "audioDetails.table.filetype": "Формат",
+  "audioDetails.table.sampleRate": "Частота дискретизации",
+  "audioDetails.table.album": "Альбом",
+  "audioDetails.relatedAudios": "Похожее аудио",
+  "audioDetails.genreLabel": "Жанр",
+  "mediaDetails.contentReport.short": "Пожаловаться",
+  "mediaDetails.contentReport.form.sensitive.subLabel": "Необязательно",
+  "mediaDetails.contentReport.form.sensitive.option": "Содержит конфиденциальный контент",
+  "mediaDetails.contentReport.form.sensitive.placeholder": "По желанию укажите описание",
+  "mediaDetails.contentReport.form.other.placeholder": "Введите не менее 20 символов.",
+  "mediaDetails.contentReport.form.other.subLabel": "Обязательно",
+  "mediaDetails.contentReport.form.other.note": "Опишите проблему.",
+  "mediaDetails.contentReport.form.other.option": "Прочее",
+  "mediaDetails.contentReport.form.cancel": "Отмена",
+  "mediaDetails.contentReport.form.question": "В чём причина?",
+  "mediaDetails.contentReport.form.submit": "Пожаловаться",
+  "mediaDetails.contentReport.success.note": "Спасибо, что сообщили об этом содержимом. Мы рекомендуем сделать то же самое в его источнике, {source}.",
+  "mediaDetails.contentReport.success.title": "Жалоба отправлена",
+  "mediaDetails.contentReport.failure.note": "Что-то пошло не так. Пожалуйста, повторите попытку позже.",
+  "mediaDetails.contentReport.failure.title": "Жалоба не может быть отправлена",
+  "mediaDetails.reuse.tool.content": "Узнайте больше про инструмент {link}",
+  "mediaDetails.reuse.copyLicense.title": "Поблагодарить автора",
+  "mediaDetails.reuse.copyLicense.html": "HTML",
+  "mediaDetails.reuse.image": "Изображение",
+  "mediaDetails.reuse.audio": "Звук",
+  "mediaDetails.reuse.title": "Повторно используемое содержимое",
+  "mediaDetails.reuse.attribution": "Это изображение отмечено как использующее лицензию {link}.",
+  "mediaDetails.reuse.toolHeader": "Public Domain",
+  "mediaDetails.reuse.licenseHeader": "Лицензия",
+  "mediaDetails.loading": "Загрузка...",
+  "mediaDetails.sourceLabel": "Источник",
+  "mediaDetails.providerLabel": "Поставщик",
+  "header.filterButton.withCount": "{count} Фильтр|{count} Фильтра|{count} Фильтров",
+  "header.aria.search": "поиск",
+  "header.aria.srSearch": "кнопка поиска",
+  "header.aria.menu": "меню",
+  "header.aria.primary": "основное",
+  "header.placeholder": "Поиск по всему содержимому",
+  "header.aboutTab": "О нас",
+  "filters.licenses.title": "Лицензии",
+  "filters.licenses.byNcNd": "BY-NC-ND",
+  "filters.licenses.byNcSa": "BY-NC-SA",
+  "filters.licenses.byNd": "BY-ND",
+  "filters.licenses.byNc": "BY-NC",
+  "filters.licenses.bySa": "BY-SA",
+  "filters.licenses.by": "BY",
+  "filters.licenses.pdm": "Public Domain Mark",
+  "filters.licenses.cc0": "CC0",
+  "filters.aria.removeFilter": "Очистить фильтр {label}",
+  "filters.licenseTypes.title": "Использование",
+  "filters.licenseTypes.modification": "Изменить или адаптировать",
+  "filters.licenseTypes.commercial": "Использовать в коммерческих целях",
+  "filters.imageProviders.title": "Источник",
+  "filters.audioProviders.title": "Источник",
+  "filters.audioCategories.title": "Категория аудиозаписей",
+  "filters.audioCategories.podcast": "Подкасты",
+  "filters.audioCategories.sound": "Звуковые эффекты",
+  "filters.audioCategories.music": "Музыка",
+  "filters.imageCategories.title": "Тип изображения",
+  "filters.imageCategories.illustration": "Иллюстрации",
+  "filters.imageCategories.photograph": "Фотографии",
+  "filters.audioExtensions.title": "Тип файла",
+  "filters.audioExtensions.flac": "FLAC",
+  "filters.audioExtensions.ogg": "OGG",
+  "filters.audioExtensions.mp3": "MP3",
+  "filters.imageExtensions.title": "Тип файла",
+  "filters.imageExtensions.svg": "SVG",
+  "filters.imageExtensions.gif": "GIF",
+  "filters.imageExtensions.png": "PNG",
+  "filters.imageExtensions.jpg": "JPEG",
+  "filters.aspectRatios.title": "Формат кадра",
+  "filters.aspectRatios.square": "Квадрат",
+  "filters.aspectRatios.wide": "Широкий",
+  "filters.aspectRatios.tall": "Высокий",
+  "filters.sizes.title": "Размер изображения",
+  "filters.sizes.large": "Большой",
+  "filters.sizes.medium": "Средний",
+  "filters.sizes.small": "Небольшой",
+  "filters.lengths.medium": "Средняя",
+  "filters.lengths.title": "Продолжительность",
+  "filters.lengths.long": "Длинные",
+  "filters.lengths.short": "Короткие",
+  "filters.creator.title": "Поиск по автору",
+  "filters.title": "Фильтры",
+  "filters.filterBy": "Фильтровать по",
+  "filterList.filterBy": "Фильтр по",
+  "filterList.categoryAria": "Список фильтров для категории {categoryName}",
+  "filterList.show": "Показать результаты",
+  "filterList.clear": "Очистить фильтры",
+  "filterList.hide": "Скрыть фильтры",
+  "searchType.heading": "Типы содержимого",
+  "searchType.all": "Всё содержимое",
+  "searchType.video": "Видео",
+  "searchType.audio": "Аудио",
+  "searchType.image": "Изображения",
+  "modal.close": "Закрыть",
+  "licenseReadableNames.pdm": "Знак общественного достояния",
+  "search.search": "Поиск",
+  "sources.title": "Источники",
+  "sources.providers.source": "Источник",
+  "sources.issueButton": "Предложить новый источник",
+  "sources.singleName": "Источник",
+  "searchGuide.exact.ariaLabel": "в кавычках, Клод Моне",
+  "searchGuide.exact.claudeMonet": "\"Клод Моне\"",
+  "browsePage.searchRating.content": "Эти результаты релевантны?",
+  "browsePage.searchRating.feedbackThanks": "Спасибо за ваш отзыв!",
+  "browsePage.searchRating.no": "Нет",
+  "browsePage.searchRating.yes": "Да",
+  "browsePage.searchForm.button": "Поиск",
+  "browsePage.searchForm.video": "видео",
+  "browsePage.searchForm.collectionPlaceholder": "Искать в этой коллекции",
+  "browsePage.allResultCount": "{localeCount} результат|{localeCount} результата|{localeCount} результатов",
+  "browsePage.allNoResults": "Нет результатов",
+  "browsePage.aria.removeFilter": "удалить фильтр",
+  "browsePage.aria.scroll": "прокрутить наверх",
+  "browsePage.fetchingError": "Ошибка при получении {type}:",
+  "browsePage.licenseDescription.sa": "Адаптации должны распространяться на тех же условиях.",
+  "browsePage.licenseDescription.nd": "Адаптация или производные работы не разрешаются.",
+  "browsePage.licenseDescription.nc": "Только для некоммерческого использования.",
+  "browsePage.load": "Загрузить ещё результаты",
+  "browsePage.allResultCountMore": "Более {localeCount} результата|Более {localeCount} результатов|Более {localeCount} результатов",
+  "imageDetails.information.pixels": "пикс.",
+  "imageDetails.information.dimensions": "Размеры",
+  "imageDetails.aria.creatorUrl": "Автор {creator}",
+  "imageDetails.relatedImages": "Связанные изображения",
+  "externalSources.form.supportedTitle": "Не нашли то, что вы искали? Попробуйте дополнительные источники {type}.",
   "interpunct": "•",
-  "error": {
-    "audio": "аудио",
-    "image": "изображение",
-    "occurred": "Произошла ошибка"
-  },
-  "dropdownButton": {
-    "aria": {
-      "arrowLabel": "Выпадающий список"
-    }
-  },
-  "playPause": {
-    "pause": "Приостановить",
-    "play": "Воспроизвести"
-  },
-  "audioTrack": {
-    "messages": {
-      "err_unsupported": "Этот формат аудио не поддерживается вашим браузером.",
-      "err_decode": "Невозможно декодировать аудио.",
-      "err_network": "Произошла ошибка сети.",
-      "err_aborted": "Вы отменили воспроизведение."
-    }
-  },
-  "waveform": {
-    "currentTime": "{time} секунда|{time} секунды|{time} секунд"
-  },
-  "externalSourcesPage": {
-    "why": {
-      "feedbackSuggestions": "Мы надеемся, что вам нравится. Если у вас есть предложения по улучшению, то есть {feedback}.",
-      "feedbackLink": "отзыв",
-      "ariaLabel": "отзыв"
-    },
-    "new": {
-      "email": "email"
-    },
-    "use": "Использование"
-  },
-  "browsers": {
-    "edge": "Edge",
-    "opera": "Opera",
-    "firefox": "Firefox",
-    "chrome": "Chrome"
-  },
-  "singleResult": {
-    "back": "Назад к результатам поиска"
-  },
-  "about": {
-    "planning": {
-      "working": "над чем мы сейчас работаем",
-      "meta": "Мета поиск"
-    }
-  }
+  "error.audio": "аудио",
+  "error.image": "изображение",
+  "error.occurred": "Произошла ошибка",
+  "playPause.pause": "Приостановить",
+  "playPause.play": "Воспроизвести",
+  "audioTrack.messages.err_unsupported": "Этот формат аудио не поддерживается вашим браузером.",
+  "audioTrack.messages.err_decode": "Невозможно декодировать аудио.",
+  "audioTrack.messages.err_network": "Произошла ошибка сети.",
+  "audioTrack.messages.err_aborted": "Вы отменили воспроизведение.",
+  "waveform.currentTime": "{time} секунда|{time} секунды|{time} секунд",
+  "externalSourcesPage.why.feedbackSuggestions": "Мы надеемся, что вам нравится. Если у вас есть предложения по улучшению, то есть {feedback}.",
+  "externalSourcesPage.why.feedbackLink": "отзыв",
+  "externalSourcesPage.why.ariaLabel": "отзыв",
+  "externalSourcesPage.new.email": "email",
+  "browsers.edge": "Edge",
+  "browsers.opera": "Opera",
+  "browsers.firefox": "Firefox",
+  "browsers.chrome": "Chrome",
+  "singleResult.back": "Назад к результатам поиска",
+  "about.planning.working": "над чем мы сейчас работаем"
 }

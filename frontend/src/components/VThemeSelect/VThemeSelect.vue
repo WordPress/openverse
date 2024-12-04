@@ -76,7 +76,7 @@ watch(() => [darkMode.colorMode.value, darkMode.osColorMode.value], updateRefs)
     :label-text="$t('theme.theme')"
     :show-selected="false"
     :show-new-highlight="!isDarkModeSeen"
-    @click="setIsDarkModeSeen"
+    @focus="setIsDarkModeSeen"
     @update:model-value="handleUpdateModelValue"
   >
     <template #start>

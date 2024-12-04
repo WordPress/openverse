@@ -208,6 +208,9 @@ importers:
       jsdom:
         specifier: ^25.0.0
         version: 25.0.1
+      json5:
+        specifier: ^2.2.3
+        version: 2.2.3
       node-html-parser:
         specifier: ^6.1.13
         version: 6.1.13
