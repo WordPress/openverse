@@ -34,10 +34,10 @@ dependencies = [
     "psycopg >=3.1.18, <4",
     "python-decouple >=3.8, <4",
     "python-xmp-toolkit >=2.0.2, <3",
-    "sentry-sdk >=2.18, <3",
+    "sentry-sdk >=2.19, <3",
     "uvicorn[standard] >=0.32, <0.33",
     "openverse-attribution @ file:///${PROJECT_ROOT}/../packages/python/openverse-attribution",
-    "structlog-sentry>=2.1.0",
+    "structlog-sentry >=2.2.1, <3",
 ]
 
 [tool.pdm]
