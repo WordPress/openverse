@@ -66,6 +66,6 @@ This is the guide to debugging the API using VS Code. This uses Microsoft's
    ![VS Code Run and Debug panel](/_static/vs_code_debug_panel.png)
 
 1. Read the
-   [official instructions](https://code.visualstudio.com/docs/editor/debugging)
+   [Visual Code debugger's official instructions](https://code.visualstudio.com/docs/editor/debugging)
    to better understand how to use the debugger interface to accomplish tasks
    like setting breakpoints, watching variables etc.
