@@ -1,6 +1,13 @@
 <script setup lang="ts">
-import { focusIn, useNuxtApp, useRoute, useRouter } from "#imports"
-import { computed, nextTick, ref, SetupContext, watch } from "vue"
+import { useNuxtApp, useRoute, useRouter } from "#imports"
+import {
+  computed,
+  nextTick,
+  ref,
+  type SetupContext,
+  useTemplateRef,
+  watch,
+} from "vue"
 
 import { onClickOutside } from "@vueuse/core"
 
@@ -15,6 +22,7 @@ import {
   getAllTabbableIn,
   getFirstTabbableIn,
 } from "~/utils/reakit-utils/focus"
+import { focusIn } from "~/utils/focus-management"
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 import { useDialogControl } from "~/composables/use-dialog-control"
@@ -34,16 +42,18 @@ import VSearchBarButton from "~/components/VHeader/VHeaderMobile/VSearchBarButto
  * displayed in the bar itself.
  */
 
-const searchInputRef = ref<HTMLInputElement | null>(null)
-const headerRef = ref<HTMLElement | null>(null)
-const recentSearchesRef = ref<InstanceType<typeof VRecentSearches> | null>(null)
-const contentSettingsButtonRef = ref<InstanceType<
-  typeof VContentSettingsButton
-> | null>(null)
+const searchInputRef = useTemplateRef("searchInputRef")
+const headerRef = useTemplateRef("headerRef")
+const recentSearchesRef =
+  useTemplateRef<InstanceType<typeof VRecentSearches>>("recentSearchesRef")
+const contentSettingsButtonRef = useTemplateRef<
+  InstanceType<typeof VContentSettingsButton>
+>("contentSettingsButtonRef")
 const contentSettingsButton = computed(
   () => (contentSettingsButtonRef.value?.$el as HTMLElement) ?? undefined
 )
-const clearButtonRef = ref<InstanceType<typeof VSearchBarButton> | null>(null)
+const clearButtonRef =
+  useTemplateRef<InstanceType<typeof VSearchBarButton>>("clearButtonRef")
 
 const mediaStore = useMediaStore()
 const searchStore = useSearchStore()
@@ -67,7 +77,10 @@ const { updateSearchState, searchTerm, searchStatus } =
 const localSearchTerm = ref(searchTerm.value)
 
 const focusInput = () => {
-  const input = searchInputRef.value as HTMLInputElement
+  const input = searchInputRef.value
+  if (!input) {
+    return
+  }
   ensureFocus(input)
   input.selectionStart = selection.value.start
   input.selectionEnd = selection.value.end
@@ -108,7 +121,10 @@ const deactivate = () => {
  * the input field is blurred and focused again.
  */
 const updateSelection = () => {
-  const inputElement = searchInputRef.value as HTMLInputElement
+  const inputElement = searchInputRef.value
+  if (!inputElement) {
+    return
+  }
   const lastPos =
     inputElement.value.length > 0 ? inputElement.value.length - 1 : 0
   selection.value = {
@@ -125,7 +141,11 @@ const updateSelection = () => {
  * and activate the search bar.
  */
 const updateSearchText = () => {
-  localSearchTerm.value = (searchInputRef.value as HTMLInputElement).value
+  const inputElement = searchInputRef.value
+  if (!inputElement) {
+    return
+  }
+  localSearchTerm.value = inputElement.value
   updateSelection()
   if (isInputFocused.value && !isSearchBarActive.value) {
     activate()
