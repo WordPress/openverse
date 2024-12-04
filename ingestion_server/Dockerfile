@@ -72,13 +72,13 @@ RUN apt-get update \
     && mkdir /worker_state
 
 # Create a non-root user
-RUN useradd ov_user \
-    && chown ov_user /worker_state
+RUN useradd ingestionu \
+    && chown ingestionu /worker_state
 
-USER ov_user
+USER ingestionu
 
 # Copy code into the final image
-COPY --chown=ov_user . /ingestion_server/
+COPY --chown=ingestionu . /ingestion_server/
 
 # Exposes
 # - 8001: Gunicorn server for `ingestion_server` Falcon app

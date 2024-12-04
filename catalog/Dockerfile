@@ -18,7 +18,7 @@ ENV AIRFLOW_HOME=/opt/airflow
 ENV DAGS_FOLDER=${AIRFLOW_HOME}/catalog/dags
 ENV PYTHONPATH=${DAGS_FOLDER}
 ENV PATH=${AIRFLOW_HOME}/.local/bin:$PATH
-ENV IPYTHONDIR=/home/ov_user/.cache/ipython
+ENV IPYTHONDIR=/home/airflow/.cache/ipython
 
 # Container optimizations
 ENV PYTHONUNBUFFERED=1
@@ -51,11 +51,11 @@ RUN apt-get update \
 # Create and set the ownership of the cache directory so airflow user can write to them
 # These directories are not needed in production but it's easier to perform
 # this step here while we're doing it for the output directory
-RUN useradd -m ov_user
-RUN mkdir -p ${OUTPUT_DIR} /home/ov_user/.cache && \
-    chown ov_user ${OUTPUT_DIR} /home/ov_user/.cache
+# RUN useradd -m ov_user
+RUN mkdir -p ${OUTPUT_DIR} /home/airflow/.cache && \
+    chown airflow ${OUTPUT_DIR} /home/airflow/.cache
 
-USER ov_user
+USER airflow
 
 WORKDIR  ${AIRFLOW_HOME}
 # Always add the prod req because the dev reqs depend on it for deduplication
