@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM docker.io/library/fedora:42
+FROM docker.io/library/fedora:41
 
 # We want to keep all important things in `/opt` as we will preserve the
 # `/opt` directory as a volume.
@@ -52,10 +52,10 @@ ENV PATH="${PNPM_BIN}:${N_PREFIX}/bin:${PDM_PYTHONS}:${HOME}/.local/bin:${PATH}"
 # - n: Node.js distribution manager
 # - corepack: Node.js package-manager-manager
 RUN mkdir /pipx \
-  && dnf -y install dnf-plugins-core \
-  && dnf -y config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo \
-  && dnf -y install https://dl.k6.io/rpm/repo.rpm \
-  && dnf -y install \
+  && dnf5 -y install dnf-plugins-core \
+  && dnf5 -y config-manager addrepo --from-repofile=https://download.docker.com/linux/fedora/docker-ce.repo \
+  && dnf5 -y install https://dl.k6.io/rpm/repo.rpm \
+  && dnf5 -y install \
     git \
     g++ \
     just \
@@ -70,7 +70,7 @@ RUN mkdir /pipx \
     unzip \
     postgresql postgresql-devel \
     k6 \
-  && dnf clean all \
+  && dnf5 clean all \
   && pipx install --global \
     httpie \
     pdm pipenv  \
