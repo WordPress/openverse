@@ -5,7 +5,7 @@
 groups = ["default", "dev", "test"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:f7bedd77012aa43cc7f18d56191f1411e60643a0c32aa4ac96631a0cf032fb99"
+content_hash = "sha256:3f5ed07772b1b52bc6db98306326f9aa359b0d3b4e6ba5a92fce53a879eb70a5"
 
 [[metadata.targets]]
 requires_python = "==3.12.*"
@@ -156,7 +156,7 @@ files = [
 
 [[package]]
 name = "elastic-transport"
-version = "8.15.0"
+version = "8.15.1"
 requires_python = ">=3.8"
 summary = "Transport classes and utilities shared among Python Elastic client libraries"
 groups = ["default"]
@@ -166,22 +166,22 @@ dependencies = [
     "urllib3<3,>=1.26.2",
 ]
 files = [
-    {file = "elastic_transport-8.15.0-py3-none-any.whl", hash = "sha256:d7080d1dada2b4eee69e7574f9c17a76b42f2895eff428e562f94b0360e158c0"},
-    {file = "elastic_transport-8.15.0.tar.gz", hash = "sha256:85d62558f9baafb0868c801233a59b235e61d7b4804c28c2fadaa866b6766233"},
+    {file = "elastic_transport-8.15.1-py3-none-any.whl", hash = "sha256:b5e82ff1679d8c7705a03fd85c7f6ef85d6689721762d41228dd312e34f331fc"},
+    {file = "elastic_transport-8.15.1.tar.gz", hash = "sha256:9cac4ab5cf9402668cf305ae0b7d93ddc0c7b61461d6d1027850db6da9cc5742"},
 ]
 
 [[package]]
 name = "elasticsearch"
-version = "8.15.1"
+version = "8.16.0"
 requires_python = ">=3.8"
 summary = "Python client for Elasticsearch"
 groups = ["default"]
 dependencies = [
-    "elastic-transport<9,>=8.13",
+    "elastic-transport<9,>=8.15.1",
 ]
 files = [
-    {file = "elasticsearch-8.15.1-py3-none-any.whl", hash = "sha256:02a0476e98768a30d7926335fc0d305c04fdb928eea1354c6e6040d8c2814569"},
-    {file = "elasticsearch-8.15.1.tar.gz", hash = "sha256:40c0d312f8adf8bdc81795bc16a0b546ddf544cb1f90e829a244e4780c4dbfd8"},
+    {file = "elasticsearch-8.16.0-py3-none-any.whl", hash = "sha256:83d9fe09e8e95880559da43e44976c1e11cc63fe96bc0c0592f3d64f371772bf"},
+    {file = "elasticsearch-8.16.0.tar.gz", hash = "sha256:d2aaa92f44ebea3c4147389aeba038c0b42a017f8c52ff35b1e7ebc34c49adb7"},
 ]
 
 [[package]]
