@@ -32,7 +32,7 @@ export const searchTypeNames = {
     [AUDIO]: t("searchType.audio", "ltr"),
     [IMAGE]: t("searchType.image", "ltr"),
     [VIDEO]: t("searchType.video", "ltr"),
-    [MODEL_3D]: t("searchType.model-3d", "ltr"),
+    [MODEL_3D]: t("searchType.model3d", "ltr"),
   },
   rtl: {
     [ALL_MEDIA]: t("searchType.all", "rtl"),

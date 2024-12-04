@@ -148,7 +148,7 @@ supportedMediaTypes.forEach((mediaType) => {
 
       await page
         .getByRole("dialog", {
-          name: t("mediaDetails.contentReport.successTitle"),
+          name: t("mediaDetails.contentReport.success.title"),
         })
         .isVisible()
 

@@ -1,949 +1,561 @@
 {
-  "404": {
-    "title": "يبدو أن المحتوى الذي تبحث عنه قد اختفى.",
-    "main": "انتقل إلى {link} أو ابحث عن شيء مشابه من الحقل أدناه."
-  },
-  "hero": {
-    "subtitle": "استكشف أكثر من 800 مليون عمل إبداعي",
-    "description": "مكتبة واسعة من الصور المجانية ، والصور ، والصوت ، متاحة للاستخدام المجاني.",
-    "search": {
-      "placeholder": "البحث عن محتوى"
-    },
-    "disclaimer": {
-      "content": "كل محتوى {openverse} يخضع لـ {license} أو في المجال العام.",
-      "license": "رخصة المشاع الإبداعي"
-    }
-  },
-  "notification": {
-    "translation": {
-      "text": "ترجمة اللغة {locale} غير كاملة. ساعدنا في الوصول إلى 100 بالمائة عن طريق {link}.",
-      "link": "المساهمة بترجمة",
-      "close": "إغلاق مساهمة الترجمة يساعد على طلب الملصق"
-    },
-    "analytics": {
-      "text": "المفرقعات تستخدم المحللين لتحسين نوعية خدمتنا زيارة {link} لتعلم المزيد أو اختيار.",
-      "link": "صفحة الخصوصية",
-      "close": "اغلق المحللين اللافتة"
-    }
-  },
-  "header": {
-    "homeLink": "{openverse} البيت",
-    "placeholder": "البحث في كل المحتوى",
-    "aria": {
-      "primary": "الأولية",
-      "menu": "قائمة",
-      "search": "بحث",
-      "srSearch": "زر البحث"
-    },
-    "aboutTab": "حول",
-    "resourcesTab": "موارد",
-    "loading": "جار التحميل...",
-    "filterButton": {
-      "simple": "مرشحات",
-      "withCount": "({count}) مرشح"
-    },
-    "seeResults": "انظر النتائج",
-    "backButton": "عُد",
-    "contentSettingsButton": {
-      "simple": "Menu",
-      "withCount": "(مينو) {count} filter applied.Menu. {count}"
-    }
-  },
-  "navigation": {
-    "about": "حول",
-    "licenses": "التراخيص",
-    "getInvolved": "شارك",
-    "api": "API",
-    "terms": "شروط",
-    "privacy": "خصوصية",
-    "feedback": "استجابة",
-    "sources": "مصادر",
-    "externalSources": "مصادر خارجية",
-    "searchHelp": "بحث في المساعدة"
-  },
-  "about": {
-    "title": "حول {openverse}",
-    "description": {
-      "content": "{openverse} هي أداة تسمح باكتشاف أعمال المجال العام والمرخصة بشكل مفتوح واستخدامها من قبل الجميع."
-    },
-    "collection": {
-      "content": {
-        "a": "{openverse} searches across more than 800 million images and audio from open APIs and the {commonCrawl} dataset.",
-        "b": "نحن نجمع العمل من عدة مستودعات عامة، ونسهل إعادة الاستخدام من خلال سمات مثل العزو البقعة الواحدة."
-      }
-    },
-    "planning": {
-      "content": {
-        "a": "وحالياً، لا تقوم شركة {openverse} إلا بتفتيش الصور والصوت، والبحث عن الفيديو المقدم من مصادر خارجية.",
-        "b": "ونخطط لإضافة أنواع إضافية من وسائط الإعلام مثل النصوص المفتوحة ونماذج الـ 3 دال، بهدف نهائي هو إتاحة إمكانية الوصول إلى ما يقدر بـ 2.5 بليون من دولارات الولايات المتحدة المرخص لها والمجالات العامة على الشبكة.",
-        "c": "جميع رموزنا هي مصدر مفتوح ويمكن الوصول إليها في {working} نحن {repository} يمكنك أن ترى ما هو {community}"
-      },
-      "repository": "مستودع {openverse} {github}",
-      "community": "نرحب بمساهمة المجتمع",
-      "working": "نحن نعمل حاليا على"
-    },
-    "transfer": {
-      "content": {
-        "a": "{openverse} is the successor to CC search which was launched by Creative Commons in 2019, after its migration to WordPress in 2021.",
-        "b": "يمكنك قراءة المزيد عن هذا الانتقال في الإعلانات الرسمية من {creativeCommons} and {wordpress}",
-        "c": "ولا نزال ملتزمين بتحقيق هدفنا المتمثل في معالجة إمكانية اكتشاف وسائل الإعلام المفتوحة والوصول إليها."
-      }
-    },
-    "declaration": {
-      "content": {
-        "a": "{openverse} does not verify licensing information for individual works, or whether the generated attribution is accurate or complete.",
-        "b": "يرجى التحقق بشكل مستقل من حالة الترخيص والمعلومات المتعلقة بالإسناد قبل إعادة استخدام المحتوى. للحصول على المزيد من التفاصيل، قراءة {terms}"
-      },
-      "terms": "{openverse} شروط الاستخدام"
-    }
-  },
-  "sources": {
-    "title": "مصادر",
-    "detail": "يتيح لك النقر فوق {singleName} تصفح العناصر الموجودة داخل هذا المصدر وتصفيتها.",
-    "singleName": "مصدر",
-    "providers": {
-      "source": "مصدر",
-      "domain": "اِختِصاص",
-      "item": "مجموع العناصر"
-    },
-    "ccContent": {
-      "where": "من أين يأتي المحتوى على {openverse}؟",
-      "content": "هناك محتوى مرخص بشكل علني مستضاف على ملايين المجالات عبر اتساع الإنترنت. يحدد فريقنا بشكل منهجي مقدمي الخدمة الذين يستضيفون محتوى مرخصًا بـ CC. إذا كان ملائمًا ، فنحن نفهرس هذا المحتوى ونجعله قابلاً للاكتشاف من خلال {openverse}.",
-      "provider": {
-        "a": "ولدى بعض مقدمي الخدمات تجمعات متعددة مختلفة من المحتوى داخلهم. {flickr} has sources ranging from NASA to personal photography. The {smithsonian} comprises a dozen diverse collections.",
-        "b": "ويدير مشاعات الويكيو القفازات من حيث المحتوى، ويستخدمها عدد من المجرات والمكتبات والمحفوظات والمتاحف التي تسلط الضوء على بعض أو كل مجموعاتها الرقمية."
-      },
-      "europeana": "{openverse} ممتن بشكل خاص لعمل {link} ، وهي منظمة تعمل على رقمنة وإنشاء أعمال التراث الثقافي القابلة للاكتشاف في جميع أنحاء أوروبا. {openverse} قادر على فهرسة مئات المصادر القيمة من خلال تكامل واحد مع {linkApi}."
-    },
-    "newContent": {
-      "next": "كيف نقرر ما هي المصادر التي يجب إضافتها بعد ذلك؟",
-      "integrate": "لدينا قائمة لا تنتهي أبدًا بالمصادر المحتملة للبحث قبل التكامل. نسأل أنفسنا أسئلة مثل:",
-      "impact": " ما هو تأثير أو أهمية هذا المصدر لمستخدمينا؟ إذا كان موجودًا داخل مزود مثل ويكيميديا كومنز ، فهل من المفيد لمستخدمينا أن يكونوا قادرين على التصفية حسب هذا المصدر مباشرة؟",
-      "reuse": "هل معلومات الترخيص والإسناد معروضة بوضوح لتمكين إعادة الاستخدام الواثق؟",
-      "totalItems": "كم عدد العناصر الإجمالية الجديدة أو الأنواع الجديدة من العناصر التي يمكننا تقديمها لمستخدمينا من خلال هذا التكامل؟ بعض المصادر عبارة عن تكاملات مباشرة ، بينما قد يكون البعض الآخر مصدرًا داخل المصدر."
-    },
-    "suggestions": "نحن نقدر الاقتراحات لمصادر جديدة من مجتمع المستخدمين لدينا.",
-    "issueButton": "اقترح مصدر جديد",
-    "aria": {
-      "table": "جدول المصادر"
-    },
-    "heading": {
-      "image": "مصادر الصور",
-      "audio": "مصادر الصوت"
-    }
-  },
-  "externalSourcesPage": {
-    "title": "بحث ميتا",
-    "intro": "تم إنشاء {openverse} فوق كتالوج يقوم بفهرسة المحتوى المرخص لـ CC والمحتوى العام من مصادر محددة. تعرف على المزيد حول {link} الخاص بنا.",
-    "link": "مصادر",
-    "license": {
-      "a": "ومع ذلك، هناك مصادر عديدة لوسائط الإعلام المرخص بها من قبل لجنة مكافحة الإرهاب ووسائط الإعلام العامة التي لم نتمكن بعد من إدراجها في بحث {openverse}.",
-      "b": "This might be because they do not offer a public API, or that our contributors have not yet had time to integrate them into {openverse}",
-      "c": "هذه مصادر قيّمة و نريد أن نتأكّد من أنّك قادر على إيجاد أفضل المواد المرخصة علناً، بغض النظر عن مكان وجودها."
-    },
-    "new": {
-      "title": "هل يمكنني اقتراح مصادر خارجية جديدة؟",
-      "content": "نعم من فضلك! أنشئ {issue} في مستودع GitHub أو أرسل إلينا {email} وأخبرنا بالمصادر الجديدة التي ترغب في تضمينها.",
-      "issue": "القضية",
-      "email": "البريد الإلكتروني"
-    },
-    "why": {
-      "title": "لماذا بنيت هذا؟",
-      "content": "لسنوات عديدة ، قدمت Creative Commons لمستخدميها بوابة بحث مخصصة لمنصات البحث التي تحتوي على عوامل تصفية ترخيص CC مضمنة. في الواقع ، لا يزال هذا قيد الصيانة في {old}.",
-      "new": {
-        "a": "بالنسبة لمستخدمي موقع البحث عن الميثان، سيبدو سمة &quot; المصادر الخارجية &quot; في {openverse} مألوفة.",
-        "b": "وكان الهدف هو ضمان عدم فقدان القدرة الوظيفية، ولكن يجري تحديثها وإدراجها في محرك البحث الجديد الخاص بمحتواها المرخص بشكل مفتوح.",
-        "c": "وبالإضافة إلى ذلك، تستند سمة &quot; المصادر الخارجية &quot; إلى هذه الوظيفة، مما يتيح لنا أن نضيف بسرعة مصادر خارجية جديدة عند اكتشافها، وأن ندعم أنواع المحتوى الجديدة في المستقبل."
-      },
-      "ariaLabel": "استجابة",
-      "feedbackSuggestions": "نأمل أن تستمتع ، وإذا كانت لديك اقتراحات للتحسين ، فاترك لنا {feedback}.",
-      "feedbackLink": "استجابة"
-    },
-    "relationships": {
-      "a": "وهذه الوظيفة تتيح لنا أيضا البدء في المحادثات وبناء علاقات مع المصادر التي قد ترغب في إدراجها في قضية {openverse} في المستقبل.",
-      "b": "وأخيرا، يمكننا أيضا أن نعرض مصادر خارجية لأنواع وسائط الإعلام التي لا ندرجها في {openverse}، ولكن نخطط لذلك."
-    },
-    "explanation": "يمكنك العثور على روابط لمصادر خارجية أسفل كل صفحة نتائج بحث {openverse} ؛ في صفحات عمليات البحث التي لا تظهر نتائج ؛ وعلى صفحات أنواع الوسائط التي لا ندعمها بعد ولكننا نعتزم ذلك."
-  },
-  "privacy": {
-    "title": "خصوصية",
-    "intro": {
-      "content": "يسعى مشروع {openverse} إلى جعل خصوصية مستخدمينا وأمانهم أولوية. {openverse} تلتزم بـ {link}. يرجى الاطلاع على هذا المستند للحصول على وصف كامل لكيفية استخدام {openverse} وحمايته لأي معلومات تزودنا بها.",
-      "link": "سياسة الخصوصية لجميع مواقع WordPress.org"
-    },
-    "cookies": {
-      "title": "ملفات تعريف الارتباط",
-      "content": {
-        "a": "{openverse} تستخدم البسكويت لتخزين المعلومات عن أفضليات الزائرين ومعلومات عن مروجهم على الشبكة. ونحن نستخدم هذه المعلومات لتحسين خبرة مستخدمي الموقع.",
-        "b": "هذه تعتبر \"الوكالة\" أو \"الكوكيز الضروري جداً\" قد تبطلين هذه من خلال تغيير أطرك للطوارئ، ولكن هذا قد يؤثر على كيفية وظائف {openverse}"
-      }
-    },
-    "contact": {
-      "title": "اتصل بنا",
-      "content": "يمكن إرسال أي أسئلة حول {openverse} والخصوصية إلى {email} ، أو مشاركتها على أنها {issue} ، أو مناقشتها مع مجتمعنا في #openverse قناة {chat}.",
-      "issue": "مشكلة GitHub",
-      "chat": "جعل WordPress دردشة"
-    }
-  },
-  "searchGuide": {
-    "title": "{openverse} دليل البنية",
-    "intro": "عند البحث ، يمكنك إدخال رموز أو كلمات خاصة لمصطلح البحث الخاص بك لجعل نتائج البحث أكثر دقة.",
-    "exact": {
-      "title": "ابحث عن تطابق تام",
-      "ariaLabel": "اقتبس اقتباس كلود مونيه",
-      "claudeMonet": "\"كلود مونيه\"",
-      "content": "ضع كلمة أو عبارة داخل علامات الاقتباس. على سبيل المثال ، {link}."
-    },
-    "negate": {
-      "title": "المصطلحات المستبعدة",
-      "operatorName": "ناقصا",
-      "ariaLabel": "الكلب مطروحا منه",
-      "example": "كلب",
-      "content": "لاستبعاد مصطلح من نتائجك، وضع {operator} أمامه. Example: {link}{br} هذا سيبحث عن وسائل الإعلام ذات الصلة بـ\"الكلب\" لكن لن يتضمن النتائج ذات الصلة بـ \"بوغ\""
-    }
-  },
-  "feedback": {
-    "title": "استجابة",
-    "intro": "شكرًا لك على استخدام {openverse}! نرحب بأفكارك لتحسين الأداة أدناه. لتقديم ملاحظات منتظمة ، انضم إلى قناة {slack} في مساحة عمل {makingWordpress} Slack.",
-    "improve": "ساعدنا لنتحسن",
-    "report": "الإبلاغ عن خطأ",
-    "loading": "جار التحميل...",
-    "aria": {
-      "improve": "ساعدنا في تحسين الشكل",
-      "report": "الإبلاغ عن نموذج خطأ"
-    }
-  },
-  "sensitive": {
-    "title": "المحتوى الحساس",
-    "description": {
-      "content": {
-        "a": "{openverse} operates along a “safe-default” approach in all aspects of its operation and development, with the intention of being as inclusive and accessible as possible.",
-        "b": "ومن ثم، فإن {openverse} لا تشمل سوى النتائج ذات المحتوى الحساس عندما اختار المستعملون صراحة &quot; تحقيق نتائج حساسة &quot; بشأن {openverseOrg} وفي {openverse} API.",
-        "c": "In adherence to {wpCoc} and its {deiStatement}, {openverse} holds contributors to high expectations regarding conduct towards other contributors, the accessibility of contribution and the services, and, therefore, being an inclusive project.",
-        "d": "Similarly, {openverse} holds the expectation that the results returned from the API or displayed on the {openverseOrg} should be accessible by default.",
-        "e": "على الجميع، بغض النظر عن خلفيتهم، أن يشعروا بالأمان، وأنهم مشمولون في {openverse}، سواء كانوا مساهمين في الجوانب التقنية لخدمات {openverse}، وهو مبدع مشمول بأعماله في {openverse}",
-        "f": "{openverse} recognises its responsibility as a tool used by people of a wide variety of ages, including young people in educational settings, and pays particular attention to minimizing accidental interaction with or exposure to sensitive content."
-      },
-      "wpCoc": "مدونة قواعد السلوك المجتمعية",
-      "deiStatement": "التنوع والإنصاف وبيان الإدماج"
-    },
-    "sensitivity": {
-      "what": {
-        "a": "{openverse} تستخدم مصطلح \"حساس\" بدلاً من \"المكانة\" أو \"الخدمة العامة\" (غير آمنة للعمل) أو مصطلحات أخرى للإشارة إلى أن تعريفنا للمحتوى حساس هو واسع، مع التركيز على إمكانية الوصول والإدماج.",
-        "b": "وهذا يعني أن بعض المحتويات تُسمّى بـ \"حساسية\" التي لا تندرج في فئة مما يُفهم عموماً على أنها محتوى \"المكانة\" (أي بعبارة أخرى، المحتوى تحديداً لجمهور بالغ).",
-        "c": "غير أن التسمية لا تعني ضمناً أن {openverse} أو متعهديها يعتبرون المضمون غير ملائم للمنبر بشكل عام، وهو أيضاً لا ينطوي على حكم أخلاقي أو أخلاقي.",
-        "d": "نحن نعتبر المحتوى \"الحساس\" مُحتوى مُهين أو مُزعج، أو غير لائق، مع إيلاء اهتمام خاص للشباب."
-      },
-      "how": {
-        "a": "ويتسم تعريف الحساسية هذا بدرجة كبيرة من المرونة وهو غير دقيق عن قصد.",
-        "b": "وتعتمد شركة {openverse} على مجموعة متنوعة من الأدوات لاكتشاف المحتوى الذي يمكن أن يكون حساسا، بما في ذلك تقارير معتدلة للمستعملين عن العمل الفردي ومسح المحتوى النصي المتصل بالعمل ذي الحساسية.",
-        "c": "ويرد أدناه وصف أكثر تفصيلا لهذه المسائل."
-      }
-    },
-    "onOff": {
-      "title": "تغيير المحتوى الحساس",
-      "sensitiveResults": "بالخطأ {openverse} does not include sensitive content in search results. ويتطلب إدراج النتائج الحساسة اختيارا صريحا من المستخدم. ويمكن للمستعمل أن يختار إدراج المحتوى الحساس في نتائج البحث بتمكين مفتاح &quot; النتائج الحسية &quot; .",
-      "blurSensitive": {
-        "a": "وعندما يُدرج المحتوى الحساس، تكون النتائج الحساسة التي تُعاد غير واضحة أيضاً لمنع التعرض العرضي.",
-        "b": "كما أن عدم طمسها يتطلب اختيارا صريحا من المستخدم. ويمكن للمستعمل أن يختار أن يرى محتوى حساسا غير واضح من خلال تبديل مفتاح &quot; محتوى اللغم &quot; ."
-      },
-      "where": "وكلاهما متاحان في قاذفة التصفية (على الحواسيب المكتبية) وفي شريط &quot; فليتر &quot; لأماكن البحث (على الأجهزة المحمولة) على صفحة نتائج البحث."
-    },
-    "designations": {
-      "title": "تعيينات المحتوى الحساسة",
-      "description": {
-        "a": "{openverse} يعيّن محتوىً حساساً في API وفي موقع {openverseOrg} على شبكة الإنترنت باستخدام طريقتين: تقارير من مستعملي {openverse} واكتشاف النصوص الحساسة آلياً.",
-        "b": "ولا تقتصر هذه التسميات على بعضها البعض، ويمكن أن يطبق عليها عمل واحد أو كليهما."
-      },
-      "userReported": {
-        "title": "المستعمل أبلغ عن حساسية",
-        "description": {
-          "a": "{openverse} users are invited to report sensitive content via the {openverseOrg} website and the {openverse} API.",
-          "b": "Some tools and apps that integrate with the {openverse} API, like the {gutenbergMediaInserter}, also allow their users to report sensitive content.",
-          "c": "وتشمل صفحة العمل الفردي القدرة على الإبلاغ عن المحتوى على أنه حساس (أو الإبلاغ عن انتهاكات الحقوق).",
-          "d": "وتحقق من هذه التقارير ويتخذون قرارات بشأن ما إذا كان ينبغي إضافة تسمية حساسية للعمل، أو في بعض الحالات، على النحو المبين أعلاه، شطب العمل من مكتب المدعي العام."
-        },
-        "gutenbergMediaInserter": "Gutenberg editor’s {openverse}"
-      },
-      "sensitiveText": {
-        "title": "المحتوى النصي الحساس",
-        "description": {
-          "a": "{openverse} يمسح بعض البيانات الوصفية النصية المتصلة بالأعمال التي توفرها مصادرنا بشروط حساسة.",
-          "b": "{openverse} {sensitiveTermsList} is open source and contributions and input from the community are welcome and invited.",
-          "c": "ومن أمثلة النصوص التي يمكن أن تكون حساسة النص، على سبيل المثال لا الحصر، نصوص ذات طابع جنسي أو بيولوجي أو عنيف أو عنصري أو غير ذلك من أشكال عدم التقيد.",
-          "d": "The project recognises that this approach is imperfect and that some works may inadvertently receive a sensitivity nomination without necessarily being sensitive.",
-          "e": "ولمزيد من السياق بشأن السبب الذي جعلنا نختار هذا النهج على الرغم من ذلك، نشير إلى {imperfect} من وثيقة تخطيط مشاريعنا المتصلة بهذه السمة."
-        },
-        "sensitiveTermsList": "قائمة المصطلحات الحساسة",
-        "imperfect": "قسم شرطة لوس أنجلوس",
-        "metadata": {
-          "a": "It is important to note that some textual metadata for a work is {notAvailable} من خلال موقع {openverse} API أو موقع {openverseOrg}",
-          "b": "غير أن هذه البيانات الوصفية لا تزال مقصودة بشروط حساسة ولا تعامل كحالة خاصة.",
-          "c": "وفي حالة ما إذا وجد نص {openverse} شروطا حساسة في حقول البيانات الفوقية هذه للعمل، فإن العمل سيظل يتلقى تعيينا حساسا يستند إلى نص حساس حتى وإن لم يكن النص الحساس نفسه متاحا عن طريق {openverse}",
-          "d": "وتأخذ شركة {openverse} النهج القائل بأن المحتوى النصي الحساس في وصف ما هو مؤشر عال نسبيا من مؤشرات الأعمال الحساسة المحتملة.",
-          "e": "As above, {openverse} understands that this is not perfect."
-        },
-        "notAvailable": "غير متاحة"
-      }
-    },
-    "faq": {
-      "title": "الأسئلة المتكررة",
-      "one": {
-        "question": "وقد وجدت المحتوى الذي أعتقد أنه حساس لا يوجد فيه تحديد حساسية. ماذا يجب أن أفعل؟",
-        "answer": {
-          "a": "يرجى الإبلاغ عن المحتوى الحساس عن طريق زيارة صفحة العمل الفردي على موقع {openverseOrg} على شبكة الإنترنت، واستخدام زر &quot; إعادة الإبلاغ عن هذا المحتوى &quot; تحت معلومات الإسناد وفوق البطاقات.",
-          "b": "{openverse}"
-        }
-      },
-      "two": {
-        "question": "لا أوافق على تحديد الحساسية في العمل هل يمكنك أن تزيله من فضلك؟",
-        "answerPt1": "بالنسبة للتسميات القائمة على النصوص، {openverse} does not at the moment have a method for removing the nomination. This is a feature that will be built eventually, but is not part of the baseline sensitive content detection feature.",
-        "answerPt2": {
-          "a": "وفيما يتعلق بالتسميات التي أبلغ عنها المستعمل، يرجى تقديم تقرير جديد عن صفحة العمل بعد التعليمات الواردة في السؤال السابق.",
-          "b": "في الملاحظات، وصف لماذا تعتقد أن العمل لا ينبغي أن يكون له تحديد حساسية.",
-          "c": "As when added a new nomination, {openverse} reserves the right to respectfully decline the request to remove a confirmed user sensitivity nomination."
-        }
-      },
-      "three": {
-        "question": "وقد وجدت محتوى في {openverse} قد يكون غير قانوني. إلى جانب إبلاغه إلى {openverse}، هل هناك أي خطوات أخرى يمكنني اتخاذها؟",
-        "answer": {
-          "a": "وفيما يتعلق بالتسميات التي أبلغ عنها المستعمل، يرجى تقديم تقرير جديد عن صفحة العمل بعد التعليمات الواردة في السؤال السابق.",
-          "b": "في الملاحظات، وصف لماذا تعتقد أن العمل لا ينبغي أن يكون له تحديد حساسية.",
-          "c": "As when added a new nomination, {openverse} reserves the right to respectfully decline the request to remove a confirmed user sensitivity nomination."
-        }
-      }
-    }
-  },
-  "tags": {
-    "title": "Understanding Tags in {openverse}",
-    "intro": {
-      "a": "وقد يكون لكل عمل إبداعي في {openverse} بطاقات، ومجموعة اختيارية من الكلمات الرئيسية المستخدمة لوصف العمل وجعل من الأسهل للمستعملين أن يجدوا وسائل الإعلام ذات الصلة للبحث عنهم.",
-      "b": "وتنقسم هذه البطاقات إلى فئتين رئيسيتين: علامات المصدر والعلامات المولدة. فهم الفرق بينهما يمكن أن يعزز خبرتك في البحث ويحسن دقة نتائجك"
-    },
-    "sourceTags": {
-      "title": "المصدر",
-      "content": {
-        "a": "وعلامات المصدر هي علامات نشأت من المصدر الأصلي للعمل الإبداعي. ويمكن أن يضاف المساهمون المختلفون هذه البطاقات، مثل المصور الذي قام بتحميل صورتهم إلى فليكر والعلامات الوصفية الإضافية.",
-        "b": "ويمكن للمنبر الأصلي نفسه أن يخصص بطاقات إضافية من أعضاء المجتمع المحلي أو التشغيل الآلي أو مصادر أخرى."
-      }
-    },
-    "generatedTags": {
-      "title": "تاغس المولدة",
-      "content": {
-        "a": "وتُنشأ العلامات المولدة من خلال التحليل الآلي للأشغال الإبداعية، ومعظم الصور الشائعة. وتنطوي هذه العملية على تكنولوجيات متطورة مثل  AWS Rekognition ، وكلاريفاي، وغير ذلك من خدمات التعرف على الصور التي تحلل المحتوى وتولد علامات وصفية.",
-        "b": "وفي حين أن النظم الآلية الموثوق بها عموما يمكن أن تسيئ أحيانا تفسير أو تفوت عناصر في صورة ما.",
-        "c": "وتبذل الجهود لاستبعاد أي علامات متولدة تشير إلى هويات أو انتماءات البشر.",
-        "d": "إذا واجهتم أي صور بعلامات متولدة تضعون افتراضات حول، على سبيل المثال، الجنس أو الدين أو الانتماء السياسي، يرجى الإبلاغ عن الصور باستخدام زر \" التقرير \" على صفحات النتائج الوحيدة."
-      }
-    }
-  },
-  "error": {
-    "occurred": "حدث خطأ",
-    "imageNotFound": "تعذر العثور على الصورة بالمعرف {id}",
-    "mediaNotFound": "تعذر العثور على {mediaType} بالمعرف {id}",
-    "image": "صورة",
-    "audio": "صوتي"
-  },
-  "filters": {
-    "title": "مرشحات",
-    "filterBy": "مصنف بواسطة",
-    "licenses": {
-      "title": "التراخيص",
-      "cc0": "CC0",
-      "pdm": "علامة المجال العام",
-      "by": "بواسطة",
-      "bySa": "BY-SA",
-      "byNc": "BY-NC",
-      "byNd": "BY-ND",
-      "byNcSa": "BY-NC-SA",
-      "byNcNd": "BY-NC-ND"
-    },
-    "licenseTypes": {
-      "title": "يستخدم",
-      "commercial": "استخدام تجاريًا",
-      "modification": "تعديل أو تكييف"
-    },
-    "imageProviders": {
-      "title": "مصدر"
-    },
-    "audioProviders": {
-      "title": "مصدر"
-    },
-    "audioCategories": {
-      "title": "فئة الصوت",
-      "audiobook": "كتاب مسموع",
-      "music": "موسيقى",
-      "news": "أخبار",
-      "podcast": "تدوين صوتي",
-      "pronunciation": "النطق",
-      "sound_effect": "مؤثرات صوتية",
-      "sound": "مؤثرات صوتية"
-    },
-    "imageCategories": {
-      "title": "نوع الصورة",
-      "photograph": "الصور",
-      "illustration": "الرسوم التوضيحية",
-      "digitized_artwork": "الأعمال الفنية الرقمية"
-    },
-    "audioExtensions": {
-      "title": "امتداد",
-      "flac": "FLAC",
-      "mid": "منتصف",
-      "mp3": "MP3",
-      "oga": "OGA",
-      "ogg": "OGG",
-      "opus": "OPUS",
-      "wav": "WAV",
-      "webm": "WEBM"
-    },
-    "imageExtensions": {
-      "title": "امتداد",
-      "jpg": "JPEG",
-      "png": "بي إن جي",
-      "gif": "GIF",
-      "svg": "SVG"
-    },
-    "aspectRatios": {
-      "title": "ابعاد متزنة",
-      "tall": "طويل",
-      "wide": "واسع",
-      "square": "ميدان"
-    },
-    "sizes": {
-      "title": "حجم الصورة",
-      "small": "صغير",
-      "medium": "متوسط",
-      "large": "كبير"
-    },
-    "safeBrowsing": {
-      "title": "الحشد الآمن",
-      "desc": "ولا يظهر التخلف المضمون الذي يُعرف باسم {sensitive}..",
-      "sensitive": "حساسة",
-      "toggles": {
-        "fetchSensitive": {
-          "title": "النتائج الحساسة",
-          "desc": "واتسمت النتائج بالحساسية في مجال النتائج."
-        },
-        "blurSensitive": {
-          "title": "محتوى البق",
-          "desc": "الصور والنصوص لمنع رؤية المواد الحساسة"
-        }
-      }
-    },
-    "lengths": {
-      "title": "مدة",
-      "shortest": "<30 ثانية",
-      "short": "30 ثانية -2 دقيقة",
-      "medium": "2-10 دقائق",
-      "long": "> 10 دقائق"
-    },
-    "creator": {
-      "title": "البحث حسب المنشئ"
-    },
-    "searchBy": {
-      "title": "البحث عن طريق",
-      "creator": "المنشئ"
-    },
-    "licenseExplanation": {
-      "licenseDefinition": "تعريف الترخيص",
-      "markDefinition": "تعريف {mark}",
-      "more": {
-        "license": "{readMore} حول هذا الترخيص.",
-        "mark": "{readMore} حول {mark}.",
-        "readMore": "اقرأ أكثر"
-      }
-    },
-    "aria": {
-      "removeFilter": "إزالة مرشح {label}"
-    }
-  },
-  "filterList": {
-    "filterBy": "مصنف بواسطة",
-    "hide": "إخفاء عوامل التصفية",
-    "clear": "مسح عوامل التصفية",
-    "clearNumbered": "مرشحات واضحة ({number})",
-    "show": "أظهر النتائج",
-    "categoryAria": "قائمة عوامل التصفية لفئة {categoryName}"
-  },
-  "browsePage": {
-    "allNoResults": "لا نتائج",
-    "allResultCount": "{localeCount} نتيجة | {localeCount} نتيجة",
-    "allResultCountMore": "أكثر من {localeCount} نتيجة | أكثر من {localeCount} نتيجة",
-    "contentLink": {
-      "image": {
-        "zero": "لا توجد صور لـ {query}",
-        "count": "See {localeCount} image found for {query}.|See {localeCount} images found for {query}.",
-        "countMore": "انظر على صور {query} {localeCount}"
-      },
-      "audio": {
-        "zero": "لم يعثر على أي صوت لـ {query}.",
-        "count": "انظر {localeCount} {query}",
-        "countMore": "انظر فوق {query} {localeCount}"
-      }
-    },
-    "load": "تحميل المزيد من النتائج",
-    "loading": "جار التحميل...",
-    "fetchingError": "خطأ في جلب {type}:",
-    "searchRating": {
-      "content": "هل هذه النتائج ذات صلة؟",
-      "yes": "نعم",
-      "no": "رقم",
-      "feedbackThanks": "شكرا لملاحظاتك!"
-    },
-    "searchForm": {
-      "placeholder": "بحث في كل {type}",
-      "image": "الصور",
-      "audio": "صوتي",
-      "video": "أشرطة فيديو",
-      "model3d": "نماذج ثلاثية الأبعاد",
-      "all": "المحتوى",
-      "collectionPlaceholder": "بحث في هذه المجموعة",
-      "button": "يبحث",
-      "clear": "آمن"
-    },
-    "licenseDescription": {
-      "title": "رخصة CC",
-      "by": "ائتمن الخالق.",
-      "nc": "الاستخدامات غير التجارية فقط.",
-      "nd": "لا مشتقات أو تعديلات مسموح بها.",
-      "sa": "شارك التعديلات تحت نفس الشروط.",
-      "zero": "تم وضع علامة على هذا العمل على أنه مخصص للملك العام.",
-      "pd": "تم وضع علامة على هذا العمل على أنه في المجال العام.",
-      "samplingPlus": "العينات والمزج والتحولات الإبداعية مسموح بها."
-    },
-    "aria": {
-      "close": "أغلق",
-      "scroll": "انتقل إلى أعلى",
-      "search": "بحث",
-      "removeFilter": "إزالة عامل التصفية",
-      "licenseExplanation": "شرح الترخيص",
-      "creator": "البحث عن طريق المنشئ",
-      "imageTitle": "Image: {title}",
-      "audioTitle": "Audio: {title}",
-      "resultsLabel": {
-        "all": "جميع النتائج لـ {query}",
-        "image": "Image results for {query}",
-        "audio": "Audio tracks for {query}"
-      },
-      "results": {
-        "all": "جميع النتائج لـ \"{query}\" و{imageResults} و{audioResults}.",
-        "image": {
-          "zero": "لا توجد نتائج للصور لـ \"{query}\"",
-          "count": "{localeCount} {query}",
-          "countMore": "أهم نتائج الصور {localeCount} لـ \"{query}\"."
-        },
-        "audio": {
-          "zero": "لا توجد آثار صوتية لـ \"{query}\"",
-          "count": "{localeCount} {query}",
-          "countMore": "أهم المقاطع الصوتية {localeCount} لـ \"{query}\"."
-        }
-      },
-      "allResultsHeadingCount": {
-        "image": {
-          "zero": "لا صور",
-          "count": "{localeCount} image.{localeCount} images",
-          "countMore": "أعلى صور {localeCount}"
-        },
-        "audio": {
-          "zero": "لا آثار صوتية",
-          "count": "{localeCount} {localeCount}",
-          "countMore": "أعلى {localeCount}"
-        }
-      }
-    }
-  },
-  "mediaDetails": {
-    "information": {
-      "type": "يكتب",
-      "unknown": "مجهول",
-      "category": "فئة"
-    },
-    "scroll": {
-      "forward": "تقدم للأمام",
-      "back": "تراجع"
-    },
-    "reuse": {
-      "title": "كيف تستعمل",
-      "description": "قم بزيارة موقع ويب {media} لتنزيله واستخدامه. تأكد من أن تنسب الفضل إلى المنشئ من خلال إظهار معلومات الإسناد حيث تشارك عملك.",
-      "copyrightDisclaimer": "قد تحتوي بعض الصور الفوتوغرافية على محتوى محمي بحقوق الطبع والنشر، مثل اللوحات أو المنحوتات أو الأعمال المعمارية. قد يتطلب استخدام هذه الصور الحصول على أذونات إضافية من صاحب حقوق الطبع والنشر للأعمال المصورة.",
-      "licenseHeader": "رخصة",
-      "toolHeader": "المجال العام",
-      "audio": "صوتي",
-      "image": "صورة",
-      "tool": {
-        "content": "اقرأ المزيد عن الأداة {link}.",
-        "link": "هنا"
-      },
-      "credit": {
-        "genericTitle": "هذا العمل",
-        "actualTitle": "\"{title}\"",
-        "text": "{title} {creator} {markedLicensed} {license}. {viewLegal}",
-        "creatorText": "بواسطة {creatorName}",
-        "marked": "تم وضع علامة",
-        "licensed": "مرخص بموجب",
-        "viewLegalText": "لعرض {termsCopy} ، قم بزيارة {url}.",
-        "termsText": "الشروط",
-        "copyText": "نسخة من هذا الترخيص"
-      },
-      "copyLicense": {
-        "title": "انسب الفضل إلى المنشئ",
-        "rich": "النص الغني",
-        "html": "لغة البرمجة",
-        "plain": "نص عادي",
-        "copyText": "نسخ النص",
-        "copied": "نسخ!",
-        "xml": "إك سم إل"
-      },
-      "attribution": "تم تمييز هذه الصورة بترخيص {link}:"
-    },
-    "providerLabel": "مزود",
-    "sourceLabel": "مصدر",
-    "providerDescription": "الموقع الشبكي الذي يستضيف فيه المحتوى",
-    "sourceDescription": "المنظمة التي أنشأت أو تملك المحتوى الأصلي",
-    "loading": "جار التحميل...",
-    "relatedError": "خطأ في جلب الوسائط ذات الصلة",
-    "aria": {
-      "attribution": {
-        "license": "اقرأ المزيد عن الترخيص",
-        "tool": "اقرأ المزيد عن الأداة"
-      },
-      "creatorUrl": "اسم {creator}"
-    },
-    "imageInfo": "معلومات الصورة",
-    "audioInfo": "معلومات صوتية",
-    "tags": {
-      "title": "العلامات",
-      "generated": {
-        "heading": "العلامات المولدة",
-        "pageTitle": "تعلم المزيد"
-      },
-      "source": {
-        "heading": "بطاقات المصدر"
-      },
-      "showMore": "أظهر المزيد",
-      "showLess": "تظهر أقل"
-    },
-    "contentReport": {
-      "short": "تقرير",
-      "long": "الإبلاغ عن هذا المحتوى",
-      "form": {
-        "disclaimer": "لأغراض أمنية ، يجمع {openverse} ويحتفظ بعناوين IP مجهولة المصدر لأولئك الذين يكملون هذا النموذج ويرسلونه.",
-        "question": "ماهو السبب؟",
-        "dmca": {
-          "option": "ينتهك حقوق الطبع والنشر",
-          "note": "يجب عليك ملء هذا {form} للإبلاغ عن انتهاك حقوق النشر. لن يتم اتخاذ أي إجراء حتى يتم ملء هذا النموذج وإرساله. نوصي بعمل الشيء نفسه في المصدر ، {source}.",
-          "form": "نموذج DMCA",
-          "open": "فتح النموذج"
-        },
-        "sensitive": {
-          "option": "يحتوي على محتوى حساس",
-          "subLabel": "اختياري",
-          "placeholder": "اختياريًا ، قدم وصفًا."
-        },
-        "other": {
-          "option": "آخر",
-          "note": "صف القضية.",
-          "subLabel": "مطلوب",
-          "placeholder": "الرجاء إدخال 20 حرفًا على الأقل."
-        },
-        "submit": "تقرير",
-        "cancel": "يلغي"
-      },
-      "success": {
-        "title": "تم إرسال التقرير بنجاح",
-        "note": "شكرا على الإبلاغ هذا المحتوى. نوصي بعمل الشيء نفسه في المصدر ، {source}."
-      },
-      "failure": {
-        "title": "تعذر تقديم التقرير",
-        "note": "حدث خطأ ما ، يرجى المحاولة مرة أخرى بعد قليل."
-      }
-    }
-  },
-  "singleResult": {
-    "back": "رجوع إلى نتائج البحث"
-  },
-  "imageDetails": {
-    "creator": "بالاسم{name}",
-    "weblink": "احصل على هذه الصورة",
-    "information": {
-      "dimensions": "أبعاد",
-      "pixels": "بكسل",
-      "sizeInPixels": "{width} × {height} بكسل"
-    },
-    "relatedImages": "الصور ذات الصلة",
-    "aria": {
-      "creatorUrl": "المؤلف {creator}"
-    }
-  },
-  "audioDetails": {
-    "genreLabel": "النوع",
-    "relatedAudios": "الصوت ذو الصلة",
-    "table": {
-      "album": "الألبوم",
-      "sampleRate": "معدل العينة",
-      "filetype": "شكل",
-      "genre": "النوع"
-    },
-    "weblink": "احصل على هذا الصوت"
-  },
-  "allResults": {
-    "snackbar": {
-      "text": "Press {spacebar} to play or pause the track.",
-      "spacebar": "Spacebar"
-    }
-  },
-  "audioResults": {
-    "snackbar": {
-      "text": "Press {spacebar} to play or pause, and {left} &quot;{right} to seek through the track.",
-      "spacebar": "Spacebar",
-      "left": "♪",
-      "right": "?"
-    }
-  },
-  "externalSources": {
-    "caption": "{openverse} لا يتحكم في النتائج ، تحقق دائمًا من أن العمل في الواقع خاضع لترخيص CC.",
-    "button": "قائمة مصدر",
-    "title": "مصادر خارجية",
-    "card": {
-      "search": "لا تجد ما تبحث عنه؟ جرب المصادر الخارجية",
-      "caption": "انقر فوق أحد المصادر أدناه للبحث مباشرة في مجموعات أخرى من الصور المرخصة CC. {break} يرجى ملاحظة أن استخدام المرشحات غير مدعوم لمكتبة Open Clip Art Library أو Nappy."
-    },
-    "form": {
-      "supportedTitle": "لا تجد ما تبحث عنه؟ ابحث في مصادر خارجية",
-      "supportedTitleSm": "ابحث في مصادر خارجية"
-    }
-  },
-  "browsers": {
-    "chrome": "كروم",
-    "firefox": "ثعلب النار",
-    "opera": "Opera",
-    "edge": "حافة"
-  },
-  "waveform": {
-    "label": "شريط البحث عن الصوت",
-    "currentTime": "{time} ثانية | {time} ثانية"
-  },
-  "audioThumbnail": {
-    "alt": "صورة الغلاف لـ \"{title}\" بواسطة {creator}"
-  },
-  "audioTrack": {
-    "ariaLabel": "{title} - مشغل الصوت",
-    "ariaLabelInteractive": "{title} - مشغل الصوت - اضغط على مفتاح المسافة لتشغيل معاينة الصوت وإيقافها مؤقتًا",
-    "ariaLabelInteractiveSeekable": "Audio: {title} - اللاعب التفاعلي - اضغط على حانة الفضاء لتلعب وتتوقف عن النظرة المسبقة للصوت؛ استخدام مفاتيح السهم اليسرى واليمن للبحث عن طريق المسار.",
-    "messages": {
-      "err_aborted": "لقد أجهضت التشغيل.",
-      "err_network": "حدث خطأ في الشبكة.",
-      "err_decode": "تعذر فك تشفير الصوت.",
-      "err_unallowed": "لا يسمح بالاستنساخ.",
-      "err_unknown": "حدث خطأ غير متوقع حاول مرة أخرى في بضع دقائق أو الإبلاغ عن البند إذا استمرت المسألة.",
-      "err_unsupported": "لا يدعم متصفحك تنسيق الصوت هذا.",
-      "loading": "جار التحميل..."
-    },
-    "creator": "بواسطة {creator}",
-    "close": "أغلق مشغل الصوت"
-  },
-  "playPause": {
-    "play": "لعب",
-    "pause": "يوقف",
-    "replay": "إعادة",
-    "loading": "جار التحميل"
-  },
-  "search": {
-    "search": "يبحث",
-    "searchBarLabel": "البحث عن محتوى في {openverse}"
-  },
-  "licenseReadableNames": {
-    "cc0": "صفر",
-    "pdm": "علامة المجال العام",
-    "by": "الإسناد",
-    "bySa": "نَسب المُصنَّف - شارك - على حدٍ سواء",
-    "byNc": "نَسب المُصنَّف - غير تجاري",
-    "byNd": "Attribution-NoDerivatives",
-    "byNcSa": "Attribution-NonCommercial-Share-Alike",
-    "byNcNd": "نسب المصنف غير التجاري لا المشتقات",
-    "sampling+": "سامبلينغ بلس",
-    "ncSampling+": "أخذ العينات غير التجارية زائد"
-  },
+  "404.title": "يبدو أن المحتوى الذي تبحث عنه قد اختفى.",
+  "404.main": "انتقل إلى {link} أو ابحث عن شيء مشابه من الحقل أدناه.",
+  "hero.subtitle": "استكشف أكثر من 800 مليون عمل إبداعي",
+  "hero.description": "مكتبة واسعة من الصور المجانية ، والصور ، والصوت ، متاحة للاستخدام المجاني.",
+  "hero.search.placeholder": "البحث عن محتوى",
+  "hero.disclaimer.content": "كل محتوى {openverse} يخضع لـ {license} أو في المجال العام.",
+  "hero.disclaimer.license": "رخصة المشاع الإبداعي",
+  "notification.translation.text": "ترجمة اللغة {locale} غير كاملة. ساعدنا في الوصول إلى 100 بالمائة عن طريق {link}.",
+  "notification.translation.link": "المساهمة بترجمة",
+  "notification.translation.close": "إغلاق مساهمة الترجمة يساعد على طلب الملصق",
+  "notification.analytics.text": "المفرقعات تستخدم المحللين لتحسين نوعية خدمتنا زيارة {link} لتعلم المزيد أو اختيار.",
+  "notification.analytics.link": "صفحة الخصوصية",
+  "notification.analytics.close": "اغلق المحللين اللافتة",
+  "header.homeLink": "{openverse} البيت",
+  "header.placeholder": "البحث في كل المحتوى",
+  "header.aria.primary": "الأولية",
+  "header.aria.menu": "قائمة",
+  "header.aria.search": "بحث",
+  "header.aria.srSearch": "زر البحث",
+  "header.aboutTab": "حول",
+  "header.resourcesTab": "موارد",
+  "header.loading": "جار التحميل...",
+  "header.filterButton.simple": "مرشحات",
+  "header.filterButton.withCount": "({count}) مرشح",
+  "header.seeResults": "انظر النتائج",
+  "header.backButton": "عُد",
+  "header.contentSettingsButton.simple": "Menu",
+  "header.contentSettingsButton.withCount": "(مينو) {count} filter applied.Menu. {count}",
+  "navigation.about": "حول",
+  "navigation.licenses": "التراخيص",
+  "navigation.getInvolved": "شارك",
+  "navigation.api": "API",
+  "navigation.terms": "شروط",
+  "navigation.privacy": "خصوصية",
+  "navigation.feedback": "استجابة",
+  "navigation.sources": "مصادر",
+  "navigation.externalSources": "مصادر خارجية",
+  "navigation.searchHelp": "بحث في المساعدة",
+  "about.title": "حول {openverse}",
+  "about.description.content": "{openverse} هي أداة تسمح باكتشاف أعمال المجال العام والمرخصة بشكل مفتوح واستخدامها من قبل الجميع.",
+  "about.collection.content.a": "{openverse} searches across more than 800 million images and audio from open APIs and the {commonCrawl} dataset.",
+  "about.collection.content.b": "نحن نجمع العمل من عدة مستودعات عامة، ونسهل إعادة الاستخدام من خلال سمات مثل العزو البقعة الواحدة.",
+  "about.planning.content.a": "وحالياً، لا تقوم شركة {openverse} إلا بتفتيش الصور والصوت، والبحث عن الفيديو المقدم من مصادر خارجية.",
+  "about.planning.content.b": "ونخطط لإضافة أنواع إضافية من وسائط الإعلام مثل النصوص المفتوحة ونماذج الـ 3 دال، بهدف نهائي هو إتاحة إمكانية الوصول إلى ما يقدر بـ 2.5 بليون من دولارات الولايات المتحدة المرخص لها والمجالات العامة على الشبكة.",
+  "about.planning.content.c": "جميع رموزنا هي مصدر مفتوح ويمكن الوصول إليها في {working} نحن {repository} يمكنك أن ترى ما هو {community}",
+  "about.planning.repository": "مستودع {openverse} {github}",
+  "about.planning.community": "نرحب بمساهمة المجتمع",
+  "about.planning.working": "نحن نعمل حاليا على",
+  "about.transfer.content.a": "{openverse} is the successor to CC search which was launched by Creative Commons in 2019, after its migration to WordPress in 2021.",
+  "about.transfer.content.b": "يمكنك قراءة المزيد عن هذا الانتقال في الإعلانات الرسمية من {creativeCommons} and {wordpress}",
+  "about.transfer.content.c": "ولا نزال ملتزمين بتحقيق هدفنا المتمثل في معالجة إمكانية اكتشاف وسائل الإعلام المفتوحة والوصول إليها.",
+  "about.declaration.content.a": "{openverse} does not verify licensing information for individual works, or whether the generated attribution is accurate or complete.",
+  "about.declaration.content.b": "يرجى التحقق بشكل مستقل من حالة الترخيص والمعلومات المتعلقة بالإسناد قبل إعادة استخدام المحتوى. للحصول على المزيد من التفاصيل، قراءة {terms}",
+  "about.declaration.terms": "{openverse} شروط الاستخدام",
+  "sources.title": "مصادر",
+  "sources.detail": "يتيح لك النقر فوق {singleName} تصفح العناصر الموجودة داخل هذا المصدر وتصفيتها.",
+  "sources.singleName": "مصدر",
+  "sources.providers.source": "مصدر",
+  "sources.providers.domain": "اِختِصاص",
+  "sources.providers.item": "مجموع العناصر",
+  "sources.ccContent.where": "من أين يأتي المحتوى على {openverse}؟",
+  "sources.ccContent.content": "هناك محتوى مرخص بشكل علني مستضاف على ملايين المجالات عبر اتساع الإنترنت. يحدد فريقنا بشكل منهجي مقدمي الخدمة الذين يستضيفون محتوى مرخصًا بـ CC. إذا كان ملائمًا ، فنحن نفهرس هذا المحتوى ونجعله قابلاً للاكتشاف من خلال {openverse}.",
+  "sources.ccContent.provider.a": "ولدى بعض مقدمي الخدمات تجمعات متعددة مختلفة من المحتوى داخلهم. {flickr} has sources ranging from NASA to personal photography. The {smithsonian} comprises a dozen diverse collections.",
+  "sources.ccContent.provider.b": "ويدير مشاعات الويكيو القفازات من حيث المحتوى، ويستخدمها عدد من المجرات والمكتبات والمحفوظات والمتاحف التي تسلط الضوء على بعض أو كل مجموعاتها الرقمية.",
+  "sources.ccContent.europeana": "{openverse} ممتن بشكل خاص لعمل {link} ، وهي منظمة تعمل على رقمنة وإنشاء أعمال التراث الثقافي القابلة للاكتشاف في جميع أنحاء أوروبا. {openverse} قادر على فهرسة مئات المصادر القيمة من خلال تكامل واحد مع {linkApi}.",
+  "sources.newContent.next": "كيف نقرر ما هي المصادر التي يجب إضافتها بعد ذلك؟",
+  "sources.newContent.integrate": "لدينا قائمة لا تنتهي أبدًا بالمصادر المحتملة للبحث قبل التكامل. نسأل أنفسنا أسئلة مثل:",
+  "sources.newContent.impact": " ما هو تأثير أو أهمية هذا المصدر لمستخدمينا؟ إذا كان موجودًا داخل مزود مثل ويكيميديا كومنز ، فهل من المفيد لمستخدمينا أن يكونوا قادرين على التصفية حسب هذا المصدر مباشرة؟",
+  "sources.newContent.reuse": "هل معلومات الترخيص والإسناد معروضة بوضوح لتمكين إعادة الاستخدام الواثق؟",
+  "sources.newContent.totalItems": "كم عدد العناصر الإجمالية الجديدة أو الأنواع الجديدة من العناصر التي يمكننا تقديمها لمستخدمينا من خلال هذا التكامل؟ بعض المصادر عبارة عن تكاملات مباشرة ، بينما قد يكون البعض الآخر مصدرًا داخل المصدر.",
+  "sources.suggestions": "نحن نقدر الاقتراحات لمصادر جديدة من مجتمع المستخدمين لدينا.",
+  "sources.issueButton": "اقترح مصدر جديد",
+  "sources.aria.table": "جدول المصادر",
+  "sources.heading.image": "مصادر الصور",
+  "sources.heading.audio": "مصادر الصوت",
+  "externalSourcesPage.title": "بحث ميتا",
+  "externalSourcesPage.intro": "تم إنشاء {openverse} فوق كتالوج يقوم بفهرسة المحتوى المرخص لـ CC والمحتوى العام من مصادر محددة. تعرف على المزيد حول {link} الخاص بنا.",
+  "externalSourcesPage.link": "مصادر",
+  "externalSourcesPage.license.a": "ومع ذلك، هناك مصادر عديدة لوسائط الإعلام المرخص بها من قبل لجنة مكافحة الإرهاب ووسائط الإعلام العامة التي لم نتمكن بعد من إدراجها في بحث {openverse}.",
+  "externalSourcesPage.license.b": "This might be because they do not offer a public API, or that our contributors have not yet had time to integrate them into {openverse}",
+  "externalSourcesPage.license.c": "هذه مصادر قيّمة و نريد أن نتأكّد من أنّك قادر على إيجاد أفضل المواد المرخصة علناً، بغض النظر عن مكان وجودها.",
+  "externalSourcesPage.new.title": "هل يمكنني اقتراح مصادر خارجية جديدة؟",
+  "externalSourcesPage.new.content": "نعم من فضلك! أنشئ {issue} في مستودع GitHub أو أرسل إلينا {email} وأخبرنا بالمصادر الجديدة التي ترغب في تضمينها.",
+  "externalSourcesPage.new.issue": "القضية",
+  "externalSourcesPage.new.email": "البريد الإلكتروني",
+  "externalSourcesPage.why.title": "لماذا بنيت هذا؟",
+  "externalSourcesPage.why.content": "لسنوات عديدة ، قدمت Creative Commons لمستخدميها بوابة بحث مخصصة لمنصات البحث التي تحتوي على عوامل تصفية ترخيص CC مضمنة. في الواقع ، لا يزال هذا قيد الصيانة في {old}.",
+  "externalSourcesPage.why.new.a": "بالنسبة لمستخدمي موقع البحث عن الميثان، سيبدو سمة &quot; المصادر الخارجية &quot; في {openverse} مألوفة.",
+  "externalSourcesPage.why.new.b": "وكان الهدف هو ضمان عدم فقدان القدرة الوظيفية، ولكن يجري تحديثها وإدراجها في محرك البحث الجديد الخاص بمحتواها المرخص بشكل مفتوح.",
+  "externalSourcesPage.why.new.c": "وبالإضافة إلى ذلك، تستند سمة &quot; المصادر الخارجية &quot; إلى هذه الوظيفة، مما يتيح لنا أن نضيف بسرعة مصادر خارجية جديدة عند اكتشافها، وأن ندعم أنواع المحتوى الجديدة في المستقبل.",
+  "externalSourcesPage.why.ariaLabel": "استجابة",
+  "externalSourcesPage.why.feedbackSuggestions": "نأمل أن تستمتع ، وإذا كانت لديك اقتراحات للتحسين ، فاترك لنا {feedback}.",
+  "externalSourcesPage.why.feedbackLink": "استجابة",
+  "externalSourcesPage.relationships.a": "وهذه الوظيفة تتيح لنا أيضا البدء في المحادثات وبناء علاقات مع المصادر التي قد ترغب في إدراجها في قضية {openverse} في المستقبل.",
+  "externalSourcesPage.relationships.b": "وأخيرا، يمكننا أيضا أن نعرض مصادر خارجية لأنواع وسائط الإعلام التي لا ندرجها في {openverse}، ولكن نخطط لذلك.",
+  "externalSourcesPage.explanation": "يمكنك العثور على روابط لمصادر خارجية أسفل كل صفحة نتائج بحث {openverse} ؛ في صفحات عمليات البحث التي لا تظهر نتائج ؛ وعلى صفحات أنواع الوسائط التي لا ندعمها بعد ولكننا نعتزم ذلك.",
+  "privacy.title": "خصوصية",
+  "privacy.intro.content": "يسعى مشروع {openverse} إلى جعل خصوصية مستخدمينا وأمانهم أولوية. {openverse} تلتزم بـ {link}. يرجى الاطلاع على هذا المستند للحصول على وصف كامل لكيفية استخدام {openverse} وحمايته لأي معلومات تزودنا بها.",
+  "privacy.intro.link": "سياسة الخصوصية لجميع مواقع WordPress.org",
+  "privacy.cookies.title": "ملفات تعريف الارتباط",
+  "privacy.cookies.content.a": "{openverse} تستخدم البسكويت لتخزين المعلومات عن أفضليات الزائرين ومعلومات عن مروجهم على الشبكة. ونحن نستخدم هذه المعلومات لتحسين خبرة مستخدمي الموقع.",
+  "privacy.cookies.content.b": "هذه تعتبر \"الوكالة\" أو \"الكوكيز الضروري جداً\" قد تبطلين هذه من خلال تغيير أطرك للطوارئ، ولكن هذا قد يؤثر على كيفية وظائف {openverse}",
+  "privacy.contact.title": "اتصل بنا",
+  "privacy.contact.content": "يمكن إرسال أي أسئلة حول {openverse} والخصوصية إلى {email} ، أو مشاركتها على أنها {issue} ، أو مناقشتها مع مجتمعنا في #openverse قناة {chat}.",
+  "privacy.contact.issue": "مشكلة GitHub",
+  "privacy.contact.chat": "جعل WordPress دردشة",
+  "searchGuide.title": "{openverse} دليل البنية",
+  "searchGuide.intro": "عند البحث ، يمكنك إدخال رموز أو كلمات خاصة لمصطلح البحث الخاص بك لجعل نتائج البحث أكثر دقة.",
+  "searchGuide.exact.title": "ابحث عن تطابق تام",
+  "searchGuide.exact.ariaLabel": "اقتبس اقتباس كلود مونيه",
+  "searchGuide.exact.claudeMonet": "\"كلود مونيه\"",
+  "searchGuide.exact.content": "ضع كلمة أو عبارة داخل علامات الاقتباس. على سبيل المثال ، {link}.",
+  "searchGuide.negate.title": "المصطلحات المستبعدة",
+  "searchGuide.negate.operatorName": "ناقصا",
+  "searchGuide.negate.ariaLabel": "الكلب مطروحا منه",
+  "searchGuide.negate.example": "كلب",
+  "searchGuide.negate.content": "لاستبعاد مصطلح من نتائجك، وضع {operator} أمامه. Example: {link}{br} هذا سيبحث عن وسائل الإعلام ذات الصلة بـ\"الكلب\" لكن لن يتضمن النتائج ذات الصلة بـ \"بوغ\"",
+  "feedback.title": "استجابة",
+  "feedback.intro": "شكرًا لك على استخدام {openverse}! نرحب بأفكارك لتحسين الأداة أدناه. لتقديم ملاحظات منتظمة ، انضم إلى قناة {slack} في مساحة عمل {makingWordpress} Slack.",
+  "feedback.improve": "ساعدنا لنتحسن",
+  "feedback.report": "الإبلاغ عن خطأ",
+  "feedback.loading": "جار التحميل...",
+  "feedback.aria.improve": "ساعدنا في تحسين الشكل",
+  "feedback.aria.report": "الإبلاغ عن نموذج خطأ",
+  "sensitive.title": "المحتوى الحساس",
+  "sensitive.description.content.a": "{openverse} operates along a “safe-default” approach in all aspects of its operation and development, with the intention of being as inclusive and accessible as possible.",
+  "sensitive.description.content.b": "ومن ثم، فإن {openverse} لا تشمل سوى النتائج ذات المحتوى الحساس عندما اختار المستعملون صراحة &quot; تحقيق نتائج حساسة &quot; بشأن {openverseOrg} وفي {openverse} API.",
+  "sensitive.description.content.c": "In adherence to {wpCoc} and its {deiStatement}, {openverse} holds contributors to high expectations regarding conduct towards other contributors, the accessibility of contribution and the services, and, therefore, being an inclusive project.",
+  "sensitive.description.content.d": "Similarly, {openverse} holds the expectation that the results returned from the API or displayed on the {openverseOrg} should be accessible by default.",
+  "sensitive.description.content.e": "على الجميع، بغض النظر عن خلفيتهم، أن يشعروا بالأمان، وأنهم مشمولون في {openverse}، سواء كانوا مساهمين في الجوانب التقنية لخدمات {openverse}، وهو مبدع مشمول بأعماله في {openverse}",
+  "sensitive.description.content.f": "{openverse} recognises its responsibility as a tool used by people of a wide variety of ages, including young people in educational settings, and pays particular attention to minimizing accidental interaction with or exposure to sensitive content.",
+  "sensitive.description.wpCoc": "مدونة قواعد السلوك المجتمعية",
+  "sensitive.description.deiStatement": "التنوع والإنصاف وبيان الإدماج",
+  "sensitive.sensitivity.what.a": "{openverse} تستخدم مصطلح \"حساس\" بدلاً من \"المكانة\" أو \"الخدمة العامة\" (غير آمنة للعمل) أو مصطلحات أخرى للإشارة إلى أن تعريفنا للمحتوى حساس هو واسع، مع التركيز على إمكانية الوصول والإدماج.",
+  "sensitive.sensitivity.what.b": "وهذا يعني أن بعض المحتويات تُسمّى بـ \"حساسية\" التي لا تندرج في فئة مما يُفهم عموماً على أنها محتوى \"المكانة\" (أي بعبارة أخرى، المحتوى تحديداً لجمهور بالغ).",
+  "sensitive.sensitivity.what.c": "غير أن التسمية لا تعني ضمناً أن {openverse} أو متعهديها يعتبرون المضمون غير ملائم للمنبر بشكل عام، وهو أيضاً لا ينطوي على حكم أخلاقي أو أخلاقي.",
+  "sensitive.sensitivity.what.d": "نحن نعتبر المحتوى \"الحساس\" مُحتوى مُهين أو مُزعج، أو غير لائق، مع إيلاء اهتمام خاص للشباب.",
+  "sensitive.sensitivity.how.a": "ويتسم تعريف الحساسية هذا بدرجة كبيرة من المرونة وهو غير دقيق عن قصد.",
+  "sensitive.sensitivity.how.b": "وتعتمد شركة {openverse} على مجموعة متنوعة من الأدوات لاكتشاف المحتوى الذي يمكن أن يكون حساسا، بما في ذلك تقارير معتدلة للمستعملين عن العمل الفردي ومسح المحتوى النصي المتصل بالعمل ذي الحساسية.",
+  "sensitive.sensitivity.how.c": "ويرد أدناه وصف أكثر تفصيلا لهذه المسائل.",
+  "sensitive.onOff.title": "تغيير المحتوى الحساس",
+  "sensitive.onOff.sensitiveResults": "بالخطأ {openverse} does not include sensitive content in search results. ويتطلب إدراج النتائج الحساسة اختيارا صريحا من المستخدم. ويمكن للمستعمل أن يختار إدراج المحتوى الحساس في نتائج البحث بتمكين مفتاح &quot; النتائج الحسية &quot; .",
+  "sensitive.onOff.blurSensitive.a": "وعندما يُدرج المحتوى الحساس، تكون النتائج الحساسة التي تُعاد غير واضحة أيضاً لمنع التعرض العرضي.",
+  "sensitive.onOff.blurSensitive.b": "كما أن عدم طمسها يتطلب اختيارا صريحا من المستخدم. ويمكن للمستعمل أن يختار أن يرى محتوى حساسا غير واضح من خلال تبديل مفتاح &quot; محتوى اللغم &quot; .",
+  "sensitive.onOff.where": "وكلاهما متاحان في قاذفة التصفية (على الحواسيب المكتبية) وفي شريط &quot; فليتر &quot; لأماكن البحث (على الأجهزة المحمولة) على صفحة نتائج البحث.",
+  "sensitive.designations.title": "تعيينات المحتوى الحساسة",
+  "sensitive.designations.description.a": "{openverse} يعيّن محتوىً حساساً في API وفي موقع {openverseOrg} على شبكة الإنترنت باستخدام طريقتين: تقارير من مستعملي {openverse} واكتشاف النصوص الحساسة آلياً.",
+  "sensitive.designations.description.b": "ولا تقتصر هذه التسميات على بعضها البعض، ويمكن أن يطبق عليها عمل واحد أو كليهما.",
+  "sensitive.designations.userReported.title": "المستعمل أبلغ عن حساسية",
+  "sensitive.designations.userReported.description.a": "{openverse} users are invited to report sensitive content via the {openverseOrg} website and the {openverse} API.",
+  "sensitive.designations.userReported.description.b": "Some tools and apps that integrate with the {openverse} API, like the {gutenbergMediaInserter}, also allow their users to report sensitive content.",
+  "sensitive.designations.userReported.description.c": "وتشمل صفحة العمل الفردي القدرة على الإبلاغ عن المحتوى على أنه حساس (أو الإبلاغ عن انتهاكات الحقوق).",
+  "sensitive.designations.userReported.description.d": "وتحقق من هذه التقارير ويتخذون قرارات بشأن ما إذا كان ينبغي إضافة تسمية حساسية للعمل، أو في بعض الحالات، على النحو المبين أعلاه، شطب العمل من مكتب المدعي العام.",
+  "sensitive.designations.userReported.gutenbergMediaInserter": "Gutenberg editor’s {openverse}",
+  "sensitive.designations.sensitiveText.title": "المحتوى النصي الحساس",
+  "sensitive.designations.sensitiveText.description.a": "{openverse} يمسح بعض البيانات الوصفية النصية المتصلة بالأعمال التي توفرها مصادرنا بشروط حساسة.",
+  "sensitive.designations.sensitiveText.description.b": "{openverse} {sensitiveTermsList} is open source and contributions and input from the community are welcome and invited.",
+  "sensitive.designations.sensitiveText.description.c": "ومن أمثلة النصوص التي يمكن أن تكون حساسة النص، على سبيل المثال لا الحصر، نصوص ذات طابع جنسي أو بيولوجي أو عنيف أو عنصري أو غير ذلك من أشكال عدم التقيد.",
+  "sensitive.designations.sensitiveText.description.d": "The project recognises that this approach is imperfect and that some works may inadvertently receive a sensitivity nomination without necessarily being sensitive.",
+  "sensitive.designations.sensitiveText.description.e": "ولمزيد من السياق بشأن السبب الذي جعلنا نختار هذا النهج على الرغم من ذلك، نشير إلى {imperfect} من وثيقة تخطيط مشاريعنا المتصلة بهذه السمة.",
+  "sensitive.designations.sensitiveText.sensitiveTermsList": "قائمة المصطلحات الحساسة",
+  "sensitive.designations.sensitiveText.imperfect": "قسم شرطة لوس أنجلوس",
+  "sensitive.designations.sensitiveText.metadata.a": "It is important to note that some textual metadata for a work is {notAvailable} من خلال موقع {openverse} API أو موقع {openverseOrg}",
+  "sensitive.designations.sensitiveText.metadata.b": "غير أن هذه البيانات الوصفية لا تزال مقصودة بشروط حساسة ولا تعامل كحالة خاصة.",
+  "sensitive.designations.sensitiveText.metadata.c": "وفي حالة ما إذا وجد نص {openverse} شروطا حساسة في حقول البيانات الفوقية هذه للعمل، فإن العمل سيظل يتلقى تعيينا حساسا يستند إلى نص حساس حتى وإن لم يكن النص الحساس نفسه متاحا عن طريق {openverse}",
+  "sensitive.designations.sensitiveText.metadata.d": "وتأخذ شركة {openverse} النهج القائل بأن المحتوى النصي الحساس في وصف ما هو مؤشر عال نسبيا من مؤشرات الأعمال الحساسة المحتملة.",
+  "sensitive.designations.sensitiveText.metadata.e": "As above, {openverse} understands that this is not perfect.",
+  "sensitive.designations.sensitiveText.notAvailable": "غير متاحة",
+  "sensitive.faq.title": "الأسئلة المتكررة",
+  "sensitive.faq.one.question": "وقد وجدت المحتوى الذي أعتقد أنه حساس لا يوجد فيه تحديد حساسية. ماذا يجب أن أفعل؟",
+  "sensitive.faq.one.answer.a": "يرجى الإبلاغ عن المحتوى الحساس عن طريق زيارة صفحة العمل الفردي على موقع {openverseOrg} على شبكة الإنترنت، واستخدام زر &quot; إعادة الإبلاغ عن هذا المحتوى &quot; تحت معلومات الإسناد وفوق البطاقات.",
+  "sensitive.faq.one.answer.b": "{openverse}",
+  "sensitive.faq.two.question": "لا أوافق على تحديد الحساسية في العمل هل يمكنك أن تزيله من فضلك؟",
+  "sensitive.faq.two.answerPt1": "بالنسبة للتسميات القائمة على النصوص، {openverse} does not at the moment have a method for removing the nomination. This is a feature that will be built eventually, but is not part of the baseline sensitive content detection feature.",
+  "sensitive.faq.two.answerPt2.a": "وفيما يتعلق بالتسميات التي أبلغ عنها المستعمل، يرجى تقديم تقرير جديد عن صفحة العمل بعد التعليمات الواردة في السؤال السابق.",
+  "sensitive.faq.two.answerPt2.b": "في الملاحظات، وصف لماذا تعتقد أن العمل لا ينبغي أن يكون له تحديد حساسية.",
+  "sensitive.faq.two.answerPt2.c": "As when added a new nomination, {openverse} reserves the right to respectfully decline the request to remove a confirmed user sensitivity nomination.",
+  "sensitive.faq.three.question": "وقد وجدت محتوى في {openverse} قد يكون غير قانوني. إلى جانب إبلاغه إلى {openverse}، هل هناك أي خطوات أخرى يمكنني اتخاذها؟",
+  "sensitive.faq.three.answer.a": "وفيما يتعلق بالتسميات التي أبلغ عنها المستعمل، يرجى تقديم تقرير جديد عن صفحة العمل بعد التعليمات الواردة في السؤال السابق.",
+  "sensitive.faq.three.answer.b": "في الملاحظات، وصف لماذا تعتقد أن العمل لا ينبغي أن يكون له تحديد حساسية.",
+  "sensitive.faq.three.answer.c": "As when added a new nomination, {openverse} reserves the right to respectfully decline the request to remove a confirmed user sensitivity nomination.",
+  "tags.title": "Understanding Tags in {openverse}",
+  "tags.intro.a": "وقد يكون لكل عمل إبداعي في {openverse} بطاقات، ومجموعة اختيارية من الكلمات الرئيسية المستخدمة لوصف العمل وجعل من الأسهل للمستعملين أن يجدوا وسائل الإعلام ذات الصلة للبحث عنهم.",
+  "tags.intro.b": "وتنقسم هذه البطاقات إلى فئتين رئيسيتين: علامات المصدر والعلامات المولدة. فهم الفرق بينهما يمكن أن يعزز خبرتك في البحث ويحسن دقة نتائجك",
+  "tags.sourceTags.title": "المصدر",
+  "tags.sourceTags.content.a": "وعلامات المصدر هي علامات نشأت من المصدر الأصلي للعمل الإبداعي. ويمكن أن يضاف المساهمون المختلفون هذه البطاقات، مثل المصور الذي قام بتحميل صورتهم إلى فليكر والعلامات الوصفية الإضافية.",
+  "tags.sourceTags.content.b": "ويمكن للمنبر الأصلي نفسه أن يخصص بطاقات إضافية من أعضاء المجتمع المحلي أو التشغيل الآلي أو مصادر أخرى.",
+  "tags.generatedTags.title": "تاغس المولدة",
+  "tags.generatedTags.content.a": "وتُنشأ العلامات المولدة من خلال التحليل الآلي للأشغال الإبداعية، ومعظم الصور الشائعة. وتنطوي هذه العملية على تكنولوجيات متطورة مثل  AWS Rekognition ، وكلاريفاي، وغير ذلك من خدمات التعرف على الصور التي تحلل المحتوى وتولد علامات وصفية.",
+  "tags.generatedTags.content.b": "وفي حين أن النظم الآلية الموثوق بها عموما يمكن أن تسيئ أحيانا تفسير أو تفوت عناصر في صورة ما.",
+  "tags.generatedTags.content.c": "وتبذل الجهود لاستبعاد أي علامات متولدة تشير إلى هويات أو انتماءات البشر.",
+  "tags.generatedTags.content.d": "إذا واجهتم أي صور بعلامات متولدة تضعون افتراضات حول، على سبيل المثال، الجنس أو الدين أو الانتماء السياسي، يرجى الإبلاغ عن الصور باستخدام زر \" التقرير \" على صفحات النتائج الوحيدة.",
+  "error.occurred": "حدث خطأ",
+  "error.imageNotFound": "تعذر العثور على الصورة بالمعرف {id}",
+  "error.mediaNotFound": "تعذر العثور على {mediaType} بالمعرف {id}",
+  "error.image": "صورة",
+  "error.audio": "صوتي",
+  "filters.title": "مرشحات",
+  "filters.filterBy": "مصنف بواسطة",
+  "filters.licenses.title": "التراخيص",
+  "filters.licenses.cc0": "CC0",
+  "filters.licenses.pdm": "علامة المجال العام",
+  "filters.licenses.by": "بواسطة",
+  "filters.licenses.bySa": "BY-SA",
+  "filters.licenses.byNc": "BY-NC",
+  "filters.licenses.byNd": "BY-ND",
+  "filters.licenses.byNcSa": "BY-NC-SA",
+  "filters.licenses.byNcNd": "BY-NC-ND",
+  "filters.licenseTypes.title": "يستخدم",
+  "filters.licenseTypes.commercial": "استخدام تجاريًا",
+  "filters.licenseTypes.modification": "تعديل أو تكييف",
+  "filters.imageProviders.title": "مصدر",
+  "filters.audioProviders.title": "مصدر",
+  "filters.audioCategories.title": "فئة الصوت",
+  "filters.audioCategories.audiobook": "كتاب مسموع",
+  "filters.audioCategories.music": "موسيقى",
+  "filters.audioCategories.news": "أخبار",
+  "filters.audioCategories.podcast": "تدوين صوتي",
+  "filters.audioCategories.pronunciation": "النطق",
+  "filters.audioCategories.sound_effect": "مؤثرات صوتية",
+  "filters.audioCategories.sound": "مؤثرات صوتية",
+  "filters.imageCategories.title": "نوع الصورة",
+  "filters.imageCategories.photograph": "الصور",
+  "filters.imageCategories.illustration": "الرسوم التوضيحية",
+  "filters.imageCategories.digitized_artwork": "الأعمال الفنية الرقمية",
+  "filters.audioExtensions.title": "امتداد",
+  "filters.audioExtensions.flac": "FLAC",
+  "filters.audioExtensions.mid": "منتصف",
+  "filters.audioExtensions.mp3": "MP3",
+  "filters.audioExtensions.oga": "OGA",
+  "filters.audioExtensions.ogg": "OGG",
+  "filters.audioExtensions.opus": "OPUS",
+  "filters.audioExtensions.wav": "WAV",
+  "filters.audioExtensions.webm": "WEBM",
+  "filters.imageExtensions.title": "امتداد",
+  "filters.imageExtensions.jpg": "JPEG",
+  "filters.imageExtensions.png": "بي إن جي",
+  "filters.imageExtensions.gif": "GIF",
+  "filters.imageExtensions.svg": "SVG",
+  "filters.aspectRatios.title": "ابعاد متزنة",
+  "filters.aspectRatios.tall": "طويل",
+  "filters.aspectRatios.wide": "واسع",
+  "filters.aspectRatios.square": "ميدان",
+  "filters.sizes.title": "حجم الصورة",
+  "filters.sizes.small": "صغير",
+  "filters.sizes.medium": "متوسط",
+  "filters.sizes.large": "كبير",
+  "filters.safeBrowsing.title": "الحشد الآمن",
+  "filters.safeBrowsing.desc": "ولا يظهر التخلف المضمون الذي يُعرف باسم {sensitive}..",
+  "filters.safeBrowsing.sensitive": "حساسة",
+  "filters.safeBrowsing.toggles.fetchSensitive.title": "النتائج الحساسة",
+  "filters.safeBrowsing.toggles.fetchSensitive.desc": "واتسمت النتائج بالحساسية في مجال النتائج.",
+  "filters.safeBrowsing.toggles.blurSensitive.title": "محتوى البق",
+  "filters.safeBrowsing.toggles.blurSensitive.desc": "الصور والنصوص لمنع رؤية المواد الحساسة",
+  "filters.lengths.title": "مدة",
+  "filters.lengths.shortest": "<30 ثانية",
+  "filters.lengths.short": "30 ثانية -2 دقيقة",
+  "filters.lengths.medium": "2-10 دقائق",
+  "filters.lengths.long": "> 10 دقائق",
+  "filters.creator.title": "البحث حسب المنشئ",
+  "filters.searchBy.title": "البحث عن طريق",
+  "filters.searchBy.creator": "المنشئ",
+  "filters.licenseExplanation.licenseDefinition": "تعريف الترخيص",
+  "filters.licenseExplanation.markDefinition": "تعريف {mark}",
+  "filters.licenseExplanation.more.license": "{readMore} حول هذا الترخيص.",
+  "filters.licenseExplanation.more.mark": "{readMore} حول {mark}.",
+  "filters.licenseExplanation.more.readMore": "اقرأ أكثر",
+  "filters.aria.removeFilter": "إزالة مرشح {label}",
+  "filterList.filterBy": "مصنف بواسطة",
+  "filterList.hide": "إخفاء عوامل التصفية",
+  "filterList.clear": "مسح عوامل التصفية",
+  "filterList.clearNumbered": "مرشحات واضحة ({number})",
+  "filterList.show": "أظهر النتائج",
+  "filterList.categoryAria": "قائمة عوامل التصفية لفئة {categoryName}",
+  "browsePage.allNoResults": "لا نتائج",
+  "browsePage.allResultCount": "{localeCount} نتيجة | {localeCount} نتيجة",
+  "browsePage.allResultCountMore": "أكثر من {localeCount} نتيجة | أكثر من {localeCount} نتيجة",
+  "browsePage.contentLink.image.zero": "لا توجد صور لـ {query}",
+  "browsePage.contentLink.image.count": "See {localeCount} image found for {query}.|See {localeCount} images found for {query}.",
+  "browsePage.contentLink.image.countMore": "انظر على صور {query} {localeCount}",
+  "browsePage.contentLink.audio.zero": "لم يعثر على أي صوت لـ {query}.",
+  "browsePage.contentLink.audio.count": "انظر {localeCount} {query}",
+  "browsePage.contentLink.audio.countMore": "انظر فوق {query} {localeCount}",
+  "browsePage.load": "تحميل المزيد من النتائج",
+  "browsePage.loading": "جار التحميل...",
+  "browsePage.fetchingError": "خطأ في جلب {type}:",
+  "browsePage.searchRating.content": "هل هذه النتائج ذات صلة؟",
+  "browsePage.searchRating.yes": "نعم",
+  "browsePage.searchRating.no": "رقم",
+  "browsePage.searchRating.feedbackThanks": "شكرا لملاحظاتك!",
+  "browsePage.searchForm.placeholder": "بحث في كل {type}",
+  "browsePage.searchForm.image": "الصور",
+  "browsePage.searchForm.audio": "صوتي",
+  "browsePage.searchForm.video": "أشرطة فيديو",
+  "browsePage.searchForm.model3d": "نماذج ثلاثية الأبعاد",
+  "browsePage.searchForm.all": "المحتوى",
+  "browsePage.searchForm.collectionPlaceholder": "بحث في هذه المجموعة",
+  "browsePage.searchForm.button": "يبحث",
+  "browsePage.searchForm.clear": "آمن",
+  "browsePage.licenseDescription.title": "رخصة CC",
+  "browsePage.licenseDescription.by": "ائتمن الخالق.",
+  "browsePage.licenseDescription.nc": "الاستخدامات غير التجارية فقط.",
+  "browsePage.licenseDescription.nd": "لا مشتقات أو تعديلات مسموح بها.",
+  "browsePage.licenseDescription.sa": "شارك التعديلات تحت نفس الشروط.",
+  "browsePage.licenseDescription.zero": "تم وضع علامة على هذا العمل على أنه مخصص للملك العام.",
+  "browsePage.licenseDescription.pd": "تم وضع علامة على هذا العمل على أنه في المجال العام.",
+  "browsePage.licenseDescription.samplingPlus": "العينات والمزج والتحولات الإبداعية مسموح بها.",
+  "browsePage.aria.close": "أغلق",
+  "browsePage.aria.scroll": "انتقل إلى أعلى",
+  "browsePage.aria.search": "بحث",
+  "browsePage.aria.removeFilter": "إزالة عامل التصفية",
+  "browsePage.aria.licenseExplanation": "شرح الترخيص",
+  "browsePage.aria.creator": "البحث عن طريق المنشئ",
+  "browsePage.aria.imageTitle": "Image: {title}",
+  "browsePage.aria.audioTitle": "Audio: {title}",
+  "browsePage.aria.resultsLabel.all": "جميع النتائج لـ {query}",
+  "browsePage.aria.resultsLabel.image": "Image results for {query}",
+  "browsePage.aria.resultsLabel.audio": "Audio tracks for {query}",
+  "browsePage.aria.results.all": "جميع النتائج لـ \"{query}\" و{imageResults} و{audioResults}.",
+  "browsePage.aria.results.image.zero": "لا توجد نتائج للصور لـ \"{query}\"",
+  "browsePage.aria.results.image.count": "{localeCount} {query}",
+  "browsePage.aria.results.image.countMore": "أهم نتائج الصور {localeCount} لـ \"{query}\".",
+  "browsePage.aria.results.audio.zero": "لا توجد آثار صوتية لـ \"{query}\"",
+  "browsePage.aria.results.audio.count": "{localeCount} {query}",
+  "browsePage.aria.results.audio.countMore": "أهم المقاطع الصوتية {localeCount} لـ \"{query}\".",
+  "browsePage.aria.allResultsHeadingCount.image.zero": "لا صور",
+  "browsePage.aria.allResultsHeadingCount.image.count": "{localeCount} image.{localeCount} images",
+  "browsePage.aria.allResultsHeadingCount.image.countMore": "أعلى صور {localeCount}",
+  "browsePage.aria.allResultsHeadingCount.audio.zero": "لا آثار صوتية",
+  "browsePage.aria.allResultsHeadingCount.audio.count": "{localeCount} {localeCount}",
+  "browsePage.aria.allResultsHeadingCount.audio.countMore": "أعلى {localeCount}",
+  "mediaDetails.information.type": "يكتب",
+  "mediaDetails.information.unknown": "مجهول",
+  "mediaDetails.information.category": "فئة",
+  "mediaDetails.scroll.forward": "تقدم للأمام",
+  "mediaDetails.scroll.back": "تراجع",
+  "mediaDetails.reuse.title": "كيف تستعمل",
+  "mediaDetails.reuse.description": "قم بزيارة موقع ويب {media} لتنزيله واستخدامه. تأكد من أن تنسب الفضل إلى المنشئ من خلال إظهار معلومات الإسناد حيث تشارك عملك.",
+  "mediaDetails.reuse.copyrightDisclaimer": "قد تحتوي بعض الصور الفوتوغرافية على محتوى محمي بحقوق الطبع والنشر، مثل اللوحات أو المنحوتات أو الأعمال المعمارية. قد يتطلب استخدام هذه الصور الحصول على أذونات إضافية من صاحب حقوق الطبع والنشر للأعمال المصورة.",
+  "mediaDetails.reuse.licenseHeader": "رخصة",
+  "mediaDetails.reuse.toolHeader": "المجال العام",
+  "mediaDetails.reuse.audio": "صوتي",
+  "mediaDetails.reuse.image": "صورة",
+  "mediaDetails.reuse.tool.content": "اقرأ المزيد عن الأداة {link}.",
+  "mediaDetails.reuse.tool.link": "هنا",
+  "mediaDetails.reuse.credit.genericTitle": "هذا العمل",
+  "mediaDetails.reuse.credit.actualTitle": "\"{title}\"",
+  "mediaDetails.reuse.credit.text": "{title} {creator} {markedLicensed} {license}. {viewLegal}",
+  "mediaDetails.reuse.credit.creatorText": "بواسطة {creatorName}",
+  "mediaDetails.reuse.credit.marked": "تم وضع علامة",
+  "mediaDetails.reuse.credit.licensed": "مرخص بموجب",
+  "mediaDetails.reuse.credit.viewLegalText": "لعرض {termsCopy} ، قم بزيارة {url}.",
+  "mediaDetails.reuse.credit.termsText": "الشروط",
+  "mediaDetails.reuse.credit.copyText": "نسخة من هذا الترخيص",
+  "mediaDetails.reuse.copyLicense.title": "انسب الفضل إلى المنشئ",
+  "mediaDetails.reuse.copyLicense.rich": "النص الغني",
+  "mediaDetails.reuse.copyLicense.html": "لغة البرمجة",
+  "mediaDetails.reuse.copyLicense.plain": "نص عادي",
+  "mediaDetails.reuse.copyLicense.copyText": "نسخ النص",
+  "mediaDetails.reuse.copyLicense.copied": "نسخ!",
+  "mediaDetails.reuse.copyLicense.xml": "إك سم إل",
+  "mediaDetails.reuse.attribution": "تم تمييز هذه الصورة بترخيص {link}:",
+  "mediaDetails.providerLabel": "مزود",
+  "mediaDetails.sourceLabel": "مصدر",
+  "mediaDetails.providerDescription": "الموقع الشبكي الذي يستضيف فيه المحتوى",
+  "mediaDetails.sourceDescription": "المنظمة التي أنشأت أو تملك المحتوى الأصلي",
+  "mediaDetails.loading": "جار التحميل...",
+  "mediaDetails.relatedError": "خطأ في جلب الوسائط ذات الصلة",
+  "mediaDetails.aria.attribution.license": "اقرأ المزيد عن الترخيص",
+  "mediaDetails.aria.attribution.tool": "اقرأ المزيد عن الأداة",
+  "mediaDetails.aria.creatorUrl": "اسم {creator}",
+  "mediaDetails.imageInfo": "معلومات الصورة",
+  "mediaDetails.audioInfo": "معلومات صوتية",
+  "mediaDetails.tags.title": "العلامات",
+  "mediaDetails.tags.generated.heading": "العلامات المولدة",
+  "mediaDetails.tags.generated.pageTitle": "تعلم المزيد",
+  "mediaDetails.tags.source.heading": "بطاقات المصدر",
+  "mediaDetails.tags.showMore": "أظهر المزيد",
+  "mediaDetails.tags.showLess": "تظهر أقل",
+  "mediaDetails.contentReport.short": "تقرير",
+  "mediaDetails.contentReport.long": "الإبلاغ عن هذا المحتوى",
+  "mediaDetails.contentReport.form.disclaimer": "لأغراض أمنية ، يجمع {openverse} ويحتفظ بعناوين IP مجهولة المصدر لأولئك الذين يكملون هذا النموذج ويرسلونه.",
+  "mediaDetails.contentReport.form.question": "ماهو السبب؟",
+  "mediaDetails.contentReport.form.dmca.option": "ينتهك حقوق الطبع والنشر",
+  "mediaDetails.contentReport.form.dmca.note": "يجب عليك ملء هذا {form} للإبلاغ عن انتهاك حقوق النشر. لن يتم اتخاذ أي إجراء حتى يتم ملء هذا النموذج وإرساله. نوصي بعمل الشيء نفسه في المصدر ، {source}.",
+  "mediaDetails.contentReport.form.dmca.form": "نموذج DMCA",
+  "mediaDetails.contentReport.form.dmca.open": "فتح النموذج",
+  "mediaDetails.contentReport.form.sensitive.option": "يحتوي على محتوى حساس",
+  "mediaDetails.contentReport.form.sensitive.subLabel": "اختياري",
+  "mediaDetails.contentReport.form.sensitive.placeholder": "اختياريًا ، قدم وصفًا.",
+  "mediaDetails.contentReport.form.other.option": "آخر",
+  "mediaDetails.contentReport.form.other.note": "صف القضية.",
+  "mediaDetails.contentReport.form.other.subLabel": "مطلوب",
+  "mediaDetails.contentReport.form.other.placeholder": "الرجاء إدخال 20 حرفًا على الأقل.",
+  "mediaDetails.contentReport.form.submit": "تقرير",
+  "mediaDetails.contentReport.form.cancel": "يلغي",
+  "mediaDetails.contentReport.success.title": "تم إرسال التقرير بنجاح",
+  "mediaDetails.contentReport.success.note": "شكرا على الإبلاغ هذا المحتوى. نوصي بعمل الشيء نفسه في المصدر ، {source}.",
+  "mediaDetails.contentReport.failure.title": "تعذر تقديم التقرير",
+  "mediaDetails.contentReport.failure.note": "حدث خطأ ما ، يرجى المحاولة مرة أخرى بعد قليل.",
+  "singleResult.back": "رجوع إلى نتائج البحث",
+  "imageDetails.creator": "بالاسم{name}",
+  "imageDetails.weblink": "احصل على هذه الصورة",
+  "imageDetails.information.dimensions": "أبعاد",
+  "imageDetails.information.pixels": "بكسل",
+  "imageDetails.information.sizeInPixels": "{width} × {height} بكسل",
+  "imageDetails.relatedImages": "الصور ذات الصلة",
+  "imageDetails.aria.creatorUrl": "المؤلف {creator}",
+  "audioDetails.genreLabel": "النوع",
+  "audioDetails.relatedAudios": "الصوت ذو الصلة",
+  "audioDetails.table.album": "الألبوم",
+  "audioDetails.table.sampleRate": "معدل العينة",
+  "audioDetails.table.filetype": "شكل",
+  "audioDetails.table.genre": "النوع",
+  "audioDetails.weblink": "احصل على هذا الصوت",
+  "allResults.snackbar.text": "Press {spacebar} to play or pause the track.",
+  "allResults.snackbar.spacebar": "Spacebar",
+  "audioResults.snackbar.text": "Press {spacebar} to play or pause, and {left} &quot;{right} to seek through the track.",
+  "audioResults.snackbar.spacebar": "Spacebar",
+  "audioResults.snackbar.left": "♪",
+  "audioResults.snackbar.right": "?",
+  "externalSources.caption": "{openverse} لا يتحكم في النتائج ، تحقق دائمًا من أن العمل في الواقع خاضع لترخيص CC.",
+  "externalSources.button": "قائمة مصدر",
+  "externalSources.title": "مصادر خارجية",
+  "externalSources.card.search": "لا تجد ما تبحث عنه؟ جرب المصادر الخارجية",
+  "externalSources.card.caption": "انقر فوق أحد المصادر أدناه للبحث مباشرة في مجموعات أخرى من الصور المرخصة CC. {break} يرجى ملاحظة أن استخدام المرشحات غير مدعوم لمكتبة Open Clip Art Library أو Nappy.",
+  "externalSources.form.supportedTitle": "لا تجد ما تبحث عنه؟ ابحث في مصادر خارجية",
+  "externalSources.form.supportedTitleSm": "ابحث في مصادر خارجية",
+  "browsers.chrome": "كروم",
+  "browsers.firefox": "ثعلب النار",
+  "browsers.opera": "Opera",
+  "browsers.edge": "حافة",
+  "waveform.label": "شريط البحث عن الصوت",
+  "waveform.currentTime": "{time} ثانية | {time} ثانية",
+  "audioThumbnail.alt": "صورة الغلاف لـ \"{title}\" بواسطة {creator}",
+  "audioTrack.ariaLabel": "{title} - مشغل الصوت",
+  "audioTrack.ariaLabelInteractive": "{title} - مشغل الصوت - اضغط على مفتاح المسافة لتشغيل معاينة الصوت وإيقافها مؤقتًا",
+  "audioTrack.ariaLabelInteractiveSeekable": "Audio: {title} - اللاعب التفاعلي - اضغط على حانة الفضاء لتلعب وتتوقف عن النظرة المسبقة للصوت؛ استخدام مفاتيح السهم اليسرى واليمن للبحث عن طريق المسار.",
+  "audioTrack.messages.err_aborted": "لقد أجهضت التشغيل.",
+  "audioTrack.messages.err_network": "حدث خطأ في الشبكة.",
+  "audioTrack.messages.err_decode": "تعذر فك تشفير الصوت.",
+  "audioTrack.messages.err_unallowed": "لا يسمح بالاستنساخ.",
+  "audioTrack.messages.err_unknown": "حدث خطأ غير متوقع حاول مرة أخرى في بضع دقائق أو الإبلاغ عن البند إذا استمرت المسألة.",
+  "audioTrack.messages.err_unsupported": "لا يدعم متصفحك تنسيق الصوت هذا.",
+  "audioTrack.messages.loading": "جار التحميل...",
+  "audioTrack.creator": "بواسطة {creator}",
+  "audioTrack.close": "أغلق مشغل الصوت",
+  "playPause.play": "لعب",
+  "playPause.pause": "يوقف",
+  "playPause.replay": "إعادة",
+  "playPause.loading": "جار التحميل",
+  "search.search": "يبحث",
+  "search.searchBarLabel": "البحث عن محتوى في {openverse}",
+  "licenseReadableNames.cc0": "صفر",
+  "licenseReadableNames.pdm": "علامة المجال العام",
+  "licenseReadableNames.by": "الإسناد",
+  "licenseReadableNames.bySa": "نَسب المُصنَّف - شارك - على حدٍ سواء",
+  "licenseReadableNames.byNc": "نَسب المُصنَّف - غير تجاري",
+  "licenseReadableNames.byNd": "Attribution-NoDerivatives",
+  "licenseReadableNames.byNcSa": "Attribution-NonCommercial-Share-Alike",
+  "licenseReadableNames.byNcNd": "نسب المصنف غير التجاري لا المشتقات",
+  "licenseReadableNames.sampling+": "سامبلينغ بلس",
+  "licenseReadableNames.ncSampling+": "أخذ العينات غير التجارية زائد",
   "interpunct": "•",
-  "modal": {
-    "close": "قريب",
-    "ariaClose": "أغلق النموذج",
-    "closeNamed": "إغلاق {name}",
-    "closeContentSettings": "اغلق قائمة المحتويات",
-    "closePagesMenu": "اغلق قائمة الصفحات",
-    "closeBanner": "اغلق اللافتة"
-  },
-  "errorImages": {
-    "depressedMusician": "عازف البيانو المكتئب يضع رأسه في أيديهم.",
-    "waitingForABite": "يجلس ثلاثة أولاد على جذع شجرة مكسور بينما يصطاد اثنان منهم."
-  },
-  "noResults": {
-    "heading": "لم نتمكن من العثور على أي شيء لـ \"{query}\".",
-    "alternatives": "جرب استعلامًا مختلفًا أو استخدم أحد المصادر الخارجية لتوسيع نطاق البحث."
-  },
-  "serverTimeout": {
-    "heading": "عفوًا ، يبدو أن هذا الطلب استغرق وقتًا طويلاً لإكماله. حاول مرة اخرى."
-  },
-  "unknownError": {
-    "heading": "عفوًا ، يبدو أنه حدث خطأ ما. حاول مرة اخرى."
-  },
-  "searchType": {
-    "image": "الصور",
-    "audio": "صوتي",
-    "all": "كل المحتوى",
-    "video": "أشرطة فيديو",
-    "model3d": "نماذج ثلاثية الأبعاد",
-    "label": "نوع المحتوى للبحث",
-    "heading": "أنواع المحتويات",
-    "additional": "مصادر إضافية",
-    "statusBeta": "بيتا",
-    "seeImage": "مشاهدة جميع الصور",
-    "seeAudio": "مشاهدة كل الملفات الصوتية",
-    "selectLabel": "حدد نوع المحتوى: {type}"
-  },
+  "modal.close": "قريب",
+  "modal.ariaClose": "أغلق النموذج",
+  "modal.closeNamed": "إغلاق {name}",
+  "modal.closeContentSettings": "اغلق قائمة المحتويات",
+  "modal.closePagesMenu": "اغلق قائمة الصفحات",
+  "modal.closeBanner": "اغلق اللافتة",
+  "errorImages.depressedMusician": "عازف البيانو المكتئب يضع رأسه في أيديهم.",
+  "errorImages.waitingForABite": "يجلس ثلاثة أولاد على جذع شجرة مكسور بينما يصطاد اثنان منهم.",
+  "noResults.heading": "لم نتمكن من العثور على أي شيء لـ \"{query}\".",
+  "noResults.alternatives": "جرب استعلامًا مختلفًا أو استخدم أحد المصادر الخارجية لتوسيع نطاق البحث.",
+  "serverTimeout.heading": "عفوًا ، يبدو أن هذا الطلب استغرق وقتًا طويلاً لإكماله. حاول مرة اخرى.",
+  "unknownError.heading": "عفوًا ، يبدو أنه حدث خطأ ما. حاول مرة اخرى.",
+  "searchType.image": "الصور",
+  "searchType.audio": "صوتي",
+  "searchType.all": "كل المحتوى",
+  "searchType.video": "أشرطة فيديو",
+  "searchType.model3d": "نماذج ثلاثية الأبعاد",
+  "searchType.label": "نوع المحتوى للبحث",
+  "searchType.heading": "أنواع المحتويات",
+  "searchType.additional": "مصادر إضافية",
+  "searchType.statusBeta": "بيتا",
+  "searchType.seeImage": "مشاهدة جميع الصور",
+  "searchType.seeAudio": "مشاهدة كل الملفات الصوتية",
+  "searchType.selectLabel": "حدد نوع المحتوى: {type}",
   "skipToContent": "تخطى الى المحتوى",
-  "prefPage": {
-    "title": "التفضيلات",
-    "groups": {
-      "analytics": {
-        "title": "تحليلات",
-        "desc": "يستخدم {openverse} تحليلات مجهولة لتحسين خدماتنا. نحن لا نجمع أي معلومات يمكن استخدامها لتحديد هويتك شخصيًا. ومع ذلك ، إذا كنت لا ترغب في المشاركة ، يمكنك إلغاء الاشتراك هنا."
-      }
-    },
-    "features": {
-      "analytics": "سجل الأحداث المخصصة وطرق عرض الصفحة."
-    },
-    "nonSwitchable": {
-      "title": "ميزات غير قابلة للتحويل",
-      "desc": "لا يمكنك تعديل حالة هذه الميزات."
-    },
-    "switchable": {
-      "title": "ميزات قابلة للتبديل",
-      "desc": "يمكنك تشغيل هذه الميزات أو إيقاف تشغيلها كما تريد وسيتم حفظ تفضيلاتك في ملف تعريف ارتباط."
-    },
-    "storeState": "حالة المتجر",
-    "contentFiltering": "تصفية المحتوى",
-    "explanation": "يظهر لأن {featName} هي {featState}"
-  },
+  "prefPage.title": "التفضيلات",
+  "prefPage.groups.analytics.title": "تحليلات",
+  "prefPage.groups.analytics.desc": "يستخدم {openverse} تحليلات مجهولة لتحسين خدماتنا. نحن لا نجمع أي معلومات يمكن استخدامها لتحديد هويتك شخصيًا. ومع ذلك ، إذا كنت لا ترغب في المشاركة ، يمكنك إلغاء الاشتراك هنا.",
+  "prefPage.features.analytics": "سجل الأحداث المخصصة وطرق عرض الصفحة.",
+  "prefPage.nonSwitchable.title": "ميزات غير قابلة للتحويل",
+  "prefPage.nonSwitchable.desc": "لا يمكنك تعديل حالة هذه الميزات.",
+  "prefPage.switchable.title": "ميزات قابلة للتبديل",
+  "prefPage.switchable.desc": "يمكنك تشغيل هذه الميزات أو إيقاف تشغيلها كما تريد وسيتم حفظ تفضيلاتك في ملف تعريف ارتباط.",
+  "prefPage.storeState": "حالة المتجر",
+  "prefPage.contentFiltering": "تصفية المحتوى",
+  "prefPage.explanation": "يظهر لأن {featName} هي {featState}",
   "sketchfabIframeTitle": "عارض {sketchfab}",
-  "flagStatus": {
-    "nonexistent": "غير موجود",
-    "on": "على",
-    "off": "عن"
-  },
-  "footer": {
-    "wordpressAffiliation": "جزء من مشروع {wordpress}",
-    "wip": "🚧"
-  },
-  "language": {
-    "language": "لغة"
-  },
-  "recentSearches": {
-    "heading": "عمليات البحث الأخيرة",
-    "clear": {
-      "text": "مسح",
-      "label": "مسح عمليات البحث الأخيرة"
-    },
-    "clearSingle": {
-      "label": "تم البحث مؤخراً عن '{entry}'"
-    },
-    "none": "لا توجد عمليات بحث حديثة لعرضها.",
-    "disclaimer": "لا يقوم Openverse بتخزين عمليات البحث الأخيرة ، يتم الاحتفاظ بهذه المعلومات محليًا في متصفحك."
-  },
-  "report": {
-    "imageDetails": "انظر تفاصيل الصورة"
-  },
-  "sensitiveContent": {
-    "title": {
-      "image": "هذه الصورة قد تحتوي على محتوى حساس",
-      "audio": "هذا المسار الصوتي قد يحتوي على محتوى حساس"
-    },
-    "creator": "Creator",
-    "singleResult": {
-      "title": "المحتوى الحساس",
-      "hide": "إخفاء المحتوى",
-      "show": "محتوى العرض",
-      "explanation": "وهذا العمل يتسم بالحساسية للأسباب التالية:",
-      "learnMore": "{link} حول كيفية تعامل {openverse} مع المحتوى الحساس.",
-      "link": "تعلم المزيد"
-    },
-    "reasons": {
-      "providerSuppliedSensitive": "وقد اعتبر مصدر هذا العمل أنه حساس.",
-      "sensitiveText": "{openverse} رصدت نصا يمكن أن يكون حساسا.",
-      "userReportedSensitive": "{openverse} Use have reported this work as sensitive."
-    }
-  },
-  "collection": {
-    "heading": {
-      "tag": "الكلمات الدلالية",
-      "creator": "مبتدع",
-      "source": "منشأ"
-    },
-    "pageTitle": {
-      "tag": {
-        "audio": "{tag}",
-        "image": "صور {tag}"
-      },
-      "source": {
-        "audio": "{source}",
-        "image": "صور {source}"
-      }
-    },
-    "link": {
-      "source": "موقع مفتوح المصدر",
-      "creator": "افتح صفحة المنشئ"
-    },
-    "ariaLabel": {
-      "creator": {
-        "audio": "الملفات الصوتية بواسطة {creator}",
-        "image": "الصور عن طريق {creator}"
-      },
-      "source": {
-        "audio": "ملفات صوتية من {source}",
-        "image": "الصور عن طريق {source}"
-      },
-      "tag": {
-        "audio": "الملفات الصوتية مع العلامة {tag}",
-        "image": "الصور التي تحمل الوسم {tag}"
-      }
-    },
-    "resultCountLabel": {
-      "creator": {
-        "audio": {
-          "zero": "لا توجد ملفات صوتية من قبل هذا الصانع",
-          "count": "{count}",
-          "countMore": "على الملفات الصوتية من قبل هذا الصانع"
-        },
-        "image": {
-          "zero": "لا صور من هذا الصانع",
-          "count": "{count} صورة من هذا المبتكر.",
-          "countMore": "على صور {count} بواسطة هذا الصانع."
-        }
-      },
-      "source": {
-        "audio": {
-          "zero": "No audio files provided by this source",
-          "count": "{count} audio file provided by this source. {count}",
-          "countMore": "Top {count} audio files provided by this source"
-        },
-        "image": {
-          "zero": "No images provided by this source",
-          "count": "{count} image provided by this source. {count} images provided by this source",
-          "countMore": "Top {count} images provided by this source"
-        }
-      },
-      "tag": {
-        "audio": {
-          "zero": "لا ملفات صوتية مع علامة مختارة",
-          "count": "{count} {count}",
-          "countMore": "Top {count} audio files with the selected tag"
-        },
-        "image": {
-          "zero": "لا صور مع العلامة المختارة",
-          "count": "{count} {count} الصور مع علامة مختارة",
-          "countMore": "Top {count} images with the selected tag"
-        }
-      }
-    }
-  }
+  "flagStatus.nonexistent": "غير موجود",
+  "flagStatus.on": "على",
+  "flagStatus.off": "عن",
+  "footer.wordpressAffiliation": "جزء من مشروع {wordpress}",
+  "footer.wip": "🚧",
+  "language.language": "لغة",
+  "recentSearches.heading": "عمليات البحث الأخيرة",
+  "recentSearches.clear.text": "مسح",
+  "recentSearches.clear.label": "مسح عمليات البحث الأخيرة",
+  "recentSearches.clearSingle.label": "تم البحث مؤخراً عن '{entry}'",
+  "recentSearches.none": "لا توجد عمليات بحث حديثة لعرضها.",
+  "recentSearches.disclaimer": "لا يقوم Openverse بتخزين عمليات البحث الأخيرة ، يتم الاحتفاظ بهذه المعلومات محليًا في متصفحك.",
+  "report.imageDetails": "انظر تفاصيل الصورة",
+  "sensitiveContent.title.image": "هذه الصورة قد تحتوي على محتوى حساس",
+  "sensitiveContent.title.audio": "هذا المسار الصوتي قد يحتوي على محتوى حساس",
+  "sensitiveContent.creator": "Creator",
+  "sensitiveContent.singleResult.title": "المحتوى الحساس",
+  "sensitiveContent.singleResult.hide": "إخفاء المحتوى",
+  "sensitiveContent.singleResult.show": "محتوى العرض",
+  "sensitiveContent.singleResult.explanation": "وهذا العمل يتسم بالحساسية للأسباب التالية:",
+  "sensitiveContent.singleResult.learnMore": "{link} حول كيفية تعامل {openverse} مع المحتوى الحساس.",
+  "sensitiveContent.singleResult.link": "تعلم المزيد",
+  "sensitiveContent.reasons.providerSuppliedSensitive": "وقد اعتبر مصدر هذا العمل أنه حساس.",
+  "sensitiveContent.reasons.sensitiveText": "{openverse} رصدت نصا يمكن أن يكون حساسا.",
+  "sensitiveContent.reasons.userReportedSensitive": "{openverse} Use have reported this work as sensitive.",
+  "collection.heading.tag": "الكلمات الدلالية",
+  "collection.heading.creator": "مبتدع",
+  "collection.heading.source": "منشأ",
+  "collection.pageTitle.tag.audio": "{tag}",
+  "collection.pageTitle.tag.image": "صور {tag}",
+  "collection.pageTitle.source.audio": "{source}",
+  "collection.pageTitle.source.image": "صور {source}",
+  "collection.link.source": "موقع مفتوح المصدر",
+  "collection.link.creator": "افتح صفحة المنشئ",
+  "collection.ariaLabel.creator.audio": "الملفات الصوتية بواسطة {creator}",
+  "collection.ariaLabel.creator.image": "الصور عن طريق {creator}",
+  "collection.ariaLabel.source.audio": "ملفات صوتية من {source}",
+  "collection.ariaLabel.source.image": "الصور عن طريق {source}",
+  "collection.ariaLabel.tag.audio": "الملفات الصوتية مع العلامة {tag}",
+  "collection.ariaLabel.tag.image": "الصور التي تحمل الوسم {tag}",
+  "collection.resultCountLabel.creator.audio.zero": "لا توجد ملفات صوتية من قبل هذا الصانع",
+  "collection.resultCountLabel.creator.audio.count": "{count}",
+  "collection.resultCountLabel.creator.audio.countMore": "على الملفات الصوتية من قبل هذا الصانع",
+  "collection.resultCountLabel.creator.image.zero": "لا صور من هذا الصانع",
+  "collection.resultCountLabel.creator.image.count": "{count} صورة من هذا المبتكر.",
+  "collection.resultCountLabel.creator.image.countMore": "على صور {count} بواسطة هذا الصانع.",
+  "collection.resultCountLabel.source.audio.zero": "No audio files provided by this source",
+  "collection.resultCountLabel.source.audio.count": "{count} audio file provided by this source. {count}",
+  "collection.resultCountLabel.source.audio.countMore": "Top {count} audio files provided by this source",
+  "collection.resultCountLabel.source.image.zero": "No images provided by this source",
+  "collection.resultCountLabel.source.image.count": "{count} image provided by this source. {count} images provided by this source",
+  "collection.resultCountLabel.source.image.countMore": "Top {count} images provided by this source",
+  "collection.resultCountLabel.tag.audio.zero": "لا ملفات صوتية مع علامة مختارة",
+  "collection.resultCountLabel.tag.audio.count": "{count} {count}",
+  "collection.resultCountLabel.tag.audio.countMore": "Top {count} audio files with the selected tag",
+  "collection.resultCountLabel.tag.image.zero": "لا صور مع العلامة المختارة",
+  "collection.resultCountLabel.tag.image.count": "{count} {count} الصور مع علامة مختارة",
+  "collection.resultCountLabel.tag.image.countMore": "Top {count} images with the selected tag"
 }

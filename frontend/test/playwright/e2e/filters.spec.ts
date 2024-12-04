@@ -131,9 +131,10 @@ breakpoints.describeMobileAndDesktop(({ breakpoint }) => {
     // Ignore the "+" licenses which are not presented on the page
     // `exact: true` is required in locators later in this test to prevent "Attribution" from matching
     // all CC licenses with the BY element (all of them :P)
-    const allLicenses = Object.values(enMessages.licenseReadableNames).filter(
-      (l) => !l.includes("Plus")
-    )
+    const readableLicenseNames = Object.entries(enMessages)
+      .filter((message) => message[0].startsWith("licenseReadableNames"))
+      .map((message) => message[1])
+    const allLicenses = readableLicenseNames.filter((l) => !l.includes("Plus"))
     const nonCommercialLicenses = allLicenses.filter((l) =>
       l.includes("NonCommercial")
     )

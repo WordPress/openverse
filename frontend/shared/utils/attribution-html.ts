@@ -90,9 +90,24 @@ const fmt = (text: string, replacements: Record<string, string>): string => {
   return text
 }
 
+const isObject = (value: unknown): value is Record<string, unknown> => {
+  return typeof value === "object" && value !== null
+}
+
+const isBabelValue = (value: unknown): value is { loc: { source: string } } => {
+  return (
+    isObject(value) &&
+    "loc" in value &&
+    isObject(value.loc) &&
+    "source" in value.loc &&
+    typeof value.loc.source === "string"
+  )
+}
+
 /**
  * Perform the same role as `i18n.t` except that it's restricted to reading
- * English from `en.json`.
+ * English from `en.json`. In unit tests, the json file is parsed by babel,
+ * so we handle the parsed objects, too.
  *
  * @param path - the key to the JSON value to read
  * @param replacements - the pair of placeholders and their replacement strings
@@ -102,22 +117,15 @@ const fakeT = (
   path: string,
   replacements: Record<string, string> = {}
 ): string => {
-  interface NestedRecord {
-    [key: string]: string | NestedRecord
+  // enJson is parsed by babel in unit tests, so it returns a parsed object
+  const jsonValue = enJson[path as keyof typeof enJson]
+  if (isBabelValue(jsonValue)) {
+    return fmt(jsonValue.loc.source, replacements)
+  } else if (typeof jsonValue === "string") {
+    return fmt(jsonValue, replacements)
+  } else {
+    return ""
   }
-
-  const segments = path.split(".")
-  let fraction: NestedRecord = enJson["mediaDetails"].reuse.credit
-  let text: string | undefined = undefined
-  segments.forEach((segment) => {
-    const piece = fraction[segment]
-    if (typeof piece === "string") {
-      text = piece
-    } else {
-      fraction = piece
-    }
-  })
-  return text ? fmt(text, replacements) : ""
 }
 
 /**
@@ -221,7 +229,8 @@ export const getAttribution = (
         values
           ? t(`${i18nBase}.${key}`, values as Record<string, unknown>)
           : t(`${i18nBase}.${key}`)
-    : fakeT
+    : (key: string, values?: Record<string, unknown>) =>
+        fakeT(`${i18nBase}.${key}`, values as Record<string, string>)
 
   /* Title */
 
