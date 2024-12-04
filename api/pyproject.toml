@@ -49,27 +49,27 @@ overrides = [
     "-e openverse-attribution @ file:///${PROJECT_ROOT}/../packages/python/openverse-attribution"
 ]
 dev = [
-    "ipython >=8.22.1, <9",
+    "debugpy >= 1.8.9, <2",
+    "ipython >=8.30.0, <9",
     "pgcli >=4.1, <5",
     "remote-pdb >=2.1.0, <3",
-    "setuptools >=75.2,<76",
-    "debugpy >= 1.8.9,<2",
+    "setuptools >=75.6, <76",
     # FIXME: Should be removed when Python build issues are resolved,
     # FIXME: since we don't explicitly use this library.
     # FIXME: https://github.com/WordPress/openverse/issues/5146
-    "watchfiles>=0.24.0",
+    "watchfiles >=0.24.0",
 ]
 test = [
-    "factory-boy >=3.3.0, <4",
-    "fakeredis >=2.21.3, <3",
-    "freezegun >=1.4.0, <2",
-    "pook >=2, <3",
-    "pytest >=8.3.3, <9",
-    "pytest-django >=4.8.0, <5",
+    "factory-boy >=3.3, <4",
+    "fakeredis >=2.26, <3",
+    "freezegun >=1.5, <2",
+    "pook >=2.1, <3",
+    "pytest >=8.3, <9",
+    "pytest-django >=4.9, <5",
     "pytest-pook>=1.0.0",
     "pytest-raises >=0.11, <0.12",
     "pytest-sugar >=1, <1.1",
-    "schemathesis >=3.38.6, <4",
+    "schemathesis >=3.38, <4",
 ]
 
 [tool.pytest.ini_options]

@@ -5,7 +5,7 @@
 groups = ["default", "dev", "overrides", "test"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:832dee9cdc3110ecfcec05d301c4b0d790156c209bc9040e76fc95e0962b54fc"
+content_hash = "sha256:f3221f00e34af7caec4730447e3d2237e735ae558a0ca320f55fadf30a7cc831"
 
 [[metadata.targets]]
 requires_python = "==3.12.*"
@@ -653,17 +653,16 @@ files = [
 
 [[package]]
 name = "factory-boy"
-version = "3.3.0"
-requires_python = ">=3.7"
+version = "3.3.1"
+requires_python = ">=3.8"
 summary = "A versatile test fixtures replacement based on thoughtbot's factory_bot for Ruby."
 groups = ["test"]
 dependencies = [
     "Faker>=0.7.0",
-    "importlib-metadata; python_version < \"3.8\"",
 ]
 files = [
-    {file = "factory_boy-3.3.0-py2.py3-none-any.whl", hash = "sha256:a2cdbdb63228177aa4f1c52f4b6d83fab2b8623bf602c7dedd7eb83c0f69c04c"},
-    {file = "factory_boy-3.3.0.tar.gz", hash = "sha256:bc76d97d1a65bbd9842a6d722882098eb549ec8ee1081f9fb2e8ff29f0c300f1"},
+    {file = "factory_boy-3.3.1-py2.py3-none-any.whl", hash = "sha256:7b1113c49736e1e9995bc2a18f4dbf2c52cf0f841103517010b1d825712ce3ca"},
+    {file = "factory_boy-3.3.1.tar.gz", hash = "sha256:8317aa5289cdfc45f9cae570feb07a6177316c82e34d14df3c2e1f22f26abef0"},
 ]
 
 [[package]]
@@ -683,17 +682,19 @@ files = [
 
 [[package]]
 name = "fakeredis"
-version = "2.21.3"
-requires_python = ">=3.7,<4.0"
+version = "2.26.1"
+requires_python = "<4.0,>=3.7"
 summary = "Python implementation of redis API, can be used for testing purposes."
 groups = ["test"]
 dependencies = [
-    "redis>=4",
+    "redis>=4.3; python_full_version > \"3.8.0\"",
+    "redis>=4; python_version < \"3.8\"",
     "sortedcontainers<3,>=2",
+    "typing-extensions<5.0,>=4.7; python_version < \"3.11\"",
 ]
 files = [
-    {file = "fakeredis-2.21.3-py3-none-any.whl", hash = "sha256:033fe5882a20ec308ed0cf67a86c1cd982a1bffa63deb0f52eaa625bd8ce305f"},
-    {file = "fakeredis-2.21.3.tar.gz", hash = "sha256:e9e1c309d49d83c4ce1ab6f3ee2e56787f6a5573a305109017bf140334dd396d"},
+    {file = "fakeredis-2.26.1-py3-none-any.whl", hash = "sha256:68a5615d7ef2529094d6958677e30a6d30d544e203a5ab852985c19d7ad57e32"},
+    {file = "fakeredis-2.26.1.tar.gz", hash = "sha256:69f4daafe763c8014a6dbf44a17559c46643c95447b3594b3975251a171b806d"},
 ]
 
 [[package]]
@@ -712,7 +713,7 @@ files = [
 
 [[package]]
 name = "freezegun"
-version = "1.4.0"
+version = "1.5.1"
 requires_python = ">=3.7"
 summary = "Let your Python tests travel through time"
 groups = ["test"]
@@ -720,8 +721,8 @@ dependencies = [
     "python-dateutil>=2.7",
 ]
 files = [
-    {file = "freezegun-1.4.0-py3-none-any.whl", hash = "sha256:55e0fc3c84ebf0a96a5aa23ff8b53d70246479e9a68863f1fcac5a3e52f19dd6"},
-    {file = "freezegun-1.4.0.tar.gz", hash = "sha256:10939b0ba0ff5adaecf3b06a5c2f73071d9678e507c5eaedb23c761d56ac774b"},
+    {file = "freezegun-1.5.1-py3-none-any.whl", hash = "sha256:bf111d7138a8abe55ab48a71755673dbaa4ab87f4cff5634a4442dfec34c15f1"},
+    {file = "freezegun-1.5.1.tar.gz", hash = "sha256:b29dedfcda6d5e8e083ce71b2b542753ad48cfec44037b3fc79702e2980a89e9"},
 ]
 
 [[package]]
@@ -945,7 +946,7 @@ files = [
 
 [[package]]
 name = "ipython"
-version = "8.23.0"
+version = "8.30.0"
 requires_python = ">=3.10"
 summary = "IPython: Productive Interactive Computing"
 groups = ["dev"]
@@ -960,11 +961,11 @@ dependencies = [
     "pygments>=2.4.0",
     "stack-data",
     "traitlets>=5.13.0",
-    "typing-extensions; python_version < \"3.12\"",
+    "typing-extensions>=4.6; python_version < \"3.12\"",
 ]
 files = [
-    {file = "ipython-8.23.0-py3-none-any.whl", hash = "sha256:07232af52a5ba146dc3372c7bf52a0f890a23edf38d77caef8d53f9cdc2584c1"},
-    {file = "ipython-8.23.0.tar.gz", hash = "sha256:7468edaf4f6de3e1b912e57f66c241e6fd3c7099f2ec2136e239e142e800274d"},
+    {file = "ipython-8.30.0-py3-none-any.whl", hash = "sha256:85ec56a7e20f6c38fce7727dcca699ae4ffc85985aa7b23635a8008f918ae321"},
+    {file = "ipython-8.30.0.tar.gz", hash = "sha256:cb0a405a306d2995a5cbb9901894d240784a9f341394c6ba3f4fe8c6eb89ff6e"},
 ]
 
 [[package]]
@@ -1311,8 +1312,8 @@ files = [
 
 [[package]]
 name = "pook"
-version = "2.0.0"
-requires_python = ">=3.8"
+version = "2.1.2"
+requires_python = ">=3.9"
 summary = "HTTP traffic mocking and expectations made easy"
 groups = ["test"]
 dependencies = [
@@ -1321,8 +1322,8 @@ dependencies = [
     "xmltodict>=0.11.0",
 ]
 files = [
-    {file = "pook-2.0.0-py3-none-any.whl", hash = "sha256:b3993cf00b8335f19b407fca39febd048c97749eb7c06eaddd9fbaff3b0a1ac3"},
-    {file = "pook-2.0.0.tar.gz", hash = "sha256:b106ebc088417fa7b68d1f6ee21a9720fd171ea96d4b86ef308eaffac1e5c4f8"},
+    {file = "pook-2.1.2-py3-none-any.whl", hash = "sha256:ea76784ee1440ee8dde08047c6a1f68be46a07d07a5180d068a047db5620ca1d"},
+    {file = "pook-2.1.2.tar.gz", hash = "sha256:4acbb9d13ac18b807fd3a54b414a22a16b75db6e5048bc88461479da03c4ecbf"},
 ]
 
 [[package]]
@@ -1460,7 +1461,7 @@ files = [
 
 [[package]]
 name = "pytest"
-version = "8.3.3"
+version = "8.3.4"
 requires_python = ">=3.8"
 summary = "pytest: simple powerful testing with Python"
 groups = ["test"]
@@ -1473,13 +1474,13 @@ dependencies = [
     "tomli>=1; python_version < \"3.11\"",
 ]
 files = [
-    {file = "pytest-8.3.3-py3-none-any.whl", hash = "sha256:a6853c7375b2663155079443d2e45de913a911a11d669df02a50814944db57b2"},
-    {file = "pytest-8.3.3.tar.gz", hash = "sha256:70b98107bd648308a7952b06e6ca9a50bc660be218d53c257cc1fc94fda10181"},
+    {file = "pytest-8.3.4-py3-none-any.whl", hash = "sha256:50e16d954148559c9a74109af1eaf0c945ba2d8f30f0a3d3335edde19788b6f6"},
+    {file = "pytest-8.3.4.tar.gz", hash = "sha256:965370d062bce11e73868e0335abac31b4d3de0e82f4007408d242b4f8610761"},
 ]
 
 [[package]]
 name = "pytest-django"
-version = "4.8.0"
+version = "4.9.0"
 requires_python = ">=3.8"
 summary = "A Django plugin for pytest."
 groups = ["test"]
@@ -1487,8 +1488,8 @@ dependencies = [
     "pytest>=7.0.0",
 ]
 files = [
-    {file = "pytest-django-4.8.0.tar.gz", hash = "sha256:5d054fe011c56f3b10f978f41a8efb2e5adfc7e680ef36fb571ada1f24779d90"},
-    {file = "pytest_django-4.8.0-py3-none-any.whl", hash = "sha256:ca1ddd1e0e4c227cf9e3e40a6afc6d106b3e70868fd2ac5798a22501271cd0c7"},
+    {file = "pytest_django-4.9.0-py3-none-any.whl", hash = "sha256:1d83692cb39188682dbb419ff0393867e9904094a549a7d38a3154d5731b2b99"},
+    {file = "pytest_django-4.9.0.tar.gz", hash = "sha256:8bf7bc358c9ae6f6fc51b6cebb190fe20212196e6807121f11bd6a3b03428314"},
 ]
 
 [[package]]
@@ -1758,7 +1759,7 @@ files = [
 
 [[package]]
 name = "schemathesis"
-version = "3.38.6"
+version = "3.38.9"
 requires_python = ">=3.8"
 summary = "Property-based testing framework for Open API and GraphQL based apps"
 groups = ["test"]
@@ -1787,8 +1788,8 @@ dependencies = [
     "yarl<2.0,>=1.5",
 ]
 files = [
-    {file = "schemathesis-3.38.6-py3-none-any.whl", hash = "sha256:5d294c7bd353c20565a72c3dbd23319a6b6305f29e0abc6e2bc278454ada1d19"},
-    {file = "schemathesis-3.38.6.tar.gz", hash = "sha256:c05beea65de8e1659625fcf0624c898781ebaecc63ffc1f1a5dfc15bf5a4b266"},
+    {file = "schemathesis-3.38.9-py3-none-any.whl", hash = "sha256:13a9a103cd1641891f933afb324583d69b6234f8aa050ec5af18a1e9692e73d7"},
+    {file = "schemathesis-3.38.9.tar.gz", hash = "sha256:d652200f85abe64ebb417b1630c44300510bd3ded3936975b67951f37c49ee0f"},
 ]
 
 [[package]]
@@ -1830,13 +1831,13 @@ files = [
 
 [[package]]
 name = "setuptools"
-version = "75.2.0"
-requires_python = ">=3.8"
+version = "75.6.0"
+requires_python = ">=3.9"
 summary = "Easily download, build, install, upgrade, and uninstall Python packages"
 groups = ["dev"]
 files = [
-    {file = "setuptools-75.2.0-py3-none-any.whl", hash = "sha256:a7fcb66f68b4d9e8e66b42f9876150a3371558f98fa32222ffaa5bced76406f8"},
-    {file = "setuptools-75.2.0.tar.gz", hash = "sha256:753bb6ebf1f465a1912e19ed1d41f403a79173a9acf66a42e7e6aec45c3c16ec"},
+    {file = "setuptools-75.6.0-py3-none-any.whl", hash = "sha256:ce74b49e8f7110f9bf04883b730f4765b774ef3ef28f722cce7c273d253aaf7d"},
+    {file = "setuptools-75.6.0.tar.gz", hash = "sha256:8199222558df7c86216af4f84c30e9b34a61d8ba19366cc914424cdbd28252f6"},
 ]
 
 [[package]]
