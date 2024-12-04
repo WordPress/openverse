@@ -14,9 +14,11 @@ swap:
   '[^/\.]openverse[^/\.]': Openverse
   '[^/\.]wordpress[^/\.]': WordPress
   '[^/\.]github[^/\.]': GitHub
+  '[^/\.]vue[^/\.]': Vue
   # OpenVerse, Wordpress, Github and Glotpress should never be used, except as an example of
   # something that is always wrong, in which case we'll tell Vale to ignore that line.
   "OpenVerse": Openverse
   "Wordpress": WordPress
   "Github": GitHub
   "Glotpress": GlotPress
+  "vue": Vue
