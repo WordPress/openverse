@@ -5,7 +5,7 @@
 groups = ["default", "dev", "overrides", "test"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:c2d4630f70250e30f99650c6ee7a39694b2a1155ef2836d7abb299fdc3491151"
+content_hash = "sha256:832dee9cdc3110ecfcec05d301c4b0d790156c209bc9040e76fc95e0962b54fc"
 
 [[metadata.targets]]
 requires_python = "==3.12.*"
@@ -319,6 +319,7 @@ requires_python = ">=3.7"
 summary = "Config file reading, writing and validation."
 groups = ["dev"]
 files = [
+    {file = "configobj-5.0.9-py2.py3-none-any.whl", hash = "sha256:1ba10c5b6ee16229c79a05047aeda2b55eb4e80d7c7d8ecf17ec1ca600c79882"},
     {file = "configobj-5.0.9.tar.gz", hash = "sha256:03c881bbf23aa07bccf1b837005975993c4ab4427ba57f959afdd9d1a2386848"},
 ]
 
@@ -1792,7 +1793,7 @@ files = [
 
 [[package]]
 name = "sentry-sdk"
-version = "2.18.0"
+version = "2.19.0"
 requires_python = ">=3.6"
 summary = "Python client for Sentry (https://sentry.io)"
 groups = ["default"]
@@ -1801,8 +1802,8 @@ dependencies = [
     "urllib3>=1.26.11",
 ]
 files = [
-    {file = "sentry_sdk-2.18.0-py2.py3-none-any.whl", hash = "sha256:ee70e27d1bbe4cd52a38e1bd28a5fadb9b17bc29d91b5f2b97ae29c0a7610442"},
-    {file = "sentry_sdk-2.18.0.tar.gz", hash = "sha256:0dc21febd1ab35c648391c664df96f5f79fb0d92d7d4225cd9832e53a617cafd"},
+    {file = "sentry_sdk-2.19.0-py2.py3-none-any.whl", hash = "sha256:7b0b3b709dee051337244a09a30dbf6e95afe0d34a1f8b430d45e0982a7c125b"},
+    {file = "sentry_sdk-2.19.0.tar.gz", hash = "sha256:ee4a4d2ae8bfe3cac012dcf3e4607975904c137e1738116549fc3dbbb6ff0e36"},
 ]
 
 [[package]]
@@ -1939,17 +1940,17 @@ files = [
 
 [[package]]
 name = "structlog-sentry"
-version = "2.1.0"
-requires_python = ">=3.7,<4.0"
+version = "2.2.1"
+requires_python = "<4.0,>=3.7"
 summary = "Sentry integration for structlog"
 groups = ["default"]
 dependencies = [
-    "sentry-sdk",
+    "sentry-sdk<3.0.0,>=2.15.0",
     "structlog",
 ]
 files = [
-    {file = "structlog_sentry-2.1.0-py3-none-any.whl", hash = "sha256:8f631fc4cf9890f8ea368f057861b62ceef30dd75726a85706869807926e22d0"},
-    {file = "structlog_sentry-2.1.0.tar.gz", hash = "sha256:ee4fb04a381f25570017dd26345ea15b6461cbf87ae0a315e20ddd822ad4256b"},
+    {file = "structlog_sentry-2.2.1-py3-none-any.whl", hash = "sha256:868c82348bc18b7d51ef8f878c57e82835c1758dba38f7589fa02a267096a95d"},
+    {file = "structlog_sentry-2.2.1.tar.gz", hash = "sha256:78cf8751c7712e361d9d5e82fcde6c3f692a67e3e67068ccdd46448014636138"},
 ]
 
 [[package]]
