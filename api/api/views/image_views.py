@@ -102,7 +102,7 @@ class ImageViewSet(MediaViewSet):
             }
 
         serializer = self.get_serializer(image, context=context)
-        return Response(data=serializer.data)
+        return Response(data=await serializer.adata)
 
     async def get_image_proxy_media_info(self) -> image_proxy.MediaInfo:
         image = await self.aget_object()

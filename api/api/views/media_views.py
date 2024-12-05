@@ -7,9 +7,8 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 import structlog
-from adrf.views import APIView as AsyncAPIView
+from adrf.generics import GenericAPIView as AsyncAPIView
 from adrf.viewsets import ViewSetMixin as AsyncViewSetMixin
-from asgiref.sync import sync_to_async
 
 from api.constants.media_types import MediaType
 from api.controllers import search_controller
@@ -86,8 +85,6 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
                 "source_identifier"
             )
         )
-
-    aget_object = sync_to_async(ReadOnlyModelViewSet.get_object)
 
     def get_serializer_context(self):
         context = super().get_serializer_context()

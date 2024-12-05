@@ -1,7 +1,7 @@
-from rest_framework import serializers
+from adrf.serializers import ModelSerializer
 
 
-class BaseModelSerializer(serializers.ModelSerializer):
+class BaseModelSerializer(ModelSerializer):
     """Extends model serializer to use docstring of properties as help text."""
 
     def build_property_field(self, field_name, model_class):

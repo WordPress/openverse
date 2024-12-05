@@ -10,6 +10,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import NotAuthenticated, ValidationError
 from rest_framework.request import Request
 
+from adrf.serializers import Serializer
 from drf_spectacular.utils import extend_schema_serializer
 from elasticsearch_dsl.response import Hit
 from openverse_attribution.license import License
@@ -41,7 +42,7 @@ from api.utils.url import add_protocol
 #######################
 
 
-class PaginatedRequestSerializer(serializers.Serializer):
+class PaginatedRequestSerializer(Serializer):
     """This serializer passes pagination parameters from the query string."""
 
     _SUBJECT_TO_PAGINATION_LIMITS = (
@@ -549,7 +550,7 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
         return data
 
 
-class MediaThumbnailRequestSerializer(serializers.Serializer):
+class MediaThumbnailRequestSerializer(Serializer):
     """This serializer parses and validates thumbnail query string parameters."""
 
     full_size = serializers.BooleanField(
@@ -636,7 +637,7 @@ class MediaReportRequestSerializer(serializers.ModelSerializer):
 ########################
 
 
-class TagSerializer(serializers.Serializer):
+class TagSerializer(Serializer):
     """This output serializer serializes a singular tag."""
 
     name = serializers.CharField(
@@ -821,7 +822,7 @@ class MediaSerializer(BaseModelSerializer):
 
 
 def get_hyperlinks_serializer(media_type):
-    class MediaHyperlinksSerializer(serializers.Serializer):
+    class MediaHyperlinksSerializer(Serializer):
         """
         This serializer creates URLs pointing to other endpoints for this media item.
 

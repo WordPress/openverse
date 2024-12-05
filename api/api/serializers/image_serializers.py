@@ -3,6 +3,8 @@ from uuid import UUID
 
 from rest_framework import serializers
 
+from adrf.serializers import Serializer
+
 from api.constants.field_order import field_position_map
 from api.constants.field_values import ASPECT_RATIOS, IMAGE_CATEGORIES, IMAGE_SIZES
 from api.models import Image, ImageReport
@@ -96,7 +98,7 @@ class ImageSerializer(ImageHyperlinksSerializer, MediaSerializer):
 ##########################
 
 
-class OembedRequestSerializer(serializers.Serializer):
+class OembedRequestSerializer(Serializer):
     """Parse and validate oEmbed parameters."""
 
     url = serializers.URLField(
