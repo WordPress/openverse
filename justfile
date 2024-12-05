@@ -248,6 +248,7 @@ export HOST_NETWORK_ADDRESS := if os() == "macos" { "host.docker.internal" } els
 versions:
     #!/usr/bin/env bash
     cat <<EOF
+    ov_pdm_version=$(echo $OV_PDM_VERSION)
     catalog_py_version=$(just catalog/py-version)
     catalog_airflow_version=$(just catalog/airflow-version)
     api_py_version=$(just api/py-version)
