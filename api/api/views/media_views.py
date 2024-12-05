@@ -266,7 +266,7 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
         ],
     )
 
-    async def thumbnail(self, request, *_, **__):
+    async def thumbnail(self, request):
         serializer = self.get_serializer(data=request.query_params)
         serializer.is_valid(raise_exception=True)
 

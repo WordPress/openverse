@@ -121,9 +121,9 @@ class ImageViewSet(MediaViewSet):
 
     @thumbnail_docs
     @MediaViewSet.thumbnail_action
-    async def thumbnail(self, *args, **kwargs):
+    async def thumbnail(self, request, identifier):
         """Retrieve the scaled down and compressed thumbnail of the image."""
-        return await super().thumbnail(*args, **kwargs)
+        return await super().thumbnail(request)
 
     @watermark_doc
     @action(detail=True, url_path="watermark", url_name="watermark")
