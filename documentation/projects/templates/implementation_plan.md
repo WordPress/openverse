@@ -109,4 +109,10 @@ For each step description, ensure the heading includes an obvious reference to t
 ## Prior art
 
 <!-- Include links to documents and resources that you used when coming up with your solution. Credit people who have contributed to the solution that you wish to acknowledge. -->
+
+## Changelog
+
+<!-- If the plan has undergone revisions, link those below. Try linking to specific PRs or commits. The format should be as follows:
+- YYYY-MM-DD - Summary of changes (#PR number or [commit hash](link to commit))
+-->
 ```
