@@ -88,8 +88,8 @@ importers:
         specifier: ^6.12.1
         version: 6.12.1(magicast@0.3.5)(rollup@4.27.4)
       '@pinia/nuxt':
-        specifier: ^0.6.1
-        version: 0.6.1(magicast@0.3.5)(rollup@4.27.4)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))
+        specifier: ^0.9.0
+        version: 0.9.0(magicast@0.3.5)(pinia@2.2.5(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3)))(rollup@4.27.4)
       '@sentry/node':
         specifier: ^8.26.0
         version: 8.26.0
@@ -1695,8 +1695,10 @@ packages:
     resolution: {integrity: sha512-HNjmfLQEVRZmHRET336f20H/8kOozUGwk7yajvsonjNxbj2wBTK1WsQuHkD5yYh9RxFGL2EyDHryOihOwUoKDA==}
     engines: {node: '>= 10.0.0'}
 
-  '@pinia/nuxt@0.6.1':
-    resolution: {integrity: sha512-eqPaOmPbKQANNVOvMMnJfdHij5alzirYzTeZ5eGcFIet8n/gF+vWOWVJkf0BZXIyaTq8hT79IS1HlZXTIhn+PQ==}
+  '@pinia/nuxt@0.9.0':
+    resolution: {integrity: sha512-2yeRo7LeyCF68AbNeL3xu2h6uw0617RkcsYxmA8DJM0R0PMdz5wQHnc44KeENQxR/Mrq8T910XVT6buosqsjBQ==}
+    peerDependencies:
+      pinia: ^2.3.0
 
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
@@ -9130,17 +9132,14 @@ snapshots:
       '@parcel/watcher-win32-ia32': 2.4.1
       '@parcel/watcher-win32-x64': 2.4.1
 
-  '@pinia/nuxt@0.6.1(magicast@0.3.5)(rollup@4.27.4)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))':
+  '@pinia/nuxt@0.9.0(magicast@0.3.5)(pinia@2.2.5(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3)))(rollup@4.27.4)':
     dependencies:
       '@nuxt/kit': 3.14.1592(magicast@0.3.5)(rollup@4.27.4)
       pinia: 2.2.5(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))
     transitivePeerDependencies:
-      - '@vue/composition-api'
       - magicast
       - rollup
       - supports-color
-      - typescript
-      - vue
 
   '@pkgjs/parseargs@0.11.0':
     optional: true
