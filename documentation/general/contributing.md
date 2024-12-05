@@ -118,7 +118,7 @@ The [WordPress Design team](https://make.wordpress.org/design/) uses
 projects. If you are not familiar with designing for WordPress, please carefully
 read the [design handbook](https://make.wordpress.org/design/handbook/). Once
 you have a [WordPress Slack](https://make.wordpress.org/chat/) account, join the
-[#design channel](http://wordpress.slack.com/messages/design/) and ask the team
+[#design channel](https://wordpress.slack.com/messages/design/) and ask the team
 to set you up with a free Figma account.
 
 This will give you access to
@@ -132,7 +132,7 @@ file to understand how Openverse has been built, and take a look at the
 to get a glance at how design ideas are made. As the design onboarding section
 in the design library file is constantly being added to and improved, some
 documentation may be missing. If you have doubts, ask on
-[#design channel](http://wordpress.slack.com/messages/design/) for
+[#design channel](https://wordpress.slack.com/messages/design/) for
 clarification. If you discover new information that is yet to be documented,
 contributing this information back to the documentation is deeply appreciated.
 
