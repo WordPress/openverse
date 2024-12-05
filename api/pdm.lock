@@ -5,14 +5,14 @@
 groups = ["default", "dev", "overrides", "test"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:86e04ec218fb1f4ffe4e553a2ac20a19c41dd8bc8b3f25d3f19e9319cbf3cea5"
+content_hash = "sha256:c52b47012156d2cb9e48cf2633dd9f32003272a3543af22384f46827b5a239b7"
 
 [[metadata.targets]]
 requires_python = "==3.12.*"
 
 [[package]]
 name = "adrf"
-version = "0.1.6"
+version = "0.1.8"
 requires_python = ">=3.8"
 summary = "Async support for Django REST framework"
 groups = ["default"]
@@ -22,8 +22,8 @@ dependencies = [
     "djangorestframework>=3.14.0",
 ]
 files = [
-    {file = "adrf-0.1.6-py3-none-any.whl", hash = "sha256:4ed8a07159e97602b27b61cccef5a9f4088d07be6899d62fec1300286a6c500f"},
-    {file = "adrf-0.1.6.tar.gz", hash = "sha256:8057be8ac17e1ed47fbec17de4bf1772d467243422fd5f7dd78e97735d395ed3"},
+    {file = "adrf-0.1.8-py3-none-any.whl", hash = "sha256:3032b987085d75cfd59eb3d4dcd7138fc20085de1782b065603559ccec69531f"},
+    {file = "adrf-0.1.8.tar.gz", hash = "sha256:18844630dd9272c38cc3f761fce6bfb50f91c4f84dadf99846f86d4527f19c7f"},
 ]
 
 [[package]]
