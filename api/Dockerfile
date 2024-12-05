@@ -10,6 +10,9 @@ ARG API_PY_VERSION
 
 FROM docker.io/python:${API_PY_VERSION} AS builder
 
+# Get the version from the main justfile
+ARG OV_PDM_VERSION
+
 # Container optimizations
 ENV PYTHONUNBUFFERED=1
 ENV PIP_NO_CACHE_DIR=1
@@ -23,7 +26,7 @@ RUN apt-get update \
   && apt-get autoremove -y \
   && rm -rf /var/lib/apt/lists/* \
   && pip install --upgrade pip \
-  && pip install pdm~=2.21
+  && pip install pdm~=$OV_PDM_VERSION
 
 # Copy subpackages from additional build-context 'packages'
 # hadolint ignore=DL3022

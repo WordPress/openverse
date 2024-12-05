@@ -232,6 +232,7 @@ env:
 DOCKER_FILE := "-f docker-compose.yml"
 EXEC_DEFAULTS := if IS_CI == "" { "" } else { "-T" }
 
+export OV_PDM_VERSION := env_var_or_default("OV_PDM_VERSION", "2.21")
 export CATALOG_PY_VERSION := `just catalog/py-version`
 export CATALOG_AIRFLOW_VERSION := `just catalog/airflow-version`
 export INDEXER_WORKER_PY_VERSION := `just indexer_worker/py-version`
