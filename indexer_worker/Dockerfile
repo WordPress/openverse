@@ -31,7 +31,7 @@ RUN apt-get update \
 COPY pyproject.toml pdm.lock /
 
 # Pass additional arguments when installing Python packages with PDM
-ARG PDM_INSTALL_ARGS='--no-editable'
+ARG PDM_INSTALL_ARGS="--no-editable"
 
 # Install Python dependencies into a new virtualenv
 RUN pdm install --check --frozen-lockfile $PDM_INSTALL_ARGS
