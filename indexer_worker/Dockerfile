@@ -70,13 +70,13 @@ RUN apt-get update \
     && mkdir /worker_state
 
 # Create a non-root user
-RUN useradd ov_user \
-    && chown ov_user /worker_state
+RUN useradd ingestionu \
+    && chown ingestionu /worker_state
 
-USER ov_user
+USER ingestionu
 
 # Copy code into the final image
-COPY --chown=ov_user . /indexer_worker/
+COPY --chown=ingestionu . /indexer_worker/
 
 # Expose Gunicorn server to indexer worker Falcon app
 EXPOSE 8003
