@@ -51,7 +51,8 @@ ENV PATH="${PNPM_BIN}:${N_PREFIX}/bin:${PDM_PYTHONS}:${HOME}/.local/bin:${PATH}"
 # Node dependencies:
 # - n: Node.js distribution manager
 # - corepack: Node.js package-manager-manager
-RUN mkdir /pipx \
+RUN mkdir -p $HOME/.local/bin \
+  && mkdir /pipx \
   && dnf5 -y install dnf-plugins-core \
   && dnf5 -y config-manager addrepo --from-repofile=https://download.docker.com/linux/fedora/docker-ce.repo \
   && dnf5 -y install https://dl.k6.io/rpm/repo.rpm \
