@@ -70,7 +70,7 @@ RUN mkdir -p $HOME/.local/bin \
     docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin \
     unzip \
     postgresql postgresql-devel \
-    k6 \
+  && if [ "$(uname -m)" = "x86_64" ]; then dnf5 -y install k6; fi \
   && dnf5 clean all \
   && pipx install --global \
     httpie \

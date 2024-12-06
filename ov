@@ -93,7 +93,7 @@ init)
 
 build)
   # k6 does not install on aarch64, so we must specify the platform on macOS.
-  docker build "${@:2}" --platform linux/amd64 -t openverse-dev_env:latest "$dev_env"
+  docker build "${@:2}" --tag openverse-dev_env:latest "$dev_env"
   ;;
 
 setup-env)
