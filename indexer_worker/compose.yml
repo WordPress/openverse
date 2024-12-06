@@ -8,6 +8,7 @@ services:
       target: indexer_worker
       args: # Automatically inferred from env vars, unless specified
         - INDEXER_WORKER_PY_VERSION
+        - OV_PDM_VERSION=${OV_PDM_VERSION}
         - PDM_INSTALL_ARGS=--dev
     ports:
       - "50282:8003"

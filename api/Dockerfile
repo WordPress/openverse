@@ -10,6 +10,9 @@ ARG API_PY_VERSION
 
 FROM docker.io/python:${API_PY_VERSION} AS builder
 
+# Get the version from the main justfile
+ARG OV_PDM_VERSION
+
 # Container optimizations
 ENV PYTHONUNBUFFERED=1
 ENV PIP_NO_CACHE_DIR=1
@@ -19,11 +22,11 @@ ENV PIP_NO_COLOR=1
 # - Create a virtualenv inside `/venv`
 # - Install PDM to install Python dependencies
 RUN apt-get update \
-  && apt-get install -yqq --no-install-recommends \
-    python3-dev \
+  && apt-get install -yqq --no-install-recommends python3-dev \
   && apt-get autoremove -y \
   && rm -rf /var/lib/apt/lists/* \
-  && pip install pdm~=2.19
+  && pip install --upgrade pip \
+  && pip install pdm~=$OV_PDM_VERSION
 
 # Copy subpackages from additional build-context 'packages'
 # hadolint ignore=DL3022
@@ -33,7 +36,7 @@ COPY --from=packages openverse-attribution /packages/python/openverse-attributio
 COPY pyproject.toml pdm.lock /
 
 # Pass additional arguments when installing Python packages with PDM
-ARG PDM_INSTALL_ARGS='--no-editable'
+ARG PDM_INSTALL_ARGS="--no-editable"
 
 # Install Python dependencies into a new virtualenv
 RUN pdm install --check --frozen-lockfile $PDM_INSTALL_ARGS
