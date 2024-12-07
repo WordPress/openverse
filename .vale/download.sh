@@ -2,12 +2,21 @@
 
 VERSION="3.7.1"
 
-if [ "$(uname -m)" == "aarch64" ]; then
-  SUFFIX="arm64"
+if [ "$(uname)" = "Darwin" ]; then
+  OS="macOS"
 else
-  SUFFIX="64-bit"
+  OS="Linux"
 fi
 
-curl --remote-name --location "https://github.com/errata-ai/vale/releases/download/v${VERSION}/vale_${VERSION}_Linux_${SUFFIX}.tar.gz"
-tar -xvzf "vale_${VERSION}_Linux_${SUFFIX}.tar.gz" -C "${HOME}/.local/bin"
-rm "vale_${VERSION}_Linux_${SUFFIX}.tar.gz"
+if [ "$(uname -m)" = "aarch64" ] || [ "$(uname -m)" = "arm64" ]; then
+  ARCH="arm64"
+else
+  ARCH="64-bit"
+fi
+
+URL="https://github.com/errata-ai/vale/releases/download/v${VERSION}/vale_${VERSION}_${OS}_${ARCH}.tar.gz"
+
+echo "Downloading ${URL}"
+curl --output vale.tar.gz --location "${URL}"
+tar -xvzf "vale.tar.gz" vale
+rm "vale.tar.gz"

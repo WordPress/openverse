@@ -35,8 +35,8 @@ VALE_STYLES_PATH := "/opt/.local/share/vale/styles"
 # Run Vale configured for Openverse.
 @run: _link_openverse_styles
     # Download vale if not not found by which
-    which vale || ./download.sh
+    file vale || ./download.sh
     # Sync to make sure styles are up to date (this is fast if they are already synced)
-    VALE_STYLES_PATH={{ VALE_STYLES_PATH }} vale sync
+    VALE_STYLES_PATH={{ VALE_STYLES_PATH }} ./vale sync
     # Run vale :)
-    VALE_STYLES_PATH={{ VALE_STYLES_PATH }} vale {{ "`just _files`" }}
+    VALE_STYLES_PATH={{ VALE_STYLES_PATH }} ./vale {{ "`just _files`" }}
