@@ -24,12 +24,14 @@ const props = withDefaults(
        * uses the image's intrinsic size.
        */
       aspectRatio?: AspectRatio
+      position?: number
     }
   >(),
   {
     aspectRatio: "square",
     kind: "search",
     relatedTo: "null",
+    position: -1,
   }
 )
 
@@ -60,9 +62,14 @@ const imageUrl = computed(() => {
 })
 
 const imageLink = computed(() => {
-  return `/image/${props.image.id}/${
-    props.searchTerm ? "?q=" + props.searchTerm : ""
-  }`
+  const params = new URLSearchParams()
+  if (props.searchTerm) {
+    params.set("q", props.searchTerm)
+  }
+  if (props.position) {
+    params.set("p", props.position.toString())
+  }
+  return `/image/${props.image.id}/?${params}`
 })
 
 /**
@@ -112,17 +119,15 @@ const sendSelectSearchResultEvent = (event: MouseEvent) => {
   }
 
   $sendCustomEvent("SELECT_SEARCH_RESULT", {
+    ...searchStore.searchParamsForEvent,
     id: props.image.id,
     kind: props.kind,
     mediaType: IMAGE,
     provider: props.image.provider,
-    query: props.searchTerm || "",
+    position: props.position,
     relatedTo: props.relatedTo ?? "null",
     sensitivities: props.image.sensitivity?.join(",") ?? "",
     isBlurred: shouldBlur.value ?? "null",
-    collectionType:
-      searchStore.strategy !== "default" ? searchStore.strategy : "null",
-    collectionValue: searchStore.collectionValue ?? "null",
   })
 }
 

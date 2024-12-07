@@ -12,6 +12,8 @@ import {
 } from "~~/test/playwright/utils/analytics"
 import { getBackToSearchLink } from "~~/test/playwright/utils/components"
 
+import type { Events } from "#shared/types/analytics"
+
 const imageObject = {
   id: "e9d97a98-621b-4ec2-bf70-f47a74380452",
   provider: "flickr",
@@ -80,11 +82,14 @@ test("sends GET_MEDIA event on CTA button click", async ({ context, page }) => {
 
   const getMediaEvent = analyticsEvents.find((event) => event.n === "GET_MEDIA")
 
-  expectEventPayloadToMatch(getMediaEvent, {
+  const expectedPayload: Events["GET_MEDIA"] = {
     id: imageObject.id,
     provider: imageObject.provider,
     mediaType: "image",
-  })
+    query: "",
+    position: -1,
+  }
+  expectEventPayloadToMatch(getMediaEvent, expectedPayload)
 })
 
 test("sends RIGHT_CLICK_IMAGE event on right-click", async ({
@@ -101,10 +106,12 @@ test("sends RIGHT_CLICK_IMAGE event on right-click", async ({
   const rightClickImageEvent = analyticsEvents.find(
     (event) => event.n === "RIGHT_CLICK_IMAGE"
   )
-
-  expectEventPayloadToMatch(rightClickImageEvent, {
+  const expectedPayload: Events["RIGHT_CLICK_IMAGE"] = {
     id: imageObject.id,
-  })
+    query: "",
+    position: -1,
+  }
+  expectEventPayloadToMatch(rightClickImageEvent, expectedPayload)
 })
 
 test("sends SELECT_SEARCH_RESULT event on related image click", async ({
@@ -126,16 +133,18 @@ test("sends SELECT_SEARCH_RESULT event on related image click", async ({
     (event) => event.n === "SELECT_SEARCH_RESULT"
   )
 
-  expectEventPayloadToMatch(selectSearchResultEvent, {
+  const expectedPayload: Events["SELECT_SEARCH_RESULT"] = {
     id: "1c57f839-6be5-449a-b41a-b1c7de819182",
     relatedTo: imageObject.id,
     kind: "related",
+    searchType: "all",
     mediaType: "image",
     provider: "flickr",
     query: "",
     sensitivities: "",
     isBlurred: false,
     collectionType: "null",
-    collectionValue: "null",
-  })
+    position: 1,
+  }
+  expectEventPayloadToMatch(selectSearchResultEvent, expectedPayload)
 })

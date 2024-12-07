@@ -3,6 +3,7 @@ import { useNuxtApp } from "#imports"
 
 import type { SupportedMediaType } from "#shared/constants/media"
 import type { Media } from "#shared/types/media"
+import { useRouteResultParams } from "~/composables/use-route-result-params"
 
 import VButton from "~/components/VButton.vue"
 
@@ -10,14 +11,14 @@ const props = defineProps<{
   media: Media
   mediaType: SupportedMediaType
 }>()
-
+const { resultParams } = useRouteResultParams()
 const { $sendCustomEvent } = useNuxtApp()
 
 const sendGetMediaEvent = () => {
   $sendCustomEvent("GET_MEDIA", {
-    id: props.media.id,
     provider: props.media.provider,
     mediaType: props.mediaType,
+    ...resultParams.value,
   })
 }
 </script>
