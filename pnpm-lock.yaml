@@ -385,8 +385,8 @@ importers:
         specifier: ^12.0.0
         version: 12.1.1(rollup@4.27.4)(tslib@2.6.2)(typescript@5.6.3)
       '@types/k6':
-        specifier: ^0.53.1
-        version: 0.53.1
+        specifier: ^0.54.0
+        version: 0.54.2
       core-js:
         specifier: ^3.37.1
         version: 3.37.1
@@ -2364,8 +2364,8 @@ packages:
   '@types/json5@0.0.29':
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
 
-  '@types/k6@0.53.1':
-    resolution: {integrity: sha512-Mm1+7kESDNssyBiMV+5MVAJKwpJbj1Y3X1YkCDlaiPbjuc8DeaPtQFBv3pnip/0ZjM9P/P/aDNvd4BvQT0lQDg==}
+  '@types/k6@0.54.2':
+    resolution: {integrity: sha512-B5LPxeQm97JnUTpoKNE1UX9jFp+JiJCAXgZOa2P7aChxVoPQXKfWMzK+739xHq3lPkKj1aV+HeOxkP56g/oWBg==}
 
   '@types/keyv@3.1.4':
     resolution: {integrity: sha512-BQ5aZNSCpj7D6K2ksrRCTmKRLEpnPvWDiLPfoGyhZ++8YtiK9d/3DBKPJgry359X/P1PfruyYwvnvwFjuEiEIg==}
@@ -9954,7 +9954,7 @@ snapshots:
 
   '@types/json5@0.0.29': {}
 
-  '@types/k6@0.53.1': {}
+  '@types/k6@0.54.2': {}
 
   '@types/keyv@3.1.4':
     dependencies:
