@@ -1,0 +1,6 @@
+# 2023.08.14.16.35.15
+
+## Internal Improvements
+
+- Remove unused WSGIBasicAuth and django-cron
+  ([#2809](https://github.com/WordPress/openverse/pull/2809)) by @sarayourfriend

@@ -1,0 +1,11 @@
+# 2024.11.28.17.33.15
+
+## Internal Improvements
+
+- Add filters to throttled application admin view
+  ([#5188](https://github.com/WordPress/openverse/pull/5188)) by @krysal
+
+## Bug Fixes
+
+- Prevent from counting media tables in admin
+  ([#5189](https://github.com/WordPress/openverse/pull/5189)) by @krysal

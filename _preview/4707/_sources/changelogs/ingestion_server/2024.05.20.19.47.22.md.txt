@@ -1,0 +1,6 @@
+# 2024.05.20.19.47.22
+
+## Internal Improvements
+
+- Add logs to cleaning steps in the ingestion server and skip saving tags
+  ([#4358](https://github.com/WordPress/openverse/pull/4358)) by @krysal

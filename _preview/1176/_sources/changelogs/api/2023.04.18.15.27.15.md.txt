@@ -1,0 +1,25 @@
+# 2023.04.18.15.27.15
+
+## New Features
+
+- Implementation Plan: Filtering and designating sensitive results in the API
+  (#996) @sarayourfriend
+
+## Improvements
+
+- Fix typo in github link (#1802) @capitan-beto
+
+## Internal Improvements
+
+- Bump sentry-sdk from 1.18.0 to 1.19.1 in /api (#1214) @dependabot
+- Use `pytest.ini` and add `pytest-sugar` (#1227) @dhruvkb
+
+## Bug Fixes
+
+- Only use upstream thumbs with photon for SMK, for now (#1812) @zackkrida
+
+## Credits
+
+Thanks to @AetherUnbound, @Wbrown633, @capitan-beto, @dependabot,
+@dependabot[bot], @dhruvkb, @obulat, @sarayourfriend, @sepehrrezaei, @stacimc
+and @zackkrida for their contributions!
