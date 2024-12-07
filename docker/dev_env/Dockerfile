@@ -58,7 +58,6 @@ RUN mkdir -p $HOME/.local/bin \
   && mkdir /pipx \
   && dnf5 -y install dnf-plugins-core \
   && dnf5 -y config-manager addrepo --from-repofile=https://download.docker.com/linux/fedora/docker-ce.repo \
-  && dnf5 -y install https://dl.k6.io/rpm/repo.rpm \
   && dnf5 -y install \
     git \
     g++ \
@@ -74,7 +73,10 @@ RUN mkdir -p $HOME/.local/bin \
     docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin \
     unzip \
     postgresql postgresql-devel \
-  && if [ "$(uname -m)" = "x86_64" ]; then dnf5 -y install k6; fi \
+  && if [ "$(uname -m)" = "x86_64" ]; then \
+    dnf5 -y install https://dl.k6.io/rpm/repo.rpm \
+    && dnf5 -y install k6; \
+  fi \
   && dnf5 clean all \
   && pipx install --global \
     httpie \
