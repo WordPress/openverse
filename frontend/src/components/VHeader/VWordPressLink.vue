@@ -1,25 +1,13 @@
 <script setup lang="ts">
 import VLink from "~/components/VLink.vue"
 import VSvg from "~/components/VSvg/VSvg.vue"
-
-withDefaults(
-  defineProps<{
-    mode?: "dark" | "light"
-  }>(),
-  { mode: "light" }
-)
 </script>
 
 <template>
   <VLink
     href="https://wordpress.org"
     :aria-label="$t('footer.wordpressAffiliation', { wordpress: 'WordPress' })"
-    class="hover:no-underline"
-    :class="
-      mode === 'dark'
-        ? 'text-white focus-visible:outline-yellow-3'
-        : 'text-default'
-    "
+    class="text-contrast hover:no-underline focus-visible:outline-focus-ring"
   >
     <i18n-t
       scope="global"

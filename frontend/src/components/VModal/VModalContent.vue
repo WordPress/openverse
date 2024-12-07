@@ -96,6 +96,22 @@ const { height: modalHeaderHeight } = useElementSize(
   { box: "border-box" }
 )
 
+const modalStyle = computed(() => {
+  const height = modalHeaderHeight.value
+  const mode = props.mode
+  const style = {
+    "--modal-header-height": `${height}px`,
+  }
+  if (mode !== "dark") {
+    return style
+  }
+  return {
+    ...style,
+    "--color-contrast": "var(--color-white)",
+    "--color-focus-ring": "var(--color-yellow-4)",
+  }
+})
+
 defineExpose({
   dialogRef,
   deactivateFocusTrap,
@@ -134,7 +150,7 @@ defineExpose({
             'm-6 max-w-90 rounded sm:m-0 sm:w-90': variant === 'centered',
           },
         ]"
-        :style="`--modal-header-height: ${modalHeaderHeight}px;`"
+        :style="modalStyle"
         role="dialog"
         aria-modal="true"
         @keydown="onKeyDown"
@@ -201,6 +217,7 @@ defineExpose({
               : mode === 'dark'
                 ? 'bg-black'
                 : 'bg-overlay',
+            `modal-content-${mode}`,
           ]"
         >
           <slot />
@@ -228,5 +245,9 @@ by the address bar.
 .modal-content {
   max-height: calc(100vh - var(--modal-header-height, 0) - 6rem);
   overflow-y: scroll;
+}
+.modal-content-dark {
+  --color-outline-focus: var(--color-yellow-3);
+  --color-contrast: var(--color-white);
 }
 </style>
