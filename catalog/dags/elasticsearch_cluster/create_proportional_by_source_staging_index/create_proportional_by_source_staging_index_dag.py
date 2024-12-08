@@ -177,7 +177,6 @@ def create_proportional_by_source_staging_index():
         trigger_rule=TriggerRule.NONE_FAILED
     )(
         text=f"Reindexing complete for {destination_index_name}.",
-        dag_id=DAG_ID,
         username="Proportional by Source Staging Index Creation",
         icon_emoji=":elasticsearch:",
     )
