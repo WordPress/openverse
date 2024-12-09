@@ -34,7 +34,7 @@
     "dark_mode_ui_toggle": {
       "status": {
         "staging": "switchable",
-        "production": "disabled"
+        "production": "enabled"
       },
       "defaultState": "on",
       "description": "Display the UI toggle to change the site color theme and respect system preferences.",
