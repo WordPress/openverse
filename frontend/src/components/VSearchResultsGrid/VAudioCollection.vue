@@ -44,7 +44,7 @@ const audioTrackSize = computed(() => {
       :class="kind === 'related' ? 'gap-4' : 'gap-2 md:gap-1'"
     >
       <VAudioResult
-        v-for="audio in results"
+        v-for="(audio, idx) in results"
         :key="audio.id"
         :search-term="searchTerm"
         :related-to="relatedTo"
@@ -52,6 +52,7 @@ const audioTrackSize = computed(() => {
         layout="row"
         :size="audioTrackSize"
         :kind="kind"
+        :position="idx + 1"
       />
     </ol>
   </div>
