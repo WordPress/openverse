@@ -1,0 +1,6 @@
+# 2023.07.10.08.29.25
+
+## Bug Fixes
+
+- Fix types in the templates
+  ([#2584](https://github.com/WordPress/openverse/pull/2584)) by @obulat

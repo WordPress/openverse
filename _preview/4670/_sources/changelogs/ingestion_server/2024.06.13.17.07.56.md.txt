@@ -1,0 +1,11 @@
+# 2024.06.13.17.07.56
+
+## Internal Improvements
+
+- Update dependency elasticsearch to v8.13.2
+  ([#4418](https://github.com/WordPress/openverse/pull/4418)) by @openverse-bot
+
+## Bug Fixes
+
+- Revert "Save cleaned data of Ingestion Server to AWS S3 (#4163)"
+  ([#4443](https://github.com/WordPress/openverse/pull/4443)) by @krysal
