@@ -67,7 +67,7 @@ CORS_EXPOSE_HEADERS = [
 ]
 
 # Proxy handling, for production
-if config("IS_PROXIED", default=True, cast=bool):
+if config("DJANGO_IS_PROXIED", default=True, cast=bool):
     # https://docs.djangoproject.com/en/4.0/ref/settings/#secure-proxy-ssl-header
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 

@@ -20,8 +20,8 @@ if "django_structlog" not in INSTALLED_APPS:
 
 MIDDLEWARE.insert(0, "django_structlog.middlewares.RequestMiddleware")
 
-LOG_LEVEL = config("LOG_LEVEL", default="INFO").upper()
-DJANGO_DB_LOGGING = config("DJANGO_DB_LOGGING", cast=bool, default=False)
+DJANGO_LOG_LEVEL = config("DJANGO_LOG_LEVEL", default="INFO").upper()
+DJANGO_DATABASE_LOGGING = config("DJANGO_DATABASE_LOGGING", cast=bool, default=False)
 LOG_PROCESSOR = config(
     "LOG_PROCESSOR",
     default="console" if ENVIRONMENT == "local" else "json",
@@ -118,7 +118,7 @@ LOGGING = {
     },
     "handlers": {
         "console_structured": {
-            "level": LOG_LEVEL,
+            "level": DJANGO_LOG_LEVEL,
             "class": "logging.StreamHandler",
             "formatter": "structured",
             "filters": ["suppress_unwanted_logs"],
@@ -126,7 +126,7 @@ LOGGING = {
     },
     "root": {
         "handlers": ["console_structured"],
-        "level": LOG_LEVEL,
+        "level": DJANGO_LOG_LEVEL,
         "propagate": False,
     },
     "loggers": {
@@ -139,7 +139,7 @@ LOGGING = {
         },
         "uvicorn": {
             "handlers": ["console_structured"],
-            "level": LOG_LEVEL,
+            "level": DJANGO_LOG_LEVEL,
         },
     },
 }
@@ -158,9 +158,9 @@ structlog.configure(
     cache_logger_on_first_use=(ENVIRONMENT == "production"),
 )
 
-if DJANGO_DB_LOGGING:
-    # Behind a separate flag as it's a very noisy debug logger
-    # and it's nice to be able to enable it conditionally within that context
+if DJANGO_DATABASE_LOGGING:
+    # Behind a separate flag as it's a very noisy debug logger, and it's nice to be
+    # able to enable it conditionally within that context
     LOGGING["loggers"]["django.db.backends"] = {
         "level": "DEBUG",
         "handlers": ["console_structured"],
