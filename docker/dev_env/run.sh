@@ -65,30 +65,29 @@ if [ "$1" == "sudo" ]; then
   _cmd=("${@:2}")
 fi
 
-case "$OSTYPE" in
-linux*)
-  docker_group=$(getent group docker | cut -d: -f3)
-  if [ "$1" == "sudo" ]; then
-    user_id="0"
-    # Use root in CI
-  elif [ -n "$CI" ]; then
-    user_id="0"
-  else
-    user_id="$UID"
-  fi
-  shared_args+=(--user "$user_id:$docker_group")
-  ;;
+if [ -z "$CI" ]; then
+  case "$OSTYPE" in
+  linux*)
+    docker_group=$(getent group docker | cut -d: -f3)
+    if [ "$1" == "sudo" ]; then
+      user_id="0"
+    else
+      user_id="$UID"
+    fi
+    shared_args+=(--user "$user_id:$docker_group")
+    ;;
 
-darwin*)
-  # noop, just catching them to avoid the fall-through error case
-  ;;
+  darwin*)
+    # noop, just catching them to avoid the fall-through error case
+    ;;
 
-*)
-  printf "Openverse development is only supported on Linux and macOS hosts. Please use WSL to run the Openverse development environment under Linux on Windows computers." >/dev/stderr
-  exit 1
-  ;;
+  *)
+    printf "Openverse development is only supported on Linux and macOS hosts. Please use WSL to run the Openverse development environment under Linux on Windows computers." >/dev/stderr
+    exit 1
+    ;;
 
-esac
+  esac
+fi
 
 # Ensure cache directory uses, `ov clean` destroys it
 mkdir -p "$DEV_ENV"/.cache
