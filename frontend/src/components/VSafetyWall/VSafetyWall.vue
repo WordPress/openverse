@@ -57,7 +57,7 @@ const handleShow = () => {
         class="mt-2"
         keypath="sensitiveContent.singleResult.learnMore"
       >
-        <template>Openverse</template>
+        <template #openverse>Openverse</template>
         <template #link>
           <VLink class="text-link hover:underline" href="/sensitive-content">{{
             $t("sensitiveContent.singleResult.link")
