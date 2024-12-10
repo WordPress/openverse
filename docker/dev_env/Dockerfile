@@ -18,6 +18,8 @@ ENV HOME="/opt"
 ENV PDM_PYTHONS="${HOME}/pdm/bin"
 # location where `n` installs Node.js versions
 ENV N_PREFIX="${HOME}/n"
+# location for `npm`'s cache
+ENV NPM_CONFIG_CACHE="/tmp/.npm/"
 
 ENV PIPX_GLOBAL_HOME=/pipx
 
@@ -52,7 +54,6 @@ ENV PATH="${PNPM_BIN}:${N_PREFIX}/bin:${PDM_PYTHONS}:${HOME}/.local/bin:${PATH}"
 # - n: Node.js distribution manager
 # - corepack: Node.js package-manager-manager
 RUN mkdir /pipx \
-  && mkdir /opt/.npm \
   && dnf5 -y install dnf-plugins-core \
   && dnf5 -y config-manager addrepo --from-repofile=https://download.docker.com/linux/fedora/docker-ce.repo \
   && dnf5 -y install https://dl.k6.io/rpm/repo.rpm \
