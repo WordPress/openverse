@@ -1,0 +1,1003 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><link rel="next" title="Document all media properties" href="../document_all_media_properties/index.html" /><link rel="prev" title="2023-03-09 Implementation Plan: Sensitive Terms List" href="20230309-implementation_plan_sensitive_terms_list.html" />
+
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/WordPress/openverse/master/brand/icon.svg"/><!-- Generated with Sphinx 6.1.3 and Furo 2023.03.27 -->
+        <title>2023-03-09 Project Proposal - Openverse documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../index.html"><div class="brand">Openverse  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo only-light" src="../../../_static/logo_light.svg" alt="Light Logo"/>
+    <img class="sidebar-logo only-dark" src="../../../_static/logo_dark.svg" alt="Dark Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../api/index.html">Django API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../api/guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/guides/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/guides/test.html">Testing guide</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../api/reference/index.html">Reference</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/reference/authentication_and_throttling.html">Authentication and Throttling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/reference/search_algorithm.html">Search Algorithm</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../catalog/index.html">Airflow catalog</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../changelogs/index.html">Changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../changelogs/api/index.html">API changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.04.23.23.22.14.html">2023.04.23.23.22.14</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.04.19.00.01.39.html">2023.04.19.00.01.39</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.04.18.15.27.15.html">2023.04.18.15.27.15</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../changelogs/frontend/index.html">Frontend changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../changelogs/ingestion_server/index.html">Ingestion server changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../frontend/index.html">Nuxt frontend</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../frontend/guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/guides/analytics.html">Analytics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/guides/develop.html">Development guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/guides/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/guides/test.html">Running frontend tests</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../frontend/reference/index.html">Reference</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/feature_flags.html">Feature flags</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/miscellaneous.html">Miscellaneous notes on the frontend</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/playwright_tests.html">Playwright tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/storybook_tests.html">Storybook tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/testing_guidelines.html">Testing Guidelines</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../general/index.html">General development guidelines</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/deployment.html">Deployments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/general_setup.html">General setup guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/https.html">Testing HTTPS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/logging.html">Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/publish.html">Publish</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/run.html">Run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/test.html">Test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/zero-downtime-database-management.html">Zero Downtime and Database Management</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../ingestion_server/index.html">Ingestion server</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../ingestion_server/guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/guides/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/guides/test.html">Testing guide</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../meta/index.html">Managing the Openverse</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../meta/dev_flow.html">Development workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../meta/github_contribution_practices.html">GitHub contribution practices</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/ci_cd/index.html">CI + CD workflow</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/ci_cd/actions.html">Actions</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../meta/ci_cd/jobs/index.html">Jobs</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/preparation.html">Preparation jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/frontend.html">Frontend jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/docker_preparation.html">Docker jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/docker_publishing.html">Docker publishing jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/catalog.html">Catalog jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/ingestion_server.html">Ingestion server jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/api.html">API jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/documentation.html">Documentation jobs</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/ci_cd/flow.html">Flow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/ci_cd/proof_of_functionality.html">Proof-of-functionality</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/decision_making/index.html">Openverse Decision-Making Process</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/decision_making/additional_practices.html">Additional practices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/decision_making/how_to_use.html">How to follow the process in different settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/decision_making/process_description.html">Process description</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/documentation/index.html">Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/documentation/guidelines.html">Documentation Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/documentation/quickstart.html">Quickstart guide</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../../index.html">Projects</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" role="switch" type="checkbox"/><label for="toctree-checkbox-20"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../planning.html">Project Planning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../templates/implementation-plan.html">Implementation Plan Template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../templates/project-proposal.html">Project Proposal Template</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../3d_model_support/index.html">3D Model Support</a><input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" role="switch" type="checkbox"/><label for="toctree-checkbox-21"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../3d_model_support/20220221-project_proposal.html">Project Proposal - 2022-02-21</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../analytics/index.html">Analytics</a><input class="toctree-checkbox" id="toctree-checkbox-22" name="toctree-checkbox-22" role="switch" type="checkbox"/><label for="toctree-checkbox-22"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../analytics/20221006-implementation_plan_frontend.html">Implentation Plan: Frontend event tracking - 2022-10-06</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../analytics/20230307-backend_service.html">Implementation Plan: Analytics backend and visualisation service - 2023-03-07</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../core_user_interface_improvement/index.html">Core User Interface Improvements</a><input class="toctree-checkbox" id="toctree-checkbox-23" name="toctree-checkbox-23" role="switch" type="checkbox"/><label for="toctree-checkbox-23"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../core_user_interface_improvement/20230314-project_proposal_core_ui_improvement.html">Project Proposal - 2023-03-14</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current has-children"><a class="reference internal" href="index.html">Detecting and Blurring Sensitive Textual Content</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-24" name="toctree-checkbox-24" role="switch" type="checkbox"/><label for="toctree-checkbox-24"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="20230308-implementation_plan_filtering_and_designating_results_with_sensitive_textual_content.html">2023-03-08 Implementation Plan: Filtering and designating results with sensitive textual content</a></li>
+<li class="toctree-l3"><a class="reference internal" href="20230309-implementation_plan_sensitive_terms_list.html">2023-03-09 Implementation Plan: Sensitive Terms List</a></li>
+<li class="toctree-l3 current current-page"><a class="current reference internal" href="#">2023-03-09 Project Proposal</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../document_all_media_properties/index.html">Document all media properties</a><input class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" role="switch" type="checkbox"/><label for="toctree-checkbox-25"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../document_all_media_properties/20230307-project_proposal.html">Due date:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../document_all_media_properties/20230307-project_proposal.html#assigned-reviewers">Assigned reviewers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../document_all_media_properties/20230307-project_proposal.html#description">Description</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../feature_flags/index.html">Feature Flags</a><input class="toctree-checkbox" id="toctree-checkbox-26" name="toctree-checkbox-26" role="switch" type="checkbox"/><label for="toctree-checkbox-26"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../feature_flags/20220309-project_proposal.html">Project Proposal - 2022-03-09</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../frontend_ui_state_cookie/index.html">Frontend UI State Cookie</a><input class="toctree-checkbox" id="toctree-checkbox-27" name="toctree-checkbox-27" role="switch" type="checkbox"/><label for="toctree-checkbox-27"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../frontend_ui_state_cookie/20220218-project_proposal.html">2022-02-18 Project Propsal: Frontend UI State Cookie</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../monitoring/index.html">Monitoring</a><input class="toctree-checkbox" id="toctree-checkbox-28" name="toctree-checkbox-28" role="switch" type="checkbox"/><label for="toctree-checkbox-28"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../monitoring/20220307-project_proposal.html">Project Proposal - 2022-03-07</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../monorepo/index.html">Monorepo</a><input class="toctree-checkbox" id="toctree-checkbox-29" name="toctree-checkbox-29" role="switch" type="checkbox"/><label for="toctree-checkbox-29"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../monorepo/20221124-project_proposal.html">Project Proposal - 2022-11-24</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../search_relevancy_sandbox/index.html">Search Relevancy Sandbox</a><input class="toctree-checkbox" id="toctree-checkbox-30" name="toctree-checkbox-30" role="switch" type="checkbox"/><label for="toctree-checkbox-30"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../search_relevancy_sandbox/20230331-project_proposal_search_relevancy_sandbox.html">Project Proposal - 2023-03-31</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../trust_and_safety/index.html">Trust &amp; Safety</a><input class="toctree-checkbox" id="toctree-checkbox-31" name="toctree-checkbox-31" role="switch" type="checkbox"/><label for="toctree-checkbox-31"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/20230109-trust_and_safety_preliminary_overview_and_exploration.html">2023-01-09 Project Proposal</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../visual_regression_testing/index.html">Visual Regression Testing</a><input class="toctree-checkbox" id="toctree-checkbox-32" name="toctree-checkbox-32" role="switch" type="checkbox"/><label for="toctree-checkbox-32"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../visual_regression_testing/20220217-implementation_plan.html">Implementation Plan - 2022-02-17</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../vuex_to_pina_conversion/index.html">Pinia Conversion</a><input class="toctree-checkbox" id="toctree-checkbox-33" name="toctree-checkbox-33" role="switch" type="checkbox"/><label for="toctree-checkbox-33"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../vuex_to_pina_conversion/20220223-project_proposal.html">Project Proposal - 2022-02-23</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../terms_of_service.html">Openverse API Terms of Service</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">External links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://openverse.org">Openverse</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/WordPress/openverse">GitHub</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/WordPress/openverse/edit/main/documentation/projects/proposals/detecting_sensitive_textual_content/20230309-project_proposal_detecting_sensitive_textual_content.md" title="Edit this page">
+    <svg aria-hidden="true" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
+      <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
+    </svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="project-proposal">
+<h1>2023-03-09 Project Proposal<a class="headerlink" href="#project-proposal" title="Permalink to this heading">#</a></h1>
+<section id="reviewers">
+<h2>Reviewers<a class="headerlink" href="#reviewers" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[x] &#64;aetherunbound</p></li>
+<li><p>[x] &#64;krysal</p></li>
+</ul>
+</section>
+<section id="project-summary">
+<h2>Project summary<a class="headerlink" href="#project-summary" title="Permalink to this heading">#</a></h2>
+<p>Detect results with sensitive textual content by checking their textual content
+against a list of sensitive terms. Once results with sensitive terms in their
+textual content are determined, blur those results on the frontend.</p>
+<blockquote>
+<div><p><strong>Note</strong> We acknowledge that we are making an inference about results based on
+textual context. That inference applies specifically to the textual content
+<em>only</em>, but is also likely to apply to content itself (whether image or
+audio). We also acknowledge the various pit-falls that can come with this
+approach as well as its insufficency. However, it’s the best approach we can
+implement now, in a timely manner, that will substantively improve the
+accessibility of Openverse.</p>
+</div></blockquote>
+</section>
+<section id="goals">
+<h2>Goals<a class="headerlink" href="#goals" title="Permalink to this heading">#</a></h2>
+<p>This advances Openverse’s goal of increasing the safety of the platform.</p>
+</section>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading">#</a></h2>
+<blockquote>
+<div><p><strong>A note on tone</strong>: This section should be mostly readable and understandable
+by casual, non-technical readers. However, certain aspects of it unavoidably
+delve into technical details in order to describe how features fit together or
+considerations that will need to be kept in mind during implementation
+planning. These need to be documented <em>somewhere</em>, and displacing them from
+the requirements felt strange. If you are not interested in these particular
+technical details, please skip the two sections titled “Implementation
+details” and the section on “How to blur results”. These sections in
+particular consider technical issues of the project that may confound readers
+unfamiliar with software development whether applied to Openverse or more
+generally.</p>
+</div></blockquote>
+<section id="api">
+<h3>API<a class="headerlink" href="#api" title="Permalink to this heading">#</a></h3>
+<section id="filtering">
+<h4>Filtering<a class="headerlink" href="#filtering" title="Permalink to this heading">#</a></h4>
+<p>The Django API is able to filter out results that include sensitive terms in
+their textual content. It does so without degrading search performance.</p>
+<p>Results with sensitive terms in their textual content are only included in
+results when <code class="docutils literal notranslate"><span class="pre">include_sensitive_results=True</span></code>. This parameter will supplant the
+<code class="docutils literal notranslate"><span class="pre">mature=True</span></code> as a more comprehensively and descriptively named parameter.
+<code class="docutils literal notranslate"><span class="pre">mature=True</span></code> should still work, but it should just be an alias for
+<code class="docutils literal notranslate"><span class="pre">include_sensitive_results</span></code> and should be marked as deprecated in or altogether
+excluded from the API documentation.</p>
+<section id="implementation-details">
+<h5>Implementation details<a class="headerlink" href="#implementation-details" title="Permalink to this heading">#</a></h5>
+<p>This will likely be implemented as a secondary index of results that do not
+include the sensitive terms, as explored in
+https://github.com/WordPress/openverse-api/pull/1108.</p>
+</section>
+</section>
+<section id="designation-of-results-with-sensitive-terms">
+<h4>Designation of results with sensitive terms<a class="headerlink" href="#designation-of-results-with-sensitive-terms" title="Permalink to this heading">#</a></h4>
+<p>Results that include sensitive terms in their textual content are so denoted in
+the API results in a new result field named <code class="docutils literal notranslate"><span class="pre">sensitivity</span></code>. Sensitivity should be
+an array that should be empty for results where <code class="docutils literal notranslate"><span class="pre">mature</span> <span class="pre">=</span> <span class="pre">false</span></code> and the textual
+content does not contain any sensitive terms. For results marked as <code class="docutils literal notranslate"><span class="pre">mature</span></code>,
+the array should include a <code class="docutils literal notranslate"><span class="pre">&quot;mature&quot;</span></code> string. For results with sensitive terms
+in their textual content, the array should include a <code class="docutils literal notranslate"><span class="pre">&quot;sensitive_text&quot;</span></code> string.
+At this time we will not be denoting <em>what</em> sensitive terms are present nor will
+we be developing any categories of terms. This approach leaves open the
+potential for that in the future, however, by allowing the array to include
+specific tokens for particular categories of sensitivity, whether derived from a
+categorisation of the sensitive terms list, or from an image classification API.</p>
+<p>Note that this designation needs to happen both in the search endpoint and in
+the single result endpoint. Each endpoint may need a different approach to
+achieve this. In particular, the approach taken will depend on whether
+Elasticsearch or Python is used to mark results as sensitive.</p>
+<section id="id1">
+<h5>Implementation details<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h5>
+<p>There are two broad approaches that can be taken for this. I am actively
+consulting with people more familiar with Elasticsearch for the best way to do
+this, but the broad strokes of this are that we will either:</p>
+<ul class="simple">
+<li><p>Loop over results in Python and use a Regex to determine if textual content on
+the result includes sensitive terms. The results of this will be cached in
+Redis to ameliorate performance degradation over time.</p></li>
+<li><p>Use a script field and multi-index search to determine in Elasticsearch and as
+a hit property whether the result is included in the filtered index (and is
+therefore “safe”).</p></li>
+</ul>
+<p>There may also be other viable ways of performing this determination in
+Elasticsearch, but the detail remains. If the determination is made in Python,
+then it is easy to share the implementation between the search endpoint and the
+single result endpoint (and both can benefit from the Redis caching). If the
+determination is made in Elasticsearch and benefits from Elasticsearch’s full
+text search, then we may need to change the single result endpoint to pull the
+result in question from Elasticsearch rather than Postgres, leveraging the
+<code class="docutils literal notranslate"><span class="pre">_source</span></code> property on hits. This could be a big, complex change, though and
+might require big infrastructural overhauls and challenge assumptions built into
+the Django app. The alternative is that we maintain two approaches to doing so:
+the cached Python method for single results and Elasticsearch approach for
+search with the goal of unifying the approaches in the future.</p>
+</section>
+</section>
+</section>
+<section id="frontend">
+<h3>Frontend<a class="headerlink" href="#frontend" title="Permalink to this heading">#</a></h3>
+<p>Sensitive results never appear for users who have not opted-in to including
+sensitive results in their query. This feature will be built off the existing
+“mature” filter but enhanced with better UI and more comprehensive/less
+suggestive language. The API query parameter is not present in the frontend
+search route’s query parameters. Instead, the setting is set within a session
+cookie and the filter applied at query time (rather than being passed through
+via the query params of the page). <strong>Note that this differs from the
+implementation of the “mature” filter that previously existed</strong>. This is
+discussed in further depth in the <a class="reference internal" href="#settings-persistence">settings persistence</a>
+and <a class="reference internal" href="#outstanding-questions">outstanding questions</a> sections below.</p>
+<p>Sensitive results on the search results page are blurred. Users can unblur and
+reblur individual results through a simple and clear interaction on the search
+results page. In addition to being able to opt-in to having sensitive results
+included in their query, users can disable blurring by default. This parameter
+is stored in the application state. If users disable blurring by default, there
+is not an option to “reblur” images.</p>
+<p>Results unblurred by the user on the search results page are also unblurred if
+they visit the single result page for that result. Results that have not been
+unblurred remain blurred upon navigating to the single results page.</p>
+<p>If a user lands directly on a single result page for a result with sensitive
+textual content, the result is always blurred by default. This is true
+regardless of whether the user has disabled blurring by default on the search
+results page, but only applies to page navigation <em>directly</em> to a single results
+page rather than a client side navigation.</p>
+<section id="settings-persistence">
+<h4>Settings persistence<a class="headerlink" href="#settings-persistence" title="Permalink to this heading">#</a></h4>
+<p>Right now, the recommendation is to store the “include sensitive results”
+setting in session cookie and the “do not blur sensitive results” setting in the
+ephemeral application state. “Include sensitive settings” should not be reset by
+a page reload, but “do not blur sensitive results” should. To summarise:</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Setting</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Persistence location</p></th>
+<th class="head"><p>Behaviour implications</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Include sensitive results</p></td>
+<td><p>Off</p></td>
+<td><p>Session cookie</p></td>
+<td><p>Cannot be manipulated through the query params. Does not reset on page reload or in new tabs. Does reset when the browser is restarted or when the session expires.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Do not blur sensitive results</p></td>
+<td><p>Off</p></td>
+<td><p>Application state (Pinia store)</p></td>
+<td><p>Cannot be manipulated through the query params. Resets on page reloads and in new tabs and is independent of the browser session.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Compared to Google and DuckDuckGo image searches’ behaviour, ours would be more
+or less equivalent (with additional safety from blurring). Neither Google nor
+DDG, as far as I can tell, store the safe search setting in the query
+parameters. Instead, they store it as a session variable. Neither have an option
+to blur sensitive results, so there is no comparison to be made along those
+lines.</p>
+<p>The only variation to this approach I considered was to persist the “include
+sensitive results” setting in the query parameters like we did for the “mature”
+filter that used to exist. The risk of this without blurring is obvious: a
+malicious user can create a query with the setting enabled, hide it behind a URL
+shortener, and trick a victim into seeing a query with results they did not
+consent to. The risk of this is mitigated by blurring sensitive results by
+default, but landing on a page full of blurred results might set a curious young
+person up for seeing something they didn’t anticipate or want to see, simply
+because they didn’t realise <em>why</em> the image was blurred. This could be further
+mitigated by very clear messaging, but that could potentially clutter the search
+results UI and persisting the setting in the query params does not give any
+clear benefit that I can think of.</p>
+</section>
+</section>
+</section>
+<section id="outstanding-questions">
+<h2>Outstanding questions<a class="headerlink" href="#outstanding-questions" title="Permalink to this heading">#</a></h2>
+<section id="include-sensitive-results-persistence">
+<h3>“Include sensitive results” persistence<a class="headerlink" href="#include-sensitive-results-persistence" title="Permalink to this heading">#</a></h3>
+<p>As described in the <a class="reference internal" href="#settings-persistence">settings persistence</a> section above,
+one outstanding question is how to store the “include sensitive results” option.
+The current recommendation is to use a session cookie. Discussed above is
+storing the setting in the query params (with reasons why we shouldn’t do this).
+The only other option is to store the setting in the ephemeral application state
+the way we will store the “do not blur sensitive results” option.</p>
+<p>To simply phrase the question to reviewers: <strong>What is your preference for
+storing the “include sensitive results” option and why?</strong>.</p>
+<p>Above I’ve recommended the session cookie approach because I think it strikes a
+reasonable balance between usability and safety. If someone really wants to
+include sensitive results, they won’t be annoyed by having to re-enable the
+setting every time they reload the page or open a new tab within the same
+session. However, it will also reset so that shared computers will not subject
+subsequent users to the sensitive preferences of previous ones.</p>
+<p>I am totally open to not seeking that balance and going fully into safety mode
+and only persisting the setting in ephemeral application state, requiring it to
+be re-enabled any time the page is reloaded or for new tabs. If other folks
+think this is a preferable option, I am happy to change the feature descriptions
+above to reflect that.</p>
+<p>I am almost entirely closed to the option of storing the option in the query
+params. It gives no discernible benefit in my estimation but comes with risks
+that are counter-productive to the goals of this project. If there is a strong
+argument to be made it favour if this approach, however, please share it.</p>
+</section>
+<section id="how-to-blur-results">
+<h3>How to blur results<a class="headerlink" href="#how-to-blur-results" title="Permalink to this heading">#</a></h3>
+<p>There are three known viable approaches to blurring results. One is
+significantly simpler than the other two. If you know of others, please raise
+them in review.</p>
+<ol class="arabic simple">
+<li><p>Blur using a CSS filter.</p></li>
+<li><p>Blur using <a class="reference external" href="https://github.com/woltapp/blurhash">BlurHash</a>.</p></li>
+<li><p>Blur using
+<a class="reference external" href="https://github.com/transitive-bullshit/lqip-modern">Low Quality Image Placeholders (LQIP)</a>.</p></li>
+</ol>
+<blockquote>
+<div><p><strong>Note</strong>: Photon, the image proxy we use, does
+<a class="reference external" href="https://developer.wordpress.com/docs/photon/api/#filter">have an option to apply two different types of blurs to images</a>.
+This could be used to obviate the issue with blurring client-side on low-spec
+devices. However, we cannot control the degree of blurring and the current
+behaviour does not blur the image sufficiently to obscure its contents. This
+could lead to thinking that we could blur in our own thumbnail endpoint, but
+that would be more resource intensive than using BlurHash (I believe). While
+BlurHash is technically complex to implement, I do think it is the best
+approach for reasons I will describe below. LQIP could also be resource
+intensive for the API, but ameliorated with caching.</p>
+</div></blockquote>
+<section id="css-filter">
+<h4>CSS filter<a class="headerlink" href="#css-filter" title="Permalink to this heading">#</a></h4>
+<p>This is the simplest option and only requires adding a <code class="docutils literal notranslate"><span class="pre">filter:</span> <span class="pre">blur(Xrem)</span></code>
+style to sensitive results.</p>
+<p>This option has the following downsides:</p>
+<ul class="simple">
+<li><p>It is a basic Gaussian blur and may not sufficiently obscure the image if a
+low number is used or may create an unsettling blob effect if a higher number
+is used</p></li>
+<li><p>Gaussian blur may not be as aesthetically pleasing as the alternative</p></li>
+<li><p>It requires the image to be downloaded to be blurred by the client</p></li>
+</ul>
+<p>Initially I speculated that client-side Gaussian blurring may have adverse
+effects on low-spec hardware’s accessibility of the site. However, I’ve tested
+this locally by modifying the frontend to blur all images and visiting the local
+site on my PinePhone, on a low-spec quad-core ARM laptop, and on a US$30 Android
+phone. On none of these devices could I perceive a degradation in performance.
+Keep in mind these are all devices that are already very slow! They were able to
+render a full page of image results blurred at 1rem, without issue.</p>
+<p>It has one significant upside in that it is supremely simple to implement, does
+not require any new dependencies, and would only require about few lines of
+frontend code rather than lots of frontend and API code to support it.
+Additionally, the image would quickly load after being unblurred by the user
+because it would just require removing the CSS style rather than getting the
+actual image.</p>
+</section>
+<section id="blurhash">
+<h4>BlurHash<a class="headerlink" href="#blurhash" title="Permalink to this heading">#</a></h4>
+<p>This is a significantly more complex option that requires both API and frontend
+changes to support. Rather than sending the image to the client, the thumbnail
+URL would send a hashed version of the image that represents the blur. A client
+side library decodes the hash and displays it in place of the thumbnail. It
+would require two new dependencies, a JavaScript BlurHash decoder to render the
+hash in a canvas and an API library to produce the hash from the thumbnail.</p>
+<p>It has the following downsides:</p>
+<ul class="simple">
+<li><p>Significantly more complicated than Gaussian blur</p></li>
+<li><p>Requires conditionally calculating the hash on the API side in the thumbnail
+endpoint</p>
+<ul>
+<li><p>This would be done by using a new query parameter on the thumbnail endpoint
+to request the blurred hash</p></li>
+</ul>
+</li>
+<li><p>Can have a performance impact on the thumbnail endpoint</p></li>
+<li><p>Introduces a delay between when the image is unblurred when it is displayed
+due to needing to download the actual thumbnail</p></li>
+<li><p>Could have different performance issues if decoding the hash is a heavy
+operation for low-spec clients</p>
+<ul>
+<li><p>Looking at the code, I highly doubt this because it’s a
+<a class="reference external" href="https://github.com/mad-gooze/fast-blurhash/blob/main/index.js">fast bit of maths</a>
+that (due to the nature of BlurHash) ignores almost all the content of the
+image rather than a Gaussian blur which needs to consider ever aspect of the
+image in order to apply the blur</p></li>
+</ul>
+</li>
+<li><p>It may have its own client-side performance issues due to clients needing to
+render canvas for each image in view</p></li>
+</ul>
+<p>It has the following upsides:</p>
+<ul class="simple">
+<li><p>Does not require the client to download the image just to blur it</p>
+<ul>
+<li><p>If the client never unblurs an image, it will have saved all the bytes of
+the image from being downloaded to the client</p></li>
+</ul>
+</li>
+<li><p>We can easily cache the hash in Redis to ameliorate performance over time</p>
+<ul>
+<li><p>If we do so, then we could use the hash for other things down the line (like
+average colour filters) and add it directly to the documents via the same
+ETL pipeline we’ll develop for dead links, further ameliorating any API
+performance issues</p></li>
+</ul>
+</li>
+<li><p>Does not rely on the client’s ability to apply and render a Gaussian blur
+transformation to potentially several images on a single page</p></li>
+<li><p>Extremely minor and only barely relevant: If we calculated the BlurHash for
+all images in the future in our re-crawler, we could use them as placeholders
+rather than the skeleton boxes we currently use</p></li>
+</ul>
+</section>
+<section id="lqip-modern">
+<h4>LQIP (modern)<a class="headerlink" href="#lqip-modern" title="Permalink to this heading">#</a></h4>
+<p>This approach generates a very low quality version of the image and passes that
+to the frontend for scaling to the placeholder size and then blurring.
+<a class="reference external" href="https://github.com/transitive-bullshit/lqip-modern">There is an example implementation in JavaScript</a>.</p>
+<p>It has all the same downsides as BlurHash (aside from hash decoding) in addition
+to the fact that we would need to reimplement it in Python. As far as I can
+tell, there is no Python implementation ready for us to use. Performance issues
+on the API side can be amortised through caching. It does not have the same
+potential client-side performance issue as BlurHash as it only requires scaling
+and blurring an image. We know low-spec hardware can handle blurring, and
+scaling is a trivial operation for most hardware.</p>
+<p>It has similar upsides to BlurHash. Critically, compared to BlurHash it:</p>
+<ul class="simple">
+<li><p>Does not require the client to render the hash in a canvas</p></li>
+<li><p>Uses image scaling and blurring on an image with very small amounts of
+information, meaning the client-side Gaussian blur will be less heavy than
+blurring the full thumbnail</p></li>
+</ul>
+<p>However, unlike BlurHash, it has almost no practical future usage for us with
+respect to image analysis.</p>
+</section>
+<section id="recommendation">
+<h4>Recommendation<a class="headerlink" href="#recommendation" title="Permalink to this heading">#</a></h4>
+<p>We should implement the CSS blurring solution first. It is an iterative
+improvement on the current solution and is the fastest way to bring the
+improvements to users.</p>
+<p>Therefore, provided we cannot identify real device accessibility concerns
+(noting my experiments <a class="reference internal" href="#css-filter">covered above</a>), we should proceed with the
+client-side CSS blurring, with a follow-up proposal requested to evaluate
+switching to BlurHash, LQIP, or some other more advanced solution from which we
+might receive additional benefits. This proposal request is not urgent and
+should be triaged in the context of our other scheduled projects.</p>
+<p>If we had infinite time, I think BlurHash would be the best choice—provided it
+itself does not end up having device accessibility issues—for the following
+reasons:</p>
+<ol class="arabic simple">
+<li><p>While significantly more complex, it is not sufficiently complex to be
+burdensome. The simplicity of the CSS filter makes BlurHash look monstrous,
+but in the grand scheme of things, it’s actually a relatively simple approach
+to blurring the images.</p></li>
+<li><p>It avoids performance issues with relying on low-spec clients to apply
+Gaussian blurs to potentially several images.</p></li>
+<li><p>BlurHash hashes have significant future value and all potential API level
+performance issues can be ameliorated through caching hashes with Redis.</p></li>
+</ol>
+<p>The only significant downside that I think exists is the delay between
+unblurring and displaying the full image due to needing to download the full
+unblurred image. However, I think this is balanced out by the bytes saved over
+the network in <em>not</em> sending images that might potentially never be unblurred.</p>
+<p>More important, however, is getting the benefits of this broad feature out to
+users as soon as we can without compromising on the initial quality. We can do
+so using client-side CSS blurring.</p>
+<p>For reviewers: <strong>What are you feelings on this issue and why?</strong>. Do you think it
+is worth investing time up front in BlurHash, LQIP, or another solution; or is
+it fine to push that off to a later date as a potential future improvement to
+the feature?</p>
+</section>
+</section>
+</section>
+<section id="measurements-and-success-criteria">
+<h2>Measurements and success criteria<a class="headerlink" href="#measurements-and-success-criteria" title="Permalink to this heading">#</a></h2>
+<p>The project will be a success once we are able to safely and accessibly serve
+sensitive results to users. This is qualified by the fact that this is an
+initial solution and not the totality of what we wish to do in order to make
+Openverse safer and more broadly accessible.</p>
+<p>The success of that project rests on the completion of its technical
+implementation. However, we can add the following events to the API and frontend
+to better understand the usage of the features.</p>
+<section id="id2">
+<h3>API<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SENSITIVE_RESULT_COUNT</span></code></p>
+<ul>
+<li><p>Sent for each query where the search param <code class="docutils literal notranslate"><span class="pre">include_sensitive_results</span></code> is
+set to <code class="docutils literal notranslate"><span class="pre">True</span></code>. It should include a raw count of the number of results with
+sensitive textual content or with <code class="docutils literal notranslate"><span class="pre">mature</span></code> set to <code class="docutils literal notranslate"><span class="pre">True</span></code>. Not sent for
+results where the search params would not include sensitive results.</p></li>
+<li><p>Allows us to measure the saturation of sensitive results for queries that
+include them.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="id3">
+<h3>Frontend<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h3>
+<p>Each of these are intended for measuring the usage of the feature to which they
+relate.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">TOGGLE_SENSITIVE_RESULTS</span></code></p>
+<ul>
+<li><p>Sent each time the “include sensitive results” setting is toggled.</p></li>
+<li><p>Include a prop noting if the setting was being toggled on or off.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">UNBLUR_SENSITIVE_RESULT</span></code></p>
+<ul>
+<li><p>Sent each time a result is unblurred. This should include a property
+denoting whether it on the single result or search results page.</p></li>
+<li><p>Include media ID (in case this proves useful).</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">REBLUR_SENSITIVE_RESULT</span></code></p>
+<ul>
+<li><p>Sent each time a result is reblurred. This should include a property
+denoting whether it on the single result or search results page.</p></li>
+<li><p>Include media ID (in case this proves useful).</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TOGGLE_DO_NOT_BLUR</span></code></p>
+<ul>
+<li><p>Sent each time the “do not blur sensitive results” setting is toggled.</p></li>
+<li><p>Include a prop noting if the setting was being toggled on or off.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="participants-and-stakeholders">
+<h2>Participants and stakeholders<a class="headerlink" href="#participants-and-stakeholders" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Lead: &#64;sarayourfriend</p></li>
+<li><p>Design: &#64;panchovm</p></li>
+<li><p>Implementation:</p>
+<ul>
+<li><p>&#64;sarayourfriend</p></li>
+<li><p>TBD</p></li>
+</ul>
+</li>
+<li><p>Stakeholders:</p>
+<ul>
+<li><p>Team lead: &#64;zackkrida</p></li>
+<li><p>Design: &#64;panchovm &amp; &#64;WordPress/gutenberg-design</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="infrastructure">
+<h2>Infrastructure<a class="headerlink" href="#infrastructure" title="Permalink to this heading">#</a></h2>
+<p>There are no infrastructure changes anticipated for this project.</p>
+</section>
+<section id="accessibility">
+<h2>Accessibility<a class="headerlink" href="#accessibility" title="Permalink to this heading">#</a></h2>
+<p>The various blurring approaches have potential device accessibility questions
+that need to be answered. For now, sticking with client-side CSS filtering, we
+should not have an issue with device accessibility.</p>
+<p>UI accessibility remains a priority. The frontend implementation plan should
+include clear instructions for ensuring the designs are implemented in an
+accessible way.</p>
+</section>
+<section id="marketing">
+<h2>Marketing<a class="headerlink" href="#marketing" title="Permalink to this heading">#</a></h2>
+<p>We can coordinate with marketing to describe the new feature and its motivations
+and celebrate the increased safety for users, especially young people, using
+Openverse. In particular, we may be able to collaborate with educators that use
+Openverse and share what improving the accessibility of Openverse in this way
+means to them and their students.</p>
+</section>
+<section id="required-implementation-plans">
+<h2>Required implementation plans<a class="headerlink" href="#required-implementation-plans" title="Permalink to this heading">#</a></h2>
+<p>In the order they should be completed:</p>
+<ol class="arabic simple">
+<li><p>API filtering and designation implementation plan.</p>
+<ul class="simple">
+<li><p>Must cover efficiently filtering out results with sensitive textual content
+in addition to including the <code class="docutils literal notranslate"><span class="pre">sensitivity</span></code> designation on each result.</p></li>
+<li><p>Note the implementation detail considerations in the
+<a class="reference internal" href="#implementation-details">filtering</a> and
+<a class="reference internal" href="#id1">designation</a> sections above.</p></li>
+</ul>
+</li>
+<li><p>Frontend implementation plan for settings management and blurring/unblurring
+images</p>
+<ul class="simple">
+<li><p>Must cover the UI changes requested by design, management of both new
+settings, and displaying the blurred image with the ability to unblur.</p></li>
+<li><p>Must cover accessibility testing for the new UI elements, especially the
+unblur/reblur controls.</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="dependent-implementation-plans">
+<h2>Dependent implementation plans<a class="headerlink" href="#dependent-implementation-plans" title="Permalink to this heading">#</a></h2>
+<p>The actual implementation of the two implementation plans requested in this
+proposal are blocked by the implementation of the
+<a class="reference external" href="https://github.com/WordPress/openverse/pull/911">sensitive terms list, as proposed here</a>.</p>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="../document_all_media_properties/index.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Document all media properties</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="20230309-implementation_plan_sensitive_terms_list.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">2023-03-09 Implementation Plan: Sensitive Terms List</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/WordPress/openverse" aria-label="GitHub"><svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">2023-03-09 Project Proposal</a><ul>
+<li><a class="reference internal" href="#reviewers">Reviewers</a></li>
+<li><a class="reference internal" href="#project-summary">Project summary</a></li>
+<li><a class="reference internal" href="#goals">Goals</a></li>
+<li><a class="reference internal" href="#requirements">Requirements</a><ul>
+<li><a class="reference internal" href="#api">API</a><ul>
+<li><a class="reference internal" href="#filtering">Filtering</a><ul>
+<li><a class="reference internal" href="#implementation-details">Implementation details</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#designation-of-results-with-sensitive-terms">Designation of results with sensitive terms</a><ul>
+<li><a class="reference internal" href="#id1">Implementation details</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#frontend">Frontend</a><ul>
+<li><a class="reference internal" href="#settings-persistence">Settings persistence</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#outstanding-questions">Outstanding questions</a><ul>
+<li><a class="reference internal" href="#include-sensitive-results-persistence">“Include sensitive results” persistence</a></li>
+<li><a class="reference internal" href="#how-to-blur-results">How to blur results</a><ul>
+<li><a class="reference internal" href="#css-filter">CSS filter</a></li>
+<li><a class="reference internal" href="#blurhash">BlurHash</a></li>
+<li><a class="reference internal" href="#lqip-modern">LQIP (modern)</a></li>
+<li><a class="reference internal" href="#recommendation">Recommendation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#measurements-and-success-criteria">Measurements and success criteria</a><ul>
+<li><a class="reference internal" href="#id2">API</a></li>
+<li><a class="reference internal" href="#id3">Frontend</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#participants-and-stakeholders">Participants and stakeholders</a></li>
+<li><a class="reference internal" href="#infrastructure">Infrastructure</a></li>
+<li><a class="reference internal" href="#accessibility">Accessibility</a></li>
+<li><a class="reference internal" href="#marketing">Marketing</a></li>
+<li><a class="reference internal" href="#required-implementation-plans">Required implementation plans</a></li>
+<li><a class="reference internal" href="#dependent-implementation-plans">Dependent implementation plans</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/scripts/furo.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    </body>
+</html>
