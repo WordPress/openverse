@@ -28,17 +28,25 @@ export type AudioComponent =
  */
 export type SearchParamsForEvent = {
   kind: "search" | "collection"
-  searchType: SupportedSearchType
+  /** The search term, or a string representing a unique identifier for the collection */
   query: string
-
-  /**
-   * Common properties related to searches on collection pages, added in the
-   * "Additional Search Views" project.
-   */
+  /** The search type of the current results page */
+  searchType: SupportedSearchType
   /** If a collection page, the type of collection */
   collectionType: Collection | "null"
-  /** A string representing a unique identifier for the collection */
-  collectionValue: string | "null"
+}
+
+/**
+ * Common properties for search result events, used to link the result to
+ * assess relevancy.
+ */
+export type SearchResultParams = {
+  /** The unique ID of the media */
+  id: string
+  /** The search term */
+  query: string
+  /** The position of the result in the search results */
+  position: number
 }
 
 /**
@@ -74,11 +82,9 @@ export type Events = {
    *   - How often are searches returning fewer than one page of results?
    *   - How many results do most searches yield?
    */
-  GET_SEARCH_RESULTS: {
-    /** the media type being searched */
+  GET_SEARCH_RESULTS: SearchParamsForEvent & {
+    /** the media type of the results. Is different from `searchType` when searchType is "all media" */
     mediaType: SupportedMediaType
-    /** The search term */
-    query: string
     /** The number of results found for this search */
     resultsCount: number
   }
@@ -108,9 +114,7 @@ export type Events = {
    *   - Do users right-click images often? Does this suggest downloading them directly,
    *     when not paired with a `GET_MEDIA` event?
    */
-  RIGHT_CLICK_IMAGE: {
-    id: string
-  }
+  RIGHT_CLICK_IMAGE: SearchResultParams
   /**
    * Click on the 'back to search' link on a single result
    *
@@ -155,9 +159,7 @@ export type Events = {
    * Questions:
    *   - How often do users go to the source after viewing a result?
    */
-  GET_MEDIA: {
-    /** the unique ID of the media */
-    id: string
+  GET_MEDIA: SearchResultParams & {
     /** The slug (not the prettified name) of the provider */
     provider: string
     /** The media type being searched */
@@ -169,9 +171,7 @@ export type Events = {
    *   - How often do users use our attribution tool?
    *   - Which format is the most popular?
    */
-  COPY_ATTRIBUTION: {
-    /** The unique ID of the media */
-    id: string
+  COPY_ATTRIBUTION: SearchResultParams & {
     /** The format of the copied attribution */
     format: "plain" | "rich" | "html" | "xml"
     /** The media type being searched */
@@ -295,23 +295,25 @@ export type Events = {
    *   - Which results are most popular for given searches?
    *   - How often do searches lead to clicking a result?
    *   - Are there popular searches that do not result in result selection?
+   *   - How often do users select results from the "All content" search?
    */
-  SELECT_SEARCH_RESULT: Omit<SearchParamsForEvent, "searchType" | "kind"> & {
-    /** The unique ID of the media */
-    id: string
-    /** If the result is a related result, provide the ID of the 'original' result */
-    relatedTo: string | "null"
-    /** Kind of the result selected: search/related/collection */
-    kind: ResultKind
-    /** The media type being searched */
-    mediaType: SearchType
-    /** The slug (not the prettified name) of the provider */
-    provider: string
-    /** the reasons for why this result is considered sensitive */
-    sensitivities: string
-    /** whether the result was blurred or visible when selected by the user */
-    isBlurred: boolean | "null"
-  }
+  SELECT_SEARCH_RESULT: SearchResultParams &
+    Pick<SearchParamsForEvent, "collectionType"> & {
+      /** If the result is a related result, provide the ID of the 'original' result */
+      relatedTo: string | "null"
+      /** Kind of the result selected: search/related/collection */
+      kind: ResultKind
+      /** The media type of the result */
+      mediaType: SupportedMediaType
+      /** The search type of the current results page */
+      searchType: SupportedSearchType
+      /** The slug (not the prettified name) of the provider */
+      provider: string
+      /** the reasons for why this result is considered sensitive */
+      sensitivities: string
+      /** whether the result was blurred or visible when selected by the user */
+      isBlurred: boolean | "null"
+    }
   /**
    * Description: When a user opens the external sources popover.
    * Questions:
@@ -337,8 +339,7 @@ export type Events = {
    *     from anyway?
    */
   LOAD_MORE_RESULTS: {
-    /** The current page of results the user is on,
-     * *before* loading more results.. */
+    /** The current page of results the user is on, *before* loading more results. */
     resultPage: number
   } & SearchParamsForEvent
   /**
