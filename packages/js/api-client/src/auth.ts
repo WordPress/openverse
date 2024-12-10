@@ -1,4 +1,4 @@
-import type { Middleware } from "openapi-fetch"
+import type { MiddlewareCallbackParams } from "openapi-fetch"
 import type { components } from "./generated/openverse"
 import type { OpenverseClient, ClientCredentials } from "./types"
 
@@ -11,7 +11,15 @@ type OAuth2Token = components["schemas"]["OAuth2Token"]
 const currTimestamp = (): number => Math.floor(Date.now() / 1e3)
 export const EXPIRY_THRESHOLD = 5 // seconds
 
-export class OpenverseAuthMiddleware implements Middleware {
+type MiddlewareOnRequest = (
+  options: MiddlewareCallbackParams
+) => void | Request | undefined | Promise<Request | undefined | void>
+
+interface OpenverseMiddleware {
+  onRequest: MiddlewareOnRequest
+}
+
+export class OpenverseAuthMiddleware implements OpenverseMiddleware {
   /**
    * An Openverse REST API client.
    *
@@ -57,7 +65,10 @@ export class OpenverseAuthMiddleware implements Middleware {
     this.credentials = credentials
   }
 
-  onRequest: Middleware["onRequest"] = async ({ schemaPath, request }) => {
+  onRequest: OpenverseMiddleware["onRequest"] = async ({
+    schemaPath,
+    request,
+  }) => {
     if (schemaPath == "/v1/auth_tokens/token/") {
       // Do not send auth headers for token generation requests
       return request

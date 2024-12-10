@@ -5,7 +5,7 @@ set dotenv-load := true
 # _ - Private recipes (https://github.com/casey/just#private-recipes)
 
 IS_CI := env_var_or_default("CI", "")
-DC_USER := env_var_or_default("DC_USER", "opener")
+DC_USER := env_var_or_default("DC_USER", "ov_user")
 
 # Show all available recipes, also recurses inside nested justfiles
 @_default:
@@ -232,6 +232,7 @@ env:
 DOCKER_FILE := "-f docker-compose.yml"
 EXEC_DEFAULTS := if IS_CI == "" { "" } else { "-T" }
 
+export OV_PDM_VERSION := env_var_or_default("OV_PDM_VERSION", "2.21")
 export CATALOG_PY_VERSION := `just catalog/py-version`
 export CATALOG_AIRFLOW_VERSION := `just catalog/airflow-version`
 export INDEXER_WORKER_PY_VERSION := `just indexer_worker/py-version`
@@ -247,6 +248,7 @@ export HOST_NETWORK_ADDRESS := if os() == "macos" { "host.docker.internal" } els
 versions:
     #!/usr/bin/env bash
     cat <<EOF
+    ov_pdm_version=$(echo $OV_PDM_VERSION)
     catalog_py_version=$(just catalog/py-version)
     catalog_airflow_version=$(just catalog/airflow-version)
     api_py_version=$(just api/py-version)

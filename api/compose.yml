@@ -16,6 +16,7 @@ services:
       args: # Automatically inferred from env vars, unless specified
         - SEMANTIC_VERSION=${SEMANTIC_VERSION:-v1.0.0}
         - API_PY_VERSION
+        - OV_PDM_VERSION=${OV_PDM_VERSION}
         - PDM_INSTALL_ARGS=--dev
     image: openverse-api:${API_PDM_HASH:-latest}
     pull_policy: never

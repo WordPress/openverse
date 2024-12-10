@@ -98,7 +98,7 @@ recreate:
 
 # Launch a `pgcli` shell in the web container
 pgcli db_user_pass="deploy" db_name="openledger": up
-    env DC_USER="opener" just ../_pgcli web {{ db_user_pass }} {{ db_name }} db
+    env DC_USER="ov_user" just ../_pgcli web {{ db_user_pass }} {{ db_name }} db
 
 #########################
 # Django administration #
@@ -112,7 +112,7 @@ dj-local *args:
 # Run Django administrative commands inside the Docker container
 [positional-arguments]
 dj *args: wait-up
-    env DC_USER="{{ env_var_or_default("DC_USER", "opener") }}" just ../exec web python manage.py "$@"
+    env DC_USER="{{ env_var_or_default("DC_USER", "ov_user") }}" just ../exec web python manage.py "$@"
 
 # Get IPython shell inside the Docker container
 ipython:
@@ -158,7 +158,7 @@ generate-docs doc="media-props" fail_on_diff="true":
 # Run API tests inside the Docker container
 [positional-arguments]
 test *args: wait-up
-    env DC_USER="opener" just ../exec web pytest "$@"
+    env DC_USER="ov_user" just ../exec web pytest "$@"
 
 # Run API tests locally
 [positional-arguments]

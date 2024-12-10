@@ -50,9 +50,9 @@ overrides = [
 ]
 dev = [
     "debugpy >= 1.8.9, <2",
-    "ipython >=8.30.0, <9",
+    "ipython >=8.30, <9",
     "pgcli >=4.1, <5",
-    "remote-pdb >=2.1.0, <3",
+    "remote-pdb >=2.1, <3",
     "setuptools >=75.6, <76",
     # FIXME: Should be removed when Python build issues are resolved,
     # FIXME: since we don't explicitly use this library.

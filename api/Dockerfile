@@ -10,6 +10,9 @@ ARG API_PY_VERSION
 
 FROM docker.io/python:${API_PY_VERSION} AS builder
 
+# Get the version from the main justfile
+ARG OV_PDM_VERSION
+
 # Container optimizations
 ENV PYTHONUNBUFFERED=1
 ENV PIP_NO_CACHE_DIR=1
@@ -19,11 +22,11 @@ ENV PIP_NO_COLOR=1
 # - Create a virtualenv inside `/venv`
 # - Install PDM to install Python dependencies
 RUN apt-get update \
-  && apt-get install -yqq --no-install-recommends \
-    python3-dev \
+  && apt-get install -yqq --no-install-recommends python3-dev \
   && apt-get autoremove -y \
   && rm -rf /var/lib/apt/lists/* \
-  && pip install pdm~=2.19
+  && pip install --upgrade pip \
+  && pip install pdm~=$OV_PDM_VERSION
 
 # Copy subpackages from additional build-context 'packages'
 # hadolint ignore=DL3022
@@ -33,7 +36,7 @@ COPY --from=packages openverse-attribution /packages/python/openverse-attributio
 COPY pyproject.toml pdm.lock /
 
 # Pass additional arguments when installing Python packages with PDM
-ARG PDM_INSTALL_ARGS='--no-editable'
+ARG PDM_INSTALL_ARGS="--no-editable"
 
 # Install Python dependencies into a new virtualenv
 RUN pdm install --check --frozen-lockfile $PDM_INSTALL_ARGS
@@ -86,16 +89,16 @@ RUN apt-get update \
 RUN mkdir /static
 
 # Create a non-root user, and make it the owner of the static dir created above
-RUN useradd --create-home opener \
-  && chown -R opener /static
-USER opener
+RUN useradd --create-home ov_user \
+  && chown -R ov_user /static
+USER ov_user
 
 # Copy subpackages from additional build-context 'packages'
 # hadolint ignore=DL3022
-COPY --chown=opener --from=packages openverse-attribution /packages/python/openverse-attribution/
+COPY --chown=ov_user --from=packages openverse-attribution /packages/python/openverse-attribution/
 
 # Copy code into the final image
-COPY --chown=opener . /api/
+COPY --chown=ov_user . /api/
 
 # Collect static assets, these are used by the next stage, `nginx`
 RUN env \

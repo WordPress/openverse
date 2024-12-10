@@ -47,4 +47,10 @@
 ## Required implementation plans
 
 <!-- What are the required implementation plans? Consider if they should be split per level of the stack or per feature. -->
+
+## Changelog
+
+<!-- If the proposal has undergone revisions, link those below. Try linking to specific PRs or commits. The format should be as follows:
+- YYYY-MM-DD - Summary of changes (#PR number or [commit hash](link to commit))
+-->
 ```

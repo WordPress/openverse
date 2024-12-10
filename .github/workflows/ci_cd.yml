@@ -192,6 +192,7 @@ jobs:
           build-contexts: ${{ matrix.build-contexts }}
           build-args: |
             SEMANTIC_VERSION=${{ needs.get-image-tag.outputs.image_tag }}
+            OV_PDM_VERSION=${{ steps.prepare-build-args.outputs.ov_pdm_version }}
             CATALOG_PY_VERSION=${{ steps.prepare-build-args.outputs.catalog_py_version }}
             CATALOG_AIRFLOW_VERSION=${{ steps.prepare-build-args.outputs.catalog_airflow_version }}
             INDEXER_WORKER_PY_VERSION=${{ steps.prepare-build-args.outputs.indexer_worker_py_version }}
@@ -367,6 +368,7 @@ jobs:
           cache-to: type=gha,scope=indexer_worker_dev
           build-args: |
             INDEXER_WORKER_PY_VERSION=${{ steps.prepare-build-args.outputs.indexer_worker_py_version }}
+            OV_PDM_VERSION=${{ steps.prepare-build-args.outputs.ov_pdm_version }}
             PDM_INSTALL_ARGS=--dev
 
       - name: Run tests
@@ -484,6 +486,7 @@ jobs:
           build-args: |
             SEMANTIC_VERSION=${{ needs.get-image-tag.outputs.image_tag }}
             API_PY_VERSION=${{ steps.prepare-build-args.outputs.api_py_version }}
+            OV_PDM_VERSION=${{ steps.prepare-build-args.outputs.ov_pdm_version }}
             PDM_INSTALL_ARGS=--dev
 
       - name: Start Catalog

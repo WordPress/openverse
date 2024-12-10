@@ -10,6 +10,9 @@ ARG INDEXER_WORKER_PY_VERSION
 
 FROM docker.io/python:${INDEXER_WORKER_PY_VERSION} AS builder
 
+# Get the version from the main justfile
+ARG OV_PDM_VERSION
+
 # Container optimizations
 ENV PYTHONUNBUFFERED=1
 ENV PIP_NO_CACHE_DIR=1
@@ -18,17 +21,17 @@ ENV PIP_NO_COLOR=1
 # - Install system packages needed for building Python dependencies
 # - Install PDM to install Python dependencies
 RUN apt-get update \
-    && apt-get install -yqq --no-install-recommends \
-      python3-dev \
+    && apt-get install -yqq --no-install-recommends python3-dev \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/* \
-    && pip install pdm~=2.14
+    && pip install --upgrade pip \
+    && pip install pdm~=$OV_PDM_VERSION
 
 # Copy the Pipenv files into the container
 COPY pyproject.toml pdm.lock /
 
 # Pass additional arguments when installing Python packages with PDM
-ARG PDM_INSTALL_ARGS='--no-editable'
+ARG PDM_INSTALL_ARGS="--no-editable"
 
 # Install Python dependencies into a new virtualenv
 RUN pdm install --check --frozen-lockfile $PDM_INSTALL_ARGS
@@ -70,13 +73,13 @@ RUN apt-get update \
     && mkdir /worker_state
 
 # Create a non-root user
-RUN useradd ingestionu \
-    && chown ingestionu /worker_state
+RUN useradd ov_user \
+    && chown ov_user /worker_state
 
-USER ingestionu
+USER ov_user
 
 # Copy code into the final image
-COPY --chown=ingestionu . /indexer_worker/
+COPY --chown=ov_user . /indexer_worker/
 
 # Expose Gunicorn server to indexer worker Falcon app
 EXPOSE 8003
