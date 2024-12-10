@@ -11,9 +11,8 @@ const handleClick = () => {
 </script>
 
 <template>
-  <!-- TODO: Populate the post permalink. -->
   <VFeatureNotice
-    see-more-href="https://make.wordpress.org/openverse/"
+    see-more-href="https://make.wordpress.org/openverse/?p=2216"
     @click="handleClick"
   >
     {{ $t("notification.darkMode.text") }}
