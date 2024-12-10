@@ -1,13 +1,13 @@
 """This file contains configuration pertaining to Elasticsearch."""
 
 from decouple import config
-from elasticsearch import Elasticsearch
+from elasticsearch import AsyncElasticsearch, Elasticsearch
 from elasticsearch_dsl import connections
 
 from api.constants.media_types import MEDIA_TYPES
 
 
-def _elasticsearch_connect() -> tuple[Elasticsearch, str]:
+def _elasticsearch_connect() -> tuple[Elasticsearch, str, AsyncElasticsearch]:
     """
     Connect to configured Elasticsearch domain.
 
@@ -30,17 +30,20 @@ def _elasticsearch_connect() -> tuple[Elasticsearch, str]:
     )
     _es.info()
     _es.cluster.health(wait_for_status="yellow")
-    return _es, es_endpoint
+
+    _async_es = AsyncElasticsearch(es_endpoint)
+
+    return _es, es_endpoint, _async_es
 
 
 SETUP_ES = config("SETUP_ES", default=True, cast=bool)
 if SETUP_ES:
-    ES, ES_ENDPOINT = _elasticsearch_connect()
+    ES, ES_ENDPOINT, ASYNC_ES = _elasticsearch_connect()
     #: Elasticsearch client, also aliased to connection 'default'
 
     connections.add_connection("default", ES)
 else:
-    ES, ES_ENDPOINT = None, None
+    ES, ES_ENDPOINT, ASYNC_ES = None, None, None
 
 MEDIA_INDEX_MAPPING = {
     media_type: config(f"{media_type.upper()}_INDEX_NAME", default=media_type)
