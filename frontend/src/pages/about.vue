@@ -30,7 +30,7 @@ useHead({
 
     <p>
       <i18n-t scope="global" keypath="about.collection.content.a" tag="span">
-        <template>Openverse</template>
+        <template #openverse>Openverse</template>
         <template #commonCrawl>
           <VLink href="https://commoncrawl.org/">Common Crawl</VLink>
         </template>
@@ -42,7 +42,7 @@ useHead({
       {{ $t("about.planning.content.a", { openverse: "Openverse" }) }}
       {{ $t("about.planning.content.b") }}
       <i18n-t scope="global" keypath="about.planning.content.c" tag="span">
-        <template>Openverse</template>
+        <template #openverse>Openverse</template>
         <template #repository>
           <VLink href="https://github.com/wordpress/openverse">{{
             $t("about.planning.repository", {
@@ -98,7 +98,7 @@ useHead({
     </h2>
 
     <i18n-t scope="global" keypath="externalSourcesPage.intro" tag="p">
-      <template>Openverse</template>
+      <template #openverse>Openverse</template>
       <template #link>
         <VLink href="/sources">{{ $t("externalSourcesPage.link") }}</VLink>
       </template>
