@@ -20,7 +20,7 @@ if "django_structlog" not in INSTALLED_APPS:
 
 MIDDLEWARE.insert(0, "django_structlog.middlewares.RequestMiddleware")
 
-LOG_LEVEL = config("LOG_LEVEL", default="INFO").upper()
+DJANGO_LOG_LEVEL = config("DJANGO_LOG_LEVEL", default="INFO").upper()
 DJANGO_DB_LOGGING = config("DJANGO_DB_LOGGING", cast=bool, default=False)
 LOG_PROCESSOR = config(
     "LOG_PROCESSOR",
@@ -118,7 +118,7 @@ LOGGING = {
     },
     "handlers": {
         "console_structured": {
-            "level": LOG_LEVEL,
+            "level": DJANGO_LOG_LEVEL,
             "class": "logging.StreamHandler",
             "formatter": "structured",
             "filters": ["suppress_unwanted_logs"],
@@ -126,7 +126,7 @@ LOGGING = {
     },
     "root": {
         "handlers": ["console_structured"],
-        "level": LOG_LEVEL,
+        "level": DJANGO_LOG_LEVEL,
         "propagate": False,
     },
     "loggers": {
@@ -139,7 +139,7 @@ LOGGING = {
         },
         "uvicorn": {
             "handlers": ["console_structured"],
-            "level": LOG_LEVEL,
+            "level": DJANGO_LOG_LEVEL,
         },
     },
 }
