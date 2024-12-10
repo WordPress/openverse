@@ -8,7 +8,10 @@ from conf.settings.base import ENVIRONMENT
 
 SENTRY_DSN = config("SENTRY_DSN", default="")
 
-SENTRY_SAMPLE_RATE = config("SENTRY_SAMPLE_RATE", default=0, cast=float)
+SENTRY_TRACES_SAMPLE_RATE = config("SENTRY_TRACES_SAMPLE_RATE", default=0, cast=float)
+SENTRY_PROFILES_SAMPLE_RATE = config(
+    "SENTRY_PROFILES_SAMPLE_RATE", default=0, cast=float
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DJANGO_DEBUG_ENABLED", default=False, cast=bool)
@@ -26,7 +29,8 @@ if not DEBUG and SENTRY_DSN:
     sentry_sdk.init(
         dsn=SENTRY_DSN,
         integrations=INTEGRATIONS,
-        traces_sample_rate=SENTRY_SAMPLE_RATE,
+        traces_sample_rate=SENTRY_TRACES_SAMPLE_RATE,
+        profiles_sample_rate=SENTRY_PROFILES_SAMPLE_RATE,
         send_default_pii=False,
         environment=ENVIRONMENT,
     )
