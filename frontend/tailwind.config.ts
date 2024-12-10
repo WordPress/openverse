@@ -109,6 +109,9 @@ export default {
       tx: "transparent",
       curr: "currentColor",
       current: "currentColor",
+
+      contrast: "var(--color-contrast, var(--color-text))",
+      "focus-ring": "var(--color-focus-ring, var(--color-border-focus))",
     },
     placeholderColor: {
       default: "var(--color-text-secondary)",
@@ -254,6 +257,7 @@ export default {
         "over-dark": "var(--color-text-over-dark)",
         "over-negative": "var(--color-text-over-negative)",
         "secondary-over-dark": "var(--color-text-secondary-over-dark)",
+        contrast: "var(--color-contrast, var(--color-text))",
       },
       backgroundColor: {
         default: "var(--color-bg)",
@@ -360,7 +364,7 @@ export default {
             item,
             (value) => ({
               "--tw-ring-offset-color": "var(--color-bg-curr-page)",
-              "--tw-ring-color": value,
+              "--tw-ring-color": `var(--color-accent, var(${value}))`,
               "--tw-outline-color": value,
             }),
           ])

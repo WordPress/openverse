@@ -96,7 +96,7 @@ const linkColumnHeight = computed(() => ({
     <!-- Locale chooser and WordPress affiliation graphic -->
     <div class="locale-and-wp flex flex-col justify-between">
       <template v-if="showThemeSwitcher">
-        <VWordPressLink mode="light" />
+        <VWordPressLink />
         <div class="flex flex-row items-center gap-6">
           <VLanguageSelect
             v-bind="languageProps"
@@ -110,7 +110,7 @@ const linkColumnHeight = computed(() => ({
           v-bind="languageProps"
           class="language max-w-full border-secondary"
         />
-        <VWordPressLink mode="light" />
+        <VWordPressLink />
       </template>
     </div>
   </footer>
