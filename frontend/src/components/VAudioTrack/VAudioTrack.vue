@@ -431,7 +431,7 @@ const layoutBasedProps = computed(() =>
           "cursor-pointer",
           {
             "focus-visible:focus-bold-filled": props.layout === "box",
-            "focus-slim-tx": props.layout === "row",
+            "focus-visible:focus-slim-tx": props.layout === "row",
           },
         ],
       }

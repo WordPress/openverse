@@ -121,7 +121,7 @@ const onChange = () => {
                 'h-5',
                 'w-5',
                 'rounded-sm',
-                'focus-slim-tx',
+                'focus-visible:focus-slim-tx',
                 'checked:focus-visible:border-bg-ring',
               ]
         "
