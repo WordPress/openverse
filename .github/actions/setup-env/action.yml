@@ -21,6 +21,13 @@ inputs:
 runs:
   using: "composite"
   steps:
+    # Setup dev-env
+    - name: Setup ov
+      shell: bash
+      run: |
+        ./ov build
+        ./ov setup-env
+
     # Just
     - name: Setup just
       uses: taiki-e/install-action@v2
