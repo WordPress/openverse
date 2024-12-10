@@ -109,23 +109,18 @@ jobs:
       - name: Setup CI env
         uses: ./.github/actions/setup-env
         with:
-          # PDM is needed to run Vale
-          setup_python: "true"
-          # Node.js is needed by lint actions.
-          install_recipe: "node-install"
-
-      - name: Cache pre-commit envs
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pre-commit
-          key: ${{ runner.os }}-pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
+          setup_python: false
+          # Python is not needed to run lint.
+          setup_nodejs: false
+          # Node.js is not needed to run lint.
+          install_recipe: ""
 
       - name: Run pre-commit to lint files
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
-          just precommit
-          just lint
+          ./ov just precommit
+          ./ov just lint
 
   validate-codeowners:
     name: Validate CODEOWNERS
