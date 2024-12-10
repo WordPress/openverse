@@ -53,7 +53,7 @@ useHead({ title: `${t("sources.title")} | Openverse` })
     </p>
 
     <i18n-t scope="global" keypath="sources.ccContent.europeana" tag="p">
-      <template>Openverse</template>
+      <template #openverse>Openverse</template>
       <template #link>
         <VLink href="https://www.europeana.eu/en">Europeana</VLink>
       </template>
