@@ -44,7 +44,7 @@ const handleChange = ({ checked }: { checked?: boolean }) => {
           $t("privacy.intro.link")
         }}</VLink>
       </template>
-      <template #openverse>Openverse</template>
+      <template>Openverse</template>
     </i18n-t>
 
     <h2>
@@ -60,7 +60,7 @@ const handleChange = ({ checked }: { checked?: boolean }) => {
     </h2>
 
     <i18n-t scope="global" keypath="privacy.contact.content" tag="p">
-      <template #openverse>Openverse</template>
+      <template>Openverse</template>
       <template #email>
         <VLink href="mailto:openverse@wordpress.org"
           >openverse@wordpress.org</VLink
