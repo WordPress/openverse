@@ -18,8 +18,6 @@ ENV HOME="/opt"
 ENV PDM_PYTHONS="${HOME}/pdm/bin"
 # location where `n` installs Node.js versions
 ENV N_PREFIX="${HOME}/n"
-# location for `npm`'s cache
-ENV NPM_CONFIG_CACHE="/tmp/.npm/"
 
 ENV PIPX_GLOBAL_HOME=/pipx
 

@@ -70,6 +70,9 @@ linux*)
   docker_group=$(getent group docker | cut -d: -f3)
   if [ "$1" == "sudo" ]; then
     user_id="0"
+    # Use root in CI
+  elif [ -n "$CI" ]; then
+    user_id="0"
   else
     user_id="$UID"
   fi
