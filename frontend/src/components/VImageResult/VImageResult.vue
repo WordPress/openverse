@@ -3,6 +3,7 @@ import { useI18n, useNuxtApp } from "#imports"
 import { computed } from "vue"
 
 import { IMAGE } from "#shared/constants/media"
+import { singleResultQuery } from "#shared/utils/query-utils"
 import type { AspectRatio, ImageDetail } from "#shared/types/media"
 import type { SingleResultProps } from "#shared/types/collection-component-props"
 import { useSearchStore } from "~/stores/search"
@@ -60,9 +61,7 @@ const imageUrl = computed(() => {
 })
 
 const imageLink = computed(() => {
-  return `/image/${props.image.id}/${
-    props.searchTerm ? "?q=" + props.searchTerm : ""
-  }`
+  return `/image/${props.image.id}/${singleResultQuery(props.searchTerm)}`
 })
 
 /**

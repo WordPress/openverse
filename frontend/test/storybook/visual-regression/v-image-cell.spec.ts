@@ -10,12 +10,12 @@ const imageCell = "a[itemprop='contentUrl']"
 // exceeds the bounds of the actual component
 const screenshotEl = ".image-wrapper"
 
-const urlWithArgs = makeUrlWithArgs("components-vimagecell--default")
+const urlWithArgs = makeUrlWithArgs("components-vimageresult--default")
 
 test.describe.configure({ mode: "parallel" })
 
 const aspectRatios: AspectRatio[] = ["square", "intrinsic"]
-test.describe("VImageCell", () => {
+test.describe("VImageResult", () => {
   breakpoints.describeMobileXsAndDesktop(({ expectSnapshot }) => {
     for (const ratio of aspectRatios) {
       test.beforeEach(async ({ page }) => {
