@@ -1,8 +1,0 @@
-# Relicensing
-
-```{toctree}
-:titlesonly:
-:glob:
-
-*
-```

@@ -1,1 +1,0 @@
-import{V as o}from"./D4JcsNEP.js";import{d as r,F as t,G as l,T as n,H as p,S as c}from"./D21kBugn.js";const d=r({__name:"VTag",props:{href:{}},setup(a){const e=a;return(s,i)=>(p(),t(o,n({as:"VLink",size:"small",variant:"filled-gray",class:"label-bold"},e),{default:l(()=>[c(s.$slots,"default")]),_:3},16))}});export{d as _};
