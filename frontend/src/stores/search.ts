@@ -239,12 +239,14 @@ export const useSearchStore = defineStore("search", {
     searchParamsForEvent(): SearchParamsForEvent {
       return {
         kind: this.strategy === "default" ? "search" : "collection",
-        query: this.searchTerm,
+        query:
+          this.strategy === "default"
+            ? this.searchTerm
+            : (this.collectionValue ?? ""),
         searchType: isSearchTypeSupported(this.searchType)
           ? this.searchType
           : ALL_MEDIA,
         collectionType: this.collectionParams?.collection ?? "null",
-        collectionValue: this.collectionValue ?? "null",
       }
     },
   },

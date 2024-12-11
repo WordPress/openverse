@@ -12,18 +12,28 @@ import {
 } from "~~/test/playwright/utils/analytics"
 import { t } from "~~/test/playwright/utils/i18n"
 
-import { AUDIO, IMAGE } from "#shared/constants/media"
+import { ALL_MEDIA, AUDIO, IMAGE } from "#shared/constants/media"
+import type { Events } from "#shared/types/analytics"
 
 test.describe.configure({ mode: "parallel" })
 
-const defaultPayload = {
-  query: "birds",
+const searchResultPayload = {
   kind: "search",
-  relatedTo: "null",
   collectionType: "null",
-  collectionValue: "null",
-  sensitivities: "",
+  searchType: ALL_MEDIA,
+} as const
+
+const defaultPayload = {
+  ...searchResultPayload,
   isBlurred: false,
+  relatedTo: "null",
+  sensitivities: "",
+} as const
+
+const audioResult = {
+  mediaType: AUDIO,
+  id: "2e38ac1e-830c-4e9c-b13d-2c9a1ad53f95",
+  provider: "jamendo",
 } as const
 
 test.describe("all results grid analytics test", () => {
@@ -42,15 +52,14 @@ test.describe("all results grid analytics test", () => {
     const selectSearchResultEvent = analyticsEvents.find(
       (event) => event.n === "SELECT_SEARCH_RESULT"
     )
-    expectEventPayloadToMatch(selectSearchResultEvent, {
+    const expectedPayload: Events["SELECT_SEARCH_RESULT"] = {
       ...defaultPayload,
-      mediaType: AUDIO,
-      id: "2e38ac1e-830c-4e9c-b13d-2c9a1ad53f95",
-      provider: "jamendo",
-    })
+      ...audioResult,
+    }
+    expectEventPayloadToMatch(selectSearchResultEvent, expectedPayload)
   })
 
-  test("should send SELECT_SEARCH_RESULT event when image result is selected", async ({
+  test("sends SELECT_SEARCH_RESULT event when image result is selected", async ({
     context,
     page,
   }) => {
@@ -60,12 +69,14 @@ test.describe("all results grid analytics test", () => {
     const selectSearchResultEvent = analyticsEvents.find(
       (event) => event.n === "SELECT_SEARCH_RESULT"
     )
-
-    expectEventPayloadToMatch(selectSearchResultEvent, {
+    const expectedPayload: Events["SELECT_SEARCH_RESULT"] = {
+      ...defaultPayload,
       id: "da5cb478-c093-4d62-b721-cda18797e3fb",
       mediaType: IMAGE,
       provider: "flickr",
-    })
+    }
+
+    expectEventPayloadToMatch(selectSearchResultEvent, expectedPayload)
   })
 
   test("sends AUDIO_INTERACTION event when audio is interacted", async ({
@@ -83,13 +94,13 @@ test.describe("all results grid analytics test", () => {
     const audioInteractionEvent = analyticsEvents.find(
       (event) => event.n === "AUDIO_INTERACTION"
     )
-
-    expectEventPayloadToMatch(audioInteractionEvent, {
-      id: "2e38ac1e-830c-4e9c-b13d-2c9a1ad53f95",
+    const expectedPayload: Events["AUDIO_INTERACTION"] = {
+      id: audioResult.id,
+      provider: audioResult.provider,
       event: "play",
-      provider: "jamendo",
       component: "VAllResultsGrid",
-    })
+    }
+    expectEventPayloadToMatch(audioInteractionEvent, expectedPayload)
   })
 
   test("sends CHANGE_CONTENT_TYPE event when content type is changed", async ({
@@ -109,11 +120,11 @@ test.describe("all results grid analytics test", () => {
     const changeContentTypeEvent = events.find(
       (event) => event.n === "CHANGE_CONTENT_TYPE"
     )
-
-    expectEventPayloadToMatch(changeContentTypeEvent, {
+    const expectedPayload: Events["CHANGE_CONTENT_TYPE"] = {
       component: "VContentLink",
       next: "image",
       previous: "all",
-    })
+    }
+    expectEventPayloadToMatch(changeContentTypeEvent, expectedPayload)
   })
 })
