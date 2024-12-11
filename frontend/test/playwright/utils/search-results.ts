@@ -34,7 +34,7 @@ export const locateFocusedResult = async (page: Page) => {
   expect(href).toBeDefined()
   const url = new URL(href ?? "")
 
-  return page.locator(`[href="${url.pathname}?q=birds"]`)
+  return page.locator(`[href*="${url.pathname}?q=birds"]`)
 }
 
 /**
