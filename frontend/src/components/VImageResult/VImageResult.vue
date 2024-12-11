@@ -110,10 +110,8 @@ const sendSelectSearchResultEvent = (event: MouseEvent) => {
     return
   }
 
-  const { searchType, collectionType } = searchStore.searchParamsForEvent
   $sendCustomEvent("SELECT_SEARCH_RESULT", {
-    searchType,
-    collectionType,
+    ...searchStore.searchParamsForEvent,
     id: props.image.id,
     kind: props.kind,
     mediaType: IMAGE,

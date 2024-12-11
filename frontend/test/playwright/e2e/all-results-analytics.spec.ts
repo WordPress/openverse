@@ -18,6 +18,7 @@ import type { Events } from "#shared/types/analytics"
 test.describe.configure({ mode: "parallel" })
 
 const searchResultPayload = {
+  query: "birds",
   kind: "search",
   collectionType: "null",
   searchType: ALL_MEDIA,
