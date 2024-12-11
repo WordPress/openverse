@@ -46,10 +46,6 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
     view_is_async = True
 
     lookup_field = "identifier"
-    # TODO: https://github.com/encode/django-rest-framework/pull/6789
-    lookup_value_regex = (
-        r"[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}"
-    )
 
     pagination_class = StandardPagination
 
