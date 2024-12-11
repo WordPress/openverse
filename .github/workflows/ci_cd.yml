@@ -119,6 +119,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
+          ./ov rm -rf /opt/.npm
           ./ov just lint
 
   validate-codeowners:
