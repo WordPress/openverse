@@ -28,19 +28,22 @@ ENV PATH="${PNPM_BIN}:${N_PREFIX}/bin:${PDM_PYTHONS}:${HOME}/.local/bin:${PATH}"
 
 # Dependency explanations:
 # - git: required by some python package; contributors should use git on their host
-# - perl: used in linting
-# - gcc, g++: required by some pre-commit hooks for node-gyp
+# - g++: required by some pre-commit hooks for node-gyp
 # - just: command runner
 # - jq: JSON processor
 # - which: locate a program file in `PATH`
 # - tree: list files in a tree
+# - xdg-utils: added because Storybook wants to open in a browser
+# - nodejs, npm: language runtime (does not include Corepack)
 # - python*: required by some Python libraries for compilation during installation
-# - libffi*: required for the Python package cffi
 # - pipx: Python CLI app installer
-# - nodejs: language runtime (includes npm but not Corepack)
+# - libffi*: required for the Python package cffi
 # - docker*: used to interact with host Docker socket
+# - unzip: used to extract zip files of visual regression patches from CI artifacts
 # - postgresql*: required to connect to PostgreSQL databases
-# - k6: used for load testing
+#
+# System-specific dependencies:
+# - k6: used for load testing (only installed on x86 architectures)
 #
 # pipx dependencies:
 # - httpie: CLI HTTP client
@@ -51,10 +54,10 @@ ENV PATH="${PNPM_BIN}:${N_PREFIX}/bin:${PDM_PYTHONS}:${HOME}/.local/bin:${PATH}"
 # Node dependencies:
 # - n: Node.js distribution manager
 # - corepack: Node.js package-manager-manager
-RUN mkdir /pipx \
+RUN mkdir -p $HOME/.local/bin \
+  && mkdir /pipx \
   && dnf5 -y install dnf-plugins-core \
   && dnf5 -y config-manager addrepo --from-repofile=https://download.docker.com/linux/fedora/docker-ce.repo \
-  && dnf5 -y install https://dl.k6.io/rpm/repo.rpm \
   && dnf5 -y install \
     git \
     g++ \
@@ -64,12 +67,16 @@ RUN mkdir /pipx \
     tree \
     xdg-utils \
     nodejs npm \
-    python3.12 python3.12-devel pipx \
+    python3.12 python3.12-devel \
+    pipx \
     libffi-devel \
     docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin \
     unzip \
     postgresql postgresql-devel \
-    k6 \
+  && if [ "$(uname -m)" = "x86_64" ]; then \
+    dnf5 -y install https://dl.k6.io/rpm/repo.rpm \
+    && dnf5 -y install k6; \
+  fi \
   && dnf5 clean all \
   && pipx install --global \
     httpie \
