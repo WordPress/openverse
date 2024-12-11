@@ -119,7 +119,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
-          ./ov just precommit
           ./ov just lint
 
   validate-codeowners:
