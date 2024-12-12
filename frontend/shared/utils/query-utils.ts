@@ -27,6 +27,9 @@ export const mediaSlug = (mediaType: SupportedMediaType) =>
  * Create a query string for a single result page, e.g. `/search?q=term&p=1`.
  */
 export const singleResultQuery = (searchTerm?: string, position?: number) => {
+  if (!searchTerm && !position) {
+    return ""
+  }
   const query = new URLSearchParams()
   if (searchTerm) {
     query.set("q", searchTerm)
@@ -34,5 +37,5 @@ export const singleResultQuery = (searchTerm?: string, position?: number) => {
   if (position) {
     query.set("p", position.toString())
   }
-  return query.toString()
+  return `?${query.toString()}`
 }

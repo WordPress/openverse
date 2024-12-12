@@ -28,7 +28,7 @@ test.describe("VImageResult", () => {
         await page.goto(urlWithArgs({ aspectRatio: ratio }))
         await expectSnapshot(
           page,
-          `v-image-cell-${ratio}-loaded`,
+          `v-image-result-${ratio}-loaded`,
           page.locator(screenshotEl)
         )
       })
@@ -40,7 +40,7 @@ test.describe("VImageResult", () => {
 
         await expectSnapshot(
           page,
-          `v-image-cell-${ratio}-focused`,
+          `v-image-result-${ratio}-focused`,
           page.locator(screenshotEl)
         )
       })
@@ -52,7 +52,7 @@ test.describe("VImageResult", () => {
 
         await expectSnapshot(
           page,
-          `v-image-cell-${ratio}-hovered`,
+          `v-image-result-${ratio}-hovered`,
           page.locator(screenshotEl)
         )
       })
@@ -66,7 +66,7 @@ test.describe("VImageResult", () => {
 
         await expectSnapshot(
           page,
-          `v-image-cell-${ratio}-focused-hovered`,
+          `v-image-result-${ratio}-focused-hovered`,
           page.locator(screenshotEl)
         )
       })

@@ -34,7 +34,7 @@ const searchStore = useSearchStore()
 const { isHidden: shouldBlur } = useSensitiveMedia(ref(props.audio))
 
 const href = computed(() => {
-  return `/audio/${props.audio.id}/?${singleResultQuery(props.searchTerm)}`
+  return `/audio/${props.audio.id}/${singleResultQuery(props.searchTerm)}`
 })
 
 const sendSelectSearchResultEvent = (
