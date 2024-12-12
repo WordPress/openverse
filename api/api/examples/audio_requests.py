@@ -69,5 +69,6 @@ audio_waveform_curl = f"""
 # Get the waveform of audio ID {identifier}
 curl \\
   {auth} \\
+  -H "Content-Type: application/json" \\
   "{ORIGIN}/v1/audio/{identifier}/waveform/"
 """
