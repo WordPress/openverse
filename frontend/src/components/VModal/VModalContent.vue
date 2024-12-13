@@ -200,8 +200,9 @@ defineExpose({
             },
             variant === 'mobile-input'
               ? 'bg-default'
-              : 'bg-overlay dark:bg-black',
-            `modal-content-${mode}`,
+              : mode === 'dark'
+                ? 'bg-black'
+                : 'bg-overlay',
           ]"
         >
           <slot />
