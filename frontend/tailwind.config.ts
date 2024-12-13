@@ -104,6 +104,12 @@ export default {
       curr: "currentColor",
       current: "currentColor",
 
+      // Focus ring colors
+      focus: {
+        DEFAULT: "var(--color-border-focus)",
+        yellow: "var(--color-yellow-3)",
+      },
+
       contrast: "var(--color-contrast, var(--color-text))",
     },
     placeholderColor: {
@@ -167,12 +173,6 @@ export default {
       1.5: "1.5px",
       2: "2px",
       3: "3px",
-    },
-    outlineColor: {
-      focus: "var(--color-border-focus)",
-    },
-    ringColor: {
-      focus: "var(--color-border-focus)",
     },
     ringOffsetWidth: {
       0: "0px",
@@ -321,6 +321,12 @@ export default {
       outlineWidth: {
         1.5: "1.5px",
         3: "3px",
+      },
+      outlineColor: {
+        focus: "var(--color-border-focus)",
+      },
+      ringColor: {
+        focus: "var(--color-border-focus)",
       },
       typography: () => ({
         DEFAULT: {
