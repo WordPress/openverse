@@ -159,7 +159,7 @@ const variant = computed(() => tabContext.variant.value)
     size="disabled"
     variant="plain--avoid"
     v-bind="tabProps"
-    class="rounded-none bg-default focus:z-10 focus-visible:focus-slim-tx"
+    class="focus-visible:focus-slim-tx rounded-none bg-default focus:z-10"
     :class="[variant, `size-${size}`, { [`${variant}-selected`]: isSelected }]"
     @click="handleSelection"
     @focus="handleFocus"
