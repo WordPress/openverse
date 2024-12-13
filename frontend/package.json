@@ -41,7 +41,7 @@
     "test:storybook:local": "playwright test -c test/storybook",
     "test:storybook:debug": "PWDEBUG=1 pnpm test:storybook:local",
     "test:storybook:gen": "playwright codegen localhost:54000/",
-    "types": "pnpm run i18n:test && npx nuxi prepare && vue-tsc -p .",
+    "types": "pnpm run i18n:test && npx nuxi typecheck",
     "i18n": "node i18n/scripts/setup.mjs",
     "i18n:debug": "pnpm i18n --debug",
     "i18n:en": "pnpm i18n --en-only",
