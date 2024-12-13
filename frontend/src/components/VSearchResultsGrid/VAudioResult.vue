@@ -43,18 +43,17 @@ const sendSelectSearchResultEvent = (
     return
   }
   useAudioSnackbar().hide()
+  const { searchType, collectionType } = searchStore.searchParamsForEvent
   $sendCustomEvent("SELECT_SEARCH_RESULT", {
+    searchType,
+    collectionType,
     id: audio.id,
     kind: props.kind,
     mediaType: AUDIO,
-    query: props.searchTerm,
     provider: audio.provider,
     relatedTo: props.relatedTo ?? "null",
     sensitivities: audio.sensitivity?.join(",") ?? "",
     isBlurred: shouldBlur.value ?? "null",
-    collectionType:
-      searchStore.strategy !== "default" ? searchStore.strategy : "null",
-    collectionValue: searchStore.collectionValue ?? "null",
   })
 }
 const sendInteractionEvent = (

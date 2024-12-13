@@ -11,6 +11,8 @@ import {
 import { t } from "~~/test/playwright/utils/i18n"
 import { getH1 } from "~~/test/playwright/utils/components"
 
+import type { Events } from "#shared/types/analytics"
+
 const audioObject = {
   id: "1cb1af19-7232-40c2-b9ea-8d6c47e677f9",
   provider: "wikimedia_audio",
@@ -51,10 +53,11 @@ test("sends GET_MEDIA event on CTA button click", async ({ context, page }) => {
 
   const getMediaEvent = analyticsEvents.find((event) => event.n === "GET_MEDIA")
 
-  expectEventPayloadToMatch(getMediaEvent, {
+  const expectedPayload: Events["GET_MEDIA"] = {
     ...audioObject,
     mediaType: "audio",
-  })
+  }
+  expectEventPayloadToMatch(getMediaEvent, expectedPayload)
 })
 
 test("sends AUDIO_INTERACTION event on play", async ({ page, context }) => {
@@ -68,11 +71,12 @@ test("sends AUDIO_INTERACTION event on play", async ({ page, context }) => {
     (event) => event.n === "AUDIO_INTERACTION"
   )
 
-  expectEventPayloadToMatch(audioInteractionEvent, {
+  const expectedPayload: Events["AUDIO_INTERACTION"] = {
     ...audioObject,
     event: "play",
     component: "AudioDetailPage",
-  })
+  }
+  expectEventPayloadToMatch(audioInteractionEvent, expectedPayload)
 })
 
 test("sends AUDIO_INTERACTION event on seek", async ({ page, context }) => {
@@ -86,11 +90,12 @@ test("sends AUDIO_INTERACTION event on seek", async ({ page, context }) => {
     (event) => event.n === "AUDIO_INTERACTION"
   )
 
-  expectEventPayloadToMatch(audioInteractionEvent, {
+  const expectedPayload: Events["AUDIO_INTERACTION"] = {
     ...audioObject,
     event: "seek",
     component: "AudioDetailPage",
-  })
+  }
+  expectEventPayloadToMatch(audioInteractionEvent, expectedPayload)
 })
 
 test("shows the 404 error page when no valid id", async ({ page }) => {
@@ -126,16 +131,16 @@ test("sends SELECT_SEARCH_RESULT event on related audio click", async ({
     (event) => event.n === "SELECT_SEARCH_RESULT"
   )
 
-  expectEventPayloadToMatch(selectSearchResultEvent, {
+  const expectedPayload: Events["SELECT_SEARCH_RESULT"] = {
     id: "0b94484c-d7d1-43f2-8710-69399b6a0310",
     relatedTo: audioObject.id,
     kind: "related",
     mediaType: "audio",
     provider: "wikimedia_audio",
-    query: "",
+    searchType: "all",
     sensitivities: "",
     isBlurred: false,
     collectionType: "null",
-    collectionValue: "null",
-  })
+  }
+  expectEventPayloadToMatch(selectSearchResultEvent, expectedPayload)
 })
