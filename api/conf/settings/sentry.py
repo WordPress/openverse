@@ -4,6 +4,7 @@ from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.logging import LoggingIntegration, ignore_logger
 
 from conf.settings.base import ENVIRONMENT
+from conf.settings.security import DEBUG
 
 
 SENTRY_DSN = config("SENTRY_DSN", default="")
@@ -12,9 +13,6 @@ SENTRY_TRACES_SAMPLE_RATE = config("SENTRY_TRACES_SAMPLE_RATE", default=0, cast=
 SENTRY_PROFILES_SAMPLE_RATE = config(
     "SENTRY_PROFILES_SAMPLE_RATE", default=0, cast=float
 )
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config("DJANGO_DEBUG_ENABLED", default=False, cast=bool)
 
 INTEGRATIONS = [
     DjangoIntegration(),
