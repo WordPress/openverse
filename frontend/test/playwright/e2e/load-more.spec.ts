@@ -12,6 +12,7 @@ import {
 import { getLoadMoreButton } from "~~/test/playwright/utils/components"
 
 import { AUDIO, IMAGE, type SupportedMediaType } from "#shared/constants/media"
+import type { Events } from "#shared/types/analytics"
 
 test.describe.configure({ mode: "parallel" })
 
@@ -24,6 +25,14 @@ const openSingleMediaView = async (
     .click()
   await page.waitForURL(/search\/(audio|image)/)
 }
+
+const defaultPayload = {
+  query: "cat",
+  searchType: "all",
+  collectionType: "null",
+  kind: "search",
+} as const
+
 /**
  * Cases, check both SSR and CSR:
  * 1. All content view with more than 1 page of results for each media type:
@@ -151,13 +160,11 @@ test.describe("Load more button", () => {
       (event) => event.n === "REACH_RESULT_END"
     )
 
-    expectEventPayloadToMatch(reachResultEndEvent, {
-      query: "cat",
-      searchType: "all",
+    const expectedPayload: Events["REACH_RESULT_END"] = {
+      ...defaultPayload,
       resultPage: 1,
-      collectionType: "null",
-      collectionValue: "null",
-    })
+    }
+    expectEventPayloadToMatch(reachResultEndEvent, expectedPayload)
   })
 
   test(`is sent when loading one page of results.`, async ({
@@ -173,13 +180,11 @@ test.describe("Load more button", () => {
       (event) => event.n === "LOAD_MORE_RESULTS"
     )
 
-    expectEventPayloadToMatch(loadMoreEvent, {
-      query: "cat",
-      searchType: "all",
+    const expectedPayload: Events["LOAD_MORE_RESULTS"] = {
+      ...defaultPayload,
       resultPage: 1,
-      collectionType: "null",
-      collectionValue: "null",
-    })
+    }
+    expectEventPayloadToMatch(loadMoreEvent, expectedPayload)
   })
 
   test(`is sent when loading two pages of results.`, async ({
@@ -199,15 +204,13 @@ test.describe("Load more button", () => {
     )
 
     expect(loadMoreEvents.length).toBe(2)
-    loadMoreEvents.every((event, index) =>
-      expectEventPayloadToMatch(event, {
-        query: "cat",
-        searchType: "all",
+    loadMoreEvents.every((event, index) => {
+      const expectedPayload: Events["LOAD_MORE_RESULTS"] = {
+        ...defaultPayload,
         resultPage: index + 1,
-        collectionType: "null",
-        collectionValue: "null",
-      })
-    )
+      }
+      return expectEventPayloadToMatch(event, expectedPayload)
+    })
   })
 
   test(`is not sent when more results are not loaded.`, async ({

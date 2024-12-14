@@ -1,4 +1,4 @@
-import { computed } from "#imports"
+import { computed } from "vue"
 
 import { describe, expect, test, vi } from "vitest"
 import { usePreferredColorScheme } from "@vueuse/core"

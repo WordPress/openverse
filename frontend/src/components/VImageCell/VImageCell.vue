@@ -111,18 +111,17 @@ const sendSelectSearchResultEvent = (event: MouseEvent) => {
     return
   }
 
+  const { searchType, collectionType } = searchStore.searchParamsForEvent
   $sendCustomEvent("SELECT_SEARCH_RESULT", {
+    searchType,
+    collectionType,
     id: props.image.id,
     kind: props.kind,
     mediaType: IMAGE,
     provider: props.image.provider,
-    query: props.searchTerm || "",
     relatedTo: props.relatedTo ?? "null",
     sensitivities: props.image.sensitivity?.join(",") ?? "",
     isBlurred: shouldBlur.value ?? "null",
-    collectionType:
-      searchStore.strategy !== "default" ? searchStore.strategy : "null",
-    collectionValue: searchStore.collectionValue ?? "null",
   })
 }
 

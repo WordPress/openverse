@@ -8,21 +8,25 @@ import type { EventName, Events } from "#shared/types/analytics"
 
 export type EventResponse<T extends EventName> = {
   n: T
-  p: Events[T]
+  p: Events[T] & { width: number; height: number; breakpoint: string }
 }
 
 export type AnalyticEventResponses = Array<EventResponse<EventName>>
 
 export function expectEventPayloadToMatch<T extends EventName>(
   event: EventResponse<T> | undefined,
-  expectedPayload: Events[T]
+  expectedPayload: Omit<Events[T], "width" | "height" | "breakpoint">
 ): void {
   expect(
     event,
     `Event not captured; expected payload of ${JSON.stringify(expectedPayload)}`
   ).toBeDefined()
   // Safe to cast as previous line ensures it is defined
-  expect((event as EventResponse<T>).p).toMatchObject(expectedPayload)
+  const p = (event as EventResponse<T>).p
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { width, height, breakpoint, ...rest } = p
+
+  expect(rest as Record<string, string>).toEqual(expectedPayload)
 }
 
 export const collectAnalyticsEvents = (context: BrowserContext) => {
