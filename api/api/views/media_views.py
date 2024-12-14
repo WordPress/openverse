@@ -46,6 +46,7 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
     view_is_async = True
 
     lookup_field = "identifier"
+    lookup_value_converter = "uuid"
 
     pagination_class = StandardPagination
 
