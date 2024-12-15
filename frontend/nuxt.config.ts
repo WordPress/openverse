@@ -67,6 +67,7 @@ export default defineNuxtConfig({
     "@nuxt/test-utils/module",
     "@nuxtjs/sitemap",
     "@nuxtjs/robots",
+    "@sentry/nuxt/module",
   ],
   routeRules: {
     "/photos/**": { redirect: { to: "/image/**", statusCode: 301 } },
@@ -125,5 +126,14 @@ export default defineNuxtConfig({
     detectBrowserLanguage: false,
     trailingSlash: false,
     vueI18n: "./vue-i18n",
+  },
+  sentry: {
+    sourceMapsUploadOptions: {
+      org: "openverse",
+      project: "openverse-frontend",
+    },
+  },
+  sourcemap: {
+    client: "hidden",
   },
 })
