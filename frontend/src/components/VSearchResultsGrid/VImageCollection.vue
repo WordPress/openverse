@@ -6,7 +6,7 @@
 
 import type { CollectionComponentProps } from "#shared/types/collection-component-props"
 
-import VImageCell from "~/components/VImageCell/VImageCell.vue"
+import VImageResult from "~/components/VImageResult/VImageResult.vue"
 
 withDefaults(defineProps<CollectionComponentProps<"image">>(), {
   relatedTo: "null",
@@ -18,7 +18,7 @@ withDefaults(defineProps<CollectionComponentProps<"image">>(), {
     class="image-grid flex flex-wrap gap-6 sm:gap-4"
     :aria-label="collectionLabel"
   >
-    <VImageCell
+    <VImageResult
       v-for="image in results"
       :key="image.id"
       :image="image"

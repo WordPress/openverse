@@ -17,7 +17,7 @@ const testWrapperContainer = createApp({}).component("TestWrapper", {
 const TestWrapper = testWrapperContainer._context.components.TestWrapper
 
 describe("use-get-locale-formatted-number", () => {
-  it.each(["ar", "fa", "ckb", "ps"])(
+  it.each(["ar-EG", "fa", "ckb", "ps"])(
     "should use en formatting for locales like %s that use Eastern Arabic Numerals",
     async (locale) => {
       const { container } = await render(TestWrapper, {
