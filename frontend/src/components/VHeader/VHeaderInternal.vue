@@ -136,7 +136,7 @@ watch(route, () => {
                 variant="transparent-tx"
                 size="large"
                 :icon-props="{ name: 'close' }"
-                class="focus-visible:focus-slim-tx text-white hover:bg-surface"
+                class="text-white hover:bg-surface focus-visible:focus-slim-tx"
                 :label="$t('modal.closePagesMenu')"
                 @click="closePageMenu"
               />
