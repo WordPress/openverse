@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { useNuxtApp } from "#imports"
-import { toRefs } from "vue"
+import { computed, ref } from "vue"
 
 import { AUDIO } from "#shared/constants/media"
 import type { AudioLayout, AudioSize } from "#shared/constants/audio"
+import { singleResultQuery } from "#shared/utils/query-utils"
 import type { AudioInteractionData } from "#shared/types/analytics"
 import type { AudioTrackClickEvent } from "#shared/types/events"
 import type { AudioDetail } from "#shared/types/media"
@@ -30,8 +31,11 @@ const props = withDefaults(
 const { $sendCustomEvent } = useNuxtApp()
 const searchStore = useSearchStore()
 
-const { audio } = toRefs(props)
-const { isHidden: shouldBlur } = useSensitiveMedia(audio)
+const { isHidden: shouldBlur } = useSensitiveMedia(ref(props.audio))
+
+const href = computed(() => {
+  return `/audio/${props.audio.id}/${singleResultQuery(props.searchTerm)}`
+})
 
 const sendSelectSearchResultEvent = (
   audio: AudioDetail,
@@ -76,6 +80,7 @@ const sendInteractionEvent = (
       :layout="layout"
       :size="size"
       :search-term="searchTerm"
+      :href="href"
       v-bind="$attrs"
       @interacted="sendInteractionEvent"
       @mousedown="sendSelectSearchResultEvent(audio, $event)"
