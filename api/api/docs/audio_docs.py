@@ -116,6 +116,7 @@ report = custom_extend_schema(
         201: (AudioReportRequestSerializer, audio_complain_201_example),
         400: (ValidationError, None),
         401: (AuthenticationFailed, None),
+        404: (NotFound, None),
     },
     eg=[audio_complain_curl],
 )

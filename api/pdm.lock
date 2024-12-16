@@ -1759,7 +1759,7 @@ files = [
 
 [[package]]
 name = "schemathesis"
-version = "3.38.9"
+version = "3.38.10"
 requires_python = ">=3.8"
 summary = "Property-based testing framework for Open API and GraphQL based apps"
 groups = ["test"]
@@ -1788,8 +1788,8 @@ dependencies = [
     "yarl<2.0,>=1.5",
 ]
 files = [
-    {file = "schemathesis-3.38.9-py3-none-any.whl", hash = "sha256:13a9a103cd1641891f933afb324583d69b6234f8aa050ec5af18a1e9692e73d7"},
-    {file = "schemathesis-3.38.9.tar.gz", hash = "sha256:d652200f85abe64ebb417b1630c44300510bd3ded3936975b67951f37c49ee0f"},
+    {file = "schemathesis-3.38.10-py3-none-any.whl", hash = "sha256:32e2aaabf57e4e8327f11c6e7b8dd2f6e41b436f3d4eae35c17109c770d358d4"},
+    {file = "schemathesis-3.38.10.tar.gz", hash = "sha256:01cdd4f313d0b1a8625604cc3bf99ec09147a5668771c8e9bfc1f97990bba2da"},
 ]
 
 [[package]]
