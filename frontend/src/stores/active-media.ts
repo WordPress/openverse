@@ -74,6 +74,9 @@ export const useActiveMediaStore = defineStore(ACTIVE_MEDIA, {
       this.message = message
     },
     playAudio(audio: HTMLAudioElement | undefined) {
+      const { $captureException, $captureMessage } = useNuxtApp()
+      console.log("sentry in playAudio", $captureException)
+      $captureMessage("test")
       const playPromise = audio?.play()
       // Check if the audio can be played successfully
       if (playPromise === undefined) {
@@ -85,8 +88,8 @@ export const useActiveMediaStore = defineStore(ACTIVE_MEDIA, {
           ? audioErrorMessages[err.name as keyof typeof audioErrorMessages]
           : "err_unknown"
         if (message === "err_unknown") {
-          const { $sentry } = useNuxtApp()
-          $sentry.captureException(err)
+          const { $captureException } = useNuxtApp()
+          $captureException(err)
         }
         this.setMessage({ message })
         audio?.pause()
