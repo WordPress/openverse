@@ -1,5 +1,6 @@
+import { useNuxtApp } from "#imports"
+
 import { defineStore } from "pinia"
-import { useNuxtApp } from "#app"
 
 import type { SupportedMediaType } from "#shared/constants/media"
 import { audioErrorMessages } from "#shared/constants/audio"
@@ -74,9 +75,6 @@ export const useActiveMediaStore = defineStore(ACTIVE_MEDIA, {
       this.message = message
     },
     playAudio(audio: HTMLAudioElement | undefined) {
-      const { $captureException, $captureMessage } = useNuxtApp()
-      console.log("sentry in playAudio", $captureException)
-      $captureMessage("test")
       const playPromise = audio?.play()
       // Check if the audio can be played successfully
       if (playPromise === undefined) {
