@@ -5,14 +5,14 @@
 groups = ["default", "dev", "overrides", "test"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:86e04ec218fb1f4ffe4e553a2ac20a19c41dd8bc8b3f25d3f19e9319cbf3cea5"
+content_hash = "sha256:6bbd74580d8a8f54234a5da217af861c9549d66c9e3b21be2fb104e8364ede10"
 
 [[metadata.targets]]
 requires_python = "==3.12.*"
 
 [[package]]
 name = "adrf"
-version = "0.1.6"
+version = "0.1.8"
 requires_python = ">=3.8"
 summary = "Async support for Django REST framework"
 groups = ["default"]
@@ -22,8 +22,8 @@ dependencies = [
     "djangorestframework>=3.14.0",
 ]
 files = [
-    {file = "adrf-0.1.6-py3-none-any.whl", hash = "sha256:4ed8a07159e97602b27b61cccef5a9f4088d07be6899d62fec1300286a6c500f"},
-    {file = "adrf-0.1.6.tar.gz", hash = "sha256:8057be8ac17e1ed47fbec17de4bf1772d467243422fd5f7dd78e97735d395ed3"},
+    {file = "adrf-0.1.8-py3-none-any.whl", hash = "sha256:3032b987085d75cfd59eb3d4dcd7138fc20085de1782b065603559ccec69531f"},
+    {file = "adrf-0.1.8.tar.gz", hash = "sha256:18844630dd9272c38cc3f761fce6bfb50f91c4f84dadf99846f86d4527f19c7f"},
 ]
 
 [[package]]
@@ -39,7 +39,7 @@ files = [
 
 [[package]]
 name = "aiohttp"
-version = "3.11.2"
+version = "3.11.10"
 requires_python = ">=3.9"
 summary = "Async http client/server framework (asyncio)"
 groups = ["default"]
@@ -54,22 +54,22 @@ dependencies = [
     "yarl<2.0,>=1.17.0",
 ]
 files = [
-    {file = "aiohttp-3.11.2-cp312-cp312-macosx_10_13_universal2.whl", hash = "sha256:f833a80d9de9307d736b6af58c235b17ef7f90ebea7b9c49cd274dec7a66a2f1"},
-    {file = "aiohttp-3.11.2-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:382f853516664d2ebfc75dc01da4a10fdef5edcb335fe7b45cf471ce758ecb18"},
-    {file = "aiohttp-3.11.2-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:d3a2bcf6c81639a165da93469e1e0aff67c956721f3fa9c0560f07dd1e505116"},
-    {file = "aiohttp-3.11.2-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:de3b4d5fb5d69749104b880a157f38baeea7765c93d9cd3837cedd5b84729e10"},
-    {file = "aiohttp-3.11.2-cp312-cp312-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:0a90a0dc4b054b5af299a900bf950fe8f9e3e54322bc405005f30aa5cacc5c98"},
-    {file = "aiohttp-3.11.2-cp312-cp312-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:32334f35824811dd20a12cc90825d000e6b50faaeaa71408d42269151a66140d"},
-    {file = "aiohttp-3.11.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:0cba0b8d25aa2d450762f3dd6df85498f5e7c3ad0ddeb516ef2b03510f0eea32"},
-    {file = "aiohttp-3.11.2-cp312-cp312-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:9bbb2dbc2701ab7e9307ca3a8fa4999c5b28246968e0a0202a5afabf48a42e22"},
-    {file = "aiohttp-3.11.2-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:97fba98fc5d9ccd3d33909e898d00f2494d6a9eec7cbda3d030632e2c8bb4d00"},
-    {file = "aiohttp-3.11.2-cp312-cp312-musllinux_1_2_i686.whl", hash = "sha256:0ebdf5087e2ce903d8220cc45dcece90c2199ae4395fd83ca616fcc81010db2c"},
-    {file = "aiohttp-3.11.2-cp312-cp312-musllinux_1_2_ppc64le.whl", hash = "sha256:122768e3ae9ce74f981b46edefea9c6e5a40aea38aba3ac50168e6370459bf20"},
-    {file = "aiohttp-3.11.2-cp312-cp312-musllinux_1_2_s390x.whl", hash = "sha256:5587da333b7d280a312715b843d43e734652aa382cba824a84a67c81f75b338b"},
-    {file = "aiohttp-3.11.2-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:85de9904bc360fd29a98885d2bfcbd4e02ab33c53353cb70607f2bea2cb92468"},
-    {file = "aiohttp-3.11.2-cp312-cp312-win32.whl", hash = "sha256:b470de64d17156c37e91effc109d3b032b39867000e2c126732fe01d034441f9"},
-    {file = "aiohttp-3.11.2-cp312-cp312-win_amd64.whl", hash = "sha256:3f617a48b70f4843d54f52440ea1e58da6bdab07b391a3a6aed8d3b311a4cc04"},
-    {file = "aiohttp-3.11.2.tar.gz", hash = "sha256:68d1f46f9387db3785508f5225d3acbc5825ca13d9c29f2b5cce203d5863eb79"},
+    {file = "aiohttp-3.11.10-cp312-cp312-macosx_10_13_universal2.whl", hash = "sha256:b78f053a7ecfc35f0451d961dacdc671f4bcbc2f58241a7c820e9d82559844cf"},
+    {file = "aiohttp-3.11.10-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:ab7485222db0959a87fbe8125e233b5a6f01f4400785b36e8a7878170d8c3138"},
+    {file = "aiohttp-3.11.10-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:cf14627232dfa8730453752e9cdc210966490992234d77ff90bc8dc0dce361d5"},
+    {file = "aiohttp-3.11.10-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:076bc454a7e6fd646bc82ea7f98296be0b1219b5e3ef8a488afbdd8e81fbac50"},
+    {file = "aiohttp-3.11.10-cp312-cp312-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:482cafb7dc886bebeb6c9ba7925e03591a62ab34298ee70d3dd47ba966370d2c"},
+    {file = "aiohttp-3.11.10-cp312-cp312-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:bf3d1a519a324af764a46da4115bdbd566b3c73fb793ffb97f9111dbc684fc4d"},
+    {file = "aiohttp-3.11.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:24213ba85a419103e641e55c27dc7ff03536c4873470c2478cce3311ba1eee7b"},
+    {file = "aiohttp-3.11.10-cp312-cp312-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:b99acd4730ad1b196bfb03ee0803e4adac371ae8efa7e1cbc820200fc5ded109"},
+    {file = "aiohttp-3.11.10-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:14cdb5a9570be5a04eec2ace174a48ae85833c2aadc86de68f55541f66ce42ab"},
+    {file = "aiohttp-3.11.10-cp312-cp312-musllinux_1_2_i686.whl", hash = "sha256:7e97d622cb083e86f18317282084bc9fbf261801b0192c34fe4b1febd9f7ae69"},
+    {file = "aiohttp-3.11.10-cp312-cp312-musllinux_1_2_ppc64le.whl", hash = "sha256:012f176945af138abc10c4a48743327a92b4ca9adc7a0e078077cdb5dbab7be0"},
+    {file = "aiohttp-3.11.10-cp312-cp312-musllinux_1_2_s390x.whl", hash = "sha256:44224d815853962f48fe124748227773acd9686eba6dc102578defd6fc99e8d9"},
+    {file = "aiohttp-3.11.10-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:c87bf31b7fdab94ae3adbe4a48e711bfc5f89d21cf4c197e75561def39e223bc"},
+    {file = "aiohttp-3.11.10-cp312-cp312-win32.whl", hash = "sha256:06a8e2ee1cbac16fe61e51e0b0c269400e781b13bcfc33f5425912391a542985"},
+    {file = "aiohttp-3.11.10-cp312-cp312-win_amd64.whl", hash = "sha256:be2b516f56ea883a3e14dda17059716593526e10fb6303189aaf5503937db408"},
+    {file = "aiohttp-3.11.10.tar.gz", hash = "sha256:b1fc6b45010a8d0ff9e88f9f2418c6fd408c99c211257334aff41597ebece42e"},
 ]
 
 [[package]]
