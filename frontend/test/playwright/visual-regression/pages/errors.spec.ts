@@ -1,3 +1,4 @@
+import { expect } from "@playwright/test"
 import { test } from "~~/test/playwright/utils/test"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import {
@@ -6,7 +7,8 @@ import {
   sleep,
 } from "~~/test/playwright/utils/navigation"
 import { setViewportToFullHeight } from "~~/test/playwright/utils/viewport"
-import { languageDirections } from "~~/test/playwright/utils/i18n"
+import { languageDirections, t } from "~~/test/playwright/utils/i18n"
+import { getH1 } from "~~/test/playwright/utils/components"
 
 import { ALL_MEDIA, supportedSearchTypes } from "#shared/constants/media"
 
@@ -56,6 +58,7 @@ breakpoints.describeXl(({ breakpoint, expectSnapshot }) => {
       // eslint-disable-next-line playwright/no-networkidle
       await page.waitForLoadState("networkidle")
 
+      await expect(getH1(page, t("404.title"))).toBeVisible()
       await expectSnapshot(page, "generic-error-ltr", page, {
         screenshotOptions: { fullPage: true },
       })
@@ -77,6 +80,7 @@ for (const searchType of supportedSearchTypes) {
       await preparePageForTests(page, breakpoint)
       await goToSearchTerm(page, `SearchPage500error`, { searchType })
 
+      await expect(getH1(page, t("404.title"))).toBeVisible()
       await expectSnapshot(page, "generic-error-ltr", page, {
         screenshotOptions: { fullPage: true },
       })
@@ -101,6 +105,7 @@ for (const searchType of supportedSearchTypes) {
             searchType,
           })
 
+          await expect(getH1(page, t("404.title"))).toBeVisible()
           await expectSnapshot(page, "generic-error", page, {
             dir,
             screenshotOptions: {
@@ -135,6 +140,8 @@ for (const searchType of supportedSearchTypes) {
           return route.abort("timedout")
         })
         await goToSearchTerm(page, "cat", { dir, searchType, mode: "CSR" })
+
+        await expect(getH1(page, t("serverTimeout.heading", dir))).toBeVisible()
 
         await setViewportToFullHeight(page)
 
