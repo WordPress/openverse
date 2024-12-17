@@ -3,6 +3,8 @@
 
 # Automatically build image using Node.js version specified in `package.json`.
 ARG FRONTEND_NODE_VERSION
+ARG SENTRY_AUTH_TOKEN
+ARG SEMANTIC_VERSION
 
 ###################
 # Node.js builder #
@@ -43,6 +45,8 @@ ENV NODE_ENV=production
 
 # Increase memory limit for the build process (necessary for i18n routes)
 ENV NODE_OPTIONS="--max_old_space_size=4096"
+ENV SEMANTIC_VERSION=${SEMANTIC_VERSION}
+ENV SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
 
 RUN pnpm build
 
