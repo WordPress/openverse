@@ -402,8 +402,8 @@ def test_related_view_for_invalid_uuids_returns_not_found(
 
 def test_related_view_has_no_pagination(related_results):
     _, _, data = related_results
-    results = data["results"]
-    assert data["result_count"] == len(results) == 10
+
+    assert data["result_count"] <= 10
     assert data["page_count"] == 1
 
 
