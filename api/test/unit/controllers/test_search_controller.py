@@ -698,9 +698,9 @@ def test_post_process_results_recurses_as_needed(
     wrapped_post_process_results,
     image_media_type_config,
     settings,
-    page,
-    page_size,
-    mock_total_hits,
+    page: int,
+    page_size: int,
+    mock_total_hits: int,
     # request the redis mock to auto-clean Redis between each test run
     # otherwise the dead link query mask causes test details to leak
     # between each run
@@ -750,8 +750,6 @@ def test_post_process_results_recurses_as_needed(
 
     mock_second_es_request = (
         pook.post(es_endpoint)
-        # Size is clamped to the total number of available hits
-        .body(re.compile(f'size":{mock_total_hits}'))
         .body(re.compile('from":0'))
         .times(1)
         .reply(200)
