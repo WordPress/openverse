@@ -49,9 +49,11 @@ ENV SEMANTIC_VERSION=${SEMANTIC_VERSION}
 
 RUN printenv
 
+RUN --mount=type=secret,id=sentry_auth_token \
+    export SENTRY_AUTH_TOKEN="$(cat /run/secrets/sentry_auth_token)"
 
-RUN --mount=type=secret,id=sentry_auth_token,env=SENTRY_AUTH_TOKEN && pnpm build"
-
+RUN printenv
+RUN pnpm build
 ############
 # Nuxt app #
 ############
