@@ -180,6 +180,8 @@ jobs:
 
       - name: Build image `${{ matrix.image }}`
         uses: docker/build-push-action@v6
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         with:
           context: ${{ matrix.context }}
           target: ${{ matrix.target }}
@@ -203,6 +205,8 @@ jobs:
             FRONTEND_PNPM_VERSION=${{ steps.prepare-build-args.outputs.frontend_pnpm_version }}
             PGCLI_VERSION=${{ steps.prepare-build-args.outputs.pgcli_version }}
             ${{ matrix.build-args || '' }}
+          secrets: |
+            id=sentry_auth_token,env=SENTRY_AUTH_TOKEN
 
       - name: Upload image `${{ matrix.image }}`
         id: upload-img
