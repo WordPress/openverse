@@ -26,12 +26,12 @@ const emit = defineEmits<{ failure: [] }>()
 const { t } = useI18n({ useScope: "global" })
 const label = t("sketchfabIframeTitle", { sketchfab: "Sketchfab" })
 const node = ref<Element | undefined>()
-const { $sentry } = useNuxtApp()
+const { $captureException, $captureMessage } = useNuxtApp()
 
 const initSketchfab = async () => {
   await loadScript(sketchfabUrl)
   if (typeof window.Sketchfab === "undefined") {
-    $sentry.captureMessage("Unable to find window.Sketchfab after loading")
+    $captureMessage("Unable to find window.Sketchfab after loading")
     return
   }
 
@@ -44,7 +44,7 @@ const initSketchfab = async () => {
   const sf = new window.Sketchfab(node.value)
   sf.init(props.uid, {
     error: (e: unknown) => {
-      $sentry.captureException(e)
+      $captureException(e)
       emit("failure")
     },
   })
