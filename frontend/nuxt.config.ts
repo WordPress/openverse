@@ -132,6 +132,11 @@ export default defineNuxtConfig({
       org: "openverse",
       project: "openverse-frontend",
     },
+    unstable_sentryBundlerPluginOptions: {
+      release: {
+        name: import.meta.env.SEMANTIC_VERSION,
+      },
+    },
   },
   sourcemap: {
     client: "hidden",
