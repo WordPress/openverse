@@ -153,6 +153,9 @@ jobs:
       - determine-images
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       # Sets up `just` and Node.js.
       # Node.js is needed for the frontend to download translations.
       # `just` is needed to run the recipes and set build args.

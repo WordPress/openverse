@@ -134,7 +134,7 @@ export default defineNuxtConfig({
     },
     unstable_sentryBundlerPluginOptions: {
       release: {
-        name: import.meta.env.SEMANTIC_VERSION,
+        name: process.env.SEMANTIC_VERSION,
       },
     },
   },

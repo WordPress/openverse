@@ -47,12 +47,11 @@ ENV NODE_ENV=production
 ENV NODE_OPTIONS="--max_old_space_size=4096"
 ENV SEMANTIC_VERSION=${SEMANTIC_VERSION}
 
-RUN printenv
+RUN --mount=type=secret,id=sentry_auth_token,mode=0444 \
+    sh -c 'SENTRY_AUTH_TOKEN="$(cat /run/secrets/sentry_auth_token)" && \
+    echo "SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN" >> .env.sentry-build-plugin'
 
-RUN --mount=type=secret,id=sentry_auth_token \
-    export SENTRY_AUTH_TOKEN="$(cat /run/secrets/sentry_auth_token)"
 
-RUN printenv
 RUN pnpm build
 ############
 # Nuxt app #
