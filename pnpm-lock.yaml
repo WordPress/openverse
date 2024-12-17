@@ -116,9 +116,6 @@ importers:
       clipboard:
         specifier: ^2.0.11
         version: 2.0.11
-      dotenv:
-        specifier: ^16.4.7
-        version: 16.4.7
       focus-trap:
         specifier: ^7.5.4
         version: 7.5.4

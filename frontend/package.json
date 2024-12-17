@@ -71,7 +71,6 @@
     "axios": "^1.7.2",
     "axios-mock-adapter": "^1.22.0",
     "clipboard": "^2.0.11",
-    "dotenv": "^16.4.7",
     "focus-trap": "^7.5.4",
     "focus-visible": "^5.2.0",
     "pinia": "^2.2.5",
