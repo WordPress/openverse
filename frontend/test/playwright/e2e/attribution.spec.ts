@@ -85,6 +85,8 @@ test.describe("attribution", () => {
       id: imageId,
       format,
       mediaType: "image",
+      query: "",
+      position: -1,
     })
   })
 })

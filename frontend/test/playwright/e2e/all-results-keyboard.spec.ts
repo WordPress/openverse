@@ -20,11 +20,19 @@ test.describe.configure({ mode: "parallel" })
 
 const singleResultRegex = (
   mediaType: SupportedMediaType,
-  searchTerm?: string
+  searchTerm?: string,
+  position?: number
 ) => {
-  const query = searchTerm ? `\\?q=${searchTerm}` : ""
+  const query = new URLSearchParams()
+  if (searchTerm) {
+    query.set("q", searchTerm)
+  }
+  if (position) {
+    query.set("p", position.toString())
+  }
+  const queryStr = query.toString() ? `\\?${query}` : ""
   return new RegExp(
-    `/${mediaType}/[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}${query}$`,
+    `/${mediaType}/[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}${queryStr}$`,
     "i"
   )
 }
@@ -43,7 +51,7 @@ test.describe(
       const mediaType = "image"
       await walkToType(mediaType, page)
       await page.keyboard.press("Enter")
-      const urlRegex = singleResultRegex(mediaType, searchTerm)
+      const urlRegex = singleResultRegex(mediaType, searchTerm, 1)
 
       await page.waitForURL(urlRegex)
       expect(page.url()).toMatch(urlRegex)
@@ -53,7 +61,7 @@ test.describe(
       const mediaType = "audio"
       await walkToType(mediaType, page)
       await page.keyboard.press("Enter")
-      const urlRegex = singleResultRegex(mediaType, searchTerm)
+      const urlRegex = singleResultRegex(mediaType, searchTerm, 2)
       await page.waitForURL(urlRegex)
       expect(page.url()).toMatch(urlRegex)
     })

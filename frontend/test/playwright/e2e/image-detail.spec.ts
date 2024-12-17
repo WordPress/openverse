@@ -86,6 +86,8 @@ test("sends GET_MEDIA event on CTA button click", async ({ context, page }) => {
     id: imageObject.id,
     provider: imageObject.provider,
     mediaType: "image",
+    query: "",
+    position: -1,
   }
   expectEventPayloadToMatch(getMediaEvent, expectedPayload)
 })
@@ -107,6 +109,8 @@ test("sends RIGHT_CLICK_IMAGE event on right-click", async ({
 
   const expectedPayload: Events["RIGHT_CLICK_IMAGE"] = {
     id: imageObject.id,
+    query: "",
+    position: -1,
   }
   expectEventPayloadToMatch(rightClickImageEvent, expectedPayload)
 })
@@ -137,9 +141,11 @@ test("sends SELECT_SEARCH_RESULT event on related image click", async ({
     mediaType: "image",
     provider: "flickr",
     searchType: "all",
+    query: "",
     sensitivities: "",
     isBlurred: false,
     collectionType: "null",
+    position: 1,
   }
   expectEventPayloadToMatch(selectSearchResultEvent, expectedPayload)
 })

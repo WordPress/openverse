@@ -23,9 +23,10 @@ const props = withDefaults(
       layout: Extract<AudioLayout, "box" | "row">
       size?: AudioSize
       audio: AudioDetail
+      position?: number
     }
   >(),
-  { relatedTo: "null" }
+  { relatedTo: "null", position: -1 }
 )
 
 const { $sendCustomEvent } = useNuxtApp()
@@ -34,7 +35,7 @@ const searchStore = useSearchStore()
 const { isHidden: shouldBlur } = useSensitiveMedia(ref(props.audio))
 
 const href = computed(() => {
-  return `/audio/${props.audio.id}/${singleResultQuery(props.searchTerm)}`
+  return `/audio/${props.audio.id}/${singleResultQuery(props.searchTerm, props.position)}`
 })
 
 const sendSelectSearchResultEvent = (
@@ -47,13 +48,12 @@ const sendSelectSearchResultEvent = (
     return
   }
   useAudioSnackbar().hide()
-  const { searchType, collectionType } = searchStore.searchParamsForEvent
   $sendCustomEvent("SELECT_SEARCH_RESULT", {
-    searchType,
-    collectionType,
+    ...searchStore.searchParamsForEvent,
     id: audio.id,
     kind: props.kind,
     mediaType: AUDIO,
+    position: props.position,
     provider: audio.provider,
     relatedTo: props.relatedTo ?? "null",
     sensitivities: audio.sensitivity?.join(",") ?? "",

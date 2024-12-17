@@ -191,6 +191,7 @@ jobs:
           outputs: type=docker,dest=/tmp/${{ matrix.image }}.tar
           build-contexts: ${{ matrix.build-contexts }}
           build-args: |
+            SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
             SEMANTIC_VERSION=${{ needs.get-image-tag.outputs.image_tag }}
             OV_PDM_VERSION=${{ steps.prepare-build-args.outputs.ov_pdm_version }}
             CATALOG_PY_VERSION=${{ steps.prepare-build-args.outputs.catalog_py_version }}

@@ -43,3 +43,6 @@ src/locales/scripts/wp-locales.json
 # To prevent accidentally adding a hardcoded robots.txt, see
 # /src/server-middleware/robots.js for the robots.txt file.
 src/static/robots.txt
+
+# Sentry Config File
+.env.sentry-build-plugin

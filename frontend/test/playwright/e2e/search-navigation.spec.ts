@@ -143,19 +143,17 @@ test.describe("search query param is set on a single page results", () => {
     page,
   }) => {
     await openFirstResult(page, "image")
-    const url = page.url()
-    const query = url.substring(url.indexOf("=") + 1)
+    const url = new URLSearchParams(page.url().split("?")[1])
 
-    expect(query).toEqual("cat")
+    expect(url.get("q")).toEqual("cat")
   })
 
   test("the search query param should be set to the search term inside the header on a single page result of type audio", async ({
     page,
   }) => {
     await openFirstResult(page, "audio")
-    const url = page.url()
-    const query = url.substring(url.indexOf("=") + 1)
+    const url = new URLSearchParams(page.url().split("?")[1])
 
-    expect(query).toEqual("cat")
+    expect(url.get("q")).toEqual("cat")
   })
 })
