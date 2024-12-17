@@ -6,7 +6,7 @@ MOCK_DEAD_RESULT_URL_PREFIX = "https://example.com/openverse-dead-image-result-u
 
 
 def create_mock_es_http_image_hit(
-    _id: str,
+    _id: int,
     index: str,
     live: bool = True,
     identifier: str | None = None,
@@ -101,7 +101,7 @@ def create_mock_es_http_image_response_with_identifier(
             "max_score": 11.0007305,
             "hits": [
                 create_mock_es_http_image_hit(
-                    _id="1",
+                    _id=1,
                     index=index,
                     live=True,
                     identifier=identifier,
