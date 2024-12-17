@@ -5,7 +5,7 @@
 groups = ["default", "dev", "overrides", "test"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:67f4dc301322e2bbfe0e9acbb39956403f57914cf940fbd17dc834b89465d066"
+content_hash = "sha256:4b79ac930434004eac562fc74824028c6d6f947f5bef404d567f8b19726a1dd8"
 
 [[metadata.targets]]
 requires_python = "==3.12.*"
@@ -640,6 +640,38 @@ dependencies = [
 files = [
     {file = "elasticsearch_dsl-8.17.0-py3-none-any.whl", hash = "sha256:2096d196d473e0b11c3b190d0f1d5896e05d52c302c4170b29d3262d1164d555"},
     {file = "elasticsearch_dsl-8.17.0.tar.gz", hash = "sha256:c204218175462d108a84fb913371e45d3f49e9dd711ca26ec7ed89ab4e8f287d"},
+]
+
+[[package]]
+name = "elasticsearch-dsl"
+version = "8.17.0"
+extras = ["async"]
+requires_python = ">=3.8"
+summary = "Python client for Elasticsearch"
+groups = ["default"]
+dependencies = [
+    "elasticsearch-dsl==8.17.0",
+    "elasticsearch[async]<9.0.0,>=8.0.0",
+]
+files = [
+    {file = "elasticsearch_dsl-8.17.0-py3-none-any.whl", hash = "sha256:2096d196d473e0b11c3b190d0f1d5896e05d52c302c4170b29d3262d1164d555"},
+    {file = "elasticsearch_dsl-8.17.0.tar.gz", hash = "sha256:c204218175462d108a84fb913371e45d3f49e9dd711ca26ec7ed89ab4e8f287d"},
+]
+
+[[package]]
+name = "elasticsearch"
+version = "8.17.0"
+extras = ["async"]
+requires_python = ">=3.8"
+summary = "Python client for Elasticsearch"
+groups = ["default"]
+dependencies = [
+    "aiohttp<4,>=3",
+    "elasticsearch==8.17.0",
+]
+files = [
+    {file = "elasticsearch-8.17.0-py3-none-any.whl", hash = "sha256:15965240fe297279f0e68b260936d9ced9606aa7ef8910b9b56727f96ef00d5b"},
+    {file = "elasticsearch-8.17.0.tar.gz", hash = "sha256:c1069bf2204ba8fab29ff00b2ce6b37324b2cc6ff593283b97df43426ec13053"},
 ]
 
 [[package]]
