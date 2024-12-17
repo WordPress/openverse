@@ -11,7 +11,6 @@ ARG FRONTEND_NODE_VERSION
 FROM docker.io/node:${FRONTEND_NODE_VERSION}-alpine AS builder
 
 ARG SEMANTIC_VERSION
-ARG SENTRY_AUTH_TOKEN
 
 # Install system packages needed to build on macOS
 RUN apk add --no-cache --virtual .gyp python3 make g++ \
@@ -48,9 +47,9 @@ ENV NODE_ENV=production
 ENV NODE_OPTIONS="--max_old_space_size=4096"
 ENV SEMANTIC_VERSION=${SEMANTIC_VERSION}
 
-# Use BuildKit secret for SENTRY_AUTH_TOKEN
 RUN --mount=type=secret,id=sentry_auth_token \
   sh -c "export SENTRY_AUTH_TOKEN=$(cat /run/secrets/sentry_auth_token) && pnpm build"
+
 ############
 # Nuxt app #
 ############
