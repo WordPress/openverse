@@ -45,7 +45,7 @@ export type SearchResultParams = {
   id: string
   /** The search term */
   query: string
-  /** The position of the result in the search results */
+  /** The position, not index, of the result in the search results */
   position: number
 }
 
