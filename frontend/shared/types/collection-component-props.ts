@@ -6,6 +6,7 @@ export type SingleResultProps = {
   kind: ResultKind
   searchTerm: string
   relatedTo?: string
+  position?: number
 }
 export type CommonCollectionProps = SingleResultProps & {
   collectionLabel: string

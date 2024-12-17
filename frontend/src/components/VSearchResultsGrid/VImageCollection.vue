@@ -19,9 +19,10 @@ withDefaults(defineProps<CollectionComponentProps<"image">>(), {
     :aria-label="collectionLabel"
   >
     <VImageResult
-      v-for="image in results"
+      v-for="(image, idx) in results"
       :key="image.id"
       :image="image"
+      :position="idx + 1"
       :search-term="searchTerm"
       aspect-ratio="intrinsic"
       :kind="kind"

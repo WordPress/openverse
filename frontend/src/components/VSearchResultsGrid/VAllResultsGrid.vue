@@ -38,11 +38,12 @@ const isSm = computed(() => uiStore.isBreakpoint("sm"))
       "
       :aria-label="collectionLabel"
     >
-      <template v-for="item in results">
+      <template v-for="(item, idx) in results">
         <VImageResult
           v-if="isDetail.image(item)"
           :key="item.id"
           :image="item"
+          :position="idx + 1"
           :search-term="searchTerm"
           kind="search"
           aspect-ratio="square"
@@ -51,6 +52,7 @@ const isSm = computed(() => uiStore.isBreakpoint("sm"))
           v-if="isDetail.audio(item)"
           :key="item.id"
           :audio="item"
+          :position="idx + 1"
           :search-term="searchTerm"
           layout="box"
           :size="isSm ? 'l' : 's'"

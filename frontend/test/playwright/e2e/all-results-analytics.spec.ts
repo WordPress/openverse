@@ -18,6 +18,7 @@ import type { Events } from "#shared/types/analytics"
 test.describe.configure({ mode: "parallel" })
 
 const searchResultPayload = {
+  query: "birds",
   kind: "search",
   collectionType: "null",
   searchType: ALL_MEDIA,
@@ -55,6 +56,7 @@ test.describe("all results grid analytics test", () => {
     const expectedPayload: Events["SELECT_SEARCH_RESULT"] = {
       ...defaultPayload,
       ...audioResult,
+      position: 2,
     }
     expectEventPayloadToMatch(selectSearchResultEvent, expectedPayload)
   })
@@ -74,6 +76,7 @@ test.describe("all results grid analytics test", () => {
       id: "da5cb478-c093-4d62-b721-cda18797e3fb",
       mediaType: IMAGE,
       provider: "flickr",
+      position: 1,
     }
 
     expectEventPayloadToMatch(selectSearchResultEvent, expectedPayload)

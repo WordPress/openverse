@@ -43,6 +43,10 @@ export type SearchParamsForEvent = {
 export type SearchResultParams = {
   /** The unique ID of the media */
   id: string
+  /** The search term */
+  query: string
+  /** The position, not index, of the result in the search results */
+  position: number
 }
 
 /**
@@ -78,11 +82,9 @@ export type Events = {
    *   - How often are searches returning fewer than one page of results?
    *   - How many results do most searches yield?
    */
-  GET_SEARCH_RESULTS: {
+  GET_SEARCH_RESULTS: SearchParamsForEvent & {
     /** the media type of the results. Is different from `searchType` when searchType is "all media" */
     mediaType: SupportedMediaType
-    /** The search term */
-    query: string
     /** The number of results found for this search */
     resultsCount: number
   }
@@ -293,6 +295,7 @@ export type Events = {
    *   - Which results are most popular for given searches?
    *   - How often do searches lead to clicking a result?
    *   - Are there popular searches that do not result in result selection?
+   *   - How often do users select results from the "All content" search?
    */
   SELECT_SEARCH_RESULT: SearchResultParams &
     Pick<SearchParamsForEvent, "collectionType"> & {
