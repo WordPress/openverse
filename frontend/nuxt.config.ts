@@ -131,6 +131,7 @@ export default defineNuxtConfig({
     sourceMapsUploadOptions: {
       org: "openverse",
       project: "openverse-frontend",
+      authToken: process.env.SENTRY_AUTH_TOKEN,
     },
     unstable_sentryBundlerPluginOptions: {
       release: {

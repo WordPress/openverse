@@ -49,7 +49,6 @@ ENV NODE_OPTIONS="--max_old_space_size=4096"
 ENV SEMANTIC_VERSION=${SEMANTIC_VERSION}
 ENV ADD_SENTRY_RELEASE=${ADD_SENTRY_RELEASE}
 
-
 RUN --mount=type=secret,id=sentry_auth_token,mode=0444 \
     sh -c 'if [ "$ADD_SENTRY_RELEASE" = "true" ]; then \
       SENTRY_AUTH_TOKEN="$(cat /run/secrets/sentry_auth_token)" && \
