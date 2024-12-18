@@ -179,7 +179,7 @@ class AudioSerializer(AudioHyperlinksSerializer, MediaSerializer):
         super().__init__(*args, **kwargs)
 
     def get_peaks(self, obj) -> list[int]:
-        audio_addon = self.context["addons"].get(obj.identifier)
+        audio_addon = self.context.get("addons", {}).get(obj.identifier)
         if audio_addon:
             return audio_addon.waveform_peaks
 
