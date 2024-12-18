@@ -53,9 +53,9 @@ RUN --mount=type=secret,id=sentry_auth_token,mode=0444 \
     sh -c 'if [ "$ADD_SENTRY_RELEASE" = "true" ]; then \
       SENTRY_AUTH_TOKEN="$(cat /run/secrets/sentry_auth_token)" && \
       echo "SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN" >> .env.sentry-build-plugin; \
-    fi' \
+    fi' && printenv
 
-RUN printenv
+RUN echo add sentry release: "$ADD_SENTRY_RELEASE" && echo semantic version: "$SEMANTIC_VERSION" && echo sentry auth token: "$SENTRY_AUTH_TOKEN"
 
 RUN pnpm build
 ############
