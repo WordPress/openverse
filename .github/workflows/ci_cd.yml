@@ -181,7 +181,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           secrets: |
-            "sentry_auth_token=${{ matrix.image == 'frontend' && ((github.event_name == 'push' && github.repository == 'WordPress/openverse') ||(github.event_name == 'workflow_dispatch' && inputs.perform_deploy)) && secrets.SENTRY_AUTH_TOKEN || ''}}"
+            "sentry_auth_token=${{ matrix.image == 'frontend' && !((github.event_name == 'push' && github.repository == 'WordPress/openverse') ||(github.event_name == 'workflow_dispatch' && inputs.perform_deploy)) && secrets.SENTRY_AUTH_TOKEN || ''}}"
           context: ${{ matrix.context }}
           target: ${{ matrix.target }}
           push: false
