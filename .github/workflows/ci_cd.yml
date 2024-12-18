@@ -182,7 +182,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           secrets: |
-            "sentry_auth_token=${{ matrix.image == 'frontend' && secrets.SENTRY_AUTH_TOKEN }}"
+            "sentry_auth_token=${{ secrets.SENTRY_AUTH_TOKEN }}"
           context: ${{ matrix.context }}
           target: ${{ matrix.target }}
           push: false
