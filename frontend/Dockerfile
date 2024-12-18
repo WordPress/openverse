@@ -11,7 +11,6 @@ ARG FRONTEND_NODE_VERSION
 FROM docker.io/node:${FRONTEND_NODE_VERSION}-alpine AS builder
 
 ARG SEMANTIC_VERSION
-ARG ADD_SENTRY_RELEASE
 
 # Install system packages needed to build on macOS
 RUN apk add --no-cache --virtual .gyp python3 make g++ \
@@ -47,13 +46,6 @@ ENV NODE_ENV=production
 # Increase memory limit for the build process (necessary for i18n routes)
 ENV NODE_OPTIONS="--max_old_space_size=4096"
 ENV SEMANTIC_VERSION=${SEMANTIC_VERSION}
-ENV ADD_SENTRY_RELEASE=${ADD_SENTRY_RELEASE}
-
-RUN --mount=type=secret,id=sentry_auth_token,mode=0444 \
-    sh -c 'SENTRY_AUTH_TOKEN="$(cat /run/secrets/sentry_auth_token)" && \
-      echo "SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN" && \
-      export SENTRY_AUTH_TOKEN; \
-    ' && printenv
 
 RUN --mount=type=secret,id=sentry_auth_token,mode=0444 \
     SENTRY_AUTH_TOKEN="$(cat /run/secrets/sentry_auth_token)" pnpm build
