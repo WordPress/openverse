@@ -224,19 +224,6 @@ class Audio(AudioFileMixin, AbstractMedia):
     def audio_set(self):
         return getattr(self, "audioset")
 
-    def get_waveform(self) -> list[float]:
-        """
-        Get the waveform if it exists. Return a blank list otherwise.
-
-        :return: the waveform, if it exists; empty list otherwise
-        """
-
-        try:
-            add_on = AudioAddOn.objects.get(audio_identifier=self.identifier)
-            return add_on.waveform_peaks or []
-        except AudioAddOn.DoesNotExist:
-            return []
-
     def get_or_create_waveform(self):
         add_on, _ = AudioAddOn.objects.get_or_create(audio_identifier=self.identifier)
 
