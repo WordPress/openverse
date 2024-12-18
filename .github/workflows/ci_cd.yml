@@ -690,6 +690,7 @@ jobs:
         with:
           setup_python: false
           install_recipe: node-install
+          locales: "test"
 
       - name: Build and run Nuxt and Talkback
         run: |
