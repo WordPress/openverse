@@ -55,9 +55,8 @@ RUN --mount=type=secret,id=sentry_auth_token,mode=0444 \
       export SENTRY_AUTH_TOKEN; \
     ' && printenv
 
-RUN echo add sentry release: "$ADD_SENTRY_RELEASE" && echo semantic version: "$SEMANTIC_VERSION" && echo sentry auth token: "$SENTRY_AUTH_TOKEN"
-
-RUN pnpm build
+RUN --mount=type=secret,id=sentry_auth_token,mode=0444 \
+    SENTRY_AUTH_TOKEN="$(cat /run/secrets/sentry_auth_token)" pnpm build
 
 ############
 # Nuxt app #
