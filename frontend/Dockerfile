@@ -47,9 +47,15 @@ ENV NODE_ENV=production
 ENV NODE_OPTIONS="--max_old_space_size=4096"
 ENV SEMANTIC_VERSION=${SEMANTIC_VERSION}
 
-# Use the Sentry auth token secret to send the sourcemaps to Sentry
+# Use the Sentry auth token secret to send the sourcemaps to Sentry only if the secret is provided
 RUN --mount=type=secret,id=sentry_auth_token,mode=0444 \
-    SENTRY_AUTH_TOKEN="$(cat /run/secrets/sentry_auth_token)" pnpm build
+    sh -c 'if [ -f /run/secrets/sentry_auth_token ]; then \
+      SENTRY_AUTH_TOKEN="$(cat /run/secrets/sentry_auth_token)"; \
+      echo "Using Sentry Auth Token: $SENTRY_AUTH_TOKEN"; \
+    else \
+      echo "No Sentry Auth Token provided"; \
+    fi' && pnpm build
+
 
 ############
 # Nuxt app #
