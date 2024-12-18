@@ -47,6 +47,7 @@ ENV NODE_ENV=production
 ENV NODE_OPTIONS="--max_old_space_size=4096"
 ENV SEMANTIC_VERSION=${SEMANTIC_VERSION}
 
+# Use the Sentry auth token secret to send the sourcemaps to Sentry
 RUN --mount=type=secret,id=sentry_auth_token,mode=0444 \
     SENTRY_AUTH_TOKEN="$(cat /run/secrets/sentry_auth_token)" pnpm build
 
