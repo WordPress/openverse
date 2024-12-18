@@ -670,7 +670,6 @@ jobs:
         with:
           setup_python: false
           install_recipe: node-install
-          locales: "production"
 
       - name: Run build
         run: just frontend/run build
@@ -692,7 +691,6 @@ jobs:
         with:
           setup_python: false
           install_recipe: node-install
-          locales: "test"
 
       - name: Build and run Nuxt and Talkback
         run: |
@@ -800,7 +798,6 @@ jobs:
         with:
           setup_python: false
           install_recipe: node-install
-          locales: "test"
 
       - name: Run check recipe
         run: just ${{ matrix.recipe }}
@@ -913,7 +910,6 @@ jobs:
         with:
           setup_python: false
           install_recipe: node-install
-          locales: "test"
 
       - name: Run Playwright tests
         run: just frontend/run ${{ matrix.script }} --workers=2
