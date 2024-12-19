@@ -183,7 +183,7 @@ jobs:
         with:
           # The Sentry auth token is only set for the production release of the frontend (on push to main or manual release).
           secrets: |
-            ${{ matrix.image == 'frontend' && ((github.event_name == 'push' && github.repository == 'WordPress/openverse') || (github.event_name == 'workflow_dispatch' && inputs.perform_deploy)) && format('sentry_auth_token={0}', secrets.SENTRY_AUTH_TOKEN) || '' }}
+            ${{ matrix.image == 'frontend' && ((github.event_name == 'pull_request' ) || (github.event_name == 'push' && github.repository == 'WordPress/openverse') || (github.event_name == 'workflow_dispatch' && inputs.perform_deploy)) && format('sentry_auth_token={0}', secrets.SENTRY_AUTH_TOKEN) || '' }}
           context: ${{ matrix.context }}
           target: ${{ matrix.target }}
           push: false
