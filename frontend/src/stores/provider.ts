@@ -3,6 +3,7 @@ import { useNuxtApp } from "#imports"
 import { defineStore } from "pinia"
 
 import {
+  ALL_MEDIA,
   AUDIO,
   IMAGE,
   type SupportedMediaType,
@@ -11,17 +12,13 @@ import {
 import { capitalCase } from "#shared/utils/case"
 import type { MediaProvider } from "#shared/types/media-provider"
 import type { FetchingError, FetchState } from "#shared/types/fetch-state"
-import { useApiClient } from "~/composables/use-api-client"
 
 export interface ProviderState {
   providers: {
     audio: MediaProvider[]
     image: MediaProvider[]
   }
-  fetchState: {
-    audio: FetchState
-    image: FetchState
-  }
+  fetchState: FetchState
   sourceNames: {
     audio: string[]
     image: string[]
@@ -49,10 +46,7 @@ export const useProviderStore = defineStore("provider", {
       [AUDIO]: [],
       [IMAGE]: [],
     },
-    fetchState: {
-      [AUDIO]: { isFetching: false, hasStarted: false, fetchingError: null },
-      [IMAGE]: { isFetching: false, hasStarted: false, fetchingError: null },
-    },
+    fetchState: { isFetching: false, fetchingError: null },
     sourceNames: {
       [AUDIO]: [],
       [IMAGE]: [],
@@ -60,30 +54,21 @@ export const useProviderStore = defineStore("provider", {
   }),
 
   actions: {
-    _endFetching(mediaType: SupportedMediaType, error?: FetchingError) {
-      this.fetchState[mediaType].fetchingError = error || null
+    _endFetching(error?: FetchingError) {
+      this.fetchState.fetchingError = error || null
       if (error) {
-        this.fetchState[mediaType].isFinished = true
-        this.fetchState[mediaType].hasStarted = true
-      } else {
-        this.fetchState[mediaType].hasStarted = true
+        this.fetchState.isFinished = true
       }
-      this.fetchState[mediaType].isFetching = false
     },
-    _startFetching(mediaType: SupportedMediaType) {
-      this.fetchState[mediaType].isFetching = true
-      this.fetchState[mediaType].hasStarted = true
+    _startFetching() {
+      this.fetchState.isFetching = true
     },
 
-    _updateFetchState(
-      mediaType: SupportedMediaType,
-      action: "start" | "end",
-      option?: FetchingError
-    ) {
+    _updateFetchState(action: "start" | "end", option?: FetchingError) {
       if (action === "start") {
-        this._startFetching(mediaType)
+        this._startFetching()
       } else {
-        this._endFetching(mediaType, option)
+        this._endFetching(option)
       }
     },
 
@@ -113,40 +98,35 @@ export const useProviderStore = defineStore("provider", {
       return this._getProvider(providerCode, mediaType)?.source_url
     },
 
-    async fetchProviders() {
-      await Promise.allSettled(
-        supportedMediaTypes.map((mediaType) =>
-          this.fetchMediaTypeProviders(mediaType)
-        )
-      )
+    setMediaTypeProviders(
+      mediaType: SupportedMediaType,
+      providers: MediaProvider[]
+    ) {
+      if (!providers.length) {
+        return
+      }
+      this.providers[mediaType] = sortProviders(providers)
+      this.sourceNames[mediaType] = providers.map((p) => p.source_name)
     },
 
-    /**
-     * Fetches provider stats for a set media type.
-     * Does not update provider stats if there's an error.
-     */
-    async fetchMediaTypeProviders(
-      mediaType: SupportedMediaType
-    ): Promise<void> {
-      this._updateFetchState(mediaType, "start")
-      let sortedProviders = [] as MediaProvider[]
-
-      const client = useApiClient()
-
+    async fetchProviders() {
+      this._updateFetchState("start")
       try {
-        const res = await client.stats(mediaType)
-        sortedProviders = sortProviders(res ?? [])
-        this._updateFetchState(mediaType, "end")
+        const res =
+          await $fetch<Record<SupportedMediaType, MediaProvider[]>>(
+            `/api/sources/`
+          )
+        if (!res) {
+          throw new Error("No sources data returned from the API")
+        }
+        for (const mediaType of supportedMediaTypes) {
+          this.setMediaTypeProviders(mediaType, res[mediaType])
+        }
+        this._updateFetchState("end")
       } catch (error: unknown) {
         const { $processFetchingError } = useNuxtApp()
-        const errorData = $processFetchingError(error, mediaType, "provider")
-
-        // Fallback on existing providers if there was an error
-        sortedProviders = this.providers[mediaType]
-        this._updateFetchState(mediaType, "end", errorData)
-      } finally {
-        this.providers[mediaType] = sortedProviders
-        this.sourceNames[mediaType] = sortedProviders.map((p) => p.source_name)
+        const errorData = $processFetchingError(error, ALL_MEDIA, "provider")
+        this._updateFetchState("end", errorData)
       }
     },
 

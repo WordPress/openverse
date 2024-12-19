@@ -304,6 +304,7 @@ def test_search_refuses_invalid_categories(
 @pytest.mark.parametrize(
     "bad_uuid",
     [
+        "000000000000000000000000000000000000",
         "123456789123456789123456789123456789",
         "12345678-1234-5678-1234-1234567891234",
         "abcd",
@@ -381,6 +382,22 @@ def test_detail_view_contains_sensitivity_info(sensitive_result, api_client):
 ################
 # Related view #
 ################
+
+
+@pytest.mark.parametrize(
+    "bad_uuid",
+    [
+        "000000000000000000000000000000000000",
+        "123456789123456789123456789123456789",
+        "12345678-1234-5678-1234-1234567891234",
+        "abcd",
+    ],
+)
+def test_related_view_for_invalid_uuids_returns_not_found(
+    media_type_config: MediaTypeConfig, bad_uuid: str, api_client
+):
+    res = api_client.get(f"/v1/{media_type_config.url_prefix}/{bad_uuid}/related/")
+    assert res.status_code == 404
 
 
 def test_related_view_has_no_pagination(related_results):

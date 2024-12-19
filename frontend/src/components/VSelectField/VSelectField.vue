@@ -104,10 +104,13 @@ const splitAttrs = computed(() => {
       v-bind="splitAttrs.nonClassAttrs"
       :aria-label="labelText"
     >
-      <option v-if="blankText" disabled value="">{{ blankText }}</option>
+      <option v-if="blankText" class="bg-overlay" disabled value="">
+        {{ blankText }}
+      </option>
       <option
         v-for="choice in choices"
         :key="choice.key"
+        class="bg-overlay"
         :value="choice.key"
         :selected="choice.key === selectValue ? true : undefined"
       >

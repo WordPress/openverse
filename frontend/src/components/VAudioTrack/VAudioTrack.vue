@@ -55,14 +55,14 @@ const props = defineProps<{
    */
   size?: AudioSize
   /**
-   * The search term that was used to find this track. This is used
-   * in the link to the track's detail page.
+   * The URL for the single result page. Can include search term and position
+   * in the search results.
    */
-  searchTerm?: string
+  href?: string
 }>()
 const emit = defineEmits<{
   "shift-tab": [KeyboardEvent]
-  interacted: [Omit<AudioInteractionData, "component">]
+  interacted: [Pick<AudioInteractionData, "event" | "id" | "provider">]
   mousedown: [AudioTrackClickEvent]
   focus: [FocusEvent]
 }>()
@@ -415,34 +415,15 @@ const handleMousedown = (event: MouseEvent) => {
   emit("mousedown", { event, inWaveform })
 }
 
-/**
- * These layout-conditional props and listeners allow us
- * to set properties on the parent element depending on
- * the layout in use.
- */
 const isComposite = computed(() => ["box", "row"].includes(props.layout))
-const layoutBasedProps = computed(() =>
-  isComposite.value
-    ? {
-        href: `/audio/${props.audio.id}/${
-          props.searchTerm ? "?q=" + props.searchTerm : ""
-        }`,
-        class: [
-          "cursor-pointer",
-          {
-            "focus-visible:focus-bold-filled": props.layout === "box",
-            "focus-slim-tx": props.layout === "row",
-          },
-        ],
-      }
-    : {}
-)
+
 const ariaLabel = computed(() =>
-  isComposite.value
-    ? t("audioTrack.ariaLabelInteractiveSeekable", {
-        title: props.audio.title,
-      })
-    : t("audioTrack.ariaLabel", { title: props.audio.title })
+  t(
+    isComposite.value
+      ? "audioTrack.ariaLabelInteractiveSeekable"
+      : "audioTrack.ariaLabel",
+    { title: props.audio.title }
+  )
 )
 
 const togglePlayback = () => {
@@ -462,11 +443,15 @@ const handleKeydown = (event: KeyboardEvent) => {
   seekable.listeners.keydown(event)
 }
 
-const containerAttributes = computed(() => ({
+/**
+ * These layout-conditional props and listeners allow us
+ * to set properties on the parent element depending on
+ * the layout in use.
+ */
+const containerAttributes = computed(() => {
   // ARIA slider attributes are only added when interactive
-  ...(isComposite.value ? seekable.attributes.value : {}),
-  ...layoutBasedProps.value,
-}))
+  return isComposite.value ? seekable.attributes.value : {}
+})
 
 const snackbar = useAudioSnackbar()
 
@@ -496,9 +481,14 @@ const handleWaveformBlur = () => {
   <!-- eslint-disable vue/use-v-on-exact -->
   <Component
     :is="isComposite ? VLink : 'div'"
+    :href="href"
     v-bind="containerAttributes"
     class="audio-track group block overflow-hidden rounded-sm hover:no-underline"
-    :class="{ 'audio-link': isComposite && layout === 'box' }"
+    :class="{
+      'audio-link cursor-pointer focus-visible:focus-bold-filled':
+        layout === 'box',
+      'cursor-pointer focus-slim-tx': layout === 'row',
+    }"
     :aria-label="ariaLabel"
     :role="isComposite ? 'application' : undefined"
     @keydown.shift.tab.exact="$emit('shift-tab', $event)"

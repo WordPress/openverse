@@ -227,6 +227,6 @@ by the address bar.
 }
 .modal-content {
   max-height: calc(100vh - var(--modal-header-height, 0) - 6rem);
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 </style>

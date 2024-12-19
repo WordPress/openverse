@@ -3,6 +3,7 @@ import { useI18n, useNuxtApp } from "#imports"
 import { computed } from "vue"
 
 import { IMAGE } from "#shared/constants/media"
+import { singleResultQuery } from "#shared/utils/query-utils"
 import type { AspectRatio, ImageDetail } from "#shared/types/media"
 import type { SingleResultProps } from "#shared/types/collection-component-props"
 import { useSearchStore } from "~/stores/search"
@@ -24,12 +25,14 @@ const props = withDefaults(
        * uses the image's intrinsic size.
        */
       aspectRatio?: AspectRatio
+      position?: number
     }
   >(),
   {
     aspectRatio: "square",
     kind: "search",
     relatedTo: "null",
+    position: -1,
   }
 )
 
@@ -60,9 +63,7 @@ const imageUrl = computed(() => {
 })
 
 const imageLink = computed(() => {
-  return `/image/${props.image.id}/${
-    props.searchTerm ? "?q=" + props.searchTerm : ""
-  }`
+  return `/image/${props.image.id}/${singleResultQuery(props.searchTerm, props.position)}`
 })
 
 /**
@@ -111,14 +112,13 @@ const sendSelectSearchResultEvent = (event: MouseEvent) => {
     return
   }
 
-  const { searchType, collectionType } = searchStore.searchParamsForEvent
   $sendCustomEvent("SELECT_SEARCH_RESULT", {
-    searchType,
-    collectionType,
+    ...searchStore.searchParamsForEvent,
     id: props.image.id,
     kind: props.kind,
     mediaType: IMAGE,
     provider: props.image.provider,
+    position: props.position,
     relatedTo: props.relatedTo ?? "null",
     sensitivities: props.image.sensitivity?.join(",") ?? "",
     isBlurred: shouldBlur.value ?? "null",

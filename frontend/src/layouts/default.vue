@@ -14,7 +14,7 @@ defineOptions({
     class="app h-dyn-screen grid grid-cols-1 grid-rows-[auto,1fr] flex-col bg-complementary dark:bg-default"
   >
     <VHeader class="header-el" kind="internal" color="complementary" />
-    <div class="main-content flex flex-grow flex-col overflow-y-scroll">
+    <div class="main-content flex flex-grow flex-col overflow-y-auto">
       <slot class="flex-grow" />
       <VFooter mode="internal" class="bg-complementary dark:bg-default" />
     </div>

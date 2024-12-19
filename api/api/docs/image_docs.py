@@ -21,10 +21,8 @@ from api.examples import (
     image_detail_404_example,
     image_detail_curl,
     image_oembed_200_example,
-    image_oembed_404_example,
     image_oembed_curl,
     image_related_200_example,
-    image_related_404_example,
     image_related_curl,
     image_search_200_example,
     image_search_400_example,
@@ -109,7 +107,7 @@ related = custom_extend_schema(
     res={
         200: (ImageSerializer(many=True), image_related_200_example["results"][0]),
         401: (AuthenticationFailed, None),
-        404: (NotFound, image_related_404_example),
+        404: (NotFound, None),
     },
     eg=[image_related_curl],
 )
@@ -119,6 +117,7 @@ report = custom_extend_schema(
         201: (ImageReportRequestSerializer, image_complain_201_example),
         401: (AuthenticationFailed, None),
         400: (ValidationError, None),
+        404: (NotFound, None),
     },
     eg=[image_complain_curl],
 )
@@ -138,7 +137,7 @@ oembed = custom_extend_schema(
         200: (OembedSerializer, image_oembed_200_example),
         400: (ValidationError, image_oembed_400_example),
         401: (AuthenticationFailed, None),
-        404: (NotFound, image_oembed_404_example),
+        404: (NotFound, None),
     },
     eg=[image_oembed_curl],
 )

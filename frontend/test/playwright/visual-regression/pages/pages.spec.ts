@@ -2,6 +2,7 @@ import { expect } from "@playwright/test"
 import { test } from "~~/test/playwright/utils/test"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import {
+  isPageDesktop,
   pathWithDir,
   preparePageForTests,
 } from "~~/test/playwright/utils/navigation"
@@ -11,6 +12,7 @@ import {
   getHomepageSearchButton,
   getLanguageSelect,
   getLoadMoreButton,
+  getMenuButton,
 } from "~~/test/playwright/utils/components"
 
 test.describe.configure({ mode: "parallel" })
@@ -32,6 +34,11 @@ for (const contentPage of contentPages) {
 
           await page.goto(pathWithDir(contentPage, dir))
           // Ensure the page is hydrated
+          // eslint-disable-next-line playwright/no-conditional-in-test
+          if (!isPageDesktop(page)) {
+            // eslint-disable-next-line playwright/no-conditional-expect
+            await expect(getMenuButton(page, dir)).toBeEnabled()
+          }
           await expect(page.locator("#language")).toHaveValue(
             dir === "ltr" ? "en" : "ar"
           )

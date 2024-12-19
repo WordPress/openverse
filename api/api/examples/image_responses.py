@@ -121,8 +121,6 @@ image_related_200_example = {
     ],
 }
 
-image_related_404_example = {"detail": "An internal server error occurred."}
-
 image_oembed_200_example = {
     "version": "1.0",
     "type": "photo",
@@ -134,7 +132,6 @@ image_oembed_200_example = {
     "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
 }
 
-image_oembed_404_example = {"detail": "An internal server error occurred."}
 image_oembed_400_example = {"detail": {"url": ["Could not parse identifier from URL."]}}
 
 image_complain_201_example = {

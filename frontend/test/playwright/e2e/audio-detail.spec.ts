@@ -56,6 +56,8 @@ test("sends GET_MEDIA event on CTA button click", async ({ context, page }) => {
   const expectedPayload: Events["GET_MEDIA"] = {
     ...audioObject,
     mediaType: "audio",
+    query: "",
+    position: -1,
   }
   expectEventPayloadToMatch(getMediaEvent, expectedPayload)
 })
@@ -138,6 +140,8 @@ test("sends SELECT_SEARCH_RESULT event on related audio click", async ({
     mediaType: "audio",
     provider: "wikimedia_audio",
     searchType: "all",
+    query: "",
+    position: 1,
     sensitivities: "",
     isBlurred: false,
     collectionType: "null",

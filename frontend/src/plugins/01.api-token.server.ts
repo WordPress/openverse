@@ -2,11 +2,11 @@ import { defineNuxtPlugin, useRuntimeConfig } from "#imports"
 
 import { Mutex, MutexInterface } from "async-mutex"
 import axios from "axios"
+import * as Sentry from "@sentry/nuxt"
 
 import { debug, warn } from "~/utils/console"
 
 import type { AxiosError } from "axios"
-import type { NuxtApp } from "#app"
 
 /* Process level state */
 
@@ -161,14 +161,12 @@ export const getApiAccessToken = async (): Promise<string | undefined> => {
   return process.tokenData.accessToken
 }
 
-export default defineNuxtPlugin(async (app) => {
+export default defineNuxtPlugin(async () => {
   let openverseApiToken: string | undefined
   try {
     openverseApiToken = await getApiAccessToken()
   } catch (e) {
-    const sentry =
-      app.ssrContext?.event.context.$sentry ?? (app as NuxtApp).$sentry
-    sentry.captureException(e)
+    Sentry.captureException(e)
   }
   return {
     provide: {

@@ -1,6 +1,7 @@
 import { defineNuxtPlugin } from "#imports"
 
 import { isAxiosError } from "axios"
+import * as Sentry from "@sentry/nuxt"
 
 import { ERR_UNKNOWN, ErrorCode, errorCodes } from "#shared/constants/errors"
 import type { SupportedSearchType } from "#shared/constants/media"
@@ -122,8 +123,7 @@ export function recordError(
       searchType: fetchingError.searchType,
     })
   } else {
-    const sentry = nuxtApp.ssrContext?.event.context.$sentry ?? nuxtApp.$sentry
-    sentry.captureException(originalError, { extra: { fetchingError } })
+    Sentry.captureException(originalError, { extra: { fetchingError } })
   }
 }
 

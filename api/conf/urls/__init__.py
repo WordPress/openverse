@@ -24,7 +24,7 @@ versioned_paths = [
     path("", include(deprecations_urlpatterns)),  # Deprecated, redirects to new URL
 ]
 
-router = SimpleRouter()
+router = SimpleRouter(use_regex_path=False)
 router.register("audio", AudioViewSet, basename="audio")
 router.register("images", ImageViewSet, basename="image")
 versioned_paths += router.urls

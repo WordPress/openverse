@@ -10,12 +10,12 @@ const imageCell = "a[itemprop='contentUrl']"
 // exceeds the bounds of the actual component
 const screenshotEl = ".image-wrapper"
 
-const urlWithArgs = makeUrlWithArgs("components-vimagecell--default")
+const urlWithArgs = makeUrlWithArgs("components-vimageresult--default")
 
 test.describe.configure({ mode: "parallel" })
 
 const aspectRatios: AspectRatio[] = ["square", "intrinsic"]
-test.describe("VImageCell", () => {
+test.describe("VImageResult", () => {
   breakpoints.describeMobileXsAndDesktop(({ expectSnapshot }) => {
     for (const ratio of aspectRatios) {
       test.beforeEach(async ({ page }) => {
@@ -28,7 +28,7 @@ test.describe("VImageCell", () => {
         await page.goto(urlWithArgs({ aspectRatio: ratio }))
         await expectSnapshot(
           page,
-          `v-image-cell-${ratio}-loaded`,
+          `v-image-result-${ratio}-loaded`,
           page.locator(screenshotEl)
         )
       })
@@ -40,7 +40,7 @@ test.describe("VImageCell", () => {
 
         await expectSnapshot(
           page,
-          `v-image-cell-${ratio}-focused`,
+          `v-image-result-${ratio}-focused`,
           page.locator(screenshotEl)
         )
       })
@@ -52,7 +52,7 @@ test.describe("VImageCell", () => {
 
         await expectSnapshot(
           page,
-          `v-image-cell-${ratio}-hovered`,
+          `v-image-result-${ratio}-hovered`,
           page.locator(screenshotEl)
         )
       })
@@ -66,7 +66,7 @@ test.describe("VImageCell", () => {
 
         await expectSnapshot(
           page,
-          `v-image-cell-${ratio}-focused-hovered`,
+          `v-image-result-${ratio}-focused-hovered`,
           page.locator(screenshotEl)
         )
       })

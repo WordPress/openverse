@@ -2,6 +2,7 @@
 import { useNuxtApp } from "#imports"
 
 import type { SupportedMediaType } from "#shared/constants/media"
+import { useRouteResultParams } from "~/composables/use-route-result-params"
 
 import VCopyButton from "~/components/VCopyButton.vue"
 import VTabPanel from "~/components/VTabs/VTabPanel.vue"
@@ -23,10 +24,12 @@ const props = defineProps<{
   mediaType: SupportedMediaType
 }>()
 
+const { resultParams } = useRouteResultParams()
+
 const { $sendCustomEvent } = useNuxtApp()
 const handleCopy = () => {
   $sendCustomEvent("COPY_ATTRIBUTION", {
-    id: props.mediaId,
+    ...resultParams.value,
     format: props.tab,
     mediaType: props.mediaType,
   })

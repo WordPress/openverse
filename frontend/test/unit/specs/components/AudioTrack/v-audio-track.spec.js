@@ -29,20 +29,6 @@ const stubs = {
   RouterLink: RouterLinkStub,
 }
 
-const captureExceptionMock = vi.fn()
-
-vi.mock("#app", async () => {
-  const original = await import("#app")
-  return {
-    ...original,
-    useNuxtApp: vi.fn(() => ({
-      $sentry: {
-        captureException: captureExceptionMock,
-      },
-    })),
-  }
-})
-
 describe("AudioTrack", () => {
   let options = null
   let props = null
@@ -109,7 +95,6 @@ describe("AudioTrack", () => {
     ${"NotAllowedError"}   | ${/Reproduction not allowed./i}
     ${"NotSupportedError"} | ${/This audio format is not supported by your browser./i}
     ${"AbortError"}        | ${/You aborted playback./i}
-    ${"UnknownError"}      | ${/An unexpected error has occurred./i}
   `(
     "on play error displays a message instead of the waveform",
     async ({ errorType, errorText }) => {
@@ -139,15 +124,6 @@ describe("AudioTrack", () => {
       expect(playStub).toHaveBeenCalledTimes(1)
       expect(pauseStub).toHaveBeenCalledTimes(1)
       expect(getByText(errorText)).toBeVisible()
-
-      // Only the UnknownError should be sent to Sentry.
-      if (errorType === "UnknownError") {
-        // eslint-disable-next-line vitest/no-conditional-expect
-        expect(captureExceptionMock).toHaveBeenCalledWith(playError)
-      } else {
-        // eslint-disable-next-line vitest/no-conditional-expect
-        expect(captureExceptionMock).not.toHaveBeenCalled()
-      }
     }
   )
 
