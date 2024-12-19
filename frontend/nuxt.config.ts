@@ -131,6 +131,16 @@ export default defineNuxtConfig({
     sourceMapsUploadOptions: {
       org: "openverse",
       project: "openverse-frontend",
+      /**
+       * This token is only used in the CI to upload source maps to Sentry when building the production
+       * image of the frontend.
+       */
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+    },
+    unstable_sentryBundlerPluginOptions: {
+      release: {
+        name: process.env.SEMANTIC_VERSION,
+      },
     },
   },
   sourcemap: {

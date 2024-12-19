@@ -10,6 +10,8 @@ ARG FRONTEND_NODE_VERSION
 
 FROM docker.io/node:${FRONTEND_NODE_VERSION}-alpine AS builder
 
+ARG SEMANTIC_VERSION
+
 # Install system packages needed to build on macOS
 RUN apk add --no-cache --virtual .gyp python3 make g++ \
   && corepack enable pnpm
@@ -35,7 +37,7 @@ ENV SKIP_PRE_COMMIT=true
 # Get rid of the lockfile as it won't be accurate for the build without workspace.
 # Then install dependencies, and in the process:
 #   - fix the missing lockfile by writing a new one
-RUN pnpm install && pnpm i18n
+RUN pnpm install
 
 # disable telemetry when building the app
 ENV NUXT_TELEMETRY_DISABLED=1
@@ -43,8 +45,17 @@ ENV NODE_ENV=production
 
 # Increase memory limit for the build process (necessary for i18n routes)
 ENV NODE_OPTIONS="--max_old_space_size=4096"
+ENV SEMANTIC_VERSION=${SEMANTIC_VERSION}
 
-RUN pnpm build
+# Use the Sentry auth token secret to send the sourcemaps to Sentry only if the secret is provided
+RUN --mount=type=secret,id=sentry_auth_token,mode=0444 \
+    sh -c 'if [ -f /run/secrets/sentry_auth_token ]; then \
+      SENTRY_AUTH_TOKEN="$(cat /run/secrets/sentry_auth_token)"; \
+      echo "Using Sentry Auth Token: $SENTRY_AUTH_TOKEN"; \
+    else \
+      echo "No Sentry Auth Token provided"; \
+    fi' && pnpm build
+
 
 ############
 # Nuxt app #

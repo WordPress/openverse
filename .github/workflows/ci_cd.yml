@@ -181,6 +181,9 @@ jobs:
       - name: Build image `${{ matrix.image }}`
         uses: docker/build-push-action@v6
         with:
+          # The Sentry auth token is only set for the production release of the frontend (on push to main or manual release).
+          secrets: |
+            ${{ matrix.image == 'frontend' && ((github.event_name == 'push' && github.repository == 'WordPress/openverse') || (github.event_name == 'workflow_dispatch' && inputs.perform_deploy)) && format('sentry_auth_token={0}', secrets.SENTRY_AUTH_TOKEN) || '' }}
           context: ${{ matrix.context }}
           target: ${{ matrix.target }}
           push: false
@@ -191,7 +194,6 @@ jobs:
           outputs: type=docker,dest=/tmp/${{ matrix.image }}.tar
           build-contexts: ${{ matrix.build-contexts }}
           build-args: |
-            SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
             SEMANTIC_VERSION=${{ needs.get-image-tag.outputs.image_tag }}
             OV_PDM_VERSION=${{ steps.prepare-build-args.outputs.ov_pdm_version }}
             CATALOG_PY_VERSION=${{ steps.prepare-build-args.outputs.catalog_py_version }}
@@ -798,7 +800,6 @@ jobs:
         with:
           setup_python: false
           install_recipe: node-install
-          locales: "test"
 
       - name: Run check recipe
         run: just ${{ matrix.recipe }}

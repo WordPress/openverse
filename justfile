@@ -48,7 +48,6 @@ node-install:
     pnpm i
     pnpm --filter './packages/js/*' run build
     pnpm prepare:nuxt
-    just frontend/run i18n:en
 
 
 # Set up locales for the frontend
