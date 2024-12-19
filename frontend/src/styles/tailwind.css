@@ -177,6 +177,7 @@
       --color-border-focus: var(--color-pink-8);
       --color-border-bg-ring: var(--color-white);
       --color-border-disabled: var(--color-gray-5);
+      --color-focus-ring: var(--color-pink-8);
 
       /* Text */
       --color-text: var(--color-gray-12);
@@ -236,6 +237,7 @@
       --color-border-focus: var(--color-yellow-4);
       --color-border-bg-ring: var(--color-gray-13);
       --color-border-disabled: var(--color-gray-8);
+      --color-focus-ring: var(--color-yellow-4);
 
       /* Text */
       --color-text: var(--color-gray-1);
@@ -297,6 +299,7 @@
     --color-border-focus: var(--color-pink-8);
     --color-border-bg-ring: var(--color-white);
     --color-border-disabled: var(--color-gray-5);
+    --color-focus-ring: var(--color-pink-8);
 
     /* Text */
     --color-text: var(--color-gray-12);
@@ -357,6 +360,7 @@
     --color-border-focus: var(--color-yellow-4);
     --color-border-bg-ring: var(--color-gray-13);
     --color-border-disabled: var(--color-gray-8);
+    --color-focus-ring: var(--color-yellow-4);
 
     /* Text */
     --color-text: var(--color-gray-1);
@@ -532,13 +536,14 @@ Time                - 11px - xs semibold (default leading-tight)
     @apply ring-offset-1;
   }
 
-  [class*="focus-slim-tx"] {
-    @apply focus-visible:outline-none; /* UA styles: none */
-    @apply focus-visible:ring; /* outer-stroke: box-shadow */
-    @apply focus-visible:border-tx; /* inner-stroke: transparent border */
+  .focus-slim-tx {
+    @apply outline-style-none; /* UA styles: none */
+    @apply ring; /* outer-stroke: box-shadow */
+    @apply border-tx; /* inner-stroke: transparent border */
 
     /* It is up to the component to apply border utilities. */
-    @apply focus-visible:hover:border-tx; /* focus prevails over hover */
+    @apply hover:border-tx; /* focus prevails over hover */
+    @apply ring-focus; /* default ring color */
   }
 
   [class*="focus-slim-filled"] {
@@ -552,7 +557,7 @@ Time                - 11px - xs semibold (default leading-tight)
     @apply focus-visible:after:-left-px focus-visible:after:-top-px;
 
     @apply focus-visible:after:border-bg-ring;
-    @apply focus-visible:outline-[--tw-outline-color];
+    @apply focus-visible:outline-focus;
     /* @apply ring-offset-bg-default; */
   }
 
@@ -565,6 +570,8 @@ Time                - 11px - xs semibold (default leading-tight)
 
     @apply after:pointer-events-none after:absolute after:inset-0 after:rounded-inherit;
     @apply after:z-10 after:shadow-bold-filled; /* inner-stroke: pseudo-element */
+
+    @apply ring-focus; /* default ring color */
   }
 
   /**

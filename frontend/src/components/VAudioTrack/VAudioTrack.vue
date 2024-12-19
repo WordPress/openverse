@@ -487,7 +487,7 @@ const handleWaveformBlur = () => {
     :class="{
       'audio-link cursor-pointer focus-visible:focus-bold-filled':
         layout === 'box',
-      'cursor-pointer focus-slim-tx': layout === 'row',
+      'cursor-pointer focus-visible:focus-slim-tx': layout === 'row',
     }"
     :aria-label="ariaLabel"
     :role="isComposite ? 'application' : undefined"
