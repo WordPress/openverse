@@ -16,7 +16,7 @@ from api.models.media import (
 )
 
 
-pytestmark = pytest.mark.django_db
+pytestmark = pytest.mark.django_db(transaction=True)
 
 reason_params = pytest.mark.parametrize("reason", [DMCA, MATURE, OTHER])
 
