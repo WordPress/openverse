@@ -40,6 +40,134 @@ LICENSE_INFO = {
 }
 
 
+class FlickrRecordBuilder:
+    """
+    Build records for Flickr.
+
+    This small class contains the record building functionality and facilitates
+    reuse with the FlickrTargetedProviderIngester.
+    """
+
+    def get_record_data(self, data):
+        if not (license_info := self._get_license_info(data)):
+            return None
+
+        image_size = self._get_largest_image_size(data)
+        if not (url := data.get(f"url_{image_size}")):
+            return None
+
+        if not (foreign_identifier := data.get("id")):
+            return None
+
+        if not (owner := data.get("owner")):
+            # Owner is needed to construct the foreign_landing_url, which is
+            # a required field
+            return None
+
+        creator_url = self._url_join(self.photo_url_base, owner.strip())
+        foreign_landing_url = self._url_join(creator_url, foreign_identifier)
+
+        # Optional fields
+        height = data.get(f"height_{image_size}")
+        width = data.get(f"width_{image_size}")
+        title = data.get("title")
+        creator = data.get("ownername")
+        category = self._get_category(data)
+        meta_data = self._create_meta_data_dict(data)
+        raw_tags = self._create_tags_list(data)
+        # Flickr includes a collection of sub-providers which are available to a wide
+        # audience. If this record belongs to a known sub-provider, we should indicate
+        # that as the source. If not we fall back to the default provider.
+        source = next(
+            (s for s in self.sub_providers if owner in self.sub_providers[s]),
+            self.provider_string,
+        )
+
+        return {
+            "foreign_landing_url": foreign_landing_url,
+            "url": url,
+            "license_info": license_info,
+            "foreign_identifier": foreign_identifier,
+            "width": width,
+            "height": height,
+            "creator": creator,
+            "creator_url": creator_url,
+            "title": title,
+            "meta_data": meta_data,
+            "raw_tags": raw_tags,
+            "source": source,
+            "category": category,
+        }
+
+    def _url_join(self, *args):
+        return "/".join([s.strip("/") for s in args])
+
+    @staticmethod
+    def _get_largest_image_size(image_data):
+        """Return the key for the largest image size available."""
+        for size in ["l", "m", "s"]:
+            if f"url_{size}" in image_data:
+                return size
+
+        logger.warning("No image detected!")
+        return None
+
+    @staticmethod
+    def _get_license_info(image_data) -> LicenseInfo | None:
+        license_id = str(image_data.get("license"))
+        if license_id not in LICENSE_INFO:
+            logger.warning(f"Unknown license ID: {license_id}")
+            return None
+
+        license_, license_version = LICENSE_INFO.get(license_id)
+        return get_license_info(license_=license_, license_version=license_version)
+
+    @staticmethod
+    def _create_meta_data_dict(image_data, max_description_length=2000):
+        meta_data = {
+            "pub_date": image_data.get("dateupload"),
+            "date_taken": image_data.get("datetaken"),
+            "views": image_data.get("views"),
+        }
+        description = image_data.get("description", {}).get("_content", "")
+        if description.strip():
+            try:
+                description_text = " ".join(
+                    html.fromstring(description).xpath("//text()")
+                ).strip()[:max_description_length]
+                meta_data["description"] = description_text
+            except (TypeError, ValueError, IndexError) as e:
+                logger.warning(f"Could not parse description {description}!\n{e}")
+
+        return {k: v for k, v in meta_data.items() if v is not None}
+
+    @staticmethod
+    def _create_tags_list(image_data, max_tag_string_length=2000):
+        raw_tags = None
+        # We limit the input tag string length, not the number of tags,
+        # since tags could otherwise be arbitrarily long, resulting in
+        # arbitrarily large data in the DB.
+        raw_tag_string = image_data.get("tags", "").strip()[:max_tag_string_length]
+        if raw_tag_string:
+            raw_tags = raw_tag_string.split()
+        return raw_tags
+
+    @staticmethod
+    def _get_category(image_data):
+        """
+        Get the category.
+
+        Flickr has three types:
+            0 for photos
+            1 for screenshots
+            3 for other
+        Treating everything different from photos as unknown.
+        """
+        if "content_type" in image_data and image_data["content_type"] == "0":
+            return ImageCategory.PHOTOGRAPH
+        return None
+
+
 class FlickrDataIngester(TimeDelineatedProviderDataIngester):
     provider_string = prov.FLICKR_DEFAULT_PROVIDER
     sub_providers = prov.FLICKR_SUB_PROVIDERS
@@ -87,6 +215,8 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
 
         # Keep track of the current timestamp pair being processed.
         self.current_timestamp_pair = ()
+
+        self.record_builder = FlickrRecordBuilder()
 
     def ingest_records(self, **kwargs):
         """
@@ -227,124 +357,10 @@ class FlickrDataIngester(TimeDelineatedProviderDataIngester):
             return int(count)
         return 0
 
-    def get_record_data(self, data):
-        if not (license_info := self._get_license_info(data)):
-            return None
-
-        image_size = self._get_largest_image_size(data)
-        if not (url := data.get(f"url_{image_size}")):
-            return None
-
-        if not (foreign_identifier := data.get("id")):
-            return None
-
-        if not (owner := data.get("owner")):
-            # Owner is needed to construct the foreign_landing_url, which is
-            # a required field
-            return None
-
-        creator_url = self._url_join(self.photo_url_base, owner.strip())
-        foreign_landing_url = self._url_join(creator_url, foreign_identifier)
-
-        # Optional fields
-        height = data.get(f"height_{image_size}")
-        width = data.get(f"width_{image_size}")
-        title = data.get("title")
-        creator = data.get("ownername")
-        category = self._get_category(data)
-        meta_data = self._create_meta_data_dict(data)
-        raw_tags = self._create_tags_list(data)
-        # Flickr includes a collection of sub-providers which are available to a wide
-        # audience. If this record belongs to a known sub-provider, we should indicate
-        # that as the source. If not we fall back to the default provider.
-        source = next(
-            (s for s in self.sub_providers if owner in self.sub_providers[s]),
-            self.provider_string,
+    def get_record_data(self, data: dict) -> dict:
+        return self.record_builder.get_record_data(
+            data | {"item_webresource": self._get_additional_item_data(data)}
         )
-
-        return {
-            "foreign_landing_url": foreign_landing_url,
-            "url": url,
-            "license_info": license_info,
-            "foreign_identifier": foreign_identifier,
-            "width": width,
-            "height": height,
-            "creator": creator,
-            "creator_url": creator_url,
-            "title": title,
-            "meta_data": meta_data,
-            "raw_tags": raw_tags,
-            "source": source,
-            "category": category,
-        }
-
-    def _url_join(self, *args):
-        return "/".join([s.strip("/") for s in args])
-
-    @staticmethod
-    def _get_largest_image_size(image_data):
-        """Return the key for the largest image size available."""
-        for size in ["l", "m", "s"]:
-            if f"url_{size}" in image_data:
-                return size
-
-        logger.warning("No image detected!")
-        return None
-
-    @staticmethod
-    def _get_license_info(image_data) -> LicenseInfo | None:
-        license_id = str(image_data.get("license"))
-        if license_id not in LICENSE_INFO:
-            logger.warning(f"Unknown license ID: {license_id}")
-            return None
-
-        license_, license_version = LICENSE_INFO.get(license_id)
-        return get_license_info(license_=license_, license_version=license_version)
-
-    @staticmethod
-    def _create_meta_data_dict(image_data, max_description_length=2000):
-        meta_data = {
-            "pub_date": image_data.get("dateupload"),
-            "date_taken": image_data.get("datetaken"),
-            "views": image_data.get("views"),
-        }
-        description = image_data.get("description", {}).get("_content", "")
-        if description.strip():
-            try:
-                description_text = " ".join(
-                    html.fromstring(description).xpath("//text()")
-                ).strip()[:max_description_length]
-                meta_data["description"] = description_text
-            except (TypeError, ValueError, IndexError) as e:
-                logger.warning(f"Could not parse description {description}!\n{e}")
-
-        return {k: v for k, v in meta_data.items() if v is not None}
-
-    @staticmethod
-    def _create_tags_list(image_data, max_tag_string_length=2000):
-        raw_tags = None
-        # We limit the input tag string length, not the number of tags,
-        # since tags could otherwise be arbitrarily long, resulting in
-        # arbitrarily large data in the DB.
-        raw_tag_string = image_data.get("tags", "").strip()[:max_tag_string_length]
-        if raw_tag_string:
-            raw_tags = raw_tag_string.split()
-        return raw_tags
-
-    @staticmethod
-    def _get_category(image_data):
-        """
-        Get the category.
-
-        Flickr has three types:
-            0 for photos
-            1 for screenshots
-            3 for other
-        Treating everything different from photos as unknown.
-        """
-        if "content_type" in image_data and image_data["content_type"] == "0":
-            return ImageCategory.PHOTOGRAPH
-        return None
 
 
 def main(date):
