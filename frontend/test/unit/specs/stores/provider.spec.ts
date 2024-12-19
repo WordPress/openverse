@@ -3,7 +3,7 @@
 import { beforeEach, describe, expect, it } from "vitest"
 import { setActivePinia, createPinia } from "~~/test/unit/test-utils/pinia"
 
-import { AUDIO, IMAGE } from "#shared/constants/media"
+import { IMAGE } from "#shared/constants/media"
 import type { MediaProvider } from "#shared/types/media-provider"
 import { useProviderStore } from "~/stores/provider"
 
@@ -42,8 +42,8 @@ describe("provider store", () => {
     expect(providerStore.providers.audio.length).toEqual(0)
     expect(providerStore.providers.image.length).toEqual(0)
     expect(providerStore.fetchState).toEqual({
-      [AUDIO]: { hasStarted: false, isFetching: false, fetchingError: null },
-      [IMAGE]: { hasStarted: false, isFetching: false, fetchingError: null },
+      isFetching: false,
+      fetchingError: null,
     })
   })
 
@@ -55,7 +55,8 @@ describe("provider store", () => {
   `(
     "getProviderName returns provider name or capitalizes providerCode",
     async ({ providerCode, displayName }) => {
-      await providerStore.$patch({ providers: { [IMAGE]: testProviders } })
+      providerStore.$patch({ providers: { [IMAGE]: testProviders } })
+
       expect(providerStore.getProviderName(providerCode, IMAGE)).toEqual(
         displayName
       )
