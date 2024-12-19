@@ -1,0 +1,6 @@
+# 2023.05.19.18.58.25
+
+## Bug Fixes
+
+- Add safe check for Content-Type in photon
+  ([#2143](https://github.com/WordPress/openverse/pull/2143)) by @krysal

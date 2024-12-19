@@ -1,0 +1,1 @@
+.backdrop.mobile-input[data-v-db1d6b46]{height:calc(100dvh - var(--header-height, 80px));top:var(--header-height,80px)}@supports not (height:100dvh){.modal-content.fallback-padding[data-v-db1d6b46]{padding-bottom:2.5rem}}.modal-content[data-v-db1d6b46]{max-height:calc(100vh - var(--modal-header-height, 0) - 6rem);overflow-y:scroll}

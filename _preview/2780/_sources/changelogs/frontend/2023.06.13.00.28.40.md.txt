@@ -1,0 +1,42 @@
+# 2023.06.13.00.28.40
+
+## New Features
+
+- Add analytics events for external links
+  ([#2247](https://github.com/WordPress/openverse/pull/2247)) by @obulat
+- Analytics event: RIGHT_CLICK_IMAGE
+  ([#1156](https://github.com/WordPress/openverse/pull/1156)) by @CouldBeFree
+
+## Improvements
+
+- Use camelCase for i18n strings
+  ([#2271](https://github.com/WordPress/openverse/pull/2271)) by @obulat
+- Fix the full-height layout
+  ([#2160](https://github.com/WordPress/openverse/pull/2160)) by @obulat
+
+## Internal Improvements
+
+- Skip flaky tests related to SVGs
+  ([#2376](https://github.com/WordPress/openverse/pull/2376)) by @zackkrida
+- Update Playwright to use a custom test fixture with global mocks
+  ([#2196](https://github.com/WordPress/openverse/pull/2196)) by @zackkrida
+- Add a unit test for RIGHT_CLICK_IMAGE
+  ([#2336](https://github.com/WordPress/openverse/pull/2336)) by @obulat
+- Remove style-resources module
+  ([#2233](https://github.com/WordPress/openverse/pull/2233)) by @obulat
+- Convert route guards to middleware
+  ([#2244](https://github.com/WordPress/openverse/pull/2244)) by @obulat
+
+## Bug Fixes
+
+- Fix flaky Playwright CI tests
+  ([#2378](https://github.com/WordPress/openverse/pull/2378)) by @obulat
+- Skip flaky tests related to SVGs
+  ([#2376](https://github.com/WordPress/openverse/pull/2376)) by @zackkrida
+- Add assertions to the
+  `fetchSingleMediaType does not reset images if shouldPersistMedia is true`
+  ([#2334](https://github.com/WordPress/openverse/pull/2334)) by @obulat
+- Enable "should allow changing the type" test for VInputField
+  ([#2337](https://github.com/WordPress/openverse/pull/2337)) by @zackkrida
+- Fix content report form unit test
+  ([#2228](https://github.com/WordPress/openverse/pull/2228)) by @obulat

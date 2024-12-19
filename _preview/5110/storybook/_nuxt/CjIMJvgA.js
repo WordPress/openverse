@@ -1,0 +1,1 @@
+const e=t=>Array.isArray(t)?t[0]:t??null,n=t=>t?/^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(t):!1,s=t=>t==="image"?"images":"audio",f=(t,a)=>{if(!t&&!a)return"";const r=new URLSearchParams;return t&&r.set("q",t),`?${r.toString()}`};export{e as f,s as m,f as s,n as v};
