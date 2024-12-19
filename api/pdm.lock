@@ -5,7 +5,7 @@
 groups = ["default", "dev", "overrides", "test"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:3937f0179322b8bbf6617fe31ea122c45b2e0d2d1c5672204ceaf8e095e6ab8c"
+content_hash = "sha256:8738e49e25a4fd8e0f2262481ba71e950cc17aa086a7fe2587d09498192c0613"
 
 [[metadata.targets]]
 requires_python = "==3.11.*"
@@ -1379,7 +1379,7 @@ name = "psycopg"
 version = "3.2.3"
 requires_python = ">=3.8"
 summary = "PostgreSQL database adapter for Python"
-groups = ["dev"]
+groups = ["default", "dev"]
 dependencies = [
     "backports-zoneinfo>=0.2.0; python_version < \"3.9\"",
     "typing-extensions>=4.6; python_version < \"3.13\"",
