@@ -49,6 +49,9 @@ class AudioViewSet(MediaViewSet):
     def get_queryset(self):
         return super().get_queryset().select_related("sensitive_audio", "audioset")
 
+    def include_addons(self, serializer):
+        return serializer.validated_data.get("peaks")
+
     # Extra actions
 
     async def get_image_proxy_media_info(self) -> image_proxy.MediaInfo:

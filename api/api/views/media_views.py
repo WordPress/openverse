@@ -159,6 +159,20 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
                 detail=f"Invalid source '{source}'. Valid sources are: {valid_string}.",
             )
 
+    def include_addons(self, serializer):
+        """
+        Whether to include objects of the addon model when mapping hits to
+        objects of the media model.
+
+        If the media type has an addon model, this method should be overridden
+        in the subclass to return ``True`` based on serializer input.
+
+        :param serializer: the validated serializer instance
+        :return: whether to include addon model objects
+        """
+
+        return False
+
     def get_media_results(
         self,
         request,
@@ -200,8 +214,8 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
         except ValueError as e:
             raise APIException(getattr(e, "message", str(e)))
 
-        peaks = params.validated_data.get("peaks")
-        results, addons = self.get_db_results(results, include_addons=peaks)
+        include_addons = self.include_addons(params)
+        results, addons = self.get_db_results(results, include_addons)
         serializer_context = (
             search_context
             | self.get_serializer_context()
