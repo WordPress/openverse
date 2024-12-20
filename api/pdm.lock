@@ -5,7 +5,7 @@
 groups = ["default", "dev", "overrides", "test"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:6bbd74580d8a8f54234a5da217af861c9549d66c9e3b21be2fb104e8364ede10"
+content_hash = "sha256:652202681573595e8bd9a1e5244b59091e6ded9c84b1367ba592063a129320c1"
 
 [[metadata.targets]]
 requires_python = "==3.12.*"
@@ -256,42 +256,11 @@ files = [
 ]
 
 [[package]]
-name = "cli-helpers"
-version = "2.3.1"
-requires_python = ">=3.6"
-summary = "Helpers for building command-line apps"
-groups = ["dev"]
-dependencies = [
-    "configobj>=5.0.5",
-    "tabulate[widechars]>=0.9.0",
-]
-files = [
-    {file = "cli_helpers-2.3.1-py3-none-any.whl", hash = "sha256:208a24a44f41a8289b742867197450a002967a5a67c779911c0b8487b1c16b83"},
-    {file = "cli_helpers-2.3.1.tar.gz", hash = "sha256:b82a8983ceee21f180e6fd0ddb7ca8dae43c40e920951e3817f996ab204dae6a"},
-]
-
-[[package]]
-name = "cli-helpers"
-version = "2.3.1"
-extras = ["styles"]
-requires_python = ">=3.6"
-summary = "Helpers for building command-line apps"
-groups = ["dev"]
-dependencies = [
-    "Pygments>=1.6",
-    "cli-helpers==2.3.1",
-]
-files = [
-    {file = "cli_helpers-2.3.1-py3-none-any.whl", hash = "sha256:208a24a44f41a8289b742867197450a002967a5a67c779911c0b8487b1c16b83"},
-    {file = "cli_helpers-2.3.1.tar.gz", hash = "sha256:b82a8983ceee21f180e6fd0ddb7ca8dae43c40e920951e3817f996ab204dae6a"},
-]
-
-[[package]]
 name = "click"
 version = "8.1.7"
 requires_python = ">=3.7"
 summary = "Composable command line interface toolkit"
-groups = ["default", "dev", "test"]
+groups = ["default", "test"]
 dependencies = [
     "colorama; platform_system == \"Windows\"",
     "importlib-metadata; python_version < \"3.8\"",
@@ -310,17 +279,6 @@ groups = ["default", "dev", "test"]
 files = [
     {file = "colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"},
     {file = "colorama-0.4.6.tar.gz", hash = "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44"},
-]
-
-[[package]]
-name = "configobj"
-version = "5.0.9"
-requires_python = ">=3.7"
-summary = "Config file reading, writing and validation."
-groups = ["dev"]
-files = [
-    {file = "configobj-5.0.9-py2.py3-none-any.whl", hash = "sha256:1ba10c5b6ee16229c79a05047aeda2b55eb4e80d7c7d8ecf17ec1ca600c79882"},
-    {file = "configobj-5.0.9.tar.gz", hash = "sha256:03c881bbf23aa07bccf1b837005975993c4ab4427ba57f959afdd9d1a2386848"},
 ]
 
 [[package]]
@@ -1241,44 +1199,6 @@ files = [
 ]
 
 [[package]]
-name = "pgcli"
-version = "4.1.0"
-requires_python = ">=3.8"
-summary = "CLI for Postgres Database. With auto-completion and syntax highlighting."
-groups = ["dev"]
-dependencies = [
-    "Pygments>=2.0",
-    "cli-helpers[styles]>=2.2.1",
-    "click>=4.1",
-    "configobj>=5.0.6",
-    "pgspecial>=2.0.0",
-    "prompt-toolkit<4.0.0,>=2.0.6",
-    "psycopg-binary>=3.0.14; sys_platform == \"win32\"",
-    "psycopg>=3.0.14; sys_platform != \"win32\"",
-    "setproctitle>=1.1.9",
-    "sqlparse<0.6,>=0.3.0",
-]
-files = [
-    {file = "pgcli-4.1.0-py3-none-any.whl", hash = "sha256:00e68817e1681d4b2d4a5b93c87c188103110d1f5a27af72ae2fd06bf3fd57d0"},
-    {file = "pgcli-4.1.0.tar.gz", hash = "sha256:3fd16c8b51bd0145ff618c2c73264bcd854ba866aa206d4f076851f641b9b215"},
-]
-
-[[package]]
-name = "pgspecial"
-version = "2.1.2"
-summary = "Meta-commands handler for Postgres Database."
-groups = ["dev"]
-dependencies = [
-    "click>=4.1",
-    "psycopg>=3.0.10",
-    "sqlparse>=0.1.19",
-]
-files = [
-    {file = "pgspecial-2.1.2-py3-none-any.whl", hash = "sha256:a0d2f9cd85d94c11453a99b5c14e64136fde800f4a6c8f180500d3fc23789e7e"},
-    {file = "pgspecial-2.1.2.tar.gz", hash = "sha256:f0419e1b3b78fb3a72fe3b546f6788a712091532d599fe7593b5f6ee55a88f87"},
-]
-
-[[package]]
 name = "pillow"
 version = "11.0.0"
 requires_python = ">=3.9"
@@ -1365,43 +1285,6 @@ files = [
     {file = "propcache-0.2.0-cp312-cp312-win_amd64.whl", hash = "sha256:ad9c9b99b05f163109466638bd30ada1722abb01bbb85c739c50b6dc11f92dc3"},
     {file = "propcache-0.2.0-py3-none-any.whl", hash = "sha256:2ccc28197af5313706511fab3a8b66dcd6da067a1331372c82ea1cb74285e036"},
     {file = "propcache-0.2.0.tar.gz", hash = "sha256:df81779732feb9d01e5d513fad0122efb3d53bbc75f61b2a4f29a020bc985e70"},
-]
-
-[[package]]
-name = "psycopg"
-version = "3.2.3"
-requires_python = ">=3.8"
-summary = "PostgreSQL database adapter for Python"
-groups = ["default", "dev"]
-dependencies = [
-    "backports-zoneinfo>=0.2.0; python_version < \"3.9\"",
-    "typing-extensions>=4.6; python_version < \"3.13\"",
-    "tzdata; sys_platform == \"win32\"",
-]
-files = [
-    {file = "psycopg-3.2.3-py3-none-any.whl", hash = "sha256:644d3973fe26908c73d4be746074f6e5224b03c1101d302d9a53bf565ad64907"},
-    {file = "psycopg-3.2.3.tar.gz", hash = "sha256:a5764f67c27bec8bfac85764d23c534af2c27b893550377e37ce59c12aac47a2"},
-]
-
-[[package]]
-name = "psycopg-binary"
-version = "3.2.3"
-requires_python = ">=3.8"
-summary = "PostgreSQL database adapter for Python -- C optimisation distribution"
-groups = ["dev"]
-marker = "sys_platform == \"win32\""
-files = [
-    {file = "psycopg_binary-3.2.3-cp312-cp312-macosx_12_0_x86_64.whl", hash = "sha256:48f8ca6ee8939bab760225b2ab82934d54330eec10afe4394a92d3f2a0c37dd6"},
-    {file = "psycopg_binary-3.2.3-cp312-cp312-macosx_14_0_arm64.whl", hash = "sha256:5361ea13c241d4f0ec3f95e0bf976c15e2e451e9cc7ef2e5ccfc9d170b197a40"},
-    {file = "psycopg_binary-3.2.3-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:cb987f14af7da7c24f803111dbc7392f5070fd350146af3345103f76ea82e339"},
-    {file = "psycopg_binary-3.2.3-cp312-cp312-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:0463a11b1cace5a6aeffaf167920707b912b8986a9c7920341c75e3686277920"},
-    {file = "psycopg_binary-3.2.3-cp312-cp312-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:8b7be9a6c06518967b641fb15032b1ed682fd3b0443f64078899c61034a0bca6"},
-    {file = "psycopg_binary-3.2.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:64a607e630d9f4b2797f641884e52b9f8e239d35943f51bef817a384ec1678fe"},
-    {file = "psycopg_binary-3.2.3-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:fa33ead69ed133210d96af0c63448b1385df48b9c0247eda735c5896b9e6dbbf"},
-    {file = "psycopg_binary-3.2.3-cp312-cp312-musllinux_1_2_i686.whl", hash = "sha256:1f8b0d0e99d8e19923e6e07379fa00570be5182c201a8c0b5aaa9a4d4a4ea20b"},
-    {file = "psycopg_binary-3.2.3-cp312-cp312-musllinux_1_2_ppc64le.whl", hash = "sha256:709447bd7203b0b2debab1acec23123eb80b386f6c29e7604a5d4326a11e5bd6"},
-    {file = "psycopg_binary-3.2.3-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:5e37d5027e297a627da3551a1e962316d0f88ee4ada74c768f6c9234e26346d9"},
-    {file = "psycopg_binary-3.2.3-cp312-cp312-win_amd64.whl", hash = "sha256:261f0031ee6074765096a19b27ed0f75498a8338c3dcd7f4f0d831e38adf12d1"},
 ]
 
 [[package]]
@@ -1808,28 +1691,6 @@ files = [
 ]
 
 [[package]]
-name = "setproctitle"
-version = "1.3.3"
-requires_python = ">=3.7"
-summary = "A Python module to customize the process title"
-groups = ["dev"]
-files = [
-    {file = "setproctitle-1.3.3-cp312-cp312-macosx_10_9_universal2.whl", hash = "sha256:d4460795a8a7a391e3567b902ec5bdf6c60a47d791c3b1d27080fc203d11c9dc"},
-    {file = "setproctitle-1.3.3-cp312-cp312-macosx_10_9_x86_64.whl", hash = "sha256:bdfd7254745bb737ca1384dee57e6523651892f0ea2a7344490e9caefcc35e64"},
-    {file = "setproctitle-1.3.3-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:477d3da48e216d7fc04bddab67b0dcde633e19f484a146fd2a34bb0e9dbb4a1e"},
-    {file = "setproctitle-1.3.3-cp312-cp312-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:ab2900d111e93aff5df9fddc64cf51ca4ef2c9f98702ce26524f1acc5a786ae7"},
-    {file = "setproctitle-1.3.3-cp312-cp312-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:088b9efc62d5aa5d6edf6cba1cf0c81f4488b5ce1c0342a8b67ae39d64001120"},
-    {file = "setproctitle-1.3.3-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:a6d50252377db62d6a0bb82cc898089916457f2db2041e1d03ce7fadd4a07381"},
-    {file = "setproctitle-1.3.3-cp312-cp312-musllinux_1_1_aarch64.whl", hash = "sha256:87e668f9561fd3a457ba189edfc9e37709261287b52293c115ae3487a24b92f6"},
-    {file = "setproctitle-1.3.3-cp312-cp312-musllinux_1_1_i686.whl", hash = "sha256:287490eb90e7a0ddd22e74c89a92cc922389daa95babc833c08cf80c84c4df0a"},
-    {file = "setproctitle-1.3.3-cp312-cp312-musllinux_1_1_ppc64le.whl", hash = "sha256:4fe1c49486109f72d502f8be569972e27f385fe632bd8895f4730df3c87d5ac8"},
-    {file = "setproctitle-1.3.3-cp312-cp312-musllinux_1_1_x86_64.whl", hash = "sha256:4a6ba2494a6449b1f477bd3e67935c2b7b0274f2f6dcd0f7c6aceae10c6c6ba3"},
-    {file = "setproctitle-1.3.3-cp312-cp312-win32.whl", hash = "sha256:2df2b67e4b1d7498632e18c56722851ba4db5d6a0c91aaf0fd395111e51cdcf4"},
-    {file = "setproctitle-1.3.3-cp312-cp312-win_amd64.whl", hash = "sha256:f38d48abc121263f3b62943f84cbaede05749047e428409c2c199664feb6abc7"},
-    {file = "setproctitle-1.3.3.tar.gz", hash = "sha256:c913e151e7ea01567837ff037a23ca8740192880198b7fbb90b16d181607caae"},
-]
-
-[[package]]
 name = "setuptools"
 version = "75.6.0"
 requires_python = ">=3.9"
@@ -1877,7 +1738,7 @@ name = "sqlparse"
 version = "0.5.2"
 requires_python = ">=3.8"
 summary = "A non-validating SQL parser."
-groups = ["default", "dev"]
+groups = ["default"]
 files = [
     {file = "sqlparse-0.5.2-py3-none-any.whl", hash = "sha256:e99bc85c78160918c3e1d9230834ab8d80fc06c59d03f8db2618f65f65dda55e"},
     {file = "sqlparse-0.5.2.tar.gz", hash = "sha256:9e37b35e16d1cc652a2545f0997c1deb23ea28fa1f3eefe609eee3063c3b105f"},
@@ -1952,33 +1813,6 @@ dependencies = [
 files = [
     {file = "structlog_sentry-2.2.1-py3-none-any.whl", hash = "sha256:868c82348bc18b7d51ef8f878c57e82835c1758dba38f7589fa02a267096a95d"},
     {file = "structlog_sentry-2.2.1.tar.gz", hash = "sha256:78cf8751c7712e361d9d5e82fcde6c3f692a67e3e67068ccdd46448014636138"},
-]
-
-[[package]]
-name = "tabulate"
-version = "0.9.0"
-requires_python = ">=3.7"
-summary = "Pretty-print tabular data"
-groups = ["dev"]
-files = [
-    {file = "tabulate-0.9.0-py3-none-any.whl", hash = "sha256:024ca478df22e9340661486f85298cff5f6dcdba14f3813e8830015b9ed1948f"},
-    {file = "tabulate-0.9.0.tar.gz", hash = "sha256:0095b12bf5966de529c0feb1fa08671671b3368eec77d7ef7ab114be2c068b3c"},
-]
-
-[[package]]
-name = "tabulate"
-version = "0.9.0"
-extras = ["widechars"]
-requires_python = ">=3.7"
-summary = "Pretty-print tabular data"
-groups = ["dev"]
-dependencies = [
-    "tabulate==0.9.0",
-    "wcwidth",
-]
-files = [
-    {file = "tabulate-0.9.0-py3-none-any.whl", hash = "sha256:024ca478df22e9340661486f85298cff5f6dcdba14f3813e8830015b9ed1948f"},
-    {file = "tabulate-0.9.0.tar.gz", hash = "sha256:0095b12bf5966de529c0feb1fa08671671b3368eec77d7ef7ab114be2c068b3c"},
 ]
 
 [[package]]
@@ -2065,7 +1899,7 @@ name = "typing-extensions"
 version = "4.12.2"
 requires_python = ">=3.8"
 summary = "Backported and Experimental Type Hints for Python 3.8+"
-groups = ["default", "dev"]
+groups = ["default"]
 files = [
     {file = "typing_extensions-4.12.2-py3-none-any.whl", hash = "sha256:04e5ca0351e0f3f85c6853954072df659d0d13fac324d0072316b67d7794700d"},
     {file = "typing_extensions-4.12.2.tar.gz", hash = "sha256:1a7ead55c7e559dd4dee8856e3a88b41225abfe1ce8df57b7c13915fe121ffb8"},
@@ -2076,7 +1910,7 @@ name = "tzdata"
 version = "2024.2"
 requires_python = ">=2"
 summary = "Provider of IANA time zone data"
-groups = ["default", "dev"]
+groups = ["default"]
 marker = "sys_platform == \"win32\""
 files = [
     {file = "tzdata-2024.2-py2.py3-none-any.whl", hash = "sha256:a48093786cdcde33cad18c2555e8532f34422074448fbc874186f0abd79565cd"},
