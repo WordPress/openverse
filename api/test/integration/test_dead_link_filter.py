@@ -31,6 +31,10 @@ def empty_validation_cache(monkeypatch):
 _MAKE_HEAD_REQUESTS_MODULE_PATH = "api.utils.check_dead_links._make_head_requests"
 
 
+def _mock_get_db_results(results, include_addons=False):
+    return (results, [])
+
+
 def _patch_make_head_requests():
     def _make_head_requests(urls, *args, **kwargs):
         responses = []
@@ -67,7 +71,7 @@ def test_dead_link_filtering(mocked_map, api_client):
     with patch(
         "api.views.image_views.ImageViewSet.get_db_results"
     ) as mock_get_db_result:
-        mock_get_db_result.side_effect = lambda value: value
+        mock_get_db_result.side_effect = _mock_get_db_results
         res_with_dead_links = api_client.get(
             path,
             query_params | {"filter_dead": False},
@@ -121,7 +125,7 @@ def test_dead_link_filtering_all_dead_links(
     with patch(
         "api.views.image_views.ImageViewSet.get_db_results"
     ) as mock_get_db_result:
-        mock_get_db_result.side_effect = lambda value: value
+        mock_get_db_result.side_effect = _mock_get_db_results
         with patch_link_validation_dead_for_count(page_size / DEAD_LINK_RATIO):
             response = api_client.get(
                 path,

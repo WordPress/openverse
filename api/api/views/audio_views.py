@@ -16,6 +16,7 @@ from api.docs.audio_docs import (
 )
 from api.docs.audio_docs import thumbnail as thumbnail_docs
 from api.models import Audio
+from api.models.audio import AudioAddOn
 from api.serializers.audio_serializers import (
     AudioReportRequestSerializer,
     AudioSearchRequestSerializer,
@@ -38,6 +39,7 @@ class AudioViewSet(MediaViewSet):
     """Viewset for all endpoints pertaining to audio."""
 
     model_class = Audio
+    addon_model_class = AudioAddOn
     media_type = AUDIO_TYPE
     query_serializer_class = AudioSearchRequestSerializer
     default_index = settings.MEDIA_INDEX_MAPPING[AUDIO_TYPE]
@@ -46,6 +48,9 @@ class AudioViewSet(MediaViewSet):
 
     def get_queryset(self):
         return super().get_queryset().select_related("sensitive_audio", "audioset")
+
+    def include_addons(self, serializer):
+        return serializer.validated_data.get("peaks")
 
     # Extra actions
 

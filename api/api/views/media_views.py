@@ -14,6 +14,7 @@ from api.constants.media_types import MediaType
 from api.controllers import search_controller
 from api.controllers.elasticsearch.related import related_media
 from api.models import ContentSource
+from api.models.base import OpenLedgerModel
 from api.models.media import AbstractMedia
 from api.serializers import media_serializers
 from api.serializers.source_serializers import SourceSerializer
@@ -51,6 +52,7 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
 
     # Populate these in the corresponding subclass
     model_class: type[AbstractMedia] = None
+    addon_model_class: type[OpenLedgerModel] = None
     media_type: MediaType | None = None
     query_serializer_class = None
     default_index = None
@@ -97,7 +99,11 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
         req_serializer.is_valid(raise_exception=True)
         return req_serializer
 
-    def get_db_results(self, results):
+    def get_db_results(
+        self,
+        results,
+        include_addons=False,
+    ) -> tuple[list[AbstractMedia], list[OpenLedgerModel]]:
         """
         Map ES hits to ORM model instances.
 
@@ -107,6 +113,7 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
         which is both unique and indexed, so it's quite performant.
 
         :param results: the list of ES hits
+        :param include_addons: whether to include add-ons with results
         :return: the corresponding list of ORM model instances
         """
 
@@ -121,7 +128,12 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
         for result, hit in zip(results, hits):
             result.fields_matched = getattr(hit.meta, "highlight", None)
 
-        return results
+        if include_addons and self.addon_model_class:
+            addons = list(self.addon_model_class.objects.filter(pk__in=identifiers))
+        else:
+            addons = []
+
+        return (results, addons)
 
     # Standard actions
 
@@ -146,6 +158,20 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
             raise InvalidSource(
                 detail=f"Invalid source '{source}'. Valid sources are: {valid_string}.",
             )
+
+    def include_addons(self, serializer):
+        """
+        Whether to include objects of the addon model when mapping hits to
+        objects of the media model.
+
+        If the media type has an addon model, this method should be overridden
+        in the subclass to return ``True`` based on serializer input.
+
+        :param serializer: the validated serializer instance
+        :return: whether to include addon model objects
+        """
+
+        return False
 
     def get_media_results(
         self,
@@ -188,9 +214,13 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
         except ValueError as e:
             raise APIException(getattr(e, "message", str(e)))
 
-        serializer_context = search_context | self.get_serializer_context()
-
-        results = self.get_db_results(results)
+        include_addons = self.include_addons(params)
+        results, addons = self.get_db_results(results, include_addons)
+        serializer_context = (
+            search_context
+            | self.get_serializer_context()
+            | {"addons": {addon.audio_identifier: addon for addon in addons}}
+        )
 
         serializer = self.get_serializer(results, many=True, context=serializer_context)
         return self.get_paginated_response(serializer.data)
@@ -231,7 +261,7 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
 
         serializer_context = self.get_serializer_context()
 
-        results = self.get_db_results(results)
+        results, _ = self.get_db_results(results)
 
         serializer = self.get_serializer(results, many=True, context=serializer_context)
         return self.get_paginated_response(serializer.data)
