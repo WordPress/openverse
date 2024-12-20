@@ -5,10 +5,10 @@
 groups = ["default", "dev", "overrides", "test"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:652202681573595e8bd9a1e5244b59091e6ded9c84b1367ba592063a129320c1"
+content_hash = "sha256:c4c727b3f896dab5ac522075e436e6140ea610b8031d2c1728ffb3b3b839e537"
 
 [[metadata.targets]]
-requires_python = "==3.12.*"
+requires_python = "==3.11.*"
 
 [[package]]
 name = "adrf"
@@ -154,6 +154,18 @@ groups = ["default"]
 files = [
     {file = "async_property-0.2.2-py2.py3-none-any.whl", hash = "sha256:8924d792b5843994537f8ed411165700b27b2bd966cefc4daeefc1253442a9d7"},
     {file = "async_property-0.2.2.tar.gz", hash = "sha256:17d9bd6ca67e27915a75d92549df64b5c7174e9dc806b30a3934dc4ff0506380"},
+]
+
+[[package]]
+name = "async-timeout"
+version = "5.0.1"
+requires_python = ">=3.8"
+summary = "Timeout context manager for asyncio programs"
+groups = ["default", "test"]
+marker = "python_full_version < \"3.11.3\""
+files = [
+    {file = "async_timeout-5.0.1-py3-none-any.whl", hash = "sha256:39e3809566ff85354557ec2398b55e096c8364bacac9405a7a1fa429e77fe76c"},
+    {file = "async_timeout-5.0.1.tar.gz", hash = "sha256:d9321a7a3d5a6a5e187e824d2fa0793ce379a202935782d555d6e9d2735677d3"},
 ]
 
 [[package]]
@@ -1132,7 +1144,7 @@ files = [
 [[package]]
 name = "openverse-attribution"
 version = "0.0.0"
-requires_python = "==3.12.*"
+requires_python = ">=3.11"
 editable = true
 path = "../packages/python/openverse-attribution"
 summary = "Provides utilities related to open licenses, tools, and attribution."
@@ -1899,7 +1911,7 @@ name = "typing-extensions"
 version = "4.12.2"
 requires_python = ">=3.8"
 summary = "Backported and Experimental Type Hints for Python 3.8+"
-groups = ["default"]
+groups = ["default", "dev"]
 files = [
     {file = "typing_extensions-4.12.2-py3-none-any.whl", hash = "sha256:04e5ca0351e0f3f85c6853954072df659d0d13fac324d0072316b67d7794700d"},
     {file = "typing_extensions-4.12.2.tar.gz", hash = "sha256:1a7ead55c7e559dd4dee8856e3a88b41225abfe1ce8df57b7c13915fe121ffb8"},
