@@ -122,7 +122,9 @@ defineExpose({
         v-bind="$attrs"
         class="flex flex-col"
         :class="[
-          mode === 'dark' ? 'bg-black text-default' : 'bg-overlay text-default',
+          mode === 'dark'
+            ? 'dark-mode bg-black text-default'
+            : 'bg-overlay text-default',
           {
             'w-full md:max-w-[768px] lg:w-[768px] xl:w-[1024px] xl:max-w-[1024px]':
               variant === 'default',
