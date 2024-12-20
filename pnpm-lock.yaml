@@ -223,7 +223,7 @@ importers:
         specifier: ^6.0.1
         version: 6.0.1
       storybook:
-        specifier: ^8.3.6
+        specifier: 8.3.6
         version: 8.3.6
       talkback:
         specifier: ^4.2.0
