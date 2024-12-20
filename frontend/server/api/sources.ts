@@ -19,7 +19,7 @@ const getSources = defineCachedFunction(
   async (mediaType: SupportedMediaType, event: H3Event) => {
     const apiUrl = useRuntimeConfig(event).public.apiUrl
 
-    consola.info(`Fetching sources for ${mediaType} media`)
+    consola.info(`Fetching ${mediaType} sources.`)
 
     return await $fetch<MediaProvider[]>(
       `${apiUrl}v1/${mediaSlug(mediaType)}/stats/`,
@@ -27,6 +27,8 @@ const getSources = defineCachedFunction(
         headers: {
           ...getProxyRequestHeaders(event),
           ...userAgentHeader,
+          "Content-Type": "application/json",
+          Accept: "application/json",
         },
       }
     )
