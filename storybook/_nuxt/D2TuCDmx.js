@@ -1,0 +1,11 @@
+import{s as c}from"./CMfearWB.js";import{u,O as f}from"./D3mt7-LU.js";import{W as b}from"./EwZOUFE2.js";import{_ as o}from"./okoeSM9X.js";import"./Cb7Zuqx8.js";import{h as g}from"./Bf-AzR54.js";import"./BiC8Cn9J.js";import"./B06Wl6je.js";import"./OXefpJAj.js";import"./CXyLtIA_.js";import"./CaHoH0jp.js";import"./DzAq6MI-.js";import"./CSbO3l5S.js";import"./BVPzU1gS.js";import"./CX0YfO9m.js";import"./Dm2Vgud-.js";import"./CZvnpAZI.js";import"./Dy3_0OnD.js";import"./MEtS268D.js";import"./Bqz7oJe_.js";import"./Dbp9NDS0.js";import"./CaLJbFDg.js";import"./D0sNZIq0.js";import"./LrXbMvc1.js";import"./53t0DvQJ.js";import"./4JVUVGS7.js";import"./BtGjuzI1.js";import"./DhTbjJlp.js";import"./C42M7uFW.js";import"./Cbz4n-D4.js";import"../sb-preview/runtime.js";(function(){try{var e=typeof window<"u"?window:typeof global<"u"?global:typeof self<"u"?self:{},a=new e.Error().stack;a&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[a]="bfc614a7-d360-425e-93aa-b24f0e1221a7",e._sentryDebugIdIdentifier="sentry-dbid-bfc614a7-d360-425e-93aa-b24f0e1221a7")}catch{}})();const U={title:"Components/VContentSwitcher/VSearchTypeButton",component:o,parameters:{height:"480px"},decorators:[b],argTypes:{searchType:{options:c,control:"select"},pressed:{control:"boolean"},showLabel:{control:"boolean"},onClick:{action:"click"}},args:{searchType:"all",pressed:!1,showLabel:!1}},l=e=>({components:{VSearchTypeButton:o},setup(){return u().toggleFeature("additional_search_types",f),()=>g(o,e)}}),r={render:l.bind({}),name:"Default"},t={render:l.bind({}),name:"Large pressed with text label",args:{pressed:!0,showLabel:!0}};var s,p,n;r.parameters={...r.parameters,docs:{...(s=r.parameters)==null?void 0:s.docs,source:{originalSource:`{
+  render: Template.bind({}),
+  name: "Default"
+}`,...(n=(p=r.parameters)==null?void 0:p.docs)==null?void 0:n.source}}};var i,m,d;t.parameters={...t.parameters,docs:{...(i=t.parameters)==null?void 0:i.docs,source:{originalSource:`{
+  render: Template.bind({}),
+  name: "Large pressed with text label",
+  args: {
+    pressed: true,
+    showLabel: true
+  }
+}`,...(d=(m=t.parameters)==null?void 0:m.docs)==null?void 0:d.source}}};const X=["Default","LargePressedWithTextLabel"];export{r as Default,t as LargePressedWithTextLabel,X as __namedExportsOrder,U as default};

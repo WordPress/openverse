@@ -1,0 +1,41 @@
+# 2023.10.06.18.29.33
+
+## New Features
+
+- Provider: justtakeitfree.com
+  ([#2793](https://github.com/WordPress/openverse/pull/2793)) by @obulat
+
+## Improvements
+
+- generate-dag-docs recipe move DAGs.md to documentation folder
+  ([#3061](https://github.com/WordPress/openverse/pull/3061)) by @ngken0995
+- Start data refreshes on Mondays UTC 00:00
+  ([#3054](https://github.com/WordPress/openverse/pull/3054)) by @stacimc
+- Refactor popularity SQL
+  ([#2964](https://github.com/WordPress/openverse/pull/2964)) by @stacimc
+- Collect image dimensions from Europeana
+  ([#2782](https://github.com/WordPress/openverse/pull/2782)) by @rwidom
+- Start data refresh schedule on Tuesdays UTC 00:00
+  ([#2984](https://github.com/WordPress/openverse/pull/2984)) by @cullenwatson
+
+## Internal Improvements
+
+- Bump apache-airflow[amazon,http,postgres] from 2.7.0 to 2.7.1 in /catalog
+  ([#3094](https://github.com/WordPress/openverse/pull/3094)) by @dependabot
+- Bump tldextract from 3.4.4 to 3.6.0 in /catalog
+  ([#3093](https://github.com/WordPress/openverse/pull/3093)) by @dependabot
+- Update postgres Docker tag to v13.10
+  ([#2945](https://github.com/WordPress/openverse/pull/2945)) by @renovate
+- Add `catalog/init` just command
+  ([#2915](https://github.com/WordPress/openverse/pull/2915)) by @krysal
+
+## Bug Fixes
+
+- Update glibc ([#3154](https://github.com/WordPress/openverse/pull/3154)) by
+  @stacimc
+- Update `_AIRFLOW_DB_UPGRADE` to `_AIRFLOW_DB_MIGRATE`
+  ([#3079](https://github.com/WordPress/openverse/pull/3079)) by @23198
+- Configure conf options as parameters
+  ([#3044](https://github.com/WordPress/openverse/pull/3044)) by @stacimc
+- Ensure data refresh can still be run if no initial index exist
+  ([#2727](https://github.com/WordPress/openverse/pull/2727)) by @sruthiv98

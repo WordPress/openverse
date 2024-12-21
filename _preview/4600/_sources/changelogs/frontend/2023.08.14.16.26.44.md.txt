@@ -1,0 +1,23 @@
+# 2023.08.14.16.26.44
+
+## Improvements
+
+- JavaScript to TypeScript
+  ([#2490](https://github.com/WordPress/openverse/pull/2490)) by
+  @Devanshi-Crypto
+
+## Internal Improvements
+
+- Remove reference to tailwind config viewer from docs
+  ([#2827](https://github.com/WordPress/openverse/pull/2827)) by @sarayourfriend
+
+## Bug Fixes
+
+- Fix VImageCell storybook test
+  ([#2821](https://github.com/WordPress/openverse/pull/2821)) by @obulat
+- polyfill flatMap for Chrome < 69
+  ([#2822](https://github.com/WordPress/openverse/pull/2822)) by @zackkrida
+- Fix audio snackbar and box audio seeking
+  ([#2743](https://github.com/WordPress/openverse/pull/2743)) by @obulat
+- fix: adding mce-visual-caret-hidden pattern to ignored Sentry errors
+  ([#2781](https://github.com/WordPress/openverse/pull/2781)) by @rousseam
