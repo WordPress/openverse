@@ -160,18 +160,18 @@ const replacePlaceholders = (json, locale, deprecatedKeys, invalidKeys) => {
    * translations are replaced with camelCased keys the app expects.
    */
   function replacer(_, match) {
-    const targetWords = {"openverse": "Openverse"};
+    const targetWords = {"openverse": "Openverse"}
 
     if (match.includes("-")) {
-      recordProblems(match, deprecatedKeys);
+      recordProblems(match, deprecatedKeys)
     }
 
     // Check if the match is one of the target words
     if (match in targetWords) {
-      return `{'${targetWords[match]}'}`; // Add single quotes
+      return `{'${targetWords[match]}'}` // Add single quotes
     }
 
-    return `{${kebabToCamel(match)}}`;
+    return `{${kebabToCamel(match)}}`
   }
 
   function cleanupString(str, key) {
