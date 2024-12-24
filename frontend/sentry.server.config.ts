@@ -13,3 +13,4 @@ Sentry.init({
   tracesSampleRate: 1.0,
 })
 Sentry.setContext("render context", { platform: "server" })
+Sentry.setTag("platform", "server")
