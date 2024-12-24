@@ -9,7 +9,7 @@
         headers: {
             connection: 'keep-alive',
         },
-        url: '/v1/images/?collection=creator&unstable__collection=creator&creator=strogoscope%2F+photographer+%3F+creator&source=flickr',
+      url: '/v1/images/?collection=creator&unstable__collection=creator&creator=strogoscope%2F%20photographer%20%3F%20creator&source=flickr',
         method: 'GET',
         body: '',
     },

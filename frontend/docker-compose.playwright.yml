@@ -6,9 +6,9 @@ services:
       args:
         - PLAYWRIGHT_VERSION=${PLAYWRIGHT_VERSION}
     volumes:
-      - .:/frontend:rw,Z
+      - ../:/workspace:rw,Z
     user: ${USER_ID}
-    working_dir: /frontend
+    working_dir: /workspace/frontend
     entrypoint: >
       /bin/sh -c '
       pnpm install;

@@ -9,7 +9,7 @@
         headers: {
             connection: 'keep-alive',
         },
-        url: '/v1/audio/?q=French+government&license=by&extension=mp3&source=jamendo&peaks=true',
+        url: '/v1/audio/?q=French%20government&license=by&extension=mp3&source=jamendo&peaks=true',
         method: 'GET',
         body: '',
     },

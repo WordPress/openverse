@@ -9,7 +9,7 @@
         headers: {
             connection: 'keep-alive',
         },
-        url: '/v1/images/?q=school+clip+art&license=by&extension=jpg&source=flickr',
+        url: '/v1/images/?q=school%20clip%20art&license=by&extension=jpg&source=flickr',
         method: 'GET',
         body: '',
     },

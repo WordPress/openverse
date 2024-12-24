@@ -1,10 +1,14 @@
-import { useNuxtApp } from "#imports"
+import { useNuxtApp, useRequestEvent } from "#imports"
 
 import { defineStore } from "pinia"
+import { getProxyRequestHeaders } from "h3"
 
 import type { SupportedMediaType } from "#shared/constants/media"
 import type { FetchingError, FetchState } from "#shared/types/fetch-state"
 import type { Media } from "#shared/types/media"
+import type { MediaResult } from "~/data/api-service"
+import { decodeMediaData } from "~/utils/decode-media-data"
+import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useApiClient } from "~/composables/use-api-client"
 
 interface RelatedMediaState {
@@ -52,21 +56,42 @@ export const useRelatedMediaStore = defineStore("related-media", {
       this.mainMediaId = id
       this._startFetching()
       this.media = []
-      const client = useApiClient()
 
-      try {
-        this.media = await client.getRelatedMedia(mediaType, id)
-        this._endFetching()
+      const ffStore = useFeatureFlagStore()
+      const proxyEnabled = ffStore.isOn("proxy_requests")
 
-        return this.media
-      } catch (error) {
-        const { $processFetchingError } = useNuxtApp()
-        const errorData = $processFetchingError(error, mediaType, "related", {
-          id,
-        })
-        this._endFetching(errorData)
-        return null
+      let media: Media[] = []
+
+      if (proxyEnabled) {
+        const event = useRequestEvent()
+        const headers = event ? getProxyRequestHeaders(event) : {}
+        const res = await $fetch<MediaResult<Media[]>>(
+          `/api/related/${mediaType}/${id}`,
+          headers
+        )
+        if (res) {
+          media = res.results.map((media: Media) =>
+            decodeMediaData(media, mediaType)
+          )
+        } else {
+          this._endFetching({ message: "error" } as FetchingError)
+          return null
+        }
+      } else {
+        const client = useApiClient()
+
+        try {
+          media = await client.getRelatedMedia(mediaType, id)
+        } catch (error) {
+          const { $processFetchingError } = useNuxtApp()
+          const errorData = $processFetchingError(error, mediaType, "related", {
+            id,
+          })
+          this._endFetching(errorData)
+          return null
+        }
       }
+      this.media = media
     },
   },
 })

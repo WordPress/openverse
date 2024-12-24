@@ -9,7 +9,7 @@
         headers: {
             connection: 'keep-alive',
         },
-        url: '/v1/audio/?q=windy+day+music&license=by&extension=mp3&source=jamendo&peaks=true',
+        url: '/v1/audio/?q=windy%20day%20music&license=by&extension=mp3&source=jamendo&peaks=true',
         method: 'GET',
         body: '',
     },

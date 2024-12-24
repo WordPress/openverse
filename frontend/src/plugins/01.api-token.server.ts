@@ -3,10 +3,13 @@ import { defineNuxtPlugin, useRuntimeConfig } from "#imports"
 import { Mutex, MutexInterface } from "async-mutex"
 import axios from "axios"
 import * as Sentry from "@sentry/nuxt"
-
-import { debug, warn } from "~/utils/console"
+import { consola } from "consola"
 
 import type { AxiosError } from "axios"
+
+const logger = consola.withTag("api-token-plugin")
+const debug = logger.debug.bind(logger)
+const warn = logger.warn.bind(logger)
 
 /* Process level state */
 

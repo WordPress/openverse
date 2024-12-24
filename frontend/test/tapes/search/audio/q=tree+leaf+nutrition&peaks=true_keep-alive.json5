@@ -9,7 +9,7 @@
         headers: {
             connection: 'keep-alive',
         },
-        url: '/v1/audio/?q=tree+leaf+nutrition&peaks=true',
+        url: '/v1/audio/?q=tree%20leaf%20nutrition&peaks=true',
         method: 'GET',
         body: '',
     },

@@ -9,7 +9,7 @@
         headers: {
             connection: 'keep-alive',
         },
-        url: '/v1/images/?q=horses+snort+window',
+        url: '/v1/images/?q=horses%20snort%20window',
         method: 'GET',
         body: '',
     },

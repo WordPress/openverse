@@ -28,6 +28,11 @@ export default defineNuxtConfig({
   runtimeConfig: {
     apiClientId: "",
     apiClientSecret: "",
+    session: {
+      // Set using `NUXT_SESSION_PASSWORD` environment variable
+      password:
+        "this is a sample password for local development that has to be 32 characters.",
+    },
     public: {
       deploymentEnv: "local",
       apiUrl: "https://api.openverse.org/",

@@ -9,7 +9,7 @@
         headers: {
             connection: 'keep-alive',
         },
-        url: '/v1/images/?q=tree+leaf+nutrition',
+        url: '/v1/images/?q=tree%20leaf%20nutrition',
         method: 'GET',
         body: '',
     },

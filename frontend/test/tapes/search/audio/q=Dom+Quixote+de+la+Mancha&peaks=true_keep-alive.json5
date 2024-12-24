@@ -9,7 +9,7 @@
         headers: {
             connection: 'keep-alive',
         },
-        url: '/v1/audio/?q=Dom+Quixote+de+la+Mancha&peaks=true',
+        url: '/v1/audio/?q=Dom%20Quixote%20de%20la%20Mancha&peaks=true',
         method: 'GET',
         body: '',
     },

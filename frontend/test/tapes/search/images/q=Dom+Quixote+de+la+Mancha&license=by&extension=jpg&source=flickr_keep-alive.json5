@@ -9,7 +9,7 @@
         headers: {
             connection: 'keep-alive',
         },
-        url: '/v1/images/?q=Dom+Quixote+de+la+Mancha&license=by&extension=jpg&source=flickr',
+        url: '/v1/images/?q=Dom%20Quixote%20de%20la%20Mancha&license=by&extension=jpg&source=flickr',
         method: 'GET',
         body: '',
     },

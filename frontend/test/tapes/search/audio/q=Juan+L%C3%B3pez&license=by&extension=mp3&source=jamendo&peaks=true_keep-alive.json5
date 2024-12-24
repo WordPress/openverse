@@ -9,7 +9,7 @@
         headers: {
             connection: 'keep-alive',
         },
-        url: '/v1/audio/?q=Juan+L%C3%B3pez&license=by&extension=mp3&source=jamendo&peaks=true',
+        url: '/v1/audio/?q=Juan%20L%C3%B3pez&license=by&extension=mp3&source=jamendo&peaks=true',
         method: 'GET',
         body: '',
     },

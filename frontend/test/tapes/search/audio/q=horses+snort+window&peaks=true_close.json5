@@ -9,7 +9,7 @@
         headers: {
             connection: 'close',
         },
-        url: '/v1/audio/?q=horses+snort+window&peaks=true',
+        url: '/v1/audio/?q=horses%20snort%20window&peaks=true',
         method: 'GET',
         body: '',
     },

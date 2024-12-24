@@ -186,12 +186,15 @@ const opts = /** @type {Partial<TalkbackOptions>} */ ({
   ignoreBody: true,
   allowHeaders: ["connection"],
   name: "Openverse e2e proxy",
-  summary: false,
+  summary: true,
+  debug: false,
   tapeNameGenerator,
   tapeDecorator,
   responseDecorator: (tape, req, context) => {
     // Log responses to make debugging easier
-    console.log(req.method, req.url, tape.res?.status, context.id)
+    if (process.env.CONSOLA_LEVEL && process.env.CONSOLA_LEVEL > 4) {
+      console.log(req.method, req.url, tape.res?.status, context.id)
+    }
     return tape
   },
 })

@@ -9,7 +9,7 @@
         headers: {
             connection: 'keep-alive',
         },
-        url: '/v1/images/?q=French+government&license=by&extension=jpg&source=flickr',
+        url: '/v1/images/?q=French%20government&license=by&extension=jpg&source=flickr',
         method: 'GET',
         body: '',
     },

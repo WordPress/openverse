@@ -1,12 +1,17 @@
 # syntax=docker/dockerfile:1
 # check=skip=InvalidDefaultArgInFrom
 
+# You can define ARGs before FROM if you're using them in the FROM line.
+ARG CACHEBUST=1
 ARG PLAYWRIGHT_VERSION
 
 FROM mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-jammy
 
-WORKDIR /frontend
+WORKDIR /workspace
 
+# Copy only the files needed at build time (pnpm config, package.json, etc.).
+# If you need more files for the build stage, copy them here.
+COPY pnpm-workspace.yaml /workspace/
 COPY package.json .
 
 # Ensure the Playwright container's pnpm cache folder exists and is writable
@@ -14,10 +19,10 @@ RUN mkdir -p /.cache/node/corepack/ && chmod -R 777 /.cache/node/corepack/
 # Ensure that the dlx cache folder exists and is writable
 RUN mkdir -p /.cache/pnpm/dlx/ && chmod -R 777 /.cache/pnpm/dlx/
 
-# Requires `packageManager` field to be present in `frontend/package.json`.
+# Enable pnpm via corepack; requires "packageManager": "pnpm@x.y.z" in package.json
 RUN corepack enable pnpm
 
-# DO NOT actually run `pnpm install` here. Doing so requires us to copy the the source into the container.
-# However, that's a waste of time because we mount the source in the compose file anyway.
-# Instead, we run `pnpm install` in the entrypoint script defined in the compose file.
-# ENTRYPOINT ["pnpm", "install", "&&"]
+# We intentionally do NOT run `pnpm install` here, since you'll mount your source code
+# and run `pnpm install` in the container at runtime (via Docker Compose entrypoint).
+# This avoids copying the entire repo into the build image.
+# ENTRYPOINT ["pnpm", "install"]

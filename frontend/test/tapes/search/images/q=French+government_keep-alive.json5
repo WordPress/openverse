@@ -9,7 +9,7 @@
         headers: {
             connection: 'keep-alive',
         },
-        url: '/v1/images/?q=French+government',
+        url: '/v1/images/?q=French%20government',
         method: 'GET',
         body: '',
     },

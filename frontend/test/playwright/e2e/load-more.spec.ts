@@ -63,7 +63,7 @@ test.describe("Load more button", () => {
       if (url.includes("page=2")) {
         if (url.includes("/audio/")) {
           additionalRequests.push(AUDIO)
-        } else if (url.includes("/images/")) {
+        } else if (url.includes("/image/")) {
           additionalRequests.push(IMAGE)
         }
       }
@@ -112,7 +112,7 @@ test.describe("Load more button", () => {
           if (url.includes("page=2")) {
             if (url.includes("/audio/")) {
               additionalRequests.push(AUDIO)
-            } else if (url.includes("/images/")) {
+            } else if (url.includes("/image/")) {
               additionalRequests.push(IMAGE)
             }
           }

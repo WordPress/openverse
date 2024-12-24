@@ -1,3 +1,5 @@
+import { consola } from "consola"
+
 import type { MiddlewareCallbackParams } from "openapi-fetch"
 import type { components } from "./generated/openverse"
 import type { OpenverseClient, ClientCredentials } from "./types"
@@ -18,6 +20,8 @@ type MiddlewareOnRequest = (
 interface OpenverseMiddleware {
   onRequest: MiddlewareOnRequest
 }
+
+const logger = consola.withTag("openverse-api-client:auth")
 
 export class OpenverseAuthMiddleware implements OpenverseMiddleware {
   /**
@@ -129,6 +133,7 @@ export class OpenverseAuthMiddleware implements OpenverseMiddleware {
    */
   refreshAuthentication() {
     this.requesting = new Promise((resolve) => {
+      logger.info("Sending token request.")
       this.client
         .POST("/v1/auth_tokens/token/", {
           body: {
@@ -136,6 +141,10 @@ export class OpenverseAuthMiddleware implements OpenverseMiddleware {
             client_id: this.credentials.clientId,
             client_secret: this.credentials.clientSecret,
           },
+          bodySerializer(body) {
+            return new URLSearchParams(body)
+          },
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
         })
         .then((tokenResponse) => {
           if (!tokenResponse.response.ok || !tokenResponse.data) {
@@ -151,7 +160,7 @@ export class OpenverseAuthMiddleware implements OpenverseMiddleware {
           resolve(true)
         })
         .catch((e) => {
-          console.error("[openverse-api-client]: Token refresh failed!", e)
+          logger.error("Token refresh failed!", e)
           this.failure = e
           resolve(false)
         })

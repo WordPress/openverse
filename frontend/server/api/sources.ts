@@ -21,15 +21,17 @@ const getSources = defineCachedFunction(
 
     consola.info(`Fetching sources for ${mediaType} media`)
 
-    return await $fetch<MediaProvider[]>(
+    const res = await $fetch<MediaProvider[]>(
       `${apiUrl}v1/${mediaSlug(mediaType)}/stats/`,
       {
         headers: {
           ...getProxyRequestHeaders(event),
           ...userAgentHeader,
+          Accept: "application/json",
         },
       }
     )
+    return Array.isArray(res) ? res : []
   },
   {
     maxAge: UPDATE_FREQUENCY_SECONDS,

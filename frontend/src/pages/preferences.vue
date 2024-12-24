@@ -51,7 +51,7 @@ const featureGroups = computed(() => {
   return featureFlagStore.getFeatureGroups()
 })
 
-const doneHydrating = computed(() => useHydrating())
+const { doneHydrating } = useHydrating()
 </script>
 
 <template>

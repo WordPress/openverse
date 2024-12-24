@@ -1,4 +1,11 @@
-import { defineNuxtPlugin, useCookie } from "#imports"
+import {
+  defineNuxtPlugin,
+  useCookie,
+  useRequestEvent,
+  useRuntimeConfig,
+} from "#imports"
+
+import { H3Event, useSession } from "h3"
 
 import type { OpenverseCookieState } from "#shared/types/cookies"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
@@ -32,4 +39,9 @@ export default defineNuxtPlugin(async () => {
   const uiStore = useUiStore()
   const uiCookies = useCookie<OpenverseCookieState["ui"]>("ui")
   uiStore.initFromCookies(uiCookies.value ?? {})
+
+  const password = useRuntimeConfig().session.password
+  // This plugin only runs on the server side, where `useRequestEvent` is always defined.
+  const event = useRequestEvent() as H3Event
+  await useSession(event, { password })
 })

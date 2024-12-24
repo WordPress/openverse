@@ -9,7 +9,7 @@
         headers: {
             connection: 'keep-alive',
         },
-        url: '/v1/audio/?q=French+government&peaks=true',
+        url: '/v1/audio/?q=French%20government&peaks=true',
         method: 'GET',
         body: '',
     },

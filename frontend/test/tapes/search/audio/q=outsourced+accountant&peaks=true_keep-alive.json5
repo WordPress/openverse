@@ -9,7 +9,7 @@
         headers: {
             connection: 'keep-alive',
         },
-        url: '/v1/audio/?q=outsourced+accountant&peaks=true',
+        url: '/v1/audio/?q=outsourced%20accountant&peaks=true',
         method: 'GET',
         body: '',
     },

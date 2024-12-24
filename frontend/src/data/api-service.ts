@@ -1,10 +1,11 @@
 import { useRuntimeConfig } from "#imports"
 
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios"
+import axios, { AxiosRequestConfig } from "axios"
 
 import { AUDIO, type SupportedMediaType } from "#shared/constants/media"
 import { userAgentHeader } from "#shared/constants/user-agent.mjs"
 import { mediaSlug } from "#shared/utils/query-utils"
+import { buildEventPayload } from "#shared/utils/search-response-time-payload"
 import type { Events } from "#shared/types/analytics"
 import type { Media } from "#shared/types/media"
 import type {
@@ -54,7 +55,7 @@ export interface MediaResult<
  * @param data - search result data
  * @param fakeSensitive - whether to fake sensitive data for testing
  */
-function transformResults<T extends Media>(
+export function transformResults<T extends Media>(
   mediaType: SupportedMediaType,
   data: MediaResult<T[]>,
   fakeSensitive: boolean
@@ -69,56 +70,6 @@ function transformResults<T extends Media>(
       },
       {} as Record<string, T>
     ),
-  }
-}
-
-/**
- * Processes AxiosResponse from a search query to construct
- * SEARCH_RESPONSE_TIME analytics event payload.
- * @param response - Axios response
- * @param requestDatetime - datetime before request was sent
- * @param mediaType - the media type of the search query
- */
-const buildEventPayload = (
-  response: AxiosResponse,
-  requestDatetime: Date,
-  mediaType: SupportedMediaType
-): SearchTimeEventPayload | undefined => {
-  const REQUIRED_HEADERS = ["date", "cf-cache-status", "cf-ray"]
-
-  const responseHeaders = response.headers
-  if (!REQUIRED_HEADERS.every((header) => header in responseHeaders)) {
-    return
-  }
-
-  const responseDatetime = new Date(responseHeaders["date"])
-  if (responseDatetime < requestDatetime) {
-    // response returned was from the local cache
-    return
-  }
-
-  const cfRayIATA = responseHeaders["cf-ray"].split("-")[1]
-  if (cfRayIATA === undefined) {
-    return
-  }
-
-  const elapsedSeconds = Math.floor(
-    (responseDatetime.getTime() - requestDatetime.getTime()) / 1000
-  )
-
-  const responseUrl =
-    response.request?.responseURL ?? response.request?.res?.responseUrl
-  if (!responseUrl) {
-    return
-  }
-  const url = new URL(responseUrl)
-
-  return {
-    cfCacheStatus: responseHeaders["cf-cache-status"].toString(),
-    cfRayIATA: cfRayIATA.toString(),
-    elapsedTime: elapsedSeconds,
-    queryString: url.search,
-    mediaType: mediaType,
   }
 }
 
@@ -139,7 +90,6 @@ export interface ApiServiceConfig {
 export const createApiClient = ({
   accessToken = undefined,
   isVersioned = true,
-  fakeSensitive = false,
 }: ApiServiceConfig = {}) => {
   const baseUrl =
     useRuntimeConfig().public.apiUrl ?? "https://api.openverse.org/"
@@ -197,14 +147,25 @@ export const createApiClient = ({
       query.peaks = "true"
     }
     const requestDatetime = new Date()
-    const res = await client.get<MediaResult<T[]>>(`${mediaSlug(mediaType)}/`, {
-      params: query,
-    })
-    const eventPayload = buildEventPayload(res, requestDatetime, mediaType)
+    const queryString = new URLSearchParams(
+      query as Record<string, string>
+    ).toString()
+    const res = await client.get<MediaResult<T[]>>(
+      `${mediaSlug(mediaType)}/${queryString ? `?${queryString}` : ""}`
+    )
+
+    const eventPayload = queryString
+      ? buildEventPayload(
+          res["headers"],
+          queryString,
+          requestDatetime,
+          mediaType
+        )
+      : null
 
     return {
       eventPayload,
-      data: transformResults(mediaType, res.data, fakeSensitive),
+      data: res.data,
     }
   }
 

@@ -9,7 +9,7 @@
         headers: {
             connection: 'keep-alive',
         },
-        url: '/v1/images/?q=windy+day+music',
+        url: '/v1/images/?q=windy%20day%20music',
         method: 'GET',
         body: '',
     },

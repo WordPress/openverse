@@ -1,4 +1,4 @@
-import { useNuxtApp } from "#imports"
+import { decodeMediaData, useFeatureFlagStore, useNuxtApp } from "#imports"
 
 import { defineStore } from "pinia"
 
@@ -141,25 +141,49 @@ export const useSingleResultStore = defineStore("single-result", {
 
       this._updateFetchState("start")
 
-      // When fetch is called by the middleware, the app context is not available during the error handling,
-      // so we need to use the `useNuxtApp` here, outside the catch clause, to access the app context.
-      const { $processFetchingError } = useNuxtApp()
+      const ffStore = useFeatureFlagStore()
+      const proxyEnabled = ffStore.isOn("proxy_requests")
+      if (proxyEnabled) {
+        const result = await $fetch(`/api/${type}/${id}`)
+        if (result) {
+          const item = decodeMediaData(result, type)
+          this.setMediaItem(item)
+          this._updateFetchState("end")
+          return item as DetailFromMediaType<typeof type>
+        } else {
+          this._updateFetchState("end", {
+            code: "ERR_UNKNOWN",
+            requestKind: "single-result",
+            searchType: type,
+          } as FetchingError)
+          return null
+        }
+      } else {
+        // When fetch is called by the middleware, the app context is not available during the error handling,
+        // so we need to use the `useNuxtApp` here, outside the catch clause, to access the app context.
+        const { $processFetchingError } = useNuxtApp()
 
-      const client = useApiClient()
+        const client = useApiClient()
 
-      try {
-        const item = await client.getSingleMedia(type, id)
+        try {
+          const item = await client.getSingleMedia(type, id)
 
-        this.setMediaItem(item)
-        this._updateFetchState("end")
+          this.setMediaItem(item)
+          this._updateFetchState("end")
 
-        return item as DetailFromMediaType<typeof type>
-      } catch (error) {
-        const errorData = $processFetchingError(error, type, "single-result", {
-          id,
-        })
-        this._updateFetchState("end", errorData)
-        return null
+          return item as DetailFromMediaType<typeof type>
+        } catch (error) {
+          const errorData = $processFetchingError(
+            error,
+            type,
+            "single-result",
+            {
+              id,
+            }
+          )
+          this._updateFetchState("end", errorData)
+          return null
+        }
       }
     },
   },

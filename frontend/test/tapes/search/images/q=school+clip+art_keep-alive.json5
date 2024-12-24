@@ -9,7 +9,7 @@
         headers: {
             connection: 'keep-alive',
         },
-        url: '/v1/images/?q=school+clip+art',
+        url: '/v1/images/?q=school%20clip%20art',
         method: 'GET',
         body: '',
     },

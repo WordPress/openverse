@@ -1,6 +1,7 @@
-import { useNuxtApp } from "#imports"
+import { useFeatureFlagStore, useNuxtApp, useRequestEvent } from "#imports"
 
 import { defineStore } from "pinia"
+import { getProxyRequestHeaders } from "h3"
 
 import {
   ALL_MEDIA,
@@ -21,7 +22,12 @@ import type {
   Media,
 } from "#shared/types/media"
 import type { FetchingError, FetchState } from "#shared/types/fetch-state"
+import type {
+  PaginatedCollectionQuery,
+  PaginatedSearchQuery,
+} from "#shared/types/search"
 import { warn } from "~/utils/console"
+import { type MediaResult, transformResults } from "~/data/api-service"
 import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { useApiClient } from "~/composables/use-api-client"
@@ -447,6 +453,38 @@ export const useMediaStore = defineStore("media", {
       this.currentPage = 0
     },
 
+    transformData(
+      mediaType: SupportedMediaType,
+      result: MediaResult<Media[]> | { data: MediaResult<Media[]> }
+    ): MediaResult<Record<string, Media>> {
+      const ffStore = useFeatureFlagStore()
+      const fakeSensitive = ffStore.isOn("fake_sensitive")
+      return transformResults(
+        mediaType,
+        ("data" in result ? result.data : result) ?? {},
+        fakeSensitive
+      )
+    },
+
+    async makeRequest(
+      mediaType: SupportedMediaType,
+      queryParams: PaginatedCollectionQuery | PaginatedSearchQuery
+    ) {
+      const ffStore = useFeatureFlagStore()
+      if (ffStore.isOn("proxy_requests")) {
+        const event = useRequestEvent()
+        const headers = event ? getProxyRequestHeaders(event) : {}
+
+        return $fetch<MediaResult<Media[]>>(`/api/search/${mediaType}/`, {
+          query: { ...queryParams },
+          headers,
+        })
+      } else {
+        const client = useApiClient()
+        return client.search(mediaType, queryParams)
+      }
+    },
+
     /**
      * @param mediaType - the mediaType to fetch (do not use 'All_media' here)
      * @param shouldPersistMedia - whether the existing media should be added to or replaced.
@@ -469,17 +507,13 @@ export const useMediaStore = defineStore("media", {
 
       const { $sendCustomEvent, $processFetchingError } = useNuxtApp()
 
-      const client = useApiClient()
-
       try {
-        const { eventPayload, data } = await client.search(
-          mediaType,
-          queryParams
-        )
-
-        if (eventPayload) {
-          $sendCustomEvent("SEARCH_RESPONSE_TIME", eventPayload)
+        const result = await this.makeRequest(mediaType, queryParams)
+        if ("eventPayload" in result && result.eventPayload) {
+          $sendCustomEvent("SEARCH_RESPONSE_TIME", result.eventPayload)
         }
+        const data = this.transformData(mediaType, result)
+
         const mediaCount = data.result_count
         let errorData: FetchingError | undefined
 

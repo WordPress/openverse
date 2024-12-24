@@ -243,10 +243,10 @@ breakpoints.describeMobileAndDesktop(({ breakpoint }) => {
     await expect(page.getByRole("checkbox", { name: cc0 })).not.toBeChecked()
 
     // Alternative way with a predicate. Note no await.
-    const responsePromise = page.waitForResponse(
-      (response) =>
-        response.url().includes("/images/") && response.status() === 200
-    )
+    const responsePromise = page.waitForResponse((response) => {
+      console.log("response.url()", response.url())
+      return response.url().includes("/image/") && response.status() === 200
+    })
     await page.getByLabel(cc0).click()
     const response = await responsePromise
 

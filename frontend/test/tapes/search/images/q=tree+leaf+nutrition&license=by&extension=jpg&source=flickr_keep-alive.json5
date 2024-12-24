@@ -9,7 +9,7 @@
         headers: {
             connection: 'keep-alive',
         },
-        url: '/v1/images/?q=tree+leaf+nutrition&license=by&extension=jpg&source=flickr',
+        url: '/v1/images/?q=tree%20leaf%20nutrition&license=by&extension=jpg&source=flickr',
         method: 'GET',
         body: '',
     },
