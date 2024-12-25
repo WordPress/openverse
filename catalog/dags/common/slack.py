@@ -429,5 +429,5 @@ def notify_slack(
         text,
         username=username,
         icon_emoji=icon_emoji,
-        dag_id=dag.id,
+        dag_id=dag.dag_id,
     )
