@@ -72,8 +72,8 @@ This is the guide to debugging the API using VS Code. This uses Microsoft's
 
 ## Debugging Database Queries
 
-To log all database queries, add the following `env` variables to your
-configuration
+To log all database queries, add the following variables to your `api/.env`
+file:
 
 ```
 DJANGO_LOG_LEVEL=DEBUG
