@@ -69,3 +69,12 @@ This is the guide to debugging the API using VS Code. This uses Microsoft's
    [Visual Code debugger's official instructions](https://code.visualstudio.com/docs/editor/debugging)
    to better understand how to use the debugger interface to accomplish tasks
    like setting breakpoints, watching variables etc.
+
+## Debugging Database Queries
+
+To log all database queries, add the following `env` variables to your configuration
+
+```
+DJANGO_LOG_LEVEL=DEBUG
+DJANGO_DATABASE_LOGGING=True
+```
