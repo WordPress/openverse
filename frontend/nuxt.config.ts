@@ -38,8 +38,10 @@ export default defineNuxtConfig({
       sentry: {
         dsn: "",
         environment: "local",
-        // Release is a build time variable, and as such, is defined in app.config.ts
       },
+      // Release is a build time variable. However, due to the way Sentry is set up, setting it in app.config.ts
+      // does not work, so we set it here using `process.env` to bake in the value at build time.
+      sentryRelease: process.env.SEMANTIC_VERSION,
       plausible: {
         ignoredHostnames: ["localhost", "staging.openverse.org"],
         logIgnoredEvents: true,

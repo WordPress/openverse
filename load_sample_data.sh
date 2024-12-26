@@ -63,6 +63,9 @@ function verify_loaded_data {
   fi
 }
 
+# Start the catalog (needed for data refresh process)
+just catalog/up
+
 load_sample_data "image"
 verify_loaded_data "image"
 load_sample_data "audio"
