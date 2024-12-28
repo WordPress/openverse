@@ -7,4 +7,5 @@ quickstart
 test
 documentation
 debugging
+logging
 ```
