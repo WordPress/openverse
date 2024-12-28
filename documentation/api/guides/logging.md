@@ -1,4 +1,4 @@
-## Debugging Database Queries
+# Debugging Database Queries
 
 To log all database queries, add the following variables to your `api/.env`
 file:
