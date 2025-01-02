@@ -1,0 +1,638 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><link rel="next" title="Project Proposal - 2023-03-09" href="20230309-project_proposal_detecting_sensitive_textual_content.html" /><link rel="prev" title="Detecting and Blurring Sensitive Textual Content" href="index.html" />
+
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/WordPress/openverse/master/brand/icon.svg"/><!-- Generated with Sphinx 6.1.3 and Furo 2023.03.27 -->
+        <title>Implementation Plan: Sensitive Terms List - 2023-03-09 - Openverse documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../index.html"><div class="brand">Openverse  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo only-light" src="../../../_static/logo_light.svg" alt="Light Logo"/>
+    <img class="sidebar-logo only-dark" src="../../../_static/logo_dark.svg" alt="Dark Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/general_setup.html">General setup guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/deployment.html">Deployments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/logging.html">Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/zero-downtime-database-management.html">Zero Downtime and Database Management</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../guides/api/index.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../guides/api/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../guides/api/test.html">Testing guide</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../guides/ingestion_server/index.html">Ingestion server</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../guides/ingestion_server/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../guides/ingestion_server/test.html">Testing guide</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../guides/frontend/index.html">Frontend</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../guides/frontend/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../guides/frontend/test.html">Testing guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../guides/frontend/analytics.html">Analytics</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../guides/documentation/index.html">Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../guides/documentation/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../guides/documentation/guidelines.html">Documentation Guidelines</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../reference/index.html">Reference</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference/github_contribution_practices.html">GitHub contribution practices</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../reference/decision_making/index.html">Openverse Decision-Making Process</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/decision_making/process_description.html">Process description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/decision_making/additional_practices.html">Additional practices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/decision_making/how_to_use.html">How to follow the process in different settings</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference/dev_flow.html">Development workflow</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../reference/api/index.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/api/authentication_and_throttling.html">Authentication and Throttling</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../reference/frontend/index.html">Frontend</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/frontend/feature_flags.html">Feature flags</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference/search_algorithm.html">Search Algorithm</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../../index.html">Projects</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../planning.html">Project Planning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../templates/implementation-plan.html">Implementation Plan Template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../templates/project-proposal.html">Project Proposal Template</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../3d_model_support/index.html">3D Model Support</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../3d_model_support/20220221-project_proposal.html">Project Proposal - 2022-02-21</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../analytics/index.html">Analytics</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../analytics/20221006-implementation_plan_frontend.html">Implentation Plan: Frontend event tracking - 2022-10-06</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../analytics/20230307-backend_service.html">Implementation Plan: Analytics backend and visualisation service - 2023-03-07</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../core_user_interface_improvement/index.html">Core User Interface Improvements</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../core_user_interface_improvement/20230314-project_proposal_core_ui_improvement.html">Project Proposal - 2023-03-14</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current has-children"><a class="reference internal" href="index.html">Detecting and Blurring Sensitive Textual Content</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3 current current-page"><a class="current reference internal" href="#">Implementation Plan: Sensitive Terms List - 2023-03-09</a></li>
+<li class="toctree-l3"><a class="reference internal" href="20230309-project_proposal_detecting_sensitive_textual_content.html">Project Proposal - 2023-03-09</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../feature_flags/index.html">Feature Flags</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../feature_flags/20220309-project_proposal.html">Project Proposal - 2022-03-09</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../frontend_ui_state_cookie/index.html">Frontend UI State Cookie</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../frontend_ui_state_cookie/20220218-project_proposal.html">2022-02-18 Project Propsal: Frontend UI State Cookie</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../monitoring/index.html">Monitoring</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../monitoring/20220307-project_proposal.html">Project Proposal - 2022-03-07</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../monorepo/index.html">Monorepo</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../monorepo/20221124-project_proposal.html">Project Proposal - 2022-11-24</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../trust_and_safety/index.html">Trust &amp; Safety</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/20230109-trust_and_safety_preliminary_overview_and_exploration.html">2023-01-09 Project Proposal</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../visual_regression_testing/index.html">Visual Regression Testing</a><input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" role="switch" type="checkbox"/><label for="toctree-checkbox-20"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../visual_regression_testing/20220217-implementation_plan.html">Implementation Plan - 2022-02-17</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../vuex_to_pina_conversion/index.html">Pinia Conversion</a><input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" role="switch" type="checkbox"/><label for="toctree-checkbox-21"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../vuex_to_pina_conversion/20220223-project_proposal.html">Project Proposal - 2022-02-23</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../changelogs/index.html">Changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-22" name="toctree-checkbox-22" role="switch" type="checkbox"/><label for="toctree-checkbox-22"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../changelogs/api/index.html">API changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-23" name="toctree-checkbox-23" role="switch" type="checkbox"/><label for="toctree-checkbox-23"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.04.13.23.36.40.html">2023.04.13.23.36.40</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../changelogs/frontend/index.html">Frontend changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-24" name="toctree-checkbox-24" role="switch" type="checkbox"/><label for="toctree-checkbox-24"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../changelogs/ingestion_server/index.html">Ingestion server changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" role="switch" type="checkbox"/><label for="toctree-checkbox-25"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../terms_of_service.html">Openverse API Terms of Service</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">External links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/WordPress/openverse">GitHub repo</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="implementation-plan-sensitive-terms-list-2023-03-09">
+<h1>Implementation Plan: Sensitive Terms List - 2023-03-09<a class="headerlink" href="#implementation-plan-sensitive-terms-list-2023-03-09" title="Permalink to this heading">#</a></h1>
+<blockquote>
+<div><p><strong>Content Warning</strong></p>
+<p>This document <strong>does not</strong> include sensitive content or direct links to
+sensitive content. It <em>does</em> discuss different sub-categorizations of
+sensitive content at times.</p>
+<p>This document should not be considered sensitive but please view at your own
+discretion, regardless.</p>
+</div></blockquote>
+<section id="reviewers">
+<h2>Reviewers<a class="headerlink" href="#reviewers" title="Permalink to this heading">#</a></h2>
+<!-- Choose two people at your discretion who make sense to review this based on their existing expertise. Check in to make sure folks aren't currently reviewing more than one other proposal or RFC. -->
+<ul class="simple">
+<li><p>[x] &#64;sarayourfriend</p></li>
+<li><p>[x] &#64;dhruvkb</p></li>
+</ul>
+<p>The Openverse project
+<a class="reference external" href="https://github.com/orgs/WordPress/projects/70?query=is%3Aopen+sort%3Aupdated-desc&amp;amp;pane=issue&amp;amp;itemId=19530115">Filter and blur sensitive results by term matching #377</a>
+requires that we compare the textual contents of Openverse media against a list
+of sensitive terms. We use this list to identify media that should be marked as
+“sensitive,” which means they should not be displayed to users by default, but
+only with their explicit consent. Importantly, this list is not used to censor
+or deny access to specific works, but to enable opt-in access.</p>
+<p>The list must be accessible to contributors who need to modify it, but not so
+public that it could be seen by users who would rather not be exposed to it. We
+recognize that the list itself is sensitive content, and it needs to be treated
+with care.</p>
+<p>To create and manage this list I recommend the following guidelines.</p>
+</section>
+<section id="proposal">
+<h2>Proposal<a class="headerlink" href="#proposal" title="Permalink to this heading">#</a></h2>
+<p>The Openverse team will maintain a standalone public repository which contains
+an English-language list of sensitive terms. This term list is a living document
+which accepts community revisions for adding and removing new terms. The
+contents of the list will initially be based on an existing public list,
+modified at the discretion of Openverse maintainers interested in contributing.
+The list will be iterated on and refined as we develop community standards
+around what constitutes “sensitive content” for Openverse users.</p>
+<section id="maintenance-of-the-list">
+<h3>Maintenance of the list<a class="headerlink" href="#maintenance-of-the-list" title="Permalink to this heading">#</a></h3>
+<p>The list be will be maintained by a subset of Openeverse contributors who are
+comfortable reading these strings, but also making judgments about which should
+be included. This work may involve fielding pull requests and feedback from the
+community, along with researching unfamiliar sensitive terms to determine their
+suitability. Issues and PRs in this repo should be handled using the same
+practices as our other repositories, in terms of response times, review
+practices, and prioritization.</p>
+<p>These issues should <strong>not</strong>, however be included in the Openverse project board
+or directly referenced (linked to) in meetings. We want to take great care to
+make sure folks are only seeing this content if they consent to. The management
+of this list is itself a great model for how we want users of Openverse to view
+sensitive content.</p>
+<p>Participation in this group will be entirely opt-in. I (&#64;zackkrida) will always
+be part of the group.</p>
+<section id="how-new-terms-are-added">
+<h4>How new terms are added<a class="headerlink" href="#how-new-terms-are-added" title="Permalink to this heading">#</a></h4>
+<p>New terms will be added manually by community contributors or maintainers. We
+don’t have any specific quotas or goals to add new terms, but welcome them when
+suggested.</p>
+<p>In the future, it’s possible we could use some analysis of Openverse content
+reports to find identify new terms are users are being exposed to inadvertently.</p>
+</section>
+</section>
+<section id="anticipated-questions">
+<h3>Anticipated questions<a class="headerlink" href="#anticipated-questions" title="Permalink to this heading">#</a></h3>
+<ol class="arabic">
+<li><p>Why is the list in a standalone repository, instead of the
+https://github.com/wordPress/openverse?</p>
+<p>The main reason to keep the list seperate is contributor safety. The list is
+kept independently from the codebase so that users must explicitly consent
+to viewing and downloading it. Additionally, there are Search Engine
+Optimization and blocklist considerations with public GitHub repositories.</p>
+<p>We do not, for example, want students to be unable to access our repository
+and contribute to it because it is blocked by a school administration’s web
+filter.</p>
+</li>
+<li><p>Why is the list only in English?</p>
+<p>At the time of writing Openverse doesn’t do any translation of the textual
+contents of indexed media. We also do not translate user-submitted searches.
+The vast majority of indexed works are in English. Additionally, it would be
+difficult to validate suggestions for terms in languages not spoken by
+Openverse maintainers, which to my current knowledge includes English,
+Spanish, Brazilian Portugese, Turkish, and Russian. English is the only
+language used by all maintainers.</p>
+</li>
+<li><p>On what basis will Openverse maintainers use their “discretion” to create
+this list?</p>
+<p>Until our community has developed its own standards around sensitivity, we
+can use a few existing documents in the WordPress and user-submitted content
+ecosystem to guide us:</p>
+<ul class="simple">
+<li><p>WordPress’s page on <a class="reference external" href="https://wordpress.org/about/etiquette/">etiquette</a> in
+the project.</p></li>
+<li><p>WordPress’s
+<a class="reference external" href="https://make.wordpress.org/community/handbook/wordcamp-organizer/planning-details/code-of-conduct/">code of conduct</a>
+for in-person events.</p></li>
+<li><p>YouTube’s
+<a class="reference external" href="https://www.youtube.com/howyoutubeworks/policies/community-guidelines/">community guidelines</a>
+offers a decent list of categories for unacceptable types of content. For
+example, their
+<a class="reference external" href="https://support.google.com/youtube/answer/9229980?hl=en&amp;amp;ref_topic=9282679#zippy=%2Cage-restricted-thumbnails-and-thumbnail-removal">thumbnail policy</a>
+includes some information on types of sexual and violent content that
+either can’t be used or can be used behind a flag comparable to ours.</p>
+<ul>
+<li><p>Additionally, please read
+<a class="reference internal" href="#this-will-not-be-perfect">#this-will-not-be-perfect</a>.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+</section>
+</section>
+<section id="implementation-plan">
+<h2>Implementation Plan<a class="headerlink" href="#implementation-plan" title="Permalink to this heading">#</a></h2>
+<ol class="arabic">
+<li><p>Ping a WordPress GitHub account maintainer to request that they create the
+<code class="docutils literal notranslate"><span class="pre">WordPress/openverse-sensitive-terms</span></code> repository.</p></li>
+<li><p>Initialize the repository with a <code class="docutils literal notranslate"><span class="pre">README.md</span></code> and a blank
+<code class="docutils literal notranslate"><span class="pre">sensitive-terms.txt</span></code> file.</p></li>
+<li><p>Create a PR which initializes the sensitive terms list by copying all terms
+from two existing lists and removing any duplicates (Note: <em>I am not
+including the links here to prevent accidental viewing of the repository, but
+they should be easily found by searching their names.</em>):</p>
+<ul class="simple">
+<li><p>LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words</p></li>
+<li><p>surge-ai/profanity</p></li>
+</ul>
+<p>These combined lists give us a total of 1913 terms. This PR should be
+reviewed by the sensitive list maintainers to remove any unacceptable words
+based on their discretion (see above for more on that).</p>
+</li>
+<li><p>Identify willing reviewers from the <code class="docutils literal notranslate"><span class="pre">&#64;WordPress/openverse-maintainers</span></code> group
+who are comfortable with looking at the list and reviewing the PR, looking
+for terms which should be removed or missing terms which should be added.</p></li>
+<li><p>Merge the PR, and now the list is available for use in Openverse projects.</p></li>
+<li><p>Publish a “Make” post about the creation of the list and its purpose.</p></li>
+<li><p>The sensitive term list can be included as an environment variable in any of
+our repositories by adding a terraform <code class="docutils literal notranslate"><span class="pre">http</span></code> data source. The code would
+look something like this:</p>
+<div class="highlight-terraform notranslate"><div class="highlight"><pre><span></span>data &quot;http&quot; &quot;sensitive-terms-raw&quot; {
+  # Example of the raw url we would fetch from the repo
+  url = &quot;https://raw.githubusercontent.com/WordPress/openverse-sensitive-terms/main//sensitive_terms.txt&quot;
+}
+
+locals {
+   # The `sensitive()` function makes sure this list isn&#39;t printed by terraform
+   sensitive_terms_list = sensitive([for line in split(&quot;\n&quot;, data.http.sensitive-terms-raw): chomp(line)])
+}
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">locals.sensitive_terms_list</span></code> can then be supplied to any of our terraform
+modules.</p>
+</li>
+</ol>
+</section>
+<section id="this-will-not-be-perfect">
+<h2>This will not be perfect<a class="headerlink" href="#this-will-not-be-perfect" title="Permalink to this heading">#</a></h2>
+<p>By default, we accept that this list and its usage will not be perfect. At times
+we may accidentally include terms which inadvertently cause harm to groups or
+individuals. We may also accidentally expose users to undesired content in the
+implementation of this list. Despite the potential for these transgressions this
+work will always be based on the following assumptions:</p>
+<ol class="arabic">
+<li><p>Safety first. Given the choice, we would prefer to incorrectly restrict
+non-sensitive content rather than accidentally show sensitive content.</p></li>
+<li><p>Avoid censorship. This list will not be used to block or deny access to
+content, rather to make the viewing of content opt-in. The Openverse project
+will use other means to explicitly block or remove content. Removing
+sensitive content can, in many cases, be its own form of harm. A quote From
+the research paper “On the Dangers of Stochastic Parrots: Can Language Models
+Be Too Big? 🦜”[1] illustrates this well:</p>
+<p>“If we filter out the discourse of marginalized populations, we fail to
+provide training data that reclaims slurs and otherwise describes
+marginalized identities in a positive light”</p>
+</li>
+<li><p>Encourage feedback. We will request and monitor community feedback on the
+terms in this list (without inadvertently exposing anyone to the list) to
+make sure it meets the expectations of our users.</p></li>
+</ol>
+</section>
+<section id="guidelines-for-using-the-list-in-openverse-projects">
+<h2>Guidelines for using the list in Openverse projects<a class="headerlink" href="#guidelines-for-using-the-list-in-openverse-projects" title="Permalink to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Never use terms from the list in Openverse repositories (issues, discussions,
+or code itself), chats, or communications of any time, outside of the
+sensitive terms repository.</p></li>
+<li><p>Do not link directly to the list file itself; always reference the
+repository. The README will provide important context towards consenting to
+viewing the list.</p></li>
+<li><p>Always use the most up-to-date version of the sensitive terms list when
+filtering and marking media as sensitive in Openverse projects.</p></li>
+</ol>
+</section>
+<section id="how-the-initial-sensitive-terms-list-was-chosen">
+<h2>How the initial sensitive terms list was chosen<a class="headerlink" href="#how-the-initial-sensitive-terms-list-was-chosen" title="Permalink to this heading">#</a></h2>
+<p>The initial set of terms, created by combining two lists:</p>
+<ul class="simple">
+<li><p>LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words</p>
+<ul>
+<li><p>Very popular, used by many FOSS projects</p></li>
+<li><p>Created explicitly for stock photography moderation</p></li>
+</ul>
+</li>
+<li><p>surge-ai/profanity</p>
+<ul>
+<li><p>Comprehensive</p></li>
+<li><p>Contains more racist terms than LDNOOBW</p></li>
+<li><p>Is categorized, which we’re not using yet but could in the future</p></li>
+</ul>
+</li>
+</ul>
+<p>Generally, it is beneficial to us that our list be as comprehensive as possible.
+This actually speeds up the time required to evaluate all works for sensitivity.
+It also makes sure we’re correctly marking as many works as possible. An earlier
+version of this proposal only used the LDNOOBW list which was good, but limited
+in scope.</p>
+<p>Other lists were considered and rejected for a few reasons:</p>
+<ul class="simple">
+<li><p>Even smaller datasets</p></li>
+<li><p>Poorly-maintained with ignored PRs for terms to be reconsidered</p></li>
+</ul>
+</section>
+<section id="credits">
+<h2>Credits<a class="headerlink" href="#credits" title="Permalink to this heading">#</a></h2>
+<p>Many of the term lists I evaluated in considering this work came from a
+<a class="reference external" href="https://www.wired.com/story/ai-list-dirty-naughty-obscene-bad-words/">Wired article</a>
+entitled “AI and the List of Dirty, Naughty, Obscene, and Otherwise Bad Words”.
+That article discusses the limits of this kind of text matching in-depth and is
+an excellent read for anyone working on content safety in Openverse.</p>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="20230309-project_proposal_detecting_sensitive_textual_content.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Project Proposal - 2023-03-09</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="index.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Detecting and Blurring Sensitive Textual Content</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Implementation Plan: Sensitive Terms List - 2023-03-09</a><ul>
+<li><a class="reference internal" href="#reviewers">Reviewers</a></li>
+<li><a class="reference internal" href="#proposal">Proposal</a><ul>
+<li><a class="reference internal" href="#maintenance-of-the-list">Maintenance of the list</a><ul>
+<li><a class="reference internal" href="#how-new-terms-are-added">How new terms are added</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#anticipated-questions">Anticipated questions</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#implementation-plan">Implementation Plan</a></li>
+<li><a class="reference internal" href="#this-will-not-be-perfect">This will not be perfect</a></li>
+<li><a class="reference internal" href="#guidelines-for-using-the-list-in-openverse-projects">Guidelines for using the list in Openverse projects</a></li>
+<li><a class="reference internal" href="#how-the-initial-sensitive-terms-list-was-chosen">How the initial sensitive terms list was chosen</a></li>
+<li><a class="reference internal" href="#credits">Credits</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/scripts/furo.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    </body>
+</html>

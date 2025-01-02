@@ -1,0 +1,12 @@
+import{I as n}from"./D6F1Hhm-.js";import{_ as o}from"./CxAoIoXu.js";import"./DJiKieMK.js";import{_ as a,D as s,h as d}from"./Bf-AzR54.js";import"./D9JVarWf.js";import"./DGT3PRLF.js";import"./DIoPOIW-.js";import"./DP_WGbG6.js";import"./DHc3v09i.js";import"./Bny5abkt.js";import"./HRLWcGUV.js";import"./BHCnpuXR.js";import"./B06Wl6je.js";import"./l54NnjUF.js";import"./CeH6ebnn.js";import"./DCDaOnb6.js";import"./C-dE80hk.js";import"./CUsr6PUM.js";import"./qA--S04K.js";import"./XhmO_eME.js";import"./tw9gWovy.js";import"./DzAq6MI-.js";import"./BtvQp53i.js";import"./DoJ0DzMc.js";import"./DJ89QBAT.js";import"./BG7tCcxx.js";import"./lviA4LEO.js";import"./Btwz4PSy.js";import"./Bk6rfkGw.js";import"./BkbAmEqc.js";import"./DcwCHNwG.js";import"./BgVAWI2R.js";import"./bqX4GSlx.js";import"./CimVcy15.js";import"./BtGsfS_x.js";import"./CdpvutFv.js";import"./Cyf2jyE0.js";import"./cGIRWP1M.js";import"./BAvHRt8K.js";import"./DhTbjJlp.js";import"./CaoJuCVd.js";import"./FADBYOvo.js";import"./CAndsDKN.js";import"./CqQMmfM-.js";import"./D_XFy5Jd.js";import"./D41TQfhX.js";import"./DH6x54wi.js";import"./CVxoL6nj.js";import"./CIhFzX55.js";import"./B1tASevW.js";import"./XWxx7e39.js";import"./B6aEqbQu.js";import"./D4tTEaWa.js";import"./BxfPi6bw.js";import"./BDo4SFD8.js";import"./B38AYptg.js";import"./DSr6_qLp.js";import"./DPCAinxI.js";import"./BFJ5TeEW.js";import"./vgWrVU66.js";import"./DgYKsnBt.js";import"./CoOOw3i6.js";import"./DLdaABfb.js";import"./DyMHLpGW.js";import"./BKzeanwB.js";import"./CLNcPnMT.js";import"../sb-preview/runtime.js";(function(){try{var r=typeof window<"u"?window:typeof global<"u"?global:typeof self<"u"?self:{},i=new r.Error().stack;i&&(r._sentryDebugIds=r._sentryDebugIds||{},r._sentryDebugIds[i]="ed26842c-d587-4522-a421-9a390ea1955a",r._sentryDebugIdIdentifier="sentry-dbid-ed26842c-d587-4522-a421-9a390ea1955a")}catch{}})();const hr={title:"Components/VHeader/VHeaderDesktop",component:o},t={render:()=>({components:{VHeaderDesktop:o},setup(){return a(n,s(!1)),()=>d(o)}}),name:"Default"};var p,e,m;t.parameters={...t.parameters,docs:{...(p=t.parameters)==null?void 0:p.docs,source:{originalSource:`{
+  render: () => ({
+    components: {
+      VHeaderDesktop
+    },
+    setup() {
+      provide(IsSidebarVisibleKey, ref(false));
+      return () => h(VHeaderDesktop);
+    }
+  }),
+  name: "Default"
+}`,...(m=(e=t.parameters)==null?void 0:e.docs)==null?void 0:m.source}}};const vr=["Default"];export{t as Default,vr as __namedExportsOrder,hr as default};

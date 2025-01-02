@@ -1,0 +1,20 @@
+# 2023.05.30.12.02.04
+
+## New Features
+
+- Add `internal__index` param, walled behind auth
+  ([#2073](https://github.com/WordPress/openverse/pull/2073)) by @dhruvkb
+
+## Internal Improvements
+
+- Update nginx Docker tag to v1.24.0
+  ([#1946](https://github.com/WordPress/openverse/pull/1946)) by @openverse-bot
+- Bump requests from 2.30.0 to 2.31.0 in /api
+  ([#2167](https://github.com/WordPress/openverse/pull/2167)) by @dependabot
+
+## Bug Fixes
+
+- Validate `name` field to replace `IntegrityError`s with 400 response
+  ([#2190](https://github.com/WordPress/openverse/pull/2190)) by @dhruvkb
+- Decode cached file type for thumbnails
+  ([#2163](https://github.com/WordPress/openverse/pull/2163)) by @krysal
