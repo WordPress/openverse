@@ -158,4 +158,33 @@ describe("AudioTrack", () => {
     expect(screen.queryAllByTitle(match)).toEqual([])
     expect(screen.queryAllByAltText(match)).toEqual([])
   })
+
+  it("should show message when audio ID matches active ID", async () => {
+    const activeMediaStore = useActiveMediaStore()
+    const audioId = props.audio.id
+    activeMediaStore.$patch({
+      state: {
+        id: audioId,
+        message: "playing",
+        type: "audio"
+      }
+    })
+    
+    const { getByText } = await render(VAudioTrack, options)
+    expect(getByText(/playing/i)).toBeVisible()
+  })
+
+  it("should not show message when audio ID doesn't match active ID", async () => {
+    const activeMediaStore = useActiveMediaStore()
+    activeMediaStore.$patch({
+      state: {
+        id: "different-id",
+        message: "playing",
+        type: "audio"
+      }
+    })
+    
+    const { queryByText } = await render(VAudioTrack, options)
+    expect(queryByText(/playing/i)).not.toBeInTheDocument()
+  })
 })
