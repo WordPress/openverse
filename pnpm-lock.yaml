@@ -260,8 +260,8 @@ importers:
         specifier: ^12.0.0
         version: 12.1.1(rollup@4.27.4)(tslib@2.6.2)(typescript@5.6.3)
       nock:
-        specifier: 14.0.0-beta.18
-        version: 14.0.0-beta.18
+        specifier: 14.0.0-beta.19
+        version: 14.0.0-beta.19
       openapi-typescript:
         specifier: ^7.3.2
         version: 7.4.3(encoding@0.1.13)(typescript@5.6.3)
@@ -1349,8 +1349,8 @@ packages:
     resolution: {integrity: sha512-sTGoeZnjI8N4KS+sW2AN95gDBErhAguvkw/tWdCjeM8bvxpz5lqrnd0vOJABA1A+Ic3zED7PYoLP/RANLgVotA==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
-  '@mswjs/interceptors@0.36.10':
-    resolution: {integrity: sha512-GXrJgakgJW3DWKueebkvtYgGKkxA7s0u5B0P5syJM5rvQUnrpLPigvci8Hukl7yEM+sU06l+er2Fgvx/gmiRgg==}
+  '@mswjs/interceptors@0.37.3':
+    resolution: {integrity: sha512-USvgCL/uOGFtVa6SVyRrC8kIAedzRohxIXN5LISlg5C5vLZCn7dgMFVSNhSF9cuBEFrm/O2spDWEZeMnw4ZXYg==}
     engines: {node: '>=18'}
 
   '@netlify/functions@2.8.2':
@@ -5558,8 +5558,8 @@ packages:
       xml2js:
         optional: true
 
-  nock@14.0.0-beta.18:
-    resolution: {integrity: sha512-pG+QkbovRb8XMdSTnV/GgFWdwWAv2y7bWMzdCQnk2gQ3JjrpHgBAd0V8IIIhSBLJVvrOAqhSBsZrxSntISvXjA==}
+  nock@14.0.0-beta.19:
+    resolution: {integrity: sha512-xqWQQZ/Hv01tj5uL7BE4j752hhB2MHP7aaEcTp/iDT1EHsh3TYZOIx4HHFL81yRc8KFx4pqb2P2OtuxKShKhjw==}
     engines: {node: '>= 18'}
 
   node-addon-api@3.2.1:
@@ -7559,6 +7559,9 @@ packages:
   vue-component-type-helpers@2.1.6:
     resolution: {integrity: sha512-ng11B8B/ZADUMMOsRbqv0arc442q7lifSubD0v8oDXIFoMg/mXwAPUunrroIDkY+mcD0dHKccdaznSVp8EoX3w==}
 
+  vue-component-type-helpers@2.2.0:
+    resolution: {integrity: sha512-cYrAnv2me7bPDcg9kIcGwjJiSB6Qyi08+jLDo9yuvoFQjzHiPTzML7RnkJB1+3P6KMsX/KbCD4QE3Tv/knEllw==}
+
   vue-demi@0.14.10:
     resolution: {integrity: sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==}
     engines: {node: '>=12'}
@@ -8683,7 +8686,7 @@ snapshots:
       got: 11.8.6
       os-filter-obj: 2.0.0
 
-  '@mswjs/interceptors@0.36.10':
+  '@mswjs/interceptors@0.37.3':
     dependencies:
       '@open-draft/deferred-promise': 2.2.0
       '@open-draft/logger': 0.3.0
@@ -10314,7 +10317,7 @@ snapshots:
       ts-dedent: 2.2.0
       type-fest: 2.19.0
       vue: 3.5.13(typescript@5.6.3)
-      vue-component-type-helpers: 2.1.10
+      vue-component-type-helpers: 2.2.0
 
   '@swc/cli@0.5.0(@swc/core@1.7.42)(chokidar@3.6.0)':
     dependencies:
@@ -14058,9 +14061,9 @@ snapshots:
       - supports-color
       - uWebSockets.js
 
-  nock@14.0.0-beta.18:
+  nock@14.0.0-beta.19:
     dependencies:
-      '@mswjs/interceptors': 0.36.10
+      '@mswjs/interceptors': 0.37.3
       json-stringify-safe: 5.0.1
       propagate: 2.0.1
 
@@ -16292,6 +16295,8 @@ snapshots:
   vue-component-type-helpers@2.1.10: {}
 
   vue-component-type-helpers@2.1.6: {}
+
+  vue-component-type-helpers@2.2.0: {}
 
   vue-demi@0.14.10(vue@3.5.13(typescript@5.6.3)):
     dependencies:
