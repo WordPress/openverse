@@ -35,7 +35,6 @@ useHead({ title: `${t("sensitive.title")} | Openverse` })
         keypath="sensitive.description.content.c"
         tag="span"
       >
-        <template #openverse>Openverse</template>
         <template #wpCoc
           ><VLink
             href="https://make.wordpress.org/handbook/community-code-of-conduct/"
@@ -119,7 +118,6 @@ useHead({ title: `${t("sensitive.title")} | Openverse` })
         keypath="sensitive.designations.userReported.description.b"
         tag="span"
       >
-        <template #openverse>Openverse</template>
         <template #gutenbergMediaInserter>
           <VLink
             href="https://learn.wordpress.org/tutorial/add-media-and-openverse-images-to-your-content-directly-from-the-inserter/"
@@ -154,7 +152,6 @@ useHead({ title: `${t("sensitive.title")} | Openverse` })
         keypath="sensitive.designations.sensitiveText.description.b"
         tag="span"
       >
-        <template #openverse>Openverse</template>
         <template #sensitiveTermsList>
           <VLink
             href="https://github.com/wordpress/openverse-sensitive-terms"
@@ -194,7 +191,6 @@ useHead({ title: `${t("sensitive.title")} | Openverse` })
         keypath="sensitive.designations.sensitiveText.metadata.a"
         tag="span"
       >
-        <template #openverse>Openverse</template>
         <template #openverseOrg>Openverse.org</template>
         <template #notAvailable>
           <VLink href="https://github.com/WordPress/openverse/issues/2594">{{
