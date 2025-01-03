@@ -288,7 +288,7 @@ def notify_complete(deleted_envfiles: dict[str, list[str]]):
             files = ", ".join(envfiles)
             message += f"{env}: {files}\n"
         notify_slack.function(
-            dag_id=DAG_ID, text=f"Deleted the following environment files:\n{message}"
+            text=f"Deleted the following environment files:\n{message}"
         )
 
 

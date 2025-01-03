@@ -110,7 +110,6 @@ def create_popularity_refresh_dag(popularity_refresh: PopularityRefresh):
             " constants update_",
             username=SLACK_USERNAME,
             icon_emoji=SLACK_EMOJI,
-            dag_id=popularity_refresh.dag_id,
         )
 
         update_constants = (
@@ -139,7 +138,6 @@ def create_popularity_refresh_dag(popularity_refresh: PopularityRefresh):
             " popularity scores_",
             username=SLACK_USERNAME,
             icon_emoji=SLACK_EMOJI,
-            dag_id=popularity_refresh.dag_id,
         )
 
         # Once popularity constants have been calculated, establish the cutoff time
@@ -173,7 +171,6 @@ def create_popularity_refresh_dag(popularity_refresh: PopularityRefresh):
             ),
             username=SLACK_USERNAME,
             icon_emoji=SLACK_EMOJI,
-            dag_id=popularity_refresh.dag_id,
         )
 
         # Set up task dependencies
