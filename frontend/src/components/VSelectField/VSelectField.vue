@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, useAttrs, useSlots } from "vue"
+import { computed, useAttrs } from "vue"
 
 import type { ProperlyExtractPropTypes } from "#shared/types/prop-extraction"
 
@@ -48,7 +48,9 @@ const props = withDefaults(
 const emit = defineEmits<{ "update:modelValue": [string] }>()
 
 const attrs = useAttrs()
-const slots = useSlots()
+const slots = defineSlots<{
+  start?: () => unknown[]
+}>()
 
 const fieldName = computed(() => (attrs["name"] as string) ?? props.fieldId)
 const selectValue = computed<string>({

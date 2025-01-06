@@ -110,13 +110,13 @@
     "rimraf": "^6.0.1",
     "storybook": "8.3.6",
     "talkback": "^4.2.0",
-    "typescript": "5.6.3",
+    "typescript": "5.7.2",
     "vitest": "^2.1.4",
     "vitest-dom": "^0.1.1",
     "vue": "^3.5.13",
     "vue-i18n": "10.0.5",
     "vue-router": "^4.4.5",
-    "vue-tsc": "2.1.10"
+    "vue-tsc": "2.2.0"
   },
   "browserslist": [
     "> 1%",
