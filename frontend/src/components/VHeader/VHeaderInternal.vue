@@ -79,7 +79,7 @@ watch(route, () => {
     ref="nodeRef"
     class="main-header z-30 flex h-20 w-full items-stretch justify-between gap-x-2 border-b border-tx px-2 py-4 md:py-4 lg:pe-10 lg:ps-6"
   >
-    <VHomeLink variant="dark" />
+    <VHomeLink />
     <nav class="hidden lg:flex">
       <VPageLinks
         mode="light"
@@ -125,18 +125,18 @@ watch(route, () => {
           :hide="closePageMenu"
           variant="full"
           mode="dark"
-          modal-content-classes="flex sm:hidden"
+          content-classes="flex sm:hidden"
           :visible="isModalVisible"
           @open="openPageMenu"
         >
           <template #top-bar>
             <div class="flex h-20 w-full justify-between px-2 py-4">
-              <VHomeLink variant="light" />
+              <VHomeLink />
               <VIconButton
                 variant="transparent-tx"
                 size="large"
                 :icon-props="{ name: 'close' }"
-                class="text-white focus-slim-tx hover:bg-tertiary hover:text-over-negative"
+                class="text-white hover:bg-surface focus-visible:focus-slim-tx"
                 :label="$t('modal.closePagesMenu')"
                 @click="closePageMenu"
               />
@@ -147,12 +147,12 @@ watch(route, () => {
               <VPageLinks
                 mode="dark"
                 class="mt-3 flex flex-col items-end gap-y-6"
-                nav-link-classes="text-white text-3xl focus-visible:outline-yellow-3"
+                nav-link-classes="text-white text-3xl focus-visible:outline-focus"
                 :is-in-modal="true"
                 @close="closePageMenu"
               />
             </nav>
-            <VWordPressLink class="mt-auto" mode="dark" />
+            <VWordPressLink class="mt-auto" />
           </template>
         </VModalContent>
       </template>

@@ -65,7 +65,7 @@ const iconClassNames = computed(() =>
 
 const closeButtonClassNames = computed(() =>
   props.variant === "dark"
-    ? "focus-slim-tx-bg-complementary hover:bg-tertiary-hover"
+    ? "focus-visible:focus-slim-tx hover:bg-tertiary-hover"
     : {
         info: "hover:!bg-info-3",
         warning: "hover:!bg-warning-3",
