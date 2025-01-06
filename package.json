@@ -30,11 +30,7 @@
     "overrides": {
       "nitropack": "~2.9.7",
       "vite": "^6.0.1",
-      "@intlify/core-base": "10.0.5",
-      "@intlify/message-compiler": "10.0.5",
-      "@intlify/shared": "10.0.5",
-      "@vercel/nft": "^0.27.4",
-      "@vue/compiler-sfc": "3.5.13"
+      "@vercel/nft": "^0.27.4"
     }
   }
 }

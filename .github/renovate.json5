@@ -76,6 +76,10 @@
       ],
     },
     {
+      groupName: "i18n",
+      matchPackageNames: ["vue-i18n", "@nuxtjs/i18n", "@intlify{/,}**"],
+    },
+    {
       matchPackageNames: ["/elasticsearch/", "/postgres/", "/redis/"],
       matchManagers: ["docker-compose", "dockerfile"],
       enabled: false,
