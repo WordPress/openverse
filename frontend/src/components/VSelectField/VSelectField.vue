@@ -63,7 +63,7 @@ const selectValue = computed<string>({
 })
 
 const hasStartContent = computed(() => {
-  return slots.start !== undefined && slots.start().length !== 0
+  return slots && slots.start && slots.start().length !== 0
 })
 
 const splitAttrs = computed(() => {
