@@ -67,6 +67,15 @@
       matchPackageNames: ["@testing-library{/,}**"],
     },
     {
+      groupName: "typescript",
+      matchPackageNames: [
+        "typescript",
+        "vue-tsc",
+        "@typescript-eslint{/,}**",
+        "typescript-eslint",
+      ],
+    },
+    {
       matchPackageNames: ["/elasticsearch/", "/postgres/", "/redis/"],
       matchManagers: ["docker-compose", "dockerfile"],
       enabled: false,

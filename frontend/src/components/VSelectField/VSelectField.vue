@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, useAttrs, useSlots } from "vue"
+import { computed, useAttrs } from "vue"
 
 import type { ProperlyExtractPropTypes } from "#shared/types/prop-extraction"
 
@@ -48,7 +48,9 @@ const props = withDefaults(
 const emit = defineEmits<{ "update:modelValue": [string] }>()
 
 const attrs = useAttrs()
-const slots = useSlots()
+const slots = defineSlots<{
+  start?: () => unknown[]
+}>()
 
 const fieldName = computed(() => (attrs["name"] as string) ?? props.fieldId)
 const selectValue = computed<string>({
@@ -61,7 +63,7 @@ const selectValue = computed<string>({
 })
 
 const hasStartContent = computed(() => {
-  return slots && slots.start && slots.start().length !== 0
+  return slots.start !== undefined && slots.start().length !== 0
 })
 
 const splitAttrs = computed(() => {

@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-restricted-imports
-import { test as base } from "@playwright/test"
+import { type Page, test as base } from "@playwright/test"
 
 const encoder = new TextEncoder()
 
@@ -28,7 +28,9 @@ async function getSigningKey() {
   return signingKey
 }
 
-export const test = base.extend({
+export const test = base.extend<{
+  page: Page
+}>({
   page: async ({ page }, use) => {
     // Only match staging; it'll just be ignored for local testing
     await page.route(
