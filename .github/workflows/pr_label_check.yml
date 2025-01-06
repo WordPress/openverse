@@ -42,7 +42,7 @@ jobs:
       - get_label_groups
     steps:
       - name: Check aspect label
-        uses: docker://agilepathway/pull-request-label-checker:v1.6.60
+        uses: docker://agilepathway/pull-request-label-checker:latest
         with:
           any_of: ${{ needs.get_label_groups.outputs.aspect }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
