@@ -89,7 +89,7 @@
     "@nuxtjs/i18n": "^9.1.1",
     "@nuxtjs/storybook": "8.3.2",
     "@playwright/test": "1.49.1",
-    "@storybook-vue/nuxt": "8.3.2",
+    "@storybook-vue/nuxt": "8.3.3",
     "@storybook/addon-essentials": "^8.3.6",
     "@storybook/addon-interactions": "^8.3.6",
     "@storybook/addon-links": "^8.3.6",
