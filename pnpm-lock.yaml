@@ -156,8 +156,8 @@ importers:
         specifier: ^9.1.1
         version: 9.1.1(@vue/compiler-dom@3.5.13)(eslint@9.13.0(jiti@2.4.2))(magicast@0.3.5)(rollup@4.27.4)(typescript@5.7.2)(vue@3.5.13(typescript@5.7.2))
       '@nuxtjs/storybook':
-        specifier: 8.3.2
-        version: 8.3.2(@types/node@22.8.5)(eslint@9.13.0(jiti@2.4.2))(magicast@0.3.5)(nuxt@3.15.1(@parcel/watcher@2.4.1)(@types/node@22.8.5)(db0@0.1.4)(encoding@0.1.13)(eslint@9.13.0(jiti@2.4.2))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.3)(rollup@4.27.4)(terser@5.31.0)(typescript@5.7.2)(vite@6.0.1(@types/node@22.8.5)(jiti@2.4.2)(terser@5.31.0)(yaml@2.7.0))(vue-tsc@2.2.0(typescript@5.7.2))(yaml@2.7.0))(optionator@0.9.3)(rollup@4.27.4)(terser@5.31.0)(typescript@5.7.2)(vite@6.0.1(@types/node@22.8.5)(jiti@2.4.2)(terser@5.31.0)(yaml@2.7.0))(vue-tsc@2.2.0(typescript@5.7.2))(vue@3.5.13(typescript@5.7.2))(yaml@2.7.0)
+        specifier: 8.3.3
+        version: 8.3.3(@types/node@22.8.5)(eslint@9.13.0(jiti@2.4.2))(magicast@0.3.5)(nuxt@3.15.1(@parcel/watcher@2.4.1)(@types/node@22.8.5)(db0@0.1.4)(encoding@0.1.13)(eslint@9.13.0(jiti@2.4.2))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.3)(rollup@4.27.4)(terser@5.31.0)(typescript@5.7.2)(vite@6.0.1(@types/node@22.8.5)(jiti@2.4.2)(terser@5.31.0)(yaml@2.7.0))(vue-tsc@2.2.0(typescript@5.7.2))(yaml@2.7.0))(optionator@0.9.3)(prettier@3.4.2)(rollup@4.27.4)(terser@5.31.0)(typescript@5.7.2)(vite@6.0.1(@types/node@22.8.5)(jiti@2.4.2)(terser@5.31.0)(yaml@2.7.0))(vue-tsc@2.2.0(typescript@5.7.2))(vue@3.5.13(typescript@5.7.2))(yaml@2.7.0)
       '@playwright/test':
         specifier: 1.49.1
         version: 1.49.1
@@ -1503,8 +1503,8 @@ packages:
     resolution: {integrity: sha512-/wCP927/Bcfdbw/iVeD5+FOuogS+U2zuwVg+C1vyXqV9hVj5Br1Jy2pjkcerfXPK/REpp+ASBOmrcVWuHcewcA==}
     engines: {node: '>=18.0.0'}
 
-  '@nuxtjs/storybook@8.3.2':
-    resolution: {integrity: sha512-Q99iDHn+s4wgIRfC8dwN18iBfeWwV54KAJes5qt0KW262pV4eZEyEDaJKlVRwFcKQd4yCcw369I6R4uQTz42LQ==}
+  '@nuxtjs/storybook@8.3.3':
+    resolution: {integrity: sha512-pyZsSB+rIzPaZlBIuYHQdZvd+6kFuCLfjNVtHzvmtejwv2dNQPwUw4fBqIIzShSlbTM/JLTGJrP7llt6CFYqbg==}
     engines: {node: '>=18.0.0'}
 
   '@nuxtjs/tailwindcss@6.12.1':
@@ -2302,6 +2302,14 @@ packages:
       vite: ^6.0.1
       vue: ^3.4.0
 
+  '@storybook-vue/nuxt@8.3.3':
+    resolution: {integrity: sha512-+/JE0Mg0uKgeKHPyLru8K609yqw4PDaaiiW54PdRWLwDBG0vrXlREP6+6ecyhQjPgTSG5o4ftw/2+rU7x8LtOQ==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      nuxt: ^3.13.0
+      vite: ^6.0.1
+      vue: ^3.4.0
+
   '@storybook/addon-actions@8.3.6':
     resolution: {integrity: sha512-nOqgl0WoZK2KwjaABaXMoIgrIHOQl9inOzJvqQau0HOtsvnXGXYfJXYnpjZenoZDoZXKbUDl0U2haDFx2a2fJw==}
     peerDependencies:
@@ -2394,28 +2402,52 @@ packages:
       vite-plugin-glimmerx:
         optional: true
 
+  '@storybook/builder-vite@8.4.7':
+    resolution: {integrity: sha512-LovyXG5VM0w7CovI/k56ZZyWCveQFVDl0m7WwetpmMh2mmFJ+uPQ35BBsgTvTfc8RHi+9Q3F58qP1MQSByXi9g==}
+    peerDependencies:
+      storybook: ^8.4.7
+      vite: ^6.0.1
+
   '@storybook/components@8.3.6':
     resolution: {integrity: sha512-TXuoGZY7X3iixF45lXkYOFk8k2q9OHcqHyHyem1gATLLQXgyOvDgzm+VB7uKBNzssRQPEE+La70nfG8bq/viRw==}
     peerDependencies:
       storybook: ^8.3.6
 
-  '@storybook/core-common@8.3.6':
-    resolution: {integrity: sha512-67GHzjuYIvIfD/sqOuTeY1PmOdXZ2Hv9iTCc5xTMJCVBW0XN2Uqqy0ORP111x4EQblBPmnuNAfyYHoWrRxvTxg==}
+  '@storybook/components@8.4.7':
+    resolution: {integrity: sha512-uyJIcoyeMWKAvjrG9tJBUCKxr2WZk+PomgrgrUwejkIfXMO76i6jw9BwLa0NZjYdlthDv30r9FfbYZyeNPmF0g==}
     peerDependencies:
-      storybook: ^8.3.6
+      storybook: ^8.2.0 || ^8.3.0-0 || ^8.4.0-0 || ^8.5.0-0 || ^8.6.0-0
 
-  '@storybook/core-server@8.3.6':
-    resolution: {integrity: sha512-jDaeIQQ7hiltfR/krqhkTu2XUMRDHbWATOV2tkf92yRKfESqMhs4ZxwkFZbP4DQda+zBPK6sXYeI1lenWpUlgA==}
+  '@storybook/core-common@8.4.7':
+    resolution: {integrity: sha512-WgVg9UR/Ye4vnoB0i9pQkJsy47IlerkBaxSHycaxIlg87znrYL1K31a5Os1qUXq+eJbH6Jk70dfUmbRh/UOS6A==}
     peerDependencies:
-      storybook: ^8.3.6
+      storybook: ^8.2.0 || ^8.3.0-0 || ^8.4.0-0 || ^8.5.0-0 || ^8.6.0-0
+
+  '@storybook/core-server@8.4.7':
+    resolution: {integrity: sha512-RW5R+kqRmcP+7QNTmhcrh46qWYkVpxaRlN8MmkHV52m2H5nbBrvgwc3/sb3wdgm1PEU0K5wxT0cmAMIwtnHC9Q==}
+    peerDependencies:
+      storybook: ^8.2.0 || ^8.3.0-0 || ^8.4.0-0 || ^8.5.0-0 || ^8.6.0-0
 
   '@storybook/core@8.3.6':
     resolution: {integrity: sha512-frwfgf0EJ7QL29DWZ5bla/g0eOOWqJGd14t+VUBlpP920zB6sdDfo7+p9JoCjD9u08lGeFDqbPNKayUk+0qDag==}
+
+  '@storybook/core@8.4.7':
+    resolution: {integrity: sha512-7Z8Z0A+1YnhrrSXoKKwFFI4gnsLbWzr8fnDCU6+6HlDukFYh8GHRcZ9zKfqmy6U3hw2h8H5DrHsxWfyaYUUOoA==}
+    peerDependencies:
+      prettier: ^2 || ^3
+    peerDependenciesMeta:
+      prettier:
+        optional: true
 
   '@storybook/csf-plugin@8.3.6':
     resolution: {integrity: sha512-TJyJPFejO6Gyr3+bXqE/+LomQbivvfHEbee/GwtlRj0XF4KQlqnvuEdEdcK25JbD0NXT8AbyncEUmjoxE7ojQw==}
     peerDependencies:
       storybook: ^8.3.6
+
+  '@storybook/csf-plugin@8.4.7':
+    resolution: {integrity: sha512-Fgogplu4HImgC+AYDcdGm1rmL6OR1rVdNX1Be9C/NEXwOCpbbBwi0BxTf/2ZxHRk9fCeaPEcOdP5S8QHfltc1g==}
+    peerDependencies:
+      storybook: ^8.4.7
 
   '@storybook/csf@0.1.11':
     resolution: {integrity: sha512-dHYFQH3mA+EtnCkHXzicbLgsvzYjcDJ1JWsogbItZogkPHgSJM/Wr71uMkcvw8v9mmCyP4NpXJuu6bPoVsOnzg==}
@@ -2440,10 +2472,20 @@ packages:
     peerDependencies:
       storybook: ^8.3.6
 
+  '@storybook/manager-api@8.4.7':
+    resolution: {integrity: sha512-ELqemTviCxAsZ5tqUz39sDmQkvhVAvAgiplYy9Uf15kO0SP2+HKsCMzlrm2ue2FfkUNyqbDayCPPCB0Cdn/mpQ==}
+    peerDependencies:
+      storybook: ^8.2.0 || ^8.3.0-0 || ^8.4.0-0 || ^8.5.0-0 || ^8.6.0-0
+
   '@storybook/preview-api@8.3.6':
     resolution: {integrity: sha512-/Wxvb7wbI2O2iH63arRQQyyojA630vibdshkFjuC/u1nYdptEV1jkxa0OYmbZbKCn4/ze6uH4hfsKOpDPV9SWg==}
     peerDependencies:
       storybook: ^8.3.6
+
+  '@storybook/preview-api@8.4.7':
+    resolution: {integrity: sha512-0QVQwHw+OyZGHAJEXo6Knx+6/4er7n2rTDE5RYJ9F2E2Lg42E19pfdLlq2Jhoods2Xrclo3wj6GWR//Ahi39Eg==}
+    peerDependencies:
+      storybook: ^8.2.0 || ^8.3.0-0 || ^8.4.0-0 || ^8.5.0-0 || ^8.6.0-0
 
   '@storybook/react-dom-shim@8.3.6':
     resolution: {integrity: sha512-9BO6VXIdli4GHSfiP/Z0gwAf7oQig3D/yWK2U1+91UWDV8nIAgnNBAi76U4ORC6MiK5MdkDfIikIxnLLeLnahA==}
@@ -2462,6 +2504,11 @@ packages:
     peerDependencies:
       storybook: ^8.3.6
 
+  '@storybook/theming@8.4.7':
+    resolution: {integrity: sha512-99rgLEjf7iwfSEmdqlHkSG3AyLcK0sfExcr0jnc6rLiAkBhzuIsvcHjjUwkR210SOCgXqBPW0ZA6uhnuyppHLw==}
+    peerDependencies:
+      storybook: ^8.2.0 || ^8.3.0-0 || ^8.4.0-0 || ^8.5.0-0 || ^8.6.0-0
+
   '@storybook/vue3-vite@8.3.6':
     resolution: {integrity: sha512-C7QvFgbDVE7Tjqd/iaJH+T80Kd7gKk8B9LwpzYl6Rm/xt4/64pc294AkkC/FGoOPVV1gTVDPGGf0tr0uxpeiIQ==}
     engines: {node: '>=18.0.0'}
@@ -2469,11 +2516,25 @@ packages:
       storybook: ^8.3.6
       vite: ^6.0.1
 
+  '@storybook/vue3-vite@8.4.7':
+    resolution: {integrity: sha512-MCU4GB6mKgeOy23eGL/yCxPWP1dBGuU4hRVoQYUzDyvNRNWD/0n7WOwIpKGeDHhmOW3J9PPX7C3k/N4ewFBmrQ==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      storybook: ^8.4.7
+      vite: ^6.0.1
+
   '@storybook/vue3@8.3.6':
     resolution: {integrity: sha512-ztf54Ug2u6xSWocBybeGiUR1Cy9znlVMPRlLtsOtq05Huk+a5km/Lg7AZRvzAUtj3HUMhQeiUEP5je7SSD1gBg==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       storybook: ^8.3.6
+      vue: ^3.0.0
+
+  '@storybook/vue3@8.4.7':
+    resolution: {integrity: sha512-QvILEkgx7VyKBuLB4KiuQ0U8OLfQyLTwDuJ36wihQ75EEt86z29kYLNC2keHSbns/HUs3x3cjM9EkUT2xLgc/A==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      storybook: ^8.4.7
       vue: ^3.0.0
 
   '@swc/cli@0.5.0':
@@ -6853,6 +6914,15 @@ packages:
     resolution: {integrity: sha512-9GVbtej6ZzPRUM7KRQ7848506FfHrUiJGqPuIQdoSJd09EmuEoLjmLAgEOmrHBQKgGYMaM7Vh9GsTLim6vwZTQ==}
     hasBin: true
 
+  storybook@8.4.7:
+    resolution: {integrity: sha512-RP/nMJxiWyFc8EVMH5gp20ID032Wvk+Yr3lmKidoegto5Iy+2dVQnUoElZb2zpbVXNHWakGuAkfI0dY1Hfp/vw==}
+    hasBin: true
+    peerDependencies:
+      prettier: ^2 || ^3
+    peerDependenciesMeta:
+      prettier:
+        optional: true
+
   streamx@2.16.1:
     resolution: {integrity: sha512-m9QYj6WygWyWa3H1YY69amr4nVgy61xfjys7xO7kviL5rfIEc2naf+ewFiOA+aEJD7y0JO3h2GoiUv4TDwEGzQ==}
 
@@ -9126,22 +9196,21 @@ snapshots:
       - vite
       - vue
 
-  '@nuxtjs/storybook@8.3.2(@types/node@22.8.5)(eslint@9.13.0(jiti@2.4.2))(magicast@0.3.5)(nuxt@3.15.1(@parcel/watcher@2.4.1)(@types/node@22.8.5)(db0@0.1.4)(encoding@0.1.13)(eslint@9.13.0(jiti@2.4.2))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.3)(rollup@4.27.4)(terser@5.31.0)(typescript@5.7.2)(vite@6.0.1(@types/node@22.8.5)(jiti@2.4.2)(terser@5.31.0)(yaml@2.7.0))(vue-tsc@2.2.0(typescript@5.7.2))(yaml@2.7.0))(optionator@0.9.3)(rollup@4.27.4)(terser@5.31.0)(typescript@5.7.2)(vite@6.0.1(@types/node@22.8.5)(jiti@2.4.2)(terser@5.31.0)(yaml@2.7.0))(vue-tsc@2.2.0(typescript@5.7.2))(vue@3.5.13(typescript@5.7.2))(yaml@2.7.0)':
+  '@nuxtjs/storybook@8.3.3(@types/node@22.8.5)(eslint@9.13.0(jiti@2.4.2))(magicast@0.3.5)(nuxt@3.15.1(@parcel/watcher@2.4.1)(@types/node@22.8.5)(db0@0.1.4)(encoding@0.1.13)(eslint@9.13.0(jiti@2.4.2))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.3)(rollup@4.27.4)(terser@5.31.0)(typescript@5.7.2)(vite@6.0.1(@types/node@22.8.5)(jiti@2.4.2)(terser@5.31.0)(yaml@2.7.0))(vue-tsc@2.2.0(typescript@5.7.2))(yaml@2.7.0))(optionator@0.9.3)(prettier@3.4.2)(rollup@4.27.4)(terser@5.31.0)(typescript@5.7.2)(vite@6.0.1(@types/node@22.8.5)(jiti@2.4.2)(terser@5.31.0)(yaml@2.7.0))(vue-tsc@2.2.0(typescript@5.7.2))(vue@3.5.13(typescript@5.7.2))(yaml@2.7.0)':
     dependencies:
       '@nuxt/devtools-kit': 1.7.0(magicast@0.3.5)(rollup@4.27.4)(vite@6.0.1(@types/node@22.8.5)(jiti@2.4.2)(terser@5.31.0)(yaml@2.7.0))
       '@nuxt/kit': 3.15.1(magicast@0.3.5)(rollup@4.27.4)
-      '@storybook-vue/nuxt': 8.3.2(@types/node@22.8.5)(eslint@9.13.0(jiti@2.4.2))(magicast@0.3.5)(nuxt@3.15.1(@parcel/watcher@2.4.1)(@types/node@22.8.5)(db0@0.1.4)(encoding@0.1.13)(eslint@9.13.0(jiti@2.4.2))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.3)(rollup@4.27.4)(terser@5.31.0)(typescript@5.7.2)(vite@6.0.1(@types/node@22.8.5)(jiti@2.4.2)(terser@5.31.0)(yaml@2.7.0))(vue-tsc@2.2.0(typescript@5.7.2))(yaml@2.7.0))(optionator@0.9.3)(rollup@4.27.4)(storybook@8.3.6)(terser@5.31.0)(typescript@5.7.2)(vite@6.0.1(@types/node@22.8.5)(jiti@2.4.2)(terser@5.31.0)(yaml@2.7.0))(vue-tsc@2.2.0(typescript@5.7.2))(vue@3.5.13(typescript@5.7.2))(yaml@2.7.0)
-      '@storybook/core-common': 8.3.6(storybook@8.3.6)
-      '@storybook/core-server': 8.3.6(storybook@8.3.6)
+      '@storybook-vue/nuxt': 8.3.3(@types/node@22.8.5)(eslint@9.13.0(jiti@2.4.2))(magicast@0.3.5)(nuxt@3.15.1(@parcel/watcher@2.4.1)(@types/node@22.8.5)(db0@0.1.4)(encoding@0.1.13)(eslint@9.13.0(jiti@2.4.2))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.3)(rollup@4.27.4)(terser@5.31.0)(typescript@5.7.2)(vite@6.0.1(@types/node@22.8.5)(jiti@2.4.2)(terser@5.31.0)(yaml@2.7.0))(vue-tsc@2.2.0(typescript@5.7.2))(yaml@2.7.0))(optionator@0.9.3)(rollup@4.27.4)(storybook@8.4.7(prettier@3.4.2))(terser@5.31.0)(typescript@5.7.2)(vite@6.0.1(@types/node@22.8.5)(jiti@2.4.2)(terser@5.31.0)(yaml@2.7.0))(vue-tsc@2.2.0(typescript@5.7.2))(vue@3.5.13(typescript@5.7.2))(yaml@2.7.0)
+      '@storybook/core-common': 8.4.7(storybook@8.4.7(prettier@3.4.2))
+      '@storybook/core-server': 8.4.7(storybook@8.4.7(prettier@3.4.2))
       chalk: 5.3.0
       consola: 3.3.3
       defu: 6.1.4
       get-port-please: 3.1.2
-      storybook: 8.3.6
+      storybook: 8.4.7(prettier@3.4.2)
       ufo: 1.5.4
     transitivePeerDependencies:
       - '@biomejs/biome'
-      - '@preact/preset-vite'
       - '@types/node'
       - bufferutil
       - eslint
@@ -9151,6 +9220,7 @@ snapshots:
       - meow
       - nuxt
       - optionator
+      - prettier
       - rolldown
       - rollup
       - sass
@@ -9164,7 +9234,6 @@ snapshots:
       - typescript
       - utf-8-validate
       - vite
-      - vite-plugin-glimmerx
       - vls
       - vti
       - vue
@@ -10125,6 +10194,50 @@ snapshots:
       - vue-tsc
       - yaml
 
+  '@storybook-vue/nuxt@8.3.3(@types/node@22.8.5)(eslint@9.13.0(jiti@2.4.2))(magicast@0.3.5)(nuxt@3.15.1(@parcel/watcher@2.4.1)(@types/node@22.8.5)(db0@0.1.4)(encoding@0.1.13)(eslint@9.13.0(jiti@2.4.2))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.3)(rollup@4.27.4)(terser@5.31.0)(typescript@5.7.2)(vite@6.0.1(@types/node@22.8.5)(jiti@2.4.2)(terser@5.31.0)(yaml@2.7.0))(vue-tsc@2.2.0(typescript@5.7.2))(yaml@2.7.0))(optionator@0.9.3)(rollup@4.27.4)(storybook@8.4.7(prettier@3.4.2))(terser@5.31.0)(typescript@5.7.2)(vite@6.0.1(@types/node@22.8.5)(jiti@2.4.2)(terser@5.31.0)(yaml@2.7.0))(vue-tsc@2.2.0(typescript@5.7.2))(vue@3.5.13(typescript@5.7.2))(yaml@2.7.0)':
+    dependencies:
+      '@nuxt/kit': 3.15.1(magicast@0.3.5)(rollup@4.27.4)
+      '@nuxt/schema': 3.15.1
+      '@nuxt/vite-builder': 3.15.1(@types/node@22.8.5)(eslint@9.13.0(jiti@2.4.2))(magicast@0.3.5)(optionator@0.9.3)(rollup@4.27.4)(terser@5.31.0)(typescript@5.7.2)(vue-tsc@2.2.0(typescript@5.7.2))(vue@3.5.13(typescript@5.7.2))(yaml@2.7.0)
+      '@rollup/plugin-replace': 6.0.2(rollup@4.27.4)
+      '@storybook/builder-vite': 8.4.7(storybook@8.4.7(prettier@3.4.2))(vite@6.0.1(@types/node@22.8.5)(jiti@2.4.2)(terser@5.31.0)(yaml@2.7.0))
+      '@storybook/vue3': 8.4.7(storybook@8.4.7(prettier@3.4.2))(vue@3.5.13(typescript@5.7.2))
+      '@storybook/vue3-vite': 8.4.7(storybook@8.4.7(prettier@3.4.2))(vite@6.0.1(@types/node@22.8.5)(jiti@2.4.2)(terser@5.31.0)(yaml@2.7.0))(vue@3.5.13(typescript@5.7.2))
+      json-stable-stringify: 1.1.1
+      mlly: 1.7.3
+      nuxt: 3.15.1(@parcel/watcher@2.4.1)(@types/node@22.8.5)(db0@0.1.4)(encoding@0.1.13)(eslint@9.13.0(jiti@2.4.2))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.3)(rollup@4.27.4)(terser@5.31.0)(typescript@5.7.2)(vite@6.0.1(@types/node@22.8.5)(jiti@2.4.2)(terser@5.31.0)(yaml@2.7.0))(vue-tsc@2.2.0(typescript@5.7.2))(yaml@2.7.0)
+      ofetch: 1.4.1
+      pathe: 1.1.2
+      unctx: 2.4.1
+      vite: 6.0.1(@types/node@22.8.5)(jiti@2.4.2)(terser@5.31.0)(yaml@2.7.0)
+      vue: 3.5.13(typescript@5.7.2)
+      vue-router: 4.5.0(vue@3.5.13(typescript@5.7.2))
+    transitivePeerDependencies:
+      - '@biomejs/biome'
+      - '@types/node'
+      - eslint
+      - less
+      - lightningcss
+      - magicast
+      - meow
+      - optionator
+      - rolldown
+      - rollup
+      - sass
+      - sass-embedded
+      - storybook
+      - stylelint
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+      - tsx
+      - typescript
+      - vls
+      - vti
+      - vue-tsc
+      - yaml
+
   '@storybook/addon-actions@8.3.6(storybook@8.3.6)':
     dependencies:
       '@storybook/global': 5.0.0
@@ -10262,17 +10375,29 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@storybook/builder-vite@8.4.7(storybook@8.4.7(prettier@3.4.2))(vite@6.0.1(@types/node@22.8.5)(jiti@2.4.2)(terser@5.31.0)(yaml@2.7.0))':
+    dependencies:
+      '@storybook/csf-plugin': 8.4.7(storybook@8.4.7(prettier@3.4.2))
+      browser-assert: 1.2.1
+      storybook: 8.4.7(prettier@3.4.2)
+      ts-dedent: 2.2.0
+      vite: 6.0.1(@types/node@22.8.5)(jiti@2.4.2)(terser@5.31.0)(yaml@2.7.0)
+
   '@storybook/components@8.3.6(storybook@8.3.6)':
     dependencies:
       storybook: 8.3.6
 
-  '@storybook/core-common@8.3.6(storybook@8.3.6)':
+  '@storybook/components@8.4.7(storybook@8.4.7(prettier@3.4.2))':
     dependencies:
-      storybook: 8.3.6
+      storybook: 8.4.7(prettier@3.4.2)
 
-  '@storybook/core-server@8.3.6(storybook@8.3.6)':
+  '@storybook/core-common@8.4.7(storybook@8.4.7(prettier@3.4.2))':
     dependencies:
-      storybook: 8.3.6
+      storybook: 8.4.7(prettier@3.4.2)
+
+  '@storybook/core-server@8.4.7(storybook@8.4.7(prettier@3.4.2))':
+    dependencies:
+      storybook: 8.4.7(prettier@3.4.2)
 
   '@storybook/core@8.3.6':
     dependencies:
@@ -10294,9 +10419,34 @@ snapshots:
       - supports-color
       - utf-8-validate
 
+  '@storybook/core@8.4.7(prettier@3.4.2)':
+    dependencies:
+      '@storybook/csf': 0.1.11
+      better-opn: 3.0.2
+      browser-assert: 1.2.1
+      esbuild: 0.24.2
+      esbuild-register: 3.6.0(esbuild@0.24.2)
+      jsdoc-type-pratt-parser: 4.1.0
+      process: 0.11.10
+      recast: 0.23.9
+      semver: 7.6.3
+      util: 0.12.5
+      ws: 8.18.0
+    optionalDependencies:
+      prettier: 3.4.2
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+
   '@storybook/csf-plugin@8.3.6(storybook@8.3.6)':
     dependencies:
       storybook: 8.3.6
+      unplugin: 1.16.0
+
+  '@storybook/csf-plugin@8.4.7(storybook@8.4.7(prettier@3.4.2))':
+    dependencies:
+      storybook: 8.4.7(prettier@3.4.2)
       unplugin: 1.16.0
 
   '@storybook/csf@0.1.11':
@@ -10321,9 +10471,17 @@ snapshots:
     dependencies:
       storybook: 8.3.6
 
+  '@storybook/manager-api@8.4.7(storybook@8.4.7(prettier@3.4.2))':
+    dependencies:
+      storybook: 8.4.7(prettier@3.4.2)
+
   '@storybook/preview-api@8.3.6(storybook@8.3.6)':
     dependencies:
       storybook: 8.3.6
+
+  '@storybook/preview-api@8.4.7(storybook@8.4.7(prettier@3.4.2))':
+    dependencies:
+      storybook: 8.4.7(prettier@3.4.2)
 
   '@storybook/react-dom-shim@8.3.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.3.6)':
     dependencies:
@@ -10348,6 +10506,10 @@ snapshots:
     dependencies:
       storybook: 8.3.6
 
+  '@storybook/theming@8.4.7(storybook@8.4.7(prettier@3.4.2))':
+    dependencies:
+      storybook: 8.4.7(prettier@3.4.2)
+
   '@storybook/vue3-vite@8.3.6(storybook@8.3.6)(vite@6.0.1(@types/node@22.8.5)(jiti@2.4.2)(terser@5.31.0)(yaml@2.7.0))(vue@3.5.13(typescript@5.7.2))':
     dependencies:
       '@storybook/builder-vite': 8.3.6(storybook@8.3.6)(typescript@5.7.2)(vite@6.0.1(@types/node@22.8.5)(jiti@2.4.2)(terser@5.31.0)(yaml@2.7.0))
@@ -10365,6 +10527,20 @@ snapshots:
       - vite-plugin-glimmerx
       - vue
 
+  '@storybook/vue3-vite@8.4.7(storybook@8.4.7(prettier@3.4.2))(vite@6.0.1(@types/node@22.8.5)(jiti@2.4.2)(terser@5.31.0)(yaml@2.7.0))(vue@3.5.13(typescript@5.7.2))':
+    dependencies:
+      '@storybook/builder-vite': 8.4.7(storybook@8.4.7(prettier@3.4.2))(vite@6.0.1(@types/node@22.8.5)(jiti@2.4.2)(terser@5.31.0)(yaml@2.7.0))
+      '@storybook/vue3': 8.4.7(storybook@8.4.7(prettier@3.4.2))(vue@3.5.13(typescript@5.7.2))
+      find-package-json: 1.2.0
+      magic-string: 0.30.17
+      storybook: 8.4.7(prettier@3.4.2)
+      typescript: 5.7.2
+      vite: 6.0.1(@types/node@22.8.5)(jiti@2.4.2)(terser@5.31.0)(yaml@2.7.0)
+      vue-component-meta: 2.1.6(typescript@5.7.2)
+      vue-docgen-api: 4.79.2(vue@3.5.13(typescript@5.7.2))
+    transitivePeerDependencies:
+      - vue
+
   '@storybook/vue3@8.3.6(storybook@8.3.6)(vue@3.5.13(typescript@5.7.2))':
     dependencies:
       '@storybook/components': 8.3.6(storybook@8.3.6)
@@ -10374,6 +10550,20 @@ snapshots:
       '@storybook/theming': 8.3.6(storybook@8.3.6)
       '@vue/compiler-core': 3.5.13
       storybook: 8.3.6
+      ts-dedent: 2.2.0
+      type-fest: 2.19.0
+      vue: 3.5.13(typescript@5.7.2)
+      vue-component-type-helpers: 2.2.0
+
+  '@storybook/vue3@8.4.7(storybook@8.4.7(prettier@3.4.2))(vue@3.5.13(typescript@5.7.2))':
+    dependencies:
+      '@storybook/components': 8.4.7(storybook@8.4.7(prettier@3.4.2))
+      '@storybook/global': 5.0.0
+      '@storybook/manager-api': 8.4.7(storybook@8.4.7(prettier@3.4.2))
+      '@storybook/preview-api': 8.4.7(storybook@8.4.7(prettier@3.4.2))
+      '@storybook/theming': 8.4.7(storybook@8.4.7(prettier@3.4.2))
+      '@vue/compiler-core': 3.5.13
+      storybook: 8.4.7(prettier@3.4.2)
       ts-dedent: 2.2.0
       type-fest: 2.19.0
       vue: 3.5.13(typescript@5.7.2)
@@ -12191,6 +12381,13 @@ snapshots:
     dependencies:
       debug: 4.3.7(supports-color@9.4.0)
       esbuild: 0.23.1
+    transitivePeerDependencies:
+      - supports-color
+
+  esbuild-register@3.6.0(esbuild@0.24.2):
+    dependencies:
+      debug: 4.3.7(supports-color@9.4.0)
+      esbuild: 0.24.2
     transitivePeerDependencies:
       - supports-color
 
@@ -15524,6 +15721,16 @@ snapshots:
   storybook@8.3.6:
     dependencies:
       '@storybook/core': 8.3.6
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+
+  storybook@8.4.7(prettier@3.4.2):
+    dependencies:
+      '@storybook/core': 8.4.7(prettier@3.4.2)
+    optionalDependencies:
+      prettier: 3.4.2
     transitivePeerDependencies:
       - bufferutil
       - supports-color
