@@ -49,7 +49,8 @@ const {
   apiSearchQueryParams: query,
 } = storeToRefs(searchStore)
 
-const { fetchState } = storeToRefs(mediaStore)
+const fetchingError = computed(() => mediaStore.fetchState.error)
+const isFetching = computed(() => mediaStore.isFetching)
 
 const pageTitle = ref(`${searchTerm.value} | Openverse`)
 watch(searchTerm, () => {
@@ -81,9 +82,7 @@ const fetchMedia = async (payload: { shouldPersistMedia?: boolean } = {}) => {
    * and there is an error status that will not change if retried, don't re-fetch.
    */
   const shouldNotRefetch =
-    fetchState.value.hasStarted &&
-    fetchingError.value !== null &&
-    !isRetriable(fetchingError.value)
+    fetchingError.value !== null && !isRetriable(fetchingError.value)
   if (shouldNotRefetch) {
     return
   }
@@ -99,9 +98,6 @@ const fetchMedia = async (payload: { shouldPersistMedia?: boolean } = {}) => {
   }
   return fetchingError.value
 }
-
-const fetchingError = computed(() => fetchState.value.fetchingError)
-const isFetching = computed(() => fetchState.value.isFetching)
 
 /**
  * This watcher fires even when the queries are equal. We update the path only

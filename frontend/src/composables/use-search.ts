@@ -73,7 +73,7 @@ export const useSearch = (
     return navigateTo(searchPath)
   }
 
-  const isFetching = computed(() => mediaStore.fetchState.isFetching)
+  const isFetching = computed(() => mediaStore.isFetching)
   const resultsCount = computed(() => mediaStore.resultCount)
 
   const { getI18nCount, getLoading } = useI18nResultsCount()

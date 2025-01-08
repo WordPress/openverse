@@ -63,7 +63,7 @@ const isInputFocused = ref(false)
 const contentSettingsOpen = ref(false)
 
 const appliedFilterCount = computed(() => searchStore.appliedFilterCount)
-const isFetching = computed(() => mediaStore.fetchState.isFetching)
+const isFetching = computed(() => mediaStore.isFetching)
 
 /**
  * The selection range of the input field. Used to make sure that the cursor

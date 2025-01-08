@@ -11,8 +11,8 @@ const Template: Story = {
     components: { VLoadMore },
     setup() {
       const mediaStore = useMediaStore()
-      mediaStore._startFetching("image")
-      mediaStore.results.image.count = 1
+      mediaStore.results.image.page = 1
+      mediaStore.results.image.pageCount = 12
       return () =>
         h("div", { class: "flex p-4", id: "wrapper" }, [
           h(VLoadMore, {
