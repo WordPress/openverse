@@ -29,7 +29,7 @@ const uiStore = useUiStore()
 
 const isSidebarVisible = inject<Ref<boolean>>(IsSidebarVisibleKey)
 
-const isFetching = computed(() => mediaStore.fetchState.isFetching)
+const isFetching = computed(() => mediaStore.isFetching)
 
 const { $sendCustomEvent } = useNuxtApp()
 

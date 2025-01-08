@@ -70,7 +70,7 @@ const image = ref<ImageDetail | null>(
     ? singleResultStore.image
     : null
 )
-const fetchingError = computed(() => singleResultStore.fetchState.fetchingError)
+const fetchingError = computed(() => singleResultStore.fetchState.error)
 const isLoadingOnClient = computed(
   () => !(import.meta.server || nuxtApp.isHydrating)
 )

@@ -18,7 +18,7 @@ export const useCollection = <T extends SupportedMediaType>({
   const searchStore = useSearchStore()
 
   const collectionParams = computed(() => searchStore.collectionParams)
-  const isFetching = computed(() => mediaStore.fetchState.isFetching)
+  const isFetching = computed(() => mediaStore.isFetching)
 
   const media = ref(mediaStore.resultItems[mediaType]) as Ref<ResultType[]>
   const creatorUrl = ref<string>()

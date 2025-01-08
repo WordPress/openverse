@@ -1,5 +1,3 @@
-// @vitest-environment jsdom
-
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { createPinia, setActivePinia } from "~~/test/unit/test-utils/pinia"
 import { getAudioObj } from "~~/test/unit/fixtures/audio"
@@ -79,8 +77,8 @@ describe("Media Item Store", () => {
   describe("state", () => {
     it("sets default state", () => {
       expect(singleResultStore.fetchState).toEqual({
-        isFetching: false,
-        fetchingError: null,
+        status: "idle",
+        error: null,
       })
       expect(singleResultStore.mediaItem).toEqual(null)
       expect(singleResultStore.mediaType).toEqual(null)

@@ -92,7 +92,7 @@ const showCollectionExternalLink = computed(() => {
 const { getI18nCollectionResultCountLabel } = useI18nResultsCount()
 
 const resultsLabel = computed(() => {
-  if (mediaStore.resultCount === 0 && mediaStore.fetchState.isFetching) {
+  if (mediaStore.resultCount === 0 && mediaStore.isFetching) {
     return ""
   }
   const resultsCount = mediaStore.results[props.mediaType].count

@@ -12,7 +12,6 @@ import {
 } from "#shared/constants/media"
 import { NO_RESULT } from "#shared/constants/errors"
 import { hash, rand as prng } from "#shared/utils/prng"
-import { isRetriable } from "#shared/utils/errors"
 import { deepFreeze } from "#shared/utils/deep-freeze"
 import type {
   AudioDetail,
@@ -26,9 +25,6 @@ import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
 import { useRelatedMediaStore } from "~/stores/media/related-media"
 import { useApiClient } from "~/composables/use-api-client"
 
-interface SearchFetchState extends Omit<FetchState, "hasStarted"> {
-  hasStarted: boolean
-}
 export type MediaStoreResult = {
   count: number
   pageCount: number
@@ -42,8 +38,8 @@ export interface MediaState {
     image: MediaStoreResult
   }
   mediaFetchState: {
-    audio: SearchFetchState
-    image: SearchFetchState
+    audio: FetchState
+    image: FetchState
   }
   currentPage: number
 }
@@ -58,6 +54,14 @@ export const initialResults = deepFreeze({
   items: {},
 }) as MediaStoreResult
 
+const areMorePagesAvailable = ({
+  page,
+  pageCount,
+}: {
+  page: number
+  pageCount: number
+}) => page < pageCount
+
 export const useMediaStore = defineStore("media", {
   state: (): MediaState => ({
     results: {
@@ -65,18 +69,8 @@ export const useMediaStore = defineStore("media", {
       [IMAGE]: { ...initialResults },
     },
     mediaFetchState: {
-      [AUDIO]: {
-        isFetching: false,
-        hasStarted: false,
-        isFinished: false,
-        fetchingError: null,
-      },
-      [IMAGE]: {
-        isFetching: false,
-        hasStarted: false,
-        isFinished: false,
-        fetchingError: null,
-      },
+      [AUDIO]: { status: "idle", error: null },
+      [IMAGE]: { status: "idle", error: null },
     },
     currentPage: 0,
   }),
@@ -146,16 +140,8 @@ export const useMediaStore = defineStore("media", {
      * Search fetching state for selected search type. For 'All content', aggregates
      * the values for supported media types.
      */
-    fetchState(): SearchFetchState {
+    fetchState(): FetchState {
       if (this._searchType === ALL_MEDIA) {
-        /**
-         * For all_media, we return 'All media fetching error' if all types have some kind of error.
-         */
-        const atLeastOne = (property: keyof SearchFetchState) =>
-          supportedMediaTypes.some(
-            (type) => this.mediaFetchState[type][property]
-          )
-
         /**
          * Returns a combined error for all media types.
          *
@@ -190,24 +176,29 @@ export const useMediaStore = defineStore("media", {
           return results.length ? results[0] : null
         }
 
-        return {
-          isFetching: atLeastOne("isFetching"),
-          fetchingError: allMediaError(),
-          hasStarted: atLeastOne("hasStarted"),
-          isFinished: supportedMediaTypes.every(
-            (type) => this.mediaFetchState[type].isFinished
-          ),
+        const error = allMediaError()
+        if (error) {
+          return { status: "error", error }
         }
+        const status = supportedMediaTypes.some(
+          (type) => this.mediaFetchState[type].status === "fetching"
+        )
+          ? "fetching"
+          : supportedMediaTypes.some(
+                (type) => this.mediaFetchState[type].status === "success"
+              )
+            ? "success"
+            : "idle"
+        return { status, error: null }
       } else if (isSearchTypeSupported(this._searchType)) {
         return this.mediaFetchState[this._searchType]
       } else {
-        return {
-          isFetching: false,
-          fetchingError: null,
-          hasStarted: false,
-          isFinished: false,
-        }
+        return { status: "idle", error: null }
       }
+    },
+
+    isFetching(): boolean {
+      return this.fetchState.status === "fetching"
     },
 
     /**
@@ -277,35 +268,46 @@ export const useMediaStore = defineStore("media", {
 
       return newResults
     },
+
+    /**
+     * Returns an array of media types that can be fetched:
+     *  - current media type, or all media types if the search type is ALL_MEDIA
+     *  - are not currently fetching and don't have error
+     *  - either the first page has not been fetched yet, or there are more pages available
+     */
     _fetchableMediaTypes(): SupportedMediaType[] {
       return (
         (this._searchType !== ALL_MEDIA
           ? [this._searchType]
           : [IMAGE, AUDIO]) as SupportedMediaType[]
-      ).filter(
-        (type) =>
-          !this.mediaFetchState[type].fetchingError &&
-          !this.mediaFetchState[type].isFetching &&
-          !this.mediaFetchState[type].isFinished
-      )
+      ).filter((type) => {
+        if (!["idle", "success"].includes(this.mediaFetchState[type].status)) {
+          return false
+        }
+        // Either the first page has not been fetched yet, or there are more pages available.
+        return (
+          this.results[type].page < 1 ||
+          areMorePagesAvailable(this.results[type])
+        )
+      })
     },
 
+    /**
+     * Used to display the load more button in the UI.
+     * For all the media types that can be fetched for the current search type
+     * (i.e., `image` for `image`, or [`image`, `audio`] for `ALL_MEDIA`), checks
+     * that the first page of the results has been fetched and that the API has more pages.
+     */
     canLoadMore(): boolean {
-      return (
-        this.fetchState.hasStarted &&
-        !this.fetchState.fetchingError &&
-        !this.fetchState.isFinished &&
-        this.resultCount > 0
+      return this._fetchableMediaTypes.every(
+        (type) => this.results[type].pageCount !== 0
       )
     },
   },
 
   actions: {
     _startFetching(mediaType: SupportedMediaType) {
-      this.mediaFetchState[mediaType].isFetching = true
-      this.mediaFetchState[mediaType].hasStarted = true
-      this.mediaFetchState[mediaType].isFinished = false
-      this.mediaFetchState[mediaType].fetchingError = null
+      this.mediaFetchState[mediaType] = { status: "fetching", error: null }
     },
     /**
      * Called when the request is finished, regardless of whether it was successful or not.
@@ -313,36 +315,22 @@ export const useMediaStore = defineStore("media", {
      * @param error - The string representation of the error, if any.
      */
     _endFetching(mediaType: SupportedMediaType, error?: FetchingError) {
-      this.mediaFetchState[mediaType].fetchingError = error || null
-      this.mediaFetchState[mediaType].hasStarted = true
-      this.mediaFetchState[mediaType].isFetching = false
-
-      if (error && !isRetriable(error)) {
-        this.mediaFetchState[mediaType].isFinished = true
+      if (error) {
+        this.mediaFetchState[mediaType] = { status: "error", error }
+      } else {
+        this.mediaFetchState[mediaType] = { status: "success", error: null }
       }
-    },
-    /**
-     * This is called when there are no more results available in the API for specific query.
-     * @param mediaType - The media type for which the request was made.
-     */
-    _finishFetchingForQuery(mediaType: SupportedMediaType) {
-      this.mediaFetchState[mediaType].isFinished = true
-      this.mediaFetchState[mediaType].hasStarted = true
-      this.mediaFetchState[mediaType].isFetching = false
     },
 
     _resetFetchState() {
       for (const mediaType of supportedMediaTypes) {
-        this.mediaFetchState[mediaType].isFetching = false
-        this.mediaFetchState[mediaType].hasStarted = false
-        this.mediaFetchState[mediaType].isFinished = false
-        this.mediaFetchState[mediaType].fetchingError = null
+        this.mediaFetchState[mediaType] = { status: "idle", error: null }
       }
     },
 
-    _updateFetchState(
+    updateFetchState(
       mediaType: SupportedMediaType,
-      action: "reset" | "start" | "end" | "finish",
+      action: "reset" | "start" | "end",
       error?: FetchingError
     ) {
       switch (action) {
@@ -358,47 +346,52 @@ export const useMediaStore = defineStore("media", {
           this._endFetching(mediaType, error)
           break
         }
-        case "finish": {
-          this._finishFetchingForQuery(mediaType)
-          break
-        }
       }
     },
 
     setMedia<T extends SupportedMediaType>(params: {
       mediaType: T
       media: Record<string, DetailFromMediaType<T>>
-      mediaCount?: number
-      page?: number
+      mediaCount: number
+      page: number
       pageCount: number
       shouldPersistMedia: boolean | undefined
     }) {
       const {
         mediaType,
         media,
-        mediaCount,
+        mediaCount: count,
         page,
         pageCount,
         shouldPersistMedia,
       } = params
-      let mediaToSet
+      let items
 
       if (shouldPersistMedia) {
-        mediaToSet = { ...this.results[mediaType].items, ...media } as Record<
+        items = { ...this.results[mediaType].items, ...media } as Record<
           string,
           DetailFromMediaType<T>
         >
       } else {
-        mediaToSet = media
+        items = media
       }
 
-      const mediaPage = page || 1
-      this.results[mediaType].items = mediaToSet
-      this.results[mediaType].count = mediaCount || 0
-      this.results[mediaType].page = mediaCount === 0 ? 0 : mediaPage
-      this.results[mediaType].pageCount = pageCount
-      if (mediaPage >= pageCount) {
-        this._updateFetchState(mediaType, "finish")
+      // Edge case when the dead link filtering removed all results from subsequent pages:
+      // set the pageCount and the count to the current values.
+      if (page > 1 && count === 0) {
+        this.results[mediaType] = {
+          items,
+          count: Object.keys(items).length,
+          page: page - 1,
+          pageCount: page - 1,
+        }
+      } else {
+        this.results[mediaType] = {
+          items,
+          count,
+          page,
+          pageCount,
+        }
       }
     },
 
@@ -421,18 +414,11 @@ export const useMediaStore = defineStore("media", {
       const mediaType = this._searchType
       const shouldPersistMedia = Boolean(payload.shouldPersistMedia)
 
-      const mediaToFetch = this._fetchableMediaTypes
-
       await Promise.allSettled(
-        mediaToFetch.map((mediaType) =>
+        this._fetchableMediaTypes.map((mediaType) =>
           this.fetchSingleMediaType({ mediaType, shouldPersistMedia })
         )
       )
-
-      this.currentPage =
-        mediaType === ALL_MEDIA
-          ? this.currentPage + 1
-          : this.results[mediaType].page
 
       return mediaType === ALL_MEDIA
         ? this.allMedia
@@ -461,11 +447,12 @@ export const useMediaStore = defineStore("media", {
       const searchStore = useSearchStore()
       const queryParams = searchStore.getApiRequestQuery(mediaType)
       let page = this.results[mediaType].page + 1
+
       if (shouldPersistMedia) {
         queryParams.page = `${page}`
       }
 
-      this._updateFetchState(mediaType, "start")
+      this.updateFetchState(mediaType, "start")
 
       const { $sendCustomEvent, $processFetchingError } = useNuxtApp()
 
@@ -505,7 +492,7 @@ export const useMediaStore = defineStore("media", {
             details: { searchTerm: queryParams.q ?? "" },
           }
         }
-        this._updateFetchState(mediaType, "end", errorData)
+        this.updateFetchState(mediaType, "end", errorData)
 
         this.setMedia({
           mediaType,
@@ -515,13 +502,15 @@ export const useMediaStore = defineStore("media", {
           shouldPersistMedia,
           page,
         })
+
+        this.currentPage = page
         return mediaCount
       } catch (error: unknown) {
         const errorData = $processFetchingError(error, mediaType, "search", {
           searchTerm: queryParams.q ?? "",
         })
 
-        this._updateFetchState(mediaType, "end", errorData)
+        this.updateFetchState(mediaType, "end", errorData)
 
         return null
       }
@@ -546,7 +535,7 @@ export const useMediaStore = defineStore("media", {
 
 const getMediaErrors = (mediaFetchStates: MediaState["mediaFetchState"]) => {
   return supportedMediaTypes
-    .map((mediaType) => mediaFetchStates[mediaType].fetchingError)
+    .map((mediaType) => mediaFetchStates[mediaType].error)
     .filter((err): err is FetchingError => err !== null)
 }
 

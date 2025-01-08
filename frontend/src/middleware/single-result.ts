@@ -38,7 +38,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       relatedMediaStore.fetchMedia(mediaType, mediaId),
     ])
 
-    const fetchingError = singleResultStore.fetchState.fetchingError
+    const fetchingError = singleResultStore.fetchState.error
 
     if (
       !singleResultStore.mediaItem &&
