@@ -447,4 +447,4 @@ The following data need to be monitored:
 [^3]:
     [Cloudflare rate limiting rules](https://developers.cloudflare.com/waf/rate-limiting-rules/)
 
-[^4] [Nuxt $fetch](https://nuxt.com/docs/api/utils/dollarfetch)
+[^4]: [Nuxt $fetch](https://nuxt.com/docs/api/utils/dollarfetch)
