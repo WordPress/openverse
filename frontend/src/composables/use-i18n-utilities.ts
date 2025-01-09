@@ -1,4 +1,5 @@
 import { useNuxtApp } from "#imports"
+import type { ComputedRef } from "vue"
 
 import { ALL_MEDIA, AUDIO, IMAGE } from "#shared/constants/media"
 import type {
@@ -88,7 +89,7 @@ export function getCountKey(resultsCount: number): keyof KeyCollection {
 /**
  * Returns the localized text for the number of search results.
  */
-export function useI18nResultsCount() {
+export function useI18nResultsCount(showLoading?: ComputedRef<boolean>) {
   const { t } = useNuxtApp().$i18n
   const getLocaleFormattedNumber = useGetLocaleFormattedNumber()
 
@@ -98,6 +99,9 @@ export function useI18nResultsCount() {
     resultsCount: number,
     searchType: SupportedSearchType
   ) => {
+    if (showLoading?.value) {
+      return "header.loading"
+    }
     const countKey = getCountKey(resultsCount)
     return searchResultKeys[searchType][countKey]
   }
@@ -111,6 +115,9 @@ export function useI18nResultsCount() {
     query: string,
     mediaType: SupportedMediaType
   ) => {
+    if (showLoading?.value) {
+      return getLoading()
+    }
     return t(getI18nKey(resultsCount, mediaType), {
       count: resultsCount,
       localeCount: getLocaleFormattedNumber(resultsCount),
@@ -124,6 +131,9 @@ export function useI18nResultsCount() {
     collectionType: Collection,
     params: Record<string, string> | undefined = undefined
   ) => {
+    if (showLoading?.value) {
+      return getLoading()
+    }
     const key =
       collectionKeys[collectionType][mediaType][getCountKey(resultCount)]
     return t(key, {
@@ -139,6 +149,9 @@ export function useI18nResultsCount() {
    * E.g. "No results", "132 results", "Top 240 results".
    */
   const getI18nCount = (resultsCount: number) => {
+    if (showLoading?.value) {
+      return getLoading()
+    }
     return t(getI18nKey(resultsCount, ALL_MEDIA), {
       count: resultsCount,
       localeCount: getLocaleFormattedNumber(resultsCount),

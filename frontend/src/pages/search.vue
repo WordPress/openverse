@@ -14,7 +14,6 @@ import { computed, ref, watch } from "vue"
 import { watchDebounced } from "@vueuse/core"
 import { storeToRefs } from "pinia"
 
-import { ALL_MEDIA } from "#shared/constants/media"
 import { skipToContentTargetId } from "#shared/constants/window"
 import { areQueriesEqual } from "#shared/utils/search-query-transform"
 import { handledClientSide, isRetriable } from "#shared/utils/errors"
@@ -62,15 +61,7 @@ useHead(() => ({
 }))
 
 const searchResults = ref<Results | null>(
-  isSearchTypeSupported(searchType.value)
-    ? ({
-        type: searchType.value,
-        items:
-          searchType.value === ALL_MEDIA
-            ? mediaStore.allMedia
-            : mediaStore.resultItems[searchType.value],
-      } as Results)
-    : null
+  isSearchTypeSupported(searchType.value) ? mediaStore.searchResults : null
 )
 
 const fetchMedia = async (payload: { shouldPersistMedia?: boolean } = {}) => {
@@ -82,7 +73,9 @@ const fetchMedia = async (payload: { shouldPersistMedia?: boolean } = {}) => {
    * and there is an error status that will not change if retried, don't re-fetch.
    */
   const shouldNotRefetch =
-    fetchingError.value !== null && !isRetriable(fetchingError.value)
+    mediaStore.fetchState.status !== "idle" &&
+    fetchingError.value !== null &&
+    !isRetriable(fetchingError.value)
   if (shouldNotRefetch) {
     return
   }
@@ -91,9 +84,9 @@ const fetchMedia = async (payload: { shouldPersistMedia?: boolean } = {}) => {
   }
 
   const media = await mediaStore.fetchMedia(payload)
-  searchResults.value = { type: searchType.value, items: media } as Results
 
-  if (fetchingError.value === null || handledClientSide(fetchingError.value)) {
+  if (!fetchingError.value || handledClientSide(fetchingError.value)) {
+    searchResults.value = media
     return media
   }
   return fetchingError.value
@@ -135,14 +128,20 @@ await useAsyncData(
      */
     document.getElementById("main-page")?.scroll(0, 0)
     const res = await fetchMedia()
-    if (!res || (res && "requestKind" in res)) {
-      return showError(res ?? createError("No results found"))
+    if (!res) {
+      return showError(
+        createError(
+          fetchingError.value ?? "Fetch media did not return anything"
+        )
+      )
+    }
+    if ("requestKind" in res) {
+      return showError(res)
     }
     return res
   },
   {
     server: false,
-    lazy: true,
     watch: [shouldFetchSensitiveResults, routeQuery, routePath],
   }
 )

@@ -50,7 +50,11 @@ export const searchMiddleware = defineNuxtRouteMiddleware(async (to) => {
     const results = await mediaStore.fetchMedia()
 
     const fetchingError = mediaStore.fetchState.error
-    if (!results.length && fetchingError && !handledClientSide(fetchingError)) {
+    if (
+      !results.items.length &&
+      fetchingError &&
+      !handledClientSide(fetchingError)
+    ) {
       showError(createError(fetchingError))
     }
   }

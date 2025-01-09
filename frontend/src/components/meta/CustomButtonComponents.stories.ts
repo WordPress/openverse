@@ -1,5 +1,6 @@
 import { h } from "vue"
 
+import { AUDIO, IMAGE } from "#shared/constants/media"
 import { useMediaStore } from "~/stores/media"
 
 import VLoadMore from "~/components/VLoadMore.vue"
@@ -11,8 +12,16 @@ const Template: Story = {
     components: { VLoadMore },
     setup() {
       const mediaStore = useMediaStore()
-      mediaStore.results.image.page = 1
-      mediaStore.results.image.pageCount = 12
+      mediaStore.results[AUDIO] = {
+        ...mediaStore.results[AUDIO],
+        page: 1,
+        pageCount: 12,
+      }
+      mediaStore.results[IMAGE] = {
+        ...mediaStore.results[IMAGE],
+        page: 1,
+        pageCount: 12,
+      }
       return () =>
         h("div", { class: "flex p-4", id: "wrapper" }, [
           h(VLoadMore, {

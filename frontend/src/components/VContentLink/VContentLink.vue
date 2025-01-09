@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { useNuxtApp } from "#imports"
-import { computed } from "vue"
 
 import type { SupportedMediaType } from "#shared/constants/media"
 import useSearchType from "~/composables/use-search-type"
 import { useHydrating } from "~/composables/use-hydrating"
-import { useI18nResultsCount } from "~/composables/use-i18n-utilities"
 
 import VButton from "~/components/VButton.vue"
 import VIcon from "~/components/VIcon/VIcon.vue"
@@ -13,30 +11,16 @@ import VIcon from "~/components/VIcon/VIcon.vue"
 const props = defineProps<{
   mediaType: SupportedMediaType
   /**
-   * Current search term for aria-label.
-   */
-  searchTerm: string
-  /**
-   * The number of results that the search returned. The link
-   * will be disabled if this value is zero.
-   */
-  resultsCount: number
-  /**
    * The route target of the link.
    */
-  to?: string
+  to: string | undefined
+  resultsAriaLabel: string
+  resultsCountLabel: string
 }>()
 
 defineEmits<{
   "shift-tab": [KeyboardEvent]
 }>()
-
-const { getI18nCount, getI18nContentLinkLabel } = useI18nResultsCount()
-const resultsCountLabel = computed(() => getI18nCount(props.resultsCount))
-
-const resultsAriaLabel = computed(() =>
-  getI18nContentLinkLabel(props.resultsCount, props.searchTerm, props.mediaType)
-)
 
 const { activeType } = useSearchType({ component: "VContentLink" })
 const { $sendCustomEvent } = useNuxtApp()
