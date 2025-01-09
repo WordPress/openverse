@@ -12,10 +12,9 @@ import { useSearchStore } from "~/stores/search"
 
 import VButton from "~/components/VButton.vue"
 
-const props = defineProps<
+defineProps<
   SingleResultProps & {
     searchType: SupportedSearchType
-    isFetching: boolean
   }
 >()
 
@@ -46,6 +45,7 @@ const eventPayload = computed(() => {
  * more results to fetch, we show the button.
  */
 const canLoadMore = computed(() => mediaStore.canLoadMore)
+const isFetching = computed(() => mediaStore.isFetching)
 
 const reachResultEndEventSent = ref(false)
 /**
@@ -56,10 +56,6 @@ const reachResultEndEventSent = ref(false)
  *
  */
 const onLoadMore = async () => {
-  if (props.isFetching) {
-    return
-  }
-
   reachResultEndEventSent.value = false
 
   $sendCustomEvent("LOAD_MORE_RESULTS", eventPayload.value)
@@ -76,7 +72,7 @@ const sendReachResultEnd = () => {
 }
 
 const buttonLabel = computed(() =>
-  props.isFetching ? t("browsePage.loading") : t("browsePage.load")
+  isFetching.value ? t("browsePage.loading") : t("browsePage.load")
 )
 const mainPageElement = ref<HTMLElement | null>(null)
 onMounted(() => {

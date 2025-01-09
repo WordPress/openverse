@@ -244,22 +244,29 @@ describe("media store", () => {
     })
 
     it.each`
-      searchType   | audioError             | fetchState
-      ${ALL_MEDIA} | ${{ code: NO_RESULT }} | ${{ error: null, status: "fetching" }}
-      ${ALL_MEDIA} | ${{ statusCode: 429 }} | ${{ error: { requestKind: "search", statusCode: 429, searchType: ALL_MEDIA }, status: "error" }}
+      fetchingMediaType | error                  | fetchState
+      ${AUDIO}          | ${{ code: NO_RESULT }} | ${{ error: null, status: "fetching" }}
+      ${IMAGE}          | ${null}                | ${{ error: null, status: "fetching" }}
     `(
-      "fetchState for $searchType returns $fetchState",
-      ({ searchType, audioError, fetchState }) => {
+      "fetchState for ALL_MEDIA returns `fetching` even if at least one media type is fetching",
+      ({ fetchingMediaType, error, fetchState }) => {
         const mediaStore = useMediaStore()
         const searchStore = useSearchStore()
-        searchStore.searchType = searchType
-        const audioFetchError = {
-          requestKind: "search",
-          searchType: AUDIO,
-          ...audioError,
-        }
-        mediaStore.updateFetchState(IMAGE, "start")
-        mediaStore.updateFetchState(AUDIO, "end", audioFetchError)
+        searchStore.searchType = ALL_MEDIA
+        const fetchError = error
+          ? {
+              requestKind: "search",
+              searchType: AUDIO,
+              ...error,
+            }
+          : null
+        supportedMediaTypes.forEach((mediaType) => {
+          if (mediaType === fetchingMediaType) {
+            mediaStore.updateFetchState(mediaType, "start")
+          } else {
+            mediaStore.updateFetchState(mediaType, "end", fetchError)
+          }
+        })
 
         expect(mediaStore.fetchState).toEqual(fetchState)
       }
@@ -507,7 +514,7 @@ describe("media store", () => {
       const mediaStore = useMediaStore()
       const media = await mediaStore.fetchMedia()
 
-      expect(media.length).toEqual(6)
+      expect(media.items.length).toEqual(6)
 
       expect(mocks.createApiClient).toHaveBeenCalledWith({
         accessToken: undefined,
@@ -534,7 +541,7 @@ describe("media store", () => {
       const mediaStore = useMediaStore()
       const media = await mediaStore.fetchMedia()
 
-      expect(media.length).toEqual(4)
+      expect(media.items.length).toEqual(4)
       expect(searchMock).toHaveBeenCalledTimes(1)
       expect(searchMock).toHaveBeenCalledWith("image", { q: "cat" })
       expect(mediaStore.currentPage).toEqual(1)

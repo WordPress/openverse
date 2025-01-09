@@ -1,3 +1,5 @@
+import { computed } from "vue"
+
 import { useI18nResultsCount } from "~/composables/use-i18n-utilities"
 
 describe("i18nResultsCount", () => {
@@ -16,4 +18,13 @@ describe("i18nResultsCount", () => {
       expect(result).toEqual(expectedResult)
     }
   )
+
+  it("Shows loading message", () => {
+    const showLoading = computed(() => true)
+    const { getI18nCount } = useI18nResultsCount(showLoading)
+
+    const result = getI18nCount(240)
+
+    expect(result).toEqual("Loading...")
+  })
 })

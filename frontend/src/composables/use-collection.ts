@@ -38,9 +38,8 @@ export const useCollection = <T extends SupportedMediaType>({
       shouldPersistMedia: false,
     }
   ) => {
-    media.value = (await mediaStore.fetchMedia({
-      shouldPersistMedia,
-    })) as ResultType[]
+    const results = await mediaStore.fetchMedia({ shouldPersistMedia })
+    media.value = results.items as ResultType[]
     creatorUrl.value =
       media.value.length > 0 ? media.value[0].creator_url : undefined
     return media.value

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useI18n } from "#imports"
+import { useI18n, useI18nResultsCount } from "#imports"
 import { computed } from "vue"
 
 import type { SupportedMediaType } from "#shared/constants/media"
@@ -33,6 +33,18 @@ const collectionLabel = computed(() => {
 const contentLinkPath = (mediaType: SupportedMediaType) =>
   searchStore.getSearchPath({ type: mediaType })
 
+const showLoading = computed(() => mediaStore.showLoading)
+
+const { getI18nCount, getI18nContentLinkLabel } =
+  useI18nResultsCount(showLoading)
+
+const resultsCountLabel = (count: number) => getI18nCount(count)
+const resultsAriaLabel = (
+  count: number,
+  searchTerm: string,
+  mediaType: SupportedMediaType
+) => getI18nContentLinkLabel(count, searchTerm, mediaType)
+
 const resultCounts = computed(() => mediaStore.resultCountsPerMediaType)
 </script>
 
@@ -62,9 +74,9 @@ const resultCounts = computed(() => mediaStore.resultCountsPerMediaType)
         <VContentLink
           v-for="[mediaType, count] in resultCounts"
           :key="mediaType"
+          :results-aria-label="resultsAriaLabel(count, searchTerm, mediaType)"
+          :results-count-label="resultsCountLabel(count)"
           :media-type="mediaType"
-          :search-term="searchTerm"
-          :results-count="count"
           :to="contentLinkPath(mediaType)"
         />
       </div>
