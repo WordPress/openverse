@@ -26,9 +26,11 @@ describe("VContentLink", () => {
       },
       props: {
         mediaType: "image",
-        resultsCount: 123,
+        labels: {
+          aria: "See the top 240 images found for cat.",
+          visual: "Top 240 results",
+        },
         to: "/images",
-        searchTerm: "cat",
       },
     }
   })

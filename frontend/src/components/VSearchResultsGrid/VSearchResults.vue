@@ -35,15 +35,13 @@ const contentLinkPath = (mediaType: SupportedMediaType) =>
 
 const showLoading = computed(() => mediaStore.showLoading)
 
-const { getI18nCount, getI18nContentLinkLabel } =
-  useI18nResultsCount(showLoading)
+const { getResultCountLabels } = useI18nResultsCount(showLoading)
 
-const resultsCountLabel = (count: number) => getI18nCount(count)
-const resultsAriaLabel = (
+const labels = (
   count: number,
   searchTerm: string,
   mediaType: SupportedMediaType
-) => getI18nContentLinkLabel(count, searchTerm, mediaType)
+) => getResultCountLabels(count, mediaType, searchTerm)
 
 const resultCounts = computed(() => mediaStore.resultCountsPerMediaType)
 
@@ -76,8 +74,7 @@ const canLoadMore = computed(() => mediaStore.canLoadMore)
         <VContentLink
           v-for="[mediaType, count] in resultCounts"
           :key="mediaType"
-          :results-aria-label="resultsAriaLabel(count, searchTerm, mediaType)"
-          :results-count-label="resultsCountLabel(count)"
+          :labels="labels(count, searchTerm, mediaType)"
           :media-type="mediaType"
           :to="contentLinkPath(mediaType)"
         />
