@@ -12,7 +12,7 @@ const pageUrl = (
   nature: (typeof natures)[number],
   variant: (typeof variants)[number]
 ) => {
-  return `${defaultUrl}&args=nature:${nature};variant:${variant}`
+  return `${defaultUrl}&args=sNature:${nature};sVariant:${variant}`
 }
 
 test.describe("VNotificationBanner", () => {
