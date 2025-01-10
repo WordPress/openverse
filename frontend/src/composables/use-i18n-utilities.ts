@@ -132,7 +132,7 @@ export function useI18nResultsCount(showLoading?: ComputedRef<boolean>) {
     params: Record<string, string> | undefined = undefined
   ) => {
     if (showLoading?.value) {
-      return getLoading()
+      return ""
     }
     const key =
       collectionKeys[collectionType][mediaType][getCountKey(resultCount)]
