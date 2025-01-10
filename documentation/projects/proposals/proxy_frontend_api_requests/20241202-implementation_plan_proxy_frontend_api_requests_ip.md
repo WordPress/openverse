@@ -278,7 +278,7 @@ in `server/plugins/proxy.ts`. This plugin should:
   the `process.env.[VARIABLE_NAME]`, not `runtimeConfig.VARIABLE_NAME` since the
   `runtimeConfig` is not available in the plugin body.
 - add a middleware using `defineEventHandler` that adds the `OpenverseApiClient`
-  as to the event context as `event.context.client`.
+  as to the event context as `event.context.api_client`.
 
 ### Set up Nuxt Server proxy routes
 
