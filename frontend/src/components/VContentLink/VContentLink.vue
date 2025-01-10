@@ -14,8 +14,10 @@ const props = defineProps<{
    * The route target of the link.
    */
   to: string | undefined
-  resultsAriaLabel: string
-  resultsCountLabel: string
+  labels: {
+    aria: string
+    visible: string
+  }
 }>()
 
 defineEmits<{
@@ -40,7 +42,7 @@ const { doneHydrating } = useHydrating()
   <VButton
     as="VLink"
     :href="to"
-    :aria-label="resultsAriaLabel"
+    :aria-label="labels.aria"
     variant="bordered-gray"
     size="disabled"
     :disabled="!doneHydrating"
@@ -54,7 +56,7 @@ const { doneHydrating } = useHydrating()
     </p>
     <span
       class="label-regular sm:description-regular text-secondary group-hover/button:text-default sm:ms-auto"
-      >{{ resultsCountLabel }}</span
+      >{{ labels.visible }}</span
     >
   </VButton>
 </template>

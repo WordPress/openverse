@@ -106,25 +106,6 @@ export function useI18nResultsCount(showLoading?: ComputedRef<boolean>) {
     return searchResultKeys[searchType][countKey]
   }
 
-  /**
-   * Returns the localized text for the content link label.
-   * E.g. "See 240 image results for 'cats'".
-   */
-  const getI18nContentLinkLabel = (
-    resultsCount: number,
-    query: string,
-    mediaType: SupportedMediaType
-  ) => {
-    if (showLoading?.value) {
-      return getLoading()
-    }
-    return t(getI18nKey(resultsCount, mediaType), {
-      count: resultsCount,
-      localeCount: getLocaleFormattedNumber(resultsCount),
-      query,
-      mediaType,
-    })
-  }
   const getI18nCollectionResultCountLabel = (
     resultCount: number,
     mediaType: SupportedMediaType,
@@ -149,19 +130,43 @@ export function useI18nResultsCount(showLoading?: ComputedRef<boolean>) {
    * E.g. "No results", "132 results", "Top 240 results".
    */
   const getI18nCount = (resultsCount: number) => {
-    if (showLoading?.value) {
-      return getLoading()
-    }
     return t(getI18nKey(resultsCount, ALL_MEDIA), {
       count: resultsCount,
       localeCount: getLocaleFormattedNumber(resultsCount),
     })
   }
 
+  /**
+   * The result count labels for screen readers and visible text, used in the content links
+   * on all results page. Localized text for the number of search results, using corresponding
+   * pluralization rules and decimal separators.
+   * For the visible label, does not specify the media type, e.g.,
+   * "Loading...", "No results", "132 results", "Top 240 results".
+   * For the aria label, adds details about the media type and search query, e.g.,
+   * "See 240 image results for 'cats'".
+   */
+  const getResultCountLabels = (
+    resultsCount: number,
+    mediaType: SupportedMediaType,
+    query: string
+  ) => {
+    if (showLoading?.value) {
+      return { aria: getLoading(), visible: getLoading() }
+    }
+    return {
+      aria: t(getI18nKey(resultsCount, mediaType), {
+        count: resultsCount,
+        localeCount: getLocaleFormattedNumber(resultsCount),
+        query,
+        mediaType,
+      }),
+      visible: getI18nCount(resultsCount),
+    }
+  }
+
   return {
-    getI18nCount,
-    getI18nContentLinkLabel,
     getI18nCollectionResultCountLabel,
-    getLoading,
+    getResultCountLabels,
+    getI18nCount,
   }
 }
