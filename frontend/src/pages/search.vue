@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import {
-  createError,
   definePageMeta,
   navigateTo,
   showError,
@@ -128,15 +127,14 @@ await useAsyncData(
      */
     document.getElementById("main-page")?.scroll(0, 0)
     const res = await fetchMedia()
-    if (!res) {
-      return showError(
-        createError(
-          fetchingError.value ?? "Fetch media did not return anything"
-        )
-      )
-    }
-    if ("requestKind" in res) {
-      return showError(res)
+
+    const error = !res
+      ? (fetchingError.value ?? "Fetch media error") // middleware in SSR returned an error
+      : "requestKind" in res // fetchMedia returned a `FetchingError`
+        ? res
+        : null
+    if (error) {
+      return showError(error)
     }
     return res
   },
