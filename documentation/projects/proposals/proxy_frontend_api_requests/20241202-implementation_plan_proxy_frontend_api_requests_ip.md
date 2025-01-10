@@ -178,8 +178,8 @@ Add `proxy_requests` feature flag to `frontend/feat/feature-flags.json`:
 Add the initial rate limiting to the Nuxt server routes (`/api/**`) in the
 infrastructure repository (_maintainers only_).
 
-Cloudflare rules consist of two parts: the **expression** to match the request and
-the **action** to take when the request matches the expression [^3].
+Cloudflare rules consist of two parts: the **expression** to match the request
+and the **action** to take when the request matches the expression [^3].
 
 #### Expression
 
