@@ -95,7 +95,10 @@ export const AllCollections: Omit<Story, "args"> = {
       const mediaStore = useMediaStore()
       mediaStore.$patch({
         results: { image: { count: 240 } },
-        mediaFetchState: { image: { status: "success", error: null } },
+        mediaFetchState: {
+          image: { status: "success", error: null },
+          audio: { status: "success", error: null },
+        },
       })
       return () =>
         h(

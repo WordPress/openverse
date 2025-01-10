@@ -213,6 +213,7 @@ export const useMediaStore = defineStore("media", {
     },
 
     showLoading(): boolean {
+      console.log("show loading", this.fetchState.status, this.currentPage)
       return (
         this.fetchState.status === "idle" ||
         (this.fetchState.status === "fetching" && this.currentPage < 2)
