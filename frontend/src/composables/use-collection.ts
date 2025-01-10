@@ -52,6 +52,7 @@ export const useCollection = <T extends SupportedMediaType>({
     await fetchMedia()
   })
 
+  const canLoadMore = computed(() => mediaStore.canLoadMore)
   const loadMore = async () => {
     await fetchMedia({ shouldPersistMedia: true })
   }
@@ -70,5 +71,6 @@ export const useCollection = <T extends SupportedMediaType>({
     media,
     fetchMedia,
     loadMore,
+    canLoadMore,
   }
 }

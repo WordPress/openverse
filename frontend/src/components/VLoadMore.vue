@@ -15,6 +15,7 @@ import VButton from "~/components/VButton.vue"
 defineProps<
   SingleResultProps & {
     searchType: SupportedSearchType
+    canLoadMore: boolean
   }
 >()
 
@@ -38,13 +39,6 @@ const eventPayload = computed(() => {
   }
 })
 
-/**
- * Whether we should show the "Load more" button.
- * If the fetching for the current query has started, there is at least
- * 1 page of results, there has been no fetching error, and there are
- * more results to fetch, we show the button.
- */
-const canLoadMore = computed(() => mediaStore.canLoadMore)
 const isFetching = computed(() => mediaStore.isFetching)
 
 const reachResultEndEventSent = ref(false)

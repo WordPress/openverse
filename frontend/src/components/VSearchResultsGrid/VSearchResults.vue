@@ -46,6 +46,8 @@ const resultsAriaLabel = (
 ) => getI18nContentLinkLabel(count, searchTerm, mediaType)
 
 const resultCounts = computed(() => mediaStore.resultCountsPerMediaType)
+
+const canLoadMore = computed(() => mediaStore.canLoadMore)
 </script>
 
 <template>
@@ -84,6 +86,7 @@ const resultCounts = computed(() => mediaStore.resultCountsPerMediaType)
     <template #footer>
       <footer class="mb-6 mt-4 lg:mb-10">
         <VLoadMore
+          :can-load-more="canLoadMore"
           :search-type="results.type"
           kind="search"
           :search-term="searchTerm"
