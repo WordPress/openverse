@@ -12,7 +12,7 @@ test.describe.configure({ mode: "parallel" })
 test.describe("VSearchTypes", () => {
   breakpoints.describeMd(({ expectSnapshot }) => {
     test.beforeEach(async ({ page }) => {
-      await page.goto(`${defaultUrl}&args=size%3Amedium`)
+      await page.goto(`${defaultUrl}&args=sSize%3Amedium`)
       // Ensure the search types have been hydrated
       await expect(page.getByRole("radio").nth(0)).toBeEnabled()
     })
@@ -45,7 +45,7 @@ test.describe("VSearchTypes", () => {
 
   breakpoints.describeXl(({ expectSnapshot }) => {
     test.beforeEach(async ({ page }) => {
-      await page.goto(`${defaultUrl}&args=size%3Asmall`)
+      await page.goto(`${defaultUrl}&args=sSize%3Asmall`)
       // Ensure the search types have been hydrated
       await expect(page.getByRole("radio").nth(0)).toBeEnabled()
     })

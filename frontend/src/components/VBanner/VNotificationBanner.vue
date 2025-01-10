@@ -5,7 +5,7 @@
  */
 import { computed } from "vue"
 
-import { BannerNature } from "#shared/constants/banners"
+import type { BannerNature, BannerVariant } from "#shared/constants/banners"
 import type { BannerId } from "#shared/types/banners"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
@@ -22,7 +22,7 @@ const props = withDefaults(
      * the color variant of the banner; The dark variant is intended for use on
      * bg-complementary pages.
      */
-    variant?: "regular" | "dark"
+    variant?: BannerVariant
     /**
      * the unique ID of the banner
      */

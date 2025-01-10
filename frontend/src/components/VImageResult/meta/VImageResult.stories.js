@@ -4,23 +4,21 @@ import { image } from "~~/test/unit/fixtures/image"
 
 import VImageResult from "~/components/VImageResult/VImageResult.vue"
 
-import type { Meta, StoryObj } from "@storybook/vue3"
-
 const meta = {
   title: "Components/VImageResult",
   component: VImageResult,
-} satisfies Meta<typeof VImageResult>
-
+}
 export default meta
-type Story = StoryObj<typeof meta>
 
-export const Default: Story = {
+export const Default = {
   render: (args) => ({
     components: { VImageResult },
     setup() {
       return () =>
         h("div", { class: "p-4 image-wrapper max-w-80" }, [
-          h("ol", { class: "flex flex-wrap gap-4" }, [h(VImageResult, args)]),
+          h("ol", { class: "flex flex-wrap gap-4" }, [
+            h(VImageResult, { ...args, aspectRatio: args.sAspectRatio }),
+          ]),
         ])
     },
   }),
@@ -31,7 +29,7 @@ export const Default: Story = {
   },
 
   argTypes: {
-    aspectRatio: {
+    sAspectRatio: {
       options: ["square", "intrinsic"],
       control: { type: "select" },
     },
@@ -39,7 +37,7 @@ export const Default: Story = {
   },
 
   args: {
-    aspectRatio: "intrinsic",
+    sAspectRatio: "intrinsic",
     kind: "search",
     searchTerm: "test",
     relatedTo: "fake-uuid",

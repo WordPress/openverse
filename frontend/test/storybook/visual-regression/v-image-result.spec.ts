@@ -25,7 +25,7 @@ test.describe("VImageResult", () => {
       })
 
       test(`${ratio} loaded`, async ({ page }) => {
-        await page.goto(urlWithArgs({ aspectRatio: ratio }))
+        await page.goto(urlWithArgs({ sAspectRatio: ratio }))
         await expectSnapshot(
           page,
           `v-image-result-${ratio}-loaded`,
@@ -34,7 +34,7 @@ test.describe("VImageResult", () => {
       })
 
       test(`${ratio} focused`, async ({ page }) => {
-        await page.goto(urlWithArgs({ aspectRatio: ratio }))
+        await page.goto(urlWithArgs({ sAspectRatio: ratio }))
 
         await page.focus(imageCell)
 
@@ -46,7 +46,7 @@ test.describe("VImageResult", () => {
       })
 
       test(`${ratio} hovered`, async ({ page }) => {
-        await page.goto(urlWithArgs({ aspectRatio: ratio }))
+        await page.goto(urlWithArgs({ sAspectRatio: ratio }))
 
         await page.hover(imageCell)
 
@@ -58,7 +58,7 @@ test.describe("VImageResult", () => {
       })
 
       test(`${ratio} focused hovered`, async ({ page }) => {
-        await page.goto(urlWithArgs({ aspectRatio: ratio }))
+        await page.goto(urlWithArgs({ sAspectRatio: ratio }))
 
         await page.focus(imageCell)
         await page.hover(imageCell)

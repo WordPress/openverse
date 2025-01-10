@@ -4,36 +4,37 @@ import { bannerNature } from "#shared/constants/banners"
 
 import VNotificationBanner from "~/components/VBanner/VNotificationBanner.vue"
 
-import type { StoryObj } from "@storybook/vue3"
-
 const meta = {
   title: "Components/VNotificationBanner",
   component: VNotificationBanner,
 
   argTypes: {
-    nature: { control: "select", options: [...bannerNature] },
-    variant: { control: "select", options: ["regular", "dark"] },
+    sNature: { control: "select", options: [...bannerNature] },
+    sVariant: { control: "select", options: ["regular", "dark"] },
     onClose: { action: "close" },
   },
   args: {
-    nature: "info",
-    variant: "regular",
+    sNature: "info",
+    sVariant: "regular",
     id: "banner",
   },
 }
 
 export default meta
-type Story = StoryObj<typeof meta>
-type StoryTemplate = Omit<Story, "args">
 
 const text =
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec justo eget felis facilisis fermentum."
 
-const Template: StoryTemplate = {
+const Template = {
   render: (args) => ({
     components: { VNotificationBanner },
     setup() {
-      return () => h(VNotificationBanner, { ...args }, { default: () => text })
+      return () =>
+        h(
+          VNotificationBanner,
+          { ...args, variant: args.sVariant, nature: args.sNature },
+          { default: () => text }
+        )
     },
   }),
 }
@@ -42,8 +43,8 @@ export const Default = {
   name: "Default",
 
   args: {
-    nature: "success",
-    variant: "regular",
+    sNature: "success",
+    sVariant: "regular",
   },
 }
 
@@ -52,7 +53,7 @@ export const Dark = {
   name: "Dark",
 
   args: {
-    nature: "info",
-    variant: "dark",
+    sNature: "info",
+    sVariant: "dark",
   },
 }

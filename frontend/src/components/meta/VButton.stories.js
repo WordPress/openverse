@@ -23,23 +23,19 @@ export default {
     },
   },
   args: {
-    size: "medium",
+    sSize: "medium",
   },
   argTypes: {
     as: { options: buttonForms, control: { type: "radio" } },
-
-    variant: { options: buttonVariants, control: { type: "select" } },
-
+    // Use the name that's different from the prop name to hotfix
+    // the storybook bug when the prop with a custom type is not updated when
+    // the value is set in the URL.
+    sVariant: { options: buttonVariants, control: { type: "select" } },
+    sSize: { options: buttonSizes, control: { type: "select" } },
     pressed: { control: "boolean" },
-
-    size: { options: buttonSizes, control: { type: "select" } },
-
     disabled: { control: "boolean" },
-
     focusableWhenDisabled: { control: "boolean" },
-
     type: { control: "text" },
-
     onClick: { action: "click" },
     onMouseDown: { action: "mousedown" },
     onKeydown: { action: "keydown" },
@@ -51,7 +47,6 @@ export default {
 const Template = (args) => ({
   components: { VButton },
   setup() {
-    const { size, variant, ...rest } = args
     return () =>
       h("div", { class: "flex" }, [
         h(
@@ -60,18 +55,20 @@ const Template = (args) => ({
             id: "wrapper",
             class: [
               "px-4 h-16 flex items-center justify-center",
-              variant.startsWith("transparent") ? "bg-surface" : "bg-default",
+              args.sVariant.startsWith("transparent")
+                ? "bg-surface"
+                : "bg-default",
             ],
           },
           [
             h(
               VButton,
               {
-                size,
-                variant,
                 class: "description-bold",
                 href: "/",
-                ...rest,
+                ...args,
+                variant: args.sVariant,
+                size: args.sSize,
               },
               () => "Code is Poetry"
             ),
@@ -88,19 +85,27 @@ const TemplateWithIcons = (args) => ({
       h("div", { class: "flex flex-col items-center gap-4 flex-wrap" }, [
         h(
           VButton,
-          { variant: args.variant, size: args.size, "has-icon-start": true },
+          {
+            variant: args.sVariant,
+            size: args.sSize,
+            "has-icon-start": true,
+          },
           () => [h(VIcon, { name: "replay" }), "Button"]
         ),
         h(
           VButton,
-          { variant: args.variant, size: args.size, "has-icon-end": true },
+          {
+            variant: args.sVariant,
+            size: args.sSize,
+            "has-icon-end": true,
+          },
           () => ["Button", h(VIcon, { name: "external-link" })]
         ),
         h(
           VButton,
           {
-            variant: args.variant,
-            size: args.size,
+            variant: args.sVariant,
+            size: args.sSize,
             "has-icon-start": true,
             "has-icon-end": true,
           },
@@ -130,6 +135,7 @@ const VariantsTemplate = (args) => ({
               key: variant,
               class: "description-bold",
               ...buttonArgs,
+              size: buttonArgs.sSize,
             },
             () => capitalCase(variant)
           )
@@ -143,7 +149,7 @@ export const Default = {
   name: "VButton",
 
   args: {
-    variant: "filled-pink-8",
+    sVariant: "filled-pink-8",
   },
 }
 
@@ -175,16 +181,13 @@ export const Icons = {
   name: "icons",
 
   args: {
-    variant: "bordered-dark",
+    sVariant: "bordered-dark",
   },
 
   argTypes: {
     pressed: { control: "boolean" },
-
-    size: { options: buttonSizes, control: { type: "radio" } },
-
-    variant: { options: buttonVariants },
-
+    sSize: { options: buttonSizes, control: { type: "radio" } },
+    sVariant: { options: buttonVariants },
     disabled: { control: "boolean" },
   },
 }

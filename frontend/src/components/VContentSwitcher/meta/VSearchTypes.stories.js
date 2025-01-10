@@ -14,13 +14,13 @@ const meta = {
   },
 
   argTypes: {
-    size: { options: ["small", "medium"], control: { type: "select" } },
+    sSize: { options: ["small", "medium"], control: { type: "select" } },
 
     useLinks: { control: { type: "boolean" } },
   },
 
   args: {
-    size: "medium",
+    sSize: "medium",
     useLinks: false,
     additionalTypes: false,
   },
@@ -36,10 +36,10 @@ export const Default = {
         h(
           "div",
           {
-            style: args.size === "small" ? "width: max-content;" : "",
+            style: args.sSize === "small" ? "width: max-content;" : "",
             class: "wrapper p-2",
           },
-          [h(VSearchTypes, args)]
+          [h(VSearchTypes, { ...args, size: args.sSize })]
         )
     },
   }),
