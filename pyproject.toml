@@ -58,3 +58,7 @@ known-first-party = [
 
 [tool.ruff.lint.isort.sections]
 django = ["django", "rest_framework"]
+
+[tool.poetry.dependencies]
+# ... other dependencies ...
+psycopg = {extras = ["pool"], version = ">=3.2.3"}

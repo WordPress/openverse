@@ -167,6 +167,13 @@ if DJANGO_DATABASE_LOGGING:
         "propagate": False,
     }
 
+    # Add connection pool logging
+    LOGGING["loggers"]["django.db.backends.pool"] = {
+        "level": "DEBUG",
+        "handlers": ["console_structured"],
+        "propagate": False,
+    }
+
     if not DEBUG:
         # WARNING: Do not run in production long-term as it can impact performance.
         middleware = (
