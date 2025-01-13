@@ -26,7 +26,15 @@ describe("OpenverseClient", () => {
       })
 
       const scope = nock
-        .post("/v1/auth_tokens/token/", /test-secret/)
+        .post("/v1/auth_tokens/token/", (body) => {
+          const params = new URLSearchParams(body)
+
+          // Check if the required parameter matches
+          return (
+            params.get("client_id") === "test" &&
+            params.get("client_secret") === "test-secret"
+          )
+        })
         .reply(200, {
           access_token: "test-access-token",
           scope: "test-scope",
