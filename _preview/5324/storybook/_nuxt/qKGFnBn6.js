@@ -1,0 +1,9 @@
+import{u as s}from"./BKvBQNfv.js";import{_ as o}from"./DWgyAO_r.js";import"./BQ2uyTwE.js";import{h as i}from"./ueSFnAt6.js";import"./BKGw6EjD.js";import"./BUcLuzj5.js";import"./D9PGBJDx.js";import"./CxIz9G_3.js";import"./DSEYgdJX.js";import"./cS2ccka-.js";import"./EYmIadoG.js";import"./nu0uObuU.js";import"./CP2tuLu8.js";import"./BXlC2Afm.js";import"./DHgysDkh.js";import"./C4YS0AQy.js";import"./5wCrcqN-.js";import"./C_jCWbT6.js";import"./DzAq6MI-.js";import"./dNCV0R31.js";import"./DKvPnfU5.js";import"./DI2Xpw6B.js";import"./A1b6Lb8y.js";import"./BQNGXNMh.js";import"./DDGXuWLI.js";import"./CFNrPCvG.js";import"./B_AFY9SJ.js";import"./DhTbjJlp.js";import"./rltOz0pP.js";import"./cXVshVQU.js";import"./DNI0JtzU.js";import"../sb-preview/runtime.js";(function(){try{var e=typeof window<"u"?window:typeof global<"u"?global:typeof self<"u"?self:{},t=new e.Error().stack;t&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[t]="eb503ea5-e092-4f2b-ab33-9dc6d58fee74",e._sentryDebugIdIdentifier="sentry-dbid-eb503ea5-e092-4f2b-ab33-9dc6d58fee74")}catch{}})();const n={render:e=>({components:{VLoadMore:o},setup(){const t=s();return t._startFetching("image"),t.results.image.count=1,()=>i("div",{class:"flex p-4",id:"wrapper"},[i(o,{kind:"search",searchType:"image",searchTerm:"cat",isFetching:!1,...e})])}})},K={title:"Components/CustomButtonComponents"},r={...n,name:"VLoadMore",parameters:{viewport:{defaultViewport:"sm"}}};var m,p,a;r.parameters={...r.parameters,docs:{...(m=r.parameters)==null?void 0:m.docs,source:{originalSource:`{
+  ...Template,
+  name: "VLoadMore",
+  parameters: {
+    viewport: {
+      defaultViewport: "sm"
+    }
+  }
+}`,...(a=(p=r.parameters)==null?void 0:p.docs)==null?void 0:a.source}}};const N=["Default"];export{r as Default,N as __namedExportsOrder,K as default};

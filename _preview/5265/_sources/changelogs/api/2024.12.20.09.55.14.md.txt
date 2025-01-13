@@ -1,0 +1,6 @@
+# 2024.12.20.09.55.14
+
+## Bug Fixes
+
+- Pull all addons in one DB request
+  ([#5289](https://github.com/WordPress/openverse/pull/5289)) by @dhruvkb

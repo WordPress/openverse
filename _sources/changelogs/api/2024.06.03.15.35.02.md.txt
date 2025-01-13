@@ -1,0 +1,23 @@
+# 2024.06.03.15.35.02
+
+## New Features
+
+- Make media items the centre for all moderation activity
+  ([#4386](https://github.com/WordPress/openverse/pull/4386)) by @dhruvkb
+
+## Improvements
+
+- Add report creation, better filtering and more improvements to admin views for
+  media ([#4414](https://github.com/WordPress/openverse/pull/4414)) by @dhruvkb
+- Warn on `license_url` computation in the API
+  ([#4198](https://github.com/WordPress/openverse/pull/4198)) by @krysal
+
+## Internal Improvements
+
+- Reduce permissions of default authentication scope
+  ([#4372](https://github.com/WordPress/openverse/pull/4372)) by @sarayourfriend
+
+## Bug Fixes
+
+- Rename ContentProvider to ContentSource
+  ([#4402](https://github.com/WordPress/openverse/pull/4402)) by @obulat

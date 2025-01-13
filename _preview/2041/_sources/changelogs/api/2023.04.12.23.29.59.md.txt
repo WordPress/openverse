@@ -1,0 +1,70 @@
+# 2023.04.12.23.29.59
+
+## New Features
+
+- Set rate-limit headers on each response (#775) @dhruvkb
+
+## Improvements
+
+- Fix issues in the workflow simplifications of #1054 (#1058) @dhruvkb
+- Simplify CI + CD workflow (#1054) @dhruvkb
+- Improve documentation for partial stack setups (#974) @dhruvkb
+- Use upstream thumbnail if available (#898) @krysal
+- Remove XML from the API (#986) @obulat
+- Update URLs to point to docs.openverse.org (#991) @dhruvkb
+- Absorb `build-nginx` job into `build-images` job (#944) @dhruvkb
+
+## Internal Improvements
+
+- Change deployment workflow name from colon to dash (#1174) @AetherUnbound
+- Safely call create-or-update-comment when dealing with forks (#997)
+  @sarayourfriend
+- Update nginx Docker tag to v1.23.4 (#1108) @renovate
+- Use context manager for multiprocessing in the ingestion server (#1057)
+  @obulat
+- Bump boto3 from 1.26.99 to 1.26.105 in /api (#1133) @dependabot
+- Add env var to reporting job (#1131) @dhruvkb
+- Add a Slack notification job to the CI + CD workflow (#1066) @dhruvkb
+- Bump pillow from 9.4.0 to 9.5.0 in /api (#1115) @dependabot
+- Bump sentry-sdk from 1.17.0 to 1.18.0 in /api (#1112) @dependabot
+- Bump orjson from 3.8.8 to 3.8.9 in /api (#1114) @dependabot
+- Bump ipython from 8.11.0 to 8.12.0 in /api (#1113) @dependabot
+- Pass actor for staging deploys with the `f` flag (#1104) @dhruvkb
+- Dispatch workflows instead of regular reuse to show deployment runs (#1034)
+  @sarayourfriend
+- Restore Django Admin views (#1065) @krysal
+- Save cleaned up data during the cleanup step (#904) @obulat
+- Defer the `tags_list` for media models (#1029) @obulat
+- Bump boto3 from 1.26.97 to 1.26.99 in /api (#1042) @dependabot
+- Add tag app release action (#987) @sarayourfriend
+- Add CNAME in other use of `actions-gh-pages` (#1006) @dhruvkb
+- Fix local build of the API and add its `recreate` just command (#994) @krysal
+- Skip build and publish job if nothing to do (#977) @dhruvkb
+
+## Bug Fixes
+
+- Change deployment workflow name from colon to dash (#1174) @AetherUnbound
+- Safely call create-or-update-comment when dealing with forks (#997)
+  @sarayourfriend
+- Pass `GITHUB_TOKEN` to deploy docs (#1134) @dhruvkb
+- Add `SLACK_WEBHOOK_TYPE` env var to reporting job (#1131) @dhruvkb
+- Pass actor for staging deploys with the flag (#1104) @dhruvkb
+- Add to GitHub CLI step (#1103) @dhruvkb
+- Dispatch workflows instead of regular reuse to show deployment runs (#1034)
+  @sarayourfriend
+- Fix typo in docs building on (#1067) @dhruvkb
+- Add tag app release action (#987) @sarayourfriend
+- Add CNAME in other use of (#1006) @dhruvkb
+- Add docs CNAME to config (#1005) @zackkrida
+- Fix diagrams with transparent background in README.md of "ingestion_server"
+  for dark mode. (#1000) @AdarshRawat1
+- Fix local build of the API and add its `recreate` just command (#994) @krysal
+- Treat any non 200 status as failure for thingiverse (#940) @sarayourfriend
+- Skip build and publish job if nothing to do (#977) @dhruvkb
+
+## Credits
+
+Thanks to @AdarshRawat1, @AetherUnbound, @Tomvth, @dependabot, @dependabot[bot],
+@dhruvkb, @glowatsk, @kk311y, @krysal, @obulat, @openverse-bot, @panchovm,
+@raiyaj, @renovate, @renovate[bot], @sarayourfriend, @sepehrrezaei, @sumit-158
+and @zackkrida for their contributions!
