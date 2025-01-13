@@ -27,9 +27,6 @@ export interface FetchingError {
   details?: Record<string, string>
 }
 
-export interface FetchState {
-  isFetching: boolean
-  hasStarted?: boolean
-  isFinished?: boolean
-  fetchingError: FetchingError | null
-}
+export type FetchState =
+  | { status: "idle" | "fetching" | "success"; error: null }
+  | { status: "error"; error: FetchingError }

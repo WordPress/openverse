@@ -89,16 +89,12 @@ const showCollectionExternalLink = computed(() => {
   return Boolean(props.collectionParams.collection !== "tag" && url.value)
 })
 
-const { getI18nCollectionResultCountLabel } = useI18nResultsCount()
+const showLoading = computed(() => mediaStore.showLoading)
+const { getI18nCollectionResultCountLabel } = useI18nResultsCount(showLoading)
 
 const resultsLabel = computed(() => {
-  if (mediaStore.resultCount === 0 && mediaStore.fetchState.isFetching) {
-    return ""
-  }
-  const resultsCount = mediaStore.results[props.mediaType].count
-
   return getI18nCollectionResultCountLabel(
-    resultsCount,
+    mediaStore.results[props.mediaType].count,
     props.mediaType,
     props.collectionParams.collection
   )

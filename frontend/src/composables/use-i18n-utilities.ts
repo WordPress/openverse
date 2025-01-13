@@ -1,4 +1,5 @@
 import { useNuxtApp } from "#imports"
+import type { ComputedRef } from "vue"
 
 import { ALL_MEDIA, AUDIO, IMAGE } from "#shared/constants/media"
 import type {
@@ -88,7 +89,7 @@ export function getCountKey(resultsCount: number): keyof KeyCollection {
 /**
  * Returns the localized text for the number of search results.
  */
-export function useI18nResultsCount() {
+export function useI18nResultsCount(showLoading?: ComputedRef<boolean>) {
   const { t } = useNuxtApp().$i18n
   const getLocaleFormattedNumber = useGetLocaleFormattedNumber()
 
@@ -98,32 +99,22 @@ export function useI18nResultsCount() {
     resultsCount: number,
     searchType: SupportedSearchType
   ) => {
+    if (showLoading?.value) {
+      return "header.loading"
+    }
     const countKey = getCountKey(resultsCount)
     return searchResultKeys[searchType][countKey]
   }
 
-  /**
-   * Returns the localized text for the content link label.
-   * E.g. "See 240 image results for 'cats'".
-   */
-  const getI18nContentLinkLabel = (
-    resultsCount: number,
-    query: string,
-    mediaType: SupportedMediaType
-  ) => {
-    return t(getI18nKey(resultsCount, mediaType), {
-      count: resultsCount,
-      localeCount: getLocaleFormattedNumber(resultsCount),
-      query,
-      mediaType,
-    })
-  }
   const getI18nCollectionResultCountLabel = (
     resultCount: number,
     mediaType: SupportedMediaType,
     collectionType: Collection,
     params: Record<string, string> | undefined = undefined
   ) => {
+    if (showLoading?.value) {
+      return ""
+    }
     const key =
       collectionKeys[collectionType][mediaType][getCountKey(resultCount)]
     return t(key, {
@@ -145,10 +136,37 @@ export function useI18nResultsCount() {
     })
   }
 
+  /**
+   * The result count labels for screen readers and visible text, used in the content links
+   * on all results page. Localized text for the number of search results, using corresponding
+   * pluralization rules and decimal separators.
+   * For the visible label, does not specify the media type, e.g.,
+   * "Loading...", "No results", "132 results", "Top 240 results".
+   * For the aria label, adds details about the media type and search query, e.g.,
+   * "See 240 image results for 'cats'".
+   */
+  const getResultCountLabels = (
+    resultsCount: number,
+    mediaType: SupportedMediaType,
+    query: string
+  ) => {
+    if (showLoading?.value) {
+      return { aria: getLoading(), visible: getLoading() }
+    }
+    return {
+      aria: t(getI18nKey(resultsCount, mediaType), {
+        count: resultsCount,
+        localeCount: getLocaleFormattedNumber(resultsCount),
+        query,
+        mediaType,
+      }),
+      visible: getI18nCount(resultsCount),
+    }
+  }
+
   return {
-    getI18nCount,
-    getI18nContentLinkLabel,
     getI18nCollectionResultCountLabel,
-    getLoading,
+    getResultCountLabels,
+    getI18nCount,
   }
 }

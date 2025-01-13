@@ -14,6 +14,7 @@ defineProps<{
   isFetching: boolean
   searchTerm: string
   creatorUrl?: string
+  canLoadMore: boolean
 }>()
 
 defineEmits<{ "load-more": [] }>()
@@ -40,6 +41,7 @@ defineEmits<{ "load-more": [] }>()
     <template #footer>
       <footer class="mb-6 mt-4 lg:mb-10">
         <VLoadMore
+          :can-load-more="canLoadMore"
           :search-type="results.type"
           kind="collection"
           :search-term="searchTerm"

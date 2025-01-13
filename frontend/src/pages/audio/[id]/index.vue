@@ -64,7 +64,7 @@ const audio = ref<AudioDetail | null>(
     ? singleResultStore.audio
     : null
 )
-const fetchingError = computed(() => singleResultStore.fetchState.fetchingError)
+const fetchingError = computed(() => singleResultStore.fetchState.error)
 
 const { isHidden, reveal } = useSensitiveMedia(audio.value)
 

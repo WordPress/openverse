@@ -16,7 +16,7 @@ interface RelatedMediaState {
 export const useRelatedMediaStore = defineStore("related-media", {
   state: (): RelatedMediaState => ({
     mainMediaId: null,
-    fetchState: { isFetching: false, hasStarted: false, fetchingError: null },
+    fetchState: { status: "idle", error: null },
     media: [],
   }),
 
@@ -25,23 +25,22 @@ export const useRelatedMediaStore = defineStore("related-media", {
       (state) =>
       (id: string): Media | undefined =>
         state.media.find((item) => item.id === id),
+    isFetching: (state) => state.fetchState.status === "fetching",
   },
 
   actions: {
     _endFetching(error?: FetchingError) {
-      this.fetchState.fetchingError = error || null
-      this.fetchState.hasStarted = true
-      this.fetchState.isFetching = false
+      if (error) {
+        this.fetchState = { status: "error", error }
+      } else {
+        this.fetchState = { status: "success", error: null }
+      }
     },
     _startFetching() {
-      this.fetchState.isFetching = true
-      this.fetchState.hasStarted = true
-      this.fetchState.fetchingError = null
+      this.fetchState = { status: "fetching", error: null }
     },
     _resetFetching() {
-      this.fetchState.isFetching = false
-      this.fetchState.hasStarted = false
-      this.fetchState.fetchingError = null
+      this.fetchState = { status: "idle", error: null }
     },
 
     async fetchMedia(mediaType: SupportedMediaType, id: string) {

@@ -27,6 +27,7 @@ const {
   collectionLabel,
   fetchMedia,
   loadMore,
+  canLoadMore,
   pageTitle,
 } = useCollection({ mediaType: IMAGE })
 
@@ -66,6 +67,7 @@ await useAsyncData(
       :collection-label="collectionLabel"
       :collection-params="collectionParams"
       :creator-url="creatorUrl"
+      :can-load-more="canLoadMore"
       @load-more="loadMore"
     />
   </div>

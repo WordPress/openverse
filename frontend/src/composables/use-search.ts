@@ -73,10 +73,10 @@ export const useSearch = (
     return navigateTo(searchPath)
   }
 
-  const isFetching = computed(() => mediaStore.fetchState.isFetching)
   const resultsCount = computed(() => mediaStore.resultCount)
+  const showLoading = computed(() => mediaStore.showLoading)
 
-  const { getI18nCount, getLoading } = useI18nResultsCount()
+  const { getI18nCount } = useI18nResultsCount(showLoading)
   /**
    * Additional text at the end of the search bar.
    * Shows the loading state or result count.
@@ -84,9 +84,6 @@ export const useSearch = (
   const searchStatus = computed(() => {
     if (searchStore.searchTerm === "") {
       return ""
-    }
-    if (isFetching.value) {
-      return getLoading()
     }
     return getI18nCount(resultsCount.value)
   })
