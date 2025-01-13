@@ -297,7 +297,7 @@ watch(
 /* Timekeeping */
 
 const message = computed(() =>
-  activeMediaStore.message
+  activeMediaStore.id === props.audio.id && activeMediaStore.message
     ? t(`audioTrack.messages.${activeMediaStore.message}`)
     : ""
 )
