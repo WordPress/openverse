@@ -3,6 +3,7 @@ from typing import Literal
 from urllib.parse import urlparse
 
 from django.conf import settings
+from django.db import close_old_connections
 from django.http import HttpResponse
 from rest_framework.exceptions import UnsupportedMediaType
 
@@ -297,3 +298,5 @@ async def get(
             )
 
         raise UpstreamThumbnailException(f"Failed to render thumbnail. {exc}")
+    finally:
+        close_old_connections()
