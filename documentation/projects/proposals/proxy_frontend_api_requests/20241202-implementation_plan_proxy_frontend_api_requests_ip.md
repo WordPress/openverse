@@ -5,7 +5,7 @@
 ## Reviewers
 
 - [ ] @dhruvkb
-- [ ] @krysal
+- [x] @krysal
 
 ## Project Links
 
