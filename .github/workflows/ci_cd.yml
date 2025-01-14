@@ -499,7 +499,7 @@ jobs:
         run: just api/init
 
       - name: Run API tests
-        run: just api/test
+        run: just api/test-ci
 
       - name: Print API test logs
         if: success() || failure()
