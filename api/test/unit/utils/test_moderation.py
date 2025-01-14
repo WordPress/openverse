@@ -10,7 +10,7 @@ from api.utils.moderation import perform_moderation
 from test.factory.models.oauth2 import UserFactory
 
 
-pytestmark = pytest.mark.django_db
+pytestmark = pytest.mark.django_db(transaction=True)
 
 
 @pytest.fixture
