@@ -11,6 +11,8 @@ from api.constants import restricted_features
 from api.models import OAuth2Verification, ThrottledApplication
 
 
+pytestmark = pytest.mark.django_db
+
 cache_availability_params = pytest.mark.parametrize(
     "is_cache_reachable, cache_name",
     [(True, "oauth_cache"), (False, "unreachable_oauth_cache")],
@@ -73,7 +75,6 @@ def test_auth_token_exchange(api_client, test_auth_tokens_registration):
     return res_data
 
 
-@pytest.mark.django_db
 def test_auth_token_exchange_unsupported_method(api_client):
     res = api_client.get(
         "/v1/auth_tokens/token/",
@@ -90,7 +91,6 @@ def _integration_verify_most_recent_token(api_client):
     return api_client.get(path)
 
 
-@pytest.mark.django_db
 @pytest.mark.parametrize(
     "rate_limit_model",
     [x[0] for x in ThrottledApplication.RATE_LIMIT_MODELS],
@@ -125,7 +125,6 @@ def test_auth_email_verification(
     )
 
 
-@pytest.mark.django_db
 @pytest.mark.parametrize(
     "rate_limit_model",
     [x[0] for x in ThrottledApplication.RATE_LIMIT_MODELS],
@@ -166,7 +165,6 @@ def test_auth_rate_limit_reporting(
         assert res_data["verified"] is False
 
 
-@pytest.mark.django_db
 @pytest.mark.parametrize(
     "sort_dir, exp_indexed_on",
     [
@@ -191,7 +189,6 @@ def test_sorting_authed(api_client, test_auth_token_exchange, sort_dir, exp_inde
     assert indexed_on == exp_indexed_on
 
 
-@pytest.mark.django_db
 @pytest.mark.parametrize(
     "authority_boost, exp_source",
     [
@@ -219,7 +216,6 @@ def test_authority_authed(
     assert source == exp_source
 
 
-@pytest.mark.django_db
 def test_invalid_credentials_401(api_client):
     res = api_client.get(
         "/v1/images/", HTTP_AUTHORIZATION="Bearer thisIsNot_ARealToken"
@@ -227,7 +223,6 @@ def test_invalid_credentials_401(api_client):
     assert res.status_code == 401
 
 
-@pytest.mark.django_db
 def test_revoked_application_access(api_client, test_auth_token_exchange):
     token = test_auth_token_exchange["access_token"]
     application = AccessToken.objects.get(token=token).application
@@ -258,7 +253,6 @@ def test_revoked_application_access(api_client, test_auth_token_exchange):
         )
     ),
 )
-@pytest.mark.django_db
 def test_page_size_privileges(
     api_client, test_auth_token_exchange, level, page_size_modification, allowed
 ):
@@ -304,7 +298,6 @@ def test_page_size_privileges(
         )
     ),
 )
-@pytest.mark.django_db
 def test_pagination_depth_privileges(
     api_client, test_auth_token_exchange, level, pagination_depth_modification, allowed
 ):

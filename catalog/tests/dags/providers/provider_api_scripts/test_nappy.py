@@ -4,7 +4,7 @@ from tests.dags.providers.provider_api_scripts.resources.json_load import (
 )
 
 from common.constants import IMAGE
-from common.licenses import get_license_info
+from common.licenses import LicenseInfo
 from providers.provider_api_scripts.nappy import NappyDataIngester
 
 
@@ -105,8 +105,11 @@ def test_get_should_continue(response_json, expected_result):
             {
                 "foreign_landing_url": "https://nappy.co/photo/9/woman-with-tattoos",
                 "url": "https://images.nappy.co/uploads/large/101591721349meykm7s6hvaswwvslpjrwibeyzru1fcxtxh0hf09cs7kdhmtptef4y3k4ua5z1bkyrbxov8tmagnafm8upwa3hxaxururtx7azaf.jpg",
-                "license_info": get_license_info(
-                    "https://creativecommons.org/publicdomain/zero/1.0/"
+                "license_info": LicenseInfo(
+                    license="cc0",
+                    version="1.0",
+                    url="https://creativecommons.org/publicdomain/zero/1.0/",
+                    raw_url=None,
                 ),
                 "foreign_identifier": 9,
                 "filesize": 233500,

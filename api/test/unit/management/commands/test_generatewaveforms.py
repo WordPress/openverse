@@ -14,6 +14,9 @@ from test.factory.faker import WaveformProvider
 from test.factory.models.audio import AudioAddOnFactory, AudioFactory
 
 
+pytestmark = pytest.mark.django_db
+
+
 @mock.patch("api.models.audio.generate_peaks")
 def call_generatewaveforms(mock_generate_peaks: mock.MagicMock) -> tuple[str, str]:
     mock_generate_peaks.side_effect = lambda _: WaveformProvider.generate_waveform()
@@ -35,7 +38,6 @@ def assert_all_audio_have_waveforms():
     )
 
 
-@pytest.mark.django_db
 def test_creates_waveforms_for_audio():
     AudioFactory.create_batch(153)
 
@@ -46,7 +48,6 @@ def test_creates_waveforms_for_audio():
     assert_all_audio_have_waveforms()
 
 
-@pytest.mark.django_db
 def test_does_not_reprocess_existing_waveforms():
     waveformless_audio = AudioFactory.create_batch(3)
 
@@ -66,7 +67,6 @@ def test_does_not_reprocess_existing_waveforms():
     assert_all_audio_have_waveforms()
 
 
-@pytest.mark.django_db
 @mock.patch("api.models.audio.generate_peaks")
 def test_paginates_audio_waveforms_to_generate(
     mock_generate_peaks, django_assert_num_queries
@@ -101,7 +101,6 @@ def test_paginates_audio_waveforms_to_generate(
     assert_all_audio_have_waveforms()
 
 
-@pytest.mark.django_db
 @pytest.mark.parametrize(
     ("exception_class", "exception_args", "exception_kwargs"),
     (
@@ -150,7 +149,6 @@ def test_logs_and_continues_if_waveform_generation_fails(
     )
 
 
-@pytest.mark.django_db
 @mock.patch("api.models.audio.generate_peaks")
 def test_keyboard_interrupt_should_halt_processing(mock_generate_peaks):
     audio_count = 23

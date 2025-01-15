@@ -160,6 +160,14 @@ generate-docs doc="media-props" fail_on_diff="true":
 test *args: wait-up
     env DC_USER="ov_user" just ../exec web pytest "$@"
 
+# Run the API tests in the CI
+test-ci: wait-up
+    # The order is important here: the unit tests drop the database in the end,
+    # and when ran concurrently with the integration tests, the integration
+    # tests' database is dropped.
+    just test -k unit
+    just test -k "not unit"
+
 # Run API tests locally
 [positional-arguments]
 test-local *args:

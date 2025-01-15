@@ -14,7 +14,7 @@ Notes:                  This api was written specially for Openverse.
 import logging
 
 from common import constants
-from common.licenses import get_license_info
+from common.licenses import LicenseInfo
 from common.loader import provider_details as prov
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 
@@ -28,8 +28,11 @@ class NappyDataIngester(ProviderDataIngester):
     headers = {"Accept": "application/json"}
 
     # Hardcoded to CC0, the only license Nappy.co uses
-    license_info = get_license_info(
-        "https://creativecommons.org/publicdomain/zero/1.0/"
+    license_info = LicenseInfo(
+        license="cc0",
+        version="1.0",
+        url="https://creativecommons.org/publicdomain/zero/1.0/",
+        raw_url=None,
     )
 
     def get_next_query_params(self, prev_query_params: dict | None) -> dict:

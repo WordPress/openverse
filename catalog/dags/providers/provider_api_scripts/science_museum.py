@@ -28,7 +28,11 @@ logger = logging.getLogger(__name__)
 
 LIMIT = 100
 
-CC0_LICENSE = get_license_info(license_="cc0", license_version="1.0")
+CC0_LICENSE = LicenseInfo(
+    license="cc0",
+    version="1.0",
+    url="https://creativecommons.org/publicdomain/zero/1.0/",
+)
 
 
 class ScienceMuseumDataIngester(ProviderDataIngester):
