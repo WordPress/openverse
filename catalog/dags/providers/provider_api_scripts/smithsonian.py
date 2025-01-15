@@ -14,7 +14,7 @@ import backoff
 from airflow.exceptions import AirflowException
 from airflow.models import Variable
 
-from common.licenses import get_license_info
+from common.licenses import LicenseInfo
 from common.loader import provider_details as prov
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 
@@ -110,8 +110,10 @@ class SmithsonianDataIngester(ProviderDataIngester):
         super().__init__(*args, **kwargs)
         self.api_key = Variable.get("API_KEY_DATA_GOV")
         self.units_endpoint = f"{self.base_endpoint}terms/unit_code"
-        self.license_info = get_license_info(
-            license_url="https://creativecommons.org/publicdomain/zero/1.0/"
+        self.license_info = LicenseInfo(
+            license="cc0",
+            version="1.0",
+            url="https://creativecommons.org/publicdomain/zero/1.0/",
         )
 
     def get_fixed_query_params(self):

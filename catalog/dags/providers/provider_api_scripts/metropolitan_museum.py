@@ -28,7 +28,7 @@ Notes:                  <https://metmuseum.github.io/#search>
 import argparse
 import logging
 
-from common.licenses import get_license_info
+from common.licenses import LicenseInfo
 from common.loader import provider_details as prov
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 
@@ -42,7 +42,11 @@ logger = logging.getLogger(__name__)
 class MetMuseumDataIngester(ProviderDataIngester):
     providers = {"image": prov.METROPOLITAN_MUSEUM_DEFAULT_PROVIDER}
     endpoint = "https://collectionapi.metmuseum.org/public/collection/v1/objects"
-    DEFAULT_LICENSE_INFO = get_license_info(license_="cc0", license_version="1.0")
+    DEFAULT_LICENSE_INFO = LicenseInfo(
+        license="cc0",
+        version="1.0",
+        url="https://creativecommons.org/publicdomain/zero/1.0/",
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
