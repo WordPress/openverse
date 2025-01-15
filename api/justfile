@@ -160,10 +160,11 @@ generate-docs doc="media-props" fail_on_diff="true":
 test *args: wait-up
     env DC_USER="ov_user" just ../exec web pytest "$@"
 
-# When the unit tests run concurrently with the integration tests, the integration tests fail
-# because the unit tests drop the real database in the end. This is a workaround to run the unit
-# tests first and then the integration tests.
+# Run the API tests in the CI
 test-ci: wait-up
+    # The order is important here: the unit tests drop the database in the end,
+    # and when ran concurrently with the integration tests, the integration
+    # tests' database is dropped.
     just test -k unit
     just test -k "not unit"
 
