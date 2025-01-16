@@ -140,7 +140,7 @@ export class OpenverseAuthMiddleware implements OpenverseMiddleware {
             return new URLSearchParams(body).toString()
           },
           headers: {
-            "Content-Type": "x-www-form-encoded",
+            "Content-Type": "application/x-www-form-urlencoded",
           },
         })
         .then((tokenResponse) => {
