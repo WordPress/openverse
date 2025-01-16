@@ -86,8 +86,7 @@ logger = logging.getLogger(__name__)
             default="WHERE...",
             type="string",
             description=(
-                "The `WHERE` clause of a query that selects all the rows to"
-                " be deleted."
+                "The `WHERE` clause of a query that selects all the rows to be deleted."
             ),
             pattern="^WHERE",
         ),

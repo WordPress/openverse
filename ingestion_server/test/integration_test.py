@@ -257,12 +257,12 @@ def _ingest_upstream(cb_queue, downstream_db, model, suffix="integration"):
     # Check that the indices remained the same
     after_indices = _get_indices(downstream_db, model)
     after_constraints = _get_constraints(downstream_db, model)
-    assert (
-        before_indices == after_indices
-    ), "Indices in DB don't match the names they had before the go-live"
-    assert (
-        before_constraints == after_constraints
-    ), "Constraints in DB don't match the names they had before the go-live"
+    assert before_indices == after_indices, (
+        "Indices in DB don't match the names they had before the go-live"
+    )
+    assert before_constraints == after_constraints, (
+        "Constraints in DB don't match the names they had before the go-live"
+    )
 
 
 @pytest.fixture()
@@ -599,9 +599,9 @@ def test_filtered_indexes(sample_es, sensitive_term, index):
     }
     res = es.search(index=index, query=query)
     count = res["hits"]["total"]["value"]
-    assert (
-        count == 0
-    ), f"There should be no results that exactly match {sensitive_term} in {index}. Found {count}."
+    assert count == 0, (
+        f"There should be no results that exactly match {sensitive_term} in {index}. Found {count}."
+    )
 
 
 @pytest.mark.order(after="test_upstream_indexed_audio")

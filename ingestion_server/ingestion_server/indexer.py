@@ -64,9 +64,7 @@ def get_last_item_ids(table):
     pg_conn.set_session(readonly=True)
     cur = pg_conn.cursor()
     # Find the last row added to the database table
-    query = SQL(
-        "SELECT id, identifier " "FROM {table} " "ORDER BY id DESC " "LIMIT 1;"
-    ).format(
+    query = SQL("SELECT id, identifier FROM {table} ORDER BY id DESC LIMIT 1;").format(
         table=Identifier(table),
     )
     cur.execute(query)

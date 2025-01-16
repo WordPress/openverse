@@ -167,7 +167,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Log Cleanup Job", add_help=True)
     parser.add_argument(
         "--maxLogAgeInDays",
-        help="Logs older than maxLogAgeInDays days will be deleted. " "Default is 7.",
+        help="Logs older than maxLogAgeInDays days will be deleted. Default is 7.",
     )
     parser.add_argument(
         "--enableDelete",

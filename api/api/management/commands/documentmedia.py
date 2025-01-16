@@ -225,7 +225,7 @@ def generate_relation_table(
     columns = ["Name", "Type", "DB type", "Nature", "To"]
     table = "### Relations\n\n"
     table += f"|{'|'.join(columns)}|\n"
-    table += f"|{'-|'*len(columns)}\n"
+    table += f"|{'-|' * len(columns)}\n"
     for relation in relations:
         name = f"`{relation.name}`"
         if relation.name in noted_fields:
@@ -258,7 +258,7 @@ def generate_value_table(
     columns = ["Name", "Type", "DB type", "Constraints", "Default"]
     table = "### Values\n\n"
     table += f"|{'|'.join(columns)}|\n"
-    table += f"|{'-|'*len(columns)}\n"
+    table += f"|{'-|' * len(columns)}\n"
     for value in values:
         name = f"`{value.name}`"
         if value.name in noted_fields:

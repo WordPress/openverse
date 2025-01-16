@@ -272,7 +272,7 @@ def _clean_data_worker(rows, temp_table, sources_config, all_fields: list[str]):
 
         if len(update_field_expressions) > 0:
             update_query = f"""UPDATE {temp_table} SET
-            {', '.join(update_field_expressions)} WHERE id = {_id}
+            {", ".join(update_field_expressions)} WHERE id = {_id}
             """
             log.debug(f"Executing update query: \n\t{update_query}")
             write_cur.execute(update_query)

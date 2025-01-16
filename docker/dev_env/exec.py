@@ -70,9 +70,9 @@ def alias_info(aliases: dict, args: list[str]):
         joined = " ".join(cmd)
         output += dedent(
             f"""
-            {alias}{' ' * (longest_alias - len(alias))} -> {joined}
+            {alias}{" " * (longest_alias - len(alias))} -> {joined}
                 {doc}
-                {'(Built-in alias)' if alias in SHARED_ALIASES else '(Personal alias)'}
+                {"(Built-in alias)" if alias in SHARED_ALIASES else "(Personal alias)"}
             """
         )
 

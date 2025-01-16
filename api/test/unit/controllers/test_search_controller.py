@@ -213,9 +213,9 @@ def create_mask_fixture() -> Callable[[Search, int, int], None]:
             save_query_mask(query_hash, mask)
             return
 
-        assert (
-            mask_size >= liveness_count
-        ), "Cannot create more live bits than the mask can contain."
+        assert mask_size >= liveness_count, (
+            "Cannot create more live bits than the mask can contain."
+        )
         dead_bits = [0] * (mask_size - liveness_count)
         live_bits = [1] * liveness_count
         mask = dead_bits + live_bits
@@ -420,9 +420,9 @@ def test_paginate_with_dead_link_mask_query_mask_overlaps_query_window(
     actual_range = es_helpers._paginate_with_dead_link_mask(
         s=unique_search, page_size=page_size, page=page
     )
-    assert (
-        actual_range == expected_range
-    ), f"expected {expected_range} but got {actual_range}"
+    assert actual_range == expected_range, (
+        f"expected {expected_range} but got {actual_range}"
+    )
 
 
 @pytest.mark.parametrize(

@@ -124,8 +124,7 @@ DAG_CONFIG = dict(
             default="WHERE...",
             type="string",
             description=(
-                "The `WHERE` clause of a query that selects all the rows to"
-                " be updated."
+                "The `WHERE` clause of a query that selects all the rows to be updated."
             ),
             pattern="^WHERE",
         ),
@@ -173,8 +172,7 @@ DAG_CONFIG = dict(
             default=True,
             type="boolean",
             description=(
-                "When True, the SQL commands will not actually be run"
-                " but only logged."
+                "When True, the SQL commands will not actually be run but only logged."
             ),
         ),
     },

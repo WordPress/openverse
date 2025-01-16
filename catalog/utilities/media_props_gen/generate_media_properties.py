@@ -69,9 +69,7 @@ def generate_media_props_table(media_properties) -> str:
     for field_name, field in media_properties.items():
         name, db_properties = generate_db_props_string(field["sql"])
 
-        table += (
-            f"| {name} | {db_properties} | " f"{field.get('python_column', '')} |\n"
-        )
+        table += f"| {name} | {db_properties} | {field.get('python_column', '')} |\n"
     return table
 
 
@@ -145,7 +143,7 @@ def generate_markdown_doc() -> str:
 {Md.heading(2, "Image Properties")}{tables["image"]}
 {Md.heading(2, "Audio Properties")}{tables["audio"]}
 {Md.heading(2, "Media Property Descriptions")}{long_form_doc}
-{Md.horizontal_line + POSTAMBLE if POSTAMBLE else ''}
+{Md.horizontal_line + POSTAMBLE if POSTAMBLE else ""}
 """.strip()
         + "\n"
     )

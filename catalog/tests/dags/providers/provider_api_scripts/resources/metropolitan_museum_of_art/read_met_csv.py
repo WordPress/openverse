@@ -119,7 +119,9 @@ for c in raw_data.columns:
     elif m > 0:
         example = max(raw_data[raw_data[c].isna()].index)
         sample_cases.add(example)
-        print(f"{c} is missing {int(100.0*m/total_records)}% of values, see {example}")
+        print(
+            f"{c} is missing {int(100.0 * m / total_records)}% of values, see {example}"
+        )
     else:
         print(f"{c} is never missing.")
 

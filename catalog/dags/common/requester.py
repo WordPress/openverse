@@ -86,7 +86,7 @@ class DelayedRequester:
             logger.info(f"{type(e).__name__}: {e}")
             if params := request_kwargs.get("params"):
                 logger.info(f"Using query parameters {params}")
-            logger.info(f'Using headers {request_kwargs.get("headers")}')
+            logger.info(f"Using headers {request_kwargs.get('headers')}")
 
             raise
 

@@ -108,7 +108,7 @@ def update_media_popularity_metrics(
     query = dedent(
         f"""
         INSERT INTO public.{sql_info.metrics_table} (
-          {', '.join(column_names)}
+          {", ".join(column_names)}
         ) VALUES
           {popularity_metric_inserts}
         ON CONFLICT ({PARTITION})

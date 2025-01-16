@@ -79,7 +79,7 @@ class Command(BaseCommand):
                         return errored_identifiers
                     except BaseException as err:
                         errored_identifiers.append(audio.identifier)
-                        self.error(f"Unable to process {audio.identifier}: " f"{err}")
+                        self.error(f"Unable to process {audio.identifier}: {err}")
                     progress.update(1)
 
         return errored_identifiers
