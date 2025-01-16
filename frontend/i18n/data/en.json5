@@ -146,7 +146,7 @@ _{link}_ part of "The translation for English locale is incomplete. Help us get 
   "externalSourcesPage.why.title": "Why did you build this?",
   "externalSourcesPage.why.content": "For many years, Creative Commons has offered its users a dedicated search portal for searching platforms that have CC licensing filters built in. In fact, this is still maintained at {old}.",
   /** externalSourcesPage.why.new.a-c are parts of a single statement */
-  "externalSourcesPage.why.new.a": 'For users of the legacy CC Meta Search site, the "External Sources" feature on {openverse} will look familiar.',
+  "externalSourcesPage.why.new.a": "For users of the legacy CC Meta Search site, the \"External Sources\" feature on {'Openverse'} will look familiar.",
   /** externalSourcesPage.why.new.a-c are parts of a single statement */
   "externalSourcesPage.why.new.b": "The goal was to ensure that the functionality is not lost, but is updated and embedded within our new search engine for openly licensed content.",
   /** externalSourcesPage.why.new.a-c are parts of a single statement */
@@ -174,7 +174,7 @@ _{link}_ part of "The translation for English locale is incomplete. Help us get 
   /** privacy.cookies.content.a-b are parts of a single statement */
   "privacy.cookies.content.a": "{'Openverse'} uses cookies to store information about visitor's preferences and information about their web browsers. We use this information to improve the user experience of the site.",
   /** privacy.cookies.content.a-b are parts of a single statement */
-  "privacy.cookies.content.b": 'These are considered "Necessary" or "Strictly necessary cookies". You may disable these by changing your browser settings, but this may affect how {openverse} functions.',
+  "privacy.cookies.content.b": 'These are considered "Necessary" or "Strictly necessary cookies". You may disable these by changing your browser settings, but this may affect how {\'Openverse\'} functions.',
   "privacy.contact.title": "Contact Us",
   "privacy.contact.content": "Any questions about {'Openverse'} and privacy can be sent to {email}, shared as a {issue}, or discussed with our community in the #openverse channel of the {chat}.",
   /**
@@ -235,7 +235,7 @@ _{link}_ part of "The translation for English locale is incomplete. Help us get 
    */
   "sensitive.description.deiStatement": "diversity, equity, and inclusion statement",
   /** sensitive.sensitivity.what.a-d are parts of a single statement */
-  "sensitive.sensitivity.what.a": '{openverse} uses the term "sensitive" rather than "mature", "NSFW" (not safe for work), or other terms in order to indicate that our designation of content as sensitive is broad, with a focus on accessibility and inclusion.',
+  "sensitive.sensitivity.what.a": '{\'Openverse\'} uses the term "sensitive" rather than "mature", "NSFW" (not safe for work), or other terms in order to indicate that our designation of content as sensitive is broad, with a focus on accessibility and inclusion.',
   /** sensitive.sensitivity.what.a-d are parts of a single statement */
   "sensitive.sensitivity.what.b": 'This means that some content is designated "sensitive" that would not fall into a category of what is generally understood to be "mature" content (in other words, content specifically for an adult audience).',
   /** sensitive.sensitivity.what.a-d are parts of a single statement */
