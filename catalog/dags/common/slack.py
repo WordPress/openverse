@@ -406,7 +406,7 @@ def on_failure_callback(context: dict) -> None:
     message = f"""
 *DAG*: `{dag_id}`
 *Task*: `{task_id}`
-*Logical Date*: {logical_date.strftime('%Y-%m-%dT%H:%M:%SZ')}
+*Logical Date*: {logical_date.strftime("%Y-%m-%dT%H:%M:%SZ")}
 *Log*: <{ti.log_url}|View Logs>
 {exception_message}
 """

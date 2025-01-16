@@ -15,7 +15,7 @@ def get_existence_queries(model_name: str, table_name: str) -> tuple[SQL, SQL]:
     table_name: the name of the media table to check entries in
     """
     exists_in_table = (
-        "EXISTS(SELECT 1 FROM {table} " "WHERE identifier = {identifier}) AS {name}"
+        "EXISTS(SELECT 1 FROM {table} WHERE identifier = {identifier}) AS {name}"
     )
     exists_in_deleted_table = SQL(exists_in_table).format(
         table=Identifier(f"api_deleted{model_name}"),

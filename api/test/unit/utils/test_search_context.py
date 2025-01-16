@@ -58,9 +58,9 @@ def test_sensitive_text(
             search_context = SearchContext.build(
                 result_ids, media_type_config.origin_index
             )
-            assert (
-                mock.total_matches == 0
-            ), "There should be zero requests to ES if the setting is disabled"
+            assert mock.total_matches == 0, (
+                "There should be zero requests to ES if the setting is disabled"
+            )
         pook.off()
     else:
         search_context = SearchContext.build(result_ids, media_type_config.origin_index)

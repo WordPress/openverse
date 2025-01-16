@@ -133,8 +133,7 @@ class AudioAddOn(OpenLedgerModel):
         # https://github.com/WordPress/openverse-api/blob/a7955c86d43bff504e8d41454f68717d79dd3a44/api/catalog/api/utils/waveform.py#L71
         size=1500,
         help_text=(
-            "The waveform peaks. A list of floats in"
-            " the range of 0 -> 1 inclusively."
+            "The waveform peaks. A list of floats in the range of 0 -> 1 inclusively."
         ),
         null=True,
     )

@@ -45,9 +45,9 @@ def test_report_actionable_records(
         report_actionable_records(report_counts_by_media_type)
 
         for message in audio_expected_messages + image_expected_messages:
-            assert (
-                message in send_alert_mock.call_args.args[0]
-            ), "Completion message doesn't contain expected text"
+            assert message in send_alert_mock.call_args.args[0], (
+                "Completion message doesn't contain expected text"
+            )
 
 
 def test_report_actionable_records_no_data_message():

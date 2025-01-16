@@ -264,8 +264,7 @@ def _ensure_license_version_is_valid(
             logger.debug("license_version is NoneType")
     except (TypeError, ValueError) as e:
         logger.warning(
-            f"Could not recover license_version from {license_version}!"
-            f" Error was {e}"
+            f"Could not recover license_version from {license_version}! Error was {e}"
         )
     return string_license_version
 

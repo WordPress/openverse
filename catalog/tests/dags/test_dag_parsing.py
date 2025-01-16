@@ -77,9 +77,9 @@ def test_dag_import_errors():
         dag_errors.append(Path(filename).name)
     error_string = ",".join(dag_errors)
 
-    assert (
-        len(dagbag.import_errors) == 0
-    ), f"Errors found during DAG import for files: {error_string}"
+    assert len(dagbag.import_errors) == 0, (
+        f"Errors found during DAG import for files: {error_string}"
+    )
 
     all_paths = {str(dag.relative_fileloc) for dag in dagbag.dags.values()}
     missing_paths = all_paths - set(DAG_PATHS)
@@ -115,6 +115,6 @@ def test_dag_uses_default_args():
         if on_failure_callback is None:
             failures.append(dag_id)
 
-    assert (
-        not failures
-    ), f"The following DAGs do not have DAG_DEFAULT_ARGS defined: {failures}"
+    assert not failures, (
+        f"The following DAGs do not have DAG_DEFAULT_ARGS defined: {failures}"
+    )

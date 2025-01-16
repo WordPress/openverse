@@ -128,7 +128,7 @@ def make_pr_comment(
         comment["user"]["login"] = "openverse-bot"
 
     comment["body"] = (
-        ("This is a comment\n" f"{COMMENT_MARKER}\n\n" "Please review me :)")
+        (f"This is a comment\n{COMMENT_MARKER}\n\nPlease review me :)")
         if is_reminder
         else (
             "This looks great! Amazing work :tada: "

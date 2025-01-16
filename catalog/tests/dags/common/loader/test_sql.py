@@ -309,7 +309,7 @@ def test_loaders_delete_null_foreign_landing_url_rows(
 
     # Check that rows with null foreign landing urls were deleted
     foreign_landing_url_check = (
-        f"SELECT COUNT (*) FROM {load_table} " f"WHERE foreign_landing_url IS NULL;"
+        f"SELECT COUNT (*) FROM {load_table} WHERE foreign_landing_url IS NULL;"
     )
     postgres_with_load_table.cursor.execute(foreign_landing_url_check)
     null_foreign_landing_url_num_rows = postgres_with_load_table.cursor.fetchone()[0]
@@ -346,7 +346,7 @@ def test_data_loaders_delete_null_foreign_identifier_rows(
 
     # Check that rows with null foreign identifiers were deleted
     foreign_identifier_check = (
-        f"SELECT COUNT (*) FROM {load_table} " f"WHERE foreign_identifier IS NULL;"
+        f"SELECT COUNT (*) FROM {load_table} WHERE foreign_identifier IS NULL;"
     )
     postgres_with_load_table.cursor.execute(foreign_identifier_check)
     null_foreign_identifier_num_rows = postgres_with_load_table.cursor.fetchone()[0]
@@ -383,7 +383,7 @@ def test_import_data_deletes_duplicate_foreign_identifier_rows(
 
     # Check that rows with duplicate foreign ids were deleted
     foreign_id_duplicate_check = (
-        f"SELECT COUNT (*) FROM {load_table} " f"WHERE foreign_identifier='135257';"
+        f"SELECT COUNT (*) FROM {load_table} WHERE foreign_identifier='135257';"
     )
     postgres_with_load_table.cursor.execute(foreign_id_duplicate_check)
     foreign_id_duplicate_num_rows = postgres_with_load_table.cursor.fetchone()[0]
@@ -1639,7 +1639,7 @@ def test_drop_load_table_drops_table(postgres_with_load_table, load_table, ident
     postgres_conn_id = POSTGRES_CONN_ID
     sql.drop_load_table(postgres_conn_id, identifier)
     check_query = (
-        f"SELECT EXISTS (" f"SELECT FROM pg_tables WHERE tablename='{load_table}');"
+        f"SELECT EXISTS (SELECT FROM pg_tables WHERE tablename='{load_table}');"
     )
     postgres_with_load_table.cursor.execute(check_query)
     check_result = postgres_with_load_table.cursor.fetchone()[0]

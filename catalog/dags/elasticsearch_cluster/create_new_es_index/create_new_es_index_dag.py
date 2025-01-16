@@ -287,7 +287,7 @@ def create_new_es_index_dag(dag_config: CreateNewIndex):
             trigger_rule=TriggerRule.NONE_FAILED
         )(
             text=(
-                f"New index { index_name } was successfully created with alias"
+                f"New index {index_name} was successfully created with alias"
                 "{{ params.target_alias }}."
             ),
             dag_id=dag.dag_id,

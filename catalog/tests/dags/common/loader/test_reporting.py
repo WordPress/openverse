@@ -213,14 +213,14 @@ def test_report_completion_contents(
         # Assert that if we were supposed to skip or alert missing records, we did not
         # get this far
         assert not should_skip, "Completion was reported when it should have skipped."
-        assert (
-            not should_alert_missing_records
-        ), "Completion was reported instead of alerting missing records."
+        assert not should_alert_missing_records, (
+            "Completion was reported instead of alerting missing records."
+        )
 
         for expected in [audio_expected, image_expected]:
-            assert (
-                expected in message
-            ), "Completion message doesn't contain expected text"
+            assert expected in message, (
+                "Completion message doesn't contain expected text"
+            )
 
         # Split message into "sections"
         parts = message.strip().split("\n")
@@ -282,9 +282,9 @@ def test_report_completion_contents_with_lists(
             return
 
         for expected in [audio_expected, image_expected]:
-            assert (
-                expected in message
-            ), "Completion message doesn't contain expected text"
+            assert expected in message, (
+                "Completion message doesn't contain expected text"
+            )
         # Split message into "sections"
         parts = message.strip().split("\n")
         # Get the date section

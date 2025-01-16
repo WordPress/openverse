@@ -190,7 +190,7 @@ def test_record_builder_get_record_data(ingester, record_builder):
 
     assert record_data == {
         "foreign_landing_url": (
-            "http://bibliotecadigital.jcyl.es/i18n/consulta/registro.cmd?" "id=26229"
+            "http://bibliotecadigital.jcyl.es/i18n/consulta/registro.cmd?id=26229"
         ),
         "url": (
             "http://bibliotecadigital.jcyl.es/i18n/catalogo_imagenes"

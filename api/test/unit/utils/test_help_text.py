@@ -13,8 +13,7 @@ from api.utils.help_text import make_comma_separated_help_text
         ),
         (
             ["a", "b"],
-            "A comma separated list of items; "
-            "available items include: `a`, and `b`.",
+            "A comma separated list of items; available items include: `a`, and `b`.",
         ),
         (
             ["a", "b", "c"],

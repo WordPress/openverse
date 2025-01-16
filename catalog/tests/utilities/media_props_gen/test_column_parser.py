@@ -24,7 +24,7 @@ from utilities.media_props_gen.helpers.column_parser import (
         pytest.param(
             {"name": "id", "db_name": "user_id", "python_type": "IntegerColumn"},
             True,
-            f'{COLUMN_DEFINITIONS["IntegerColumn"]} '
+            f"{COLUMN_DEFINITIONS['IntegerColumn']} "
             f'(`name="id", upsert_strategy=newest_non_null, nullable=True, required=False`)',
             id="name and db_name are different",
         ),
@@ -61,9 +61,9 @@ from utilities.media_props_gen.helpers.column_parser import (
 )
 def test_column(init_args, expected_nullable, expected_str):
     column = Column(**init_args)
-    assert (
-        column.nullable == expected_nullable
-    ), "Nullable attribute did not match expected value"
-    assert (
-        str(column) == expected_str
-    ), "__str__ representation did not match expected value"
+    assert column.nullable == expected_nullable, (
+        "Nullable attribute did not match expected value"
+    )
+    assert str(column) == expected_str, (
+        "__str__ representation did not match expected value"
+    )

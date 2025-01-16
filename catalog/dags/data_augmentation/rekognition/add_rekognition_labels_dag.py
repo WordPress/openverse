@@ -70,9 +70,7 @@ def add_rekognition_labels():
         icon_emoji=constants.SLACK_ICON,
     )
 
-    notify_resume = notify_slack.override(
-        task_id=constants.NOTIFY_RESUME_TASK_ID
-    )(
+    notify_resume = notify_slack.override(task_id=constants.NOTIFY_RESUME_TASK_ID)(
         text="Resuming Rekognition label insertion "  # noqa: UP031
         "from position: `{{ var.value.%s }}`\n%s"
         % (constants.CURRENT_POS_VAR_NAME, constants.TEMPLATE_SLACK_MESSAGE_CONFIG),

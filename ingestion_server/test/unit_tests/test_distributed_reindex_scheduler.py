@@ -24,9 +24,9 @@ from ingestion_server import distributed_reindex_scheduler
 )
 def test_assign_work(estimated_records, record_limit, workers, expected_ranges):
     # Checks for the parameters
-    assert len(workers) == len(
-        expected_ranges
-    ), "Number of workers and expected ranges do not match, correct the test parameters"
+    assert len(workers) == len(expected_ranges), (
+        "Number of workers and expected ranges do not match, correct the test parameters"
+    )
     # Set up database mock response
     mock_db = mock.MagicMock()
     mock_db.cursor.return_value.__enter__.return_value.fetchone.return_value = [

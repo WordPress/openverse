@@ -393,8 +393,7 @@ class ProviderDataIngester(ABC):
                 [f"{e.query_params}" for e in self.ingestion_errors]
             )
             logger.info(
-                "The following query_params resulted in errors: \n"
-                f"{bad_query_params}"
+                f"The following query_params resulted in errors: \n{bad_query_params}"
             )
             errors_str = "\n".join(
                 e.repr_with_traceback() for e in self.ingestion_errors

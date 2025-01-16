@@ -107,7 +107,7 @@ def _tally_response(
     with tallies_conn.pipeline() as tallies:
         tallies.incr(f"thumbnail_response_code:{month}:{status_code}")
         tallies.incr(
-            f"thumbnail_response_code_by_domain:{domain}:" f"{month}:{status_code}"
+            f"thumbnail_response_code_by_domain:{domain}:{month}:{status_code}"
         )
         tallies.incr(
             f"thumbnail_response_code_by_provider:{media_info.media_provider}:"

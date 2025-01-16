@@ -316,9 +316,9 @@ def upsert_records_to_db_table(
     upsert_query = dedent(
         f"""
         INSERT INTO {sql_info.media_table} AS old
-        ({col.DIRECT_URL.name}, {', '.join(column_inserts.keys())})
+        ({col.DIRECT_URL.name}, {", ".join(column_inserts.keys())})
         SELECT DISTINCT ON ({col.DIRECT_URL.name}) {col.DIRECT_URL.name},
-        {', '.join(column_inserts.values())}
+        {", ".join(column_inserts.values())}
         FROM {load_table} as new
         WHERE NOT EXISTS (
             SELECT {col.DIRECT_URL.name} from {sql_info.media_table}

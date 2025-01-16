@@ -313,7 +313,7 @@ def test_get_record_data_handles_example_dict(wmc):
             "categories": [
                 "Coasts of Ploz\u00e9vet",
                 "No QIC by usr:PtrQs",
-                "Photographs taken with Minolta AF Zoom " "28-70mm F2.8 G",
+                "Photographs taken with Minolta AF Zoom 28-70mm F2.8 G",
                 "Self-published work",
                 "Taken with Sony DSLR-A900",
                 "Trees in Finist\u00e8re",
