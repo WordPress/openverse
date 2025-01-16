@@ -136,6 +136,12 @@ export class OpenverseAuthMiddleware implements OpenverseMiddleware {
             client_id: this.credentials.clientId,
             client_secret: this.credentials.clientSecret,
           },
+          bodySerializer(body) {
+            return new URLSearchParams(body).toString()
+          },
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
         })
         .then((tokenResponse) => {
           if (!tokenResponse.response.ok || !tokenResponse.data) {

@@ -17,6 +17,9 @@ const getClientAndNock = (credentials?: ClientCredentials) => ({
   nock: rootNock("https://nock.local/"),
 })
 
+const TOKEN_REQUEST_BODY =
+  /grant_type=client_credentials&client_id=test&client_secret=test-secret/
+
 describe("OpenverseClient", () => {
   describe("api token refresh", async () => {
     test("should automatically refresh api token before sending final request", async () => {
@@ -26,7 +29,7 @@ describe("OpenverseClient", () => {
       })
 
       const scope = nock
-        .post("/v1/auth_tokens/token/", /test-secret/)
+        .post("/v1/auth_tokens/token/", TOKEN_REQUEST_BODY)
         .reply(200, {
           access_token: "test-access-token",
           scope: "test-scope",
@@ -57,7 +60,7 @@ describe("OpenverseClient", () => {
       })
 
       const scope = nock
-        .post("/v1/auth_tokens/token/", /test-secret/)
+        .post("/v1/auth_tokens/token/", TOKEN_REQUEST_BODY)
         .delay(1000)
         // times=1 enforces that only a single auth token request is ever made, otherwise `nock` would raise an error
         .times(1)
@@ -114,7 +117,7 @@ describe("OpenverseClient", () => {
       })
 
       const scope = nock
-        .post("/v1/auth_tokens/token/", /test-secret/)
+        .post("/v1/auth_tokens/token/", TOKEN_REQUEST_BODY)
         .times(1)
         .reply(401, "Invalid credentials")
 
@@ -140,7 +143,7 @@ describe("OpenverseClient", () => {
       })
 
       const scope = nock
-        .post("/v1/auth_tokens/token/", /test-secret/)
+        .post("/v1/auth_tokens/token/", TOKEN_REQUEST_BODY)
         .times(1)
         .reply(200, {
           access_token: "test-access-token-1",
@@ -166,7 +169,7 @@ describe("OpenverseClient", () => {
         .reply(200, {
           id: "single-audio",
         })
-        .post("/v1/auth_tokens/token/", /test-secret/)
+        .post("/v1/auth_tokens/token/", TOKEN_REQUEST_BODY)
         .delay(3)
         .times(1)
         .reply(200, {
