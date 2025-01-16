@@ -41,10 +41,7 @@ describe("provider store", () => {
   it("sets the default state", () => {
     expect(providerStore.providers.audio.length).toEqual(0)
     expect(providerStore.providers.image.length).toEqual(0)
-    expect(providerStore.fetchState).toEqual({
-      isFetching: false,
-      fetchingError: null,
-    })
+    expect(providerStore.fetchState).toEqual({ status: "idle", error: null })
   })
 
   it.each`

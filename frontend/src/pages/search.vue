@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import {
-  createError,
   definePageMeta,
   navigateTo,
   showError,
@@ -14,7 +13,6 @@ import { computed, ref, watch } from "vue"
 import { watchDebounced } from "@vueuse/core"
 import { storeToRefs } from "pinia"
 
-import { ALL_MEDIA } from "#shared/constants/media"
 import { skipToContentTargetId } from "#shared/constants/window"
 import { areQueriesEqual } from "#shared/utils/search-query-transform"
 import { handledClientSide, isRetriable } from "#shared/utils/errors"
@@ -49,7 +47,8 @@ const {
   apiSearchQueryParams: query,
 } = storeToRefs(searchStore)
 
-const { fetchState } = storeToRefs(mediaStore)
+const fetchingError = computed(() => mediaStore.fetchState.error)
+const isFetching = computed(() => mediaStore.isFetching)
 
 const pageTitle = ref(`${searchTerm.value} | Openverse`)
 watch(searchTerm, () => {
@@ -61,15 +60,7 @@ useHead(() => ({
 }))
 
 const searchResults = ref<Results | null>(
-  isSearchTypeSupported(searchType.value)
-    ? ({
-        type: searchType.value,
-        items:
-          searchType.value === ALL_MEDIA
-            ? mediaStore.allMedia
-            : mediaStore.resultItems[searchType.value],
-      } as Results)
-    : null
+  isSearchTypeSupported(searchType.value) ? mediaStore.searchResults : null
 )
 
 const fetchMedia = async (payload: { shouldPersistMedia?: boolean } = {}) => {
@@ -81,7 +72,7 @@ const fetchMedia = async (payload: { shouldPersistMedia?: boolean } = {}) => {
    * and there is an error status that will not change if retried, don't re-fetch.
    */
   const shouldNotRefetch =
-    fetchState.value.hasStarted &&
+    mediaStore.fetchState.status !== "idle" &&
     fetchingError.value !== null &&
     !isRetriable(fetchingError.value)
   if (shouldNotRefetch) {
@@ -92,16 +83,13 @@ const fetchMedia = async (payload: { shouldPersistMedia?: boolean } = {}) => {
   }
 
   const media = await mediaStore.fetchMedia(payload)
-  searchResults.value = { type: searchType.value, items: media } as Results
 
-  if (fetchingError.value === null || handledClientSide(fetchingError.value)) {
+  if (!fetchingError.value || handledClientSide(fetchingError.value)) {
+    searchResults.value = media
     return media
   }
   return fetchingError.value
 }
-
-const fetchingError = computed(() => fetchState.value.fetchingError)
-const isFetching = computed(() => fetchState.value.isFetching)
 
 /**
  * This watcher fires even when the queries are equal. We update the path only
@@ -139,14 +127,19 @@ await useAsyncData(
      */
     document.getElementById("main-page")?.scroll(0, 0)
     const res = await fetchMedia()
-    if (!res || (res && "requestKind" in res)) {
-      return showError(res ?? createError("No results found"))
+
+    const error = !res
+      ? (fetchingError.value ?? "Fetch media error") // middleware in SSR returned an error
+      : "requestKind" in res // fetchMedia returned a `FetchingError`
+        ? res
+        : null
+    if (error) {
+      return showError(error)
     }
     return res
   },
   {
     server: false,
-    lazy: true,
     watch: [shouldFetchSensitiveResults, routeQuery, routePath],
   }
 )

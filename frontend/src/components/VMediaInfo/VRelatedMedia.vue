@@ -33,7 +33,7 @@ watch(
   { immediate: true }
 )
 
-const isFetching = computed(() => relatedMediaStore.fetchState.isFetching)
+const isFetching = computed(() => relatedMediaStore.isFetching)
 const showRelated = computed(
   () => results.value.items.length > 0 || isFetching.value
 )

@@ -18,7 +18,7 @@ export const useCollection = <T extends SupportedMediaType>({
   const searchStore = useSearchStore()
 
   const collectionParams = computed(() => searchStore.collectionParams)
-  const isFetching = computed(() => mediaStore.fetchState.isFetching)
+  const isFetching = computed(() => mediaStore.isFetching)
 
   const media = ref(mediaStore.resultItems[mediaType]) as Ref<ResultType[]>
   const creatorUrl = ref<string>()
@@ -38,9 +38,8 @@ export const useCollection = <T extends SupportedMediaType>({
       shouldPersistMedia: false,
     }
   ) => {
-    media.value = (await mediaStore.fetchMedia({
-      shouldPersistMedia,
-    })) as ResultType[]
+    const results = await mediaStore.fetchMedia({ shouldPersistMedia })
+    media.value = results.items as ResultType[]
     creatorUrl.value =
       media.value.length > 0 ? media.value[0].creator_url : undefined
     return media.value
@@ -53,6 +52,7 @@ export const useCollection = <T extends SupportedMediaType>({
     await fetchMedia()
   })
 
+  const canLoadMore = computed(() => mediaStore.canLoadMore)
   const loadMore = async () => {
     await fetchMedia({ shouldPersistMedia: true })
   }
@@ -71,5 +71,6 @@ export const useCollection = <T extends SupportedMediaType>({
     media,
     fetchMedia,
     loadMore,
+    canLoadMore,
   }
 }

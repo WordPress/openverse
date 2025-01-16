@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useI18n } from "#imports"
+import { useI18n, useI18nResultsCount } from "#imports"
 import { computed } from "vue"
 
 import type { SupportedMediaType } from "#shared/constants/media"
@@ -33,7 +33,19 @@ const collectionLabel = computed(() => {
 const contentLinkPath = (mediaType: SupportedMediaType) =>
   searchStore.getSearchPath({ type: mediaType })
 
+const showLoading = computed(() => mediaStore.showLoading)
+
+const { getResultCountLabels } = useI18nResultsCount(showLoading)
+
+const labels = (
+  count: number,
+  searchTerm: string,
+  mediaType: SupportedMediaType
+) => getResultCountLabels(count, mediaType, searchTerm)
+
 const resultCounts = computed(() => mediaStore.resultCountsPerMediaType)
+
+const canLoadMore = computed(() => mediaStore.canLoadMore)
 </script>
 
 <template>
@@ -62,9 +74,8 @@ const resultCounts = computed(() => mediaStore.resultCountsPerMediaType)
         <VContentLink
           v-for="[mediaType, count] in resultCounts"
           :key="mediaType"
+          :labels="labels(count, searchTerm, mediaType)"
           :media-type="mediaType"
-          :search-term="searchTerm"
-          :results-count="count"
           :to="contentLinkPath(mediaType)"
         />
       </div>
@@ -72,6 +83,7 @@ const resultCounts = computed(() => mediaStore.resultCountsPerMediaType)
     <template #footer>
       <footer class="mb-6 mt-4 lg:mb-10">
         <VLoadMore
+          :can-load-more="canLoadMore"
           :search-type="results.type"
           kind="search"
           :search-term="searchTerm"

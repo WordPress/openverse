@@ -26,7 +26,7 @@ export const useSingleResultStore = defineStore("single-result", {
     mediaType: null,
     mediaId: null,
     mediaItem: null,
-    fetchState: { isFetching: false, fetchingError: null },
+    fetchState: { status: "idle", error: null },
   }),
 
   getters: {
@@ -42,16 +42,19 @@ export const useSingleResultStore = defineStore("single-result", {
       }
       return null
     },
+    isFetching: (state) => state.fetchState.status === "fetching",
   },
 
   actions: {
     _endFetching(error?: FetchingError) {
-      this.fetchState.isFetching = false
-      this.fetchState.fetchingError = error || null
+      if (error) {
+        this.fetchState = { status: "error", error }
+      } else {
+        this.fetchState = { status: "success", error: null }
+      }
     },
     _startFetching() {
-      this.fetchState.isFetching = true
-      this.fetchState.fetchingError = null
+      this.fetchState = { status: "fetching", error: null }
     },
 
     _updateFetchState(action: "start" | "end", option?: FetchingError) {
@@ -66,8 +69,7 @@ export const useSingleResultStore = defineStore("single-result", {
       this.mediaItem = null
       this.mediaType = null
       this.mediaId = null
-      this.fetchState.isFetching = false
-      this.fetchState.fetchingError = null
+      this.fetchState = { status: "idle", error: null }
     },
 
     /**
