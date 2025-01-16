@@ -95,7 +95,6 @@ def point_es_alias_dag(environment: str):
             trigger_rule=TriggerRule.NONE_FAILED
         )(
             text="Alias {{ params.target_alias }} applied to index {{ params.target_index }}.",
-            dag_id=dag.dag_id,
             username="Point Alias",
             icon_emoji=":elasticsearch:",
         )

@@ -182,7 +182,6 @@ def recreate_full_staging_index():
             f"{new_index_suffix}` aliased to `{target_alias}`."
         ),
         username="Full Staging Index Creation",
-        dag_id=DAG_ID,
     )
 
     # Set up dependencies

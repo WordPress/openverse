@@ -57,7 +57,7 @@ from typing import Any
 
 from airflow.decorators import task
 from airflow.exceptions import AirflowNotFoundException
-from airflow.models import Variable
+from airflow.models import DAG, Variable
 from airflow.providers.http.hooks.http import HttpHook
 from requests import Response
 from typing_extensions import NotRequired, TypedDict
@@ -421,13 +421,13 @@ def on_failure_callback(context: dict) -> None:
 @task
 def notify_slack(
     text: str,
-    dag_id: str,
     username: str = "Airflow Notification",
     icon_emoji: str = ":airflow:",
+    dag: DAG | None = None,
 ) -> None:
     send_message(
         text,
         username=username,
         icon_emoji=icon_emoji,
-        dag_id=dag_id,
+        dag_id=dag.dag_id,
     )

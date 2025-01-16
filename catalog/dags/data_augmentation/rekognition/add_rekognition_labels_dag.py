@@ -65,7 +65,6 @@ def add_rekognition_labels():
     notify_start = notify_slack.override(task_id=constants.NOTIFY_START_TASK_ID)(
         text=f"Starting Rekognition label insertion\n"
         f"{constants.TEMPLATE_SLACK_MESSAGE_CONFIG}",
-        dag_id=constants.DAG_ID,
         username=constants.SLACK_USERNAME,
         icon_emoji=constants.SLACK_ICON,
     )
@@ -74,7 +73,6 @@ def add_rekognition_labels():
         text="Resuming Rekognition label insertion "  # noqa: UP031
         "from position: `{{ var.value.%s }}`\n%s"
         % (constants.CURRENT_POS_VAR_NAME, constants.TEMPLATE_SLACK_MESSAGE_CONFIG),
-        dag_id=constants.DAG_ID,
         username=constants.SLACK_USERNAME,
         icon_emoji=constants.SLACK_ICON,
     )
@@ -117,7 +115,6 @@ def add_rekognition_labels():
 
     notify_complete = notify_slack.override(task_id="notify_complete")(
         text="Finished Rekognition label insertion and batched update :check_tick:",
-        dag_id=constants.DAG_ID,
         username=constants.SLACK_USERNAME,
         icon_emoji=constants.SLACK_ICON,
     )

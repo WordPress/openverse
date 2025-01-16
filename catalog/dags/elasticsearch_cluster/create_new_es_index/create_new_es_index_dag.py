@@ -290,7 +290,6 @@ def create_new_es_index_dag(dag_config: CreateNewIndex):
                 f"New index {index_name} was successfully created with alias"
                 "{{ params.target_alias }}."
             ),
-            dag_id=dag.dag_id,
             username="Create New ES Index",
             icon_emoji=":elasticsearch:",
         )
