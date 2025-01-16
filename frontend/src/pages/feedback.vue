@@ -37,7 +37,6 @@ useHead({ title: `${t("feedback.title")} | Openverse` })
     </h1>
     <i18n-t scope="global" keypath="feedback.intro" tag="p">
       <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
-      <template #openverse>Openverse</template>
       <template #slack>
         <VLink href="https://wordpress.slack.com/messages/openverse/"
           >#openverse</VLink

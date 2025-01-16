@@ -34,7 +34,7 @@ export const t = (
     )
   }
 
-  return value.replace("{openverse}", "Openverse")
+  return value.replace("{'Openverse'}", "Openverse")
 }
 export const languageDirections = ["ltr", "rtl"] as const
 export type LanguageDirection = (typeof languageDirections)[number]

@@ -4,7 +4,7 @@
   "hero.subtitle": "Explore more than 800 million creative works",
   "hero.description": "An extensive library of free stock photos, images, and audio, available for free use.",
   "hero.search.placeholder": "Search for content",
-  "hero.disclaimer.content": "All {openverse} content is under a {license} or is in the public domain.",
+  "hero.disclaimer.content": "All {'Openverse'} content is under a {license} or is in the public domain.",
   /**
      Interpolated into hero.disclaimer.content:
       _{license}_ part of "All Openverse content is under a {license} or is in the public domain."
@@ -27,7 +27,7 @@ _{link}_ part of "The translation for English locale is incomplete. Help us get 
   "notification.darkMode.text": "Dark mode is now available.",
   "notification.new": "New",
   "notification.more": "See more",
-  "header.homeLink": "{openverse} Home",
+  "header.homeLink": "{'Openverse'} Home",
   "header.placeholder": "Search all content",
   "header.aria.primary": "primary",
   "header.aria.menu": "menu",
@@ -53,12 +53,12 @@ _{link}_ part of "The translation for English locale is incomplete. Help us get 
   "navigation.sources": "Sources",
   "navigation.externalSources": "External sources",
   "navigation.searchHelp": "Search help",
-  "about.title": "About {openverse}",
-  "about.description.content": "{openverse} is a tool that allows openly licensed and public domain works to be discovered and used by everyone.",
-  "about.collection.content.a": "{openverse} searches across more than 800 million images and audio tracks from open APIs and the {commonCrawl} dataset.",
+  "about.title": "About {'Openverse'}",
+  "about.description.content": "{'Openverse'} is a tool that allows openly licensed and public domain works to be discovered and used by everyone.",
+  "about.collection.content.a": "{'Openverse'} searches across more than 800 million images and audio tracks from open APIs and the {commonCrawl} dataset.",
   "about.collection.content.b": "We aggregate works from multiple public repositories, and facilitate reuse through features like one-click attribution.",
   /** about.planning.content.a-c are parts of a single statement */
-  "about.planning.content.a": "Currently {openverse} only searches images and audio tracks, with search for video provided through External Sources.",
+  "about.planning.content.a": "Currently {'Openverse'} only searches images and audio tracks, with search for video provided through External Sources.",
   /** about.planning.content.a-c are parts of a single statement */
   "about.planning.content.b": "We plan to add additional media types such as open texts and 3D models, with the ultimate goal of providing access to the estimated 2.5 billion CC licensed and public domain works on the web.",
   /**
@@ -71,7 +71,7 @@ _{link}_ part of "The translation for English locale is incomplete. Help us get 
    * Interpolated into about.planning.content.c:
    * _{repository}_ part of "All of our code is open source and can be accessed at the _{repository}_".
    */
-  "about.planning.repository": "{openverse} {github} repository",
+  "about.planning.repository": "{'Openverse'} {github} repository",
   /**
    * Interpolated into about.planning.content.c:
    * _{community}_ part of "We {community}. You can see what we’re currently working on."
@@ -83,18 +83,18 @@ _{link}_ part of "The translation for English locale is incomplete. Help us get 
    */
   "about.planning.working": "we’re currently working on",
   /** Part of a single statement with about.transfer.content.b and about.transfer.content.c */
-  "about.transfer.content.a": "{openverse} is the successor to CC Search which was launched by Creative Commons in 2019, after its migration to WordPress in 2021.",
+  "about.transfer.content.a": "{'Openverse'} is the successor to CC Search which was launched by Creative Commons in 2019, after its migration to WordPress in 2021.",
   /** Part of a single statement with about.transfer.content.a and about.transfer.content.c */ "about.transfer.content.b": "You can read more about this transition in the official announcements from {creativeCommons} and {wordpress}.",
   /** Part of a single statement with about.transfer.content.a and about.transfer.content.b */ "about.transfer.content.c": "We remain committed to our goal of tackling discoverability and accessibility of open access media.",
   /** about.declaration.content.a-b are parts of a single statement */
-  "about.declaration.content.a": "{openverse} does not verify licensing information for individual works, or whether the generated attribution is accurate or complete.",
+  "about.declaration.content.a": "{'Openverse'} does not verify licensing information for individual works, or whether the generated attribution is accurate or complete.",
   /** about.declaration.content.a-b are parts of a single statement */
   "about.declaration.content.b": "Please independently verify the licensing status and attribution information before reusing the content. For more details, read the {terms}.",
   /**
    * Interpolated into about.declaration.content.b:
    * _{terms}_ part of "For more details, read the _{terms}_."
    */
-  "about.declaration.terms": "{openverse} Terms of Use",
+  "about.declaration.terms": "{'Openverse'} Terms of Use",
   "sources.title": "Sources",
   "sources.detail": "Clicking on a {singleName} allows you to browse and filter items within that source.",
   /**
@@ -105,13 +105,13 @@ _{link}_ part of "The translation for English locale is incomplete. Help us get 
   "sources.providers.source": "Source",
   "sources.providers.domain": "Domain",
   "sources.providers.item": "Total items",
-  "sources.ccContent.where": "Where does the content on {openverse} come from?",
-  "sources.ccContent.content": "There is openly licensed content hosted on millions of domains across the breadth of the internet. Our team systematically identifies providers hosting CC-licensed content. If it’s a good fit, we index that content and make it discoverable through {openverse}.",
+  "sources.ccContent.where": "Where does the content on {'Openverse'} come from?",
+  "sources.ccContent.content": "There is openly licensed content hosted on millions of domains across the breadth of the internet. Our team systematically identifies providers hosting CC-licensed content. If it’s a good fit, we index that content and make it discoverable through {'Openverse'}.",
   /** sources.ccContent.provider.a-b are parts of a single statement */
   "sources.ccContent.provider.a": "Some providers have multiple different groupings of content within them. {flickr} has sources ranging from NASA to personal photography. The {smithsonian} comprises a dozen diverse collections.",
   /** sources.ccContent.provider.a-b are parts of a single statement */
   "sources.ccContent.provider.b": "Wikimedia Commons runs the gamut in terms of content, and is used by several galleries, libraries, archives, and museums highlighting some or all of their digitized collections.",
-  "sources.ccContent.europeana": "{openverse} is especially grateful for the work of {link}, an organization that works to digitize and make discoverable cultural heritage works across Europe. {openverse} is able to index hundreds of valuable sources through a single integration with the {linkApi}.",
+  "sources.ccContent.europeana": "{'Openverse'} is especially grateful for the work of {link}, an organization that works to digitize and make discoverable cultural heritage works across Europe. {'Openverse'} is able to index hundreds of valuable sources through a single integration with the {linkApi}.",
   "sources.newContent.next": "How do we decide what sources to add next?",
   "sources.newContent.integrate": "We have a never ending list of possible sources to research prior to integration. We ask ourselves questions like:",
   "sources.newContent.impact": " What is the impact or importance of this source to our users? If it exists within a provider like Wikimedia Commons, is it valuable for our users to be able to filter by this source directly?",
@@ -123,12 +123,12 @@ _{link}_ part of "The translation for English locale is incomplete. Help us get 
   "sources.heading.image": "Image Sources",
   "sources.heading.audio": "Audio Sources",
   "externalSourcesPage.title": "External Sources",
-  "externalSourcesPage.intro": "{openverse} is built on top of a catalog that indexes CC-licensed and public domain content from selected sources. Learn more about our {link}.",
+  "externalSourcesPage.intro": "{'Openverse'} is built on top of a catalog that indexes CC-licensed and public domain content from selected sources. Learn more about our {link}.",
   "externalSourcesPage.link": "sources here",
   /** externalSourcesPage.license.a-c are parts of a single statement */
-  "externalSourcesPage.license.a": "However, there are many sources of CC-licensed and public domain media that we are not yet able to include in {openverse} search.",
+  "externalSourcesPage.license.a": "However, there are many sources of CC-licensed and public domain media that we are not yet able to include in {'Openverse'} search.",
   /** externalSourcesPage.license.a-c are parts of a single statement */
-  "externalSourcesPage.license.b": "This might be because they do not offer a public API, or that our contributors have not yet had time to integrate them into {openverse}.",
+  "externalSourcesPage.license.b": "This might be because they do not offer a public API, or that our contributors have not yet had time to integrate them into {'Openverse'}.",
   /** externalSourcesPage.license.a-c are parts of a single statement */
   "externalSourcesPage.license.c": "These are valued sources and we want to make sure that you are able to find the best openly licensed materials possible, regardless of where they are located.",
   "externalSourcesPage.new.title": "Can I suggest new external sources?",
@@ -146,7 +146,7 @@ _{link}_ part of "The translation for English locale is incomplete. Help us get 
   "externalSourcesPage.why.title": "Why did you build this?",
   "externalSourcesPage.why.content": "For many years, Creative Commons has offered its users a dedicated search portal for searching platforms that have CC licensing filters built in. In fact, this is still maintained at {old}.",
   /** externalSourcesPage.why.new.a-c are parts of a single statement */
-  "externalSourcesPage.why.new.a": 'For users of the legacy CC Meta Search site, the "External Sources" feature on {openverse} will look familiar.',
+  "externalSourcesPage.why.new.a": "For users of the legacy CC Meta Search site, the \"External Sources\" feature on {'Openverse'} will look familiar.",
   /** externalSourcesPage.why.new.a-c are parts of a single statement */
   "externalSourcesPage.why.new.b": "The goal was to ensure that the functionality is not lost, but is updated and embedded within our new search engine for openly licensed content.",
   /** externalSourcesPage.why.new.a-c are parts of a single statement */
@@ -159,12 +159,12 @@ _{link}_ part of "The translation for English locale is incomplete. Help us get 
    */
   "externalSourcesPage.why.feedbackLink": "feedback",
   /** externalSourcesPage.relationships.a-b are parts of a single statement */
-  "externalSourcesPage.relationships.a": "This functionality also allows us to start conversations and build relationships with sources that may like to be included in {openverse} in the future.",
+  "externalSourcesPage.relationships.a": "This functionality also allows us to start conversations and build relationships with sources that may like to be included in {'Openverse'} in the future.",
   /** externalSourcesPage.relationships.a-b are parts of a single statement */
-  "externalSourcesPage.relationships.b": "Finally, we can also offer external sources of media types we do not include in {openverse} yet, but plan to.",
-  "externalSourcesPage.explanation": "You can find links to external sources at the bottom of every {openverse} search results page; on pages for searches which return no results; and on pages for media types we do not yet support but intend to.",
+  "externalSourcesPage.relationships.b": "Finally, we can also offer external sources of media types we do not include in {'Openverse'} yet, but plan to.",
+  "externalSourcesPage.explanation": "You can find links to external sources at the bottom of every {'Openverse'} search results page; on pages for searches which return no results; and on pages for media types we do not yet support but intend to.",
   "privacy.title": "Privacy",
-  "privacy.intro.content": "The {openverse} project seeks to make the privacy and safety of our users a priority. {openverse} adheres to the {link}. Please see that document for a full description of how {openverse} uses and protects any information that you give us.",
+  "privacy.intro.content": "The {'Openverse'} project seeks to make the privacy and safety of our users a priority. {'Openverse'} adheres to the {link}. Please see that document for a full description of how {'Openverse'} uses and protects any information that you give us.",
   /**
    * Interpolated into privacy.intro.content:
    * _{link}_ part of "Openverse adheres to the _{link}_." */
@@ -172,11 +172,11 @@ _{link}_ part of "The translation for English locale is incomplete. Help us get 
   "privacy.intro.link": "privacy policy of all WordPress.org websites",
   "privacy.cookies.title": "Cookies",
   /** privacy.cookies.content.a-b are parts of a single statement */
-  "privacy.cookies.content.a": "{openverse} uses cookies to store information about visitor's preferences and information about their web browsers. We use this information to improve the user experience of the site.",
+  "privacy.cookies.content.a": "{'Openverse'} uses cookies to store information about visitor's preferences and information about their web browsers. We use this information to improve the user experience of the site.",
   /** privacy.cookies.content.a-b are parts of a single statement */
-  "privacy.cookies.content.b": 'These are considered "Necessary" or "Strictly necessary cookies". You may disable these by changing your browser settings, but this may affect how {openverse} functions.',
+  "privacy.cookies.content.b": 'These are considered "Necessary" or "Strictly necessary cookies". You may disable these by changing your browser settings, but this may affect how {\'Openverse\'} functions.',
   "privacy.contact.title": "Contact Us",
-  "privacy.contact.content": "Any questions about {openverse} and privacy can be sent to {email}, shared as a {issue}, or discussed with our community in the #openverse channel of the {chat}.",
+  "privacy.contact.content": "Any questions about {'Openverse'} and privacy can be sent to {email}, shared as a {issue}, or discussed with our community in the #openverse channel of the {chat}.",
   /**
    * Interpolated into privacy.contact.content:
    * _{issue}_ part of "Any questions about Openverse and privacy can be sent to openverse@wordpress.org, shared as a _{issue}_, or discussed with our community in the #openverse channel of the Making WordPress Chat."
@@ -187,7 +187,7 @@ _{link}_ part of "The translation for English locale is incomplete. Help us get 
    * _{chat}_ part of "Any questions about Openverse and privacy can be sent to openverse@wordpress.org, shared as a Github issue, or discussed with our community in the #openverse channel of the _{chat}_."
    */
   "privacy.contact.chat": "Making WordPress Chat",
-  "searchGuide.title": "{openverse} Syntax Guide",
+  "searchGuide.title": "{'Openverse'} Syntax Guide",
   "searchGuide.intro": "When you search, you can enter special symbols or words to your search term to make your search results more precise.",
   "searchGuide.exact.title": "Search for an exact match",
   "searchGuide.exact.ariaLabel": "quote unquote Claude Monet",
@@ -203,7 +203,7 @@ _{link}_ part of "The translation for English locale is incomplete. Help us get 
   "searchGuide.negate.example": "dog -pug",
   "searchGuide.negate.content": 'To exclude a term from your results, put the {operator} in front of it. Example: {link}{br} This will search for media related to "dog" but won\'t include results related to "pug".',
   "feedback.title": "Feedback",
-  "feedback.intro": "Thank you for using {openverse}! We welcome your ideas for improving the tool below. To provide regular feedback, join the {slack} channel in the {makingWordpress} Slack workspace.",
+  "feedback.intro": "Thank you for using {'Openverse'}! We welcome your ideas for improving the tool below. To provide regular feedback, join the {slack} channel in the {makingWordpress} Slack workspace.",
   "feedback.improve": "Help us Improve",
   "feedback.report": "Report a Bug",
   "feedback.loading": "Loading...",
@@ -212,17 +212,17 @@ _{link}_ part of "The translation for English locale is incomplete. Help us get 
   // translation keys used on the /sensitive-content page
   "sensitive.title": "Sensitive content",
   /** sensitive.description.content.a-f are parts of a single statement */
-  "sensitive.description.content.a": "{openverse} operates along a “safe-by-default” approach in all aspects of its operation and development, with the intention of being as inclusive and accessible as possible.",
+  "sensitive.description.content.a": "{'Openverse'} operates along a “safe-by-default” approach in all aspects of its operation and development, with the intention of being as inclusive and accessible as possible.",
   /** sensitive.description.content.a-f are parts of a single statement */
-  "sensitive.description.content.b": "Therefore, {openverse} only includes results with sensitive content when users have explicitly opted in to the “include sensitive results” features on {openverseOrg} and in the {openverse} API.",
+  "sensitive.description.content.b": "Therefore, {'Openverse'} only includes results with sensitive content when users have explicitly opted in to the “include sensitive results” features on {openverseOrg} and in the {'Openverse'} API.",
   /** sensitive.description.content.a-f are parts of a single statement */
-  "sensitive.description.content.c": "In adherence to {wpCoc} and its {deiStatement}, {openverse} holds contributors to high expectations regarding conduct towards other contributors, the accessibility of contribution and the services, and, therefore, being an inclusive project.",
+  "sensitive.description.content.c": "In adherence to {wpCoc} and its {deiStatement}, {'Openverse'} holds contributors to high expectations regarding conduct towards other contributors, the accessibility of contribution and the services, and, therefore, being an inclusive project.",
   /** sensitive.description.content.a-f are parts of a single statement */
-  "sensitive.description.content.d": "Similarly, {openverse} holds the expectation that the results returned from the API or displayed on the {openverseOrg} website should be accessible by default.",
+  "sensitive.description.content.d": "Similarly, {'Openverse'} holds the expectation that the results returned from the API or displayed on the {openverseOrg} website should be accessible by default.",
   /** sensitive.description.content.a-f are parts of a single statement */
-  "sensitive.description.content.e": "Everyone, regardless of background, should feel safe and included in {openverse}, whether they are a contributor to the technical aspects of the {openverse} services, a creator whose works are included in {openverse}, or an {openverse} user.",
+  "sensitive.description.content.e": "Everyone, regardless of background, should feel safe and included in {'Openverse'}, whether they are a contributor to the technical aspects of the {'Openverse'} services, a creator whose works are included in {'Openverse'}, or an {'Openverse'} user.",
   /** sensitive.description.content.a-f are parts of a single statement */
-  "sensitive.description.content.f": "{openverse} recognises its responsibility as a tool used by people of a wide variety of ages, including young people in educational settings, and pays particular attention to minimizing accidental interaction with or exposure to sensitive content.",
+  "sensitive.description.content.f": "{'Openverse'} recognises its responsibility as a tool used by people of a wide variety of ages, including young people in educational settings, and pays particular attention to minimizing accidental interaction with or exposure to sensitive content.",
   /**
    * Interpolated into sensitive.description.content.c.
    * Referencing https://make.wordpress.org/handbook/community-code-of-conduct/
@@ -235,21 +235,21 @@ _{link}_ part of "The translation for English locale is incomplete. Help us get 
    */
   "sensitive.description.deiStatement": "diversity, equity, and inclusion statement",
   /** sensitive.sensitivity.what.a-d are parts of a single statement */
-  "sensitive.sensitivity.what.a": '{openverse} uses the term "sensitive" rather than "mature", "NSFW" (not safe for work), or other terms in order to indicate that our designation of content as sensitive is broad, with a focus on accessibility and inclusion.',
+  "sensitive.sensitivity.what.a": '{\'Openverse\'} uses the term "sensitive" rather than "mature", "NSFW" (not safe for work), or other terms in order to indicate that our designation of content as sensitive is broad, with a focus on accessibility and inclusion.',
   /** sensitive.sensitivity.what.a-d are parts of a single statement */
   "sensitive.sensitivity.what.b": 'This means that some content is designated "sensitive" that would not fall into a category of what is generally understood to be "mature" content (in other words, content specifically for an adult audience).',
   /** sensitive.sensitivity.what.a-d are parts of a single statement */
-  "sensitive.sensitivity.what.c": "The designation does not, however, imply that {openverse} or its maintainers view the content as inappropriate for the platform in general and is likewise not an implication of moral or ethical judgement.",
+  "sensitive.sensitivity.what.c": "The designation does not, however, imply that {'Openverse'} or its maintainers view the content as inappropriate for the platform in general and is likewise not an implication of moral or ethical judgement.",
   /** sensitive.sensitivity.what.a-d are parts of a single statement */
   "sensitive.sensitivity.what.d": 'We consider "sensitive" content to be content that is offensive, disturbing, graphic, or otherwise inappropriate, with particular attention paid to young people.',
   /** Sensitive.sensitivity.how.a-c are parts of a single statement */
   "sensitive.sensitivity.how.a": "This definition of sensitivity has a tremendous degree of flexibility and is intentionally imprecise.",
   /** Sensitive.sensitivity.how.a-c are parts of a single statement */
-  "sensitive.sensitivity.how.b": "{openverse} relies on a variety of tools to discover potentially sensitive content, including moderated user reports on individual work and scanning the textual content related to a work for sensitive terms.",
+  "sensitive.sensitivity.how.b": "{'Openverse'} relies on a variety of tools to discover potentially sensitive content, including moderated user reports on individual work and scanning the textual content related to a work for sensitive terms.",
   /** Sensitive.sensitivity.how.a-c are parts of a single statement */
   "sensitive.sensitivity.how.c": "These are described in more detail below.",
   "sensitive.onOff.title": "Turning sensitive content on and off",
-  "sensitive.onOff.sensitiveResults": "By default, {openverse} does not include sensitive content in search results. Inclusion of sensitive results requires an explicit opt-in from the user. The user can opt-in to include sensitive content in the search results by enabling the “Sensitive results” switch.",
+  "sensitive.onOff.sensitiveResults": "By default, {'Openverse'} does not include sensitive content in search results. Inclusion of sensitive results requires an explicit opt-in from the user. The user can opt-in to include sensitive content in the search results by enabling the “Sensitive results” switch.",
   /** sensitive.onOff.blurSensitive.a-b are parts of a single statement */
   "sensitive.onOff.blurSensitive.a": "When sensitive content is included, the sensitive results returned are also blurred to prevent accidental exposure.",
   /** sensitive.onOff.blurSensitive.a-b are parts of a single statement */
@@ -257,28 +257,28 @@ _{link}_ part of "The translation for English locale is incomplete. Help us get 
   "sensitive.onOff.where": "Both these toggles are available in the filter sidebar (on desktops) and in the “Filter” tab of the search settings pane (on mobile devices) on the search results page.",
   "sensitive.designations.title": "Sensitive content designations",
   /** sensitive.designations.description.a-b are parts of a single statement */
-  "sensitive.designations.description.a": "{openverse} designates sensitive content in the API and on the {openverseOrg} website using two methods: reports from {openverse} users and automated sensitive textual content detection.",
+  "sensitive.designations.description.a": "{'Openverse'} designates sensitive content in the API and on the {openverseOrg} website using two methods: reports from {'Openverse'} users and automated sensitive textual content detection.",
   /** sensitive.designations.description.a-b are parts of a single statement */
   "sensitive.designations.description.b": "These designations are not exclusive of each other and a single work may have one or both applied to it.",
   "sensitive.designations.userReported.title": "User reported sensitivity",
   /** sensitive.designations.userReported.description.a-d are parts of a single statement */
-  "sensitive.designations.userReported.description.a": "{openverse} users are invited to report sensitive content via the {openverseOrg} website and the {openverse} API.",
+  "sensitive.designations.userReported.description.a": "{'Openverse'} users are invited to report sensitive content via the {openverseOrg} website and the {'Openverse'} API.",
   /** sensitive.designations.userReported.description.a-d are parts of a single statement */
-  "sensitive.designations.userReported.description.b": "Some tools and apps that integrate with the {openverse} API, like the {gutenbergMediaInserter}, also allow their users to report sensitive content.",
+  "sensitive.designations.userReported.description.b": "Some tools and apps that integrate with the {'Openverse'} API, like the {gutenbergMediaInserter}, also allow their users to report sensitive content.",
   /** sensitive.designations.userReported.description.a-d are parts of a single statement */
   "sensitive.designations.userReported.description.c": "An individual work’s page includes the ability to report content as sensitive (or to report rights violations).",
   /** sensitive.designations.userReported.description.a-d are parts of a single statement */
-  "sensitive.designations.userReported.description.d": "{openverse} moderators check these reports and make decisions about whether to add a sensitivity designation to the work or, in certain cases as described above, delist the work from {openverse}’s services.",
+  "sensitive.designations.userReported.description.d": "{'Openverse'} moderators check these reports and make decisions about whether to add a sensitivity designation to the work or, in certain cases as described above, delist the work from {'Openverse'}’s services.",
   /**
    * Interpolated into sensitive.designations.userReported.description.b,
    * _{gutenbergMediaInserter}_ part of "Some tools and apps that integrate with the Openverse API, like the _{gutenbergMediaInserter}_, also allow their users to report sensitive content."
    */
-  "sensitive.designations.userReported.gutenbergMediaInserter": "Gutenberg editor’s {openverse} media inserter",
+  "sensitive.designations.userReported.gutenbergMediaInserter": "Gutenberg editor’s {'Openverse'} media inserter",
   "sensitive.designations.sensitiveText.title": "Sensitive textual content",
   /** sensitive.designations.sensitiveText.description.a-e are a single statement */
-  "sensitive.designations.sensitiveText.description.a": "{openverse} scans some of the textual metadata related to works as provided by our sources for sensitive terms.",
+  "sensitive.designations.sensitiveText.description.a": "{'Openverse'} scans some of the textual metadata related to works as provided by our sources for sensitive terms.",
   /** sensitive.designations.sensitiveText.description.a-e are a single statement */
-  "sensitive.designations.sensitiveText.description.b": "{openverse}’s {sensitiveTermsList} is open source and contributions and input from the community are welcome and invited.",
+  "sensitive.designations.sensitiveText.description.b": "{'Openverse'}’s {sensitiveTermsList} is open source and contributions and input from the community are welcome and invited.",
   /** sensitive.designations.sensitiveText.description.a-e are a single statement */
   "sensitive.designations.sensitiveText.description.c": "Examples of potentially sensitive text include but are not limited to text of a sexual, biological, violent, racist, or otherwise derogatory nature.",
   /** sensitive.designations.sensitiveText.description.a-e are a single statement */
@@ -297,15 +297,15 @@ _{link}_ part of "The translation for English locale is incomplete. Help us get 
    */
   "sensitive.designations.sensitiveText.imperfect": '"{sectionName}" section',
   /** sensitive.designations.sensitiveText.metadata.a-e are a single statement */
-  "sensitive.designations.sensitiveText.metadata.a": "It is important to note that some textual metadata for a work is {notAvailable} through the {openverse} API or the {openverseOrg} website.",
+  "sensitive.designations.sensitiveText.metadata.a": "It is important to note that some textual metadata for a work is {notAvailable} through the {'Openverse'} API or the {openverseOrg} website.",
   /** sensitive.designations.sensitiveText.metadata.a-e are a single statement */
   "sensitive.designations.sensitiveText.metadata.b": "However, such metadata is still scanned for sensitive terms and is not treated as a special case.",
   /** sensitive.designations.sensitiveText.metadata.a-e are a single statement */
-  "sensitive.designations.sensitiveText.metadata.c": "If {openverse}’s text scanning finds sensitive terms in those metadata fields for a work, the work will still receive a sensitivity designation based on sensitive text even though the sensitive text itself is not available through {openverse}.",
+  "sensitive.designations.sensitiveText.metadata.c": "If {'Openverse'}’s text scanning finds sensitive terms in those metadata fields for a work, the work will still receive a sensitivity designation based on sensitive text even though the sensitive text itself is not available through {'Openverse'}.",
   /** sensitive.designations.sensitiveText.metadata.a-e are a single statement */
-  "sensitive.designations.sensitiveText.metadata.d": "{openverse} takes the approach that sensitive textual content in a description is a relatively high correlative indicator of potentially sensitive works.",
+  "sensitive.designations.sensitiveText.metadata.d": "{'Openverse'} takes the approach that sensitive textual content in a description is a relatively high correlative indicator of potentially sensitive works.",
   /** sensitive.designations.sensitiveText.metadata.a-e are a single statement */
-  "sensitive.designations.sensitiveText.metadata.e": "As above, {openverse} understands that this is not perfect.",
+  "sensitive.designations.sensitiveText.metadata.e": "As above, {'Openverse'} understands that this is not perfect.",
   /**
    * Interpolated into sensitive.designations.sensitiveText.metadata.a:
    * _{notAvailable}_ part of "It is important to note that some textual metadata for a work is _{notAvailable}_ through the Openverse API or the openverse.org website."
@@ -316,25 +316,25 @@ _{link}_ part of "The translation for English locale is incomplete. Help us get 
   /** sensitive.faq.one.answer.a-b are a single statement */
   "sensitive.faq.one.answer.a": "Please report sensitive content by visiting the individual work’s page on the {openverseOrg} website and using the “report this content” button below the attribution information and above the tags.",
   /** sensitive.faq.one.answer.a-b are a single statement */
-  "sensitive.faq.one.answer.b": "{openverse} moderates reports individually and reserves the right to respectfully decline the request to add a sensitivity designation to a given work.",
+  "sensitive.faq.one.answer.b": "{'Openverse'} moderates reports individually and reserves the right to respectfully decline the request to add a sensitivity designation to a given work.",
   "sensitive.faq.two.question": "I disagree with the sensitivity designation on a work. Can you please remove it?",
-  "sensitive.faq.two.answerPt1": "For text-based designations, {openverse} does not at the moment have a method for removing the designation. This is a feature that will be built eventually, but is not part of the baseline sensitive content detection feature.",
+  "sensitive.faq.two.answerPt1": "For text-based designations, {'Openverse'} does not at the moment have a method for removing the designation. This is a feature that will be built eventually, but is not part of the baseline sensitive content detection feature.",
   /** sensitive.faq.two.a-c are a single */
   "sensitive.faq.two.answerPt2.a": "For user reported designations, please file a new report on the work’s page following the instructions in the previous question.",
   /** sensitive.faq.two.a-c are a single */
   "sensitive.faq.two.answerPt2.b": "In the notes, describe why you believe the work should not have a sensitivity designation.",
   /** sensitive.faq.two.a-c are a single */
-  "sensitive.faq.two.answerPt2.c": "As when adding a new designation, {openverse} reserves the right to respectfully decline the request to remove a confirmed user sensitivity designation.",
-  "sensitive.faq.three.question": "I’ve found content on {openverse} that may be illegal. Besides reporting it to {openverse}, are there any other steps I can take?",
+  "sensitive.faq.two.answerPt2.c": "As when adding a new designation, {'Openverse'} reserves the right to respectfully decline the request to remove a confirmed user sensitivity designation.",
+  "sensitive.faq.three.question": "I’ve found content on {'Openverse'} that may be illegal. Besides reporting it to {'Openverse'}, are there any other steps I can take?",
   /** sensitive.faq.three.answer.a-c are a single statement */
   "sensitive.faq.three.answer.a": "For user reported designations, please file a new report on the work’s page following the instructions in the previous question.",
   /** sensitive.faq.three.answer.a-c are a single statement */
   "sensitive.faq.three.answer.b": "In the notes, describe why you believe the work should not have a sensitivity designation.",
   /** sensitive.faq.three.answer.a-c are a single statement */
-  "sensitive.faq.three.answer.c": "As when adding a new designation, {openverse} reserves the right to respectfully decline the request to remove a confirmed user sensitivity designation.",
-  "tags.title": "Understanding Tags in {openverse}",
+  "sensitive.faq.three.answer.c": "As when adding a new designation, {'Openverse'} reserves the right to respectfully decline the request to remove a confirmed user sensitivity designation.",
+  "tags.title": "Understanding Tags in {'Openverse'}",
   /** generatedTags.intro.a-b are parts of a single section explaining how tags work in Openverse. */
-  "tags.intro.a": "Each creative work in {openverse} may have tags, an optional set of keywords used to describe the work and make it easier for users to find relevant media for their searches.",
+  "tags.intro.a": "Each creative work in {'Openverse'} may have tags, an optional set of keywords used to describe the work and make it easier for users to find relevant media for their searches.",
   /** generatedTags.intro.a-b are parts of a single section explaining how tags work in Openverse. */
   "tags.intro.b": "These tags fall into two main categories: source tags and generated tags. Understanding the difference between them can enhance your search experience and improve the accuracy of your results.",
   "tags.sourceTags.title": "Source Tags",
@@ -619,7 +619,7 @@ _{link}_ part of "The translation for English locale is incomplete. Help us get 
   "mediaDetails.tags.showLess": "Show less",
   "mediaDetails.contentReport.short": "Report",
   "mediaDetails.contentReport.long": "Report this content",
-  "mediaDetails.contentReport.form.disclaimer": "For security purposes, {openverse} collects and retains anonymized IP addresses of those who complete and submit this form.",
+  "mediaDetails.contentReport.form.disclaimer": "For security purposes, {'Openverse'} collects and retains anonymized IP addresses of those who complete and submit this form.",
   "mediaDetails.contentReport.form.question": "What is the reason?",
   "mediaDetails.contentReport.form.dmca.option": "Infringes copyright",
   "mediaDetails.contentReport.form.dmca.note": "You must fill out this {form} to report copyright infringement. No action will be taken until this form is filled out and submitted. We recommend doing the same at the source, {source}.",
@@ -671,7 +671,7 @@ _{link}_ part of "The translation for English locale is incomplete. Help us get 
   "audioResults.snackbar.spacebar": "Spacebar",
   "audioResults.snackbar.left": "←",
   "audioResults.snackbar.right": "→",
-  "externalSources.caption": "{openverse} can not guarantee the accuracy of license information. Always verify that the work is actually under a CC license.",
+  "externalSources.caption": "{'Openverse'} can not guarantee the accuracy of license information. Always verify that the work is actually under a CC license.",
   "externalSources.button": "Source list",
   "externalSources.title": "External sources",
   "externalSources.card.search": "Not finding what you're looking for? Try external sources",
@@ -702,7 +702,7 @@ _{link}_ part of "The translation for English locale is incomplete. Help us get 
   "playPause.replay": "Replay",
   "playPause.loading": "Loading",
   "search.search": "Search",
-  "search.searchBarLabel": "Search for content in {openverse}",
+  "search.searchBarLabel": "Search for content in {'Openverse'}",
   "licenseReadableNames.cc0": "Zero",
   "licenseReadableNames.pdm": "Public Domain Mark",
   "licenseReadableNames.by": "Attribution",
@@ -741,7 +741,7 @@ _{link}_ part of "The translation for English locale is incomplete. Help us get 
   skipToContent: "Skip to content",
   "prefPage.title": "Preferences",
   "prefPage.groups.analytics.title": "Analytics",
-  "prefPage.groups.analytics.desc": "{openverse} uses anonymous analytics to improve our service. We do not collect any information that can be used to identify you personally. However, if you would like not to participate, you can opt out here.",
+  "prefPage.groups.analytics.desc": "{'Openverse'} uses anonymous analytics to improve our service. We do not collect any information that can be used to identify you personally. However, if you would like not to participate, you can opt out here.",
   "prefPage.features.analytics": "Record custom events and page views for analytics.",
   "prefPage.nonSwitchable.title": "Non-switchable features",
   "prefPage.nonSwitchable.desc": "You cannot modify the status of these features.",
@@ -775,15 +775,15 @@ _{link}_ part of "The translation for English locale is incomplete. Help us get 
   "sensitiveContent.singleResult.hide": "Hide content",
   "sensitiveContent.singleResult.show": "Show content",
   "sensitiveContent.singleResult.explanation": "This work is marked as sensitive for the following reasons:",
-  "sensitiveContent.singleResult.learnMore": "{link} about how {openverse} handles sensitive content.",
+  "sensitiveContent.singleResult.learnMore": "{link} about how {'Openverse'} handles sensitive content.",
   /**
    * Interpolated into sensitiveContent.singleResult.learnMore:
    * _{link}_ part of '_{link}_ about how Openverse handles sensitive content.'
    */
   "sensitiveContent.singleResult.link": "Learn more",
   "sensitiveContent.reasons.providerSuppliedSensitive": "The source of this work has marked it as sensitive.",
-  "sensitiveContent.reasons.sensitiveText": "{openverse} has detected potentially sensitive text.",
-  "sensitiveContent.reasons.userReportedSensitive": "{openverse} users have reported this work as sensitive.",
+  "sensitiveContent.reasons.sensitiveText": "{'Openverse'} has detected potentially sensitive text.",
+  "sensitiveContent.reasons.userReportedSensitive": "{'Openverse'} users have reported this work as sensitive.",
   "collection.heading.tag": "Tag",
   "collection.heading.creator": "Creator",
   "collection.heading.source": "Source",

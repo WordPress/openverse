@@ -15,22 +15,21 @@ definePageMeta({
 const { t } = useI18n({ useScope: "global" })
 
 useHead({
-  title: `${t("about.title", { openverse: "Openverse" })} | Openverse`,
+  title: `${t("about.title")} | Openverse`,
 })
 </script>
 
 <template>
   <VContentPage>
     <h1>
-      {{ $t("about.title", { openverse: "Openverse" }) }}
+      {{ $t("about.title") }}
     </h1>
     <p>
-      {{ $t("about.description.content", { openverse: "Openverse" }) }}
+      {{ $t("about.description.content") }}
     </p>
 
     <p>
       <i18n-t scope="global" keypath="about.collection.content.a" tag="span">
-        <template #openverse>Openverse</template>
         <template #commonCrawl>
           <VLink href="https://commoncrawl.org/">Common Crawl</VLink>
         </template>
@@ -39,14 +38,12 @@ useHead({
     </p>
 
     <p>
-      {{ $t("about.planning.content.a", { openverse: "Openverse" }) }}
+      {{ $t("about.planning.content.a") }}
       {{ $t("about.planning.content.b") }}
       <i18n-t scope="global" keypath="about.planning.content.c" tag="span">
-        <template #openverse>Openverse</template>
         <template #repository>
           <VLink href="https://github.com/wordpress/openverse">{{
             $t("about.planning.repository", {
-              openverse: "Openverse",
               github: "GitHub",
             })
           }}</VLink>
@@ -65,7 +62,7 @@ useHead({
     </p>
 
     <p>
-      {{ $t("about.transfer.content.a", { openverse: "Openverse" }) }}
+      {{ $t("about.transfer.content.a") }}
       <i18n-t scope="global" keypath="about.transfer.content.b" tag="span">
         <template #creativeCommons>
           <VLink
@@ -83,11 +80,11 @@ useHead({
     </p>
 
     <p>
-      {{ $t("about.declaration.content.a", { openverse: "Openverse" }) }}
+      {{ $t("about.declaration.content.a") }}
       <i18n-t scope="global" keypath="about.declaration.content.b" tag="span">
         <template #terms>
           <VLink href="https://creativecommons.org/terms/">{{
-            $t("about.declaration.terms", { openverse: "Openverse" })
+            $t("about.declaration.terms")
           }}</VLink>
         </template>
       </i18n-t>
@@ -98,29 +95,24 @@ useHead({
     </h2>
 
     <i18n-t scope="global" keypath="externalSourcesPage.intro" tag="p">
-      <template #openverse>Openverse</template>
       <template #link>
         <VLink href="/sources">{{ $t("externalSourcesPage.link") }}</VLink>
       </template>
     </i18n-t>
 
     <p>
-      {{ $t("externalSourcesPage.license.a", { openverse: "Openverse" }) }}
-      {{ $t("externalSourcesPage.license.b", { openverse: "Openverse" }) }}
+      {{ $t("externalSourcesPage.license.a") }}
+      {{ $t("externalSourcesPage.license.b") }}
       {{ $t("externalSourcesPage.license.c") }}
     </p>
 
     <p>
-      {{ $t("externalSourcesPage.explanation", { openverse: "Openverse" }) }}
+      {{ $t("externalSourcesPage.explanation") }}
     </p>
 
     <p>
-      {{
-        $t("externalSourcesPage.relationships.a", { openverse: "Openverse" })
-      }}
-      {{
-        $t("externalSourcesPage.relationships.b", { openverse: "Openverse" })
-      }}
+      {{ $t("externalSourcesPage.relationships.a") }}
+      {{ $t("externalSourcesPage.relationships.b") }}
     </p>
 
     <h2>
@@ -153,7 +145,7 @@ useHead({
     </i18n-t>
 
     <p>
-      {{ $t("externalSourcesPage.why.new.a", { openverse: "Openverse" }) }}
+      {{ $t("externalSourcesPage.why.new.a") }}
       {{ $t("externalSourcesPage.why.new.b") }}
       {{ $t("externalSourcesPage.why.new.c") }}
     </p>

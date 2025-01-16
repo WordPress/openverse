@@ -139,7 +139,6 @@ const {
       tag="p"
       class="mt-4 text-sr"
     >
-      <template #openverse>Openverse</template>
       <template #license>
         <VLink
           href="https://creativecommons.org/licenses/"
