@@ -354,6 +354,9 @@ In the steps below, `<env>` refers to a subfolder in the `environments/`
 directory, and can be one of "dev" or "prod". This is different from
 `<environment>` which is part of the ES module name and can be one of "staging"
 or "production".
+
+Consider pausing the `<environment>_elasticsearch_cluster_healthcheck` DAG to avoid
+getting redundant alerts during this process.
 ```
 
 1. Find the instance in the AWS management console using the ID from the
@@ -381,8 +384,12 @@ or "production".
    with this change in production. Apply this change. The plan should include:
 
    - creation of a new Elasticsearch data node
-   - creation of new alarms and changes to existing alarms
+   - creation of new alarms and changes to existing alarms (for production)
    - addition of the new instance's IP to the Route53 record
+
+   ```bash
+   just tf <env> apply -target='module.staging-elasticsearch-8-8-2'
+   ```
 
 4. Wait for a new instance to be provisioned by Terraform.
 
@@ -394,7 +401,7 @@ or "production".
    pass the public IPv4 DNS step from step 3 to the `-l`/`--limit` flag.
 
    ```bash
-   just ansible/playbook <env> elasticsearch/sync_config.yml -e apply=true -l <public_ipv4_dns>`
+   just ansible/playbook <environment> elasticsearch/sync_config.yml -e apply=true -l <public_ipv4_dns>
    ```
 
    ```{note}
@@ -413,7 +420,7 @@ or "production".
    `http://localhost:9220`.
 
    ```{tip}
-   Use the Elasticvue extension or app because the web interface cannot connect
+   Use the Elasticvue browser extension or app because the web interface cannot connect
    to Elasticsearch due to CORS protection.
    ```
 
@@ -422,7 +429,9 @@ or "production".
 
    ```json
    {
-     "transient.cluster.routing.allocation.exclude.name": "<private_ipv4_address>"
+     "transient": {
+       "cluster.routing.allocation.exclude.name": "<private_ipv4_address>"
+     }
    }
    ```
 
@@ -457,6 +466,10 @@ or "production".
 
     - subtraction of the retired instance's IP from the Route53 record
     - destruction of extra alarms and changes to existing alarms
+
+    ```bash
+    just tf <env> apply -target='module.staging-elasticsearch-8-8-2'
+    ```
 
 14. If the deletion of the individual alarms fails due to them being part of a
     composite alarm, go into the AWS management console and remove the alarms
