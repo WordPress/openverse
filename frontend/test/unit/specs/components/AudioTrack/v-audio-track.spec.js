@@ -22,6 +22,7 @@ const RouterLinkStub = createApp({}).component("RouterLink", {
   },
 })._context.components.RouterLink
 
+const ACTIVE_AUDIO = getAudioObj()
 const stubs = {
   VLicense: true,
   VWaveform: true,
@@ -33,21 +34,17 @@ describe("AudioTrack", () => {
   let options = null
   let props = null
 
+  const activeMediaStore = useActiveMediaStore()
+  activeMediaStore.setActiveMediaItem({
+    type: "audio",
+    id: ACTIVE_AUDIO.id,
+  })
+
   beforeEach(() => {
     props = {
-      audio: getAudioObj(),
+      audio: ACTIVE_AUDIO,
       layout: "full",
     }
-    const activeMediaStore = useActiveMediaStore()
-    activeMediaStore.$patch({
-      state: {
-        type: "audio",
-        id: "e19345b8-6937-49f7-a0fd-03bf057efc28",
-        message: null,
-        state: "paused",
-      },
-    })
-
     options = {
       props: props,
       global: {
@@ -103,8 +100,6 @@ describe("AudioTrack", () => {
       options.global.stubs.VWaveform = false
       options.global.stubs.VAudioThumbnail = true
 
-      vi.clearAllMocks()
-
       const pauseStub = vi.fn(() => undefined)
       const playStub = vi.fn(() => Promise.reject(playError))
       const playError = new DOMException("msg", errorType)
@@ -117,13 +112,18 @@ describe("AudioTrack", () => {
         playStub
       )
 
-      const { getByRole, getByText } = await render(VAudioTrack, options)
+      const { getByRole, getByText, getByTestId } = await render(
+        VAudioTrack,
+        options
+      )
 
       await fireEvent.click(getByRole("button", { name: /play/i }))
       await nextTick()
       expect(playStub).toHaveBeenCalledTimes(1)
       expect(pauseStub).toHaveBeenCalledTimes(1)
+
       expect(getByText(errorText)).toBeVisible()
+      expect(getByTestId("error-message").textContent).toMatch(errorText)
     }
   )
 
@@ -157,5 +157,14 @@ describe("AudioTrack", () => {
     expect(screen.queryAllByText(match)).toEqual([])
     expect(screen.queryAllByTitle(match)).toEqual([])
     expect(screen.queryAllByAltText(match)).toEqual([])
+  })
+
+  it("should not show message when audio ID doesn't match active ID", async () => {
+    activeMediaStore.id = "different-id"
+    activeMediaStore.setMessage({ message: "err_network" })
+    options.global.stubs.VWaveform = false
+
+    const { queryByTestId } = await render(VAudioTrack, options)
+    expect(queryByTestId("error-message")).not.toBeInTheDocument()
   })
 })

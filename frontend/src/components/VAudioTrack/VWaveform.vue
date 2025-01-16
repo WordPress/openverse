@@ -481,6 +481,7 @@ const seekTimeLeft = computed(() => ({
     <div
       v-else
       class="loading absolute inset-0 flex items-center justify-center text-xs font-bold"
+      data-testid="error-message"
     >
       {{ message }}
     </div>
