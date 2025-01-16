@@ -166,10 +166,10 @@ describe("AudioTrack", () => {
       state: {
         id: audioId,
         message: "playing",
-        type: "audio"
-      }
+        type: "audio",
+      },
     })
-    
+
     const { getByText } = await render(VAudioTrack, options)
     expect(getByText(/playing/i)).toBeVisible()
   })
@@ -180,12 +180,11 @@ describe("AudioTrack", () => {
       state: {
         id: "different-id",
         message: "playing",
-        type: "audio"
-      }
+        type: "audio",
+      },
     })
-    
+
     const { queryByText } = await render(VAudioTrack, options)
     expect(queryByText(/playing/i)).not.toBeInTheDocument()
   })
 })
-
