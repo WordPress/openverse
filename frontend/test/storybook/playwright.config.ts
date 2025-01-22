@@ -12,7 +12,7 @@ export default defineConfig({
     baseURL: "http://localhost:54000",
     trace: "retain-on-failure",
   },
-  timeout: 60 * 1e3, // 1 minute
+  timeout: 5 * 1e3, // 5 seconds in enough to see if the test is stuck
   expect: {
     toMatchSnapshot: {
       // To avoid flaky tests, we allow a small amount of pixel difference.

@@ -189,9 +189,9 @@ const opts = /** @type {Partial<TalkbackOptions>} */ ({
   summary: false,
   tapeNameGenerator,
   tapeDecorator,
-  responseDecorator: (tape, req, context) => {
+  responseDecorator: (tape) => {
     // Log responses to make debugging easier
-    console.log(req.method, req.url, tape.res?.status, context.id)
+    // console.log(req.method, req.url, tape.res?.status, context.id)
     return tape
   },
 })
