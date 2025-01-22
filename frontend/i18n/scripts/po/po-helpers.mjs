@@ -21,7 +21,7 @@ const PARSED_VUE_FILES = getParsedVueFiles()
 const escapeQuotes = (str) => str.replace(/"/g, '\\"')
 
 /** @param str {string} */
-const containsCurlyWord = (str) => /\{[a-zA-Z-]*}/.test(str)
+const containsCurlyWord = (str) => /\{(?:'[a-zA-Z]+'|[a-zA-Z-]+)}/.test(str)
 
 /** @param str {string} */
 const checkStringForVars = (str) =>
@@ -40,7 +40,7 @@ const replaceVarsPlaceholders = (str) => {
     return str
   }
 
-  const variable = /\{(?<variable>[a-zA-Z-]*)}/g
+  const variable = /\{(?<variable>'[a-zA-Z]+'|[a-zA-Z-]+)}/g
   return str.replace(variable, `###$<variable>###`)
 }
 
