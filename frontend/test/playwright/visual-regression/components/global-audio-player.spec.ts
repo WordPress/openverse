@@ -2,6 +2,7 @@ import { test } from "~~/test/playwright/utils/test"
 import {
   pathWithDir,
   preparePageForTests,
+  scrollToTop,
 } from "~~/test/playwright/utils/navigation"
 import breakpoints from "~~/test/playwright/utils/breakpoints"
 import audio from "~~/test/playwright/utils/audio"
@@ -28,6 +29,7 @@ for (const dir of languageDirections) {
         .locator(".global-track")
         .getByRole("button", { name: t("playPause.pause", dir) })
         .click()
+      await scrollToTop(page)
       // To make the tests consistent, set the played area to the same position
       await page.mouse.click(170, 650)
 

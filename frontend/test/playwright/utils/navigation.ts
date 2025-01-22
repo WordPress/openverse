@@ -227,6 +227,7 @@ export const preparePageForTests = async (
       isFilterDismissed: dismissFilter ?? false,
       breakpoint,
       isDarkModeSeen: true,
+      colorMode: "system",
     },
   }
   if (options.features) {

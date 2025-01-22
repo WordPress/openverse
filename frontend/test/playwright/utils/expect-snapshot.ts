@@ -39,7 +39,7 @@ const themeOption = (colorMode: EffectiveColorMode, dir: LanguageDirection) =>
 
 export const turnOnDarkMode = async (page: Page, dir: LanguageDirection) => {
   const themeSwitcher = getThemeSwitcher(page, dir)
-  await themeSwitcher.selectOption(themeOption("dark", dir))
+  await themeSwitcher.selectOption({ label: themeOption("dark", dir) })
   await expect(themeSwitcher).toHaveValue("dark")
 }
 
@@ -78,6 +78,7 @@ export const expectSnapshot: ExpectSnapshot = async (
   screenshotOptions = {
     ...(screenshotOptions ?? {}),
     style: `#storybook-theme-switcher { visibility: hidden; }`,
+    animations: "disabled",
   }
 
   expect
