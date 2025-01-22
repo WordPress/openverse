@@ -28,6 +28,7 @@ const {
   fetchMedia,
   loadMore,
   pageTitle,
+  canLoadMore,
 } = useCollection({ mediaType: AUDIO })
 
 // Collection params are not nullable in the collections route, this is enforced by the middleware
@@ -66,6 +67,7 @@ await useAsyncData(
       :collection-label="collectionLabel"
       :collection-params="collectionParams"
       :creator-url="creatorUrl"
+      :can-load-more="canLoadMore"
       @load-more="loadMore"
     />
   </div>
