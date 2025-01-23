@@ -64,7 +64,7 @@ const updateRefs = () => {
 }
 
 onMounted(updateRefs)
-watch([darkMode.colorMode, darkMode.osColorMode], () => updateRefs())
+watch([darkMode.colorMode, darkMode.osColorMode], updateRefs)
 </script>
 
 <template>
