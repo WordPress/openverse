@@ -20,7 +20,8 @@ from collections import defaultdict
 from datetime import datetime
 
 from airflow.decorators import dag, task
-from airflow.models import Variable
+from airflow.exceptions import AirflowSkipException
+from airflow.models import DAG, Variable
 from airflow.providers.amazon.aws.hooks.ec2 import EC2Hook
 from airflow.providers.amazon.aws.hooks.ecs import EcsHook
 from airflow.providers.amazon.aws.hooks.s3 import S3Hook
@@ -281,15 +282,21 @@ def delete_stale_envfiles(
 
 
 @task
-def notify_complete(deleted_envfiles: dict[str, list[str]]):
-    if deleted_envfiles:
-        message = ""
-        for env, envfiles in deleted_envfiles.items():
-            files = ", ".join(envfiles)
-            message += f"{env}: {files}\n"
-        notify_slack.function(
-            text=f"Deleted the following environment files:\n{message}"
-        )
+def notify_complete(
+    deleted_envfiles: dict[str, list[str]],
+    dag: DAG | None = None,
+):
+    if not deleted_envfiles:
+        raise AirflowSkipException("No environment files were deleted.")
+
+    message = ""
+    for env, envfiles in deleted_envfiles.items():
+        files = ", ".join(envfiles)
+        message += f"{env}: {files}\n"
+    notify_slack.function(
+        text=f"Deleted the following environment files:\n{message}",
+        dag=dag,
+    )
 
 
 @dag(
