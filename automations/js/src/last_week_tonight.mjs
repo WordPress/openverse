@@ -184,6 +184,10 @@ for (const repo of repos) {
   if (closedIssues.length || mergedPrs.length)
     reportData.push({ repo, closedIssues, mergedPrs })
 }
+if (!reportData.length) {
+  console.log("Nothing to post about, exiting.")
+  process.exit(0)
+}
 
 const res = await postActivities(reportData)
 if (res.status !== 201) {
