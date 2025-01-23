@@ -103,7 +103,7 @@ export const useProviderStore = defineStore("provider", {
       mediaType: SupportedMediaType,
       providers: MediaProvider[]
     ) {
-      if (!providers.length) {
+      if (!Array.isArray(providers) || !providers.length) {
         return
       }
       this.providers[mediaType] = sortProviders(providers)
@@ -112,6 +112,7 @@ export const useProviderStore = defineStore("provider", {
 
     async fetchProviders() {
       this._updateFetchState("start")
+      const { $processFetchingError } = useNuxtApp()
       try {
         const res =
           await $fetch<Record<SupportedMediaType, MediaProvider[]>>(
@@ -125,7 +126,6 @@ export const useProviderStore = defineStore("provider", {
         }
         this._updateFetchState("end")
       } catch (error: unknown) {
-        const { $processFetchingError } = useNuxtApp()
         const errorData = $processFetchingError(error, ALL_MEDIA, "provider")
         this._updateFetchState("end", errorData)
       }

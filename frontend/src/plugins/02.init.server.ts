@@ -3,7 +3,6 @@ import { defineNuxtPlugin, useCookie } from "#imports"
 import type { OpenverseCookieState } from "#shared/types/cookies"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useUiStore } from "~/stores/ui"
-import { useProviderStore } from "~/stores/provider"
 
 /**
  * Initialize the feature flag, ui and provider stores.
@@ -23,10 +22,6 @@ export default defineNuxtPlugin(async () => {
   const sessionFeatures =
     useCookie<OpenverseCookieState["sessionFeatures"]>("sessionFeatures")
   featureFlagStore.initFromCookies(sessionFeatures.value ?? {})
-
-  /* Provider store */
-  const providerStore = useProviderStore()
-  await providerStore.fetchProviders()
 
   /* UI store */
   const uiStore = useUiStore()
