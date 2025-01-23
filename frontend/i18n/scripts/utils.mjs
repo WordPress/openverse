@@ -12,6 +12,12 @@ export const snakeToCamel = (str) =>
  * Convert a kebab-case string (`image-title`) to camel case (`imageTitle`).
  */
 export function kebabToCamel(input) {
+  if (!input || typeof input !== "string") {
+    return ""
+  }
+  if (input === "-") {
+    return input
+  }
   const split = input.split("-")
   if (split.length === 1) {
     return input

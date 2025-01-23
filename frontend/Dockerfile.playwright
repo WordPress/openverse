@@ -8,6 +8,7 @@ FROM mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-jammy
 WORKDIR /frontend
 
 COPY package.json .
+COPY pnpm-lock.yaml .
 
 # Ensure the Playwright container's pnpm cache folder exists and is writable
 RUN mkdir -p /.cache/node/corepack/ && chmod -R 777 /.cache/node/corepack/

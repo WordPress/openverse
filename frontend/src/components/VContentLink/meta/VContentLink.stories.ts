@@ -8,8 +8,6 @@ import type { StoryObj } from "@storybook/vue3"
 
 const contentLinkArgTypes = {
   mediaType: { options: ["audio", "image"], control: { type: "radio" } },
-  searchTerm: { control: { type: "string" } },
-  resultsCount: { control: { type: "number" } },
   isSelected: { control: { type: "boolean" } },
   layout: { options: ["stacked", "horizontal"], control: { type: "radio" } },
 }
@@ -34,8 +32,11 @@ export const Default: Story = {
 
   args: {
     mediaType: "image",
-    searchTerm: "cat",
-    resultsCount: 5708,
+    labels: {
+      aria: `View 5708 image results for cat`,
+      visible: `View 5708 image`,
+    },
+    to: "/search/image/?q=cat",
   },
 }
 
@@ -44,13 +45,17 @@ export const Horizontal: Story = {
   render: (args) => ({
     components: { VContentLink },
     setup() {
-      return () => h("div", { class: "max-w-md" }, [h(VContentLink, args)])
+      const count = { image: 5708, audio: 4561 }[args.mediaType]
+      const labels = {
+        aria: `View ${count} ${args.mediaType} results for cat`,
+        visible: `View ${count} ${args.mediaType}`,
+      }
+      return () =>
+        h("div", { class: "max-w-md" }, [h(VContentLink, { ...args, labels })])
     },
   }),
   args: {
     mediaType: "audio",
-    searchTerm: "cat",
-    resultsCount: 4561,
     layout: "horizontal",
   } as typeof VContentLink.props,
 }
@@ -70,8 +75,11 @@ export const Mobile: Omit<Story, "args"> = {
           types.map(({ mediaType, resultsCount }, key) =>
             h(VContentLink, {
               mediaType: mediaType as SupportedMediaType,
-              resultsCount,
-              searchTerm: "cat",
+              labels: {
+                aria: `View ${resultsCount} ${mediaType} results for cat`,
+                visible: `View ${resultsCount} ${mediaType}`,
+              },
+              to: `/search/${mediaType}/?q=cat`,
               key,
             })
           )

@@ -24,7 +24,7 @@ const ignoredProblems = [
   /Sentry DSN wasn't provided/,
   // Errors from the Storybook nuxt module
   // TypeError or Va
-  /\[nuxt] error caught during app initialization \w*: Cannot read properties of undefined \(reading 'cdnURL'\)/,
+  /\[nuxt] error caught during app initialization \S*: Cannot read properties of undefined \(reading 'cdnURL'\)/,
   /Failed to load resource: the server responded with a status of 404 \(Not Found\)/,
   /\[Vue Router warn]: Record with path "\/iframe\.html" is either missing a "component\(s\)" or "children" property/,
 ]

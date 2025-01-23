@@ -17,7 +17,7 @@ _{link}_ part of "The translation for English locale is incomplete. Help us get 
 */
   "notification.translation.link": "contributing a translation",
   "notification.translation.close": "Close the translation contribution help request banner",
-  "notification.analytics.text": "Openverse uses analytics to improve the quality of our service. Visit {link} to learn more or opt out.",
+  "notification.analytics.text": "{'Openverse'} uses analytics to improve the quality of our service. Visit {link} to learn more or opt out.",
   /**
   Interpolated into notification.analytics.text:
   _{link}_ part of "Visit _{link}_ to learn more or opt out."
@@ -348,7 +348,7 @@ _{link}_ part of "The translation for English locale is incomplete. Help us get 
   /** generatedTags.content.a-d are parts of a single section explaining how generated tags work in Openverse. */
   "tags.generatedTags.content.b": "While generally reliable, automated systems can sometimes misinterpret or miss elements in an image.",
   /** generatedTags.content.a-d are parts of a single section explaining how generated tags work in Openverse. */
-  "tags.generatedTags.content.c": "Openverse makes efforts to exclude any generated tags that make inferences about the identities or affiliations of human subjects. ",
+  "tags.generatedTags.content.c": "{'Openverse'} makes efforts to exclude any generated tags that make inferences about the identities or affiliations of human subjects. ",
   /** generatedTags.content.a-d are parts of a single section explaining how generated tags work in Openverse. */
   "tags.generatedTags.content.d": 'If you encounter any images with generated tags making assumptions about, for example, gender, religion, or political affiliation, please report the images using the "Report" button on our single result pages.',
   "error.occurred": "An error occurred",

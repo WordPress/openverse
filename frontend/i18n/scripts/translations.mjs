@@ -182,7 +182,12 @@ const replacePlaceholders = (json, locale, deprecatedKeys, invalidKeys) => {
       .replace(/[{}]/g, "###") // Replace all { and } with ###
       .replace(/<\/?em>/g, "") // Remove <em> and </em> tags
 
-    let replaced = cleaned.replace(/###([a-zA-Z-]*?)###/g, replacer)
+    // Hotfix for bugs introduced in https://github.com/WordPress/openverse/pull/5261
+    // Not all Openverse instances were replaced with 'Openverse'
+    // Pot file generation wasn't updated, and {'Openverse'} wasn't replaced with
+    // ###'Openverse'### before being sent to GlotPress
+    let replaced = cleaned.replace(/{'Openverse'}/g, "Openverse")
+    replaced = replaced.replace(/###([a-zA-Z-]+?)###/g, replacer)
     // Irregular placeholders with more or fewer than 3 #s
     replaced = replaced.replace(/#{1,4}([a-zA-Z-]+?)#{1,4}/g, "{$1}")
 
