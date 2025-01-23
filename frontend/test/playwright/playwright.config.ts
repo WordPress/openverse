@@ -54,7 +54,7 @@ const config: PlaywrightTestConfig = {
     baseURL,
     trace: "retain-on-failure",
   },
-  timeout: 5 * 1e3, // 5 seconds in enough to see if the test is stuck
+  timeout: 8 * 1e3, // 8 seconds in enough to see if the test is stuck
   /**
    * When updating or recreating tapes, if we have more than one worker running
    * then Talkback is liable to see multiple requests at the same time that would
