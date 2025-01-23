@@ -8,26 +8,18 @@ https://docs.djangoproject.com/en/4.2/topics/http/urls/
 from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import RedirectView, TemplateView
-from rest_framework.routers import SimpleRouter
 
-from api.views.audio_views import AudioViewSet
 from api.views.health_views import HealthCheck
-from api.views.image_views import ImageViewSet
 from conf.urls.auth_tokens import urlpatterns as auth_tokens_urlpatterns
 from conf.urls.deprecations import urlpatterns as deprecations_urlpatterns
-from conf.urls.openapi import urlpatterns as openapi_urlpatterns
 
 
 versioned_paths = [
-    path("", include(openapi_urlpatterns)),  # OpenAPI
+    path("", include("open_api.urls")),  # OpenAPI
     path("", include(auth_tokens_urlpatterns)),  # Authentication endpoints
     path("", include(deprecations_urlpatterns)),  # Deprecated, redirects to new URL
+    path("", include("api.urls")),  # API endpoints
 ]
-
-router = SimpleRouter(use_regex_path=False)
-router.register("audio", AudioViewSet, basename="audio")
-router.register("images", ImageViewSet, basename="image")
-versioned_paths += router.urls
 
 urlpatterns = [
     path("", RedirectView.as_view(pattern_name="root")),
