@@ -153,7 +153,7 @@ importers:
         specifier: ^3.15.1
         version: 3.15.1(@jest/globals@29.7.0)(@playwright/test@1.49.1)(@testing-library/vue@8.1.0(@vue/compiler-sfc@3.5.13)(vue@3.5.13(typescript@5.7.2)))(@types/node@22.8.5)(@vitest/ui@2.1.6)(@vue/test-utils@2.4.6)(jiti@2.4.2)(jsdom@25.0.1)(magicast@0.3.5)(playwright-core@1.49.1)(rollup@4.27.4)(terser@5.31.0)(typescript@5.7.2)(vitest@2.1.6)(yaml@2.7.0)
       '@nuxtjs/i18n':
-        specifier: 9.1.1
+        specifier: ^9.1.1
         version: 9.1.1(@vue/compiler-dom@3.5.13)(eslint@9.13.0(jiti@2.4.2))(magicast@0.3.5)(rollup@4.27.4)(typescript@5.7.2)(vue@3.5.13(typescript@5.7.2))
       '@nuxtjs/storybook':
         specifier: 8.3.3
