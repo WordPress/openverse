@@ -9,6 +9,9 @@ WORKDIR /frontend
 
 COPY package.json .
 
+# Copy the pnpm-lock.yaml from the root of the monorepo
+COPY ../pnpm-lock.yaml ./pnpm-lock.yaml
+
 # Ensure the Playwright container's pnpm cache folder exists and is writable
 RUN mkdir -p /.cache/node/corepack/ && chmod -R 777 /.cache/node/corepack/
 # Ensure that the dlx cache folder exists and is writable

@@ -914,6 +914,9 @@ jobs:
           install_recipe: node-install
           locales: "test"
 
+      - name: Copy pnpm-lock.yaml
+        run: cp pnpm-lock.yaml frontend/
+
       - name: Run Playwright tests
         run: just frontend/run ${{ matrix.script }} --workers=2
 
