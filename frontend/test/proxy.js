@@ -70,6 +70,9 @@ const tapeNameGenerator = (tapeNumber, tape) => {
 const updatingTapes =
   process.argv.includes("--update-tapes") || process.env.UPDATE_TAPES === "true"
 
+const verbose =
+  process.argv.includes("--verbose") || process.env.VERBOSE === "true"
+
 /** @type {TalkbackOptions['record']} */
 const recordMode = updatingTapes
   ? talkback.Options.RecordMode.NEW
@@ -189,9 +192,11 @@ const opts = /** @type {Partial<TalkbackOptions>} */ ({
   summary: false,
   tapeNameGenerator,
   tapeDecorator,
-  responseDecorator: (tape) => {
-    // Log responses to make debugging easier
-    // console.log(req.method, req.url, tape.res?.status, context.id)
+  responseDecorator: (tape, req, context) => {
+    // If `verbose`, log responses to make debugging easier
+    if (verbose) {
+      console.log(req.method, req.url, tape.res?.status, context.id)
+    }
     return tape
   },
 })
