@@ -5,7 +5,7 @@
 groups = ["default", "dev", "overrides", "test"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:4958f42c8951e1c07a6279084b470fd99787be84dc222aa78ff75980b54ebdef"
+content_hash = "sha256:65555fe554ab1276e79c4a9347ff3b881562bf74e0fe6fd040c04031f089e2b8"
 
 [[metadata.targets]]
 requires_python = "==3.12.*"
@@ -1637,29 +1637,6 @@ dependencies = [
 files = [
     {file = "python-slugify-8.0.4.tar.gz", hash = "sha256:59202371d1d05b54a9e7720c5e038f928f45daaffe41dd10822f3907b937c856"},
     {file = "python_slugify-8.0.4-py2.py3-none-any.whl", hash = "sha256:276540b79961052b66b7d116620b36518847f52d5fd9e3a70164fc8c50faa6b8"},
-]
-
-[[package]]
-name = "python-xmp-toolkit"
-version = "2.0.2"
-summary = "Python XMP Toolkit for working with metadata."
-groups = ["default"]
-dependencies = [
-    "pytz",
-]
-files = [
-    {file = "python-xmp-toolkit-2.0.2.tar.gz", hash = "sha256:3a88431bb8222e9723da688b3ead50506f3ed3002749362845745dd995a7a68b"},
-    {file = "python_xmp_toolkit-2.0.2-py3-none-any.whl", hash = "sha256:dad1c2dcf5392459ecf2d0e368a7bbcab099cac7ef9f75fa53612db4efbcda8a"},
-]
-
-[[package]]
-name = "pytz"
-version = "2024.1"
-summary = "World timezone definitions, modern and historical"
-groups = ["default"]
-files = [
-    {file = "pytz-2024.1-py2.py3-none-any.whl", hash = "sha256:328171f4e3623139da4983451950b28e95ac706e13f3f2630a879749e7a8b319"},
-    {file = "pytz-2024.1.tar.gz", hash = "sha256:2a29735ea9c18baf14b448846bde5a48030ed267578472d8955cd0e7443a9812"},
 ]
 
 [[package]]

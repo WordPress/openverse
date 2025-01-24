@@ -1,10 +1,8 @@
 import io
 
 from django.conf import settings
-from django.http.response import FileResponse, HttpResponse
 from django.shortcuts import aget_object_or_404
 from rest_framework.decorators import action
-from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 
 from drf_spectacular.utils import extend_schema, extend_schema_view
@@ -20,7 +18,6 @@ from api.docs.image_docs import (
     stats,
 )
 from api.docs.image_docs import thumbnail as thumbnail_docs
-from api.docs.image_docs import watermark as watermark_doc
 from api.models import Image
 from api.serializers.image_serializers import (
     ImageReportRequestSerializer,
@@ -28,11 +25,9 @@ from api.serializers.image_serializers import (
     ImageSerializer,
     OembedRequestSerializer,
     OembedSerializer,
-    WatermarkRequestSerializer,
 )
 from api.utils import image_proxy
 from api.utils.aiohttp import get_aiohttp_session
-from api.utils.watermark import UpstreamWatermarkException, watermark
 from api.views.media_views import MediaViewSet
 
 
@@ -125,69 +120,6 @@ class ImageViewSet(MediaViewSet):
         """Retrieve the scaled down and compressed thumbnail of the image."""
         return await super().thumbnail(request)
 
-    @watermark_doc
-    @action(detail=True, url_path="watermark", url_name="watermark")
-    def watermark(self, request, *_, **__):  # noqa: D401
-        """
-        Note that this endpoint is deprecated.
-
-        ---
-
-        🚧 **TODO:** Document this.
-        """
-
-        if not settings.WATERMARK_ENABLED:
-            raise NotFound("The watermark feature is currently disabled.")
-
-        params = WatermarkRequestSerializer(data=request.query_params)
-        params.is_valid(raise_exception=True)
-
-        image = self.get_object()
-        image_url = image.url
-
-        if image_url.endswith(".svg") or getattr(image, "filetype") == "svg":
-            raise UpstreamWatermarkException(
-                "Unsupported media type: SVG images are not supported for watermarking."
-            )
-
-        image_info = {
-            attr: getattr(image, attr)
-            for attr in ["title", "creator", "license", "license_version"]
-        }
-
-        # Create the actual watermarked image.
-        watermarked, exif = watermark(image_url, image_info, params.data["watermark"])
-        img_bytes = io.BytesIO()
-        self._save_wrapper(watermarked, exif, img_bytes)
-
-        if params.data["embed_metadata"]:
-            # Embed ccREL metadata with XMP.
-            work_properties = {
-                "creator": image.creator,
-                "license_url": image.license_url,
-                "attribution": image.attribution,
-                "work_landing_page": image.foreign_landing_url,
-                "identifier": str(image.identifier),
-            }
-
-            # Import inside a function to allow server run without Exempi library
-            import libxmp
-
-            from api.utils import ccrel
-
-            try:
-                with_xmp = ccrel.embed_xmp_bytes(img_bytes, work_properties)
-                return FileResponse(with_xmp, content_type="image/jpeg")
-            except (libxmp.XMPError, AttributeError):
-                # Just send the EXIF-ified file if libxmp fails to add metadata
-                response = HttpResponse(content_type="image/jpeg")
-                self._save_wrapper(watermarked, exif, response)
-                return response
-        else:
-            response = HttpResponse(img_bytes, content_type="image/jpeg")
-            self._save_wrapper(watermarked, exif, response)
-            return response
-
     @report
     @action(
         detail=True,
@@ -203,17 +135,3 @@ class ImageViewSet(MediaViewSet):
         """
 
         return super().report(request, identifier)
-
-    # Helper functions
-
-    @staticmethod
-    def _save_wrapper(pil_img, exif_bytes, destination):
-        """Prevent PIL from crashing if ``exif_bytes`` is ``None``."""
-
-        if exif_bytes:
-            # Re-insert EXIF metadata
-            pil_img.save(destination, "jpeg", exif=exif_bytes)
-        else:
-            pil_img.save(destination, "jpeg")
-
-        pil_img.close()

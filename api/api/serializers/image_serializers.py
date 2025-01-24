@@ -181,14 +181,3 @@ class OembedSerializer(BaseModelSerializer):
 
     def get_height(self, obj) -> int:
         return self.context.get("height", obj.height)
-
-
-class WatermarkRequestSerializer(serializers.Serializer):
-    embed_metadata = serializers.BooleanField(
-        help_text="Whether to embed ccREL metadata via XMP.", default=True
-    )
-    watermark = serializers.BooleanField(
-        help_text="Whether to draw a frame around the image with attribution"
-        " text at the bottom.",
-        default=True,
-    )
