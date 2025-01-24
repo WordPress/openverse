@@ -24,3 +24,27 @@ export const Default: Story = {
   }),
   name: "Default",
 }
+import React from "react";
+import { useTranslation } from "react-i18next";
+import supportedLocales from "../../config/localization";
+
+const LanguageSelector = () => {
+  const { i18n } = useTranslation();
+
+  const handleLanguageChange = (event) => {
+    const selectedLanguage = event.target.value;
+    i18n.changeLanguage(selectedLanguage);
+  };
+
+  return (
+    <select onChange={handleLanguageChange} defaultValue={i18n.language}>
+      {Object.entries(supportedLocales).map(([locale, label]) => (
+        <option key={locale} value={locale}>
+          {label}
+        </option>
+      ))}
+    </select>
+  );
+};
+
+export default LanguageSelector;
