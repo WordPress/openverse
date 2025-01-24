@@ -135,17 +135,3 @@ class ImageViewSet(MediaViewSet):
         """
 
         return super().report(request, identifier)
-
-    # Helper functions
-
-    @staticmethod
-    def _save_wrapper(pil_img, exif_bytes, destination):
-        """Prevent PIL from crashing if ``exif_bytes`` is ``None``."""
-
-        if exif_bytes:
-            # Re-insert EXIF metadata
-            pil_img.save(destination, "jpeg", exif=exif_bytes)
-        else:
-            pil_img.save(destination, "jpeg")
-
-        pil_img.close()
