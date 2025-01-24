@@ -9,12 +9,32 @@ from conf.settings.security import DEBUG
 
 SENTRY_DSN = config("SENTRY_DSN", default="")
 
-SENTRY_TRACES_SAMPLE_RATE = config("SENTRY_TRACES_SAMPLE_RATE", default=0, cast=float)
-SENTRY_PROFILES_SAMPLE_RATE = config(
+SENTRY_TRACES_SAMPLE_RATE: float = config(
+    "SENTRY_TRACES_SAMPLE_RATE", default=0, cast=float
+)
+SENTRY_PROFILES_SAMPLE_RATE: float = config(
     "SENTRY_PROFILES_SAMPLE_RATE", default=0, cast=float
 )
 
+
+def profiles_sampler(sampling_context) -> float:
+    """
+    Control the performance profile sampling.
+    See https://docs.sentry.io/platforms/python/profiling/
+
+    Returns a float between 0.0 and 1.0.
+    """
+    url_path = sampling_context.get("url.path", "")
+
+    if "healthcheck" in url_path:
+        return 0.0  # Exclude the health check URL from profiling
+
+    # All the other instances
+    return SENTRY_PROFILES_SAMPLE_RATE
+
+
 INTEGRATIONS = [
+    # See https://docs.sentry.io/platforms/python/integrations/django/
     DjangoIntegration(),
     # This prevents two errors from being sent to Sentry (one with the correct
     # information and the other with the logged JSON as the error name), since we
@@ -28,7 +48,7 @@ if not DEBUG and SENTRY_DSN:
         dsn=SENTRY_DSN,
         integrations=INTEGRATIONS,
         traces_sample_rate=SENTRY_TRACES_SAMPLE_RATE,
-        profiles_sample_rate=SENTRY_PROFILES_SAMPLE_RATE,
+        profiles_sampler=profiles_sampler,
         send_default_pii=False,
         environment=ENVIRONMENT,
     )
