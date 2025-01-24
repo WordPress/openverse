@@ -141,11 +141,3 @@ oembed = custom_extend_schema(
     },
     eg=[image_oembed_curl],
 )
-
-watermark = extend_schema(
-    deprecated=True,
-    responses={
-        401: AuthenticationFailed,
-        404: NotFound,
-    },
-)

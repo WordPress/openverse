@@ -69,7 +69,6 @@ ARG AUDIOWAVEFORM_RELEASE=1.10.1
 ARG AUDIOWAVEFORM_DEB=audiowaveform_${AUDIOWAVEFORM_RELEASE}-1-12_${BUILDARCH}.deb
 
 # - Install system packages needed for running Python dependencies
-#   - libexempi8: required for watermarking
 # - Create directory for dumping API logs
 # - apt --fix-broken install required to install missing dependencies for audiowaveform and audiowaveform itself
 #   dpkg -i marks the dependencies for installation, apt-get installs them
@@ -77,7 +76,6 @@ ARG AUDIOWAVEFORM_DEB=audiowaveform_${AUDIOWAVEFORM_RELEASE}-1-12_${BUILDARCH}.d
 RUN apt-get update \
   && apt-get install -yqq --no-install-recommends \
     curl \
-    libexempi8 \
     postgresql-client \
   && curl -sLO https://github.com/bbc/audiowaveform/releases/download/${AUDIOWAVEFORM_RELEASE}/${AUDIOWAVEFORM_DEB} \
   && (dpkg -i ${AUDIOWAVEFORM_DEB} || apt-get --fix-broken -y --no-install-recommends install) \
