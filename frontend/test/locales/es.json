@@ -558,4 +558,9 @@
   "collection.resultCountLabel.tag.image.zero": "No hay imágenes con la etiqueta seleccionada",
   "collection.resultCountLabel.tag.image.count": "{count} image with the selected tag {count} imágenes con la etiqueta seleccionada",
   "collection.resultCountLabel.tag.image.countMore": "Sobre {count} imágenes con la etiqueta seleccionada"
+  "welcome_message": "Bienvenido a Openverse",
+  "search_placeholder": "Buscar contenido...",
+  "no_results": "No se encontraron resultados",
+  "error_message": "Algo salió mal. Por favor, inténtelo de nuevo.",
+  "footer_message": "Gracias por usar Openverse."
 }
