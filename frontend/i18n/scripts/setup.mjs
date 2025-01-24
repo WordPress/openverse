@@ -54,7 +54,7 @@ const setupI18n = async (options) => {
     return
   }
   if (options.noGet) {
-    console.log("Skipping download, re-using existing translation files.")
+    console.log("Skipping download, reusing existing translation files.")
   } else {
     console.log("Getting translations...")
     const success = await downloadTranslations(!!options.verbose)

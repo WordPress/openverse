@@ -450,7 +450,7 @@ individual checkbox listed below will be created.
   - This will also establish a pattern for writing e2e tests against Storybook.
   - Copy the visual regression test CI and swap the appropriate scripts to run
     the Storybook ones instead.
-    - If possible, create a shared action that can be re-used between all the
+    - If possible, create a shared action that can be reused between all the
       Playwright based test workflows.
 - [ ] Write a script to generate `pixelmatch` diffs from failed test results in
       the `test-results` folder created my Playwright.
