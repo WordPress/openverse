@@ -33,7 +33,6 @@ dependencies = [
     "pillow >=11, <12",
     "psycopg[pool] >=3.2.3, <4",
     "python-decouple >=3.8, <4",
-    "python-xmp-toolkit >=2.0.2, <3",
     "sentry-sdk >=2.19, <3",
     "uvicorn[standard] >=0.34, <0.35",
     "openverse-attribution @ file:///${PROJECT_ROOT}/../packages/python/openverse-attribution",
