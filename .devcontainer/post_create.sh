@@ -7,7 +7,7 @@
 
 # The Node.js feature installs the latest version of pnpm, not the one we want.
 # So we enable Corepack to provision the right pnpm version.
-corepack enable
+npm install -g corepack@0.31.0 && corepack enable pnpm
 
 # Install dependencies for projects that run outside of the Docker context. This
 # includes Node.js packages, Python automations and documentation.

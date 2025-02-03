@@ -49,7 +49,8 @@ runs:
     - name: Setup pnpm
       if: inputs.setup_nodejs == 'true'
       shell: bash
-      run: corepack enable pnpm
+      # Fix for https://github.com/nodejs/corepack/issues/612
+      run: npm install -g corepack@0.31.0 && corepack enable pnpm
 
     - name: Setup Node.js
       if: inputs.setup_nodejs == 'true'

@@ -11,7 +11,7 @@
   "scripts": {
     "prepare:nuxt": "pnpm --filter frontend run prepare:nuxt"
   },
-  "packageManager": "pnpm@9.15.4",
+  "packageManager": "pnpm@10.1.0",
   "engines": {
     "node": ">= 22.0.0 <23"
   },
