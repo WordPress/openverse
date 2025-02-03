@@ -74,8 +74,8 @@ PROVIDER_REINGESTION_WORKFLOWS = [
         dagrun_timeout=timedelta(days=7),
         daily_list_length=6,
         one_month_list_length=9,
-        three_month_list_length=18,
-        six_month_list_length=30,
+        three_month_list_length=38,
+        six_month_list_length=20,
     ),
     ProviderReingestionWorkflow(
         # 64 total reingestion days
