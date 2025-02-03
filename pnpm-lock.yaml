@@ -250,8 +250,8 @@ importers:
         specifier: ^12.0.0
         version: 12.1.1(rollup@4.27.4)(tslib@2.6.2)(typescript@5.7.2)
       nock:
-        specifier: 14.0.0-beta.19
-        version: 14.0.0-beta.19
+        specifier: 14.0.0
+        version: 14.0.0
       openapi-typescript:
         specifier: ^7.3.2
         version: 7.4.3(encoding@0.1.13)(typescript@5.7.2)
@@ -5539,8 +5539,8 @@ packages:
       xml2js:
         optional: true
 
-  nock@14.0.0-beta.19:
-    resolution: {integrity: sha512-xqWQQZ/Hv01tj5uL7BE4j752hhB2MHP7aaEcTp/iDT1EHsh3TYZOIx4HHFL81yRc8KFx4pqb2P2OtuxKShKhjw==}
+  nock@14.0.0:
+    resolution: {integrity: sha512-3Z2ZoZoYTR/y2I+NI16+6IzfZFKBX7MrADtoBAm7v/QKqxQUhKw+Dh+847PPS1j/FDutjfIXfrh3CJF74yITWg==}
     engines: {node: '>= 18'}
 
   node-addon-api@3.2.1:
@@ -14036,7 +14036,7 @@ snapshots:
       - uWebSockets.js
       - uploadthing
 
-  nock@14.0.0-beta.19:
+  nock@14.0.0:
     dependencies:
       '@mswjs/interceptors': 0.37.5
       json-stringify-safe: 5.0.1
