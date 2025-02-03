@@ -9,7 +9,7 @@ overrides:
   vite: ^6.0.11
   '@vercel/nft': ^0.27.4
 
-pnpmfileChecksum: ugk6vame5phdvj3z7an37uzqxm
+pnpmfileChecksum: sha256-J6xFhxMgj/M9dd+JvsJIXmS0mY7F904d1wxIKX3IQa8=
 
 importers:
 
@@ -104,11 +104,11 @@ importers:
         specifier: ^0.5.0
         version: 0.5.0
       axios:
-        specifier: ^1.7.2
-        version: 1.7.4
+        specifier: ^1.7.9
+        version: 1.7.9
       axios-mock-adapter:
         specifier: ^1.22.0
-        version: 1.22.0(axios@1.7.4)
+        version: 1.22.0(axios@1.7.9)
       clipboard:
         specifier: ^2.0.11
         version: 2.0.11
@@ -3244,6 +3244,9 @@ packages:
 
   axios@1.7.4:
     resolution: {integrity: sha512-DukmaFRnY6AzAALSH4J2M3k6PkaC+MfaAGdEERRWcC9q3/TWQwLpHR8ZRLKTdQ3aBDL64EdluRDjJqKw+BPZEw==}
+
+  axios@1.7.9:
+    resolution: {integrity: sha512-LhLcE7Hbiryz8oMDdDptSrWowmB4Bl6RCt6sIJKpRB4XtVf0iEgewX3au/pJqm+Py1kCASkb/FFKjxQaLtxJvw==}
 
   b4a@1.6.6:
     resolution: {integrity: sha512-5Tk1HLk6b6ctmjIkAcU/Ujv/1WqiDl0F0JdRCR80VsOcUlHcu7pWeWRlOqQLHfDEsVx9YH/aif5AG4ehoCtTmg==}
@@ -11370,9 +11373,9 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.0.0
 
-  axios-mock-adapter@1.22.0(axios@1.7.4):
+  axios-mock-adapter@1.22.0(axios@1.7.9):
     dependencies:
-      axios: 1.7.4
+      axios: 1.7.9
       fast-deep-equal: 3.1.3
       is-buffer: 2.0.5
 
@@ -11380,6 +11383,14 @@ snapshots:
     dependencies:
       follow-redirects: 1.15.9
       form-data: 4.0.0
+      proxy-from-env: 1.1.0
+    transitivePeerDependencies:
+      - debug
+
+  axios@1.7.9:
+    dependencies:
+      follow-redirects: 1.15.9
+      form-data: 4.0.1
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
       - debug
