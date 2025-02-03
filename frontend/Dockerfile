@@ -14,7 +14,7 @@ ARG SEMANTIC_VERSION
 
 # Install system packages needed to build on macOS
 RUN apk add --no-cache --virtual .gyp python3 make g++ \
-  && corepack enable pnpm
+  && npm install -g corepack@0.31.0 && corepack enable pnpm
 
 USER node
 

@@ -16,7 +16,7 @@ RUN mkdir -p /.cache/node/corepack/ && chmod -R 777 /.cache/node/corepack/
 RUN mkdir -p /.cache/pnpm/dlx/ && chmod -R 777 /.cache/pnpm/dlx/
 
 # Requires `packageManager` field to be present in `frontend/package.json`.
-RUN corepack enable pnpm
+RUN npm install -g corepack@0.31.0 && corepack enable pnpm
 
 # DO NOT actually run `pnpm install` here. Doing so requires us to copy the the source into the container.
 # However, that's a waste of time because we mount the source in the compose file anyway.
