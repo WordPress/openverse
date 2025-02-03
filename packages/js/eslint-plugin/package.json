@@ -20,7 +20,7 @@
     "@typescript-eslint/utils": "^8.19.0",
     "@vitest/eslint-plugin": "^1.1.7",
     "eslint": "^9.13.0",
-    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-prettier": "^10.0.0",
     "eslint-import-resolver-typescript": "^3.7.0",
     "eslint-plugin-eslint-comments": "^3.2.0",
     "eslint-plugin-import": "^2.31.0",
@@ -41,6 +41,6 @@
     "@swc/core": "^1.7.35",
     "@typescript-eslint/rule-tester": "^8.19.0",
     "babel-plugin-add-module-exports": "^1.0.4",
-    "vitest": "^2.1.4"
+    "vitest": "^3.0.4"
   }
 }
