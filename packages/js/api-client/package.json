@@ -46,7 +46,7 @@
     "rollup": "^4.22.4",
     "typescript": "^5.5.4",
     "vite": "^6.0.11",
-    "vitest": "^3.0.0"
+    "vitest": "^3.0.4"
   },
   "dependencies": {
     "openapi-fetch": "^0.13.0"

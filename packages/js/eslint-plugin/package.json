@@ -41,6 +41,6 @@
     "@swc/core": "^1.7.35",
     "@typescript-eslint/rule-tester": "^8.19.0",
     "babel-plugin-add-module-exports": "^1.0.4",
-    "vitest": "^3.0.0"
+    "vitest": "^3.0.4"
   }
 }

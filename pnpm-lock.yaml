@@ -180,7 +180,7 @@ importers:
         specifier: ^3.0.0
         version: 3.0.4(vitest@3.0.4)
       '@vitest/ui':
-        specifier: ^3.0.0
+        specifier: ^3.0.4
         version: 3.0.4(vitest@3.0.4)
       '@vue/test-utils':
         specifier: ^2.4.6
@@ -222,7 +222,7 @@ importers:
         specifier: 5.7.3
         version: 5.7.3
       vitest:
-        specifier: ^3.0.0
+        specifier: ^3.0.4
         version: 3.0.4(@types/node@22.8.5)(@vitest/ui@3.0.4)(jiti@2.4.2)(jsdom@26.0.0)(terser@5.31.0)(yaml@2.7.0)
       vitest-dom:
         specifier: ^0.1.1
@@ -265,7 +265,7 @@ importers:
         specifier: ^6.0.11
         version: 6.0.11(@types/node@22.8.5)(jiti@2.4.2)(terser@5.31.0)(yaml@2.7.0)
       vitest:
-        specifier: ^3.0.0
+        specifier: ^3.0.4
         version: 3.0.4(@types/node@22.8.5)(@vitest/ui@3.0.4)(jiti@2.4.2)(jsdom@26.0.0)(terser@5.31.0)(yaml@2.7.0)
 
   packages/js/eslint-plugin:
@@ -359,7 +359,7 @@ importers:
         specifier: ^1.0.4
         version: 1.0.4
       vitest:
-        specifier: ^3.0.0
+        specifier: ^3.0.4
         version: 3.0.4(@types/node@22.8.5)(@vitest/ui@3.0.4)(jiti@2.4.2)(jsdom@26.0.0)(terser@5.31.0)(yaml@2.7.0)
 
   packages/js/k6:
