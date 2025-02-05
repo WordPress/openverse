@@ -100,10 +100,10 @@ server {
         proxy_set_header X-Forwarded-Host  $host;
 
         proxy_intercept_errors on;
-        error_page 502 503 = @custom_424;  # Redirect 502 and 503 errors when Plausible is down
+        error_page 502 503 504 = @custom_424;  # Report Plausible errors as Failed dependency
     }
 
-    # Replace 502 and 503 Plausible errors when the service is down with a 424 error.
+    # Replace Plausible server errors (when the service is down) with a 424 error.
     location @custom_424 {
         internal;
         add_header Content-Type "application/json";
