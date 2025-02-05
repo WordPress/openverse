@@ -99,7 +99,7 @@ const refreshApiAccessToken = async (
       (e as AxiosError).message
     }`
     warn((e as AxiosError).message)
-    throw e
+    Sentry.captureException(e)
   }
 }
 
