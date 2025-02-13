@@ -16,8 +16,6 @@ import { useDarkMode } from "~/composables/use-dark-mode"
 
 import VSkipToContentButton from "~/components/VSkipToContentButton.vue"
 
-const { updateBreakpoint } = useLayout()
-
 const config = useRuntimeConfig()
 
 const featureFlagStore = useFeatureFlagStore()
@@ -33,13 +31,14 @@ const headerHeight = computed(() => {
 })
 
 const head = useLocaleHead({ dir: true, key: "id", seo: true })
-
-useHead({
-  bodyAttrs: { class: darkMode.cssClass },
-  title: "Openly Licensed Images, Audio and More | Openverse",
-  meta: commonMeta,
-  link: [
+const htmlI18nProps = computed(() => ({
+  lang: head.value?.htmlAttrs?.lang ?? "en",
+  dir: head.value?.htmlAttrs?.dir ?? "ltr",
+}))
+const link = computed(() => {
+  return [
     ...favicons,
+    ...(head.value.link ?? []),
     {
       rel: "search",
       type: "application/opensearchdescription+xml",
@@ -55,7 +54,19 @@ useHead({
       href: config.public.apiUrl,
       crossorigin: "",
     },
-  ],
+  ]
+})
+
+const meta = computed(() => {
+  return [...commonMeta, ...(head.value.meta ?? [])]
+})
+
+useHead({
+  htmlAttrs: htmlI18nProps,
+  bodyAttrs: { class: darkMode.cssClass, style: headerHeight },
+  title: "Openly Licensed Images, Audio and More | Openverse",
+  meta,
+  link,
 })
 
 /**
@@ -64,40 +75,18 @@ useHead({
  * and then a page is opened on SSR on a `lg` screen.
  */
 onMounted(() => {
+  const { updateBreakpoint } = useLayout()
   updateBreakpoint()
   featureFlagStore.syncAnalyticsWithLocalStorage()
 })
 </script>
 
 <template>
-  <div>
-    <Html :lang="head.htmlAttrs?.lang" :dir="head.htmlAttrs?.dir">
-      <Head>
-        <template v-for="link in head.link" :key="link.id">
-          <Link
-            :id="link.id"
-            :rel="link.rel"
-            :href="link.href"
-            :hreflang="link.hreflang"
-          />
-        </template>
-        <template v-for="meta in head.meta" :key="meta.id">
-          <Meta
-            :id="meta.id"
-            :property="meta.property"
-            :content="meta.content"
-          />
-        </template>
-      </Head>
-      <Body :style="headerHeight">
-        <div :class="[isDesktopLayout ? 'desktop' : 'mobile', breakpoint]">
-          <VSkipToContentButton />
-          <NuxtLayout>
-            <NuxtPage />
-          </NuxtLayout>
-          <VGlobalAudioSection />
-        </div>
-      </Body>
-    </Html>
+  <div :class="[isDesktopLayout ? 'desktop' : 'mobile', breakpoint]">
+    <VSkipToContentButton />
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
+    <VGlobalAudioSection />
   </div>
 </template>

@@ -1,15 +1,10 @@
 <script setup lang="ts">
-import {
-  onMounted,
-  useHead,
-  useLocaleHead,
-  useRoute,
-  useRuntimeConfig,
-} from "#imports"
+import { useHead, useLocaleHead, useRuntimeConfig } from "#imports"
+import { computed, onMounted } from "vue"
 
 import { meta as commonMeta } from "#shared/constants/meta"
 import { favicons } from "#shared/constants/favicons"
-import { useFeatureFlagStore } from "~/stores/feature-flag"
+import { useUiStore } from "~/stores/ui"
 import { useDarkMode } from "~/composables/use-dark-mode"
 import { useLayout } from "~/composables/use-layout"
 
@@ -17,9 +12,12 @@ import VFourOhFour from "~/components/VFourOhFour.vue"
 
 defineProps(["error"])
 
-const route = useRoute()
-const { updateBreakpoint } = useLayout()
 const config = useRuntimeConfig()
+const uiStore = useUiStore()
+
+const headerHeight = computed(() => {
+  return `--header-height: ${uiStore.headerHeight}px`
+})
 
 /**
  * Update the breakpoint value in the cookie on mounted.
@@ -27,24 +25,21 @@ const config = useRuntimeConfig()
  * and then a page is opened on SSR on a `lg` screen.
  */
 onMounted(() => {
+  const { updateBreakpoint } = useLayout()
   updateBreakpoint()
-  featureFlagStore.syncAnalyticsWithLocalStorage()
 })
 
-/* Feature flag store */
-
-const featureFlagStore = useFeatureFlagStore()
-featureFlagStore.initFromQuery(route.query)
-
 const darkMode = useDarkMode()
-const head = useLocaleHead({ dir: true, key: "id", seo: true })
 
-useHead({
-  bodyAttrs: { class: darkMode.cssClass },
-  title: "Openly Licensed Images, Audio and More | Openverse",
-  meta: commonMeta,
-  link: [
+const head = useLocaleHead({ dir: true, key: "id", seo: true })
+const htmlI18nProps = computed(() => ({
+  lang: head.value?.htmlAttrs?.lang ?? "en",
+  dir: head.value?.htmlAttrs?.dir ?? "ltr",
+}))
+const link = computed(() => {
+  return [
     ...favicons,
+    ...(head.value.link ?? []),
     {
       rel: "search",
       type: "application/opensearchdescription+xml",
@@ -60,37 +55,28 @@ useHead({
       href: config.public.apiUrl,
       crossorigin: "",
     },
-  ],
+  ]
+})
+
+const meta = computed(() => {
+  return [...commonMeta, ...(head.value.meta ?? [])]
+})
+
+useHead({
+  htmlAttrs: htmlI18nProps,
+  bodyAttrs: { class: darkMode.cssClass, style: headerHeight },
+  title: "Openly Licensed Images, Audio and More | Openverse",
+  meta,
+  link,
 })
 </script>
 
 <template>
   <div>
-    <Html :lang="head.htmlAttrs?.lang" :dir="head.htmlAttrs?.dir">
-      <Head>
-        <template v-for="link in head.link" :key="link.id">
-          <Link
-            :id="link.id"
-            :rel="link.rel"
-            :href="link.href"
-            :hreflang="link.hreflang"
-          />
-        </template>
-        <template v-for="meta in head.meta" :key="meta.id">
-          <Meta
-            :id="meta.id"
-            :property="meta.property"
-            :content="meta.content"
-          />
-        </template>
-      </Head>
-      <Body>
-        <VSkipToContentButton />
-        <NuxtLayout name="default">
-          <VFourOhFour class="flex-grow" :error="error" />
-        </NuxtLayout>
-      </Body>
-    </Html>
+    <VSkipToContentButton />
+    <NuxtLayout name="default">
+      <VFourOhFour class="flex-grow" :error="error" />
+    </NuxtLayout>
   </div>
 </template>
 
