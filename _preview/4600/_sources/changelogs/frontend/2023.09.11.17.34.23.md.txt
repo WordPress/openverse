@@ -1,0 +1,24 @@
+# 2023.09.11.17.34.23
+
+## Improvements
+
+- Separate features into persistent and session scoped cookies
+  ([#2955](https://github.com/WordPress/openverse/pull/2955)) by @dhruvkb
+- Add an updated `VAudioControl` component
+  ([#2929](https://github.com/WordPress/openverse/pull/2929)) by @obulat
+
+## Internal Improvements
+
+- Skip flaky global audio visual regression test
+  ([#3010](https://github.com/WordPress/openverse/pull/3010)) by @sarayourfriend
+- Silo ESLint configuration into plugin package
+  ([#2973](https://github.com/WordPress/openverse/pull/2973)) by @sarayourfriend
+
+## Bug Fixes
+
+- Fix meta tags on pages
+  ([#2997](https://github.com/WordPress/openverse/pull/2997)) by @obulat
+- Check flag 'sensitive_content' with 'fetch_sensitive'
+  ([#2995](https://github.com/WordPress/openverse/pull/2995)) by @dhruvkb
+- Fix package build and refactor tsconfig to be less complex and breakable
+  ([#2972](https://github.com/WordPress/openverse/pull/2972)) by @sarayourfriend

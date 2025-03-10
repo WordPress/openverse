@@ -1,0 +1,1 @@
+{"version":3,"file":"oAL5f6fw.js","sources":["../../shared/constants/window.ts"],"sourcesContent":["// Each page should have an element with this `id` to make the skip-to-content work\nexport const skipToContentTargetId = \"content\"\n"],"names":["skipToContentTargetId"],"mappings":"+UACO,MAAMA,EAAwB"}
