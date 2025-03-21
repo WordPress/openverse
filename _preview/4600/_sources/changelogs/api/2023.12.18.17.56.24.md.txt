@@ -1,0 +1,18 @@
+# 2023.12.18.17.56.24
+
+## Improvements
+
+- Convert oembed to async
+  ([#3458](https://github.com/WordPress/openverse/pull/3458)) by @sarayourfriend
+
+## Internal Improvements
+
+- Add some `just` recipes for the Redis cache service
+  ([#3538](https://github.com/WordPress/openverse/pull/3538)) by @dhruvkb
+
+## Bug Fixes
+
+- Remove stray commas in the codebase
+  ([#3545](https://github.com/WordPress/openverse/pull/3545)) by @dhruvkb
+- Fix source query caching
+  ([#3516](https://github.com/WordPress/openverse/pull/3516)) by @obulat

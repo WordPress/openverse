@@ -1,0 +1,11 @@
+# 2024.06.07.17.19.06
+
+## Internal Improvements
+
+- Update docker.io/redis Docker tag to v7.2.5
+  ([#4419](https://github.com/WordPress/openverse/pull/4419)) by @openverse-bot
+
+## Bug Fixes
+
+- Handle tags without provider in media admin view
+  ([#4440](https://github.com/WordPress/openverse/pull/4440)) by @dhruvkb

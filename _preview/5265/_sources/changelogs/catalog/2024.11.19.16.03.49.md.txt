@@ -1,0 +1,66 @@
+# 2024.11.19.16.03.49
+
+## Improvements
+
+- Update `psycopg2` to `psycopg` (v3)
+  ([#5161](https://github.com/WordPress/openverse/pull/5161)) by @dhruvkb
+- Configure poke interval for the filtered index creation by environment
+  ([#5114](https://github.com/WordPress/openverse/pull/5114)) by @stacimc
+- Add Collect creator data from Europeana API
+  ([#5057](https://github.com/WordPress/openverse/pull/5057)) by @dryruffian
+
+## Internal Improvements
+
+- Use healthcheck command preferred by MinIO
+  ([#5170](https://github.com/WordPress/openverse/pull/5170)) by @dhruvkb
+- Update dependency apache-airflow to v2.10.3 [SECURITY]
+  ([#5154](https://github.com/WordPress/openverse/pull/5154)) by @openverse-bot
+- Update dependency sentry-sdk to v2
+  ([#5144](https://github.com/WordPress/openverse/pull/5144)) by @openverse-bot
+- Update dependency smart-open to v7.0.5
+  ([#5129](https://github.com/WordPress/openverse/pull/5129)) by @openverse-bot
+- Update postgres Docker tag to v13.16
+  ([#5104](https://github.com/WordPress/openverse/pull/5104)) by @openverse-bot
+- Include env in data refresh Slack notifications
+  ([#5115](https://github.com/WordPress/openverse/pull/5115)) by @stacimc
+- Create env files from templates in a change-preserving way
+  ([#5099](https://github.com/WordPress/openverse/pull/5099)) by @dhruvkb
+- Log response in wait_for_reindex
+  ([#5113](https://github.com/WordPress/openverse/pull/5113)) by @stacimc
+- Drop bespoke time-freezing fixture and adopt FreezeGun
+  ([#5097](https://github.com/WordPress/openverse/pull/5097)) by @dhruvkb
+- Update python dev dependencies (major)
+  ([#5086](https://github.com/WordPress/openverse/pull/5086)) by @openverse-bot
+- Add missing warning arg in `rotate_envfiles` DAG
+  ([#5074](https://github.com/WordPress/openverse/pull/5074)) by @krysal
+- Add Slack Alert for non-dated provider DAGs with no data
+  ([#5041](https://github.com/WordPress/openverse/pull/5041)) by @stacimc
+
+## Bug Fixes
+
+- Append concurrency tag to prevent issues between DAGs in staging
+  ([#5155](https://github.com/WordPress/openverse/pull/5155)) by @krysal
+- Increase batch size for image data refresh alter step
+  ([#5145](https://github.com/WordPress/openverse/pull/5145)) by @krysal
+- Limit to 2 `alter_data_batches` concurrently
+  ([#5125](https://github.com/WordPress/openverse/pull/5125)) by @stacimc
+- Make alter data batch size configurable by media type
+  ([#5124](https://github.com/WordPress/openverse/pull/5124)) by @stacimc
+- Adjust timeouts for image data refresh
+  ([#5123](https://github.com/WordPress/openverse/pull/5123)) by @stacimc
+- Fix param name in `terminate_indexer_worker` task
+  ([#5112](https://github.com/WordPress/openverse/pull/5112)) by @stacimc
+- Remove logic to change port to 8002 for prod data refresh
+  ([#5111](https://github.com/WordPress/openverse/pull/5111)) by @stacimc
+- Update wait_for_worker checks to check instance is running and reachable
+  ([#5101](https://github.com/WordPress/openverse/pull/5101)) by @stacimc
+- Log instance status in distributed reindex, pass if empty
+  ([#5081](https://github.com/WordPress/openverse/pull/5081)) by @stacimc
+- Wait for worker to initialize before trying to trigger reindexing task
+  ([#5079](https://github.com/WordPress/openverse/pull/5079)) by @stacimc
+- Use port 8002 for indexer worker in non-local environment
+  ([#5080](https://github.com/WordPress/openverse/pull/5080)) by @stacimc
+- Fix parameter type for fetching launch template number
+  ([#5078](https://github.com/WordPress/openverse/pull/5078)) by @stacimc
+- Use the correct environment DB for getting the record count of media
+  ([#5077](https://github.com/WordPress/openverse/pull/5077)) by @stacimc
