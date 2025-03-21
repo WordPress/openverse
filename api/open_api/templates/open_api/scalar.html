@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Openverse API</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      /* Hide the link to the Scalar app. */
+      .open-api-client-button {
+        display: none !important;
+      }
+
+      :root {
+        --scalar-sidebar-width: 20rem;
+        --scalar-custom-header-height: 3rem;
+      }
+
+      /* Implement a header for branding. */
+      .custom-header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+
+        border-bottom: 1px solid var(--scalar-border-color);
+
+        padding: 0 0.75rem; /* match padding of similarly aligned elements */
+
+        background-color: var(--scalar-background-1);
+        color: var(--scalar-color-1);
+
+        height: var(--scalar-custom-header-height);
+
+        justify-content: space-between;
+      }
+
+      .custom-header,
+      .custom-header nav {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .custom-header nav {
+        font-size: 0.8125rem;
+      }
+
+      .custom-header nav a {
+        text-decoration: none;
+      }
+
+      .custom-header nav a:hover,
+      .custom-header nav a:focus {
+        color: var(--scalar-color-2);
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="custom-header scalar-app">
+      <b>Openverse API</b>
+      <nav>
+        <a href="mailto:openverse@wordpress.org">Email</a>
+        <a href="https://docs.openverse.org/terms_of_service.html">ToS</a>
+      </nav>
+    </header>
+    <script
+      id="api-reference"
+      data-url="/v1/schema/"
+      data-configuration="{{ configuration }}"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"></script>
+  </body>
+</html>
