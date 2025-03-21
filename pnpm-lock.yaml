@@ -86,8 +86,8 @@ importers:
         specifier: ^6.12.1
         version: 6.12.1(magicast@0.3.5)(rollup@4.31.0)
       '@pinia/nuxt':
-        specifier: ^0.9.0
-        version: 0.9.0(magicast@0.3.5)(pinia@2.3.0(typescript@5.7.3)(vue@3.5.13(typescript@5.7.3)))(rollup@4.31.0)
+        specifier: ^0.10.0
+        version: 0.10.1(magicast@0.3.5)(pinia@2.3.0(typescript@5.7.3)(vue@3.5.13(typescript@5.7.3)))(rollup@4.31.0)
       '@sentry/nuxt':
         specifier: ^8.53.0
         version: 8.53.0(@opentelemetry/api@1.9.0)(@opentelemetry/core@1.29.0(@opentelemetry/api@1.9.0))(@opentelemetry/instrumentation@0.56.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.29.0(@opentelemetry/api@1.9.0))(@opentelemetry/semantic-conventions@1.28.0)(encoding@0.1.13)(magicast@0.3.5)(nuxt@3.15.1(@parcel/watcher@2.4.1)(@types/node@22.8.5)(db0@0.1.4)(encoding@0.1.13)(eslint@9.13.0(jiti@2.4.2))(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.3)(rollup@4.31.0)(terser@5.31.0)(typescript@5.7.3)(vite@6.0.11(@types/node@22.8.5)(jiti@2.4.2)(terser@5.31.0)(yaml@2.7.0))(vue-tsc@2.2.0(typescript@5.7.3))(yaml@2.7.0))(pinia@2.3.0(typescript@5.7.3)(vue@3.5.13(typescript@5.7.3)))(rollup@4.31.0)(vue@3.5.13(typescript@5.7.3))
@@ -1140,16 +1140,16 @@ packages:
     resolution: {integrity: sha512-QcUYprK+e4X2lU6eJDxLuf/mUtCuVPj2RFBoFRlJJxK3wskBejzlRvh1Q0lQCi9tDOnD4iUK1ftcGylE3X3idA==}
     engines: {node: '>= 16'}
 
-  '@intlify/message-compiler@11.0.0-rc.1':
-    resolution: {integrity: sha512-TGw2uBfuTFTegZf/BHtUQBEKxl7Q/dVGLoqRIdw8lFsp9g/53sYn5iD+0HxIzdYjbWL6BTJMXCPUHp9PxDTRPw==}
-    engines: {node: '>= 16'}
-
   '@intlify/message-compiler@11.0.1':
     resolution: {integrity: sha512-5RFH8x+Mn3mbjcHXnb6KCXGiczBdiQkWkv99iiA0JpKrNuTAQeW59Pjq/uObMB0eR0shnKYGTkIJxum+DbL3sw==}
     engines: {node: '>= 16'}
 
   '@intlify/message-compiler@11.1.2':
     resolution: {integrity: sha512-T/xbNDzi+Yv0Qn2Dfz2CWCAJiwNgU5d95EhhAEf4YmOgjCKktpfpiUSmLcBvK1CtLpPQ85AMMQk/2NCcXnNj1g==}
+    engines: {node: '>= 16'}
+
+  '@intlify/message-compiler@12.0.0-alpha.2':
+    resolution: {integrity: sha512-PD9C+oQbb7BF52hec0+vLnScaFkvnfX+R7zSbODYuRo/E2niAtGmHd0wPvEMsDhf9Z9b8f/qyDsVeZnD/ya9Ug==}
     engines: {node: '>= 16'}
 
   '@intlify/message-compiler@9.14.2':
@@ -1164,10 +1164,6 @@ packages:
     resolution: {integrity: sha512-2xqwm05YPpo7TM//+v0bzS0FWiTzsjpSMnWdt7ZXs5/ZfQIedSuBXIrskd8HZ7c/cZzo1G9ALHTksnv/74vk/Q==}
     engines: {node: '>= 16'}
 
-  '@intlify/shared@11.0.0-rc.1':
-    resolution: {integrity: sha512-8tR1xe7ZEbkabTuE/tNhzpolygUn9OaYp9yuYAF4MgDNZg06C3Qny80bes2/e9/Wm3aVkPUlCw6WgU7mQd0yEg==}
-    engines: {node: '>= 16'}
-
   '@intlify/shared@11.0.1':
     resolution: {integrity: sha512-lH164+aDDptHZ3dBDbIhRa1dOPQUp+83iugpc+1upTOWCnwyC1PVis6rSWNMMJ8VQxvtHQB9JMib48K55y0PvQ==}
     engines: {node: '>= 16'}
@@ -1178,6 +1174,10 @@ packages:
 
   '@intlify/shared@11.1.2':
     resolution: {integrity: sha512-dF2iMMy8P9uKVHV/20LA1ulFLL+MKSbfMiixSmn6fpwqzvix38OIc7ebgnFbBqElvghZCW9ACtzKTGKsTGTWGA==}
+    engines: {node: '>= 16'}
+
+  '@intlify/shared@12.0.0-alpha.2':
+    resolution: {integrity: sha512-P2DULVX9nz3y8zKNqLw9Es1aAgQ1JGC+kgpx5q7yLmrnAKkPR5MybQWoEhxanefNJgUY5ehsgo+GKif59SrncA==}
     engines: {node: '>= 16'}
 
   '@intlify/shared@9.14.2':
@@ -1843,10 +1843,10 @@ packages:
     resolution: {integrity: sha512-HNjmfLQEVRZmHRET336f20H/8kOozUGwk7yajvsonjNxbj2wBTK1WsQuHkD5yYh9RxFGL2EyDHryOihOwUoKDA==}
     engines: {node: '>= 10.0.0'}
 
-  '@pinia/nuxt@0.9.0':
-    resolution: {integrity: sha512-2yeRo7LeyCF68AbNeL3xu2h6uw0617RkcsYxmA8DJM0R0PMdz5wQHnc44KeENQxR/Mrq8T910XVT6buosqsjBQ==}
+  '@pinia/nuxt@0.10.1':
+    resolution: {integrity: sha512-xrpkKZHSmshPK6kQzboJ+TZiZ5zj73gBCI5SfiUaJkKKS9gx4B1hLEzJIjxZl0/HS5jRWrIvQ+u9ulvIRlNiow==}
     peerDependencies:
-      pinia: ^2.3.0
+      pinia: ^3.0.1
 
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
@@ -8318,8 +8318,8 @@ snapshots:
 
   '@intlify/bundle-utils@10.0.0(vue-i18n@10.0.6(vue@3.5.13(typescript@5.7.3)))':
     dependencies:
-      '@intlify/message-compiler': 11.0.0-rc.1
-      '@intlify/shared': 11.0.0-rc.1
+      '@intlify/message-compiler': 12.0.0-alpha.2
+      '@intlify/shared': 12.0.0-alpha.2
       acorn: 8.14.0
       escodegen: 2.1.0
       estree-walker: 2.0.2
@@ -8405,11 +8405,6 @@ snapshots:
       '@intlify/shared': 10.0.6
       source-map-js: 1.2.1
 
-  '@intlify/message-compiler@11.0.0-rc.1':
-    dependencies:
-      '@intlify/shared': 11.0.0-rc.1
-      source-map-js: 1.2.1
-
   '@intlify/message-compiler@11.0.1':
     dependencies:
       '@intlify/shared': 11.0.1
@@ -8418,6 +8413,11 @@ snapshots:
   '@intlify/message-compiler@11.1.2':
     dependencies:
       '@intlify/shared': 11.1.2
+      source-map-js: 1.2.1
+
+  '@intlify/message-compiler@12.0.0-alpha.2':
+    dependencies:
+      '@intlify/shared': 12.0.0-alpha.2
       source-map-js: 1.2.1
 
   '@intlify/message-compiler@9.14.2':
@@ -8429,13 +8429,13 @@ snapshots:
 
   '@intlify/shared@10.0.6': {}
 
-  '@intlify/shared@11.0.0-rc.1': {}
-
   '@intlify/shared@11.0.1': {}
 
   '@intlify/shared@11.1.0': {}
 
   '@intlify/shared@11.1.2': {}
+
+  '@intlify/shared@12.0.0-alpha.2': {}
 
   '@intlify/shared@9.14.2': {}
 
@@ -9539,7 +9539,7 @@ snapshots:
       '@parcel/watcher-win32-ia32': 2.4.1
       '@parcel/watcher-win32-x64': 2.4.1
 
-  '@pinia/nuxt@0.9.0(magicast@0.3.5)(pinia@2.3.0(typescript@5.7.3)(vue@3.5.13(typescript@5.7.3)))(rollup@4.31.0)':
+  '@pinia/nuxt@0.10.1(magicast@0.3.5)(pinia@2.3.0(typescript@5.7.3)(vue@3.5.13(typescript@5.7.3)))(rollup@4.31.0)':
     dependencies:
       '@nuxt/kit': 3.15.1(magicast@0.3.5)(rollup@4.31.0)
       pinia: 2.3.0(typescript@5.7.3)(vue@3.5.13(typescript@5.7.3))
