@@ -226,7 +226,8 @@ watchDebounced(
 }
 
 .faded-overflow-e.faded-overflow-s {
-  mask-image: linear-gradient(
+  mask-image:
+    linear-gradient(
       to right,
       transparent 0,
       transparent 44px,
