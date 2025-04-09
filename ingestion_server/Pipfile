@@ -4,7 +4,7 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-ipython = "~=8.16"
+ipython = "~=9.1"
 pytest = "~=8.3"
 pytest-order = "~=1.1"
 pytest-sugar = "~=1.0"
