@@ -18,7 +18,7 @@
     "ghcr.io/devcontainers/features/node:1": {
       // Match the Node.js version defined in `package.json`.
       // TODO: Automatically populate this.
-      "version": "18.20.8"
+      "version": "22.14.0"
     },
     "ghcr.io/devcontainers/features/docker-in-docker:2": {
       "dockerDashComposeVersion": "v2"
