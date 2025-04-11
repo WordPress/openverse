@@ -31,7 +31,7 @@ distribution = false
 
 [tool.pdm.dev-dependencies]
 dev = [
-    "ipython~=8.16",
+    "ipython~=9.1",
     "remote-pdb~=2.1",
 ]
 test = [

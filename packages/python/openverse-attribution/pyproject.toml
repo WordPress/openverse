@@ -21,7 +21,7 @@ test = [
     "requests>=2.31.0",
 ]
 dev = [
-    "ipython >=8.24.0, <9",
+    "ipython >=9.1, <10",
 ]
 
 [tool.pdm.scripts]
