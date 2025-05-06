@@ -344,8 +344,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0
       '@swc/cli':
-        specifier: ^0.6.0
-        version: 0.6.0(@swc/core@1.7.42)(chokidar@4.0.3)
+        specifier: ^0.7.0
+        version: 0.7.3(@swc/core@1.7.42)(chokidar@4.0.3)
       '@swc/core':
         specifier: ^1.7.35
         version: 1.7.42
@@ -2426,8 +2426,8 @@ packages:
       storybook: ^8.4.7
       vue: ^3.0.0
 
-  '@swc/cli@0.6.0':
-    resolution: {integrity: sha512-Q5FsI3Cw0fGMXhmsg7c08i4EmXCrcl+WnAxb6LYOLHw4JFFC3yzmx9LaXZ7QMbA+JZXbigU2TirI7RAfO0Qlnw==}
+  '@swc/cli@0.7.3':
+    resolution: {integrity: sha512-rnVXNnlURjdOuPaBIwZ3TmBA44BF/eP0j154LanlgPEYfau74ige7cpKlKkZr1IBqMOG99lAnYNxQipDWA3hdg==}
     engines: {node: '>= 16.14.0'}
     hasBin: true
     peerDependencies:
@@ -10278,7 +10278,7 @@ snapshots:
       vue: 3.5.13(typescript@5.7.3)
       vue-component-type-helpers: 2.2.10
 
-  '@swc/cli@0.6.0(@swc/core@1.7.42)(chokidar@4.0.3)':
+  '@swc/cli@0.7.3(@swc/core@1.7.42)(chokidar@4.0.3)':
     dependencies:
       '@swc/core': 1.7.42
       '@swc/counter': 0.1.3
