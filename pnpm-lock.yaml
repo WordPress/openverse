@@ -247,8 +247,8 @@ importers:
         specifier: ^12.0.0
         version: 12.1.1(rollup@4.31.0)(tslib@2.6.2)(typescript@5.7.3)
       nock:
-        specifier: 14.0.3
-        version: 14.0.3
+        specifier: 14.0.4
+        version: 14.0.4
       openapi-typescript:
         specifier: ^7.3.2
         version: 7.4.3(encoding@0.1.13)(typescript@5.7.3)
@@ -1331,8 +1331,8 @@ packages:
     peerDependencies:
       rollup: ^1.20.0 || ^2.0.0 || ^3.0.0 || ^4.0.0
 
-  '@mswjs/interceptors@0.38.1':
-    resolution: {integrity: sha512-JWLtvwpj2aCk2UvLlSQ12BFF/wBJJd0NhhYf7cz4k+tMhymmLn8ss3irznjWPvOsASV2raqb5EjTw+NRoeVDag==}
+  '@mswjs/interceptors@0.38.6':
+    resolution: {integrity: sha512-qFlpmObPqeUs4u3oFYv/OM/xyX+pNa5TRAjqjvMhbGYlyMhzSrE5UfncL2rUcEeVfD9Gebgff73hPwqcOwJQNA==}
     engines: {node: '>=18'}
 
   '@netlify/functions@2.8.2':
@@ -5467,8 +5467,8 @@ packages:
       xml2js:
         optional: true
 
-  nock@14.0.3:
-    resolution: {integrity: sha512-sJ9RNmCuYBqXDmGZZHgZ1D1441MqFOU4T5aeLGVGEB4OWI/2LM0mZlkfBQzQKdOfJypL+2nPPBugXKjixBn4kQ==}
+  nock@14.0.4:
+    resolution: {integrity: sha512-86fh+gIKH8H02+y0/HKAOZZXn6OwgzXvl6JYwfjvKkoKxUWz54wIIDU/+w24xzMvk/R8pNVXOrvTubyl+Ml6cg==}
     engines: {node: '>=18.20.0 <20 || >=20.12.1'}
 
   node-addon-api@3.2.1:
@@ -8682,20 +8682,14 @@ snapshots:
       json5: 2.2.3
       rollup: 4.31.0
 
-  '@mswjs/interceptors@0.38.1':
+  '@mswjs/interceptors@0.38.6':
     dependencies:
       '@open-draft/deferred-promise': 2.2.0
       '@open-draft/logger': 0.3.0
       '@open-draft/until': 2.1.0
       is-node-process: 1.2.0
-      jsdom: 26.0.0
       outvariant: 1.4.3
       strict-event-emitter: 0.5.1
-    transitivePeerDependencies:
-      - bufferutil
-      - canvas
-      - supports-color
-      - utf-8-validate
 
   '@netlify/functions@2.8.2':
     dependencies:
@@ -13901,16 +13895,11 @@ snapshots:
       - uWebSockets.js
       - uploadthing
 
-  nock@14.0.3:
+  nock@14.0.4:
     dependencies:
-      '@mswjs/interceptors': 0.38.1
+      '@mswjs/interceptors': 0.38.6
       json-stringify-safe: 5.0.1
       propagate: 2.0.1
-    transitivePeerDependencies:
-      - bufferutil
-      - canvas
-      - supports-color
-      - utf-8-validate
 
   node-addon-api@3.2.1:
     optional: true
