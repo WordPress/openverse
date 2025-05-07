@@ -371,8 +371,8 @@ importers:
         specifier: ^12.0.0
         version: 12.1.1(rollup@4.31.0)(tslib@2.6.2)(typescript@5.7.3)
       '@types/k6':
-        specifier: ^0.53.1
-        version: 0.53.1
+        specifier: ^0.57.0
+        version: 0.57.1
       core-js:
         specifier: ^3.37.1
         version: 3.37.1
@@ -2646,8 +2646,8 @@ packages:
   '@types/json5@0.0.29':
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
 
-  '@types/k6@0.53.1':
-    resolution: {integrity: sha512-Mm1+7kESDNssyBiMV+5MVAJKwpJbj1Y3X1YkCDlaiPbjuc8DeaPtQFBv3pnip/0ZjM9P/P/aDNvd4BvQT0lQDg==}
+  '@types/k6@0.57.1':
+    resolution: {integrity: sha512-S/p2RQAYUBXyYROkR2fgeON/LaxJ0YR+KIlnPQW/TOeLBXD7tX4RfDSWaIecuDTWKblmc6UwANyP0e5QDZPhMw==}
 
   '@types/mdx@2.0.13':
     resolution: {integrity: sha512-+OWZQfAYyio6YkJb3HLxDrvnx6SWWDbC0zVPfBRzUk0/nqoDyf6dNxQi3eArPe8rJ473nobTMQ/8Zk+LxJ+Yuw==}
@@ -10539,7 +10539,7 @@ snapshots:
 
   '@types/json5@0.0.29': {}
 
-  '@types/k6@0.53.1': {}
+  '@types/k6@0.57.1': {}
 
   '@types/mdx@2.0.13': {}
 
