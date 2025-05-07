@@ -152,7 +152,7 @@ class PostgresHook(UpstreamPostgresHook):
         Pass an empty SQL statement to the regular run command so that only the
         timeout setting gets run.
         """
-        self.run("")
+        self.run("", handler=None)
 
 
 class PGExecuteQueryOperator(SQLExecuteQueryOperator):
