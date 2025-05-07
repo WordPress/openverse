@@ -5,7 +5,7 @@ from airflow.decorators import task
 from airflow.models import BaseOperator
 from airflow.models.abstractoperator import AbstractOperator
 from airflow.models.mappedoperator import MappedOperator
-from airflow.providers.common.sql.hooks.sql import fetch_one_handler
+from airflow.providers.common.sql.hooks.handlers import fetch_one_handler
 from airflow.providers.common.sql.operators.sql import SQLExecuteQueryOperator
 from airflow.providers.postgres.hooks.postgres import (
     PostgresHook as UpstreamPostgresHook,
