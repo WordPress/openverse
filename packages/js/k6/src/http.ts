@@ -14,13 +14,16 @@ import {
   type RefinedParams,
   type ResponseType,
 } from "k6/http"
-import { HttpURL } from "k6/experimental/tracing"
 
 // Polyfills URL
 import "core-js/web/url"
 import "core-js/web/url-search-params"
 
 import { sign } from "./crypto"
+
+interface HttpURL {
+  __brand: "http-url"
+}
 
 const signingSecret = __ENV.signing_secret
 
