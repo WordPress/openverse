@@ -1,0 +1,25 @@
+# 2024.05.07.23.56.36
+
+## New Features
+
+- Expose provider in the API tags response
+  ([#4280](https://github.com/WordPress/openverse/pull/4280)) by @AetherUnbound
+
+## Improvements
+
+- Alter Django Admin media views to surface content reports
+  ([#4254](https://github.com/WordPress/openverse/pull/4254)) by @AetherUnbound
+
+## Internal Improvements
+
+- Tag API images with PDM content hash
+  ([#4278](https://github.com/WordPress/openverse/pull/4278)) by @dhruvkb
+- Add structured logging for the API
+  ([#4263](https://github.com/WordPress/openverse/pull/4263)) by @dhruvkb
+- Cache repeated thumbnail failures within configured TTL
+  ([#4249](https://github.com/WordPress/openverse/pull/4249)) by @sarayourfriend
+
+## Bug Fixes
+
+- Fix send email query
+  ([#4281](https://github.com/WordPress/openverse/pull/4281)) by @sarayourfriend

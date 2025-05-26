@@ -1,0 +1,8 @@
+# 2025.04.11.13.47.14
+
+## Internal Improvements
+
+- Update docker.io/mccutchen/go-httpbin Docker tag to v2.18.1
+  ([#5402](https://github.com/WordPress/openverse/pull/5402)) by @openverse-bot
+- Update python dev dependencies (major)
+  ([#5404](https://github.com/WordPress/openverse/pull/5404)) by @openverse-bot

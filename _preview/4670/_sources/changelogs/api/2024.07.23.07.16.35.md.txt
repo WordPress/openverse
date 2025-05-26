@@ -1,0 +1,11 @@
+# 2024.07.23.07.16.35
+
+## Improvements
+
+- Remove client application headers from API responses
+  ([#4635](https://github.com/WordPress/openverse/pull/4635)) by @krysal
+
+## Internal Improvements
+
+- Use a separate logger for dead links check that Sentry will ignore
+  ([#4649](https://github.com/WordPress/openverse/pull/4649)) by @dhruvkb
