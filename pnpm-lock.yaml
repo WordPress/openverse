@@ -240,8 +240,8 @@ importers:
   packages/js/api-client:
     dependencies:
       openapi-fetch:
-        specifier: ^0.13.0
-        version: 0.13.3
+        specifier: ^0.14.0
+        version: 0.14.0
     devDependencies:
       '@rollup/plugin-typescript':
         specifier: ^12.0.0
@@ -5739,8 +5739,8 @@ packages:
     resolution: {integrity: sha512-7x81NCL719oNbsq/3mh+hVrAWmFuEYUqrq/Iw3kUzH8ReypT9QQ0BLoJS7/G9k6N81XjW4qHWtjWwe/9eLy1EQ==}
     engines: {node: '>=12'}
 
-  openapi-fetch@0.13.3:
-    resolution: {integrity: sha512-M1THnPkNOXUPsQKZfqunhW/wqH8l3/W3Vlj4lemQynf4mTaTwBTvL2pgjBe0zerL/GFT5ttCHu9fYvanUI3tOw==}
+  openapi-fetch@0.14.0:
+    resolution: {integrity: sha512-PshIdm1NgdLvb05zp8LqRQMNSKzIlPkyMxYFxwyHR+UlKD4t2nUjkDhNxeRbhRSEd3x5EUNh2w5sJYwkhOH4fg==}
 
   openapi-typescript-helpers@0.0.15:
     resolution: {integrity: sha512-opyTPaunsklCBpTK8JGef6mfPhLSnyy5a0IN9vKtx3+4aExf+KxEqYwIy3hqkedXIB97u357uLMJsOnm3GVjsw==}
@@ -14366,7 +14366,7 @@ snapshots:
       is-docker: 2.2.1
       is-wsl: 2.2.0
 
-  openapi-fetch@0.13.3:
+  openapi-fetch@0.14.0:
     dependencies:
       openapi-typescript-helpers: 0.0.15
 
