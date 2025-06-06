@@ -49,6 +49,6 @@
     "vitest": "^3.0.4"
   },
   "dependencies": {
-    "openapi-fetch": "^0.13.0"
+    "openapi-fetch": "^0.14.0"
   }
 }
