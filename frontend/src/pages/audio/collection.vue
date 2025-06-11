@@ -38,7 +38,7 @@ usePageRobotsRule(
 )
 
 useHead({
-  meta: [{ hid: "og:title", property: "og:title", content: pageTitle.value }],
+  meta: [{ property: "og:title", content: pageTitle.value }],
   title: pageTitle.value,
 })
 

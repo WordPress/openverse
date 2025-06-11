@@ -62,7 +62,7 @@ const meta = computed(() => {
 })
 
 useHead({
-  htmlAttrs: htmlI18nProps,
+  htmlAttrs: htmlI18nProps.value,
   bodyAttrs: { class: darkMode.cssClass, style: headerHeight },
   title: "Openly Licensed Images, Audio and More | Openverse",
   meta,
