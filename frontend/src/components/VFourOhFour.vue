@@ -30,7 +30,7 @@ const handleSearch = (searchTerm: string) => {
 }
 
 useHead({
-  meta: [{ hid: "theme-color", name: "theme-color", content: "#ffe033" }],
+  meta: [{ name: "theme-color", content: "#ffe033" }],
 })
 </script>
 
