@@ -3,10 +3,10 @@
 </a>
 
 <p align="center">
-  <a href="https://github.com/orgs/WordPress/projects/3">Project Board</a> |
+  <a href="https://github.com/WordPress/openverse/projects?query=is%3Aopen">Project Board</a> |
   <a href="https://make.wordpress.org/openverse/">Community Site</a> |
   <a href="https://make.wordpress.org/chat/">#openverse @ Slack</a> |
-  <a href="https://make.wordpress.org/openverse/handbook/openverse-handbook/">Handbook</a> |
+  <a href="https://make.wordpress.org/openverse/handbook/">Handbook</a> |
   <a href="https://make.wordpress.org/design/handbook/">Design Handbook</a> |
   <a href="https://www.figma.com/file/w60dl1XPUvSaRncv1Utmnb/Openverse-Releases?node-id=0%3A1">Releases mockups</a> |
   <a href="https://www.figma.com/file/GIIQ4sDbaToCfFQyKMvzr8/Openverse-Design-Library?node-id=0%3A1">Design Library</a>
@@ -36,7 +36,7 @@ more. Openverse is live at [openverse.org](https://openverse.org).
 
 This repository also contains the following directories.
 
-- [Brand](brand/) | Brand assets for Openverse such as logo and icon and
+- [Brand](documentation/meta/brand/) | Brand assets for Openverse such as logo and icon and
   guidelines for using these assets
 - [Templates](templates/) | Jinja templates that can be rendered into common
   scaffolding code for the project
@@ -49,7 +49,7 @@ You can keep in touch with the project via the following channels:
   - [Issues](https://github.com/WordPress/openverse/issues/)
   - [PRs](https://github.com/WordPress/openverse/pulls/)
   - [Discussions](https://github.com/WordPress/openverse/discussions/)
-  - [Project Board](https://github.com/orgs/WordPress/projects/3)
+  - [Project Board](https://github.com/WordPress/openverse/projects?query=is%3Aopen)
 - [Community Site](https://make.wordpress.org/openverse/)
 - #openverse channel in the
   [Making WordPress Chat](https://make.wordpress.org/chat/)
