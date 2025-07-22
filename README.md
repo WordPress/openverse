@@ -36,8 +36,8 @@ more. Openverse is live at [openverse.org](https://openverse.org).
 
 This repository also contains the following directories.
 
-- [Brand](documentation/meta/brand/) | Brand assets for Openverse such as logo and icon and
-  guidelines for using these assets
+- [Brand](documentation/meta/brand/) | Brand assets for Openverse such as logo
+  and icon and guidelines for using these assets
 - [Templates](templates/) | Jinja templates that can be rendered into common
   scaffolding code for the project
 
