@@ -49,7 +49,7 @@ You can keep in touch with the project via the following channels:
   - [Issues](https://github.com/WordPress/openverse/issues/)
   - [PRs](https://github.com/WordPress/openverse/pulls/)
   - [Discussions](https://github.com/WordPress/openverse/discussions/)
-  - [Project Board](https://github.com/WordPress/openverse/projects?query=is%3Aopen)
+  - [Project Board](https://github.com/orgs/WordPress/projects/75)
 - [Community Site](https://make.wordpress.org/openverse/)
 - #openverse channel in the
   [Making WordPress Chat](https://make.wordpress.org/chat/)
