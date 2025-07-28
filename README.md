@@ -3,7 +3,7 @@
 </a>
 
 <p align="center">
-  <a href="https://github.com/WordPress/openverse/projects?query=is%3Aopen">Project Board</a> |
+  <a href="https://github.com/orgs/WordPress/projects/75">Project Board</a> |
   <a href="https://make.wordpress.org/openverse/">Community Site</a> |
   <a href="https://make.wordpress.org/chat/">#openverse @ Slack</a> |
   <a href="https://make.wordpress.org/openverse/handbook/">Handbook</a> |
