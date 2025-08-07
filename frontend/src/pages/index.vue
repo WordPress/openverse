@@ -14,7 +14,6 @@ import { useUiStore } from "~/stores/ui"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useAnalytics } from "~/composables/use-analytics"
 
-import VDarkModeFeatureNotice from "~/components/VFeatureNotice/VDarkModeFeatureNotice.vue"
 import VHomeGallery from "~/components/VHomeGallery/VHomeGallery.vue"
 import VHomepageContent from "~/components/VHomepageContent.vue"
 
@@ -46,8 +45,6 @@ onMounted(() => {
 })
 
 const isXl = computed(() => uiStore.isBreakpoint("xl"))
-
-const isDarkModeSeen = computed(() => uiStore.isDarkModeSeen)
 
 const searchType = ref<SearchType>(ALL_MEDIA)
 
@@ -88,11 +85,6 @@ const handleSearch = (searchTerm: string) => {
     <div
       class="grid flex-grow place-items-center justify-center gap-6 xl:h-[33rem] xl:flex-grow-0 xl:items-start"
     >
-      <VDarkModeFeatureNotice
-        v-if="showThemeSwitcher && !isDarkModeSeen"
-        class="notice self-start lg:ms-26 xl:justify-self-start"
-      />
-
       <VHomepageContent
         class="page-content my-auto sm:px-14 md:px-20 lg:px-26 xl:w-[53.375rem] xl:pe-0"
         :handle-search="handleSearch"
