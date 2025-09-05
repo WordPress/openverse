@@ -59,10 +59,6 @@ const setSearchType = (type: SearchType) => {
   }
 }
 
-const showThemeSwitcher = computed(() =>
-  featureFlagStore.isOn("dark_mode_ui_toggle")
-)
-
 const handleSearch = (searchTerm: string) => {
   sendCustomEvent("SUBMIT_SEARCH", {
     searchType: searchType.value,
