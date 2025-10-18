@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2025-01-23T18:01:37+00:00\n"
+"POT-Creation-Date: 2025-10-18T05:57:14+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -83,11 +83,6 @@ msgstr ""
 #: src/components/VBanner/VAnalyticsNotice.vue:20
 msgctxt "notification.analytics.close"
 msgid "Close the analytics notice banner."
-msgstr ""
-
-#: src/components/VFeatureNotice/VDarkModeFeatureNotice.vue:18
-msgctxt "notification.darkMode.text"
-msgid "Dark mode is now available."
 msgstr ""
 
 #: src/components/VFeatureNotice/VFeatureNotice.vue:26
@@ -2597,8 +2592,8 @@ msgctxt "language.language"
 msgid "Language"
 msgstr ""
 
-#: src/components/VThemeSelect/VThemeSelect.vue:75
-#: src/components/VThemeSelect/VThemeSelect.vue:76
+#: src/components/VThemeSelect/VThemeSelect.vue:70
+#: src/components/VThemeSelect/VThemeSelect.vue:71
 msgctxt "theme.theme"
 msgid "Theme"
 msgstr ""
