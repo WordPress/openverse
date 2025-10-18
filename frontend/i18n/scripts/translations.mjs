@@ -121,6 +121,16 @@ const extractZip = async (zipPath, debug) => {
         deprecatedKeys,
         invalidKeys
       )
+      // Hotfix for the pipe character in Hindi translations
+      // https://github.com/WordPress/openverse/issues/5495
+      const enContent = readToJson(enJsonFile)
+      if (targetName === "hi.json") {
+        for (const [key, value] of Object.entries(cleanedContent)) {
+          if (value.includes("|") && !enContent[key].includes("|")) {
+            cleanedContent[key] = value.replace(/\|/g, "")
+          }
+        }
+      }
 
       // Only save if there are translations
       if (Object.keys(cleanedContent).length > 0) {
