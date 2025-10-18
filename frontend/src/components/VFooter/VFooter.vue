@@ -7,7 +7,6 @@ import { computed, ref } from "vue"
 
 import { SCREEN_SIZES } from "#shared/constants/screens"
 import { useUiStore } from "~/stores/ui"
-import { useFeatureFlagStore } from "~/stores/feature-flag"
 import usePages from "~/composables/use-pages"
 import useResizeObserver from "~/composables/use-resize-observer"
 
@@ -41,11 +40,6 @@ const uiStore = useUiStore()
 const { all: allPages } = usePages()
 
 const isContentMode = computed(() => props.mode === "content")
-
-const featureFlagStore = useFeatureFlagStore()
-const showThemeSwitcher = computed(() =>
-  featureFlagStore.isOn("dark_mode_ui_toggle")
-)
 
 /** JS-based responsiveness */
 const footerEl = ref<HTMLElement | null>(null)
@@ -93,25 +87,16 @@ const linkColumnHeight = computed(() => ({
       </nav>
     </div>
 
-    <!-- Locale chooser and WordPress affiliation graphic -->
+    <!-- Locale chooser, theme chooser, and WordPress affiliation graphic -->
     <div class="locale-and-wp flex flex-col justify-between">
-      <template v-if="showThemeSwitcher">
-        <VWordPressLink />
-        <div class="flex flex-row items-center gap-6">
-          <VLanguageSelect
-            v-bind="languageProps"
-            class="language max-w-full border-secondary"
-          />
-          <VThemeSelect class="border-secondary" />
-        </div>
-      </template>
-      <template v-else>
+      <VWordPressLink />
+      <div class="flex flex-row items-center gap-6">
         <VLanguageSelect
           v-bind="languageProps"
           class="language max-w-full border-secondary"
         />
-        <VWordPressLink />
-      </template>
+        <VThemeSelect class="border-secondary" />
+      </div>
     </div>
   </footer>
 </template>

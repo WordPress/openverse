@@ -24,7 +24,6 @@ _{link}_ part of "The translation for English locale is incomplete. Help us get 
   */
   "notification.analytics.link": "the privacy page",
   "notification.analytics.close": "Close the analytics notice banner.",
-  "notification.darkMode.text": "Dark mode is now available.",
   "notification.new": "New",
   "notification.more": "See more",
   "header.homeLink": "{'Openverse'} Home",

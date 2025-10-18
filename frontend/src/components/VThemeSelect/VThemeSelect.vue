@@ -5,7 +5,7 @@ light, dark and system.
 
 <script setup lang="ts">
 import { useI18n } from "#imports"
-import { computed, ref, onMounted, watch, type Ref } from "vue"
+import { ref, onMounted, watch, type Ref } from "vue"
 
 import { useUiStore, type ColorMode } from "~/stores/ui"
 import { useDarkMode } from "~/composables/use-dark-mode"
@@ -33,11 +33,6 @@ const THEME_TEXT = {
 const colorMode: Ref<ColorMode> = ref(uiStore.colorMode)
 const handleUpdateModelValue = (value: string) => {
   uiStore.setColorMode(value as ColorMode)
-}
-
-const isDarkModeSeen = computed(() => uiStore.isDarkModeSeen)
-const setIsDarkModeSeen = () => {
-  uiStore.setIsDarkModeSeen(true)
 }
 
 const darkMode = useDarkMode()
@@ -75,8 +70,6 @@ watch([darkMode.colorMode, darkMode.osColorMode], updateRefs)
     :blank-text="$t('theme.theme')"
     :label-text="$t('theme.theme')"
     :show-selected="false"
-    :show-new-highlight="!isDarkModeSeen"
-    @focus="setIsDarkModeSeen"
     @update:model-value="handleUpdateModelValue"
   >
     <template #start>
