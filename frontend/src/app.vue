@@ -30,10 +30,10 @@ const headerHeight = computed(() => {
   return `--header-height: ${uiStore.headerHeight}px`
 })
 
-const head = useLocaleHead({ dir: true, key: "id", seo: true })
+const head = useLocaleHead({ dir: true, seo: true })
 const htmlI18nProps = computed(() => ({
   lang: head.value?.htmlAttrs?.lang ?? "en",
-  dir: head.value?.htmlAttrs?.dir ?? "ltr",
+  dir: (head.value?.htmlAttrs?.dir ?? "ltr") as "ltr" | "rtl",
 }))
 const link = computed(() => {
   return [
@@ -62,7 +62,7 @@ const meta = computed(() => {
 })
 
 useHead({
-  htmlAttrs: htmlI18nProps,
+  htmlAttrs: { lang: htmlI18nProps.value.lang, dir: htmlI18nProps.value.dir },
   bodyAttrs: { class: darkMode.cssClass, style: headerHeight },
   title: "Openly Licensed Images, Audio and More | Openverse",
   meta,

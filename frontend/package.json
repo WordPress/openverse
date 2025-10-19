@@ -82,6 +82,11 @@
   },
   "devDependencies": {
     "@babel/parser": "^7.24.8",
+    "@intlify/core": "^11.1.12",
+    "@intlify/core-base": "^11.1.12",
+    "@intlify/shared": "^11.1.12",
+    "@intlify/message-compiler": "^11.1.12",
+    "@intlify/message-resolver": "^9.1.11",
     "@nuxt/test-utils": "^3.19.2",
     "@nuxtjs/i18n": "^10.1.1",
     "@nuxtjs/storybook": "8.3.3",
@@ -91,7 +96,7 @@
     "@storybook/addon-links": "8.4.7",
     "@testing-library/user-event": "^14.5.2",
     "@testing-library/vue": "^8.1.0",
-    "@vitest/coverage-v8": "^3.0.0",
+    "@vitest/coverage-v8": "^3.2.4",
     "@vitest/ui": "^3.2.4",
     "@vue/test-utils": "^2.4.6",
     "adm-zip": "^0.5.14",
@@ -112,7 +117,7 @@
     "vue": "^3.5.22",
     "@vue/compiler-dom": "^3.5.22",
     "@vue/server-renderer": "^3.5.22",
-    "vue-router": "^4.4.5",
+    "vue-router": "^4.6.3",
     "vue-tsc": "3.1.1"
   },
   "browserslist": [
