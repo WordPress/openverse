@@ -18,10 +18,10 @@ const custom5Rule = (n: number): number =>
             : 5
 
 export default defineI18nConfig(() => ({
-  legacy: false,
   globalInjection: true,
   fallbackLocale: localeFallback as { [x: string]: Locale[] },
-  silentFallbackWarn: true,
+  fallbackWarn: false,
+  missingWarn: false,
   pluralizationRules: {
     ar: custom5Rule,
     arq: custom5Rule,

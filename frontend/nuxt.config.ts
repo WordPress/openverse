@@ -115,7 +115,6 @@ export default defineNuxtConfig({
       },
       ...locales,
     ].filter((l) => Boolean(l.language)) as LocaleObject[],
-    lazy: true,
     langDir: "locales",
     defaultLocale: "en",
     /**
@@ -128,7 +127,6 @@ export default defineNuxtConfig({
      * */
     detectBrowserLanguage: false,
     trailingSlash: false,
-    vueI18n: "./vue-i18n",
   },
   sentry: {
     sourceMapsUploadOptions: {

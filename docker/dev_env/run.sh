@@ -20,6 +20,8 @@ shared_args=(
   # Prevents permissions issue with packages installed as root
   # when running packages.sh
   --env "PIPX_GLOBAL_HOME=/pipx"
+  # Increase Node.js heap size to 4GB for builds
+  --env "NODE_OPTIONS=--max_old_space_size=4096"
   --workdir "$(pwd)"
 )
 
