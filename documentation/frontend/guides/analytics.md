@@ -50,7 +50,7 @@ Plausible supports custom events via its "goals" feature.
 
 Sending custom events to Plausible is done by calling the `sendCustomEvents`
 function. For this function to accept a custom event name, you must update the
-`Events` type in `frontend/src/types/analyticts.ts` to include the new event
+`Events` type in `frontend/shared/types/analytics.ts` to include the new event
 name and any payload elements unique to the event.
 
 Custom events must be added to Plausible for it to record them. You may do this

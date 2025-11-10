@@ -6,7 +6,7 @@ documentation on this page was written by referencing the code in Openverse as
 well as parts of Openverse's historical development. Parts of the story for how
 Openverse's indexes came to be configured as they are today are likely missing.
 Future improvements to Openverse's indexing and search will be more carefully
-documented here and in the code to ensure there is greater longevitiy of
+documented here and in the code to ensure there is greater longevity of
 understanding.
 
 > **Note**: This document avoids covering details covered in the
@@ -23,7 +23,7 @@ about Elasticsearch, full text-search, and Openverse's index configuration:
 - [Elasticsearch 7.12 documentation](https://www.elastic.co/guide/en/elasticsearch/reference/7.12/index.html)
 - [Full-text search (Wikipedia)](https://en.wikipedia.org/wiki/Full-text_search)
 - [Stemming (Wikipedia)](https://en.wikipedia.org/wiki/Stemming)
-- [`es_mapping.py` (index configuration)](https://github.com/WordPress/openverse-api/blob/main/ingestion_server/ingestion_server/es_mapping.py)
+- [`es_mapping.py` (index configuration)](https://github.com/WordPress/openverse/blob/main/ingestion_server/ingestion_server/es_mapping.py)
 
 ## Terms
 
@@ -34,7 +34,7 @@ about Elasticsearch, full text-search, and Openverse's index configuration:
 - "Keyword field": A field where the entire contents of the field are treated as
   a single token. This is used for fields where the possible values are a known
   and relatively small set. For example, descriptive
-  ["size" of an image](https://github.com/WordPress/openverse-api/blob/d9f83e53761dd502c93384f0aa6e2f7b711151e2/api/catalog/api/constants/field_values.py#L22-L26)
+  ["size" of an image](https://github.com/WordPress/openverse/blob/main/api/catalog/api/constants/field_values.py)
   may be either "large", "medium", or "small". Because we know this ahead of
   time, Elasticsearch is able to much more quickly create the index entries for
   documents with this field because there are essentially only three keys that
@@ -211,7 +211,7 @@ These are the fields currently supported for individual field querying:
 
 Each of these can be stacked. You can make a request that queries for a specific
 title by a specific creator. The following parameters would search only for
-works by "Claude Monet" where the word "madame" (or it's stemmed versions)
+works by "Claude Monet" where the word "madame" (or its stemmed versions)
 appear in the title: `?creator=Claude Monet&title=madame`.
 
 As you can see, this is unique from the general query searching in that it

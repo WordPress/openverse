@@ -13,7 +13,7 @@ Framework API.
 
 - Run the server locally by following the [API quickstart guide](quickstart.md)
 - Update documentation
-- Make sure the updates passed the automated tests in defined in our
+- Make sure the updates passed the automated tests defined in our
   [CI/CD workflow](/meta/ci_cd/index.md)
 - Commit and push
 - Create pull request by following our
