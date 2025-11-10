@@ -34,7 +34,7 @@ about Elasticsearch, full text-search, and Openverse's index configuration:
 - "Keyword field": A field where the entire contents of the field are treated as
   a single token. This is used for fields where the possible values are a known
   and relatively small set. For example, descriptive
-  ["size" of an image](https://github.com/WordPress/openverse/blob/main/api/catalog/api/constants/field_values.py)
+  ["size" of an image](https://github.com/WordPress/openverse-api/blob/d9f83e53761dd502c93384f0aa6e2f7b711151e2/api/catalog/api/constants/field_values.py#L22-L26)
   may be either "large", "medium", or "small". Because we know this ahead of
   time, Elasticsearch is able to much more quickly create the index entries for
   documents with this field because there are essentially only three keys that
