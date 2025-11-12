@@ -79,6 +79,11 @@ See the
 [contribution guide](https://docs.openverse.org/general/contributing.html) for
 details.
 
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+You are free to use, modify, and distribute this software under the terms of the MIT License.
+
 ## Acknowledgments
 
 Openverse, previously known as CC Search, was conceived and built at
