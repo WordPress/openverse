@@ -211,8 +211,8 @@ These are the fields currently supported for individual field querying:
 
 Each of these can be stacked. You can make a request that queries for a specific
 title by a specific creator. The following parameters would search only for
-works by "Claude Monet" where the word "madame" (or its stemmed versions)
-appear in the title: `?creator=Claude Monet&title=madame`.
+works by "Claude Monet" where the word "madame" (or its stemmed versions) appear
+in the title: `?creator=Claude Monet&title=madame`.
 
 As you can see, this is unique from the general query searching in that it
 allows you to apply separate queries for individual fields (hence the name
