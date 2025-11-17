@@ -1,0 +1,33 @@
+# 2023.05.15.22.13.27
+
+## New Features
+
+- Project Proposal: Additional search views
+  ([#1890](https://github.com/WordPress/openverse/pull/1890)) by @fcoveram
+- Analytics event: SELECT_EXTERNAL_SOURCE
+  ([#1158](https://github.com/WordPress/openverse/pull/1158)) by @obulat
+
+## Improvements
+
+- Use contentlist role for search results for a11y
+  ([#1979](https://github.com/WordPress/openverse/pull/1979)) by @obulat
+- Added a recreate recipe for frontend
+  ([#2042](https://github.com/WordPress/openverse/pull/2042)) by @Aditya062003
+
+## Internal Improvements
+
+- Added a recreate recipe for frontend
+  ([#2042](https://github.com/WordPress/openverse/pull/2042)) by @Aditya062003
+- Add Cloudflare malicious traffic runbook
+  ([#1858](https://github.com/WordPress/openverse/pull/1858)) by @zackkrida
+
+## Bug Fixes
+
+- Handle more than one value for a url query parameter
+  ([#1889](https://github.com/WordPress/openverse/pull/1889)) by @obulat
+- Fix i18n setup in the unit tests
+  ([#2049](https://github.com/WordPress/openverse/pull/2049)) by @obulat
+- Use testing-library in test-utils/render
+  ([#2044](https://github.com/WordPress/openverse/pull/2044)) by @obulat
+- Remove authentication in bulk translation downloads
+  ([#1993](https://github.com/WordPress/openverse/pull/1993)) by @dhruvkb

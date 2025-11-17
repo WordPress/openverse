@@ -1,0 +1,18 @@
+# 2023.08.22.06.04.39
+
+## New Features
+
+- Show individual doc differences for rendered documentation preview on PRs
+  ([#2647](https://github.com/WordPress/openverse/pull/2647)) by @AetherUnbound
+
+## Internal Improvements
+
+- Prevent errors when Plausible is not running
+  ([#2847](https://github.com/WordPress/openverse/pull/2847)) by @dhruvkb
+- Extract use-external-sources composable
+  ([#2826](https://github.com/WordPress/openverse/pull/2826)) by @obulat
+
+## Bug Fixes
+
+- Fix mobile header spacing
+  ([#2737](https://github.com/WordPress/openverse/pull/2737)) by @zackkrida

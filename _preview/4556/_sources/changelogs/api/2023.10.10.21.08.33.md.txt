@@ -1,0 +1,6 @@
+# 2023.10.10.21.08.33
+
+## Bug Fixes
+
+- Handle instances where media items do not have creator
+  ([#3177](https://github.com/WordPress/openverse/pull/3177)) by @dhruvkb

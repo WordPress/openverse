@@ -1,0 +1,11 @@
+# 2024.02.13.05.45.50
+
+## Improvements
+
+- Refactor integration tests to have no side-effects
+  ([#3544](https://github.com/WordPress/openverse/pull/3544)) by @dhruvkb
+
+## Internal Improvements
+
+- feat: Updated Dockerfile to Use Specific Version of audiowaveform Image
+  ([#3784](https://github.com/WordPress/openverse/pull/3784)) by @zablon-oigo

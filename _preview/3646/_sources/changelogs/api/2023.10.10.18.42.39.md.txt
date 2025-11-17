@@ -1,0 +1,13 @@
+# 2023.10.10.18.42.39
+
+## Improvements
+
+- Simplify the related search
+  ([#3151](https://github.com/WordPress/openverse/pull/3151)) by @obulat
+- added robots.txt for API endpoints
+  ([#3165](https://github.com/WordPress/openverse/pull/3165)) by @MysteryManav
+
+## Bug Fixes
+
+- fix: Replace RequestError with BadRequestError
+  ([#3172](https://github.com/WordPress/openverse/pull/3172)) by @CodeAnk2829

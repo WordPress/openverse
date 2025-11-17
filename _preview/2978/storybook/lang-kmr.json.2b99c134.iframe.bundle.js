@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[127],{"./src/locales/kmr.json":function(module){module.exports=JSON.parse("{}")}}]);

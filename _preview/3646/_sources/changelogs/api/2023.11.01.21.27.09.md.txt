@@ -1,0 +1,18 @@
+# 2023.11.01.21.27.09
+
+## Improvements
+
+- Simplify search query
+  ([#3261](https://github.com/WordPress/openverse/pull/3261)) by @obulat
+
+## Internal Improvements
+
+- Bump pytest-django from 4.5.2 to 4.6.0 in /api
+  ([#3284](https://github.com/WordPress/openverse/pull/3284)) by @dependabot
+- Bump django from 4.2.6 to 4.2.7 in /api
+  ([#3282](https://github.com/WordPress/openverse/pull/3282)) by @dependabot
+
+## Bug Fixes
+
+- Hotfix: Increase ES timeout and retries
+  ([#3301](https://github.com/WordPress/openverse/pull/3301)) by @AetherUnbound

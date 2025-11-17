@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[115],{"./src/locales/ko.json":function(module){module.exports=JSON.parse('{"hero":{"disclaimer":{"license":"크리에이티브 커먼즈 라이선스","content":"모든 {openverse} 콘텐츠는 {license} 또는 퍼블릭 도메인으로 배포됩니다."}}}')}}]);

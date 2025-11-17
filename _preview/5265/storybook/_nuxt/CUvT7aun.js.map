@@ -1,0 +1,1 @@
+{"version":3,"file":"CUvT7aun.js","sources":["../../shared/constants/window.ts"],"sourcesContent":["// Each page should have an element with this `id` to make the skip-to-content work\nexport const skipToContentTargetId = \"content\"\n"],"names":["skipToContentTargetId"],"mappings":"+UACO,MAAMA,EAAwB"}

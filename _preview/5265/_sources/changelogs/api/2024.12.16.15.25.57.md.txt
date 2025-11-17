@@ -1,0 +1,11 @@
+# 2024.12.16.15.25.57
+
+## Improvements
+
+- Remove MediaViewSet's lookup regex
+  ([#5273](https://github.com/WordPress/openverse/pull/5273)) by @krysal
+
+## Internal Improvements
+
+- Bump `adrf` to 0.1.8 and `aiohttp` to 3.11.10
+  ([#5275](https://github.com/WordPress/openverse/pull/5275)) by @krysal

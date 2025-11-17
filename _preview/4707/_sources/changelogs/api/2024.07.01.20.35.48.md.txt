@@ -1,0 +1,17 @@
+# 2024.07.01.20.35.48
+
+## Internal Improvements
+
+- Remove backfillmoderationdecision management command after production run
+  ([#4554](https://github.com/WordPress/openverse/pull/4554)) by @sarayourfriend
+- Shorten PDM hash to first 8 characters
+  ([#4551](https://github.com/WordPress/openverse/pull/4551)) by @dhruvkb
+
+## Bug Fixes
+
+- Fix Docker build warnings
+  ([#4573](https://github.com/WordPress/openverse/pull/4573)) by @dhruvkb
+- Do not use unstable pook reference for API
+  ([#4536](https://github.com/WordPress/openverse/pull/4536)) by @sarayourfriend
+- Create sensitive and deleted media models for decisions
+  ([#4544](https://github.com/WordPress/openverse/pull/4544)) by @dhruvkb

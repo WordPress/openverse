@@ -1,0 +1,19 @@
+# 2024.06.07.17.19.06
+
+## Internal Improvements
+
+- Update pnpm to v9.2.0
+  ([#4445](https://github.com/WordPress/openverse/pull/4445)) by @openverse-bot
+- Update dependency @playwright/test to v1.44.1
+  ([#4424](https://github.com/WordPress/openverse/pull/4424)) by @openverse-bot
+- Update dependency eslint-plugin-tsdoc to ^0.3.0
+  ([#4425](https://github.com/WordPress/openverse/pull/4425)) by @openverse-bot
+- Update dependency prettier-plugin-tailwindcss to v0.6.1
+  ([#4426](https://github.com/WordPress/openverse/pull/4426)) by @openverse-bot
+
+## Bug Fixes
+
+- Delete `frontend/src/stories/` directory
+  ([#4437](https://github.com/WordPress/openverse/pull/4437)) by @dhruvkb
+- Ensure required DB extension is installed before attempting to setup plausible
+  ([#4428](https://github.com/WordPress/openverse/pull/4428)) by @madewithkode

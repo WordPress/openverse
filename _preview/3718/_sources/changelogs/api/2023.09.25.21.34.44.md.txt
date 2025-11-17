@@ -1,0 +1,13 @@
+# 2023.09.25.21.34.44
+
+## Improvements
+
+- Correctly set up constant fields in API responses
+  ([#3035](https://github.com/WordPress/openverse/pull/3035)) by @obulat
+
+## Bug Fixes
+
+- Fixes `KeyError` for `media_serializers.py`
+  ([#3059](https://github.com/WordPress/openverse/pull/3059)) by @OmAximani0
+- Add pagination examples to fix DRF spectacular warnings
+  ([#3039](https://github.com/WordPress/openverse/pull/3039)) by @obulat

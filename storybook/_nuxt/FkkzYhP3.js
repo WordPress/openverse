@@ -1,0 +1,11 @@
+import{h as m,d as s}from"./53SD24Bo.js";import{u as d}from"./B8akBo1x.js";import{_ as r}from"./BQLXp6q-.js";import"./Bk8VSEei.js";import"./D4B1y8Wp.js";import"./7RO02bE1.js";import"./DLXib-Qm.js";import"./D1l3oJXo.js";import"./S07_m3Bd.js";import"./okj3qyDJ.js";import"./DiNJJo8Y.js";import"./CL4zN_Dl.js";import"./BSHtV9yS.js";import"./CI6-PtcM.js";import"./DBpyOWk7.js";import"./Cx3b_-up.js";import"./7RAMVlBS.js";import"./CA_M5S-4.js";import"./whaKyvbR.js";import"./DZSCtjcm.js";import"./DUD5NJ41.js";import"./C42uAVCi.js";import"./BL_FgS7q.js";import"./C8lB5fex.js";import"./DK0xe0eK.js";import"./Cjy__5Gm.js";import"./CKwrFVsl.js";import"./q3PxUFsy.js";import"./8cLBg1iv.js";import"./CQ3yco75.js";import"./b8e1KD_n.js";import"./C7m8LBdt.js";import"./DhTbjJlp.js";import"./Cpzk_0_B.js";import"./Bl5m8s2n.js";import"./Cbq1TCLb.js";import"./fL1fV1YB.js";import"./hqAxxAzw.js";import"./C1S1UNgS.js";import"./BoVjc2lE.js";import"./CMez9Bf1.js";import"../sb-preview/runtime.js";(function(){try{var e=typeof window<"u"?window:typeof global<"u"?global:typeof self<"u"?self:{},t=new e.Error().stack;t&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[t]="24aa5959-c60b-48f2-8457-7fe1f2e714ec",e._sentryDebugIdIdentifier="sentry-dbid-24aa5959-c60b-48f2-8457-7fe1f2e714ec")}catch{}})();const ee={title:"Components/VContentSwitcher/VSearchTypePopover",component:r,argTypes:{additionalTypes:{control:{type:"boolean"}},showLabel:{control:{type:"boolean"}}},parameters:{height:"480px"}},p=s({name:"VSearchTypePopoverWrapper",components:{VSearchTypePopover:r},props:{additionalTypes:{type:Boolean,default:!0},showLabel:{type:Boolean,default:!0}},setup(e){return d().toggleFeature("additional_search_types",e.additionalTypes?"on":"off"),()=>m(r,{showLabel:e.showLabel})}}),o={render:e=>({components:{VSearchTypePopoverWrapper:p},setup(){return()=>m(p,e)}}),name:"Default"};var a,n,i;o.parameters={...o.parameters,docs:{...(a=o.parameters)==null?void 0:a.docs,source:{originalSource:`{
+  render: args => ({
+    components: {
+      VSearchTypePopoverWrapper
+    },
+    setup() {
+      return () => h(VSearchTypePopoverWrapper, args);
+    }
+  }),
+  name: "Default"
+}`,...(i=(n=o.parameters)==null?void 0:n.docs)==null?void 0:i.source}}};const oe=["Default"];export{o as Default,oe as __namedExportsOrder,ee as default};

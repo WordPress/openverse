@@ -1,0 +1,16 @@
+# 2024.07.20.10.58.11
+
+## Improvements
+
+- Remove `proxy` service and make API NGINX setup similar to the frontend
+  ([#4605](https://github.com/WordPress/openverse/pull/4605)) by @dhruvkb
+
+## Internal Improvements
+
+- Expand `ov` documentation and replace environment setup docs with `ov`
+  instructions ([#4567](https://github.com/WordPress/openverse/pull/4567)) by
+  @sarayourfriend
+- Update pook to v2 ([#4582](https://github.com/WordPress/openverse/pull/4582))
+  by @sarayourfriend
+- Decrease link validation timeout
+  ([#4598](https://github.com/WordPress/openverse/pull/4598)) by @sarayourfriend

@@ -1,0 +1,6 @@
+# 2024.05.10.03.01.22
+
+## Improvements
+
+- Save cleaned data of Ingestion Server to AWS S3
+  ([#4163](https://github.com/WordPress/openverse/pull/4163)) by @krysal

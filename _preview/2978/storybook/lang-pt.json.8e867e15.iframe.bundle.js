@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[169],{"./src/locales/pt.json":function(module){module.exports=JSON.parse('{"footer":{"wip":"🚧"},"notification":{"translation":{"link":"contribuir com uma tradução"}},"sources":{"providers":{"domain":"Domínio"}}}')}}]);

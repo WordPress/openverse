@@ -1,0 +1,16 @@
+# 2023.11.29.15.35.59
+
+## New Features
+
+- Add Elasticsearch Airflow provider
+  ([#3366](https://github.com/WordPress/openverse/pull/3366)) by @AetherUnbound
+
+## Improvements
+
+- Fix delete_records slack formatting
+  ([#3363](https://github.com/WordPress/openverse/pull/3363)) by @stacimc
+
+## Internal Improvements
+
+- Unpin glibc ([#3359](https://github.com/WordPress/openverse/pull/3359)) by
+  @dhruvkb

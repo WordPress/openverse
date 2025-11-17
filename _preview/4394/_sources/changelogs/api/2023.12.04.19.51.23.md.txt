@@ -1,0 +1,13 @@
+# 2023.12.04.19.51.23
+
+## Internal Improvements
+
+- Convert entire image proxy route async
+  ([#3388](https://github.com/WordPress/openverse/pull/3388)) by @sarayourfriend
+- Remove unused simple query string features
+  ([#3360](https://github.com/WordPress/openverse/pull/3360)) by @obulat
+
+## Bug Fixes
+
+- Use DB to augment ES hits for related media with required info
+  ([#3408](https://github.com/WordPress/openverse/pull/3408)) by @dhruvkb

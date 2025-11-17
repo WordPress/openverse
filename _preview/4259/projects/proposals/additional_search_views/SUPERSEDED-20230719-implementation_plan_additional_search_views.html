@@ -1,0 +1,1312 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><link rel="next" title="Analytics" href="../analytics/index.html" /><link rel="prev" title="2023-07-20 Implementation Plan: Additional Search Views" href="20230719-implementation_plan_additional_search_views.html" />
+
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/WordPress/openverse/master/brand/icon.svg"/><!-- Generated with Sphinx 7.3.7 and Furo 2024.04.27 -->
+        <title>SUPERSEDED 2023-07-20 Implementation Plan: Additional Search Views - Openverse documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=437aa6ec" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=36a5483c" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../index.html"><div class="brand">Openverse  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo only-light" src="../../../_static/logo_light.svg" alt="Light Logo"/>
+    <img class="sidebar-logo only-dark" src="../../../_static/logo_dark.svg" alt="Dark Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../api/index.html">Django API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Django API</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../api/guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Guides</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/guides/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/guides/test.html">Testing guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/guides/deploy.html">Deployment runbook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/guides/documentation.html">API Documentation Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/guides/https.html">Local HTTPS testing</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../api/reference/index.html">Reference</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/reference/made_with_ov.html">Made with Openverse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/reference/search_algorithm.html">Search Algorithm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/reference/authentication_and_throttling.html">Authentication and Throttling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/reference/healthcheck.html">Django Healthcheck</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../automations/index.html">Automations</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Automations</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../automations/guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Guides</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../automations/guides/quickstart.html">Quickstart Guide</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../automations/reference/index.html">Reference</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../automations/reference/python_scripts.html">Python Scripts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../automations/reference/project_automations.html">Project Automations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../catalog/index.html">Airflow Catalog</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of Airflow Catalog</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../catalog/guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of Guides</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../catalog/guides/quickstart.html">Quickstart</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../catalog/guides/deploy.html">Deployment runbook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../catalog/guides/adding_a_new_provider.html">Openverse Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../catalog/guides/deployment.html">Catalog Deployments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../catalog/guides/deployment.html#airflow">Airflow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../catalog/guides/deployment.html#postgres">Postgres</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../catalog/reference/index.html">Reference</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../catalog/reference/DAGs.html">DAGs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../catalog/reference/retired.html">Retired</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../changelogs/index.html">Changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of Changelogs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../changelogs/api/index.html">API changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle navigation of API changelogs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.05.13.15.19.42.html">2024.05.13.15.19.42</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.05.07.23.56.36.html">2024.05.07.23.56.36</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.05.06.19.44.35.html">2024.05.06.19.44.35</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.05.01.13.59.00.html">2024.05.01.13.59.00</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.04.22.15.11.09.html">2024.04.22.15.11.09</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.04.15.17.18.29.html">2024.04.15.17.18.29</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.04.09.03.50.11.html">2024.04.09.03.50.11</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.04.02.05.06.52.html">2024.04.02.05.06.52</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.04.01.17.07.10.html">2024.04.01.17.07.10</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.03.25.15.22.26.html">2024.03.25.15.22.26</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.03.18.15.51.25.html">2024.03.18.15.51.25</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.03.13.17.10.22.html">2024.03.13.17.10.22</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.03.11.15.26.16.html">2024.03.11.15.26.16</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.03.04.15.15.13.html">2024.03.04.15.15.13</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.02.28.16.32.28.html">2024.02.28.16.32.28</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.02.20.22.54.08.html">2024.02.20.22.54.08</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.02.13.05.45.50.html">2024.02.13.05.45.50</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.02.05.20.34.01.html">2024.02.05.20.34.01</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.01.29.19.36.26.html">2024.01.29.19.36.26</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.01.16.17.28.14.html">2024.01.16.17.28.14</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.01.08.20.06.53.html">2024.01.08.20.06.53</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.01.01.19.52.14.html">2024.01.01.19.52.14</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.12.26.05.11.22.html">2023.12.26.05.11.22</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.12.18.17.56.24.html">2023.12.18.17.56.24</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.12.11.19.20.45.html">2023.12.11.19.20.45</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.12.04.19.51.23.html">2023.12.04.19.51.23</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.11.29.22.20.31.html">2023.11.29.22.20.31</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.11.27.05.10.48.html">2023.11.27.05.10.48</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.11.20.09.32.25.html">2023.11.20.09.32.25</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.11.14.23.44.01.html">2023.11.14.23.44.01</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.11.13.22.18.21.html">2023.11.13.22.18.21</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.11.01.21.27.09.html">2023.11.01.21.27.09</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.10.30.16.26.21.html">2023.10.30.16.26.21</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.10.23.11.40.59.html">2023.10.23.11.40.59</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.10.18.15.25.27.html">2023.10.18.15.25.27</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.10.11.04.49.20.html">2023.10.11.04.49.20</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.10.10.21.08.33.html">2023.10.10.21.08.33</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.10.10.18.42.39.html">2023.10.10.18.42.39</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.10.06.17.13.36.html">2023.10.06.17.13.36</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.09.30.00.15.32.html">2023.09.30.00.15.32</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.09.28.00.26.34.html">2023.09.28.00.26.34</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.09.25.21.34.44.html">2023.09.25.21.34.44</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.09.20.11.16.51.html">2023.09.20.11.16.51</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.09.20.07.37.52.html">2023.09.20.07.37.52</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.09.19.08.13.24.html">2023.09.19.08.13.24</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.09.15.19.15.58.html">2023.09.15.19.15.58</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.09.11.16.56.52.html">2023.09.11.16.56.52</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.09.04.19.52.19.html">2023.09.04.19.52.19</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.08.28.20.43.01.html">2023.08.28.20.43.01</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.08.22.04.57.04.html">2023.08.22.04.57.04</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.08.14.16.35.15.html">2023.08.14.16.35.15</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.08.08.22.22.02.html">2023.08.08.22.22.02</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.07.24.20.47.04.html">2023.07.24.20.47.04</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.07.17.21.05.23.html">2023.07.17.21.05.23</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.07.10.08.44.19.html">2023.07.10.08.44.19</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.07.03.17.52.00.html">2023.07.03.17.52.00</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.06.28.19.49.58.html">2023.06.28.19.49.58</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.06.28.02.17.04.html">2023.06.28.02.17.04</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.06.26.20.33.46.html">2023.06.26.20.33.46</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.06.19.17.48.39.html">2023.06.19.17.48.39</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.06.13.00.21.51.html">2023.06.13.00.21.51</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.06.05.15.04.02.html">2023.06.05.15.04.02</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.06.01.01.50.43.html">2023.06.01.01.50.43</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.05.30.17.57.04.html">2023.05.30.17.57.04</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.05.30.12.02.04.html">2023.05.30.12.02.04</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.05.19.22.08.07.html">2023.05.19.22.08.07</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.05.19.18.58.25.html">2023.05.19.18.58.25</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.05.19.17.16.50.html">2023.05.19.17.16.50</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.05.15.21.51.49.html">2023.05.15.21.51.49</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.05.02.21.26.28.html">2023.05.02.21.26.28</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.04.27.07.29.23.html">2023.04.27.07.29.23</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.04.23.23.22.14.html">2023.04.23.23.22.14</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.04.19.00.01.39.html">2023.04.19.00.01.39</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.04.18.15.27.15.html">2023.04.18.15.27.15</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.04.12.23.29.59.html">2023.04.12.23.29.59</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../changelogs/catalog/index.html">Catalog changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle navigation of Catalog changelogs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2024.04.18.23.30.21.html">2024.04.18.23.30.21</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2024.03.22.17.45.11.html">2024.03.22.17.45.11</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2024.03.06.16.40.36.html">2024.03.06.16.40.36</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2024.01.25.17.42.59.html">2024.01.25.17.42.59</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2024.01.04.20.39.50.html">2024.01.04.20.39.50</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2023.12.20.22.19.13.html">2023.12.20.22.19.13</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2023.11.29.15.35.59.html">2023.11.29.15.35.59</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2023.11.14.18.24.16.html">2023.11.14.18.24.16</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2023.10.06.18.29.33.html">2023.10.06.18.29.33</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2023.08.30.17.30.22.html">2023.08.30.17.30.22</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2023.07.20.15.07.11.html">2023.07.20.15.07.11</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2023.06.19.17.21.41.html">2023.06.19.17.21.41</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2023.06.08.16.52.36.html">2023.06.08.16.52.36</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2023.05.16.22.14.49.html">2023.05.16.22.14.49</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2023.04.27.02.43.13.html">2023.04.27.02.43.13</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../changelogs/frontend/index.html">Frontend changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle navigation of Frontend changelogs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.05.13.17.18.44.html">2024.05.13.17.18.44</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.05.07.16.44.22.html">2024.05.07.16.44.22</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.04.25.15.32.08.html">2024.04.25.15.32.08</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.04.24.12.19.32.html">2024.04.24.12.19.32</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.04.22.15.11.07.html">2024.04.22.15.11.07</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.04.15.15.20.23.html">2024.04.15.15.20.23</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.04.13.16.19.50.html">2024.04.13.16.19.50</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.04.09.03.50.12.html">2024.04.09.03.50.12</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.04.01.17.07.11.html">2024.04.01.17.07.11</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.03.25.15.22.24.html">2024.03.25.15.22.24</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.03.18.15.51.41.html">2024.03.18.15.51.41</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.03.11.15.25.54.html">2024.03.11.15.25.54</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.03.04.15.15.07.html">2024.03.04.15.15.07</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.02.26.18.58.35.html">2024.02.26.18.58.35</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.02.19.15.45.00.html">2024.02.19.15.45.00</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.02.12.23.34.43.html">2024.02.12.23.34.43</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.02.05.18.10.41.html">2024.02.05.18.10.41</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.01.29.19.41.17.html">2024.01.29.19.41.17</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.01.08.19.12.18.html">2024.01.08.19.12.18</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.01.01.19.52.49.html">2024.01.01.19.52.49</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.12.11.19.44.28.html">2023.12.11.19.44.28</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.12.04.19.35.53.html">2023.12.04.19.35.53</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.11.27.19.20.44.html">2023.11.27.19.20.44</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.11.20.09.09.57.html">2023.11.20.09.09.57</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.11.14.19.30.29.html">2023.11.14.19.30.29</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.11.06.20.32.30.html">2023.11.06.20.32.30</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.11.01.00.18.44.html">2023.11.01.00.18.44</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.10.30.16.27.33.html">2023.10.30.16.27.33</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.10.09.17.18.13.html">2023.10.09.17.18.13</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.09.25.22.11.48.html">2023.09.25.22.11.48</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.09.18.10.25.25.html">2023.09.18.10.25.25</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.09.11.17.34.23.html">2023.09.11.17.34.23</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.09.05.17.09.13.html">2023.09.05.17.09.13</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.09.04.20.20.34.html">2023.09.04.20.20.34</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.08.28.19.38.22.html">2023.08.28.19.38.22</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.08.22.06.04.39.html">2023.08.22.06.04.39</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.08.14.16.26.44.html">2023.08.14.16.26.44</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.08.08.21.19.44.html">2023.08.08.21.19.44</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.07.28.23.42.26.html">2023.07.28.23.42.26</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.07.24.21.23.45.html">2023.07.24.21.23.45</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.07.20.17.25.42.html">2023.07.20.17.25.42</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.07.19.19.15.39.html">2023.07.19.19.15.39</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.07.17.21.49.20.html">2023.07.17.21.49.20</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.07.10.08.29.25.html">2023.07.10.08.29.25</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.07.06.14.52.49.html">2023.07.06.14.52.49</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.07.05.17.56.39.html">2023.07.05.17.56.39</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.07.03.18.19.32.html">2023.07.03.18.19.32</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.06.26.20.22.48.html">2023.06.26.20.22.48</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.06.19.17.31.24.html">2023.06.19.17.31.24</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.06.13.00.28.40.html">2023.06.13.00.28.40</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.06.05.14.48.06.html">2023.06.05.14.48.06</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.05.23.17.02.26.html">2023.05.23.17.02.26</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.05.22.15.55.57.html">2023.05.22.15.55.57</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.05.15.22.13.27.html">2023.05.15.22.13.27</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.05.02.19.17.32.html">2023.05.02.19.17.32</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.04.23.23.07.51.html">2023.04.23.23.07.51</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../changelogs/ingestion_server/index.html">Ingestion server changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle navigation of Ingestion server changelogs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2024.05.10.03.01.22.html">2024.05.10.03.01.22</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2024.04.18.16.49.08.html">2024.04.18.16.49.08</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2024.04.04.14.33.24.html">2024.04.04.14.33.24</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2024.03.06.16.40.36.html">2024.03.06.16.40.36</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2024.02.28.18.32.08.html">2024.02.28.18.32.08</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2024.02.07.18.41.16.html">2024.02.07.18.41.16</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2024.01.18.18.31.08.html">2024.01.18.18.31.08</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.12.12.17.23.14.html">2023.12.12.17.23.14</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.12.06.19.13.35.html">2023.12.06.19.13.35</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.11.14.18.39.29.html">2023.11.14.18.39.29</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.10.25.06.38.07.html">2023.10.25.06.38.07</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.10.19.06.08.15.html">2023.10.19.06.08.15</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.10.06.18.02.20.html">2023.10.06.18.02.20</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.09.29.17.40.50.html">2023.09.29.17.40.50</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.09.05.18.56.18.html">2023.09.05.18.56.18</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.08.29.17.36.35.html">2023.08.29.17.36.35</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.07.21.20.19.21.html">2023.07.21.20.19.21</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.07.05.17.46.34.html">2023.07.05.17.46.34</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.06.13.00.25.04.html">2023.06.13.00.25.04</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.06.07.17.56.30.html">2023.06.07.17.56.30</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.05.17.22.57.37.html">2023.05.17.22.57.37</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.05.03.22.29.52.html">2023.05.03.22.29.52</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../frontend/index.html">Nuxt frontend</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle navigation of Nuxt frontend</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../frontend/guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle navigation of Guides</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/guides/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/guides/deploy.html">Deployment runbook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/guides/test.html">Running frontend tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/guides/analytics.html">Analytics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/guides/icons.html">SVG Icon Sprites in Openverse Frontend</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/guides/translate.html">Translate</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../frontend/reference/index.html">Reference</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle navigation of Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/i18n.html">Internationalization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/feature_flags.html">Feature flags</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/testing_guidelines.html">Testing Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/playwright_tests.html">Playwright tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/storybook_tests.html">Storybook tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/miscellaneous.html">Miscellaneous notes on the frontend</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/healthcheck.html">Nuxt Healthcheck</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/nginx.html">Frontend reverse proxy</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../general/index.html">General development guidelines</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle navigation of General development guidelines</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../general/contributing.html">Get started with contributions</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><div class="visually-hidden">Toggle navigation of Get started with contributions</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../general/contribution/github_contribution_practices.html">GitHub contribution practices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../general/contribution/dev_flow.html">Development workflow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../general/contribution/current_maintainers.html">Current maintainers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../general/contribution/communication_aliases.html">Communication aliases</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../general/contribution/becoming_a_committer.html">Becoming a Committer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../general/contribution/maintainer_tasks.html">Regular maintainer tasks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../general/contribution/codespell.html">Codespell Configuration : spellcheck pre-commit hook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../general/contribution/good_first_and_help_wanted_issues.html">Maintainer guidelines for “Good first” and “Help wanted” issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/general_setup.html">General setup guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/run.html">Run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/test.html">Test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/zero_downtime_database_management.html">Zero Downtime and Database Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/deployment.html">Deployments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/logging.html">Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/https.html">Testing HTTPS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/stack.html">Stack</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../ingestion_server/index.html">Ingestion server</a><input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" role="switch" type="checkbox"/><label for="toctree-checkbox-20"><div class="visually-hidden">Toggle navigation of Ingestion server</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../ingestion_server/guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" role="switch" type="checkbox"/><label for="toctree-checkbox-21"><div class="visually-hidden">Toggle navigation of Guides</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/guides/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/guides/config.html">Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/guides/mapping.html">Mapping database tables to Elasticsearch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/guides/test.html">Testing guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/guides/deploy.html">Deployment runbook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/guides/migrate.html">Index migration runbook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/guides/upgrade.html">Manual index upgrade runbook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/guides/troubleshoot.html">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../ingestion_server/reference/index.html">Reference</a><input class="toctree-checkbox" id="toctree-checkbox-22" name="toctree-checkbox-22" role="switch" type="checkbox"/><label for="toctree-checkbox-22"><div class="visually-hidden">Toggle navigation of Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/reference/elasticsearch.html">Elasticsearch and Indexing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/reference/safety.html">Safety and Security Considerations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/reference/notifications.html">Notifications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/reference/data_refresh.html">Data Refresh Limit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/reference/task_api.html">Ingestion server API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../meta/index.html">Managing the Openverse</a><input class="toctree-checkbox" id="toctree-checkbox-23" name="toctree-checkbox-23" role="switch" type="checkbox"/><label for="toctree-checkbox-23"><div class="visually-hidden">Toggle navigation of Managing the Openverse</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../meta/brand/index.html">Brand assets</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/incidents/index.html">Responding to Incidents</a><input class="toctree-checkbox" id="toctree-checkbox-24" name="toctree-checkbox-24" role="switch" type="checkbox"/><label for="toctree-checkbox-24"><div class="visually-hidden">Toggle navigation of Responding to Incidents</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../meta/incidents/runbooks/index.html">Runbooks</a><input class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" role="switch" type="checkbox"/><label for="toctree-checkbox-25"><div class="visually-hidden">Toggle navigation of Runbooks</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/incidents/runbooks/incident_response_runbook.html">Incident Response Runbook</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/project_boards/index.html">Project boards</a><input class="toctree-checkbox" id="toctree-checkbox-26" name="toctree-checkbox-26" role="switch" type="checkbox"/><label for="toctree-checkbox-26"><div class="visually-hidden">Toggle navigation of Project boards</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/project_boards/issues.html">Issues project: Openverse Backlog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/project_boards/prs.html">PR project: Openverse PRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/project_boards/projects.html">Project project: Openverse Project Tracker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/project_boards/discussions.html">Discussion project: Openverse Discussions</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/ci_cd/index.html">CI + CD workflow</a><input class="toctree-checkbox" id="toctree-checkbox-27" name="toctree-checkbox-27" role="switch" type="checkbox"/><label for="toctree-checkbox-27"><div class="visually-hidden">Toggle navigation of CI + CD workflow</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/ci_cd/actions.html">Actions</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../meta/ci_cd/jobs/index.html">Jobs</a><input class="toctree-checkbox" id="toctree-checkbox-28" name="toctree-checkbox-28" role="switch" type="checkbox"/><label for="toctree-checkbox-28"><div class="visually-hidden">Toggle navigation of Jobs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/preparation.html">Preparation jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/frontend.html">Frontend jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/packages.html">Packages jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/docker.html">Docker jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/catalog.html">Catalog jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/ingestion_server.html">Ingestion server jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/api.html">API jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/documentation.html">Documentation jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/deployment.html">Deployment jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/notification.html">Notification jobs</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/ci_cd/flow.html">Flow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/ci_cd/proof_of_functionality.html">Proof-of-functionality</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/ci_cd/artifacts.html">Artifacts</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/decision_making/index.html">Openverse Decision-Making Process</a><input class="toctree-checkbox" id="toctree-checkbox-29" name="toctree-checkbox-29" role="switch" type="checkbox"/><label for="toctree-checkbox-29"><div class="visually-hidden">Toggle navigation of Openverse Decision-Making Process</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/decision_making/process_description.html">Process description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/decision_making/how_to_use.html">How to follow the process in different settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/decision_making/additional_practices.html">Additional practices</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/documentation/index.html">Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-30" name="toctree-checkbox-30" role="switch" type="checkbox"/><label for="toctree-checkbox-30"><div class="visually-hidden">Toggle navigation of Documentation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/documentation/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/documentation/guidelines.html">Documentation guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/documentation/extensions.html">Sphinx extensions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/documentation/review.html">Documentation proofreading and review</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/monitoring/index.html">Monitoring the Openverse</a><input class="toctree-checkbox" id="toctree-checkbox-31" name="toctree-checkbox-31" role="switch" type="checkbox"/><label for="toctree-checkbox-31"><div class="visually-hidden">Toggle navigation of Monitoring the Openverse</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../meta/monitoring/traffic/index.html">Traffic Management</a><input class="toctree-checkbox" id="toctree-checkbox-32" name="toctree-checkbox-32" role="switch" type="checkbox"/><label for="toctree-checkbox-32"><div class="visually-hidden">Toggle navigation of Traffic Management</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/traffic/runbooks/identifying-and-blocking-traffic-anomalies.html">Identifying and Blocking Traffic Anomalies in Cloudflare</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/monitoring/cloudwatch_logs/index.html">Log querying</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../meta/monitoring/runbooks/index.html">Runbooks</a><input class="toctree-checkbox" id="toctree-checkbox-33" name="toctree-checkbox-33" role="switch" type="checkbox"/><label for="toctree-checkbox-33"><div class="visually-hidden">Toggle navigation of Runbooks</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/api_http_2xx_under_threshold.html">Run Book: API Production HTTP 2XX responses count under threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/api_http_5xx_above_threshold.html">Run Book: API Production HTTP 5XX responses count above threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/api_avg_response_time_above_threshold.html">Run Book: API Production Average Response Time above threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/api_avg_response_time_anomaly.html">Run Book: API Production Average Response Time anomaly</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/api_p99_response_time_above_threshold.html">Run Book: API Production P99 Response Time above threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/api_p99_response_time_anomaly.html">Run Book: API Production P99 Response Time anomaly</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/api_request_count_anomaly.html">Run Book: API Production Request Count anomalously high</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/nuxt_http_2xx_under_threshold.html">Run Book: Nuxt 2XX responses count under threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/nuxt_http_5xx_above_threshold.html">Run Book: Nuxt 5XX responses count above threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/nuxt_avg_response_time_above_threshold.html">Run Book: Nuxt Production Average Response Time above threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/nuxt_avg_response_time_anomaly.html">Run Book: Nuxt Production Average Response Time anomalously high</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/nuxt_p99_response_time_above_threshold.html">Run Book: Nuxt Production P99 Response Time above threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/nuxt_p99_response_time_anomaly.html">Run Book: Nuxt Production P99 Response Time anomalously high</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/nuxt_request_count_anomaly.html">Run Book: Nuxt Request Count anomalously high</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/unhealthy_ecs_hosts.html">Run Book: Unhealthy hosts for ECS service</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/maintenance/index.html">Openverse Infrastructure Maintenance</a><input class="toctree-checkbox" id="toctree-checkbox-34" name="toctree-checkbox-34" role="switch" type="checkbox"/><label for="toctree-checkbox-34"><div class="visually-hidden">Toggle navigation of Openverse Infrastructure Maintenance</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/maintenance/elasticsearch_cluster.html">Elasticsearch cluster maintenance</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/media_properties/index.html">Media properties</a><input class="toctree-checkbox" id="toctree-checkbox-35" name="toctree-checkbox-35" role="switch" type="checkbox"/><label for="toctree-checkbox-35"><div class="visually-hidden">Toggle navigation of Media properties</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/media_properties/catalog.html">Catalog Media Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/media_properties/api.html">API Media Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/media_properties/frontend.html">Frontend Media Properties</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../packages/index.html">Subpackages</a><input class="toctree-checkbox" id="toctree-checkbox-36" name="toctree-checkbox-36" role="switch" type="checkbox"/><label for="toctree-checkbox-36"><div class="visually-hidden">Toggle navigation of Subpackages</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../packages/eslint_plugin/index.html"><code class="docutils literal notranslate"><span class="pre">@openverse/eslint-plugin</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-37" name="toctree-checkbox-37" role="switch" type="checkbox"/><label for="toctree-checkbox-37"><div class="visually-hidden">Toggle navigation of @openverse/eslint-plugin</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../packages/eslint_plugin/analytics_configuration.html"><code class="docutils literal notranslate"><span class="pre">analytics-configuration</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../packages/eslint_plugin/no-unexplained-disabled-test.html"><code class="docutils literal notranslate"><span class="pre">no-unexplained-disabled-test</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../packages/openverse_attribution/index.html"><code class="docutils literal notranslate"><span class="pre">openverse-attribution</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../../index.html">Projects</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-38" name="toctree-checkbox-38" role="switch" type="checkbox"/><label for="toctree-checkbox-38"><div class="visually-hidden">Toggle navigation of Projects</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../planning.html">Project Planning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../templates/implementation_plan.html">Template: Implementation Plan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../templates/index.html">Template: Project Directory <code class="docutils literal notranslate"><span class="pre">index.md</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../templates/project_proposal.html">Template: Project Proposal</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../yearly_planning/index.html">Yearly Planning</a><input class="toctree-checkbox" id="toctree-checkbox-39" name="toctree-checkbox-39" role="switch" type="checkbox"/><label for="toctree-checkbox-39"><div class="visually-hidden">Toggle navigation of Yearly Planning</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../yearly_planning/process_outline.html">Yearly Planning: Process Outline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../yearly_planning/project_themes.html">Project Themes</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../3d_model_support/index.html">3D Model Support</a><input class="toctree-checkbox" id="toctree-checkbox-40" name="toctree-checkbox-40" role="switch" type="checkbox"/><label for="toctree-checkbox-40"><div class="visually-hidden">Toggle navigation of 3D Model Support</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../3d_model_support/20220221-project_proposal.html">2022-02-21 Project Proposal: 3D model support</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current has-children"><a class="reference internal" href="index.html">Additional Search Views</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-41" name="toctree-checkbox-41" role="switch" type="checkbox"/><label for="toctree-checkbox-41"><div class="visually-hidden">Toggle navigation of Additional Search Views</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="20230424-project_proposal_additional_search_views.html">2023-04-24 Project Proposal: Additional search views</a></li>
+<li class="toctree-l3"><a class="reference internal" href="20230719-implementation_plan_additional_search_views.html">2023-07-20 Implementation Plan: Additional Search Views</a></li>
+<li class="toctree-l3 current current-page"><a class="current reference internal" href="#">SUPERSEDED 2023-07-20 Implementation Plan: Additional Search Views</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../analytics/index.html">Analytics</a><input class="toctree-checkbox" id="toctree-checkbox-42" name="toctree-checkbox-42" role="switch" type="checkbox"/><label for="toctree-checkbox-42"><div class="visually-hidden">Toggle navigation of Analytics</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../analytics/20221006-implementation_plan_frontend.html">2022-10-06 Implementation Plan: Frontend event tracking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../analytics/20230307-backend_service.html">2023-03-07 Implementation Plan: Analytics backend and visualisation service</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../core_user_interface_improvement/index.html">Core User Interface Improvements</a><input class="toctree-checkbox" id="toctree-checkbox-43" name="toctree-checkbox-43" role="switch" type="checkbox"/><label for="toctree-checkbox-43"><div class="visually-hidden">Toggle navigation of Core User Interface Improvements</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../core_user_interface_improvement/20230314-project_proposal_core_ui_improvement.html">2023-03-14 Project Proposal: Core UI Improvement</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../dark_mode/index.html">Dark Mode</a><input class="toctree-checkbox" id="toctree-checkbox-44" name="toctree-checkbox-44" role="switch" type="checkbox"/><label for="toctree-checkbox-44"><div class="visually-hidden">Toggle navigation of Dark Mode</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../dark_mode/20240313-project_proposal_dark_mode.html">2024-03-13 Project Proposal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dark_mode/20240325-implementation_plan_dark_mode.html">2024-03-25 Implementation Plan: Dark Mode</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../data_normalization/index.html">Data Normalization</a><input class="toctree-checkbox" id="toctree-checkbox-45" name="toctree-checkbox-45" role="switch" type="checkbox"/><label for="toctree-checkbox-45"><div class="visually-hidden">Toggle navigation of Data Normalization</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../data_normalization/20240227-implementation_plan_catalog_data_cleaning.html">2024-02-27 Implementation Plan: Catalog Data Cleaning</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../document_all_media_properties/index.html">Document all media properties</a><input class="toctree-checkbox" id="toctree-checkbox-46" name="toctree-checkbox-46" role="switch" type="checkbox"/><label for="toctree-checkbox-46"><div class="visually-hidden">Toggle navigation of Document all media properties</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../document_all_media_properties/20230307-project_proposal.html">2023-03-07 Project proposal for Document all media properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../document_all_media_properties/20230426-implementation_plan_documenting_media_properties.html">2023-04-26 Implementation Plan: Document all media properties in the catalog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../document_all_media_properties/20240313-implementation_plan_document_media_properties_api.html">2024-03-25 Implementation Plan: Document all media properties in the API</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../document_all_media_properties/samples/index.html">Samples</a><input class="toctree-checkbox" id="toctree-checkbox-47" name="toctree-checkbox-47" role="switch" type="checkbox"/><label for="toctree-checkbox-47"><div class="visually-hidden">Toggle navigation of Samples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../document_all_media_properties/samples/openverse_media_properties.html">Openverse Media Properties</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../document_all_media_properties/samples/sample_media_properties.html">sample_media_properties.md</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../document_all_media_properties/samples/sample_postamble.html">sample_postamble.md</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../document_all_media_properties/samples/sample_preamble.html">sample_preamble.md</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../document_all_media_properties/samples/index.html">Samples</a><input class="toctree-checkbox" id="toctree-checkbox-48" name="toctree-checkbox-48" role="switch" type="checkbox"/><label for="toctree-checkbox-48"><div class="visually-hidden">Toggle navigation of Samples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../document_all_media_properties/samples/openverse_media_properties.html">Openverse Media Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../document_all_media_properties/samples/sample_media_properties.html">sample_media_properties.md</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../document_all_media_properties/samples/sample_postamble.html">sample_postamble.md</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../document_all_media_properties/samples/sample_preamble.html">sample_preamble.md</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../feature_flags/index.html">Feature Flags</a><input class="toctree-checkbox" id="toctree-checkbox-49" name="toctree-checkbox-49" role="switch" type="checkbox"/><label for="toctree-checkbox-49"><div class="visually-hidden">Toggle navigation of Feature Flags</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../feature_flags/20220309-project_proposal.html">2022-03-09 Project Proposal: Feature flags</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../frontend_ui_state_cookie/index.html">Frontend UI State Cookie</a><input class="toctree-checkbox" id="toctree-checkbox-50" name="toctree-checkbox-50" role="switch" type="checkbox"/><label for="toctree-checkbox-50"><div class="visually-hidden">Toggle navigation of Frontend UI State Cookie</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../frontend_ui_state_cookie/20220218-project_proposal.html">2022-02-18 Project Propsal: Frontend UI State Cookie</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../infrastructure_improvements/index.html">Openverse Infrastructure</a><input class="toctree-checkbox" id="toctree-checkbox-51" name="toctree-checkbox-51" role="switch" type="checkbox"/><label for="toctree-checkbox-51"><div class="visually-hidden">Toggle navigation of Openverse Infrastructure</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../infrastructure_improvements/20240105_implementation_plan_move_remaining_services_to_openverse_org.html">2024-01-05 Implementation Plan: Finish moving all services to <code class="docutils literal notranslate"><span class="pre">openverse.org</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../ingestion_server_removal/index.html">Ingestion server removal</a><input class="toctree-checkbox" id="toctree-checkbox-52" name="toctree-checkbox-52" role="switch" type="checkbox"/><label for="toctree-checkbox-52"><div class="visually-hidden">Toggle navigation of Ingestion server removal</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../ingestion_server_removal/20240319-project_proposal.html">2024-03-19 Project Proposal: Removal of the Ingestion Server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../ingestion_server_removal/20240328-implementation_plan_ingestion_server_removal.html">2024-03-28 Implementation Plan: Ingestion Server Removal</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../monitoring/index.html">Monitoring</a><input class="toctree-checkbox" id="toctree-checkbox-53" name="toctree-checkbox-53" role="switch" type="checkbox"/><label for="toctree-checkbox-53"><div class="visually-hidden">Toggle navigation of Monitoring</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../monitoring/20220307-project_proposal.html">2022-03-07 Project Proposal: Monitoring</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../monitoring/20230606_implementation_plan_ecs_alarms.html">2023-06-06 Implementation Plan: Baseline Alarms for ECS Services</a><input class="toctree-checkbox" id="toctree-checkbox-54" name="toctree-checkbox-54" role="switch" type="checkbox"/><label for="toctree-checkbox-54"><div class="visually-hidden">Toggle navigation of 2023-06-06 Implementation Plan: Baseline Alarms for ECS Services</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../monitoring/run_book_samples/stable_run_book_sample.html">Stable Run Book Sample</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../monitoring/run_book_samples/unstable_run_book_sample.html">Unstable Run Book Sample</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../monorepo/index.html">Monorepo</a><input class="toctree-checkbox" id="toctree-checkbox-55" name="toctree-checkbox-55" role="switch" type="checkbox"/><label for="toctree-checkbox-55"><div class="visually-hidden">Toggle navigation of Monorepo</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../monorepo/20221124-project_proposal.html">2022-11-24 Project Proposal: Monorepo</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../nuxt_3_migration/index.html">Nuxt 3 Migration</a><input class="toctree-checkbox" id="toctree-checkbox-56" name="toctree-checkbox-56" role="switch" type="checkbox"/><label for="toctree-checkbox-56"><div class="visually-hidden">Toggle navigation of Nuxt 3 Migration</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../nuxt_3_migration/20230604-project_proposal_nuxt_3_migration.html">2023-06-02 Project Proposal</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../popularity_optimizations/index.html">Popularity Calculation Optimizations</a><input class="toctree-checkbox" id="toctree-checkbox-57" name="toctree-checkbox-57" role="switch" type="checkbox"/><label for="toctree-checkbox-57"><div class="visually-hidden">Toggle navigation of Popularity Calculation Optimizations</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../popularity_optimizations/20230406-project_proposal_popularity_optimizations.html">2023-04-06 Project Proposal: Popularity Calculation Optimizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../popularity_optimizations/20230420-implementation_plan_popularity_optimizations.html">Implementation Plan: Decoupling Popularity Calculations from the Data Refresh</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../project_improvement/index.html">Project board improvements</a><input class="toctree-checkbox" id="toctree-checkbox-58" name="toctree-checkbox-58" role="switch" type="checkbox"/><label for="toctree-checkbox-58"><div class="visually-hidden">Toggle navigation of Project board improvements</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../project_improvement/20230913-project_proposal_project_improvements.html">2023-09-13 Project proposal: Project board improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../project_improvement/20230914-implementation_plan_project_automations.html">2023-09-14 Implementation plan: Project automations</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../publish_dataset/index.html">Providing and maintaining an Openverse image dataset</a><input class="toctree-checkbox" id="toctree-checkbox-59" name="toctree-checkbox-59" role="switch" type="checkbox"/><label for="toctree-checkbox-59"><div class="visually-hidden">Toggle navigation of Providing and maintaining an Openverse image dataset</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../publish_dataset/20230706-project_proposal_openverse_dataset.html">2023-07-06 Project Proposal: Providing and maintaining an Openverse image dataset</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python_packaging/index.html">Python packaging and code sharing</a><input class="toctree-checkbox" id="toctree-checkbox-60" name="toctree-checkbox-60" role="switch" type="checkbox"/><label for="toctree-checkbox-60"><div class="visually-hidden">Toggle navigation of Python packaging and code sharing</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../python_packaging/20240412-implementation_plan_switching_to_a_new_python_package_manager.html">2024-04-12 Implementation Plan: Switching to a new Python package manager</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../rekognition_data/index.html">Rekognition Data Incorporation</a><input class="toctree-checkbox" id="toctree-checkbox-61" name="toctree-checkbox-61" role="switch" type="checkbox"/><label for="toctree-checkbox-61"><div class="visually-hidden">Toggle navigation of Rekognition Data Incorporation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../rekognition_data/20240320-project_proposal_rekognition_data.html">2024-03-20 Project Proposal: Incorporate Rekognition data into the Catalog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../rekognition_data/20240423-implementation_plan_machine_generated_tags_api.html">2024-04-23 Implementation Plan: Machine-generated tags in the API</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../search_relevancy_sandbox/index.html">Search Relevancy Sandbox</a><input class="toctree-checkbox" id="toctree-checkbox-62" name="toctree-checkbox-62" role="switch" type="checkbox"/><label for="toctree-checkbox-62"><div class="visually-hidden">Toggle navigation of Search Relevancy Sandbox</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../search_relevancy_sandbox/20230331-project_proposal_search_relevancy_sandbox.html">2023-03-31 Project Proposal: Search relevancy sandbox</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../search_relevancy_sandbox/20230406-implementation_plan_update_staging_database.html">2023-04-06 Implementation Plan: Update Staging Database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../search_relevancy_sandbox/20230518-implementation_plan_staging_index_rapid_iteration.html">2023-05-18 Implementation Plan: Rapid iteration of ingestion server index configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../search_relevancy_sandbox/20230530-implementation_plan_staging_elasticsearch_reindex_dags.html">2023-06-08 Implementation Plan: Staging Elasticsearch Reindex DAGs</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../trust_and_safety/content_report_moderation/index.html">Sensitive Content Report Moderation Initial Practices</a><input class="toctree-checkbox" id="toctree-checkbox-63" name="toctree-checkbox-63" role="switch" type="checkbox"/><label for="toctree-checkbox-63"><div class="visually-hidden">Toggle navigation of Sensitive Content Report Moderation Initial Practices</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/content_report_moderation/20230411-project_proposal_content_report_moderation.html">2023-04-11 Project Proposal: Sensitive content report moderation: initial practices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/content_report_moderation/20230517-implementation_plan_mature_copy_change.html">2023-05-17 Implementation Plan: Copy updates <code class="docutils literal notranslate"><span class="pre">mature</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">sensitive</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/content_report_moderation/20231208-implementation_plan_django_admin_moderator_access.html">2023-12-08 Implementation Plan: Django admin tools and access control for moderators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/content_report_moderation/20240122-implementation_plan_bulk_moderation_actions.html">2024-01-22 Implementation Plan: Bulk Moderation Actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/content_report_moderation/20240122-implementation_plan_moderation_metrics.html">2024-01-22 Implementation Plan: Moderation response times</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/index.html">Detecting and Blurring Sensitive Textual Content</a><input class="toctree-checkbox" id="toctree-checkbox-64" name="toctree-checkbox-64" role="switch" type="checkbox"/><label for="toctree-checkbox-64"><div class="visually-hidden">Toggle navigation of Detecting and Blurring Sensitive Textual Content</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/20230309-implementation_plan_sensitive_terms_list.html">2023-03-09 Implementation Plan: Sensitive Terms List</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/20230309-project_proposal_detecting_sensitive_textual_content.html">2023-03-09 Project Proposal: Detecting sensitive textual content and blurring all sensitive results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/20230330-implementation_plan_filtering_and_designating_results_with_sensitive_textual_content.html">2023-03-30 Implementation Plan: Filtering and designating results with sensitive textual content</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/20230506-implementation_plan_frontend_blurring_sensitive.html">2023-05-06 Implementation Plan: Fetching, blurring sensitive results</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../trust_and_safety/index.html">Trust and Safety</a><input class="toctree-checkbox" id="toctree-checkbox-65" name="toctree-checkbox-65" role="switch" type="checkbox"/><label for="toctree-checkbox-65"><div class="visually-hidden">Toggle navigation of Trust and Safety</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/20230109-trust_and_safety_preliminary_overview_and_exploration.html">2023-01-09 Initial Overview and User Stories</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../trust_and_safety/content_report_moderation/index.html">Sensitive Content Report Moderation Initial Practices</a><input class="toctree-checkbox" id="toctree-checkbox-66" name="toctree-checkbox-66" role="switch" type="checkbox"/><label for="toctree-checkbox-66"><div class="visually-hidden">Toggle navigation of Sensitive Content Report Moderation Initial Practices</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../trust_and_safety/content_report_moderation/20230411-project_proposal_content_report_moderation.html">2023-04-11 Project Proposal: Sensitive content report moderation: initial practices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../trust_and_safety/content_report_moderation/20230517-implementation_plan_mature_copy_change.html">2023-05-17 Implementation Plan: Copy updates <code class="docutils literal notranslate"><span class="pre">mature</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">sensitive</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../trust_and_safety/content_report_moderation/20231208-implementation_plan_django_admin_moderator_access.html">2023-12-08 Implementation Plan: Django admin tools and access control for moderators</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../trust_and_safety/content_report_moderation/20240122-implementation_plan_bulk_moderation_actions.html">2024-01-22 Implementation Plan: Bulk Moderation Actions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../trust_and_safety/content_report_moderation/20240122-implementation_plan_moderation_metrics.html">2024-01-22 Implementation Plan: Moderation response times</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/index.html">Detecting and Blurring Sensitive Textual Content</a><input class="toctree-checkbox" id="toctree-checkbox-67" name="toctree-checkbox-67" role="switch" type="checkbox"/><label for="toctree-checkbox-67"><div class="visually-hidden">Toggle navigation of Detecting and Blurring Sensitive Textual Content</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/20230309-implementation_plan_sensitive_terms_list.html">2023-03-09 Implementation Plan: Sensitive Terms List</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/20230309-project_proposal_detecting_sensitive_textual_content.html">2023-03-09 Project Proposal: Detecting sensitive textual content and blurring all sensitive results</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/20230330-implementation_plan_filtering_and_designating_results_with_sensitive_textual_content.html">2023-03-30 Implementation Plan: Filtering and designating results with sensitive textual content</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/20230506-implementation_plan_frontend_blurring_sensitive.html">2023-05-06 Implementation Plan: Fetching, blurring sensitive results</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../visual_regression_testing/index.html">Visual Regression Testing</a><input class="toctree-checkbox" id="toctree-checkbox-68" name="toctree-checkbox-68" role="switch" type="checkbox"/><label for="toctree-checkbox-68"><div class="visually-hidden">Toggle navigation of Visual Regression Testing</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../visual_regression_testing/20220217-implementation_plan.html">2022-02-17 Implementation Plan: Visual regression testing</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../vuex_to_pina_conversion/index.html">Pinia Conversion</a><input class="toctree-checkbox" id="toctree-checkbox-69" name="toctree-checkbox-69" role="switch" type="checkbox"/><label for="toctree-checkbox-69"><div class="visually-hidden">Toggle navigation of Pinia Conversion</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../vuex_to_pina_conversion/20220223-project_proposal.html">2022-02-23 Project Proposal: Vuex to Pinia conversion</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../terms_of_service.html">Openverse Terms of Service</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">External links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://openverse.org">Openverse</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/WordPress/openverse">GitHub</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/WordPress/openverse/edit/main/documentation/projects/proposals/additional_search_views/SUPERSEDED-20230719-implementation_plan_additional_search_views.md" title="Edit this page">
+    <svg aria-hidden="true" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
+      <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
+    </svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="superseded-2023-07-20-implementation-plan-additional-search-views">
+<h1>SUPERSEDED 2023-07-20 Implementation Plan: Additional Search Views<a class="headerlink" href="#superseded-2023-07-20-implementation-plan-additional-search-views" title="Link to this heading">¶</a></h1>
+<p><strong>Author</strong>: <a class="reference external" href="https://github.com/obulat" title="obulat on GitHub">&#64;obulat</a></p>
+<!-- See the implementation plan guide for more information: https://github.com/WordPress/openverse/tree/19791f51c063d0979112f4b9f4eeace04c8cf5ff/docs/projects#implementation-plans-status-in-rfc -->
+<!-- This template is exhaustive and may include sections which aren't relevant to your project. Feel free to remove any sections which would not be useful to have. -->
+<section id="reviewers">
+<h2>Reviewers<a class="headerlink" href="#reviewers" title="Link to this heading">¶</a></h2>
+<!-- Choose two people at your discretion who make sense to review this based on their existing expertise. Check in to make sure folks aren't currently reviewing more than one other proposal or RFC. -->
+<ul class="simple">
+<li><p>[x] <a class="reference external" href="https://github.com/zackkrida" title="zackkrida on GitHub">&#64;zackkrida</a></p></li>
+<li><p>[x] <a class="reference external" href="https://github.com/sarayourfriend" title="sarayourfriend on GitHub">&#64;sarayourfriend</a></p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This is the original version. For the current version, see <a class="reference internal" href="20230719-implementation_plan_additional_search_views.html"><span class="std std-doc">the updated plan</span></a>.</p>
+</div>
+</section>
+<section id="project-links">
+<h2>Project links<a class="headerlink" href="#project-links" title="Link to this heading">¶</a></h2>
+<!-- Enumerate any references to other documents/pages, including milestones and other plans -->
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/WordPress/openverse/issues/410">Project Thread</a></p></li>
+<li><p><a class="reference external" href="https://docs.openverse.org/projects/proposals/additional_search_views/20230424-project_proposal_additional_search_views.html">Project Proposal</a></p></li>
+<li><p><a class="reference external" href="https://github.com/WordPress/openverse/milestone/17">Milestone</a></p></li>
+</ul>
+</section>
+<section id="expected-outcomes">
+<h2>Expected Outcomes<a class="headerlink" href="#expected-outcomes" title="Link to this heading">¶</a></h2>
+<!-- List any succinct expected products from this implementation plan. -->
+<p>API endpoints return all media with the selected tag, from the selected source
+or by the selected creator, sorted by date added to Openverse.</p>
+<p>Frontend allows to browse media items by a selected creator, source, or with a
+selected tag.</p>
+<p>The single result pages link to these collection views; the external links are
+also updated to clearly show that they are external.</p>
+</section>
+<section id="step-by-step-plan">
+<h2>Step-by-step plan<a class="headerlink" href="#step-by-step-plan" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Update the Elasticsearch index to enable exact matching of the <code class="docutils literal notranslate"><span class="pre">tag</span></code>,
+<code class="docutils literal notranslate"><span class="pre">source</span></code> and <code class="docutils literal notranslate"><span class="pre">creator</span></code> fields (both the query analyzer and the index
+analyzer). This will require reindexing.</p></li>
+<li><p>Add API endpoints for exact matching of the <code class="docutils literal notranslate"><span class="pre">tag</span></code>, <code class="docutils literal notranslate"><span class="pre">source</span></code> and <code class="docutils literal notranslate"><span class="pre">creator</span></code>
+fields.</p></li>
+<li><p>Create the new components: <code class="docutils literal notranslate"><span class="pre">VCollectionHeader</span></code>, <code class="docutils literal notranslate"><span class="pre">VCollectionLink</span></code> and <code class="docutils literal notranslate"><span class="pre">VTag</span></code>.</p></li>
+<li><p>Update the store and utils used to construct the API query to allow for
+searching by <code class="docutils literal notranslate"><span class="pre">tag</span></code>, <code class="docutils literal notranslate"><span class="pre">creator</span></code> or <code class="docutils literal notranslate"><span class="pre">source</span></code>, in addition to the current search
+by title/description/tags combination.</p></li>
+<li><p>Add a switchable “additional_search_views” feature flag.</p></li>
+<li><p>Create a page for <code class="docutils literal notranslate"><span class="pre">tag</span></code> / <code class="docutils literal notranslate"><span class="pre">creator</span></code> /<code class="docutils literal notranslate"><span class="pre">source</span></code> collections. The page should
+handle fetching and updating the search store state.</p></li>
+<li><p>Update the single result pages: tags area, the “creator” and “source” area
+under the main media item.</p></li>
+<li><p>Add the Analytics event <code class="docutils literal notranslate"><span class="pre">VISIT_SOURCE_LINK</span></code> and update where
+<code class="docutils literal notranslate"><span class="pre">VISIT_CREATOR_LINK</span></code> is sent.</p></li>
+<li><p>Cleanup after the feature flag is removed:</p>
+<ul class="simple">
+<li><p>Remove conditional rendering on the single result pages.</p></li>
+<li><p>Remove the <code class="docutils literal notranslate"><span class="pre">additional_search_views</span></code> feature flag and <code class="docutils literal notranslate"><span class="pre">VMediaTag</span></code>
+component.</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="step-details">
+<h2>Step details<a class="headerlink" href="#step-details" title="Link to this heading">¶</a></h2>
+<section id="search-controller-updates">
+<h3>1. Search controller updates<a class="headerlink" href="#search-controller-updates" title="Link to this heading">¶</a></h3>
+<p>Currently, when filtering the search results, the API matches some query
+parameters in a fuzzy way: an item matches the query if the field value contains
+the query string as a separate word. When indexing the items, we “analyze” them,
+which means that we split the field values by whitespace and stem them. We also
+do the same to the query string. This means that the query string “bike” will
+match the field value “bikes”, “biking”, or “bike shop”.</p>
+<p>For these pages, however, we need an exact match.</p>
+<p>One alternative implementation considered when writing this plan was to use the
+database instead of the Elasticsearch to get the results. This would make it
+easy to get the exact matches. However, there are some problems with using the
+database rather than ES to access anything:</p>
+<ul class="simple">
+<li><p>The database does not cache queries in the same way that ES does. Repeated
+queries will not necessarily be as efficient as from ES.</p></li>
+<li><p>The database does not score documents at all, so the order will different
+dramatically to the way that ES would order the documents. That’s an issue
+with respect to popularity data today already, but will become even more of an
+issue if we start to score documents based on other metrics as theorised by
+our search relevancy discussions.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">creator</span></code> is not indexed in the API database, so a query against it will be
+very slow.</p></li>
+</ul>
+<p>To enable exact matching, we don’t need any changes in Elasticsearch index
+because we already have the <code class="docutils literal notranslate"><span class="pre">.keyword</span></code> fields for <code class="docutils literal notranslate"><span class="pre">creator</span></code>, <code class="docutils literal notranslate"><span class="pre">source</span></code> and
+<code class="docutils literal notranslate"><span class="pre">tags</span></code>. We just need to use them in the query. This will allow for exact
+matching of the values (e.g. <code class="docutils literal notranslate"><span class="pre">bike</span></code> will not match <code class="docutils literal notranslate"><span class="pre">bikes</span></code> or <code class="docutils literal notranslate"><span class="pre">biking</span></code>), and
+will probably make the search more performant since the fields and the query
+won’t need to be analyzed and/or stemmed.</p>
+<p>The search controller’s <code class="docutils literal notranslate"><span class="pre">search</span></code> method should be refactored to be smaller and
+allow for more flexibility when creating the search query. The current
+implementation of query building consists of 3 steps.</p>
+<p>We <strong>first</strong> apply the <code class="docutils literal notranslate"><span class="pre">filters</span></code>: if the query string has any parameters other
+than <code class="docutils literal notranslate"><span class="pre">q</span></code>, we use them for exact matches that must be in the search results, or
+must be excluded from the search results (if the parameter starts with
+<code class="docutils literal notranslate"><span class="pre">exclude_</span></code>).</p>
+<p><strong>Then</strong>, if <code class="docutils literal notranslate"><span class="pre">q</span></code> parameter is present, we apply the <code class="docutils literal notranslate"><span class="pre">q</span></code> parameter, which is a
+full-text search within <code class="docutils literal notranslate"><span class="pre">tags</span></code>, <code class="docutils literal notranslate"><span class="pre">title</span></code> and <code class="docutils literal notranslate"><span class="pre">description</span></code> fields. This is a
+fuzzy search, which means that the query string is stemmed and analyzed, and the
+field values are stemmed and analyzed, and the documents are scored based on the
+relevance of the match. If <code class="docutils literal notranslate"><span class="pre">q</span></code> is not present, but one of the
+<code class="docutils literal notranslate"><span class="pre">creator</span></code>/<code class="docutils literal notranslate"><span class="pre">source</span></code>/<code class="docutils literal notranslate"><span class="pre">tags</span></code> parameter is present, we search within those fields
+for fuzzy matches.</p>
+<p><strong>Finally</strong>, we apply the ranking and sorting parameters, and “highlight” the
+fields that were matched in the results.</p>
+<p>The new search controller should allow for using different filters for the first
+step and to not use the full-text search. We should also create a new serializer
+for collection search requests. It should include the common parameters for
+<code class="docutils literal notranslate"><span class="pre">list</span></code> requests, such as <code class="docutils literal notranslate"><span class="pre">page</span></code> and <code class="docutils literal notranslate"><span class="pre">page_size</span></code>, and the parameters for the
+exact matches: <code class="docutils literal notranslate"><span class="pre">tag</span></code>, <code class="docutils literal notranslate"><span class="pre">creator</span></code> and <code class="docutils literal notranslate"><span class="pre">source</span></code>.</p>
+</section>
+<section id="new-api-endpoints">
+<h3>2. New API endpoints<a class="headerlink" href="#new-api-endpoints" title="Link to this heading">¶</a></h3>
+<p>The new routes should use path parameters instead of query parameters for the
+<code class="docutils literal notranslate"><span class="pre">tag</span></code>, <code class="docutils literal notranslate"><span class="pre">creator</span></code> and <code class="docutils literal notranslate"><span class="pre">source</span></code> values. This will make the URLs more readable,
+easier to share, will be easier to cache or perform cache invalidation required
+by <a class="reference external" href="https://github.com/WordPress/openverse/issues/1969" title="Implementation Plan: Fine-grained API response cache management"><span class="xref issue closed">#1969</span></a>. The path parameters should be URL encoded to preserve special
+characters and spaces.</p>
+<p>Instead of using query strings, we can describe the resource via the path:
+<code class="docutils literal notranslate"><span class="pre">/&lt;media</span> <span class="pre">type&gt;/source/&lt;source&gt;/creator/&lt;creator&gt;</span></code> is very clean, easy to read
+and understand, and very easy to manage the cache for because it is a static
+path. The source page can use the same route by leaving off the creator. This
+removes the need to manage specific query params as well and would allow us to
+add querying within these routes more easily in the future behind the regular q
+parameter if we wanted.</p>
+<p>For the tag route, the singular <code class="docutils literal notranslate"><span class="pre">tag</span></code> rather than plural <code class="docutils literal notranslate"><span class="pre">tags</span></code> should be used
+for legibility since we are presenting a single tag.</p>
+<p>The new views should use the same pagination and dead link cleanup as the search
+views.</p>
+</section>
+<section id="new-and-updated-components">
+<h3>3. New and updated components<a class="headerlink" href="#new-and-updated-components" title="Link to this heading">¶</a></h3>
+<section id="extract-the-vaudiocollection-component">
+<h4>Extract the <code class="docutils literal notranslate"><span class="pre">VAudioCollection</span></code> component<a class="headerlink" href="#extract-the-vaudiocollection-component" title="Link to this heading">¶</a></h4>
+<p>Currently, it is not possible to reuse the audio collection from the audio
+search result page because it is a part of the <code class="docutils literal notranslate"><span class="pre">audio.vue</span></code> page. We should
+extract the part that shows the loading skeleton, the column of <code class="docutils literal notranslate"><span class="pre">VAudioTrack</span></code>
+rows and the Load more section into <code class="docutils literal notranslate"><span class="pre">VAudioCollection</span></code> component. This component
+will be reused in the audio search page and on the Additional search views.</p>
+</section>
+<section id="add-a-vcollectionheader-component">
+<h4>Add a <code class="docutils literal notranslate"><span class="pre">VCollectionHeader</span></code> component<a class="headerlink" href="#add-a-vcollectionheader-component" title="Link to this heading">¶</a></h4>
+<p>The header should have an icon (tag, creator or source) and the name of the
+tag/creator/source. For source and the creator, there should be an external link
+button if it’s available (not all creators have urls).</p>
+<p>The header should also display the number of results, “251 audio files with the
+selected tag”, “604 images provided by this source”, “37 images by this creator
+in Hirshhorn Museum and Sculpture Garden”.</p>
+<p><em>Note</em>: There are sources that only have works by one creator. In this case, we
+should probably still have two separate pages for the source and the creator,
+but we might want to add a note that the creator is the only one associated with
+this source.</p>
+<p><strong>Figma links</strong>: <strong>creator</strong>
+<a class="reference external" href="https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&amp;amp;node-id=1200-56323&amp;amp;mode=design&amp;amp;t=pN0PPAzlKQEKT9tJ-4">desktop</a>
+and
+<a class="reference external" href="https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&amp;amp;node-id=1200-56362&amp;amp;mode=design&amp;amp;t=suLIyJHNmZrM0mPH-4">mobile</a>,
+<strong>source</strong>
+<a class="reference external" href="https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&amp;amp;node-id=1200-56381&amp;amp;mode=design&amp;amp;t=suLIyJHNmZrM0mPH-4">desktop</a>
+and
+<a class="reference external" href="https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&amp;amp;node-id=1200-56421&amp;amp;mode=design&amp;amp;t=suLIyJHNmZrM0mPH-4">mobile</a>,
+<strong>tag</strong>
+<a class="reference external" href="https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&amp;amp;node-id=1216-58402&amp;amp;mode=design&amp;amp;t=suLIyJHNmZrM0mPH-4">desktop</a>
+and
+<a class="reference external" href="https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&amp;amp;node-id=1200-56457&amp;amp;mode=design&amp;amp;t=suLIyJHNmZrM0mPH-4">mobile</a>.</p>
+</section>
+<section id="add-vcollectionlink-component">
+<h4>Add <code class="docutils literal notranslate"><span class="pre">VCollectionLink</span></code> component<a class="headerlink" href="#add-vcollectionlink-component" title="Link to this heading">¶</a></h4>
+<p>This component should be a <code class="docutils literal notranslate"><span class="pre">VButton</span></code> with <code class="docutils literal notranslate"><span class="pre">as=&quot;VLink&quot;</span></code>, should have an icon, and
+should accept a localized link to the creator or source page.</p>
+<p><strong>Figma link</strong>:
+<a class="reference external" href="https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&amp;amp;node-id=1200-56972&amp;amp;mode=dev">creator and source buttons</a></p>
+</section>
+<section id="create-a-new-vtag-component-to-be-a-vbutton-wrapping-a-vlink">
+<h4>Create a new <code class="docutils literal notranslate"><span class="pre">VTag</span></code> component to be a <code class="docutils literal notranslate"><span class="pre">VButton</span></code> wrapping a <code class="docutils literal notranslate"><span class="pre">VLink</span></code><a class="headerlink" href="#create-a-new-vtag-component-to-be-a-vbutton-wrapping-a-vlink" title="Link to this heading">¶</a></h4>
+<p>The
+<a class="reference external" href="https://github.com/WordPress/openverse/blob/c7b76139d5a001ce43bde27805be5394e5732d1a/frontend/src/components/VMediaTag/VMediaTag.vue"><code class="docutils literal notranslate"><span class="pre">VMediaTag</span></code> component</a>
+should be updated to be a <code class="docutils literal notranslate"><span class="pre">VButton</span></code> wrapping a <code class="docutils literal notranslate"><span class="pre">VLink</span></code>, and should match the
+design in the
+<a class="reference external" href="https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&amp;amp;node-id=1200-56515&amp;amp;mode=design&amp;amp;t=nCX20BtJYqMOFAQm-4">Figma mockups</a>.
+The component should link to the localized page for the tag collection.</p>
+</section>
+<section id="update-links-in-the-information-section">
+<h4>Update links in the “information” section<a class="headerlink" href="#update-links-in-the-information-section" title="Link to this heading">¶</a></h4>
+<p>The links to creator in the
+<a class="reference external" href="https://github.com/WordPress/openverse/blob/35f08e5710d59f6c10f0cf54103fcce151adfefe/frontend/src/pages/image/_id/index.vue#L62-L73">image</a>
+and
+<a class="reference external" href="https://github.com/WordPress/openverse/blob/35f08e5710d59f6c10f0cf54103fcce151adfefe/frontend/src/components/VAudioTrack/layouts/VFullLayout.vue#L32-L41">audio</a>
+single result pages Information section should have an “external link” icon.</p>
+<p>Audio creator link should also be updated to match the image creator link. It
+should be a conditional component: <code class="docutils literal notranslate"><span class="pre">VLink</span></code> if the <code class="docutils literal notranslate"><span class="pre">creator_url</span></code> is truthy and
+<code class="docutils literal notranslate"><span class="pre">span</span></code> if the <code class="docutils literal notranslate"><span class="pre">creator_url</span></code> is falsy.</p>
+<p>Currently, the <code class="docutils literal notranslate"><span class="pre">foreign_landing_url</span></code> is linked to the “source” in the
+<a class="reference external" href="https://github.com/WordPress/openverse/blob/35f08e5710d59f6c10f0cf54103fcce151adfefe/frontend/src/components/VImageDetails/VImageDetails.vue#L26-L28">image</a>
+page and “provider” in the
+<a class="reference external" href="https://github.com/WordPress/openverse/blob/35f08e5710d59f6c10f0cf54103fcce151adfefe/frontend/src/components/VAudioDetails/VAudioDetails.vue#L61C1-L63">audio page</a>.
+The audio page should be updated to match the image page: the
+<code class="docutils literal notranslate"><span class="pre">foreign_landing_url</span></code> link should be added to the “source”, not provider.</p>
+</section>
+</section>
+<section id="nuxt-store-and-api-request-changes">
+<h3>4. Nuxt store and API request changes<a class="headerlink" href="#nuxt-store-and-api-request-changes" title="Link to this heading">¶</a></h3>
+<p>We can reuse the search store as is for these pages. Currently, the frontend can
+perform searches by <code class="docutils literal notranslate"><span class="pre">source</span></code> parameter. If <code class="docutils literal notranslate"><span class="pre">searchBy</span></code> value is set, then the <code class="docutils literal notranslate"><span class="pre">q</span></code>
+parameter is replaced with the <code class="docutils literal notranslate"><span class="pre">&lt;searchBy&gt;=&lt;searchTerm&gt;</span></code> query parameter.</p>
+<p>For this project, we should add new values to the <code class="docutils literal notranslate"><span class="pre">searchBy</span></code> filter.</p>
+<p>The API request URL is constructed from the search store state in the
+<a class="reference external" href="https://github.com/WordPress/openverse/blob/b4b46b903731870015c475d2c08eebef7ec6b25b/frontend/src/utils/prepare-search-query-params.ts#L22-L25"><code class="docutils literal notranslate"><span class="pre">prepare-search-query-params</span></code> method</a>.
+We will need to update this method to use the <code class="docutils literal notranslate"><span class="pre">searchBy</span></code> filter value to
+construct the API request path as described in the “API Changes” section.</p>
+<section id="update-the-searchby-filter">
+<h4>Update the <code class="docutils literal notranslate"><span class="pre">searchBy</span></code> filter<a class="headerlink" href="#update-the-searchby-filter" title="Link to this heading">¶</a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">searchBy</span></code> filter will be used to determine the shape of the API request.
+While currently these parameters will be mutually exclusive (we can only search
+by one of them), we might want to allow searching by multiple parameters in the
+future.</p>
+<p>For other filters, we only use <code class="docutils literal notranslate"><span class="pre">toggle</span></code> method to update the value. However, for
+<code class="docutils literal notranslate"><span class="pre">searchBy</span></code>, we need to be able to check one of the <code class="docutils literal notranslate"><span class="pre">searchBy</span></code> parameters, and
+uncheck the others. To enable that, we should add a new <code class="docutils literal notranslate"><span class="pre">search</span></code> store method.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">searchBy</span></code> is set to <code class="docutils literal notranslate"><span class="pre">tag</span></code>, <code class="docutils literal notranslate"><span class="pre">creator</span></code> or <code class="docutils literal notranslate"><span class="pre">source</span></code>, then the media store
+should create search path instead of the search query. So, instead of calling
+<code class="docutils literal notranslate"><span class="pre">prepareSearchQuery</span></code> to create the query parameters, it should call
+<code class="docutils literal notranslate"><span class="pre">prepareSearchPath</span></code> to create the path.</p>
+<div class="highlight-typescript notranslate"><div class="highlight"><pre><span></span><span class="kd">const</span><span class="w"> </span><span class="nx">searchPathOrQuery</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">searchBy</span>
+<span class="w">  </span><span class="o">?</span><span class="w"> </span><span class="nx">prepareSearchPath</span><span class="p">(</span><span class="nx">searchParams</span><span class="p">,</span><span class="w"> </span><span class="nx">mediaType</span><span class="p">)</span>
+<span class="w">  </span><span class="o">:</span><span class="w"> </span><span class="nx">prepareSearchQuery</span><span class="p">(</span><span class="nx">searchParams</span><span class="p">,</span><span class="w"> </span><span class="nx">mediaType</span><span class="p">)</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">prepareSearchPath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="nx">searchParams</span><span class="o">:</span><span class="w"> </span><span class="kt">Record</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">mediaType</span><span class="o">:</span><span class="w"> </span><span class="kt">SupportedMediaType</span>
+<span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">path</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">searchBy</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;tag&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="nx">mediaType</span><span class="si">}</span><span class="sb">/tag/</span><span class="si">${</span><span class="nx">searchTerm</span><span class="si">}</span><span class="sb">`</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="nx">mediaType</span><span class="si">}</span><span class="sb">/source/</span><span class="si">${</span><span class="nx">searchParams</span><span class="p">[</span><span class="sb">`</span><span class="si">${</span><span class="nx">mediaType</span><span class="si">}</span><span class="sb">Provider`</span><span class="p">]</span><span class="si">}</span><span class="sb">`</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">searchBy</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;creator&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">path</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="sb">`/creator/</span><span class="si">${</span><span class="nx">searchTerm</span><span class="si">}</span><span class="sb">`</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">path</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="add-the-additional-search-views-feature-flag">
+<h3>5. Add the <code class="docutils literal notranslate"><span class="pre">additional_search_views</span></code> feature flag<a class="headerlink" href="#add-the-additional-search-views-feature-flag" title="Link to this heading">¶</a></h3>
+<p>The flag should be switchable, and off by default.</p>
+</section>
+<section id="create-a-page-for-tag-creator-source-collections">
+<h3>6. Create a page for <code class="docutils literal notranslate"><span class="pre">tag</span></code> / <code class="docutils literal notranslate"><span class="pre">creator</span></code> /<code class="docutils literal notranslate"><span class="pre">source</span></code> collections.<a class="headerlink" href="#create-a-page-for-tag-creator-source-collections" title="Link to this heading">¶</a></h3>
+<p>Nuxt allows creating nested dynamic routes like
+<code class="docutils literal notranslate"><span class="pre">/pages/_collection/_mediaType/_term</span></code>.</p>
+<p>We should add the following pages:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">/pages/_mediaType/tag/_tag</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/pages/_mediaType/source/_source</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/pages/_mediaType/source/_source/creator/_creator</span></code> (this page might not be
+needed as it might be handled by the source page)</p></li>
+</ul>
+<p>To make sure that the <code class="docutils literal notranslate"><span class="pre">mediaType</span></code>, <code class="docutils literal notranslate"><span class="pre">source</span></code> and <code class="docutils literal notranslate"><span class="pre">creator</span></code> parameters are valid,
+this page should use the
+<a class="reference external" href="https://v2.nuxt.com/docs/components-glossary/validate/"><code class="docutils literal notranslate"><span class="pre">validate</span></code> method</a> to
+make sure that and show an error page if necessary.</p>
+<div class="highlight-typescript notranslate"><div class="highlight"><pre><span></span><span class="kd">function</span><span class="w"> </span><span class="nx">validate</span><span class="p">({</span><span class="w"> </span><span class="nx">params</span><span class="p">,</span><span class="w"> </span><span class="nx">$pinia</span><span class="w"> </span><span class="p">})</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">collection</span><span class="p">,</span><span class="w"> </span><span class="nx">mediaType</span><span class="p">,</span><span class="w"> </span><span class="nx">term</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">params</span>
+<span class="w">  </span><span class="c1">// Check that collection is one of [&quot;tag&quot;, &quot;creator&quot; or &quot;source&quot;],</span>
+<span class="w">  </span><span class="c1">// and mediaType is one of `supportedMediaTypes`.</span>
+<span class="w">  </span><span class="c1">// Check that `term` is correctly escaped.</span>
+<span class="w">  </span><span class="c1">// If the params are not valid, return `false` to show the error page.</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">isValid</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">true</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kt">false</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This page should also update the state (<code class="docutils literal notranslate"><span class="pre">searchType</span></code>, <code class="docutils literal notranslate"><span class="pre">searchTerm</span></code> and
+<code class="docutils literal notranslate"><span class="pre">searchBy</span></code> and <code class="docutils literal notranslate"><span class="pre">provider</span></code> filters) in the <code class="docutils literal notranslate"><span class="pre">search</span></code> store and handle fetching
+using <code class="docutils literal notranslate"><span class="pre">mediaStore</span></code>’s <code class="docutils literal notranslate"><span class="pre">fetchMedia</span></code> method in the <code class="docutils literal notranslate"><span class="pre">useFetch</span></code> hook.</p>
+<p>Since it is not possible to change the path or query parameters from this page
+client-side, fetching can be much simpler than on the current search page (that
+has to watch for changes in the route and fetch if necessary).</p>
+<p>This page should use <code class="docutils literal notranslate"><span class="pre">VCollectionHeader</span></code> and the image grid or the audio
+collection.</p>
+</section>
+<section id="update-the-single-result-pages">
+<h3>7. Update the single result pages<a class="headerlink" href="#update-the-single-result-pages" title="Link to this heading">¶</a></h3>
+<p>All of these changes should be conditional on whether the
+<code class="docutils literal notranslate"><span class="pre">additional_search_views</span></code> feature flag is enabled.</p>
+<p>The Figma links for new designs:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&amp;amp;node-id=1200-63284&amp;amp;mode=dev">Image single result</a></p></li>
+<li><p><a class="reference external" href="https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&amp;amp;node-id=1200-63285&amp;amp;mode=dev">Audio single result</a></p></li>
+</ul>
+<section id="update-the-vcollectionlink-area-on-the-single-result-page">
+<h4>Update the <code class="docutils literal notranslate"><span class="pre">VCollectionLink</span></code> area on the single result page<a class="headerlink" href="#update-the-vcollectionlink-area-on-the-single-result-page" title="Link to this heading">¶</a></h4>
+<p>The content info line under the main item on the single result page should be
+replaced with a section that has two buttons: one for a creator link and a
+source link. This section should be horizontally scrollable on mobile. It should
+implement a scroll-snap (example: <a class="reference external" href="https://play.tailwindcss.com/AbfA33Za50">https://play.tailwindcss.com/AbfA33Za50</a>)</p>
+</section>
+<section id="use-vtag-with-links-for-the-tags">
+<h4>Use <code class="docutils literal notranslate"><span class="pre">VTag</span></code> with links for the tags<a class="headerlink" href="#use-vtag-with-links-for-the-tags" title="Link to this heading">¶</a></h4>
+<p>The tags should be rendered using the <code class="docutils literal notranslate"><span class="pre">VTag</span></code> component with links to the tag
+collection page.</p>
+</section>
+<section id="update-the-tags-area-on-the-single-result-page">
+<h4>Update the tags area on the single result page<a class="headerlink" href="#update-the-tags-area-on-the-single-result-page" title="Link to this heading">¶</a></h4>
+<p>The tags area should be collapsible to make long lists of tags collapsible:
+<a class="reference external" href="https://github.com/WordPress/openverse/issues/2589">https://github.com/WordPress/openverse/issues/2589</a></p>
+</section>
+<section id="add-the-information-popover-next-to-source-and-provider-links">
+<h4>Add the information popover next to source and provider links<a class="headerlink" href="#add-the-information-popover-next-to-source-and-provider-links" title="Link to this heading">¶</a></h4>
+<p>The information popover should be added next to the source and provider links
+that explains the difference between the source and provider.</p>
+<p><a class="reference external" href="https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?type=design&amp;amp;node-id=1200-56521&amp;amp;mode=dev"><strong>Figma link</strong></a></p>
+</section>
+</section>
+<section id="additional-analytics-events">
+<h3>8. Additional analytics events<a class="headerlink" href="#additional-analytics-events" title="Link to this heading">¶</a></h3>
+<p>Some existing events will already track the new views events. The views can be
+tracked as page views, so no separate event is necessary. The only way to access
+the pages is directly or via links on the single results, which will all be
+captured by standard page visits. Clicking on the items will be tracked as
+<code class="docutils literal notranslate"><span class="pre">SELECT_SEARCH_RESULT</span></code> events. These events can be narrowed by pathname
+(<code class="docutils literal notranslate"><span class="pre">/search</span></code> or <code class="docutils literal notranslate"><span class="pre">/tag\*</span></code>, for example) to determine where the event occurred.</p>
+<p>Two analytics events should be added or updated:</p>
+<ul class="simple">
+<li><p>The clicks on external creator link in the <code class="docutils literal notranslate"><span class="pre">VCollectionHeader</span></code> should be
+tracked as <code class="docutils literal notranslate"><span class="pre">VISIT_CREATOR_LINK</span></code> events.</p></li>
+<li><p>We should also a special event for visiting source <code class="docutils literal notranslate"><span class="pre">VISIT_SOURCE_LINK</span></code>,
+similar to <code class="docutils literal notranslate"><span class="pre">VISIT_CREATOR_LINK</span></code>.</p></li>
+</ul>
+</section>
+<section id="cleanup-after-the-feature-flag-is-enabled-in-production">
+<h3>9. Cleanup after the feature flag is enabled in production<a class="headerlink" href="#cleanup-after-the-feature-flag-is-enabled-in-production" title="Link to this heading">¶</a></h3>
+<p>After the feature flag is enabled in production, we should remove the
+conditional rendering on the single result pages and remove the
+<code class="docutils literal notranslate"><span class="pre">additional_search_views</span></code> feature flag and (old) <code class="docutils literal notranslate"><span class="pre">VMediaTag</span></code> component.</p>
+</section>
+<section id="tests">
+<h3>Tests<a class="headerlink" href="#tests" title="Link to this heading">¶</a></h3>
+<p>We should add visual-regression tests for the new views. To minimize flakiness
+due to slow loading of the images, we should probably use the
+<a class="reference external" href="https://github.com/WordPress/openverse/blob/b4b46b903731870015c475d2c08eebef7ec6b25b/frontend/test/playwright/visual-regression/pages/pages.spec.ts#L49-L55"> <code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">filter:</span> <span class="pre">brightness(0%);</span> <span class="pre">}</span></code> trick</a>
+for the images on the page.</p>
+<p>The search store tests should be updated to reflect the changes to the filters.</p>
+</section>
+</section>
+<section id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading">¶</a></h2>
+<section id="infrastructure">
+<h3>Infrastructure<a class="headerlink" href="#infrastructure" title="Link to this heading">¶</a></h3>
+<!-- Describe any infrastructure that will need to be provisioned or modified. In particular, identify associated potential cost changes. -->
+<p>These views potentially might cause more load on our infrastructure due to
+increase in scraping activity.</p>
+</section>
+<section id="tools-packages">
+<h3>Tools &amp; packages<a class="headerlink" href="#tools-packages" title="Link to this heading">¶</a></h3>
+<!-- Describe any tools or packages which this work might be dependent on. If multiple options are available, try to list as many as are reasonable with your own recommendation. -->
+<p>No new tools or packages are necessary.</p>
+</section>
+<section id="other-projects-or-work">
+<h3>Other projects or work<a class="headerlink" href="#other-projects-or-work" title="Link to this heading">¶</a></h3>
+<!-- Note any projects this plan is dependent on. -->
+<p>Not applicable.</p>
+</section>
+</section>
+<section id="design">
+<h2>Design<a class="headerlink" href="#design" title="Link to this heading">¶</a></h2>
+<!-- Note any design requirements for this plan. -->
+<p><a class="reference external" href="https://www.figma.com/file/niWnCgB7K0Y4e4mgxMrnRC/Additional-search-views?node-id=22%3A13656&amp;amp;mode=dev">Figma designs in the dev mode</a></p>
+</section>
+<section id="parallelizable-streams">
+<h2>Parallelizable streams<a class="headerlink" href="#parallelizable-streams" title="Link to this heading">¶</a></h2>
+<!-- What, if any, work within this plan can be parallelized? -->
+<p>The API changes can be done independently of the frontend changes, although they
+should be finished before the final testing of the frontend changes.</p>
+<p>Adding the new components (step 3), Nuxt store update (step 4) and the
+<code class="docutils literal notranslate"><span class="pre">additional_search_views</span></code> feature flag (step 5) can be done in parallel, and are
+not dependent on anything.</p>
+<p>The work on the single result pages (step 7) can be done in parallel with the
+work on the collection pages (step 6), but should follow the previous steps.</p>
+</section>
+<section id="blockers">
+<h2>Blockers<a class="headerlink" href="#blockers" title="Link to this heading">¶</a></h2>
+<!-- What hard blockers exist which might prevent further work on this project? -->
+<p>The main blocker could be the maintainer capacity.</p>
+</section>
+<section id="accessibility">
+<h2>Accessibility<a class="headerlink" href="#accessibility" title="Link to this heading">¶</a></h2>
+<!-- Are there specific accessibility concerns relevant to this plan? Do you expect new UI elements that would need particular care to ensure they're implemented in an accessible way? Consider also low-spec device and slow internet accessibility, if relevant. -->
+<p>We should make sure that the search titles are accessible, and the pages clearly
+indicate the change of context.</p>
+</section>
+<section id="rollback">
+<h2>Rollback<a class="headerlink" href="#rollback" title="Link to this heading">¶</a></h2>
+<!-- How do we roll back this solution in the event of failure? Are there any steps that can not easily be rolled back? -->
+<p>To roll back the changes, we would need to set the feature flag to <code class="docutils literal notranslate"><span class="pre">OFF</span></code>.</p>
+</section>
+<section id="risks">
+<h2>Risks<a class="headerlink" href="#risks" title="Link to this heading">¶</a></h2>
+<!-- What risks are we taking with this solution? Are there risks that once taken can’t be undone?-->
+<p>The biggest risk I see is that this project might be seen as an “invitation” to
+scraping. Hopefully, frontend rate limiting and the work on providing the
+dataset would minimize such risks.</p>
+</section>
+<section id="prior-art">
+<h2>Prior art<a class="headerlink" href="#prior-art" title="Link to this heading">¶</a></h2>
+<!-- Include links to documents and resources that you used when coming up with your solution. Credit people who have contributed to the solution that you wish to acknowledge. -->
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="../analytics/index.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Analytics</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="20230719-implementation_plan_additional_search_views.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">2023-07-20 Implementation Plan: Additional Search Views</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/WordPress/openverse" aria-label="GitHub"><svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">SUPERSEDED 2023-07-20 Implementation Plan: Additional Search Views</a><ul>
+<li><a class="reference internal" href="#reviewers">Reviewers</a></li>
+<li><a class="reference internal" href="#project-links">Project links</a></li>
+<li><a class="reference internal" href="#expected-outcomes">Expected Outcomes</a></li>
+<li><a class="reference internal" href="#step-by-step-plan">Step-by-step plan</a></li>
+<li><a class="reference internal" href="#step-details">Step details</a><ul>
+<li><a class="reference internal" href="#search-controller-updates">1. Search controller updates</a></li>
+<li><a class="reference internal" href="#new-api-endpoints">2. New API endpoints</a></li>
+<li><a class="reference internal" href="#new-and-updated-components">3. New and updated components</a><ul>
+<li><a class="reference internal" href="#extract-the-vaudiocollection-component">Extract the <code class="docutils literal notranslate"><span class="pre">VAudioCollection</span></code> component</a></li>
+<li><a class="reference internal" href="#add-a-vcollectionheader-component">Add a <code class="docutils literal notranslate"><span class="pre">VCollectionHeader</span></code> component</a></li>
+<li><a class="reference internal" href="#add-vcollectionlink-component">Add <code class="docutils literal notranslate"><span class="pre">VCollectionLink</span></code> component</a></li>
+<li><a class="reference internal" href="#create-a-new-vtag-component-to-be-a-vbutton-wrapping-a-vlink">Create a new <code class="docutils literal notranslate"><span class="pre">VTag</span></code> component to be a <code class="docutils literal notranslate"><span class="pre">VButton</span></code> wrapping a <code class="docutils literal notranslate"><span class="pre">VLink</span></code></a></li>
+<li><a class="reference internal" href="#update-links-in-the-information-section">Update links in the “information” section</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#nuxt-store-and-api-request-changes">4. Nuxt store and API request changes</a><ul>
+<li><a class="reference internal" href="#update-the-searchby-filter">Update the <code class="docutils literal notranslate"><span class="pre">searchBy</span></code> filter</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#add-the-additional-search-views-feature-flag">5. Add the <code class="docutils literal notranslate"><span class="pre">additional_search_views</span></code> feature flag</a></li>
+<li><a class="reference internal" href="#create-a-page-for-tag-creator-source-collections">6. Create a page for <code class="docutils literal notranslate"><span class="pre">tag</span></code> / <code class="docutils literal notranslate"><span class="pre">creator</span></code> /<code class="docutils literal notranslate"><span class="pre">source</span></code> collections.</a></li>
+<li><a class="reference internal" href="#update-the-single-result-pages">7. Update the single result pages</a><ul>
+<li><a class="reference internal" href="#update-the-vcollectionlink-area-on-the-single-result-page">Update the <code class="docutils literal notranslate"><span class="pre">VCollectionLink</span></code> area on the single result page</a></li>
+<li><a class="reference internal" href="#use-vtag-with-links-for-the-tags">Use <code class="docutils literal notranslate"><span class="pre">VTag</span></code> with links for the tags</a></li>
+<li><a class="reference internal" href="#update-the-tags-area-on-the-single-result-page">Update the tags area on the single result page</a></li>
+<li><a class="reference internal" href="#add-the-information-popover-next-to-source-and-provider-links">Add the information popover next to source and provider links</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#additional-analytics-events">8. Additional analytics events</a></li>
+<li><a class="reference internal" href="#cleanup-after-the-feature-flag-is-enabled-in-production">9. Cleanup after the feature flag is enabled in production</a></li>
+<li><a class="reference internal" href="#tests">Tests</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#dependencies">Dependencies</a><ul>
+<li><a class="reference internal" href="#infrastructure">Infrastructure</a></li>
+<li><a class="reference internal" href="#tools-packages">Tools &amp; packages</a></li>
+<li><a class="reference internal" href="#other-projects-or-work">Other projects or work</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#design">Design</a></li>
+<li><a class="reference internal" href="#parallelizable-streams">Parallelizable streams</a></li>
+<li><a class="reference internal" href="#blockers">Blockers</a></li>
+<li><a class="reference internal" href="#accessibility">Accessibility</a></li>
+<li><a class="reference internal" href="#rollback">Rollback</a></li>
+<li><a class="reference internal" href="#risks">Risks</a></li>
+<li><a class="reference internal" href="#prior-art">Prior art</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/furo.js?v=4e2eecee"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    </body>
+</html>

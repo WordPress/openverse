@@ -1,0 +1,30 @@
+# 2023.10.09.17.18.13
+
+## New Features
+
+- Create the page for sensitive content explanation
+  ([#3074](https://github.com/WordPress/openverse/pull/3074)) by @dhruvkb
+
+## Improvements
+
+- Enable the sensitive content flag and cleanup
+  ([#3144](https://github.com/WordPress/openverse/pull/3144)) by @dhruvkb
+- Show timeout errors on the frontend
+  ([#2838](https://github.com/WordPress/openverse/pull/2838)) by @obulat
+- Improve image grid ([#2891](https://github.com/WordPress/openverse/pull/2891))
+  by @obulat
+
+## Bug Fixes
+
+- Update record count on about page
+  ([#3155](https://github.com/WordPress/openverse/pull/3155)) by @ujwalkumar1995
+- Remove monetization meta tag
+  ([#3107](https://github.com/WordPress/openverse/pull/3107)) by @sarayourfriend
+- Bump postcss from 8.4.21 to 8.4.31
+  ([#3133](https://github.com/WordPress/openverse/pull/3133)) by @dependabot
+- Undefined mediaResults Hotfix add an undefined/null check
+  ([#3072](https://github.com/WordPress/openverse/pull/3072)) by @ngken0995
+- Skip flaky test ([#3113](https://github.com/WordPress/openverse/pull/3113)) by
+  @obulat
+- Update VSourcesTable.vue
+  ([#3026](https://github.com/WordPress/openverse/pull/3026)) by @Chirag57

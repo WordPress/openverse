@@ -1,0 +1,20 @@
+# 2024.04.01.17.07.10
+
+## Improvements
+
+- Use search query parameters for additional search views in the API
+  ([#3887](https://github.com/WordPress/openverse/pull/3887)) by @obulat
+
+## Internal Improvements
+
+- Update dependency elasticsearch to v8.13.0
+  ([#3996](https://github.com/WordPress/openverse/pull/3996)) by @openverse-bot
+- Update dependency fakeredis to v2.21.3
+  ([#3991](https://github.com/WordPress/openverse/pull/3991)) by @openverse-bot
+- Fix load sample data script provider insertion
+  ([#3971](https://github.com/WordPress/openverse/pull/3971)) by @AetherUnbound
+
+## Bug Fixes
+
+- Fix load sample data script provider insertion
+  ([#3971](https://github.com/WordPress/openverse/pull/3971)) by @AetherUnbound

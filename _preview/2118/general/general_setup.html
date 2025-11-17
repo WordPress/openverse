@@ -1,0 +1,878 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Quickstart guide" href="quickstart.html" /><link rel="prev" title="Welcome" href="contributing.html" />
+
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/WordPress/openverse/master/brand/icon.svg"/><!-- Generated with Sphinx 6.2.1 and Furo 2023.03.27 -->
+        <title>General setup guide - Openverse documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">Openverse  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo only-light" src="../_static/logo_light.svg" alt="Light Logo"/>
+    <img class="sidebar-logo only-dark" src="../_static/logo_dark.svg" alt="Dark Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">Django API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../api/guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/guides/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/guides/test.html">Testing guide</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../api/reference/index.html">Reference</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/reference/search_algorithm.html">Search Algorithm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/reference/authentication_and_throttling.html">Authentication and Throttling</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../catalog/index.html">Airflow catalog</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../changelogs/index.html">Changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../changelogs/api/index.html">API changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changelogs/api/2023.05.19.22.08.07.html">2023.05.19.22.08.07</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelogs/api/2023.05.19.18.58.25.html">2023.05.19.18.58.25</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelogs/api/2023.05.19.17.16.50.html">2023.05.19.17.16.50</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelogs/api/2023.05.15.21.51.49.html">2023.05.15.21.51.49</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelogs/api/2023.05.02.21.26.28.html">2023.05.02.21.26.28</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelogs/api/2023.04.27.07.29.23.html">2023.04.27.07.29.23</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelogs/api/2023.04.23.23.22.14.html">2023.04.23.23.22.14</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelogs/api/2023.04.19.00.01.39.html">2023.04.19.00.01.39</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelogs/api/2023.04.18.15.27.15.html">2023.04.18.15.27.15</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelogs/api/2023.04.12.23.29.59.html">2023.04.12.23.29.59</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../changelogs/catalog/index.html">Catalog changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changelogs/catalog/2023.05.16.22.14.49.html">2023.05.16.22.14.49</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelogs/catalog/2023.04.27.02.43.13.html">2023.04.27.02.43.13</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../changelogs/frontend/index.html">Frontend changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changelogs/frontend/2023.05.23.17.02.26.html">2023.05.23.17.02.26</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelogs/frontend/2023.05.22.15.55.57.html">2023.05.22.15.55.57</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelogs/frontend/2023.05.15.22.13.27.html">2023.05.15.22.13.27</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelogs/frontend/2023.05.02.19.17.32.html">2023.05.02.19.17.32</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelogs/frontend/2023.04.23.23.07.51.html">2023.04.23.23.07.51</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../changelogs/ingestion_server/index.html">Ingestion server changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changelogs/ingestion_server/2023.05.17.22.57.37.html">2023.05.17.22.57.37</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelogs/ingestion_server/2023.05.03.22.29.52.html">2023.05.03.22.29.52</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../frontend/index.html">Nuxt frontend</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../frontend/guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../frontend/guides/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../frontend/guides/develop.html">Development guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../frontend/guides/test.html">Running frontend tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../frontend/guides/analytics.html">Analytics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../frontend/guides/icons.html">SVG Icon Sprites in Openverse Frontend</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../frontend/reference/index.html">Reference</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../frontend/reference/feature_flags.html">Feature flags</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../frontend/reference/testing_guidelines.html">Testing Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../frontend/reference/playwright_tests.html">Playwright tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../frontend/reference/storybook_tests.html">Storybook tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../frontend/reference/miscellaneous.html">Miscellaneous notes on the frontend</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">General development guidelines</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="contributing.html">Welcome</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">General setup guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run.html">Run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test.html">Test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="publish.html">Publish</a></li>
+<li class="toctree-l2"><a class="reference internal" href="zero_downtime_database_management.html">Zero Downtime and Database Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deployment.html">Deployments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logging.html">Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https.html">Testing HTTPS</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ingestion_server/index.html">Ingestion server</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../ingestion_server/guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../ingestion_server/guides/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../ingestion_server/guides/test.html">Testing guide</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../meta/index.html">Managing the Openverse</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../meta/github_contribution_practices.html">GitHub contribution practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../meta/dev_flow.html">Development workflow</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../meta/ci_cd/index.html">CI + CD workflow</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../meta/ci_cd/actions.html">Actions</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../meta/ci_cd/jobs/index.html">Jobs</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../meta/ci_cd/jobs/preparation.html">Preparation jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../meta/ci_cd/jobs/frontend.html">Frontend jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../meta/ci_cd/jobs/docker.html">Docker jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../meta/ci_cd/jobs/catalog.html">Catalog jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../meta/ci_cd/jobs/ingestion_server.html">Ingestion server jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../meta/ci_cd/jobs/api.html">API jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../meta/ci_cd/jobs/documentation.html">Documentation jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../meta/ci_cd/jobs/deployment.html">Deployment jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../meta/ci_cd/jobs/notification.html">Notification jobs</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../meta/ci_cd/flow.html">Flow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../meta/ci_cd/proof_of_functionality.html">Proof-of-functionality</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../meta/ci_cd/artifacts.html">Artifacts</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../meta/decision_making/index.html">Openverse Decision-Making Process</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../meta/decision_making/process_description.html">Process description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../meta/decision_making/how_to_use.html">How to follow the process in different settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../meta/decision_making/additional_practices.html">Additional practices</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../meta/documentation/index.html">Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../meta/documentation/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../meta/documentation/guidelines.html">Documentation Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../meta/documentation/extensions.html">Sphinx extensions</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../meta/traffic/index.html">Traffic Management</a><input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" role="switch" type="checkbox"/><label for="toctree-checkbox-20"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../meta/traffic/runbooks/identifying-and-blocking-traffic-anomalies.html">Identifying and Blocking Traffic Anomalies in Cloudflare</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../projects/index.html">Projects</a><input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" role="switch" type="checkbox"/><label for="toctree-checkbox-21"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../projects/planning.html">Project Planning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../projects/templates/implementation-plan.html">Implementation Plan Template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../projects/templates/index.html">Project directory <code class="docutils literal notranslate"><span class="pre">index.md</span></code> template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../projects/templates/project-proposal.html">Project Proposal Template</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../projects/proposals/3d_model_support/index.html">3D Model Support</a><input class="toctree-checkbox" id="toctree-checkbox-22" name="toctree-checkbox-22" role="switch" type="checkbox"/><label for="toctree-checkbox-22"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../projects/proposals/3d_model_support/20220221-project_proposal.html">2022-02-21 Project Proposal: 3D model support</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../projects/proposals/additional_search_views/index.html">Additional Search Views</a><input class="toctree-checkbox" id="toctree-checkbox-23" name="toctree-checkbox-23" role="switch" type="checkbox"/><label for="toctree-checkbox-23"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../projects/proposals/additional_search_views/20230424-project_proposal_additional_search_views.html">2023-04-24 Project Proposal: Additional search views</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../projects/proposals/analytics/index.html">Analytics</a><input class="toctree-checkbox" id="toctree-checkbox-24" name="toctree-checkbox-24" role="switch" type="checkbox"/><label for="toctree-checkbox-24"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../projects/proposals/analytics/20221006-implementation_plan_frontend.html">2022-10-06 Implementation Plan: Frontend event tracking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../projects/proposals/analytics/20230307-backend_service.html">2023-03-07 Implementation Plan: Analytics backend and visualisation service</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../projects/proposals/core_user_interface_improvement/index.html">Core User Interface Improvements</a><input class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" role="switch" type="checkbox"/><label for="toctree-checkbox-25"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../projects/proposals/core_user_interface_improvement/20230314-project_proposal_core_ui_improvement.html">2023-03-14 Project Proposal: Core UI Improvement</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../projects/proposals/document_all_media_properties/index.html">Document all media properties</a><input class="toctree-checkbox" id="toctree-checkbox-26" name="toctree-checkbox-26" role="switch" type="checkbox"/><label for="toctree-checkbox-26"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../projects/proposals/document_all_media_properties/20230307-project_proposal.html">2023-03-07 Project proposal for Document all media properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../projects/proposals/document_all_media_properties/20230426-implementation_plan_documenting_media_properties.html">2023-04-26 Implementation Plan: Document all media properties in the catalog</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../projects/proposals/document_all_media_properties/samples/index.html">Samples</a><input class="toctree-checkbox" id="toctree-checkbox-27" name="toctree-checkbox-27" role="switch" type="checkbox"/><label for="toctree-checkbox-27"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../projects/proposals/document_all_media_properties/samples/openverse_media_properties.html">Openverse Media Properties</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../projects/proposals/document_all_media_properties/samples/sample_media_properties.html">sample_media_properties.md</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../projects/proposals/document_all_media_properties/samples/sample_postamble.html">sample_postamble.md</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../projects/proposals/document_all_media_properties/samples/sample_preamble.html">sample_preamble.md</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../projects/proposals/document_all_media_properties/samples/index.html">Samples</a><input class="toctree-checkbox" id="toctree-checkbox-28" name="toctree-checkbox-28" role="switch" type="checkbox"/><label for="toctree-checkbox-28"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../projects/proposals/document_all_media_properties/samples/openverse_media_properties.html">Openverse Media Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../projects/proposals/document_all_media_properties/samples/sample_media_properties.html">sample_media_properties.md</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../projects/proposals/document_all_media_properties/samples/sample_postamble.html">sample_postamble.md</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../projects/proposals/document_all_media_properties/samples/sample_preamble.html">sample_preamble.md</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../projects/proposals/feature_flags/index.html">Feature Flags</a><input class="toctree-checkbox" id="toctree-checkbox-29" name="toctree-checkbox-29" role="switch" type="checkbox"/><label for="toctree-checkbox-29"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../projects/proposals/feature_flags/20220309-project_proposal.html">2022-03-09 Project Proposal: Feature flags</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../projects/proposals/frontend_ui_state_cookie/index.html">Frontend UI State Cookie</a><input class="toctree-checkbox" id="toctree-checkbox-30" name="toctree-checkbox-30" role="switch" type="checkbox"/><label for="toctree-checkbox-30"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../projects/proposals/frontend_ui_state_cookie/20220218-project_proposal.html">2022-02-18 Project Propsal: Frontend UI State Cookie</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../projects/proposals/monitoring/index.html">Monitoring</a><input class="toctree-checkbox" id="toctree-checkbox-31" name="toctree-checkbox-31" role="switch" type="checkbox"/><label for="toctree-checkbox-31"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../projects/proposals/monitoring/20220307-project_proposal.html">2022-03-07 Project Proposal: Monitoring</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../projects/proposals/monorepo/index.html">Monorepo</a><input class="toctree-checkbox" id="toctree-checkbox-32" name="toctree-checkbox-32" role="switch" type="checkbox"/><label for="toctree-checkbox-32"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../projects/proposals/monorepo/20221124-project_proposal.html">2022-11-24 Project Proposal: Monorepo</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../projects/proposals/popularity_optimizations/index.html">Popularity Calculation Optimizations</a><input class="toctree-checkbox" id="toctree-checkbox-33" name="toctree-checkbox-33" role="switch" type="checkbox"/><label for="toctree-checkbox-33"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../projects/proposals/popularity_optimizations/20230406-project_proposal_popularity_optimizations.html">2023-04-06 Project Proposal: Popularity Calculation Optimizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../projects/proposals/popularity_optimizations/20230420-implementation_plan_popularity_optimizations.html">Implementation Plan: Decoupling Popularity Calculations from the Data Refresh</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../projects/proposals/search_relevancy_sandbox/index.html">Search Relevancy Sandbox</a><input class="toctree-checkbox" id="toctree-checkbox-34" name="toctree-checkbox-34" role="switch" type="checkbox"/><label for="toctree-checkbox-34"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../projects/proposals/search_relevancy_sandbox/20230331-project_proposal_search_relevancy_sandbox.html">2023-03-31 Project Proposal: Search relevancy sandbox</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../projects/proposals/search_relevancy_sandbox/20230406-implementation_plan_update_staging_database.html">2023-04-06 Implementation Plan: Update Staging Database</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../projects/proposals/trust_and_safety/content_report_moderation/index.html">Sensitive Content Report Moderation Initial Practices</a><input class="toctree-checkbox" id="toctree-checkbox-35" name="toctree-checkbox-35" role="switch" type="checkbox"/><label for="toctree-checkbox-35"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../projects/proposals/trust_and_safety/content_report_moderation/20230411-project_proposal_content_report_moderation.html">2023-04-11 Project Proposal: Sensitive content report moderation: initial practices</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../projects/proposals/trust_and_safety/detecting_sensitive_textual_content/index.html">Detecting and Blurring Sensitive Textual Content</a><input class="toctree-checkbox" id="toctree-checkbox-36" name="toctree-checkbox-36" role="switch" type="checkbox"/><label for="toctree-checkbox-36"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../projects/proposals/trust_and_safety/detecting_sensitive_textual_content/20230309-implementation_plan_sensitive_terms_list.html">2023-03-09 Implementation Plan: Sensitive Terms List</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../projects/proposals/trust_and_safety/detecting_sensitive_textual_content/20230309-project_proposal_detecting_sensitive_textual_content.html">2023-03-09 Project Proposal: Detecting sensitive textual content and blurring all sensitive results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../projects/proposals/trust_and_safety/detecting_sensitive_textual_content/20230330-implementation_plan_filtering_and_designating_results_with_sensitive_textual_content.html">2023-03-30 Implementation Plan: Filtering and designating results with sensitive textual content</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../projects/proposals/trust_and_safety/detecting_sensitive_textual_content/20230506-implementation_plan_frontend_blurring_sensitive.html">2023-05-06 Implementation Plan: Fetching, blurring sensitive results</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../projects/proposals/trust_and_safety/index.html">Trust and Safety</a><input class="toctree-checkbox" id="toctree-checkbox-37" name="toctree-checkbox-37" role="switch" type="checkbox"/><label for="toctree-checkbox-37"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../projects/proposals/trust_and_safety/20230109-trust_and_safety_preliminary_overview_and_exploration.html">2023-01-09 Initial Overview and User Stories</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../projects/proposals/trust_and_safety/content_report_moderation/index.html">Sensitive Content Report Moderation Initial Practices</a><input class="toctree-checkbox" id="toctree-checkbox-38" name="toctree-checkbox-38" role="switch" type="checkbox"/><label for="toctree-checkbox-38"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../projects/proposals/trust_and_safety/content_report_moderation/20230411-project_proposal_content_report_moderation.html">2023-04-11 Project Proposal: Sensitive content report moderation: initial practices</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../projects/proposals/trust_and_safety/detecting_sensitive_textual_content/index.html">Detecting and Blurring Sensitive Textual Content</a><input class="toctree-checkbox" id="toctree-checkbox-39" name="toctree-checkbox-39" role="switch" type="checkbox"/><label for="toctree-checkbox-39"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../projects/proposals/trust_and_safety/detecting_sensitive_textual_content/20230309-implementation_plan_sensitive_terms_list.html">2023-03-09 Implementation Plan: Sensitive Terms List</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../projects/proposals/trust_and_safety/detecting_sensitive_textual_content/20230309-project_proposal_detecting_sensitive_textual_content.html">2023-03-09 Project Proposal: Detecting sensitive textual content and blurring all sensitive results</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../projects/proposals/trust_and_safety/detecting_sensitive_textual_content/20230330-implementation_plan_filtering_and_designating_results_with_sensitive_textual_content.html">2023-03-30 Implementation Plan: Filtering and designating results with sensitive textual content</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../projects/proposals/trust_and_safety/detecting_sensitive_textual_content/20230506-implementation_plan_frontend_blurring_sensitive.html">2023-05-06 Implementation Plan: Fetching, blurring sensitive results</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../projects/proposals/visual_regression_testing/index.html">Visual Regression Testing</a><input class="toctree-checkbox" id="toctree-checkbox-40" name="toctree-checkbox-40" role="switch" type="checkbox"/><label for="toctree-checkbox-40"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../projects/proposals/visual_regression_testing/20220217-implementation_plan.html">2022-02-17 Implementation Plan: Visual regression testing</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../projects/proposals/vuex_to_pina_conversion/index.html">Pinia Conversion</a><input class="toctree-checkbox" id="toctree-checkbox-41" name="toctree-checkbox-41" role="switch" type="checkbox"/><label for="toctree-checkbox-41"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../projects/proposals/vuex_to_pina_conversion/20220223-project_proposal.html">2022-02-23 Project Proposal: Vuex to Pinia conversion</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../terms_of_service.html">Openverse API Terms of Service</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">External links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://openverse.org">Openverse</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/WordPress/openverse">GitHub</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/WordPress/openverse/edit/main/documentation/general/general_setup.md" title="Edit this page">
+    <svg aria-hidden="true" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
+      <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
+    </svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="general-setup-guide">
+<h1>General setup guide<a class="headerlink" href="#general-setup-guide" title="Permalink to this heading">#</a></h1>
+<p>This is an exhaustive list for new developers. Feel free to skip the steps that
+you have already done on your own.</p>
+<section id="operating-system">
+<h2>Operating system<a class="headerlink" href="#operating-system" title="Permalink to this heading">#</a></h2>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>Openverse development is currently supported only for UNIX-type environments
+(Linux and macOS). Windows is not supported natively, but PRs that enable
+Openverse development on Windows, or improve the experience, are welcome.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>We recommend Windows Subsystem for Linux (WSL) as a viable option.</p>
+</div>
+<p>Windows Subsystem for Linux can be a much more versatile and familiar
+environment for software development on Windows. Everything from installing
+<code class="docutils literal notranslate"><span class="pre">git</span></code> and other dependencies to using command line tools that will be familiar
+to the wider community of software developers are more likely to be easier under
+WSL. While some parts of some Openverse projects may be able to be developed
+under native Windows, you will have a much smoother time with WSL as our command
+runners (<code class="docutils literal notranslate"><span class="pre">just</span></code> and <code class="docutils literal notranslate"><span class="pre">pnpm</span></code>) assume a UNIX-type environment (Linux and macOS).</p>
+<p>Installation instructions for WSL on Windows 10 and 11 can be found in
+Microsoft’s
+<a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/install">official documentation</a>.</p>
+</section>
+<section id="requirement-matrix">
+<h2>Requirement matrix<a class="headerlink" href="#requirement-matrix" title="Permalink to this heading">#</a></h2>
+<p>Based on which part of the Openverse stack you are contributing to, you might
+not need everything mentioned on this page. Refer to this chart to see which
+prerequisites are required to get started with your contributions.</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Requirement</p></th>
+<th class="head"><p>Docs</p></th>
+<th class="head"><p>Ingestion server</p></th>
+<th class="head"><p>API</p></th>
+<th class="head"><p>Frontend</p></th>
+<th class="head"><p>Management</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#git">Git</a></p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#just"><code class="docutils literal notranslate"><span class="pre">just</span></code></a></p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#python">Python</a></p></td>
+<td><p>✅</p></td>
+<td><p>➖</p></td>
+<td><p>➖</p></td>
+<td><p>➖</p></td>
+<td><p>✅</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#node-js">Node.js</a></p></td>
+<td><p>➖</p></td>
+<td><p>➖</p></td>
+<td><p>➖</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#docker">Docker</a></p></td>
+<td><p>➖</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+<td><p>❔<a class="footnote-reference brackets" href="#analytics" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p></td>
+<td><p>➖</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Here ✅ means required, ➖ means not required and ❔ means conditionally
+required.</p>
+</section>
+<section id="required-setup">
+<h2>Required setup<a class="headerlink" href="#required-setup" title="Permalink to this heading">#</a></h2>
+<p>The following setup steps are needed to set up a local copy of Openverse and do
+not prepare you to contribute code to the project.</p>
+<section id="git">
+<h3>Git<a class="headerlink" href="#git" title="Permalink to this heading">#</a></h3>
+<p>Openverse is Git-tracked. To clone Openverse locally, you will need to install
+<code class="docutils literal notranslate"><span class="pre">git</span></code>. Most Linux distributions and macOS will already have this installed, even
+if it’s not always the latest version. To know if you have Git installed, run
+the following command.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>git<span class="w"> </span>--version
+</pre></div>
+</div>
+<p>If you see <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">version</span> <span class="pre">x.y.z</span></code>, you have Git installed. If you see an error, you
+need to install it by following the
+<a class="reference external" href="https://git-scm.com/downloads">official instructions</a>.</p>
+</section>
+<section id="just">
+<h3><code class="docutils literal notranslate"><span class="pre">just</span></code><a class="headerlink" href="#just" title="Permalink to this heading">#</a></h3>
+<p>We use <code class="docutils literal notranslate"><span class="pre">just</span></code> as our command runner. It makes it easier to run cumbersome
+commands that are generally needed a lot during development, like bringing up
+our backend services or linting the codebase.</p>
+<p><code class="docutils literal notranslate"><span class="pre">just</span></code> can be <a class="reference external" href="https://github.com/casey/just#installation">installed</a> for a host
+of operating systems via their respective
+<a class="reference external" href="https://github.com/casey/just#packages">pacakge managers</a> or using
+<a class="reference external" href="https://github.com/casey/just#pre-built-binaries">pre-built binaries</a> available
+for some operating systems.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If you run <code class="docutils literal notranslate"><span class="pre">just</span></code> inside the Openverse root repo without a recipe name, you can
+see a huge list of all the different recipes present in the project.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>openverse/
+<span class="gp">$ </span>just
+</pre></div>
+</div>
+</div>
+<p>If for some reason, you are unable to install <code class="docutils literal notranslate"><span class="pre">just</span></code>, you can refer to the
+<code class="docutils literal notranslate"><span class="pre">justfile</span></code> to see the commands that make up a recipe, and then run those
+commands individually in a terminal. It won’t be the best user experience, but
+it will work just the same.</p>
+</section>
+</section>
+<section id="conditional-setup">
+<h2>Conditional setup<a class="headerlink" href="#conditional-setup" title="Permalink to this heading">#</a></h2>
+<p>A subset of the following requirements will be required depending on the extent
+of your contribution to the project. To see which of these you need, refer to
+the <a class="reference internal" href="#requirement-matrix">requirement matrix</a> above.</p>
+<section id="python">
+<h3>Python<a class="headerlink" href="#python" title="Permalink to this heading">#</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is only needed if you are working with the following:</p>
+<ul class="simple">
+<li><p>documentation</p></li>
+<li><p>Python automations</p></li>
+<li><p>API (outside Docker, for debugging purposes)</p></li>
+<li><p>ingestion server (outside Docker, for debugging purposes)</p></li>
+</ul>
+</div>
+<p>We use Python 3 in the backend of our stack. So to work with that part of the
+codebase, you will need Python installed. Most Linux distributions and macOS
+will already have this installed, even if it’s not always the latest version. To
+know if you have Python (specifically version 3) installed, run the following
+command.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>python3<span class="w"> </span>--version
+</pre></div>
+</div>
+<p>If you see <code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">x.y.z</span></code>, you have Python installed. If you see an error, you
+need to install it using <a class="reference external" href="https://github.com/pyenv/pyenv">pyenv</a> or by following
+the <a class="reference external" href="https://www.python.org/downloads/">official instructions</a>.</p>
+<section id="pipenv">
+<h4>Pipenv<a class="headerlink" href="#pipenv" title="Permalink to this heading">#</a></h4>
+<p>Pipenv helps us provision dependencies for our Python packages and automatically
+set up a virtualenv, provided you have the version of Python mentioned in the
+<code class="docutils literal notranslate"><span class="pre">Pipfile</span></code> installed and accessible locally.</p>
+<p>You can install Pipenv by following the
+<a class="reference external" href="https://pipenv.pypa.io/en/latest/installation/#installing-pipenv">official instructions</a>.</p>
+</section>
+</section>
+<section id="node-js">
+<h3>Node.js<a class="headerlink" href="#node-js" title="Permalink to this heading">#</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is only needed if you are working with the following:</p>
+<ul class="simple">
+<li><p>frontend</p></li>
+<li><p>Node.js automations</p></li>
+</ul>
+</div>
+<p>We use Node.js in the frontend of our stack. So to work with that part of the
+codebase, you will need Node.js installed. To know if you have Node.js
+installed, run the following command.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>node<span class="w"> </span>--version
+</pre></div>
+</div>
+<p>If you see <code class="docutils literal notranslate"><span class="pre">vx.y.z</span></code>, you have Node.js installed. If you see an error, you need
+to install it using <a class="reference external" href="https://github.com/nvm-sh/nvm">nvm</a> or by following the
+<a class="reference external" href="https://nodejs.org/en/download/">official instructions</a>.</p>
+<section id="corepack">
+<h4>Corepack<a class="headerlink" href="#corepack" title="Permalink to this heading">#</a></h4>
+<p>Corepack helps manage package managers for a project. In any Node.js workspace,
+like the <a class="reference external" href="https://github.com/WordPress/openverse/"><code class="docutils literal notranslate"><span class="pre">WordPress/openverse</span></code></a>
+monorepo for example, Corepack will automatically invoke the right version of
+the specified package manager, also installing it if needed and not present.</p>
+<p>It’s a part of Node.js and present in Node.js versions v14.19.0 and v16.9.0
+onwards. So no installation is needed.</p>
+</section>
+</section>
+<section id="docker">
+<h3>Docker<a class="headerlink" href="#docker" title="Permalink to this heading">#</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is only needed if you are working with the following:</p>
+<ul class="simple">
+<li><p>API</p></li>
+<li><p>ingestion server</p></li>
+<li><p>frontend</p></li>
+</ul>
+</div>
+<p>Our Python packages are published as Docker images to make it easier to work
+with them locally during development and also make it easier to deploy new
+versions in production.</p>
+<p>If you run WSL on Windows, you can
+<a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/tutorials/wsl-containers#install-docker-desktop">set up Docker Desktop</a>.
+If not, you can use one of the many
+<a class="reference external" href="https://docs.docker.com/engine/install/">installation methods</a> officially
+supported by Docker.</p>
+<p>Note that the building images for the frontend needs an advanced build feature,
+namely additional build contexts, that is provided by the
+<a class="reference external" href="https://docs.docker.com/build/architecture/#buildx">Buildx plugin</a>. The Buildx
+plugin is included in Docker Desktop and all
+<a class="reference external" href="https://docs.docker.com/engine/install/">installation methods</a> for Docker
+Engine include steps to also install the Buildx plugin.</p>
+<p>To know if your Docker setup is using Buildx, run the following command.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>docker<span class="w"> </span>build<span class="w"> </span>--help
+</pre></div>
+</div>
+<p>If you see <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">buildx</span> <span class="pre">build</span></code> under ‘Aliases’, you have Buildx set up as the
+build client.</p>
+<section id="docker-compose">
+<h4>Docker Compose<a class="headerlink" href="#docker-compose" title="Permalink to this heading">#</a></h4>
+<p>Docker Compose makes it easy to orchestrate multiple services which we put to
+use by orchestrating the external services and also the API, ingestion server
+and indexer workers locally during development.</p>
+<p>Docker Compose is a part of the Docker Desktop installation. To know if you have
+Docker Compose installed, run the following command.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>docker<span class="w"> </span>compose<span class="w"> </span>version
+</pre></div>
+</div>
+<p>If you see <code class="docutils literal notranslate"><span class="pre">Docker</span> <span class="pre">Compose</span> <span class="pre">version</span> <span class="pre">vx.y.z</span></code>, you have Docker Compose installed.
+If you see an error, you need to install it by following the
+<a class="reference external" href="https://docs.docker.com/compose/install/">official instructions</a>.</p>
+</section>
+</section>
+<section id="github">
+<h3>GitHub<a class="headerlink" href="#github" title="Permalink to this heading">#</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is only needed if you want to contribute code to Openverse. The codebase
+can be read, accessed and downloaded without an account.</p>
+</div>
+<p>The source code for Openverse is hosted on GitHub. To contribute to Openverse,
+you will also need to <a class="reference external" href="https://github.com/signup">sign up</a> for a GitHub account.
+It’s free, and considering how much OSS development happens on GitHub, almost
+essential.</p>
+<section id="github-cli">
+<h4>GitHub CLI<a class="headerlink" href="#github-cli" title="Permalink to this heading">#</a></h4>
+<p>It’s not necessary, but we recommended to install the GitHub CLI in your
+development environment because it makes it convenient to work with GitHub
+workflows like filing issues and opening PRs.</p>
+<p>You can install the CLI by following the
+<a class="reference external" href="https://github.com/cli/cli#installation">official instructions</a>.</p>
+</section>
+</section>
+<section id="text-editors-ides">
+<h3>Text editors/IDEs<a class="headerlink" href="#text-editors-ides" title="Permalink to this heading">#</a></h3>
+<p>A good editor or IDE (integrated development environment) makes a lot of
+difference when working with software source code. We recommend VS Code or a
+JetBrains IDE because that’s what we use day-to-day. Feel free to pick a
+different editor if you have a preference.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://code.visualstudio.com/">VS Code</a> is an option with good
+out-of-the-box support for our entire stack.</p></li>
+<li><p><a class="reference external" href="https://www.jetbrains.com/">PyCharm and WebStorm</a> are other very popular
+options with lots of bells and whistles.</p></li>
+<li><p><a class="reference external" href="https://www.sublimetext.com/">Sublime Text</a> is a minimalistic option that can
+get you off the ground quickly with lots of room for expansion through it’s
+package system.</p></li>
+<li><p><a class="reference external" href="https://www.vim.org/">vim</a> and <a class="reference external" href="https://www.gnu.org/software/emacs/">emacs</a>
+are ubiquitous terminal-based options.</p></li>
+</ul>
+</section>
+</section>
+<section id="optional-development-setup">
+<h2>Optional development setup<a class="headerlink" href="#optional-development-setup" title="Permalink to this heading">#</a></h2>
+<p>The following setup steps are only needed in very specific scenarios.</p>
+<section id="coreutils">
+<h3>coreutils<a class="headerlink" href="#coreutils" title="Permalink to this heading">#</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is only needed on macOS.</p>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">coreutils</span></code> adds GNU utils to macOS. <code class="docutils literal notranslate"><span class="pre">timeout</span></code> from the package is required. You
+can install the
+<a class="reference external" href="https://formulae.brew.sh/formula/coreutils"><code class="docutils literal notranslate"><span class="pre">coreutils</span></code> formula</a> using
+<a class="reference external" href="https://brew.sh">Homebrew</a>, which is a package manager for macOS.</p>
+</section>
+<section id="mkcert">
+<h3>mkcert<a class="headerlink" href="#mkcert" title="Permalink to this heading">#</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is only needed to test SSL locally.</p>
+</div>
+<p>To test SSL locally, install <code class="docutils literal notranslate"><span class="pre">mkcert</span></code> (and the corresponding
+<a class="reference external" href="https://firefox-source-docs.mozilla.org/security/nss/index.html">NSS</a> tools) by
+following the
+<a class="reference external" href="https://github.com/FiloSottile/mkcert#installation">official instruction</a>. You
+can run <code class="docutils literal notranslate"><span class="pre">mkcert</span> <span class="pre">-install</span></code> to verify your installation.</p>
+</section>
+<section id="openssl">
+<h3>OpenSSL<a class="headerlink" href="#openssl" title="Permalink to this heading">#</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is only need if the <code class="docutils literal notranslate"><span class="pre">psycopg2</span></code> install fails with the <code class="docutils literal notranslate"><span class="pre">ld:</span> <span class="pre">library</span> <span class="pre">not</span> <span class="pre">found</span> <span class="pre">for</span> <span class="pre">-lssl</span></code> error when running the project outside Docker.</p>
+</div>
+<p>This <code class="docutils literal notranslate"><span class="pre">psycopg2</span></code> package can fail to install on Apple Silicon Macs with the
+<code class="docutils literal notranslate"><span class="pre">ld:</span> <span class="pre">library</span> <span class="pre">not</span> <span class="pre">found</span> <span class="pre">for</span> <span class="pre">-lssl</span></code> error. To rectify this, install the
+<a class="reference external" href="https://formulae.brew.sh/formula/openssl&#64;3"><code class="docutils literal notranslate"><span class="pre">openssl</span></code> formula</a> using
+<a class="reference external" href="https://brew.sh/">Homebrew</a> and set <code class="docutils literal notranslate"><span class="pre">LDFLAGS</span></code> and <code class="docutils literal notranslate"><span class="pre">CPPFLAGS</span></code> as per the
+instructions in the output of the Homebrew installation.</p>
+<hr class="footnotes docutils" />
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="analytics" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>This is required to run analytics, not required otherwise.</p>
+</aside>
+</aside>
+</section>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="quickstart.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Quickstart guide</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="contributing.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Welcome</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/WordPress/openverse" aria-label="GitHub"><svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">General setup guide</a><ul>
+<li><a class="reference internal" href="#operating-system">Operating system</a></li>
+<li><a class="reference internal" href="#requirement-matrix">Requirement matrix</a></li>
+<li><a class="reference internal" href="#required-setup">Required setup</a><ul>
+<li><a class="reference internal" href="#git">Git</a></li>
+<li><a class="reference internal" href="#just"><code class="docutils literal notranslate"><span class="pre">just</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#conditional-setup">Conditional setup</a><ul>
+<li><a class="reference internal" href="#python">Python</a><ul>
+<li><a class="reference internal" href="#pipenv">Pipenv</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#node-js">Node.js</a><ul>
+<li><a class="reference internal" href="#corepack">Corepack</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#docker">Docker</a><ul>
+<li><a class="reference internal" href="#docker-compose">Docker Compose</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#github">GitHub</a><ul>
+<li><a class="reference internal" href="#github-cli">GitHub CLI</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#text-editors-ides">Text editors/IDEs</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#optional-development-setup">Optional development setup</a><ul>
+<li><a class="reference internal" href="#coreutils">coreutils</a></li>
+<li><a class="reference internal" href="#mkcert">mkcert</a></li>
+<li><a class="reference internal" href="#openssl">OpenSSL</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    </body>
+</html>

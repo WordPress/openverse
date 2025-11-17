@@ -1,0 +1,564 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="How to follow the process in different settings" href="how_to_use.html" /><link rel="prev" title="Process description" href="process_description.html" />
+
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/WordPress/openverse/master/brand/icon.svg"/><!-- Generated with Sphinx 6.1.3 and Furo 2023.03.27 -->
+        <title>Additional practices - Openverse documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../index.html"><div class="brand">Openverse  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo only-light" src="../../_static/logo_light.svg" alt="Light Logo"/>
+    <img class="sidebar-logo only-dark" src="../../_static/logo_dark.svg" alt="Dark Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../guides/general_setup.html">General setup guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../guides/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../guides/deployment.html">Deployments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../guides/logging.html">Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../guides/zero-downtime-database-management.html">Zero Downtime and Database Management</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../guides/api/index.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../guides/api/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../guides/api/test.html">Testing guide</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../guides/ingestion_server/index.html">Ingestion server</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../guides/ingestion_server/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../guides/ingestion_server/test.html">Testing guide</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../guides/frontend/index.html">Frontend</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../guides/frontend/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../guides/frontend/test.html">Testing guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../guides/frontend/analytics.html">Analytics</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../guides/documentation/index.html">Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../guides/documentation/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../guides/documentation/guidelines.html">Documentation Guidelines</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../index.html">Reference</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../github_contribution_practices.html">GitHub contribution practices</a></li>
+<li class="toctree-l2 current has-children"><a class="reference internal" href="index.html">Openverse Decision-Making Process</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="process_description.html">Process description</a></li>
+<li class="toctree-l3 current current-page"><a class="current reference internal" href="#">Additional practices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="how_to_use.html">How to follow the process in different settings</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../dev_flow.html">Development workflow</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../api/index.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/authentication_and_throttling.html">Authentication and Throttling</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../frontend/index.html">Frontend</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../frontend/feature_flags.html">Feature flags</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../search_algorithm.html">Search Algorithm</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../projects/index.html">Projects</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../projects/planning.html">Project Planning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../projects/templates/implementation-plan.html">Implementation Plan Template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../projects/templates/project-proposal.html">Project Proposal Template</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../projects/proposals/3d_model_support/index.html">3D Model Support</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../projects/proposals/3d_model_support/20220221-project_proposal.html">Project Proposal - 2022-02-21</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../projects/proposals/analytics/index.html">Analytics</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../projects/proposals/analytics/20221006-implementation_plan_frontend.html">Implentation Plan: Frontend event tracking - 2022-10-06</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../projects/proposals/analytics/20230307-backend_service.html">Implementation Plan: Analytics backend and visualisation service - 2023-03-07</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../projects/proposals/core_user_interface_improvement/index.html">Core User Interface Improvements</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../projects/proposals/core_user_interface_improvement/20230314-project_proposal_core_ui_improvement.html">Project Proposal - 2023-03-14</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../projects/proposals/detecting_sensitive_textual_content/index.html">Detecting and Blurring Sensitive Textual Content</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../projects/proposals/detecting_sensitive_textual_content/20230308-implementation_plan_filtering_and_designating_results_with_sensitive_textual_content.html">2023-03-08 Implementation Plan: Filtering and designating results with sensitive textual content</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../projects/proposals/detecting_sensitive_textual_content/20230309-implementation_plan_sensitive_terms_list.html">2023-03-09 Implementation Plan: Sensitive Terms List</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../projects/proposals/detecting_sensitive_textual_content/20230309-project_proposal_detecting_sensitive_textual_content.html">2023-03-09 Project Proposal</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../projects/proposals/feature_flags/index.html">Feature Flags</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../projects/proposals/feature_flags/20220309-project_proposal.html">Project Proposal - 2022-03-09</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../projects/proposals/frontend_ui_state_cookie/index.html">Frontend UI State Cookie</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../projects/proposals/frontend_ui_state_cookie/20220218-project_proposal.html">2022-02-18 Project Propsal: Frontend UI State Cookie</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../projects/proposals/monitoring/index.html">Monitoring</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../projects/proposals/monitoring/20220307-project_proposal.html">Project Proposal - 2022-03-07</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../projects/proposals/monorepo/index.html">Monorepo</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../projects/proposals/monorepo/20221124-project_proposal.html">Project Proposal - 2022-11-24</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../projects/proposals/search_relevancy_sandbox/index.html">Search Relevancy Sandbox</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../projects/proposals/search_relevancy_sandbox/20230331-project_proposal_search_relevancy_sandbox.html">Project Proposal - 2023-03-31</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../projects/proposals/trust_and_safety/index.html">Trust &amp; Safety</a><input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" role="switch" type="checkbox"/><label for="toctree-checkbox-20"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../projects/proposals/trust_and_safety/20230109-trust_and_safety_preliminary_overview_and_exploration.html">2023-01-09 Project Proposal</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../projects/proposals/visual_regression_testing/index.html">Visual Regression Testing</a><input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" role="switch" type="checkbox"/><label for="toctree-checkbox-21"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../projects/proposals/visual_regression_testing/20220217-implementation_plan.html">Implementation Plan - 2022-02-17</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../projects/proposals/vuex_to_pina_conversion/index.html">Pinia Conversion</a><input class="toctree-checkbox" id="toctree-checkbox-22" name="toctree-checkbox-22" role="switch" type="checkbox"/><label for="toctree-checkbox-22"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../projects/proposals/vuex_to_pina_conversion/20220223-project_proposal.html">Project Proposal - 2022-02-23</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../changelogs/index.html">Changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-23" name="toctree-checkbox-23" role="switch" type="checkbox"/><label for="toctree-checkbox-23"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../changelogs/api/index.html">API changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-24" name="toctree-checkbox-24" role="switch" type="checkbox"/><label for="toctree-checkbox-24"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../changelogs/frontend/index.html">Frontend changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" role="switch" type="checkbox"/><label for="toctree-checkbox-25"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../changelogs/ingestion_server/index.html">Ingestion server changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-26" name="toctree-checkbox-26" role="switch" type="checkbox"/><label for="toctree-checkbox-26"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../terms_of_service.html">Openverse API Terms of Service</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">External links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/WordPress/openverse">GitHub repo</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="additional-practices">
+<h1>Additional practices<a class="headerlink" href="#additional-practices" title="Permalink to this heading">#</a></h1>
+<p>The goal of the practices described in this document are to help the team adhere
+to the general guidelines of the
+<a class="reference internal" href="process_description.html"><span class="std std-doc">decision-making process</span></a> without overburdening
+participants with too many discussions.</p>
+<section id="current-round-call-out">
+<h2>Current-round call out<a class="headerlink" href="#current-round-call-out" title="Permalink to this heading">#</a></h2>
+<p>In the PR description or top-post of a GitHub discussion, discussion leaders
+should include the following text:</p>
+<div class="highlight-md notranslate"><div class="highlight"><pre><span></span>This discussion is following the Openverse decision-making process. Information
+about this process can be found
+[<span class="nt">on the Openverse documentation site</span>](<span class="na">https://docs.openverse.org/reference/decision_making/index.html</span>).
+Requested reviewers or participants will be following this process. If you are
+being asked to give input on a specific detail, you do not need to familiarise
+yourself with the process and follow it.
+
+<span class="gu">## Current round</span>
+
+This discussion is currently in the **{Clarification, Revision, Decision,
+Continued Revision} round**.
+
+The deadline for review of this round is <span class="gs">**{date}**</span>
+</pre></div>
+</div>
+<p>When a round ends, discussion leaders should leave a comment announcing the next
+round along with the length of time allotted for it.</p>
+</section>
+<section id="discussion-dashboard">
+<h2>Discussion dashboard<a class="headerlink" href="#discussion-dashboard" title="Permalink to this heading">#</a></h2>
+<p>The
+<a class="reference external" href="https://github.com/orgs/WordPress/projects/79/views/1">discussion dashboard is implemented as a GitHub project</a>
+for tracking the different rounds of a proposal. Proposal authors are expected
+to correctly add and update proposals as they move through the different rounds
+of discussion. This dashboard is used to
+<a class="reference internal" href="#minimising-parallel-discussions">help ensure we do not assign contributors to more than two discussions in parallel</a>,
+so it is imperative that we maintain its accuracy.</p>
+<p>Each discussion should be tracked as a single card, with issues removed from the
+“Pending proposal” column if a GitHub PR is opened. If a GitHub discussion is
+used for the proposal, because those cannot be represented in GitHub project
+boards, the issue should be used to track the status through the columns.</p>
+<p>This dashboard also serves as a record of decisions made on the team since the
+dashboard’s inception. Historical decisions that happened before the dashboard
+started being used are not documented there.</p>
+<section id="column-descriptions">
+<h3>Column descriptions<a class="headerlink" href="#column-descriptions" title="Permalink to this heading">#</a></h3>
+<p>For the most part, the columns correspond 1-to-1 with rounds of the Openverse
+consent decision-making process. However, the following columns are unique and
+bear explanation:</p>
+<ul class="simple">
+<li><p>“Proposal requested”: This column is meant for requested proposals or
+discussions for which no formal proposal yet exists. This column should be
+populated by the issues that document the request.</p></li>
+<li><p>“Discussion pending”: This column is meant for proposals that have been
+written, but cannot yet start the decision-making process (likely due to
+contributor unavailability).</p></li>
+</ul>
+</section>
+</section>
+<section id="minimising-parallel-discussions">
+<h2>Minimising parallel discussions<a class="headerlink" href="#minimising-parallel-discussions" title="Permalink to this heading">#</a></h2>
+<p>In the past, Openverse maintainers have been prone to feeling overwhelmed or
+over encumbered by too many ongoing discussions demanding their attention. The
+following practices are meant to mitigate the chances of this happening by
+creating tools and processes for keep the number of active discussions per
+participant to 2 or fewer.</p>
+<section id="checking-the-dashboard">
+<h3>Checking the dashboard<a class="headerlink" href="#checking-the-dashboard" title="Permalink to this heading">#</a></h3>
+<p>Before requesting participation from specific people on a discussion, check the
+<a class="reference internal" href="#discussion-dashboard">discussion dashboard</a> to ensure they’re not already
+involved in 2 ongoing discussions. If specific participants are required for a
+given proposal (due to the relevance of their expertise in the proposal), then
+you may open the proposal, but it should be left in the “pending discussion”
+column.</p>
+<p>Tips for checking the dashboard and not accidentally over-encumbering people:</p>
+<ul class="simple">
+<li><p>Check for discussions in the “pending discussion” column. If someone is
+already assigned to discussions there, then know that any new discussions that
+<em>must</em> involve them will need to be triaged with the other discussion</p></li>
+<li><p>If a discussion could happen synchronously (if all participants have time
+available), then you may be able to pull people in who are waiting for a
+discussion to restart during the revision round, even if they’re already
+participating in the discussion</p></li>
+</ul>
+<p>In either case, it is still courteous to check with the individuals and make it
+clear that they can push the discussion to someone else (provided they’re not a
+necessary subject-matter expert).</p>
+</section>
+<section id="project-level-process-discussions">
+<h3>Project level process discussions<a class="headerlink" href="#project-level-process-discussions" title="Permalink to this heading">#</a></h3>
+<p>Because project level process discussions usually effect all maintainers and
+sometimes other contributors, they naturally garner the expectation of
+involvement from broader sets of people than technical discussions. In addition
+to the guidelines above for general discussions, we need additional special
+guidelines to ensure we do not become over encumbered with process discussions
+specifically. In particular, retrospectives may give rise to several discussions
+that need to happen at once. In these cases, and others where process
+discussions begin to dominate the discussion backlog, we’ll need to triage
+discussions. If discussions truly need the involvement of the entire team, we
+can follow two processes:</p>
+<ol class="arabic simple">
+<li><p>Put (and prioritise) the discussions into the “proposal requested” column of
+the discussion dashboard and only allow one team-wide discussion to occur at
+a time. Limiting this to 1 allows other non-team-wide discussions to also
+happen at the same time without flooding the discussion board with team-wide
+discussions and halting other, smaller, often technical discussions.</p></li>
+<li><p>Split the group into groups of three or four people who can participate in
+different parts of the discussion. This is useful if there are multiple
+time-sensitive discussions and could lead to synchronous “lightening process”
+meetings to make faster decisions and reduce the ongoing discussion burden on
+team members. Even in this case, limit to 1 ongoing team-wide process
+discussion per group of contributors. This is less useful if everyone on the
+team wishes to give input in the discussion, although people are free to
+asynchronously give input before the fact.</p></li>
+</ol>
+<p>For both, we will aim to limit the process discussions to one discussion at a
+time for any given team member. This is recommended to avoid discussion burn out
+as I think I’ve observed process discussions feeling much heavier weight and
+burdensome than technical discussions. It also makes sure there is still room
+for team members to be involved in one other separate technical discussion and
+feel like they can still focus on their other work duties.</p>
+</section>
+</section>
+<section id="speeding-up-decision-making">
+<h2>Speeding up decision-making<a class="headerlink" href="#speeding-up-decision-making" title="Permalink to this heading">#</a></h2>
+<p>The base process should help the Openverse project make decisions more quickly
+and effectively. However, the following additional practices are available to
+help move things along at an even faster clip, if so desired.</p>
+<section id="shortcutting-a-round">
+<h3>“Shortcutting” a round<a class="headerlink" href="#shortcutting-a-round" title="Permalink to this heading">#</a></h3>
+<p>At any point during a round, any participant may say something along the lines
+of “no (further) discussion needed on my part” in order to short-cut their
+participation in the round. If all participants are finished sharing their part
+in a given round, the author can choose to move to the next round, even if the
+time period for the round has not been completed. This can be particularly
+helpful for simpler discussions.</p>
+</section>
+<section id="going-synchronous">
+<h3>Going synchronous<a class="headerlink" href="#going-synchronous" title="Permalink to this heading">#</a></h3>
+<p>If all the participants of a particular discussion are able to participate in a
+synchronous decision-making process, they may elect to do so. This can be
+particularly useful for relatively small but impactful decisions where the
+discussion periods would unnecessarily drag the process out. In these cases,
+participants should hold a synchronous conversation with the understanding that
+someone will take notes for each round, recording the feedback shared. <strong>The
+notes should be shared afterwards in the original proposal venue and should
+include explicit headings per round.</strong> If necessary, the synchronous discussion
+can be broken into two separate sections to allow time for revision.</p>
+<p>Even in these cases, however, the text of the proposal should still be written
+in a GitHub PR or discussion and available for all participants to read <em>before</em>
+the lightening process.</p>
+</section>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="how_to_use.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">How to follow the process in different settings</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="process_description.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Process description</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Additional practices</a><ul>
+<li><a class="reference internal" href="#current-round-call-out">Current-round call out</a></li>
+<li><a class="reference internal" href="#discussion-dashboard">Discussion dashboard</a><ul>
+<li><a class="reference internal" href="#column-descriptions">Column descriptions</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#minimising-parallel-discussions">Minimising parallel discussions</a><ul>
+<li><a class="reference internal" href="#checking-the-dashboard">Checking the dashboard</a></li>
+<li><a class="reference internal" href="#project-level-process-discussions">Project level process discussions</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#speeding-up-decision-making">Speeding up decision-making</a><ul>
+<li><a class="reference internal" href="#shortcutting-a-round">“Shortcutting” a round</a></li>
+<li><a class="reference internal" href="#going-synchronous">Going synchronous</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/scripts/furo.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    </body>
+</html>

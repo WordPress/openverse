@@ -1,0 +1,1 @@
+const t=(o,s,n)=>o+(s-o)*n,c=(o,s,n,e)=>[t(t(o[0],s[0],e),t(s[0],n[0],e),e),t(t(o[1],s[1],e),t(s[1],n[1],e),e)],d=(o,s)=>Math.sqrt(Math.pow(o[0]-s[0],2)+Math.pow(o[1]-s[1],2)),u=(o,s)=>{const n=[];for(let e=0;e<=s;e++){const b=e/s,h=c(o[0],o[1],o[2],b),i=c(o[1],o[2],o[3],b),a=t(h[0],i[0],b);n.push(a)}return n},M=(o,s,n,e)=>(o+s+e-n)%(e-n);export{u as b,M as c,d,t as l};

@@ -1,0 +1,15 @@
+# 2024.04.24.12.19.32
+
+## Internal Improvements
+
+- Move ESLint plugin inside `packages/js`
+  ([#4174](https://github.com/WordPress/openverse/pull/4174)) by @dhruvkb
+
+## Bug Fixes
+
+- Fix string decoding in the frontend
+  ([#4144](https://github.com/WordPress/openverse/pull/4144)) by @obulat
+- Fix frontend robots.txt
+  ([#4186](https://github.com/WordPress/openverse/pull/4186)) by @zackkrida
+- Fix new robots.txt bug
+  ([#4193](https://github.com/WordPress/openverse/pull/4193)) by @zackkrida

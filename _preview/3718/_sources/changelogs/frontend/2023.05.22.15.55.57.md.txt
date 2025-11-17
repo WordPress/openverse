@@ -1,0 +1,41 @@
+# 2023.05.22.15.55.57
+
+## New Features
+
+- Add analytics toggle to the privacy page
+  ([#2127](https://github.com/WordPress/openverse/pull/2127)) by @dhruvkb
+- Analytics event: `CHANGE_CONTENT_TYPE`
+  ([#1151](https://github.com/WordPress/openverse/pull/1151)) by @zackkrida
+
+## Improvements
+
+- Update banner spacing and add rounded corners
+  ([#2117](https://github.com/WordPress/openverse/pull/2117)) by @zackkrida
+- Remove the default `medium-old` size from buttons
+  ([#2104](https://github.com/WordPress/openverse/pull/2104)) by @obulat
+- Allow feature flags to use `sessionStorage` and ignore `ff_` query params
+  ([#2121](https://github.com/WordPress/openverse/pull/2121)) by @dhruvkb
+- Update External link buttons on No results page
+  ([#2114](https://github.com/WordPress/openverse/pull/2114)) by @obulat
+- Updated content link
+  ([#2102](https://github.com/WordPress/openverse/pull/2102)) by @obulat
+- Add media type context to start of result link titles
+  ([#1920](https://github.com/WordPress/openverse/pull/1920)) by @sarayourfriend
+- Add `role="dialog"` to popover
+  ([#2077](https://github.com/WordPress/openverse/pull/2077)) by @obulat
+- Update Load more button
+  ([#2103](https://github.com/WordPress/openverse/pull/2103)) by @obulat
+- Spacing improvements in All content's <header> area
+  ([#2084](https://github.com/WordPress/openverse/pull/2084)) by @obulat
+
+## Internal Improvements
+
+- Remove old button variants and storybook snapshots
+  ([#2122](https://github.com/WordPress/openverse/pull/2122)) by @obulat
+
+## Bug Fixes
+
+- Change the header height to 5rem(80px)
+  ([#2129](https://github.com/WordPress/openverse/pull/2129)) by @obulat
+- Add full-stops to browse-page strings
+  ([#2131](https://github.com/WordPress/openverse/pull/2131)) by @dhruvkb

@@ -1,0 +1,1 @@
+const o=(r,t,n,e)=>()=>{r|=0,t|=0,n|=0,e|=0;const h=(r+t|0)+e|0;return e=e+1|0,r=t^t>>>9,t=n+(n<<3)|0,n=n<<21|n>>>11,n=n+h|0,(h>>>0)/4294967296},s=r=>o(2654435769,608135816,3084996962,r),a=r=>{let t=0;if(r.length===0)return t;for(let n=0;n<r.length;n++){const e=r.charCodeAt(n);t=(t<<5)-t+e,t|=0}return t};export{a as h,s as r};

@@ -1,0 +1,23 @@
+# 2024.02.28.16.32.28
+
+## New Features
+
+- Expose search time headers to the browser
+  ([#3802](https://github.com/WordPress/openverse/pull/3802)) by @obulat
+
+## Improvements
+
+- `mature` -> `sensitive` code changes for the API
+  ([#3769](https://github.com/WordPress/openverse/pull/3769)) by @AetherUnbound
+
+## Internal Improvements
+
+- Replaced `get_token_info` calls with the `request.auth.application`
+  ([#3528](https://github.com/WordPress/openverse/pull/3528)) by @kb-0311
+- Bump cryptography from 42.0.2 to 42.0.4 in /api
+  ([#3818](https://github.com/WordPress/openverse/pull/3818)) by @dependabot
+
+## Bug Fixes
+
+- Rename verbose plural "mature" to "sensitive" in API admin
+  ([#3837](https://github.com/WordPress/openverse/pull/3837)) by @AetherUnbound

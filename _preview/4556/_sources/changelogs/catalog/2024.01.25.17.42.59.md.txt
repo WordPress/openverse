@@ -1,0 +1,40 @@
+# 2024.01.25.17.42.59
+
+## New Features
+
+- Add create_new_es_index DAGs
+  ([#3537](https://github.com/WordPress/openverse/pull/3537)) by @stacimc
+- Retrieve Auckland Museum Image Data
+  ([#3258](https://github.com/WordPress/openverse/pull/3258)) by @ngken0995
+- Add additional_query_params to provider DAG configuration
+  ([#3648](https://github.com/WordPress/openverse/pull/3648)) by @adjeiv
+
+## Improvements
+
+- Update WordPress Photo Directory DAG to ingest weekly
+  ([#3696](https://github.com/WordPress/openverse/pull/3696)) by @stacimc
+- Do not ingest Jamendo records with downloads disabled
+  ([#3618](https://github.com/WordPress/openverse/pull/3618)) by @stacimc
+- Prevent iNaturalist from running alongside any other DAGs
+  ([#3025](https://github.com/WordPress/openverse/pull/3025)) by @rwidom
+
+## Internal Improvements
+
+- Update dependency apache-airflow to v2.8.1 [SECURITY]
+  ([#3701](https://github.com/WordPress/openverse/pull/3701)) by @openverse-bot
+- Toggle CloudWatch alarms actions during Data Refresh
+  ([#3652](https://github.com/WordPress/openverse/pull/3652)) by @krysal
+- Convert unittest to pytest
+  ([#3622](https://github.com/WordPress/openverse/pull/3622)) by @ngken0995
+
+## Bug Fixes
+
+- Enable the isort rules for ruff and fix linting issues
+  ([#3698](https://github.com/WordPress/openverse/pull/3698)) by @stacimc
+- Update Rawpixel image URLs for ingestion
+  ([#3669](https://github.com/WordPress/openverse/pull/3669)) by
+  @rawpixel-vincent
+- Revert "Toggle CloudWatch alarms actions during Data Refresh (#3652)"
+  ([#3689](https://github.com/WordPress/openverse/pull/3689)) by @AetherUnbound
+- Add user-agent header for rawpixel
+  ([#3679](https://github.com/WordPress/openverse/pull/3679)) by @stacimc

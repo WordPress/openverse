@@ -1,0 +1,6 @@
+# 2023.06.13.00.21.51
+
+## Internal Improvements
+
+- Remove noop QA/test data loading steps on ingestion server
+  ([#2353](https://github.com/WordPress/openverse/pull/2353)) by @AetherUnbound
