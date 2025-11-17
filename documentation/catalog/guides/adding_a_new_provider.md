@@ -12,7 +12,7 @@ generated for each provider. A simple provider DAG looks like this:
 
 At a high level the steps are:
 
-1. `generate_filename`: Generates the named of a TSV (tab-separated values) text
+1. `generate_filename`: Generates the name of a TSV (tab-separated values) text
    file that will be used for saving the data to the disk in later steps
 2. `pull_data`: Pulls records from the provider API, collects just the data we
    need, and commits it to local storage in TSVs.
