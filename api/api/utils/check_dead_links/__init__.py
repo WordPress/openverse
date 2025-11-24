@@ -219,6 +219,8 @@ def check_dead_links(query_hash: str, start_slice: int, results: list[Hit]) -> N
                 f"id={results[del_idx]['identifier']} "
                 f"status={status} "
                 f"provider={provider} "
+                f"(Note: status {status} is considered 'dead' - "
+                f"includes 404 Not Found, 410 Gone, 500 errors, etc.)"
             )
             # remove the result, mutating in place
             del results[del_idx]
