@@ -87,21 +87,20 @@ provide(ShowScrollButtonKey, showScrollButton)
       <VSafeBrowsing class="border-t border-default px-10 py-8" />
     </aside>
 
-   <div
-  id="main-page"
-  class="main-page flex h-full w-full min-w-0 flex-col justify-between overflow-y-auto"
-  >
-  <slot />
+    <div
+      id="main-page"
+      class="main-page flex h-full w-full min-w-0 flex-col justify-between overflow-y-auto"
+    >
+      <slot />
 
-  <VScrollButton
-    v-show="showScrollButton"
-    :is-filter-sidebar-visible="isSidebarVisible"
-    data-testid="scroll-button"
-  />
+      <VScrollButton
+        v-show="showScrollButton"
+        :is-filter-sidebar-visible="isSidebarVisible"
+        data-testid="scroll-button"
+      />
 
-  <VFooter mode="content" class="border-t border-default bg-default" />
-   </div>
-
+      <VFooter mode="content" class="border-t border-default bg-default" />
+    </div>
   </div>
 </template>
 

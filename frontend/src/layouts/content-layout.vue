@@ -39,17 +39,16 @@ provide(ShowScrollButtonKey, showScrollButton)
     />
 
     <div class="main-page flex h-full w-full min-w-0 flex-col justify-between">
-  <slot />
+      <slot />
 
-  <VScrollButton
-    v-show="showScrollButton"
-    :is-filter-sidebar-visible="false"
-    data-testid="scroll-button"
-  />
+      <VScrollButton
+        v-show="showScrollButton"
+        :is-filter-sidebar-visible="false"
+        data-testid="scroll-button"
+      />
 
-  <VFooter mode="internal" class="border-t border-default bg-default" />
+      <VFooter mode="internal" class="border-t border-default bg-default" />
     </div>
-
   </div>
 </template>
 
