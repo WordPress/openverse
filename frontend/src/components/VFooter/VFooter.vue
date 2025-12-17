@@ -15,6 +15,7 @@ import VLink from "~/components/VLink.vue"
 import VBrand from "~/components/VBrand/VBrand.vue"
 import VLanguageSelect from "~/components/VLanguageSelect/VLanguageSelect.vue"
 import VThemeSelect from "~/components/VThemeSelect/VThemeSelect.vue"
+import VContrastSelect from "~/components/VContrastSelect/VContrastSelect.vue"
 import VPageLinks from "~/components/VHeader/VPageLinks.vue"
 import VWordPressLink from "~/components/VHeader/VWordPressLink.vue"
 
@@ -96,6 +97,7 @@ const linkColumnHeight = computed(() => ({
           class="language max-w-full border-secondary"
         />
         <VThemeSelect class="border-secondary" />
+        <VContrastSelect class="border-secondary" />
       </div>
     </div>
   </footer>
