@@ -17,10 +17,17 @@ const desktopBreakpoints: RealBreakpoint[] = ["2xl", "xl", "lg"]
 
 export type SnackbarState = "not_shown" | "visible" | "dismissed"
 export type ColorMode = "dark" | "light" | "system"
+export type ContrastMode = "normal" | "high" | "system"
 
 export function isColorMode(value: undefined | string): value is ColorMode {
   return (
     typeof value === "string" && ["light", "dark", "system"].includes(value)
+  )
+}
+
+export function isContrastMode(value: undefined | string): value is ContrastMode {
+  return (
+    typeof value === "string" && ["normal", "high", "system"].includes(value)
   )
 }
 
@@ -65,6 +72,8 @@ export interface UiState {
   colorMode: ColorMode
   /** whether the user has seen the dark mode toggle */
   isDarkModeSeen: boolean
+  /* The user-chosen contrast mode of the site. */
+  contrastMode: ContrastMode
 }
 
 export const breakpoints = Object.keys(ALL_SCREEN_SIZES)
@@ -81,6 +90,7 @@ export const defaultUiState: UiState = {
   headerHeight: 80,
   colorMode: "system",
   isDarkModeSeen: false,
+  contrastMode: "system",
 }
 
 export const useUiStore = defineStore("ui", {
@@ -95,6 +105,7 @@ export const useUiStore = defineStore("ui", {
         dismissedBanners: Array.from(this.dismissedBanners),
         colorMode: state.colorMode,
         isDarkModeSeen: state.isDarkModeSeen,
+        contrastMode: state.contrastMode,
       }
     },
     areInstructionsVisible(state): boolean {
@@ -195,6 +206,10 @@ export const useUiStore = defineStore("ui", {
 
       if (typeof cookies.isDarkModeSeen === "boolean") {
         this.setIsDarkModeSeen(cookies.isDarkModeSeen, false)
+      }
+
+      if (isContrastMode(cookies.contrastMode)) {
+        this.setContrastMode(cookies.contrastMode, false)
       }
 
       this.writeToCookie()
@@ -317,6 +332,20 @@ export const useUiStore = defineStore("ui", {
     },
     setHeaderHeight(height: number) {
       this.headerHeight = Math.max(height, 80)
+    },
+
+    /**
+     * Update the user's preferred contrast mode.
+     *
+     * @param contrastMode - the user's preferred contrast mode.
+     * @param saveToCookie - whether to save the new setting in the cookie.
+     */
+    setContrastMode(contrastMode: ContrastMode, saveToCookie = true) {
+      this.contrastMode = contrastMode
+
+      if (saveToCookie) {
+        this.writeToCookie()
+      }
     },
   },
 })
