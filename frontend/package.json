@@ -105,7 +105,7 @@
     "npm-run-all2": "^7.0.0",
     "nuxt": "^3.15.1",
     "rimraf": "^6.0.1",
-    "storybook": "8.4.7",
+    "storybook": "8.6.15",
     "talkback": "^4.2.0",
     "typescript": "5.7.3",
     "vitest": "^3.0.4",
