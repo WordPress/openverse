@@ -60,24 +60,23 @@ You can keep in touch with the project via the following channels:
 ## Documentation
 
 To use the Openverse API, please refer to the
-[API consumer documentation](https://api.openverse.org/v1/).
+[API consumer documentation.](https://api.openverse.org/v1/)
 
 ## Contributing
 
 Pull requests are welcome! Feel free to
 [join us on Slack](https://make.wordpress.org/chat/) and discuss the project
-with the engineers and community members on #openverse.
+with engineers and community members in the #openverse channel.
 
 You are welcome to take any open issue in the tracker labelled
 [`help wanted`](https://github.com/WordPress/openverse/labels/help%20wanted) or
-[`good first issue`](https://github.com/WordPress/openverse/labels/good%20first%20issue);
-**there's no need to ask for permission in advance**. Other issues are open for
+[`good first issue.`](https://github.com/WordPress/openverse/labels/good%20first%20issue)
+**There’s no need to ask for permission in advance.** Other issues are open for
 contribution as well, but may be less accessible or well-defined in comparison
 to those that are explicitly labelled.
 
-See the
-[contribution guide](https://docs.openverse.org/general/contributing.html) for
-details.
+For more details, see the
+[contribution guide.](https://docs.openverse.org/general/contributing.html)
 
 ## Acknowledgments
 
