@@ -6,6 +6,7 @@ import { meta as commonMeta } from "#shared/constants/meta"
 import { favicons } from "#shared/constants/favicons"
 import { useUiStore } from "~/stores/ui"
 import { useDarkMode } from "~/composables/use-dark-mode"
+import { useHighContrast } from "~/composables/use-high-contrast"
 import { useLayout } from "~/composables/use-layout"
 
 import VFourOhFour from "~/components/VFourOhFour.vue"
@@ -30,6 +31,12 @@ onMounted(() => {
 })
 
 const darkMode = useDarkMode()
+const highContrast = useHighContrast()
+
+// Combined CSS classes for body: dark mode class + high contrast class
+const bodyClasses = computed(() => {
+  return [darkMode.cssClass.value, highContrast.cssClass.value].filter(Boolean).join(' ')
+})
 
 const head = useLocaleHead({ dir: true, key: "id", seo: true })
 const htmlI18nProps = computed(() => ({
@@ -64,7 +71,7 @@ const meta = computed(() => {
 
 useHead({
   htmlAttrs: htmlI18nProps,
-  bodyAttrs: { class: darkMode.cssClass, style: headerHeight },
+  bodyAttrs: { class: bodyClasses, style: headerHeight },
   title: "Openly Licensed Images, Audio and More | Openverse",
   meta,
   link,

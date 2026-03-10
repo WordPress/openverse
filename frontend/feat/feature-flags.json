@@ -39,12 +39,23 @@
       "defaultState": "on",
       "description": "Display the UI toggle to change the site color theme and respect system preferences.",
       "storage": "cookie"
+    },
+    "high_contrast_ui_toggle": {
+      "status": {
+        "staging": "switchable",
+        "production": "switchable"
+      },
+      "defaultState": "on",
+      "description": "Display the UI toggle to enable high contrast mode and respect OS prefers-contrast preferences.",
+      "storage": "cookie"
     }
   },
   "groups": [
     {
       "title": "analytics",
-      "features": ["analytics"]
+      "features": [
+        "analytics"
+      ]
     }
   ]
 }

@@ -13,6 +13,7 @@ import { useUiStore } from "~/stores/ui"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useLayout } from "~/composables/use-layout"
 import { useDarkMode } from "~/composables/use-dark-mode"
+import { useHighContrast } from "~/composables/use-high-contrast"
 
 import VSkipToContentButton from "~/components/VSkipToContentButton.vue"
 
@@ -22,6 +23,12 @@ const featureFlagStore = useFeatureFlagStore()
 const uiStore = useUiStore()
 
 const darkMode = useDarkMode()
+const highContrast = useHighContrast()
+
+// Combined CSS classes for body: dark mode class + high contrast class
+const bodyClasses = computed(() => {
+  return [darkMode.cssClass.value, highContrast.cssClass.value].filter(Boolean).join(' ')
+})
 
 /* UI store */
 const isDesktopLayout = computed(() => uiStore.isDesktopLayout)
@@ -63,7 +70,7 @@ const meta = computed(() => {
 
 useHead({
   htmlAttrs: htmlI18nProps,
-  bodyAttrs: { class: darkMode.cssClass, style: headerHeight },
+  bodyAttrs: { class: bodyClasses, style: headerHeight },
   title: "Openly Licensed Images, Audio and More | Openverse",
   meta,
   link,
