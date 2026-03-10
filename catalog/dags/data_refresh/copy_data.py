@@ -83,7 +83,8 @@ def create_schema(
             fdw_name=fdw_name,
             schema_name=schema_name,
             upstream_table_name=upstream_table_name,
-        )
+        ),
+        handler=None,
     )
     return schema_name
 
