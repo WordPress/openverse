@@ -76,15 +76,19 @@ const logWarnings = (deprecatedKeys, invalidKeys, debug) => {
     ["invalidPlaceholders", invalidKeys],
   ]) {
     if (keysObject.count > 0) {
-      console.warn(`${keysObject.count} ${warnings[keysKind].failure}`)
+      console.warn(`${keysObject.count} ${warnings[keysKind].failure}`);
       if (debug) {
-        console.log(prettify(keysObject.keys))
+        console.log(prettify(keysObject.keys));
+        // New: Print a summary per locale
+        for (const [locale, keys] of Object.entries(keysObject.keys)) {
+          console.log(`Locale "${locale}" has ${keys.length} invalid keys.`);
+        }
       }
     } else {
-      console.log(keysObject[keysKind].success)
+      console.log(warnings[keysKind].success);
     }
   }
-}
+};
 
 const extractZip = async (zipPath, debug) => {
   const zip = new AdmZip(zipPath, {})
