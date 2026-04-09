@@ -1,8 +1,11 @@
 <script setup lang="ts">
 /**
  * Displays the cover art for the audio in a square aspect ratio.
+ *
+ * The thumbnail is hidden from screen readers because it is purely
+ * decorative. When no cover art exists, a generative SVG pattern is
+ * shown instead, which has no meaningful alternative text.
  */
-import { useI18n } from "#imports"
 import { toRefs, ref, onMounted } from "vue"
 
 import { rand, hash } from "#shared/utils/prng"
@@ -19,14 +22,6 @@ const props = defineProps<{
 
 const { audio } = toRefs(props)
 const { isHidden: shouldBlur } = useSensitiveMedia(audio)
-
-const { t } = useI18n({ useScope: "global" })
-const helpText = shouldBlur.value
-  ? t("sensitiveContent.title.audio")
-  : t("audioThumbnail.alt", {
-      title: props.audio.title,
-      creator: props.audio.creator,
-    })
 
 /* Switching */
 
@@ -68,7 +63,7 @@ const radius = (i: number, j: number) => {
 
 <template>
   <!-- Should be wrapped by a fixed-width parent -->
-  <div class="relative h-0 w-full overflow-hidden pt-full" :title="helpText">
+  <div class="relative h-0 w-full overflow-hidden pt-full" aria-hidden="true">
     <!-- Programmatic thumbnail -->
     <svg
       v-if="!isOk"
@@ -100,7 +95,7 @@ const radius = (i: number, j: number) => {
         class="h-full w-full overflow-clip object-cover object-center duration-200 motion-safe:transition-[filter,transform]"
         :class="{ 'scale-150 blur-image': shouldBlur }"
         :src="audio.thumbnail"
-        :alt="helpText"
+        alt=""
         @load="handleLoad"
       />
     </div>
