@@ -15,7 +15,7 @@ export default function usePages() {
     {
       id: "licenses",
       name: "navigation.licenses",
-      link: "https://creativecommons.org/about/cclicenses/",
+      link: "https://creativecommons.org/share-your-work/cclicenses/",
     },
     {
       id: "sources",
