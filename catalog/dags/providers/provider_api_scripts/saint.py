@@ -63,7 +63,7 @@ class SaintDataIngester(ProviderDataIngester):
         license_url = image.get("license", {}).get("url")
         if not license_url:
             return None
-        
+
         license_info = get_license_info(license_url)
         if license_info is None:
             return None
@@ -81,7 +81,7 @@ class SaintDataIngester(ProviderDataIngester):
             "creator": self.creator,
             "creator_url": self.creator_url,
         }
-        
+
         if (width := image.get("width")):
             raw_record_data["width"] = width
         if (height := image.get("height")):
