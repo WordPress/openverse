@@ -17,7 +17,7 @@ ingester = SaintDataIngester()
                 "pageSize": 100,
                 "api_key": "",
             },
-            id="default_response"
+            id="default_response",
         ),
         pytest.param(
             {"page": 42, "pageSize": 100, "api_key": "dummy"},
@@ -60,10 +60,8 @@ def test_get_batch_data(response_json, expected):
                     "url": "https://saint.tech/images/123.jpg",
                     "width": 800,
                     "height": 600,
-                    "license": {
-                        "url": "https://creativecommons.org/licenses/by/4.0/"
-                    }
-                }
+                    "license": {"url": "https://creativecommons.org/licenses/by/4.0/"},
+                },
             },
             {
                 "foreign_landing_url": "https://saint.tech/poi/123",
@@ -84,10 +82,7 @@ def test_get_batch_data(response_json, expected):
             id="happy_path",
         ),
         pytest.param(
-            {
-                "id": 123,
-                "title": "No image POI"
-            },
+            {"id": 123, "title": "No image POI"},
             None,
             id="no_image",
         ),
@@ -96,7 +91,7 @@ def test_get_batch_data(response_json, expected):
                 "id": 123,
                 "PrimaryImage": {
                     "url": "https://saint.tech/images/123.jpg",
-                }
+                },
             },
             None,
             id="no_license",
