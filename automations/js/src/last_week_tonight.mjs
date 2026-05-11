@@ -147,6 +147,11 @@ const getRepoHtml = ({ repo, mergedPrs, closedIssues }) => {
 const postActivities = (activities) => {
   const report = activities.map(getRepoHtml).flat().join("\n")
 
+  if (!report.includes("<li>")) {
+    console.log("Report contains no meaningful content, exiting.")
+    process.exit(0)
+  }
+
   const MAKE_SITE_API = "https://make.wordpress.org/openverse/wp-json/wp/v2/"
   const token = Buffer.from(`${username}:${password}`).toString("base64")
 
