@@ -147,11 +147,6 @@ const getRepoHtml = ({ repo, mergedPrs, closedIssues }) => {
 const postActivities = (activities) => {
   const report = activities.map(getRepoHtml).flat().join("\n")
 
-  if (!report.includes("<li>")) {
-    console.log("Report contains no meaningful content, exiting.")
-    process.exit(0)
-  }
-
   const MAKE_SITE_API = "https://make.wordpress.org/openverse/wp-json/wp/v2/"
   const token = Buffer.from(`${username}:${password}`).toString("base64")
 
@@ -178,14 +173,17 @@ const postActivities = (activities) => {
 }
 
 // Entry point
+const hasStackLabel = (item) =>
+  item.labels.some((label) => label.name.startsWith("🧱 stack"))
+
 const reportData = []
 for (const repo of repos) {
   const closedIssues = (
     await octokit.rest.search.issuesAndPullRequests({ q: closedIssuesQ(repo) })
-  ).data.items
+  ).data.items.filter(hasStackLabel)
   const mergedPrs = (
     await octokit.rest.search.issuesAndPullRequests({ q: mergedPrsQ(repo) })
-  ).data.items
+  ).data.items.filter(hasStackLabel)
   if (closedIssues.length || mergedPrs.length)
     reportData.push({ repo, closedIssues, mergedPrs })
 }
