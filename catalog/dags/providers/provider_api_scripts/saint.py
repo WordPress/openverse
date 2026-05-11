@@ -1,3 +1,14 @@
+"""
+Content Provider:       SAiNT (IMG Saxony-Anhalt)
+
+ETL Process:            Use the API to identify all CC licensed media.
+
+Output:                 TSV file containing the media and the
+                        respective meta-data.
+
+Notes:                  https://saint.tech/api/docs
+"""
+
 import logging
 
 from airflow.models import Variable
@@ -71,11 +82,7 @@ class SaintDataIngester(ProviderDataIngester):
             "creator_url": self.creator_url,
         }
 
-<<<<<<< HEAD
         if width := image.get("width"):
-=======
-        if (width := image.get("width")):
->>>>>>> bb175195cabd3d8345c52fec617ac6a8f3197743
             raw_record_data["width"] = width
         if height := image.get("height"):
             raw_record_data["height"] = height
