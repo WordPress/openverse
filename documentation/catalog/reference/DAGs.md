@@ -123,6 +123,7 @@ The following are DAGs grouped by their primary tag:
 | `nypl_workflow`                                                 | `@monthly`        | `False` | image         |
 | [`phylopic_workflow`](#phylopic_workflow)                       | `@weekly`         | `False` | image         |
 | [`rawpixel_workflow`](#rawpixel_workflow)                       | `@monthly`        | `False` | image         |
+| [`saint_workflow`](#saint_workflow)                             | `@monthly`        | `False` | image         |
 | [`science_museum_workflow`](#science_museum_workflow)           | `@monthly`        | `False` | image         |
 | [`smithsonian_workflow`](#smithsonian_workflow)                 | `@weekly`         | `False` | image         |
 | [`smk_workflow`](#smk_workflow)                                 | `@monthly`        | `False` | image         |
@@ -185,6 +186,7 @@ The following is documentation associated with each DAG (where available):
 1.  [`report_pending_reported_media`](#report_pending_reported_media)
 1.  [`rotate_db_snapshots`](#rotate_db_snapshots)
 1.  [`rotate_envfiles`](#rotate_envfiles)
+1.  [`saint_workflow`](#saint_workflow)
 1.  [`science_museum_workflow`](#science_museum_workflow)
 1.  [`smithsonian_workflow`](#smithsonian_workflow)
 1.  [`smk_workflow`](#smk_workflow)
@@ -1094,6 +1096,19 @@ resource/version.
 
 For the sake of brevity, this module uses "lt" as an abbreviation for launch
 template and "task def" as an abbreviation for task definition.
+
+----
+
+### `saint_workflow`
+
+Content Provider:       SAiNT (IMG Saxony-Anhalt)
+
+ETL Process:            Use the API to identify all CC licensed media.
+
+Output:                 TSV file containing the media and the
+                        respective meta-data.
+
+Notes:                  https://saint.tech/api/docs
 
 ----
 
