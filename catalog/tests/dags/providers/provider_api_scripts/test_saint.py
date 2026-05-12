@@ -108,6 +108,17 @@ def test_get_batch_data(response_json, expected, ingester):
             None,
             id="no_license",
         ),
+        pytest.param(
+            {
+                "id": 123,
+                "PrimaryImage": {
+                    "url": "https://saint.tech/images/123.jpg",
+                    "license": None,
+                },
+            },
+            None,
+            id="null_license",
+        ),
     ],
 )
 def test_get_record_data(record, expected_data, ingester):

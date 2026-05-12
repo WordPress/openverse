@@ -59,7 +59,7 @@ class SaintDataIngester(ProviderDataIngester):
             return None
 
         # Try to find license
-        license_url = image.get("license", {}).get("url")
+        license_url = (image.get("license") or {}).get("url")
         if not license_url:
             return None
 
