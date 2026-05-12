@@ -49,3 +49,4 @@
 /env.template            @WordPress/openverse-maintainers
 /justfile                @WordPress/openverse-maintainers
 /ov                      @WordPress/openverse-maintainers
+/uv.lock                 @WordPress/openverse-maintainers
