@@ -89,6 +89,13 @@ image_stats_200_example = [
         "logo_url": None,
         "media_count": 2500,
     },
+    {
+        "source_name": "saint_tech",
+        "display_name": "SAiNT (IMG Saxony-Anhalt)",
+        "source_url": "https://saint.tech/en",
+        "logo_url": None,
+        "media_count": 2500,
+    },
 ]
 
 image_detail_200_example = base_image
