@@ -1,10 +1,22 @@
+from unittest.mock import patch
+
 import pytest
 
 from common.licenses import LicenseInfo
 from providers.provider_api_scripts.saint import SaintDataIngester
 
 
-ingester = SaintDataIngester()
+@pytest.fixture
+def ingester():
+    with patch("providers.provider_api_scripts.saint.Variable") as mock_var:
+        mock_var.get.side_effect = lambda key, default_var=None, **kwargs: {
+            "INGESTION_LIMIT": 0,
+            "SKIPPED_INGESTION_ERRORS": {},
+            "ENVIRONMENT": "local",
+            "SHOULD_VERBOSE_LOG": [],
+            "API_KEY_SAINT": "test_key",
+        }.get(key, default_var)
+        yield SaintDataIngester()
 
 
 @pytest.mark.parametrize(
@@ -15,7 +27,7 @@ ingester = SaintDataIngester()
             {
                 "page": 1,
                 "pageSize": 100,
-                "api_key": "",
+                "api_key": "test_key",
             },
             id="default_response",
         ),
@@ -26,7 +38,7 @@ ingester = SaintDataIngester()
         ),
     ],
 )
-def test_get_next_query_params(previous, expected_result):
+def test_get_next_query_params(previous, expected_result, ingester):
     actual_result = ingester.get_next_query_params(previous)
     assert actual_result == expected_result
 
@@ -43,7 +55,7 @@ def test_get_next_query_params(previous, expected_result):
         pytest.param(None, None, id="None"),
     ],
 )
-def test_get_batch_data(response_json, expected):
+def test_get_batch_data(response_json, expected, ingester):
     actual = ingester.get_batch_data(response_json)
     assert actual == expected
 
@@ -98,6 +110,6 @@ def test_get_batch_data(response_json, expected):
         ),
     ],
 )
-def test_get_record_data(record, expected_data):
+def test_get_record_data(record, expected_data, ingester):
     actual_data = ingester.get_record_data(record)
     assert actual_data == expected_data
