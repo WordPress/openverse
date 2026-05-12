@@ -113,6 +113,7 @@ jobs:
           setup_python: "true"
           # Node.js is needed by lint actions.
           install_recipe: "node-install"
+          locales: "test"
 
       - name: Cache pre-commit envs
         uses: actions/cache@v4
