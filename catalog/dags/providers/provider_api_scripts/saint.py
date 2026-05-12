@@ -1,12 +1,11 @@
 """
-Content Provider:       SAiNT (IMG Saxony-Anhalt)
+Content Provider: SAiNT (IMG Saxony-Anhalt)
 
-ETL Process:            Use the API to identify all CC licensed media.
+ETL Process: Use the API to identify all CC licensed media.
 
-Output:                 TSV file containing the media and the
-                        respective meta-data.
+Output: TSV file containing the media and the respective meta-data.
 
-Notes:                  https://saint.tech/api/docs
+Notes: https://saint.tech/api/docs
 """
 
 import logging
