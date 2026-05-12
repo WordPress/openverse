@@ -26,7 +26,7 @@ _files separator="\n":
     echo "$files"
 
 VALE_BIN_NAME := "vale_" + os() + "_" + arch()
-VALE_STYLES_PATH := "/opt/.local/share/vale/styles"
+VALE_STYLES_PATH := env_var_or_default("VALE_STYLES_PATH", justfile_directory() + "/.styles")
 
 @_link_openverse_styles:
     mkdir -p {{ VALE_STYLES_PATH }}

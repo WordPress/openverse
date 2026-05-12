@@ -76,3 +76,4 @@ dist
 
 # ov development environment
 v8-compile-cache*
+.vale/.styles
