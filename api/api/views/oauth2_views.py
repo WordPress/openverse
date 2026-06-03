@@ -49,7 +49,11 @@ class Register(APIView):
     @register
     def post(self, request, format=None):
         """
-        Register an application to access to API via OAuth2.
+        Register an application for access to the Openverse API via OAuth2.
+
+        Provide a unique application `name`, a brief `description`, and an
+        `email` address where Openverse can contact you. The application `name`
+        must be unique across all registered Openverse API applications.
 
         Upon registering, you will receive a `client_id` and `client_secret`,
         which you can then use to authenticate using the standard OAuth2 flow.
@@ -60,8 +64,8 @@ class Register(APIView):
         > - You must keep `client_secret` confidential, as anybody with your
         >   `client_secret` can impersonate your application.
 
-        You must verify your email address by click the link sent to you in an
-        email. Until you do that, the application will be subject to the same
+        You must verify your email address by clicking the link sent to you in
+        an email. Until you do that, the application will be subject to the same
         rate limits as an anonymous user.
         """
 

@@ -9,6 +9,27 @@ class OAuth2RegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = OAuth2Registration
         fields = ("name", "description", "email")
+        extra_kwargs = {
+            "name": {
+                "help_text": (
+                    "A unique human-readable name for your application or project. "
+                    "This name must be unique across all registered Openverse API "
+                    "applications."
+                )
+            },
+            "description": {
+                "help_text": (
+                    "A description of what you are trying to achieve with your "
+                    "project using the API. Please provide as much detail as possible."
+                )
+            },
+            "email": {
+                "help_text": (
+                    "A valid email address that Openverse can use to contact you about "
+                    "your use case or data consumption."
+                )
+            },
+        }
 
 
 class OAuth2ApplicationSerializer(serializers.Serializer):
