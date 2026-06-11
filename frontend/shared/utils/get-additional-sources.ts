@@ -258,8 +258,8 @@ type SelectiveRequired<T, K extends keyof T> = { [P in K]-?: T[P] } & {
 export const getAdditionalSourceBuilders = <T extends MediaType>(
   mediaType: T
 ): SelectiveRequired<AdditionalSourceBuilder, T>[] =>
-  additionalSourceBuilders.filter((source) =>
-    source[mediaType]
+  additionalSourceBuilders.filter(
+    (source) => source[mediaType]
   ) as SelectiveRequired<AdditionalSourceBuilder, T>[]
 
 /**
