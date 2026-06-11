@@ -245,16 +245,22 @@ const additionalSourceBuilders: AdditionalSourceBuilder[] = [
   },
 ]
 
+type SelectiveRequired<T, K extends keyof T> = { [P in K]-?: T[P] } & {
+  [P in keyof T]: T[P]
+}
+
 /**
  * Get a list of source builders for a given media type.
  *
  * @param mediaType - the media type by which to filter source builders
  * @returns a list of additional source builders
  */
-export const getAdditionalSourceBuilders = (
-  mediaType: MediaType
-): AdditionalSourceBuilder[] =>
-  additionalSourceBuilders.filter((source) => source[mediaType])
+export const getAdditionalSourceBuilders = <T extends MediaType>(
+  mediaType: T
+): SelectiveRequired<AdditionalSourceBuilder, T>[] =>
+  additionalSourceBuilders.filter((source) =>
+    source[mediaType]
+  ) as SelectiveRequired<AdditionalSourceBuilder, T>[]
 
 /**
  * Get a list of sources for a given media type with the URL populated to show
@@ -270,12 +276,6 @@ export const getAdditionalSources = (
 ): AdditionalSource[] =>
   getAdditionalSourceBuilders(mediaType).map((source) => {
     const urlFunc = source[mediaType]
-    // type-guard, never occurs
-    if (!urlFunc) {
-      throw new Error(
-        `Invalid media type ${mediaType} for additional source ${source.name}`
-      )
-    }
 
     const urlInfo = urlFunc(transformSearchQuery(query))
     const sourceUrl = new URL(urlInfo.url)
