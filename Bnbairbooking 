@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BnbAirBooking | Vacation Rentals</title>
+    <!-- Load Supabase from CDN (No installation needed) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        /* Clean, modern styling */
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f7f9fc; margin: 0; padding: 20px; color: #333; }
+        .container { max-width: 800px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 40px; }
+        header h1 { color: #635bff; margin-bottom: 10px; }
+        .property-card { background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); transition: transform 0.2s; }
+        .property-card:hover { transform: translateY(-3px); box-shadow: 0 8px 16px rgba(0,0,0,0.1); }
+        .property-card h2 { margin-top: 0; color: #1a1a1a; }
+        .price { font-size: 1.25rem; font-weight: bold; color: #059669; margin: 10px 0; }
+        .book-btn { background-color: #635bff; color: white; padding: 14px 28px; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; margin-top: 15px; width: 100%; text-align: center; box-sizing: border-box; }
+        .book-btn:hover { background-color: #4b45c6; }
+        .loading { text-align: center; color: #666; padding: 40px; }
+        .error { text-align: center; color: #dc2626; padding: 20px; background: #fee2e2; border-radius: 8px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>BnbAirBooking</h1>
+            <p>Find your perfect vacation rental.</p>
+        </header>
+
+        <div id="properties-container">
+            <div class="loading">Loading properties...</div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // 1. SUPABASE CONFIGURATION (REPLACE THESE)
+        // ==========================================
+        const supabaseUrl = 'YOUR_SUPABASE_PROJECT_URL_HERE'; 
+        const supabaseKey = 'YOUR_SUPABASE_ANON_PUBLIC_KEY_HERE';
+        
+        // Initialize Supabase
+        const supabase = supabaseUrl.includes('YOUR_') ? null : supabase.createClient(supabaseUrl, supabaseKey);
+
+        // ==========================================
+        // 2. STRIPE PAYMENT LINK (REPLACE THIS)
+        // ==========================================
+        const stripeTestLink = 'https://buy.stripe.com/test_YOUR_LINK_HERE';
+
+        // ==========================================
+        // 3. FETCH & DISPLAY PROPERTIES
+        // ==========================================
+        async function loadProperties() {
+            const container = document.getElementById('properties-container');
+
+            // If Supabase isn't set up yet, show a demo property so the site isn't blank
+            if (!supabase) {
+                container.innerHTML = `
+                    <div class="property-card">
+                        <h2>🏡 Demo Beachfront Cabin</h2>
+                        <p>Connect your Supabase database to load real properties! This is a demo placeholder.</p>
+                        <div class="price">$150.00 / night</div>
+                        <a href="${stripeTestLink}" target="_blank" style="text-decoration:none;">
+                            <button class="book-btn">Book Now (Test Mode)</button>
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+
+            try {
+                // Fetch data from Supabase 'properties' table
+                const { data, error } = await supabase.from('properties').select('*');
+
+                if (error) throw error;
+
+                container.innerHTML = ''; // Clear loading message
+
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<div class="loading">No properties found. Add some in your Supabase Table Editor!</div>';
+                    return;
+                }
+
+                // Render each property
+                data.forEach(property => {
+                    const card = document.createElement('div');
+                    card.className = 'property-card';
+                    card.innerHTML = `
+                        <h2>${property.name || 'Untitled Property'}</h2>
+                        <p>${property.description || 'No description available.'}</p>
+                        <div class="price">$${property.price_per_night || '0'} / night</div>
+                        <a href="${stripeTestLink}" target="_blank" style="text-decoration:none;">
+                            <button class="book-btn">Book Now (Test Mode)</button>
+                        </a>
+                    `;
+                    container.appendChild(card);
+                });
+
+            } catch (err) {
+                console.error('Supabase Error:', err);
+                container.innerHTML = `<div class="error">Error loading properties. Check your Supabase keys and table setup.</div>`;
+            }
+        }
+
+        // Run on page load
+        loadProperties();
+    </script>
+</body>
+</html>
