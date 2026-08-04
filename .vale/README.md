@@ -1,30 +1,29 @@
-# Openverse Vale configuration
+## Together streaming integration
 
-Openverse runs Vale using
-[Vale's PyPI distribution](https://pypi.org/project/vale/). This allows our Vale
-version to be tracked in this directory's `pyproject.toml`, meaning tools like
-Renovate will be aware of and update it automatically.
+This repo includes a streaming AI assistant that uses the Together Python client as a backend model provider.
 
-This approach to running Vale is intended specifically for running inside `ov`,
-and will likely not work outside `ov`. Synced styles are kept in `ov`'s `opt`
-directory, which prevents downloaded styles from appearing within the project
-files on a contributor's computer.
+How it works
+- server/ai_stream.py calls Together's Python client in streaming mode and prints one JSON line per token.
+- server/index.js spawns that Python script and proxies its stdout as Server-Sent Events (SSE) to /api/ai-chat-stream.
+- The frontend (index.html) opens an EventSource to /api/ai-chat-stream and renders tokens as they arrive.
 
-For more information about this motivation to avoid lists of sensitive terms in
-the Openverse monorepo, refer to the README at
-[WordPress/openverse-sensitive-terms](https://github.com/WordPress/openverse-sensitive-terms).
+Required secrets (add these to GitHub Secrets or your host environment):
+- TOGETHER_API_KEY — API key for Together (used by ai_stream.py)
+- MONGO_URI — MongoDB Atlas connection string
+- STRIPE_SECRET_KEY — Stripe secret key (test & live as needed)
+- STRIPE_PUBLISHABLE_KEY
+- STRIPE_WEBHOOK_SECRET
+- TRAVELPAYOUTS_TOKEN — TravelPayouts API token
 
-To run Vale with Openverse's configuration, use the just recipe:
+Docker notes
+- The server Dockerfile now installs Python and the Together Python client. Build may take a bit longer on first run.
 
-```bash
-ov just .vale/run
-```
+Local testing
+1. Add TOGETHER_API_KEY and other required env vars locally.
+2. Start the server (recommended via Docker Compose):
+   docker-compose up --build
+3. Visit http://localhost:3000 and use the AI Autopilot panel.
 
-Typically, it is unnecessary to run Vale directly, as pre-commit automatically
-runs Vale on each commit. You only need to run Vale directly when iterating on
-changes to Openverse's Vale configuration.
-
-Refer to the `_files` recipe [in the `justfile`](./justfile) to identify which
-files we currently check with Vale. A comment on the recipe explains the
-rationale for that choice. The list of files will ideally expand in the future
-to include all textual content in the repository.
+Security notes
+- Never expose TOGETHER_API_KEY or other secrets in client-side code.
+- The SSE endpoint should be protected/rate-limited in production to avoid abuse and cost spikes.
