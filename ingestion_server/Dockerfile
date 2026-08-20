@@ -27,7 +27,12 @@ RUN apt-get update \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/* \
     && python -m venv /venv \
-    && pip install --upgrade pipenv
+    # Pinned to the last release that accepts the existing Pipfile.lock:
+    # pipenv 2026.4.0 started normalizing package names when computing
+    # the Pipfile hash, so `pipenv install --deploy` aborts with the
+    # existing Pipfile.lock. Long term this service moves off Pipenv
+    # entirely (see #4658).
+    && pip install pipenv==2026.2.2
 
 # Copy the Pipenv files into the container
 COPY Pipfile Pipfile.lock /
