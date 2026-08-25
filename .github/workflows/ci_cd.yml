@@ -212,6 +212,10 @@ jobs:
         with:
           name: ${{ matrix.image }}
           path: /tmp/${{ matrix.image }}.tar
+          # These tarballs are only consumed by later jobs in the same run
+          # (via `load-img`), so they don't need the default 90 day retention.
+          # 2 days still allows re-running failed jobs the next day.
+          retention-days: 2
 
       - name: Show artifact ID
         run: |
