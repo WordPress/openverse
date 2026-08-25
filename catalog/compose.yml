@@ -67,7 +67,7 @@ services:
     profiles:
       - catalog_dependencies
       - catalog
-    image: docker.io/minio/minio:latest
+    image: docker.io/minio/minio:RELEASE.2025-09-07T16-13-09Z
     ports:
       - "5010:5000"
       - "5011:5001"
@@ -86,7 +86,7 @@ services:
     profiles:
       - catalog_dependencies
       - catalog
-    image: docker.io/minio/mc:latest
+    image: docker.io/minio/mc:RELEASE.2025-08-13T08-35-41Z
     env_file:
       - .env
       - ../docker/minio/.env
