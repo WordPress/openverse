@@ -12,8 +12,8 @@ on:
           - disabled
           - reset
   schedule:
-    # Run every 30 minutes:
-    - cron: "0,30 * * * *"
+    # Run every 6 hours:
+    - cron: "0 */6 * * *"
 
 # Adding these as env variables makes it easy to reuse them in different steps and in bash.
 env:
