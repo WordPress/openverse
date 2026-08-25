@@ -27,7 +27,8 @@ RUN apt-get update \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/* \
     && python -m venv /venv \
-    && pip install --upgrade pipenv
+    # pipenv >= 2026.4.0 rejects the existing Pipfile.lock hash (see #4658)
+    && pip install pipenv==2026.2.2
 
 # Copy the Pipenv files into the container
 COPY Pipfile Pipfile.lock /

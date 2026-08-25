@@ -11,7 +11,7 @@ set -euxo pipefail
 # Wait for minio to be ready
 sleep 5
 
-/usr/bin/mc config host add s3 http://s3:5000 "${MINIO_ROOT_USER}" "${MINIO_ROOT_PASSWORD}"
+/usr/bin/mc alias set s3 http://s3:5000 "${MINIO_ROOT_USER}" "${MINIO_ROOT_PASSWORD}"
 cd /data
 for b in */; do
   echo "Loading bucket $b"
