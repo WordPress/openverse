@@ -8,7 +8,9 @@ ARG API_PY_VERSION
 # Python builder #
 ##################
 
-FROM docker.io/python:${API_PY_VERSION} AS builder
+# Pin the Debian release: the audiowaveform .deb below is built for
+# Debian 12 (bookworm) and silently fails to install on newer releases.
+FROM docker.io/python:${API_PY_VERSION}-bookworm AS builder
 
 # Get the version from the main justfile
 ARG OV_PDM_VERSION
@@ -45,7 +47,7 @@ RUN pdm install --check --frozen-lockfile $PDM_INSTALL_ARGS
 # API #
 #######
 
-FROM docker.io/python:${API_PY_VERSION}-slim AS api
+FROM docker.io/python:${API_PY_VERSION}-slim-bookworm AS api
 
 LABEL org.opencontainers.image.source="https://github.com/WordPress/openverse"
 
