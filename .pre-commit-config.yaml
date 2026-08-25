@@ -166,3 +166,6 @@ repos:
     rev: v2.12.0
     hooks:
       - id: hadolint-docker
+        # The upstream hook leaves the image tag floating at `latest`,
+        # ignoring `rev`. Pin it so lint results are reproducible.
+        entry: ghcr.io/hadolint/hadolint:v2.12.0 hadolint
