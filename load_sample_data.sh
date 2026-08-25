@@ -142,7 +142,8 @@ VALUES
 	(now(), 'freesound', 'Freesound', 'https://freesound.org/', false, 'audio'),
 	(now(), 'jamendo', 'Jamendo', 'https://www.jamendo.com', false, 'audio'),
 	(now(), 'wikimedia_audio', 'Wikimedia', 'https://commons.wikimedia.org', false, 'audio'),
-	(now(), 'ccmixter', 'CCMixter', 'https://ccmixter.org', false, 'audio');
+	(now(), 'ccmixter', 'CCMixter', 'https://ccmixter.org', false, 'audio'),
+	(now(), 'saint_tech', 'SAiNT (IMG Saxony-Anhalt)', 'https://saint.tech/en', false, 'image');
 "
 
 #############

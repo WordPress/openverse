@@ -38,6 +38,7 @@ WIKIMEDIA_DEFAULT_PROVIDER = "wikimedia"
 WORDPRESS_DEFAULT_PROVIDER = "wordpress"
 PHYLOPIC_DEFAULT_PROVIDER = "phylopic"
 CC_MIXTER_DEFAULT_PROVIDER = "ccmixter"
+SAINT_DEFAULT_PROVIDER = "saint_tech"
 
 # Finnish parameters
 FINNISH_SUB_PROVIDERS = {
@@ -157,6 +158,7 @@ class AudioCategory:
 # Default image category by source
 DEFAULT_IMAGE_CATEGORY = {
     "stocksnap": ImageCategory.PHOTOGRAPH,
+    "saint_tech": ImageCategory.PHOTOGRAPH,
     # Remains to be assigned
     "animaldiversity": ImageCategory.PHOTOGRAPH,
     "brooklynmuseum": ImageCategory.DIGITIZED_ARTWORK,

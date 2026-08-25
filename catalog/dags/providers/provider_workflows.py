@@ -26,6 +26,7 @@ from providers.provider_api_scripts.nypl import NyplDataIngester
 from providers.provider_api_scripts.phylopic import PhylopicDataIngester
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 from providers.provider_api_scripts.rawpixel import RawpixelDataIngester
+from providers.provider_api_scripts.saint import SaintDataIngester
 from providers.provider_api_scripts.science_museum import ScienceMuseumDataIngester
 from providers.provider_api_scripts.smithsonian import SmithsonianDataIngester
 from providers.provider_api_scripts.smk import SmkDataIngester
@@ -319,6 +320,11 @@ PROVIDER_WORKFLOWS = [
     ProviderWorkflow(
         ingester_class=RawpixelDataIngester,
         pull_timeout=timedelta(hours=12),
+    ),
+    ProviderWorkflow(
+        ingester_class=SaintDataIngester,
+        start_date=datetime(2024, 1, 1),
+        schedule_string="@monthly",
     ),
     ProviderWorkflow(
         ingester_class=ScienceMuseumDataIngester,

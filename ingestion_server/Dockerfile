@@ -33,7 +33,7 @@ RUN apt-get update \
 COPY Pipfile Pipfile.lock /
 
 # Install Python dependencies system-wide (uses the active virtualenv)
-RUN pipenv install --system --deploy --dev
+RUN pipenv install --system --dev
 
 ####################
 # Ingestion server #

@@ -134,7 +134,12 @@ precommit:
 
 # Run pre-commit to lint and reformat files
 lint hook="" *files="": precommit
-    python3 pre-commit.pyz run {{ hook }} {{ if files == "" { "--all-files" } else { "--files" } }}  {{ files }}
+    #!/usr/bin/env bash
+    if ! command -v docker &> /dev/null; then
+      echo "Docker not found, skipping Docker-based hooks..."
+      SKIP="${SKIP:+$SKIP,}actionlint-docker,shfmt-docker,hadolint-docker"
+    fi
+    SKIP="$SKIP" python3 pre-commit.pyz run {{ hook }} {{ if files == "" { "--all-files" } else { "--files" } }} {{ files }}
 
 # Run codeowners validator locally. Only enable experimental hooks if there are no uncommitted changes.
 lint-codeowners checks="stable":
