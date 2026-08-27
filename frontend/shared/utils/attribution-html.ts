@@ -63,7 +63,7 @@ const h = (
   ]
 
   const map = Object.entries(attrs)
-    .map(([key, value]) => `${key}="${value}"`)
+    .map(([key, value]) => `${key}="${escapeHtml(value)}"`)
     .join(" ")
 
   if (selfClosingTags.includes(name)) {
@@ -144,6 +144,29 @@ const licenseElementImg = (licenseElement: LicenseElement): string => {
 }
 
 /**
+ * Drop URLs with a non-http(s)/mailto scheme to `about:blank`, so a
+ * `javascript:` or `data:` URL can't yield an executable link. Escaping the
+ * attribute value does not stop these, as they contain nothing to escape.
+ *
+ * @param href - the untrusted URL to sanitise
+ * @returns the URL if its scheme is safe, otherwise `about:blank`
+ */
+const sanitizeHref = (href: string): string => {
+  // Strip the C0 controls and spaces a browser ignores when parsing, else `\x01javascript:` or `java\tscript:` evades the check but still runs.
+  const stripped = Array.from(href)
+    .filter((char) => (char.codePointAt(0) ?? 0) > 0x20)
+    .join("")
+  const scheme = stripped.match(/^([a-z][a-z0-9+.-]*):/i)
+  if (
+    scheme &&
+    !["http", "https", "mailto"].includes(scheme[1].toLowerCase())
+  ) {
+    return "about:blank"
+  }
+  return href
+}
+
+/**
  * Get an HTML `<a>` tag set up with the `target` and `rel` attributes.
  *
  * @param href - the link that the anchor tag should point to
@@ -151,7 +174,7 @@ const licenseElementImg = (licenseElement: LicenseElement): string => {
  * @returns the HTML markup of the `<a>` tag
  */
 const extLink = (href: string, text: string) =>
-  h("a", { rel: "noopener noreferrer", href }, [text])
+  h("a", { rel: "noopener noreferrer", href: sanitizeHref(href) }, [text])
 
 /**
  * Generate a Dublin Core conforming XML attribution snippet.
