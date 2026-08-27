@@ -88,8 +88,12 @@ describe("getAttribution", () => {
     }
     document.body.innerHTML = getAttribution(mediaItemWithJsUrl, t)
     const links = Array.from(document.getElementsByTagName("a"))
-    expect(links.some((a) => a.getAttribute("href")?.startsWith("javascript"))).toBe(false)
-    expect(links.some((a) => a.getAttribute("href") === "about:blank")).toBe(true)
+    expect(
+      links.some((a) => a.getAttribute("href")?.startsWith("javascript"))
+    ).toBe(false)
+    expect(links.some((a) => a.getAttribute("href") === "about:blank")).toBe(
+      true
+    )
   })
 
   it("drops javascript: URLs obfuscated with control characters", async () => {
@@ -99,9 +103,8 @@ describe("getAttribution", () => {
     }
     document.body.innerHTML = getAttribution(mediaItemWithObfuscatedUrl, t)
     const links = Array.from(document.getElementsByTagName("a"))
-    expect(
-      links.some((a) => a.getAttribute("href")?.includes("javascript"))
-    ).toBe(false)
+    // The raw attribute keeps the obfuscation verbatim; only the parsed `href` property reveals the effective javascript: scheme.
+    expect(links.some((a) => a.href.startsWith("javascript:"))).toBe(false)
     expect(links.some((a) => a.getAttribute("href") === "about:blank")).toBe(
       true
     )
