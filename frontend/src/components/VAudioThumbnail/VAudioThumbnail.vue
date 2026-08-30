@@ -68,7 +68,7 @@ const radius = (i: number, j: number) => {
 
 <template>
   <!-- Should be wrapped by a fixed-width parent -->
-  <div class="relative h-0 w-full overflow-hidden pt-full" :title="helpText">
+  <div class="relative h-0 w-full overflow-hidden pt-full" aria-hidden="true">
     <!-- Programmatic thumbnail -->
     <svg
       v-if="!isOk"
