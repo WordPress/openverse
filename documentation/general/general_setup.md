@@ -5,6 +5,14 @@ is the only supported method of working with Openverse. `ov` is included in the
 repository, and its only dependencies are git, bash, and Docker (or a compatible
 container runtime).
 
+```{note}
+If VS Code detects `.devcontainer/devcontainer.json` and offers to reopen the
+repository in a dev container, do not use that prompt for local setup. The
+dev container configuration is only intended and tested for GitHub Codespaces,
+and only for frontend and documentation contributions. For local development,
+follow this guide and use `ov` directly from your clone.
+```
+
 ```{admonition} Openverse and Windows
 :class: caution
 Openverse development is currently supported only for UNIX-type environments
