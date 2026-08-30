@@ -16,7 +16,7 @@ from airflow.exceptions import AirflowSkipException
 from airflow.models.connection import Connection
 from airflow.operators.empty import EmptyOperator
 from airflow.providers.amazon.aws.hooks.ec2 import EC2Hook
-from airflow.providers.common.sql.hooks.sql import fetch_one_handler
+from airflow.providers.common.sql.hooks.handlers import fetch_one_handler
 from airflow.sensors.base import PokeReturnValue
 from airflow.utils.trigger_rule import TriggerRule
 from requests import Response

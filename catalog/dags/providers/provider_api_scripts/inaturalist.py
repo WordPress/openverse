@@ -151,7 +151,7 @@ class INaturalistDataIngester(ProviderDataIngester):
         )
         logger.info(f"Upserted {upserted_records} records, from batch {batch_number}.")
         # Truncate the temp table
-        pg.run(f"truncate table {intermediate_table};")
+        pg.run(f"truncate table {intermediate_table};", handler=None)
         # Return results for consolidation
         end_time = time.perf_counter()
         duration = end_time - start_time

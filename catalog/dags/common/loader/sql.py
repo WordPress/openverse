@@ -87,11 +87,15 @@ def create_loading_table(
                CREATE INDEX IF NOT EXISTS {load_table}_{column}_key
                ON public.{load_table} USING btree ({btree_string});
                """
-            )
+            ),
+            handler=None,
         )
 
-    postgres.run(table_creation_query)
-    postgres.run(f"ALTER TABLE public.{load_table} OWNER TO {DB_USER_NAME};")
+    postgres.run(table_creation_query, handler=None)
+    postgres.run(
+        f"ALTER TABLE public.{load_table} OWNER TO {DB_USER_NAME};",
+        handler=None,
+    )
     create_index(col.PROVIDER.db_name, None)
     create_index(col.FOREIGN_ID.db_name, "provider")
     create_index(col.DIRECT_URL.db_name, "provider")
@@ -342,7 +346,7 @@ def drop_load_table(
     postgres = PostgresHook(
         postgres_conn_id=postgres_conn_id, default_statement_timeout=60
     )
-    postgres.run(f"DROP TABLE IF EXISTS {load_table};")
+    postgres.run(f"DROP TABLE IF EXISTS {load_table};", handler=None)
 
 
 def _get_load_table_name(

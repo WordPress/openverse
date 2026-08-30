@@ -47,10 +47,12 @@ def drop_media_popularity_functions(
         postgres_conn_id=postgres_conn_id, default_statement_timeout=10.0
     )
     postgres.run(
-        f"DROP FUNCTION IF EXISTS public.{sql_info.standardized_popularity_fn} CASCADE;"
+        f"DROP FUNCTION IF EXISTS public.{sql_info.standardized_popularity_fn} CASCADE;",
+        handler=None,
     )
     postgres.run(
-        f"DROP FUNCTION IF EXISTS public.{sql_info.popularity_percentile_fn} CASCADE;"
+        f"DROP FUNCTION IF EXISTS public.{sql_info.popularity_percentile_fn} CASCADE;",
+        handler=None,
     )
 
 
@@ -72,7 +74,7 @@ def create_media_popularity_metrics(
         );
         """
     )
-    postgres.run(query)
+    postgres.run(query, handler=None)
 
 
 @task
@@ -279,7 +281,7 @@ def create_media_popularity_percentile_function(
         RETURNS NULL ON NULL INPUT;
         """
     )
-    postgres.run(query)
+    postgres.run(query, handler=None)
 
 
 @task
@@ -303,7 +305,7 @@ def create_standardized_media_popularity_function(
         RETURNS NULL ON NULL INPUT;
         """
     )
-    postgres.run(query)
+    postgres.run(query, handler=None)
 
 
 @setup_sql_info_for_media_type
