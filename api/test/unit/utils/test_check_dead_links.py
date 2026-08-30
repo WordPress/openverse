@@ -148,3 +148,8 @@ def test_mset_and_expire_for_responses(is_cache_reachable, cache_name, request):
                 "Redis connect failed, cannot cache link liveness.",
             ]
         )
+
+def test_410_status_is_marked_as_dead():
+    from api.utils.check_dead_links.provider_status_mappings import StatusMapping
+    mapping = StatusMapping()
+    assert 410 in mapping.dead
