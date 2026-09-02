@@ -1,0 +1,11 @@
+# 2023.07.24.21.23.45
+
+## New Features
+
+- useSensitiveMedia composable
+  ([#2700](https://github.com/WordPress/openverse/pull/2700)) by @zackkrida
+
+## Bug Fixes
+
+- Handle AbortError in VAudioTrack.vue
+  ([#2681](https://github.com/WordPress/openverse/pull/2681)) by @obulat

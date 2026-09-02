@@ -1,0 +1,11 @@
+# 2023.06.13.00.25.04
+
+## Internal Improvements
+
+- Remove noop QA/test data loading steps on ingestion server
+  ([#2353](https://github.com/WordPress/openverse/pull/2353)) by @AetherUnbound
+
+## Bug Fixes
+
+- Fix sensitive term reindex query
+  ([#2363](https://github.com/WordPress/openverse/pull/2363)) by @sarayourfriend

@@ -1,0 +1,47 @@
+# 2024.09.01.19.19.29
+
+## New Features
+
+- Add color mode to ui store
+  ([#4810](https://github.com/WordPress/openverse/pull/4810)) by @zackkrida
+- Add feature flag to display the dark mode UI toggle
+  ([#4809](https://github.com/WordPress/openverse/pull/4809)) by @zackkrida
+
+## Improvements
+
+- Update the recent search disclaimer
+  ([#4824](https://github.com/WordPress/openverse/pull/4824)) by @obulat
+
+## Internal Improvements
+
+- Update dependency vue-tsc to v2.1.4
+  ([#4849](https://github.com/WordPress/openverse/pull/4849)) by @openverse-bot
+- Update dependency @playwright/test to v1.46.1
+  ([#4846](https://github.com/WordPress/openverse/pull/4846)) by @openverse-bot
+- Update dependency prettier-plugin-tailwindcss to v0.6.6
+  ([#4843](https://github.com/WordPress/openverse/pull/4843)) by @openverse-bot
+- Convert some store unit tests to TypeScript
+  ([#4837](https://github.com/WordPress/openverse/pull/4837)) by @zackkrida
+- Convert the last components to script-setup
+  ([#4805](https://github.com/WordPress/openverse/pull/4805)) by @obulat
+- Convert components used on single result pages
+  ([#4819](https://github.com/WordPress/openverse/pull/4819)) by @obulat
+- Add feature flag to display the dark mode UI toggle
+  ([#4809](https://github.com/WordPress/openverse/pull/4809)) by @zackkrida
+- Convert components used for displaying search results to `script setup`
+  ([#4799](https://github.com/WordPress/openverse/pull/4799)) by @obulat
+- Update Nuxt and related dependencies to v3.13.0
+  ([#4807](https://github.com/WordPress/openverse/pull/4807)) by @zackkrida
+- Replace hard-coded strings in Playwright tests
+  ([#4804](https://github.com/WordPress/openverse/pull/4804)) by @obulat
+
+## Bug Fixes
+
+- Fix homepage layout shift
+  ([#4816](https://github.com/WordPress/openverse/pull/4816)) by @obulat
+- Update Nuxt and deps to v3.13.0; fix server dir location
+  ([#4823](https://github.com/WordPress/openverse/pull/4823)) by @zackkrida
+- Revert the Nuxt 3 update
+  ([#4821](https://github.com/WordPress/openverse/pull/4821)) by @obulat
+- Fix dark theme grays
+  ([#4808](https://github.com/WordPress/openverse/pull/4808)) by @obulat

@@ -1,0 +1,6 @@
+# 2025.02.05.11.12.38
+
+## Internal Improvements
+
+- Revert "Close old db connections after getting thumbnails (#5335)"
+  ([#5356](https://github.com/WordPress/openverse/pull/5356)) by @krysal

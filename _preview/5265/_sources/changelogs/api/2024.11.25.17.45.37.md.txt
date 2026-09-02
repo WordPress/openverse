@@ -1,0 +1,13 @@
+# 2024.11.25.17.45.37
+
+## Internal Improvements
+
+- Add `syntax` and `check` declarations in `Dockerfile`s
+  ([#5183](https://github.com/WordPress/openverse/pull/5183)) by @dhruvkb
+
+## Bug Fixes
+
+- Get sources list for filter from content_provider table
+  ([#5180](https://github.com/WordPress/openverse/pull/5180)) by @krysal
+- Limit number of items in admin media pages
+  ([#5175](https://github.com/WordPress/openverse/pull/5175)) by @krysal

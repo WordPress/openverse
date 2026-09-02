@@ -1,0 +1,48 @@
+# 2024.10.17.13.59.15
+
+## New Features
+
+- Add envfile rotation DAG
+  ([#4954](https://github.com/WordPress/openverse/pull/4954)) by @sarayourfriend
+- Update init scripts to use new data refresh
+  ([#4962](https://github.com/WordPress/openverse/pull/4962)) by @stacimc
+- Add Katmai NPS source from Flickr
+  ([#4971](https://github.com/WordPress/openverse/pull/4971)) by @sarayourfriend
+- Add filtered index and promotion steps to data refresh
+  ([#4833](https://github.com/WordPress/openverse/pull/4833)) by @stacimc
+
+## Internal Improvements
+
+- Add tests for data refresh task dependencies
+  ([#5027](https://github.com/WordPress/openverse/pull/5027)) by @stacimc
+- Update dependency elasticsearch to v8.15.1
+  ([#5010](https://github.com/WordPress/openverse/pull/5010)) by @openverse-bot
+- Update dependency apache-airflow to v2.10.2
+  ([#5009](https://github.com/WordPress/openverse/pull/5009)) by @openverse-bot
+- Fix just argument splitting on pass-through recipes with complex args
+  ([#4961](https://github.com/WordPress/openverse/pull/4961)) by @sarayourfriend
+- Address deprecations, make DeprecationWarning and RemovedInAirflow3Warning
+  raise error ([#4951](https://github.com/WordPress/openverse/pull/4951)) by
+  @AetherUnbound
+
+## Bug Fixes
+
+- Fix WP Photo Directory DAG
+  ([#5038](https://github.com/WordPress/openverse/pull/5038)) by @sarayourfriend
+- Added some 5xx error code handling for function
+  ([#5014](https://github.com/WordPress/openverse/pull/5014)) by @MarleaM
+- Use Elasticsearch configuration file to avoid tricky envvar names
+  ([#4992](https://github.com/WordPress/openverse/pull/4992)) by @sarayourfriend
+- Fix just argument splitting on pass-through recipes with complex args
+  ([#4961](https://github.com/WordPress/openverse/pull/4961)) by @sarayourfriend
+- Modify Rekognition insertion timeouts
+  ([#4955](https://github.com/WordPress/openverse/pull/4955)) by @AetherUnbound
+- Specify insert fields and unique indices for Rekognition tags insert
+  ([#4950](https://github.com/WordPress/openverse/pull/4950)) by @AetherUnbound
+- Fix `add_license_url` DAG for last items
+  ([#4839](https://github.com/WordPress/openverse/pull/4839)) by @krysal
+- Raise exception for misclassified items in MediaStore and get filetype from
+  Wikimedia's API ([#4785](https://github.com/WordPress/openverse/pull/4785)) by
+  @krysal
+- Create S3 client for smart_open from session
+  ([#4886](https://github.com/WordPress/openverse/pull/4886)) by @AetherUnbound

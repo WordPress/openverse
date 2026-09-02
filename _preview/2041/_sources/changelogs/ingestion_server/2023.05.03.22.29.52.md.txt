@@ -1,0 +1,197 @@
+# 2023.05.03.22.29.52
+
+## New Features
+
+- [Add filtered index creation DAG (#1833)](https://github.com/WordPress/openverse/pull/1833)
+  by @sarayourfriend
+- [Install drf-spectacular (#1876)](https://github.com/WordPress/openverse/pull/1876)
+  by @dhruvkb
+- [Add documentation for the CI + CD workflow (#1001)](https://github.com/WordPress/openverse/pull/1001)
+  by @dhruvkb
+- [Add `create_and_populate_filtered_index` action to ingestion server (#1202)](https://github.com/WordPress/openverse/pull/1202)
+  by @sarayourfriend
+
+## Improvements
+
+- [Avoid the need to specify each image individually in `load-img` (#1855)](https://github.com/WordPress/openverse/pull/1855)
+  by @dhruvkb
+- [Update Python code to use Python 3.11 (#1852)](https://github.com/WordPress/openverse/pull/1852)
+  by @dhruvkb
+- [Deduce Python/Node.js/pnpm version in Docker images (#1225)](https://github.com/WordPress/openverse/pull/1225)
+  by @dhruvkb
+- [Add a `just ps` recipe for displaying service ports (#1160)](https://github.com/WordPress/openverse/pull/1160)
+  by @AetherUnbound
+- [Simplify CI + CD workflow (#1054)](https://github.com/WordPress/openverse/pull/1054)
+  by @dhruvkb
+- [Improve documentation for partial stack setups (#974)](https://github.com/WordPress/openverse/pull/974)
+  by @dhruvkb
+- [Absorb `build-nginx` job into `build-images` job (#944)](https://github.com/WordPress/openverse/pull/944)
+  by @dhruvkb
+- [Use profiles in Docker Compose (#914)](https://github.com/WordPress/openverse/pull/914)
+  by @dhruvkb
+- [Prepare Docker setup for monorepo (#889)](https://github.com/WordPress/openverse/pull/889)
+  by @dhruvkb
+- [Add stack label if available, make get-changes composite action (#786)](https://github.com/WordPress/openverse/pull/786)
+  by @AetherUnbound
+
+## Internal Improvements
+
+- [Bump tldextract from 3.4.0 to 3.4.1 in /ingestion_server (#1952)](https://github.com/WordPress/openverse/pull/1952)
+  by @dependabot
+- [Bump boto3 from 1.26.115 to 1.26.123 in /ingestion_server (#1951)](https://github.com/WordPress/openverse/pull/1951)
+  by @dependabot
+- [Bump sentry-sdk from 1.19.1 to 1.21.1 in /ingestion_server (#1954)](https://github.com/WordPress/openverse/pull/1954)
+  by @dependabot
+- [Bump ipython from 8.12.0 to 8.13.1 in /ingestion_server (#1955)](https://github.com/WordPress/openverse/pull/1955)
+  by @dependabot
+- [Remove `tags_list` from models and ingestion_server (#956)](https://github.com/WordPress/openverse/pull/956)
+  by @obulat
+- [Dispatch deployment workflows from infrastructure repository (#1865)](https://github.com/WordPress/openverse/pull/1865)
+  by @sarayourfriend
+- [Deduce Python/Node.js/pnpm version in Docker images (#1225)](https://github.com/WordPress/openverse/pull/1225)
+  by @dhruvkb
+- [Add a `just ps` recipe for displaying service ports (#1160)](https://github.com/WordPress/openverse/pull/1160)
+  by @AetherUnbound
+- [Bump boto3 from 1.26.104 to 1.26.115 in /ingestion_server (#1801)](https://github.com/WordPress/openverse/pull/1801)
+  by @dependabot
+- [Bump filelock from 3.10.7 to 3.12.0 in /ingestion_server (#1821)](https://github.com/WordPress/openverse/pull/1821)
+  by @dependabot
+- [Bump pytest from 7.2.2 to 7.3.1 in /ingestion_server (#1211)](https://github.com/WordPress/openverse/pull/1211)
+  by @dependabot
+- [Bump sentry-sdk from 1.18.0 to 1.19.1 in /ingestion_server (#1213)](https://github.com/WordPress/openverse/pull/1213)
+  by @dependabot
+- [Bump psycopg2 from 2.9.5 to 2.9.6 in /ingestion_server (#1215)](https://github.com/WordPress/openverse/pull/1215)
+  by @dependabot
+- [Use `pytest.ini` and add `pytest-sugar` (#1227)](https://github.com/WordPress/openverse/pull/1227)
+  by @dhruvkb
+- [Change deployment workflow name from colon to dash (#1174)](https://github.com/WordPress/openverse/pull/1174)
+  by @AetherUnbound
+- [Safely call create-or-update-comment when dealing with forks (#997)](https://github.com/WordPress/openverse/pull/997)
+  by @sarayourfriend
+- [Use context manager for multiprocessing in the ingestion server (#1057)](https://github.com/WordPress/openverse/pull/1057)
+  by @obulat
+- [Add `SLACK_WEBHOOK_TYPE` env var to reporting job (#1131)](https://github.com/WordPress/openverse/pull/1131)
+  by @dhruvkb
+- [Bump boto3 from 1.26.100 to 1.26.104 in /ingestion_server (#1110)](https://github.com/WordPress/openverse/pull/1110)
+  by @dependabot
+- [Add Sentry to the ingestion server (#1106)](https://github.com/WordPress/openverse/pull/1106)
+  by @krysal
+- [Pass actor for staging deploys with the `-f` flag (#1104)](https://github.com/WordPress/openverse/pull/1104)
+  by @dhruvkb
+- [Dispatch workflows instead of regular reuse to show deployment runs (#1034)](https://github.com/WordPress/openverse/pull/1034)
+  by @sarayourfriend
+- [Save cleaned up data during the cleanup step (#904)](https://github.com/WordPress/openverse/pull/904)
+  by @obulat
+- [Bump boto3 from 1.26.84 to 1.26.100 in /ingestion_server (#1048)](https://github.com/WordPress/openverse/pull/1048)
+  by @dependabot
+- [Bump pytest-order from 1.0.1 to 1.1.0 in /ingestion_server (#1040)](https://github.com/WordPress/openverse/pull/1040)
+  by @dependabot
+- [Bump filelock from 3.9.0 to 3.10.7 in /ingestion_server (#1041)](https://github.com/WordPress/openverse/pull/1041)
+  by @dependabot
+- [Bump bottle from 0.12.24 to 0.12.25 in /ingestion_server (#1044)](https://github.com/WordPress/openverse/pull/1044)
+  by @dependabot
+- [Add tag app release action (#987)](https://github.com/WordPress/openverse/pull/987)
+  by @sarayourfriend
+- [Skip build and publish job if nothing to do (#977)](https://github.com/WordPress/openverse/pull/977)
+  by @dhruvkb
+- [Use profiles in Docker Compose (#914)](https://github.com/WordPress/openverse/pull/914)
+  by @dhruvkb
+- [Always build both api & ingestion server images for either service (#936)](https://github.com/WordPress/openverse/pull/936)
+  by @AetherUnbound
+- [Build `api` when ingestion server changes (#925)](https://github.com/WordPress/openverse/pull/925)
+  by @dhruvkb
+- [Prepare Docker setup for monorepo (#889)](https://github.com/WordPress/openverse/pull/889)
+  by @dhruvkb
+- [Skip more jobs based on changed files (#895)](https://github.com/WordPress/openverse/pull/895)
+  by @dhruvkb
+- [Only generate POT file if `en.json5` has changed (#893)](https://github.com/WordPress/openverse/pull/893)
+  by @dhruvkb
+- [Provider tally extraction script (#397)](https://github.com/WordPress/openverse/pull/397)
+  by @AetherUnbound
+- [Only run stack label addition step on pull requests (#882)](https://github.com/WordPress/openverse/pull/882)
+  by @AetherUnbound
+- [Split deployment workflow into 4 separate workflows (#886)](https://github.com/WordPress/openverse/pull/886)
+  by @AetherUnbound
+- [Add stack label if available, make get-changes composite action (#786)](https://github.com/WordPress/openverse/pull/786)
+  by @AetherUnbound
+
+## Bug Fixes
+
+- [Change deployment workflow name from colon to dash (#1174)](https://github.com/WordPress/openverse/pull/1174)
+  by @AetherUnbound
+- [Safely call create-or-update-comment when dealing with forks (#997)](https://github.com/WordPress/openverse/pull/997)
+  by @sarayourfriend
+- [Make `label` prop required for VIconButton (#954)](https://github.com/WordPress/openverse/pull/954)
+  by @obulat
+- [Pass `GITHUB_TOKEN` to deploy docs (#1134)](https://github.com/WordPress/openverse/pull/1134)
+  by @dhruvkb
+- [Add `SLACK_WEBHOOK_TYPE` env var to reporting job (#1131)](https://github.com/WordPress/openverse/pull/1131)
+  by @dhruvkb
+- [Pass actor for staging deploys with the `-f` flag (#1104)](https://github.com/WordPress/openverse/pull/1104)
+  by @dhruvkb
+- [Add `GITHUB_TOKEN` to GitHub CLI step (#1103)](https://github.com/WordPress/openverse/pull/1103)
+  by @dhruvkb
+- [Dispatch workflows instead of regular reuse to show deployment runs (#1034)](https://github.com/WordPress/openverse/pull/1034)
+  by @sarayourfriend
+- [Fix typo in docs building on `main` (#1067)](https://github.com/WordPress/openverse/pull/1067)
+  by @dhruvkb
+- [Add tag app release action (#987)](https://github.com/WordPress/openverse/pull/987)
+  by @sarayourfriend
+- [Skip build and publish job if nothing to do (#977)](https://github.com/WordPress/openverse/pull/977)
+  by @dhruvkb
+- [Always build both api & ingestion server images for either service (#936)](https://github.com/WordPress/openverse/pull/936)
+  by @AetherUnbound
+- [Build `api` when ingestion server changes (#925)](https://github.com/WordPress/openverse/pull/925)
+  by @dhruvkb
+- [Skip more jobs based on changed files (#895)](https://github.com/WordPress/openverse/pull/895)
+  by @dhruvkb
+- [Add get-image-tag as dependency for nginx build step (#909)](https://github.com/WordPress/openverse/pull/909)
+  by @AetherUnbound
+- [Only run stack label addition step on pull requests (#882)](https://github.com/WordPress/openverse/pull/882)
+  by @AetherUnbound
+- [Add a stemming override for the word "universe" (#890)](https://github.com/WordPress/openverse/pull/890)
+  by @zackkrida
+
+## Credits
+
+Thanks to @0kyn, @0xwho7, @Aakash2408, @AbhiYHub, @AdarshRawat1, @AetherUnbound,
+@AlexVCS, @Arraxx, @ArslanYM, @AshwanthramKL, @Bandzyrka, @BarokDG,
+@CatherineNjenga, @ChariniNana, @ChrisCoastal, @Dachande663, @DantrazTrev,
+@DillonKyleDev, @Fahme, @GreenCreep, @HAKSOAT, @HebaFareed, @HernaniStands,
+@Jbudd512, @Jorgewlf88, @Justinjdaniel, @Kevan-Y, @Maxslide, @Mayank-Jain-1,
+@Milind712000, @MuhammadFaizanHaidar, @MukulKolpe, @MustkimKhatik, @P1YU5H-50N1,
+@Pmeet, @PrabhavPandey, @PrajwalBorkar, @Prathamdas3, @PuneetDabral, @RARNE12,
+@Rishav1707, @Sando1, @SaurabhAgarwala, @SincerelyBrittany, @StTronn, @Tanuj22,
+@The5cheduler, @TheCelestial25, @Tomvth, @VatsalSin, @VincentvI023, @Wbrown633,
+@Yash-Pratapwar, @Yashs911, @Yasir761, @abhishekcsawo, @abhisheknaiidu,
+@adrijshikhar, @akanksha-v, @akkspros, @akmadian, @akowtko, @akshgpt7,
+@alanjacobmathew, @aldenstpage, @alessandrodolci, @allen505, @alrz1999,
+@amartya-dev, @amazzoccone, @amm98d, @amycruz97, @anksh1997, @ankurshr01,
+@annatuma, @anton202, @aqeelat, @ariessa, @aryamanpuri, @ashikmeerankutty,
+@avats-dev, @avvinci, @ayanchoudhary, @ayushshivani, @bengreeley,
+@brenoferreira, @capitan-beto, @carlosreyesmunoz,
+@cc-creativecommons-github-io-bot, @chetas411, @davcortez, @demophoon,
+@dependabot, @dependabot[bot], @devRD, @dhirensr, @dhruvkb, @dos077, @elharony,
+@fcoveram, @fizal619, @flamesjames, @foroveralls, @geekayush, @gelbelle,
+@glowatsk, @grumpyp, @hasanuzzamanbe, @hemanth-hk, @himanshu007-creator,
+@iamananya, @ilitotor, @itemrarity, @j-doka, @jansone-dace, @jeherve,
+@jhutchings1, @jonrutter, @joshharrison626, @justbaileym, @kamiwis,
+@kavyabhat02, @kb-0311, @kelvindecosta, @kgodey, @kharissulistiyo,
+@kickeyhickey, @kk311y, @kokamkarsahil, @krysal, @kss682, @lamhoangpham20,
+@lyu4321, @madewithkode, @manav1403, @mariuszskon, @masif2002, @mathemancer,
+@megha070, @miikkuu, @mjprince, @msolorio, @muddi900, @mukeshpanchal27,
+@neeraj-2, @nimishbongale, @obulat, @openverse-bot, @outloudvi, @pa-w,
+@paulofilip3, @pratikmishra356, @qubit99, @raamas, @rafaelytakei,
+@raghuvar-arora-au2, @rahulbollisetty, @raiyaj, @rajdeepdas2000, @ramadanomar,
+@rbadillap, @renovate, @renovate[bot], @ritesh-pandey, @rochisha0, @rsubra13,
+@rwidom, @sahil-R, @samcaspus, @sarayourfriend, @satya-vinay, @sclachar,
+@sebworks, @sepehrrezaei, @sgrepos, @sharmadhiraj86, @shreyanshmalvya, @sjdex,
+@skidi3, @somtochiama, @sora-san45, @sp35, @stacimc, @sudharsana-kjl,
+@sumit-158, @swapnalshahil, @t-hamano, @tahmid-ul, @tal66, @thedevhaider,
+@theshakeabhi, @tichnas, @tushar912, @twstokes, @urakymzhan, @vane, @vinsout,
+@vortex73, @vsomnath, @wasimTQ, @yavik-kapadia, @zackkrida, @zmwaris1, Alden
+Page, Alden S Page, Alden S. Page, Ayush Pratap Singh, Catherine Hoang, Charini
+Nanayakkara, DillonKyleDev, Fakela, Guilherme Oliveira, Jesse, Krystle Salazar,
+Oksana Melnik, Shubham Singh, SomtochiAma, Steven Bellamy, akandeBolaji,
+aldenstpage, dravadhis, farouski, manav1403, nilshah98 and root for their
+contributions!

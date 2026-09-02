@@ -1,0 +1,59 @@
+# 2024.10.14.15.38.39
+
+## New Features
+
+- Add BACK_TO_TOP event and fire when button is clicked
+  ([#4953](https://github.com/WordPress/openverse/pull/4953)) by @d3jawu
+- Collect lighthouse CI on each frontend change
+  ([#4994](https://github.com/WordPress/openverse/pull/4994)) by @sarayourfriend
+- Run k6 against local Nuxt on PRs
+  ([#4924](https://github.com/WordPress/openverse/pull/4924)) by @sarayourfriend
+
+## Improvements
+
+- Fix image and audio result focus rings
+  ([#4959](https://github.com/WordPress/openverse/pull/4959)) by @obulat
+- Update loading skeletons
+  ([#4982](https://github.com/WordPress/openverse/pull/4982)) by @obulat
+
+## Internal Improvements
+
+- Update dependency typescript to v5.6.3
+  ([#5032](https://github.com/WordPress/openverse/pull/5032)) by @openverse-bot
+- Update pnpm to v9.12.1
+  ([#5033](https://github.com/WordPress/openverse/pull/5033)) by @openverse-bot
+- Update dependency vue-tsc to v2.1.6
+  ([#5031](https://github.com/WordPress/openverse/pull/5031)) by @openverse-bot
+- Update dependency prettier-plugin-tailwindcss to v0.6.8
+  ([#5013](https://github.com/WordPress/openverse/pull/5013)) by @openverse-bot
+- Update plausible to fix logging
+  ([#5023](https://github.com/WordPress/openverse/pull/5023)) by @obulat
+- Update dependency @nuxtjs/i18n to v8.5.5
+  ([#5007](https://github.com/WordPress/openverse/pull/5007)) by @openverse-bot
+- Update dependency @pinia/nuxt to v0.5.5
+  ([#5008](https://github.com/WordPress/openverse/pull/5008)) by @openverse-bot
+- Update dependency axios to v1.7.4 [SECURITY]
+  ([#5016](https://github.com/WordPress/openverse/pull/5016)) by @openverse-bot
+- Bump rollup from 4.21.2 to 4.22.4
+  ([#5019](https://github.com/WordPress/openverse/pull/5019)) by @dependabot
+- Improve Sentry init log and ignore non-actionable error
+  ([#4997](https://github.com/WordPress/openverse/pull/4997)) by @obulat
+- Update dependency nock to v14.0.0-beta.15
+  ([#5011](https://github.com/WordPress/openverse/pull/5011)) by @openverse-bot
+- Run k6 against local Nuxt on PRs
+  ([#4924](https://github.com/WordPress/openverse/pull/4924)) by @sarayourfriend
+- Add dark snapshots to storybook tests
+  ([#4928](https://github.com/WordPress/openverse/pull/4928)) by @obulat
+
+## Bug Fixes
+
+- Make the preferences test more robust
+  ([#5015](https://github.com/WordPress/openverse/pull/5015)) by @obulat
+- Update plausible to fix logging
+  ([#5023](https://github.com/WordPress/openverse/pull/5023)) by @obulat
+- Improve Sentry init log and ignore non-actionable error
+  ([#4997](https://github.com/WordPress/openverse/pull/4997)) by @obulat
+- Fix flaky test from #4995
+  ([#4999](https://github.com/WordPress/openverse/pull/4999)) by @obulat
+- Fix flaky test ([#4987](https://github.com/WordPress/openverse/pull/4987)) by
+  @obulat

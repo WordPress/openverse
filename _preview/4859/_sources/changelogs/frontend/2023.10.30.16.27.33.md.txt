@@ -1,0 +1,57 @@
+# 2023.10.30.16.27.33
+
+## New Features
+
+- Create VTag component
+  ([#3137](https://github.com/WordPress/openverse/pull/3137)) by @ngken0995
+
+## Improvements
+
+- Update the full audio layout on the single result page
+  ([#2933](https://github.com/WordPress/openverse/pull/2933)) by @obulat
+- Add VRT for content safety page
+  ([#3179](https://github.com/WordPress/openverse/pull/3179)) by @dhruvkb
+
+## Internal Improvements
+
+- Add frontend to the nginx image tagging
+  ([#3260](https://github.com/WordPress/openverse/pull/3260)) by @obulat
+- Update Tailwindcss dependencies
+  ([#3253](https://github.com/WordPress/openverse/pull/3253)) by @khushi-kothari
+- Update uuid dependency
+  ([#3255](https://github.com/WordPress/openverse/pull/3255)) by @khushi-kothari
+- Update focus-trap dependency
+  ([#3256](https://github.com/WordPress/openverse/pull/3256)) by @khushi-kothari
+- Update vue-demi dependencies
+  ([#3254](https://github.com/WordPress/openverse/pull/3254)) by @khushi-kothari
+- Update Clipboard dependencies
+  ([#3252](https://github.com/WordPress/openverse/pull/3252)) by @khushi-kothari
+- Update @nuxtjs/i18n dependency
+  ([#3249](https://github.com/WordPress/openverse/pull/3249)) by @khushi-kothari
+- Update @popperjs/core dependency
+  ([#3250](https://github.com/WordPress/openverse/pull/3250)) by @khushi-kothari
+- Simplify Nuxt query parameter computation
+  ([#3136](https://github.com/WordPress/openverse/pull/3136)) by @obulat
+- Allow runtime configuration of nginx listening port
+  ([#3219](https://github.com/WordPress/openverse/pull/3219)) by @sarayourfriend
+- Add result kind to the `SELECT_SEARCH_RESULT` event
+  ([#3173](https://github.com/WordPress/openverse/pull/3173)) by @obulat
+- Remove unused thumb tapes
+  ([#3187](https://github.com/WordPress/openverse/pull/3187)) by @obulat
+- Add frontend nginx container for logging and plausible proxying
+  ([#3108](https://github.com/WordPress/openverse/pull/3108)) by @sarayourfriend
+
+## Bug Fixes
+
+- Update close buttons
+  ([#3225](https://github.com/WordPress/openverse/pull/3225)) by @obulat
+- Hotfix for `undefined` in Nuxt provider data
+  ([#3185](https://github.com/WordPress/openverse/pull/3185)) by @obulat
+- Use `property` attribute for OpenGraph title and image
+  ([#3213](https://github.com/WordPress/openverse/pull/3213)) by @RogueCode007
+- Re-add the style to tags container
+  ([#3191](https://github.com/WordPress/openverse/pull/3191)) by @obulat
+- Fix single result page test flakiness
+  ([#3186](https://github.com/WordPress/openverse/pull/3186)) by @obulat
+- Fix storybook v-image-cell test
+  ([#3174](https://github.com/WordPress/openverse/pull/3174)) by @obulat

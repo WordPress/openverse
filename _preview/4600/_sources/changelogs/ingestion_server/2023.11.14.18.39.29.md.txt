@@ -1,0 +1,28 @@
+# 2023.11.14.18.39.29
+
+## New Features
+
+- Add DAG for filtering archived providers in catalog
+  ([#3259](https://github.com/WordPress/openverse/pull/3259)) by @stacimc
+
+## Improvements
+
+- Remove unused fields from ES
+  ([#3168](https://github.com/WordPress/openverse/pull/3168)) by @dhruvkb
+
+## Internal Improvements
+
+- Use a default for `HOST_NETWORK_ADDRESS` to hide warnings
+  ([#3333](https://github.com/WordPress/openverse/pull/3333)) by @dhruvkb
+- Update dependency elasticsearch to v8.10.1
+  ([#3278](https://github.com/WordPress/openverse/pull/3278)) by @renovate
+- Bump elasticsearch from 8.10.0 to 8.10.1 in /ingestion_server
+  ([#3291](https://github.com/WordPress/openverse/pull/3291)) by @dependabot
+- Bump sentry-sdk from 1.31.0 to 1.33.1 in /ingestion_server
+  ([#3293](https://github.com/WordPress/openverse/pull/3293)) by @dependabot
+- Bump boto3 from 1.28.58 to 1.28.75 in /ingestion_server
+  ([#3292](https://github.com/WordPress/openverse/pull/3292)) by @dependabot
+- Bump pytest from 7.4.2 to 7.4.3 in /ingestion_server
+  ([#3295](https://github.com/WordPress/openverse/pull/3295)) by @dependabot
+- Bump filelock from 3.12.4 to 3.13.1 in /ingestion_server
+  ([#3294](https://github.com/WordPress/openverse/pull/3294)) by @dependabot

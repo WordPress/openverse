@@ -1,0 +1,11 @@
+# 2024.08.16.21.27.06
+
+## Internal Improvements
+
+- Update colors, add the dark mode palette, and switch to CSS vars
+  ([#4690](https://github.com/WordPress/openverse/pull/4690)) by @zackkrida
+
+## Bug Fixes
+
+- Fix the focus outline for buttons
+  ([#4761](https://github.com/WordPress/openverse/pull/4761)) by @obulat

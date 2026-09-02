@@ -1,0 +1,21 @@
+# 2024.03.04.15.15.07
+
+## Improvements
+
+- Add copyright disclaimer text
+  ([#3852](https://github.com/WordPress/openverse/pull/3852)) by @zackkrida
+- Add Free Music Archive to external sources in the frontend
+  ([#3834](https://github.com/WordPress/openverse/pull/3834)) by @alt-shreya
+
+## Internal Improvements
+
+- Update docker.io/nginx Docker tag to v1.25.4
+  ([#3857](https://github.com/WordPress/openverse/pull/3857)) by @openverse-bot
+- Update dependency prettier-plugin-tailwindcss to v0.5.11
+  ([#3862](https://github.com/WordPress/openverse/pull/3862)) by @openverse-bot
+- Update dependency @playwright/test to v1.42.0
+  ([#3859](https://github.com/WordPress/openverse/pull/3859)) by @openverse-bot
+- Update Node.js to v18.19.1
+  ([#3854](https://github.com/WordPress/openverse/pull/3854)) by @openverse-bot
+- Turn analytics composable into a plugin
+  ([#3811](https://github.com/WordPress/openverse/pull/3811)) by @sarayourfriend

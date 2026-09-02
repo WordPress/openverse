@@ -1,0 +1,63 @@
+# 2024.07.19.17.07.23
+
+## New Features
+
+- Add catalog indexer worker
+  ([#4330](https://github.com/WordPress/openverse/pull/4330)) by @stacimc
+
+## Improvements
+
+- Expand `ov` documentation and replace environment setup docs with `ov`
+  instructions ([#4567](https://github.com/WordPress/openverse/pull/4567)) by
+  @sarayourfriend
+- Split `batched_update` DAG into automated and manual DAGs
+  ([#4552](https://github.com/WordPress/openverse/pull/4552)) by @AetherUnbound
+- Add linting for Dockerfiles
+  ([#4540](https://github.com/WordPress/openverse/pull/4540)) by @dhruvkb
+- Explicitly include Filter Data step in ingestion server removal IP
+  ([#4524](https://github.com/WordPress/openverse/pull/4524)) by @AetherUnbound
+- Changes all sensible occurrences of the just commands to have them run using
+  ov ([#4483](https://github.com/WordPress/openverse/pull/4483)) by
+  @szymon-polaczy
+
+## Internal Improvements
+
+- Create a dataclass for indexer worker TaskStatus
+  ([#4601](https://github.com/WordPress/openverse/pull/4601)) by @akshay-km
+- Update ingestion server removal IP with EC2 approach
+  ([#4615](https://github.com/WordPress/openverse/pull/4615)) by @stacimc
+- Update dependency apache-airflow to v2.9.3 [SECURITY]
+  ([#4629](https://github.com/WordPress/openverse/pull/4629)) by @openverse-bot
+- Expand `ov` documentation and replace environment setup docs with `ov`
+  instructions ([#4567](https://github.com/WordPress/openverse/pull/4567)) by
+  @sarayourfriend
+- Update pook to v2 ([#4582](https://github.com/WordPress/openverse/pull/4582))
+  by @sarayourfriend
+- Specify pull policy for `openverse-` images
+  ([#4568](https://github.com/WordPress/openverse/pull/4568)) by @dhruvkb
+- Add CI/CD and PDM to new indexer worker
+  ([#4497](https://github.com/WordPress/openverse/pull/4497)) by @sarayourfriend
+- Remove `trim_and_deduplicate_tags` DAG after successful run
+  ([#4557](https://github.com/WordPress/openverse/pull/4557)) by @sarayourfriend
+- Fix separators in catalog and dev-env images and dev-env volume
+  ([#4526](https://github.com/WordPress/openverse/pull/4526)) by @dhruvkb
+- Bump requests from 2.31.0 to 2.32.2 in /indexer_worker
+  ([#4532](https://github.com/WordPress/openverse/pull/4532)) by @dependabot
+- Update dependency apache-airflow to v2.9.2 [SECURITY]
+  ([#4502](https://github.com/WordPress/openverse/pull/4502)) by @openverse-bot
+
+## Bug Fixes
+
+- Fix Docker build warnings
+  ([#4573](https://github.com/WordPress/openverse/pull/4573)) by @dhruvkb
+- Specify pull policy for `openverse-` images
+  ([#4568](https://github.com/WordPress/openverse/pull/4568)) by @dhruvkb
+- Ensure plpython3u exists in live db when using it
+  ([#4555](https://github.com/WordPress/openverse/pull/4555)) by @sarayourfriend
+- Add DAG to decode and deduplicate image tags with escaped literal unicode
+  sequences ([#4475](https://github.com/WordPress/openverse/pull/4475)) by
+  @sarayourfriend
+- Fix placing test S3 data into MinIO
+  ([#4495](https://github.com/WordPress/openverse/pull/4495)) by @krysal
+- Fix trim and deduplicate tags deduplication
+  ([#4473](https://github.com/WordPress/openverse/pull/4473)) by @sarayourfriend

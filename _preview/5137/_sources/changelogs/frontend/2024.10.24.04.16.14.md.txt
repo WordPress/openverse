@@ -1,0 +1,21 @@
+# 2024.10.24.04.16.14
+
+## Internal Improvements
+
+- Update dependency vite to v5.4.6 [SECURITY]
+  ([#5068](https://github.com/WordPress/openverse/pull/5068)) by @openverse-bot
+- Update dependency pinia to v2.2.4
+  ([#5064](https://github.com/WordPress/openverse/pull/5064)) by @openverse-bot
+- Update dependency nuxt to v3.13.2
+  ([#5012](https://github.com/WordPress/openverse/pull/5012)) by @openverse-bot
+- Update dependency @actions/github to v6
+  ([#5065](https://github.com/WordPress/openverse/pull/5065)) by @openverse-bot
+- Update dependency @vueuse/core to v11
+  ([#5066](https://github.com/WordPress/openverse/pull/5066)) by @openverse-bot
+
+## Bug Fixes
+
+- Exclude `ar` from k6 load testing
+  ([#5070](https://github.com/WordPress/openverse/pull/5070)) by @obulat
+- Fix token in #4991 ([#5062](https://github.com/WordPress/openverse/pull/5062))
+  by @obulat

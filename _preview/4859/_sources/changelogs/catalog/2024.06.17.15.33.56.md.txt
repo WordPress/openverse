@@ -1,0 +1,87 @@
+# 2024.06.17.15.33.56
+
+## New Features
+
+- Added documentations for how to run DAGs in development alongside how to add
+  new documentations.
+  ([#4388](https://github.com/WordPress/openverse/pull/4388)) by @madewithkode
+- Add new data refresh factory
+  ([#4259](https://github.com/WordPress/openverse/pull/4259)) by @stacimc
+
+## Improvements
+
+- Capture thumbnails during europeana ingestion
+  ([#4447](https://github.com/WordPress/openverse/pull/4447)) by @madewithkode
+- Add verbose logging option to `ProviderDataIngester`
+  ([#4068](https://github.com/WordPress/openverse/pull/4068)) by @nicoepp
+- Add catalog media properties documentation
+  ([#4366](https://github.com/WordPress/openverse/pull/4366)) by @obulat
+- Use `.venv` for catalog virtualenv instead of `venv`
+  ([#4369](https://github.com/WordPress/openverse/pull/4369)) by
+  @thegreendrinker
+- Add variable to disable removing sql source files during ingestion
+  ([#4216](https://github.com/WordPress/openverse/pull/4216)) by @madewithkode
+- Round decimal record difference percent to three decimals after zeros
+  ([#4065](https://github.com/WordPress/openverse/pull/4065)) by @mattfergoda
+- Make links in docstring display as hyperlinks in docs site
+  ([#4195](https://github.com/WordPress/openverse/pull/4195)) by @madewithkode
+- Add instructions how to run ingestion script from command line
+  ([#4083](https://github.com/WordPress/openverse/pull/4083)) by @kuephi
+
+## Internal Improvements
+
+- Add verbose logging option to `ProviderDataIngester`
+  ([#4068](https://github.com/WordPress/openverse/pull/4068)) by @nicoepp
+- Added documentations for how to run DAGs in development alongside how to add
+  new documentations.
+  ([#4388](https://github.com/WordPress/openverse/pull/4388)) by @madewithkode
+- Always assume special urgency for contributor PR pings
+  ([#4385](https://github.com/WordPress/openverse/pull/4385)) by @AetherUnbound
+- Update dependency apache-airflow to v2.9.1 [SECURITY]
+  ([#4378](https://github.com/WordPress/openverse/pull/4378)) by @openverse-bot
+- Convert longer media `varchar` fields to `text` in the catalog db
+  ([#4357](https://github.com/WordPress/openverse/pull/4357)) by @AetherUnbound
+- Use `.venv` for catalog virtualenv instead of `venv`
+  ([#4369](https://github.com/WordPress/openverse/pull/4369)) by
+  @thegreendrinker
+- Set up airflow variable defaults with descriptions automatically
+  ([#4297](https://github.com/WordPress/openverse/pull/4297)) by @madewithkode
+- Remove popularity & matview timeouts from data refresh configurations
+  ([#4353](https://github.com/WordPress/openverse/pull/4353)) by @johan-naizu
+- Update bucket names to use openverse-catalog and remove openverse-storage
+  ([#4359](https://github.com/WordPress/openverse/pull/4359)) by @Wencho8
+- Remove temporary Science Museum DAG now that it is no longer necessary
+  ([#4314](https://github.com/WordPress/openverse/pull/4314)) by @stacimc
+- Rename old data refresh to `legacy_data_refresh`
+  ([#4260](https://github.com/WordPress/openverse/pull/4260)) by @stacimc
+- Add variable to disable removing sql source files during ingestion
+  ([#4216](https://github.com/WordPress/openverse/pull/4216)) by @madewithkode
+- Update dependency pytest-socket to v0.7.0
+  ([#4244](https://github.com/WordPress/openverse/pull/4244)) by @openverse-bot
+- Modify `add_license_url` DAG for more specific null check
+  ([#4124](https://github.com/WordPress/openverse/pull/4124)) by @krysal
+
+## Bug Fixes
+
+- Update the 'updated_on' column during popularity refresh
+  ([#4460](https://github.com/WordPress/openverse/pull/4460)) by @stacimc
+- Moved by tag from the fuzzy match group to exact match
+  ([#4481](https://github.com/WordPress/openverse/pull/4481)) by @szymon-polaczy
+- Add DAG to trim and deduplicate tags
+  ([#4429](https://github.com/WordPress/openverse/pull/4429)) by @sarayourfriend
+- Modify `add_license_url` DAG to use `batched_update`
+  ([#4370](https://github.com/WordPress/openverse/pull/4370)) by @krysal
+- Fix Slack message formatting for ES health alert
+  ([#4345](https://github.com/WordPress/openverse/pull/4345)) by @AetherUnbound
+- Update Science museum urls
+  ([#4276](https://github.com/WordPress/openverse/pull/4276)) by @stacimc
+- Fix Science Museum index out of range error
+  ([#4253](https://github.com/WordPress/openverse/pull/4253)) by @stacimc
+- Fix advanced provider options for dags that override ingest records
+  ([#4214](https://github.com/WordPress/openverse/pull/4214)) by @stacimc
+- Extend `update_license_url` tasks timeout to a day and a half
+  ([#4209](https://github.com/WordPress/openverse/pull/4209)) by @krysal
+- Don't show sources if their count has not changed
+  ([#4176](https://github.com/WordPress/openverse/pull/4176)) by @AetherUnbound
+- Add DAG run link, explanation of missing failures to agg failure report
+  ([#4180](https://github.com/WordPress/openverse/pull/4180)) by @AetherUnbound

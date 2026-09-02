@@ -1,0 +1,6 @@
+# 2024.02.28.18.32.08
+
+## Bug Fixes
+
+- Raise an exception if any indexer workers fail their health check
+  ([#3726](https://github.com/WordPress/openverse/pull/3726)) by @AetherUnbound

@@ -1,0 +1,57 @@
+# 2023.05.02.19.17.32
+
+## New Features
+
+- [Analytics event: BACK_TO_SEARCH (#1118)](https://github.com/WordPress/openverse/pull/1118)
+  by @masif2002
+- [Project Proposal: Sensitive content report moderation (#1176)](https://github.com/WordPress/openverse/pull/1176)
+  by @sarayourfriend
+- [Install drf-spectacular (#1876)](https://github.com/WordPress/openverse/pull/1876)
+  by @dhruvkb
+- [Analytics event: REPORT_MEDIA (#1181)](https://github.com/WordPress/openverse/pull/1181)
+  by @obulat
+
+## Improvements
+
+- [Replace span with h2 on image search results (#1888)](https://github.com/WordPress/openverse/pull/1888)
+  by @obulat
+- [Update Back to results button to use the new VButton variant and size (#1141)](https://github.com/WordPress/openverse/pull/1141)
+  by @obulat
+- [Update report buttons (#1004)](https://github.com/WordPress/openverse/pull/1004)
+  by @obulat
+- [Convert VPopover story to MDX (#1089)](https://github.com/WordPress/openverse/pull/1089)
+  by @sepehrrezaei
+- [Add SVG Sprite Module for icons (#1808)](https://github.com/WordPress/openverse/pull/1808)
+  by @obulat
+- [Update the VFilterButton to use the new variants (#1132)](https://github.com/WordPress/openverse/pull/1132)
+  by @obulat
+- [Avoid the need to specify each image individually in `load-img` (#1855)](https://github.com/WordPress/openverse/pull/1855)
+  by @dhruvkb
+
+## Internal Improvements
+
+- [Remove primary button variant and make variant required (#1188)](https://github.com/WordPress/openverse/pull/1188)
+  by @obulat
+- [Remove @types/lodash.sortBy from project (#1937)](https://github.com/WordPress/openverse/pull/1937)
+  by @wasimTQ
+- [Improve Playwright navigation utilities (#1869)](https://github.com/WordPress/openverse/pull/1869)
+  by @obulat
+- [Use `bordered-white` variant for VSearchTypeButton.vue (#1146)](https://github.com/WordPress/openverse/pull/1146)
+  by @obulat
+
+## Bug Fixes
+
+- [Correctly pass `maxDiffPixelRatio` to add tolerance for pages-single-result VR test (#1960)](https://github.com/WordPress/openverse/pull/1960)
+  by @obulat
+- [Lower the number of columns when sidebar is open (#1178)](https://github.com/WordPress/openverse/pull/1178)
+  by @obulat
+- [Replace the links to old repos in code (#1918)](https://github.com/WordPress/openverse/pull/1918)
+  by @obulat
+- [Compute search path query parameters for the type passed (#1871)](https://github.com/WordPress/openverse/pull/1871)
+  by @obulat
+
+## Credits
+
+Thanks to @AetherUnbound, @dependabot, @dependabot[bot], @dhruvkb, @krysal,
+@masif2002, @msolorio, @obulat, @openverse-bot, @sarayourfriend, @sepehrrezaei,
+@stacimc, @wasimTQ and @zackkrida for their contributions!

@@ -1,0 +1,52 @@
+# 2024.12.02.17.23.30
+
+## Improvements
+
+- Fix the heading size for related audio
+  ([#5194](https://github.com/WordPress/openverse/pull/5194)) by @tejaswarathe
+- Change text color to secondary on content-heavy pages
+  ([#5148](https://github.com/WordPress/openverse/pull/5148)) by @dhruvkb
+
+## Internal Improvements
+
+- chore(deps): update docker.io/nginx docker tag to v1.27.3
+  ([#5222](https://github.com/WordPress/openverse/pull/5222)) by @openverse-bot
+- fix(deps): update dependency uuid to v11
+  ([#5235](https://github.com/WordPress/openverse/pull/5235)) by @openverse-bot
+- chore(deps): update dependency nock to v14.0.0-beta.18
+  ([#5219](https://github.com/WordPress/openverse/pull/5219)) by @openverse-bot
+- chore(deps): update dependency prettier-plugin-tailwindcss to v0.6.9
+  ([#5220](https://github.com/WordPress/openverse/pull/5220)) by @openverse-bot
+- chore(deps): update pnpm to v9.14.4
+  ([#5223](https://github.com/WordPress/openverse/pull/5223)) by @openverse-bot
+- Revert "Downgrade pinia (#5214)"
+  ([#5217](https://github.com/WordPress/openverse/pull/5217)) by @obulat
+- Modify k6 load tests
+  ([#5181](https://github.com/WordPress/openverse/pull/5181)) by @obulat
+- Introduce a memory leak to check the k6 tests - follow up on #5213
+  ([#5214](https://github.com/WordPress/openverse/pull/5214)) by @obulat
+- Introduce a memory leak to check k6 tests
+  ([#5213](https://github.com/WordPress/openverse/pull/5213)) by @obulat
+- fix(deps): update dependency @vueuse/core to v12
+  ([#5208](https://github.com/WordPress/openverse/pull/5208)) by @openverse-bot
+- chore(deps): update pnpm to v9.14.3
+  ([#5205](https://github.com/WordPress/openverse/pull/5205)) by @openverse-bot
+- fix(deps): update dependency @nuxtjs/sitemap to v7
+  ([#5207](https://github.com/WordPress/openverse/pull/5207)) by @openverse-bot
+- fix(deps): update dependency @nuxtjs/robots to v5
+  ([#5206](https://github.com/WordPress/openverse/pull/5206)) by @openverse-bot
+- chore(deps): update dependency @playwright/test to v1.49.0
+  ([#5203](https://github.com/WordPress/openverse/pull/5203)) by @openverse-bot
+- Replace @openverse/eslint-plugin
+  ([#5202](https://github.com/WordPress/openverse/pull/5202)) by @openverse-bot
+- Update Nuxt i18n ([#5176](https://github.com/WordPress/openverse/pull/5176))
+  by @obulat
+- Fix unit test warnings
+  ([#5172](https://github.com/WordPress/openverse/pull/5172)) by @obulat
+
+## Bug Fixes
+
+- Fix the CI by fixing the i18n dependencies, and updating vite to v6.0.1
+  ([#5198](https://github.com/WordPress/openverse/pull/5198)) by @obulat
+- Reduce threshold for color matching in VRT
+  ([#5182](https://github.com/WordPress/openverse/pull/5182)) by @dhruvkb

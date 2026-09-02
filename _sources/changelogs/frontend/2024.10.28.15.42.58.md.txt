@@ -1,0 +1,22 @@
+# 2024.10.28.15.42.58
+
+## Internal Improvements
+
+- Add baseline functionality for running Playwright tests against live
+  environments ([#5075](https://github.com/WordPress/openverse/pull/5075)) by
+  @sarayourfriend
+- Update dependency @rollup/plugin-commonjs to v28
+  ([#5093](https://github.com/WordPress/openverse/pull/5093)) by @openverse-bot
+- Update dependency postcss-focus-visible to v10
+  ([#5089](https://github.com/WordPress/openverse/pull/5089)) by @openverse-bot
+- Update dependency npm-run-all2 to v7
+  ([#5088](https://github.com/WordPress/openverse/pull/5088)) by @openverse-bot
+- Update node and pnpm
+  ([#5084](https://github.com/WordPress/openverse/pull/5084)) by @obulat
+
+## Bug Fixes
+
+- Update node to v.22
+  ([#5096](https://github.com/WordPress/openverse/pull/5096)) by @obulat
+- Fix dark mode issues
+  ([#5076](https://github.com/WordPress/openverse/pull/5076)) by @obulat

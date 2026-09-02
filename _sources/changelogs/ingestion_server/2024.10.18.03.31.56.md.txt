@@ -1,0 +1,6 @@
+# 2024.10.18.03.31.56
+
+## Internal Improvements
+
+- Update dependency elasticsearch to v8.15.1
+  ([#5010](https://github.com/WordPress/openverse/pull/5010)) by @openverse-bot

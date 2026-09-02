@@ -1,0 +1,31 @@
+# 2024.09.16.09.52.36
+
+## New Features
+
+- Add low-level TS API client with generated types
+  ([#4538](https://github.com/WordPress/openverse/pull/4538)) by @sarayourfriend
+
+## Improvements
+
+- Implement inverted CC icons for dark mode
+  ([#4921](https://github.com/WordPress/openverse/pull/4921)) by @dhruvkb
+- Set `dark_mode_ui_toggle` to on by default
+  ([#4913](https://github.com/WordPress/openverse/pull/4913)) by @obulat
+
+## Internal Improvements
+
+- Rename all snapshots to "light"
+  ([#4914](https://github.com/WordPress/openverse/pull/4914)) by @obulat
+- Refactor k6 development environment to prepare for regular runs in CD
+  ([#4903](https://github.com/WordPress/openverse/pull/4903)) by @sarayourfriend
+- Update i18n packages
+  ([#4876](https://github.com/WordPress/openverse/pull/4876)) by @obulat
+- Re-add Storybook ([#4841](https://github.com/WordPress/openverse/pull/4841))
+  by @obulat
+- Refactor k6 development environment to prepare for regular runs in CD
+  ([#4903](https://github.com/WordPress/openverse/pull/4903)) by @sarayourfriend
+
+## Bug Fixes
+
+- Fix content switcher in the search page header
+  ([#4933](https://github.com/WordPress/openverse/pull/4933)) by @obulat

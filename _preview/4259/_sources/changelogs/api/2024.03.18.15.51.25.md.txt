@@ -1,0 +1,8 @@
+# 2024.03.18.15.51.25
+
+## Bug Fixes
+
+- Fix audio alt files missing bit rate
+  ([#3931](https://github.com/WordPress/openverse/pull/3931)) by @obulat
+- Remove unused API variables from environment template
+  ([#3929](https://github.com/WordPress/openverse/pull/3929)) by @AetherUnbound

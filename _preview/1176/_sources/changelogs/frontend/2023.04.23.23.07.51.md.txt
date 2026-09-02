@@ -1,0 +1,182 @@
+# 2023.04.23.23.07.51
+
+## New Features
+
+- Add documentation for the CI + CD workflow (#1001) @dhruvkb
+- Analytics event: COPY_ATTRIBUTION (#1147) @obulat
+- Analytics event: GET_MEDIA (#1180) @obulat
+- Add new buttons variants and sizes (#1003) @obulat
+- Implement analytics in Nuxt (#844) @dhruvkb
+- Adding brand assets (#888) @panchovm
+- Add preferences for analytics (#843) @dhruvkb
+- Add actions to search forms (#785) @zackkrida
+
+## Improvements
+
+- Deduce Python/Node.js/pnpm version in Docker images (#1225) @dhruvkb
+- Move Nuxt testing docs to the Docs site (#1144) @obulat
+- Convert `VContentLink` story to MDX (#1062) @sepehrrezaei
+- Update the CTA buttons (#1049) @obulat
+- Update the Copy button (#1140) @obulat
+- Update sources button (#1021) @obulat
+- Convert VModal story to MDX (#1091) @sepehrrezaei
+- Extract VCloseButton and add descriptive labels (#988) @obulat
+- Convert VPill and VItemGroup stories to mdx (#1092) @sepehrrezaei
+- Update other references of media count to 700 million (#1098) @AetherUnbound
+- Simplify CI + CD workflow (#1054) @dhruvkb
+- Improve documentation for partial stack setups (#974) @dhruvkb
+- Project Proposal: Core UI improvement (#912) @panchovm
+- Update URLs to point to docs.openverse.org (#991) @dhruvkb
+- Use profiles in Docker Compose (#914) @dhruvkb
+- Add a counter to filter button and tab (#826) @obulat
+- Prepare Docker setup for monorepo (#889) @dhruvkb
+- Update homepage copy to "700 million" (#842) @Rishav1707
+- Add stack label if available, make get-changes composite action (#786)
+  @AetherUnbound
+- Update home link screen reader text (#788) @zackkrida
+
+## Internal Improvements
+
+- Dispatch deployment workflows from infrastructure repository (#1865)
+  @sarayourfriend
+- Deduce Python/Node.js/pnpm version in Docker images (#1225) @dhruvkb
+- Update Tailwind to version 3.3 (#1060) @obulat
+- Use the built-in Tailwind named groups (#1179) @obulat
+- Change deployment workflow name from colon to dash (#1174) @AetherUnbound
+- Update deployment doc and add zero-downtime info about environment variables
+  (#907) @sarayourfriend
+- Delete unused VSearchTypeRadio.vue (#1143) @obulat
+- Safely call create-or-update-comment when dealing with forks (#997)
+  @sarayourfriend
+- Use context manager for multiprocessing in the ingestion server (#1057)
+  @obulat
+- Add more docs for Plausible and auto-initialise custom event names (#1122)
+  @sarayourfriend
+- Prepare VButton for updates (#1002) @obulat
+- Add `SLACK_WEBHOOK_TYPE` env var to reporting job (#1131) @dhruvkb
+- Fix types in VFilters and VContentReport (#1030) @obulat
+- Update other references of media count to 700 million (#1100) @krysal
+- Pass actor for staging deploys with the `-f` flag (#1104) @dhruvkb
+- Dispatch workflows instead of regular reuse to show deployment runs (#1034)
+  @sarayourfriend
+- Save cleaned up data during the cleanup step (#904) @obulat
+- Add tag app release action (#987) @sarayourfriend
+- Update TS configuration to use composite projects and fix VSCode integration
+  (#951) @sarayourfriend
+- Update Nuxt to v.2.16.3 (#952) @obulat
+- Skip build and publish job if nothing to do (#977) @dhruvkb
+- Update Playwright (#919) @obulat
+- Use profiles in Docker Compose (#914) @dhruvkb
+- Update pinia and pinia/testing (#917) @obulat
+- Always build both api & ingestion server images for either service (#936)
+  @AetherUnbound
+- Build `api` when ingestion server changes (#925) @dhruvkb
+- Prepare Docker setup for monorepo (#889) @dhruvkb
+- Skip more jobs based on changed files (#895) @dhruvkb
+- Update Vue from 2.7.10 to 2.7.14 (#916) @obulat
+- Move peerDependencyRules to root package.json (#828) @obulat
+- Only generate POT file if `en.json5` has changed (#893) @dhruvkb
+- Only run stack label addition step on pull requests (#882) @AetherUnbound
+- Simplify and fix bundle size workflow (#894) @dhruvkb
+- Split deployment workflow into 4 separate workflows (#886) @AetherUnbound
+- Add feature flag for fake marking results as sensitive (#862) @dhruvkb
+- Update sentry; fix config (#870) @zackkrida
+- Add stack label if available, make get-changes composite action (#786)
+  @AetherUnbound
+- Combine VImageCellSquare with VImageCell (#814) @obulat
+- Replace imports from capi with vue imports (#816) @obulat
+- Update TS dependencies (#805) @obulat
+- Unify rollback & deployment, simplify deployment workflow (#767)
+  @AetherUnbound
+
+## Bug Fixes
+
+- Fix focus rings (#1253) @obulat
+- Update frontend Dockerfile to use same release ARG as API (#1827)
+  @sarayourfriend
+- Disable Plausible at init (#1182) @dhruvkb
+- Change deployment workflow name from colon to dash (#1174) @AetherUnbound
+- Add a check for `statement`'s name to fix the failure (#1177) @obulat
+- Fix Storybook tests by waiting for URL instead of a port (#1137) @obulat
+- Safely call create-or-update-comment when dealing with forks (#997)
+  @sarayourfriend
+- Make `label` prop required for VIconButton (#954) @obulat
+- Fix Tailwind line heights (#946) @obulat
+- Pass `GITHUB_TOKEN` to deploy docs (#1134) @dhruvkb
+- Add `SLACK_WEBHOOK_TYPE` env var to reporting job (#1131) @dhruvkb
+- Fix types in VFilters and VContentReport (#1030) @obulat
+- Add a wait to filter button test to fix CI (#1124) @obulat
+- Pass actor for staging deploys with the `-f` flag (#1104) @dhruvkb
+- Add `GITHUB_TOKEN` to GitHub CLI step (#1103) @dhruvkb
+- Dispatch workflows instead of regular reuse to show deployment runs (#1034)
+  @sarayourfriend
+- Fix typo in docs building on `main` (#1067) @dhruvkb
+- Pin pnpm version in frontend `Dockerfile` (#1051) @dhruvkb
+- Add tag app release action (#987) @sarayourfriend
+- Update TS configuration to use composite projects and fix VSCode integration
+  (#951) @sarayourfriend
+- Switch to internal header on single results (#981) @zackkrida
+- Add decoding of the strings that don't have backslashes (#979) @obulat
+- Skip build and publish job if nothing to do (#977) @dhruvkb
+- Make `searchTerm` for VAudioTrack and VImageCell optional (#955) @obulat
+- Update opensearch.xml to fix bad url (#961) @zackkrida
+- Make Plausible setup idempotent (#943) @dhruvkb
+- Fix background color on report pages (#915) @obulat
+- Fix global audio player's close button (#927) @obulat
+- Always build both api & ingestion server images for either service (#936)
+  @AetherUnbound
+- Fix links on the main Storybook page (#930) @obulat
+- Build `api` when ingestion server changes (#925) @dhruvkb
+- Fix global audio player layout (#918) @obulat
+- Skip more jobs based on changed files (#895) @dhruvkb
+- Move peerDependencyRules to root package.json (#828) @obulat
+- Add get-image-tag as dependency for nginx build step (#909) @AetherUnbound
+- Only run stack label addition step on pull requests (#882) @AetherUnbound
+- Simplify and fix bundle size workflow (#894) @dhruvkb
+- Update sentry; fix config (#870) @zackkrida
+- Fix crash when more than one `q` parameter is provided in URL (#806) @obulat
+- Unify rollback & deployment, simplify deployment workflow (#767)
+  @AetherUnbound
+
+## Credits
+
+Thanks to @0kyn, @0xwho7, @Aakash2408, @AbhiYHub, @AdarshRawat1, @AetherUnbound,
+@AlexVCS, @Arraxx, @ArslanYM, @AshwanthramKL, @Bandzyrka, @BarokDG,
+@CatherineNjenga, @ChariniNana, @ChrisCoastal, @Dachande663, @DantrazTrev,
+@DillonKyleDev, @Fahme, @GreenCreep, @HAKSOAT, @HebaFareed, @HernaniStands,
+@Jbudd512, @Jorgewlf88, @Justinjdaniel, @Kevan-Y, @Maxslide, @Mayank-Jain-1,
+@Milind712000, @MuhammadFaizanHaidar, @MukulKolpe, @MustkimKhatik, @P1YU5H-50N1,
+@Pmeet, @PrabhavPandey, @PrajwalBorkar, @Prathamdas3, @PuneetDabral, @RARNE12,
+@Rishav1707, @Sando1, @SaurabhAgarwala, @SincerelyBrittany, @StTronn, @Tanuj22,
+@The5cheduler, @TheCelestial25, @Tomvth, @VatsalSin, @VincentvI023, @Wbrown633,
+@Yash-Pratapwar, @Yashs911, @Yasir761, @abhishekcsawo, @abhisheknaiidu,
+@adrijshikhar, @akanksha-v, @akkspros, @akmadian, @akowtko, @akshgpt7,
+@alanjacobmathew, @aldenstpage, @alessandrodolci, @allen505, @alrz1999,
+@amartya-dev, @amazzoccone, @amm98d, @amycruz97, @anksh1997, @ankurshr01,
+@annatuma, @anton202, @aqeelat, @ariessa, @aryamanpuri, @ashikmeerankutty,
+@avats-dev, @avvinci, @ayanchoudhary, @ayushshivani, @bengreeley,
+@brenoferreira, @capitan-beto, @carlosreyesmunoz,
+@cc-creativecommons-github-io-bot, @chetas411, @davcortez, @demophoon,
+@dependabot, @dependabot[bot], @devRD, @dhirensr, @dhruvkb, @dos077, @elharony,
+@fizal619, @flamesjames, @foroveralls, @geekayush, @gelbelle, @glowatsk,
+@grumpyp, @hasanuzzamanbe, @hemanth-hk, @himanshu007-creator, @iamananya,
+@ilitotor, @itemrarity, @j-doka, @jansone-dace, @jeherve, @jhutchings1,
+@jonrutter, @joshharrison626, @justbaileym, @kamiwis, @kavyabhat02, @kb-0311,
+@kelvindecosta, @kgodey, @kharissulistiyo, @kickeyhickey, @kk311y,
+@kokamkarsahil, @krysal, @kss682, @lamhoangpham20, @lyu4321, @madewithkode,
+@manav1403, @mariuszskon, @mathemancer, @megha070, @miikkuu, @mjprince,
+@muddi900, @mukeshpanchal27, @neeraj-2, @nimishbongale, @obulat, @openverse-bot,
+@outloudvi, @pa-w, @panchovm, @paulofilip3, @pratikmishra356, @qubit99, @raamas,
+@rafaelytakei, @raghuvar-arora-au2, @rahulbollisetty, @raiyaj, @rajdeepdas2000,
+@ramadanomar, @rbadillap, @renovate, @renovate[bot], @ritesh-pandey, @rochisha0,
+@rsubra13, @rwidom, @sahil-R, @samcaspus, @sarayourfriend, @satya-vinay,
+@sclachar, @sebworks, @sepehrrezaei, @sgrepos, @sharmadhiraj86,
+@shreyanshmalvya, @sjdex, @skidi3, @somtochiama, @sora-san45, @sp35, @stacimc,
+@sudharsana-kjl, @sumit-158, @swapnalshahil, @t-hamano, @tahmid-ul, @tal66,
+@thedevhaider, @theshakeabhi, @tichnas, @tushar912, @twstokes, @urakymzhan,
+@vane, @vinsout, @vortex73, @vsomnath, @yavik-kapadia, @zackkrida, @zmwaris1,
+Alden Page, Alden S Page, Alden S. Page, Ayush Pratap Singh, Catherine Hoang,
+Charini Nanayakkara, DillonKyleDev, Fakela, Guilherme Oliveira, Jesse, Krystle
+Salazar, Oksana Melnik, Shubham Singh, SomtochiAma, Steven Bellamy,
+akandeBolaji, aldenstpage, dravadhis, farouski, manav1403, nilshah98 and root
+for their contributions!

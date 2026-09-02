@@ -1,0 +1,13 @@
+# 2024.07.30.17.36.41
+
+## New Features
+
+- Implement bulk moderation actions
+  ([#4654](https://github.com/WordPress/openverse/pull/4654)) by @dhruvkb
+- Update media list admin view to add ES-powered search
+  ([#4656](https://github.com/WordPress/openverse/pull/4656)) by @dhruvkb
+
+## Improvements
+
+- Limit access for content moderators
+  ([#4603](https://github.com/WordPress/openverse/pull/4603)) by @dhruvkb

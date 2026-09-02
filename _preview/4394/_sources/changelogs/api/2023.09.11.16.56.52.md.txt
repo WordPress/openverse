@@ -1,0 +1,14 @@
+# 2023.09.11.16.56.52
+
+## Internal Improvements
+
+- remove redlock-py from api dependencies
+  ([#3004](https://github.com/WordPress/openverse/pull/3004)) by @rwidom
+- Remove python3 openid dependency from api
+  ([#3005](https://github.com/WordPress/openverse/pull/3005)) by @rwidom
+- remove hvac dependency from API
+  ([#3003](https://github.com/WordPress/openverse/pull/3003)) by @rwidom
+- Bump deepdiff from 6.3.1 to 6.4.1 in /api
+  ([#2960](https://github.com/WordPress/openverse/pull/2960)) by @dependabot
+- Switch local API dev server to use gunicorn instead of django runserver
+  ([#2936](https://github.com/WordPress/openverse/pull/2936)) by @ashiramin

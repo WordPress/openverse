@@ -1,0 +1,24 @@
+# 2024.04.15.17.18.29
+
+## New Features
+
+- Content moderator user preferences admin view
+  ([#3914](https://github.com/WordPress/openverse/pull/3914)) by @AetherUnbound
+- Implement media properties documentation for the API and frontend
+  ([#3966](https://github.com/WordPress/openverse/pull/3966)) by @dhruvkb
+
+## Improvements
+
+- Show the unstable params and improve collection docs
+  ([#4085](https://github.com/WordPress/openverse/pull/4085)) by @obulat
+
+## Internal Improvements
+
+- Bump idna from 3.6 to 3.7 in /api
+  ([#4098](https://github.com/WordPress/openverse/pull/4098)) by @dependabot
+
+## Bug Fixes
+
+- Bugfix to ensure image type is correctly extracted from content type
+  ([#4062](https://github.com/WordPress/openverse/pull/4062)) by
+  @thegreendrinker

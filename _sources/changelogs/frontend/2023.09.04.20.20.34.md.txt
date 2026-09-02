@@ -1,0 +1,37 @@
+# 2023.09.04.20.20.34
+
+## New Features
+
+- Add analytics to content safety events
+  ([#2941](https://github.com/WordPress/openverse/pull/2941)) by @dhruvkb
+- Enabling fetching sensitive results when the UI switch is toggled
+  ([#2880](https://github.com/WordPress/openverse/pull/2880)) by @obulat
+- Simplify, improve and document the i18n pipeline
+  ([#2898](https://github.com/WordPress/openverse/pull/2898)) by @dhruvkb
+- Update metasearch button style and use a modal for screens below `lg`
+  ([#2811](https://github.com/WordPress/openverse/pull/2811)) by @chenikabukes
+
+## Improvements
+
+- Create a page for apps made with the Openverse API
+  ([#2881](https://github.com/WordPress/openverse/pull/2881)) by @dhruvkb
+- Combine `VAudioDetails` and `VImageDetails` into `VMediaDetails` component
+  ([#2846](https://github.com/WordPress/openverse/pull/2846)) by @obulat
+- Update the external search modal and items
+  ([#2860](https://github.com/WordPress/openverse/pull/2860)) by @obulat
+
+## Internal Improvements
+
+- Refactor the error page
+  ([#2845](https://github.com/WordPress/openverse/pull/2845)) by @obulat
+- Add all pages to tsconfig
+  ([#2897](https://github.com/WordPress/openverse/pull/2897)) by @obulat
+- Upgrade ESLint and Prettier packages in monorepo root
+  ([#2908](https://github.com/WordPress/openverse/pull/2908)) by @sarayourfriend
+- Combine all error visual regression tests into one file
+  ([#2867](https://github.com/WordPress/openverse/pull/2867)) by @obulat
+
+## Bug Fixes
+
+- Revert prettier updates to fix the dev build
+  ([#2958](https://github.com/WordPress/openverse/pull/2958)) by @obulat

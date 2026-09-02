@@ -1,0 +1,29 @@
+# 2024.08.15.16.49.58
+
+## New Features
+
+- Preemptively filter out Rekognition tags
+  ([#4667](https://github.com/WordPress/openverse/pull/4667)) by @AetherUnbound
+- Add `catalog_cleaner` DAG
+  ([#4610](https://github.com/WordPress/openverse/pull/4610)) by @krysal
+
+## Improvements
+
+- Always use only latest provider tags when reingesting
+  ([#4752](https://github.com/WordPress/openverse/pull/4752)) by @sarayourfriend
+- Clarify policy around which demographics to exclude in Rekognition IP
+  ([#4662](https://github.com/WordPress/openverse/pull/4662)) by @AetherUnbound
+
+## Internal Improvements
+
+- Remove env from Airflow alerts, improve ES alert username & icon
+  ([#4652](https://github.com/WordPress/openverse/pull/4652)) by @AetherUnbound
+
+## Bug Fixes
+
+- Replace retry with backoff, add backoff to all Freesound requests
+  ([#4663](https://github.com/WordPress/openverse/pull/4663)) by @AetherUnbound
+- Convert iNaturalist vernacular VARCHAR columns to TEXT
+  ([#4711](https://github.com/WordPress/openverse/pull/4711)) by @AetherUnbound
+- Fix update query and increase simultaneous tasks of the `add_license_url` DAG
+  ([#4661](https://github.com/WordPress/openverse/pull/4661)) by @krysal

@@ -1,0 +1,11 @@
+# 2024.03.18.15.51.41
+
+## New Features
+
+- Update the Additional search views IP
+  ([#3868](https://github.com/WordPress/openverse/pull/3868)) by @obulat
+
+## Improvements
+
+- Add source links to creator pages
+  ([#3780](https://github.com/WordPress/openverse/pull/3780)) by @obulat

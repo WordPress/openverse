@@ -1,0 +1,64 @@
+# 2023.04.27.02.43.13
+
+## Improvements
+
+- Add `LABEL` to link repo with GHCR image (#1223) @dhruvkb
+
+## Internal Improvements
+
+- Accommodate multi-heading DAG docs (#1866) @sarayourfriend
+- Make foreign_identifier required in `add_item` (#1887) @obulat
+- Add `catalog/recreate` just command and remove a file (#1856) @krysal
+- Bump pre-commit from 3.2.1 to 3.2.2 in /catalog (#1210) @dependabot
+- Bump pytest-sugar from 0.9.6 to 0.9.7 in /catalog (#1212) @dependabot
+- Add `LABEL` to link repo with GHCR image (#1223) @dhruvkb
+
+## Bug Fixes
+
+- Update timeouts for image popularity view creation (#1906) @stacimc
+- Consolidate all transient dev container dirs for the catalog (#1829)
+  @AetherUnbound
+- Fix line ending of Java SDK file (#1222) @zackkrida
+
+## Credits
+
+Thanks to @0kyn, @0xwho7, @Aakash2408, @AbhiYHub, @AdarshRawat1, @AetherUnbound,
+@AlexVCS, @Arraxx, @ArslanYM, @AshwanthramKL, @Bandzyrka, @BarokDG,
+@CatherineNjenga, @ChariniNana, @ChrisCoastal, @Dachande663, @DantrazTrev,
+@DillonKyleDev, @Fahme, @GreenCreep, @HAKSOAT, @HebaFareed, @HernaniStands,
+@Jbudd512, @Jorgewlf88, @Justinjdaniel, @Kevan-Y, @Maxslide, @Mayank-Jain-1,
+@Milind712000, @MuhammadFaizanHaidar, @MukulKolpe, @MustkimKhatik, @P1YU5H-50N1,
+@Pmeet, @PrabhavPandey, @PrajwalBorkar, @Prathamdas3, @PuneetDabral, @RARNE12,
+@Rishav1707, @Sando1, @SaurabhAgarwala, @SincerelyBrittany, @StTronn, @Tanuj22,
+@The5cheduler, @TheCelestial25, @Tomvth, @VatsalSin, @VincentvI023, @Wbrown633,
+@Yash-Pratapwar, @Yashs911, @Yasir761, @abhishekcsawo, @abhisheknaiidu,
+@adrijshikhar, @akanksha-v, @akkspros, @akmadian, @akowtko, @akshgpt7,
+@alanjacobmathew, @aldenstpage, @alessandrodolci, @allen505, @alrz1999,
+@amartya-dev, @amazzoccone, @amm98d, @amycruz97, @anksh1997, @ankurshr01,
+@annatuma, @anton202, @aqeelat, @ariessa, @aryamanpuri, @ashikmeerankutty,
+@avats-dev, @avvinci, @ayanchoudhary, @ayushshivani, @bengreeley,
+@brenoferreira, @capitan-beto, @carlosreyesmunoz,
+@cc-creativecommons-github-io-bot, @chetas411, @davcortez, @demophoon,
+@dependabot, @dependabot[bot], @devRD, @dhirensr, @dhruvkb, @dos077, @elharony,
+@fizal619, @flamesjames, @foroveralls, @geekayush, @gelbelle, @glowatsk,
+@grumpyp, @hasanuzzamanbe, @hemanth-hk, @himanshu007-creator, @iamananya,
+@ilitotor, @itemrarity, @j-doka, @jansone-dace, @jeherve, @jhutchings1,
+@jonrutter, @joshharrison626, @justbaileym, @kamiwis, @kavyabhat02, @kb-0311,
+@kelvindecosta, @kgodey, @kharissulistiyo, @kickeyhickey, @kk311y,
+@kokamkarsahil, @krysal, @kss682, @lamhoangpham20, @lyu4321, @madewithkode,
+@manav1403, @mariuszskon, @mathemancer, @megha070, @miikkuu, @mjprince,
+@muddi900, @mukeshpanchal27, @neeraj-2, @nimishbongale, @obulat, @openverse-bot,
+@outloudvi, @pa-w, @panchovm, @paulofilip3, @pratikmishra356, @qubit99, @raamas,
+@rafaelytakei, @raghuvar-arora-au2, @rahulbollisetty, @raiyaj, @rajdeepdas2000,
+@ramadanomar, @rbadillap, @renovate, @renovate[bot], @ritesh-pandey, @rochisha0,
+@rsubra13, @rwidom, @sahil-R, @samcaspus, @sarayourfriend, @satya-vinay,
+@sclachar, @sebworks, @sepehrrezaei, @sgrepos, @sharmadhiraj86,
+@shreyanshmalvya, @sjdex, @skidi3, @somtochiama, @sora-san45, @sp35, @stacimc,
+@sudharsana-kjl, @sumit-158, @swapnalshahil, @t-hamano, @tahmid-ul, @tal66,
+@thedevhaider, @theshakeabhi, @tichnas, @tushar912, @twstokes, @urakymzhan,
+@vane, @vinsout, @vortex73, @vsomnath, @yavik-kapadia, @zackkrida, @zmwaris1,
+Alden Page, Alden S Page, Alden S. Page, Ayush Pratap Singh, Catherine Hoang,
+Charini Nanayakkara, DillonKyleDev, Fakela, Guilherme Oliveira, Jesse, Krystle
+Salazar, Oksana Melnik, Shubham Singh, SomtochiAma, Steven Bellamy,
+akandeBolaji, aldenstpage, dravadhis, farouski, manav1403, nilshah98 and root
+for their contributions!

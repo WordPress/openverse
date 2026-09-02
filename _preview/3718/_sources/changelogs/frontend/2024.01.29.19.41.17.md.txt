@@ -1,0 +1,6 @@
+# 2024.01.29.19.41.17
+
+## Internal Improvements
+
+- Update tests for Nuxt 3 migration
+  ([#3667](https://github.com/WordPress/openverse/pull/3667)) by @obulat

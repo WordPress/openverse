@@ -1,0 +1,6 @@
+# 2023.09.20.11.16.51
+
+## Bug Fixes
+
+- Replace gevent with uvloop
+  ([#3048](https://github.com/WordPress/openverse/pull/3048)) by @sarayourfriend

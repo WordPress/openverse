@@ -1,0 +1,11 @@
+# 2025.01.11.11.22.59
+
+## Improvements
+
+- Docs: add database queries log documentation
+  ([#5301](https://github.com/WordPress/openverse/pull/5301)) by @dilipbheda
+
+## Internal Improvements
+
+- Revert "Downgrade the API's python version back to 3.11 (#5295)"
+  ([#5327](https://github.com/WordPress/openverse/pull/5327)) by @krysal

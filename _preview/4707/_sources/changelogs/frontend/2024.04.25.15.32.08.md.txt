@@ -1,0 +1,6 @@
+# 2024.04.25.15.32.08
+
+## Bug Fixes
+
+- Add translated routes to block to robots.txt
+  ([#4205](https://github.com/WordPress/openverse/pull/4205)) by @zackkrida

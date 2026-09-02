@@ -1,0 +1,18 @@
+# 2024.05.20.15.14.53
+
+## Improvements
+
+- Use openverse.org domains for Openverse API in all documentation
+  ([#4323](https://github.com/WordPress/openverse/pull/4323)) by @sarayourfriend
+
+## Internal Improvements
+
+- Initialize feature flag state on the server
+  ([#4295](https://github.com/WordPress/openverse/pull/4295)) by @obulat
+
+## Bug Fixes
+
+- Focus the trigger when content setting modal is closed
+  ([#4338](https://github.com/WordPress/openverse/pull/4338)) by @obulat
+- Fix the skip-to-content button
+  ([#4336](https://github.com/WordPress/openverse/pull/4336)) by @obulat

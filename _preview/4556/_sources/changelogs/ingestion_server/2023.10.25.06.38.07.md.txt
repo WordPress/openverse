@@ -1,0 +1,16 @@
+# 2023.10.25.06.38.07
+
+## Improvements
+
+- Remove unreferenced subfields in indices
+  ([#3162](https://github.com/WordPress/openverse/pull/3162)) by @dhruvkb
+
+## Internal Improvements
+
+- Bump tldextract from 3.5.0 to 5.0.1 in /ingestion_server
+  ([#3220](https://github.com/WordPress/openverse/pull/3220)) by @dependabot
+
+## Bug Fixes
+
+- removed-igestion_server-readme.md
+  ([#3227](https://github.com/WordPress/openverse/pull/3227)) by @vinayakhegde1

@@ -1,0 +1,1 @@
+@property --deg{syntax:"<angle>";initial-value:0deg;inherits:false}.new-highlight{background:linear-gradient(var(--color-bg-curr-page),var(--color-bg-curr-page)) content-box,linear-gradient(var(--deg),var(--color-gray-new-highlight),var(--color-new-highlight)) border-box}

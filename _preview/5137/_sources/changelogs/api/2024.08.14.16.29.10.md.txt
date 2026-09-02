@@ -1,0 +1,13 @@
+# 2024.08.14.16.29.10
+
+## Internal Improvements
+
+- Setup structlog Sentry integration
+  ([#4704](https://github.com/WordPress/openverse/pull/4704)) by @obulat
+
+## Bug Fixes
+
+- Do not logger.error timeout errors in dead link checks
+  ([#4757](https://github.com/WordPress/openverse/pull/4757)) by @sarayourfriend
+- Setup structlog Sentry integration
+  ([#4704](https://github.com/WordPress/openverse/pull/4704)) by @obulat

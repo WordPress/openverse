@@ -1,0 +1,15 @@
+# 2024.01.01.19.52.49
+
+## Internal Improvements
+
+- Update pnpm from 7.17.1 to 8.12.1
+  ([#3556](https://github.com/WordPress/openverse/pull/3556)) by @AetherUnbound
+- Unify Vue components
+  ([#3593](https://github.com/WordPress/openverse/pull/3593)) by @obulat
+
+## Bug Fixes
+
+- Fix linting in CI ([#3557](https://github.com/WordPress/openverse/pull/3557))
+  by @stacimc
+- Send SELECT_SEARCH_RESULT event only on left-mouse clicks
+  ([#3472](https://github.com/WordPress/openverse/pull/3472)) by @aneevel

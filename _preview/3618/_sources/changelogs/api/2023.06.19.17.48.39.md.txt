@@ -1,0 +1,12 @@
+# 2023.06.19.17.48.39
+
+## Bug Fixes
+
+- Treat 403s from Europeana as dead links
+  ([#2425](https://github.com/WordPress/openverse/pull/2425)) by @krysal
+- Add 10s timeout to check_image_type head requests
+  ([#2426](https://github.com/WordPress/openverse/pull/2426)) by @zackkrida
+- Check filtered index feature flag before querying in `SearchContext`
+  ([#2408](https://github.com/WordPress/openverse/pull/2408)) by @sarayourfriend
+- Fix API image builds
+  ([#2410](https://github.com/WordPress/openverse/pull/2410)) by @zackkrida

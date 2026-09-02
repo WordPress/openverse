@@ -1,0 +1,13 @@
+# 2023.09.28.00.26.34
+
+## Internal Improvements
+
+- Upgrade psycopg to version 3 in the API
+  ([#3064](https://github.com/WordPress/openverse/pull/3064)) by @krysal
+
+## Bug Fixes
+
+- Transfer UUID validation inside serializer
+  ([#3068](https://github.com/WordPress/openverse/pull/3068)) by @dhruvkb
+- Replace deprecated body in the ES requests with individual parameters
+  ([#3055](https://github.com/WordPress/openverse/pull/3055)) by @ngken0995

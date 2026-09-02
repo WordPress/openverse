@@ -1,0 +1,12 @@
+# 2024.05.28.21.25.54
+
+## Internal Improvements
+
+- Make miscellaneous improvements to the API developer experience
+  ([#4387](https://github.com/WordPress/openverse/pull/4387)) by @dhruvkb
+
+## Bug Fixes
+
+- Revert "Change search query approach to include only available providers
+  (#4238)" ([#4397](https://github.com/WordPress/openverse/pull/4397)) by
+  @AetherUnbound
