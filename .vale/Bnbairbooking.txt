@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BnbAirBooking | Cheapest Global Hotel & Vacation Rentals</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; color: #333; background-color: #f8f9fa; }
+        header { background: linear-gradient(135deg, #ff385c 0%, #e61e4d 100%); color: white; text-align: center; padding: 40px 20px; }
+        header h1 { margin: 0; font-size: 2.5em; }
+        header p { font-size: 1.2em; margin-top: 10px; opacity: 0.9; }
+        .search-container { background: white; max-width: 800px; margin: -30px auto 40px auto; padding: 30px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); text-align: center; }
+        .search-container h2 { color: #ff385c; margin-top: 0; }
+        /* REPLACE THE DIV BELOW WITH YOUR TRAVELPAYOUTS/BOOKING.COM WIDGET CODE */
+        .widget-placeholder { background: #f1f1f1; border: 2px dashed #ccc; padding: 40px; border-radius: 8px; color: #666; font-weight: bold; }
+        .features { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; max-width: 1000px; margin: 0 auto 40px auto; padding: 0 20px; }
+        .feature-card { background: white; padding: 20px; border-radius: 10px; flex: 1 1 250px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); text-align: center; }
+        .feature-card h3 { color: #ff385c; }
+        .video-support { text-align: center; margin: 40px auto; max-width: 600px; padding: 0 20px;}
+        .video-support iframe { width: 100%; aspect-ratio: 16/9; border-radius: 10px; border: none; }
+        footer { background: #222; color: #aaa; text-align: center; padding: 30px 20px; font-size: 0.9em; }
+        footer a { color: #ff385c; text-decoration: none; margin: 0 10px; }
+        .legal-text { display: none; text-align: left; max-width: 800px; margin: 20px auto; background: white; padding: 20px; border-radius: 8px; }
+        .legal-text:target { display: block; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>BnbAirBooking</h1>
+        <p>Undercutting the market. The cheapest hotel & vacation rentals worldwide.</p>
+    </header>
+
+    <div class="search-container">
+        <h2>Find Your Perfect Stay</h2>
+        <p>Search millions of hotels and vacation rentals. We guarantee the lowest rates.</p>
+        <br>
+        <!-- INSTRUCTION: Paste your Travelpayouts or Booking.com Affiliate Search Widget code right here -->
+        <div class="widget-placeholder">
+            [ YOUR FREE AFFILIATE BOOKING WIDGET CODE GOES HERE ]
+        </div>
+    </div>
+
+    <div class="features">
+        <div class="feature-card">
+            <h3>💰 Cashback Rewards</h3>
+            <p>Get up to 10% cash back on every booking. We pass our commission directly to you.</p>
+        </div>
+        <div class="feature-card">
+            <h3>🤖 24/7 AI Support</h3>
+            <p>Our adaptive AI problem-solving system resolves booking issues instantly, day or night.</p>
+        </div>
+        <div class="feature-card">
+            <h3>🌍 Global Inventory</h3>
+            <p>From boutique vacation rentals to 5-star hotels, access the world's largest inventory.</p>
+        </div>
+    </div>
+
+    <div class="video-support">
+        <h2>24/7 Video Customer Service</h2>
+        <p>Watch our quick guide or speak with our AI support agent below.</p>
+        <!-- INSTRUCTION: Replace the src below with your actual YouTube Video URL -->
+        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 BnbAirBooking. Owned and Operated by Jeremy C. Shirley.</p>
+        <p>
+            <a href="#tos">Terms of Service</a> | 
+            <a href="#privacy">Privacy Policy</a>
+        </p>
+        
+        <div id="tos" class="legal-text">
+            <h2>Terms of Service</h2>
+            <p><strong>Last Updated:</strong> July 10, 2026</p>
+            <p>Welcome to BnbAirBooking. By accessing our platform, you agree to these terms. BnbAirBooking, owned by Jeremy C. Shirley, acts solely as an intermediary and booking agent connecting Guests with independent Hosts. We do not own the listed properties. All bookings are subject to Host availability. All sales are final unless specified in the Host's cancellation policy. To the maximum extent permitted by law, BnbAirBooking and Jeremy C. Shirley shall not be liable for any indirect damages arising from your use of the Platform.</p>
+        </div>
+
+        <div id="privacy" class="legal-text">
+            <h2>Privacy Policy</h2>
+            <p><strong>Last Updated:</strong> July 10, 2026</p>
+            <p>BnbAirBooking collects necessary personal and payment data to facilitate bookings. Payment data is processed securely via encrypted third-party gateways; we do not store full credit card numbers. We share necessary booking information with your specific Host to fulfill your reservation. We do not sell your personal data. For privacy concerns or data deletion requests, contact Jeremy C. Shirley at support@bnbairbooking.com.</p>
+        </div>
+    </footer>
+
+    <!-- INSTRUCTION: Paste your free Tidio or Crisp Chat Widget script here for 24/7 AI Chat -->
+
+</body>
+</html>

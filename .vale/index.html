@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="BnbAirBooking - Find the cheapest hotels and vacation rentals worldwide. Get up to 10% cashback on every booking with our guaranteed lowest rates.">
+    <meta name="keywords" content="hotels, vacation rentals, booking, cashback, travel deals, Airbnb, Booking.com">
+    <meta property="og:title" content="BnbAirBooking | Cheapest Global Hotel & Vacation Rentals">
+    <meta property="og:description" content="Undercutting the market. The cheapest hotel & vacation rentals worldwide with cashback rewards.">
+    <meta property="og:type" content="website">
+    <title>BnbAirBooking | Cheapest Global Hotel & Vacation Rentals</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            color: #333; 
+            background-color: #f8f9fa;
+            line-height: 1.6;
+        }
+        header { 
+            background: linear-gradient(135deg, #ff385c 0%, #e61e4d 100%); 
+            color: white; 
+            text-align: center; 
+            padding: 50px 20px; 
+        }
+        header h1 { 
+            margin: 0; 
+            font-size: 2.5em; 
+            font-weight: 700;
+        }
+        header p { 
+            font-size: 1.2em; 
+            margin-top: 10px; 
+            opacity: 0.95;
+        }
+        .search-container { 
+            background: white; 
+            max-width: 900px; 
+            margin: -40px auto 50px auto; 
+            padding: 40px; 
+            border-radius: 12px; 
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15); 
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+        .search-container h2 { 
+            color: #ff385c; 
+            margin-top: 0;
+            font-size: 1.8em;
+        }
+        .travelpayouts-widget {
+            margin-top: 20px;
+            min-height: 200px;
+        }
+        .features { 
+            display: flex; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            gap: 20px; 
+            max-width: 1200px; 
+            margin: 0 auto 60px auto; 
+            padding: 0 20px; 
+        }
+        .feature-card { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 10px; 
+            flex: 1 1 280px; 
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08); 
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        .feature-card h3 { 
+            color: #ff385c; 
+            font-size: 1.4em;
+            margin-bottom: 10px;
+        }
+        .feature-card p {
+            color: #666;
+            font-size: 0.95em;
+        }
+        .cta-section {
+            background: linear-gradient(135deg, #ff385c 0%, #e61e4d 100%);
+            color: white;
+            padding: 50px 20px;
+            text-align: center;
+            margin: 60px 0;
+        }
+        .cta-section h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        .cta-section p {
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+        .email-signup {
+            display: flex;
+            gap: 10px;
+            max-width: 500px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .email-signup input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+        }
+        .email-signup button {
+            padding: 12px 30px;
+            background: white;
+            color: #ff385c;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .email-signup button:hover {
+            background: #f0f0f0;
+        }
+        .video-support { 
+            text-align: center; 
+            margin: 60px auto; 
+            max-width: 700px; 
+            padding: 0 20px;
+        }
+        .video-support h2 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+        .video-support p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .video-support iframe { 
+            width: 100%; 
+            max-width: 100%;
+            aspect-ratio: 16/9; 
+            border-radius: 10px; 
+            border: none;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+        footer { 
+            background: #222; 
+            color: #aaa; 
+            text-align: center; 
+            padding: 40px 20px;
+            font-size: 0.9em;
+        }
+        footer a { 
+            color: #ff385c; 
+            text-decoration: none; 
+            margin: 0 10px;
+            transition: color 0.3s;
+        }
+        footer a:hover {
+            color: #ff6b7a;
+        }
+        .legal-text { 
+            display: none; 
+            text-align: left; 
+            max-width: 900px; 
+            margin: 40px auto; 
+            background: white; 
+            padding: 30px; 
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .legal-text:target { 
+            display: block; 
+        }
+        .legal-text h2 {
+            color: #ff385c;
+            margin-bottom: 15px;
+        }
+        .legal-text p {
+            margin-bottom: 10px;
+            line-height: 1.8;
+        }
+        .back-link {
+            color: #ff385c;
+            text-decoration: none;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.8em; }
+            header p { font-size: 1em; }
+            .search-container { padding: 25px; }
+            .features { gap: 15px; }
+            .feature-card { flex: 1 1 100%; }
+            .cta-section h2 { font-size: 1.5em; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>BnbAirBooking</h1>
+        <p>Undercutting the market. The cheapest hotel & vacation rentals worldwide.</p>
+    </header>
+
+    <div class="search-container">
+        <h2>Find Your Perfect Stay</h2>
+        <p>Search millions of hotels and vacation rentals. We guarantee the lowest rates.</p>
+        <div class="travelpayouts-widget">
+            <!-- TravelPayouts Official Widget - Promo ID: 749503 -->
+            <script src="//travelpayouts.com/w/4c82f76c8c634b5e9f.js"></script>
+        </div>
+    </div>
+
+    <div class="features">
+        <div class="feature-card">
+            <h3>💰 Cashback Rewards</h3>
+            <p>Get up to 10% cash back on every booking. We pass our commission directly to you.</p>
+        </div>
+        <div class="feature-card">
+            <h3>🤖 24/7 AI Support</h3>
+            <p>Our adaptive AI problem-solving system resolves booking issues instantly, day or night.</p>
+        </div>
+        <div class="feature-card">
+            <h3>🌍 Global Inventory</h3>
+            <p>From boutique vacation rentals to 5-star hotels, access the world's largest inventory.</p>
+        </div>
+        <div class="feature-card">
+            <h3>✅ Price Guarantee</h3>
+            <p>Find a lower price elsewhere? We'll match it plus give you an extra 5% cashback.</p>
+        </div>
+    </div>
+
+    <div class="cta-section">
+        <h2>Ready to Save on Your Next Trip?</h2>
+        <p>Join thousands of travelers who save up to 10% with BnbAirBooking</p>
+        <div class="email-signup">
+            <input type="email" placeholder="Enter your email" id="emailSignup">
+            <button onclick="signupEmail()">Get Started</button>
+        </div>
+    </div>
+
+    <div class="video-support">
+        <h2>How BnbAirBooking Works</h2>
+        <p>Watch our quick guide to start earning cashback on your bookings.</p>
+        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 BnbAirBooking. Owned and Operated by Jeremy C. Shirley.</p>
+        <p>
+            <a href="#tos">Terms of Service</a> | 
+            <a href="#privacy">Privacy Policy</a> |
+            <a href="mailto:support@bnbairbooking.com">Contact Support</a>
+        </p>
+        
+        <div id="tos" class="legal-text">
+            <a href="#" class="back-link">← Back</a>
+            <h2>Terms of Service</h2>
+            <p><strong>Last Updated:</strong> July 10, 2026</p>
+            <p>Welcome to BnbAirBooking. By accessing our platform, you agree to these terms. BnbAirBooking, owned by Jeremy C. Shirley, acts solely as an intermediary and booking agent connecting Guests with independent Hosts through TravelPayouts affiliate network. We do not own the listed properties.</p>
+            <p>All bookings are subject to Host availability. All sales are final unless specified in the Host's cancellation policy. Cashback rewards are processed within 30 days of confirmed booking completion.</p>
+            <p>To the maximum extent permitted by law, BnbAirBooking and Jeremy C. Shirley shall not be liable for any indirect damages arising from your use of the Platform.</p>
+        </div>
+
+        <div id="privacy" class="legal-text">
+            <a href="#" class="back-link">← Back</a>
+            <h2>Privacy Policy</h2>
+            <p><strong>Last Updated:</strong> July 10, 2026</p>
+            <p>BnbAirBooking collects necessary personal and payment data to facilitate bookings through our TravelPayouts affiliate network. Payment data is processed securely via encrypted third-party gateways; we do not store full credit card numbers.</p>
+            <p>We share necessary booking information with your Host to fulfill your reservation. We do not sell your personal data to third parties.</p>
+            <p>For privacy concerns or data deletion requests, contact Jeremy C. Shirley at support@bnbairbooking.com.</p>
+        </div>
+    </footer>
+
+    <!-- TravelPayouts AI Optimization Script (Official) -->
+    <script nowprocket data-noptimize="1" data-cfasync="false" data-wpfc-render="false" seraph-accel-crit="1" data-no-defer="1">
+      (function () {
+          var script = document.createElement("script");
+          script.async = 1;
+          script.src = 'https://emrld.ltd/NTQ4OTk0.js?t=548994';
+          document.head.appendChild(script);
+      })();
+    </script>
+
+    <!-- Google Analytics (Add your ID when ready) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PLACEHOLDER"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        // Replace G-PLACEHOLDER with your actual Google Analytics ID
+        // gtag('config', 'G-YOUR-ID');
+    </script>
+
+    <!-- Functionality -->
+    <script>
+        function signupEmail() {
+            const email = document.getElementById('emailSignup').value;
+            if (email && email.includes('@')) {
+                alert('Thanks for signing up! Check your email for exclusive deals.');
+                document.getElementById('emailSignup').value = '';
+            } else {
+                alert('Please enter a valid email address');
+            }
+        }
+
+        console.log('BnbAirBooking with TravelPayouts (Promo ID: 749503) + AI Optimization loaded - ready to earn!');
+    </script>
+
+</body>
+</html>
