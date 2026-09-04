@@ -3,7 +3,9 @@ from decouple import config
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.logging import LoggingIntegration, ignore_logger
 
+from api.utils.sentry import make_sensitive_value_scrubber
 from conf.settings.base import ENVIRONMENT
+from conf.settings.databases import DATABASES
 from conf.settings.security import DEBUG
 
 
@@ -43,6 +45,10 @@ INTEGRATIONS = [
     LoggingIntegration(event_level=None, level=None),
 ]
 
+# Redact infrastructure hostnames (e.g. the database DNS name) that can leak
+# into events as free text, where key-based scrubbing never sees them.
+scrub_sensitive_values = make_sensitive_value_scrubber([DATABASES["default"]["HOST"]])
+
 if not DEBUG and SENTRY_DSN:
     sentry_sdk.init(
         dsn=SENTRY_DSN,
@@ -51,6 +57,8 @@ if not DEBUG and SENTRY_DSN:
         profiles_sampler=profiles_sampler,
         send_default_pii=False,
         environment=ENVIRONMENT,
+        before_send=scrub_sensitive_values,
+        before_send_transaction=scrub_sensitive_values,
     )
 
     # ALLOW_HOSTS is correctly configured so ignore this to prevent
