@@ -7,6 +7,7 @@ from rest_framework.response import Response
 
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from PIL import Image as PILImage
+import structlog
 
 from api.constants.media_types import IMAGE_TYPE
 from api.docs.image_docs import (
@@ -29,6 +30,9 @@ from api.serializers.image_serializers import (
 from api.utils import image_proxy
 from api.utils.aiohttp import get_aiohttp_session
 from api.views.media_views import MediaViewSet
+
+
+logger = structlog.get_logger(__name__)
 
 
 @extend_schema(tags=["images"])
@@ -81,20 +85,26 @@ class ImageViewSet(MediaViewSet):
         image = await aget_object_or_404(Image, identifier=identifier)
 
         if not (image.height and image.width):
-            session = await get_aiohttp_session()
+            try:
+                session = await get_aiohttp_session()
 
-            async with session.get(
-                image.url, headers=self.OEMBED_HEADERS
-            ) as image_file:
-                image_content = await image_file.content.read()
-
-            with PILImage.open(io.BytesIO(image_content)) as image_file:
-                width, height = image_file.size
-
-            context |= {
-                "width": width,
-                "height": height,
-            }
+                async with session.get(
+                    image.url, headers=self.OEMBED_HEADERS
+                ) as image_file:
+                    if image_file.status == 200:
+                        image_content = await image_file.content.read()
+                        with PILImage.open(io.BytesIO(image_content)) as image_file_obj:
+                            width, height = image_file_obj.size
+                        context |= {
+                            "width": width,
+                            "height": height,
+                        }
+            except Exception:
+                logger.warning(
+                    "failed_to_get_image_dimensions_for_oembed",
+                    image_identifier=image.identifier,
+                    image_url=image.url,
+                )
 
         serializer = self.get_serializer(image, context=context)
         return Response(data=await serializer.adata)

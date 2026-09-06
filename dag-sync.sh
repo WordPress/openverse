@@ -36,6 +36,9 @@ fi
 
 # Pull out the subject from the new commit
 subject=$(git log -1 --format='%s')
+# Escape backslashes and double quotes for JSON payload safety
+subject=${subject//\\/\\\\}
+subject=${subject//\"/\\\"}
 # Swap the < & > characters for their HTML entities so they aren't
 # interpreted as delimiters by Slack
 subject=${subject//>/&gt;}
