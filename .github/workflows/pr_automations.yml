@@ -17,7 +17,8 @@
 #
 # 4. This workflow runs after `pr_automations_init.yml` workflow completes.
 # 5. It downloads the artifacts from that workflow run.
-# 6. It extracts the JSON file from the ZIP to `/tmp`.
+# 6. It reads the event action and changed groups from them and derives the
+#    PR from the `workflow_run` payload, as the init run executes PR code.
 # 7. It runs the automations as a script, which can access secrets.
 
 name: PR automations
@@ -35,13 +36,19 @@ jobs:
     runs-on: ubuntu-latest
     # Prevent running this workflow on forks, it's unnecessary for external contributors
     if: github.repository_owner == 'WordPress'
+    permissions:
+      actions: read
+      contents: read
+      pull-requests: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
-      # This step was copied from the GitHub docs.
+      # Adapted from the GitHub docs.
       # Ref: https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#using-data-from-the-triggering-workflow
-      - name: Download artifact
+      - name: Download artifacts
         uses: actions/github-script@v7
         with:
           script: |
@@ -51,32 +58,95 @@ jobs:
                repo: context.repo.repo,
                run_id: context.payload.workflow_run.id,
             });
-            let matchArtifacts = allArtifacts.data.artifacts.filter((artifact) => {
-              return ["event_info", "change_info"].includes(artifact.name)
-            });
-            for (let matchArtifact of matchArtifacts) {
+            for (let name of ["event_info", "change_info"]) {
+              let artifact = allArtifacts.data.artifacts.find((candidate) => candidate.name === name);
+              if (!artifact) {
+                core.setFailed(`Artifact "${name}" not found on the triggering run.`);
+                return;
+              }
               let download = await github.rest.actions.downloadArtifact({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                artifact_id: matchArtifact.id,
+                artifact_id: artifact.id,
                 archive_format: 'zip',
               });
               fs.writeFileSync(
-                `${process.env.GITHUB_WORKSPACE}/${matchArtifact.name}.zip`,
+                `${process.env.RUNNER_TEMP}/${name}.zip`,
                 Buffer.from(download.data)
               );
             }
 
-      - name: Unzip artifacts
+      - name: Read event action and changes from the artifacts
+        id: artifacts
         run: |
-          unzip event_info.zip
-          mv event.json /tmp/event.json
-          cat /tmp/event.json
-          unzip change_info.zip
-          mv change.json /tmp/change.json
-          cat /tmp/change.json
+          # PR-built artifacts: copy out only the expected entry of each, never unzip into the checkout.
+          for pair in event_info:event.json change_info:change.json; do
+            archive="$RUNNER_TEMP/${pair%%:*}.zip"
+            entry="${pair##*:}"
+            if [[ "$(unzip -Z1 "$archive")" != "$entry" ]]; then
+              echo "Artifact ${pair%%:*} must contain exactly one entry named $entry." >&2
+              exit 1
+            fi
+            unzip -p "$archive" "$entry" > "$RUNNER_TEMP/$entry"
+          done
+
+          event_action="$(jq -er '.eventAction' "$RUNNER_TEMP/event.json")"
+          if ! [[ "$event_action" =~ ^(opened|reopened|edited|converted_to_draft|ready_for_review|closed|submitted|dismissed)$ ]]; then
+            echo "Unexpected event action in event_info." >&2
+            exit 1
+          fi
+          changes="$(jq -ec 'select(type == "array") | select(all(.[]; type == "string" and test("^[a-z0-9_]+$")))' "$RUNNER_TEMP/change.json")"
+
+          echo "event-action=$event_action" >> "$GITHUB_OUTPUT"
+          echo "changes=$changes" >> "$GITHUB_OUTPUT"
+
+      - name: Resolve pull request from the triggering run
+        id: resolve
+        uses: actions/github-script@v7
+        env:
+          EVENT_ACTION: ${{ steps.artifacts.outputs.event-action }}
+          CHANGES: ${{ steps.artifacts.outputs.changes }}
+        with:
+          script: |
+            let fs = require('fs');
+            // `workflow_run.pull_requests` is empty in practice; the run's head repository and branch identify the PR.
+            let run = context.payload.workflow_run;
+            if (!run.head_repository) {
+              core.setFailed('The triggering run has no head repository.');
+              return;
+            }
+            let head = `${run.head_repository.owner.login}:${run.head_branch}`;
+            let candidates = await github.paginate(github.rest.pulls.list, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'all',
+              head,
+              sort: 'created',
+              direction: 'desc',
+              per_page: 100,
+            });
+            candidates = candidates.filter((pr) =>
+              pr.head.repo && pr.head.repo.id === run.head_repository.id && pr.head.ref === run.head_branch
+            );
+            // A push right after the event moves the head past the run's SHA; then the branch's only PR is it.
+            let matches = candidates.filter((pr) => pr.head.sha === run.head_sha);
+            if (matches.length === 0) {
+              matches = candidates;
+            }
+            if (matches.length !== 1) {
+              core.setFailed(`Expected one pull request for ${head}, found ${matches.length}.`);
+              return;
+            }
+            let pr = matches[0];
+            fs.writeFileSync('/tmp/event.json', JSON.stringify({
+              eventName: run.event,
+              eventAction: process.env.EVENT_ACTION,
+              prNodeId: pr.node_id,
+            }));
+            fs.writeFileSync('/tmp/change.json', process.env.CHANGES);
 
       - name: Perform PR labelling
+        if: steps.resolve.outcome == 'success'
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.ACCESS_TOKEN }}
@@ -86,7 +156,8 @@ jobs:
 
       - name: Perform PR automations
         uses: actions/github-script@v7
-        if: success() || failure()
+        # Runs even if labelling failed, but never on unresolved input.
+        if: ${{ !cancelled() && steps.resolve.outcome == 'success' }}
         with:
           github-token: ${{ secrets.ACCESS_TOKEN }}
           script: |
