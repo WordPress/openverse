@@ -11,6 +11,7 @@
 import { useNuxtApp } from "#imports"
 import { computed, useAttrs } from "vue"
 
+import { sanitizeHref } from "#shared/utils/sanitize-href"
 import { useAnalytics } from "~/composables/use-analytics"
 
 import VIcon from "~/components/VIcon/VIcon.vue"
@@ -89,7 +90,8 @@ const to = computed(() => {
       // Internal link should link to the localized page
       return localePath(props.href) ?? props.href
     } else {
-      return props.href
+      // External href comes from untrusted sources (e.g. provider metadata); block script-bearing schemes.
+      return sanitizeHref(props.href)
     }
   }
   // if href is undefined, return props that make the link disabled

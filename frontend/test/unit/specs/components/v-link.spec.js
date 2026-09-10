@@ -40,6 +40,33 @@ describe("VLink", () => {
     }
   )
   it.each`
+    href                                   | expected
+    ${"javascript:alert(1)"}               | ${"about:blank"}
+    ${"JavaScript:alert(1)"}               | ${"about:blank"}
+    ${"java\tscript:alert(1)"}             | ${"about:blank"}
+    ${"data:text/html,<script>1</script>"} | ${"about:blank"}
+    ${"https://good.example.com/landing"}  | ${"https://good.example.com/landing"}
+  `(
+    "neutralises script-bearing external hrefs ($href)",
+    async ({ href, expected }) => {
+      options.props = { href }
+      options.slots = { default: () => "Code is Poetry" }
+      await render(VLink, options)
+      const link = screen.getByRole("link")
+      expect(link.getAttribute("href")).toEqual(expected)
+    }
+  )
+  it("re-applies the guard when href changes from safe to unsafe", async () => {
+    options.props = { href: "https://good.example.com/landing" }
+    options.slots = { default: () => "Code is Poetry" }
+    const { rerender } = render(VLink, options)
+    expect(screen.getByRole("link").getAttribute("href")).toEqual(
+      "https://good.example.com/landing"
+    )
+    await rerender({ href: "javascript:alert(1)" })
+    expect(screen.getByRole("link").getAttribute("href")).toEqual("about:blank")
+  })
+  it.each`
     href
     ${"/about"}
     ${"http://localhost"}
