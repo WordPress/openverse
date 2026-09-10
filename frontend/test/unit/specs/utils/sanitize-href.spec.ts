@@ -20,9 +20,9 @@ describe("sanitizeHref", () => {
   it.each([0, 1, 9, 31])(
     "blanks a scheme hidden behind leading control char %i",
     (code) => {
-      expect(sanitizeHref(String.fromCharCode(code) + "javascript:alert(1)")).toBe(
-        "about:blank"
-      )
+      expect(
+        sanitizeHref(String.fromCharCode(code) + "javascript:alert(1)")
+      ).toBe("about:blank")
     }
   )
 

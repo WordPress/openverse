@@ -40,12 +40,12 @@ describe("VLink", () => {
     }
   )
   it.each`
-    href                                  | expected
-    ${"javascript:alert(1)"}              | ${"about:blank"}
-    ${"JavaScript:alert(1)"}              | ${"about:blank"}
-    ${"java\tscript:alert(1)"}            | ${"about:blank"}
+    href                                   | expected
+    ${"javascript:alert(1)"}               | ${"about:blank"}
+    ${"JavaScript:alert(1)"}               | ${"about:blank"}
+    ${"java\tscript:alert(1)"}             | ${"about:blank"}
     ${"data:text/html,<script>1</script>"} | ${"about:blank"}
-    ${"https://good.example.com/landing"} | ${"https://good.example.com/landing"}
+    ${"https://good.example.com/landing"}  | ${"https://good.example.com/landing"}
   `(
     "neutralises script-bearing external hrefs ($href)",
     async ({ href, expected }) => {
