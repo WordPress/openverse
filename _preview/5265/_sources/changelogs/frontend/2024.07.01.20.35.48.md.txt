@@ -1,0 +1,24 @@
+# 2024.07.01.20.35.48
+
+## Improvements
+
+- Include xml in frontend attribution options
+  (https://github.com/WordPress/openverse/pull/4499) by @madewithkode
+
+## Internal Improvements
+
+- Update dependency prettier-plugin-tailwindcss to v0.6.5
+  ([#4574](https://github.com/WordPress/openverse/pull/4574)) by @openverse-bot
+- Update dependency typescript to v5.5.2
+  ([#4581](https://github.com/WordPress/openverse/pull/4581)) by @openverse-bot
+- Update dependency @playwright/test to v1.45.0
+  ([#4577](https://github.com/WordPress/openverse/pull/4577)) by @openverse-bot
+- Update dependency prettier to v3.3.2
+  ([#4580](https://github.com/WordPress/openverse/pull/4580)) by @openverse-bot
+- Remove volta and engines.pnpm settings
+  ([#4583](https://github.com/WordPress/openverse/pull/4583)) by @obulat
+
+## Bug Fixes
+
+- Fix Docker build warnings
+  ([#4573](https://github.com/WordPress/openverse/pull/4573)) by @dhruvkb

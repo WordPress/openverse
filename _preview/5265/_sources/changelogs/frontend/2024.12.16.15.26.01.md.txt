@@ -1,0 +1,15 @@
+# 2024.12.16.15.26.01
+
+## Internal Improvements
+
+- Standardize the image and audio result components
+  ([#5272](https://github.com/WordPress/openverse/pull/5272)) by @obulat
+- Make analytics tests stricter
+  ([#5267](https://github.com/WordPress/openverse/pull/5267)) by @obulat
+- Use `nuxi typecheck` to make the frontend types check in pre-commit faster
+  ([#5268](https://github.com/WordPress/openverse/pull/5268)) by @obulat
+
+## Bug Fixes
+
+- Set the background color on `<option>` to fix readability issue
+  ([#5278](https://github.com/WordPress/openverse/pull/5278)) by @dhruvkb

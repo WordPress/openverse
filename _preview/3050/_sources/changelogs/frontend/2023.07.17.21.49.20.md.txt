@@ -1,0 +1,48 @@
+# 2023.07.17.21.49.20
+
+## New Features
+
+- Blur sensitive search results
+  ([#2640](https://github.com/WordPress/openverse/pull/2640)) by @dhruvkb
+
+## Improvements
+
+- Add "search" role to search bar forms
+  ([#2631](https://github.com/WordPress/openverse/pull/2631)) by @AetherUnbound
+- Update `fake_sensitive` feature flag based on updated API response schema
+  ([#2613](https://github.com/WordPress/openverse/pull/2613)) by @dhruvkb
+- Set UA string for Openverse API requests from the frontend
+  ([#2544](https://github.com/WordPress/openverse/pull/2544)) by @zackkrida
+
+## Internal Improvements
+
+- Add Playwright visual regression tests for error pages
+  ([#2611](https://github.com/WordPress/openverse/pull/2611)) by @obulat
+- Remove nuxt eslint module
+  ([#2643](https://github.com/WordPress/openverse/pull/2643)) by @obulat
+- Replace single image unit tests with Playwright e2e
+  ([#2583](https://github.com/WordPress/openverse/pull/2583)) by @obulat
+- Replace require with import homepage
+  ([#2601](https://github.com/WordPress/openverse/pull/2601)) by @sehgxl
+- Replace `require` with `import` for error section images
+  ([#2614](https://github.com/WordPress/openverse/pull/2614)) by
+  @viktoriussuwandi
+- fix: unused composables/use-browser-detection
+  ([#2634](https://github.com/WordPress/openverse/pull/2634)) by
+  @AlimurtuzaCodes
+- Exclude venv directories from type checks
+  ([#2632](https://github.com/WordPress/openverse/pull/2632)) by @sarayourfriend
+- Remove duplicated plausible props
+  ([#2578](https://github.com/WordPress/openverse/pull/2578)) by @zackkrida
+
+## Bug Fixes
+
+- Fix fetching and types on single result pages
+  ([#2585](https://github.com/WordPress/openverse/pull/2585)) by @obulat
+- Update frontend/src/components/VSkeleton/VGridSkeleton.vue
+  ([#2636](https://github.com/WordPress/openverse/pull/2636)) by
+  @viktoriussuwandi
+- Remove irrelevant mature UI toggle test
+  ([#2617](https://github.com/WordPress/openverse/pull/2617)) by @zackkrida
+- Simplify Skip-to-content links
+  ([#2538](https://github.com/WordPress/openverse/pull/2538)) by @obulat

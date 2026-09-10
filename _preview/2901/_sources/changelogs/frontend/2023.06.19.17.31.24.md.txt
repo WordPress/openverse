@@ -1,0 +1,18 @@
+# 2023.06.19.17.31.24
+
+## New Features
+
+- Analytics: Add SELECT_SEARCH_RESULT event
+  ([#2373](https://github.com/WordPress/openverse/pull/2373)) by @obulat
+
+## Internal Improvements
+
+- Renamed identifier to id
+  ([#2381](https://github.com/WordPress/openverse/pull/2381)) by @duwarakan
+
+## Bug Fixes
+
+- Ignore locales; fix kebab-cased translation keys
+  ([#2433](https://github.com/WordPress/openverse/pull/2433)) by @obulat
+- Fix CI Playwright storybook failure
+  ([#2379](https://github.com/WordPress/openverse/pull/2379)) by @obulat

@@ -1,0 +1,6 @@
+# 2024.06.17.15.33.55
+
+## New Features
+
+- Add favicon to Storybook
+  ([#4441](https://github.com/WordPress/openverse/pull/4441)) by @dhruvkb

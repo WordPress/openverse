@@ -1,0 +1,6 @@
+# 2024.11.18.15.59.41
+
+## Internal Improvements
+
+- Bump aiohttp to 3.11.2
+  ([#5165](https://github.com/WordPress/openverse/pull/5165)) by @krysal

@@ -1,0 +1,25 @@
+# 2024.12.07.04.18.28
+
+## Internal Improvements
+
+- fix(deps): update dependency openapi-fetch to ^0.13.0
+  ([#5229](https://github.com/WordPress/openverse/pull/5229)) by @openverse-bot
+- fix(deps): update dependency @pinia/nuxt to ^0.9.0
+  ([#5252](https://github.com/WordPress/openverse/pull/5252)) by @openverse-bot
+- chore(deps): update dependency prettier to v3.4.2
+  ([#5251](https://github.com/WordPress/openverse/pull/5251)) by @openverse-bot
+- Rewrite the i18n scripts
+  ([#5177](https://github.com/WordPress/openverse/pull/5177)) by @obulat
+- Update Nuxt and create shared folder
+  ([#5187](https://github.com/WordPress/openverse/pull/5187)) by @obulat
+
+## Bug Fixes
+
+- Track `focus` event instead of `click` to support Safari
+  ([#5216](https://github.com/WordPress/openverse/pull/5216)) by @dhruvkb
+- Handle case when the input template ref is falsy in the mobile header
+  ([#5193](https://github.com/WordPress/openverse/pull/5193)) by @obulat
+- Update the icon color in `onMounted`
+  ([#5237](https://github.com/WordPress/openverse/pull/5237)) by @obulat
+- Add a duotone icon to represent the "system" theme
+  ([#5236](https://github.com/WordPress/openverse/pull/5236)) by @dhruvkb

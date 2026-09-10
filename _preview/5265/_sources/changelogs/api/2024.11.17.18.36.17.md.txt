@@ -1,0 +1,15 @@
+# 2024.11.17.18.36.17
+
+## Internal Improvements
+
+- Bump schemathesis to 3.38.6 and silence its warning
+  ([#5166](https://github.com/WordPress/openverse/pull/5166)) by @krysal
+- Fix incorrect OpenAPI examples
+  ([#5160](https://github.com/WordPress/openverse/pull/5160)) by @dhruvkb
+- Update dependency django to v5
+  ([#5122](https://github.com/WordPress/openverse/pull/5122)) by @openverse-bot
+
+## Bug Fixes
+
+- Fix incorrect OpenAPI examples
+  ([#5160](https://github.com/WordPress/openverse/pull/5160)) by @dhruvkb

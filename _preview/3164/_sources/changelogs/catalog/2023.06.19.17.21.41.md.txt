@@ -1,0 +1,28 @@
+# 2023.06.19.17.21.41
+
+## New Features
+
+- Add batched_update dag
+  ([#2331](https://github.com/WordPress/openverse/pull/2331)) by @stacimc
+- Deploy staging API after staging DB restore
+  ([#2211](https://github.com/WordPress/openverse/pull/2211)) by @AetherUnbound
+- Truncate OAuth tables after staging DB restore
+  ([#2207](https://github.com/WordPress/openverse/pull/2207)) by @AetherUnbound
+
+## Improvements
+
+- Determine data refresh pool by environment variable with default
+  ([#2352](https://github.com/WordPress/openverse/pull/2352)) by @AetherUnbound
+
+## Internal Improvements
+
+- Extract entrypoints to separate shell scripts
+  ([#1926](https://github.com/WordPress/openverse/pull/1926)) by @arun-chib
+
+## Bug Fixes
+
+- Defined log rotation policies in docker-compose
+  ([#2416](https://github.com/WordPress/openverse/pull/2416)) by
+  @ZeroPlayerRodent
+- Remove string reference to old s3 bucket
+  ([#2347](https://github.com/WordPress/openverse/pull/2347)) by @zackkrida

@@ -1,0 +1,6 @@
+# 2024.08.16.21.27.09
+
+## Internal Improvements
+
+- Use default of 0 for SENTRY_SAMPLE_RATE
+  ([#4759](https://github.com/WordPress/openverse/pull/4759)) by @sarayourfriend

@@ -1,0 +1,8 @@
+# Monorepo
+
+```{toctree}
+:titlesonly:
+:glob:
+
+*
+```

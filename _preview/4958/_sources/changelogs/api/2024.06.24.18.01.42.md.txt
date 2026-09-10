@@ -1,0 +1,17 @@
+# 2024.06.24.18.01.42
+
+## New Features
+
+- Add catalog indexer worker
+  ([#4330](https://github.com/WordPress/openverse/pull/4330)) by @stacimc
+
+## Internal Improvements
+
+- Log dead link verification request timings
+  ([#4508](https://github.com/WordPress/openverse/pull/4508)) by @sarayourfriend
+
+## Bug Fixes
+
+- Drop FK constraint on media_obj in MediaDecisionThrough, update
+  backfillmoderationdecision command
+  ([#4530](https://github.com/WordPress/openverse/pull/4530)) by @stacimc

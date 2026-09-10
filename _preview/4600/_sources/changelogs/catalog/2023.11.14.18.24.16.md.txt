@@ -1,0 +1,47 @@
+# 2023.11.14.18.24.16
+
+## New Features
+
+- Add DAG for filtering archived providers in catalog
+  ([#3259](https://github.com/WordPress/openverse/pull/3259)) by @stacimc
+
+## Improvements
+
+- Create filtered index before promoting primary index during data refresh
+  ([#3303](https://github.com/WordPress/openverse/pull/3303)) by @stacimc
+- Add instructions on running individual test in new provider docs
+  ([#3323](https://github.com/WordPress/openverse/pull/3323)) by @ngken0995
+- Revise Catalog Quickstart
+  ([#3325](https://github.com/WordPress/openverse/pull/3325)) by @ngken0995
+- Use pytest-env to set up API key
+  ([#3272](https://github.com/WordPress/openverse/pull/3272)) by @ngken0995
+- move new provider docs to documentation folder
+  ([#3273](https://github.com/WordPress/openverse/pull/3273)) by @ngken0995
+- Raise error when space is in URL
+  ([#3198](https://github.com/WordPress/openverse/pull/3198)) by @ngken0995
+- Allow data refresh poke interval for Image.
+  ([#3171](https://github.com/WordPress/openverse/pull/3171)) by @ngken0995
+- Move catalog README to docs site quickstart
+  ([#3204](https://github.com/WordPress/openverse/pull/3204)) by @AetherUnbound
+
+## Internal Improvements
+
+- Use a default for `HOST_NETWORK_ADDRESS` to hide warnings
+  ([#3333](https://github.com/WordPress/openverse/pull/3333)) by @dhruvkb
+- Unpin pytest-mock and rely on Airflow constraints for version
+  ([#3332](https://github.com/WordPress/openverse/pull/3332)) by @AetherUnbound
+- Use pytest-env to set up API key
+  ([#3272](https://github.com/WordPress/openverse/pull/3272)) by @ngken0995
+- Bump apache-airflow[amazon,http,postgres] from 2.7.1 to 2.7.2 in /catalog
+  ([#3290](https://github.com/WordPress/openverse/pull/3290)) by @dependabot
+- Bump tldextract from 3.6.0 to 5.0.1 in /catalog
+  ([#3289](https://github.com/WordPress/openverse/pull/3289)) by @dependabot
+
+## Bug Fixes
+
+- Updated new-provider docs to use correct `just` commands
+  ([#3319](https://github.com/WordPress/openverse/pull/3319)) by @vinayakhegde1
+- Encode spaces in metropolitan urls
+  ([#3262](https://github.com/WordPress/openverse/pull/3262)) by @stacimc
+- Fix PR review reminder DAG for case where base branch is 2+ levels deep
+  ([#3182](https://github.com/WordPress/openverse/pull/3182)) by @AetherUnbound

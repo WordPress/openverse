@@ -1,0 +1,13 @@
+# 2024.06.24.18.01.44
+
+## Improvements
+
+- Display generated tags separately
+  ([#4291](https://github.com/WordPress/openverse/pull/4291)) by @obulat
+- Changes all sensible occurrences of the just commands to have them run using
+  ov ([#4483](https://github.com/WordPress/openverse/pull/4483)) by
+  @szymon-polaczy
+- Stop opening links in a new tab
+  ([#4446](https://github.com/WordPress/openverse/pull/4446)) by @obulat
+- Update works count on the frontend
+  ([#4486](https://github.com/WordPress/openverse/pull/4486)) by @szymon-polaczy

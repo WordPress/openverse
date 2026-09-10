@@ -1,0 +1,11 @@
+# 2023.09.20.07.37.52
+
+## Internal Improvements
+
+- Remove `django-storages` and associated conf
+  ([#3036](https://github.com/WordPress/openverse/pull/3036)) by @dhruvkb
+
+## Bug Fixes
+
+- Re-add gevent monkey-patching
+  ([#3047](https://github.com/WordPress/openverse/pull/3047)) by @obulat

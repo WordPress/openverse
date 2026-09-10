@@ -1,0 +1,11 @@
+import{h as l}from"./53SD24Bo.js";import{s as f}from"./DDS--uLL.js";import{u,O as b}from"./Dm0sd39P.js";import{W as g}from"./TY_f3vpZ.js";import{_ as o}from"./EVnEJsjm.js";import"./_bbq3c9C.js";import"./DZOi7sP9.js";import"./7RO02bE1.js";import"./B9k6C3Hw.js";import"./B_-6Taiq.js";import"./CUnsfT8r.js";import"./okj3qyDJ.js";import"./DD0JbomO.js";import"./DGyM8Eie.js";import"./DVthAQU8.js";import"./8DNOLO2n.js";import"./C1DVfU3S.js";import"./iProge2w.js";import"./CdxtYFZI.js";import"./Cy_NKsXi.js";import"./DlboKt2a.js";import"./Di7dAt70.js";import"./BOewZ2sR.js";import"./D2GrBf-6.js";import"./DjsporFN.js";import"./CH5-dTGy.js";import"./dvXbmdTd.js";import"./ivjvpZKc.js";import"./DhTbjJlp.js";import"./DSjpNhLF.js";import"./BnbCYJz1.js";import"../sb-preview/runtime.js";(function(){try{var e=typeof window<"u"?window:typeof global<"u"?global:typeof self<"u"?self:{},a=new e.Error().stack;a&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[a]="f14b8a88-96ff-4034-8150-c19531fbc7ce",e._sentryDebugIdIdentifier="sentry-dbid-f14b8a88-96ff-4034-8150-c19531fbc7ce")}catch{}})();const X={title:"Components/VContentSwitcher/VSearchTypeButton",component:o,parameters:{height:"480px"},decorators:[g],argTypes:{searchType:{options:f,control:"select"},pressed:{control:"boolean"},showLabel:{control:"boolean"},onClick:{action:"click"}},args:{searchType:"all",pressed:!1,showLabel:!1}},d=e=>({components:{VSearchTypeButton:o},setup(){return u().toggleFeature("additional_search_types",b),()=>l(o,e)}}),r={render:d.bind({}),name:"Default"},t={render:d.bind({}),name:"Large pressed with text label",args:{pressed:!0,showLabel:!0}};var s,p,n;r.parameters={...r.parameters,docs:{...(s=r.parameters)==null?void 0:s.docs,source:{originalSource:`{
+  render: Template.bind({}),
+  name: "Default"
+}`,...(n=(p=r.parameters)==null?void 0:p.docs)==null?void 0:n.source}}};var i,m,c;t.parameters={...t.parameters,docs:{...(i=t.parameters)==null?void 0:i.docs,source:{originalSource:`{
+  render: Template.bind({}),
+  name: "Large pressed with text label",
+  args: {
+    pressed: true,
+    showLabel: true
+  }
+}`,...(c=(m=t.parameters)==null?void 0:m.docs)==null?void 0:c.source}}};const Y=["Default","LargePressedWithTextLabel"];export{r as Default,t as LargePressedWithTextLabel,Y as __namedExportsOrder,X as default};

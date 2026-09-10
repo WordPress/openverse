@@ -1,0 +1,13 @@
+# 2023.12.11.19.20.45
+
+## Internal Improvements
+
+- Change Django secret key to make it more obvious it's a shim value
+  ([#3422](https://github.com/WordPress/openverse/pull/3422)) by @AetherUnbound
+
+## Bug Fixes
+
+- Move Oembed endpoint validation onto the serializer
+  ([#3069](https://github.com/WordPress/openverse/pull/3069)) by @krysal
+- Fix image proxy get error handling
+  ([#3455](https://github.com/WordPress/openverse/pull/3455)) by @sarayourfriend

@@ -1,0 +1,6 @@
+# 2024.10.21.09.19.16
+
+## Improvements
+
+- Removed obsolete cache invalidation code from get_sources function
+  ([#5050](https://github.com/WordPress/openverse/pull/5050)) by @dryruffian

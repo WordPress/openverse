@@ -1,0 +1,11 @@
+# 2023.06.01.01.50.43
+
+## Improvements
+
+- Use tallies redis DB for thumbnail tallies
+  ([#2257](https://github.com/WordPress/openverse/pull/2257)) by @AetherUnbound
+
+## Bug Fixes
+
+- Simplify and consolidate photon log handling, improve tallying
+  ([#2243](https://github.com/WordPress/openverse/pull/2243)) by @AetherUnbound

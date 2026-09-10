@@ -1,0 +1,16 @@
+# 2023.05.17.22.57.37
+
+## New Features
+
+- Add `standardized_popularity` to Catalog media tables
+  ([#2096](https://github.com/WordPress/openverse/pull/2096)) by @stacimc
+
+## Improvements
+
+- Implementation Plan: Decoupling Popularity Calculations from Data Refresh
+  ([#1894](https://github.com/WordPress/openverse/pull/1894)) by @stacimc
+
+## Internal Improvements
+
+- Bump boto3 from 1.26.123 to 1.26.126 in /ingestion_server
+  ([#2024](https://github.com/WordPress/openverse/pull/2024)) by @dependabot

@@ -1,0 +1,12 @@
+# 2023.06.26.20.33.46
+
+## Bug Fixes
+
+- Make `load_sample_data` more resilient
+  ([#2479](https://github.com/WordPress/openverse/pull/2479)) by @dhruvkb
+- Fix text wrapping in watermarked images
+  ([#2467](https://github.com/WordPress/openverse/pull/2467)) by @zackkrida
+- Use the original SVG file as thumbnail
+  ([#2422](https://github.com/WordPress/openverse/pull/2422)) by @obulat
+- Prevent unnecessary post-process results recursion
+  ([#2418](https://github.com/WordPress/openverse/pull/2418)) by @sarayourfriend

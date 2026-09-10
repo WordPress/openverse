@@ -1,0 +1,6 @@
+# 2023.05.30.17.57.04
+
+## Bug Fixes
+
+- Convert thumb extension to lowercase
+  ([#2239](https://github.com/WordPress/openverse/pull/2239)) by @krysal

@@ -1,0 +1,22 @@
+# 2023.09.18.10.25.25
+
+## Improvements
+
+- Update links in metadata section on single result page
+  ([#2851](https://github.com/WordPress/openverse/pull/2851)) by @obulat
+- `mature` -> `sensitive` frontend copy and code
+  ([#3006](https://github.com/WordPress/openverse/pull/3006)) by @sarayourfriend
+
+## Internal Improvements
+
+- Add content safety info to `SELECT_SEARCH_RESULT` event
+  ([#2983](https://github.com/WordPress/openverse/pull/2983)) by @dhruvkb
+
+## Bug Fixes
+
+- Resolve flakiness in global audio player VR tests
+  ([#3021](https://github.com/WordPress/openverse/pull/3021)) by @dhruvkb
+- Filter languages by presence of ISO
+  ([#3017](https://github.com/WordPress/openverse/pull/3017)) by @dhruvkb
+- Media results null check
+  ([#3016](https://github.com/WordPress/openverse/pull/3016)) by @akhilsrivatsa

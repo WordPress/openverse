@@ -1,0 +1,13 @@
+# 2024.06.28.20.22.20
+
+## New Features
+
+- Upload Ingestion Server's TSV files to AWS S3 (skip tags)
+  ([#4529](https://github.com/WordPress/openverse/pull/4529)) by @krysal
+
+## Internal Improvements
+
+- Remove single quotes in values of Ingestion Server's TSV files
+  ([#4471](https://github.com/WordPress/openverse/pull/4471)) by @krysal
+- Bump urllib3 from 2.2.1 to 2.2.2 in /ingestion_server
+  ([#4519](https://github.com/WordPress/openverse/pull/4519)) by @dependabot

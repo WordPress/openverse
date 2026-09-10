@@ -1,0 +1,14 @@
+# 2024.12.02.20.27.17
+
+## Internal Improvements
+
+- fix(deps): update dependency django-structlog to v9
+  ([#5240](https://github.com/WordPress/openverse/pull/5240)) by @openverse-bot
+- chore(deps): update docker.io/nginx docker tag to v1.27.3
+  ([#5222](https://github.com/WordPress/openverse/pull/5222)) by @openverse-bot
+- fix(deps): update dependency pillow to v11
+  ([#5234](https://github.com/WordPress/openverse/pull/5234)) by @openverse-bot
+- fix(deps): update dependency uvicorn to >=0.32, <0.33
+  ([#5230](https://github.com/WordPress/openverse/pull/5230)) by @openverse-bot
+- fix(deps): update dependency drf-spectacular to >=0.28, <0.29
+  ([#5228](https://github.com/WordPress/openverse/pull/5228)) by @openverse-bot

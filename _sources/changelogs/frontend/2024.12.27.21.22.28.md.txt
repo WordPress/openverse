@@ -1,0 +1,6 @@
+# 2024.12.27.21.22.28
+
+## Internal Improvements
+
+- Fix Sentry client setup
+  ([#5297](https://github.com/WordPress/openverse/pull/5297)) by @obulat

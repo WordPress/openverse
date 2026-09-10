@@ -1,0 +1,21 @@
+# 2024.08.12.10.29.09
+
+## Internal Improvements
+
+- Disallow crawlers from high cardinality collection pages
+  ([#4735](https://github.com/WordPress/openverse/pull/4735)) by @sarayourfriend
+- Update dependency vue to v3.4.36
+  ([#4689](https://github.com/WordPress/openverse/pull/4689)) by @openverse-bot
+- Update nuxtjs/plausible
+  ([#4716](https://github.com/WordPress/openverse/pull/4716)) by @obulat
+
+## Bug Fixes
+
+- Fix mobile recent searches modal with banners
+  ([#4730](https://github.com/WordPress/openverse/pull/4730)) by @obulat
+- Fix Playwright test failures when Nuxt context is not available
+  ([#4731](https://github.com/WordPress/openverse/pull/4731)) by @obulat
+- Remove the use of `import.meta.env`
+  ([#4705](https://github.com/WordPress/openverse/pull/4705)) by @obulat
+- Fix the sources table crash
+  ([#4725](https://github.com/WordPress/openverse/pull/4725)) by @obulat

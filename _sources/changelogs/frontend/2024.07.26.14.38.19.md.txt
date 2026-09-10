@@ -1,0 +1,8 @@
+# 2024.07.26.14.38.19
+
+## Bug Fixes
+
+- Remove the single-result endpoints from the robots.txt
+  ([#4660](https://github.com/WordPress/openverse/pull/4660)) by @AetherUnbound
+- Fix HTML creator crediting incorrect image tags
+  ([#4653](https://github.com/WordPress/openverse/pull/4653)) by @zackkrida

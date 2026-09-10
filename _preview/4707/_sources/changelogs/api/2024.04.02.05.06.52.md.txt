@@ -1,0 +1,11 @@
+# 2024.04.02.05.06.52
+
+## Improvements
+
+- Add a warning when source query parameter contains invalid values
+  ([#3949](https://github.com/WordPress/openverse/pull/3949)) by @manojks1999
+
+## Bug Fixes
+
+- Selectively update API deps and undo unrelated updates
+  ([#4002](https://github.com/WordPress/openverse/pull/4002)) by @dhruvkb

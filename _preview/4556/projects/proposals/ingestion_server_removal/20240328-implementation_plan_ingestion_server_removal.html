@@ -1,0 +1,1589 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><link rel="next" title="Monitoring" href="../monitoring/index.html" /><link rel="prev" title="2024-03-19 Project Proposal: Removal of the Ingestion Server" href="20240319-project_proposal.html" />
+
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/><!-- Generated with Sphinx 7.3.7 and Furo 2024.04.27 -->
+        <title>2024-03-28 Implementation Plan: Ingestion Server Removal - Openverse documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=437aa6ec" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=36a5483c" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../index.html"><div class="brand">Openverse  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo only-light" src="../../../_static/logo_light.svg" alt="Light Logo"/>
+    <img class="sidebar-logo only-dark" src="../../../_static/logo_dark.svg" alt="Dark Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../api/index.html">Django API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Django API</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../api/guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Guides</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/guides/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/guides/test.html">Testing guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/guides/deploy.html">Deployment runbook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/guides/documentation.html">API Documentation Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/guides/https.html">Local HTTPS testing</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../api/reference/index.html">Reference</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/reference/made_with_ov.html">Made with Openverse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/reference/search_algorithm.html">Search Algorithm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/reference/authentication_and_throttling.html">Authentication and Throttling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/reference/healthcheck.html">Django Healthcheck</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../automations/index.html">Automations</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Automations</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../automations/guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Guides</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../automations/guides/quickstart.html">Quickstart Guide</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../automations/reference/index.html">Reference</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../automations/reference/python_scripts.html">Python Scripts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../automations/reference/project_automations.html">Project Automations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../catalog/index.html">Airflow Catalog</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of Airflow Catalog</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../catalog/guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of Guides</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../catalog/guides/quickstart.html">Quickstart</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../catalog/guides/deploy.html">Deployment runbook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../catalog/guides/adding_a_new_provider.html">Openverse Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../catalog/guides/deployment.html">Catalog Deployments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../catalog/guides/deployment.html#airflow">Airflow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../catalog/guides/deployment.html#postgres">Postgres</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../catalog/guides/dag_testing.html">Running DAGs locally</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../catalog/reference/index.html">Reference</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../catalog/reference/DAGs.html">DAGs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../catalog/reference/retired.html">Retired</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../changelogs/index.html">Changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of Changelogs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../changelogs/api/index.html">API changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle navigation of API changelogs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.06.24.18.01.42.html">2024.06.24.18.01.42</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.06.17.15.33.56.html">2024.06.17.15.33.56</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.06.07.17.19.06.html">2024.06.07.17.19.06</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.06.03.15.35.02.html">2024.06.03.15.35.02</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.05.28.21.25.54.html">2024.05.28.21.25.54</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.05.27.15.21.38.html">2024.05.27.15.21.38</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.05.23.15.02.00.html">2024.05.23.15.02.00</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.05.20.15.14.53.html">2024.05.20.15.14.53</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.05.13.15.19.42.html">2024.05.13.15.19.42</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.05.07.23.56.36.html">2024.05.07.23.56.36</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.05.06.19.44.35.html">2024.05.06.19.44.35</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.05.01.13.59.00.html">2024.05.01.13.59.00</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.04.22.15.11.09.html">2024.04.22.15.11.09</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.04.15.17.18.29.html">2024.04.15.17.18.29</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.04.09.03.50.11.html">2024.04.09.03.50.11</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.04.02.05.06.52.html">2024.04.02.05.06.52</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.04.01.17.07.10.html">2024.04.01.17.07.10</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.03.25.15.22.26.html">2024.03.25.15.22.26</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.03.18.15.51.25.html">2024.03.18.15.51.25</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.03.13.17.10.22.html">2024.03.13.17.10.22</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.03.11.15.26.16.html">2024.03.11.15.26.16</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.03.04.15.15.13.html">2024.03.04.15.15.13</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.02.28.16.32.28.html">2024.02.28.16.32.28</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.02.20.22.54.08.html">2024.02.20.22.54.08</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.02.13.05.45.50.html">2024.02.13.05.45.50</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.02.05.20.34.01.html">2024.02.05.20.34.01</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.01.29.19.36.26.html">2024.01.29.19.36.26</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.01.16.17.28.14.html">2024.01.16.17.28.14</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.01.08.20.06.53.html">2024.01.08.20.06.53</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2024.01.01.19.52.14.html">2024.01.01.19.52.14</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.12.26.05.11.22.html">2023.12.26.05.11.22</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.12.18.17.56.24.html">2023.12.18.17.56.24</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.12.11.19.20.45.html">2023.12.11.19.20.45</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.12.04.19.51.23.html">2023.12.04.19.51.23</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.11.29.22.20.31.html">2023.11.29.22.20.31</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.11.27.05.10.48.html">2023.11.27.05.10.48</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.11.20.09.32.25.html">2023.11.20.09.32.25</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.11.14.23.44.01.html">2023.11.14.23.44.01</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.11.13.22.18.21.html">2023.11.13.22.18.21</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.11.01.21.27.09.html">2023.11.01.21.27.09</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.10.30.16.26.21.html">2023.10.30.16.26.21</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.10.23.11.40.59.html">2023.10.23.11.40.59</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.10.18.15.25.27.html">2023.10.18.15.25.27</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.10.11.04.49.20.html">2023.10.11.04.49.20</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.10.10.21.08.33.html">2023.10.10.21.08.33</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.10.10.18.42.39.html">2023.10.10.18.42.39</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.10.06.17.13.36.html">2023.10.06.17.13.36</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.09.30.00.15.32.html">2023.09.30.00.15.32</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.09.28.00.26.34.html">2023.09.28.00.26.34</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.09.25.21.34.44.html">2023.09.25.21.34.44</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.09.20.11.16.51.html">2023.09.20.11.16.51</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.09.20.07.37.52.html">2023.09.20.07.37.52</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.09.19.08.13.24.html">2023.09.19.08.13.24</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.09.15.19.15.58.html">2023.09.15.19.15.58</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.09.11.16.56.52.html">2023.09.11.16.56.52</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.09.04.19.52.19.html">2023.09.04.19.52.19</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.08.28.20.43.01.html">2023.08.28.20.43.01</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.08.22.04.57.04.html">2023.08.22.04.57.04</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.08.14.16.35.15.html">2023.08.14.16.35.15</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.08.08.22.22.02.html">2023.08.08.22.22.02</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.07.24.20.47.04.html">2023.07.24.20.47.04</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.07.17.21.05.23.html">2023.07.17.21.05.23</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.07.10.08.44.19.html">2023.07.10.08.44.19</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.07.03.17.52.00.html">2023.07.03.17.52.00</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.06.28.19.49.58.html">2023.06.28.19.49.58</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.06.28.02.17.04.html">2023.06.28.02.17.04</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.06.26.20.33.46.html">2023.06.26.20.33.46</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.06.19.17.48.39.html">2023.06.19.17.48.39</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.06.13.00.21.51.html">2023.06.13.00.21.51</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.06.05.15.04.02.html">2023.06.05.15.04.02</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.06.01.01.50.43.html">2023.06.01.01.50.43</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.05.30.17.57.04.html">2023.05.30.17.57.04</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.05.30.12.02.04.html">2023.05.30.12.02.04</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.05.19.22.08.07.html">2023.05.19.22.08.07</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.05.19.18.58.25.html">2023.05.19.18.58.25</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.05.19.17.16.50.html">2023.05.19.17.16.50</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.05.15.21.51.49.html">2023.05.15.21.51.49</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.05.02.21.26.28.html">2023.05.02.21.26.28</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.04.27.07.29.23.html">2023.04.27.07.29.23</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.04.23.23.22.14.html">2023.04.23.23.22.14</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.04.19.00.01.39.html">2023.04.19.00.01.39</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.04.18.15.27.15.html">2023.04.18.15.27.15</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.04.12.23.29.59.html">2023.04.12.23.29.59</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../changelogs/catalog/index.html">Catalog changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle navigation of Catalog changelogs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2024.06.17.15.33.56.html">2024.06.17.15.33.56</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2024.04.18.23.30.21.html">2024.04.18.23.30.21</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2024.03.22.17.45.11.html">2024.03.22.17.45.11</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2024.03.06.16.40.36.html">2024.03.06.16.40.36</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2024.01.25.17.42.59.html">2024.01.25.17.42.59</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2024.01.04.20.39.50.html">2024.01.04.20.39.50</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2023.12.20.22.19.13.html">2023.12.20.22.19.13</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2023.11.29.15.35.59.html">2023.11.29.15.35.59</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2023.11.14.18.24.16.html">2023.11.14.18.24.16</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2023.10.06.18.29.33.html">2023.10.06.18.29.33</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2023.08.30.17.30.22.html">2023.08.30.17.30.22</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2023.07.20.15.07.11.html">2023.07.20.15.07.11</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2023.06.19.17.21.41.html">2023.06.19.17.21.41</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2023.06.08.16.52.36.html">2023.06.08.16.52.36</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2023.05.16.22.14.49.html">2023.05.16.22.14.49</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2023.04.27.02.43.13.html">2023.04.27.02.43.13</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../changelogs/frontend/index.html">Frontend changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle navigation of Frontend changelogs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.06.24.18.01.44.html">2024.06.24.18.01.44</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.06.17.15.33.55.html">2024.06.17.15.33.55</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.06.07.17.19.06.html">2024.06.07.17.19.06</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.06.03.15.35.03.html">2024.06.03.15.35.03</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.05.27.15.21.40.html">2024.05.27.15.21.40</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.05.20.15.14.53.html">2024.05.20.15.14.53</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.05.13.17.18.44.html">2024.05.13.17.18.44</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.05.07.16.44.22.html">2024.05.07.16.44.22</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.04.25.15.32.08.html">2024.04.25.15.32.08</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.04.24.12.19.32.html">2024.04.24.12.19.32</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.04.22.15.11.07.html">2024.04.22.15.11.07</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.04.15.15.20.23.html">2024.04.15.15.20.23</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.04.13.16.19.50.html">2024.04.13.16.19.50</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.04.09.03.50.12.html">2024.04.09.03.50.12</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.04.01.17.07.11.html">2024.04.01.17.07.11</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.03.25.15.22.24.html">2024.03.25.15.22.24</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.03.18.15.51.41.html">2024.03.18.15.51.41</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.03.11.15.25.54.html">2024.03.11.15.25.54</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.03.04.15.15.07.html">2024.03.04.15.15.07</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.02.26.18.58.35.html">2024.02.26.18.58.35</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.02.19.15.45.00.html">2024.02.19.15.45.00</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.02.12.23.34.43.html">2024.02.12.23.34.43</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.02.05.18.10.41.html">2024.02.05.18.10.41</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.01.29.19.41.17.html">2024.01.29.19.41.17</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.01.08.19.12.18.html">2024.01.08.19.12.18</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2024.01.01.19.52.49.html">2024.01.01.19.52.49</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.12.11.19.44.28.html">2023.12.11.19.44.28</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.12.04.19.35.53.html">2023.12.04.19.35.53</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.11.27.19.20.44.html">2023.11.27.19.20.44</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.11.20.09.09.57.html">2023.11.20.09.09.57</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.11.14.19.30.29.html">2023.11.14.19.30.29</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.11.06.20.32.30.html">2023.11.06.20.32.30</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.11.01.00.18.44.html">2023.11.01.00.18.44</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.10.30.16.27.33.html">2023.10.30.16.27.33</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.10.09.17.18.13.html">2023.10.09.17.18.13</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.09.25.22.11.48.html">2023.09.25.22.11.48</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.09.18.10.25.25.html">2023.09.18.10.25.25</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.09.11.17.34.23.html">2023.09.11.17.34.23</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.09.05.17.09.13.html">2023.09.05.17.09.13</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.09.04.20.20.34.html">2023.09.04.20.20.34</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.08.28.19.38.22.html">2023.08.28.19.38.22</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.08.22.06.04.39.html">2023.08.22.06.04.39</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.08.14.16.26.44.html">2023.08.14.16.26.44</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.08.08.21.19.44.html">2023.08.08.21.19.44</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.07.28.23.42.26.html">2023.07.28.23.42.26</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.07.24.21.23.45.html">2023.07.24.21.23.45</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.07.20.17.25.42.html">2023.07.20.17.25.42</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.07.19.19.15.39.html">2023.07.19.19.15.39</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.07.17.21.49.20.html">2023.07.17.21.49.20</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.07.10.08.29.25.html">2023.07.10.08.29.25</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.07.06.14.52.49.html">2023.07.06.14.52.49</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.07.05.17.56.39.html">2023.07.05.17.56.39</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.07.03.18.19.32.html">2023.07.03.18.19.32</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.06.26.20.22.48.html">2023.06.26.20.22.48</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.06.19.17.31.24.html">2023.06.19.17.31.24</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.06.13.00.28.40.html">2023.06.13.00.28.40</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.06.05.14.48.06.html">2023.06.05.14.48.06</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.05.23.17.02.26.html">2023.05.23.17.02.26</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.05.22.15.55.57.html">2023.05.22.15.55.57</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.05.15.22.13.27.html">2023.05.15.22.13.27</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.05.02.19.17.32.html">2023.05.02.19.17.32</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.04.23.23.07.51.html">2023.04.23.23.07.51</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../changelogs/ingestion_server/index.html">Ingestion server changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle navigation of Ingestion server changelogs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2024.06.13.17.07.56.html">2024.06.13.17.07.56</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2024.05.27.13.36.10.html">2024.05.27.13.36.10</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2024.05.20.19.47.22.html">2024.05.20.19.47.22</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2024.05.10.03.01.22.html">2024.05.10.03.01.22</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2024.04.18.16.49.08.html">2024.04.18.16.49.08</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2024.04.04.14.33.24.html">2024.04.04.14.33.24</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2024.03.06.16.40.36.html">2024.03.06.16.40.36</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2024.02.28.18.32.08.html">2024.02.28.18.32.08</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2024.02.07.18.41.16.html">2024.02.07.18.41.16</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2024.01.18.18.31.08.html">2024.01.18.18.31.08</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.12.12.17.23.14.html">2023.12.12.17.23.14</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.12.06.19.13.35.html">2023.12.06.19.13.35</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.11.14.18.39.29.html">2023.11.14.18.39.29</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.10.25.06.38.07.html">2023.10.25.06.38.07</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.10.19.06.08.15.html">2023.10.19.06.08.15</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.10.06.18.02.20.html">2023.10.06.18.02.20</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.09.29.17.40.50.html">2023.09.29.17.40.50</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.09.05.18.56.18.html">2023.09.05.18.56.18</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.08.29.17.36.35.html">2023.08.29.17.36.35</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.07.21.20.19.21.html">2023.07.21.20.19.21</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.07.05.17.46.34.html">2023.07.05.17.46.34</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.06.13.00.25.04.html">2023.06.13.00.25.04</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.06.07.17.56.30.html">2023.06.07.17.56.30</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.05.17.22.57.37.html">2023.05.17.22.57.37</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.05.03.22.29.52.html">2023.05.03.22.29.52</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../frontend/index.html">Nuxt frontend</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle navigation of Nuxt frontend</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../frontend/guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle navigation of Guides</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/guides/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/guides/deploy.html">Deployment runbook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/guides/test.html">Running frontend tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/guides/analytics.html">Analytics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/guides/icons.html">SVG Icon Sprites in Openverse Frontend</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/guides/translate.html">Translate</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../frontend/reference/index.html">Reference</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle navigation of Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/i18n.html">Internationalization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/feature_flags.html">Feature flags</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/testing_guidelines.html">Testing Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/playwright_tests.html">Playwright tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/storybook_tests.html">Storybook tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/miscellaneous.html">Miscellaneous notes on the frontend</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/healthcheck.html">Nuxt Healthcheck</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/nginx.html">Frontend reverse proxy</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../general/index.html">General development guidelines</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle navigation of General development guidelines</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../general/contributing.html">Get started with contributions</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><div class="visually-hidden">Toggle navigation of Get started with contributions</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../general/contribution/github_contribution_practices.html">GitHub contribution practices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../general/contribution/dev_flow.html">Development workflow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../general/contribution/current_maintainers.html">Current maintainers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../general/contribution/communication_aliases.html">Communication aliases</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../general/contribution/becoming_a_committer.html">Becoming a Committer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../general/contribution/maintainer_tasks.html">Regular maintainer tasks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../general/contribution/codespell.html">Codespell Configuration : spellcheck pre-commit hook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../general/contribution/good_first_and_help_wanted_issues.html">Maintainer guidelines for “Good first” and “Help wanted” issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/general_setup.html">General setup guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/run.html">Run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/test.html">Test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/zero_downtime_database_management.html">Zero Downtime and Database Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/deployment.html">Deployments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/logging.html">Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/https.html">Testing HTTPS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/stack.html">Stack</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../ingestion_server/index.html">Ingestion server</a><input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" role="switch" type="checkbox"/><label for="toctree-checkbox-20"><div class="visually-hidden">Toggle navigation of Ingestion server</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../ingestion_server/guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" role="switch" type="checkbox"/><label for="toctree-checkbox-21"><div class="visually-hidden">Toggle navigation of Guides</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/guides/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/guides/config.html">Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/guides/mapping.html">Mapping database tables to Elasticsearch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/guides/test.html">Testing guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/guides/deploy.html">Deployment runbook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/guides/migrate.html">Index migration runbook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/guides/upgrade.html">Manual index upgrade runbook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/guides/troubleshoot.html">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../ingestion_server/reference/index.html">Reference</a><input class="toctree-checkbox" id="toctree-checkbox-22" name="toctree-checkbox-22" role="switch" type="checkbox"/><label for="toctree-checkbox-22"><div class="visually-hidden">Toggle navigation of Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/reference/elasticsearch.html">Elasticsearch and Indexing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/reference/safety.html">Safety and Security Considerations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/reference/notifications.html">Notifications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/reference/data_refresh.html">Data Refresh Limit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/reference/task_api.html">Ingestion server API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../meta/index.html">Managing the Openverse</a><input class="toctree-checkbox" id="toctree-checkbox-23" name="toctree-checkbox-23" role="switch" type="checkbox"/><label for="toctree-checkbox-23"><div class="visually-hidden">Toggle navigation of Managing the Openverse</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../meta/brand/index.html">Brand assets</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/incidents/index.html">Responding to Incidents</a><input class="toctree-checkbox" id="toctree-checkbox-24" name="toctree-checkbox-24" role="switch" type="checkbox"/><label for="toctree-checkbox-24"><div class="visually-hidden">Toggle navigation of Responding to Incidents</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../meta/incidents/runbooks/index.html">Runbooks</a><input class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" role="switch" type="checkbox"/><label for="toctree-checkbox-25"><div class="visually-hidden">Toggle navigation of Runbooks</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/incidents/runbooks/incident_response_runbook.html">Incident Response Runbook</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/project_boards/index.html">Project boards</a><input class="toctree-checkbox" id="toctree-checkbox-26" name="toctree-checkbox-26" role="switch" type="checkbox"/><label for="toctree-checkbox-26"><div class="visually-hidden">Toggle navigation of Project boards</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/project_boards/issues.html">Issues project: Openverse Backlog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/project_boards/prs.html">PR project: Openverse PRs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/project_boards/projects.html">Project project: Openverse Project Tracker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/project_boards/discussions.html">Discussion project: Openverse Discussions</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/ci_cd/index.html">CI + CD workflow</a><input class="toctree-checkbox" id="toctree-checkbox-27" name="toctree-checkbox-27" role="switch" type="checkbox"/><label for="toctree-checkbox-27"><div class="visually-hidden">Toggle navigation of CI + CD workflow</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/ci_cd/actions.html">Actions</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../meta/ci_cd/jobs/index.html">Jobs</a><input class="toctree-checkbox" id="toctree-checkbox-28" name="toctree-checkbox-28" role="switch" type="checkbox"/><label for="toctree-checkbox-28"><div class="visually-hidden">Toggle navigation of Jobs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/preparation.html">Preparation jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/frontend.html">Frontend jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/packages.html">Packages jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/docker.html">Docker jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/catalog.html">Catalog jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/ingestion_server.html">Ingestion server jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/api.html">API jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/documentation.html">Documentation jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/deployment.html">Deployment jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/notification.html">Notification jobs</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/ci_cd/flow.html">Flow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/ci_cd/proof_of_functionality.html">Proof-of-functionality</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/ci_cd/artifacts.html">Artifacts</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/decision_making/index.html">Openverse Decision-Making Process</a><input class="toctree-checkbox" id="toctree-checkbox-29" name="toctree-checkbox-29" role="switch" type="checkbox"/><label for="toctree-checkbox-29"><div class="visually-hidden">Toggle navigation of Openverse Decision-Making Process</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/decision_making/process_description.html">Process description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/decision_making/how_to_use.html">How to follow the process in different settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/decision_making/additional_practices.html">Additional practices</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/documentation/index.html">Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-30" name="toctree-checkbox-30" role="switch" type="checkbox"/><label for="toctree-checkbox-30"><div class="visually-hidden">Toggle navigation of Documentation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/documentation/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/documentation/guidelines.html">Documentation guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/documentation/adding_docs.html">Adding a new documentation page</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/documentation/extensions.html">Sphinx extensions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/documentation/review.html">Documentation proofreading and review</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/monitoring/index.html">Monitoring the Openverse</a><input class="toctree-checkbox" id="toctree-checkbox-31" name="toctree-checkbox-31" role="switch" type="checkbox"/><label for="toctree-checkbox-31"><div class="visually-hidden">Toggle navigation of Monitoring the Openverse</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../meta/monitoring/traffic/index.html">Traffic Management</a><input class="toctree-checkbox" id="toctree-checkbox-32" name="toctree-checkbox-32" role="switch" type="checkbox"/><label for="toctree-checkbox-32"><div class="visually-hidden">Toggle navigation of Traffic Management</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/traffic/runbooks/identifying-and-blocking-traffic-anomalies.html">Identifying and Blocking Traffic Anomalies in Cloudflare</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/monitoring/cloudwatch_logs/index.html">Log querying</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../meta/monitoring/runbooks/index.html">Runbooks</a><input class="toctree-checkbox" id="toctree-checkbox-33" name="toctree-checkbox-33" role="switch" type="checkbox"/><label for="toctree-checkbox-33"><div class="visually-hidden">Toggle navigation of Runbooks</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/api_http_2xx_under_threshold.html">Run Book: API Production HTTP 2XX responses count under threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/api_http_5xx_above_threshold.html">Run Book: API Production HTTP 5XX responses count above threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/api_avg_response_time_above_threshold.html">Run Book: API Production Average Response Time above threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/api_avg_response_time_anomaly.html">Run Book: API Production Average Response Time anomaly</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/api_p99_response_time_above_threshold.html">Run Book: API Production P99 Response Time above threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/api_p99_response_time_anomaly.html">Run Book: API Production P99 Response Time anomaly</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/api_request_count_anomaly.html">Run Book: API Production Request Count anomalously high</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/nuxt_http_2xx_under_threshold.html">Run Book: Nuxt 2XX responses count under threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/nuxt_http_5xx_above_threshold.html">Run Book: Nuxt 5XX responses count above threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/nuxt_avg_response_time_above_threshold.html">Run Book: Nuxt Production Average Response Time above threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/nuxt_avg_response_time_anomaly.html">Run Book: Nuxt Production Average Response Time anomalously high</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/nuxt_p99_response_time_above_threshold.html">Run Book: Nuxt Production P99 Response Time above threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/nuxt_p99_response_time_anomaly.html">Run Book: Nuxt Production P99 Response Time anomalously high</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/nuxt_request_count_anomaly.html">Run Book: Nuxt Request Count anomalously high</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/monitoring/runbooks/unhealthy_ecs_hosts.html">Run Book: Unhealthy hosts for ECS service</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/maintenance/index.html">Openverse Infrastructure Maintenance</a><input class="toctree-checkbox" id="toctree-checkbox-34" name="toctree-checkbox-34" role="switch" type="checkbox"/><label for="toctree-checkbox-34"><div class="visually-hidden">Toggle navigation of Openverse Infrastructure Maintenance</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/maintenance/elasticsearch_cluster.html">Elasticsearch cluster maintenance</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/media_properties/index.html">Media properties</a><input class="toctree-checkbox" id="toctree-checkbox-35" name="toctree-checkbox-35" role="switch" type="checkbox"/><label for="toctree-checkbox-35"><div class="visually-hidden">Toggle navigation of Media properties</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/media_properties/catalog.html">Catalog Media Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/media_properties/api.html">API Media Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/media_properties/frontend.html">Frontend Media Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/media_properties/etls.html">Extract-Transform-Load flows</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../packages/index.html">Subpackages</a><input class="toctree-checkbox" id="toctree-checkbox-36" name="toctree-checkbox-36" role="switch" type="checkbox"/><label for="toctree-checkbox-36"><div class="visually-hidden">Toggle navigation of Subpackages</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../packages/eslint_plugin/index.html"><code class="docutils literal notranslate"><span class="pre">@openverse/eslint-plugin</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-37" name="toctree-checkbox-37" role="switch" type="checkbox"/><label for="toctree-checkbox-37"><div class="visually-hidden">Toggle navigation of @openverse/eslint-plugin</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../packages/eslint_plugin/analytics_configuration.html"><code class="docutils literal notranslate"><span class="pre">analytics-configuration</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../packages/eslint_plugin/no-unexplained-disabled-test.html"><code class="docutils literal notranslate"><span class="pre">no-unexplained-disabled-test</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../packages/openverse_attribution/index.html"><code class="docutils literal notranslate"><span class="pre">openverse-attribution</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../../index.html">Projects</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-38" name="toctree-checkbox-38" role="switch" type="checkbox"/><label for="toctree-checkbox-38"><div class="visually-hidden">Toggle navigation of Projects</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../planning.html">Project Planning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../templates/implementation_plan.html">Template: Implementation Plan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../templates/index.html">Template: Project Directory <code class="docutils literal notranslate"><span class="pre">index.md</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../templates/project_proposal.html">Template: Project Proposal</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../yearly_planning/index.html">Yearly Planning</a><input class="toctree-checkbox" id="toctree-checkbox-39" name="toctree-checkbox-39" role="switch" type="checkbox"/><label for="toctree-checkbox-39"><div class="visually-hidden">Toggle navigation of Yearly Planning</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../yearly_planning/process_outline.html">Yearly Planning: Process Outline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../yearly_planning/project_themes.html">Project Themes</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../3d_model_support/index.html">3D Model Support</a><input class="toctree-checkbox" id="toctree-checkbox-40" name="toctree-checkbox-40" role="switch" type="checkbox"/><label for="toctree-checkbox-40"><div class="visually-hidden">Toggle navigation of 3D Model Support</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../3d_model_support/20220221-project_proposal.html">2022-02-21 Project Proposal: 3D model support</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../additional_search_views/index.html">Additional Search Views</a><input class="toctree-checkbox" id="toctree-checkbox-41" name="toctree-checkbox-41" role="switch" type="checkbox"/><label for="toctree-checkbox-41"><div class="visually-hidden">Toggle navigation of Additional Search Views</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../additional_search_views/20230424-project_proposal_additional_search_views.html">2023-04-24 Project Proposal: Additional search views</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_search_views/20230719-implementation_plan_additional_search_views.html">2023-07-20 Implementation Plan: Additional Search Views</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_search_views/SUPERSEDED-20230719-implementation_plan_additional_search_views.html">SUPERSEDED 2023-07-20 Implementation Plan: Additional Search Views</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../analytics/index.html">Analytics</a><input class="toctree-checkbox" id="toctree-checkbox-42" name="toctree-checkbox-42" role="switch" type="checkbox"/><label for="toctree-checkbox-42"><div class="visually-hidden">Toggle navigation of Analytics</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../analytics/20221006-implementation_plan_frontend.html">2022-10-06 Implementation Plan: Frontend event tracking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../analytics/20230307-backend_service.html">2023-03-07 Implementation Plan: Analytics backend and visualisation service</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../core_user_interface_improvement/index.html">Core User Interface Improvements</a><input class="toctree-checkbox" id="toctree-checkbox-43" name="toctree-checkbox-43" role="switch" type="checkbox"/><label for="toctree-checkbox-43"><div class="visually-hidden">Toggle navigation of Core User Interface Improvements</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../core_user_interface_improvement/20230314-project_proposal_core_ui_improvement.html">2023-03-14 Project Proposal: Core UI Improvement</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../dark_mode/index.html">Dark Mode</a><input class="toctree-checkbox" id="toctree-checkbox-44" name="toctree-checkbox-44" role="switch" type="checkbox"/><label for="toctree-checkbox-44"><div class="visually-hidden">Toggle navigation of Dark Mode</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../dark_mode/20240313-project_proposal_dark_mode.html">2024-03-13 Project Proposal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dark_mode/20240325-implementation_plan_dark_mode.html">2024-03-25 Implementation Plan: Dark Mode</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../data_normalization/index.html">Data Normalization</a><input class="toctree-checkbox" id="toctree-checkbox-45" name="toctree-checkbox-45" role="switch" type="checkbox"/><label for="toctree-checkbox-45"><div class="visually-hidden">Toggle navigation of Data Normalization</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../data_normalization/20240227-implementation_plan_catalog_data_cleaning.html">2024-02-27 Implementation Plan: Catalog Data Cleaning</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../document_all_media_properties/index.html">Document all media properties</a><input class="toctree-checkbox" id="toctree-checkbox-46" name="toctree-checkbox-46" role="switch" type="checkbox"/><label for="toctree-checkbox-46"><div class="visually-hidden">Toggle navigation of Document all media properties</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../document_all_media_properties/20230307-project_proposal.html">2023-03-07 Project proposal for Document all media properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../document_all_media_properties/20230426-implementation_plan_documenting_media_properties.html">2023-04-26 Implementation Plan: Document all media properties in the catalog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../document_all_media_properties/20240313-implementation_plan_document_media_properties_api.html">2024-03-25 Implementation Plan: Document all media properties in the API</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../document_all_media_properties/samples/index.html">Samples</a><input class="toctree-checkbox" id="toctree-checkbox-47" name="toctree-checkbox-47" role="switch" type="checkbox"/><label for="toctree-checkbox-47"><div class="visually-hidden">Toggle navigation of Samples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../document_all_media_properties/samples/openverse_media_properties.html">Openverse Media Properties</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../document_all_media_properties/samples/sample_media_properties.html">sample_media_properties.md</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../document_all_media_properties/samples/sample_postamble.html">sample_postamble.md</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../document_all_media_properties/samples/sample_preamble.html">sample_preamble.md</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../document_all_media_properties/samples/index.html">Samples</a><input class="toctree-checkbox" id="toctree-checkbox-48" name="toctree-checkbox-48" role="switch" type="checkbox"/><label for="toctree-checkbox-48"><div class="visually-hidden">Toggle navigation of Samples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../document_all_media_properties/samples/openverse_media_properties.html">Openverse Media Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../document_all_media_properties/samples/sample_media_properties.html">sample_media_properties.md</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../document_all_media_properties/samples/sample_postamble.html">sample_postamble.md</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../document_all_media_properties/samples/sample_preamble.html">sample_preamble.md</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../feature_flags/index.html">Feature Flags</a><input class="toctree-checkbox" id="toctree-checkbox-49" name="toctree-checkbox-49" role="switch" type="checkbox"/><label for="toctree-checkbox-49"><div class="visually-hidden">Toggle navigation of Feature Flags</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../feature_flags/20220309-project_proposal.html">2022-03-09 Project Proposal: Feature flags</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../frontend_ui_state_cookie/index.html">Frontend UI State Cookie</a><input class="toctree-checkbox" id="toctree-checkbox-50" name="toctree-checkbox-50" role="switch" type="checkbox"/><label for="toctree-checkbox-50"><div class="visually-hidden">Toggle navigation of Frontend UI State Cookie</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../frontend_ui_state_cookie/20220218-project_proposal.html">2022-02-18 Project Propsal: Frontend UI State Cookie</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../infrastructure_improvements/index.html">Openverse Infrastructure</a><input class="toctree-checkbox" id="toctree-checkbox-51" name="toctree-checkbox-51" role="switch" type="checkbox"/><label for="toctree-checkbox-51"><div class="visually-hidden">Toggle navigation of Openverse Infrastructure</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../infrastructure_improvements/20240105_implementation_plan_move_remaining_services_to_openverse_org.html">2024-01-05 Implementation Plan: Finish moving all services to <code class="docutils literal notranslate"><span class="pre">openverse.org</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2 current has-children"><a class="reference internal" href="index.html">Ingestion server removal</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-52" name="toctree-checkbox-52" role="switch" type="checkbox"/><label for="toctree-checkbox-52"><div class="visually-hidden">Toggle navigation of Ingestion server removal</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="20240319-project_proposal.html">2024-03-19 Project Proposal: Removal of the Ingestion Server</a></li>
+<li class="toctree-l3 current current-page"><a class="current reference internal" href="#">2024-03-28 Implementation Plan: Ingestion Server Removal</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../monitoring/index.html">Monitoring</a><input class="toctree-checkbox" id="toctree-checkbox-53" name="toctree-checkbox-53" role="switch" type="checkbox"/><label for="toctree-checkbox-53"><div class="visually-hidden">Toggle navigation of Monitoring</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../monitoring/20220307-project_proposal.html">2022-03-07 Project Proposal: Monitoring</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../monitoring/20230606_implementation_plan_ecs_alarms.html">2023-06-06 Implementation Plan: Baseline Alarms for ECS Services</a><input class="toctree-checkbox" id="toctree-checkbox-54" name="toctree-checkbox-54" role="switch" type="checkbox"/><label for="toctree-checkbox-54"><div class="visually-hidden">Toggle navigation of 2023-06-06 Implementation Plan: Baseline Alarms for ECS Services</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../monitoring/run_book_samples/stable_run_book_sample.html">Stable Run Book Sample</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../monitoring/run_book_samples/unstable_run_book_sample.html">Unstable Run Book Sample</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../monorepo/index.html">Monorepo</a><input class="toctree-checkbox" id="toctree-checkbox-55" name="toctree-checkbox-55" role="switch" type="checkbox"/><label for="toctree-checkbox-55"><div class="visually-hidden">Toggle navigation of Monorepo</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../monorepo/20221124-project_proposal.html">2022-11-24 Project Proposal: Monorepo</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../nuxt_3_migration/index.html">Nuxt 3 Migration</a><input class="toctree-checkbox" id="toctree-checkbox-56" name="toctree-checkbox-56" role="switch" type="checkbox"/><label for="toctree-checkbox-56"><div class="visually-hidden">Toggle navigation of Nuxt 3 Migration</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../nuxt_3_migration/20230604-project_proposal_nuxt_3_migration.html">2023-06-02 Project Proposal</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../popularity_optimizations/index.html">Popularity Calculation Optimizations</a><input class="toctree-checkbox" id="toctree-checkbox-57" name="toctree-checkbox-57" role="switch" type="checkbox"/><label for="toctree-checkbox-57"><div class="visually-hidden">Toggle navigation of Popularity Calculation Optimizations</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../popularity_optimizations/20230406-project_proposal_popularity_optimizations.html">2023-04-06 Project Proposal: Popularity Calculation Optimizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../popularity_optimizations/20230420-implementation_plan_popularity_optimizations.html">Implementation Plan: Decoupling Popularity Calculations from the Data Refresh</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../project_improvement/index.html">Project board improvements</a><input class="toctree-checkbox" id="toctree-checkbox-58" name="toctree-checkbox-58" role="switch" type="checkbox"/><label for="toctree-checkbox-58"><div class="visually-hidden">Toggle navigation of Project board improvements</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../project_improvement/20230913-project_proposal_project_improvements.html">2023-09-13 Project proposal: Project board improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../project_improvement/20230914-implementation_plan_project_automations.html">2023-09-14 Implementation plan: Project automations</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../publish_dataset/index.html">Providing and maintaining an Openverse image dataset</a><input class="toctree-checkbox" id="toctree-checkbox-59" name="toctree-checkbox-59" role="switch" type="checkbox"/><label for="toctree-checkbox-59"><div class="visually-hidden">Toggle navigation of Providing and maintaining an Openverse image dataset</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../publish_dataset/20230706-project_proposal_openverse_dataset.html">2023-07-06 Project Proposal: Providing and maintaining an Openverse image dataset</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python_packaging/index.html">Python packaging and code sharing</a><input class="toctree-checkbox" id="toctree-checkbox-60" name="toctree-checkbox-60" role="switch" type="checkbox"/><label for="toctree-checkbox-60"><div class="visually-hidden">Toggle navigation of Python packaging and code sharing</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../python_packaging/20240412-implementation_plan_switching_to_a_new_python_package_manager.html">2024-04-12 Implementation Plan: Switching to a new Python package manager</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../rekognition_data/index.html">Rekognition Data Incorporation</a><input class="toctree-checkbox" id="toctree-checkbox-61" name="toctree-checkbox-61" role="switch" type="checkbox"/><label for="toctree-checkbox-61"><div class="visually-hidden">Toggle navigation of Rekognition Data Incorporation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../rekognition_data/20240320-project_proposal_rekognition_data.html">2024-03-20 Project Proposal: Incorporate Rekognition data into the Catalog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../rekognition_data/20240423-implementation_plan_machine_generated_tags_api.html">2024-04-23 Implementation Plan: Machine-generated tags in the API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../rekognition_data/20240510-implementation_plan_machine_generated_tags_frontend.html">2024-05-08 Implementation Plan: Machine-generated tags in the frontend</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../search_relevancy_sandbox/index.html">Search Relevancy Sandbox</a><input class="toctree-checkbox" id="toctree-checkbox-62" name="toctree-checkbox-62" role="switch" type="checkbox"/><label for="toctree-checkbox-62"><div class="visually-hidden">Toggle navigation of Search Relevancy Sandbox</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../search_relevancy_sandbox/20230331-project_proposal_search_relevancy_sandbox.html">2023-03-31 Project Proposal: Search relevancy sandbox</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../search_relevancy_sandbox/20230406-implementation_plan_update_staging_database.html">2023-04-06 Implementation Plan: Update Staging Database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../search_relevancy_sandbox/20230518-implementation_plan_staging_index_rapid_iteration.html">2023-05-18 Implementation Plan: Rapid iteration of ingestion server index configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../search_relevancy_sandbox/20230530-implementation_plan_staging_elasticsearch_reindex_dags.html">2023-06-08 Implementation Plan: Staging Elasticsearch Reindex DAGs</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../trust_and_safety/content_report_moderation/index.html">Sensitive Content Report Moderation Initial Practices</a><input class="toctree-checkbox" id="toctree-checkbox-63" name="toctree-checkbox-63" role="switch" type="checkbox"/><label for="toctree-checkbox-63"><div class="visually-hidden">Toggle navigation of Sensitive Content Report Moderation Initial Practices</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/content_report_moderation/20230411-project_proposal_content_report_moderation.html">2023-04-11 Project Proposal: Sensitive content report moderation: initial practices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/content_report_moderation/20230517-implementation_plan_mature_copy_change.html">2023-05-17 Implementation Plan: Copy updates <code class="docutils literal notranslate"><span class="pre">mature</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">sensitive</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/content_report_moderation/20231208-implementation_plan_django_admin_moderator_access.html">2023-12-08 Implementation Plan: Django admin tools and access control for moderators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/content_report_moderation/20240122-implementation_plan_bulk_moderation_actions.html">2024-01-22 Implementation Plan: Bulk Moderation Actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/content_report_moderation/20240122-implementation_plan_moderation_metrics.html">2024-01-22 Implementation Plan: Moderation response times</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/index.html">Detecting and Blurring Sensitive Textual Content</a><input class="toctree-checkbox" id="toctree-checkbox-64" name="toctree-checkbox-64" role="switch" type="checkbox"/><label for="toctree-checkbox-64"><div class="visually-hidden">Toggle navigation of Detecting and Blurring Sensitive Textual Content</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/20230309-implementation_plan_sensitive_terms_list.html">2023-03-09 Implementation Plan: Sensitive Terms List</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/20230309-project_proposal_detecting_sensitive_textual_content.html">2023-03-09 Project Proposal: Detecting sensitive textual content and blurring all sensitive results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/20230330-implementation_plan_filtering_and_designating_results_with_sensitive_textual_content.html">2023-03-30 Implementation Plan: Filtering and designating results with sensitive textual content</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/20230506-implementation_plan_frontend_blurring_sensitive.html">2023-05-06 Implementation Plan: Fetching, blurring sensitive results</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../trust_and_safety/index.html">Trust and Safety</a><input class="toctree-checkbox" id="toctree-checkbox-65" name="toctree-checkbox-65" role="switch" type="checkbox"/><label for="toctree-checkbox-65"><div class="visually-hidden">Toggle navigation of Trust and Safety</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/20230109-trust_and_safety_preliminary_overview_and_exploration.html">2023-01-09 Initial Overview and User Stories</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../trust_and_safety/content_report_moderation/index.html">Sensitive Content Report Moderation Initial Practices</a><input class="toctree-checkbox" id="toctree-checkbox-66" name="toctree-checkbox-66" role="switch" type="checkbox"/><label for="toctree-checkbox-66"><div class="visually-hidden">Toggle navigation of Sensitive Content Report Moderation Initial Practices</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../trust_and_safety/content_report_moderation/20230411-project_proposal_content_report_moderation.html">2023-04-11 Project Proposal: Sensitive content report moderation: initial practices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../trust_and_safety/content_report_moderation/20230517-implementation_plan_mature_copy_change.html">2023-05-17 Implementation Plan: Copy updates <code class="docutils literal notranslate"><span class="pre">mature</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">sensitive</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../trust_and_safety/content_report_moderation/20231208-implementation_plan_django_admin_moderator_access.html">2023-12-08 Implementation Plan: Django admin tools and access control for moderators</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../trust_and_safety/content_report_moderation/20240122-implementation_plan_bulk_moderation_actions.html">2024-01-22 Implementation Plan: Bulk Moderation Actions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../trust_and_safety/content_report_moderation/20240122-implementation_plan_moderation_metrics.html">2024-01-22 Implementation Plan: Moderation response times</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/index.html">Detecting and Blurring Sensitive Textual Content</a><input class="toctree-checkbox" id="toctree-checkbox-67" name="toctree-checkbox-67" role="switch" type="checkbox"/><label for="toctree-checkbox-67"><div class="visually-hidden">Toggle navigation of Detecting and Blurring Sensitive Textual Content</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/20230309-implementation_plan_sensitive_terms_list.html">2023-03-09 Implementation Plan: Sensitive Terms List</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/20230309-project_proposal_detecting_sensitive_textual_content.html">2023-03-09 Project Proposal: Detecting sensitive textual content and blurring all sensitive results</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/20230330-implementation_plan_filtering_and_designating_results_with_sensitive_textual_content.html">2023-03-30 Implementation Plan: Filtering and designating results with sensitive textual content</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/20230506-implementation_plan_frontend_blurring_sensitive.html">2023-05-06 Implementation Plan: Fetching, blurring sensitive results</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../visual_regression_testing/index.html">Visual Regression Testing</a><input class="toctree-checkbox" id="toctree-checkbox-68" name="toctree-checkbox-68" role="switch" type="checkbox"/><label for="toctree-checkbox-68"><div class="visually-hidden">Toggle navigation of Visual Regression Testing</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../visual_regression_testing/20220217-implementation_plan.html">2022-02-17 Implementation Plan: Visual regression testing</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../vuex_to_pina_conversion/index.html">Pinia Conversion</a><input class="toctree-checkbox" id="toctree-checkbox-69" name="toctree-checkbox-69" role="switch" type="checkbox"/><label for="toctree-checkbox-69"><div class="visually-hidden">Toggle navigation of Pinia Conversion</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../vuex_to_pina_conversion/20220223-project_proposal.html">2022-02-23 Project Proposal: Vuex to Pinia conversion</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../terms_of_service.html">Openverse Terms of Service</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">External links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://openverse.org">Openverse</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/WordPress/openverse">GitHub</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/WordPress/openverse/edit/main/documentation/projects/proposals/ingestion_server_removal/20240328-implementation_plan_ingestion_server_removal.md" title="Edit this page">
+    <svg aria-hidden="true" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
+      <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
+    </svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="implementation-plan-ingestion-server-removal">
+<h1>2024-03-28 Implementation Plan: Ingestion Server Removal<a class="headerlink" href="#implementation-plan-ingestion-server-removal" title="Link to this heading">¶</a></h1>
+<p><strong>Author</strong>: <a class="reference external" href="https://github.com/stacimc" title="stacimc on GitHub">&#64;stacimc</a></p>
+<!-- See the implementation plan guide for more information: https://github.com/WordPress/openverse/tree/19791f51c063d0979112f4b9f4eeace04c8cf5ff/docs/projects#implementation-plans-status-in-rfc -->
+<!-- This template is exhaustive and may include sections which aren't relevant to your project. Feel free to remove any sections which would not be useful to have. -->
+<section id="reviewers">
+<h2>Reviewers<a class="headerlink" href="#reviewers" title="Link to this heading">¶</a></h2>
+<!-- Choose two people at your discretion who make sense to review this based on their existing expertise. Check in to make sure folks aren't currently reviewing more than one other proposal or RFC. -->
+<ul class="simple">
+<li><p>[x] <a class="reference external" href="https://github.com/sarayourfriend" title="sarayourfriend on GitHub">&#64;sarayourfriend</a></p></li>
+<li><p>[x] <a class="reference external" href="https://github.com/AetherUnbound" title="AetherUnbound on GitHub">&#64;AetherUnbound</a></p></li>
+</ul>
+</section>
+<section id="project-links">
+<h2>Project links<a class="headerlink" href="#project-links" title="Link to this heading">¶</a></h2>
+<!-- Enumerate any references to other documents/pages, including milestones and other plans -->
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/WordPress/openverse/issues/3925">Project Thread</a></p></li>
+<li><p><a class="reference internal" href="20240319-project_proposal.html"><span class="std std-doc">Project Proposal</span></a></p></li>
+</ul>
+</section>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
+<!-- An overview of the implementation plan, if necessary. Save any specific steps for the section(s) below. -->
+<p>The critical data refresh process is orchestrated by Airflow via the
+<code class="docutils literal notranslate"><span class="pre">&lt;media_type&gt;_data_refresh</span></code> DAGs, but the bulk of the work is merely triggered
+by Airflow on a remote ingestion server. Due to the reasons laid out in the
+Project Proposal, we will be moving all operational pieces of the data refresh
+into Airflow itself, and removing the ingestion server entirely.</p>
+<p>The work which must be moved into Airflow can be split into these abstract
+steps, which will be discussed separately in this IP:</p>
+<ul class="simple">
+<li><p><strong>Copy Data</strong>: An
+<a class="reference external" href="https://www.postgresql.org/docs/current/postgres-fdw.html">FDW extension</a> is
+used to connect the API database to the upstream (catalog) database. The
+entire contents of the upstream media table are copied into a new temp table
+in the API database. This temp table will later replace the main media table
+in the API.</p></li>
+<li><p><strong>Clean Data</strong>: Data clean up which includes cleaning URLs. This step will
+become unnecessary when the
+<a class="reference external" href="https://github.com/WordPress/openverse/issues/430">Catalog Data Cleaning project</a>
+is completed, which moves all data cleaning steps upstream into the initial
+provider ingestion process.</p></li>
+<li><p><strong>Filter Data</strong>: Separate from the clean up step (but currently included as
+part of it). Filter out denylisted tags and machine-generated tags which are
+below our current confidence threshold. This will <em>not</em> be a part of the data
+cleaning project and must be carried forward.</p></li>
+<li><p><strong>Create Index</strong>: Create a new Elasticsearch index, matching the configuration
+of the existing media index.</p></li>
+<li><p><strong>Distributed Reindex</strong>: Convert each record from the new temp table to the
+format required by an Elasticsearch document, and then reindex them into the
+newly created index. Because this step is by far the most time consuming, the
+reindex is distributed across multiple <strong>indexer workers</strong>. In the current
+implementation, the indexer workers are themselves running on EC2 instances (6
+in production, 2 in staging). Each indexer worker serves a small API which can
+be used to trigger a reindexing task for an equal portion of the work. The
+workers are started by the ingestion-server when needed, and automatically
+spun down when complete.</p></li>
+<li><p><strong>Create and Populate Filtered Index</strong>: Create a new Elasticsearch index
+matching the configuration of the existing <em>filtered</em> index, and then reindex
+documents into it from the new media index, applying appropriate filtering for
+sensitive terms.</p></li>
+<li><p><strong>Reapply Constraints</strong>: Recreate indices and constraints from the original
+API table on the new temp table.</p></li>
+<li><p><strong>Promote Table</strong>: Drop the old media table in the API and rename the temp
+table and its indices, which has the effect of promoting them/replacing the
+old table.</p></li>
+<li><p><strong>Promote Index</strong>: Promote the new Elasticsearch index by unlinking the given
+alias from the existing index and moving it to the new one. (Used for both the
+main and filtered indices.)</p></li>
+<li><p><strong>Delete Index</strong>: Delete the old Elasticsearch index. (Used for both the main
+and filtered indices.)</p></li>
+</ul>
+<p>In addition to the data refresh DAGs, some combination of these steps on the
+ingestion-server are also used by:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">recreate_full_staging_index</span></code> DAG</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">create_filtered_&lt;media&gt;_index</span></code> DAGs</p></li>
+<li><p>Our <code class="docutils literal notranslate"><span class="pre">load_sample_data</span></code> scripts, which use the ingestion server to load sample
+data from the catalog into the API and Elasticsearch</p></li>
+</ul>
+<p>This IP includes details for moving all steps into Airflow. The bulk of the plan
+deals with the <code class="docutils literal notranslate"><span class="pre">Distributed</span> <span class="pre">Reindex</span></code> step, which is the only step that is not
+straightforward to move.</p>
+</section>
+<section id="expected-outcomes">
+<h2>Expected Outcomes<a class="headerlink" href="#expected-outcomes" title="Link to this heading">¶</a></h2>
+<!-- List any succinct expected products from this implementation plan. -->
+<p>When this work is completed we will be able to:</p>
+<ul class="simple">
+<li><p>Manage data refreshes entirely in Airflow, without the use of the ingestion
+server</p></li>
+<li><p>Completely remove the staging and production ingestion servers, as well as all
+related code in the monorepo and infrastructure repos</p></li>
+<li><p>Remove the <code class="docutils literal notranslate"><span class="pre">recreate_full_staging_index</span></code> DAG</p></li>
+</ul>
+</section>
+<section id="approach-to-the-distributed-reindex">
+<h2>Approach to the Distributed Reindex<a class="headerlink" href="#approach-to-the-distributed-reindex" title="Link to this heading">¶</a></h2>
+<p>The majority of the data refresh process can be implemented in Airflow with only
+slight refactoring, using our existing
+<a class="reference external" href="https://github.com/WordPress/openverse/blob/05ff48d05f2163104151c5589cf352a156bc6a97/catalog/dags/common/sql.py">Postgres hooks/operators</a>
+and reusable
+<a class="reference external" href="https://github.com/WordPress/openverse/blob/05ff48d05f2163104151c5589cf352a156bc6a97/catalog/dags/common/elasticsearch.py">Elasticsearch tasks</a>.
+The exception is the <em>distributed reindex</em>.</p>
+<p>The simplest approach would be to remove the indexer workers entirely in favor
+of doing the reindexing in parallelized dynamic tasks in Airflow. However,
+currently the indexer workers and catalog EC2 instances are the same size
+(m5.xlarge), and each of the six production workers were observed to use up to
+~25% CPU and ~52% memory utilization during reindexing. The expense of
+permanently increasing resources on the catalog instance to support reindexing
+(which may happen concurrently with popularity refreshes, ingestion, and all
+other processes that occur on the catalog) would significantly exceed the cost
+of maintaining remote workers that can be run only when needed.</p>
+<p>Two other options were evaluated for this IP:</p>
+<ul class="simple">
+<li><p>Keep the EC2 instances as they are now, but connect to them directly from
+Airflow. Rather than managing the 8 total EC2 instances directly, we will
+instead set up an EC2 Auto Scaling group for each environment, with an initial
+desired capacity of 0. The data refresh DAGs will spin up instances by
+increasing this desired capacity. (More details follow later in this
+document.)</p></li>
+<li><p>Remove the EC2 instances entirely in favor of a new ECS task definition using
+the <code class="docutils literal notranslate"><span class="pre">indexer-worker</span></code> image, which would remove all API code and contain only
+the reindexing script. Airflow would spin up the appropriate number of ECS
+tasks when needed.</p></li>
+</ul>
+<section id="comparison-of-ec2-and-ecs">
+<h3>Comparison of EC2 and ECS<a class="headerlink" href="#comparison-of-ec2-and-ecs" title="Link to this heading">¶</a></h3>
+<p>The following areas of comparison were considered when choosing between the two
+approaches:</p>
+<section id="cost">
+<h4>Cost<a class="headerlink" href="#cost" title="Link to this heading">¶</a></h4>
+<p>Maintaining the
+<a class="reference external" href="https://calculator.aws/#/createCalculator/ec2-enhancement">EC2 worker instances</a>,
+provided we continue to automatically stop the instances when not in use, would
+be cheaper than using <a class="reference external" href="https://calculator.aws/#/createCalculator/Fargate">ECS</a>,
+given equivalent resources.</p>
+<p>Since our existing indexer workers do not use all of the resources available, we
+can also consider reducing resources for the workers. For EC2, we are already
+using the cheapest possible offering that will comfortably accommodate our
+memory consumption. Since ECS is more flexible and allows scaling vCPU and RAM
+independently, it is possible that ECS could be cheaper than EC2 with careful
+adjustment of resources<a class="footnote-reference brackets" href="#id4" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
+<p>Notably both solutions are <em>signifcantly</em> cheaper than the current
+implementation, because the bulk of the cost comes from constantly running the
+two m5.xlarge EC2 instances for the ingestion servers.</p>
+</section>
+<section id="ease-of-infrastructure-development">
+<h4>Ease of infrastructure development<a class="headerlink" href="#ease-of-infrastructure-development" title="Link to this heading">¶</a></h4>
+<p>EC2 is also likelier the easier solution to implement, because it requires so
+few changes to the indexer-workers as they are currently configured. For ECS,
+less total infrastructure scaffolding is required, but it is a greater departure
+from the current setup.</p>
+</section>
+<section id="code-maintainability">
+<h4>Code maintainability<a class="headerlink" href="#code-maintainability" title="Link to this heading">¶</a></h4>
+<p>The ECS approach requires slightly less code, because it would allow us to
+completely remove all of the server logic needed in the EC2 instances. The
+Docker image need only contain the script for reindexing.</p>
+<p>For the EC2 instances we would continue to serve a minimal API with the
+following endpoints:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">healthcheck</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">reindexing_task</span></code> - Trigger the reindexing task for the given parameters
+(e.g., run the script)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">task/{task_id}</span></code> - Get the status of the running task</p></li>
+</ul>
+<p>That being said, the API needed for the indexer worker is simple and small. The
+vast majority of the complexity in the data refresh is in the <em>ingestion
+server’s</em> API, all of which would still be removed.</p>
+</section>
+<section id="supporting-local-testing-development">
+<h4>Supporting local testing &amp; development<a class="headerlink" href="#supporting-local-testing-development" title="Link to this heading">¶</a></h4>
+<p>This is the most significant area in which EC2 is preferable to the ECS
+approach. With the EC2 approach, assigning work to the workers requires starting
+the worker instances and then triggering the reindexing task on each worker by
+POSTing to its <code class="docutils literal notranslate"><span class="pre">reindexing_task</span></code> endpoint. Locally, we would simply POST to our
+local Docker container rather than an EC2 instance. Minimal work is needed to
+adapt the process to work in a local environment, and the DAG when run locally
+is as close as possible to its production counterpart.</p>
+<p>For the ECS approach, in production we must spin up ECS instances using
+Airflow’s
+<a class="reference external" href="https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/operators/ecs.html#run-a-task-definition">EcsRunTaskOperator</a>.
+Simulating this in a local development environment without actually connecting
+to AWS is less straightforward, and requires supporting a separate workflow for
+local environments. For example we could have a <code class="docutils literal notranslate"><span class="pre">branch</span></code> operator that checks
+the environment and proceeds to the EcsRunTaskOperator in production to spin up
+ECS tasks, or a
+<a class="reference external" href="https://airflow.apache.org/docs/apache-airflow-providers-docker/stable/_api/airflow/providers/docker/operators/docker/index.html">DockerOperator</a>
+in local development to spin up a worker as a local Docker container.</p>
+<p>This is still relatively complex, however, because the worker Docker containers
+must be launched from Airflow, which is itself dockerized. This requires either
+using a Docker-in-Docker approach, which should typically be avoided, or
+modifying the configuration to allow Airflow to launch sibling containers<a class="footnote-reference brackets" href="#id5" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.
+Requirements differ across operating systems, yet this <strong>must</strong> be tested and
+maintained across platforms because the data refresh is used as a critical step
+in setting up our local development environment.</p>
+</section>
+<section id="support-for-progress-tracking">
+<h4>Support for progress tracking<a class="headerlink" href="#support-for-progress-tracking" title="Link to this heading">¶</a></h4>
+<p>With the EC2 approach it is trivial to calculate the <code class="docutils literal notranslate"><span class="pre">percentage_complete</span></code> for
+the reindexing task, and report to Airflow via the task status endpoint.
+Airflow’s ECS Operators do not have out-of-the-box support for streaming the
+Cloudwatch logs from the task while it is running, so we would have less insight
+into the status of the task from Airflow.</p>
+</section>
+<section id="impact-on-deployments">
+<h4>Impact on Deployments<a class="headerlink" href="#impact-on-deployments" title="Link to this heading">¶</a></h4>
+<p>This is a great strength of both approaches, each of which would eliminate the
+need for deployments when changes are made to the data refresh code (including
+changes to the indexer workers).</p>
+<p>Each time an ECS task is spun up on Fargate, it will pull the Docker image
+configured in the task definition. By using the <code class="docutils literal notranslate"><span class="pre">latest</span></code> tag in this
+configuration we can ensure that the latest indexer-worker image is pulled each
+time, which means that any changes to the reindexing code will become live in
+production as soon as the new docker image is published after merging on <code class="docutils literal notranslate"><span class="pre">main</span></code>.</p>
+<p>The EC2 approach uses an ASG to achieve a similar result. Because the ASG will
+actually terminate (rather than stop) the instances when their work is complete
+and start <em>new</em> instances for each data refresh, we can pull the Docker image
+with the <code class="docutils literal notranslate"><span class="pre">latest</span></code> tag in the <code class="docutils literal notranslate"><span class="pre">user_data</span></code> script so that the latest Docker image
+is pulled each time a new data refresh starts. By using AWS Systems Manager
+parameters instead of AMI IDs in the launch template, we can even use the ASG to
+automatically use new AMI IDs without needing to deploy a new launch template
+each time a system dependency is updated.</p>
+</section>
+</section>
+<section id="conclusion">
+<h3>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">¶</a></h3>
+<p>Both approaches allow us to eliminate the need for deployments in almost all
+cases, except for when changes are made to the task definition and launch
+template respectively.</p>
+<p>The main advantage of the ECS approach is that it allows us to remove 100% of
+the server management code. However, it is more difficult to implement, likely
+more expensive, and requires a special secondary implementation for running
+locally that may be prone to cross-platform issues. The EC2 approach on the
+other hand is cheaper, quicker to implement, and gets us the vast majority of
+what we want in terms of removing complexity. Consequently I argue here that the
+EC2 approach is the one we should pursue.</p>
+</section>
+</section>
+<section id="step-by-step-plan">
+<h2>Step-by-step plan<a class="headerlink" href="#step-by-step-plan" title="Link to this heading">¶</a></h2>
+<!--
+List the ordered steps of the plan in the form of imperative-tone issue titles.
+
+The goal of this section is to give a high-level view of the order of implementation any relationships like
+blockages or other dependencies that exist between steps of the plan. Link each step to the step description
+in the following section.
+
+If special deployments are required between steps, explicitly note them here. Additionally, highlight key
+milestones like when a feature flag could be made available in a particular environment.
+-->
+<p>Because the data refresh process is critical, we will not remove the ingestion
+server or the existing data refresh DAGs until the new process has been
+performed successfully in staging and production. The new data refresh will be
+developed as separate DAGs alongside the current ones.</p>
+<ol class="arabic simple">
+<li><p>Create a new data refresh factory to generate new data refresh DAGs for each
+media type for staging and production, with the
+<code class="docutils literal notranslate"><span class="pre">&lt;environment&gt;_&lt;media&gt;_data_refresh</span></code> DAG id. For simplicity of code review,
+these initial DAGs should only perform the <code class="docutils literal notranslate"><span class="pre">Copy</span> <span class="pre">Data</span></code>, <code class="docutils literal notranslate"><span class="pre">Filter</span> <span class="pre">Data</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">Create</span> <span class="pre">Index</span></code> steps, which we will perform entirely in Airflow.</p></li>
+<li><p>Create a new <code class="docutils literal notranslate"><span class="pre">catalog-indexer-worker</span></code> in the Catalog, and build the new
+indexer worker image locally.</p></li>
+<li><p>Add the distributed reindexing step to the DAG (excludes infrastructure
+work).</p></li>
+<li><p>Set up the necessary resources for the ASGs for staging and production in the
+catalog Terraform configuration.</p></li>
+<li><p>Add all remaining steps to the data refresh DAGs:
+<code class="docutils literal notranslate"><span class="pre">Create</span> <span class="pre">and</span> <span class="pre">Populated</span> <span class="pre">Filtered</span> <span class="pre">Index</span></code>, <code class="docutils literal notranslate"><span class="pre">Reapply</span> <span class="pre">Constraints</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Promote</span> <span class="pre">Table</span></code>, <code class="docutils literal notranslate"><span class="pre">Promote</span> <span class="pre">Index</span></code>, <code class="docutils literal notranslate"><span class="pre">Delete</span> <span class="pre">Index</span></code>.</p></li>
+<li><p>Deploy the catalog and the new indexer-workers configuration.</p></li>
+<li><p>Run the staging audio data refresh, followed by the staging image data
+refresh.</p></li>
+<li><p>Once successful, run the production audio data refresh and image data
+refresh.</p></li>
+<li><p>Update the <code class="docutils literal notranslate"><span class="pre">create_filtered_&lt;media&gt;_index</span></code> DAGs to remove use of the
+ingestion server.</p></li>
+<li><p>Drop the <code class="docutils literal notranslate"><span class="pre">recreate_full_staging_index</span></code> DAG, which can be removed entirely in
+favor of the staging data refresh.</p></li>
+<li><p>Update the <code class="docutils literal notranslate"><span class="pre">load_sample_data.sh</span></code> script to run the DAG instead of using the
+ingestion server.</p></li>
+<li><p>Fully remove the ingestion server and related infrastructure.</p></li>
+</ol>
+<p>There are few opportunities for multiple streams of work. Updating the
+<code class="docutils literal notranslate"><span class="pre">create_filtered_&lt;media&gt;_index</span></code> DAGs can happen at any time.</p>
+</section>
+<section id="step-details">
+<h2>Step details<a class="headerlink" href="#step-details" title="Link to this heading">¶</a></h2>
+<!--
+Describe all of the implementation steps listed in the "step-by-step plan" in detail.
+
+For each step description, ensure the heading includes an obvious reference to the step as described in the
+"step-by-step plan" section above.
+-->
+<p>While this may look daunting, it should be noted that with very few exceptions
+the work described below is refactoring of existing logic. Links to the source
+files are included for convenience.</p>
+<section id="create-the-new-data-refresh-dag-factory-and-move-initial-steps-into-airflow">
+<h3>Create the new data refresh DAG factory and move initial steps into Airflow<a class="headerlink" href="#create-the-new-data-refresh-dag-factory-and-move-initial-steps-into-airflow" title="Link to this heading">¶</a></h3>
+<p>In this step, we’ll create a new data refresh DAG factory to generate data
+refresh DAGs for each existing media_type and environment. Currently these four
+will be generated:</p>
+<ul class="simple">
+<li><p>staging_audio_data_refresh</p></li>
+<li><p>staging_image_data_refresh</p></li>
+<li><p>production_audio_data_refresh</p></li>
+<li><p>production_image_data_refresh</p></li>
+</ul>
+<p>Because the <code class="docutils literal notranslate"><span class="pre">environment</span></code> is added as a prefix, there will be no collision with
+the existing DAG ids. In this initial step, we we will add only a small portion
+of the logic in order to make the PR easier to review. The first steps are
+already implemented in the current data refresh and can simply be copied:</p>
+<ul class="simple">
+<li><p>Get the current record count from the target API table; this must be modified
+to take the <code class="docutils literal notranslate"><span class="pre">environment</span></code> as an argument</p></li>
+<li><p>Perform concurrency checks on the other data refreshes and conflicting DAGs;
+this must be modified to include the now larger list of data refresh DAG ids</p></li>
+<li><p>Get the name of the Elasticsearch index currently mapped to the <code class="docutils literal notranslate"><span class="pre">target_alias</span></code></p></li>
+<li><p>Generate the new index suffix</p></li>
+</ul>
+<p>We will include new tasks to perform the initial few steps of the ingestion
+server’s work:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Copy</span> <span class="pre">Data</span></code>: this should be a TaskGroup that will have multiple tasks for
+creating the FDW from the upstream DB to the downstream DB, running the
+copy_data query, and so on. It should fully replace the implementation of
+<a class="reference external" href="https://github.com/WordPress/openverse/blob/05ff48d05f2163104151c5589cf352a156bc6a97/ingestion_server/ingestion_server/ingest.py#L248"><code class="docutils literal notranslate"><span class="pre">refresh_api_table</span></code></a>
+in the ingestion server. All steps in this section are SQL queries that can be
+implemented using the existing
+<a class="reference external" href="https://github.com/WordPress/openverse/blob/05ff48d05f2163104151c5589cf352a156bc6a97/catalog/dags/common/sql.py">PostgresHook and PGExecuteQueryOperator</a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Filter</span> <span class="pre">Data</span></code>: initially, this should be a single python task which exactly
+mirrors the behavior of the
+<a class="reference external" href="https://github.com/WordPress/openverse/blob/47fe5df0e9b8ad3dba06021f4cd4af9139977644/ingestion_server/ingestion_server/cleanup.py#L295"><code class="docutils literal notranslate"><span class="pre">clean_image_data</span></code> function of <code class="docutils literal notranslate"><span class="pre">cleanup.py</span></code></a>
+(only applying the tag-specific steps) on the ingestion server<a class="footnote-reference brackets" href="#id6" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>. The
+easiest way to do this would be to directly map the functionality of the
+ingestion server on this step within a single Airflow task. The steps for this
+task are as follows (see <a class="reference internal" href="#filtering-approach">Alternatives</a> for possible
+future directions):</p>
+<ol class="arabic simple">
+<li><p>Get a batch of records from the database using <code class="docutils literal notranslate"><span class="pre">CLEANUP_BUFFER_SIZE</span></code></p></li>
+<li><p>Divide batch up into <code class="docutils literal notranslate"><span class="pre">multiprocessing.cpu_count()</span></code> subbatches</p></li>
+<li><p>Split the filtering up into separate workers using multiprocessing</p></li>
+<li><p>On each process</p>
+<ol class="arabic simple">
+<li><p>Create a new DB connection &amp; cursor per worker</p></li>
+<li><p>Iterate through each record</p>
+<ol class="arabic simple">
+<li><p>Remove tags below confidence level</p></li>
+<li><p>Remove tags that need to be filtered (denylisted, machine-generated
+filter list, provider, etc)</p></li>
+<li><p>Only surface the record if it needs to be changed</p></li>
+<li><p>Update each records one by one with a single <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code></p></li>
+</ol>
+</li>
+<li><p>Commit cursor and close connection</p></li>
+</ol>
+</li>
+<li><p>Repeat steps 1-4 until all batches are consumed</p></li>
+</ol>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Create</span> <span class="pre">Index</span></code>: we can use our existing
+<a class="reference external" href="https://github.com/WordPress/openverse/blob/05ff48d05f2163104151c5589cf352a156bc6a97/catalog/dags/common/elasticsearch.py#L82">Elasticsearch tasks</a>
+to create the new elasticsearch index with the index suffix generated in the
+previous task.</p></li>
+</ul>
+</section>
+<section id="implement-new-catalog-indexer-worker">
+<h3>Implement new catalog indexer worker<a class="headerlink" href="#implement-new-catalog-indexer-worker" title="Link to this heading">¶</a></h3>
+<p>In this step we will create the new catalog-indexer-worker Docker image. This
+step does not include adding the orchestration steps to the DAG, or the
+infrastructure work to actually create the ASGs.</p>
+<p>First we will create a new <code class="docutils literal notranslate"><span class="pre">indexer-worker</span></code> directory under
+<code class="docutils literal notranslate"><span class="pre">catalog/dags/data_refresh</span></code>, which will contain the contents of the new indexer
+worker. <strong>This implementation already exists in the ingestion server. The
+relevant pieces can be pulled out and refactored slightly to fit the new, much
+smaller image.</strong> Broadly, this is the mapping of existing files to new files
+needed:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">api.py</span></code> will defined the API for the worker, and is refactored from the
+existing
+<a class="reference external" href="https://github.com/WordPress/openverse/blob/05ff48d05f2163104151c5589cf352a156bc6a97/ingestion_server/ingestion_server/indexer_worker.py"><code class="docutils literal notranslate"><span class="pre">indexer_worker.py</span></code></a>.
+It must be refactored to add task state and a <code class="docutils literal notranslate"><span class="pre">task_status</span></code> endpoint, which
+takes a <code class="docutils literal notranslate"><span class="pre">task_id</span></code> and returns the status and progress of the given task.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">indexer.py</span></code> will contain the logic for the actual indexing task. It will be
+refactored from the existing
+<a class="reference external" href="https://github.com/WordPress/openverse/blob/05ff48d05f2163104151c5589cf352a156bc6a97/ingestion_server/ingestion_server/indexer.py"><code class="docutils literal notranslate"><span class="pre">indexer.py</span></code></a>;
+specifically all we need is the
+<a class="reference external" href="https://github.com/WordPress/openverse/blob/05ff48d05f2163104151c5589cf352a156bc6a97/ingestion_server/ingestion_server/indexer.py#L157"><code class="docutils literal notranslate"><span class="pre">replicate</span></code></a>
+function.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">elasticsearch_models.py</span></code>, pulled from the file of the
+<a class="reference external" href="https://github.com/WordPress/openverse/blob/05ff48d05f2163104151c5589cf352a156bc6a97/ingestion_server/ingestion_server/elasticsearch_models.py">same name</a>
+in the ingestion server. Defines a mapping from a database record to an
+Elasticsearch document.</p></li>
+<li><p>Utility files for helper functions for connecting to Elasticsearch and
+Postgres (e.g.
+<a class="reference external" href="https://github.com/WordPress/openverse/blob/main/ingestion_server/ingestion_server/es_helpers.py"><code class="docutils literal notranslate"><span class="pre">es_helpers.py</span></code></a>)</p></li>
+</ul>
+<p>The
+<a class="reference external" href="https://github.com/WordPress/openverse/blob/main/ingestion_server/Dockerfile"><code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code></a>
+can be copied from the existing ingestion server. It should be updated to
+reference the new file structure, and to expose only a single port, which should
+be distinguished from the ports currently in use by the ingestion server (8001
+and 8002). Other necessary files, including <code class="docutils literal notranslate"><span class="pre">env.docker</span></code>, <code class="docutils literal notranslate"><span class="pre">.dockerignore</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Pipfile</span></code>, and <code class="docutils literal notranslate"><span class="pre">gunicorn.conf.py</span></code> can all be copied in from the existing
+ingestion server as well.</p>
+<p>Finally we will update the monorepo’s root
+<a class="reference external" href="https://github.com/WordPress/openverse/blob/05ff48d05f2163104151c5589cf352a156bc6a97/docker-compose.yml"><code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code></a>
+to add a new <code class="docutils literal notranslate"><span class="pre">catalog-indexer-worker</span></code> service. Its build context should point to
+the nested <code class="docutils literal notranslate"><span class="pre">data_refresh/indexer_worker</span></code> directory, and it should map the
+exposed port to enable the API to be reached by the catalog.</p>
+<p>When this work is complete, it should be possible to run <code class="docutils literal notranslate"><span class="pre">just</span> <span class="pre">catalog/shell</span></code>
+and curl the new indexer worker. The existing ingestion-server and
+indexer-worker services are unaffected (it is still possible to run legacy data
+refreshes locally and in production).</p>
+</section>
+<section id="implement-distributed-reindexing-locally">
+<h3>Implement distributed reindexing locally<a class="headerlink" href="#implement-distributed-reindexing-locally" title="Link to this heading">¶</a></h3>
+<p>In this step we will add tasks to the data refresh DAGs to orchestrate the
+distributed reindex. At the end of this step, it will be possible to run a
+distributed reindex <em>locally</em>, but because the infrastructure work to create the
+ASGs is not complete, it can not be run on production yet. The following code
+can all be refactored from
+<a class="reference external" href="https://github.com/WordPress/openverse/blob/main/ingestion_server/ingestion_server/distributed_reindex_scheduler.py"><code class="docutils literal notranslate"><span class="pre">distributed_reindex_scheduler.py</span></code></a>.</p>
+<ul class="simple">
+<li><p>Use
+<a class="reference external" href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/autoscaling/client/describe_auto_scaling_groups.html"><code class="docutils literal notranslate"><span class="pre">describe_auto_scaling_groups</span></code></a>
+and filter by tags to select the appropriate ASG for the desired environment.
+(Skips in local env.)</p></li>
+<li><p>Use
+<a class="reference external" href="https://boto3.amazonaws.com/v1/documentation/api/1.26.86/reference/services/autoscaling/client/set_desired_capacity.html"><code class="docutils literal notranslate"><span class="pre">set_desired_capacity</span></code></a>
+to increase the desired capacity of the ASG to the desired number of workers,
+depending on the environment. This will cause the ASG to begin spinning up
+instances. (Skips in local env.)</p></li>
+<li><p>Use
+<a class="reference external" href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/autoscaling/client/describe_auto_scaling_groups.html"><code class="docutils literal notranslate"><span class="pre">describe_auto_scaling_groups</span></code></a>
+to poll the ASG until all instances have been started, and get the EC2
+instance IDs. (Skips in local env.)</p></li>
+<li><p>Use dynamic task mapping to distribute reindexing across the indexer workers
+by first calculating <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">end</span></code> indices that will split the records in
+the media table into even portions, depending on the number of workers
+available in the given environment. Then:</p>
+<ul>
+<li><p>POST to each worker’s <code class="docutils literal notranslate"><span class="pre">reindexing_task</span></code> endpoint the <code class="docutils literal notranslate"><span class="pre">start_index</span></code> and
+<code class="docutils literal notranslate"><span class="pre">end_index</span></code> it should handle</p></li>
+<li><p>Use a Sensor to ping the worker’s <code class="docutils literal notranslate"><span class="pre">task/{task_id}</span></code> endpoint until the task
+is complete, logging the progress as it goes</p></li>
+</ul>
+</li>
+<li><p>Use
+<a class="reference external" href="https://boto3.amazonaws.com/v1/documentation/api/1.26.86/reference/services/autoscaling/client/terminate_instance_in_auto_scaling_group.html"><code class="docutils literal notranslate"><span class="pre">terminate_instance_in_auto_scaling_group</span></code></a>
+to terminate the instance. Make sure to set <code class="docutils literal notranslate"><span class="pre">ShouldDecrementDesiredCapacity</span></code>
+to <code class="docutils literal notranslate"><span class="pre">True</span></code> to ensure that the ASG does not try to replace the instance. This
+task should use the
+<a class="reference external" href="https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dags.html#trigger-rules"><code class="docutils literal notranslate"><span class="pre">NONE_SKIPPED</span></code> TriggerRule</a>
+to ensure that the instances are terminated, even if there are upstream
+failures. (Skips in local env.)</p></li>
+<li><p>Finally, after all tasks have finished (regardless of success/failure), we
+should have a cleanup task that calls <code class="docutils literal notranslate"><span class="pre">set_desired_capacity</span></code> to 0. Generally
+this should be a no-op, but if an instance crashes during reindexing (rather
+than simply failing during reindexing) the ASG will spin up a replacement and
+Airflow will not automatically clean it up. This task ensures that any
+dangling instances are terminated.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is not possible to retry a single indexer worker with this set up, because once a worker fails the instance is actually terminated (rather than simply stopped). If a task that triggers a reindex is cleared after an instance has been terminated, it will simply fail. The entire reindex must be restarted from the first step in this task group.</p>
+<p>However, there is a valuable tradoff to this approach: it ensures that all of the indexer workers in a data refresh are identical, while still allowing us to avoid manual deployments every time the indexer logic changes. For example, imagine some changes to the reindexing logic are merged to <code class="docutils literal notranslate"><span class="pre">main</span></code> while a data refresh is actively underway, and a new Docker image is published. If one indexer worker failed, and it were possible to retry <strong>just</strong> that indexer worker, it would use the new Docker image – leading to inconsistency in the behavior of different workers within a single data refresh.</p>
+<p>In future iterations this may also be solved by using AMIs with the Docker image baked in, and then preventing launch template version bumps while a data refresh is running.</p>
+</div>
+</section>
+<section id="create-the-terraform-and-ansible-resources-needed-to-deploy-the-new-indexer-workers">
+<h3>Create the Terraform and Ansible resources needed to deploy the new indexer workers<a class="headerlink" href="#create-the-terraform-and-ansible-resources-needed-to-deploy-the-new-indexer-workers" title="Link to this heading">¶</a></h3>
+<p>In this step we will add the resources needed to actually configure the ASGs.</p>
+<p>Some important notes:</p>
+<ul class="simple">
+<li><p>Currently, the staging and production workers are split into separate
+environments (i.e., a staging deploy is used to deploy the 2 staging workers
+separately from the 6 production workers). It is more accurate to view all 8
+workers as production instances (i.e., part of the production catalog
+deployment), which merely <em>operate</em> on different environments. As such all 8
+should be part of the production deployment, but two separate ASGs which are
+given a “staging-indexer-worker-pool” and “production-indexer-worker-pool”
+tag, respectively, to indicate their intended environment.</p></li>
+<li><p>The playbooks must be updated to check if any of the four <em>new</em> data refresh
+DAGs are running before deploying, as well.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">user_data</span></code> script should be updated to pull the Docker image with the
+<code class="docutils literal notranslate"><span class="pre">latest</span></code> tag.</p></li>
+</ul>
+</section>
+<section id="add-remaining-steps-to-the-data-refresh-dags">
+<h3>Add remaining steps to the Data Refresh DAGs<a class="headerlink" href="#add-remaining-steps-to-the-data-refresh-dags" title="Link to this heading">¶</a></h3>
+<p>The final steps can now be added to the DAGs:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Create</span> <span class="pre">and</span> <span class="pre">Populated</span> <span class="pre">Filtered</span> <span class="pre">Index</span></code>: this should be implemented as a
+reusable TaskGroup. This work can already be implemented using our existing
+Elasticsearch tasks and replaces
+<a class="reference external" href="https://github.com/WordPress/openverse/blob/226aed0890a19ace1e0b54c1e784c86e9f26b4cb/ingestion_server/ingestion_server/indexer.py#L437">this function</a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Reapply</span> <span class="pre">Constraints</span></code> and <code class="docutils literal notranslate"><span class="pre">Promote</span> <span class="pre">Table</span></code>: these SQL queries can be performed
+with the PostgresHook, and replaces
+<a class="reference external" href="https://github.com/WordPress/openverse/blob/226aed0890a19ace1e0b54c1e784c86e9f26b4cb/ingestion_server/ingestion_server/ingest.py#L340">this function</a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Promote</span> <span class="pre">Index</span></code> and <code class="docutils literal notranslate"><span class="pre">Delete</span> <span class="pre">Index</span></code>: these can be implemented using our
+existing Elasticsearch tasks, and replaces
+<a class="reference external" href="https://github.com/WordPress/openverse/blob/226aed0890a19ace1e0b54c1e784c86e9f26b4cb/ingestion_server/ingestion_server/indexer.py#L311">these</a>
+<a class="reference external" href="https://github.com/WordPress/openverse/blob/226aed0890a19ace1e0b54c1e784c86e9f26b4cb/ingestion_server/ingestion_server/indexer.py#L377">functions</a>.</p></li>
+</ul>
+</section>
+<section id="deploy-the-catalog-and-indexer-workers">
+<h3>Deploy the catalog and indexer workers<a class="headerlink" href="#deploy-the-catalog-and-indexer-workers" title="Link to this heading">¶</a></h3>
+<p>In this step we’ll actually deploy the new workers using the Ansible playbooks.
+The existing ingestion server and indexer workers remain untouched, so the
+legacy data refresh can continue to run.</p>
+</section>
+<section id="run-the-data-refreshes">
+<h3>Run the data refreshes<a class="headerlink" href="#run-the-data-refreshes" title="Link to this heading">¶</a></h3>
+<p>The next step is to run the <code class="docutils literal notranslate"><span class="pre">staging_&lt;x&gt;</span></code> data refreshes, which act on the
+staging API DB and Elasticsearch cluster and are therefore lower risk. This will
+be the first test of the new process. Once successful, we can run the
+<code class="docutils literal notranslate"><span class="pre">production_&lt;x&gt;</span></code> refreshes.</p>
+</section>
+<section id="update-create-filtered-media-index-dags">
+<h3>Update <code class="docutils literal notranslate"><span class="pre">create_filtered_&lt;media&gt;_index</span></code> DAGs<a class="headerlink" href="#update-create-filtered-media-index-dags" title="Link to this heading">¶</a></h3>
+<p>These DAGs currently use the ingestion server to perform the
+<code class="docutils literal notranslate"><span class="pre">create_filtered_index</span></code> steps in isolation. We can update these to use the
+reusable TaskGroup implemented in an earlier step.</p>
+</section>
+<section id="remove-the-recreate-full-staging-index-dag">
+<h3>Remove the <code class="docutils literal notranslate"><span class="pre">recreate_full_staging_index</span></code> DAG<a class="headerlink" href="#remove-the-recreate-full-staging-index-dag" title="Link to this heading">¶</a></h3>
+<p>This DAG performs the second half of a data refresh (the distributed reindex and
+promotion) in staging. Once the data refresh has been moved to Airflow, we can
+add a
+<a class="reference external" href="https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/params.html">DAG param</a>
+to the data refresh that allows skipping the initial <code class="docutils literal notranslate"><span class="pre">Copy</span> <span class="pre">Data</span></code> steps. This DAG
+will no longer be necessary and can then be deleted.</p>
+</section>
+<section id="update-the-load-sample-data-scripts">
+<h3>Update the load_sample_data scripts<a class="headerlink" href="#update-the-load-sample-data-scripts" title="Link to this heading">¶</a></h3>
+<p>Our <code class="docutils literal notranslate"><span class="pre">load_sample_data.sh</span></code> scripts currently use <code class="docutils literal notranslate"><span class="pre">just</span></code> commands to
+<a class="reference external" href="https://github.com/WordPress/openverse/blob/226aed0890a19ace1e0b54c1e784c86e9f26b4cb/load_sample_data.sh#L98">run parts of the data refresh</a>
+on the local ingestion server, as part of setting up the local development
+environment. We should update the scripts to instead use the Airflow CLI to
+unpause the two data refresh DAGs and await their completion.</p>
+</section>
+<section id="remove-the-ingestion-server">
+<h3>Remove the ingestion server<a class="headerlink" href="#remove-the-ingestion-server" title="Link to this heading">¶</a></h3>
+<p>Once the new data refresh has been run successfully in production, we can
+finally remove all ingestion-server code from the monorepo and the
+infrastructure repo, and completely remove the associated EC2 instances.</p>
+</section>
+<section id="infrastructure">
+<h3>Infrastructure<a class="headerlink" href="#infrastructure" title="Link to this heading">¶</a></h3>
+<!-- Describe any infrastructure that will need to be provisioned or modified. In particular, identify associated potential cost changes. -->
+<p>Infrastructure is a large part of this project. We will be adding 8 new EC2
+instances but deprovisioning ten, as described above. There will be significant
+cost benefits to removing the two EC2 instances which are constantly running.</p>
+</section>
+<section id="tools-packages">
+<h3>Tools &amp; packages<a class="headerlink" href="#tools-packages" title="Link to this heading">¶</a></h3>
+<!-- Describe any tools or packages which this work might be dependent on. If multiple options are available, try to list as many as are reasonable with your own recommendation. -->
+<p>No new tools or packages are required.</p>
+</section>
+<section id="other-projects-or-work">
+<h3>Other projects or work<a class="headerlink" href="#other-projects-or-work" title="Link to this heading">¶</a></h3>
+<!-- Note any projects this plan is dependent on. -->
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/WordPress/openverse-infrastructure/pull/829">Deploying Airflow with Ansible</a>,
+part of the
+<a class="reference external" href="https://github.com/WordPress/openverse-infrastructure/milestone/6">Move Airflow to openverse.org</a>
+Project.</p></li>
+<li><p><a class="reference external" href="https://github.com/WordPress/openverse/issues/430">Catalog Data Cleaning project</a>,
+which removes the Clean Data steps from the data refresh</p></li>
+<li><p><a class="reference external" href="https://github.com/WordPress/openverse/issues/286">Switch Python Package Management Away from Pipenv</a></p></li>
+</ul>
+</section>
+</section>
+<section id="alternatives">
+<h2>Alternatives<a class="headerlink" href="#alternatives" title="Link to this heading">¶</a></h2>
+<!-- Describe any alternatives considered and why they were not chosen or recommended. -->
+<section id="ecs-approach">
+<h3>ECS approach<a class="headerlink" href="#ecs-approach" title="Link to this heading">¶</a></h3>
+<p>The alternative options of using an ECS approach or performing the reindex
+entirely in Airflow are discussed at length in the
+<a class="reference internal" href="#approach-to-the-distributed-reindex">Approach to the Distributed Reindex</a>
+section.</p>
+<p>It is also possible to use EC2 instances but manage them directly in Airflow
+using EC2 operators to start and stop the instances as needed. However, more
+infrastructure work is required in this approach, and we would require
+deployments whenever there are code changes in the indexer workers.</p>
+</section>
+<section id="filtering-approach">
+<h3>Filtering approach<a class="headerlink" href="#filtering-approach" title="Link to this heading">¶</a></h3>
+<p>There are a number of ways to accomplish the data filtering, including several
+ways to improve the approach mentioned.</p>
+<p>The Airflow scheduler container has access to 4 cores, which is the same as the
+ingestion server where this step was originally running. At present, it takes
+about 8 hours for all cleanup steps, but that includes the URL cleaning which is
+certainly more time intensive than the tag filtering since it makes outbound
+requests. Running the tag filtering on Airflow should not impact any of the
+other running tasks or saturate the instance.</p>
+<p>There are a few ways this process could be improved, but none of them are
+required <em>at this moment</em>. We can follow up after this project is complete to
+assess what further optimizations might be necessary at this step. Some
+potential suggestions for that time:</p>
+<ul class="simple">
+<li><p>Instead of single <code class="docutils literal notranslate"><span class="pre">UPDATE</span></code> queries for each affected records, we could insert
+records from each subbatch to a temporary table. Then the base table could be
+updated with an <code class="docutils literal notranslate"><span class="pre">UPDATE</span> <span class="pre">...</span> <span class="pre">FROM</span></code> in bulk. Since the indices haven’t been
+applied to the base table yet, this should be fairly performant.</p></li>
+<li><p>Instead of using multiprocessing, we could pre-define the batches and run the
+filtering chunks on a set of mapped tasks. The multiprocessing has the benefit
+of iterating over a cursor on the database rather than having to manage the
+record ranges explicitly, but this would allow further parallelization and
+task management.</p></li>
+<li><p>The indexer workers themselves could be expanded to run on larger chunks of
+the database for this filtering. This would likely require the most work as it
+would involve expanding the indexer workers’ API to handle this additional
+task.</p></li>
+</ul>
+</section>
+</section>
+<section id="blockers">
+<h2>Blockers<a class="headerlink" href="#blockers" title="Link to this heading">¶</a></h2>
+<!-- What hard blockers exist that prevent further work on this project? -->
+<p>Development can start immediately, but the infrastructure components of this
+project are blocked by completion of the effort to move Airflow to
+<a class="reference external" href="http://openverse.org">openverse.org</a>, specifically
+<a class="reference external" href="https://github.com/WordPress/openverse-infrastructure/issues/776">this issue</a>
+to run a (legacy) data refresh on the new instance.</p>
+</section>
+<section id="rollback">
+<h2>Rollback<a class="headerlink" href="#rollback" title="Link to this heading">¶</a></h2>
+<!-- How do we roll back this solution in the event of failure? Are there any steps that can not easily be rolled back? -->
+<p>We will not remove the ingestion server or the existing data refresh DAGs until
+the new DAGs have been run successfully against both staging and production. We
+can rollback at any time by simply removing the new instances and DAGs.</p>
+</section>
+<section id="risks">
+<h2>Risks<a class="headerlink" href="#risks" title="Link to this heading">¶</a></h2>
+<!-- What risks are we taking with this solution? Are there risks that once taken can’t be undone?-->
+<p>There is minimal risk, as we will be able to test against production data in
+staging before running against production. However the data refresh does
+completely replace the production media tables and Elasticsearch indices, so
+there is always inherent risk that production data could be lost or malformed if
+something goes wrong. We will ensure production backups are available and
+monitor the first production data refreshes closely.</p>
+</section>
+<section id="prior-art">
+<h2>Prior art<a class="headerlink" href="#prior-art" title="Link to this heading">¶</a></h2>
+<!-- Include links to documents and resources that you used when coming up with your solution. Credit people who have contributed to the solution that you wish to acknowledge. -->
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/WordPress/openverse/issues/392">Search relevancy sandbox</a></p></li>
+</ul>
+<hr class="footnotes docutils" />
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id4" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>See
+<a class="reference external" href="https://github.com/WordPress/openverse/pull/4026#pullrequestreview-1978477921">comment</a>
+for specific cost assessment, courtesy of <a class="reference external" href="https://github.com/sarayourfriend" title="sarayourfriend on GitHub">&#64;sarayourfriend</a></p>
+</aside>
+<aside class="footnote brackets" id="id5" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://towardsdatascience.com/using-apache-airflow-dockeroperator-with-docker-compose-57d0217c8219">https://towardsdatascience.com/using-apache-airflow-dockeroperator-with-docker-compose-57d0217c8219</a></p>
+</aside>
+<aside class="footnote brackets" id="id6" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
+<p>See <a class="reference external" href="https://github.com/WordPress/openverse/issues/4456" title="Update ingestion server removal IP to include plan for filtering tags"><span class="xref issue closed">#4456</span></a> for further context on this. The filtering is a <em>necessary</em> step
+of the data refresh we need to carry forward even after removing the other
+cleanup steps.</p>
+</aside>
+</aside>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="../monitoring/index.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Monitoring</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="20240319-project_proposal.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">2024-03-19 Project Proposal: Removal of the Ingestion Server</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/WordPress/openverse" aria-label="GitHub"><svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">2024-03-28 Implementation Plan: Ingestion Server Removal</a><ul>
+<li><a class="reference internal" href="#reviewers">Reviewers</a></li>
+<li><a class="reference internal" href="#project-links">Project links</a></li>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#expected-outcomes">Expected Outcomes</a></li>
+<li><a class="reference internal" href="#approach-to-the-distributed-reindex">Approach to the Distributed Reindex</a><ul>
+<li><a class="reference internal" href="#comparison-of-ec2-and-ecs">Comparison of EC2 and ECS</a><ul>
+<li><a class="reference internal" href="#cost">Cost</a></li>
+<li><a class="reference internal" href="#ease-of-infrastructure-development">Ease of infrastructure development</a></li>
+<li><a class="reference internal" href="#code-maintainability">Code maintainability</a></li>
+<li><a class="reference internal" href="#supporting-local-testing-development">Supporting local testing &amp; development</a></li>
+<li><a class="reference internal" href="#support-for-progress-tracking">Support for progress tracking</a></li>
+<li><a class="reference internal" href="#impact-on-deployments">Impact on Deployments</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#conclusion">Conclusion</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#step-by-step-plan">Step-by-step plan</a></li>
+<li><a class="reference internal" href="#step-details">Step details</a><ul>
+<li><a class="reference internal" href="#create-the-new-data-refresh-dag-factory-and-move-initial-steps-into-airflow">Create the new data refresh DAG factory and move initial steps into Airflow</a></li>
+<li><a class="reference internal" href="#implement-new-catalog-indexer-worker">Implement new catalog indexer worker</a></li>
+<li><a class="reference internal" href="#implement-distributed-reindexing-locally">Implement distributed reindexing locally</a></li>
+<li><a class="reference internal" href="#create-the-terraform-and-ansible-resources-needed-to-deploy-the-new-indexer-workers">Create the Terraform and Ansible resources needed to deploy the new indexer workers</a></li>
+<li><a class="reference internal" href="#add-remaining-steps-to-the-data-refresh-dags">Add remaining steps to the Data Refresh DAGs</a></li>
+<li><a class="reference internal" href="#deploy-the-catalog-and-indexer-workers">Deploy the catalog and indexer workers</a></li>
+<li><a class="reference internal" href="#run-the-data-refreshes">Run the data refreshes</a></li>
+<li><a class="reference internal" href="#update-create-filtered-media-index-dags">Update <code class="docutils literal notranslate"><span class="pre">create_filtered_&lt;media&gt;_index</span></code> DAGs</a></li>
+<li><a class="reference internal" href="#remove-the-recreate-full-staging-index-dag">Remove the <code class="docutils literal notranslate"><span class="pre">recreate_full_staging_index</span></code> DAG</a></li>
+<li><a class="reference internal" href="#update-the-load-sample-data-scripts">Update the load_sample_data scripts</a></li>
+<li><a class="reference internal" href="#remove-the-ingestion-server">Remove the ingestion server</a></li>
+<li><a class="reference internal" href="#infrastructure">Infrastructure</a></li>
+<li><a class="reference internal" href="#tools-packages">Tools &amp; packages</a></li>
+<li><a class="reference internal" href="#other-projects-or-work">Other projects or work</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#alternatives">Alternatives</a><ul>
+<li><a class="reference internal" href="#ecs-approach">ECS approach</a></li>
+<li><a class="reference internal" href="#filtering-approach">Filtering approach</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#blockers">Blockers</a></li>
+<li><a class="reference internal" href="#rollback">Rollback</a></li>
+<li><a class="reference internal" href="#risks">Risks</a></li>
+<li><a class="reference internal" href="#prior-art">Prior art</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/furo.js?v=4e2eecee"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    </body>
+</html>

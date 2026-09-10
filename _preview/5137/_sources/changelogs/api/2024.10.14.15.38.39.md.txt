@@ -1,0 +1,11 @@
+# 2024.10.14.15.38.39
+
+## New Features
+
+- Update init scripts to use new data refresh
+  ([#4962](https://github.com/WordPress/openverse/pull/4962)) by @stacimc
+
+## Bug Fixes
+
+- Add correct `verbose_name` and `verbose_name_plural` to audio models
+  ([#4986](https://github.com/WordPress/openverse/pull/4986)) by @dryruffian
