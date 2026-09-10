@@ -56,6 +56,16 @@ describe("VLink", () => {
       expect(link.getAttribute("href")).toEqual(expected)
     }
   )
+  it("re-applies the guard when href changes from safe to unsafe", async () => {
+    options.props = { href: "https://good.example.com/landing" }
+    options.slots = { default: () => "Code is Poetry" }
+    const { rerender } = render(VLink, options)
+    expect(screen.getByRole("link").getAttribute("href")).toEqual(
+      "https://good.example.com/landing"
+    )
+    await rerender({ href: "javascript:alert(1)" })
+    expect(screen.getByRole("link").getAttribute("href")).toEqual("about:blank")
+  })
   it.each`
     href
     ${"/about"}
