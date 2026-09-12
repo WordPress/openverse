@@ -177,7 +177,7 @@ version for maintainers safety.
    of these tasks as documents in an aggregated form. Then here use Sensors and
    the previously emitted task IDs to wait for reindex tasks to complete.
 7. Once all tasks are finished, trigger an [`indices.refresh`][es_py_refresh] to
-   make the index queyrable.
+   make the index queryable.
 8. Make the alias `<media_type>-subset-by-provider` point to the new index.
    Follow the same procedure to that of `<media_type>-full` alias of the
    previous DAG.
