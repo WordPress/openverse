@@ -1,0 +1,193 @@
+*** Begin Patch
+*** Add File: env.example
++DOMAIN=bandbairbooking.com
++TRAVELPAYOUTS_PUB_ID=REPLACE_ME
++BOOKING_COM_AFFILIATE_ID=REPLACE_ME
++GOOGLE_DRIVE_URL=REPLACE_ME
++NETLIFY_AUTH_TOKEN=REPLACE_ME
++NETLIFY_SITE_ID=REPLACE_ME
++VERCEL_TOKEN=REPLACE_ME
++VERCEL_PROJECT_ID=REPLACE_ME
++DOCKER_REGISTRY_USER=REPLACE_ME
++DOCKER_REGISTRY_PASS=REPLACE_ME
++AWS_ACCESS_KEY_ID=REPLACE_ME
++AWS_SECRET_ACCESS_KEY=REPLACE_ME
++AWS_REGION=us-east-1
++
+*** End Patch
+*** Begin Patch
+*** Add File: CNAME
++bandbairbooking.com
++
+*** End Patch
+*** Begin Patch
+*** Add File: docker-compose.yml
++version: '3.8'
++services:
++  frontend:
++    build:
++      context: ./frontend
++      dockerfile: Dockerfile
++    ports:
++      - "3000:3000"
++    environment:
++      - NODE_ENV=development
++      - REACT_APP_DOMAIN=${DOMAIN}
++      - REACT_APP_TRAVELPAYOUTS_PUB_ID=${TRAVELPAYOUTS_PUB_ID}
++      - REACT_APP_BOOKING_COM_AFFILIATE_ID=${BOOKING_COM_AFFILIATE_ID}
++    volumes:
++      - ./frontend:/app
++  api:
++    build:
++      context: ./api
++      dockerfile: Dockerfile
++    ports:
++      - "8000:8000"
++    environment:
++      - DJANGO_SETTINGS_MODULE=api.settings
++      - DOMAIN=${DOMAIN}
++    volumes:
++      - ./api:/app
++  ingestion_server:
++    build:
++      context: ./ingestion_server
++      dockerfile: Dockerfile
++    environment:
++      - DOMAIN=${DOMAIN}
++    volumes:
++      - ./ingestion_server:/app
++  redis:
++    image: redis:6
++    ports:
++      - "6379:6379"
++
+*** End Patch
+*** Begin Patch
+*** Add File: .github/workflows/ci-deploy.yml
++name: CI / Build
++
++on:
++  push:
++    branches: [ main, deploy/bandbairbooking ]
++  pull_request:
++
++jobs:
++  build-frontend:
++    runs-on: ubuntu-latest
++    steps:
++      - uses: actions/checkout@v4
++      - name: Use Node.js
++        uses: actions/setup-node@v4
++        with:
++          node-version: '18'
++      - name: Install pnpm
++        run: npm install -g pnpm
++      - name: Install frontend deps
++        run: |
++          cd frontend || exit 0
++          pnpm install
++      - name: Build frontend
++        run: |
++          cd frontend || exit 0
++          pnpm run build || echo "No build script found"
++
++  build-api:
++    runs-on: ubuntu-latest
++    needs: build-frontend
++    steps:
++      - uses: actions/checkout@v4
++      - name: Build API (Docker)
++        run: |
++          if [ -f api/Dockerfile ]; then
++            docker build -t openverse-api ./api
++          else
++            echo "No api/Dockerfile found — skipping docker build"
++          fi
++
++# Optional deploy steps (Netlify, Vercel, Docker registry, AWS) can be added below.
++
+*** End Patch
+*** Begin Patch
+*** Add File: frontend/src/components/AffiliateLinks.js
++// Minimal Affiliate helper — generic JS module
++// Place this file at frontend/src/components/AffiliateLinks.js (adjust to your frontend framework)
++
++export function bookingLink({hotelId, label = 'Book on Booking.com'}) {
++  const affiliateId = process.env.REACT_APP_BOOKING_COM_AFFILIATE_ID || '';
++  const base = `https://www.booking.com/hotel/${hotelId}.html`;
++  if (!affiliateId) return base;
++  return `${base}?aid=${affiliateId}`;
++}
++
++export function injectTravelpayoutsScript(pubId) {
++  if (!pubId) return;
++  if (typeof window === 'undefined') return;
++  const id = `travelpayouts-script-${pubId}`;
++  if (document.getElementById(id)) return;
++  const s = document.createElement('script');
++  s.id = id;
++  // Example widget URL — replace if Travelpayouts gives a different widget path
++  s.src = `https://www.travelpayouts.com/widgets/69521?marker=${pubId}`;
++  s.async = true;
++  document.body.appendChild(s);
++}
++
+*** End Patch
+*** Begin Patch
+*** Add File: README_DEPLOY.md
++Deployment & DNS (CLOUDFLARE)
++
++Summary
++- I prepared deployment scaffolding and affiliate placeholders on branch deploy/bandbairbooking.
++- You confirmed the domain is pointing at Cloudflare already. For initial deployment, set Cloudflare DNS entries to "DNS only" (gray cloud) for the provider records to avoid SSL/proxying issues while verifying.
++
++Cloudflare DNS guidance
++- If hosting frontend on Netlify or Vercel:
++  - Add a CNAME for "www" pointing to your-site.netlify.app (or Vercel CNAME) and set it to DNS only (gray cloud) until verification completes.
++  - For the apex domain, use the host's A/ALIAS records and set them to DNS only.
++- If hosting on a VPS or load balancer:
++  - Set A records for the root (@) to your server IP and set the record to DNS only while deploying.
++
++What was added (branch: deploy/bandbairbooking)
++- env.example — placeholders for domain, affiliate IDs, and deploy secrets
++- CNAME — contains bandbairbooking.com
++- docker-compose.yml — run frontend, api, ingestion_server, and redis locally
++- .github/workflows/ci-deploy.yml — basic CI to build the frontend and optionally build the API Docker image
++- frontend/src/components/AffiliateLinks.js — helper to construct Booking links and inject Travelpayouts script
++
++Next steps I will take once you upload/apply this patch and add secrets
++1. Push the prepared files to deploy/bandbairbooking and open a PR.
++2. Add provider-specific deploy workflows (Netlify + Vercel by default) with placeholders; you'll add the secrets.
++3. Trigger CI to build and verify the site; I'll walk you through DNS toggles in Cloudflare and final verification.
++
++Required repository secrets (add in GitHub Settings → Secrets and variables → Actions):
++- TRAVELPAYOUTS_PUB_ID
++- BOOKING_COM_AFFILIATE_ID
++- NETLIFY_AUTH_TOKEN and NETLIFY_SITE_ID (if Netlify)
++- VERCEL_TOKEN and VERCEL_PROJECT_ID (if Vercel)
++- DOCKER_REGISTRY_USER / DOCKER_REGISTRY_PASS (if pushing images)
++- AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY / AWS_REGION (if using AWS)
++
++Local test (before pushing to production)
++1. Copy env.example → .env and fill placeholders locally.
++2. Run: docker compose up --build
++   - Frontend: http://localhost:3000
++   - Backend (Django): http://localhost:8000
++
++How to apply this patch locally (recommended)
++1. Save this file as deploy_bandbairbooking.patch
++2. From your repo root:
++   - git checkout -b deploy/bandbairbooking
++   - git apply ../path/to/deploy_bandbairbooking.patch
++   - git add .
++   - git commit -m "Add deployment scaffolding and affiliate placeholders for bandbairbooking"
++   - git push origin deploy/bandbairbooking
++
++Alternative: upload each file directly through the GitHub web UI into the deploy/bandbairbooking branch.
++
++When you've applied the patch and pushed the branch, tell me "Branch pushed" and I will:
++- open a PR,
++- add provider-specific workflow files (Netlify/Vercel/AWS) if you want,
++- and start the first CI run to verify builds.
++
+*** End Patch

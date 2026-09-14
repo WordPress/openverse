@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bnbairbooking | Cheapest Global Hotel & Vacation Rentals</title>
+    <style>
+        :root { --primary: #0052cc; --accent: #00c7b1; --bg: #f8f9fa; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; background-color: var(--bg); color: #333; -webkit-font-smoothing: antialiased; }
+        .header { background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; padding: 50px 20px; text-align: center; }
+        .header h1 { margin: 0; font-size: 2.2rem; font-weight: 800; letter-spacing: -0.5px; }
+        .header p { margin-top: 10px; font-size: 1.1rem; opacity: 0.95; }
+        .container { max-width: 800px; margin: -30px auto 40px; padding: 25px; background: white; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+        .booking-widget { background: #f0f4f8; border: 2px dashed #cbd5e1; border-radius: 12px; padding: 40px 20px; text-align: center; color: #64748b; }
+        .booking-widget h3 { margin-top: 0; color: #334155; }
+        .features { display: grid; grid-template-columns: 1fr; gap: 20px; margin-top: 30px; }
+        .feature-card { background: #fff; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; text-align: center; }
+        .feature-card h4 { margin: 0 0 10px 0; color: var(--primary); }
+        .footer { text-align: center; padding: 30px 20px; color: #64748b; font-size: 0.9rem; }
+        @media (min-width: 600px) { .features { grid-template-columns: repeat(3, 1fr); } }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Bnbairbooking</h1>
+        <p>Undercutting the market. The cheapest global vacation & hotel reservations.</p>
+    </div>
+
+    <div class="container">
+        <!-- TRAVELPAYOUTS WIDGET GOES HERE -->
+        <div class="booking-widget">
+            <h3>🔍 Search & Book Instantly</h3>
+            <p>Your Travelpayouts White-Label Search Widget will load here.</p>
+            <p><em>(Paste your Travelpayouts Widget Script in the code to activate)</em></p>
+        </div>
+
+        <div class="features">
+            <div class="feature-card">
+                <h4>💰 Cheapest Rates</h4>
+                <p>We pass wholesale API rates directly to you, undercutting major platforms.</p>
+            </div>
+            <div class="feature-card">
+                <h4>🤖 24/7 AI Support</h4>
+                <p>Adaptive AI problem-solving with instant video escalation to our team.</p>
+            </div>
+            <div class="feature-card">
+                <h4>📱 iPhone Optimized</h4>
+                <p>Book, manage, and track your reservations seamlessly from any device.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        &copy; 2026 Bnbairbooking, LLC. Owned and Operated by Jeremy C. Shirley.<br>
+        <a href="#" style="color: var(--primary); text-decoration: none;">Terms of Service</a> | <a href="#" style="color: var(--primary); text-decoration: none;">Privacy Policy</a>
+    </div>
+
+    <!-- TIDIO 24/7 AI VIDEO CHAT SCRIPT -->
+    <!-- Replace 'YOUR_PUBLIC_KEY' with your actual Tidio Public Key -->
+    <script src="//code.tidio.co/YOUR_PUBLIC_KEY.js" async></script>
+
+</body>
+</html>
+	◦	

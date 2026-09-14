@@ -1,94 +1,29 @@
-<a href="https://openverse.org">
-  <img src="documentation/meta/brand/banner.svg" width="100%" alt="Visit Openverse.org"/>
-</a>
+## Together streaming integration
 
-<p align="center">
-  <a href="https://github.com/orgs/WordPress/projects/75">Project Board</a> |
-  <a href="https://make.wordpress.org/openverse/">Community Site</a> |
-  <a href="https://make.wordpress.org/chat/">#openverse @ Slack</a> |
-  <a href="https://make.wordpress.org/openverse/handbook/">Handbook</a> |
-  <a href="https://make.wordpress.org/design/handbook/">Design Handbook</a> |
-  <a href="https://www.figma.com/file/w60dl1XPUvSaRncv1Utmnb/Openverse-Releases?node-id=0%3A1">Releases mockups</a> |
-  <a href="https://www.figma.com/file/GIIQ4sDbaToCfFQyKMvzr8/Openverse-Design-Library?node-id=0%3A1">Design Library</a>
-</p>
+This repo includes a streaming AI assistant that uses the Together Python client as a backend model provider.
 
-<p align="center">
-  Openverse is a search engine for openly-licensed media.
-</p>
+How it works
+- server/ai_stream.py calls Together's Python client in streaming mode and prints one JSON line per token.
+- server/index.js spawns that Python script and proxies its stdout as Server-Sent Events (SSE) to /api/ai-chat-stream.
+- The frontend (index.html) opens an EventSource to /api/ai-chat-stream and renders tokens as they arrive.
 
-# Openverse
+Required secrets (add these to GitHub Secrets or your host environment):
+- TOGETHER_API_KEY — API key for Together (used by ai_stream.py)
+- MONGO_URI — MongoDB Atlas connection string
+- STRIPE_SECRET_KEY — Stripe secret key (test & live as needed)
+- STRIPE_PUBLISHABLE_KEY
+- STRIPE_WEBHOOK_SECRET
+- TRAVELPAYOUTS_TOKEN — TravelPayouts API token
 
-Openverse is a powerful search engine for GPL-compatible images, audio, and
-more. Openverse is live at [openverse.org](https://openverse.org).
+Docker notes
+- The server Dockerfile now installs Python and the Together Python client. Build may take a bit longer on first run.
 
-- [Catalog](catalog/) | The Apache Airflow-powered system for downloading and
-  storing Openverse's metadata
-- [Ingestion server](ingestion_server/) | The mechanism for refreshing the data
-  from the catalog to the API
-- [API](api/) | The Django REST API for querying the database, used by the
-  frontend
-- [Frontend](frontend/) | The public search engine at
-  [openverse.org](https://openverse.org), built with Vue and Nuxt
-- [Automations](automations/) | Scripts used for various workflows around
-  Openverse repositories and processes
-- [Utilities](utilities/) | Scripts or utilities which are useful across
-  multiple projects or don't necessarily fit into a specific project.
+Local testing
+1. Add TOGETHER_API_KEY and other required env vars locally.
+2. Start the server (recommended via Docker Compose):
+   docker-compose up --build
+3. Visit http://localhost:3000 and use the AI Autopilot panel.
 
-This repository also contains the following directories.
-
-- [Brand](documentation/meta/brand/) | Brand assets for Openverse such as logo
-  and icon and guidelines for using these assets
-- [Templates](templates/) | Jinja templates that can be rendered into common
-  scaffolding code for the project
-
-## Keep in touch
-
-You can keep in touch with the project via the following channels:
-
-- GitHub
-  - [Issues](https://github.com/WordPress/openverse/issues/)
-  - [PRs](https://github.com/WordPress/openverse/pulls/)
-  - [Discussions](https://github.com/WordPress/openverse/discussions/)
-  - [Project Board](https://github.com/orgs/WordPress/projects/75)
-- [Community Site](https://make.wordpress.org/openverse/)
-- #openverse channel in the
-  [Making WordPress Chat](https://make.wordpress.org/chat/)
-  - Weekly Development Chat (
-    [Mondays @ 15:00 UTC](https://everytimezone.com/s/d2e71015))
-  - Monthly Prioritisation Meeting (first Wednesday of every month @ 15:00 UTC)
-
-## Documentation
-
-To use the Openverse API, please refer to the
-[API consumer documentation](https://api.openverse.org/v1/).
-
-## Contributing
-
-Pull requests are welcome! Feel free to
-[join us on Slack](https://make.wordpress.org/chat/) and discuss the project
-with the engineers and community members on #openverse.
-
-You are welcome to take any open issue in the tracker labelled
-[`help wanted`](https://github.com/WordPress/openverse/labels/help%20wanted) or
-[`good first issue`](https://github.com/WordPress/openverse/labels/good%20first%20issue);
-**there's no need to ask for permission in advance**. Other issues are open for
-contribution as well, but may be less accessible or well-defined in comparison
-to those that are explicitly labelled.
-
-See the
-[contribution guide](https://docs.openverse.org/general/contributing.html) for
-details.
-
-## Acknowledgments
-
-Openverse, previously known as CC Search, was conceived and built at
-[Creative Commons](https://creativecommons.org). We thank them for their
-commitment to open source and openly licensed content, with particular thanks to
-previous team members @ryanmerkley, @janetpkr, @lizadaly, @sebworks, @pa-w,
-@kgodey, @annatuma, @mathemancer, @aldenstpage, @brenoferreira, and @sclachar,
-along with their
-[community of volunteers](https://opensource.creativecommons.org/community/community-team/).
-
-We would also like to thank our former maintainers @AetherUnbound,
-@sarayourfriend, @stacimc and @zackkrida for their invaluable contributions to
-Openverse, which have shaped the project and made it what it is today.
+Security notes
+- Never expose TOGETHER_API_KEY or other secrets in client-side code.
+- The SSE endpoint should be protected/rate-limited in production to avoid abuse and cost spikes.
