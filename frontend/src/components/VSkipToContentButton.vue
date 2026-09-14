@@ -16,7 +16,7 @@ import VButton from "~/components/VButton.vue"
 </template>
 
 <style scoped>
-.skip-button:not(:focus-visible) {
+.skip-button:not(:focus, :focus-visible) {
   @apply sr-only;
 }
 </style>
