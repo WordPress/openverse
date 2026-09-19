@@ -1,5 +1,6 @@
 # Specific assignments for the 'openverse-catalog' group
 /catalog/        @WordPress/openverse-catalog
+/catalog/dags/elasticsearch_cluster/ @openverse/catalog
 /indexer_worker/ @WordPress/openverse-catalog
 /dag-sync.sh     @WordPress/openverse-catalog
 
@@ -44,6 +45,7 @@
 /CONTRIBUTING.md         @WordPress/openverse-maintainers
 /LICENSE                 @WordPress/openverse-maintainers
 /README.md               @WordPress/openverse-maintainers
+/DAGs.md @openverse/meta
 /packages/README.md      @WordPress/openverse-maintainers
 /docker-compose.yml      @WordPress/openverse-maintainers
 /env.template            @WordPress/openverse-maintainers
