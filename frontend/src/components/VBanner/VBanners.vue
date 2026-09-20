@@ -14,6 +14,9 @@ const VTranslationStatusBanner = defineAsyncComponent(
 const VAnalyticsNotice = defineAsyncComponent(
   () => import("~/components/VBanner/VAnalyticsNotice.vue")
 )
+const VUnsupportedLocaleBanner = defineAsyncComponent(
+  () => import("~/components/VBanner/VUnsupportedLocaleBanner.vue")
+)
 const uiStore = useUiStore()
 const localeProperties = useNuxtApp().$i18n.localeProperties
 
@@ -22,6 +25,9 @@ const shouldShowTranslationBanner = computed(() =>
 )
 const shouldShowAnalyticsBanner = computed(
   () => uiStore.shouldShowAnalyticsBanner
+)
+const shouldShowUnsupportedLocaleBanner = computed(
+  () => uiStore.shouldShowUnsupportedLocaleBanner
 )
 
 const translationBannerId = computed<TranslationBannerId>(
@@ -37,10 +43,18 @@ const dismissBanner = (bannerKey: BannerId) => {
   uiStore.dismissBanner(bannerKey)
 }
 
+// The unsupported-locale banner is a one-time popup rather than a permanently
+// dismissible banner, so closing it just hides the current instance.
+const closeUnsupportedLocaleBanner = () => {
+  uiStore.setUnsupportedLocaleBannerVisible(false)
+}
+
 const showBanners = computed(() =>
-  [shouldShowTranslationBanner, shouldShowAnalyticsBanner].some(
-    (item) => item.value
-  )
+  [
+    shouldShowTranslationBanner,
+    shouldShowAnalyticsBanner,
+    shouldShowUnsupportedLocaleBanner,
+  ].some((item) => item.value)
 )
 </script>
 
@@ -57,6 +71,11 @@ const showBanners = computed(() =>
         :variant="variant"
         :banner-key="translationBannerId"
         @close="dismissBanner(translationBannerId)"
+      />
+      <VUnsupportedLocaleBanner
+        v-if="shouldShowUnsupportedLocaleBanner"
+        :variant="variant"
+        @close="closeUnsupportedLocaleBanner"
       />
     </div>
   </div>
