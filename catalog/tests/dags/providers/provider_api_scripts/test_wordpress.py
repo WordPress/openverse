@@ -93,6 +93,11 @@ def test_get_title(ingester):
     expected_result = "Coffee Bean with bags"
     assert actual_result == expected_result
 
+def test_get_title_handles_emoji(ingester):
+    image_data = {"content": {"rendered": "<p>Tomato Basil \U0001F33F Soup</p>\n"}}
+    actual_result = ingester._get_title(image_data)
+    expected_result = "Tomato Basil \U0001F33F Soup"
+    assert actual_result == expected_result
 
 def test_get_file_info(ingester):
     image_details = (
