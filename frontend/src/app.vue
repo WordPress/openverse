@@ -15,6 +15,7 @@ import { useLayout } from "~/composables/use-layout"
 import { useDarkMode } from "~/composables/use-dark-mode"
 
 import VSkipToContentButton from "~/components/VSkipToContentButton.vue"
+import LanguageRedirectBanner from '~/components/LanguageRedirectBanner.vue'
 
 const config = useRuntimeConfig()
 
@@ -85,6 +86,7 @@ onMounted(() => {
   <div :class="[isDesktopLayout ? 'desktop' : 'mobile', breakpoint]">
     <VSkipToContentButton />
     <NuxtLayout>
+    <LanguageRedirectBanner />
       <NuxtPage />
     </NuxtLayout>
     <VGlobalAudioSection />
