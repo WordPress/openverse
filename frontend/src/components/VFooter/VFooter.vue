@@ -17,8 +17,6 @@ import VWordPressLink from "~/components/VHeader/VWordPressLink.vue"
 
 type FooterMode = "internal" | "content"
 
-defineOptions({ inheritAttrs: false })
-
 const props = withDefaults(
   defineProps<{
     /**
@@ -45,9 +43,8 @@ const linkColumnHeight = computed(() => ({
 </script>
 
 <template>
-  <div class="footer-container">
-    <footer
-      v-bind="$attrs"
+  <footer class="footer-container">
+    <div
       class="footer flex flex-col gap-10 px-6"
       :class="isContentMode ? 'footer-content' : 'footer-internal'"
     >
@@ -76,8 +73,8 @@ const linkColumnHeight = computed(() => ({
           <VThemeSelect class="border-secondary" />
         </div>
       </div>
-    </footer>
-  </div>
+    </div>
+  </footer>
 </template>
 
 <style>
