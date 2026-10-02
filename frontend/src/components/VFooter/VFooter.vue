@@ -3,12 +3,9 @@
  * The footer is the section displayed at the bottom of a page. It can contain
  * some branding, links to other pages and an option to change the language.
  */
-import { computed, ref } from "vue"
+import { computed } from "vue"
 
-import { SCREEN_SIZES } from "#shared/constants/screens"
-import { useUiStore } from "~/stores/ui"
 import usePages from "~/composables/use-pages"
-import useResizeObserver from "~/composables/use-resize-observer"
 
 import type { SelectFieldProps } from "~/components/VSelectField/VSelectField.vue"
 import VLink from "~/components/VLink.vue"
@@ -19,6 +16,8 @@ import VPageLinks from "~/components/VHeader/VPageLinks.vue"
 import VWordPressLink from "~/components/VHeader/VWordPressLink.vue"
 
 type FooterMode = "internal" | "content"
+
+defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(
   defineProps<{
@@ -36,28 +35,9 @@ const props = withDefaults(
   }
 )
 
-const uiStore = useUiStore()
 const { all: allPages } = usePages()
 
 const isContentMode = computed(() => props.mode === "content")
-
-/** JS-based responsiveness */
-const footerEl = ref<HTMLElement | null>(null)
-const initialWidth = SCREEN_SIZES[uiStore.breakpoint]
-const { dimens: footerDimens } = useResizeObserver(footerEl, {
-  initialWidth,
-})
-
-/**
- * Return a list of all breakpoints that are smaller than the current screen width. This allows us to use the smallest variant class to target CSS styles.
- *
- * I.e., with a width at 1200, the footer will have `footer-2xl footer-lg`. Using `footer-lg`, we can apply styles to both `footer-2xl` and `footer-lg`.
- */
-const variantNames = computed(() =>
-  Object.entries(SCREEN_SIZES)
-    .filter(([, val]) => footerDimens.value.width >= val)
-    .map(([key]) => `footer-${key}`)
-)
 
 const linkColumnHeight = computed(() => ({
   "--link-col-height": Math.ceil(Object.keys(allPages).length / 2),
@@ -65,67 +45,53 @@ const linkColumnHeight = computed(() => ({
 </script>
 
 <template>
-  <footer
-    ref="footerEl"
-    class="footer flex flex-col gap-10 px-6"
-    :class="[
-      ...variantNames,
-      isContentMode ? 'footer-content' : 'footer-internal',
-    ]"
-  >
-    <!-- Logo and links -->
-    <div v-if="isContentMode" class="logo-and-links flex flex-col gap-y-10">
-      <VLink href="/" class="logo text-default" aria-label="Openverse">
-        <VBrand class="text-[18px]" />
-      </VLink>
-      <nav>
-        <VPageLinks
-          class="nav-list label-regular"
-          :style="linkColumnHeight"
-          nav-link-classes="py-2"
-        />
-      </nav>
-    </div>
-
-    <!-- Locale chooser, theme chooser, and WordPress affiliation graphic -->
-    <div class="locale-and-wp flex flex-col justify-between">
-      <VWordPressLink />
-      <div class="flex flex-row items-center gap-6">
-        <VLanguageSelect
-          v-bind="languageProps"
-          class="language max-w-full border-secondary"
-        />
-        <VThemeSelect class="border-secondary" />
+  <div class="footer-container">
+    <footer
+      v-bind="$attrs"
+      class="footer flex flex-col gap-10 px-6"
+      :class="isContentMode ? 'footer-content' : 'footer-internal'"
+    >
+      <!-- Logo and links -->
+      <div v-if="isContentMode" class="logo-and-links flex flex-col gap-y-10">
+        <VLink href="/" class="logo text-default" aria-label="Openverse">
+          <VBrand class="text-[18px]" />
+        </VLink>
+        <nav>
+          <VPageLinks
+            class="nav-list label-regular"
+            :style="linkColumnHeight"
+            nav-link-classes="py-2"
+          />
+        </nav>
       </div>
-    </div>
-  </footer>
+
+      <!-- Locale chooser, theme chooser, and WordPress affiliation graphic -->
+      <div class="locale-and-wp flex flex-col justify-between">
+        <VWordPressLink />
+        <div class="flex flex-row items-center gap-6">
+          <VLanguageSelect
+            v-bind="languageProps"
+            class="language max-w-full border-secondary"
+          />
+          <VThemeSelect class="border-secondary" />
+        </div>
+      </div>
+    </footer>
+  </div>
 </template>
 
 <style>
-/* wrapper element styles */
-.footer-lg {
-  @apply gap-y-8 px-10;
+.footer-container {
+  container-type: inline-size;
 }
 
 .footer-internal {
   @apply py-6;
 }
 
-.footer-content,
-.footer-interal.footer-lg {
+.footer-content {
   @apply py-10;
 }
-
-/* footer > logo-and-links styles */
-.footer-sm .logo-and-links {
-  @apply grid grid-flow-col grid-cols-2;
-}
-
-.footer-lg .logo-and-links {
-  @apply flex flex-row items-center justify-between;
-}
-
-/* logo-and-links > nav-list styles */
 
 .nav-list {
   @apply grid grid-flow-col grid-cols-2 items-center gap-x-10 gap-y-2;
@@ -135,11 +101,6 @@ const linkColumnHeight = computed(() => ({
   grid-template-rows: repeat(var(--link-col-height, 4), auto);
 }
 
-.footer-lg .nav-list {
-  @apply flex gap-x-6;
-}
-
-/* locale-and-wp locale chooser and WordPress affiliation graphic styles */
 .footer-content .locale-and-wp {
   @apply gap-y-10;
 }
@@ -148,23 +109,47 @@ const linkColumnHeight = computed(() => ({
   @apply gap-y-4;
 }
 
-.footer-content.footer-sm .locale-and-wp {
-  @apply grid grid-cols-2 items-center;
-}
-
-.footer-content.footer-lg .locale-and-wp,
-.footer-internal.footer-sm .locale-and-wp {
-  @apply flex flex-row items-center;
-}
-
-/* element styles */
-.footer-sm .logo {
-  @apply self-start pt-2;
-}
 .footer .language {
   width: 100% !important;
 }
-.footer-sm .language {
-  @apply max-w-[12.5rem];
+
+@container (min-width: 640px) {
+  .footer .logo-and-links {
+    @apply grid grid-flow-col grid-cols-2;
+  }
+
+  .footer-content .locale-and-wp {
+    @apply grid grid-cols-2 items-center;
+  }
+
+  .footer-internal .locale-and-wp {
+    @apply flex flex-row items-center;
+  }
+
+  .footer .logo {
+    @apply self-start pt-2;
+  }
+
+  .footer .language {
+    @apply max-w-[12.5rem];
+  }
+}
+
+@container (min-width: 1024px) {
+  .footer {
+    @apply gap-y-8 px-10;
+  }
+
+  .footer .logo-and-links {
+    @apply flex flex-row items-center justify-between;
+  }
+
+  .footer .nav-list {
+    @apply flex gap-x-6;
+  }
+
+  .footer-content .locale-and-wp {
+    @apply flex flex-row items-center;
+  }
 }
 </style>
