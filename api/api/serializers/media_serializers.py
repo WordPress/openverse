@@ -34,6 +34,7 @@ from api.serializers.docs import (
 )
 from api.serializers.fields import SchemableHyperlinkedIdentityField
 from api.utils.help_text import make_comma_separated_help_text
+from api.utils.text import strip_markup
 from api.utils.url import add_protocol
 
 
@@ -812,6 +813,9 @@ class MediaSerializer(BaseModelSerializer):
         url_fields = ["url", "creator_url", "foreign_landing_url"]
         for url_field in url_fields:
             output[url_field] = add_protocol(output[url_field])
+
+        for text_field in ["title", "creator"]:
+            output[text_field] = strip_markup(output[text_field])
 
         return output
 

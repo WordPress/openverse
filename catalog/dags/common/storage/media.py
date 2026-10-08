@@ -11,6 +11,7 @@ from common.extensions import (
 )
 from common.loader import provider_details as prov
 from common.storage.tsv_columns import CURRENT_VERSION
+from common.text import strip_markup
 
 
 logger = logging.getLogger(__name__)
@@ -110,6 +111,7 @@ class MediaStore(metaclass=abc.ABCMeta):
         - validate `filetype`
         - validate `url`, `foreign_landing_url`, `thumbnail_url`, and `creator_url`
           (stripping trailing slashes if requested)
+        - strip markup from `title` and `creator`
         - enrich `metadata`,
         - replace `raw_tags` with enriched `tags`,
         - validate `source`,
@@ -142,6 +144,10 @@ class MediaStore(metaclass=abc.ABCMeta):
                 media_data[field],
                 self.strip_url_trailing_slashes,
             )
+        for field in ["title", "creator"]:
+            if field in media_data:
+                media_data[field] = strip_markup(media_data[field])
+
         media_data["source"] = self._get_source(media_data.get("source"), self.provider)
         # Add ingestion_type column value based on `source`.
         # The implementation is based on `ingestion_column`

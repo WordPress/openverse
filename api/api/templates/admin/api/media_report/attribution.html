@@ -1,15 +1,16 @@
+{% load safe_href %}
 <p>
 {% if media_obj.title %}
-  "{% if media_obj.url %}<a href="{{ media_obj.url }}">{% endif %}{{ media_obj.title }}{% if media_obj.url %}</a>{% endif %}"
+  "{% if media_obj.url %}<a href="{{ media_obj.url|safe_href }}">{% endif %}{{ media_obj.title }}{% if media_obj.url %}</a>{% endif %}"
 {% else %}
-  {% if media_obj.url %}<a href="{{ media_obj.url }}">{% endif %}
+  {% if media_obj.url %}<a href="{{ media_obj.url|safe_href }}">{% endif %}
   This work
   {% if media_obj.url %}</a>{% endif %}
 {% endif %}
   <span> by </span>
   {% if media_obj.creator %}
   {% if media_obj.creator_url %}
-  <a href="{{ media_obj.creator_url }}">{{ media_obj.creator }}</a>
+  <a href="{{ media_obj.creator_url|safe_href }}">{{ media_obj.creator }}</a>
   {% else %}
   {{ media_obj.creator }}
   {% endif %}

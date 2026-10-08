@@ -1,5 +1,6 @@
 {% extends "admin/change_form.html" %}
 {% load static %}
+{% load safe_href %}
 
 {% block extrahead %}
 {{ block.super }}
@@ -69,7 +70,7 @@
         <label>Media details</label>
         <div class="readonly">
           {% include "admin/api/media_report/attribution.html" with media_obj=media_obj license=license %}
-          <p>View media at <a href="{{media_obj.foreign_landing_url}}">source ({{media_obj.source}})</a>,
+          <p>View media at <a href="{{ media_obj.foreign_landing_url|safe_href }}">source ({{media_obj.source}})</a>,
             on <a href="https://openverse.org/{{media_type}}/{{media_obj.identifier}}">openverse.org</a>,
             on <a href="{% url media_type|add:'-detail' identifier=media_obj.identifier %}">Openverse API</a>.</p>
           <p>Provider: {{ media_obj.provider }}.</p>

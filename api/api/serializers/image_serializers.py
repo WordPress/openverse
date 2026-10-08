@@ -16,6 +16,8 @@ from api.serializers.media_serializers import (
     MediaSerializer,
     get_hyperlinks_serializer,
 )
+from api.utils.text import strip_markup
+from api.utils.url import add_protocol
 
 
 #######################
@@ -181,3 +183,10 @@ class OembedSerializer(BaseModelSerializer):
 
     def get_height(self, obj) -> int:
         return self.context.get("height", obj.height)
+
+    def to_representation(self, instance):
+        output = super().to_representation(instance)
+        for text_field in ["title", "author_name"]:
+            output[text_field] = strip_markup(output[text_field])
+        output["author_url"] = add_protocol(output["author_url"])
+        return output

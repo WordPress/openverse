@@ -12,6 +12,8 @@ from api.serializers.media_serializers import (
     MediaSerializer,
     get_hyperlinks_serializer,
 )
+from api.utils.text import strip_markup
+from api.utils.url import add_protocol
 
 
 #######################
@@ -79,6 +81,14 @@ class AudioSetSerializer(serializers.ModelSerializer):
             "filesize",
             "filetype",
         ]
+
+    def to_representation(self, instance):
+        output = super().to_representation(instance)
+        for url_field in ["url", "creator_url", "foreign_landing_url"]:
+            output[url_field] = add_protocol(output[url_field])
+        for text_field in ["title", "creator"]:
+            output[text_field] = strip_markup(output[text_field])
+        return output
 
 
 AudioHyperlinksSerializer = get_hyperlinks_serializer("audio")

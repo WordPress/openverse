@@ -691,3 +691,37 @@ def test_get_source_fills_source_if_none_given():
 def test_get_source_nones_if_none_given():
     actual_source = image.MockImageStore._get_source(None, None)
     assert actual_source is None
+
+
+# Entity-encoded markup must be stripped the same way as literal markup.
+ENCODED_MARKUP = "&lt;iframe&gt;X&lt;/iframe&gt;"
+
+
+def test_MediaStore_clean_media_metadata_strips_markup_from_title_and_creator():
+    image_store = image.ImageStore()
+    image_data = {
+        **TEST_REQUIRED_FIELDS,
+        "filetype": None,
+        "category": None,
+        "title": ENCODED_MARKUP,
+        "creator": ENCODED_MARKUP,
+    }
+    cleaned_data = image_store.clean_media_metadata(**image_data)
+
+    assert cleaned_data["title"] == "X"
+    assert cleaned_data["creator"] == "X"
+
+
+def test_MediaStore_clean_media_metadata_keeps_absent_title_and_creator_null():
+    image_store = image.ImageStore()
+    image_data = {
+        **TEST_REQUIRED_FIELDS,
+        "filetype": None,
+        "category": None,
+        "title": None,
+        "creator": None,
+    }
+    cleaned_data = image_store.clean_media_metadata(**image_data)
+
+    assert cleaned_data["title"] is None
+    assert cleaned_data["creator"] is None
