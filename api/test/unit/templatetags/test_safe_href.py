@@ -38,5 +38,25 @@ def test_media_report_attribution_drops_unsafe_links():
     )
 
     assert "javascript:" not in rendered
+    assert "<a " not in rendered
     assert "A title" in rendered
     assert "A creator" in rendered
+
+
+def test_media_report_attribution_keeps_safe_links():
+    media_obj = Image(
+        title="A title",
+        creator="A creator",
+        url="example.com/a",
+        creator_url="https://example.com/jane",
+        license="by",
+        license_version="4.0",
+    )
+
+    rendered = render_to_string(
+        "admin/api/media_report/attribution.html",
+        {"media_obj": media_obj, "license": "CC BY 4.0"},
+    )
+
+    assert '<a href="https://example.com/a">A title</a>' in rendered
+    assert '<a href="https://example.com/jane">A creator</a>' in rendered

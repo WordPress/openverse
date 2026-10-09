@@ -45,3 +45,8 @@ ENCODED_MARKUP = "&lt;iframe&gt;X&lt;/iframe&gt;"
 )
 def test_strip_markup(value, expected):
     assert strip_markup(value) == expected
+
+
+@pytest.mark.parametrize("value", ["Jane Doe", "Tom & Jerry", "a > b"])
+def test_strip_markup_returns_plain_values_untouched(value):
+    assert strip_markup(value) is value

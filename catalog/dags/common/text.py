@@ -57,7 +57,7 @@ def strip_markup(value: str | None) -> str | None:
     Exact-match lookups against stored values, such as creator collections,
     depend on a value only being rewritten when markup was actually removed.
     """
-    if not value:
+    if not value or ("<" not in value and "&" not in value):
         return value
     decoded = _decode_entities(value)
     plain = decoded
