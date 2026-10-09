@@ -10,9 +10,22 @@
 <script>
   document.addEventListener("DOMContentLoaded", function() {
     document.querySelectorAll("div.readonly").forEach(div => {
-      if (div.textContent.match(/https?:\/\/\S+/)) {
-        div.innerHTML = div.textContent.replace(/(https?:\/\/\S+)/g, '<a href="$1">$1</a>');
+      const text = div.textContent;
+      if (!text.match(/https?:\/\/\S+/)) {
+        return;
       }
+      // The field text is data, not markup, so it is rebuilt from nodes.
+      div.replaceChildren();
+      text.split(/(https?:\/\/\S+)/g).forEach((part, index) => {
+        if (index % 2 === 1) {
+          const link = document.createElement("a");
+          link.href = part;
+          link.textContent = part;
+          div.append(link);
+        } else if (part) {
+          div.append(part);
+        }
+      });
     });
   });
 </script>

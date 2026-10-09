@@ -92,3 +92,17 @@ def test_sensitive_media_bulk_action(media_type_config):
             for media_id in media_ids:
                 doc = Document.get(id=media_id, index=index, using=settings.ES)
                 assert doc.mature == mature
+
+
+@media_type_params
+def test_attribution_strips_markup_from_title_and_creator(media_type, media_model):
+    # Entity-encoded markup must be stripped the same way as literal markup.
+    encoded_markup = "&lt;iframe&gt;X&lt;/iframe&gt;"
+    obj = media_model(
+        license="by",
+        license_version="3.0",
+        title=encoded_markup,
+        creator=encoded_markup,
+    )
+
+    assert '"X" by X is licensed under CC BY 3.0.' in obj.attribution

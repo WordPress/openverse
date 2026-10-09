@@ -10,13 +10,13 @@ Notes:                  <https://wordpress.org/photos/wp-json/wp/v2>
                         No rate limit specified.
 """
 
+import html
 import logging
-
-import lxml.html as html
 
 from common import constants
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
+from common.text import strip_markup
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 
 
@@ -169,13 +169,11 @@ class WordPressDataIngester(ProviderDataIngester):
 
     @staticmethod
     def _get_title(image):
-        if title := image.get("content", {}).get("rendered"):
-            try:
-                title = html.fromstring(title).text_content()
-            except UnicodeDecodeError as e:
-                logger.warning(f"Can't save the image's title ('{title}') due to {e}")
-                return None
-        return title
+        title = image.get("content", {}).get("rendered")
+        if title is None:
+            return None
+        # ``content.rendered`` is HTML, so entities are decoded even without tags.
+        return strip_markup(html.unescape(title))
 
     @staticmethod
     def _get_metadata(media_data, media_details):

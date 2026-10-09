@@ -158,3 +158,15 @@ def test_get_metadata(ingester):
     assert actual_metadata == expected_metadata
     assert len(actual_tags) == len(expected_tags)
     assert actual_tags == expected_tags
+
+
+def test_get_title_strips_entity_encoded_markup(ingester):
+    image_data = _get_resource_json("full_item.json")
+    image_data["content"]["rendered"] = "<p>&lt;iframe&gt;X&lt;/iframe&gt;</p>\n"
+    assert ingester._get_title(image_data) == "X"
+
+
+def test_get_title_decodes_entities_without_tags(ingester):
+    image_data = _get_resource_json("full_item.json")
+    image_data["content"]["rendered"] = "Jane &amp; John &copy; 2024"
+    assert ingester._get_title(image_data) == "Jane & John © 2024"

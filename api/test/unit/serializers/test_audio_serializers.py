@@ -2,8 +2,8 @@ import uuid
 
 import pytest
 
-from api.models.audio import Audio
-from api.serializers.audio_serializers import AudioSerializer
+from api.models.audio import Audio, AudioSet
+from api.serializers.audio_serializers import AudioSerializer, AudioSetSerializer
 
 
 @pytest.fixture
@@ -52,3 +52,30 @@ def test_audio_serializer_with_non_required_alt_audio_fields_missing(anon_reques
 
     assert len(audio_serializer.data.get("alt_files")) == 1
     assert audio_serializer.data.get("alt_files")[0] == alt_files[0]
+
+
+# Entity-encoded markup must be stripped the same way as literal markup.
+ENCODED_MARKUP = "&lt;iframe&gt;X&lt;/iframe&gt;"
+
+
+def test_audio_set_serializer_strips_markup_from_title_and_creator():
+    audio_set = AudioSet(title=ENCODED_MARKUP, creator=ENCODED_MARKUP)
+
+    output = AudioSetSerializer(audio_set).data
+
+    assert output["title"] == "X"
+    assert output["creator"] == "X"
+
+
+def test_audio_set_serializer_drops_urls_with_unsafe_schemes():
+    audio_set = AudioSet(
+        creator_url="javascript:void(0)",
+        foreign_landing_url="javascript:void(0)",
+        url="javascript:void(0)",
+    )
+
+    output = AudioSetSerializer(audio_set).data
+
+    assert output["creator_url"] is None
+    assert output["foreign_landing_url"] is None
+    assert output["url"] is None

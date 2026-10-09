@@ -14,6 +14,7 @@ from openverse_attribution.license import License
 from api.constants.moderation import DecisionAction
 from api.models.base import OpenLedgerModel
 from api.models.mixins import ForeignIdentifierMixin, IdentifierMixin, MediaMixin
+from api.utils.text import strip_markup
 
 
 MATURE = "mature"
@@ -140,8 +141,8 @@ class AbstractMedia(
                 self.license.lower(),
                 self.license_version,
             ).get_attribution_text(
-                self.title,
-                self.creator,
+                strip_markup(self.title),
+                strip_markup(self.creator),
                 self.license_url,
             )
         except ValueError:

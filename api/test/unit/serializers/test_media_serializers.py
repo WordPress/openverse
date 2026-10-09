@@ -240,3 +240,40 @@ def test_report_serializer_accepts_mature_reason(media_type_config):
     serializer.is_valid(raise_exception=True)
 
     assert serializer.validated_data["reason"] == "mature"
+
+
+# Entity-encoded markup must be stripped the same way as literal markup.
+ENCODED_MARKUP = "&lt;iframe&gt;X&lt;/iframe&gt;"
+
+
+def test_media_serializer_strips_markup_from_title_and_creator(
+    anon_request, hit, media_type_config
+):
+    hit.title = ENCODED_MARKUP
+    hit.creator = ENCODED_MARKUP
+    serializer_class = media_type_config.model_serializer
+    repr = serializer_class(hit, context={"request": anon_request}).data
+    assert repr["title"] == "X"
+    assert repr["creator"] == "X"
+
+
+def test_media_serializer_drops_urls_with_unsafe_schemes(
+    anon_request, hit, media_type_config
+):
+    hit.creator_url = "javascript:void(0)"
+    hit.foreign_landing_url = "javascript:void(0)"
+    serializer_class = media_type_config.model_serializer
+    repr = serializer_class(hit, context={"request": anon_request}).data
+    assert repr["creator_url"] is None
+    assert repr["foreign_landing_url"] is None
+
+
+def test_media_serializer_keeps_entity_only_creator_unchanged(
+    anon_request, hit, media_type_config
+):
+    # Creator collection lookups match the stored value exactly, so a value with
+    # entities but no markup must round-trip untouched.
+    hit.creator = "Tom &amp; Jerry"
+    serializer_class = media_type_config.model_serializer
+    repr = serializer_class(hit, context={"request": anon_request}).data
+    assert repr["creator"] == "Tom &amp; Jerry"
