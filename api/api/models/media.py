@@ -254,7 +254,7 @@ class AbstractMediaReport(models.Model):
 
     def url(self, request=None) -> str:
         url = self.media_url(request)
-        return format_html(f"<a href={url}>{url}</a>")
+        return format_html('<a href="{}">{}</a>', url, url)
 
     @property
     def is_pending(self) -> bool:
