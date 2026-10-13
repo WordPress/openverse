@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useI18n, useNuxtApp } from "#imports"
-import { computed } from "vue"
+import { computed, ref } from "vue"
 
 import { IMAGE } from "#shared/constants/media"
 import { singleResultQuery } from "#shared/utils/query-utils"
@@ -35,6 +35,10 @@ const props = withDefaults(
     position: -1,
   }
 )
+
+// NEW: Add reactive state for tracking image loading failures
+const imageLoadFailed = ref(false)
+const currentImageSrc = ref("")
 
 const toAbsolutePath = (url: string, prefix = "https://") => {
   if (url.startsWith("http://") || url.startsWith("https://")) {
@@ -73,8 +77,33 @@ const imageLink = computed(() => {
  */
 const onImageLoadError = (event: Event) => {
   const element = event.target as HTMLImageElement
-  element.src = element.src === props.image.url ? errorImage : props.image.url
+  const newSrc = element.src === props.image.url ? errorImage : props.image.url
+  element.src = newSrc
+  currentImageSrc.value = newSrc
+  
+  // NEW: Track if we've fallen back to the error image
+  if (newSrc === errorImage) {
+    imageLoadFailed.value = true
+  }
 }
+
+/**
+ * NEW: Handle successful image load
+ * @param event - the load event.
+ */
+const onImageLoad = (event: Event) => {
+  const element = event.target as HTMLImageElement
+  currentImageSrc.value = element.src
+  
+  // Reset failure state if image loads successfully and it's not the error placeholder
+  if (element.src !== errorImage) {
+    imageLoadFailed.value = false
+  }
+  
+  // Call existing dimension handling
+  getImgDimension(event)
+}
+
 /**
  * If the image is not square, on the image load event, update
  * the img's height and width with image natural dimensions.
@@ -92,6 +121,20 @@ const getImgDimension = (event: Event) => {
 const imageTitle = t("browsePage.aria.imageTitle", {
   title: props.image.title,
 })
+
+// NEW: Computed property for accessible alt text that updates when image fails
+const accessibleAltText = computed(() => {
+  if (shouldBlur.value) {
+    return `${t('sensitiveContent.title.image')}`
+  }
+  
+  if (imageLoadFailed.value) {
+    return `${t('browsePage.aria.imageNotAvailable', { title: props.image.title }, 'Image not available: {title}')}`
+  }
+  
+  return props.image.title
+})
+
 const contextSensitiveLabel = computed(() =>
   shouldBlur.value ? t("sensitiveContent.title.image") : imageTitle
 )
@@ -126,6 +169,12 @@ const sendSelectSearchResultEvent = (event: MouseEvent) => {
 }
 
 const { isHidden: shouldBlur } = useSensitiveMedia(props.image)
+
+// NEW: Watch for image URL changes to reset failure state
+watch(() => imageUrl.value, () => {
+  imageLoadFailed.value = false
+  currentImageSrc.value = ""
+})
 </script>
 
 <template>
@@ -164,16 +213,23 @@ const { isHidden: shouldBlur } = useSensitiveMedia(props.image)
           :class="[
             isSquare ? 'h-full' : 'margin-auto sm:aspect-[--img-aspect-ratio]',
           ]"
-          :alt="
-            shouldBlur ? `${$t('sensitiveContent.title.image')}` : image.title
-          "
+          :alt="accessibleAltText"
           :src="imageUrl"
           :width="imgWidth"
           :height="imgHeight"
           itemprop="thumbnailUrl"
-          @load="getImgDimension"
+          @load="onImageLoad"
           @error="onImageLoadError($event)"
         />
+        <!-- NEW: Screen reader announcement for image load failures -->
+        <span
+          v-if="imageLoadFailed"
+          class="sr-only"
+          aria-live="polite"
+          role="status"
+        >
+          {{ $t('browsePage.aria.imageLoadFailed', { title: props.image.title }, 'This image is currently unavailable. The original title was: {title}') }}
+        </span>
         <span
           class="col-span-full row-span-full flex items-center justify-center bg-blur text-default backdrop-blur-xl duration-200 motion-safe:transition-opacity"
           :class="shouldBlur ? 'opacity-100' : 'opacity-0'"
@@ -210,3 +266,18 @@ const { isHidden: shouldBlur } = useSensitiveMedia(props.image)
     </VLink>
   </li>
 </template>
+
+<style scoped>
+/* NEW: Screen reader only utility class */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+</style>
