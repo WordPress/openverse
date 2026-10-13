@@ -12,7 +12,10 @@ from textwrap import dedent
 
 from airflow.decorators import task, task_group
 from airflow.models.abstractoperator import AbstractOperator
-from airflow.providers.common.sql.hooks.sql import fetch_all_handler, fetch_one_handler
+from airflow.providers.common.sql.hooks.handlers import (
+    fetch_all_handler,
+    fetch_one_handler,
+)
 from psycopg2.extras import Json
 
 from common.constants import POSTGRES_API_CONN_IDS, Environment
