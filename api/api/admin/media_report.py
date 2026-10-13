@@ -895,7 +895,7 @@ class MediaReportAdmin(admin.ModelAdmin):
     @admin.display(description="Media obj")
     def media_id(self, obj):
         path = reverse(f"admin:api_{self.media_type}_change", args=(obj.media_obj.id,))
-        return format_html(f'<a href="{path}">{obj.media_obj}</a>')
+        return format_html('<a href="{}">{}</a>', path, obj.media_obj)
 
     ###############
     # Change view #
