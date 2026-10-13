@@ -380,7 +380,7 @@ describe("media store", () => {
   describe("actions", () => {
     beforeEach(() => {
       setActivePinia(createPinia())
-      vi.restoreAllMocks()
+      vi.resetAllMocks()
     })
 
     it("setMedia updates state persisting images", () => {
