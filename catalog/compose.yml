@@ -67,7 +67,7 @@ services:
     profiles:
       - catalog_dependencies
       - catalog
-    image: docker.io/minio/minio:RELEASE.2025-09-07T16-13-09Z
+    image: cgr.dev/chainguard/minio:latest@sha256:dc455cdd4db6e390b1b26514f15ff37681a777bf8dab41aac445a0259f751e56
     ports:
       - "5010:5000"
       - "5011:5001"
@@ -86,7 +86,7 @@ services:
     profiles:
       - catalog_dependencies
       - catalog
-    image: docker.io/minio/mc:RELEASE.2025-08-13T08-35-41Z
+    image: cgr.dev/chainguard/minio:latest@sha256:dc455cdd4db6e390b1b26514f15ff37681a777bf8dab41aac445a0259f751e56
     env_file:
       - .env
       - ../docker/minio/.env
