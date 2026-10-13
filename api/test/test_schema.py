@@ -44,9 +44,8 @@ TOKEN_TEST_ACCEPTABLE = re.compile(r"^Bearer \w+$")
 
 @schema.parametrize()
 def test_schema(case: schemathesis.Case):
-    if case.headers and not TOKEN_TEST_ACCEPTABLE.findall(
-        case.headers.get("Authorization")
-    ):
+    authorization = (case.headers or {}).get("Authorization")
+    if authorization is not None and not TOKEN_TEST_ACCEPTABLE.findall(authorization):
         # Do not use `pytest.skip` here, unfortunately it causes a deprecation warning
         # from schemathesis's implementation of `parameterize`.
         return
