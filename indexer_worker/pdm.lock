@@ -4,7 +4,7 @@
 [metadata]
 groups = ["default", "dev", "test"]
 strategy = ["inherit_metadata"]
-lock_version = "4.5.0"
+lock_version = "4.5.1"
 content_hash = "sha256:3bafd87ba1a6a48d5ba6b71200ecb90f0960cc91916aa1864e180c0d96861510"
 
 [[metadata.targets]]
@@ -226,13 +226,13 @@ files = [
 
 [[package]]
 name = "filelock"
-version = "3.15.1"
-requires_python = ">=3.8"
+version = "3.32.7"
+requires_python = ">=3.10"
 summary = "A platform independent file lock."
 groups = ["default"]
 files = [
-    {file = "filelock-3.15.1-py3-none-any.whl", hash = "sha256:71b3102950e91dfc1bb4209b64be4dc8854f40e5f534428d8684f953ac847fac"},
-    {file = "filelock-3.15.1.tar.gz", hash = "sha256:58a2549afdf9e02e10720eaa4d4470f56386d7a6f72edd7d0596337af8ed7ad8"},
+    {file = "filelock-3.32.7-py3-none-any.whl", hash = "sha256:65ff0d0190ea42038b32bda4b77834fb05be2cad4c5b9b01aa4dfb3614536e52"},
+    {file = "filelock-3.32.7.tar.gz", hash = "sha256:37b8a3d9811b0f9aef7e5ec5c71bb320de52df51e6ca9bcd6f5ad81187660da7"},
 ]
 
 [[package]]
