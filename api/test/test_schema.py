@@ -6,7 +6,7 @@ import schemathesis
 from schemathesis.checks import content_type_conformance
 
 
-schema = schemathesis.from_uri(f"{settings.CANONICAL_ORIGIN}/v1/schema/")
+schema = schemathesis.openapi.from_url(f"{settings.CANONICAL_ORIGIN}/v1/schema/")
 
 
 def status_code_aware_content_type_conformance(ctx, res, case):
