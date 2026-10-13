@@ -246,15 +246,36 @@ const additionalSourceBuilders: AdditionalSourceBuilder[] = [
 ]
 
 /**
+ * A utility type that makes only the selected keys required,
+ */
+type SelectiveRequired<T, K extends keyof T> = {
+  [P in K]-?: T[P]
+} & T
+
+/**
+ * Shape of an additional source builder.
+ * Each media-type key is optional and only present if supported by that source.
+ */
+export interface AdditionalSourceBuilder {
+  name: string
+  image?: () => unknown
+  audio?: () => unknown
+  video?: () => unknown
+}
+
+/**
  * Get a list of source builders for a given media type.
  *
  * @param mediaType - the media type by which to filter source builders
  * @returns a list of additional source builders
  */
-export const getAdditionalSourceBuilders = (
-  mediaType: MediaType
-): AdditionalSourceBuilder[] =>
-  additionalSourceBuilders.filter((source) => source[mediaType])
+export const getAdditionalSourceBuilders = <T extends MediaType>(
+  mediaType: T
+): SelectiveRequired<AdditionalSourceBuilder, T>[] => {
+  return additionalSourceBuilders.filter((source) =>
+    Boolean(source[mediaType])
+  ) as SelectiveRequired<AdditionalSourceBuilder, T>[]
+}
 
 /**
  * Get a list of sources for a given media type with the URL populated to show
