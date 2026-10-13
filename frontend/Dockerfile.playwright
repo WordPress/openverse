@@ -14,6 +14,8 @@ COPY pnpm-lock.yaml .
 RUN mkdir -p /.cache/node/corepack/ && chmod -R 777 /.cache/node/corepack/
 # Ensure that the dlx cache folder exists and is writable
 RUN mkdir -p /.cache/pnpm/dlx/ && chmod -R 777 /.cache/pnpm/dlx/
+# Ensure Storybook's global settings folder exists and is writable
+RUN mkdir -p /.storybook/ && chmod -R 777 /.storybook/
 
 # Requires `packageManager` field to be present in `frontend/package.json`.
 RUN npm install -g corepack@0.31.0 && corepack enable pnpm
