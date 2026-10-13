@@ -1,4 +1,8 @@
 import pytest
+
+# Registers the FAB `ab_user` table that `task_instance_note` references; without it,
+# deleting task instances fails to resolve the foreign key.
+import airflow.providers.fab.auth_manager.models  # noqa: F401
 from airflow.models import DagRun, Pool, TaskInstance
 from airflow.utils.session import create_session
 
