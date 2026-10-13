@@ -1,6 +1,6 @@
 import { useRuntimeConfig } from "#imports"
 
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios"
+import { AxiosRequestConfig, AxiosResponse, create } from "axios"
 
 import { AUDIO, type SupportedMediaType } from "#shared/constants/media"
 import { userAgentHeader } from "#shared/constants/user-agent.mjs"
@@ -155,7 +155,7 @@ export const createApiClient = ({
     headers,
   }
 
-  const client = axios.create(axiosParams)
+  const client = create(axiosParams)
   client.interceptors.request.use(function (config) {
     validateRequest(
       !config.url?.endsWith("/"),
