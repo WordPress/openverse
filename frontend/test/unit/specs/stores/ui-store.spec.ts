@@ -125,7 +125,7 @@ describe("Ui Store", () => {
 
     it("initFromCookies sets initial state with a dismissed banner", () => {
       const uiStore = useUiStore()
-      const dismissedBanners: BannerId[] = ["translation-ru", "translation-ar"]
+      const dismissedBanners: BannerId[] = ["translation-en", "analytics"]
       uiStore.initFromCookies({
         dismissedBanners: dismissedBanners,
       })
