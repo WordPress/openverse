@@ -1,0 +1,14 @@
+# Managing the Openverse
+
+```{toctree}
+:titlesonly:
+
+github_contribution_practices
+dev_flow
+maintainer_tasks
+ci_cd/index
+decision_making/index
+documentation/index
+traffic/index
+communication_aliases
+```

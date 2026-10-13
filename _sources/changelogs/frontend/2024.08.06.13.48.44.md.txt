@@ -1,0 +1,32 @@
+# 2024.08.06.13.48.44
+
+## New Features
+
+- Init dark mode with feature flag and body class
+  ([#4687](https://github.com/WordPress/openverse/pull/4687)) by @zackkrida
+
+## Internal Improvements
+
+- Convert modal-related components to script setup
+  ([#4700](https://github.com/WordPress/openverse/pull/4700)) by @obulat
+- Update dependency @playwright/test to v1.45.3
+  ([#4685](https://github.com/WordPress/openverse/pull/4685)) by @openverse-bot
+- Update dependency prettier to v3.3.3
+  ([#4686](https://github.com/WordPress/openverse/pull/4686)) by @openverse-bot
+- Update dependency vue-tsc to v2.0.29
+  ([#4691](https://github.com/WordPress/openverse/pull/4691)) by @openverse-bot
+- Update dependency typescript to v5.5.4
+  ([#4688](https://github.com/WordPress/openverse/pull/4688)) by @openverse-bot
+- Move setup template sections
+  ([#4679](https://github.com/WordPress/openverse/pull/4679)) by @obulat
+
+## Bug Fixes
+
+- Fix audio collection page SSR error
+  ([#4722](https://github.com/WordPress/openverse/pull/4722)) by @obulat
+- Fix test flake in pages.spec.ts
+  ([#4709](https://github.com/WordPress/openverse/pull/4709)) by @zackkrida
+- Fix the flaky pages test
+  ([#4702](https://github.com/WordPress/openverse/pull/4702)) by @obulat
+- Update Vue and remove modal hotfix
+  ([#4682](https://github.com/WordPress/openverse/pull/4682)) by @obulat

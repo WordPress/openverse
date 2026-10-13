@@ -1,0 +1,11 @@
+# 2024.12.17.14.37.03
+
+## Improvements
+
+- Update the analytics events for relevancy
+  ([#5108](https://github.com/WordPress/openverse/pull/5108)) by @obulat
+
+## Internal Improvements
+
+- Add Sentry Nuxt module
+  ([#5279](https://github.com/WordPress/openverse/pull/5279)) by @obulat

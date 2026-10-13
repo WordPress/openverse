@@ -1,0 +1,6 @@
+# 2024.01.16.17.28.14
+
+## Improvements
+
+- Add secret-key check
+  ([#3623](https://github.com/WordPress/openverse/pull/3623)) by @firatbezir

@@ -1,0 +1,25 @@
+# 2023.04.23.23.22.14
+
+## Improvements
+
+- Update Python code to use Python 3.11 (#1852) @dhruvkb
+- Deduce Python/Node.js/pnpm version in Docker images (#1225) @dhruvkb
+- Add a `just ps` recipe for displaying service ports (#1160) @AetherUnbound
+
+## Internal Improvements
+
+- Dispatch deployment workflows from infrastructure repository (#1865)
+  @sarayourfriend
+- Deduce Python/Node.js/pnpm version in Docker images (#1225) @dhruvkb
+- Add a `just ps` recipe for displaying service ports (#1160) @AetherUnbound
+- Fix `pgcli` just commands for the api and catalog (#1822) @krysal
+
+## Bug Fixes
+
+- Fix `pgcli` just commands for the api and catalog (#1822) @krysal
+
+## Credits
+
+Thanks to @AetherUnbound, @Yasir761, @dependabot, @dependabot[bot], @dhruvkb,
+@krysal, @obulat, @openverse-bot, @sarayourfriend, @sjdex, @stacimc and
+@zackkrida for their contributions!

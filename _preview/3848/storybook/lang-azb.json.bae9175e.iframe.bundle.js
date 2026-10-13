@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[37],{"./src/locales/azb.json":function(module){module.exports=JSON.parse("{}")}}]);

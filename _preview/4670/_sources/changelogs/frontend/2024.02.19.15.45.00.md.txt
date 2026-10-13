@@ -1,0 +1,6 @@
+# 2024.02.19.15.45.00
+
+## New Features
+
+- Add links to additional views to sources table
+  ([#3749](https://github.com/WordPress/openverse/pull/3749)) by @obulat

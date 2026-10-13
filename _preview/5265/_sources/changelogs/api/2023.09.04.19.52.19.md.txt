@@ -1,0 +1,24 @@
+# 2023.09.04.19.52.19
+
+## Improvements
+
+- Create a page for apps made with the Openverse API
+  ([#2881](https://github.com/WordPress/openverse/pull/2881)) by @dhruvkb
+
+## Internal Improvements
+
+- Bump pillow from 9.5.0 to 10.0.0 in /api
+  ([#2874](https://github.com/WordPress/openverse/pull/2874)) by @dependabot
+- Update postgres Docker tag to v13.10
+  ([#2945](https://github.com/WordPress/openverse/pull/2945)) by @renovate
+- Update nginx Docker tag to v1.25.2
+  ([#2939](https://github.com/WordPress/openverse/pull/2939)) by @renovate
+- Bump sentry-sdk from 1.29.2 to 1.30.0 in /api
+  ([#2954](https://github.com/WordPress/openverse/pull/2954)) by @dependabot
+- Add `catalog/init` just command
+  ([#2915](https://github.com/WordPress/openverse/pull/2915)) by @krysal
+
+## Bug Fixes
+
+- Replace deprecated function from Pillow
+  ([#2934](https://github.com/WordPress/openverse/pull/2934)) by @krysal

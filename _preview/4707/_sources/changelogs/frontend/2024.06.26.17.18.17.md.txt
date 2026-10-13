@@ -1,0 +1,25 @@
+# 2024.06.26.17.18.17
+
+## New Features
+
+- Include xml in frontend attribution options
+  ([#4499](https://github.com/WordPress/openverse/pull/4499)) by @madewithkode
+
+## Improvements
+
+- Replace "Over..." language with more precise "Top..."
+  ([#4509](https://github.com/WordPress/openverse/pull/4509)) by @sarayourfriend
+
+## Internal Improvements
+
+- Add caching to frontend Nginx configuration
+  ([#4516](https://github.com/WordPress/openverse/pull/4516)) by @sarayourfriend
+
+## Bug Fixes
+
+- Fix possible TypeError when accessing properties of `route.value`
+  ([#4523](https://github.com/WordPress/openverse/pull/4523)) by @krysal
+- Fix flaky VCollectionHeader snapshot tests
+  ([#4559](https://github.com/WordPress/openverse/pull/4559)) by @sarayourfriend
+- Re-add tags page text
+  ([#4549](https://github.com/WordPress/openverse/pull/4549)) by @obulat

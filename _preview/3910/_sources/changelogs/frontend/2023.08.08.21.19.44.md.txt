@@ -1,0 +1,13 @@
+# 2023.08.08.21.19.44
+
+## Improvements
+
+- Rename `mature` to `includeSensitiveResults`
+  ([#2721](https://github.com/WordPress/openverse/pull/2721)) by @obulat
+
+## Bug Fixes
+
+- Stop converting timeout error to an object in Nuxt API requests
+  ([#2778](https://github.com/WordPress/openverse/pull/2778)) by @obulat
+- Add a wait for the fonts to load in the internal header modal
+  ([#2736](https://github.com/WordPress/openverse/pull/2736)) by @obulat

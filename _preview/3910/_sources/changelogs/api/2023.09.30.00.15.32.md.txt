@@ -1,0 +1,6 @@
+# 2023.09.30.00.15.32
+
+## Improvements
+
+- Increase the API sources cache TTL from 20 minutes to 4 hours
+  ([#3083](https://github.com/WordPress/openverse/pull/3083)) by @AetherUnbound
