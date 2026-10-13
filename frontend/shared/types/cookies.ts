@@ -15,6 +15,7 @@ export const persistentCookieOptions = {
 export const defaultPersistientCookieState: OpenverseCookieState = {
   ui: {
     colorMode: "system",
+    contrastMode: "system",
   },
 }
 
