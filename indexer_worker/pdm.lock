@@ -4,8 +4,8 @@
 [metadata]
 groups = ["default", "dev", "test"]
 strategy = ["inherit_metadata"]
-lock_version = "4.5.1"
-content_hash = "sha256:3bafd87ba1a6a48d5ba6b71200ecb90f0960cc91916aa1864e180c0d96861510"
+lock_version = "4.5.0"
+content_hash = "sha256:3bc244e98590fcdce099ebf1d1405ef6e90f276929c9664c04d854cfd96fa775"
 
 [[metadata.targets]]
 requires_python = "==3.12.*"
@@ -529,7 +529,7 @@ name = "pygments"
 version = "2.19.1"
 requires_python = ">=3.8"
 summary = "Pygments is a syntax highlighting package written in Python."
-groups = ["dev"]
+groups = ["dev", "test"]
 files = [
     {file = "pygments-2.19.1-py3-none-any.whl", hash = "sha256:9ea1544ad55cecf4b8242fab6dd35a93bbce657034b0611ee383099054ab6d8c"},
     {file = "pygments-2.19.1.tar.gz", hash = "sha256:61c16d2a8576dc0649d9f39e089b5f02bcd27fba10d8fb4dcc28173f7a45151f"},
@@ -537,21 +537,22 @@ files = [
 
 [[package]]
 name = "pytest"
-version = "8.3.3"
-requires_python = ">=3.8"
+version = "9.1.1"
+requires_python = ">=3.10"
 summary = "pytest: simple powerful testing with Python"
 groups = ["test"]
 dependencies = [
-    "colorama; sys_platform == \"win32\"",
-    "exceptiongroup>=1.0.0rc8; python_version < \"3.11\"",
-    "iniconfig",
-    "packaging",
+    "colorama>=0.4; sys_platform == \"win32\"",
+    "exceptiongroup>=1; python_version < \"3.11\"",
+    "iniconfig>=1.0.1",
+    "packaging>=22",
     "pluggy<2,>=1.5",
+    "pygments>=2.7.2",
     "tomli>=1; python_version < \"3.11\"",
 ]
 files = [
-    {file = "pytest-8.3.3-py3-none-any.whl", hash = "sha256:a6853c7375b2663155079443d2e45de913a911a11d669df02a50814944db57b2"},
-    {file = "pytest-8.3.3.tar.gz", hash = "sha256:70b98107bd648308a7952b06e6ca9a50bc660be218d53c257cc1fc94fda10181"},
+    {file = "pytest-9.1.1-py3-none-any.whl", hash = "sha256:37a86b45efb9a47a61a36449063e8e18d0cab3161329fc099eb21783169c4f0c"},
+    {file = "pytest-9.1.1.tar.gz", hash = "sha256:1088fbde8f2b49d95a549a195707afa7a76a3ce9bcadc26b6d71f0ffda5fe313"},
 ]
 
 [[package]]

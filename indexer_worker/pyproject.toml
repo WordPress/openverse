@@ -36,7 +36,7 @@ dev = [
 ]
 test = [
     "pook~=2.0",
-    "pytest~=8.3",
+    "pytest~=9.0",
     "pytest-order~=1.1",
     "pytest-sugar~=1.0",
 ]

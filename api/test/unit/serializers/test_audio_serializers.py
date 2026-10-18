@@ -7,8 +7,7 @@ from api.serializers.audio_serializers import AudioSerializer
 
 
 @pytest.fixture
-@pytest.mark.django_db
-def audio_fixture():
+def audio_fixture(db):
     audio = Audio(
         identifier=uuid.uuid4(),
         license="cc0",
