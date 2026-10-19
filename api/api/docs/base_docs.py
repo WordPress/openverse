@@ -282,3 +282,17 @@ NON_FILTER_FIELDS = [
     "unstable__authority",
     "unstable__authority_boost",
 ]
+
+
+def allow_blank_optional_query_params(result, **kwargs):
+    """DRF treats a blank optional query value as omitted, so do not document it as invalid."""
+
+    for operations in result["paths"].values():
+        for operation in operations.values():
+            for param in operation.get("parameters", []):
+                if param["in"] != "query" or param.get("required"):
+                    continue
+                param["allowEmptyValue"] = True
+                if param["schema"].get("minLength") == 1:
+                    del param["schema"]["minLength"]
+    return result

@@ -42,6 +42,7 @@ key_info = custom_extend_schema(
     res={
         200: (OAuth2KeyInfoSerializer, auth_key_info_200_example),
         401: (NotAuthenticated, None),
+        424: (OAuth2KeyInfoSerializer, None),
         429: (
             APIException("Request was throttled. Expected available in 1 second.", 429),
             None,
