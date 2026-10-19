@@ -459,6 +459,9 @@ def test_report_is_created(single_result, api_client, request_format):
         pytest.param(
             {"reason": "other", "description": None}, id="other_without_description"
         ),
+        pytest.param(
+            {"reason": "mature", "description": 0}, id="non_string_description"
+        ),
     ],
 )
 def test_report_rejects_invalid_body(single_result, api_client, body):
