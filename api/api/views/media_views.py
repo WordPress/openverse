@@ -1,3 +1,4 @@
+from collections.abc import Mapping
 from typing import Union
 
 from rest_framework import status
@@ -267,9 +268,12 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
         return self.get_paginated_response(serializer.data)
 
     def report(self, request, identifier):
-        # `QueryDict | dict` turns multipart values into lists; `copy()` keeps them scalar.
-        data = request.data.copy()
-        data["identifier"] = identifier
+        data = request.data
+        # Anything else is left for the serializer to reject.
+        if isinstance(data, Mapping):
+            # `QueryDict | dict` turns multipart values into lists; `copy()` keeps them scalar.
+            data = data.copy()
+            data["identifier"] = identifier
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()

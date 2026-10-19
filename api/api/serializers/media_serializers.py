@@ -1,4 +1,5 @@
 from collections import namedtuple
+from collections.abc import Mapping
 from math import floor
 from typing import TypedDict
 
@@ -589,7 +590,8 @@ class MediaReportRequestSerializer(serializers.ModelSerializer):
         further explanation.
         """
 
-        data["reason"] = self._map_reason(data.get("reason"))
+        if isinstance(data, Mapping):
+            data["reason"] = self._map_reason(data.get("reason"))
         return super().to_internal_value(data)
 
     def validate(self, attrs):

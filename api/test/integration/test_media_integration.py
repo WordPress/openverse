@@ -452,6 +452,22 @@ def test_report_is_created(single_result, api_client, request_format):
     assert data["identifier"] == item["id"]
 
 
+@pytest.mark.parametrize(
+    "body",
+    [
+        pytest.param([None, None], id="non_object"),
+    ],
+)
+def test_report_rejects_invalid_body(single_result, api_client, body):
+    media_type_config, item = single_result
+    res = api_client.post(
+        f"/v1/{media_type_config.url_prefix}/{item['id']}/report/",
+        body,
+        "json",
+    )
+    assert res.status_code == 400
+
+
 ####################
 # Collection results #
 ####################
