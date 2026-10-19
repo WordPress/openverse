@@ -32,6 +32,7 @@ from api.examples import (
 )
 from api.examples.image_responses import image_oembed_400_example
 from api.serializers.image_serializers import (
+    ImageReportBodySerializer,
     ImageReportRequestSerializer,
     ImageSearchRequestSerializer,
     ImageSerializer,
@@ -113,6 +114,7 @@ related = custom_extend_schema(
 )
 
 report = custom_extend_schema(
+    request=ImageReportBodySerializer,
     res={
         201: (ImageReportRequestSerializer, image_complain_201_example),
         401: (AuthenticationFailed, None),

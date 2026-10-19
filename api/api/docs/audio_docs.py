@@ -33,6 +33,7 @@ from api.examples import (
     audio_waveform_curl,
 )
 from api.serializers.audio_serializers import (
+    AudioReportBodySerializer,
     AudioReportRequestSerializer,
     AudioSearchRequestSerializer,
     AudioSerializer,
@@ -112,6 +113,7 @@ related = custom_extend_schema(
 )
 
 report = custom_extend_schema(
+    request=AudioReportBodySerializer,
     res={
         201: (AudioReportRequestSerializer, audio_complain_201_example),
         400: (ValidationError, None),
