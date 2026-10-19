@@ -14,3 +14,9 @@ def test_report_body_omits_path_identifier(schema, media_type):
     for content in body["content"].values():
         ref = content["schema"]["$ref"].rsplit("/", 1)[-1]
         assert "identifier" not in schema["components"]["schemas"][ref]["properties"]
+
+
+@pytest.mark.parametrize("field", ["name", "description"])
+def test_registration_fields_reject_blank(schema, field):
+    properties = schema["components"]["schemas"]["OAuth2Registration"]["properties"]
+    assert properties[field]["minLength"] == 1
