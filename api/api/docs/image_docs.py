@@ -41,6 +41,7 @@ from api.serializers.image_serializers import (
 )
 from api.serializers.media_serializers import MediaThumbnailRequestSerializer
 from api.serializers.source_serializers import SourceSerializer
+from api.utils.image_proxy.exception import UpstreamThumbnailException
 
 
 serializer = ImageSearchRequestSerializer(context={"media_type": "image"})
@@ -128,8 +129,10 @@ thumbnail = extend_schema(
     parameters=[MediaThumbnailRequestSerializer],
     responses={
         200: OpenApiResponse(description="Thumbnail image"),
+        400: ValidationError,
         404: NotFound,
         401: AuthenticationFailed,
+        424: UpstreamThumbnailException,
     },
 )
 

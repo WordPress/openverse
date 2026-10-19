@@ -41,6 +41,8 @@ from api.serializers.audio_serializers import (
 )
 from api.serializers.media_serializers import MediaThumbnailRequestSerializer
 from api.serializers.source_serializers import SourceSerializer
+from api.utils.image_proxy.exception import UpstreamThumbnailException
+from api.utils.waveform import UpstreamWaveformException
 
 
 serializer = AudioSearchRequestSerializer(context={"media_type": "audio"})
@@ -127,7 +129,9 @@ thumbnail = extend_schema(
     parameters=[MediaThumbnailRequestSerializer],
     responses={
         200: OpenApiResponse(description="Thumbnail image"),
+        400: ValidationError,
         401: AuthenticationFailed,
+        424: UpstreamThumbnailException,
     },
 )
 
@@ -136,6 +140,7 @@ waveform = custom_extend_schema(
         200: (AudioWaveformSerializer, audio_waveform_200_example),
         401: (AuthenticationFailed, None),
         404: (NotFound, audio_waveform_404_example),
+        424: (UpstreamWaveformException, None),
     },
     eg=[audio_waveform_curl],
 )
