@@ -267,7 +267,10 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
         return self.get_paginated_response(serializer.data)
 
     def report(self, request, identifier):
-        serializer = self.get_serializer(data=request.data | {"identifier": identifier})
+        # `QueryDict | dict` turns multipart values into lists; `copy()` keeps them scalar.
+        data = request.data.copy()
+        data["identifier"] = identifier
+        serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
 

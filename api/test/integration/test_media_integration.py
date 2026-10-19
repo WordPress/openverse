@@ -435,7 +435,8 @@ def test_related_results_have_non_es_fields(related_results):
 ###############
 
 
-def test_report_is_created(single_result, api_client):
+@pytest.mark.parametrize("request_format", ["json", "multipart"])
+def test_report_is_created(single_result, api_client, request_format):
     media_type_config, item = single_result
     res = api_client.post(
         f"/v1/{media_type_config.url_prefix}/{item['id']}/report/",
@@ -443,7 +444,7 @@ def test_report_is_created(single_result, api_client):
             "reason": "mature",
             "description": "This item contains sensitive content",
         },
-        "json",
+        request_format,
     )
     assert res.status_code == 201
 
