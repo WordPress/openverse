@@ -595,10 +595,7 @@ class MediaReportRequestSerializer(serializers.ModelSerializer):
         return super().to_internal_value(data)
 
     def validate(self, attrs):
-        if (
-            attrs["reason"] == "other"
-            and ("description" not in attrs or len(attrs["description"])) < 20
-        ):
+        if attrs["reason"] == "other" and len(attrs.get("description") or "") < 20:
             raise serializers.ValidationError(
                 "Description must be at least be 20 characters long"
             )
