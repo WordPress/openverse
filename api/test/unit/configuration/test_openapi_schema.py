@@ -22,6 +22,24 @@ def test_registration_fields_reject_blank(schema, field):
     assert properties[field]["minLength"] == 1
 
 
+def test_optional_query_params_allow_blank(schema):
+    # DRF treats a blank optional query value as omitted, so it must not be documented as invalid
+    params = schema["paths"]["/v1/images/"]["get"]["parameters"]
+    blank_rejecting = [
+        param["name"]
+        for param in params
+        if param["in"] == "query"
+        and not param.get("required")
+        and "minLength" in param["schema"]
+    ]
+    assert blank_rejecting == []
+    assert all(
+        param["allowEmptyValue"]
+        for param in params
+        if param["in"] == "query" and not param.get("required")
+    )
+
+
 @pytest.mark.parametrize(
     "path",
     [
