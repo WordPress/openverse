@@ -67,7 +67,12 @@ ARG CATALOG_AIRFLOW_VERSION
 # https://airflow.apache.org/docs/apache-airflow/stable/installation/installing-from-pypi.html#constraints-files
 ARG CONSTRAINTS_FILE="https://raw.githubusercontent.com/apache/airflow/constraints-${CATALOG_AIRFLOW_VERSION}/constraints-${CATALOG_PY_VERSION}.txt"
 
-RUN pip install -r ${REQUIREMENTS_FILE} -c ${CONSTRAINTS_FILE}
+# The Airflow constraints pin certifi==2024.8.30, which still trusts the compromised
+# emSign CA, so override it after the constrained install
+RUN pip install -r ${REQUIREMENTS_FILE} -c ${CONSTRAINTS_FILE} \
+    && echo "certifi==2026.10.19 --hash=sha256:42d35340cc5b9ba78e818ddbff0c5b1c2b779de448a340fd1b989f5fa8670e1b" > /tmp/certifi.txt \
+    && pip install --no-deps --require-hashes -r /tmp/certifi.txt \
+    && rm /tmp/certifi.txt
 
 COPY entrypoint.sh /opt/airflow/entrypoint.sh
 COPY variables.tsv /opt/airflow/variables.tsv
