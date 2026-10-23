@@ -1,0 +1,11 @@
+# 2024.09.16.09.52.36
+
+## New Features
+
+- Add low-level TS API client with generated types
+  ([#4538](https://github.com/WordPress/openverse/pull/4538)) by @sarayourfriend
+
+## Internal Improvements
+
+- Log when API client apps authorize
+  ([#4892](https://github.com/WordPress/openverse/pull/4892)) by @sarayourfriend

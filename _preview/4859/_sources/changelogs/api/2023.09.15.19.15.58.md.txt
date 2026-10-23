@@ -1,0 +1,22 @@
+# 2023.09.15.19.15.58
+
+## Improvements
+
+- Refactor popularity SQL
+  ([#2964](https://github.com/WordPress/openverse/pull/2964)) by @stacimc
+- `mature` -> `sensitive` frontend copy and code
+  ([#3006](https://github.com/WordPress/openverse/pull/3006)) by @sarayourfriend
+
+## Internal Improvements
+
+- Update dependency Pillow to v10.0.1
+  ([#3030](https://github.com/WordPress/openverse/pull/3030)) by @stacimc
+- Remove `requests-oauthlib` from api dependencies
+  ([#3018](https://github.com/WordPress/openverse/pull/3018)) by @rwidom
+- Remove django-sslserver
+  ([#3002](https://github.com/WordPress/openverse/pull/3002)) by @krysal
+
+## Bug Fixes
+
+- Populate sensitivities for single result view
+  ([#3013](https://github.com/WordPress/openverse/pull/3013)) by @dhruvkb

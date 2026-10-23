@@ -1,0 +1,26 @@
+# 2023.11.14.19.30.29
+
+## Improvements
+
+- Update the Audio track in row, box and full layouts
+  ([#3297](https://github.com/WordPress/openverse/pull/3297)) by @obulat
+- Update the global audio player
+  ([#3265](https://github.com/WordPress/openverse/pull/3265)) by @obulat
+
+## Internal Improvements
+
+- Remove `this` from `VGridSkeleton` props `default`
+  ([#3341](https://github.com/WordPress/openverse/pull/3341)) by @Ashhar-24
+- Add some Vue 3 Eslint rules
+  ([#3322](https://github.com/WordPress/openverse/pull/3322)) by @obulat
+- Use a default for `HOST_NETWORK_ADDRESS` to hide warnings
+  ([#3333](https://github.com/WordPress/openverse/pull/3333)) by @dhruvkb
+- Update nuxt, @nuxt/vue-app, @nuxt/types dependencies
+  ([#3247](https://github.com/WordPress/openverse/pull/3247)) by @khushi-kothari
+- Vendor in case functions
+  ([#3233](https://github.com/WordPress/openverse/pull/3233)) by @obulat
+
+## Bug Fixes
+
+- Remove Storybook smoke test
+  ([#3317](https://github.com/WordPress/openverse/pull/3317)) by @obulat

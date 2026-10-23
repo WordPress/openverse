@@ -1,0 +1,20 @@
+# 2024.11.08.08.05.38
+
+## Improvements
+
+- Add an analytics event for search results count
+  ([#5109](https://github.com/WordPress/openverse/pull/5109)) by @Danil49
+
+## Internal Improvements
+
+- Update dependency @octokit/rest to v21
+  ([#5139](https://github.com/WordPress/openverse/pull/5139)) by @openverse-bot
+- Update dependency chokidar to v4
+  ([#5140](https://github.com/WordPress/openverse/pull/5140)) by @openverse-bot
+- Update dependency jsdom to v25
+  ([#5143](https://github.com/WordPress/openverse/pull/5143)) by @openverse-bot
+
+## Bug Fixes
+
+- Fix Playwright VR test failures
+  ([#5135](https://github.com/WordPress/openverse/pull/5135)) by @obulat

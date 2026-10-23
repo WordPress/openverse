@@ -1,0 +1,19 @@
+# 2023.12.04.19.35.53
+
+## Internal Improvements
+
+- Update dependency @pinia/testing to ^0.1.0
+  ([#3431](https://github.com/WordPress/openverse/pull/3431)) by @openverse-bot
+- Update dependency prettier to v2.8.8
+  ([#3426](https://github.com/WordPress/openverse/pull/3426)) by @openverse-bot
+- Update dependency @octokit/rest to v19.0.13
+  ([#3423](https://github.com/WordPress/openverse/pull/3423)) by @openverse-bot
+- Remove unused simple query string features
+  ([#3360](https://github.com/WordPress/openverse/pull/3360)) by @obulat
+- Update Node.js to v18.19.0
+  ([#3429](https://github.com/WordPress/openverse/pull/3429)) by @openverse-bot
+
+## Bug Fixes
+
+- Fix loading skeletons
+  ([#3414](https://github.com/WordPress/openverse/pull/3414)) by @obulat

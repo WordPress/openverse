@@ -1,0 +1,8 @@
+# 2024.07.19.17.07.25
+
+## Internal Improvements
+
+- Update ingestion server removal IP with EC2 approach
+  ([#4615](https://github.com/WordPress/openverse/pull/4615)) by @stacimc
+- Bump sentry-sdk from 2.7.1 to 2.8.0 in /ingestion_server
+  ([#4631](https://github.com/WordPress/openverse/pull/4631)) by @dependabot

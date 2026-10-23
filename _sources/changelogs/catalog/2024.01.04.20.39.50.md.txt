@@ -1,0 +1,20 @@
+# 2024.01.04.20.39.50
+
+## Improvements
+
+- Remove Internet Archive Book Images sub provider
+  ([#3532](https://github.com/WordPress/openverse/pull/3532)) by @stacimc
+
+## Internal Improvements
+
+- Update Airflow filtered warnings, address deprecations
+  ([#3591](https://github.com/WordPress/openverse/pull/3591)) by @AetherUnbound
+- Update dependency apache-airflow to v2.8.0 [SECURITY]
+  ([#3572](https://github.com/WordPress/openverse/pull/3572)) by @openverse-bot
+- Bump Redis to v7 in local dev environment
+  ([#3561](https://github.com/WordPress/openverse/pull/3561)) by @dhruvkb
+
+## Bug Fixes
+
+- HOTFIX: Convert encoded HTTP connection variables to http type not https
+  ([#3624](https://github.com/WordPress/openverse/pull/3624)) by @AetherUnbound

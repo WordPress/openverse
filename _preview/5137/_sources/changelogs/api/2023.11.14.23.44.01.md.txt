@@ -1,0 +1,16 @@
+# 2023.11.14.23.44.01
+
+## Improvements
+
+- Include media provider in thumbnail failure logging and tallying
+  ([#3324](https://github.com/WordPress/openverse/pull/3324)) by @AetherUnbound
+
+## Internal Improvements
+
+- Add gc debugging flag to help debug prod thumbnails leak
+  ([#3354](https://github.com/WordPress/openverse/pull/3354)) by @sarayourfriend
+
+## Bug Fixes
+
+- Configure the number of proxies to fix anon rate limiting
+  ([#3344](https://github.com/WordPress/openverse/pull/3344)) by @sarayourfriend

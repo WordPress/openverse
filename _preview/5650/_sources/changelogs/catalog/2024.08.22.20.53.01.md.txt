@@ -1,0 +1,28 @@
+# 2024.08.22.20.53.01
+
+## Improvements
+
+- Add alter data step to the data refresh DAG
+  ([#4684](https://github.com/WordPress/openverse/pull/4684)) by @AetherUnbound
+- Increase Wikimedia reingestion pull_data timeout
+  ([#4744](https://github.com/WordPress/openverse/pull/4744)) by @stacimc
+
+## Internal Improvements
+
+- Update dependency apache-airflow to v2.10.0 [SECURITY]
+  ([#4798](https://github.com/WordPress/openverse/pull/4798)) by @openverse-bot
+- Fix or ignore deprecation warnings in the catalog
+  ([#4773](https://github.com/WordPress/openverse/pull/4773)) by @AetherUnbound
+
+## Bug Fixes
+
+- Fix DAG docstrings so they no longer produce improper HTML
+  ([#4770](https://github.com/WordPress/openverse/pull/4770)) by @AetherUnbound
+- Only cache branch protection within the scope of the function
+  ([#4747](https://github.com/WordPress/openverse/pull/4747)) by @AetherUnbound
+- Filter `filetype` of Wikimedia's images
+  ([#4772](https://github.com/WordPress/openverse/pull/4772)) by @krysal
+- Fix Wikimedia provider when verbose logging enabled
+  ([#4753](https://github.com/WordPress/openverse/pull/4753)) by @stacimc
+- Add request retries for 5XX errors on Science Museum & Brooklyn Museum
+  ([#4715](https://github.com/WordPress/openverse/pull/4715)) by @AetherUnbound

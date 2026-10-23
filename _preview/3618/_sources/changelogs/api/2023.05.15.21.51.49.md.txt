@@ -1,0 +1,33 @@
+# 2023.05.15.21.51.49
+
+## Improvements
+
+- Query the filtered indexes
+  ([#1903](https://github.com/WordPress/openverse/pull/1903)) by @sarayourfriend
+
+## Internal Improvements
+
+- Update consistent python test module naming pattern
+  ([#2051](https://github.com/WordPress/openverse/pull/2051)) by
+  @harsitagarwalla187
+- Add Cloudflare malicious traffic runbook
+  ([#1858](https://github.com/WordPress/openverse/pull/1858)) by @zackkrida
+- Simplify and reorder parameters to `catalog/pgcli` recipe
+  ([#2023](https://github.com/WordPress/openverse/pull/2023)) by @AetherUnbound
+- Restructure API to remove confusion about 'catalog'
+  ([#1936](https://github.com/WordPress/openverse/pull/1936)) by @dhruvkb
+- Remove `piexif` and suppress warnings
+  ([#2016](https://github.com/WordPress/openverse/pull/2016)) by @krysal
+
+## Bug Fixes
+
+- Re-add accidentally removed CORS middleware
+  ([#2075](https://github.com/WordPress/openverse/pull/2075)) by @dhruvkb
+- Remove unused and empty settings file
+  ([#2069](https://github.com/WordPress/openverse/pull/2069)) by @dhruvkb
+- Add throttle classes for health check endpoint
+  ([#2061](https://github.com/WordPress/openverse/pull/2061)) by @krysal
+- Simplify and reorder parameters to `catalog/pgcli` recipe
+  ([#2023](https://github.com/WordPress/openverse/pull/2023)) by @AetherUnbound
+- Bump redis from 4.3.4 to 4.4.4 in /utilities/dead_links
+  ([#2035](https://github.com/WordPress/openverse/pull/2035)) by @dependabot

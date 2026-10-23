@@ -1,0 +1,6 @@
+# 2024.12.10.14.47.56
+
+## New Features
+
+- Launch the dark mode
+  ([#5260](https://github.com/WordPress/openverse/pull/5260)) by @obulat

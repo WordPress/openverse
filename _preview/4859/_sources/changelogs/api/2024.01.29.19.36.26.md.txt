@@ -1,0 +1,21 @@
+# 2024.01.29.19.36.26
+
+## Improvements
+
+- Remove needs db and add patch
+  ([#3687](https://github.com/WordPress/openverse/pull/3687)) by @ngken0995
+- Add Rawpixel to authority data as CURATED
+  ([#3668](https://github.com/WordPress/openverse/pull/3668)) by
+  @rawpixel-vincent
+
+## Internal Improvements
+
+- Update copy changes implementation plan to avoid table rename
+  ([#3568](https://github.com/WordPress/openverse/pull/3568)) by @AetherUnbound
+- Update dependency Pillow to ~=10.2.0 [SECURITY]
+  ([#3691](https://github.com/WordPress/openverse/pull/3691)) by @openverse-bot
+
+## Bug Fixes
+
+- Enable the isort rules for ruff and fix linting issues
+  ([#3698](https://github.com/WordPress/openverse/pull/3698)) by @stacimc

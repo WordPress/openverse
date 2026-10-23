@@ -1,0 +1,40 @@
+# 2023.07.28.23.42.26
+
+## New Features
+
+- Content Safety UI for single results
+  ([#2651](https://github.com/WordPress/openverse/pull/2651)) by @zackkrida
+- Create a new `VIconButton`
+  ([#2697](https://github.com/WordPress/openverse/pull/2697)) by @obulat
+
+## Improvements
+
+- Add test/ to .dockerignore to exclude tests and test assets from frontend
+  image build context
+  ([#2713](https://github.com/WordPress/openverse/pull/2713)) by @sehgxl
+- Update the Box image and Large image cell component hover state
+  ([#2714](https://github.com/WordPress/openverse/pull/2714)) by @zackkrida
+- Fix fetching search results and handle fetching errors
+  ([#2618](https://github.com/WordPress/openverse/pull/2618)) by @obulat
+- Add `additional_search_views` feature flag
+  ([#2733](https://github.com/WordPress/openverse/pull/2733)) by @obulat
+- Update VBackToSearchResultsLink size to "small"
+  ([#2723](https://github.com/WordPress/openverse/pull/2723)) by @zackkrida
+- Update back to results button area
+  ([#2696](https://github.com/WordPress/openverse/pull/2696)) by @nevvada
+
+## Internal Improvements
+
+- Block crawling on search results views
+  ([#2739](https://github.com/WordPress/openverse/pull/2739)) by @zackkrida
+- Extract reusable VAudioCollection.vue
+  ([#2695](https://github.com/WordPress/openverse/pull/2695)) by @obulat
+- Extract `use-audio-snackbar` component
+  ([#2722](https://github.com/WordPress/openverse/pull/2722)) by @obulat
+
+## Bug Fixes
+
+- Fix double-scroll issue on iOS devices
+  ([#2728](https://github.com/WordPress/openverse/pull/2728)) by @dhruvkb
+- Remove External sources section from All content page
+  ([#2693](https://github.com/WordPress/openverse/pull/2693)) by @obulat

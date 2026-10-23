@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[135],{"./src/locales/ory.json":function(module){module.exports=JSON.parse("{}")}}]);
