@@ -140,6 +140,7 @@ const licenseElementImg = (licenseElement: LicenseElement): string => {
   const src = `https://mirrors.creativecommons.org/presskit/icons/${filename}.svg`
   return h("img", {
     src,
+    alt: "",
     style: "height: 1em; margin-right: 0.125em; display: inline;",
   })
 }
