@@ -134,7 +134,11 @@ precommit:
 
 # Run pre-commit to lint and reformat files
 lint hook="" *files="": precommit
+    #!/usr/bin/env bash
     python3 pre-commit.pyz run {{ hook }} {{ if files == "" { "--all-files" } else { "--files" } }}  {{ files }}
+    if [ $? -ne 0 ]; then
+        echo "error: Recipe 'lint' failed. Look above this line for the exact error."
+    fi
 
 # Run codeowners validator locally. Only enable experimental hooks if there are no uncommitted changes.
 lint-codeowners checks="stable":
