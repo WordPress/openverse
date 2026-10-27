@@ -130,7 +130,7 @@ const onChange = () => {
         @click="onChange"
       />
 
-      <!-- Knob, for when `ifSwitch` is `true` -->
+      <!-- Knob, for when `ifSwitch` is `true`. Uses `:dir(rtl)`, not `rtl:`, which also matches inside `dir="ltr"` islands like VContentPage. -->
       <span
         v-if="isSwitch"
         class="absolute inset-s-0.75 top-0.75 block h-3 w-3 rounded-full transition-transform duration-100"
@@ -139,7 +139,7 @@ const onChange = () => {
             ? [
                 'bg-default',
                 'translate-x-[1.125rem]',
-                'rtl:-translate-x-[1.125rem]',
+                '[&:dir(rtl)]:-translate-x-[1.125rem]',
               ]
             : disabled
               ? ['bg-disabled']

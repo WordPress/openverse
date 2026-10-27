@@ -67,7 +67,7 @@ defineExpose({ focusInput })
         type="search"
         name="q"
         :placeholder="$t('hero.search.placeholder')"
-        class="ms-4 h-full w-full appearance-none rounded-none bg-tx paragraph-large leading-none text-default placeholder-default focus-visible:outline-style-none md:label-regular"
+        class="ms-4 h-full w-full appearance-none rounded-none bg-tx paragraph-large text-default placeholder-default focus-visible:outline-style-none md:label-regular"
         :aria-label="
           $t('search.searchBarLabel', {
             openverse: 'Openverse',

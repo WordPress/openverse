@@ -16,7 +16,6 @@ import { skipToContentTargetId } from "#shared/constants/window"
 import { firstParam, validateUUID } from "#shared/utils/query-utils"
 import { handledClientSide } from "#shared/utils/errors"
 import type { ImageDetail } from "#shared/types/media"
-import singleResultMiddleware from "~/middleware/single-result"
 import { useSingleResultStore } from "~/stores/media/single-result"
 import { useAnalytics } from "~/composables/use-analytics"
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
@@ -43,7 +42,7 @@ defineOptions({
 
 definePageMeta({
   layout: "content-layout",
-  middleware: singleResultMiddleware,
+  middleware: "single-result",
 })
 
 usePageRobotsRule("single-result")

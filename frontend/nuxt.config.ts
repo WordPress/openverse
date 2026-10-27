@@ -146,6 +146,7 @@ export default defineNuxtConfig({
     },
   },
   sentry: {
+    telemetry: false,
     sourceMapsUploadOptions: {
       org: "openverse",
       project: "openverse-frontend",

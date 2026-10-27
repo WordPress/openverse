@@ -257,12 +257,11 @@ watch(routeSearchTerm, (newSearchTerm) => {
 const { doneHydrating } = useHydrating()
 
 const router = useRouter()
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, from) => {
   if (to.path !== from.path) {
     closeContentSettings()
     deactivate()
   }
-  next()
 })
 
 const handleTab = (

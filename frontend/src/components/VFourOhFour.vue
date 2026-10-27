@@ -51,7 +51,7 @@ useHead({
         tabindex="-1"
         class="z-10 grow-3 space-y-4 lg:space-y-6"
       >
-        <h1 class="mb-6 heading-5 lg:mb-10 lg:heading-2 lg:leading-tight">
+        <h1 class="mb-6 heading-5 lg:mb-10 lg:heading-2">
           {{ $t("404.title") }}
         </h1>
         <p class="sr-only">{{ error }}</p>

@@ -120,7 +120,7 @@ const splitAttrs = computed(() => {
     <VButton
       data-item-group-item
       :as="as"
-      class="relative min-w-full justify-between border-0 hover:bg-transparent-hover focus-visible:z-10"
+      class="relative min-w-full justify-between! border-0 hover:bg-transparent-hover focus-visible:z-10"
       :class="{
         'w-max': contextProps.direction === 'horizontal',
         'p-3!': contextProps.size === 'small',

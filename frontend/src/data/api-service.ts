@@ -13,6 +13,7 @@ import type {
 } from "#shared/types/search"
 import { debug, warn } from "~/utils/console"
 import { decodeMediaData } from "~/utils/decode-media-data"
+import { useProviderStore } from "~/stores/provider"
 
 const DEFAULT_REQUEST_TIMEOUT = 30000
 
@@ -57,14 +58,20 @@ export interface MediaResult<
 function transformResults<T extends Media>(
   mediaType: SupportedMediaType,
   data: MediaResult<T[]>,
-  fakeSensitive: boolean
+  fakeSensitive: boolean,
+  providerStore: ReturnType<typeof useProviderStore>
 ): MediaResult<Record<string, T>> {
   const mediaResults = <T[]>data.results ?? []
   return {
     ...data,
     results: mediaResults.reduce(
       (acc, item) => {
-        acc[item.id] = decodeMediaData(item, mediaType, fakeSensitive)
+        acc[item.id] = decodeMediaData(
+          item,
+          mediaType,
+          fakeSensitive,
+          providerStore
+        )
         return acc
       },
       {} as Record<string, T>
@@ -141,6 +148,7 @@ export const createApiClient = ({
   isVersioned = true,
   fakeSensitive = false,
 }: ApiServiceConfig = {}) => {
+  const providerStore = useProviderStore()
   const baseUrl =
     useRuntimeConfig().public.apiUrl ?? "https://api.openverse.org/"
 
@@ -204,7 +212,7 @@ export const createApiClient = ({
 
     return {
       eventPayload,
-      data: transformResults(mediaType, res.data, fakeSensitive),
+      data: transformResults(mediaType, res.data, fakeSensitive, providerStore),
     }
   }
 
@@ -213,7 +221,7 @@ export const createApiClient = ({
     id: string
   ) => {
     const res = await client.get<T>(`${mediaSlug(mediaType)}/${id}/`)
-    return decodeMediaData(res.data, mediaType)
+    return decodeMediaData(res.data, mediaType, false, providerStore)
   }
 
   const getRelatedMedia = async (mediaType: SupportedMediaType, id: string) => {
@@ -222,7 +230,9 @@ export const createApiClient = ({
       `${mediaSlug(mediaType)}/${id}/related/`,
       { params }
     )
-    return res.data.results.map((media) => decodeMediaData(media, mediaType))
+    return res.data.results.map((media) =>
+      decodeMediaData(media, mediaType, false, providerStore)
+    )
   }
 
   const stats = async (mediaType: SupportedMediaType) => {

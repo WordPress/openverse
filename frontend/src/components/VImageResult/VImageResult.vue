@@ -198,7 +198,7 @@ const { isHidden: shouldBlur } = useSensitiveMedia(props.image)
             }}
           </h2>
           <div
-            class="label-regular leading-none text-secondary group-hover:text-default group-focus-visible:text-default sm:text-default"
+            class="label-regular text-secondary group-hover:text-default group-focus-visible:text-default sm:text-default"
           >
             <template v-if="shouldBlur">
               {{ $t("sensitiveContent.singleResult.title") }}

@@ -16,7 +16,6 @@ import { firstParam, validateUUID } from "#shared/utils/query-utils"
 import { handledClientSide } from "#shared/utils/errors"
 import type { AudioDetail } from "#shared/types/media"
 import type { AudioInteractionData } from "#shared/types/analytics"
-import singleResultMiddleware from "~/middleware/single-result"
 import { useSingleResultStore } from "~/stores/media/single-result"
 import { useAnalytics } from "~/composables/use-analytics"
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
@@ -37,7 +36,7 @@ defineOptions({
 
 definePageMeta({
   layout: "content-layout",
-  middleware: singleResultMiddleware,
+  middleware: "single-result",
 })
 
 usePageRobotsRule("single-result")

@@ -17,7 +17,6 @@ import { skipToContentTargetId } from "#shared/constants/window"
 import { areQueriesEqual } from "#shared/utils/search-query-transform"
 import { handledClientSide, isRetriable } from "#shared/utils/errors"
 import type { Results } from "#shared/types/result"
-import { searchMiddleware } from "~/middleware/search"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
 import { useMediaStore } from "~/stores/media"
 import { isSearchTypeSupported, useSearchStore } from "~/stores/search"
@@ -30,7 +29,7 @@ defineOptions({
 
 definePageMeta({
   layout: "search-layout",
-  middleware: searchMiddleware,
+  middleware: "search",
 })
 
 const nuxtApp = useNuxtApp()

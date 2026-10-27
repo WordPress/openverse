@@ -4,7 +4,6 @@ import { definePageMeta, useAsyncData, useHead } from "#imports"
 import { skipToContentTargetId } from "#shared/constants/window"
 import { IMAGE } from "#shared/constants/media"
 import type { CollectionParams } from "#shared/types/search"
-import { collectionMiddleware } from "~/middleware/collection"
 import { useCollection } from "~/composables/use-collection"
 import { usePageRobotsRule } from "~/composables/use-page-robots-rule"
 
@@ -16,7 +15,7 @@ defineOptions({
 
 definePageMeta({
   layout: "content-layout",
-  middleware: collectionMiddleware,
+  middleware: "collection",
 })
 
 const {

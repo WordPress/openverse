@@ -42,7 +42,7 @@ const handleClick = (sourceName: string) => {
       as="VLink"
       variant="transparent-gray"
       size="medium"
-      class="w-full! justify-between label-regular"
+      class="w-full! justify-between! label-regular"
       show-external-icon
       has-icon-end
       :external-icon-size="6"
