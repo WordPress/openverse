@@ -315,7 +315,7 @@ old. Old issues should be treated
 
 #### Updating prioritisation
 
-Issues are often prioritised at the moment or within the week that they are
+Issues are often prioritized immediately or within the week in which they are
 opened. Therefore, the priority labels for issues must be considered relevant to
 their age. Issues opened with a medium or low priority are not necessarily
 issues that can go forever without being addressed. These prioritisations merely
@@ -327,7 +327,7 @@ variety of reasons:
 
 - They don't appear in our regular scans of the backlog because they're on the
   final pages
-- They can sometimes be tricky or ambiguous issues and have been avoided by even
+- They can sometimes be tricky or ambiguous issues and have been avoided even
   by contributors who are looking through old issues in favour of more
   straight-forward ones
 
