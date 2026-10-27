@@ -106,7 +106,7 @@ const nonClassAttrs = computed(() => {
     <form
       action="/search"
       role="search"
-      class="search-bar group flex h-12 flex-row items-center rounded-sm border-tx bg-default"
+      class="search-bar group flex h-12 flex-row items-center rounded-xs border-tx bg-default"
       @submit.prevent="handleSearch"
     >
       <VInputField
@@ -114,7 +114,7 @@ const nonClassAttrs = computed(() => {
         v-bind="nonClassAttrs"
         v-model="modelMedium"
         :placeholder="placeholder || $t('hero.search.placeholder')"
-        class="search-field flex-grow border-tx bg-secondary text-secondary focus-within:bg-default focus-visible:border-focus group-hover:text-default"
+        class="search-field grow border-tx bg-secondary text-secondary group-hover:text-default focus-within:bg-default focus-visible:border-focus"
         :label-text="$t('search.searchBarLabel', { openverse: 'Openverse' })"
         :connection-sides="['end']"
         field-id="search-bar"

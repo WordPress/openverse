@@ -19,4 +19,4 @@ export const favicons = [
     rel: "apple-touch-icon",
     href: "/openverse-logo-180.png",
   },
-]
+] as const

@@ -79,7 +79,7 @@ const isDisabled = (name: string) =>
       </template>
     </i18n-t>
     <form class="safe-browsing-form">
-      <fieldset class="mb-10 mt-8 flex flex-col gap-8">
+      <fieldset class="mt-8 mb-10 flex flex-col gap-8">
         <div v-for="toggle in toggles" :key="toggle.name">
           <VCheckbox
             :id="toggle.name"
@@ -95,7 +95,7 @@ const isDisabled = (name: string) =>
             }}</span>
           </VCheckbox>
           <p
-            class="label-regular mt-2"
+            class="mt-2 label-regular"
             :class="{ 'text-disabled': isDisabled(toggle.name) }"
           >
             {{ $t(`filters.safeBrowsing.toggles.${toggle.name}.desc`) }}

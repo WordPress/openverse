@@ -50,7 +50,7 @@ const handleTab = (idx: number) => {
 
 <template>
   <div
-    class="flex flex-col rounded-sm bg-default"
+    class="flex flex-col rounded-xs bg-default"
     :class="{ 'border border-default p-2 shadow-el-2': bordered }"
     data-testid="recent-searches"
   >
@@ -87,7 +87,7 @@ const handleTab = (idx: number) => {
         :id="`option-${idx}`"
         :key="entry"
         role="option"
-        class="group/entry label-regular flex h-10 flex-row items-center gap-2 rounded-sm border-1.5 pe-1 ps-2 hover:bg-secondary"
+        class="group/entry flex h-10 flex-row items-center gap-2 rounded-xs border-1.5 ps-2 pe-1 label-regular hover:bg-secondary"
         :class="idx === selectedIdx ? 'border-focus' : 'border-tx'"
         :aria-selected="idx === selectedIdx"
         @click="handleClick(idx)"
@@ -109,7 +109,7 @@ const handleTab = (idx: number) => {
     </ul>
     <span
       v-else
-      class="description-regular flex h-10 flex-row items-center ps-3"
+      class="flex h-10 flex-row items-center ps-3 description-regular"
       :class="{ 'pe-1': !bordered }"
     >
       {{ $t("recentSearches.none") }}

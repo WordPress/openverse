@@ -34,13 +34,11 @@ describe("AudioTrack", () => {
   let options = null
   let props = null
 
-  const activeMediaStore = useActiveMediaStore()
-  activeMediaStore.setActiveMediaItem({
-    type: "audio",
-    id: ACTIVE_AUDIO.id,
-  })
-
   beforeEach(() => {
+    useActiveMediaStore().setActiveMediaItem({
+      type: "audio",
+      id: ACTIVE_AUDIO.id,
+    })
     props = {
       audio: ACTIVE_AUDIO,
       layout: "full",
@@ -160,6 +158,7 @@ describe("AudioTrack", () => {
   })
 
   it("should not show message when audio ID doesn't match active ID", async () => {
+    const activeMediaStore = useActiveMediaStore()
     activeMediaStore.id = "different-id"
     activeMediaStore.setMessage({ message: "err_network" })
     options.global.stubs.VWaveform = false

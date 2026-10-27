@@ -1,5 +1,6 @@
 import { expect, describe, it, beforeEach, vi } from "vitest"
 import { AxiosError } from "axios"
+import { useRuntimeConfig } from "#app/nuxt"
 import { setActivePinia, createPinia } from "~~/test/unit/test-utils/pinia"
 import { image as imageObject } from "~~/test/unit/fixtures/image"
 
@@ -106,27 +107,35 @@ const apiResult = (
   eventPayload: {},
 })
 
-vi.mock("#app/nuxt", async () => {
-  const original = await import("#app/nuxt")
-  return {
-    ...original,
-    useRuntimeConfig: vi.fn(() => ({ public: { deploymentEnv: "staging" } })),
-    useNuxtApp: vi.fn(() => ({
-      $captureException: vi.fn(),
-      $sendCustomEvent: vi.fn(),
-      $processFetchingError: vi.fn(),
-    })),
-    tryUseNuxtApp: vi.fn(() => ({
-      $config: {
-        public: {
-          deploymentEnv: "staging",
-        },
-      },
-    })),
+const nuxtAppMocks: Record<string, unknown> = {
+  $captureException: vi.fn(),
+  $sendCustomEvent: vi.fn(),
+  $processFetchingError: vi.fn(),
+}
+
+vi.mock(
+  "#app/nuxt",
+  async (importOriginal: () => Promise<typeof import("#app/nuxt")>) => {
+    const original = await importOriginal()
+    // The Nuxt test app is built through this mock, so wrap the real app instead of replacing it.
+    return {
+      ...original,
+      useNuxtApp: () =>
+        new Proxy(original.useNuxtApp(), {
+          get: (app, key) =>
+            typeof key === "string" && key in nuxtAppMocks
+              ? nuxtAppMocks[key]
+              : Reflect.get(app, key),
+        }),
+    }
   }
-})
+)
 
 describe("media store", () => {
+  beforeEach(() => {
+    useRuntimeConfig().public.deploymentEnv = "staging"
+  })
+
   describe("state", () => {
     it("sets default state", () => {
       setActivePinia(createPinia())

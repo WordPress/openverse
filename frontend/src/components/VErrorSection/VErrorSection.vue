@@ -36,14 +36,16 @@ const isTimeout = computed(() =>
 </script>
 
 <template>
-  <div class="error-section mx-auto flex max-w-screen-xl flex-row items-center">
-    <div class="image-pane hidden max-w-[432px] flex-grow md:block">
+  <div
+    class="error-section mx-auto flex max-w-[theme(screens.xl)] flex-row items-center"
+  >
+    <div class="image-pane hidden max-w-[432px] grow md:block">
       <VErrorImage class="hidden md:block" :error-code="errorCode" />
     </div>
-    <div class="flex-grow p-4 md:p-20">
+    <div class="grow p-4 md:p-20">
       <VNoResults v-if="errorCode === NO_RESULT" :search-term="searchTerm" />
       <div v-else>
-        <h1 class="heading-4 md:heading-2 text-center !font-semibold">
+        <h1 class="text-center heading-4 font-semibold! md:heading-2">
           {{
             isTimeout ? $t("serverTimeout.heading") : $t("unknownError.heading")
           }}

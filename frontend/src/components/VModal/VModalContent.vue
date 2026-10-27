@@ -106,10 +106,10 @@ defineExpose({
   <Teleport to="#teleports">
     <div
       v-show="visible"
-      class="backdrop h-dyn-screen min-h-dyn-screen fixed inset-0 z-40 flex justify-center overflow-y-auto"
+      class="backdrop fixed inset-0 z-40 flex h-dyn-screen min-h-dyn-screen justify-center overflow-y-auto"
       :class="[
         { 'flex-col items-center': variant === 'centered' },
-        variant === 'mobile-input' ? 'bg-tx' : 'bg-modal-layer bg-opacity-75',
+        variant === 'mobile-input' ? 'bg-tx' : 'bg-modal-layer',
         contentClasses,
         variant,
       ]"
@@ -129,9 +129,9 @@ defineExpose({
             'w-full md:max-w-[768px] lg:w-[768px] xl:w-[1024px] xl:max-w-[1024px]':
               variant === 'default',
             'w-full': variant === 'full',
-            'mt-auto h-2/3 w-full rounded-se-lg rounded-ss-lg bg-overlay':
+            'mt-auto h-2/3 w-full rounded-ss-lg rounded-se-lg bg-overlay':
               variant === 'two-thirds',
-            'mt-auto w-full rounded-se-lg rounded-ss-lg bg-overlay':
+            'mt-auto w-full rounded-ss-lg rounded-se-lg bg-overlay':
               variant === 'fit-content',
             'm-6 max-w-90 rounded sm:m-0 sm:w-90': variant === 'centered',
           },
@@ -151,7 +151,7 @@ defineExpose({
                 -->
           <div
             v-if="variant === 'default'"
-            class="flex w-full shrink-0 justify-between bg-overlay py-4 pe-3 ps-4 md:justify-end md:bg-tx md:px-0 md:py-3"
+            class="flex w-full shrink-0 justify-between bg-overlay py-4 ps-4 pe-3 md:justify-end md:bg-tx md:px-0 md:py-3"
           >
             <VIconButton
               ref="closeButton"
@@ -180,17 +180,17 @@ defineExpose({
         </header>
 
         <div
-          class="modal-content flex w-full flex-grow flex-col text-default"
+          class="modal-content flex w-full grow flex-col text-default"
           :class="[
             {
-              'text-left align-bottom md:rounded-se-lg md:rounded-ss-lg':
+              'text-left align-bottom md:rounded-ss-lg md:rounded-se-lg':
                 variant === 'default',
               'w-auto rounded': variant === 'centered',
-              'mt-auto w-full rounded-se-lg rounded-ss-lg bg-overlay':
+              'mt-auto w-full rounded-ss-lg rounded-se-lg bg-overlay':
                 variant === 'fit-content',
               'flex w-full flex-col justify-between px-6 pb-10':
                 variant === 'full',
-              'overflow-y-hidden rounded-se-lg rounded-ss-lg':
+              'overflow-y-hidden rounded-ss-lg rounded-se-lg':
                 variant === 'two-thirds',
               'h-full': variant === 'mobile-input',
               'fallback-padding':
@@ -213,6 +213,7 @@ defineExpose({
 </template>
 
 <style scoped>
+@reference "~/styles/tailwind.css";
 .backdrop.mobile-input {
   height: calc(100dvh - var(--header-height, 80px));
   top: var(--header-height, 80px);

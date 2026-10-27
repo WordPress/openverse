@@ -24,6 +24,8 @@ const mocks = vi.hoisted(() => {
 })
 vi.mock("#app/nuxt", async (importOriginal) => {
   const original = await importOriginal()
+  // Nuxt test env builds the app through this mock, so default to the real config.
+  mocks.useRuntimeConfig.mockImplementation(original.useRuntimeConfig)
   return {
     ...original,
     useRuntimeConfig: mocks.useRuntimeConfig,
@@ -31,7 +33,6 @@ vi.mock("#app/nuxt", async (importOriginal) => {
 })
 
 const frozenNow = Date.now()
-vi.spyOn(global.Date, "now").mockReturnValue(frozenNow)
 
 const defaultConfig = {
   public: {
@@ -59,6 +60,7 @@ const getMockTokenResponse = (expires_in = twelveHoursInSeconds) => ({
 describe("token retrieval", () => {
   beforeEach(() => {
     vi.resetAllMocks()
+    vi.spyOn(global.Date, "now").mockReturnValue(frozenNow)
     process.tokenData = {
       accessToken: "",
       accessTokenExpiry: 0,

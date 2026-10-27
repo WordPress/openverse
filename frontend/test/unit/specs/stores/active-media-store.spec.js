@@ -8,11 +8,20 @@ import { useActiveMediaStore } from "~/stores/active-media"
 
 const mockCaptureException = vi.fn()
 
-vi.mock("#app/nuxt", () => ({
-  useNuxtApp: () => ({
-    $captureException: mockCaptureException,
-  }),
-}))
+vi.mock("#app/nuxt", async (importOriginal) => {
+  const original = await importOriginal()
+  // The Nuxt test app is built through this mock, so wrap the real app instead of replacing it.
+  return {
+    ...original,
+    useNuxtApp: () =>
+      new Proxy(original.useNuxtApp(), {
+        get: (app, key) =>
+          key === "$captureException"
+            ? mockCaptureException
+            : Reflect.get(app, key),
+      }),
+  }
+})
 
 vi.mock("~/utils/console", () => ({
   warn: vi.fn(),

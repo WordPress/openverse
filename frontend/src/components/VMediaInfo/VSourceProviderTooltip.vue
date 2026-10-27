@@ -30,7 +30,7 @@ const description = computed(() => {
     <VTooltip placement="top" :described-by="describedBy" class="ms-1">
       <template #default>
         <p
-          class="caption-regular rounded-sm bg-tertiary px-2 py-1 text-over-dark"
+          class="rounded-xs bg-tertiary px-2 py-1 caption-regular text-over-dark"
         >
           {{ description }}
         </p>

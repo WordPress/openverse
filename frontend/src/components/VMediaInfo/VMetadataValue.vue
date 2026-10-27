@@ -14,11 +14,11 @@ defineEmits<{
 </script>
 
 <template>
-  <dd class="label-bold flex justify-start overflow-hidden break-words p-1">
+  <dd class="flex justify-start overflow-hidden p-1 label-bold wrap-break-word">
     <VLink
       v-if="datum.url"
       :href="datum.url"
-      class="flex text-link focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring focus-visible:ring-focus focus-visible:ring-offset-1"
+      class="flex text-link focus-visible:rounded-xs focus-visible:ring focus-visible:ring-focus focus-visible:ring-offset-1 focus-visible:outline-hidden"
       :send-external-link-click-event="false"
       @click="$emit('click', datum.source)"
       ><span

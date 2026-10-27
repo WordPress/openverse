@@ -77,7 +77,7 @@ watch(route, () => {
 <template>
   <header
     ref="nodeRef"
-    class="main-header z-30 flex h-20 w-full items-stretch justify-between gap-x-2 border-b border-tx px-2 py-4 md:py-4 lg:pe-10 lg:ps-6"
+    class="main-header z-30 flex h-20 w-full items-stretch justify-between gap-x-2 border-b border-tx px-2 py-4 md:py-4 lg:ps-6 lg:pe-10"
   >
     <VHomeLink />
     <nav class="hidden lg:flex">
@@ -113,7 +113,7 @@ watch(route, () => {
           <VPageLinks
             mode="dark"
             variant="itemgroup"
-            class="label-regular w-50 items-start"
+            class="w-50 items-start label-regular"
             @close="closePageMenu"
           />
         </VPopoverContent>

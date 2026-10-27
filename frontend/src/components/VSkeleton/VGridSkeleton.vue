@@ -73,6 +73,7 @@ const isSidebarVisible = inject(IsSidebarVisibleKey, ref(false))
 </template>
 
 <style scoped>
+@reference "~/styles/tailwind.css";
 .square {
   @apply aspect-square;
 }

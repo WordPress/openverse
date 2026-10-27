@@ -134,7 +134,7 @@ watch(error, (err) => {
 </script>
 
 <template>
-  <main :id="skipToContentTargetId" tabindex="-1" class="relative flex-grow">
+  <main :id="skipToContentTargetId" tabindex="-1" class="relative grow">
     <VErrorSection
       v-if="fetchingError"
       :fetching-error="fetchingError"
@@ -157,7 +157,7 @@ watch(error, (err) => {
           <VMediaDetails :media="audio">
             <template #thumbnail>
               <div
-                class="h-[75px] w-[75px] flex-none overflow-hidden rounded-sm lg:h-30 lg:w-30"
+                class="h-[75px] w-[75px] flex-none overflow-hidden rounded-xs lg:h-30 lg:w-30"
               >
                 <VAudioThumbnail :audio="audio" />
               </div>

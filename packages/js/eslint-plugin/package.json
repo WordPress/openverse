@@ -15,9 +15,9 @@
     "@intlify/eslint-plugin-vue-i18n": "^3.2.0",
     "@types/eslint-config-prettier": "^6.11.3",
     "@types/eslint__js": "^8.42.3",
-    "@typescript-eslint/eslint-plugin": "^8.19.0",
-    "@typescript-eslint/parser": "^8.19.0",
-    "@typescript-eslint/utils": "^8.19.0",
+    "@typescript-eslint/eslint-plugin": "^8.72.1",
+    "@typescript-eslint/parser": "^8.72.1",
+    "@typescript-eslint/utils": "^8.72.1",
     "@vitest/eslint-plugin": "^1.1.7",
     "eslint": "^9.13.0",
     "eslint-config-prettier": "^10.0.0",
@@ -32,14 +32,14 @@
     "eslint-plugin-vuejs-accessibility": "^2.4.1",
     "jsonc-eslint-parser": "^2.4.0",
     "typescript": "5.7.3",
-    "typescript-eslint": "^8.19.0",
+    "typescript-eslint": "^8.72.1",
     "vue-eslint-parser": "^9.4.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.1.0",
     "@swc/cli": "^0.7.0",
     "@swc/core": "^1.7.35",
-    "@typescript-eslint/rule-tester": "^8.19.0",
+    "@typescript-eslint/rule-tester": "^8.72.1",
     "babel-plugin-add-module-exports": "^1.0.4",
     "vitest": "^4.0.0"
   }

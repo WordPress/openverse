@@ -65,7 +65,7 @@ const collectionLabel = computed(() => {
     :aria-label="collectionLabel"
   >
     <template #header>
-      <h2 id="related-heading" class="heading-6 md:heading-5 mb-6">
+      <h2 id="related-heading" class="mb-6 heading-6 md:heading-5">
         {{ collectionLabel }}
       </h2>
     </template>

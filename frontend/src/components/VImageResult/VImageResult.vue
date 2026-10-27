@@ -135,18 +135,18 @@ const { isHidden: shouldBlur } = useSensitiveMedia(props.image)
     :class="
       isSquare
         ? 'square'
-        : 'intrinsic sm:w-[--container-width] sm:flex-grow-[--container-grow]'
+        : 'intrinsic sm:w-(--container-width) sm:grow-(--container-grow)'
     "
   >
     <VLink
       itemprop="contentUrl"
       :title="contextSensitiveTitle"
       :href="imageLink"
-      class="image-link group relative block w-full overflow-hidden rounded-sm text-gray-2 hover:no-underline"
+      class="image-link group relative block w-full overflow-hidden rounded-xs text-gray-2 hover:no-underline"
       :class="
         isSquare
           ? 'focus-visible:focus-bold-filled'
-          : 'focus-visible:-m-2 focus-visible:w-[calc(100%+theme(spacing.4))] focus-visible:p-2 focus-visible:focus-slim-tx sm:focus-visible:m-0 sm:focus-visible:w-full sm:focus-visible:p-0 focus-visible:sm:focus-bold-filled'
+          : 'focus-visible:-m-2 focus-visible:w-[calc(100%+theme(spacing.4))] focus-visible:focus-slim-tx focus-visible:p-2 focus-visible:sm:focus-bold-filled sm:focus-visible:m-0 sm:focus-visible:w-full sm:focus-visible:p-0'
       "
       :aria-label="contextSensitiveLabel"
       @mousedown="sendSelectSearchResultEvent"
@@ -155,14 +155,14 @@ const { isHidden: shouldBlur } = useSensitiveMedia(props.image)
         itemprop="image"
         itemscope
         itemtype="https://schema.org/ImageObject"
-        class="grid w-full rounded-sm"
+        class="grid w-full rounded-xs"
         :class="{ 'aspect-square': isSquare }"
       >
         <img
           loading="lazy"
-          class="image col-span-full row-span-full block w-full overflow-hidden rounded-sm object-cover"
+          class="image col-span-full row-span-full block w-full overflow-hidden rounded-xs object-cover"
           :class="[
-            isSquare ? 'h-full' : 'margin-auto sm:aspect-[--img-aspect-ratio]',
+            isSquare ? 'h-full' : 'margin-auto sm:aspect-(--img-aspect-ratio)',
           ]"
           :alt="
             shouldBlur ? `${$t('sensitiveContent.title.image')}` : image.title
@@ -183,7 +183,7 @@ const { isHidden: shouldBlur } = useSensitiveMedia(props.image)
           <VIcon name="eye-closed" />
         </span>
         <figcaption
-          class="z-10 col-span-full mt-2 self-end justify-self-start rounded-sm text-default group-hover:visible group-focus-visible:visible sm:mb-2"
+          class="z-10 col-span-full mt-2 self-end justify-self-start rounded-xs text-default group-hover:visible group-focus-visible:visible sm:mb-2"
           :class="[
             isSquare
               ? 'invisible row-span-full p-2'

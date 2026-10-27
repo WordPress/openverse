@@ -17,12 +17,13 @@ export default defineNuxtPlugin(() => {
 
   const sendCustomEvent: SendCustomEvent = (name, payload) => {
     useTrackEvent(name, {
+      // The tracker types props as strings, but Plausible accepts any scalar value.
       props: {
         breakpoint: uiStore.breakpoint,
         width: window.innerWidth,
         height: window.innerHeight,
         ...payload,
-      },
+      } as unknown as Record<string, string>,
     })
   }
 

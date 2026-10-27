@@ -289,7 +289,7 @@ const handleTab = (
     <!-- Form action is a fallback for when JavaScript is disabled. -->
     <form
       action="/search"
-      class="search-bar group flex h-12 w-full flex-row items-center overflow-hidden rounded-sm"
+      class="search-bar group flex h-12 w-full flex-row items-center overflow-hidden rounded-xs"
       :class="
         isSearchBarActive || isInputFocused
           ? 'bg-default ring ring-focus'
@@ -301,7 +301,7 @@ const handleTab = (
         <VLogoButton
           v-show="!isRecentVisible"
           :is-fetching="isFetching"
-          class="focus-visible:me-1.5px focus-visible:ms-1.5px focus-visible:!h-[45px] focus-visible:max-w-[45px]"
+          class="focus-visible:ms-1.5px focus-visible:me-1.5px focus-visible:h-[45px]! focus-visible:max-w-[45px]"
         />
         <VSearchBarButton
           v-show="isRecentVisible"
@@ -320,7 +320,7 @@ const handleTab = (
         name="q"
         :placeholder="$t('hero.search.placeholder')"
         type="search"
-        class="search-field ms-1 h-full w-full flex-grow appearance-none rounded-none border-tx bg-tx text-2xl text-secondary placeholder-default hover:text-default focus-visible:outline-none"
+        class="search-field ms-1 h-full w-full grow appearance-none rounded-none border-tx bg-tx text-2xl text-secondary placeholder-default hover:text-default focus-visible:outline-hidden"
         :value="localSearchTerm"
         :aria-label="
           $t('search.searchBarLabel', {
@@ -352,7 +352,7 @@ const handleTab = (
       />
       <span
         v-show="!isSearchBarActive && searchStatus"
-        class="info mx-4 hidden whitespace-nowrap text-xs group-hover:text-default group-focus:text-default md:flex"
+        class="info mx-4 hidden text-xs whitespace-nowrap group-hover:text-default group-focus:text-default md:flex"
       >
         {{ searchStatus }}
       </span>
@@ -391,7 +391,7 @@ const handleTab = (
       <ClientOnly>
         <VRecentSearches
           ref="recentSearchesRef"
-          class="w-[100dvw] px-3"
+          class="w-dvw px-3"
           :selected-idx="selectedIdx"
           :entries="entries"
           :bordered="false"

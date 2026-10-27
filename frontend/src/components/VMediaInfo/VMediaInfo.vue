@@ -8,7 +8,7 @@ defineProps<{ media: Media }>()
 
 <template>
   <div class="w-full lg:w-auto">
-    <h1 class="heading-6 mb-3 sm:mb-1">{{ media.title }}</h1>
+    <h1 class="mb-3 heading-6 sm:mb-1">{{ media.title }}</h1>
     <VByLine :media="media" />
   </div>
 </template>

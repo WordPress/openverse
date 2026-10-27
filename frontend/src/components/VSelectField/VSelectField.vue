@@ -77,7 +77,7 @@ const splitAttrs = computed(() => {
 
 <template>
   <div
-    class="group/select relative m-0.5px box-content block w-fit rounded-sm border text-sm focus-within:m-0 focus-within:border-1.5 focus-within:border-focus hover:border-hover focus-within:hover:border-focus"
+    class="group/select relative m-0.5px box-content block w-fit rounded-xs border text-sm focus-within:m-0 focus-within:border-1.5 focus-within:border-focus hover:border-hover focus-within:hover:border-focus"
     :class="[
       splitAttrs.classAttrs,
       showNewHighlight ? 'border-tx' : 'border-default',
@@ -85,19 +85,19 @@ const splitAttrs = computed(() => {
   >
     <div
       v-if="showNewHighlight"
-      class="new-highlight pointer-events-none absolute -inset-1.5px animate-new-highlight rounded-sm border-1.5 border-tx group-focus-within/select:hidden group-hover/select:hidden"
+      class="new-highlight pointer-events-none absolute -inset-1.5px animate-new-highlight rounded-xs border-1.5 border-tx group-focus-within/select:hidden group-hover/select:hidden"
       aria-hidden="true"
     />
-    <div class="pointer-events-none absolute inset-y-0 start-2 my-auto h-fit">
+    <div class="pointer-events-none absolute inset-y-0 inset-s-2 my-auto h-fit">
       <slot name="start" />
     </div>
-    <div class="pointer-events-none absolute inset-y-0 end-2 my-auto h-fit">
+    <div class="pointer-events-none absolute inset-y-0 inset-e-2 my-auto h-fit">
       <VIcon name="caret-down" />
     </div>
     <select
       :id="fieldId"
       v-model="selectValue"
-      class="outline-style-none flex h-[calc(theme(spacing.10)_-_2_*_theme(borderWidth.DEFAULT))] appearance-none truncate bg-tx pe-10"
+      class="flex h-[calc(theme(spacing.10)_-_2_*_theme(borderWidth.DEFAULT))] appearance-none truncate bg-tx pe-10 outline-style-none"
       :class="[
         showSelected ? 'w-full' : 'w-0 max-w-0',
         hasStartContent ? 'ps-10' : 'ps-2',

@@ -32,7 +32,8 @@ withDefaults(defineProps<CollectionComponentProps<"image">>(), {
 </template>
 
 <style scoped>
-@screen md {
+@reference "~/styles/tailwind.css";
+@media (min-width: theme("screens.md")) {
   .image-grid:after {
     /**
    * This keeps the last item in the results from expanding to fill

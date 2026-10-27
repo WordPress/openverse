@@ -172,13 +172,11 @@ const providerViewUrl = (provider: MediaProvider) => {
 </template>
 
 <style scoped>
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@reference "~/styles/tailwind.css";
 
 @layer components {
   .source-table {
-    @apply hidden rounded-sm border-0 border-default md:table;
+    @apply hidden rounded-xs border-0 border-default md:table;
   }
 
   .source-table th,
@@ -200,7 +198,7 @@ const providerViewUrl = (provider: MediaProvider) => {
   }
 
   .source-table td {
-    @apply break-normal border-y-0;
+    @apply border-y-0 break-normal;
   }
 
   .source-table tr {
@@ -208,15 +206,15 @@ const providerViewUrl = (provider: MediaProvider) => {
   }
 
   .source-table th {
-    @apply first:rounded-ss-sm last:rounded-se-sm;
+    @apply first:rounded-ss-xs last:rounded-se-xs;
   }
 
   .source-table tr:last-child td {
-    @apply border-b first:rounded-es-sm last:rounded-ee-sm;
+    @apply border-b first:rounded-es-xs last:rounded-ee-xs;
   }
 
   .mobile-source-table article {
-    @apply grid border-l border-r border-default p-4 sm:grid-cols-4;
+    @apply grid border-r border-l border-default p-4 sm:grid-cols-4;
   }
 
   .mobile-source-table article:first-child {

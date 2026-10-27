@@ -61,7 +61,7 @@ const contentSettingsTemplate = (args) => ({
     return () =>
       h(
         "div",
-        { class: "wrapper rounded-sm inline-flex justify-end bg-secondary" },
+        { class: "wrapper rounded-xs inline-flex justify-end bg-secondary" },
         [
           h(VContentSettingsButton, {
             label: "VContentSettingsButton",
@@ -81,7 +81,7 @@ const activeButtonsTemplate = () => ({
         "div",
         {
           class:
-            "wrapper rounded-sm bg-default flex justify-between ring ring-focus",
+            "wrapper rounded-xs bg-default flex justify-between ring ring-focus",
         },
         [
           h(VSearchBarButton, {
