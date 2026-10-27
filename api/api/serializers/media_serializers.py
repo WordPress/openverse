@@ -42,6 +42,7 @@ from api.utils.url import add_protocol
 #######################
 
 
+
 class PaginatedRequestSerializer(Serializer):
     """This serializer passes pagination parameters from the query string."""
 
