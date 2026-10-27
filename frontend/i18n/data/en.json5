@@ -24,6 +24,13 @@ _{link}_ part of "The translation for English locale is incomplete. Help us get 
   */
   "notification.analytics.link": "the privacy page",
   "notification.analytics.close": "Close the analytics notice banner.",
+  "notification.unsupportedLocale.text": "{'Openverse'} isn’t translated into the language you requested yet, so we’ve shown you the English version. Help us translate {'Openverse'} by {link}.",
+  /**
+  Interpolated into notification.unsupportedLocale.text:
+  _{link}_ part of "Help us translate Openverse by _{link}_."
+  */
+  "notification.unsupportedLocale.link": "contributing a translation",
+  "notification.unsupportedLocale.close": "Close the unsupported language notice banner.",
   "notification.new": "New",
   "notification.more": "See more",
   "header.homeLink": "{'Openverse'} Home",
