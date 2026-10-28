@@ -118,7 +118,7 @@ class OembedRequestSerializer(Serializer):
             uuid = UUID(identifier)
         except ValueError:
             raise serializers.ValidationError(
-                {"Could not parse identifier from URL.": data["url"]}
+                {"url": ["Could not parse identifier from URL."]}
             )
 
         data["identifier"] = uuid
