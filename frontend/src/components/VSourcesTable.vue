@@ -174,76 +174,75 @@ const providerViewUrl = (provider: MediaProvider) => {
 <style scoped>
 @reference "~/styles/tailwind.css";
 
-@layer components {
-  .source-table {
-    @apply hidden rounded-xs border-0 border-default md:table;
-  }
+/* Unlayered: a scoped `@layer components` can be declared before `base`, letting preflight reset padding and borders. */
+.source-table {
+  @apply hidden rounded-xs border-0 border-default md:table;
+}
 
-  .source-table th,
-  .source-table td {
-    @apply border-default;
-  }
+.source-table th,
+.source-table td {
+  @apply border-default;
+}
 
-  .source-table a {
-    @apply text-link hover:underline;
-  }
+.source-table a {
+  @apply text-link hover:underline;
+}
 
-  .source-table th {
-    @apply cursor-pointer border-t bg-secondary;
-  }
+.source-table th {
+  @apply cursor-pointer border-t bg-secondary;
+}
 
-  .source-table th,
-  .source-table td {
-    @apply border-r p-4 first:border-l;
-  }
+.source-table th,
+.source-table td {
+  @apply border-r p-4 first:border-l;
+}
 
-  .source-table td {
-    @apply border-y-0 break-normal;
-  }
+.source-table td {
+  @apply border-y-0 break-normal;
+}
 
-  .source-table tr {
-    @apply even:bg-surface;
-  }
+.source-table tr {
+  @apply even:bg-surface;
+}
 
-  .source-table th {
-    @apply first:rounded-ss-xs last:rounded-se-xs;
-  }
+.source-table th {
+  @apply first:rounded-ss-xs last:rounded-se-xs;
+}
 
-  .source-table tr:last-child td {
-    @apply border-b first:rounded-es-xs last:rounded-ee-xs;
-  }
+.source-table tr:last-child td {
+  @apply border-b first:rounded-es-xs last:rounded-ee-xs;
+}
 
-  .mobile-source-table article {
-    @apply grid border-r border-l border-default p-4 sm:grid-cols-4;
-  }
+.mobile-source-table article {
+  @apply grid border-r border-l border-default p-4 sm:grid-cols-4;
+}
 
-  .mobile-source-table article:first-child {
-    @apply border-t;
-  }
+.mobile-source-table article:first-child {
+  @apply border-t;
+}
 
-  .mobile-source-table article:last-child {
-    @apply border-b;
-  }
+.mobile-source-table article:last-child {
+  @apply border-b;
+}
 
-  .mobile-source-table article:nth-child(odd) {
-    @apply bg-secondary;
-  }
+.mobile-source-table article:nth-child(odd) {
+  @apply bg-secondary;
+}
 
-  .mobile-source-table article p {
-    @apply col-span-1 pt-2 font-bold;
-  }
+.mobile-source-table article p {
+  @apply col-span-1 pt-2 font-bold;
+}
 
-  .mobile-source-table article p:first-child {
-    @apply pt-0;
-  }
+.mobile-source-table article p:first-child {
+  @apply pt-0;
+}
 
-  .mobile-source-table article a,
-  .mobile-source-table article span {
-    @apply col-span-3;
-  }
+.mobile-source-table article a,
+.mobile-source-table article span {
+  @apply col-span-3;
+}
 
-  .mobile-source-table article a {
-    @apply font-bold text-link hover:underline;
-  }
+.mobile-source-table article a {
+  @apply font-bold text-link hover:underline;
 }
 </style>
