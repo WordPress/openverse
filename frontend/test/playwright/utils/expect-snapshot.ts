@@ -39,8 +39,14 @@ const themeOption = (colorMode: EffectiveColorMode, dir: LanguageDirection) =>
 
 export const turnOnDarkMode = async (page: Page, dir: LanguageDirection) => {
   const themeSwitcher = getThemeSwitcher(page, dir)
-  await themeSwitcher.selectOption({ label: themeOption("dark", dir) })
-  await expect(themeSwitcher).toHaveValue("dark")
+  // Retry: a selection made before hydration finishes is lost or reset to "system".
+  await expect(async () => {
+    await themeSwitcher.selectOption({ label: themeOption("dark", dir) })
+    await expect(themeSwitcher).toHaveValue("dark", { timeout: 1000 })
+    await expect(page.locator("body")).toHaveClass(/\bdark-mode\b/, {
+      timeout: 1000,
+    })
+  }).toPass({ timeout: 10_000 })
 }
 
 type SnapshotNameOptions = {
