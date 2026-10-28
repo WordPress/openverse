@@ -6,13 +6,28 @@
   `TextField`s, they are not rendered as links in the Django Admin UI.
   This script identifies `<div>`s containing links and converts them to
   `<a>` tags.
+
+  The field text is rebuilt from text and anchor nodes rather than from an
+  HTML string, so the escaping Django applied when rendering the page is
+  preserved.
 -->
 <script>
   document.addEventListener("DOMContentLoaded", function() {
+    const urlPattern = /(https?:\/\/\S+)/;
     document.querySelectorAll("div.readonly").forEach(div => {
-      if (div.textContent.match(/https?:\/\/\S+/)) {
-        div.innerHTML = div.textContent.replace(/(https?:\/\/\S+)/g, '<a href="$1">$1</a>');
+      const parts = div.textContent.split(urlPattern);
+      if (parts.length === 1) {
+        return;
       }
+      div.replaceChildren(...parts.map((part, index) => {
+        if (index % 2 === 0) {
+          return document.createTextNode(part);
+        }
+        const link = document.createElement("a");
+        link.href = part;
+        link.textContent = part;
+        return link;
+      }));
     });
   });
 </script>

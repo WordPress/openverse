@@ -314,6 +314,8 @@ jobs:
           setup_images: upstream_db catalog
 
       - name: Check generated documentation
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           just catalog/generate-docs dag true
           just catalog/generate-docs media-props true
@@ -571,6 +573,7 @@ jobs:
         run: just ${{ matrix.recipe }}
         env:
           DC_USER: root
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Upload schema
         if: matrix.name == 'test_doc'
@@ -807,6 +810,8 @@ jobs:
 
       - name: Run check recipe
         run: just ${{ matrix.recipe }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
 
   # This job runs when `nuxt-checks` doesn't and always passes, thus allowing
   # PRs to meet the required checks criteria and be merged.
