@@ -73,6 +73,34 @@ test("shows the 404 error page when no id", async ({ page }) => {
   await expect(errorPageLocator(page)).toBeVisible()
 })
 
+test("shows a 404 without raw error details for a missing image on SSR", async ({
+  page,
+}) => {
+  const response = await page.goto("image/da5cb478-c093-4d62-b721-cda18797e3fc")
+
+  expect(response?.status()).toBe(404)
+  await expect(errorPageLocator(page)).toBeVisible()
+  await expect(page.locator("main p.sr-only")).toHaveCount(0)
+  await expect(page.locator("main")).not.toContainText(/"statusCode"|"stack"/)
+})
+
+test("shows a 404 without raw error details for a missing image on CSR", async ({
+  page,
+}) => {
+  const message = "No image with this diagnostic ID was found."
+  await page.route(/v1\/images\//, (route) =>
+    route.fulfill({ status: 404, json: { detail: message } })
+  )
+
+  await page.goto("/")
+  await page.locator("a.home-cell").first().click()
+
+  await expect(errorPageLocator(page)).toBeVisible()
+  await expect(page.locator("main p.sr-only")).toHaveCount(0)
+  await expect(page.locator("main")).not.toContainText(message)
+  await expect(page.locator("main")).not.toContainText(/"statusCode"|"stack"/)
+})
+
 test("sends GET_MEDIA event on CTA button click", async ({ context, page }) => {
   const analyticsEvents = collectAnalyticsEvents(context)
 
