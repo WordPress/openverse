@@ -103,6 +103,8 @@ test("sends AUDIO_INTERACTION event on seek", async ({ page, context }) => {
 test("shows the 404 error page when no valid id", async ({ page }) => {
   await page.goto("audio/foo")
   await expect(errorPageHeading(page)).toBeVisible()
+  await expect(page.locator("main p.sr-only")).toHaveCount(0)
+  await expect(page.locator("main")).not.toContainText(/"statusCode"|"stack"/)
 })
 
 test("shows the 404 error page when no id", async ({ page }) => {
