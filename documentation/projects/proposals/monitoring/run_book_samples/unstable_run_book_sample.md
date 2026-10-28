@@ -73,7 +73,7 @@ activity like indexing during a data refresh.
 
 - 2023-06-08 at 03:00 UTC. There was an increase in response time but it was
   brief and for a very short period of time and corresponded with peak traffic
-  hourse. We think we can change the anomaly configuration to 2.5 standard
+  hours. We think we can change the anomaly configuration to 2.5 standard
   deviations above the curve but we need further examples to corroborate this.
 - 2023-06-12 at 16:00 UTC. This happened during low traffic when response time
   is also much lower than peak traffic. We think we might be able to add
