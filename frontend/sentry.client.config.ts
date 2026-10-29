@@ -15,7 +15,7 @@ Sentry.init({
     /\/_nuxt\/builds\/(meta|latest)\b/,
   ],
 
-  tracesSampleRate: 1.0,
+  tracesSampleRate: useRuntimeConfig().public.sentry.tracesSampleRate,
   dataCollection: sentryDataCollection,
 })
 Sentry.setContext("render context", { platform: "client" })

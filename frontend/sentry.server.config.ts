@@ -12,7 +12,9 @@ Sentry.init({
   environment: process.env.NUXT_PUBLIC_SENTRY_ENVIRONMENT,
   release: process.env.SEMANTIC_VERSION,
 
-  tracesSampleRate: 1.0,
+  tracesSampleRate: Number(
+    process.env.NUXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE ?? 0.05
+  ),
   dataCollection: sentryDataCollection,
 })
 Sentry.setContext("render context", { platform: "server" })
