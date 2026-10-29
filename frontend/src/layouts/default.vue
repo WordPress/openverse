@@ -11,11 +11,11 @@ defineOptions({
 
 <template>
   <div
-    class="app h-dyn-screen grid grid-cols-1 grid-rows-[auto,1fr] flex-col bg-complementary dark:bg-default"
+    class="app grid h-dyn-screen grid-cols-1 grid-rows-[auto_1fr] flex-col bg-complementary dark:bg-default"
   >
     <VHeader class="header-el" kind="internal" color="complementary" />
-    <div class="main-content flex flex-grow flex-col overflow-y-auto">
-      <slot class="flex-grow" />
+    <div class="main-content flex grow flex-col overflow-y-auto">
+      <slot class="grow" />
       <VFooter mode="internal" class="bg-complementary dark:bg-default" />
     </div>
   </div>

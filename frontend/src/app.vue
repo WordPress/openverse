@@ -11,7 +11,7 @@ import { meta as commonMeta } from "#shared/constants/meta"
 import { favicons } from "#shared/constants/favicons"
 import { useUiStore } from "~/stores/ui"
 import { useFeatureFlagStore } from "~/stores/feature-flag"
-import { useLayout } from "~/composables/use-layout"
+import { useUiLayout } from "~/composables/use-layout"
 import { useDarkMode } from "~/composables/use-dark-mode"
 
 import VSkipToContentButton from "~/components/VSkipToContentButton.vue"
@@ -30,13 +30,16 @@ const headerHeight = computed(() => {
   return `--header-height: ${uiStore.headerHeight}px`
 })
 
-const head = useLocaleHead({ dir: true, key: "id", seo: true })
-const htmlI18nProps = computed(() => ({
-  lang: head.value?.htmlAttrs?.lang ?? "en",
-  dir: head.value?.htmlAttrs?.dir ?? "ltr",
-}))
-const link = computed(() => {
-  return [
+const head = useLocaleHead({ dir: true, seo: true })
+useHead(() => ({
+  htmlAttrs: {
+    lang: head.value?.htmlAttrs?.lang ?? "en",
+    dir: head.value?.htmlAttrs?.dir ?? "ltr",
+  },
+  bodyAttrs: { class: darkMode.cssClass, style: headerHeight },
+  title: "Openly Licensed Images, Audio and More | Openverse",
+  meta: [...commonMeta, ...(head.value.meta ?? [])],
+  link: [
     ...favicons,
     ...(head.value.link ?? []),
     {
@@ -54,20 +57,8 @@ const link = computed(() => {
       href: config.public.apiUrl,
       crossorigin: "",
     },
-  ]
-})
-
-const meta = computed(() => {
-  return [...commonMeta, ...(head.value.meta ?? [])]
-})
-
-useHead({
-  htmlAttrs: htmlI18nProps,
-  bodyAttrs: { class: darkMode.cssClass, style: headerHeight },
-  title: "Openly Licensed Images, Audio and More | Openverse",
-  meta,
-  link,
-})
+  ],
+}))
 
 /**
  * Update the breakpoint value in the cookie on mounted.
@@ -75,7 +66,7 @@ useHead({
  * and then a page is opened on SSR on a `lg` screen.
  */
 onMounted(() => {
-  const { updateBreakpoint } = useLayout()
+  const { updateBreakpoint } = useUiLayout()
   updateBreakpoint()
   featureFlagStore.syncAnalyticsWithLocalStorage()
 })

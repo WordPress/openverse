@@ -84,7 +84,7 @@ const clearFilters = () => searchStore.clearFilters()
         id="clear-filter-button"
         variant="transparent-gray"
         size="small"
-        class="label-bold absolute end-0 !text-link"
+        class="absolute inset-e-0 label-bold text-link!"
         @click="clearFilters"
       >
         {{ $t("filterList.clear") }}

@@ -73,7 +73,7 @@ const { doneHydrating } = useHydrating()
     <VSearchBar
       ref="searchBarRef"
       v-model.trim="searchTerm"
-      class="me-4 flex-grow"
+      class="me-4 grow"
       @submit="handleSearch"
       @recent-hidden="handleSearch"
     >
@@ -87,7 +87,7 @@ const { doneHydrating } = useHydrating()
       />
       <span
         v-show="Boolean(searchStatus)"
-        class="info mx-4 hidden whitespace-nowrap text-xs text-secondary group-focus-within:hidden group-hover:text-default group-focus:text-default lg:block"
+        class="info mx-4 hidden text-xs whitespace-nowrap text-secondary group-focus-within:hidden group-hover:text-default group-focus:text-default lg:block"
       >
         {{ searchStatus }}
       </span>

@@ -36,7 +36,7 @@ const handleClick = () => {
     has-icon-start
     variant="transparent-gray"
     size="small"
-    class="label-bold inline-flex"
+    class="inline-flex! label-bold"
     @mousedown="handleClick"
   >
     <VIcon name="chevron-back" :rtl-flip="true" />

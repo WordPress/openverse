@@ -5,6 +5,9 @@ ARG PLAYWRIGHT_VERSION
 
 FROM mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-jammy
 
+# The image's bundled Node is too old for Nuxt 4; upgrade without changing browsers so snapshots stay stable.
+RUN npm install -g n && n 22.23.4 && hash -r
+
 WORKDIR /frontend
 
 COPY package.json .

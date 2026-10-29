@@ -33,7 +33,7 @@ const handleClick = (sourceName: string) => {
     class="p-4 pt-0 sm:max-w-[25rem] sm:p-6 sm:pt-0"
     data-testid="source-list-popover"
   >
-    <p class="label-regular px-3 pb-4 text-start !leading-normal">
+    <p class="px-3 pb-4 text-start label-regular leading-normal!">
       {{ $t("externalSources.caption", { openverse: "Openverse" }) }}
     </p>
     <VButton
@@ -42,7 +42,7 @@ const handleClick = (sourceName: string) => {
       as="VLink"
       variant="transparent-gray"
       size="medium"
-      class="label-regular !w-full justify-between"
+      class="w-full! justify-between! label-regular"
       show-external-icon
       has-icon-end
       :external-icon-size="6"

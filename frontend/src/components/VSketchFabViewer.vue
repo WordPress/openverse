@@ -56,7 +56,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="block aspect-[2/1]">
+  <div class="block aspect-2/1">
     <iframe
       id="sketchfab-iframe"
       ref="node"

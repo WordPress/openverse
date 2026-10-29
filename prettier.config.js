@@ -15,7 +15,7 @@ module.exports = {
       files: ["frontend/**/*"],
       options: {
         plugins: ["prettier-plugin-tailwindcss"],
-        tailwindConfig: "frontend/tailwind.config.ts",
+        tailwindStylesheet: "frontend/src/styles/tailwind.css",
         vueIndentScriptAndStyle: false,
       },
     },

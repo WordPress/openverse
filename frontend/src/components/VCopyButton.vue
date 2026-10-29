@@ -59,7 +59,7 @@ const { doneHydrating } = useHydrating()
     type="button"
     variant="filled-dark"
     size="small"
-    class="label-bold flex-shrink-0"
+    class="shrink-0 label-bold"
     :disabled="!doneHydrating"
     :data-clipboard-target="el"
   >

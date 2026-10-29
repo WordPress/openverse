@@ -26,12 +26,12 @@ const { isHidden: shouldBlur } = useSensitiveMedia(props.audio)
 
 <template>
   <div
-    class="box-track group relative h-0 w-full rounded-sm bg-complementary pt-full text-default"
+    class="box-track group relative h-0 w-full rounded-xs bg-complementary pt-full text-default"
   >
     <div class="absolute inset-0 flex flex-col">
-      <div class="info flex flex-grow flex-col justify-between px-4 pt-4">
+      <div class="info flex grow flex-col justify-between px-4 pt-4">
         <h2
-          class="label-bold line-clamp-3"
+          class="line-clamp-3 label-bold"
           :class="{ 'blur-text': shouldBlur }"
         >
           {{ shouldBlur ? $t("sensitiveContent.title.audio") : audio.title }}
@@ -42,7 +42,7 @@ const { isHidden: shouldBlur } = useSensitiveMedia(props.audio)
             hide-name
             :license="audio.license"
           />
-          <div v-if="audio.category && !isSmall" class="label-regular mt-2">
+          <div v-if="audio.category && !isSmall" class="mt-2 label-regular">
             {{ categoryLabel }}
           </div>
         </div>
@@ -57,7 +57,7 @@ const { isHidden: shouldBlur } = useSensitiveMedia(props.audio)
             "
           />
         </div>
-        <p v-if="audio.category && isSmall" class="label-regular self-center">
+        <p v-if="audio.category && isSmall" class="self-center label-regular">
           {{ categoryLabel }}
         </p>
         <slot
@@ -72,8 +72,9 @@ const { isHidden: shouldBlur } = useSensitiveMedia(props.audio)
 </template>
 
 <style scoped>
+@reference "~/styles/tailwind.css";
 :deep(.waveform) {
-  @apply h-10 flex-grow;
+  @apply h-10 grow;
   --waveform-background-color: theme("backgroundColor.complementary");
 }
 </style>

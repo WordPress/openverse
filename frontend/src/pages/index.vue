@@ -33,7 +33,7 @@ const uiStore = useUiStore()
 const { sendCustomEvent } = useAnalytics()
 
 useHead({
-  meta: [{ hid: "theme-color", name: "theme-color", content: "#ffe033" }],
+  meta: [{ key: "theme-color", name: "theme-color", content: "#ffe033" }],
 })
 
 /**
@@ -76,10 +76,10 @@ const handleSearch = (searchTerm: string) => {
 
 <template>
   <main
-    class="index flex w-full flex-shrink-0 flex-grow flex-col justify-center gap-6 px-6 sm:px-0 xl:flex-row xl:items-center xl:justify-between xl:gap-0"
+    class="index flex w-full shrink-0 grow flex-col justify-center gap-6 px-6 sm:px-0 xl:flex-row xl:items-center xl:justify-between xl:gap-0"
   >
     <div
-      class="grid flex-grow place-items-center justify-center gap-6 xl:h-[33rem] xl:flex-grow-0 xl:items-start"
+      class="grid grow place-items-center justify-center gap-6 xl:h-[33rem] xl:grow-0 xl:items-start"
     >
       <VHomepageContent
         class="page-content my-auto sm:px-14 md:px-20 lg:px-26 xl:w-[53.375rem] xl:pe-0"
@@ -90,16 +90,17 @@ const handleSearch = (searchTerm: string) => {
     </div>
 
     <!-- Image carousel -->
-    <VHomeGallery v-if="isXl" class="mx-10 me-12 flex h-full flex-grow" />
+    <VHomeGallery v-if="isXl" class="mx-10 me-12 flex h-full grow" />
   </main>
 </template>
 
 <style>
+@reference "~/styles/tailwind.css";
 .page-content,
 .notice {
   grid-area: 1/1;
 }
-@screen lg {
+@media (min-width: theme("screens.lg")) {
   .homepage-images {
     transform: translateY(-7.143vh);
   }

@@ -213,7 +213,7 @@ watch(
   <Component
     :is="buttonComponent"
     :type="typeAttribute"
-    class="group/button button flex appearance-none items-center justify-center rounded-sm no-underline"
+    class="group/button button flex appearance-none items-center justify-center rounded-xs no-underline"
     :class="[
       variantClass,
       connectionStyles,
@@ -246,6 +246,7 @@ watch(
 </template>
 
 <style scoped>
+@reference "~/styles/tailwind.css";
 .button[disabled="disabled"],
 .button[aria-disabled="true"] {
   @apply cursor-not-allowed;
@@ -262,7 +263,7 @@ a.button {
   @apply rounded-e-none;
 }
 .connection-top {
-  @apply rounded-se-none rounded-ss-none;
+  @apply rounded-ss-none rounded-se-none;
 }
 .connection-bottom {
   @apply rounded-ee-none rounded-es-none;
@@ -290,7 +291,7 @@ a.button {
   @apply border-default bg-default text-default hover:border-hover focus-visible:border-tx hover:focus-visible:border-tx;
 }
 .bordered-tx {
-  @apply border-tx bg-tx text-default hover:border-transparent-hover hover:focus-visible:border-tx dark:hover:border-[--color-gray-9];
+  @apply border-tx bg-tx text-default hover:border-transparent-hover hover:focus-visible:border-tx dark:hover:border-(--color-gray-9);
 }
 .bordered-tx-pressed {
   @apply border-tx bg-tertiary text-over-dark hover:border-hover;

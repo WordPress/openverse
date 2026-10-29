@@ -6,7 +6,7 @@ import { meta as commonMeta } from "#shared/constants/meta"
 import { favicons } from "#shared/constants/favicons"
 import { useUiStore } from "~/stores/ui"
 import { useDarkMode } from "~/composables/use-dark-mode"
-import { useLayout } from "~/composables/use-layout"
+import { useUiLayout } from "~/composables/use-layout"
 
 import VFourOhFour from "~/components/VFourOhFour.vue"
 
@@ -25,19 +25,22 @@ const headerHeight = computed(() => {
  * and then a page is opened on SSR on a `lg` screen.
  */
 onMounted(() => {
-  const { updateBreakpoint } = useLayout()
+  const { updateBreakpoint } = useUiLayout()
   updateBreakpoint()
 })
 
 const darkMode = useDarkMode()
 
-const head = useLocaleHead({ dir: true, key: "id", seo: true })
-const htmlI18nProps = computed(() => ({
-  lang: head.value?.htmlAttrs?.lang ?? "en",
-  dir: head.value?.htmlAttrs?.dir ?? "ltr",
-}))
-const link = computed(() => {
-  return [
+const head = useLocaleHead({ dir: true, seo: true })
+useHead(() => ({
+  htmlAttrs: {
+    lang: head.value?.htmlAttrs?.lang ?? "en",
+    dir: head.value?.htmlAttrs?.dir ?? "ltr",
+  },
+  bodyAttrs: { class: darkMode.cssClass, style: headerHeight },
+  title: "Openly Licensed Images, Audio and More | Openverse",
+  meta: [...commonMeta, ...(head.value.meta ?? [])],
+  link: [
     ...favicons,
     ...(head.value.link ?? []),
     {
@@ -55,27 +58,15 @@ const link = computed(() => {
       href: config.public.apiUrl,
       crossorigin: "",
     },
-  ]
-})
-
-const meta = computed(() => {
-  return [...commonMeta, ...(head.value.meta ?? [])]
-})
-
-useHead({
-  htmlAttrs: htmlI18nProps,
-  bodyAttrs: { class: darkMode.cssClass, style: headerHeight },
-  title: "Openly Licensed Images, Audio and More | Openverse",
-  meta,
-  link,
-})
+  ],
+}))
 </script>
 
 <template>
   <div>
     <VSkipToContentButton />
     <NuxtLayout name="default">
-      <VFourOhFour class="flex-grow" :error="error" />
+      <VFourOhFour class="grow" :error="error" />
     </NuxtLayout>
   </div>
 </template>

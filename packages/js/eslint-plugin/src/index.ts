@@ -1,9 +1,6 @@
 import * as tseslint from "typescript-eslint"
 import unicornPlugin from "eslint-plugin-unicorn"
-// @ts-expect-error Playwright plugin is an ECMAScript module,
-// and importing it will produce invalid `require` calls
 import playwrightPlugin from "eslint-plugin-playwright"
-// @ts-expect-error Vitest is an ECMAScript module
 import vitestPlugin from "@vitest/eslint-plugin"
 import jsoncPlugin from "eslint-plugin-jsonc"
 import eslintCommentsConfigs from "@eslint-community/eslint-plugin-eslint-comments/configs"

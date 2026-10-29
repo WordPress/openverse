@@ -13,7 +13,7 @@ import VSvg from "~/components/VSvg/VSvg.vue"
       scope="global"
       tag="p"
       keypath="footer.wordpressAffiliation"
-      class="label-regular flex flex-row items-center gap-1"
+      class="flex flex-row items-center gap-1 label-regular"
     >
       <template #wordpress>
         <VSvg name="wordpress" class="h-6 w-6" width="24" height="24" />

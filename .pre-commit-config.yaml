@@ -6,9 +6,9 @@ repos:
       - id: i18n
         name: i18n
         files: ^frontend/.*$
-        # Check if the i18n files have been downloaded by checking if the Arabic translation exists
+        # Check if the i18n files have been downloaded by checking if the Spanish translation exists
         # Download the i18n files if they do not exist
-        entry: bash -c 'if [ ! -f "$(dirname "$dir")"/frontend/src/locales/ar.json ]; then just frontend/run i18n; fi'
+        entry: bash -c 'if [ ! -f "$(dirname "$dir")"/frontend/i18n/locales/es.json ]; then just frontend/run i18n; fi'
         language: system
         pass_filenames: false
 

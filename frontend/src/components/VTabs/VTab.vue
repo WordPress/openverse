@@ -171,14 +171,15 @@ const variant = computed(() => tabContext.variant.value)
 </template>
 
 <style scoped>
+@reference "~/styles/tailwind.css";
 .bordered {
-  @apply rounded-se-sm rounded-ss-sm border-x border-t border-tx text-sm font-semibold md:text-base md:font-semibold md:leading-snug;
+  @apply rounded-ss-xs rounded-se-xs border-x border-t border-tx text-sm font-semibold md:text-base md:leading-snug md:font-semibold;
 }
 .plain {
-  @apply rounded-sm border-tx bg-tx text-sm hover:bg-secondary;
+  @apply rounded-xs border-tx bg-tx text-sm hover:bg-secondary;
 }
 .bordered-selected {
-  @apply -mb-[1px] border border-x-default border-b-tx border-t-default bg-default;
+  @apply mb-[-1px] border border-x-default border-t-default border-b-tx bg-default;
 }
 .plain-selected {
   @apply relative after:absolute after:right-1/2 after:h-0.5 after:w-full after:translate-x-1/2 after:translate-y-[-50%] after:bg-tertiary after:transition-all after:duration-200;

@@ -14,7 +14,7 @@ defineProps<{
     as="VLink"
     size="small"
     has-icon-start
-    class="label-bold !bg-secondary hover:!bg-tertiary hover:!text-over-dark sm:!bg-tx"
+    class="bg-secondary! label-bold hover:bg-tertiary! hover:text-over-dark! sm:bg-tx!"
     variant="transparent-gray"
     :href="href"
   >

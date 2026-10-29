@@ -43,14 +43,14 @@ const { status, updateStatus, title } = useContentReport()
   <main
     :id="skipToContentTargetId"
     tabindex="-1"
-    class="mx-auto mb-6 mt-8 max-w-none gap-x-10 px-4 md:grid md:max-w-4xl md:grid-cols-2 md:px-6 lg:mb-30 lg:px-0 xl:max-w-4xl"
+    class="mx-auto mt-8 mb-6 max-w-none gap-x-10 px-4 md:grid md:max-w-4xl md:grid-cols-2 md:px-6 lg:mb-30 lg:px-0 xl:max-w-4xl"
   >
     <figure v-if="image" class="mb-6 flex flex-col items-start gap-y-4">
       <img
         id="main-image"
         :src="image.thumbnail"
         :alt="image.title"
-        class="mx-auto h-auto w-full rounded-sm"
+        class="mx-auto h-auto w-full rounded-xs"
         :width="image.width"
         :height="image.height"
       />
@@ -73,7 +73,7 @@ const { status, updateStatus, title } = useContentReport()
     </figure>
 
     <div>
-      <h2 class="heading-6 mb-4">{{ title }}</h2>
+      <h2 class="mb-4 heading-6">{{ title }}</h2>
       <VContentReportForm
         v-if="image"
         :media="image"

@@ -34,12 +34,7 @@ export const collectAnalyticsEvents = (context: BrowserContext) => {
   context.route(/\/api\/event$/, (route, request) => {
     const postData = request.postData()
     if (postData) {
-      const parsedData = JSON.parse(postData)
-      const event = parsedData
-      if (parsedData.p) {
-        event.p = JSON.parse(parsedData.p)
-      }
-      sentAnalyticsEvents.push({ ...event })
+      sentAnalyticsEvents.push(JSON.parse(postData))
     }
     route.abort()
   })

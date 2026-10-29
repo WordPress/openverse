@@ -1,8 +1,7 @@
 type Meta = {
-  name?: string
-  content?: string
-  property?: string
-  key?: string
+  key: string
+  property: string
+  content: string
 }[]
 
 export const createDetailPageMeta = ({

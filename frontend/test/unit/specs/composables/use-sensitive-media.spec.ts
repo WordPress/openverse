@@ -8,25 +8,33 @@ let mockUseUiStore = {
   revealedSensitiveResults: [],
 }
 
+const sendCustomEventMock = vi.fn()
+
 vi.resetModules()
 
-vi.mock("#app/nuxt", async () => {
-  const original = await import("#app/nuxt")
-  return {
-    ...original,
-    useNuxtApp: vi.fn(() => ({
-      $sendCustomEvent: vi.fn(),
-    })),
+vi.mock(
+  "#app/nuxt",
+  async (importOriginal: () => Promise<typeof import("#app/nuxt")>) => {
+    const original = await importOriginal()
+    // The Nuxt test app is built through this mock, so wrap the real app instead of replacing it.
+    return {
+      ...original,
+      useNuxtApp: () =>
+        new Proxy(original.useNuxtApp(), {
+          get: (app, key) =>
+            key === "$sendCustomEvent"
+              ? sendCustomEventMock
+              : Reflect.get(app, key),
+        }),
+    }
   }
-})
+)
 
 vi.mock("~/stores/ui", () => ({
   useUiStore: () => mockUseUiStore,
 }))
 
 describe("useSensitiveMedia composable", () => {
-  const sendCustomEventMock = vi.fn()
-
   let mockMedia: {
     id: string
     sensitivity: Sensitivity[]

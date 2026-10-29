@@ -4,5 +4,3 @@ import * as pinia from "pinia"
 export const createPinia = () => pinia.createPinia()
 
 export const setActivePinia = pinia.setActivePinia
-
-export const PiniaVuePlugin = pinia.PiniaVuePlugin

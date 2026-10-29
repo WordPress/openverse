@@ -115,7 +115,9 @@ const parseTags = (tags: Tag[]) => {
 export const decodeMediaData = <T extends Media>(
   media: ApiMedia | undefined | null,
   mediaType: T["frontendMediaType"],
-  fakeSensitive = false
+  fakeSensitive = false,
+  // Callers that decode after an `await` must pass the store resolved beforehand: on SSR, the active Pinia is lost across awaits.
+  providerStore = useProviderStore()
 ): T => {
   if (!media) {
     throw new Error("Media is undefined or null")
@@ -127,7 +129,6 @@ export const decodeMediaData = <T extends Media>(
   sensitivity.sort()
   const isSensitive = sensitivity.length > 0
 
-  const providerStore = useProviderStore()
   const sourceName = providerStore.getProviderName(media.source, mediaType)
   const providerName = providerStore.getProviderName(media.provider, mediaType)
   const filetype =

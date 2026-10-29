@@ -16,7 +16,6 @@ import { skipToContentTargetId } from "#shared/constants/window"
 import { firstParam, validateUUID } from "#shared/utils/query-utils"
 import { handledClientSide } from "#shared/utils/errors"
 import type { ImageDetail } from "#shared/types/media"
-import singleResultMiddleware from "~/middleware/single-result"
 import { useSingleResultStore } from "~/stores/media/single-result"
 import { useAnalytics } from "~/composables/use-analytics"
 import { useSensitiveMedia } from "~/composables/use-sensitive-media"
@@ -43,7 +42,7 @@ defineOptions({
 
 definePageMeta({
   layout: "content-layout",
-  middleware: singleResultMiddleware,
+  middleware: "single-result",
 })
 
 usePageRobotsRule("single-result")
@@ -164,7 +163,7 @@ const onImageLoaded = (event: Event) => {
       axios
         .head(image.value.url)
         .then((res) => {
-          const imageType = res.headers["content-type"]
+          const imageType = res.headers["content-type"] as string | undefined
           if (singleResultStore.mediaItem) {
             singleResultStore.mediaItem.filetype = imageType
           }
@@ -231,7 +230,7 @@ watch(error, (err) => {
 </script>
 
 <template>
-  <main :id="skipToContentTargetId" tabindex="-1" class="relative flex-grow">
+  <main :id="skipToContentTargetId" tabindex="-1" class="relative grow">
     <VErrorSection
       v-if="fetchingError"
       :fetching-error="fetchingError"
@@ -258,7 +257,7 @@ watch(error, (err) => {
             id="main-image"
             :src="imageSrc"
             :alt="image.title"
-            class="col-span-full row-span-full h-full max-h-[500px] w-full rounded-se-sm rounded-ss-sm object-contain"
+            class="col-span-full row-span-full h-full max-h-[500px] w-full rounded-ss-xs rounded-se-xs object-contain"
             :width="image.width ?? 0"
             :height="image.height ?? 0"
             @load="onImageLoaded"
@@ -271,20 +270,20 @@ watch(error, (err) => {
           >
             <VSketchFabViewer
               :uid="sketchFabUid"
-              class="rounded-se-sm rounded-ss-sm"
+              class="rounded-ss-xs rounded-se-xs"
               @failure="sketchFabfailure = true"
             />
           </div>
         </figure>
 
         <section
-          class="grid grid-cols-1 grid-rows-[auto,1fr] sm:grid-cols-[1fr,auto] sm:grid-rows-1 sm:gap-x-6"
+          class="grid grid-cols-1 grid-rows-[auto_1fr] sm:grid-cols-[1fr_auto] sm:grid-rows-1 sm:gap-x-6"
         >
           <VMediaInfo :media="image" class="min-w-0 sm:col-start-1" />
           <VGetMediaButton
             :media="image"
             media-type="image"
-            class="row-start-1 mb-4 !w-full flex-initial sm:col-start-2 sm:mb-0 sm:mt-1 sm:!w-auto"
+            class="row-start-1 mb-4 w-full! flex-initial sm:col-start-2 sm:mt-1 sm:mb-0 sm:w-auto!"
           />
         </section>
 
@@ -302,7 +301,8 @@ watch(error, (err) => {
 </template>
 
 <style scoped>
+@reference "~/styles/tailwind.css";
 section {
-  @apply mb-10 w-full px-6 md:mb-16 md:max-w-screen-lg md:px-12 lg:mx-auto lg:px-16;
+  @apply mb-10 w-full px-6 md:mb-16 md:max-w-[theme(screens.lg)] md:px-12 lg:mx-auto lg:px-16;
 }
 </style>
