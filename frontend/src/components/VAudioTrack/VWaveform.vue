@@ -345,7 +345,7 @@ const seekTimeLeft = computed(() => ({
   <div
     v-bind="waveformAttributes"
     ref="el"
-    class="waveform bg-background-var group/waveform relative overflow-hidden text-default focus-visible:outline-none"
+    class="waveform bg-background-var group/waveform relative overflow-hidden text-default focus-visible:outline-hidden"
     :style="heightProperties"
     :tabIndex="isTabbable && isInteractive ? 0 : -1"
     :aria-disabled="!isInteractive"
@@ -428,7 +428,7 @@ const seekTimeLeft = computed(() => ({
     <!-- Focus bar -->
     <div
       v-if="isInteractive && isSeeking"
-      class="absolute top-0 z-20 hidden h-full flex-col items-center justify-between bg-black group-focus/waveform:flex group-focus:flex dark:bg-white"
+      class="absolute top-0 z-20 hidden h-full flex-col items-center justify-between bg-black group-focus:flex group-focus/waveform:flex dark:bg-white"
       :style="{ width: `${barWidth}px`, left: `${progressBarWidth}px` }"
     >
       <div
@@ -489,6 +489,7 @@ const seekTimeLeft = computed(() => ({
 </template>
 
 <style scoped>
+@reference "~/styles/tailwind.css";
 .waveform {
   --v-background-color: var(
     --waveform-background-color,

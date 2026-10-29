@@ -17,15 +17,15 @@ const handleClick = (e: MouseEvent) => {
 <template>
   <VLink
     :href="seeMoreHref"
-    class="group flex h-10 w-full flex-row items-center gap-2 rounded-full border border-secondary pe-4 ps-2 hover:no-underline sm:w-[23.125rem]"
+    class="group flex h-10 w-full flex-row items-center gap-2 rounded-full border border-secondary ps-2 pe-4 hover:no-underline sm:w-[23.125rem]"
     @click="handleClick"
   >
     <div
-      class="flex h-6 items-center rounded-full bg-primary px-2 text-xs font-semibold uppercase text-over-negative"
+      class="flex h-6 items-center rounded-full bg-primary px-2 text-xs font-semibold text-over-negative uppercase"
     >
       {{ $t("notification.new") }}
     </div>
-    <div class="label-regular flex-grow text-default">
+    <div class="grow label-regular text-default">
       <!-- @slot Content goes here. -->
       <slot />
     </div>

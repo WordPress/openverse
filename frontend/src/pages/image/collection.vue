@@ -4,7 +4,6 @@ import { definePageMeta, useAsyncData, useHead } from "#imports"
 import { skipToContentTargetId } from "#shared/constants/window"
 import { IMAGE } from "#shared/constants/media"
 import type { CollectionParams } from "#shared/types/search"
-import { collectionMiddleware } from "~/middleware/collection"
 import { useCollection } from "~/composables/use-collection"
 import { usePageRobotsRule } from "~/composables/use-page-robots-rule"
 
@@ -16,7 +15,7 @@ defineOptions({
 
 definePageMeta({
   layout: "content-layout",
-  middleware: collectionMiddleware,
+  middleware: "collection",
 })
 
 const {
@@ -32,7 +31,7 @@ const {
 } = useCollection({ mediaType: IMAGE })
 
 useHead(() => ({
-  meta: [{ hid: "og:title", property: "og:title", content: pageTitle.value }],
+  meta: [{ property: "og:title", content: pageTitle.value }],
   title: pageTitle.value,
 }))
 

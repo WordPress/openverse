@@ -34,7 +34,7 @@ const width = computed(() => diameter * 3 + spacing * 2)
   <VButton
     variant="filled-pink-8"
     size="large"
-    class="label-bold relative ms-auto"
+    class="relative ms-auto label-bold"
     @click="$emit('click')"
   >
     <!-- Loading animation -->
@@ -78,6 +78,7 @@ const width = computed(() => diameter * 3 + spacing * 2)
 </template>
 
 <style>
+@reference "~/styles/tailwind.css";
 /*
   Dot #2 becomes visible as soon as dot #3 as passed over it. This avoids the
   need to translate 2 dots and ensure that their movements are perfectly
@@ -86,11 +87,11 @@ const width = computed(() => diameter * 3 + spacing * 2)
 @keyframes dot-2 {
   0%,
   49% {
-    @apply opacity-0;
+    opacity: 0;
   }
   50%,
   100% {
-    @apply opacity-100;
+    opacity: 1;
   }
 }
 
@@ -105,7 +106,7 @@ const width = computed(() => diameter * 3 + spacing * 2)
   }
   90%,
   100% {
-    @apply translate-x-0;
+    transform: translateX(0);
   }
 }
 

@@ -31,7 +31,7 @@ const isSelected = computed(() => props.id === tabContext.selectedId.value)
 
 const panelVariantStyle = computed(() =>
   tabContext.variant.value === "bordered"
-    ? "border rounded-sm first:rounded-ss-none"
+    ? "border rounded-xs first:rounded-ss-none"
     : "border-t"
 )
 </script>

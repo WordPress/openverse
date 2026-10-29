@@ -57,7 +57,7 @@ const canLoadMore = computed(() => mediaStore.canLoadMore)
     kind="search"
   >
     <template #header>
-      <header v-if="searchTerm" class="my-0 md:mb-8 md:mt-4">
+      <header v-if="searchTerm" class="my-0 md:mt-4 md:mb-8">
         <VSearchResultsTitle
           :search-term="searchTerm"
           :size="results.type === 'all' ? 'large' : 'default'"
@@ -69,7 +69,7 @@ const canLoadMore = computed(() => mediaStore.canLoadMore)
 
       <div
         v-if="results.type === 'all'"
-        class="mb-4 mt-2 grid grid-cols-2 gap-4 md:mt-0"
+        class="mt-2 mb-4 grid grid-cols-2 gap-4 md:mt-0"
       >
         <VContentLink
           v-for="[mediaType, count] in resultCounts"
@@ -81,7 +81,7 @@ const canLoadMore = computed(() => mediaStore.canLoadMore)
       </div>
     </template>
     <template #footer>
-      <footer class="mb-6 mt-4 lg:mb-10">
+      <footer class="mt-4 mb-6 lg:mb-10">
         <VLoadMore
           :can-load-more="canLoadMore"
           :search-type="results.type"

@@ -31,7 +31,7 @@ defineProps<{
       </div>
     </div>
     <div
-      class="mx-auto grid grid-cols-1 grid-rows-[auto,1fr] gap-y-6 p-6 pb-0 sm:grid-cols-[1fr,auto] sm:grid-rows-1 sm:gap-x-6 lg:mb-6 lg:max-w-5xl"
+      class="mx-auto grid grid-cols-1 grid-rows-[auto_1fr] gap-y-6 p-6 pb-0 sm:grid-cols-[1fr_auto] sm:grid-rows-1 sm:gap-x-6 lg:mb-6 lg:max-w-5xl"
     >
       <div
         class="row-start-1 flex justify-between gap-x-6 sm:col-start-2 sm:mt-1"
@@ -43,7 +43,7 @@ defineProps<{
         <VGetMediaButton
           :media="audio"
           media-type="audio"
-          class="col-start-2 !w-full px-0 sm:!w-auto sm:flex-shrink-0"
+          class="col-start-2 w-full! px-0 sm:w-auto! sm:shrink-0"
         />
       </div>
       <VMediaInfo :media="audio" class="min-w-0" />
@@ -52,12 +52,13 @@ defineProps<{
 </template>
 
 <style>
+@reference "~/styles/tailwind.css";
 .full-track .waveform {
-  @apply h-[185px] rounded-sm;
+  @apply h-[185px] rounded-xs;
   --waveform-background-color: theme("backgroundColor.default");
 }
 
 .full-track .audio-control {
-  @apply rounded-sm;
+  @apply rounded-xs;
 }
 </style>

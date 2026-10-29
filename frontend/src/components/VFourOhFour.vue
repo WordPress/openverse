@@ -30,14 +30,14 @@ const handleSearch = (searchTerm: string) => {
 }
 
 useHead({
-  meta: [{ hid: "theme-color", name: "theme-color", content: "#ffe033" }],
+  meta: [{ key: "theme-color", name: "theme-color", content: "#ffe033" }],
 })
 </script>
 
 <template>
   <div class="error grid overflow-x-hidden">
     <VSvg
-      class="z-0 pointer-events-none col-start-1 row-start-1 -mx-[15%] fill-gray-12 opacity-5 lg:mx-15 lg:-mt-20 dark:fill-gray-8"
+      class="pointer-events-none z-0 col-start-1 row-start-1 mx-[-15%] fill-gray-12 opacity-5 lg:mx-15 lg:-mt-20 dark:fill-gray-8"
       viewBox="0 0 1320 569"
       name="oops"
     />
@@ -49,9 +49,9 @@ useHead({
       <main
         :id="skipToContentTargetId"
         tabindex="-1"
-        class="z-10 grow-[3] space-y-4 lg:space-y-6"
+        class="z-10 grow-3 space-y-4 lg:space-y-6"
       >
-        <h1 class="heading-5 lg:heading-2 mb-6 lg:mb-10 lg:leading-tight">
+        <h1 class="mb-6 heading-5 lg:mb-10 lg:heading-2">
           {{ $t("404.title") }}
         </h1>
         <p class="sr-only">{{ error }}</p>
