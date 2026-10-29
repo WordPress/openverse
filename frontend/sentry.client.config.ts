@@ -2,6 +2,8 @@ import { useRuntimeConfig } from "#imports"
 
 import * as Sentry from "@sentry/nuxt"
 
+import { sentryDataCollection } from "#shared/constants/sentry"
+
 Sentry.init({
   dsn: useRuntimeConfig().public.sentry.dsn,
   environment: useRuntimeConfig().public.sentry.environment,
@@ -12,6 +14,7 @@ Sentry.init({
   ],
 
   tracesSampleRate: 1.0,
+  dataCollection: sentryDataCollection,
 })
 Sentry.setContext("render context", { platform: "client" })
 Sentry.setTag("platform", "client")
