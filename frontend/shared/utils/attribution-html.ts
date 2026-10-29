@@ -160,15 +160,22 @@ const extLink = (href: string, text: string) =>
  * @param mediaItem - the media item being attributed
  * @returns the XML markup of the attribution
  */
+const escapeXml = (unsafe: string) =>
+  unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;")
+
 const xmlAttribution = (mediaItem: Record<string, string>) =>
   `<attribution xmlns:dc="http://purl.org/dc/elements/1.1/">
-	<dc:creator>${mediaItem.creator}</dc:creator>
-	<dc:title>${mediaItem.title}</dc:title>
-	<dc:rights>${mediaItem.license_url}</dc:rights>
-	<dc:identifier>${mediaItem.foreign_landing_url}</dc:identifier>
-	<dc:type>${mediaItem.type}</dc:type>
+		<dc:creator>${escapeXml(mediaItem.creator)}</dc:creator>
+		<dc:title>${escapeXml(mediaItem.title)}</dc:title>
+		<dc:rights>${escapeXml(mediaItem.license_url)}</dc:rights>
+		<dc:identifier>${escapeXml(mediaItem.foreign_landing_url)}</dc:identifier>
+		<dc:type>${escapeXml(mediaItem.type)}</dc:type>
 </attribution>`
-
 /* Interfaces */
 
 /**
@@ -306,6 +313,7 @@ export const getAttribution = (
 
     const xmlAttributionParts = {
       ...restMediaItem,
+      title: mediaItem.originalTitle || tFn("genericTitle"),
       type: frontendMediaType === "audio" ? "Sound" : "StillImage",
     }
 
