@@ -1,0 +1,1 @@
+@media (min-width:1024px){.homepage-images{transform:translateY(-7.143vh)}.homepage-image:nth-child(2n){transform:translateY(50%)}}.homepage-image{transition-delay:var(--transition-index)!important}.fade-enter,.fade-leave-to{opacity:0}.fade-enter-active,.fade-leave-active{transition:.5s}

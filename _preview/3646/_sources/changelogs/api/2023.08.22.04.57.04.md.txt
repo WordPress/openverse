@@ -1,0 +1,17 @@
+# 2023.08.22.04.57.04
+
+## Internal Improvements
+
+- Set API Dockerfile run to production config
+  ([#2808](https://github.com/WordPress/openverse/pull/2808)) by @sarayourfriend
+- Remove `body` from the index.update elasticsearch requests
+  ([#2777](https://github.com/WordPress/openverse/pull/2777)) by @obulat
+- Replace request mocks with pook in tests
+  ([#2783](https://github.com/WordPress/openverse/pull/2783)) by @ashiramin
+
+## Bug Fixes
+
+- Fix nginx redirect for no trailing slash
+  ([#2848](https://github.com/WordPress/openverse/pull/2848)) by @sarayourfriend
+- Unexpose port 3000 from API Dockerfile
+  ([#2842](https://github.com/WordPress/openverse/pull/2842)) by @dhruvkb

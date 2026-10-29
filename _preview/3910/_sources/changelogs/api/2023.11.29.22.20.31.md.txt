@@ -1,0 +1,13 @@
+# 2023.11.29.22.20.31
+
+## Internal Improvements
+
+- Bump cryptography from 41.0.5 to 41.0.6 in /api
+  ([#3410](https://github.com/WordPress/openverse/pull/3410)) by @dependabot
+
+## Bug Fixes
+
+- Allow None value for `NUM_PROXIES`
+  ([#3409](https://github.com/WordPress/openverse/pull/3409)) by @sarayourfriend
+- Fix dynamically excluded providers
+  ([#3401](https://github.com/WordPress/openverse/pull/3401)) by @obulat

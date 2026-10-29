@@ -1,0 +1,8 @@
+# 2024.09.09.05.40.22
+
+## Bug Fixes
+
+- Remove unnecessary JSON log properties from Nginx API logs
+  ([#4891](https://github.com/WordPress/openverse/pull/4891)) by @sarayourfriend
+- Fix unbound access of `log` (when the captured exception is a timeout)
+  ([#4889](https://github.com/WordPress/openverse/pull/4889)) by @sarayourfriend

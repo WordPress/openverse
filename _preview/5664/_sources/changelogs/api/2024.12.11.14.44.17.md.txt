@@ -1,0 +1,6 @@
+# 2024.12.11.14.44.17
+
+## Internal Improvements
+
+- Set up Sentry profiling for the API
+  ([#5264](https://github.com/WordPress/openverse/pull/5264)) by @krysal

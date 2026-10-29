@@ -1,0 +1,12 @@
+# 2024.05.23.15.02.00
+
+## Internal Improvements
+
+- Add 'revoked' field to ThrottledApplication to enable easily revoking access
+  to client applications violating openverse TOS
+  ([#4334](https://github.com/WordPress/openverse/pull/4334)) by @madewithkode
+
+## Bug Fixes
+
+- Change search query approach to include only available providers
+  ([#4238](https://github.com/WordPress/openverse/pull/4238)) by @krysal

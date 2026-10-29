@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[87],{"./src/locales/fuc.json":function(module){module.exports=JSON.parse("{}")}}]);

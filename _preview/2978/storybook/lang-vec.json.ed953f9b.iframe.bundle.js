@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[211],{"./src/locales/vec.json":function(module){module.exports=JSON.parse("{}")}}]);

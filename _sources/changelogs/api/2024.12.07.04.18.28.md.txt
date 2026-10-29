@@ -1,0 +1,22 @@
+# 2024.12.07.04.18.28
+
+## New Features
+
+- Enable debugging of the API server from inside a Docker container
+  ([#5218](https://github.com/WordPress/openverse/pull/5218)) by @dhruvkb
+
+## Improvements
+
+- Making docker user names consistent
+  ([#5238](https://github.com/WordPress/openverse/pull/5238)) by @tejaswarathe
+
+## Internal Improvements
+
+- Bump and unify PDM in the api/ and indexer_worker/ to 2.21
+  ([#5250](https://github.com/WordPress/openverse/pull/5250)) by @krysal
+- Bump dev and test dependencies of the API
+  ([#5249](https://github.com/WordPress/openverse/pull/5249)) by @krysal
+- Bump sentry-sdk to 2.18.0 and structlog-sentry to 2.2.1
+  ([#5248](https://github.com/WordPress/openverse/pull/5248)) by @krysal
+- Enable debugging of the API server from inside a Docker container
+  ([#5218](https://github.com/WordPress/openverse/pull/5218)) by @dhruvkb

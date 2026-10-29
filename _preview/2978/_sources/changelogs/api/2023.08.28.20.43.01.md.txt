@@ -1,0 +1,17 @@
+# 2023.08.28.20.43.01
+
+## Improvements
+
+- Add codespell pre-commit hook
+  ([#2855](https://github.com/WordPress/openverse/pull/2855)) by @sarayourfriend
+
+## Internal Improvements
+
+- Fix Elasticsearch memory hogging the right way
+  ([#2909](https://github.com/WordPress/openverse/pull/2909)) by @sarayourfriend
+- Remove ES matrix from CI
+  ([#2882](https://github.com/WordPress/openverse/pull/2882)) by @obulat
+- Remove `gevent`, `django-braces`, and `ipaddress` dependencies
+  ([#2892](https://github.com/WordPress/openverse/pull/2892)) by @sarayourfriend
+- Bump fakeredis from 2.15.0 to 2.18.0 in /api
+  ([#2875](https://github.com/WordPress/openverse/pull/2875)) by @dependabot

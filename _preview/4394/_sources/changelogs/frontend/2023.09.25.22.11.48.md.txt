@@ -1,0 +1,6 @@
+# 2023.09.25.22.11.48
+
+## Improvements
+
+- Improve image grid ([#2891](https://github.com/WordPress/openverse/pull/2891))
+  by @obulat

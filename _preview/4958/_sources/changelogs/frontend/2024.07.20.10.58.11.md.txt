@@ -1,0 +1,18 @@
+# 2024.07.20.10.58.11
+
+## Improvements
+
+- Make the sources tables responsive using CSS
+  ([#4543](https://github.com/WordPress/openverse/pull/4543)) by @szymon-polaczy
+
+## Internal Improvements
+
+- Make running Playwright to update snapshots easier
+  ([#4585](https://github.com/WordPress/openverse/pull/4585)) by @madewithkode
+- Remove unnecessary locales downloads from CI
+  ([#4627](https://github.com/WordPress/openverse/pull/4627)) by @obulat
+- Update pnpm and use corepack
+  ([#4628](https://github.com/WordPress/openverse/pull/4628)) by @obulat
+- Expand `ov` documentation and replace environment setup docs with `ov`
+  instructions ([#4567](https://github.com/WordPress/openverse/pull/4567)) by
+  @sarayourfriend

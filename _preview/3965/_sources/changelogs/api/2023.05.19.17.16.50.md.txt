@@ -1,0 +1,6 @@
+# 2023.05.19.17.16.50
+
+## Improvements
+
+- Check the file type of the thumbnail before passing it to Photon
+  ([#2086](https://github.com/WordPress/openverse/pull/2086)) by @krysal
