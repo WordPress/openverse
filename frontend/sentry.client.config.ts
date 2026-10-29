@@ -11,6 +11,8 @@ Sentry.init({
   ignoreErrors: [
     // Can be safely ignored, @see https://github.com/WICG/resize-observer/issues/38
     /ResizeObserver loop limit exceeded/i,
+    // Nuxt app manifest fetches fail when Cloudflare serves a bot challenge (403) instead of the JSON
+    /\/_nuxt\/builds\/(meta|latest)\b/,
   ],
 
   tracesSampleRate: 1.0,
