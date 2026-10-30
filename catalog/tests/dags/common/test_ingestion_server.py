@@ -84,9 +84,7 @@ def test_index_readiness_check(
         run_type=DagRunType.MANUAL,
     )
 
-    with mock.patch(
-        "airflow.providers.http.hooks.http.requests.Session.send"
-    ) as mock_session_send:
+    with mock.patch("requests.Session.send") as mock_session_send:
         r = requests.Response()
         r.status_code = response_code
         r.reason = "test"
