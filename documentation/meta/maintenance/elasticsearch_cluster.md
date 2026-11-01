@@ -504,6 +504,19 @@ getting redundant alerts during this process.
 9. Manually terminate the retiring instance from the AWS management console. It
    has now become retired.
 
+   Then clear the exclusion from step 7 by sending a `PUT` request with the
+   following JSON body to the `/_cluster/settings` endpoint. Otherwise it stays
+   in the cluster settings, and would exclude a future node that reuses the IP
+   address.
+
+   ```json
+   {
+     "transient": {
+       "cluster.routing.allocation.exclude.name": null
+     }
+   }
+   ```
+
 10. In Terraform, decrease the `data_node_count` for the relevant Elasticsearch
     module by one to go back to the original value. _Do not apply this yet._
 
