@@ -336,13 +336,69 @@ etc. The main focus should be understanding the new configuration and
 determining whether it's possible to test it locally. Otherwise, follow the
 steps for deploying a new cluster and switching the live services over to it.
 
+## Kernel updates and reboots
+
+Use the
+[`update_kernel.yml` playbook](https://github.com/WordPress/openverse-infrastructure/blob/main/ansible/update_kernel.md)
+to install kernel security updates. Do not reboot Elasticsearch nodes by hand:
+nodes created before
+[WordPress/openverse-infrastructure#1172](https://github.com/WordPress/openverse-infrastructure/pull/1172)
+don't persist `vm.max_map_count` or mount the `/ssd` volume on boot, so after a
+plain reboot Elasticsearch either fails its bootstrap check or starts on an
+empty directory. The playbook fixes both before rebooting.
+
+It updates one node at a time. For the whole update it sets
+`cluster.routing.rebalance.enable` to `none`, so the cluster doesn't keep
+starting shard moves to balance the nodes while they reboot. Before rebooting a
+node it waits for the cluster to be green with no shards moving, because a
+reboot cancels a move and it starts over later. Before rebooting a data node it
+also sets `cluster.routing.allocation.enable` to `primaries` and flushes, so the
+cluster doesn't copy the node's shards elsewhere while it's down. Afterwards it
+waits for the node to rejoin, resets the setting, and waits for the cluster to
+be green before moving on. Like the other playbooks, it only plans unless run
+with `-e apply=true`.
+
+```bash
+just ansible/playbook <environment> update_kernel.yml
+just ansible/playbook <environment> update_kernel.yml -e apply=true -l <public_ipv4_dns>
+just ansible/playbook <environment> update_kernel.yml -e apply=true
+```
+
+Run it on staging first, then apply to a single production data node with `-l`
+and check it before updating the rest. Pause the
+`<environment>_elasticsearch_cluster_healthcheck` DAG and make sure no data
+refresh is running while it runs.
+
+If the playbook stops early, rebalancing stays paused. Fix the problem and run
+the playbook again, or resume rebalancing by hand. Check `GET _cluster/settings`
+is empty when you're done:
+
+```bash
+just ansible/exec ansible <environment> 'elasticsearch_datanodes[0]' -m uri -a '{"url": "http://{{ private_ip_address }}:9200/_cluster/settings", "method": "PUT", "body_format": "json", "body": {"persistent": {"cluster.routing.rebalance.enable": null}}}'
+```
+
+```{warning}
+Data nodes keep their indices on an instance store volume (`/ssd`). Its data
+survives a reboot, but not a stop and start: after a stop and start the volume
+is blank and the node's data is gone. Never stop a data node; replace it with
+the procedure below instead.
+```
+
 ## Node Replacements
 
 Occasionally, the underlying EC2 instance for one of our nodes will undergo a
-scheduled decomission ("retirement") and need to be replaced beforehand.
+scheduled decomission ("retirement") and need to be replaced beforehand. The
+same procedure moves nodes to a new AMI, such as from Amazon Linux 2 to Amazon
+Linux 2023: new nodes are created from the AMI and init script in the module,
+while existing nodes ignore changes to both.
 
-This procedure describes the process of replacing a single node, but could be
-extrapolated to multiple nodes with relative ease.
+This procedure describes the process of replacing a single data node. To replace
+several at once, see
+[Replacing several data nodes at once](#replacing-several-data-nodes-at-once)
+after the steps. It doesn't apply to master nodes, which have a fixed count of 3
+in the module. Replacing a master node also requires excluding it from the
+voting configuration (`POST /_cluster/voting_config_exclusions`), and isn't
+documented yet.
 
 If a data refresh is scheduled during the timeframe of this procedure, it is
 best to pause it for performance reasons.
@@ -381,26 +437,44 @@ getting redundant alerts during this process.
 3. In Terraform, increase the `data_node_count` for the relevant Elasticsearch
    module by one. Here is an
    [example commit](https://github.com/WordPress/openverse-infrastructure/pull/894/commits/4a827b786b1460aa89931d474db119d835784727)
-   with this change in production. Apply this change. The plan should include:
+   with this change in production. Plan, then apply this change. The plan should
+   include:
 
    - creation of a new Elasticsearch data node
    - creation of new alarms and changes to existing alarms (for production)
    - addition of the new instance's IP to the Route53 record
 
    ```bash
-   just tf <env> apply -target='module.staging-elasticsearch-8-8-2'
+   just plan <env> <environment>-elasticsearch-8-8-2
+   just tf <env> apply -target='module.<environment>-elasticsearch-8-8-2'
    ```
+
+   The new node uses the AMI and init script of the checked-out code, so run
+   this from an up-to-date `main`.
 
 4. Wait for a new instance to be provisioned by Terraform.
 
    Record the public IPv4 DNS and Terraform index of the new instance, they will
    be useful later.
 
-5. Configure the created instance by running our Ansible playbook to sync
-   Elasticsearch nodes. Supply the correct environment name to the command and
-   pass the public IPv4 DNS step from step 3 to the `-l`/`--limit` flag.
+   Terraform returns as soon as the instance is running, but its init script
+   keeps running for several minutes, and may then schedule a reboot into an
+   updated kernel. Wait for both before configuring the node:
 
    ```bash
+   just ansible/exec ansible <environment> <public_ipv4_dns> -b -m shell -a "cloud-init status --wait; if test -f /run/systemd/shutdown/scheduled; then echo reboot scheduled; else echo no reboot scheduled; fi"
+   ```
+
+   If it prints `reboot scheduled`, the node reboots within a minute. Wait, and
+   rerun the command until it prints `no reboot scheduled`.
+
+5. Configure the created instance by running our Ansible playbook to sync
+   Elasticsearch nodes. Supply the correct environment name to the command and
+   pass the public IPv4 DNS step from step 3 to the `-l`/`--limit` flag. Plan
+   first, then apply.
+
+   ```bash
+   just ansible/playbook <environment> elasticsearch/sync_config.yml -l <public_ipv4_dns>
    just ansible/playbook <environment> elasticsearch/sync_config.yml -e apply=true -l <public_ipv4_dns>
    ```
 
@@ -444,6 +518,19 @@ getting redundant alerts during this process.
 9. Manually terminate the retiring instance from the AWS management console. It
    has now become retired.
 
+   Then clear the exclusion from step 7 by sending a `PUT` request with the
+   following JSON body to the `/_cluster/settings` endpoint. Otherwise it stays
+   in the cluster settings, and would exclude a future node that reuses the IP
+   address.
+
+   ```json
+   {
+     "transient": {
+       "cluster.routing.allocation.exclude.name": null
+     }
+   }
+   ```
+
 10. In Terraform, decrease the `data_node_count` for the relevant Elasticsearch
     module by one to go back to the original value. _Do not apply this yet._
 
@@ -468,7 +555,8 @@ getting redundant alerts during this process.
     - destruction of extra alarms and changes to existing alarms
 
     ```bash
-    just tf <env> apply -target='module.staging-elasticsearch-8-8-2'
+    just plan <env> <environment>-elasticsearch-8-8-2
+    just tf <env> apply -target='module.<environment>-elasticsearch-8-8-2'
     ```
 
 14. If the deletion of the individual alarms fails due to them being part of a
@@ -477,6 +565,42 @@ getting redundant alerts during this process.
     part of.
 
     Applying again after this should get rid of them too.
+
+### Replacing several data nodes at once
+
+The same steps replace several data nodes together, which saves waiting for
+shards to move once per node. The remaining data nodes must have enough disk
+space for all shards.
+
+- In step 3, increase `data_node_count` by the number of nodes being replaced.
+- In step 4, Ansible connects to the new nodes in parallel, and the first SSH
+  connection to each asks to confirm its host key. Add `-f 1` so the prompts
+  come one at a time, and pass all new nodes as one pattern:
+
+  ```bash
+  just ansible/exec ansible <environment> '<new_dns_1>:<new_dns_2>' -f 1 -b -m shell -a "cloud-init status --wait; if test -f /run/systemd/shutdown/scheduled; then echo reboot scheduled; else echo no reboot scheduled; fi"
+  ```
+
+- In step 5, pass all new nodes to `-l`, separated by commas.
+- In step 7, exclude all retiring nodes in one request, separated by commas:
+
+  ```json
+  {
+    "transient": {
+      "cluster.routing.allocation.exclude.name": "<private_ipv4_address_1>,<private_ipv4_address_2>"
+    }
+  }
+  ```
+
+- In step 8, check that all retiring nodes are empty. Each line of the output
+  starts with the node's shard count, which must be 0:
+
+  ```bash
+  just ansible/exec ansible <environment> <new_dns_1> -m uri -a "url=http://{{ private_ip_address }}:9200/_cat/allocation/<private_ipv4_address_1>,<private_ipv4_address_2>?h=shards,disk.indices,node return_content=true"
+  ```
+
+- In steps 11 and 12, remove every retired node from the state, then move each
+  new node to one of the freed indices.
 
 ## Potential improvements
 
