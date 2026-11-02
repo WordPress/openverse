@@ -54,7 +54,7 @@ await useAsyncData(
 </script>
 
 <template>
-  <div
+  <main
     :id="skipToContentTargetId"
     tabindex="-1"
     class="p-6 pt-0 lg:p-10 lg:pt-2"
@@ -70,5 +70,5 @@ await useAsyncData(
       :can-load-more="canLoadMore"
       @load-more="loadMore"
     />
-  </div>
+  </main>
 </template>
