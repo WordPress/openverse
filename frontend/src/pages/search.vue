@@ -145,7 +145,7 @@ await useAsyncData(
 </script>
 
 <template>
-  <div
+  <main
     :id="skipToContentTargetId"
     tabindex="-1"
     class="browse-page flex w-full flex-col px-6 lg:px-10"
@@ -165,5 +165,5 @@ await useAsyncData(
         data-testid="search-results"
       />
     </div>
-  </div>
+  </main>
 </template>
