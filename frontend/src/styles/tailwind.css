@@ -1,6 +1,136 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@config '../../tailwind.config.ts';
+
+/* Keep v3 behaviour: apply `hover:` on touch devices too, not only `@media (hover: hover)`. */
+@custom-variant hover (&:hover);
+
+/* Keep v3 behaviour: v4 preflight no longer sets a pointer cursor on buttons. */
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+@utility heading-1 {
+  @apply text-7xl font-bold;
+}
+
+@utility heading-2 {
+  @apply text-6xl font-bold;
+}
+
+@utility heading-3 {
+  @apply text-5xl font-bold;
+}
+
+@utility heading-4 {
+  @apply text-4xl font-bold;
+}
+
+@utility heading-5 {
+  @apply text-3xl font-semibold;
+}
+
+@utility heading-6 {
+  @apply text-2xl font-semibold;
+}
+
+@utility paragraph-large {
+  @apply text-2xl leading-larger;
+}
+
+@utility paragraph-small {
+  @apply text-base leading-large;
+}
+
+@utility body {
+  @apply text-base;
+}
+
+@utility description-regular {
+  @apply text-base leading-snug;
+}
+
+@utility description-bold {
+  @apply text-base leading-snug font-semibold;
+}
+
+@utility label-bold {
+  @apply text-sm font-semibold;
+}
+
+@utility label-regular {
+  @apply text-sm font-normal;
+}
+
+@utility caption-regular {
+  @apply text-sr;
+}
+
+@utility caption-bold {
+  @apply text-sr font-semibold;
+}
+
+@utility category {
+  @apply text-sr font-semibold uppercase;
+}
+
+@utility time {
+  @apply text-xs font-semibold;
+}
+
+@utility focus-slim-tx {
+  @apply outline-style-none; /* UA styles: none */
+  @apply ring; /* outer-stroke: box-shadow */
+  @apply border-tx; /* inner-stroke: transparent border */
+
+  /* It is up to the component to apply border utilities. */
+  @apply hover:border-tx; /* focus prevails over hover */
+  @apply ring-focus; /* default ring color */
+}
+
+@utility focus-bold-filled {
+  @apply outline-style-none; /* UA styles: none */
+  @apply ring-bold; /* outer-stroke: box-shadow */
+  @apply relative;
+
+  @apply after:z-10; /* inner-stroke: pseudo-element */
+
+  @apply after:pointer-events-none after:absolute after:inset-0 after:rounded-inherit;
+  @apply after:z-10 after:shadow-bold-filled; /* inner-stroke: pseudo-element */
+
+  @apply ring-focus; /* default ring color */
+}
+
+@utility h-dyn-screen {
+  @apply h-screen;
+  @apply h-dvh;
+}
+
+@utility min-h-dyn-screen {
+  @apply min-h-screen;
+  @apply min-h-dvh;
+}
 
 @layer base {
   :root {
@@ -390,7 +520,7 @@
   }
 
   body {
-    @apply m-0 font-normal leading-loose text-default;
+    @apply m-0 leading-loose font-normal text-default;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -415,11 +545,11 @@
   input[type="search"]::-webkit-search-results-decoration {
     -webkit-appearance: none;
   }
+}
 
-  /* Completely remove the outline; to be replaced with a different focus ring */
-  .outline-style-none {
-    outline-style: none;
-  }
+/* Completely remove the outline; to be replaced with a different focus ring */
+@utility outline-style-none {
+  outline-style: none;
 }
 /*
 Text styles from Figma, @see
@@ -446,74 +576,6 @@ Time                - 11px - xs semibold (default leading-tight)
 
 */
 @layer utilities {
-  .heading-1 {
-    @apply text-7xl font-bold;
-  }
-
-  .heading-2 {
-    @apply text-6xl font-bold;
-  }
-
-  .heading-3 {
-    @apply text-5xl font-bold;
-  }
-
-  .heading-4 {
-    @apply text-4xl font-bold;
-  }
-
-  .heading-5 {
-    @apply text-3xl font-semibold;
-  }
-
-  .heading-6 {
-    @apply text-2xl font-semibold;
-  }
-
-  .paragraph-large {
-    @apply text-2xl leading-larger;
-  }
-
-  .paragraph-small {
-    @apply text-base leading-large;
-  }
-
-  .body {
-    @apply text-base;
-  }
-
-  .description-regular {
-    @apply text-base leading-snug;
-  }
-
-  .description-bold {
-    @apply text-base font-semibold leading-snug;
-  }
-
-  .label-bold {
-    @apply text-sm font-semibold;
-  }
-
-  .label-regular {
-    @apply text-sm font-normal;
-  }
-
-  .caption-regular {
-    @apply text-sr;
-  }
-
-  .caption-bold {
-    @apply text-sr font-semibold;
-  }
-
-  .category {
-    @apply text-sr font-semibold uppercase;
-  }
-
-  .time {
-    @apply text-xs font-semibold;
-  }
-
   /**
    * Focus styles are defined across across two axes.
    *
@@ -531,47 +593,24 @@ Time                - 11px - xs semibold (default leading-tight)
    */
 
   [class*="focus-slim-offset"] {
-    @apply focus-visible:outline-none; /* UA styles: none */
+    @apply focus-visible:outline-hidden; /* UA styles: none */
     @apply focus-visible:ring; /* outer-stroke: box-shadow */
     @apply ring-offset-1;
-  }
-
-  .focus-slim-tx {
-    @apply outline-style-none; /* UA styles: none */
-    @apply ring; /* outer-stroke: box-shadow */
-    @apply border-tx; /* inner-stroke: transparent border */
-
-    /* It is up to the component to apply border utilities. */
-    @apply hover:border-tx; /* focus prevails over hover */
-    @apply ring-focus; /* default ring color */
   }
 
   [class*="focus-slim-filled"] {
     @apply focus-visible:relative focus-visible:after:pointer-events-none;
     /* colored outline */
-    @apply focus-visible:outline focus-visible:outline-1.5 focus-visible:outline-offset-0;
+    @apply focus-visible:outline-1.5 focus-visible:outline-offset-0 focus-visible:outline-solid;
     /* absolutely positioned overlapping pseudo element with a 1.5px border */
     @apply focus-visible:after:absolute focus-visible:after:z-10 focus-visible:after:rounded-inherit;
     @apply focus-visible:after:border-1.5;
     @apply focus-visible:after:h-full-with-border focus-visible:after:w-full-with-border;
-    @apply focus-visible:after:-left-px focus-visible:after:-top-px;
+    @apply focus-visible:after:-top-px focus-visible:after:-left-px;
 
     @apply focus-visible:after:border-bg-ring;
     @apply focus-visible:outline-focus;
     /* @apply ring-offset-bg-default; */
-  }
-
-  .focus-bold-filled {
-    @apply outline-style-none; /* UA styles: none */
-    @apply ring-bold; /* outer-stroke: box-shadow */
-    @apply relative;
-
-    @apply after:z-10; /* inner-stroke: pseudo-element */
-
-    @apply after:pointer-events-none after:absolute after:inset-0 after:rounded-inherit;
-    @apply after:z-10 after:shadow-bold-filled; /* inner-stroke: pseudo-element */
-
-    @apply ring-focus; /* default ring color */
   }
 
   /**
@@ -579,14 +618,5 @@ Time                - 11px - xs semibold (default leading-tight)
    */
   #content {
     @apply scroll-mt-20;
-  }
-
-  .h-dyn-screen {
-    @apply h-screen;
-    @apply h-[100dvh];
-  }
-  .min-h-dyn-screen {
-    @apply min-h-screen;
-    @apply min-h-[100dvh];
   }
 }

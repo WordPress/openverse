@@ -94,8 +94,8 @@ const imageCount = computed(() => columnCount.value * rowCount)
           v-for="(image, idx) in imageList"
           v-else
           :key="idx"
-          enter-active-class="transition-opacity delay-[var(--delay)] duration-500"
-          leave-active-class="transition-opacity delay-[var(--delay)] duration-500"
+          enter-active-class="transition-opacity delay-(--delay) duration-500"
+          leave-active-class="transition-opacity delay-(--delay) duration-500"
           enter-from-class="opacity-0"
           leave-to-class="opacity-0"
           mode="out-in"

@@ -47,10 +47,10 @@ const sendVisitSourceLinkEvent = (source?: string) => {
       <VSourceProviderTooltip
         v-if="tooltipId(datum)"
         :described-by="tooltipId(datum)"
-        class="label-regular -ms-1 mb-1 flex flex-row items-center ps-1"
+        class="-ms-1 mb-1 flex flex-row items-center ps-1 label-regular"
         :datum="datum"
       />
-      <dt v-else class="label-regular mb-1 flex flex-row ps-1">
+      <dt v-else class="mb-1 flex flex-row ps-1 label-regular">
         {{ $t(datum.label) }}
       </dt>
       <VMetadataValue
@@ -60,19 +60,19 @@ const sendVisitSourceLinkEvent = (source?: string) => {
       />
     </div>
   </dl>
-  <dl v-else class="grid grid-cols-[auto,1fr] gap-x-4 gap-y-2">
+  <dl v-else class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2">
     <template v-for="datum in metadata" :key="datum.label">
       <VSourceProviderTooltip
         v-if="tooltipId(datum)"
         :described-by="tooltipId(datum)"
-        class="label-regular -ms-1 flex flex-row items-center p-1 sm:ms-0 sm:py-0 sm:pe-0"
+        class="-ms-1 flex flex-row items-center p-1 label-regular sm:ms-0 sm:py-0 sm:pe-0"
         :datum="datum"
       />
       <dt
         v-else
         :id="datum.label"
         :key="datum.label"
-        class="label-regular flex flex-row pt-1"
+        class="flex flex-row pt-1 label-regular"
       >
         {{ $t(datum.label) }}
       </dt>
@@ -85,7 +85,8 @@ const sendVisitSourceLinkEvent = (source?: string) => {
 </template>
 
 <style scoped>
-@screen sm {
+@reference "~/styles/tailwind.css";
+@media (min-width: theme("screens.sm")) {
   .metadata {
     grid-template-columns: repeat(var(--column-count, 4), fit-content(10rem));
   }

@@ -132,7 +132,7 @@ watch(
     <template v-if="audio">
       <VGlobalAudioTrack :audio="audio" />
       <VIconButton
-        class="!absolute end-0 top-0 z-30 m-2"
+        class="absolute! inset-e-0 top-0 z-30 m-2"
         variant="transparent-gray"
         :icon-props="{ name: 'close-small' }"
         size="small"

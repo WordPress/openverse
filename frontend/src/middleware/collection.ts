@@ -62,7 +62,7 @@ const routeNameToMediaType = (
  * If the source name does not exist in the provider store, it will throw a 404 error.
  */
 
-export const collectionMiddleware = defineNuxtRouteMiddleware(async (to) => {
+export default defineNuxtRouteMiddleware(async (to) => {
   const mediaStore = useMediaStore()
   const searchStore = useSearchStore()
   // Route name has the locale in it, e.g. `audio-collection__en`

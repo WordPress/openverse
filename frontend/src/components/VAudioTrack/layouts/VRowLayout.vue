@@ -38,7 +38,7 @@ const isMd = computed(() => uiStore.isBreakpoint("md"))
     :class="[`size-${size}`, { 'items-start': isSmall }]"
   >
     <div
-      class="thumbnail grid overflow-hidden rounded-sm"
+      class="thumbnail grid overflow-hidden rounded-xs"
       :class="{ 'h-20 w-20': isSmall }"
     >
       <VAudioThumbnail :audio="audio" class="col-span-full row-span-full" />
@@ -53,9 +53,9 @@ const isMd = computed(() => uiStore.isBreakpoint("md"))
       </div>
     </div>
 
-    <div role="document" class="flex min-w-0 flex-shrink-0 flex-col gap-1">
+    <div role="document" class="flex min-w-0 shrink-0 flex-col gap-1">
       <h2
-        class="decoration-inherit line-clamp-1 block overflow-hidden text-ellipsis whitespace-nowrap rounded-sm text-default hover:text-default group-hover:underline"
+        class="line-clamp-1 block overflow-hidden rounded-xs text-ellipsis whitespace-nowrap text-default decoration-inherit group-hover:underline hover:text-default"
         :class="[
           { 'blur-text': shouldBlur },
           isSmall ? 'label-bold' : 'description-bold',
@@ -93,7 +93,7 @@ const isMd = computed(() => uiStore.isBreakpoint("md"))
           <VLicense :hide-name="true" :license="audio.license" />
         </div>
         <!-- Medium and large layouts -->
-        <div v-else class="flex flex-shrink-0 flex-row">
+        <div v-else class="flex shrink-0 flex-row">
           <span v-if="audio.category" :class="{ 'dot-before': isMedium }">{{
             $t(`filters.audioCategories.${audio.category}`)
           }}</span>
@@ -132,12 +132,13 @@ const isMd = computed(() => uiStore.isBreakpoint("md"))
 </template>
 
 <style scoped>
+@reference "~/styles/tailwind.css";
 :deep(.audio-control) {
-  @apply flex-none rounded-es-sm rounded-ss-sm;
+  @apply flex-none rounded-ss-xs rounded-es-xs;
 }
 
 :deep(.waveform) {
-  @apply w-full rounded-ee-sm rounded-se-sm;
+  @apply w-full rounded-se-xs rounded-ee-xs;
   --waveform-background-color: theme("colors.tx");
 }
 
@@ -176,11 +177,11 @@ const isMd = computed(() => uiStore.isBreakpoint("md"))
 
 .dot-after {
   @apply relative me-5;
-  @apply after:absolute after:-end-3 after:top-[calc(50%-0.125rem)] after:h-1 after:w-1 after:rounded-full after:bg-gray-8;
+  @apply after:absolute after:-inset-e-3 after:top-[calc(50%-0.125rem)] after:h-1 after:w-1 after:rounded-full after:bg-gray-8;
 }
 
 .dot-before {
   @apply relative ms-5;
-  @apply before:absolute before:-start-3 before:top-[calc(50%-0.125rem)] before:h-1 before:w-1 before:rounded-full before:bg-gray-8;
+  @apply before:absolute before:-inset-s-3 before:top-[calc(50%-0.125rem)] before:h-1 before:w-1 before:rounded-full before:bg-gray-8;
 }
 </style>

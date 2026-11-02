@@ -125,7 +125,7 @@ const handleEscape = () => {
           :aria-describedby="describedBy"
           variant="bordered-white"
           size="disabled"
-          class="h-4 w-4 hover:!border-tx"
+          class="h-4 w-4 hover:border-tx!"
           :icon-props="{ name: 'info', size: 4 }"
           @click="open"
         />
@@ -136,7 +136,7 @@ const handleEscape = () => {
       :id="describedBy"
       ref="tooltipRef"
       role="tooltip"
-      :class="`z-${zIndex} w-max-content absolute left-0 top-0`"
+      :class="`z-${zIndex} w-max-content absolute top-0 left-0`"
       :style="{ ...style }"
       :aria-hidden="!visibleRef"
     >

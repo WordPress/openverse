@@ -12,7 +12,7 @@ import { handledClientSide } from "#shared/utils/errors"
 import { useMediaStore } from "~/stores/media"
 import { useSearchStore } from "~/stores/search"
 
-export const searchMiddleware = defineNuxtRouteMiddleware(async (to) => {
+export default defineNuxtRouteMiddleware(async (to) => {
   const {
     query: { q },
   } = to

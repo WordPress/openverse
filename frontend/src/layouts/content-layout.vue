@@ -30,7 +30,7 @@ provide(ShowScrollButtonKey, showScrollButton)
 
 <template>
   <div
-    class="app min-h-dyn-screen grid grid-cols-1 grid-rows-[auto,1fr] bg-default"
+    class="app grid min-h-dyn-screen grid-cols-1 grid-rows-[auto_1fr] bg-default"
   >
     <VHeader
       kind="internal"

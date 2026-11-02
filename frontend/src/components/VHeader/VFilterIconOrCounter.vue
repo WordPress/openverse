@@ -21,7 +21,7 @@ const showIcon = computed(() => props.appliedFilterCount === 0)
   <VIcon v-if="showIcon" name="filter" />
   <p
     v-else
-    class="flex h-6 w-6 items-center justify-center rounded-sm"
+    class="flex h-6 w-6 items-center justify-center rounded-xs"
     :class="pressed ? 'bg-tx' : 'bg-secondary'"
   >
     {{ appliedFilterCount }}

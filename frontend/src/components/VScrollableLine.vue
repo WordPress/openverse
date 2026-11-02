@@ -153,7 +153,7 @@ watchDebounced(
 <template>
   <div
     ref="containerRef"
-    class="container relative flex min-w-0"
+    class="relative container flex min-w-0"
     :class="{ 'pointer-events-none': !isInteractive }"
   >
     <div
@@ -170,7 +170,7 @@ watchDebounced(
         :class="[
           showScrollButton.start
             ? showScrollButton.end
-              ? 'me-11 ms-11 w-[calc(100%_-_2_*_theme(spacing.11))]'
+              ? 'ms-11 me-11 w-[calc(100%_-_2_*_theme(spacing.11))]'
               : 'ms-11 w-[calc(100%_-_theme(spacing.11))]'
             : showScrollButton.end
               ? 'me-11 w-[calc(100%_-_theme(spacing.11))]'
@@ -182,13 +182,13 @@ watchDebounced(
     </div>
     <VScroller
       v-show="showScrollButton.start"
-      class="start-0"
+      class="inset-s-0"
       direction="back"
       @click="scroll('start')"
     />
     <VScroller
       v-show="showScrollButton.end"
-      class="end-0"
+      class="inset-e-0"
       direction="forward"
       @click="scroll('end')"
     />

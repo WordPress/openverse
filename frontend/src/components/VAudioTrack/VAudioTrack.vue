@@ -483,7 +483,7 @@ const handleWaveformBlur = () => {
     :is="isComposite ? VLink : 'div'"
     :href="href"
     v-bind="containerAttributes"
-    class="audio-track group block overflow-hidden rounded-sm hover:no-underline"
+    class="audio-track group block overflow-hidden rounded-xs hover:no-underline"
     :class="{
       'audio-link cursor-pointer focus-visible:focus-bold-filled':
         layout === 'box',

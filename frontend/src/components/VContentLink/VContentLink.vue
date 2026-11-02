@@ -46,16 +46,16 @@ const { doneHydrating } = useHydrating()
     variant="bordered-gray"
     size="disabled"
     :disabled="!doneHydrating"
-    class="h-auto w-full flex-col !items-start !justify-start gap-1 overflow-hidden p-4 sm:h-18 sm:flex-row sm:!items-center sm:gap-2 sm:px-6"
+    class="h-auto w-full flex-col items-start! justify-start! gap-1 overflow-hidden p-4 sm:h-18 sm:flex-row sm:items-center! sm:gap-2 sm:px-6"
     @keydown.shift.tab.exact="$emit('shift-tab', $event)"
     @mousedown="handleClick"
   >
     <VIcon :name="mediaType" />
-    <p class="label-bold sm:description-bold mt-1 sm:mt-0">
+    <p class="mt-1 label-bold sm:mt-0 sm:description-bold">
       {{ $t(`searchType.${mediaType}`) }}
     </p>
     <span
-      class="label-regular sm:description-regular text-secondary group-hover/button:text-default sm:ms-auto"
+      class="label-regular text-secondary group-hover/button:text-default sm:ms-auto sm:description-regular"
       >{{ labels.visible }}</span
     >
   </VButton>

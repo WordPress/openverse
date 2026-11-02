@@ -9,7 +9,7 @@ defineProps<{ media: Media }>()
 
 <template>
   <section :aria-label="$t('mediaDetails.reuse.title')" class="media-reuse">
-    <h2 class="heading-6 md:heading-5 mb-4">
+    <h2 class="mb-4 heading-6 md:heading-5">
       {{ $t("mediaDetails.reuse.title") }}
     </h2>
     <p class="description-regular">
@@ -21,7 +21,7 @@ defineProps<{ media: Media }>()
     </p>
     <p
       v-if="media.frontendMediaType === 'image'"
-      class="description-regular mt-3"
+      class="mt-3 description-regular"
     >
       {{ $t("mediaDetails.reuse.copyrightDisclaimer") }}
     </p>

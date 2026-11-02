@@ -38,7 +38,7 @@ const tagsPagePath = computed(() => localePath("/tags"))
 <template>
   <div class="flex flex-col gap-6 sm:gap-8">
     <div v-if="hasSourceTags">
-      <h3 v-if="hasGeneratedTags" class="label-regular mb-2">
+      <h3 v-if="hasGeneratedTags" class="mb-2 label-regular">
         {{ $t("mediaDetails.tags.source.heading") }}
       </h3>
       <h3 v-else class="sr-only">{{ $t("mediaDetails.tags.title") }}</h3>
@@ -48,7 +48,7 @@ const tagsPagePath = computed(() => localePath("/tags"))
       />
     </div>
     <div v-if="hasGeneratedTags">
-      <div class="label-regular mb-2 flex gap-2">
+      <div class="mb-2 flex gap-2 label-regular">
         <h3>{{ $t("mediaDetails.tags.generated.heading") }}</h3>
         <VLink :href="tagsPagePath">{{
           $t("mediaDetails.tags.generated.pageTitle")

@@ -94,11 +94,11 @@ const ariaHeading = computed((): string => {
 
 <template>
   <h1
-    class="sr-only break-words md:not-sr-only"
+    class="sr-only wrap-break-word md:not-sr-only"
     :class="[
       size === 'large'
-        ? 'heading-2 lg:heading-1 !leading-none lg:!leading-none'
-        : 'heading-2 !leading-none',
+        ? 'heading-2 leading-none! lg:heading-1 lg:leading-none!'
+        : 'heading-2 leading-none!',
     ]"
   >
     <span aria-hidden="true">{{ searchTerm }}</span

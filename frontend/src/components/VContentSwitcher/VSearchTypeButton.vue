@@ -42,7 +42,7 @@ const { doneHydrating } = useHydrating()
 <template>
   <VButton
     class="min-w-12 gap-x-2"
-    :class="{ '!px-3': showLabel }"
+    :class="{ 'px-3!': showLabel }"
     variant="bordered-tx"
     :icon-only="!showLabel"
     :disabled="!doneHydrating"
@@ -53,7 +53,7 @@ const { doneHydrating } = useHydrating()
     <VIcon :name="searchType" />
     <template v-if="showLabel">
       <span
-        class="label-regular block max-w-30 flex-none truncate text-start"
+        class="block max-w-30 flex-none truncate text-start label-regular"
         >{{ label }}</span
       >
       <VIcon name="caret-down" />

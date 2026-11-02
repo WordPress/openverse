@@ -37,7 +37,7 @@ const ariaLabel = computed(() =>
     id="filter-button"
     :variant="pressed ? 'filled-dark' : 'bordered-white'"
     size="disabled"
-    class="label-regular h-12 w-12 gap-x-2 self-center xl:w-auto xl:pe-4 xl:ps-3"
+    class="h-12 w-12 gap-x-2 self-center label-regular xl:w-auto xl:ps-3 xl:pe-4"
     :pressed="pressed"
     :disabled="disabled"
     aria-controls="filters"

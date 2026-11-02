@@ -51,11 +51,11 @@ defineExpose({ focusInput })
     id="search-form"
     action="/search"
     role="search"
-    class="group flex h-14 flex-row items-center rounded-sm border-tx bg-default sm:h-16 dark:bg-overlay"
+    class="group flex h-14 flex-row items-center rounded-xs border-tx bg-default sm:h-16 dark:bg-overlay"
     @submit.prevent="handleSearch"
   >
     <div
-      class="input-field search-field group flex h-full flex-grow items-center overflow-hidden rounded-sm rounded-e-none border-1.5 border-e-0 pe-2"
+      class="input-field search-field group flex h-full grow items-center overflow-hidden rounded-xs rounded-e-none border-1.5 border-e-0 pe-2"
       :class="[
         route === 'home' ? 'border-tx' : 'border-black dark:border-tx',
         { 'has-popover': hasPopover, black: route !== 'home' },
@@ -67,7 +67,7 @@ defineExpose({ focusInput })
         type="search"
         name="q"
         :placeholder="$t('hero.search.placeholder')"
-        class="paragraph-large md:label-regular focus-visible:outline-style-none ms-4 h-full w-full appearance-none rounded-none bg-tx leading-none text-default placeholder-default"
+        class="ms-4 h-full w-full appearance-none rounded-none bg-tx paragraph-large text-default placeholder-default focus-visible:outline-style-none md:label-regular"
         :aria-label="
           $t('search.searchBarLabel', {
             openverse: 'Openverse',
@@ -82,6 +82,7 @@ defineExpose({ focusInput })
 </template>
 
 <style scoped>
+@reference "~/styles/tailwind.css";
 .input-field:has(#search-bar:focus-visible) {
   @apply border-focus;
 }

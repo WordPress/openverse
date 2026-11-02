@@ -120,7 +120,7 @@ const onChange = () => {
             : [
                 'h-5',
                 'w-5',
-                'rounded-sm',
+                'rounded-xs',
                 'focus-visible:focus-slim-tx',
                 'checked:focus-visible:border-bg-ring',
               ]
@@ -133,7 +133,7 @@ const onChange = () => {
       <!-- Knob, for when `ifSwitch` is `true` -->
       <span
         v-if="isSwitch"
-        class="absolute left-0.75 top-0.75 block h-3 w-3 rounded-full transition-transform duration-100"
+        class="absolute top-0.75 left-0.75 block h-3 w-3 rounded-full transition-transform duration-100"
         :class="
           localCheckedState
             ? ['bg-default', 'translate-x-[1.125rem]']

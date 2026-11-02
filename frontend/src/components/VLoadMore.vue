@@ -98,7 +98,7 @@ watch(isLoadMoreButtonVisible, (isVisible) => {
   <div ref="loadMoreSectionRef" class="w-full">
     <VButton
       v-show="canLoadMore"
-      class="label-bold lg:description-bold h-16 w-full lg:h-18"
+      class="h-16 w-full label-bold lg:h-18 lg:description-bold"
       variant="filled-gray"
       size="disabled"
       :disabled="isFetching"

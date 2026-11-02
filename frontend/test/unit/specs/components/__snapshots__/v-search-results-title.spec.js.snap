@@ -6,18 +6,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultC
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         All results for "zack", no images and no audio tracks.
       </span>
@@ -32,18 +32,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultC
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         All results for "zack", no images and 10 audio track.
       </span>
@@ -58,18 +58,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultC
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         All results for "zack", no images and top 240 audio tracks.
       </span>
@@ -84,18 +84,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultC
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         All results for "zack", no images and top 240 audio tracks.
       </span>
@@ -110,18 +110,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultC
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         All results for "zack", no images and top 4,300 audio tracks.
       </span>
@@ -136,18 +136,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultC
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         All results for "zack", 10 image and no audio tracks.
       </span>
@@ -162,18 +162,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultC
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         All results for "zack", 10 image and 10 audio track.
       </span>
@@ -188,18 +188,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultC
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         All results for "zack", 10 image and top 240 audio tracks.
       </span>
@@ -214,18 +214,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultC
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         All results for "zack", 10 image and top 240 audio tracks.
       </span>
@@ -240,18 +240,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultC
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         All results for "zack", 10 image and top 4,300 audio tracks.
       </span>
@@ -266,18 +266,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultC
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         All results for "zack", top 240 images and no audio tracks.
       </span>
@@ -292,18 +292,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultC
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         All results for "zack", top 240 images and no audio tracks.
       </span>
@@ -318,18 +318,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultC
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         All results for "zack", top 240 images and 10 audio track.
       </span>
@@ -344,18 +344,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultC
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         All results for "zack", top 240 images and 10 audio track.
       </span>
@@ -370,18 +370,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultC
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         All results for "zack", top 240 images and top 240 audio tracks.
       </span>
@@ -396,18 +396,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultC
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         All results for "zack", top 240 images and top 240 audio tracks.
       </span>
@@ -422,18 +422,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultC
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         All results for "zack", top 240 images and top 240 audio tracks.
       </span>
@@ -448,18 +448,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultC
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         All results for "zack", top 240 images and top 240 audio tracks.
       </span>
@@ -474,18 +474,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultC
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         All results for "zack", top 240 images and top 4,300 audio tracks.
       </span>
@@ -500,18 +500,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultC
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         All results for "zack", top 240 images and top 4,300 audio tracks.
       </span>
@@ -526,18 +526,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultC
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         All results for "zack", top 4,300 images and no audio tracks.
       </span>
@@ -552,18 +552,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultC
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         All results for "zack", top 4,300 images and 10 audio track.
       </span>
@@ -578,18 +578,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultC
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         All results for "zack", top 4,300 images and top 240 audio tracks.
       </span>
@@ -604,18 +604,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultC
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         All results for "zack", top 4,300 images and top 240 audio tracks.
       </span>
@@ -630,18 +630,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"all","resultC
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         All results for "zack", top 4,300 images and top 4,300 audio tracks.
       </span>
@@ -656,18 +656,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"audio","resul
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         No audio tracks for "zack"
       </span>
@@ -682,18 +682,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"audio","resul
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         10 audio tracks for "zack".
       </span>
@@ -708,18 +708,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"audio","resul
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         Top 240 audio tracks for "zack".
       </span>
@@ -734,18 +734,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"audio","resul
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         Top 240 audio tracks for "zack".
       </span>
@@ -760,18 +760,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"audio","resul
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         Top 4,300 audio tracks for "zack".
       </span>
@@ -786,18 +786,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"image","resul
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         No image results for "zack"
       </span>
@@ -812,18 +812,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"image","resul
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         10 image results for "zack".
       </span>
@@ -838,18 +838,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"image","resul
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         Top 240 image results for "zack".
       </span>
@@ -864,18 +864,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"image","resul
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         Top 240 image results for "zack".
       </span>
@@ -890,18 +890,18 @@ exports[`VSearchResultsTitle > accessible heading > {"searchType":"image","resul
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         Top 4,300 image results for "zack".
       </span>
@@ -916,18 +916,18 @@ exports[`VSearchResultsTitle > should render an h1 tag containing the correct te
     id="test-wrapper"
   >
     <h1
-      class="sr-only break-words md:not-sr-only heading-2 lg:heading-1 !leading-none lg:!leading-none"
-      data-v-2b685c21=""
+      class="sr-only wrap-break-word md:not-sr-only heading-2 leading-none! lg:heading-1 lg:leading-none!"
+      data-v-334cbaa1=""
     >
       <span
         aria-hidden="true"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         zack
       </span>
       <span
         class="sr-only"
-        data-v-2b685c21=""
+        data-v-334cbaa1=""
       >
         All results for "zack", 10 image and 10 audio track.
       </span>

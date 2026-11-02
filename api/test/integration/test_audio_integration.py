@@ -5,14 +5,32 @@ Tests common to all media types are in ``test_media_integration.py``.
 """
 
 import os
+import shutil
 import subprocess
+from pathlib import Path
 from unittest import mock
 
 import pook
 import pytest
 
+from api.utils import waveform
+
 
 pytestmark = pytest.mark.django_db
+
+_SAMPLE_AUDIO = Path(__file__).parent.parent / "factory" / "sample-audio.mp3"
+
+
+@pytest.fixture
+def mock_audio_download(monkeypatch):
+    """Serve a local file instead of downloading the audio from the provider."""
+
+    def download_audio(url, identifier):
+        file_name = f"audio-{identifier}.mp3"
+        shutil.copyfile(_SAMPLE_AUDIO, waveform.TMP_DIR / file_name)
+        return file_name
+
+    monkeypatch.setattr(waveform, "download_audio", download_audio)
 
 
 def test_audio_detail_without_thumb(api_client):
@@ -30,6 +48,7 @@ def test_audio_search_without_thumb(api_client):
     assert parsed["results"][0]["thumbnail"] is None
 
 
+@pytest.mark.usefixtures("mock_audio_download")
 def test_audio_waveform(api_client):
     resp = api_client.get("/v1/audio/44540200-91eb-483d-9e99-38ce86a52fb6/waveform/")
     assert resp.status_code == 200
@@ -37,6 +56,7 @@ def test_audio_waveform(api_client):
     assert parsed["len"] == len(parsed["points"])
 
 
+@pytest.mark.usefixtures("mock_audio_download")
 def test_audio_generation_failure(monkeypatch, api_client):
     mock_subprocess_run = mock.Mock()
     mock_subprocess_run.side_effect = subprocess.CalledProcessError(1, "", "", "")
@@ -47,6 +67,7 @@ def test_audio_generation_failure(monkeypatch, api_client):
     assert "Could not generate the waveform." == resp.json()["detail"]
 
 
+@pytest.mark.usefixtures("mock_audio_download")
 def test_audio_waveform_cleanup_failure_does_not_fail_request(monkeypatch, api_client):
     mock_os_remove = mock.Mock()
     mock_os_remove.side_effect = OSError("beep boop")

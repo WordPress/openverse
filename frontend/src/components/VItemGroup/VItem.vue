@@ -120,15 +120,15 @@ const splitAttrs = computed(() => {
     <VButton
       data-item-group-item
       :as="as"
-      class="relative min-w-full justify-between border-0 hover:bg-transparent-hover focus-visible:z-10"
+      class="relative min-w-full justify-between! border-0 hover:bg-transparent-hover focus-visible:z-10"
       :class="{
         'w-max': contextProps.direction === 'horizontal',
-        '!p-3': contextProps.size === 'small',
-        '!p-5 !ps-6': contextProps.size === 'medium',
+        'p-3!': contextProps.size === 'small',
+        'p-5! ps-6!': contextProps.size === 'medium',
         'bg-transparent-hover ring-offset-gray-2':
           selected && contextProps.showCheck,
         'text-default': as === 'VLink',
-        '!px-2': !contextProps.showCheck,
+        'px-2!': !contextProps.showCheck,
       }"
       variant="transparent-tx"
       size="disabled"
@@ -143,7 +143,7 @@ const splitAttrs = computed(() => {
       @click="$emit('click')"
     >
       <div
-        class="flex w-full flex-grow gap-x-2 whitespace-nowrap rounded-sm"
+        class="flex w-full grow gap-x-2 rounded-xs whitespace-nowrap"
         :class="[`${contextProps.direction}-content`]"
       >
         <slot name="default" />
@@ -155,7 +155,7 @@ const splitAttrs = computed(() => {
           contextProps.showCheck
         "
         class="absolute"
-        :class="contextProps.size === 'small' ? 'end-3' : 'end-5'"
+        :class="contextProps.size === 'small' ? 'inset-e-3' : 'inset-e-5'"
         name="item-indicator"
       />
     </VButton>
@@ -163,16 +163,17 @@ const splitAttrs = computed(() => {
 </template>
 
 <style scoped>
+@reference "~/styles/tailwind.css";
 .vertical {
   @apply min-w-max;
 }
 
 .vertical-bordered {
-  @apply border-b border-t-0;
+  @apply border-t-0 border-b;
 }
 
 .vertical:first-of-type {
-  @apply rounded-se-sm rounded-ss-sm;
+  @apply rounded-ss-xs rounded-se-xs;
 }
 
 .vertical-bordered:first-of-type {
@@ -180,7 +181,7 @@ const splitAttrs = computed(() => {
 }
 
 .vertical:last-of-type {
-  @apply rounded-ee-sm rounded-es-sm;
+  @apply rounded-ee-xs rounded-es-xs;
 }
 
 .vertical-content {
@@ -192,11 +193,11 @@ const splitAttrs = computed(() => {
 }
 
 .horizontal-bordered {
-  @apply border-e border-s-0 border-default;
+  @apply border-s-0 border-e border-default;
 }
 
 .horizontal:first-of-type {
-  @apply rounded-s-sm;
+  @apply rounded-s-xs;
 }
 
 .horizontal-bordered:first-of-type {
@@ -204,7 +205,7 @@ const splitAttrs = computed(() => {
 }
 
 .horizontal:last-of-type {
-  @apply rounded-e-sm;
+  @apply rounded-e-xs;
 }
 
 .horizontal-content {

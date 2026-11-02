@@ -102,6 +102,7 @@ const linkColumnHeight = computed(() => ({
 </template>
 
 <style>
+@reference "~/styles/tailwind.css";
 /* wrapper element styles */
 .footer-lg {
   @apply gap-y-8 px-10;

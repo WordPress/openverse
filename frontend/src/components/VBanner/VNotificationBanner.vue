@@ -67,17 +67,17 @@ const closeButtonClassNames = computed(() =>
   props.variant === "dark"
     ? "focus-visible:focus-slim-tx hover:bg-tertiary-hover"
     : {
-        info: "hover:!bg-info-3",
-        warning: "hover:!bg-warning-3",
-        success: "hover:!bg-success-3",
-        error: "hover:!bg-error-3",
+        info: "hover:bg-info-3!",
+        warning: "hover:bg-warning-3!",
+        success: "hover:bg-success-3!",
+        error: "hover:bg-error-3!",
       }[props.nature]
 )
 </script>
 
 <template>
   <section
-    class="flex flex-row items-center gap-2 rounded-sm p-2 lg:p-3"
+    class="flex flex-row items-center gap-2 rounded-xs p-2 lg:p-3"
     :class="classNames"
     :data-testid="`banner-${id}`"
   >
@@ -85,7 +85,7 @@ const closeButtonClassNames = computed(() =>
       <VIcon :name="nature" :class="iconClassNames" />
     </slot>
 
-    <p class="caption-regular lg:paragraph-small flex-grow">
+    <p class="grow caption-regular lg:paragraph-small">
       <slot />
     </p>
 

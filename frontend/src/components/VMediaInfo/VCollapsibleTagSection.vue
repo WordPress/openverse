@@ -175,7 +175,7 @@ watchDebounced(
       size="small"
       variant="transparent-tx"
       has-icon-end
-      class="label-bold -ms-2 mt-4 hover:underline"
+      class="-ms-2 mt-4 label-bold hover:underline"
       :aria-expanded="buttonStatus === 'show' ? 'false' : 'true'"
       @click="handleClick"
       >{{

@@ -57,6 +57,9 @@ const eslintIgnores = [
   "**/coverage/**",
   "frontend/test/tapes/**",
   "frontend/storybook-static/**",
+  // Storybook is disabled until it supports Nuxt 4 with @nuxtjs/i18n
+  "frontend/.storybook/**",
+  "frontend/src/**/*.stories.ts",
   "packages/**/dist/**",
 ]
 
