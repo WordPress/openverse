@@ -22,11 +22,15 @@ def _elasticsearch_connect() -> tuple[Elasticsearch, str]:
 
     _es = Elasticsearch(
         es_endpoint,
-        # TODO: Return to default timeout of 10s and 1 retry once
-        # TODO: Elasticsearch response time has been stabilized
-        request_timeout=12,
-        max_retries=3,
-        retry_on_timeout=True,
+        # A search holds a pooled DB connection for as long as ES takes to
+        # answer, so a generous timeout with retries (previously 12 s × 4
+        # attempts) lets a slow cluster exhaust the pool and take the whole
+        # task down. Fail the one slow request instead.
+        request_timeout=config("ELASTICSEARCH_REQUEST_TIMEOUT", default=8, cast=float),
+        max_retries=config("ELASTICSEARCH_MAX_RETRIES", default=1, cast=int),
+        retry_on_timeout=config(
+            "ELASTICSEARCH_RETRY_ON_TIMEOUT", default=False, cast=bool
+        ),
     )
     _es.info()
     _es.cluster.health(wait_for_status="yellow")
