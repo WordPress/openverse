@@ -392,11 +392,13 @@ same procedure moves nodes to a new AMI, such as from Amazon Linux 2 to Amazon
 Linux 2023: new nodes are created from the AMI and init script in the module,
 while existing nodes ignore changes to both.
 
-This procedure describes the process of replacing a single data node, but could
-be extrapolated to multiple nodes with relative ease. It doesn't apply to master
-nodes, which have a fixed count of 3 in the module. Replacing a master node also
-requires excluding it from the voting configuration
-(`POST /_cluster/voting_config_exclusions`), and isn't documented yet.
+This procedure describes the process of replacing a single data node. To replace
+several at once, see
+[Replacing several data nodes at once](#replacing-several-data-nodes-at-once)
+after the steps. It doesn't apply to master nodes, which have a fixed count of 3
+in the module. Replacing a master node also requires excluding it from the
+voting configuration (`POST /_cluster/voting_config_exclusions`), and isn't
+documented yet.
 
 If a data refresh is scheduled during the timeframe of this procedure, it is
 best to pause it for performance reasons.
@@ -563,6 +565,42 @@ getting redundant alerts during this process.
     part of.
 
     Applying again after this should get rid of them too.
+
+### Replacing several data nodes at once
+
+The same steps replace several data nodes together, which saves waiting for
+shards to move once per node. The remaining data nodes must have enough disk
+space for all shards.
+
+- In step 3, increase `data_node_count` by the number of nodes being replaced.
+- In step 4, Ansible connects to the new nodes in parallel, and the first SSH
+  connection to each asks to confirm its host key. Add `-f 1` so the prompts
+  come one at a time, and pass all new nodes as one pattern:
+
+  ```bash
+  just ansible/exec ansible <environment> '<new_dns_1>:<new_dns_2>' -f 1 -b -m shell -a "cloud-init status --wait; if test -f /run/systemd/shutdown/scheduled; then echo reboot scheduled; else echo no reboot scheduled; fi"
+  ```
+
+- In step 5, pass all new nodes to `-l`, separated by commas.
+- In step 7, exclude all retiring nodes in one request, separated by commas:
+
+  ```json
+  {
+    "transient": {
+      "cluster.routing.allocation.exclude.name": "<private_ipv4_address_1>,<private_ipv4_address_2>"
+    }
+  }
+  ```
+
+- In step 8, check that all retiring nodes are empty. Each line of the output
+  starts with the node's shard count, which must be 0:
+
+  ```bash
+  just ansible/exec ansible <environment> <new_dns_1> -m uri -a "url=http://{{ private_ip_address }}:9200/_cat/allocation/<private_ipv4_address_1>,<private_ipv4_address_2>?h=shards,disk.indices,node return_content=true"
+  ```
+
+- In steps 11 and 12, remove every retired node from the state, then move each
+  new node to one of the freed indices.
 
 ## Potential improvements
 
