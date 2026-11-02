@@ -347,12 +347,16 @@ don't persist `vm.max_map_count` or mount the `/ssd` volume on boot, so after a
 plain reboot Elasticsearch either fails its bootstrap check or starts on an
 empty directory. The playbook fixes both before rebooting.
 
-It updates one node at a time. Before rebooting a data node it sets
-`cluster.routing.allocation.enable` to `primaries` and flushes, so the cluster
-doesn't copy the node's shards elsewhere while it's down. Afterwards it waits
-for the node to rejoin, resets the setting, and waits for the cluster to be
-green before moving on. Like the other playbooks, it only plans unless run with
-`-e apply=true`.
+It updates one node at a time. For the whole update it sets
+`cluster.routing.rebalance.enable` to `none`, so the cluster doesn't keep
+starting shard moves to balance the nodes while they reboot. Before rebooting a
+node it waits for the cluster to be green with no shards moving, because a
+reboot cancels a move and it starts over later. Before rebooting a data node it
+also sets `cluster.routing.allocation.enable` to `primaries` and flushes, so the
+cluster doesn't copy the node's shards elsewhere while it's down. Afterwards it
+waits for the node to rejoin, resets the setting, and waits for the cluster to
+be green before moving on. Like the other playbooks, it only plans unless run
+with `-e apply=true`.
 
 ```bash
 just ansible/playbook <environment> update_kernel.yml
@@ -364,6 +368,14 @@ Run it on staging first, then apply to a single production data node with `-l`
 and check it before updating the rest. Pause the
 `<environment>_elasticsearch_cluster_healthcheck` DAG and make sure no data
 refresh is running while it runs.
+
+If the playbook stops early, rebalancing stays paused. Fix the problem and run
+the playbook again, or resume rebalancing by hand. Check `GET _cluster/settings`
+is empty when you're done:
+
+```bash
+just ansible/exec ansible <environment> 'elasticsearch_datanodes[0]' -m uri -a '{"url": "http://{{ private_ip_address }}:9200/_cluster/settings", "method": "PUT", "body_format": "json", "body": {"persistent": {"cluster.routing.rebalance.enable": null}}}'
+```
 
 ```{warning}
 Data nodes keep their indices on an instance store volume (`/ssd`). Its data
