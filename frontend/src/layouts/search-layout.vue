@@ -66,7 +66,7 @@ provide(ShowScrollButtonKey, showScrollButton)
 
 <template>
   <div
-    class="app h-dyn-screen min-h-dyn-screen grid grid-rows-[auto,1fr] bg-default"
+    class="app grid h-dyn-screen min-h-dyn-screen grid-rows-[auto_1fr] bg-default"
     :class="[
       isSidebarVisible
         ? 'has-sidebar grid-cols-[1fr_var(--filter-sidebar-width)]'
@@ -81,7 +81,7 @@ provide(ShowScrollButtonKey, showScrollButton)
 
     <aside
       v-if="isSidebarVisible"
-      class="sidebar end-0 z-10 h-full overflow-y-auto border-s border-default bg-surface"
+      class="sidebar inset-e-0 z-10 h-full overflow-y-auto border-s border-default bg-surface"
     >
       <VSearchGridFilter class="px-10 py-8" />
       <VSafeBrowsing class="border-t border-default px-10 py-8" />

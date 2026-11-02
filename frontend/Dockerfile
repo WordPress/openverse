@@ -47,15 +47,14 @@ ENV NODE_ENV=production
 ENV NODE_OPTIONS="--max_old_space_size=4096"
 ENV SEMANTIC_VERSION=${SEMANTIC_VERSION}
 
-# Use the Sentry auth token secret to send the sourcemaps to Sentry only if the secret is provided
+# Use the Sentry auth token secret to send the sourcemaps to Sentry only if the secret is provided.
+# The token is only exported for `pnpm build`, never written to a file, so it does not end up in the image.
 RUN --mount=type=secret,id=sentry_auth_token,mode=0444 \
     sh -c 'if [ -f /run/secrets/sentry_auth_token ]; then \
-      SENTRY_AUTH_TOKEN="$(cat /run/secrets/sentry_auth_token)" && \
-      echo "SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN" >> .env.sentry-build-plugin && \
-      echo "Using Sentry Auth Token: $SENTRY_AUTH_TOKEN"; \
+      export SENTRY_AUTH_TOKEN="$(cat /run/secrets/sentry_auth_token)"; \
     else \
       echo "No Sentry Auth Token provided"; \
-    fi' && pnpm build
+    fi && pnpm build'
 
 
 ############

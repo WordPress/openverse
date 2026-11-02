@@ -48,7 +48,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div>
-    <h3 id="copy-license-title" class="description-bold md:heading-6 mb-4">
+    <h3 id="copy-license-title" class="mb-4 description-bold md:heading-6">
       {{ $t("mediaDetails.reuse.copyLicense.title") }}
     </h3>
 
@@ -94,7 +94,7 @@ onBeforeUnmount(() => {
       >
         <pre
           id="attribution-xml"
-          class="whitespace-pre-wrap break-all"
+          class="break-all whitespace-pre-wrap"
           dir="ltr"
           >{{ getAttributionMarkup({ isXml: true }) }}</pre
         >

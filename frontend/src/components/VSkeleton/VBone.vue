@@ -1,10 +1,11 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="bg-gradient shimmering motion-reduce:!animate-none" />
+  <div class="bg-gradient shimmering motion-reduce:animate-none!" />
 </template>
 
 <style scoped>
+@reference "~/styles/tailwind.css";
 .bg-gradient {
   @apply bg-secondary;
   background: linear-gradient(

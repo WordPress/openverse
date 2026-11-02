@@ -80,7 +80,7 @@ const selectItem = (item: SearchType) => {
       <h4
         v-if="index !== 0"
         :class="bordered ? 'ps-0' : 'ps-6'"
-        class="category pb-4 pt-6"
+        class="pt-6 pb-4 category"
       >
         {{ $t(`searchType.${category.heading}`) }}
       </h4>

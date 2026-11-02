@@ -91,6 +91,7 @@ watch(
 </template>
 
 <style scoped>
+@reference "~/styles/tailwind.css";
 [dir="rtl"] .v-icon.rtl-flip {
   @apply -scale-x-100 transform;
 }

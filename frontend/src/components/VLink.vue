@@ -113,10 +113,10 @@ const handleClick = (e: MouseEvent) => {
     url: props.href,
   })
 }
-const defaultRounded = "rounded-sm"
+const defaultRounded = "rounded-xs"
 const attrs = useAttrs()
 
-// Add `rounded-sm` class to links that don't have a rounded class.
+// Add `rounded-xs` class to links that don't have a rounded class.
 const roundedClass = computed(() => {
   if (
     !attrs.class ||

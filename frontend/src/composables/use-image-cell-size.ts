@@ -38,7 +38,7 @@ export const useImageCellSize = ({
   const isPanorama = computed(() => naturalAspectRatio.value > panoramaAspect)
 
   /**
-   * Returns the style declarations for the container width, aspect ratio and flex-grow value.
+   * Returns the style declarations for the container width, aspect ratio and grow value.
    * For the square cell, the styles are empty.
    */
   const styles = computed(() => {

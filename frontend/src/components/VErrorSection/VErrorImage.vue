@@ -57,14 +57,15 @@ const image = computed(() => images[props.errorCode])
 </template>
 
 <style scoped>
-::v-deep(.attribution) {
+@reference "~/styles/tailwind.css";
+:deep(.attribution) {
   @apply mt-4 text-sr text-secondary;
 }
-::v-deep(.attribution a) {
+:deep(.attribution a) {
   @apply text-current underline;
 }
 /* license icons should match the text color */
-::v-deep(.attribution img) {
+:deep(.attribution img) {
   @apply opacity-70;
 }
 </style>

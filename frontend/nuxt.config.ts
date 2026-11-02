@@ -1,4 +1,5 @@
 import { defineNuxtConfig } from "nuxt/config"
+import tailwindcss from "@tailwindcss/vite"
 
 import { disallowedBots } from "./shared/constants/disallowed-bots"
 import locales from "./i18n/data/valid-locales.json"
@@ -8,6 +9,10 @@ import type { LocaleObject } from "@nuxtjs/i18n"
 export default defineNuxtConfig({
   srcDir: "src/",
   serverDir: "server/",
+  // Nuxt 4 resolves `public/` from the root dir, not `srcDir`.
+  dir: {
+    public: "src/public",
+  },
   devServer: {
     port: 8443,
     host: "0.0.0.0",
@@ -17,7 +22,19 @@ export default defineNuxtConfig({
     autoImport: false,
   },
   compatibilityDate: "2024-07-23",
-  css: ["~/assets/fonts.css", "~/styles/accent.css"],
+  css: ["~/styles/tailwind.css", "~/assets/fonts.css", "~/styles/accent.css"],
+  vite: {
+    plugins: [tailwindcss()],
+  },
+  typescript: {
+    tsConfig: {
+      // Nuxt 4 enables this by default; opt out until the codebase is migrated.
+      compilerOptions: { noUncheckedIndexedAccess: false },
+      include: ["../typings/**/*"],
+      // Storybook is disabled until it supports Nuxt 4 with @nuxtjs/i18n.
+      exclude: ["../src/**/*.stories.ts", "../.storybook"],
+    },
+  },
   /**
    * Define available runtime configuration values and their defaults.
    *
@@ -39,6 +56,8 @@ export default defineNuxtConfig({
       sentry: {
         dsn: "",
         environment: "local",
+        // Overridden by NUXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE
+        tracesSampleRate: 0.05,
       },
       // Release is a build time variable. However, due to the way Sentry is set up, setting it in app.config.ts
       // does not work, so we set it here using `process.env` to bake in the value at build time.
@@ -64,9 +83,7 @@ export default defineNuxtConfig({
   modules: [
     "@pinia/nuxt",
     "@nuxtjs/i18n",
-    "@nuxtjs/tailwindcss",
     "@nuxtjs/plausible",
-    "@nuxtjs/storybook",
     "@nuxt/test-utils/module",
     "@nuxtjs/sitemap",
     "@nuxtjs/robots",
@@ -94,9 +111,6 @@ export default defineNuxtConfig({
       })),
     ],
   },
-  tailwindcss: {
-    cssPath: "~/styles/tailwind.css",
-  },
   i18n: {
     locales: [
       {
@@ -115,7 +129,6 @@ export default defineNuxtConfig({
       },
       ...locales,
     ].filter((l) => Boolean(l.language)) as LocaleObject[],
-    lazy: true,
     langDir: "locales",
     defaultLocale: "en",
     /**
@@ -128,22 +141,23 @@ export default defineNuxtConfig({
      * */
     detectBrowserLanguage: false,
     trailingSlash: false,
-    vueI18n: "./vue-i18n",
+    vueI18n: "./vue-i18n.ts",
+    experimental: {
+      // Keep query strings in hreflang links (v10 strips them), e.g. `/image/collection?tag=cat`.
+      alternateLinkCanonicalQueries: false,
+    },
   },
   sentry: {
-    sourceMapsUploadOptions: {
-      org: "openverse",
-      project: "openverse-frontend",
-      /**
-       * This token is only used in the CI to upload source maps to Sentry when building the production
-       * image of the frontend.
-       */
-      authToken: process.env.SENTRY_AUTH_TOKEN,
-    },
-    unstable_sentryBundlerPluginOptions: {
-      release: {
-        name: process.env.SEMANTIC_VERSION,
-      },
+    telemetry: false,
+    org: "openverse",
+    project: "openverse-frontend",
+    /**
+     * This token is only used in the CI to upload source maps to Sentry when building the production
+     * image of the frontend.
+     */
+    authToken: process.env.SENTRY_AUTH_TOKEN,
+    release: {
+      name: process.env.SEMANTIC_VERSION,
     },
   },
   sourcemap: {

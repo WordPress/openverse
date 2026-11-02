@@ -72,10 +72,10 @@ const captureException = () => {
       :key="group.title"
       class="not-prose border-b border-default py-6 last-of-type:border-b-0"
     >
-      <h2 class="label-bold mb-2">
+      <h2 class="mb-2 label-bold">
         {{ $t(`prefPage.groups.${group.title}.title`) }}
       </h2>
-      <p class="label-regular mb-4">
+      <p class="mb-4 label-regular">
         {{
           $t(`prefPage.groups.${group.title}.desc`, { openverse: "Openverse" })
         }}
@@ -105,10 +105,10 @@ const captureException = () => {
       :key="`${isSwitchable}`"
       class="not-prose border-b border-default py-6 last-of-type:border-b-0"
     >
-      <h2 class="label-bold mb-2">
+      <h2 class="mb-2 label-bold">
         {{ $t(`prefPage.${isSwitchable ? "s" : "nonS"}witchable.title`) }}
       </h2>
-      <p class="label-regular mb-4">
+      <p class="mb-4 label-regular">
         {{ $t(`prefPage.${isSwitchable ? "s" : "nonS"}witchable.desc`) }}
       </p>
       <ul>

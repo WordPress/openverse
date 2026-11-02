@@ -42,9 +42,7 @@ const metadata = computed<null | Metadata[]>(() => {
       <slot name="thumbnail" />
 
       <div class="flex flex-col gap-6 md:gap-8">
-        <div
-          class="flex w-full flex-grow flex-col items-start gap-6 md:flex-row"
-        >
+        <div class="flex w-full grow flex-col items-start gap-6 md:flex-row">
           <p v-if="media.description">{{ media.description }}</p>
           <VMetadata v-if="metadata" :metadata="metadata" />
         </div>

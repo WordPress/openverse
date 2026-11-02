@@ -120,7 +120,7 @@ const sendAnalyticsEvent = () => {
 
 <template>
   <div
-    class="collection-header grid gap-2 sm:grid-cols-[1fr,auto]"
+    class="collection-header grid gap-2 sm:grid-cols-[1fr_auto]"
     :class="{ 'no-link': !showCollectionExternalLink }"
   >
     <h1 class="title flex flex-col gap-2 sm:flex-row">
@@ -130,10 +130,10 @@ const sendAnalyticsEvent = () => {
         :size="10"
         class="icon hidden sm:flex"
       />
-      <span class="label-regular flex text-secondary sm:hidden">{{
+      <span class="flex label-regular text-secondary sm:hidden">{{
         $t(`collection.heading.${collection}`)
       }}</span>
-      <span class="text-3xl font-semibold leading-snug sm:text-6xl">{{
+      <span class="text-3xl leading-snug font-semibold sm:text-6xl">{{
         title
       }}</span>
     </h1>
@@ -142,7 +142,7 @@ const sendAnalyticsEvent = () => {
       as="VLink"
       variant="filled-dark"
       size="medium"
-      class="link label-bold mt-1 !w-full"
+      class="link mt-1 w-full! label-bold"
       has-icon-end
       show-external-icon
       :external-icon-size="6"
@@ -154,7 +154,7 @@ const sendAnalyticsEvent = () => {
       class="results mt-6 flex w-full min-w-0 flex-col items-start gap-1 sm:mt-0 sm:flex-row sm:items-center"
     >
       <p
-        class="label-regular w-max text-secondary sm:whitespace-nowrap"
+        class="w-max label-regular text-secondary sm:whitespace-nowrap"
         :class="{ 'pb-2 sm:pb-0': collection !== 'creator' }"
       >
         {{ resultsLabel }}
@@ -167,7 +167,7 @@ const sendAnalyticsEvent = () => {
           as="VLink"
           size="disabled"
           variant="transparent-gray"
-          class="label-bold m-1.5px h-8 w-max gap-x-1 whitespace-nowrap p-1"
+          class="m-1.5px h-8 w-max gap-x-1 p-1 label-bold whitespace-nowrap"
           :href="sourceCollectionLink"
           has-icon-start
           ><VIcon
@@ -183,6 +183,7 @@ const sendAnalyticsEvent = () => {
 </template>
 
 <style scoped>
+@reference "~/styles/tailwind.css";
 .collection-header {
   grid-template-areas: "title" "link" "results";
 }
@@ -190,7 +191,7 @@ const sendAnalyticsEvent = () => {
   grid-template-areas: "title" "results";
 }
 
-@screen sm {
+@media (min-width: theme("screens.sm")) {
   .collection-header {
     grid-template-rows: minmax(3.75rem, auto) minmax(2rem, auto);
     grid-template-areas: "title link" "results results";

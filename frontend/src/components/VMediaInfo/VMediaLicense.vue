@@ -38,7 +38,7 @@ const sendVisitLicensePage = () => {
 
 <template>
   <div class="media-attribution mb-2 md:mb-0">
-    <h3 class="description-bold md:heading-6 mb-4">
+    <h3 class="mb-4 description-bold md:heading-6">
       {{ headerText }}
     </h3>
 

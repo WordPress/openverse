@@ -16,7 +16,7 @@ const { isHidden: shouldBlur } = useSensitiveMedia(audio)
 
 <template>
   <div
-    class="global-track grid w-full grid-cols-[3rem,1fr] grid-rows-[3rem,3rem] rounded ring-1 ring-[--color-gray-3] ring-opacity-20"
+    class="global-track grid w-full grid-cols-[3rem_1fr] grid-rows-[3rem_3rem] rounded ring-1 ring-(--color-gray-3)"
   >
     <div class="h-12 w-12 rounded-ss">
       <VAudioThumbnail class="rounded-ss" :audio="audio" />
@@ -25,7 +25,7 @@ const { isHidden: shouldBlur } = useSensitiveMedia(audio)
     <div class="flex h-12 items-center justify-between rounded-se bg-default">
       <VLink
         :href="`/audio/${audio.id}`"
-        class="hover-underline label-bold z-10 flex flex-row items-center px-3 pe-12 text-default"
+        class="hover-underline z-10 flex flex-row items-center px-3 pe-12 label-bold text-default"
         :class="{ 'blur-text': shouldBlur }"
       >
         {{ shouldBlur ? $t("sensitiveContent.title.audio") : audio.title }}
@@ -40,6 +40,7 @@ const { isHidden: shouldBlur } = useSensitiveMedia(audio)
 </template>
 
 <style scoped>
+@reference "~/styles/tailwind.css";
 .global-track .thumbnail {
   @apply h-12 w-12 rounded-ss;
 }

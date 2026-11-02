@@ -369,7 +369,7 @@ export default {
             item,
             (value) => ({
               "--tw-ring-offset-color": "var(--color-bg-curr-page)",
-              "--tw-ring-color": `var(--color-accent, var(${value}))`,
+              "--tw-ring-color": `var(--color-accent, ${value})`,
               "--tw-outline-color": value,
             }),
           ])

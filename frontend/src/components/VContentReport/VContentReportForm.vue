@@ -137,7 +137,7 @@ defineExpose({ resetForm })
 
       <form class="flex flex-col gap-y-4 text-sm" @submit="handleSubmit">
         <fieldset class="flex flex-col gap-y-4">
-          <legend class="label-bold mb-4">
+          <legend class="mb-4 label-bold">
             {{ $t("mediaDetails.contentReport.form.question") }}
           </legend>
           <VRadio

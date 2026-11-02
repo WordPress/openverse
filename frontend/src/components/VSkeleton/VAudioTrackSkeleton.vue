@@ -7,11 +7,11 @@ const getRandomSize = (max = 250, min = 70) => {
 <template>
   <article class="mb-14 flex w-full flex-row">
     <!-- Thumbnail skeleton -->
-    <div class="shimmering mr-4 h-20 w-20 flex-shrink-0 rounded bg-secondary" />
+    <div class="shimmering mr-4 h-20 w-20 shrink-0 rounded bg-secondary" />
 
     <div class="flex h-20 w-full flex-row gap-6">
       <!-- Track info skeleton -->
-      <div class="w-70 flex-shrink-0">
+      <div class="w-70 shrink-0">
         <div class="flex h-full flex-col justify-around">
           <div
             v-for="idx in 2"
@@ -33,6 +33,7 @@ const getRandomSize = (max = 250, min = 70) => {
 </template>
 
 <style scoped>
+@reference "~/styles/tailwind.css";
 @keyframes shimmer {
   0% {
     background-position: -1000px 0;

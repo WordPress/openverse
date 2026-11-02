@@ -5,6 +5,9 @@ ARG PLAYWRIGHT_VERSION
 
 FROM mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-jammy
 
+# The image's bundled Node is too old for Nuxt 4; upgrade without changing browsers so snapshots stay stable.
+RUN npm install -g n && n 22.23.4 && hash -r
+
 WORKDIR /frontend
 
 COPY package.json .
@@ -14,6 +17,8 @@ COPY pnpm-lock.yaml .
 RUN mkdir -p /.cache/node/corepack/ && chmod -R 777 /.cache/node/corepack/
 # Ensure that the dlx cache folder exists and is writable
 RUN mkdir -p /.cache/pnpm/dlx/ && chmod -R 777 /.cache/pnpm/dlx/
+# Ensure Storybook's global settings folder exists and is writable
+RUN mkdir -p /.storybook/ && chmod -R 777 /.storybook/
 
 # Requires `packageManager` field to be present in `frontend/package.json`.
 RUN npm install -g corepack@0.31.0 && corepack enable pnpm

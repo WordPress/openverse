@@ -33,10 +33,10 @@ onMounted(() => {
 
 <template>
   <div class="no-results text-center md:text-left">
-    <h1 class="heading-4 md:heading-2 break-words">
+    <h1 class="heading-4 wrap-break-word md:heading-2">
       {{ $t("noResults.heading", { query: searchTerm }) }}
     </h1>
-    <h2 class="description-regular md:heading-5 mt-4">
+    <h2 class="mt-4 description-regular md:heading-5">
       {{ $t("noResults.alternatives") }}
     </h2>
 
@@ -48,7 +48,7 @@ onMounted(() => {
         :href="source.url"
         variant="bordered-gray"
         size="medium"
-        class="label-bold !w-full text-default sm:!w-auto"
+        class="w-full! label-bold text-default sm:w-auto!"
         show-external-icon
         has-icon-end
         :external-icon-size="6"

@@ -33,14 +33,24 @@ export type ExpectScreenshotAreaSnapshot = (
   options?: ExpectSnapshotOptions
 ) => Promise<void>
 
+// Hide the theme switcher before taking the screenshot. The WordPress logo
+// is hidden because its anti-aliasing differs between page loads.
+export const snapshotHiddenStyle = `#storybook-theme-switcher, a[href="https://wordpress.org"] svg { visibility: hidden; }`
+
 type EffectiveColorMode = "dark" | "light"
 const themeOption = (colorMode: EffectiveColorMode, dir: LanguageDirection) =>
   t(`theme.choices.${colorMode}`, dir)
 
 export const turnOnDarkMode = async (page: Page, dir: LanguageDirection) => {
   const themeSwitcher = getThemeSwitcher(page, dir)
-  await themeSwitcher.selectOption({ label: themeOption("dark", dir) })
-  await expect(themeSwitcher).toHaveValue("dark")
+  // Retry: a selection made before hydration finishes is lost or reset to "system".
+  await expect(async () => {
+    await themeSwitcher.selectOption({ label: themeOption("dark", dir) })
+    await expect(themeSwitcher).toHaveValue("dark", { timeout: 1000 })
+    await expect(page.locator("body")).toHaveClass(/\bdark-mode\b/, {
+      timeout: 1000,
+    })
+  }).toPass({ timeout: 10_000 })
 }
 
 type SnapshotNameOptions = {
@@ -74,10 +84,9 @@ export const expectSnapshot: ExpectSnapshot = async (
   screenshotAble,
   { screenshotOptions, snapshotOptions, useColorMode = true, dir } = {}
 ) => {
-  // Hide the theme switcher before taking the screenshot.
   screenshotOptions = {
     ...(screenshotOptions ?? {}),
-    style: `#storybook-theme-switcher { visibility: hidden; }`,
+    style: snapshotHiddenStyle,
     animations: "disabled",
   }
 

@@ -39,7 +39,7 @@ defineEmits<{ "load-more": [] }>()
     </template>
 
     <template #footer>
-      <footer class="mb-6 mt-4 lg:mb-10">
+      <footer class="mt-4 mb-6 lg:mb-10">
         <VLoadMore
           :can-load-more="canLoadMore"
           :search-type="results.type"

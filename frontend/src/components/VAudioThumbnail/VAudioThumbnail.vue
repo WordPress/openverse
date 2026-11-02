@@ -62,7 +62,8 @@ const radius = (i: number, j: number) => {
   const bezierPoint = bezierPoints[i]
   const distance = dist([0, bezierPoint], [0, offset(j)])
   const maxFeasibleDistance = canvasSize * ((dotCount - 1) / (dotCount + 1))
-  return lerp(maxRadius, minRadius, distance / maxFeasibleDistance)
+  // Dots slightly beyond `maxFeasibleDistance` would get a negative radius, which is invalid SVG.
+  return Math.max(0, lerp(maxRadius, minRadius, distance / maxFeasibleDistance))
 }
 </script>
 
@@ -97,7 +98,7 @@ const radius = (i: number, j: number) => {
     <div v-show="audio.thumbnail && isOk" class="thumbnail absolute inset-0">
       <img
         ref="imgEl"
-        class="h-full w-full overflow-clip object-cover object-center duration-200 motion-safe:transition-[filter,transform]"
+        class="h-full w-full overflow-clip object-cover object-center duration-200 motion-safe:transition-[filter,transform,scale]"
         :class="{ 'scale-150 blur-image': shouldBlur }"
         :src="audio.thumbnail"
         :alt="helpText"
@@ -108,7 +109,7 @@ const radius = (i: number, j: number) => {
     <VIcon
       v-show="shouldBlur"
       name="eye-closed"
-      class="absolute left-[calc(50%-0.75rem)] top-[calc(50%-0.75rem)]"
+      class="absolute top-[calc(50%-0.75rem)] left-[calc(50%-0.75rem)]"
     />
   </div>
 </template>

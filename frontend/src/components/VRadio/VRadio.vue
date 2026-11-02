@@ -42,14 +42,14 @@ const handleInput = () => {
       :id="id"
       v-bind="$attrs"
       :value="value"
-      class="radio relative me-3 h-5 w-5 flex-shrink-0 appearance-none rounded-full border border-tertiary bg-default focus-visible:outline-none focus-visible:ring focus-visible:ring-focus focus-visible:ring-offset-2 disabled:border-disabled disabled:bg-secondary"
+      class="radio relative me-3 h-5 w-5 shrink-0 appearance-none rounded-full border border-tertiary bg-default focus-visible:ring focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:outline-hidden disabled:border-disabled disabled:bg-secondary"
       type="radio"
       :checked="isChecked"
       @input="handleInput"
     />
     <VSvg
       name="radiomark"
-      class="radiomark pointer-events-none absolute start-0 h-5 w-5 text-default opacity-0 transition-opacity"
+      class="radiomark pointer-events-none absolute inset-s-0 h-5 w-5 text-default opacity-0 transition-opacity"
       width="20"
       height="20"
     />
@@ -59,6 +59,7 @@ const handleInput = () => {
 </template>
 
 <style scoped>
+@reference "~/styles/tailwind.css";
 .radio:checked ~ .radiomark {
   @apply opacity-100;
 }

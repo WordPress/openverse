@@ -15,7 +15,7 @@ const widthToBreakpoint = (width: number): RealBreakpoint => {
  * This composable updates the UI store when the screen width changes or
  * when the SSR layout settings are different from the cookie settings.
  */
-export function useLayout() {
+export function useUiLayout() {
   const uiStore = useUiStore()
 
   const { width } = useWindowSize()

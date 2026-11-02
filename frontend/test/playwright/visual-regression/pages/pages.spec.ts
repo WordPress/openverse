@@ -13,6 +13,7 @@ import {
   getLoadMoreButton,
   getThemeSwitcher,
 } from "~~/test/playwright/utils/components"
+import { snapshotHiddenStyle } from "~~/test/playwright/utils/expect-snapshot"
 
 test.describe.configure({ mode: "parallel" })
 
@@ -101,9 +102,9 @@ test.describe("layout color is set correctly", () => {
       await expect(getH1(page, t("about.title"))).toBeVisible()
       await page.mouse.move(100, 100)
 
-      expect(await page.screenshot({ fullPage: true })).toMatchSnapshot(
-        "about-ltr-lg-light.png"
-      )
+      expect(
+        await page.screenshot({ fullPage: true, style: snapshotHiddenStyle })
+      ).toMatchSnapshot("about-ltr-lg-light.png")
     })
   })
 })

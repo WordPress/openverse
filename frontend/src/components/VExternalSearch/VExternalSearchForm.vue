@@ -53,7 +53,7 @@ const isMd = computed(() => uiStore.isBreakpoint("md"))
   <section
     :key="externalSourcesType"
     ref="sectionRef"
-    class="external-sources flex flex-row place-items-center justify-center pb-6 pt-4 lg:pb-10"
+    class="external-sources flex flex-row place-items-center justify-center pt-4 pb-6 lg:pb-10"
     data-testid="external-sources-form"
   >
     <VModal
@@ -73,7 +73,7 @@ const isMd = computed(() => uiStore.isBreakpoint("md"))
           aria-controls="external-sources-modal"
           variant="bordered-gray"
           size="disabled"
-          class="label-bold lg:description-bold h-16 w-full gap-x-2 lg:h-18"
+          class="h-16 w-full gap-x-2 label-bold lg:h-18 lg:description-bold"
         >
           <i18n-t
             v-if="isMd"

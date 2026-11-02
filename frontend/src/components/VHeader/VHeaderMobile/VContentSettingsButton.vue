@@ -32,7 +32,7 @@ withDefaults(
     <template #notification>
       <span
         v-if="appliedFilterCount"
-        class="absolute right-[-0.1875rem] top-[-0.1875rem] h-[0.5rem] w-[0.5rem] rounded bg-primary"
+        class="absolute top-[-0.1875rem] right-[-0.1875rem] h-[0.5rem] w-[0.5rem] rounded bg-primary"
       />
     </template>
   </VSearchBarButton>
