@@ -38,12 +38,14 @@ class BoundedWaitUrllib3HttpNode(Urllib3HttpNode):
         # cleanup treats ``EmptyPoolError`` specially: raising anything else
         # from the acquisition makes it "release" a connection it never got,
         # which adds a phantom slot to the pool.
-        urlopen = self.pool.urlopen
+        pool = self.pool
 
         def urlopen_with_deadline(*args, **kwargs):
             kwargs.setdefault("pool_timeout", self.pool_timeout)
             try:
-                return urlopen(*args, **kwargs)
+                # Resolved on every call, not captured at start-up, so that
+                # class-level patches of ``urlopen`` (pook in the tests) apply.
+                return type(pool).urlopen(pool, *args, **kwargs)
             except EmptyPoolError as e:
                 raise SearchCapacityExceeded(
                     f"No Elasticsearch connection free within {self.pool_timeout} s"
