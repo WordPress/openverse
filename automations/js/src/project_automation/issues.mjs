@@ -1,8 +1,7 @@
 import { getBoard } from "../utils/projects.mjs"
 
 /**
- * Set the "Priority" custom field based on the issue's labels. Also move
- * the card for critical issues directly to the "📅 To Do" column.
+ * Set the "Priority" custom field based on the issue's labels.
  *
  * @param core {import('@actions/core')} GitHub Actions toolkit, for logging
  * @param issue {Issue} the issue for which to set the "Priority" custom field
@@ -20,10 +19,50 @@ async function syncPriority(core, issue, backlogBoard, issueCard) {
   if (priority) {
     await backlogBoard.setCustomChoiceField(issueCard.id, "Priority", priority)
   }
-  if (priority === "🟥 priority: critical") {
-    core.info('Moving critical issue to "📅 To Do" column.')
-    await backlogBoard.moveCard(issueCard.id, backlogBoard.columns.ToDo)
+}
+
+/**
+ * Determine the single destination for an issue card.
+ *
+ * Critical priority takes precedence over blocked status. Label events only
+ * move cards when the changed label can affect the destination.
+ *
+ * @param issue {Issue} the issue for which to determine a destination
+ * @param eventAction {string} the issue event action
+ * @param changedLabel {object | undefined} the label from the event payload
+ * @returns {string | null} the destination column, or null when no move is needed
+ */
+export function getIssueDestination(issue, eventAction, changedLabel) {
+  const isCritical = issue.labels.some(
+    (label) => label.name === "🟥 priority: critical"
+  )
+  const isBlocked = issue.labels.some(
+    (label) => label.name === "⛔ status: blocked"
+  )
+  const changedLabelName = changedLabel?.name
+
+  if (eventAction === "closed") {
+    return issue.state_reason === "completed" ? "Done" : "Discarded"
   }
+
+  if (eventAction === "assigned") {
+    return null
+  }
+
+  if (eventAction === "opened" || eventAction === "reopened") {
+    return isCritical ? "ToDo" : isBlocked ? "Blocked" : "Backlog"
+  }
+
+  if (eventAction === "labeled" || eventAction === "unlabeled") {
+    const changedStatus = changedLabelName === "⛔ status: blocked"
+    const changedPriority = changedLabelName === "🟥 priority: critical"
+
+    if (changedStatus || changedPriority) {
+      return isCritical ? "ToDo" : isBlocked ? "Blocked" : "Backlog"
+    }
+  }
+
+  return null
 }
 
 /**
@@ -59,24 +98,20 @@ export const main = async (octokit, core, context) => {
   switch (eventAction) {
     case "opened":
     case "reopened": {
-      if (issue.labels.some((label) => label.name === "⛔ status: blocked")) {
-        core.info("Issue was opened, labelled as blocked.")
-        await backlogBoard.moveCard(card.id, backlogBoard.columns.Blocked)
-      } else {
-        await backlogBoard.moveCard(card.id, backlogBoard.columns.Backlog)
-      }
       await syncPriority(core, issue, backlogBoard, card)
+      const destination = getIssueDestination(issue, eventAction, label)
+      await backlogBoard.moveCard(card.id, backlogBoard.columns[destination])
       break
     }
 
     case "closed": {
-      if (issue.state_reason === "completed") {
+      const destination = getIssueDestination(issue, eventAction, label)
+      if (destination === "Done") {
         core.info("Issue was closed as completed.")
-        await backlogBoard.moveCard(card.id, backlogBoard.columns.Done)
       } else {
         core.info("Issue was closed as discarded.")
-        await backlogBoard.moveCard(card.id, backlogBoard.columns.Discarded)
       }
+      await backlogBoard.moveCard(card.id, backlogBoard.columns[destination])
       break
     }
 
@@ -88,20 +123,20 @@ export const main = async (octokit, core, context) => {
     }
 
     case "labeled": {
-      if (label.name === "⛔ status: blocked") {
-        core.info("Issue was labeled as blocked.")
-        await backlogBoard.moveCard(card.id, backlogBoard.columns.Blocked)
-      }
       await syncPriority(core, issue, backlogBoard, card)
+      const destination = getIssueDestination(issue, eventAction, label)
+      if (destination) {
+        await backlogBoard.moveCard(card.id, backlogBoard.columns[destination])
+      }
       break
     }
 
     case "unlabeled": {
-      if (label.name === "⛔ status: blocked") {
-        core.info("Issue was unlabeled as blocked.")
-        await backlogBoard.moveCard(card.id, backlogBoard.columns.Backlog)
-      }
       await syncPriority(core, issue, backlogBoard, card)
+      const destination = getIssueDestination(issue, eventAction, label)
+      if (destination) {
+        await backlogBoard.moveCard(card.id, backlogBoard.columns[destination])
+      }
       break
     }
   }

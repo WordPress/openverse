@@ -28,6 +28,10 @@ not contain the label "🧭 project: thread".
   to the "⛔ Blocked" column.
 - Else it is automatically added to the "📋 Backlog" column.
 
+When multiple conditions apply, the automation calculates the final destination
+before moving the card, so critical priority takes precedence over blocked
+status without an intermediate move.
+
 ```{note}
 This workflow also sets the Priority custom field in the issue so that we can
 create a kanban-board view based on priority.
