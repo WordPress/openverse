@@ -56,6 +56,8 @@ export default defineNuxtConfig({
       sentry: {
         dsn: "",
         environment: "local",
+        // Overridden by NUXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE
+        tracesSampleRate: 0.05,
       },
       // Release is a build time variable. However, due to the way Sentry is set up, setting it in app.config.ts
       // does not work, so we set it here using `process.env` to bake in the value at build time.
@@ -147,19 +149,15 @@ export default defineNuxtConfig({
   },
   sentry: {
     telemetry: false,
-    sourceMapsUploadOptions: {
-      org: "openverse",
-      project: "openverse-frontend",
-      /**
-       * This token is only used in the CI to upload source maps to Sentry when building the production
-       * image of the frontend.
-       */
-      authToken: process.env.SENTRY_AUTH_TOKEN,
-    },
-    unstable_sentryBundlerPluginOptions: {
-      release: {
-        name: process.env.SEMANTIC_VERSION,
-      },
+    org: "openverse",
+    project: "openverse-frontend",
+    /**
+     * This token is only used in the CI to upload source maps to Sentry when building the production
+     * image of the frontend.
+     */
+    authToken: process.env.SENTRY_AUTH_TOKEN,
+    release: {
+      name: process.env.SEMANTIC_VERSION,
     },
   },
   sourcemap: {
