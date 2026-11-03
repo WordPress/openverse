@@ -5,6 +5,7 @@ from elasticsearch import Elasticsearch
 from elasticsearch_dsl import connections
 
 from api.constants.media_types import MEDIA_TYPES
+from api.utils.es_transport import BoundedWaitUrllib3HttpNode
 
 
 def _elasticsearch_connect() -> tuple[Elasticsearch, str]:
@@ -32,14 +33,16 @@ def _elasticsearch_connect() -> tuple[Elasticsearch, str]:
             "ELASTICSEARCH_RETRY_ON_TIMEOUT", default=False, cast=bool
         ),
         # The transport keeps a blocking urllib3 pool of this many sockets per
-        # node (default 10) and waits for a free one with no deadline, so
-        # ``request_timeout`` never covers that wait. With a slow cluster the
-        # client-side queue grew to minutes while each queued search held a
-        # Django thread and a pooled DB connection. Keep this at least as large
-        # as ``DJANGO_DATABASE_POOL_MAX_SIZE`` so the DB pool, which does have
-        # a timeout, is the only concurrency limit per task.
+        # node (default 10). Per-task request concurrency is unbounded, so with
+        # a slow cluster the client-side queue grew to minutes while each
+        # queued search held a Django thread, and for authenticated requests a
+        # pooled DB connection too. The node class below puts a deadline on
+        # that wait; see ``api.utils.es_transport``.
         connections_per_node=config(
             "ELASTICSEARCH_CONNECTIONS_PER_NODE", default=32, cast=int
+        ),
+        node_class=BoundedWaitUrllib3HttpNode.with_pool_timeout(
+            config("ELASTICSEARCH_POOL_TIMEOUT", default=5, cast=float)
         ),
     )
     _es.info()
