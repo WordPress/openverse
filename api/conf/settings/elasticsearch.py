@@ -31,6 +31,16 @@ def _elasticsearch_connect() -> tuple[Elasticsearch, str]:
         retry_on_timeout=config(
             "ELASTICSEARCH_RETRY_ON_TIMEOUT", default=False, cast=bool
         ),
+        # The transport keeps a blocking urllib3 pool of this many sockets per
+        # node (default 10) and waits for a free one with no deadline, so
+        # ``request_timeout`` never covers that wait. With a slow cluster the
+        # client-side queue grew to minutes while each queued search held a
+        # Django thread and a pooled DB connection. Keep this at least as large
+        # as ``DJANGO_DATABASE_POOL_MAX_SIZE`` so the DB pool, which does have
+        # a timeout, is the only concurrency limit per task.
+        connections_per_node=config(
+            "ELASTICSEARCH_CONNECTIONS_PER_NODE", default=32, cast=int
+        ),
     )
     _es.info()
     _es.cluster.health(wait_for_status="yellow")
