@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import urllib3
 from elastic_transport import NodeConfig, Urllib3HttpNode
 from urllib3.exceptions import EmptyPoolError
 
@@ -19,25 +18,6 @@ class SearchCapacityExceeded(RuntimeError):
     """
 
 
-class _BoundedWaitPool(urllib3.HTTPConnectionPool):
-    def __init__(self, *args, pool_timeout: float, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.pool_timeout = pool_timeout
-
-    def _get_conn(self, timeout: float | None = None):
-        # ``urlopen`` only passes a wait deadline when its caller supplies
-        # ``pool_timeout``, which ``elastic_transport`` never does, so a
-        # blocking pool waits indefinitely unless the default is set here.
-        try:
-            return super()._get_conn(
-                timeout=self.pool_timeout if timeout is None else timeout
-            )
-        except EmptyPoolError as e:
-            raise SearchCapacityExceeded(
-                f"No Elasticsearch connection free within {self.pool_timeout} s"
-            ) from e
-
-
 class BoundedWaitUrllib3HttpNode(Urllib3HttpNode):
     """
     ``Urllib3HttpNode`` whose socket pool gives up after ``pool_timeout``.
@@ -45,28 +25,31 @@ class BoundedWaitUrllib3HttpNode(Urllib3HttpNode):
     Per-task request concurrency is otherwise unbounded (Django's ASGI handler
     runs each request on its own thread), so under a slow cluster the default
     node queued searches for minutes with ``request_timeout`` never engaging.
-    Only plain HTTP is supported; the TLS set-up in the base class is not
-    replicated here.
     """
 
     pool_timeout: float = 5.0
 
     def __init__(self, config: NodeConfig):
-        if config.scheme != "http":
-            raise ValueError(
-                f"{type(self).__name__} only supports the http scheme, "
-                f"got {config.scheme!r}"
-            )
         super().__init__(config)
-        self.pool.close()
-        self.pool = _BoundedWaitPool(
-            config.host,
-            port=config.port,
-            timeout=urllib3.Timeout(total=config.request_timeout),
-            maxsize=config.connections_per_node,
-            block=True,
-            pool_timeout=self.pool_timeout,
-        )
+        # Wrap the pool the base class built rather than rebuilding it, so its
+        # TLS configuration survives. ``urlopen`` already takes the wait
+        # deadline as ``pool_timeout``; ``elastic_transport`` just never passes
+        # one. The translation must happen outside ``urlopen`` because its
+        # cleanup treats ``EmptyPoolError`` specially: raising anything else
+        # from the acquisition makes it "release" a connection it never got,
+        # which adds a phantom slot to the pool.
+        urlopen = self.pool.urlopen
+
+        def urlopen_with_deadline(*args, **kwargs):
+            kwargs.setdefault("pool_timeout", self.pool_timeout)
+            try:
+                return urlopen(*args, **kwargs)
+            except EmptyPoolError as e:
+                raise SearchCapacityExceeded(
+                    f"No Elasticsearch connection free within {self.pool_timeout} s"
+                ) from e
+
+        self.pool.urlopen = urlopen_with_deadline
 
     @classmethod
     def with_pool_timeout(cls, seconds: float) -> type[BoundedWaitUrllib3HttpNode]:
