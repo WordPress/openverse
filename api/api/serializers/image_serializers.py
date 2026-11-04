@@ -66,6 +66,14 @@ class ImageReportRequestSerializer(MediaReportRequestSerializer):
         model = ImageReport
 
 
+class ImageReportBodySerializer(ImageReportRequestSerializer):
+    # Request body for docs only; `identifier` comes from the URL path.
+    identifier = None
+
+    class Meta(ImageReportRequestSerializer.Meta):
+        fields = ["reason", "description"]
+
+
 ########################
 # Response serializers #
 ########################

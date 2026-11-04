@@ -1,10 +1,12 @@
 from collections import namedtuple
+from collections.abc import Mapping
 from math import floor
 from typing import TypedDict
 
 from django.conf import settings
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.core.validators import MaxValueValidator
+from django.db import models
 from django.urls import reverse
 from rest_framework import serializers
 from rest_framework.exceptions import NotAuthenticated, ValidationError
@@ -575,7 +577,21 @@ class MediaThumbnailRequestSerializer(Serializer):
         return data
 
 
+class StrictCharField(serializers.CharField):
+    """Reject non-string input instead of coercing it, e.g. ``0`` to ``"0"``."""
+
+    def to_internal_value(self, data):
+        if not isinstance(data, str):
+            self.fail("invalid")
+        return super().to_internal_value(data)
+
+
 class MediaReportRequestSerializer(serializers.ModelSerializer):
+    serializer_field_mapping = {
+        **serializers.ModelSerializer.serializer_field_mapping,
+        models.TextField: StrictCharField,
+    }
+
     class Meta:
         model = None
         fields = ["identifier", "reason", "description"]
@@ -589,14 +605,12 @@ class MediaReportRequestSerializer(serializers.ModelSerializer):
         further explanation.
         """
 
-        data["reason"] = self._map_reason(data.get("reason"))
+        if isinstance(data, Mapping):
+            data["reason"] = self._map_reason(data.get("reason"))
         return super().to_internal_value(data)
 
     def validate(self, attrs):
-        if (
-            attrs["reason"] == "other"
-            and ("description" not in attrs or len(attrs["description"])) < 20
-        ):
+        if attrs["reason"] == "other" and len(attrs.get("description") or "") < 20:
             raise serializers.ValidationError(
                 "Description must be at least be 20 characters long"
             )

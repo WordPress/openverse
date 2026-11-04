@@ -39,6 +39,10 @@ SPECTACULAR_SETTINGS = {
     },
     "SERVE_INCLUDE_SCHEMA": False,
     "SORT_OPERATION_PARAMETERS": False,
+    "POSTPROCESSING_HOOKS": [
+        "drf_spectacular.hooks.postprocess_schema_enums",
+        "api.docs.base_docs.allow_blank_optional_query_params",
+    ],
     "EXTENSIONS_INFO": {
         "x-logo": {
             "url": "https://raw.githubusercontent.com/WordPress/openverse/HEAD/documentation/meta/brand/logo.svg",
