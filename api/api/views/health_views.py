@@ -21,6 +21,14 @@ class HealthCheck(APIView):
     This endpoint is used in production to ensure that the server should receive
     traffic. If no response is provided, the server is deregistered from the
     load balancer and destroyed.
+
+    The database and Elasticsearch checks are opt-in (``check_db`` and
+    ``check_es`` query parameters). The load balancer calls this endpoint
+    without them: the DB check needs a pooled connection, so whenever slow
+    requests exhausted the pool the check timed out too and the task was
+    killed, which only moved the load onto the remaining tasks. A task that
+    cannot reach the database never finishes booting anyway, because
+    migrations run on startup.
     """
 
     throttle_classes = [HealthcheckAnonRateThrottle, ExemptOAuth2IdRateThrottle]
@@ -56,6 +64,7 @@ class HealthCheck(APIView):
     def get(self, request: Request):
         if "check_es" in request.query_params:
             self._check_es()
-        self._check_db()
+        if "check_db" in request.query_params:
+            self._check_db()
 
         return Response({"status": "200 OK"}, status=200)
