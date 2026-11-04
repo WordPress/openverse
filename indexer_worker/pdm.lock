@@ -5,7 +5,7 @@
 groups = ["default", "dev", "test"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.1"
-content_hash = "sha256:3bafd87ba1a6a48d5ba6b71200ecb90f0960cc91916aa1864e180c0d96861510"
+content_hash = "sha256:e96424b34e531600327041e35803fbf9b60095b9cd51caec44c1e9c83e17981c"
 
 [[metadata.targets]]
 requires_python = "==3.12.*"
@@ -226,13 +226,13 @@ files = [
 
 [[package]]
 name = "filelock"
-version = "3.32.7"
-requires_python = ">=3.10"
+version = "4.2.4"
+requires_python = ">=3.11"
 summary = "A platform independent file lock."
 groups = ["default"]
 files = [
-    {file = "filelock-3.32.7-py3-none-any.whl", hash = "sha256:65ff0d0190ea42038b32bda4b77834fb05be2cad4c5b9b01aa4dfb3614536e52"},
-    {file = "filelock-3.32.7.tar.gz", hash = "sha256:37b8a3d9811b0f9aef7e5ec5c71bb320de52df51e6ca9bcd6f5ad81187660da7"},
+    {file = "filelock-4.2.4-py3-none-any.whl", hash = "sha256:301241438c57936ef93f4243a94f2559022268bfcf9b375a9a72eb0f8db8358e"},
+    {file = "filelock-4.2.4.tar.gz", hash = "sha256:c6d8663535e1650ee430507b4ffbac7b464dd64b7647ea0112a9f406499d163d"},
 ]
 
 [[package]]
