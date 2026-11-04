@@ -437,17 +437,22 @@ getting redundant alerts during this process.
 3. In Terraform, increase the `data_node_count` for the relevant Elasticsearch
    module by one. Here is an
    [example commit](https://github.com/WordPress/openverse-infrastructure/pull/894/commits/4a827b786b1460aa89931d474db119d835784727)
-   with this change in production. Plan, then apply this change. The plan should
-   include:
+   with this change in production. The full plan includes:
 
    - creation of a new Elasticsearch data node
    - creation of new alarms and changes to existing alarms (for production)
    - addition of the new instance's IP to the Route53 record
 
+   Elasticsearch only runs on the new node after step 5, but the API sends
+   requests to every IP in the Route53 record. So first create only the
+   instance. Plan, then apply:
+
    ```bash
-   just plan <env> <environment>-elasticsearch-8-8-2
-   just tf <env> apply -target='module.<environment>-elasticsearch-8-8-2'
+   just tf <env> plan -target='module.<environment>-elasticsearch-8-8-2.aws_instance.datanodes'
+   just tf <env> apply -target='module.<environment>-elasticsearch-8-8-2.aws_instance.datanodes'
    ```
+
+   The rest of the changes are applied in step 5.
 
    The new node uses the AMI and init script of the checked-out code, so run
    this from an up-to-date `main`.
@@ -470,8 +475,8 @@ getting redundant alerts during this process.
 
 5. Configure the created instance by running our Ansible playbook to sync
    Elasticsearch nodes. Supply the correct environment name to the command and
-   pass the public IPv4 DNS step from step 3 to the `-l`/`--limit` flag. Plan
-   first, then apply.
+   pass the public IPv4 DNS from step 4 to the `-l`/`--limit` flag. Plan first,
+   then apply.
 
    ```bash
    just ansible/playbook <environment> elasticsearch/sync_config.yml -l <public_ipv4_dns>
@@ -481,6 +486,14 @@ getting redundant alerts during this process.
    ```{note}
    If this only prints a PDM command and exits, copy and paste that PDM command
    into the terminal and run it from the `ansible/` directory.
+   ```
+
+   Once the node has joined the cluster and it's green, apply the rest of the
+   changes from step 3: the alarms, and the new IP in the Route53 record.
+
+   ```bash
+   just plan <env> <environment>-elasticsearch-8-8-2
+   just tf <env> apply -target='module.<environment>-elasticsearch-8-8-2'
    ```
 
 6. Connect to the cluster via the bastion. This will map the Elasticsearch
@@ -515,56 +528,59 @@ getting redundant alerts during this process.
 
    This step can take a while so it might be wise to continue on the next day.
 
-9. Manually terminate the retiring instance from the AWS management console. It
-   has now become retired.
+   The retiring node keeps running until step 13. Its IP is removed from the
+   Route53 record first, in step 12, so the API doesn't send requests to a
+   terminated node.
 
-   Then clear the exclusion from step 7 by sending a `PUT` request with the
-   following JSON body to the `/_cluster/settings` endpoint. Otherwise it stays
-   in the cluster settings, and would exclude a future node that reuses the IP
-   address.
+9. In Terraform, decrease the `data_node_count` for the relevant Elasticsearch
+   module by one to go back to the original value. _Do not apply this yet._
 
-   ```json
-   {
-     "transient": {
-       "cluster.routing.allocation.exclude.name": null
-     }
-   }
-   ```
-
-10. In Terraform, decrease the `data_node_count` for the relevant Elasticsearch
-    module by one to go back to the original value. _Do not apply this yet._
-
-11. Remove the retired node from the Terraform state using the index from
-    step 2.
+10. Remove the retiring node from the Terraform state using the index from step
+    2, then move the new node to its position. This only changes the state; the
+    retiring instance keeps running.
 
     ```bash
     just tf <env> state rm 'module.<environment>-elasticsearch-8-8-2.aws_instance.datanodes[<retired_index>]'
-    ```
-
-12. Move the new node to the position of the retired node.
-
-    ```bash
     just tf <env> state mv \
       'module.<environment>-elasticsearch-8-8-2.aws_instance.datanodes[<new_index>]' \
       'module.<environment>-elasticsearch-8-8-2.aws_instance.datanodes[<retired_index>]'
     ```
 
-13. Now apply the Terraform changes from step 10. The plan should involve:
+11. In production only, delete the two composite CPU alarms. Step 12 deletes the
+    extra node's CPU alarms before updating the composite alarms that include
+    them, and CloudWatch refuses to delete an alarm that a composite alarm
+    includes. Step 12 creates the composite alarms again.
 
-    - subtraction of the retired instance's IP from the Route53 record
+    ```bash
+    aws cloudwatch delete-alarms --alarm-names "ES Production CPU utilization above 50%" "ES Production CPU utilization above 90%"
+    ```
+
+12. Now apply the Terraform changes from step 9. The plan should involve:
+
+    - subtraction of the retiring instance's IP from the Route53 record
     - destruction of extra alarms and changes to existing alarms
+    - in production, creation of the two composite alarms from step 11
 
     ```bash
     just plan <env> <environment>-elasticsearch-8-8-2
     just tf <env> apply -target='module.<environment>-elasticsearch-8-8-2'
     ```
 
-14. If the deletion of the individual alarms fails due to them being part of a
-    composite alarm, go into the AWS management console and remove the alarms
-    that are supposed to be deleted from any composite alarms that they are a
-    part of.
+13. Manually terminate the retiring instance from the AWS management console. It
+    has now become retired.
 
-    Applying again after this should get rid of them too.
+    Then clear the exclusion from step 7 by sending a `PUT` request with the
+    following JSON body to the `/_cluster/settings` endpoint. Otherwise it stays
+    in the cluster settings, and would exclude a future node that reuses the IP
+    address.
+
+    ```json
+    {
+      "transient": {
+        "cluster.routing.allocation.exclude.name": null
+      }
+    }
+    ```
 
 ### Replacing several data nodes at once
 
@@ -599,8 +615,15 @@ space for all shards.
   just ansible/exec ansible <environment> <new_dns_1> -m uri -a "url=http://{{ private_ip_address }}:9200/_cat/allocation/<private_ipv4_address_1>,<private_ipv4_address_2>?h=shards,disk.indices,node return_content=true"
   ```
 
-- In steps 11 and 12, remove every retired node from the state, then move each
-  new node to one of the freed indices.
+  Shards move at up to 40 MB/s per node by default. Replacing all three
+  production data nodes, about 3 TB, took about 6 hours at 100 MB/s. To raise
+  the limit, set `indices.recovery.max_bytes_per_sec` in the same way as the
+  exclusion, for example to `"100mb"`. It also slows searches, so watch the
+  API's response times, and set it back to `null` with the exclusion in step 13.
+
+- In step 10, remove every retiring node from the state, then move each new node
+  to one of the freed indices.
+- In step 13, terminate all retiring nodes.
 
 ## Potential improvements
 
