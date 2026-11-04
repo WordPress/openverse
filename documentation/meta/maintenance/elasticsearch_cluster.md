@@ -395,10 +395,8 @@ while existing nodes ignore changes to both.
 This procedure describes the process of replacing a single data node. To replace
 several at once, see
 [Replacing several data nodes at once](#replacing-several-data-nodes-at-once)
-after the steps. It doesn't apply to master nodes, which have a fixed count of 3
-in the module. Replacing a master node also requires excluding it from the
-voting configuration (`POST /_cluster/voting_config_exclusions`), and isn't
-documented yet.
+after the steps. To replace master nodes, see
+[Replacing master nodes](#replacing-master-nodes).
 
 If a data refresh is scheduled during the timeframe of this procedure, it is
 best to pause it for performance reasons.
@@ -601,6 +599,107 @@ space for all shards.
 
 - In steps 11 and 12, remove every retired node from the state, then move each
   new node to one of the freed indices.
+
+### Replacing master nodes
+
+Master nodes hold no shards, so no data has to move, but the cluster stops
+working if it loses a majority of its voting master nodes. Add all the new
+master nodes first, then remove the old nodes one at a time. Replace staging
+before production.
+
+Pause any data refresh and the
+`<environment>_elasticsearch_cluster_healthcheck` DAG first, and make sure the
+cluster is green.
+
+In the commands below, `<node_dns>` is the public IPv4 DNS of any node that's
+staying in the cluster. Each request runs on that node.
+
+1. Record the old master nodes. Each node's name is its private IP. `*` in the
+   `master` column marks the elected master, so replace it last.
+
+   ```bash
+   just ansible/exec ansible <environment> <node_dns> -m uri -a "url=http://{{ private_ip_address }}:9200/_cat/nodes?h=name,master,node.role return_content=true"
+   ```
+
+   Then use the `state show` command from step 2 of the data node steps, with
+   `masternodes` in place of `datanodes`, to record each node's Terraform index.
+
+2. Set `master_node_count = 6` on the relevant Elasticsearch module. First
+   create only the instances. Plan, then apply:
+
+   ```bash
+   just tf <env> plan -target='module.<environment>-elasticsearch-8-8-2.aws_instance.masternodes'
+   just tf <env> apply -target='module.<environment>-elasticsearch-8-8-2.aws_instance.masternodes'
+   ```
+
+3. Wait for the init scripts and any reboots to finish, then configure the new
+   nodes, as in steps 4 and 5 of the data node steps. Pass all new nodes to
+   `-l`, separated by commas.
+
+4. Run the command from step 1 again, and check that all 6 master nodes are
+   listed and the cluster is still green. Then apply the rest of the changes:
+   the alarms, and the new IPs in the `masters` Route53 record.
+
+   ```bash
+   just plan <env> <environment>-elasticsearch-8-8-2
+   just tf <env> apply -target='module.<environment>-elasticsearch-8-8-2'
+   ```
+
+5. For each old master node, one at a time, leaving the elected master until
+   last:
+
+   1. Exclude the node from the voting configuration. A `200` response means
+      the node no longer votes. If it was the elected master, another node takes
+      over.
+
+      ```bash
+      just ansible/exec ansible <environment> <node_dns> -m uri -a "url=http://{{ private_ip_address }}:9200/_cluster/voting_config_exclusions?node_names=<private_ipv4_address> method=POST"
+      ```
+
+   2. Terminate the instance from the AWS management console.
+
+   3. Clear the exclusion. This request waits until the node has left the
+      cluster.
+
+      ```bash
+      just ansible/exec ansible <environment> <node_dns> -m uri -a "url=http://{{ private_ip_address }}:9200/_cluster/voting_config_exclusions method=DELETE"
+      ```
+
+   4. Check that the cluster is green and has an elected master before you
+      continue.
+
+      ```bash
+      just ansible/exec ansible <environment> <node_dns> -m uri -a "url=http://{{ private_ip_address }}:9200/_cat/health?h=status,node.total return_content=true"
+      just ansible/exec ansible <environment> <node_dns> -m uri -a "url=http://{{ private_ip_address }}:9200/_cat/master?h=node return_content=true"
+      ```
+
+6. Remove `master_node_count` from the module, so it returns to the default of
+   3. _Do not apply this yet._
+
+7. Remove the old nodes from the Terraform state, then move each new node to one
+   of the freed indices.
+
+   ```bash
+   just tf <env> state rm 'module.<environment>-elasticsearch-8-8-2.aws_instance.masternodes[<old_index>]'
+   just tf <env> state mv \
+     'module.<environment>-elasticsearch-8-8-2.aws_instance.masternodes[<new_index>]' \
+     'module.<environment>-elasticsearch-8-8-2.aws_instance.masternodes[<old_index>]'
+   ```
+
+8. Apply the changes from step 6. The plan should only remove the old IPs from
+   the Route53 record, and remove the extra alarms.
+
+   ```bash
+   just plan <env> <environment>-elasticsearch-8-8-2
+   just tf <env> apply -target='module.<environment>-elasticsearch-8-8-2'
+   ```
+
+```{note}
+`sync_config.yml` now shows a difference in `cluster.initial_master_nodes` on
+every node. Elasticsearch only reads that setting when a cluster first forms, so
+you don't need to apply it now. Applying it restarts the node, so leave it for
+the next planned configuration change.
+```
 
 ## Potential improvements
 
