@@ -72,7 +72,15 @@ async def get_aiohttp_session() -> aiohttp.ClientSession:
         logger.info(msg)
 
         if create_session:
-            session = aiohttp.ClientSession(trace_configs=[LogTiming()])
+            # The default `CookieJar` leaks: `filter_cookies` is called for
+            # every request and, once the jar holds a single cookie, inserts an
+            # empty entry for each (domain, path) pair of the URL it has never
+            # seen (aiohttp < 3.12.3). Dead-link checks and thumbnails request
+            # millions of distinct provider URLs and never need cookies.
+            session = aiohttp.ClientSession(
+                cookie_jar=aiohttp.DummyCookieJar(),
+                trace_configs=[LogTiming()],
+            )
             _SESSIONS[loop] = session
 
         return _SESSIONS[loop]
