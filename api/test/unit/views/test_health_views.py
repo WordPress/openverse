@@ -26,9 +26,16 @@ def test_health_check_plain(api_client):
     assert res.status_code == 200
 
 
-def test_health_check_calls__check_db(api_client):
+def test_health_check_plain_skips__check_db(api_client):
     with mock.patch("api.views.health_views.HealthCheck._check_db") as mock_check_db:
         res = api_client.get("/healthcheck/")
+        assert res.status_code == 200
+        mock_check_db.assert_not_called()
+
+
+def test_health_check_calls__check_db(api_client):
+    with mock.patch("api.views.health_views.HealthCheck._check_db") as mock_check_db:
+        res = api_client.get("/healthcheck/", data={"check_db": True})
         assert res.status_code == 200
         mock_check_db.assert_called_once()
 
@@ -38,7 +45,7 @@ def test_health_check_calls__check_db_with_failure(api_client):
         "api.views.health_views.connection.ensure_connection"
     ) as mock_ensure_connection:
         mock_ensure_connection.side_effect = OperationalError("Database has gone away")
-        res = api_client.get("/healthcheck/")
+        res = api_client.get("/healthcheck/", data={"check_db": True})
         assert res.status_code == 503
         assert res.json() == {"detail": "postgres: Database has gone away"}
         mock_ensure_connection.assert_called_once()
