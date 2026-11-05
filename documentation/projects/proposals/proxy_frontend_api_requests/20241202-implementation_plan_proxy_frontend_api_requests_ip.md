@@ -25,14 +25,14 @@ authenticate them and thus distinguish them from the anonymous traffic in the
 API.
 
 This implementation plan outlines how we will route all frontend traffic to the
-API through Nuxt server routes — effectively “authenticating” these requests at
-the API level — and configure Cloudflare rate-limiting to protect these routes
-from excessive automated traffic that is against Openverse Terms of Service.
+API through Nuxt server routes, which authenticates these requests at the API
+level, and limit these routes in the Nitro server to protect them from excessive
+automated traffic that is against Openverse Terms of Service.
 
-While this plan does not include lowering unauthenticated rate limits in the
-API, it establishes the groundwork for it. This approach will ensure better
-stability and fairness of the API service, while also preserving the normal user
-experience on the frontend.
+This plan does not lower the unauthenticated rate limits in the API. It lays the
+groundwork, and the [follow-up work](#follow-up-work) describes what remains.
+This keeps the API stable and fair for everyone, and frontend users shouldn't
+notice a difference.
 
 ## Expected Outcomes
 
@@ -40,98 +40,78 @@ experience on the frontend.
    the frontend requests are authenticated and no longer constrained by
    unauthenticated rate limits.
 
-2. **The frontend is protected with Cloudflare rate-limiting rules**: The
-   frontend pages are protected from automated abuse and suspicious traffic by
-   Cloudflare rate-limiting, ensuring that legitimate users (including those in
-   shared IP environments, such as schools and libraries) maintain reliable
-   access without undue friction.
+2. **The proxy is not a way around the API rate limits**: The Nitro server
+   limits requests per visitor and per IP address, and the API limits the
+   frontend's total usage. Legitimate users, including those on shared IP
+   addresses at schools and libraries, keep reliable access.
 
 ## Request Flow
 
-Under this new approach, when a user visits https://openverse.org or, for
-example, https://openverse.org/search/?q=cat, the browser request goes through
-Cloudflare, which applies its rate-limiting based on IP (and session cookie or
-the session header, once set). If the request is under the limit, Cloudflare
-forwards it to the Nuxt (Nitro) server for server-side rendering (SSR). During
-this SSR process, Nuxt sets a session cookie in the response if the user does
-not already have one.
+The `openverse.org` DNS record is not proxied by Cloudflare, so browsers connect
+directly to the Nuxt server. The API hosts are proxied.
 
-After that first SSR load, the user’s browser automatically includes the newly
-issued session cookie and the session header on all subsequent requests. When
-the user navigates to another page or makes another search, the client requests
-either static assets (e.g., `/\_nuxt` routes for static resources such as
-JavaScript or CSS files) or API data from `/api` routes. All these client-side
-requests again go through Cloudflare first for rate-limiting checks. When
-allowed, Cloudflare passes them on to Nuxt, which verifies the session cookie
-and proxies any `/api` requests to the Django API.
-
-By combining the session cookie and IP at the Cloudflare layer, Openverse can
-apply rate-limiting on a per-user basis—even behind NAT or shared IP addresses.
-Any request that lacks a valid cookie or exceeds rate limits can be challenged
-or blocked by Cloudflare, preventing unauthorized or abusive usage. This setup
-ensures that no request (initial or otherwise) bypasses Cloudflare’s checks, and
-that all API traffic flows through Nuxt’s server rather than directly to Django.
+When a user loads a page, Nuxt renders it on the server (SSR) and sets a session
+cookie if the user doesn't have one. During SSR, the stores call the `/api`
+routes in-process, so these calls don't make a network request. After the first
+load, the stores call the same routes from the browser, and the session cookie
+is sent with them. In both cases, the Nitro route adds the frontend credentials
+and sends the request to the Django API.
 
 ```{mermaid}
 sequenceDiagram
-    participant U as User
-    participant C as Cloudflare
-    participant O as Nuxt Server
-    participant NS as Nitro Server
+    participant U as Browser
+    participant N as Nuxt (Nitro)
     participant A as API
-    U ->> C: request
-    Note left of C: "Check the rate limits based on session cookie and IP"
-    alt has-cookie-not-rate-limited
-        C ->> O: request
-        O ->> NS: request
-        NS ->> A: Request authenticated with frontend credentials
-        A ->> NS: response
-        NS ->> O: response
-        O ->> U: response
-    else has-cookie-rate-limited
-        C ->> U: challenge
-    else has-no-cookie-not-rate-limited
-        C ->> O: request
-        O ->> NS: request with added cookie
+    U ->> N: Page load or /api request
+    alt under the rate limits
+        N ->> A: Request authenticated with frontend credentials
+        A ->> N: Response
+        N ->> U: Response
+    else over a rate limit
+        N ->> U: 429 with a message
     end
-
-    U ->> C: client-side request, with the HTTP-only cookie
-    C ->> NS: request
-    NS ->> A: Request authenticated with frontend credentials
 ```
 
-## Cloudflare Rate Limiting
+## Rate limiting
 
-Originally, I thought of using Cloudflare managed challenges to protect the Nuxt
-server routes from abuse. However, this would have required issuing a challenge
-to every new user, which would have been a poor user experience. Instead, we
-will use Cloudflare rate limiting to protect the frontend app from abuse.
+The proxy routes are public and use the frontend's credentials, so without
+limits of their own, a script blocked by the anonymous API limits could use them
+instead.
 
-The rate limiting will be based on the IP and cookie combination if cookie is
-available, or on IP (for requests without cookies), and will trigger a managed
-challenge only when the request volume from a user exceeds the defined
-threshold. This way, legitimate users will not be inconvenienced by challenges,
-while automated traffic will be rate-limited and challenged.
+Cloudflare can't limit these routes while the `openverse.org` record isn't
+proxied. We will limit them in Nitro first, and put Cloudflare in front of
+`openverse.org` if usage stays too high. See
+[the follow-up work](#follow-up-work).
 
-The proxying rules should exclude the `/_nuxt/` routes and requests for static
-files (such as ending with `.jpg`, `.css`, or `.csv`), since those requests are
-indirectly rate-limited by the rate-limits on the main requests, and would be
-difficult to set rate-limiting rules for.
+### Counters
 
-- **Supported Browsers for Challenges**:
-  [Cloudflare Documentation](https://developers.cloudflare.com/waf/reference/cloudflare-challenges/#supported-browsers)
-  notes that managed challenges support modern browsers, but does not show the
-  minimum supported versions. Users with older browsers may struggle,
-  potentially creating accessibility issues.
+The session cookie lets Nitro separate the people who share an IP address, such
+as in a library. Every request that counts also counts toward the per-IP
+ceiling.
 
-- **Referer Header Changes After Challenge**: After passing a managed challenge,
-  the referer header may change:
-  [Referer Header after Challenge](https://developers.cloudflare.com/waf/reference/cloudflare-challenges/#referer-header)
-  We must ensure this does not disrupt our request logic.
+| Request                                      | Counted by | Limit                         |
+| -------------------------------------------- | ---------- | ----------------------------- |
+| `/api` request with a session                | Session    | Normal use by one person      |
+| `/api` request without a session             | IP         | Low                           |
+| Page load that calls the API, with a session | Session    | Normal use by one person      |
+| All of the above                             | IP         | Very high, the per-IP ceiling |
 
-- **Multi-language Support**: Challenges support multiple languages [^2],
-  although the number of supported languages is lower than the number of
-  languages supported by Openverse.
+- A page load without a session counts only toward the per-IP ceiling, because
+  every new visitor arrives this way and many can share one IP address.
+- SSR calls to the `/api` routes are not counted separately, because their page
+  load is already counted. SSR search pages call the API, so if page loads
+  weren't counted, a script could request `/search?q=cat` to avoid the limits.
+- Browsers that block cookies share the low limit for their IP address, so some
+  of these users can receive a 429.
+- The counters are in memory and are per Nuxt task, so the limits are
+  approximate. This is enough for generous limits.
+
+### Backstop in the API
+
+The frontend's API application gets a high but finite rate limit. If a script
+gets past the Nitro limits, for example by using many IP addresses, this limit
+protects the API. openverse.org search can degrade for everyone when it's
+reached, so we need an alert before that point.
 
 ### Impact on the Nuxt Server
 
@@ -144,14 +124,16 @@ difficult to set rate-limiting rules for.
 ## Step-by-step plan
 
 1. [Add the frontend feature flag](#add-the-frontend-feature-flag)
-2. [Set up Cloudflare rate limiting for staging](#set-up-cloudflare-rate-limiting-for-staging)
-3. [Add session to the init plugin](#add-session-to-the-init-plugin)
-4. [Add the server plugin to create the Openverse API client and add it to the event context](#add-the-server-plugin-to-initialize-the-openverse-api-client-and-add-it-to-the-event-context)
-5. [Set up Nuxt server proxy routes](#set-up-nuxt-server-proxy-routes)
-6. [Use Nuxt server routes instead of the `api-client` in the frontend when the feature flag is on](#use-server-routes-in-the-frontend-when-the-feature-flag-is-on)
-7. [Set up Cloudflare rate limiting for production](#set-up-cloudflare-rate-limiting-for-production)
-8. [Switch on the flag in production](#switch-the-feature-flag-on-in-production)
-9. [Monitor the Cloudflare dashboard and Sentry logs for challenge occurrences](#monitor-the-cloudflare-dashboard-and-sentry-logs-for-challenge-occurrences)
+2. [Give the frontend's API application its own rate limit](#give-the-frontends-api-application-its-own-rate-limit)
+3. [Add a route from Nitro to the API that Cloudflare can't challenge](#add-a-route-from-nitro-to-the-api-that-cloudflare-cant-challenge)
+4. [Add session to the init plugin](#add-session-to-the-init-plugin)
+5. [Add the server plugin to create the Openverse API client and add it to the event context](#add-the-server-plugin-to-initialize-the-openverse-api-client-and-add-it-to-the-event-context)
+6. [Set up Nuxt server proxy routes](#set-up-nuxt-server-proxy-routes)
+7. [Add the rate limiting to Nitro in log-only mode](#add-the-rate-limiting-to-nitro-in-log-only-mode)
+8. [Use Nuxt server routes instead of the `api-client` in the frontend when the feature flag is on](#use-server-routes-in-the-frontend-when-the-feature-flag-is-on)
+9. [Switch on the flag in production](#switch-the-feature-flag-on-in-production)
+10. [Monitor usage and enforce the limits](#monitor-usage-and-enforce-the-limits)
+11. [Remove the feature flag and the direct API client](#remove-the-feature-flag-and-the-direct-api-client)
 
 ## Step Details
 
@@ -173,95 +155,54 @@ Add `proxy_requests` feature flag to `frontend/feat/feature-flags.json`:
 }
 ```
 
-### Set up Cloudflare rate limiting for staging
+### Give the frontend's API application its own rate limit
 
-Add the initial rate limiting to the Nuxt server routes (`/api/**`) in the
-infrastructure repository (_maintainers only_).
+All openverse.org traffic will use one API `client_id`, so it will share one set
+of API rate limits. The existing models don't fit: `standard` allows 100
+requests per minute, `enhanced` allows 200, and `exempt` has no limit and so no
+backstop.
 
-Cloudflare rules consist of two parts: the **expression** to match the request
-and the **action** to take when the request matches the expression [^3].
+- Add a new `rate_limit_model` to `ThrottledApplication`, with burst and
+  sustained throttles sized from the frontend's current API request rate.
+- In the Django admin (_maintainers only_), confirm that the frontend's
+  application is `verified`, uses the new model, and has no `privileges`,
+  because the proxy doesn't need the larger page size and result depth that they
+  unlock.
+- Add an alert for when usage gets close to the limit.
 
-#### Expression
+### Add a route from Nitro to the API that Cloudflare can't challenge
 
-There should be two rate limiting expressions:
+The API hosts are proxied by Cloudflare, and the frontend reads the API address
+from `public.apiUrl`, so it may call the API through Cloudflare from a small set
+of IP addresses. The rate limiting rules on the API hosts could then count all
+users' requests against those addresses. The rules for repeated 400, 401, and
+403 responses and for `/v1/auth_tokens/token/` are the most likely to fire.
+Nitro can't solve a managed challenge, so this would break search for all users.
 
-- for the returning users - the combination of IP and the session cookie
-- for new users - IP and no cookie. This will cause the new users from a shared
-  IP see the managed challenge more often, if the IP is sending many requests.
-  However, after the first request such a user will be subject to the first rate
-  limiting counts (IP and session cookie).
-
-```
-(http.host eq "staging.openverse.org"
-and (
-    (http.request.headers["x-h3-session"][0] ne "")
-    or
-    (http.request.headers["Cookie"] contains "ovSession")
-)
-and not starts_with(http.request.uri.path, "/_nuxt/")
-and not ends_with(http.request.uri.path, ".js")
-and not ends_with(http.request.uri.path, ".css")
-and not ends_with(http.request.uri.path, ".png")
-and not ends_with(http.request.uri.path, ".jpg")
-and not ends_with(http.request.uri.path, ".svg")
-and not ends_with(http.request.uri.path, ".webp")
-
-```
-
-#### Action
-
-The action should be `managed_challenge`, which will issue a challenge to the
-user when the rate limit is exceeded.
-
-#### Testing the rate limits
-
-##### Shared IP scenario
-
-To test that the rate limits work as expected in the shared IP scenario, we can
-simulate two users accessing the service from the same IP address:
-
-1. Use two different browsers (or one browser with an incognito window) to
-   represent two users.
-2. User 1: In one browser, simulate a user with a valid session cookie,
-   confirming they are treated as authenticated and bypass stricter rate limits.
-3. User 2: In the other browser, simulate an anonymous user without a session
-   cookie. Verify that their requests are subject to stricter IP-based rate
-   limits.
-4. Verification:
-
-- Both users function independently, even though they share the same IP.
-- The authenticated user is not affected by the stricter limits applied to the
-  anonymous user.
-- It is easy for the anonymous user to pass the challenge and use the service
-  after that.
-
-The rate limits should be set very low (such as 4 requests per minute) for this
-test to allow for quick testing.
-
-##### Real rate limits
-
-Calculate the actual rate limits based on the expected traffic. The rate limits
-should be generous enough to accommodate normal user behavior. Later, they can
-be made stricter to deter automated abuse.
+- Confirm the production value of `NUXT_PUBLIC_API_URL`.
+- Add a private `apiUrl` to `runtimeConfig` for Nitro, pointing at an internal
+  API address. If there's no internal route, exclude Nuxt's outbound IP
+  addresses from these rules using `ip.src`. This requires stable outbound
+  addresses.
 
 ### Add session to the `init` plugin
 
-When the user sends the first request to any Openverse frontend URLs, the Nuxt
-server should initialize their session. This will be done in the entry point for
-all SSR requests, the `init.server.ts` plugin (currently
-`init-stores.server.ts`). This will make all subsequent requests from the user
-identifiable as single-user requests, even in shared IP environments.
+When the user sends the first request to any Openverse frontend URL, the Nuxt
+server initializes their session, which makes their later requests identifiable
+as one user's requests, even on a shared IP address. Add this to the
+`frontend/src/plugins/02.init.server.ts` plugin, the entry point for SSR
+requests.
 
-- Rename the `frontend/src/plugins/init-stores.server.ts` plugin to
-  `init.server.ts` to reflect that this plugin will be initializing the state on
-  the server side, not only in the stores.
-- Add a session using the `unjs/h3`
-  [`useSession`](https://h3.unjs.io/examples/handle-session) hook to the
-  `init.server.ts` plugin. This hook will add an encoded cookie and a header to
-  requests. The session should:
-  - use the `HMAC_SIGNING_SECRET` env variable to sign the session.
-  - the session cookie should be `HttpOnly`, `Secure`, and `SameSite=Strict` to
-    prevent client-side tampering and XSS attacks.
+Add a session using the `unjs/h3`
+[`useSession`](https://h3.unjs.io/examples/handle-session) hook. The session
+should:
+
+- use the `HMAC_SIGNING_SECRET` env variable to sign the session, so that a
+  script can't make up session values.
+- be named `ovSession`, and the session cookie should be `HttpOnly`, `Secure`,
+  and `SameSite=Lax`, and have a short maximum age. With `SameSite=Strict`,
+  users arriving from an external link wouldn't send the cookie and would get a
+  new session.
 
 ### Add the server plugin to initialize the Openverse API client and add it to the event context
 
@@ -278,9 +219,15 @@ in `server/plugins/proxy.ts`. This plugin should:
   the `process.env.[VARIABLE_NAME]`, not `runtimeConfig.VARIABLE_NAME` since the
   `runtimeConfig` is not available in the plugin body.
 - add a middleware using `defineEventHandler` that adds the `OpenverseApiClient`
-  as to the event context as `event.context.api_client`.
+  to the event context as `event.context.apiClient`.
 
 ### Set up Nuxt Server proxy routes
+
+These routes are public and use the frontend's credentials, so they must not
+give visitors more access than a direct anonymous API request. Authenticated
+requests can use a `page_size` of up to 50, while anonymous requests can use up
+to 20. Passing parameters straight through would give every visitor the higher
+limit.
 
 - Create the Nuxt server routes under `/api/`:
 
@@ -291,15 +238,18 @@ in `server/plugins/proxy.ts`. This plugin should:
 - Create a `proxyApiRequest` function that accepts the H3 `event` object and
   forwards the request to the API.
   - `validateRequest` function should:
-    - test that the session is valid using the `unjs/h3` `getSession` function,
-      or throw a 401 `Unauthorized` error.
-    - ensure that the request contains the required details (media type, and
-      media id, if required for the specific route).
+    - ensure that the media type is one of the supported media types, and that
+      the media id is a valid UUID, so that the routes can't reach any other API
+      endpoints.
+    - keep only the query parameters that the frontend sends, using an
+      allowlist, and drop all others.
+    - reject a `page_size` above the anonymous maximum, or drop the parameter if
+      the frontend doesn't need it.
   - `generateApiUrl` function should generate the API request URL based on the
     request details (for example, `/api/search/image/?q=cat` should be converted
     to `<apiUrl>/v1/images/?q=cat`).
   - send the request to the API using the Openverse API client from
-    `event.context.client`.
+    `event.context.apiClient`. Do not forward the browser's cookies to the API.
   - handle errors, extract data necessary for the search time Plausible event,
     and return the appropriate response to the client.
 
@@ -310,13 +260,18 @@ requests with `api-service`, and the other that sends the request to the Nuxt
 server route. The fetch function to use should be selected based on the feature
 flag status.
 
+Use `useRequestFetch` for the server route requests. During SSR it calls the
+Nitro route in-process, and in the browser it behaves like `$fetch`, so SSR and
+client requests share one code path.
+
 The change will need to be added to the `related`, `single-media` and `media`
 stores. Here's sample implementation in the media store,
-`frontend/stores/media/index.ts`:
+`frontend/src/stores/media/index.ts`:
 
 ```ts
 if (featureFlagStore.isOn("proxy_requests")) {
-  const result = getProxiedResponse(mediaType, queryParams)
+  const requestFetch = useRequestFetch()
+  const result = await getProxiedResponse(requestFetch, mediaType, queryParams)
 } else {
   const client = useApiClient()
   const result = await getApiClientResponse(client, mediaType, queryParams)
@@ -328,15 +283,19 @@ if (featureFlagStore.isOn("proxy_requests")) {
 }
 
 const getProxiedResponse = async (
+  requestFetch: typeof $fetch,
   mediaType: string,
   queryParams: Record<string, string>
 ) => {
   try {
-    const { eventPayload, data } = await $fetch(
+    const { eventPayload, data } = await requestFetch(
       `/api/search/${mediaType}/?${queryParams}`
     )
     return { eventPayload, data }
   } catch (error) {
+    if (isRateLimited(error)) {
+      // show the rate limit message, using the Retry-After header
+    }
     // return the $fetch error
   }
 }
@@ -356,16 +315,25 @@ const getApiClientResponse = async (
 ```
 
 The new functions should not call any composables that require the Nuxt context
-(e.g., `useNuxtApp`) because `[nuxt]` is not available in nested functions.
+(e.g., `useNuxtApp`) because `[nuxt]` is not available in nested functions. This
+is why `useRequestFetch` is called before them.
 
-### Set up Cloudflare rate limiting for production
+`isRateLimited` checks for a 429 response. The frontend shows a message that
+explains the limit and when to try again, instead of the regular error page.
 
-The rate limiting rule should be similar to that of the staging environment.
+### Add the rate limiting to Nitro in log-only mode
 
-The rates should be generous enough to accommodate normal user behavior. Later,
-they can be made stricter to deter automated abuse.
+Add the [counters](#counters) to the `/api` routes and to the pages that call
+the API, using a server middleware. Use a `runtimeConfig` setting to switch
+between logging and enforcing, and start with logging.
 
-[More information on how request counts are calculated](https://developers.cloudflare.com/waf/rate-limiting-rules/request-rate/)
+- Read the client IP from the `X-Forwarded-For` entry added by our load
+  balancer. Earlier entries come from the client and can be faked.
+- Identify in-process SSR calls in a way that a client can't fake.
+- Do not log session values or IP addresses. Log which counter a request hit and
+  whether it would have been limited.
+- When enforcing, return a 429 with a `Retry-After` header. The frontend must
+  show a clear message for this response, including on SSR pages.
 
 ### Switch the feature flag on in production
 
@@ -373,34 +341,73 @@ Set the `proxy_requests` feature flag to `enabled` in the production
 environment. This will start routing all frontend requests through the Nuxt
 server.
 
-### Monitor the Cloudflare dashboard and Sentry logs for challenge occurrences
+### Monitor usage and enforce the limits
 
-The following data need to be monitored:
+Keep the limits in log-only mode long enough to see normal traffic from shared
+IP addresses, ideally including school hours. Then set the numbers and switch to
+enforcing. The following data need to be monitored:
 
-- Cloudflare dashboard (Security > WAF > Rate limiting rules) shows the number
-  of issued challenges, and the
-  [Challenge solve rate (CSR)](https://developers.cloudflare.com/bots/concepts/challenge-solve-rate/)
-  for the rule. The CSR should be very high since we expect that most of the
-  frontend usage is not automated.
+- The number of requests that would be limited, by counter. Look for IP
+  addresses with many sessions, which are likely to be institutions.
+- The 429 rate after enforcing, and user reports of being blocked.
+- The frontend application's usage against its API limit.
 - Nuxt CPU and memory usage. In case the server is under heavy load, we might
   need to adjust the rate limits and/or frontend task values.
+- API logs for unauthenticated search, single result, and related media requests
+  from openverse.org. These must drop to about zero before the
+  [anonymous limits are tightened](#follow-up-work).
+
+### Remove the feature flag and the direct API client
+
+Once the flag has been stable in production, remove the `proxy_requests` flag,
+the direct fetch functions in the stores, `frontend/src/data/api-service.ts`,
+and the `01.api-token.server.ts` plugin. The API credentials then exist only in
+the Nitro server.
+
+## Follow-up work
+
+This project does not change the anonymous limits. These changes come after the
+flag is on:
+
+- **Search, single result, and related media:** Lower `THROTTLE_ANON_BURST` and
+  `THROTTLE_ANON_SUSTAINED`, after confirming the current production values.
+  Audio waveforms are covered because they come from the `peaks` parameter on
+  these requests.
+- **Thumbnails:** Browsers load thumbnails directly from the API, so they remain
+  anonymous and are counted by IP. Cloudflare serves them, but a request that
+  misses its cache still reaches Django. The default `THROTTLE_ANON_THUMBS` is
+  150 requests per minute, and 30 students each loading a page of 20 results
+  make about 600 requests. Check the cache hit rate and the thumbnail 429 rate,
+  and keep this limit generous.
+- **Openverse referrer throttles:** The `ov_referrer` throttles trust a
+  `referrer: openverse.org` request header, which the frontend doesn't send. If
+  something upstream adds this header, anyone can spoof it to avoid the
+  anonymous limits. Remove these throttles when tightening the limits.
+- **Cloudflare in front of `openverse.org`:** If usage stays too high, proxy
+  this record and add rate limiting rules that count by IP with NAT support,
+  with a per-IP ceiling. Requests are then rejected before they reach Nuxt, and
+  a blocked user can solve a managed challenge. This requires restricting the
+  origin to Cloudflare's IP ranges, reading the client IP from Cloudflare, and
+  handling challenges on `fetch` requests. The zone has 2 free rate limiting
+  rules, on the Business plan.
 
 ## Rejected Alternatives
 
-- **Always Issuing a Challenge Without Thresholds**: Issuing a managed challenge
-  to every new user, regardless of load or conditions, would inconvenience users
-  behind NATs and degrade the initial user experience. While simpler to
-  implement (we would not need to calculate the exact rate limit), it fails our
-  design goal of minimizing friction for normal users.
-
 - **Proxying thumbnail requests** The thumbnail requests from the frontend will
-  remain anonymous on the API level. Since controlling search and related
-  requests naturally throttles excessive thumbnail retrieval, we consider it
-  unnecessary to further load the Nuxt server.
+  remain anonymous on the API level. Cloudflare serves them, and proxying them
+  would add load to the Nuxt server.
 
-- **Only proxying the `/api` routes** This would make the setup more difficult
-  as we would have to handle the challenge response from the `/api` routes to
-  the fetch functions inside pinia stores.
+- **Tightening the anonymous limits without a proxy** This is the smallest
+  change, but it throttles the shared IP addresses that this project is meant to
+  protect.
+
+- **Limiting only by IP in Nitro** This would recreate the shared IP problem at
+  the proxy. Sessions let a library's users have separate counters.
+
+- **Cloudflare in front of `openverse.org` as the first step** This would reject
+  abusive requests earlier and give blocked users a challenge they can solve,
+  but it moves all production traffic. We will do it if the Nitro limits aren't
+  enough. See the [follow-up work](#follow-up-work).
 
 ## Dependencies
 
@@ -408,31 +415,31 @@ The following data need to be monitored:
 
   - `proxy_requests`
 
-- **Infrastructure**: Cloudflare WAF rules, monitoring (Sentry, Cloudflare
-  dashboard).
+- **Infrastructure**: An internal route from the frontend to the API, a new API
+  rate limit model, the `HMAC_SIGNING_SECRET` secret, and monitoring (Sentry).
 
 - **Tools & Packages**:
   - `ofetch`: This would be a great occasion to move away from `axios`. `ofetch`
     is used internally by Nuxt, so it's a good choice for the server proxying.
     The store requests can be made with Nuxt helper wrapper over `ofetch`,
-    `$fetch`[^4].
+    `$fetch`[^2].
   - `h3` for server route handling and session management.
 
 ## Accessibility and Privacy
 
-- **Accessibility**:
+- **Accessibility**: The 429 message must be translated and available to screen
+  readers.
 
-  - Cloudflare challenges are generally accessible, but older browsers may fail.
-  - Multilingual support helps non-English speakers.
-
-- **Privacy**:
-  - No personal data is stored, cookies are short-lived and anonymous.
+- **Privacy**: The session cookie is anonymous and short-lived, and no personal
+  data is stored. The in-memory counters use IP addresses only for as long as a
+  counting window lasts.
 
 ## Rollback Strategy
 
-- Set the `proxy_requests` feature flag to `off`. This will automatically
-  deactivate the rate limiting rules, since the requests won't be going through
-  the Nuxt server anymore.
+- Set the `proxy_requests` feature flag to `off`. The frontend then calls the
+  API directly again.
+- To keep the proxy on but stop blocking users, switch the Nitro limits back to
+  log-only mode.
 
 [^1]:
     `Client requests` - Requests made by the frontend client to the API after
@@ -441,10 +448,4 @@ The following data need to be monitored:
     send directly to Openverse API without any authentication, because using the
     API credentials in the client code would expose them to the public.
 
-[^2]:
-    [Cloudflare multi-language support](https://developers.cloudflare.com/waf/reference/cloudflare-challenges/#multi-language-support)
-
-[^3]:
-    [Cloudflare rate limiting rules](https://developers.cloudflare.com/waf/rate-limiting-rules/)
-
-[^4]: [Nuxt $fetch](https://nuxt.com/docs/api/utils/dollarfetch)
+[^2]: [Nuxt $fetch](https://nuxt.com/docs/api/utils/dollarfetch)
