@@ -1,8 +1,10 @@
 import asyncio
+from http.cookies import SimpleCookie
 
 import aiohttp
 import pytest
 from structlog.testing import capture_logs
+from yarl import URL
 
 from api.utils.aiohttp import get_aiohttp_session
 
@@ -14,6 +16,26 @@ def test_reuses_session_within_same_loop(get_new_loop):
     session_2 = loop.run_until_complete(get_aiohttp_session())
 
     assert session_1 is session_2
+
+
+def test_session_does_not_keep_cookies(get_new_loop):
+    """
+    The default ``CookieJar`` grows by one empty entry per (domain, path)
+    prefix of every URL looked up once it holds any cookie, which leaked
+    ~200 MB/day per task in production.
+    """
+    loop = get_new_loop()
+
+    session = loop.run_until_complete(get_aiohttp_session())
+    session.cookie_jar.update_cookies(
+        SimpleCookie("session=1; Domain=example.com; Path=/"),
+        URL("https://example.com/"),
+    )
+    for i in range(50):
+        session.cookie_jar.filter_cookies(URL(f"https://cdn.example.org/a/b/{i}.jpg"))
+
+    assert isinstance(session.cookie_jar, aiohttp.DummyCookieJar)
+    assert len(session.cookie_jar) == 0
 
 
 def test_creates_new_session_for_separate_loops(get_new_loop):
