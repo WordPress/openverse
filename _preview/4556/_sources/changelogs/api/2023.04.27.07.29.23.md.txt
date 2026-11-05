@@ -1,0 +1,15 @@
+# 2023.04.27.07.29.23
+
+## Improvements
+
+- Avoid the need to specify each image individually in `load-img`
+  ([#1855](https://github.com/WordPress/openverse/pull/1855)) @dhruvkb
+
+## Internal Improvements
+
+- Remove `tags_list` from models and ingestion_server
+  ([#956](https://github.com/WordPress/openverse/pull/956)) @obulat
+- Bump orjson from 3.8.9 to 3.8.10 in /api
+  ([#1218](https://github.com/WordPress/openverse/pull/1218)) @dependabot
+- Bump psycopg2 from 2.9.5 to 2.9.6 in /api
+  ([#1219](https://github.com/WordPress/openverse/pull/1219)) @dependabot

@@ -1,0 +1,17 @@
+# 2025.01.24.17.16.28
+
+## Internal Improvements
+
+- Update dependency jsdom to v26
+  ([#5349](https://github.com/WordPress/openverse/pull/5349)) by @openverse-bot
+- Update pnpm to v9.15.4
+  ([#5346](https://github.com/WordPress/openverse/pull/5346)) by @openverse-bot
+- Update vitest monorepo to v3 (major)
+  ([#5350](https://github.com/WordPress/openverse/pull/5350)) by @openverse-bot
+- Update dependency vite to v6.0.9 [SECURITY]
+  ([#5342](https://github.com/WordPress/openverse/pull/5342)) by @openverse-bot
+
+## Bug Fixes
+
+- Fix i18n placeholder replacement and make tests robust
+  ([#5343](https://github.com/WordPress/openverse/pull/5343)) by @obulat

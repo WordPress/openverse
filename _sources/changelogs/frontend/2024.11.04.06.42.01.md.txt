@@ -1,0 +1,36 @@
+# 2024.11.04.06.42.01
+
+## Improvements
+
+- Prevent layout shift by removing `<ClientOnly>` on the theme selector
+  ([#5116](https://github.com/WordPress/openverse/pull/5116)) by @dhruvkb
+
+## Internal Improvements
+
+- Update dependency vite to v5.4.10
+  ([#5130](https://github.com/WordPress/openverse/pull/5130)) by @openverse-bot
+- Update pnpm to v9.12.3
+  ([#5132](https://github.com/WordPress/openverse/pull/5132)) by @openverse-bot
+- Update dependency @pinia/nuxt to v0.6.1
+  ([#5133](https://github.com/WordPress/openverse/pull/5133)) by @openverse-bot
+- Update dependency @playwright/test to v1.48.2
+  ([#5126](https://github.com/WordPress/openverse/pull/5126)) by @openverse-bot
+- Update dependency vue-tsc to v2.1.10
+  ([#5131](https://github.com/WordPress/openverse/pull/5131)) by @openverse-bot
+- Migrate Openverse ESLint plugin to FlatConfig
+  ([#5049](https://github.com/WordPress/openverse/pull/5049)) by @obulat
+- Update docker.io/nginx Docker tag to v1.27.2
+  ([#5102](https://github.com/WordPress/openverse/pull/5102)) by @openverse-bot
+- Update dependency vue-tsc to v2.1.8
+  ([#5092](https://github.com/WordPress/openverse/pull/5092)) by @openverse-bot
+- Update dependency @rollup/plugin-typescript to v12
+  ([#5094](https://github.com/WordPress/openverse/pull/5094)) by @openverse-bot
+
+## Bug Fixes
+
+- Update Storybook and pin Nuxt Storybook module version
+  ([#5025](https://github.com/WordPress/openverse/pull/5025)) by @obulat
+- Manually set option's selected prop
+  ([#5118](https://github.com/WordPress/openverse/pull/5118)) by @obulat
+- Increase the timeout before taking a dark snapshot
+  ([#5106](https://github.com/WordPress/openverse/pull/5106)) by @obulat

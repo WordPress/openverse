@@ -1,0 +1,11 @@
+# 2024.03.13.17.10.22
+
+## New Features
+
+- Update the Additional search views IP
+  ([#3868](https://github.com/WordPress/openverse/pull/3868)) by @obulat
+
+## Internal Improvements
+
+- Enable Users and Groups in the Django Admin UI
+  ([#3899](https://github.com/WordPress/openverse/pull/3899)) by @AetherUnbound

@@ -1,0 +1,34 @@
+# 2023.07.05.17.46.34
+
+## Improvements
+
+- Temporarily disable saving clean tags to disk
+  ([#2557](https://github.com/WordPress/openverse/pull/2557)) by @obulat
+- Count docs in index when loading sample data
+  ([#2491](https://github.com/WordPress/openverse/pull/2491)) by @dhruvkb
+- Unified logging approach for api and ingestion server
+  ([#2380](https://github.com/WordPress/openverse/pull/2380)) by @ashiramin
+- Add Slack functionality inside logger
+  ([#2395](https://github.com/WordPress/openverse/pull/2395)) by @Kerfred
+
+## Internal Improvements
+
+- Fix Sentry configuration for multiprocessing environment
+  ([#2506](https://github.com/WordPress/openverse/pull/2506)) by @sarayourfriend
+- Bump boto3 from 1.26.144 to 1.26.165 in /ingestion_server
+  ([#2527](https://github.com/WordPress/openverse/pull/2527)) by @dependabot
+- Bump filelock from 3.12.0 to 3.12.2 in /ingestion_server
+  ([#2529](https://github.com/WordPress/openverse/pull/2529)) by @dependabot
+- Bump ipython from 8.13.2 to 8.14.0 in /ingestion_server
+  ([#2531](https://github.com/WordPress/openverse/pull/2531)) by @dependabot
+- Bump pytest from 7.3.1 to 7.4.0 in /ingestion_server
+  ([#2526](https://github.com/WordPress/openverse/pull/2526)) by @dependabot
+- Bump sentry-sdk from 1.24.0 to 1.26.0 in /ingestion_server
+  ([#2530](https://github.com/WordPress/openverse/pull/2530)) by @dependabot
+
+## Bug Fixes
+
+- Fix Sentry configuration for multiprocessing environment
+  ([#2506](https://github.com/WordPress/openverse/pull/2506)) by @sarayourfriend
+- Make `load_sample_data` more resilient
+  ([#2479](https://github.com/WordPress/openverse/pull/2479)) by @dhruvkb

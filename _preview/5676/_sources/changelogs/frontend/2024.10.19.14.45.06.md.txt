@@ -1,0 +1,30 @@
+# 2024.10.19.14.45.06
+
+## Improvements
+
+- Update the homepage dark color
+  ([#4983](https://github.com/WordPress/openverse/pull/4983)) by @obulat
+
+## Internal Improvements
+
+- Update dependency @nuxtjs/sitemap to v6
+  ([#5035](https://github.com/WordPress/openverse/pull/5035)) by @openverse-bot
+- Update dependency @playwright/test to v1.48.1 - autoclosed
+  ([#5047](https://github.com/WordPress/openverse/pull/5047)) by @openverse-bot
+- Add MD snapshots for dark mode
+  ([#5051](https://github.com/WordPress/openverse/pull/5051)) by @obulat
+- Add XS snapshots for dark mode
+  ([#5053](https://github.com/WordPress/openverse/pull/5053)) by @obulat
+- Add SM snapshots for dark mode
+  ([#5052](https://github.com/WordPress/openverse/pull/5052)) by @obulat
+
+## Bug Fixes
+
+- Initialize the stores only on the server
+  ([#5046](https://github.com/WordPress/openverse/pull/5046)) by @obulat
+- Update the text area colors
+  ([#5034](https://github.com/WordPress/openverse/pull/5034)) by @obulat
+- Fix flaky e2e preferences test
+  ([#5044](https://github.com/WordPress/openverse/pull/5044)) by @obulat
+- Correctly set locale `language` property
+  ([#5036](https://github.com/WordPress/openverse/pull/5036)) by @obulat

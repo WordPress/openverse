@@ -1,0 +1,6 @@
+# 2024.09.04.18.01.14
+
+## Bug Fixes
+
+- Revert Nuxt updates and pin pinia versions
+  ([#4859](https://github.com/WordPress/openverse/pull/4859)) by @obulat

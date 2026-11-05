@@ -1,0 +1,1 @@
+const l=()=>({legacy:!1,globalInjection:!0,fallbackLocale:"en",silentFallbackWarn:!0,pluralizationRules:{ru:function(n,t){if(n===0)return 0;const r=n>10&&n<20,e=n%10===1;return t<4?!r&&e?1:2:!r&&e?1:!r&&n%10>=2&&n%10<=4||t<4?2:3}}});export{l as default};

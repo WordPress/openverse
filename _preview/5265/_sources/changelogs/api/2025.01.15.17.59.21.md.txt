@@ -1,0 +1,6 @@
+# 2025.01.15.17.59.21
+
+## Internal Improvements
+
+- Add Django connection pools feature
+  ([#5332](https://github.com/WordPress/openverse/pull/5332)) by @obulat

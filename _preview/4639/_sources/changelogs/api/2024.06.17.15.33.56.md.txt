@@ -1,0 +1,11 @@
+# 2024.06.17.15.33.56
+
+## New Features
+
+- Add `backfillmoderationdecision` management command
+  ([#4415](https://github.com/WordPress/openverse/pull/4415)) by @krysal
+
+## Bug Fixes
+
+- More precisely handle waveform generation failures
+  ([#4444](https://github.com/WordPress/openverse/pull/4444)) by @sarayourfriend

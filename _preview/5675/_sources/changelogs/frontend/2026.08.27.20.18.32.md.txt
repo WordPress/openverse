@@ -1,0 +1,86 @@
+# 2026.08.27.20.18.32
+
+## Improvements
+
+- Remove dark mode notices
+  ([#5469](https://github.com/WordPress/openverse/pull/5469)) by @zackkrida
+
+## Internal Improvements
+
+- Update dependency js-yaml to v4.1.1 [SECURITY]
+  ([#5529](https://github.com/WordPress/openverse/pull/5529)) by @openverse-bot
+- Update dependency rollup to v4.59.0 [SECURITY]
+  ([#5557](https://github.com/WordPress/openverse/pull/5557)) by @openverse-bot
+- Update dependency axios to v1.13.5 [SECURITY]
+  ([#5532](https://github.com/WordPress/openverse/pull/5532)) by @openverse-bot
+- Update dependency vue-i18n to v11.1.10 [SECURITY]
+  ([#5523](https://github.com/WordPress/openverse/pull/5523)) by @openverse-bot
+- Update dependency js-yaml to v4.1.1 [SECURITY]
+  ([#5522](https://github.com/WordPress/openverse/pull/5522)) by @openverse-bot
+- Update dependency axios to v1.12.0 [SECURITY]
+  ([#5525](https://github.com/WordPress/openverse/pull/5525)) by @openverse-bot
+- Update dependency vite to v6.4.1 [SECURITY]
+  ([#5528](https://github.com/WordPress/openverse/pull/5528)) by @openverse-bot
+- Update dependency nuxt to v3.19.0 [SECURITY]
+  ([#5527](https://github.com/WordPress/openverse/pull/5527)) by @openverse-bot
+- Update dependency glob to v11.1.0 [SECURITY]
+  ([#5526](https://github.com/WordPress/openverse/pull/5526)) by @openverse-bot
+- Update dependency @intlify/core-base to v11.1.10 [SECURITY]
+  ([#5524](https://github.com/WordPress/openverse/pull/5524)) by @openverse-bot
+- Update dependency js-yaml to v4.1.1 [SECURITY]
+  ([#5509](https://github.com/WordPress/openverse/pull/5509)) by @openverse-bot
+- Update dependency vue-i18n to v11.1.10 [SECURITY]
+  ([#5510](https://github.com/WordPress/openverse/pull/5510)) by @openverse-bot
+- Update dependency @intlify/core-base to v11.1.10 [SECURITY]
+  ([#5512](https://github.com/WordPress/openverse/pull/5512)) by @openverse-bot
+- Update dependency axios to v1.12.0 [SECURITY]
+  ([#5513](https://github.com/WordPress/openverse/pull/5513)) by @openverse-bot
+- Update dependency glob to v11.1.0 [SECURITY]
+  ([#5518](https://github.com/WordPress/openverse/pull/5518)) by @openverse-bot
+- Update dependency nuxt to v3.19.0 [SECURITY]
+  ([#5514](https://github.com/WordPress/openverse/pull/5514)) by @openverse-bot
+- Update dependency vite to v6.4.1 [SECURITY]
+  ([#5519](https://github.com/WordPress/openverse/pull/5519)) by @openverse-bot
+- Update dependency vite to v6.4.1 [SECURITY]
+  ([#5515](https://github.com/WordPress/openverse/pull/5515)) by @openverse-bot
+- Update dependency glob to v11.1.0 [SECURITY]
+  ([#5516](https://github.com/WordPress/openverse/pull/5516)) by @openverse-bot
+- Update dependency vue-i18n to v11.1.10 [SECURITY]
+  ([#5497](https://github.com/WordPress/openverse/pull/5497)) by @openverse-bot
+- Update dependency nuxt to v3.19.0 [SECURITY]
+  ([#5501](https://github.com/WordPress/openverse/pull/5501)) by @openverse-bot
+- Update dependency vite to v6.4.1 [SECURITY]
+  ([#5504](https://github.com/WordPress/openverse/pull/5504)) by @openverse-bot
+- Update dependency axios to v1.12.0 [SECURITY]
+  ([#5500](https://github.com/WordPress/openverse/pull/5500)) by @openverse-bot
+- Update dependency @intlify/core to v11.1.10 [SECURITY]
+  ([#5498](https://github.com/WordPress/openverse/pull/5498)) by @openverse-bot
+- Update dependency @intlify/core-base to v11.1.10 [SECURITY]
+  ([#5499](https://github.com/WordPress/openverse/pull/5499)) by @openverse-bot
+- Update dependency js-yaml to v4.1.1 [SECURITY]
+  ([#5508](https://github.com/WordPress/openverse/pull/5508)) by @openverse-bot
+- Update dependency nock to v14.0.10
+  ([#5473](https://github.com/WordPress/openverse/pull/5473)) by @openverse-bot
+- Update dependency vite to v6.4.1 [SECURITY]
+  ([#5502](https://github.com/WordPress/openverse/pull/5502)) by @openverse-bot
+- Update dependency vite to v6.3.6 [SECURITY]
+  ([#5450](https://github.com/WordPress/openverse/pull/5450)) by @openverse-bot
+- Update dependency nuxt to v3.19.0 [SECURITY]
+  ([#5449](https://github.com/WordPress/openverse/pull/5449)) by @openverse-bot
+- Update dependency @intlify/core-base to v11.1.10 [SECURITY]
+  ([#5461](https://github.com/WordPress/openverse/pull/5461)) by @openverse-bot
+- Update dependency @intlify/core to v11.1.10 [SECURITY]
+  ([#5460](https://github.com/WordPress/openverse/pull/5460)) by @openverse-bot
+- Update dependency vue-i18n to v11.1.10 [SECURITY]
+  ([#5459](https://github.com/WordPress/openverse/pull/5459)) by @openverse-bot
+- Update dependency axios to v1.12.0 [SECURITY]
+  ([#5476](https://github.com/WordPress/openverse/pull/5476)) by @openverse-bot
+
+## Bug Fixes
+
+- Escape attribute values in attribution markup builder
+  ([#5607](https://github.com/WordPress/openverse/pull/5607)) by @obenland
+- Update Creative Commons licenses link to new URL
+  ([#5565](https://github.com/WordPress/openverse/pull/5565)) by @coderGtm
+- Add a hotfix replacing the pipe character
+  ([#5496](https://github.com/WordPress/openverse/pull/5496)) by @obulat

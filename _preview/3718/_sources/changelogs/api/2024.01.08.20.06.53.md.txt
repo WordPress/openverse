@@ -1,0 +1,15 @@
+# 2024.01.08.20.06.53
+
+## Internal Improvements
+
+- Remove unused AWS variables
+  ([#3627](https://github.com/WordPress/openverse/pull/3627)) by @sarayourfriend
+- Silence the gunicorn access log
+  ([#3617](https://github.com/WordPress/openverse/pull/3617)) by @ngken0995
+- Update dependency elasticsearch to v8.11.1
+  ([#3608](https://github.com/WordPress/openverse/pull/3608)) by @openverse-bot
+
+## Bug Fixes
+
+- Remove step to deploy production thumbnails
+  ([#3611](https://github.com/WordPress/openverse/pull/3611)) by @dhruvkb

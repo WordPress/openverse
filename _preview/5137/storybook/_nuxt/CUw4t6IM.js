@@ -1,0 +1,1 @@
+const e=["VLink","button","a"],a=["filled-pink-8","filled-dark","filled-gray","filled-white","bordered-white","bordered-gray","bordered-tx","transparent-tx","transparent-gray","transparent-dark"],r=[...a,"plain","plain--avoid"],t=["large","medium","small"],n=[...t,"disabled","larger"];export{a,t as b,e as c,r as d,n as e};

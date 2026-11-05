@@ -1,0 +1,28 @@
+# 2025.07.03.14.31.53
+
+## Internal Improvements
+
+- Update dependency nock to v14.0.5
+  ([#5434](https://github.com/WordPress/openverse/pull/5434)) by @openverse-bot
+- Update dependency vite to v6.1.6 [SECURITY]
+  ([#5447](https://github.com/WordPress/openverse/pull/5447)) by @openverse-bot
+- Update dependency nuxt to v3.16.0 [SECURITY]
+  ([#5446](https://github.com/WordPress/openverse/pull/5446)) by @openverse-bot
+- Update dependency openapi-fetch to ^0.14.0
+  ([#5436](https://github.com/WordPress/openverse/pull/5436)) by @openverse-bot
+- Update docker.io/nginx Docker tag to v1.28.0
+  ([#5438](https://github.com/WordPress/openverse/pull/5438)) by @openverse-bot
+- Update dependency prettier-plugin-tailwindcss to v0.6.12
+  ([#5435](https://github.com/WordPress/openverse/pull/5435)) by @openverse-bot
+- Update dependency nuxt to v3.16.0 [SECURITY]
+  ([#5441](https://github.com/WordPress/openverse/pull/5441)) by @openverse-bot
+- Update dependency vite to v6.1.6 [SECURITY]
+  ([#5442](https://github.com/WordPress/openverse/pull/5442)) by @openverse-bot
+- Update dependency vite to v6.1.6 [SECURITY]
+  ([#5431](https://github.com/WordPress/openverse/pull/5431)) by @openverse-bot
+- Update dependency nuxt to v3.16.0 [SECURITY]
+  ([#5430](https://github.com/WordPress/openverse/pull/5430)) by @openverse-bot
+- Update dependency nuxt to v3.16.0 [SECURITY]
+  ([#5416](https://github.com/WordPress/openverse/pull/5416)) by @openverse-bot
+- Update dependency vite to v6.1.6 [SECURITY]
+  ([#5427](https://github.com/WordPress/openverse/pull/5427)) by @openverse-bot

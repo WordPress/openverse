@@ -1,0 +1,24 @@
+# 2024.05.01.13.59.00
+
+## Improvements
+
+- Update media moderation view
+  ([#4169](https://github.com/WordPress/openverse/pull/4169)) by @obulat
+- Respond with 401 for requests with bad credentials
+  ([#4126](https://github.com/WordPress/openverse/pull/4126)) by @sarayourfriend
+
+## Internal Improvements
+
+- Update dependency uvicorn to >=0.29, <0.30
+  ([#4245](https://github.com/WordPress/openverse/pull/4245)) by @openverse-bot
+- Update dependency django-asgi-lifespan to >=0.3.1, <0.4
+  ([#4243](https://github.com/WordPress/openverse/pull/4243)) by @openverse-bot
+- Delete base indices before recreation of sample data
+  ([#4213](https://github.com/WordPress/openverse/pull/4213)) by @krysal
+
+## Bug Fixes
+
+- Add "sa" as valid license and map "publicdomain" to "pdm"
+  ([#4220](https://github.com/WordPress/openverse/pull/4220)) by @dhruvkb
+- Convert OperationalError into unhealthy health check response
+  ([#4197](https://github.com/WordPress/openverse/pull/4197)) by @AetherUnbound

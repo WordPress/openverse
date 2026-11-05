@@ -1,0 +1,30 @@
+# 2023.04.27.02.43.13
+
+## Improvements
+
+- Add `LABEL` to link repo with GHCR image
+  ([#1223](https://github.com/WordPress/openverse/pull/1223)) @dhruvkb
+
+## Internal Improvements
+
+- Accommodate multi-heading DAG docs
+  ([#1866](https://github.com/WordPress/openverse/pull/1866)) @sarayourfriend
+- Make foreign_identifier required in `add_item`
+  ([#1887](https://github.com/WordPress/openverse/pull/1887)) @obulat
+- Add `catalog/recreate` just command and remove a file
+  ([#1856](https://github.com/WordPress/openverse/pull/1856)) @krysal
+- Bump pre-commit from 3.2.1 to 3.2.2 in /catalog
+  ([#1210](https://github.com/WordPress/openverse/pull/1210)) @dependabot
+- Bump pytest-sugar from 0.9.6 to 0.9.7 in /catalog
+  ([#1212](https://github.com/WordPress/openverse/pull/1212)) @dependabot
+- Add `LABEL` to link repo with GHCR image
+  ([#1223](https://github.com/WordPress/openverse/pull/1223)) @dhruvkb
+
+## Bug Fixes
+
+- Update timeouts for image popularity view creation
+  ([#1906](https://github.com/WordPress/openverse/pull/1906)) @stacimc
+- Consolidate all transient dev container dirs for the catalog
+  ([#1829](https://github.com/WordPress/openverse/pull/1829)) @AetherUnbound
+- Fix line ending of Java SDK file
+  ([#1222](https://github.com/WordPress/openverse/pull/1222)) @zackkrida

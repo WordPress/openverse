@@ -1,0 +1,11 @@
+import{W as e}from"./D76x7TaQ.js";import{_ as o}from"./FptrohcI.js";import{h as a}from"./-WkxctKM.js";import"./DTU7yJca.js";import"./D-XGaJuf.js";import"./8bxaQBfd.js";import"./DNZ0QEaN.js";import"./CFMQYC2y.js";import"./Dt-H8hG_.js";import"./CTON8dBl.js";import"./CRWjC3CT.js";import"./C36Bf8YV.js";import"./Cpj98o6Y.js";import"./Ci7G4jyV.js";import"./HGGXJyB7.js";import"./D0ww02ZN.js";import"./R-F224MX.js";import"./BLIMiQvM.js";import"./CVtkxrq9.js";import"./Xs_VBmP5.js";import"./CmiN-34A.js";import"./BOX21o1p.js";import"./BKKKF4W5.js";import"./BnDRGrsR.js";import"./CVV9gpzL.js";import"./CuPsdpTl.js";import"./DlAUqK2U.js";import"./BecnK7b_.js";import"./WINk6Gqn.js";import"./BPwGQkdi.js";import"./DJuamxAL.js";import"./DQnMOLSw.js";import"./C0aPY4k7.js";import"./ZwMfgceM.js";import"./CR6ZVAxS.js";import"./BBsRl7xl.js";import"./k5PUqNI5.js";import"./Bz7P8nyL.js";import"./BxOnwPF8.js";import"./Cy2Oj-z2.js";import"./RevM6cLn.js";import"./DC-AD4tD.js";import"./-TaKdCZx.js";import"./2rn3yr8r.js";import"./DvW_hYzt.js";import"./DqEiLywi.js";import"./CqzC9m7X.js";import"./BhmHUKSp.js";import"./CEjvU9Qv.js";import"./Ce2A_LXr.js";import"./C_4PSVgb.js";import"./B7pyvAJ7.js";import"./Bnkvtx4f.js";import"./BaVzLC5-.js";import"./J4MDjhZE.js";import"./CJk8lJ1H.js";import"./BXAcwQ7Y.js";import"./HSkZLNjo.js";import"./BSEdKPgk.js";import"./Dy_QAvVS.js";import"./DSfRbglK.js";import"./zC3a4JnJ.js";import"./CJGZE0Y2.js";import"./fl49u9nx.js";import"./DmR46oB_.js";import"./D_zKKbBz.js";import"./DvUPudwq.js";import"./rZti7sp_.js";import"./RxpDUvxm.js";import"./hXBgEdtc.js";import"../sb-preview/runtime.js";import"./BZhKRcfk.js";import"./CiUfQdtK.js";import"./4nnA4bBz.js";const Or={title:"Components/VHeader/VHeaderMobile/VHeaderMobile",component:o,decorators:[e]},r={render:i=>({components:{VHeaderMobile:o},setup(){return()=>a(o,i)}}),name:"Default"};var t,m,p;r.parameters={...r.parameters,docs:{...(t=r.parameters)==null?void 0:t.docs,source:{originalSource:`{
+  render: args => ({
+    components: {
+      VHeaderMobile
+    },
+    setup() {
+      return () => h(VHeaderMobile, args);
+    }
+  }),
+  name: "Default"
+}`,...(p=(m=r.parameters)==null?void 0:m.docs)==null?void 0:p.source}}};const Sr=["Default"];export{r as Default,Sr as __namedExportsOrder,Or as default};

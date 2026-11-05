@@ -1,0 +1,15 @@
+# 2023.06.05.15.04.02
+
+## New Features
+
+- Add documentation for accessing API over HTTPS
+  ([#2201](https://github.com/WordPress/openverse/pull/2201)) by @dhruvkb
+- Derive document sensitivity markings from filtered index
+  ([#2057](https://github.com/WordPress/openverse/pull/2057)) by @sarayourfriend
+
+## Internal Improvements
+
+- Remove qa param from api
+  ([#2322](https://github.com/WordPress/openverse/pull/2322)) by @ashiramin
+- Bump fakeredis from 2.11.2 to 2.13.0 in /api
+  ([#2292](https://github.com/WordPress/openverse/pull/2292)) by @dependabot

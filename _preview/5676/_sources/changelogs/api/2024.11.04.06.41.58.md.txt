@@ -1,0 +1,12 @@
+# 2024.11.04.06.41.58
+
+## Internal Improvements
+
+- Update dependency django-asgi-lifespan to >=0.4, <0.5
+  ([#5121](https://github.com/WordPress/openverse/pull/5121)) by @openverse-bot
+- Update python version in API and attribution
+  ([#5095](https://github.com/WordPress/openverse/pull/5095)) by @obulat
+- Update docker.io/nginx Docker tag to v1.27.2
+  ([#5102](https://github.com/WordPress/openverse/pull/5102)) by @openverse-bot
+- Update python dev dependencies (major)
+  ([#5086](https://github.com/WordPress/openverse/pull/5086)) by @openverse-bot
