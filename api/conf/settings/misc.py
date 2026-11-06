@@ -29,3 +29,9 @@ OUTBOUND_USER_AGENT_TEMPLATE = config(
     "OUTBOUND_USER_AGENT_TEMPLATE",
     default=f"Openverse{{purpose}}/{API_VERSION} (https://wordpress.org/openverse)",
 )
+
+# How often the API hands freed heap pages back to the kernel, see
+# ``conf.malloc_trim``. 0 disables it.
+MALLOC_TRIM_INTERVAL_SECONDS = config(
+    "MALLOC_TRIM_INTERVAL_SECONDS", default=300, cast=int
+)
