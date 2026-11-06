@@ -44,7 +44,7 @@ runs:
       # TODO: Try using `pipx` here instead of `pip`.
       run: |
         pip install -U pip
-        pip install pipenv pdm
+        pip install pipenv "pdm[locked]"
 
     - name: Setup pnpm
       if: inputs.setup_nodejs == 'true'
