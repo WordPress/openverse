@@ -19,13 +19,14 @@ ENV PIP_NO_CACHE_DIR=1
 ENV PIP_NO_COLOR=1
 
 # - Install system packages needed for building Python dependencies
-# - Install PDM to install Python dependencies
+# - Install PDM to install Python dependencies, with its own dependencies locked
+#   so a release of one of them (hishel 2.0.0 broke pdm) cannot break the build
 RUN apt-get update \
     && apt-get install -yqq --no-install-recommends python3-dev \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/* \
     && pip install --upgrade pip \
-    && pip install pdm~=$OV_PDM_VERSION
+    && pip install "pdm[locked]~=$OV_PDM_VERSION"
 
 # Copy the Pipenv files into the container
 COPY pyproject.toml pdm.lock /
