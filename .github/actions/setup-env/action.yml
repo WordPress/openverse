@@ -41,10 +41,13 @@ runs:
     - name: Setup global Python deps
       if: inputs.setup_python == 'true'
       shell: bash
-      # TODO: Try using `pipx` here instead of `pip`.
+      # pdm goes through pipx: `pdm[locked]` pins pdm's dependencies (so a
+      # release of one of them cannot break it), and those pins conflict
+      # with pipenv's requirements when both share one environment.
       run: |
         pip install -U pip
-        pip install pipenv "pdm[locked]"
+        pip install pipenv
+        pipx install "pdm[locked]"
 
     - name: Setup pnpm
       if: inputs.setup_nodejs == 'true'
