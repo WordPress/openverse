@@ -114,13 +114,13 @@ jobs:
           # Node.js is needed by lint actions.
           install_recipe: "node-install"
 
-      - name: Cache pre-commit envs
+      - name: Cache prek envs
         uses: actions/cache@v6
         with:
-          path: ~/.cache/pre-commit
-          key: ${{ runner.os }}-pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
+          path: ~/.cache/prek
+          key: ${{ runner.os }}-prek-${{ hashFiles('.pre-commit-config.yaml') }}
 
-      - name: Run pre-commit to lint files
+      - name: Run prek to lint files
         env:
           GITHUB_TOKEN: ${{ github.token }}
           # Translations aren't needed for linting, and GlotPress is

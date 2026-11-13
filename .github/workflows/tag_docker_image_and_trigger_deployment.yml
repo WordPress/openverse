@@ -97,15 +97,15 @@ jobs:
           # Node.js is needed by lint actions.
           install_recipe: "node-install"
 
-      - name: Cache pre-commit envs
+      - name: Cache prek envs
         uses: actions/cache@v6
         with:
-          path: ~/.cache/pre-commit
-          key: ${{ runner.os }}-pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
+          path: ~/.cache/prek
+          key: ${{ runner.os }}-prek-${{ hashFiles('.pre-commit-config.yaml') }}
 
       - name: Lint the changelog file so that it passes CI
         run: |
-          # Add the new changelog file to git so that pre-commit can lint it.
+          # Add the new changelog file to git so that prek can lint it.
           git add documentation/changelogs/${{ env.APP_NAME }}/${{ steps.tag.outputs.date }}.md
           just precommit
           # Ensure this step passes even if linting has made changes so the workflow can continue

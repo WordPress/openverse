@@ -52,10 +52,10 @@ COMMANDS
         ov clean && ov init
 
     Warning: running `ov clean` will result in needing to fully rebuild the environment
-    including downloading tools handled by `ov setup-env` and pre-commit environments.
+    including downloading tools handled by `ov setup-env` and prek environments.
 
   ov hook HOOK
-    Run Git hooks through pre-commit inside the development toolkit container.
+    Run Git hooks through prek inside the development toolkit container.
 
   ov aliases [--help|-h]
     Display information about ov aliases. By default, lists all available aliases.
@@ -132,8 +132,8 @@ clean)
   ;;
 
 hook)
-  # Arguments match the implementation of hooks installed by pre-commit
-  "$_self" pre-commit hook-impl \
+  # Arguments match the implementation of hooks installed by prek
+  "$_self" prek hook-impl \
     --config=.pre-commit-config.yaml \
     --hook-type="$2" \
     --hook-dir "$OPENVERSE_PROJECT"/.git/hooks \

@@ -6,6 +6,8 @@ set dotenv-load := true
 
 IS_CI := env_var_or_default("CI", "")
 DC_USER := env_var_or_default("DC_USER", "ov_user")
+# Keep in sync with `PREK_VERSION` in `docker/dev_env/Dockerfile`
+PREK_VERSION := "0.5.10"
 
 # Show all available recipes, also recurses inside nested justfiles
 @_default:
@@ -105,36 +107,23 @@ welcome-to-openverse:
      \___/ |__| |_____||__|__|  \_/  |_____||__|\_|  \___||_____|
     OPENVERSE
 
-# Setup pre-commit as a Git hook
+# Install prek and set it up as a Git hook
 precommit:
     #!/usr/bin/env bash
     set -eo pipefail
-    if [ -z "$SKIP_PRE_COMMIT" ] && [ ! -f ./pre-commit.pyz ]; then
-      echo "Getting latest release"
-      curl \
-        ${GITHUB_TOKEN:+ --header "Authorization: Bearer ${GITHUB_TOKEN}"} \
-        --output latest.json \
-        https://api.github.com/repos/pre-commit/pre-commit/releases/latest
-      cat latest.json
-      URL=$(grep -o 'https://.*\.pyz' -m 1 latest.json)
-      rm latest.json
-      echo "Downloading pre-commit from $URL"
-      curl \
-        --fail \
-        --location `# follow redirects, else cURL outputs a blank file` \
-        --output pre-commit.pyz \
-        ${GITHUB_TOKEN:+ --header "Authorization: Bearer ${GITHUB_TOKEN}"} \
-        "$URL"
-      echo "Installing pre-commit"
-      python3 pre-commit.pyz install -t pre-push -t pre-commit
-      echo "Done"
-    else
-      echo "Skipping pre-commit installation"
+    if [ -n "$SKIP_PRE_COMMIT" ]; then
+      echo "Skipping prek installation"
+      exit 0
     fi
+    if ! command -v prek >/dev/null; then
+      echo "Installing prek"
+      pipx install prek=={{ PREK_VERSION }}
+    fi
+    prek install -t pre-push -t pre-commit
 
-# Run pre-commit to lint and reformat files
+# Run prek to lint and reformat files
 lint hook="" *files="": precommit
-    python3 pre-commit.pyz run {{ hook }} {{ if files == "" { "--all-files" } else { "--files" } }}  {{ files }}
+    prek run {{ hook }} {{ if files == "" { "--all-files" } else { "--files" } }}  {{ files }}
 
 # Run codeowners validator locally. Only enable experimental hooks if there are no uncommitted changes.
 lint-codeowners checks="stable":
