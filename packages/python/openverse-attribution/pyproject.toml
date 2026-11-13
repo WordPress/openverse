@@ -14,7 +14,10 @@ requires-python = "==3.12.*"
 requires = ["pdm-backend"]
 build-backend = "pdm.backend"
 
-[tool.pdm.dev-dependencies]
+[tool.uv]
+default-groups = "all"
+
+[dependency-groups]
 test = [
     "pytest >=8.1.1, <9",
     "pytest-sugar >=1.0.0, <2",
@@ -23,7 +26,3 @@ test = [
 dev = [
     "ipython >=9.1, <10",
 ]
-
-[tool.pdm.scripts]
-build = "{pdm} build"
-test = "pytest"
