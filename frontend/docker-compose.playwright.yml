@@ -6,9 +6,14 @@ services:
       args:
         - PLAYWRIGHT_VERSION=${PLAYWRIGHT_VERSION}
     volumes:
-      - .:/frontend:rw,Z
+      - .:/ov/frontend:rw,Z
+      - ../packages/js/api-client:/ov/packages/js/api-client:rw,Z
+      # Keep the container's dependencies out of the host's `node_modules`.
+      - root_node_modules:/ov/node_modules
+      - node_modules:/ov/frontend/node_modules
+      - api_client_node_modules:/ov/packages/js/api-client/node_modules
     user: ${USER_ID}
-    working_dir: /frontend
+    working_dir: /ov/frontend
     entrypoint: >
       /bin/sh -c '
       pnpm install;
@@ -21,3 +26,8 @@ services:
       - FASTSTART=${FASTSTART:-false}
       - PLAYWRIGHT_BASE_URL=${PLAYWRIGHT_BASE_URL:-}
       - HMAC_SIGNING_SECRET=${HMAC_SIGNING_SECRET:-}
+
+volumes:
+  root_node_modules:
+  node_modules:
+  api_client_node_modules:
