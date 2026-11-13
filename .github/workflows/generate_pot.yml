@@ -20,7 +20,7 @@ jobs:
     if: github.repository_owner == 'WordPress'
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -35,7 +35,7 @@ jobs:
         run: cp frontend/openverse.pot /tmp/openverse.pot
 
       - name: Checkout repository at `translations` branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: translations
 
@@ -50,4 +50,4 @@ jobs:
 
       - name: Checkout repository # again, to enable cleaning.
         if: always()
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7

@@ -25,7 +25,7 @@ jobs:
       stack: ${{ steps.get_groups.outputs.stack }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Get label groups
         id: get_groups

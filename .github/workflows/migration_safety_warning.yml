@@ -16,16 +16,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: peter-evans/find-comment@v3
+      - uses: peter-evans/find-comment@v4
         id: existing-warning
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body-includes: This PR has migrations
 
       - name: Delete existing migration warning comment
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         if: steps.existing-warning.outputs.comment-id != 0
         with:
           github-token: ${{ secrets.ACCESS_TOKEN }}
@@ -36,7 +36,7 @@ jobs:
               comment_id: ${{ steps.existing-warning.outputs.comment-id }},
             })
 
-      - uses: peter-evans/create-or-update-comment@v4
+      - uses: peter-evans/create-or-update-comment@v5
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |

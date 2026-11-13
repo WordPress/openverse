@@ -28,7 +28,7 @@ jobs:
           - ingestion_server
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Calculate tag name
         id: tag
@@ -45,7 +45,7 @@ jobs:
       # Each time this runs, it should replace the previous drafted release matching the tag prefix set in the release drafter config
       # This means there will always be a running drafted release for all apps
       # Publishing the drafted release triggers the "Tag docker image and trigger deployment" workflow
-      - uses: release-drafter/release-drafter@v6
+      - uses: release-drafter/release-drafter@v7
         id: release-drafter
         with:
           config-name: release-drafter-${{ matrix.app }}.yml

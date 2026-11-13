@@ -20,7 +20,7 @@ jobs:
     if: github.repository_owner == 'WordPress'
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Run file sync
         uses: BetaHuhn/repo-file-sync-action@v1
