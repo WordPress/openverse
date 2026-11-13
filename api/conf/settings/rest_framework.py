@@ -12,6 +12,12 @@ THROTTLE_ANON_SUSTAINED = config("THROTTLE_ANON_SUSTAINED", default="100/day")
 THROTTLE_ANON_THUMBS = config("THROTTLE_ANON_THUMBS", default="150/minute")
 THROTTLE_OAUTH2_THUMBS = config("THROTTLE_OAUTH2_THUMBS", default="500/minute")
 THROTTLE_ANON_HEALTHCHECK = config("THROTTLE_ANON_HEALTHCHECK", default="3/minute")
+# The openverse.org frontend sends the requests of all its users with one key.
+# Live environments should size these from the frontend's request rate.
+THROTTLE_FRONTEND_BURST = config("THROTTLE_FRONTEND_BURST", default="3000/min")
+THROTTLE_FRONTEND_SUSTAINED = config(
+    "THROTTLE_FRONTEND_SUSTAINED", default="2000000/day"
+)
 
 THROTTLE_OV_REFERRER_BURST = config(
     "THROTTLE_OV_REFERRER_BURST", default=THROTTLE_ANON_BURST
@@ -36,6 +42,8 @@ DEFAULT_THROTTLE_RATES = {
     "oauth2_client_credentials_burst": "100/min",
     "enhanced_oauth2_client_credentials_sustained": "20000/day",
     "enhanced_oauth2_client_credentials_burst": "200/min",
+    "frontend_oauth2_client_credentials_sustained": THROTTLE_FRONTEND_SUSTAINED,
+    "frontend_oauth2_client_credentials_burst": THROTTLE_FRONTEND_BURST,
     # ``None`` completely by-passes the rate limiting
     "exempt_oauth2_client_credentials": None,
 }
@@ -49,6 +57,8 @@ DEFAULT_THROTTLE_CLASSES = (
     "api.utils.throttle.OAuth2IdSustainedRateThrottle",
     "api.utils.throttle.EnhancedOAuth2IdBurstRateThrottle",
     "api.utils.throttle.EnhancedOAuth2IdSustainedRateThrottle",
+    "api.utils.throttle.FrontendOAuth2IdBurstRateThrottle",
+    "api.utils.throttle.FrontendOAuth2IdSustainedRateThrottle",
     "api.utils.throttle.ExemptOAuth2IdRateThrottle",
 )
 

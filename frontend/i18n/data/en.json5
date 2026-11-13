@@ -725,6 +725,8 @@ _{link}_ part of "The translation for English locale is incomplete. Help us get 
   "noResults.alternatives": "Try a different query or use one of the external sources to expand your search.",
   "serverTimeout.heading": "Whoops, it looks like that request took too long to complete. Please try again.",
   "unknownError.heading": "Whoops, it looks like something went wrong. Please try again.",
+  "rateLimited.heading": "You’ve sent a lot of requests in a short time.",
+  "rateLimited.description": "Please wait a minute, then try again.",
   "searchType.image": "Images",
   "searchType.audio": "Audio",
   "searchType.all": "All content",

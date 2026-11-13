@@ -49,6 +49,7 @@
     "doc:media-props": "node ./scripts/document-media.js"
   },
   "dependencies": {
+    "@openverse/api-client": "workspace:*",
     "@floating-ui/dom": "^1.6.8",
     "@nuxtjs/plausible": "^3.0.2",
     "@nuxtjs/robots": "^5.7.1",

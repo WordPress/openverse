@@ -8,7 +8,11 @@ FROM mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-jammy
 # The image's bundled Node is too old for Nuxt 4; upgrade without changing browsers so snapshots stay stable.
 RUN npm install -g n && n 22.23.4 && hash -r
 
-WORKDIR /frontend
+# The compose file mounts the monorepo at `/ov` and keeps the container's
+# `node_modules` in volumes. The volumes copy these folders' permissions.
+WORKDIR /ov/frontend
+RUN mkdir -p /ov/node_modules /ov/frontend/node_modules /ov/packages/js/api-client/node_modules \
+  && chmod -R 777 /ov
 
 COPY package.json .
 COPY pnpm-lock.yaml .

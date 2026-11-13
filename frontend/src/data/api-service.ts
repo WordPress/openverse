@@ -55,7 +55,7 @@ export interface MediaResult<
  * @param data - search result data
  * @param fakeSensitive - whether to fake sensitive data for testing
  */
-function transformResults<T extends Media>(
+export function transformResults<T extends Media>(
   mediaType: SupportedMediaType,
   data: MediaResult<T[]>,
   fakeSensitive: boolean,

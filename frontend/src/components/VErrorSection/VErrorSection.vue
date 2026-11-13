@@ -30,6 +30,8 @@ const errorCode = computed(() =>
   props.fetchingError.code === NO_RESULT ? NO_RESULT : SERVER_TIMEOUT
 )
 
+const isRateLimited = computed(() => props.fetchingError.statusCode === 429)
+
 const isTimeout = computed(() =>
   [SERVER_TIMEOUT, ECONNABORTED].includes(props.fetchingError.code)
 )
@@ -44,6 +46,14 @@ const isTimeout = computed(() =>
     </div>
     <div class="grow p-4 md:p-20">
       <VNoResults v-if="errorCode === NO_RESULT" :search-term="searchTerm" />
+      <div v-else-if="isRateLimited" role="alert">
+        <h1 class="text-center heading-4 font-semibold! md:heading-2">
+          {{ $t("rateLimited.heading") }}
+        </h1>
+        <p class="mt-4 text-center label-regular md:heading-6">
+          {{ $t("rateLimited.description") }}
+        </p>
+      </div>
       <div v-else>
         <h1 class="text-center heading-4 font-semibold! md:heading-2">
           {{

@@ -236,6 +236,14 @@ class CheckRates(APIView):
             burst_throttle_key = throttle_key.format(
                 scope="enhanced_oauth2_client_credentials_burst", client_id=client_id
             )
+        elif throttle_type == "frontend":
+            sustained_throttle_key = throttle_key.format(
+                scope="frontend_oauth2_client_credentials_sustained",
+                client_id=client_id,
+            )
+            burst_throttle_key = throttle_key.format(
+                scope="frontend_oauth2_client_credentials_burst", client_id=client_id
+            )
         elif throttle_type == "exempt":
             burst_throttle_key = sustained_throttle_key = throttle_key.format(
                 scope="exempt_oauth2_client_credentials_burst", client_id=client_id

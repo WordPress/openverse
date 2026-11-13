@@ -159,7 +159,7 @@ class AbstractOAuth2IdRateThrottle(SimpleRateThrottle, metaclass=abc.ABCMeta):
 
 
 class OAuth2IdThumbnailRateThrottle(AbstractOAuth2IdRateThrottle):
-    applies_to_rate_limit_model = {"standard", "enhanced"}
+    applies_to_rate_limit_model = {"standard", "enhanced", "frontend"}
     scope = "oauth2_client_credentials_thumbnail"
 
 
@@ -181,6 +181,16 @@ class EnhancedOAuth2IdSustainedRateThrottle(AbstractOAuth2IdRateThrottle):
 class EnhancedOAuth2IdBurstRateThrottle(AbstractOAuth2IdRateThrottle):
     applies_to_rate_limit_model = {"enhanced"}
     scope = "enhanced_oauth2_client_credentials_burst"
+
+
+class FrontendOAuth2IdSustainedRateThrottle(AbstractOAuth2IdRateThrottle):
+    applies_to_rate_limit_model = {"frontend"}
+    scope = "frontend_oauth2_client_credentials_sustained"
+
+
+class FrontendOAuth2IdBurstRateThrottle(AbstractOAuth2IdRateThrottle):
+    applies_to_rate_limit_model = {"frontend"}
+    scope = "frontend_oauth2_client_credentials_burst"
 
 
 class ExemptOAuth2IdRateThrottle(AbstractOAuth2IdRateThrottle):

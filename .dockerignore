@@ -5,3 +5,5 @@
 !.pnpmfile.cjs
 !pnpm-lock.yaml
 !tsconfig.base.json
+!packages/js/api-client/package.json
+!packages/js/api-client/src/**

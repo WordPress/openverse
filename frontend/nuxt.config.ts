@@ -1,3 +1,5 @@
+import { fileURLToPath } from "node:url"
+
 import { defineNuxtConfig } from "nuxt/config"
 import tailwindcss from "@tailwindcss/vite"
 
@@ -43,9 +45,32 @@ export default defineNuxtConfig({
    *
    * @see {@link https://nuxt.com/docs/api/nuxt-config#runtimeconfig-1}
    */
+  alias: {
+    // Use the source of the workspace package, so that it doesn't need to be
+    // built before the frontend.
+    "@openverse/api-client": fileURLToPath(
+      new URL("../packages/js/api-client/src/index.ts", import.meta.url)
+    ),
+  },
   runtimeConfig: {
     apiClientId: "",
     apiClientSecret: "",
+    // The API address that Nitro uses for proxied requests, overridden by
+    // NUXT_API_URL_INTERNAL. Falls back to `public.apiUrl` when empty.
+    apiUrlInternal: "",
+    // Signs the `ovSession` cookie, overridden by NUXT_HMAC_SIGNING_SECRET.
+    // Must be at least 32 characters long.
+    hmacSigningSecret: "",
+    rateLimit: {
+      // `log` only logs the requests that would be limited, `enforce` rejects them.
+      mode: "log",
+      windowSeconds: 60,
+      sessionLimit: 120,
+      noSessionLimit: 30,
+      ipLimit: 1200,
+      // The number of proxies that append to `X-Forwarded-For`.
+      trustedProxies: 1,
+    },
     public: {
       deploymentEnv: "local",
       apiUrl: "https://api.openverse.org/",
