@@ -31,9 +31,9 @@ jobs:
     # Prevent running this workflow on forks, it's unnecessary for external contributors
     if: github.repository_owner == 'WordPress'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         if: github.event.inputs.repoCache != 'disabled'
         continue-on-error: true
         with:
@@ -83,7 +83,7 @@ jobs:
           # To solve *that*, we'd have to extract to root (/), which isn't safe.
           tar -czvf "$cache_archive" -C "$cache_dir" .
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: github.event.inputs.repoCache != 'disabled'
         with:
           name: ${{ env.cache_key }}

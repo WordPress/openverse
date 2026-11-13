@@ -14,10 +14,10 @@ jobs:
     if: github.repository_owner == 'WordPress'
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Sync labels from monorepo to infra
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           github-token: ${{ secrets.ACCESS_TOKEN }}
           script: |

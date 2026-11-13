@@ -22,7 +22,7 @@ jobs:
       EVENT_ACTION: ${{ github.event.action }}
     steps:
       - name: Write payload to file
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             let { writeFileSync } = await import('fs')
@@ -58,7 +58,7 @@ jobs:
             writeFileSync('/tmp/pr_ping_payload.json', JSON.stringify(payload))
 
       - name: Send Slack notification
-        uses: slackapi/slack-github-action@v2
+        uses: slackapi/slack-github-action@v4
         with:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook

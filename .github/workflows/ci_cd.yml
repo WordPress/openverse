@@ -49,7 +49,7 @@ jobs:
       js_packages: ${{ contains(fromJson(steps.paths-filter.outputs.changes), 'js_packages') }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Get changes
         id: paths-filter
@@ -84,7 +84,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set matrix images
         id: set-matrix
@@ -104,7 +104,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -115,7 +115,7 @@ jobs:
           install_recipe: "node-install"
 
       - name: Cache pre-commit envs
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.cache/pre-commit
           key: ${{ runner.os }}-pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
@@ -137,7 +137,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - uses: mszostok/codeowners-validator@v0.7.4
         with:
@@ -158,7 +158,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       # Sets up `just` and Node.js.
       # Node.js is needed for the frontend to download translations.
@@ -178,12 +178,12 @@ jobs:
           just versions | tee "$GITHUB_OUTPUT"
 
       - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
         with:
           install: true
 
       - name: Build image `${{ matrix.image }}`
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           # The Sentry auth token is only set for the production release of the frontend (on push to main or manual release).
           secrets: |
@@ -212,7 +212,7 @@ jobs:
 
       - name: Upload image `${{ matrix.image }}`
         id: upload-img
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.image }}
           path: /tmp/${{ matrix.image }}.tar
@@ -242,7 +242,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -266,12 +266,12 @@ jobs:
           just versions | tee "$GITHUB_OUTPUT"
 
       - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
         with:
           install: true
 
       - name: Build catalog dev image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: catalog
           target: cat
@@ -301,7 +301,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -341,7 +341,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -365,12 +365,12 @@ jobs:
           just versions | tee "$GITHUB_OUTPUT"
 
       - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
         with:
           install: true
 
       - name: Build indexer worker dev image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: indexer_worker
           target: indexer_worker
@@ -405,7 +405,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -433,7 +433,7 @@ jobs:
 
       - name: Upload ingestion test logs
         if: success() || failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ing_logs
           path: ingestion_server/test/ingestion_logs.txt
@@ -457,7 +457,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -481,12 +481,12 @@ jobs:
           just versions | tee "$GITHUB_OUTPUT"
 
       - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
         with:
           install: true
 
       - name: Build API dev image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: api
           target: api
@@ -519,7 +519,7 @@ jobs:
 
       - name: Upload API test logs
         if: success() || failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: api_logs
           path: api_logs
@@ -556,7 +556,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -581,7 +581,7 @@ jobs:
 
       - name: Upload schema
         if: matrix.name == 'test_doc'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: openapi.json
           path: ./api/openapi.json
@@ -627,7 +627,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -674,7 +674,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -696,7 +696,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -729,7 +729,7 @@ jobs:
             -e text_summary=/tmp/k6-summary.txt
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: k6-output
           path: /tmp/k6-summary.txt
@@ -762,7 +762,7 @@ jobs:
           [^update]: This comment will automatically update with new output each time k6 runs for this PR
           """)
 
-      - uses: peter-evans/find-comment@v3
+      - uses: peter-evans/find-comment@v4
         if: steps.set-post-comment.outputs.post_comment == 'true'
         id: k6-summary-comment
         with:
@@ -770,7 +770,7 @@ jobs:
           body-includes: Latest k6 run output
 
       - name: Post comment summary
-        uses: peter-evans/create-or-update-comment@v4
+        uses: peter-evans/create-or-update-comment@v5
         if: steps.set-post-comment.outputs.post_comment == 'true'
         with:
           issue-number: ${{ github.event.pull_request.number }}
@@ -804,7 +804,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -859,7 +859,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -915,7 +915,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -947,7 +947,7 @@ jobs:
             echo "snapshots_changed=false" | tee "$GITHUB_OUTPUT"
           fi
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: failure()
         id: test-results
         with:
@@ -955,7 +955,7 @@ jobs:
           path: frontend/test-results
 
       # This step only runs if there was a failure and snapshots indeed changed.
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: failure() && steps.check_snapshots_changed.outputs.snapshots_changed == 'true'
         id: snapshot-patch
         with:
@@ -993,14 +993,14 @@ jobs:
       - playwright
 
     steps:
-      - uses: peter-evans/find-comment@v3
+      - uses: peter-evans/find-comment@v4
         id: test-results-comment
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body-includes: Playwright failure test results
 
       - name: Delete existing results comment
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         if: steps.test-results-comment.outputs.comment-id != 0
         with:
           script: |
@@ -1030,7 +1030,7 @@ jobs:
           )
           echo "$MESSAGE" | tee "$GITHUB_OUTPUT"
 
-      - uses: peter-evans/create-or-update-comment@v4
+      - uses: peter-evans/create-or-update-comment@v5
         id: create-comment
         # Do not leave a comment on forks
         if: |
@@ -1052,7 +1052,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -1097,7 +1097,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup CI env
         uses: ./.github/actions/setup-env
@@ -1109,7 +1109,7 @@ jobs:
         # Docs will be located at `/tmp/docs`.
 
       - name: Upload documentation
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: documentation
           path: /tmp/docs/
@@ -1147,7 +1147,7 @@ jobs:
 
     steps:
       - name: Download documentation
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: documentation
           path: /tmp/docs
@@ -1159,13 +1159,13 @@ jobs:
           mkdir openverse
 
       - name: Checkout repository at `gh-pages` branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: gh-pages
           path: gh-pages
 
       - name: Checkout automations from repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           path: automation-checkout
 
@@ -1199,14 +1199,14 @@ jobs:
           force_orphan: true
           cname: docs.openverse.org
 
-      - uses: peter-evans/find-comment@v3
+      - uses: peter-evans/find-comment@v4
         if: github.event_name == 'pull_request'
         id: final-preview-comment
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body-includes: Full-stack documentation
 
-      - uses: peter-evans/create-or-update-comment@v4
+      - uses: peter-evans/create-or-update-comment@v5
         if: github.event_name == 'pull_request'
         with:
           issue-number: ${{ github.event.pull_request.number }}
@@ -1215,7 +1215,7 @@ jobs:
           body: ${{ steps.preview_diff.outputs.body }}
 
       - name: Checkout repository # again, to enable cleaning
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         if: success() || failure()
 
   #################
@@ -1254,10 +1254,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Log in to GitHub Docker Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: https://ghcr.io
           username: ${{ github.actor }}
@@ -1303,7 +1303,7 @@ jobs:
       - publish-images
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Get commit message
         id: commit
@@ -1381,7 +1381,7 @@ jobs:
       - publish-images
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Get commit message
         id: commit
@@ -1436,7 +1436,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Get commit message
         id: commit
@@ -1464,7 +1464,7 @@ jobs:
         run: python generate_report.py
 
       - name: Send report
-        uses: slackapi/slack-github-action@v2
+        uses: slackapi/slack-github-action@v4
         with:
           webhook: ${{ secrets.SLACK_OV_ALERTS_WEBHOOK_URL }}
           webhook-type: incoming-webhook
