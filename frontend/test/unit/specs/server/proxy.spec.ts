@@ -25,18 +25,16 @@ describe("filterQuery", () => {
 })
 
 describe("generateApiPath", () => {
-  const id = "2a2a1c2e-6a3b-4d5c-9e8f-0a1b2c3d4e5f"
-
   it.each`
     kind               | mediaType  | expected
-    ${"search"}        | ${"image"} | ${"images/"}
-    ${"search"}        | ${"audio"} | ${"audio/"}
-    ${"single-result"} | ${"image"} | ${`images/${id}/`}
-    ${"related"}       | ${"audio"} | ${`audio/${id}/related/`}
+    ${"search"}        | ${"image"} | ${"/v1/images/"}
+    ${"search"}        | ${"audio"} | ${"/v1/audio/"}
+    ${"single-result"} | ${"image"} | ${"/v1/images/{identifier}/"}
+    ${"related"}       | ${"audio"} | ${"/v1/audio/{identifier}/related/"}
   `(
     "returns $expected for $kind $mediaType",
     ({ kind, mediaType, expected }) => {
-      expect(generateApiPath(kind, mediaType, id)).toEqual(expected)
+      expect(generateApiPath(kind, mediaType)).toEqual(expected)
     }
   )
 })

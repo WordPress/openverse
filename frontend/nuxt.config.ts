@@ -1,3 +1,5 @@
+import { fileURLToPath } from "node:url"
+
 import { defineNuxtConfig } from "nuxt/config"
 import tailwindcss from "@tailwindcss/vite"
 
@@ -43,6 +45,13 @@ export default defineNuxtConfig({
    *
    * @see {@link https://nuxt.com/docs/api/nuxt-config#runtimeconfig-1}
    */
+  alias: {
+    // Use the source of the workspace package, so that it doesn't need to be
+    // built before the frontend.
+    "@openverse/api-client": fileURLToPath(
+      new URL("../packages/js/api-client/src/index.ts", import.meta.url)
+    ),
+  },
   runtimeConfig: {
     apiClientId: "",
     apiClientSecret: "",

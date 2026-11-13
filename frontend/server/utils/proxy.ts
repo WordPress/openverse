@@ -19,7 +19,7 @@ import {
 import { mediaSlug, validateUUID } from "#shared/utils/query-utils"
 import type { Events } from "#shared/types/analytics"
 
-import type { FetchResponse } from "ofetch"
+import type { OpenverseClient } from "@openverse/api-client"
 
 export type ProxyRequestKind = "search" | "single-result" | "related"
 
@@ -79,27 +79,49 @@ export const validateRequest = (event: H3Event, kind: ProxyRequestKind) => {
 }
 
 /**
- * Returns the API path, relative to `<apiUrl>v1/`, for the request.
- * For example, `search` for `image` returns `images/`.
+ * Returns the API schema path for the request, with an `{identifier}`
+ * placeholder for the media id. For example, `related` for `image` returns
+ * `/v1/images/{identifier}/related/`.
  */
 export const generateApiPath = (
   kind: ProxyRequestKind,
-  mediaType: SupportedMediaType,
-  id?: string
+  mediaType: SupportedMediaType
 ) => {
   const slug = mediaSlug(mediaType)
   switch (kind) {
     case "search": {
-      return `${slug}/`
+      return `/v1/${slug}/`
     }
     case "single-result": {
-      return `${slug}/${id}/`
+      return `/v1/${slug}/{identifier}/`
     }
     case "related": {
-      return `${slug}/${id}/related/`
+      return `/v1/${slug}/{identifier}/related/`
     }
   }
 }
+
+/**
+ * `OpenverseClient.GET` is typed for each schema path, and the proxy chooses
+ * the path at runtime. The query parameters are validated by `filterQuery`.
+ */
+type ProxyGet = (
+  path: string,
+  init: {
+    params: { path?: { identifier: string }; query?: Record<string, string> }
+  }
+) => Promise<{ data?: unknown; error?: unknown; response: Response }>
+
+const getFromApi = (
+  apiClient: OpenverseClient,
+  kind: ProxyRequestKind,
+  mediaType: SupportedMediaType,
+  id: string | undefined,
+  query: Record<string, string>
+) =>
+  (apiClient.GET as unknown as ProxyGet)(generateApiPath(kind, mediaType), {
+    params: { path: id ? { identifier: id } : undefined, query },
+  })
 
 /**
  * Builds the SEARCH_RESPONSE_TIME analytics event payload from the API
@@ -157,7 +179,8 @@ export const isInternalRequest = (event: H3Event) => {
  * browser's cookies and headers are not forwarded.
  *
  * API errors are returned with the API's status code and `detail` message.
- * Timeouts return 504 and other failures return 502.
+ * Timeouts return 504 and other failures, including a failed API token
+ * request, return 502.
  */
 export const proxyApiRequest = async (
   event: H3Event,
@@ -174,9 +197,9 @@ export const proxyApiRequest = async (
   const { mediaType, id, query } = validateRequest(event, kind)
   const requestDatetime = new Date()
 
-  let response: FetchResponse<unknown>
+  let result: Awaited<ReturnType<typeof getFromApi>>
   try {
-    response = await apiClient.get(generateApiPath(kind, mediaType, id), query)
+    result = await getFromApi(apiClient, kind, mediaType, id, query)
   } catch (error) {
     const isTimeout = isTimeoutError(error)
     throw createError({
@@ -185,12 +208,13 @@ export const proxyApiRequest = async (
     })
   }
 
+  const { data, error, response } = result
   if (!response.ok) {
     const retryAfter = Number(response.headers.get("retry-after"))
     if (retryAfter > 0) {
       setResponseHeader(event, "Retry-After", retryAfter)
     }
-    const detail = (response._data as { detail?: unknown } | undefined)?.detail
+    const detail = (error as { detail?: unknown } | undefined)?.detail
     throw createError({
       statusCode: response.status,
       data: typeof detail === "string" ? { detail } : undefined,
@@ -205,8 +229,8 @@ export const proxyApiRequest = async (
         mediaType,
         query
       ),
-      data: response._data,
+      data,
     }
   }
-  return response._data
+  return data
 }

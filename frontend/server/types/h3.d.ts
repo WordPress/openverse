@@ -1,8 +1,8 @@
-import type { OpenverseApiClient } from "~~/server/utils/api-client"
+import type { OpenverseClient } from "@openverse/api-client"
 
 declare module "h3" {
   interface H3EventContext {
-    apiClient?: OpenverseApiClient
+    apiClient?: OpenverseClient
     internalRequestToken?: string
   }
 }

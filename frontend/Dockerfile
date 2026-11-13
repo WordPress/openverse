@@ -24,7 +24,13 @@ WORKDIR /home/node/
 # Note: these files must be manually un-ignored in the root .dockerignore
 # hadolint ignore=DL3022
 COPY --from=repo_root --chown=node:node .npmrc .pnpmfile.cjs pnpm-lock.yaml ./
-RUN echo '{"packages":["frontend/"]}' > pnpm-workspace.yaml
+# Copy the workspace packages that the frontend depends on. The frontend uses
+# the package source through an alias, so the packages don't need to be built.
+# hadolint ignore=DL3022
+COPY --from=repo_root --chown=node:node packages/js/api-client/package.json ./packages/js/api-client/
+# hadolint ignore=DL3022
+COPY --from=repo_root --chown=node:node packages/js/api-client/src ./packages/js/api-client/src/
+RUN echo '{"packages":["frontend/","packages/js/api-client/"]}' > pnpm-workspace.yaml
 
 # Copy the `frontend/` directory into `/home/node/frontend`, as a package in the monorepo.
 COPY --chown=node:node . ./frontend/
@@ -74,6 +80,7 @@ USER node
 
 COPY --from=builder --chown=node:node /home/node/node_modules ./node_modules/
 COPY --from=builder --chown=node:node /home/node/frontend ./frontend/
+COPY --from=builder --chown=node:node /home/node/packages ./packages/
 
 WORKDIR /home/node/frontend/
 
