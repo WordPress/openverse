@@ -123,6 +123,10 @@ jobs:
       - name: Run pre-commit to lint files
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          # Translations aren't needed for linting, and GlotPress is
+          # rate-limiting the download with 429s.
+          # TODO: Remove once the downloads succeed again.
+          SKIP: i18n
         run: |
           just precommit
           just lint
