@@ -1,5 +1,5 @@
 install:
-    pdm install
+    uv sync
 
 run:
-    pdm run __main__.py
+    uv run __main__.py

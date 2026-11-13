@@ -13,7 +13,7 @@ Follow the [general setup guide](/general/general_setup.md) to set up `ov`.
 Node.js dependencies for automations as well as other parts of the repository.
 If you wish to install only dependencies for automations, run the following:
 
-- `ov pdm install` in `automations/python`
+- `ov uv sync` in `automations/python`
 - `ov pnpm install --filter=automations`
 
 ## Running a Script
@@ -27,7 +27,7 @@ Ex.:
 ov just automations/python/run print_labels.py
 ```
 
-The recipe is an alias for running `ov pdm run <script>` inside the
+The recipe is an alias for running `ov uv run <script>` inside the
 `automations/python` directory. This facilitates correct `PYTHONPATH`
 configuration as expected by many scripts.
 

@@ -125,6 +125,9 @@ ones you might see used throughout the documentation:
 - [`pdm`](https://pdm-project.org/en/stable/) is a Python package manager. You
   can use it in any Openverse directory to interact with `pyproject.toml` and
   different virtual environments. Try `ov pdm --help` for info.
+- [`uv`](https://docs.astral.sh/uv/) is the Python package manager that is
+  replacing `pdm`. Projects with a `uv.lock` file use it: `ov uv sync` installs
+  their dependencies and `ov uv run` runs commands in their environment.
 - [`httpie`](https://httpie.io/docs/cli) is a command line HTTP client. Like
   cURL but with a lot of conveniences and easier to remember. Try `http --help`
   for info.
