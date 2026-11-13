@@ -47,7 +47,7 @@ ENV PATH="${PNPM_BIN}:${N_PREFIX}/bin:${PDM_PYTHONS}:${HOME}/.local/bin:${PATH}"
 #
 # pipx dependencies:
 # - httpie: CLI HTTP client
-# - pdm, pipenv: Python package managers
+# - pdm, pipenv, uv: Python package managers
 # - pre-commit: Git pre-commit and pre-push hook manager
 # - pgcli: PostgreSQL CLI
 #
@@ -80,7 +80,7 @@ RUN mkdir -p $HOME/.local/bin \
   && dnf5 clean all \
   && pipx install --global \
     httpie \
-    pdm pipenv  \
+    pdm pipenv uv \
     pgcli \
     pre-commit \
   && npm install -g \
@@ -90,6 +90,13 @@ RUN mkdir -p $HOME/.local/bin \
 
 # Avoid overwriting `.venv`'s from the host
 ENV PDM_VENV_IN_PROJECT="False"
+# Keep uv's environments apart from the host's `.venv`, and its cache and
+# Python builds in the persisted `/opt` volume. The cache and the bind-mounted
+# repository are on different filesystems, so uv copies instead of linking.
+ENV UV_PROJECT_ENVIRONMENT=".venv-ov"
+ENV UV_CACHE_DIR="${HOME}/uv/cache"
+ENV UV_PYTHON_INSTALL_DIR="${HOME}/uv/python"
+ENV UV_LINK_MODE="copy"
 
 # The fedora container's default entrypoint + command behaviour is to keep running
 # so we do not need to modify entrypoint and command to use the container as a

@@ -49,6 +49,13 @@ runs:
         pip install pipenv
         pipx install "pdm[locked]"
 
+    - name: Setup uv
+      if: inputs.setup_python == 'true'
+      uses: astral-sh/setup-uv@v10
+      with:
+        # Keep in sync with `OV_UV_VERSION` in the root justfile.
+        version: "0.13.5"
+
     - name: Setup pnpm
       if: inputs.setup_nodejs == 'true'
       shell: bash

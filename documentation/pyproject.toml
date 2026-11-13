@@ -11,10 +11,10 @@ authors = [
 requires-python = "==3.12.*"
 dependencies = []
 
-[tool.pdm]
-distribution = false
+[tool.uv]
+package = false
 
-[tool.pdm.dev-dependencies]
+[dependency-groups]
 dev = [
   "furo >=2024.4.27, <2025",
   "myst-parser[linkify] >=4, <5",
