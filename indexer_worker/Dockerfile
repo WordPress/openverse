@@ -1,8 +1,13 @@
 # syntax=docker/dockerfile:1
 # check=skip=InvalidDefaultArgInFrom
 
-# Automatically build image using Python version specified in the `Pipfile`.
+# Automatically build image using Python version specified in `pyproject.toml`
 ARG INDEXER_WORKER_PY_VERSION
+
+# Get the version from the main justfile
+ARG OV_UV_VERSION
+
+FROM ghcr.io/astral-sh/uv:${OV_UV_VERSION} AS uv
 
 ##################
 # Python builder #
@@ -10,32 +15,29 @@ ARG INDEXER_WORKER_PY_VERSION
 
 FROM docker.io/python:${INDEXER_WORKER_PY_VERSION} AS builder
 
-# Get the version from the main justfile
-ARG OV_PDM_VERSION
-
 # Container optimizations
 ENV PYTHONUNBUFFERED=1
 ENV PIP_NO_CACHE_DIR=1
 ENV PIP_NO_COLOR=1
+# Use the image's Python instead of downloading one
+ENV UV_PYTHON_DOWNLOADS=never
 
-# - Install system packages needed for building Python dependencies
-# - Install PDM to install Python dependencies, with its own dependencies locked
-#   so a release of one of them (hishel 2.0.0 broke pdm) cannot break the build
+# Install system packages needed for building Python dependencies
 RUN apt-get update \
     && apt-get install -yqq --no-install-recommends python3-dev \
     && apt-get autoremove -y \
-    && rm -rf /var/lib/apt/lists/* \
-    && pip install --upgrade pip \
-    && pip install "pdm[locked]~=$OV_PDM_VERSION"
+    && rm -rf /var/lib/apt/lists/*
 
-# Copy the Pipenv files into the container
-COPY pyproject.toml pdm.lock /
+COPY --from=uv /uv /bin/uv
 
-# Pass additional arguments when installing Python packages with PDM
-ARG PDM_INSTALL_ARGS="--no-editable"
+# Copy the Python project manifest and uv lockfile into the container
+COPY pyproject.toml uv.lock /
 
-# Install Python dependencies into a new virtualenv
-RUN pdm install --check --frozen-lockfile $PDM_INSTALL_ARGS
+# Pass additional arguments when installing Python packages with uv
+ARG UV_SYNC_ARGS=""
+
+# Install Python dependencies into a new virtualenv at `/.venv`
+RUN uv sync --locked $UV_SYNC_ARGS
 
 ####################
 # Indexer worker #

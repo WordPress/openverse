@@ -25,8 +25,8 @@ export INDEXER_WORKER_PY_VERSION := `grep 'requires-python' pyproject.toml | awk
 ###########
 
 # Install dependencies
-install *args="--dev":
-    pdm install {{ args }}
+install *args:
+    uv sync {{ args }}
 
 ######
 # Up #
@@ -86,4 +86,4 @@ test *args: wait-up
 # Run indexer-worker tests locally
 [positional-arguments]
 test-local *args:
-    pdm run pytest "$@"
+    uv run pytest "$@"
