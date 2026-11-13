@@ -51,7 +51,7 @@ runs:
 
     - name: Setup uv
       if: inputs.setup_python == 'true'
-      uses: astral-sh/setup-uv@v10
+      uses: astral-sh/setup-uv@v10.3.3
       with:
         # Keep in sync with `OV_UV_VERSION` in the root justfile.
         version: "0.13.5"
