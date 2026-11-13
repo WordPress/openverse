@@ -2,8 +2,10 @@ import fs from "node:fs"
 import path from "node:path"
 
 import rootNock from "nock"
-import { describe, test, expect } from "vitest"
+import { afterEach, describe, test, expect, vi } from "vitest"
 import { createClient, ClientCredentials } from "@openverse/api-client"
+
+import { FAILURE_RETRY_DELAY } from "../src/auth"
 
 const mockThumbnailBuffer = fs.readFileSync(
   path.resolve(__dirname, "mock-thumbnail.bin")
@@ -134,6 +136,86 @@ describe("OpenverseClient", () => {
 
       // use expect instead of scope.done() alias so that expect.assertions tracks this
       expect(scope.isDone()).toBe(true)
+    })
+
+    describe("after an api token request failure", () => {
+      afterEach(() => {
+        vi.useRealTimers()
+      })
+
+      test("should request a new api token after the retry delay", async () => {
+        vi.useFakeTimers({ toFake: ["Date"] })
+        vi.setSystemTime(0)
+
+        const { client, nock } = getClientAndNock({
+          clientId: "test",
+          clientSecret: "test-secret",
+        })
+
+        const scope = nock
+          .post("/v1/auth_tokens/token/", TOKEN_REQUEST_BODY)
+          .reply(500, "Server error")
+          .post("/v1/auth_tokens/token/", TOKEN_REQUEST_BODY)
+          .reply(200, {
+            access_token: "test-access-token",
+            scope: "test-scope",
+            expires_in: 3600,
+            token_type: "test-token-type",
+          })
+          .get("/v1/images/")
+          .matchHeader("Authorization", "Bearer test-access-token")
+          .reply(200, { results: [] })
+
+        await expect(client.GET("/v1/images/")).rejects.toThrow()
+
+        // Within the delay, the request fails without a new token request.
+        vi.setSystemTime((FAILURE_RETRY_DELAY - 1) * 1000)
+        await expect(client.GET("/v1/images/")).rejects.toThrow()
+        expect(scope.pendingMocks()).toHaveLength(2)
+
+        vi.setSystemTime(FAILURE_RETRY_DELAY * 1000)
+        const images = await client.GET("/v1/images/")
+
+        expect(images.error).toBeUndefined()
+        scope.done()
+      })
+
+      test("should keep using a token that is still valid", async () => {
+        vi.useFakeTimers({ toFake: ["Date"] })
+        vi.setSystemTime(0)
+
+        const { client, nock } = getClientAndNock({
+          clientId: "test",
+          clientSecret: "test-secret",
+        })
+
+        const scope = nock
+          .post("/v1/auth_tokens/token/", TOKEN_REQUEST_BODY)
+          .reply(200, {
+            access_token: "test-access-token",
+            scope: "test-scope",
+            expires_in: 10,
+            token_type: "test-token-type",
+          })
+          .post("/v1/auth_tokens/token/", TOKEN_REQUEST_BODY)
+          .reply(500, "Server error")
+          .get("/v1/images/")
+          .times(3)
+          .matchHeader("Authorization", "Bearer test-access-token")
+          .reply(200, { results: [] })
+
+        await client.GET("/v1/images/")
+
+        // Within the expiry threshold, the eager refresh fails in the background.
+        vi.setSystemTime(6 * 1000)
+        await client.GET("/v1/images/")
+        await new Promise((resolve) => setTimeout(resolve, 50))
+
+        const images = await client.GET("/v1/images/")
+
+        expect(images.error).toBeUndefined()
+        scope.done()
+      })
     })
 
     test("should send but not await token response if current token still within expiry threshold", async () => {

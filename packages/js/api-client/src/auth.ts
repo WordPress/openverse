@@ -10,6 +10,11 @@ type OAuth2Token = components["schemas"]["OAuth2Token"]
  */
 const currTimestamp = (): number => Math.floor(Date.now() / 1e3)
 export const EXPIRY_THRESHOLD = 5 // seconds
+/**
+ * How long to wait after a failed token request before requesting again,
+ * so that a long-running client recovers without flooding the token endpoint.
+ */
+export const FAILURE_RETRY_DELAY = 10 // seconds
 
 type MiddlewareOnRequest = (
   options: MiddlewareCallbackParams
@@ -54,6 +59,11 @@ export class OpenverseAuthMiddleware implements OpenverseMiddleware {
    * The most recent API token request failure, if any.
    */
   failure = null as unknown
+
+  /**
+   * The UNIX timestamp of the most recent API token request failure.
+   */
+  failureTimestamp: number | null = null
 
   /**
    * The UNIX timestamp at which the current token will expire.
@@ -104,19 +114,23 @@ export class OpenverseAuthMiddleware implements OpenverseMiddleware {
    * the lack of a token altogether or due to the existing token's
    * pending expiration.
    *
-   * Furthermore, prevent further API token requests if a previous API token
-   * request failed.
-   *
-   * TODO: is that safe?
+   * After a failed API token request, wait `FAILURE_RETRY_DELAY` seconds
+   * before requesting again.
    *
    * Refer to the documentation on `mustAwaitTokenRefresh` for further details.
    *
    * @returns Whether the client should trigger a token refresh.
    */
   private shouldTriggerTokenRefresh = () =>
-    !(this.failure || this.requesting) &&
+    !this.requesting &&
+    !this.isWaitingAfterFailure() &&
     (!(this.apiToken && this.tokenExpiry) ||
       this.tokenExpiry - EXPIRY_THRESHOLD < currTimestamp())
+
+  private isWaitingAfterFailure = () =>
+    Boolean(this.failure) &&
+    this.failureTimestamp !== null &&
+    currTimestamp() - this.failureTimestamp < FAILURE_RETRY_DELAY
 
   /**
    * Refresh the API token used by credentialed clients.
@@ -154,11 +168,13 @@ export class OpenverseAuthMiddleware implements OpenverseMiddleware {
 
           // Clear any previous failures, given this request succeeded
           this.failure = null
+          this.failureTimestamp = null
           resolve(true)
         })
         .catch((e) => {
           console.error("[openverse-api-client]: Token refresh failed!", e)
           this.failure = e
+          this.failureTimestamp = currTimestamp()
           resolve(false)
         })
     })
@@ -189,7 +205,8 @@ export class OpenverseAuthMiddleware implements OpenverseMiddleware {
       await this.requesting
     }
 
-    if (!this.apiToken || this.failure) {
+    // A failed eager refresh does not affect a token that is still valid.
+    if (!this.apiToken || this.mustAwaitTokenRefresh()) {
       const error = new Error(
         "Failed to retrieve Openverse API token for credentialed client. Check logs or `cause` for details."
       )
