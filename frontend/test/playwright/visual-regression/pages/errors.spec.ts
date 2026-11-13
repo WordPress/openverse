@@ -58,10 +58,16 @@ breakpoints.describeXl(({ breakpoint, expectSnapshot }) => {
       // eslint-disable-next-line playwright/no-networkidle
       await page.waitForLoadState("networkidle")
 
-      await expect(getH1(page, t("404.title"))).toBeVisible()
-      await expectSnapshot(page, "generic-error-ltr", page, {
-        screenshotOptions: { fullPage: true },
-      })
+      const isRateLimited = status === 429
+      await expect(
+        getH1(page, t(isRateLimited ? "rateLimited.heading" : "404.title"))
+      ).toBeVisible()
+      await expectSnapshot(
+        page,
+        isRateLimited ? "rate-limited-error-ltr" : "generic-error-ltr",
+        page,
+        { screenshotOptions: { fullPage: true } }
+      )
     })
   }
 })
@@ -105,13 +111,21 @@ for (const searchType of supportedSearchTypes) {
             searchType,
           })
 
-          await expect(getH1(page, t("404.title"))).toBeVisible()
-          await expectSnapshot(page, "generic-error", page, {
-            dir,
-            screenshotOptions: {
-              fullPage: true,
-            },
-          })
+          const isRateLimited = errorStatus === 429
+          await expect(
+            getH1(page, t(isRateLimited ? "rateLimited.heading" : "404.title"))
+          ).toBeVisible()
+          await expectSnapshot(
+            page,
+            isRateLimited ? "rate-limited-error" : "generic-error",
+            page,
+            {
+              dir,
+              screenshotOptions: {
+                fullPage: true,
+              },
+            }
+          )
         })
       }
 
