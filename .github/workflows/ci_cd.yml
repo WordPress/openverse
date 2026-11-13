@@ -635,7 +635,7 @@ jobs:
           install_recipe: packages/python/openverse-attribution/install
 
       - name: Run Python packages checks
-        run: pdm run -p ${{ matrix.packages }} ${{ matrix.script }}
+        run: just ${{ matrix.packages }}/${{ matrix.script }}
 
   # This job runs when `py-package-checks` doesn't and always passes, thus
   # allowing PRs to meet the required checks criteria and be merged.
