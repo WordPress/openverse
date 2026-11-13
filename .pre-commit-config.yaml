@@ -39,9 +39,6 @@ repos:
         exclude: (frontend/test/tapes/.+\.json5|frontend/.*snapshots.*)
       - id: check-symlinks
       - id: mixed-line-ending
-      - id: fix-encoding-pragma
-        args:
-          - --remove
       - id: check-docstring-first
       - id: requirements-txt-fixer
 
