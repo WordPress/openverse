@@ -6,8 +6,9 @@ services:
       args:
         - PLAYWRIGHT_VERSION=${PLAYWRIGHT_VERSION}
     volumes:
-      - .:/ov/frontend:rw,Z
-      - ../packages/js/api-client:/ov/packages/js/api-client:rw,Z
+      # Mount the whole monorepo, so that pnpm uses the root lockfile and the
+      # frontend's workspace dependencies resolve.
+      - ..:/ov:rw,Z
       # Keep the container's dependencies out of the host's `node_modules`.
       - root_node_modules:/ov/node_modules
       - node_modules:/ov/frontend/node_modules
@@ -16,7 +17,7 @@ services:
     working_dir: /ov/frontend
     entrypoint: >
       /bin/sh -c '
-      pnpm install;
+      pnpm install --frozen-lockfile --filter "@openverse/frontend..." &&
       pnpm ${TEST_COMMAND} ${PLAYWRIGHT_ARGS:-};
       '
     environment:
