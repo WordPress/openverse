@@ -4,20 +4,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2025-10-18T05:57:14+00:00\n"
+"POT-Creation-Date: 2026-11-13T08:07:43+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "PO-Revision-Date: 2021-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-#: src/components/VFourOhFour.vue:55
+#: src/components/VFourOhFour.vue:66
 msgctxt "404.title"
 msgid "The content you’re looking for seems to have disappeared."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VFourOhFour.vue:59
+#: src/components/VFourOhFour.vue:70
 msgctxt "404.main"
 msgid "Go to ###link### or search for something similar from the field below."
 msgstr ""
@@ -34,7 +34,7 @@ msgstr ""
 
 #: src/components/VHeader/VSearchBar/VStandaloneSearchBar.vue:69
 #: src/components/VHeader/VSearchBar/VSearchBar.vue:116
-#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:321
+#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:320
 msgctxt "hero.search.placeholder"
 msgid "Search for content"
 msgstr ""
@@ -155,7 +155,7 @@ msgctxt "header.seeResults"
 msgid "See results"
 msgstr ""
 
-#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:309
+#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:308
 msgctxt "header.backButton"
 msgid "Go back"
 msgstr ""
@@ -1601,7 +1601,7 @@ msgid "Search"
 msgstr ""
 
 #: src/components/VHeader/VHeaderDesktop.vue:83
-#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:349
+#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:348
 msgctxt "browsePage.searchForm.clear"
 msgid "Clear"
 msgstr ""
@@ -2337,7 +2337,7 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/components/VHeader/VSearchBar/VStandaloneSearchBar.vue:72
 #: src/components/VHeader/VSearchBar/VSearchBar.vue:118
-#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:326
+#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:325
 msgctxt "search.searchBarLabel"
 msgid "Search for content in ###'Openverse'###"
 msgstr ""
@@ -2437,14 +2437,26 @@ msgctxt "noResults.alternatives"
 msgid "Try a different query or use one of the external sources to expand your search."
 msgstr ""
 
-#: src/components/VErrorSection/VErrorSection.vue:48
+#: src/components/VErrorSection/VErrorSection.vue:60
 msgctxt "serverTimeout.heading"
 msgid "Whoops, it looks like that request took too long to complete. Please try again."
 msgstr ""
 
-#: src/components/VErrorSection/VErrorSection.vue:48
+#: src/components/VErrorSection/VErrorSection.vue:60
 msgctxt "unknownError.heading"
 msgid "Whoops, it looks like something went wrong. Please try again."
+msgstr ""
+
+#: src/components/VFourOhFour.vue:59
+#: src/components/VErrorSection/VErrorSection.vue:51
+msgctxt "rateLimited.heading"
+msgid "You’ve sent a lot of requests in a short time."
+msgstr ""
+
+#: src/components/VFourOhFour.vue:62
+#: src/components/VErrorSection/VErrorSection.vue:54
+msgctxt "rateLimited.description"
+msgid "Please wait a minute, then try again."
 msgstr ""
 
 msgctxt "searchType.image"
@@ -2615,7 +2627,7 @@ msgstr ""
 
 #: src/components/VRecentSearches/VRecentSearches.vue:63
 #: src/components/VRecentSearches/VRecentSearches.vue:81
-#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:388
+#: src/components/VHeader/VHeaderMobile/VHeaderMobile.vue:387
 msgctxt "recentSearches.heading"
 msgid "Recent searches"
 msgstr ""
