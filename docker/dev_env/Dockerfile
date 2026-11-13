@@ -14,8 +14,6 @@ FROM docker.io/library/fedora:41
 # permissions issues to contend with and as such run the container as root)
 ENV HOME="/opt"
 
-# location where PDM installs Python interpreters
-ENV PDM_PYTHONS="${HOME}/pdm/bin"
 # location where `n` installs Node.js versions
 ENV N_PREFIX="${HOME}/n"
 
@@ -24,7 +22,7 @@ ENV PIPX_GLOBAL_HOME=/pipx
 ENV PNPM_BIN="${HOME}/pnpm"
 
 # Add tooling installed in custom locations to `PATH`.
-ENV PATH="${PNPM_BIN}:${N_PREFIX}/bin:${PDM_PYTHONS}:${HOME}/.local/bin:${PATH}"
+ENV PATH="${PNPM_BIN}:${N_PREFIX}/bin:${HOME}/.local/bin:${PATH}"
 
 # Dependency explanations:
 # - git: required by some python package; contributors should use git on their host
@@ -47,7 +45,7 @@ ENV PATH="${PNPM_BIN}:${N_PREFIX}/bin:${PDM_PYTHONS}:${HOME}/.local/bin:${PATH}"
 #
 # pipx dependencies:
 # - httpie: CLI HTTP client
-# - pdm, pipenv, uv: Python package managers
+# - pipenv, uv: Python package managers
 # - pre-commit: Git pre-commit and pre-push hook manager
 # - pgcli: PostgreSQL CLI
 #
@@ -80,7 +78,7 @@ RUN mkdir -p $HOME/.local/bin \
   && dnf5 clean all \
   && pipx install --global \
     httpie \
-    pdm pipenv uv \
+    pipenv uv \
     pgcli \
     pre-commit \
   && npm install -g \
@@ -88,8 +86,6 @@ RUN mkdir -p $HOME/.local/bin \
     corepack@0.31.0 \
   && corepack enable
 
-# Avoid overwriting `.venv`'s from the host
-ENV PDM_VENV_IN_PROJECT="False"
 # Keep uv's environments apart from the host's `.venv`, and its cache and
 # Python builds in the persisted `/opt` volume. The cache and the bind-mounted
 # repository are on different filesystems, so uv copies instead of linking.

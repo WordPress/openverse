@@ -231,7 +231,6 @@ env:
 DOCKER_FILE := "-f docker-compose.yml"
 EXEC_DEFAULTS := if IS_CI == "" { "" } else { "-T" }
 
-export OV_PDM_VERSION := env_var_or_default("OV_PDM_VERSION", "2.21")
 # Keep in sync with the `Setup uv` step in `.github/actions/setup-env/action.yml`.
 export OV_UV_VERSION := env_var_or_default("OV_UV_VERSION", "0.13.5")
 export CATALOG_PY_VERSION := `just catalog/py-version`
@@ -249,7 +248,6 @@ export HOST_NETWORK_ADDRESS := if os() == "macos" { "host.docker.internal" } els
 versions:
     #!/usr/bin/env bash
     cat <<EOF
-    ov_pdm_version=$(echo $OV_PDM_VERSION)
     ov_uv_version=$(echo $OV_UV_VERSION)
     catalog_py_version=$(just catalog/py-version)
     catalog_airflow_version=$(just catalog/airflow-version)
