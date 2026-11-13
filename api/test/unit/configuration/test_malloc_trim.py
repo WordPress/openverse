@@ -19,11 +19,15 @@ def test_disabled_without_glibc(monkeypatch):
 def test_trims_periodically(monkeypatch):
     calls = []
     called_twice = threading.Event()
+    never_set = threading.Event()
 
     def fake_trim(pad):
         calls.append(pad)
         if len(calls) >= 2:
             called_twice.set()
+            # The thread can't be stopped, so park it here; otherwise it keeps
+            # logging "Trimmed the heap" into other tests' `capture_logs`.
+            never_set.wait()
         return 1
 
     monkeypatch.setattr(malloc_trim, "_get_malloc_trim", lambda: fake_trim)
