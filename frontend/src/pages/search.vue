@@ -3,8 +3,8 @@ import {
   definePageMeta,
   navigateTo,
   showError,
-  useAsyncData,
   useHead,
+  useLazyAsyncData,
   useNuxtApp,
   useRoute,
 } from "#imports"
@@ -114,7 +114,9 @@ const handleLoadMore = async () => {
   await fetchMedia({ shouldPersistMedia: true })
 }
 
-await useAsyncData(
+// Lazy, so that navigating to the search page doesn't wait for the API
+// response. The results grid shows a loading state until the results arrive.
+useLazyAsyncData(
   "search",
   async () => {
     if (nuxtApp.isHydrating) {
