@@ -126,6 +126,14 @@ def test_anon_frontend_referrer_used_default_throttles(api_client):
             id="enhanced",
         ),
         pytest.param(
+            "frontend",
+            {
+                throttle.FrontendOAuth2IdBurstRateThrottle.scope,
+                throttle.FrontendOAuth2IdSustainedRateThrottle.scope,
+            },
+            id="frontend",
+        ),
+        pytest.param(
             "exempt",
             # Exempted requests have _no_ throttle class applied to them
             # This is a safe test because otherwise the anon scopes would apply
@@ -191,6 +199,11 @@ def test_anon_frontend_referrer_used_thumbnail(api_client):
             "enhanced",
             {throttle.OAuth2IdThumbnailRateThrottle.scope},
             id="enhanced",
+        ),
+        pytest.param(
+            "frontend",
+            {throttle.OAuth2IdThumbnailRateThrottle.scope},
+            id="frontend",
         ),
         pytest.param(
             "exempt",

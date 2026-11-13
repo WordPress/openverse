@@ -36,6 +36,8 @@ class ThrottledApplication(AbstractApplication):
         # case-by-case basis.
         ("exempt", "exempt"),  # Rate limits used for internal infrastructure to
         # by-pass rate limiting entirely.
+        ("frontend", "frontend"),  # High but finite rate limits for the
+        # openverse.org frontend, which proxies requests for all its users.
     ]
     rate_limit_model = models.CharField(
         max_length=20, choices=RATE_LIMIT_MODELS, default="standard"
