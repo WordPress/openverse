@@ -17,6 +17,7 @@ jobs:
       !startsWith(github.event.pull_request.title, '🔄') &&
       github.repository_owner == 'WordPress'
     runs-on: ubuntu-latest
+    permissions: {}
     env:
       EVENT_ACTION: ${{ github.event.action }}
     steps:
@@ -26,21 +27,29 @@ jobs:
           script: |
             let { writeFileSync } = await import('fs')
 
+            // Slack parses `<...>` in mrkdwn as mentions and links, so
+            // escape user-controlled text to prevent pings and spoofed links.
+            // Ref: https://api.slack.com/reference/surfaces/formatting#escaping
+            const escape = (text) =>
+              text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+
             const repoName = `${context.repo.owner}/${context.repo.repo}`
             const { pull_request: pr } = context.payload
+            const title = escape(pr.title)
+            const author = escape(pr.user.login)
             const isNew = process.env.EVENT_ACTION === 'opened'
             const emoji = pr.draft ? ':pr-draft:' : ':pull-request:'
             const adjective = isNew ? pr.draft ? 'New draft ' : 'New ' : ''
             const verb = isNew ? 'opened' : 'marked ready for review'
 
             const payload = {
-              text: `${adjective}PR ${verb} by ${pr.user.login} in ${repoName}: #${pr.number} - ${pr.title}`,
+              text: `${adjective}PR ${verb} by ${author} in ${repoName}: #${pr.number} - ${title}`,
               blocks: [
                 {
                   type: 'section',
                   text: {
                     type: 'mrkdwn',
-                    text: `${emoji} ${adjective}PR ${verb} by *${pr.user.login}* in \`${repoName}\`:\n<${pr.html_url}|#${pr.number} - ${pr.title}>`
+                    text: `${emoji} ${adjective}PR ${verb} by *${author}* in \`${repoName}\`:\n<${pr.html_url}|#${pr.number} - ${title}>`
                   }
                 }
               ]
