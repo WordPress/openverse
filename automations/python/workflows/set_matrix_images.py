@@ -71,7 +71,7 @@ includes: dict[str, Include] = {
         image="api",
         target="api",
         build_contexts="packages=./packages/python",
-        build_args="PDM_INSTALL_ARGS=--prod",
+        build_args="UV_SYNC_ARGS=--no-editable --no-default-groups",
     ),
     "api_nginx": Include(
         image="api_nginx",

@@ -16,9 +16,9 @@ services:
       args: # Automatically inferred from env vars, unless specified
         - SEMANTIC_VERSION=${SEMANTIC_VERSION:-v1.0.0}
         - API_PY_VERSION
-        - OV_PDM_VERSION=${OV_PDM_VERSION}
-        - PDM_INSTALL_ARGS=--dev
-    image: openverse-api:${API_PDM_HASH:-latest}
+        - OV_UV_VERSION=${OV_UV_VERSION}
+        - UV_SYNC_ARGS=
+    image: openverse-api:${API_UV_HASH:-latest}
     pull_policy: never
     # During debugging, use the following command to override.
     # command: python -Xfrozen_modules=off -m debugpy --listen 0.0.0.0:5678 run.py
@@ -48,8 +48,9 @@ services:
       args: # Automatically inferred from env vars, unless specified
         - SEMANTIC_VERSION=${SEMANTIC_VERSION:-v1.0.0}
         - API_PY_VERSION
-        - PDM_INSTALL_ARGS=--dev
-    image: openverse-api_nginx:${API_PDM_HASH:-latest}
+        - OV_UV_VERSION=${OV_UV_VERSION}
+        - UV_SYNC_ARGS=
+    image: openverse-api_nginx:${API_UV_HASH:-latest}
     pull_policy: never
     ports:
       - "50270:8080"
