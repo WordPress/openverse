@@ -71,7 +71,7 @@ COMMANDS
     some of the following:
 
       - ov just
-      - ov pdm
+      - ov uv
       - ov pnpm
       - ov python
       - ov bash
@@ -112,7 +112,7 @@ doctor)
 
   case "$OSTYPE" in
   linux*)
-    # For some reason permissions can get mixed up in `/opt` and PDM will fail to create venvs
+    # For some reason permissions can get mixed up in `/opt` and uv will fail to create venvs
     # This is only relevant to Linux hosts because macOS hosts run the container as root regardless
     printf "   - Fixing file permissions in container's /opt\n"
     "$_self" sudo chmod -R 0777 /opt
