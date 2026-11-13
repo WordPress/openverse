@@ -9,6 +9,7 @@ import type { FetchingError, RequestKind } from "#shared/types/fetch-state"
 import { debug } from "~/utils/console"
 
 import type { NuxtApp } from "#app"
+import type { FetchError } from "ofetch"
 
 const isValidErrorCode = (
   code: string | undefined | null
@@ -21,6 +22,45 @@ const isValidErrorCode = (
 
 function isDetailedResponseData(data: unknown): data is { detail: string } {
   return !!data && typeof data === "object" && "detail" in data
+}
+
+/**
+ * Checks the name rather than using `instanceof`, because the app and Nuxt
+ * can use different copies of `ofetch`.
+ */
+const isFetchError = (error: unknown): error is FetchError =>
+  error instanceof Error && error.name === "FetchError"
+
+/**
+ * Normalizes the errors from the Nuxt server proxy routes. The routes return
+ * h3 errors, with the API's `detail` message or an error `code` in `data`.
+ */
+function normalizeProxyFetchError(
+  error: FetchError,
+  fetchingError: FetchingError
+): FetchingError {
+  const errorData = (error.data as { data?: unknown } | undefined)?.data as
+    | { detail?: unknown; code?: unknown }
+    | undefined
+
+  if (error.statusCode) {
+    fetchingError.statusCode = error.statusCode
+  } else {
+    // The request didn't receive a response.
+    fetchingError.code = "ERR_NETWORK"
+  }
+  if (typeof errorData?.code === "string" && isValidErrorCode(errorData.code)) {
+    fetchingError.code = errorData.code
+  }
+
+  const retryAfter = error.response?.headers.get("retry-after")
+  if (retryAfter) {
+    fetchingError.details = { ...fetchingError.details, retryAfter }
+  }
+
+  fetchingError.message =
+    typeof errorData?.detail === "string" ? errorData.detail : error.message
+  return fetchingError
 }
 
 /**
@@ -43,6 +83,10 @@ export function normalizeFetchingError(
     details,
     searchType,
     code: ERR_UNKNOWN,
+  }
+
+  if (isFetchError(error)) {
+    return normalizeProxyFetchError(error, fetchingError)
   }
 
   if (!isAxiosError(error)) {

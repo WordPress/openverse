@@ -46,6 +46,22 @@ export default defineNuxtConfig({
   runtimeConfig: {
     apiClientId: "",
     apiClientSecret: "",
+    // The API address that Nitro uses for proxied requests, overridden by
+    // NUXT_API_URL_INTERNAL. Falls back to `public.apiUrl` when empty.
+    apiUrlInternal: "",
+    // Signs the `ovSession` cookie, overridden by NUXT_HMAC_SIGNING_SECRET.
+    // Must be at least 32 characters long.
+    hmacSigningSecret: "",
+    rateLimit: {
+      // `log` only logs the requests that would be limited, `enforce` rejects them.
+      mode: "log",
+      windowSeconds: 60,
+      sessionLimit: 120,
+      noSessionLimit: 30,
+      ipLimit: 1200,
+      // The number of proxies that append to `X-Forwarded-For`.
+      trustedProxies: 1,
+    },
     public: {
       deploymentEnv: "local",
       apiUrl: "https://api.openverse.org/",

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { navigateTo, useHead } from "#imports"
+import { computed } from "vue"
 
 import { ALL_MEDIA } from "#shared/constants/media"
 import { skipToContentTargetId } from "#shared/constants/window"
@@ -12,7 +13,9 @@ import VSvg from "~/components/VSvg/VSvg.vue"
 
 import type { NuxtError } from "#app"
 
-defineProps<{ error: NuxtError }>()
+const props = defineProps<{ error: NuxtError }>()
+
+const isRateLimited = computed(() => props.error?.statusCode === 429)
 
 const searchStore = useSearchStore()
 
@@ -51,11 +54,19 @@ useHead({
         tabindex="-1"
         class="z-10 grow-3 space-y-4 lg:space-y-6"
       >
-        <h1 class="mb-6 heading-5 lg:mb-10 lg:heading-2">
+        <template v-if="isRateLimited">
+          <h1 class="mb-6 heading-5 lg:mb-10 lg:heading-2">
+            {{ $t("rateLimited.heading") }}
+          </h1>
+          <p class="label-bold lg:heading-6">
+            {{ $t("rateLimited.description") }}
+          </p>
+        </template>
+        <h1 v-else class="mb-6 heading-5 lg:mb-10 lg:heading-2">
           {{ $t("404.title") }}
         </h1>
         <p class="sr-only">{{ error }}</p>
-        <p class="label-bold lg:heading-6">
+        <p v-if="!isRateLimited" class="label-bold lg:heading-6">
           <i18n-t scope="global" keypath="404.main" tag="span">
             <template #link>
               <VLink
