@@ -259,7 +259,15 @@ class MediaSearchRequestSerializer(PaginatedRequestSerializer):
     )
     filter_dead = serializers.BooleanField(
         label="filter_dead",
-        help_text="Control whether 404 links are filtered out.",
+        help_text=(
+            "Control whether broken links are filtered out. "
+            "When enabled (default), images that return HTTP error status codes "
+            "(404 Not Found, 410 Gone, 500 Internal Server Error, etc.) are excluded "
+            "from results. When disabled, all images from the catalog are returned "
+            "regardless of their current accessibility. "
+            "Note: Status codes 429 (rate limiting) and 403 (forbidden) are treated "
+            "as temporary issues and generate warnings but do not filter results."
+        ),
         required=False,
         default=settings.FILTER_DEAD_LINKS_BY_DEFAULT,
     )
