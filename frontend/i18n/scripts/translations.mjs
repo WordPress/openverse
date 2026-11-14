@@ -1,5 +1,12 @@
-import { createWriteStream, readFileSync, unlinkSync } from "fs"
-import { basename, join } from "path"
+import {
+  copyFileSync,
+  createWriteStream,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  unlinkSync,
+} from "fs"
+import { basename, dirname, join } from "path"
 import { pipeline } from "stream/promises"
 
 import AdmZip from "adm-zip"
@@ -81,7 +88,7 @@ const logWarnings = (deprecatedKeys, invalidKeys, debug) => {
         console.log(prettify(keysObject.keys))
       }
     } else {
-      console.log(keysObject[keysKind].success)
+      console.log(warnings[keysKind].success)
     }
   }
 }
@@ -220,6 +227,44 @@ const replacePlaceholders = (json, locale, deprecatedKeys, invalidKeys) => {
 }
 
 /**
+ * Get the path to the translations ZIP archive, downloading it from GlotPress
+ * unless a fresh cached copy can be used.
+ *
+ * `I18N_NGX_CACHE` is the path where the downloaded archive is kept between
+ * runs (CI restores it with `actions/cache`). If `I18N_NGX_CACHE_FRESH` is
+ * "true", the cached archive is used without downloading. If the download
+ * fails, a cached archive of any age is used instead.
+ *
+ * @return {Promise<{ zipPath: string, isTemporary: boolean }>}
+ */
+const getNgxZip = async () => {
+  const cachePath = process.env.I18N_NGX_CACHE
+  const hasCache = Boolean(cachePath) && existsSync(cachePath)
+
+  if (hasCache && process.env.I18N_NGX_CACHE_FRESH === "true") {
+    console.log(`Using cached translations from ${cachePath}.`)
+    return { zipPath: cachePath, isTemporary: false }
+  }
+
+  try {
+    const zipPath = await fetchBulkNgx()
+    if (cachePath) {
+      mkdirSync(dirname(cachePath), { recursive: true })
+      copyFileSync(zipPath, cachePath)
+    }
+    return { zipPath, isTemporary: true }
+  } catch (error) {
+    if (!hasCache) {
+      throw error
+    }
+    console.warn(
+      `${error.message}. Falling back to the cached translations in ${cachePath}.`
+    )
+    return { zipPath: cachePath, isTemporary: false }
+  }
+}
+
+/**
  * Perform a bulk download of translation strings from GlotPress and extract the
  * JSON files from the ZIP archive.
  *
@@ -228,9 +273,11 @@ const replacePlaceholders = (json, locale, deprecatedKeys, invalidKeys) => {
 export const downloadTranslations = async (debug) => {
   console.log("Performing bulk translations download.")
   try {
-    const zipPath = await fetchBulkNgx()
+    const { zipPath, isTemporary } = await getNgxZip()
     const translationsCount = await extractZip(zipPath, debug)
-    unlinkSync(zipPath)
+    if (isTemporary) {
+      unlinkSync(zipPath)
+    }
     console.log(`Successfully saved ${translationsCount} translations.`)
     return true
   } catch (error) {
@@ -238,6 +285,7 @@ export const downloadTranslations = async (debug) => {
     return false
   }
 }
+
 /**
  * Convert en.json5 to en.json, and return the number of keys in the file,
  * if `countKeys` is true.
