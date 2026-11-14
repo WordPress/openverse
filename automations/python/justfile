@@ -13,9 +13,9 @@ NO_COLOR := "\\033[0m"
 # Install dependencies
 [positional-arguments]
 install *args:
-    pdm install "$@"
+    uv sync "$@"
 
 # Run a script
 [positional-arguments]
 run script *args:
-    pdm run "$@"
+    uv run "$@"

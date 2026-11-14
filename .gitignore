@@ -20,6 +20,7 @@ logs/
 env/
 venv/
 .venv/
+.venv-ov/
 pip-log.txt
 
 # Python
