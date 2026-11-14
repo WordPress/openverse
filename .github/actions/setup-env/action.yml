@@ -54,7 +54,7 @@ runs:
       uses: astral-sh/setup-uv@v10.3.3
       with:
         # Keep in sync with `OV_UV_VERSION` in the root justfile.
-        version: "0.13.5"
+        version: "0.13.8"
 
     - name: Setup pnpm
       if: inputs.setup_nodejs == 'true'
