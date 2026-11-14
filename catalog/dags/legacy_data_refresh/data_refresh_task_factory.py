@@ -48,16 +48,26 @@ https://github.com/WordPress/openverse-catalog/issues/353)
 import logging
 from collections.abc import Sequence
 
+from airflow.decorators import task
+from airflow.exceptions import AirflowSkipException
 from airflow.models.baseoperator import chain
 from airflow.operators.python import PythonOperator
+from airflow.utils.state import TaskInstanceState
 from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
 
 from common import cloudwatch, ingestion_server
-from common.constants import DATA_REFRESH_POOL, XCOM_PULL_TEMPLATE
+from common.constants import (
+    AUDIO,
+    DATA_REFRESH_POOL,
+    IMAGE,
+    OPENLEDGER_API_CONN_ID,
+    XCOM_PULL_TEMPLATE,
+)
 from common.sensors.constants import PRODUCTION_ES_CONCURRENCY_TAG
 from common.sensors.single_run_external_dags_sensor import SingleRunExternalDAGsSensor
 from common.sensors.utils import wait_for_external_dags_with_tag
+from common.sql import PostgresHook
 from legacy_data_refresh.create_filtered_index import (
     create_filtered_index_creation_task_groups,
 )
@@ -65,6 +75,41 @@ from legacy_data_refresh.data_refresh_types import DataRefresh
 
 
 logger = logging.getLogger(__name__)
+
+# The API DB tables the ingestion server's ``ingest_upstream`` creates for each media
+# type; the audio refresh also copies ``audioset``.
+TEMP_TABLES = {
+    IMAGE: ["temp_import_image"],
+    AUDIO: ["temp_import_audio", "temp_import_audioset"],
+}
+
+
+@task(trigger_rule=TriggerRule.ONE_FAILED)
+def drop_temp_tables(media_type: str, ingest_trigger_task_id: str, ti=None):
+    """
+    Drop the API DB temp tables a failed data refresh left behind.
+
+    The ingestion server drops and recreates ``temp_import_<table>`` in the same
+    transaction as the copy, so a leftover table's disk space is only freed once the
+    next copy commits. A leftover image table therefore doubles the space the next
+    refresh needs, and can fill the API DB before the copy finishes.
+
+    Skips unless this run triggered ``ingest_upstream``: if the run failed earlier,
+    for example while waiting on other Elasticsearch DAGs, the tables may belong to
+    a refresh that is still running.
+    """
+    trigger_ti = ti.get_dagrun().get_task_instance(ingest_trigger_task_id)
+    if trigger_ti is None or trigger_ti.state != TaskInstanceState.SUCCESS:
+        raise AirflowSkipException(
+            "This run did not trigger ingest_upstream, so it created no temp tables."
+        )
+
+    tables = TEMP_TABLES[media_type]
+    PostgresHook(postgres_conn_id=OPENLEDGER_API_CONN_ID).run(
+        [f"DROP TABLE IF EXISTS {table};" for table in tables]
+    )
+    logger.info(f"Dropped temp tables: {', '.join(tables)}")
+    return tables
 
 
 def create_data_refresh_task_group(
@@ -149,7 +194,7 @@ def create_data_refresh_task_group(
         # Catalog into the API DB and builds the elasticsearch index. The new table
         # and index are not promoted until a later step.
         with TaskGroup(group_id="ingest_upstream") as ingest_upstream_tasks:
-            ingestion_server.trigger_and_wait_for_task(
+            trigger_ingest_upstream, _ = ingestion_server.trigger_and_wait_for_task(
                 action="ingest_upstream",
                 model=data_refresh.media_type,
                 data={"index_suffix": generate_index_suffix},
@@ -184,6 +229,14 @@ def create_data_refresh_task_group(
         # but before it is promoted. This prevents the filtered index creation from
         # running against an index that is already promoted in production.
         tasks.append(create_filtered_index)
+
+        # If any step before promotion fails, drop the temp tables so they do not
+        # block the next refresh. This sits off the main chain, so it is skipped when
+        # the refresh succeeds and never runs after promotion has started.
+        create_filtered_index >> drop_temp_tables(
+            media_type=data_refresh.media_type,
+            ingest_trigger_task_id=trigger_ingest_upstream.task_id,
+        )
 
         enable_alarms = PythonOperator(
             task_id="enable_sensitive_cloudwatch_alarms",
