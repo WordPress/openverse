@@ -1,0 +1,72 @@
+{
+  "base": "./",
+  "build": {
+    "emptyOutDir": false,
+    "outDir": "/home/runner/work/openverse/openverse/frontend/storybook-static",
+    "rollupOptions": {
+      "external": [
+        "./sb-preview/runtime.js",
+        {
+        }
+      ]
+    }
+  },
+  "cacheDir": "/home/runner/work/openverse/openverse/frontend/node_modules/.cache/storybook/default/sb-vite",
+  "configFile": false,
+  "envPrefix": [
+    "VITE_",
+    "STORYBOOK_"
+  ],
+  "plugins": [
+    {
+      "enforce": "pre",
+      "name": "storybook:code-generator-plugin"
+    },
+    {
+      "enforce": "pre",
+      "name": "plugin-csf",
+      "rollup": {
+        "name": "plugin-csf"
+      },
+      "vite": {
+        "enforce": "pre",
+        "name": "plugin-csf"
+      }
+    },
+    {
+      "enforce": "post",
+      "name": "storybook:inject-export-order-plugin"
+    },
+    {
+      "enforce": "post",
+      "name": "storybook:strip-hmr-boundary-plugin"
+    },
+    {
+      "enforce": "post",
+      "name": "storybook:allow-storybook-dir"
+    },
+    {
+      "enforce": "post",
+      "name": "storybook:external-globals-plugin"
+    },
+    {
+      "enforce": "post",
+      "name": "storybook:rollup-plugin-webpack-stats"
+    },
+    {
+      "name": "storybook:vue-docgen-plugin"
+    }
+  ],
+  "resolve": {
+    "alias": {
+      "assert": "/home/runner/work/openverse/openverse/node_modules/.pnpm/browser-assert@1.2.1/node_modules/browser-assert/lib/assert.js",
+      "vue": "vue/dist/vue.esm-bundler.js"
+    },
+    "conditions": [
+      "storybook",
+      "stories",
+      "test"
+    ]
+  },
+  "root": "/home/runner/work/openverse/openverse/frontend"
+}

@@ -1,0 +1,1 @@
+const s=["by","by-sa","by-nd","by-nc","by-nc-sa","by-nc-nd"],E=["nc-sampling+","sampling+"],n=["pdm","cc0"],C=[...n,...s],c=[...C,...E],S=["","1.0","2.0","2.5","3.0","4.0"];export{c as A,s as C,E as D,S as L,n as P,C as a};

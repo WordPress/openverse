@@ -1,0 +1,13 @@
+# 2024.09.09.23.00.57
+
+## Internal Improvements
+
+- Update dependency apache-airflow to v2.10.1 [SECURITY]
+  ([#4897](https://github.com/WordPress/openverse/pull/4897)) by @openverse-bot
+- Remove retired DAGs from the codebase
+  ([#4867](https://github.com/WordPress/openverse/pull/4867)) by @sarayourfriend
+
+## Bug Fixes
+
+- Make `additional_where` optional for batched update
+  ([#4872](https://github.com/WordPress/openverse/pull/4872)) by @AetherUnbound

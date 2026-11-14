@@ -1,0 +1,6 @@
+# 2024.07.30.16.33.18
+
+## Bug Fixes
+
+- Set site indexability at runtime
+  ([#4671](https://github.com/WordPress/openverse/pull/4671)) by @zackkrida

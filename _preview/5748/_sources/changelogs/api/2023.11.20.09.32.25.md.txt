@@ -1,0 +1,16 @@
+# 2023.11.20.09.32.25
+
+## New Features
+
+- Add API routes and controllers for additional search views
+  ([#2853](https://github.com/WordPress/openverse/pull/2853)) by @obulat
+
+## Improvements
+
+- Use the correct suffix for exact matches field
+  ([#3358](https://github.com/WordPress/openverse/pull/3358)) by @obulat
+
+## Internal Improvements
+
+- Unpin glibc ([#3359](https://github.com/WordPress/openverse/pull/3359)) by
+  @dhruvkb

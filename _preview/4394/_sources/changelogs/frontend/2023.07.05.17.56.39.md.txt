@@ -1,0 +1,21 @@
+# 2023.07.05.17.56.39
+
+## New Features
+
+- Add AUDIO_INTERACTION event
+  ([#2424](https://github.com/WordPress/openverse/pull/2424)) by @obulat
+- Add ESLint plugin package
+  ([#2482](https://github.com/WordPress/openverse/pull/2482)) by @sarayourfriend
+
+## Internal Improvements
+
+- Add ESLint plugin package
+  ([#2482](https://github.com/WordPress/openverse/pull/2482)) by @sarayourfriend
+
+## Bug Fixes
+
+- Sync pre-commit deps with package.json
+  ([#2546](https://github.com/WordPress/openverse/pull/2546)) by @obulat
+- Replaced get\* assertions in testing library with explicit assertions
+  ([#2428](https://github.com/WordPress/openverse/pull/2428)) by
+  @ZeroPlayerRodent

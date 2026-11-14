@@ -1,0 +1,13 @@
+# 2024.05.27.15.21.38
+
+## Improvements
+
+- Add favicon to Django API
+  ([#4360](https://github.com/WordPress/openverse/pull/4360)) by @madewithkode
+- Remove overridden function that doesn't do anything over super
+  ([#4380](https://github.com/WordPress/openverse/pull/4380)) by @dhruvkb
+
+## Internal Improvements
+
+- Configure IPython configuration dir in the API
+  ([#4376](https://github.com/WordPress/openverse/pull/4376)) by @dhruvkb

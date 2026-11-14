@@ -1,0 +1,11 @@
+# 2024.01.01.19.52.14
+
+## New Features
+
+- Add a script to observe the API during Redis migration
+  ([#3575](https://github.com/WordPress/openverse/pull/3575)) by @dhruvkb
+
+## Bug Fixes
+
+- Bump jwcrypto from 1.5.0 to 1.5.1 in /api
+  ([#3600](https://github.com/WordPress/openverse/pull/3600)) by @dependabot

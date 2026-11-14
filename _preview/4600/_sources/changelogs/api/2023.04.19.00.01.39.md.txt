@@ -1,0 +1,18 @@
+# 2023.04.19.00.01.39
+
+## New Features
+
+- Publish changelog for api-2023.04.18.15.27.15
+  ([#1813](https://github.com/WordPress/openverse/pull/1813)) @openverse-bot
+
+## Improvements
+
+- Treat 403s from Flickr as dead links
+  ([#1201](https://github.com/WordPress/openverse/pull/1201)) @sarayourfriend
+
+## Bug Fixes
+
+- Increase photon request timeout
+  ([#1809](https://github.com/WordPress/openverse/pull/1809)) @sarayourfriend
+- Update how `psycopg2` errors are referenced
+  ([#1807](https://github.com/WordPress/openverse/pull/1807)) @dhruvkb
