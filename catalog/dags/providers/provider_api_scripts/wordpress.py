@@ -11,7 +11,7 @@ Notes:                  <https://wordpress.org/photos/wp-json/wp/v2>
 """
 
 import logging
-
+import re
 import lxml.html as html
 
 from common import constants
@@ -172,9 +172,12 @@ class WordPressDataIngester(ProviderDataIngester):
         if title := image.get("content", {}).get("rendered"):
             try:
                 title = html.fromstring(title).text_content()
-            except UnicodeDecodeError as e:
-                logger.warning(f"Can't save the image's title ('{title}') due to {e}")
-                return None
+            except UnicodeDecodeError:
+                # lxml's HTML parser can raise UnicodeDecodeError on titles
+                # containing certain emoji. Fall back to a regex-based tag
+                # strip, which operates on the original str and never
+                # re-encodes it, so emoji are preserved correctly.
+                title = re.sub(r"<[^<]+?>", "", title).strip()
         return title
 
     @staticmethod
