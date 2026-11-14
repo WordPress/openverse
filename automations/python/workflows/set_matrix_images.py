@@ -65,7 +65,7 @@ includes: dict[str, Include] = {
         image="catalog_indexer_worker",
         target="indexer_worker",
         context="indexer_worker",
-        build_args="PDM_INSTALL_ARGS=--prod",
+        build_args="UV_SYNC_ARGS=--no-default-groups",
     ),
     "api": Include(
         image="api",
