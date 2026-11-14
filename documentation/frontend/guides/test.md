@@ -19,8 +19,8 @@ Storybook visual regression tests read the
    ```
 
    ````{note}
-   Unit tests are automatically run by pre-commit before Git push, if you've set
-   up pre-commit's Git hooks by running the following command.
+   Unit tests are automatically run by prek before Git push, if you've set up
+   prek's Git hooks by running the following command.
 
    ```bash
    ov just precommit

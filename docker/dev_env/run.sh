@@ -29,7 +29,7 @@ run_args=(
   # Use host network so things like Sphinx and the frontend that run directly in `ov`
   # will have ports available on the host (and this way we don't have to manually map each one)
   --network host
-  # Bind the repo to the same exact location inside the container so that pre-commit
+  # Bind the repo to the same exact location inside the container so that prek
   # and others don't get confused about where files are supposed to be
   -v "$OPENVERSE_PROJECT:$OPENVERSE_PROJECT:rw,z"
   # Save the /opt directory of the container so we can reuse it each time
@@ -41,7 +41,7 @@ run_args=(
 # When running `ov` directly, `-t 0` will show that stdin is available, so
 # we should provision a TTY in the docker container (making it possible to
 # interact with the container directly)
-# However, when running in pre-commit (for example), there is no TTY, and
+# However, when running in prek (for example), there is no TTY, and
 # docker run will complain if `-t` requests a TTY when the execution
 # environment doesn't have one to attach.
 # In other words, only tell Docker to attach a TTY to the container when

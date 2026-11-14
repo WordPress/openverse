@@ -23,12 +23,15 @@ ENV PIPX_GLOBAL_HOME=/pipx
 
 ENV PNPM_BIN="${HOME}/pnpm"
 
+# Keep in sync with `PREK_VERSION` in the root `justfile`
+ARG PREK_VERSION=0.5.10
+
 # Add tooling installed in custom locations to `PATH`.
 ENV PATH="${PNPM_BIN}:${N_PREFIX}/bin:${PDM_PYTHONS}:${HOME}/.local/bin:${PATH}"
 
 # Dependency explanations:
 # - git: required by some python package; contributors should use git on their host
-# - g++: required by some pre-commit hooks for node-gyp
+# - g++: required by some prek hooks for node-gyp
 # - just: command runner
 # - jq: JSON processor
 # - which: locate a program file in `PATH`
@@ -48,7 +51,7 @@ ENV PATH="${PNPM_BIN}:${N_PREFIX}/bin:${PDM_PYTHONS}:${HOME}/.local/bin:${PATH}"
 # pipx dependencies:
 # - httpie: CLI HTTP client
 # - pdm, pipenv, uv: Python package managers
-# - pre-commit: Git pre-commit and pre-push hook manager
+# - prek: Git pre-commit and pre-push hook manager
 # - pgcli: PostgreSQL CLI
 #
 # Node dependencies:
@@ -82,7 +85,7 @@ RUN mkdir -p $HOME/.local/bin \
     httpie \
     pdm pipenv uv \
     pgcli \
-    pre-commit \
+    prek==${PREK_VERSION} \
   && npm install -g \
     n \
     corepack@0.31.0 \
