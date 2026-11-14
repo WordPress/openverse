@@ -52,6 +52,17 @@ export interface UiState {
    */
   dismissedBanners: BannerId[]
   /**
+   * Set when the visitor is redirected here from an unsupported locale prefix
+   * (e.g. `/cn`). Persisted only so it survives the redirect, then consumed on
+   * the next navigation.
+   */
+  unsupportedLocaleRedirect: boolean
+  /**
+   * Whether the one-time "language not supported" banner is showing. Transient:
+   * turned on for the landing page and cleared on the next navigation.
+   */
+  unsupportedLocaleBannerVisible: boolean
+  /**
    * Whether to blur sensitive content in search and single result pages.
    * Value should *not* be set directly, use setShouldBlurSensitive(value: boolean)
    * to ensure necessary side-effects are executed.
@@ -76,6 +87,8 @@ export const defaultUiState: UiState = {
   isDesktopLayout: false,
   breakpoint: "sm",
   dismissedBanners: [],
+  unsupportedLocaleRedirect: false,
+  unsupportedLocaleBannerVisible: false,
   shouldBlurSensitive: true,
   revealedSensitiveResults: [],
   headerHeight: 80,
@@ -93,6 +106,7 @@ export const useUiStore = defineStore("ui", {
         isFilterDismissed: state.isFilterDismissed,
         breakpoint: state.breakpoint,
         dismissedBanners: Array.from(this.dismissedBanners),
+        unsupportedLocaleRedirect: state.unsupportedLocaleRedirect,
         colorMode: state.colorMode,
         isDarkModeSeen: state.isDarkModeSeen,
       }
@@ -126,6 +140,14 @@ export const useUiStore = defineStore("ui", {
      */
     shouldShowAnalyticsBanner(): boolean {
       return !this.dismissedBanners.includes("analytics")
+    },
+    /**
+     * A one-time notice shown on the page the visitor lands on after being
+     * redirected from an unsupported locale prefix. Not dismissible like the
+     * other banners; the middleware controls when it shows.
+     */
+    shouldShowUnsupportedLocaleBanner(): boolean {
+      return this.unsupportedLocaleBannerVisible
     },
   },
 
@@ -187,6 +209,10 @@ export const useUiStore = defineStore("ui", {
 
       if (Array.isArray(cookies.dismissedBanners)) {
         this.dismissedBanners = cookies.dismissedBanners
+      }
+
+      if (typeof cookies.unsupportedLocaleRedirect === "boolean") {
+        this.unsupportedLocaleRedirect = cookies.unsupportedLocaleRedirect
       }
 
       if (isColorMode(cookies.colorMode)) {
@@ -272,6 +298,26 @@ export const useUiStore = defineStore("ui", {
     },
     isBannerDismissed(bannerId: BannerId) {
       return this.dismissedBanners.includes(bannerId)
+    },
+    /**
+     * Record (and persist) that the visitor was just redirected from an
+     * unsupported locale prefix, so the flag survives the redirect.
+     * @param value - whether the redirect just happened.
+     */
+    setUnsupportedLocaleRedirect(value: boolean) {
+      if (this.unsupportedLocaleRedirect === value) {
+        return
+      }
+      this.unsupportedLocaleRedirect = value
+      this.writeToCookie()
+    },
+    /**
+     * Show or hide the one-time unsupported-locale banner. Transient, so it is
+     * never written to the cookie and won't re-show on a later visit.
+     * @param value - whether the banner should be visible.
+     */
+    setUnsupportedLocaleBannerVisible(value: boolean) {
+      this.unsupportedLocaleBannerVisible = value
     },
     /**
      * Similar to CSS `@media` queries, this function returns a boolean
