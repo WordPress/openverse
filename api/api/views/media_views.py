@@ -1,5 +1,6 @@
 from typing import Union
 
+from django.conf import settings
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.exceptions import APIException, NotFound
@@ -246,7 +247,7 @@ class MediaViewSet(AsyncViewSetMixin, AsyncAPIView, ReadOnlyModelViewSet):
             results = related_media(
                 uuid=identifier,
                 index=self.default_index,
-                filter_dead=True,
+                filter_dead=settings.FILTER_DEAD_LINKS_BY_DEFAULT,
             )
             self.paginator.page_count = 1
             # `page_size` refers to the maximum number of related images to return.
