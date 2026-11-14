@@ -603,13 +603,16 @@ def _get_result_and_page_count(
     if len(results) < page_size:
         if page_count == 1:
             result_count = len(results)
-
-        # If we have fewer results than the requested page size and are
-        # not on the first page that means that we've reached the end of
-        # the query and can set the page_count to the currently requested
-        # page. This means that the `page_count` can change during
-        # pagination for the same query, but it's the only way to
-        # communicate under the current v1 API that a query has been exhausted.
-        page_count = page
+            page_count = 1
+        else:
+            # If we have fewer results than the requested page size and are
+            # not on the first page that means that we've reached the end of
+            # the query. Calculate the actual total based on previous pages + current results
+            actual_total = (page - 1) * page_size + len(results)
+            result_count = min(result_count, actual_total)
+            # Set the page_count to the currently requested page. This means that the 
+            # `page_count` can change during pagination for the same query, but it's the 
+            # only way to communicate under the current v1 API that a query has been exhausted.
+            page_count = page
 
     return result_count, page_count
