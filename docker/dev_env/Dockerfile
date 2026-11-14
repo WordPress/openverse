@@ -85,7 +85,7 @@ RUN mkdir -p $HOME/.local/bin \
     pre-commit \
   && npm install -g \
     n \
-    corepack@0.31.0 \
+    corepack@0.35.0 \
   && corepack enable
 
 # Avoid overwriting `.venv`'s from the host

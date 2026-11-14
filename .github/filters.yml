@@ -36,7 +36,6 @@ frontend:
   - pnpm-lock.yaml
   - pnpm-workspace.yaml
   - tsconfig.base.json
-  - .npmrc
   - .pnpmfile.cjs
 py_packages:
   - packages/python/**
@@ -46,7 +45,6 @@ js_packages:
   - pnpm-lock.yaml
   - pnpm-workspace.yaml
   - tsconfig.json
-  - .npmrc
   - .pnpmfile.cjs
 analytics:
   - docker/clickhouse/**

@@ -25,10 +25,5 @@
     "typescript": "5.9.3",
     "typescript-eslint": "^8.72.1",
     "vue-tsc": "3.3.13"
-  },
-  "pnpm": {
-    "overrides": {
-      "@opentelemetry/api": "~1.9.1"
-    }
   }
 }

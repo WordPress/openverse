@@ -2,3 +2,24 @@ packages:
   - automations/js/
   - frontend/
   - packages/js/*
+
+shamefullyHoist: true
+enablePrePostScripts: true
+
+# Newly published versions are not resolved until they are 7 days old, to
+# give the community time to catch compromised releases. Keep it in sync with
+# the npm `minimumReleaseAge` in `.github/renovate.json5`. To take an urgent security fix earlier, add its exact version
+# (`pkg@1.2.3`) to `minimumReleaseAgeExclude`, and remove it once it ages.
+minimumReleaseAge: 10080
+
+# None of these need their build scripts: esbuild and @swc/core ship their
+# binaries as optional platform packages, core-js only prints a banner, and
+# nice-napi is an optional native addon for piscina.
+allowBuilds:
+  "@swc/core": false
+  core-js: false
+  esbuild: false
+  nice-napi: false
+
+overrides:
+  "@opentelemetry/api": ~1.9.1
