@@ -19,7 +19,7 @@ default-groups = "all"
 
 [dependency-groups]
 test = [
-    "pytest >=8.1.1, <9",
+    "pytest >=9.0.3, <10",
     "pytest-sugar >=1.0.0, <2",
     "requests>=2.31.0",
 ]
