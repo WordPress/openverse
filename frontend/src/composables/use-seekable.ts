@@ -1,7 +1,7 @@
-import { useI18n } from "#imports"
 import { computed, ToRefs, ref } from "vue"
 
 import { keycodes } from "#shared/constants/key-codes"
+import { timeFmt } from "#shared/utils/time-fmt"
 
 export interface UseSeekableOptions
   extends ToRefs<{
@@ -22,15 +22,11 @@ export const useSeekable = ({
   onSeek,
   onTogglePlayback,
 }: UseSeekableOptions) => {
-  const { t } = useI18n({ useScope: "global" })
-
   const attributes = computed(() => ({
     "aria-role": "slider",
     "aria-valuemax": duration.value,
     "aria-valuenow": currentTime.value,
-    "aria-valuetext": t("waveform.currentTime", {
-      time: currentTime.value,
-    }),
+    "aria-valuetext": timeFmt(currentTime.value),
     "aria-orientation": "horizontal" as const,
     "aria-valuemin": "0",
   }))
