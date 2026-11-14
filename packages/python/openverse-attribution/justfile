@@ -16,4 +16,13 @@ NO_COLOR := "\\033[0m"
 # Install dependencies
 [positional-arguments]
 install *args:
-    pdm install "$@"
+    uv sync "$@"
+
+# Build the source distribution and wheel into `dist/`
+build:
+    uv build
+
+# Run the tests
+[positional-arguments]
+test *args:
+    uv run pytest "$@"
