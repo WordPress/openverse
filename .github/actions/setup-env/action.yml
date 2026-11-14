@@ -81,8 +81,44 @@ runs:
         just ${{ inputs.install_recipe }}
 
     # Set up locales
-    - name: Setup locales
-      if: inputs.locales != ''
+    # GlotPress rate-limits the bulk translations download, so the downloaded
+    # archive is cached and reused by every run within the same 2-hour window.
+    # Older archives are restored as a fallback for when the download fails.
+    - name: Get translations cache key
+      id: i18n-cache-key
+      if: inputs.locales == 'production'
       shell: bash
       run: |
+        echo "window=$(( $(date -u +%s) / 7200 ))" >> "$GITHUB_OUTPUT"
+        echo "path=${{ runner.temp }}/glotpress/openverse.zip" >> "$GITHUB_OUTPUT"
+
+    - name: Restore cached translations
+      id: i18n-cache
+      if: inputs.locales == 'production'
+      uses: actions/cache/restore@v4
+      with:
+        path: ${{ steps.i18n-cache-key.outputs.path }}
+        key: glotpress-ngx-${{ steps.i18n-cache-key.outputs.window }}
+        restore-keys: glotpress-ngx-
+
+    - name: Setup locales
+      id: locales
+      if: inputs.locales != ''
+      shell: bash
+      env:
+        I18N_NGX_CACHE: ${{ steps.i18n-cache-key.outputs.path }}
+        I18N_NGX_CACHE_FRESH: ${{ steps.i18n-cache.outputs.cache-hit }}
+      run: |
+        marker="${{ runner.temp }}/i18n-start"
+        touch "$marker"
         just locales ${{ inputs.locales }}
+        if [ -n "$I18N_NGX_CACHE" ] && [ "$I18N_NGX_CACHE" -nt "$marker" ]; then
+          echo "downloaded=true" >> "$GITHUB_OUTPUT"
+        fi
+
+    - name: Cache downloaded translations
+      if: steps.locales.outputs.downloaded == 'true'
+      uses: actions/cache/save@v4
+      with:
+        path: ${{ steps.i18n-cache-key.outputs.path }}
+        key: glotpress-ngx-${{ steps.i18n-cache-key.outputs.window }}
