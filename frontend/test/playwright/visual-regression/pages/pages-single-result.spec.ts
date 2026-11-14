@@ -64,6 +64,29 @@ for (const mediaType of supportedMediaTypes) {
 
 for (const dir of languageDirections) {
   breakpoints.describeMobileAndDesktop(({ breakpoint, expectSnapshot }) => {
+    test(`${dir} Sketchfab single result page snapshot`, async ({ page }) => {
+      await preparePageForTests(page, breakpoint)
+
+      const SKETCHFAB_ID = "da5cb478-c093-4d62-b721-cda18797e3fb"
+      const path = pathWithDir(`/image/${SKETCHFAB_ID}`, dir)
+
+      await page.goto(path)
+
+      // Wait a bit for the Sketchfab iframe to fully load
+      await sleep(3000)
+
+      await expectSnapshot(
+        `${dir}-sketchfab-single-result`,
+        page,
+        { fullPage: true },
+        { maxDiffPixelRatio: 0.01 }
+      )
+    })
+  })
+}
+
+for (const dir of languageDirections) {
+  breakpoints.describeMobileAndDesktop(({ breakpoint, expectSnapshot }) => {
     test(`${dir} full-page report snapshots`, async ({ page }) => {
       await preparePageForTests(page, breakpoint)
 
