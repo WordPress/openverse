@@ -249,7 +249,7 @@ class CheckRates(APIView):
                 scope="exempt_oauth2_client_credentials_burst", client_id=client_id
             )
         else:
-            return APIException("Unknown API key rate limit type")
+            raise APIException("Unknown API key rate limit type")
 
         try:
             sustained_requests_list = cache.get(sustained_throttle_key)

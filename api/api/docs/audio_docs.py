@@ -33,6 +33,7 @@ from api.examples import (
     audio_waveform_curl,
 )
 from api.serializers.audio_serializers import (
+    AudioReportBodySerializer,
     AudioReportRequestSerializer,
     AudioSearchRequestSerializer,
     AudioSerializer,
@@ -40,6 +41,8 @@ from api.serializers.audio_serializers import (
 )
 from api.serializers.media_serializers import MediaThumbnailRequestSerializer
 from api.serializers.source_serializers import SourceSerializer
+from api.utils.image_proxy.exception import UpstreamThumbnailException
+from api.utils.waveform import UpstreamWaveformException
 
 
 serializer = AudioSearchRequestSerializer(context={"media_type": "audio"})
@@ -112,6 +115,7 @@ related = custom_extend_schema(
 )
 
 report = custom_extend_schema(
+    request=AudioReportBodySerializer,
     res={
         201: (AudioReportRequestSerializer, audio_complain_201_example),
         400: (ValidationError, None),
@@ -125,7 +129,9 @@ thumbnail = extend_schema(
     parameters=[MediaThumbnailRequestSerializer],
     responses={
         200: OpenApiResponse(description="Thumbnail image"),
+        400: ValidationError,
         401: AuthenticationFailed,
+        424: UpstreamThumbnailException,
     },
 )
 
@@ -134,6 +140,7 @@ waveform = custom_extend_schema(
         200: (AudioWaveformSerializer, audio_waveform_200_example),
         401: (AuthenticationFailed, None),
         404: (NotFound, audio_waveform_404_example),
+        424: (UpstreamWaveformException, None),
     },
     eg=[audio_waveform_curl],
 )

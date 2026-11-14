@@ -32,6 +32,7 @@ from api.examples import (
 )
 from api.examples.image_responses import image_oembed_400_example
 from api.serializers.image_serializers import (
+    ImageReportBodySerializer,
     ImageReportRequestSerializer,
     ImageSearchRequestSerializer,
     ImageSerializer,
@@ -40,6 +41,7 @@ from api.serializers.image_serializers import (
 )
 from api.serializers.media_serializers import MediaThumbnailRequestSerializer
 from api.serializers.source_serializers import SourceSerializer
+from api.utils.image_proxy.exception import UpstreamThumbnailException
 
 
 serializer = ImageSearchRequestSerializer(context={"media_type": "image"})
@@ -113,6 +115,7 @@ related = custom_extend_schema(
 )
 
 report = custom_extend_schema(
+    request=ImageReportBodySerializer,
     res={
         201: (ImageReportRequestSerializer, image_complain_201_example),
         401: (AuthenticationFailed, None),
@@ -126,8 +129,10 @@ thumbnail = extend_schema(
     parameters=[MediaThumbnailRequestSerializer],
     responses={
         200: OpenApiResponse(description="Thumbnail image"),
+        400: ValidationError,
         404: NotFound,
         401: AuthenticationFailed,
+        424: UpstreamThumbnailException,
     },
 )
 
