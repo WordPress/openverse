@@ -14,7 +14,7 @@ ARG SEMANTIC_VERSION
 
 # Install system packages needed to build on macOS
 RUN apk add --no-cache --virtual .gyp python3 make g++ \
-  && npm install -g corepack@0.31.0 && corepack enable pnpm
+  && npm install -g corepack@0.35.0 && corepack enable pnpm
 
 USER node
 
@@ -23,14 +23,15 @@ WORKDIR /home/node/
 # Copy monorepo mocking files into `/home/node`, which pretends to be the monorepo root.
 # Note: these files must be manually un-ignored in the root .dockerignore
 # hadolint ignore=DL3022
-COPY --from=repo_root --chown=node:node .npmrc .pnpmfile.cjs pnpm-lock.yaml ./
+COPY --from=repo_root --chown=node:node pnpm-workspace.yaml .pnpmfile.cjs pnpm-lock.yaml ./
 # Copy the workspace packages that the frontend depends on. The frontend uses
 # the package source through an alias, so the packages don't need to be built.
 # hadolint ignore=DL3022
 COPY --from=repo_root --chown=node:node packages/js/api-client/package.json ./packages/js/api-client/
 # hadolint ignore=DL3022
 COPY --from=repo_root --chown=node:node packages/js/api-client/src ./packages/js/api-client/src/
-RUN echo '{"packages":["frontend/","packages/js/api-client/"]}' > pnpm-workspace.yaml
+# Keep the workspace settings, but drop the projects that aren't copied in.
+RUN sed -i '/^  - automations\/js\/$/d' pnpm-workspace.yaml
 
 # Copy the `frontend/` directory into `/home/node/frontend`, as a package in the monorepo.
 COPY --chown=node:node . ./frontend/

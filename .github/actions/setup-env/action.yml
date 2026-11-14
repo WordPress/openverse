@@ -71,7 +71,7 @@ runs:
         cache: pnpm
         cache-dependency-path: |
           **/pnpm-lock.yaml
-          **/.npmrc
+          pnpm-workspace.yaml
 
     # Install dependencies
     - name: Install dependencies
