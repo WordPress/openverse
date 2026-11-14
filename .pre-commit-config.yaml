@@ -43,7 +43,7 @@ repos:
       - id: requirements-txt-fixer
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.9.9
+    rev: v0.17.5
     hooks:
       - id: ruff # replaces Flake8, isort, pydocstyle, pyupgrade
         args:
@@ -51,7 +51,7 @@ repos:
       - id: ruff-format # replaces Black
 
   - repo: https://github.com/koalaman/shellcheck-precommit
-    rev: v0.10.0
+    rev: v0.11.0
     hooks:
       - id: shellcheck
 
@@ -61,12 +61,12 @@ repos:
       - id: shfmt-docker
 
   - repo: https://github.com/rhysd/actionlint
-    rev: v1.7.7
+    rev: v1.7.12
     hooks:
       - id: actionlint-docker
 
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.4.1
+    rev: v2.4.3
     hooks:
       - id: codespell
         args: [
@@ -151,7 +151,7 @@ repos:
         files: (.vale/.*|.mdx?)$
 
   - repo: https://github.com/renovatebot/pre-commit-hooks
-    rev: 44.238.2
+    rev: 44.239.1
     hooks:
       - id: renovate-config-validator
         args:
@@ -160,7 +160,7 @@ repos:
           - .github/renovate.json5
 
   - repo: https://github.com/hadolint/hadolint
-    rev: v2.12.0
+    rev: v2.15.1
     hooks:
       - id: hadolint-docker
         # The upstream hook leaves the image tag floating at `latest`,
