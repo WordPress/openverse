@@ -16,7 +16,7 @@ from airflow.decorators import dag, task
 from airflow.exceptions import AirflowSkipException
 from airflow.models.abstractoperator import AbstractOperator
 from airflow.models.param import Param
-from airflow.operators.trigger_dagrun import TriggerDagRunOperator
+from airflow.providers.standard.operators.trigger_dagrun import TriggerDagRunOperator
 from psycopg2._json import Json
 from tabulate import tabulate
 

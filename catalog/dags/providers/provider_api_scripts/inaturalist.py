@@ -28,8 +28,11 @@ import requests
 from airflow import XComArg
 from airflow.exceptions import AirflowNotFoundException, AirflowSkipException
 from airflow.models.abstractoperator import AbstractOperator
-from airflow.operators.python import PythonOperator, ShortCircuitOperator
 from airflow.providers.amazon.aws.hooks.s3 import S3Hook
+from airflow.providers.standard.operators.python import (
+    PythonOperator,
+    ShortCircuitOperator,
+)
 from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
 

@@ -12,7 +12,7 @@ from typing import NamedTuple
 from airflow import DAG
 from airflow.exceptions import AirflowSkipException
 from airflow.models import Variable
-from airflow.operators.python import PythonOperator
+from airflow.providers.standard.operators.python import PythonOperator
 
 from common.constants import DAG_DEFAULT_ARGS
 from common.loader import provider_details as prov

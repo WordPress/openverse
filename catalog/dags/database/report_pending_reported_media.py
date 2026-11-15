@@ -18,7 +18,7 @@ from urllib.parse import urljoin
 from airflow import DAG
 from airflow.exceptions import AirflowException
 from airflow.models import BaseOperator, TaskInstance
-from airflow.operators.python import PythonOperator
+from airflow.providers.standard.operators.python import PythonOperator
 
 from common import slack
 from common.constants import (

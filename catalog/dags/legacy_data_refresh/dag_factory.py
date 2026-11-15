@@ -27,7 +27,7 @@ import logging
 from collections.abc import Sequence
 
 from airflow import DAG
-from airflow.operators.python import PythonOperator
+from airflow.providers.standard.operators.python import PythonOperator
 from airflow.utils.trigger_rule import TriggerRule
 
 from common import elasticsearch as es

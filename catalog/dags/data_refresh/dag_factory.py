@@ -34,7 +34,7 @@ from itertools import product
 from airflow import DAG
 from airflow.decorators import task, task_group
 from airflow.models.param import Param
-from airflow.operators.python import PythonOperator
+from airflow.providers.standard.operators.python import PythonOperator
 from airflow.utils.trigger_rule import TriggerRule
 
 from common import cloudwatch
