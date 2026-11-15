@@ -95,7 +95,7 @@ runs:
     - name: Restore cached translations
       id: i18n-cache
       if: inputs.locales == 'production'
-      uses: actions/cache/restore@v4
+      uses: actions/cache/restore@v6
       with:
         path: ${{ steps.i18n-cache-key.outputs.path }}
         key: glotpress-ngx-${{ steps.i18n-cache-key.outputs.window }}
@@ -118,7 +118,7 @@ runs:
 
     - name: Cache downloaded translations
       if: steps.locales.outputs.downloaded == 'true'
-      uses: actions/cache/save@v4
+      uses: actions/cache/save@v6
       with:
         path: ${{ steps.i18n-cache-key.outputs.path }}
         key: glotpress-ngx-${{ steps.i18n-cache-key.outputs.window }}
