@@ -28,6 +28,9 @@ const webServer =
   baseURL === localBaseURL
     ? {
         command: `pnpm exec npm-run-all -p -r talkback ${pwCommand}`,
+        // `npm-run-all` reads `package.json` from its cwd, and pnpm 12 no
+        // longer moves `pnpm exec` to the project root.
+        cwd: "../..",
         timeout: process.env.CI ? 60_000 * 5 : 60_000 * 10, // 5 minutes in CI, 10 in other envs
         port: 8443,
         reuseExistingServer: !process.env.CI || process.env.PWDEBUG === "1",
