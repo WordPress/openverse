@@ -68,7 +68,7 @@
     "pinia": "^3.0.4",
     "postcss-focus-visible": "^10.0.0",
     "rfdc": "^1.4.1",
-    "seeded-rand": "^2.0.1",
+    "seeded-rand": "^4.0.0",
     "tailwindcss": "^4.3.3",
     "throttle-debounce": "^5.0.2",
     "uuid": "^14.0.0"
