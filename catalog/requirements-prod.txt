@@ -11,6 +11,6 @@ lxml
 psycopg2-binary
 requests-file
 requests-oauthlib
-smart-open[s3]==7.5.1
+smart-open[s3]==9.0.4
 tabulate==0.10.0
 tldextract==5.3.2
