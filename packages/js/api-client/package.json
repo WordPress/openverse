@@ -18,7 +18,7 @@
     }
   },
   "scripts": {
-    "build": "rm -rf dist && mkdir dist && pnpm run build:rollup && pnpm pack && pnpm publish --dry-run --no-git-checks",
+    "build": "rm -rf dist && mkdir dist && pnpm run build:rollup && pnpm pack && pnpm publish --dry-run --no-git-checks --tag next",
     "build:rollup": "rollup --config rollup.config.ts --configPlugin typescript",
     "types": "tsc -p . --noEmit",
     "test:unit": "vitest run",
