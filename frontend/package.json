@@ -71,7 +71,7 @@
     "seeded-rand": "^2.0.1",
     "tailwindcss": "^4.3.3",
     "throttle-debounce": "^5.0.2",
-    "uuid": "^11.0.0"
+    "uuid": "^14.0.0"
   },
   "devDependencies": {
     "@babel/parser": "^8.0.0",
