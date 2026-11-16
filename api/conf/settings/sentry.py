@@ -1,5 +1,6 @@
 import sentry_sdk
 from decouple import config
+from psycopg_pool import PoolTimeout
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.logging import LoggingIntegration, ignore_logger
 
@@ -33,6 +34,41 @@ def profiles_sampler(sampling_context) -> float:
     return SENTRY_PROFILES_SAMPLE_RATE
 
 
+def _is_pool_timeout(exc: BaseException | None) -> bool:
+    # Django wraps the pool's ``PoolTimeout`` in its own ``OperationalError``,
+    # so the type to match is somewhere down the exception chain.
+    seen = set()
+    while exc is not None and id(exc) not in seen:
+        if isinstance(exc, PoolTimeout):
+            return True
+        seen.add(id(exc))
+        exc = exc.__cause__ or exc.__context__
+    return False
+
+
+def before_send(event, hint):
+    """
+    Drop events that only report infrastructure noise.
+
+    - DB connection pool timeouts: the pool is saturated and the request can
+      only be retried; there is nothing to fix at the call site.
+    - uvloop's "Fatal error on SSL protocol" log: the remote end of an outbound
+      HTTPS request closed the connection. The request itself succeeds, but
+      asyncio logs this at ERROR, which ``SentryProcessor`` turns into an event.
+    """
+    exc_info = hint.get("exc_info")
+    if exc_info and _is_pool_timeout(exc_info[1]):
+        return None
+
+    message = event.get("message") or ""
+    if event.get("logger") == "asyncio" and message.startswith(
+        "Fatal error on SSL protocol"
+    ):
+        return None
+
+    return event
+
+
 INTEGRATIONS = [
     # See https://docs.sentry.io/platforms/python/integrations/django/
     DjangoIntegration(),
@@ -49,6 +85,7 @@ if not DEBUG and SENTRY_DSN:
         integrations=INTEGRATIONS,
         traces_sample_rate=SENTRY_TRACES_SAMPLE_RATE,
         profiles_sampler=profiles_sampler,
+        before_send=before_send,
         send_default_pii=False,
         environment=ENVIRONMENT,
     )
