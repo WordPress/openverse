@@ -1,5 +1,4 @@
 import pytest
-
 from utilities.media_props_gen.helpers.md import Md
 
 

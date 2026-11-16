@@ -1,4 +1,3 @@
-import asyncio
 import mimetypes
 from os.path import splitext
 from urllib.parse import urlparse
@@ -37,7 +36,7 @@ _NON_ACTIONABLE_NETWORK_EXCEPTIONS = (
     aiohttp.ServerDisconnectedError,
     aiohttp.ServerTimeoutError,
     aiohttp.ClientOSError,
-    asyncio.TimeoutError,
+    TimeoutError,
 )
 
 
@@ -85,7 +84,7 @@ async def get_image_extension(media_info: MediaInfo) -> str | None:
             # timeouts with per-provider granularity, but for now, we just have to
             # accept they will happen and are part of the set of non-actionable
             # networking errors that we don't need to report as errors to Sentry.
-            if not isinstance(exc, asyncio.TimeoutError):
+            if not isinstance(exc, TimeoutError):
                 if isinstance(exc, _NON_ACTIONABLE_NETWORK_EXCEPTIONS):
                     log = logger.warning
                 else:

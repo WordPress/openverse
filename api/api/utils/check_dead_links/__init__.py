@@ -88,15 +88,15 @@ async def _head(
         ) as response:
             status = response.status
 
-    except (aiohttp.ClientError, asyncio.TimeoutError) as exception:
+    except (TimeoutError, aiohttp.ClientError) as exception:
         # only log non-timeout exceptions. Timeouts are more or less expected
         # and we have means of visibility into them (e.g., querying for timings
         # that exceed the timeout); they do _not_ need to be in the error log or go to Sentry
-        # The timeout exception class aiohttp uses is a subclass of `ClientError` and `asyncio.TimeoutError`,
-        # so we have to explicitly check that the error is _not_ an asyncio timeout error, not that it
-        # _is_ an aiohttp error. When it is a timeout error, it will be both `asyncio.TimeoutError` and
+        # The timeout exception class aiohttp uses is a subclass of `ClientError` and `TimeoutError`,
+        # so we have to explicitly check that the error is _not_ a timeout error, not that it
+        # _is_ an aiohttp error. When it is a timeout error, it will be both `TimeoutError` and
         # `aiohttp.ClientError` because it's a subclass of both
-        if not isinstance(exception, asyncio.TimeoutError):
+        if not isinstance(exception, TimeoutError):
             if isinstance(exception, _NON_ACTIONABLE_NETWORK_EXCEPTIONS):
                 log = logger.warning
             else:

@@ -32,18 +32,18 @@ license.
 from openverse_attribution.license import License
 
 lic = License("by")
-lic.url()           # 'https://creativecommons.org/licenses/by/4.0/'
-lic.name("2.0")     # 'CC BY 2.0'
-lic.is_deprecated   # False
-lic.is_pd           # False
-lic.is_cc           # True
+lic.url()  # 'https://creativecommons.org/licenses/by/4.0/'
+lic.name("2.0")  # 'CC BY 2.0'
+lic.is_deprecated  # False
+lic.is_pd  # False
+lic.is_cc  # True
 
 mark = License("pdm")
-mark.url()          # 'https://creativecommons.org/publicdomain/mark/1.0/'
-mark.name("2.0")    # 'Public Domain Mark 1.0'
+mark.url()  # 'https://creativecommons.org/publicdomain/mark/1.0/'
+mark.name("2.0")  # 'Public Domain Mark 1.0'
 mark.is_deprecated  # False
-mark.is_pd          # True
-mark.is_cc          # False
+mark.is_pd  # True
+mark.is_cc  # False
 ```
 
 ## Attribution
@@ -63,9 +63,9 @@ passing `False` to the `license_url` param.
 from openverse_attribution.attribution import get_attribution_text
 
 get_attribution_text(
-  "cc0",
-  title="Wheat Field with Cypresses",
-  creator="Vincent van Gogh",
+    "cc0",
+    title="Wheat Field with Cypresses",
+    creator="Vincent van Gogh",
 )
 # '"Wheat Field with Cypresses" by Vincent van Gogh is marked with CC0 1.0.
 #  To view the terms, visit https://creativecommons.org/publicdomain/zero/1.0/.'

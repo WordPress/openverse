@@ -57,7 +57,7 @@ def get_record_data(self, data: dict) -> dict | list[dict] | None:
     # Get data from the details endpoint
     response_json = self.get_response_json(
         query_params={"my_params": "foo"},
-        endpoint=f"https://foobar.museum.org/api/v1/images/{data.get("uuid")}"
+        endpoint=f"https://foobar.museum.org/api/v1/images/{data.get('uuid')}",
     )
 
     ...
@@ -95,6 +95,7 @@ def __init__(self, *args, **kwargs):
 
     # Set up our instance variable
     self.page_number = None
+
 
 def get_next_query_params(self, prev_query_params: dict | None, **kwargs) -> dict:
     # Remember that `get_next_query_params` is called before every request, even
@@ -157,9 +158,7 @@ complex behavior.
 
 ```python
 # Pseudo code serves as an example
-def get_response_json(
-    self, query_params: dict, endpoint: str | None = None, **kwargs
-):
+def get_response_json(self, query_params: dict, endpoint: str | None = None, **kwargs):
     batch_json = None
 
     while True:

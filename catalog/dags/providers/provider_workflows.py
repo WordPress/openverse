@@ -4,9 +4,10 @@ import re
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
+from typing import NotRequired
 
 from airflow.models import Variable
-from typing_extensions import NotRequired, TypedDict
+from typing_extensions import TypedDict
 
 from providers.provider_api_scripts.auckland_museum import AucklandMuseumDataIngester
 from providers.provider_api_scripts.brooklyn_museum import BrooklynMuseumDataIngester

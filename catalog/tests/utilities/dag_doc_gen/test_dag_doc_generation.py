@@ -5,10 +5,10 @@ import pytest
 from tests.dags.providers.provider_api_scripts.resources.provider_data_ingester.mock_provider_data_ingester import (
     MockProviderDataIngester,
 )
-
-from providers.provider_workflows import ProviderWorkflow
 from utilities.dag_doc_gen import dag_doc_generation
 from utilities.dag_doc_gen.dag_doc_generation import DagInfo
+
+from providers.provider_workflows import ProviderWorkflow
 
 
 class DagMock(NamedTuple):

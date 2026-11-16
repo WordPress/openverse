@@ -205,7 +205,7 @@ this:
 
 ```py
 def create_and_populate_filtered_index(
-  self, model_name: str, index_suffix: Optional[str], **_
+    self, model_name: str, index_suffix: Optional[str], **_
 ):
     # Rely on the alias to always created the filtered index from the up-to-date origin
     source_index = f"{model_name}"
@@ -426,6 +426,7 @@ that the media serialisers can reference them to derive the sensitive field:
 ```py
 sensitivity = serializers.SerializerMethodField()
 
+
 def get_sensitivity(self, obj):
     result = []
     if obj["identifier"] in self.context["user_reported_sensitive_content_ids"]:
@@ -469,14 +470,14 @@ writing this document).
 
 ```py
 origin_index_results = [
-  {id: 1, mature: false}, # no sensitive text
-  {id: 2, mature: true}, # no sensitive text
-  {id: 3, mature: false}, # has sensitive text
-  {id: 4, mature: true}, # has sensitive text
+    {id: 1, mature: false},  # no sensitive text
+    {id: 2, mature: true},  # no sensitive text
+    {id: 3, mature: false},  # has sensitive text
+    {id: 4, mature: true},  # has sensitive text
 ]
 
 filtered_index_results = [
-  {id: 1, mature: false}, # no sensitive text
+    {id: 1, mature: false},  # no sensitive text
 ]
 
 sensitive_result_ids = origin_index_result_ids - filtered_index_result_ids
@@ -519,20 +520,24 @@ textual content:
 
 ```py
 origin_index_results = [
-  {id: 1, mature: false}, # no sensitive text
-  {id: 2, mature: true}, # no sensitive text
-  {id: 3, mature: false}, # has sensitive text
-  {id: 4, mature: true}, # has sensitive text
+    {id: 1, mature: false},  # no sensitive text
+    {id: 2, mature: true},  # no sensitive text
+    {id: 3, mature: false},  # has sensitive text
+    {id: 4, mature: true},  # has sensitive text
 ]
 
 filtered_index_results = [
-  {id: 1, mature: false}, # no sensitive text
+    {id: 1, mature: false},  # no sensitive text
 ]
 
 sensitive_result_ids = origin_index_result_ids - filtered_index_result_ids
 # => [1, 2, 3, 4] - [1] = [2, 3, 4]
 
-sensitive_results = [r for r in origin_index_results if r["_id"] in sensitive_result_ids and not r["mature"]]
+sensitive_results = [
+    r
+    for r in origin_index_results
+    if r["_id"] in sensitive_result_ids and not r["mature"]
+]
 # => [3]
 ```
 

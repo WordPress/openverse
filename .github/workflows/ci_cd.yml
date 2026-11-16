@@ -179,8 +179,6 @@ jobs:
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v4
-        with:
-          install: true
 
       - name: Build image `${{ matrix.image }}`
         uses: docker/build-push-action@v7
@@ -268,8 +266,6 @@ jobs:
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v4
-        with:
-          install: true
 
       - name: Build catalog dev image
         uses: docker/build-push-action@v7
@@ -367,8 +363,6 @@ jobs:
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v4
-        with:
-          install: true
 
       - name: Build indexer worker dev image
         uses: docker/build-push-action@v7
@@ -482,8 +476,6 @@ jobs:
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v4
-        with:
-          install: true
 
       - name: Build API dev image
         uses: docker/build-push-action@v7

@@ -11,6 +11,7 @@ We follow these guidelines when writing logs from the API.
 
    ```python
    import structlog
+
    logger = structlog.get_logger(__name__)
    ```
 

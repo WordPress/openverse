@@ -1,6 +1,6 @@
 import logging
 from datetime import timedelta
-from typing import Literal, Union
+from typing import Literal
 
 from airflow.decorators import task, task_group
 from airflow.exceptions import AirflowSkipException
@@ -142,7 +142,7 @@ def trigger_and_wait_for_reindex(
     query: dict | None = None,
     max_docs: int | None = None,
     refresh: bool = True,
-    slices: Union[int, Literal["auto"]] = "auto",
+    slices: int | Literal["auto"] = "auto",
     poke_interval: int = REFRESH_POKE_INTERVAL,
 ):
     @task
@@ -153,7 +153,7 @@ def trigger_and_wait_for_reindex(
         query: dict,
         requests_per_second: int,
         max_docs: int | None,
-        slices: Union[int, Literal["auto"]],
+        slices: int | Literal["auto"],
     ):
         es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
         source = {"index": source_index}

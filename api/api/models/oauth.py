@@ -35,7 +35,7 @@ class ThrottledApplication(AbstractApplication):
         ("enhanced", "enhanced"),  # Rate limits for "super" keys, granted on a
         # case-by-case basis.
         ("exempt", "exempt"),  # Rate limits used for internal infrastructure to
-        # by-pass rate limiting entirely.
+        # bypass rate limiting entirely.
         ("frontend", "frontend"),  # High but finite rate limits for the
         # openverse.org frontend, which proxies requests for all its users.
     ]

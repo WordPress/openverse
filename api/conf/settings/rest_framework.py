@@ -44,7 +44,7 @@ DEFAULT_THROTTLE_RATES = {
     "enhanced_oauth2_client_credentials_burst": "200/min",
     "frontend_oauth2_client_credentials_sustained": THROTTLE_FRONTEND_SUSTAINED,
     "frontend_oauth2_client_credentials_burst": THROTTLE_FRONTEND_BURST,
-    # ``None`` completely by-passes the rate limiting
+    # ``None`` completely bypasses the rate limiting
     "exempt_oauth2_client_credentials": None,
 }
 

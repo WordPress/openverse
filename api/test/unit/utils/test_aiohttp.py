@@ -1,4 +1,3 @@
-import asyncio
 from http.cookies import SimpleCookie
 
 import aiohttp
@@ -205,7 +204,7 @@ def test_log_timing_trace_config_timeout(session_loop):
     event_name = "empty_request_ctx_timing_event_test"
 
     with capture_logs() as logs:
-        with pytest.raises(asyncio.TimeoutError):
+        with pytest.raises(TimeoutError):
             session_loop.run_until_complete(
                 aiohttp_session.get(
                     "http://httpbin:8080/delay/4",

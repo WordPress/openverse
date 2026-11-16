@@ -285,12 +285,20 @@ reports_in_range = Report.objects.filter(created_at__gte=n_days_ago)
 # accuracy of reports
 # ===================
 total_reports = reports_in_range.count()
-confirmed_reports = reports_in_range.filter(decision__action__in=['marked_sensitive', 'deindexed_sensitive', 'deindexed_copyright']).count()
+confirmed_reports = reports_in_range.filter(
+    decision__action__in=[
+        "marked_sensitive",
+        "deindexed_sensitive",
+        "deindexed_copyright",
+    ]
+).count()
 report_accuracy = (confirmed_reports / total_reports) * 100 if total_reports else 0
 
 # duplication in reports
 # ======================
-duplicate_reports = reports_in_range.filter(decision__action='deduplicated_reports').count()
+duplicate_reports = reports_in_range.filter(
+    decision__action="deduplicated_reports"
+).count()
 report_duplication = (duplicate_reports / total_reports) * 100 if total_reports else 0
 ```
 
@@ -310,15 +318,17 @@ reports_in_range = Report.objects.filter(created_at__gte=n_days_ago)
 # time to decision
 # ================
 time_differences = reports_in_range.annotate(
-  decision_time=Avg(F('decision__created_at') - F('created_at'))
-).values_list('decision_time', flat=True)
-average_decision_time = sum(time_differences, timedelta()) / len(time_differences) if time_differences else timedelta()
+    decision_time=Avg(F("decision__created_at") - F("created_at"))
+).values_list("decision_time", flat=True)
+average_decision_time = (
+    sum(time_differences, timedelta()) / len(time_differences)
+    if time_differences
+    else timedelta()
+)
 
 p99_decision_time = reports_in_range.annotate(
-  decision_time=F('decision__created_at') - F('created_at')
-).aggregate(
-  percentile_99=Percentile('decision_time', 0.99)
-)['percentile_99']
+    decision_time=F("decision__created_at") - F("created_at")
+).aggregate(percentile_99=Percentile("decision_time", 0.99))["percentile_99"]
 ```
 
 #### Lists
@@ -341,9 +351,21 @@ reports_in_range = Report.objects.filter(created_at__gte=n_days_ago)
 
 # leaderboards
 # ============
-most_reported_media = reports_in_range.values('media_id').annotate(report_count=Count('id')).order_by('-report_count')[:10]
-most_reported_creator = reports_in_range.values('media__creator').annotate(report_count=Count('id')).order_by('-report_count')[:10]
-most_reported_source = reports_in_range.values('media__source').annotate(report_count=Count('id')).order_by('-report_count')[:10]
+most_reported_media = (
+    reports_in_range.values("media_id")
+    .annotate(report_count=Count("id"))
+    .order_by("-report_count")[:10]
+)
+most_reported_creator = (
+    reports_in_range.values("media__creator")
+    .annotate(report_count=Count("id"))
+    .order_by("-report_count")[:10]
+)
+most_reported_source = (
+    reports_in_range.values("media__source")
+    .annotate(report_count=Count("id"))
+    .order_by("-report_count")[:10]
+)
 ```
 
 ### Surface in Django Admin
@@ -370,6 +392,7 @@ admin site and finally create custom filters to operate on the in-memory list.
 ```python
 from collections import Counter
 
+
 class Creator(models.Model):
     # fields to uniquely identify a creator
     name = models.CharField(max_length=100)
@@ -378,34 +401,43 @@ class Creator(models.Model):
     class Meta:
         managed = False
 
+
 class CreatorAdmin(admin.ModelAdmin):
-    list_display = ('name', 'provider', 'report_count')
-    list_filter = ('provider',)
+    list_display = ("name", "provider", "report_count")
+    list_filter = ("provider",)
 
     def report_count(self, obj):
-        return Report.objects.filter(media_provider=obj.provider).filter(media__creator=obj.name).count()
+        return (
+            Report.objects.filter(media_provider=obj.provider)
+            .filter(media__creator=obj.name)
+            .count()
+        )
 
     def get_queryset(self, request):
         # Convert creators from report models into `Creator` models
         creators = Counter()
-        for media_id in Report.objects.values('media_obj_id', flat=True):
+        for media_id in Report.objects.values("media_obj_id", flat=True):
             try:
-              media = Media.objects.get(identifier=media_id)
-              creators[(media.creator, media.provider)] += 1
+                media = Media.objects.get(identifier=media_id)
+                creators[(media.creator, media.provider)] += 1
             except Media.DoesNotExist:
-              pass
-        return [Creator(name=creator[0], provider=creator[1]) for (creator, _) in creators.most_common(len(c))]
+                pass
+        return [
+            Creator(name=creator[0], provider=creator[1])
+            for (creator, _) in creators.most_common(len(c))
+        ]
+
 
 class CustomFilter(admin.SimpleListFilter):
-    title = 'Filter Title'
-    parameter_name = 'parameter'
+    title = "Filter Title"
+    parameter_name = "parameter"
 
     def lookups(self, request, model_admin):
         # Return a list of tuples (value, verbose_value) for the filter.
         # For example, in the provider filter, these can be a list of providers for that media type.
         return (
-            ('option_one', 'Option 1'),
-            ('option_two', 'Option 2'),
+            ("option_one", "Option 1"),
+            ("option_two", "Option 2"),
         )
 
     def queryset(self, request, queryset):
@@ -421,6 +453,7 @@ using a proxy as Django disallows one model to be registered more than once.
 class ImageProxy(Image):
     class Meta:
         proxy = True
+
 
 class AudioProxy(Audio):
     class Meta:

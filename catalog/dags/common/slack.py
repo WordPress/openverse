@@ -53,14 +53,14 @@ import logging
 import re
 from collections.abc import Callable
 from os.path import basename
-from typing import Any
+from typing import Any, NotRequired
 
 from airflow.decorators import task
 from airflow.exceptions import AirflowNotFoundException
 from airflow.models import DAG, Variable
 from airflow.providers.http.hooks.http import HttpHook
 from requests import Response
-from typing_extensions import NotRequired, TypedDict
+from typing_extensions import TypedDict
 
 
 SLACK_NOTIFICATIONS_CONN_ID = "slack_notifications"

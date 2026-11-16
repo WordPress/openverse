@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from unittest.mock import MagicMock, patch
 from uuid import uuid4
 
@@ -60,7 +60,7 @@ def test_get_queryset_source_filtering(api_client, media_type_config, filter_con
     media = media_type_config.model_factory.create(source=test_source)
 
     ContentSource.objects.create(
-        created_on=datetime.now(tz=timezone.utc),
+        created_on=datetime.now(tz=UTC),
         source_identifier=test_source,
         source_name="Test Source",
         domain_name="https://example.com",

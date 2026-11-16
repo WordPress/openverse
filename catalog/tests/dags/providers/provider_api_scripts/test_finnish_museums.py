@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from unittest.mock import patch
 
 import pytest
@@ -18,9 +18,7 @@ logging.basicConfig(
 )
 
 FROZEN_DATE = "2020-04-01"
-FROZEN_UTC_DATE = datetime.strptime(FROZEN_DATE, "%Y-%m-%d").replace(
-    tzinfo=timezone.utc
-)
+FROZEN_UTC_DATE = datetime.strptime(FROZEN_DATE, "%Y-%m-%d").replace(tzinfo=UTC)
 fm = FinnishMuseumsDataIngester(date=FROZEN_DATE)
 image_store = ImageStore(provider=prov.FINNISH_DEFAULT_PROVIDER)
 fm.media_stores = {"image": image_store}
