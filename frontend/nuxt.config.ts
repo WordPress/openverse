@@ -61,6 +61,9 @@ export default defineNuxtConfig({
     // Signs the `ovSession` cookie, overridden by NUXT_HMAC_SIGNING_SECRET.
     // Must be at least 32 characters long.
     hmacSigningSecret: "",
+    // Signs Nitro's API requests so that the API's Cloudflare rules skip them,
+    // overridden by NUXT_API_REQUEST_SIGNING_SECRET.
+    apiRequestSigningSecret: "",
     rateLimit: {
       // `log` only logs the requests that would be limited, `enforce` rejects them.
       mode: "log",

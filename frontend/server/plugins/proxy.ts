@@ -42,12 +42,19 @@ export default defineNitroPlugin((nitroApp) => {
     )
   }
 
+  if (!isLocal && !config.apiRequestSigningSecret) {
+    logger.warn(
+      "The API request signing secret is not set. Proxied API requests are subject to the API's Cloudflare rules."
+    )
+  }
+
   const apiUrl = config.apiUrlInternal || config.public.apiUrl
   const apiClient =
     hasCredentials || isLocal
       ? createOpenverseApiClient({
           apiUrl,
           credentials: hasCredentials ? { clientId, clientSecret } : undefined,
+          signingSecret: config.apiRequestSigningSecret,
         })
       : undefined
   // Only this process knows the token, so a client can't send it to skip the
