@@ -165,6 +165,17 @@ def test_auth_rate_limit_reporting(
         assert res_data["verified"] is False
 
 
+def test_auth_rate_limit_reporting_unknown_model(api_client, test_auth_token_exchange):
+    time.sleep(1)
+    token = test_auth_token_exchange["access_token"]
+    ThrottledApplication.objects.filter(accesstoken__token=token).update(
+        rate_limit_model="unknown"
+    )
+    res = api_client.get("/v1/rate_limit/", HTTP_AUTHORIZATION=f"Bearer {token}")
+    assert res.status_code == 500
+    assert res.json() == {"detail": "Unknown API key rate limit type"}
+
+
 @pytest.mark.parametrize(
     "sort_dir, exp_indexed_on",
     [

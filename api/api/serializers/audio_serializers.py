@@ -60,6 +60,14 @@ class AudioReportRequestSerializer(MediaReportRequestSerializer):
         model = AudioReport
 
 
+class AudioReportBodySerializer(AudioReportRequestSerializer):
+    # Request body for docs only; `identifier` comes from the URL path.
+    identifier = None
+
+    class Meta(AudioReportRequestSerializer.Meta):
+        fields = ["reason", "description"]
+
+
 ########################
 # Response serializers #
 ########################
