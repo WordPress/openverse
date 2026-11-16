@@ -1,5 +1,4 @@
 import pytest
-
 from utilities.media_props_gen.helpers.db import (
     FieldSqlInfo,
     get_table_description_matches,

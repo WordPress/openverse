@@ -172,7 +172,7 @@ def is_issuetracker_env(
 
 def lookup_issue(
     app: Sphinx, tracker_config: TrackerConfig, issue_id: str
-) -> t.Optional[Issue]:
+) -> Issue | None:
     """
     Lookup the given issue.
     The issue is first looked up in an internal cache.  If it is not found, the
@@ -230,7 +230,7 @@ def make_issue_reference(issue: Issue, content_node: nodes.inline) -> nodes.refe
 
 def resolve_issue_reference(
     app: Sphinx, env: BuildEnvironment, node: PendingIssueXRef, contnode: nodes.inline
-) -> t.Optional[nodes.reference]:
+) -> nodes.reference | None:
     """
     Resolve an issue reference and turn it into a real reference to the
     corresponding issue.
@@ -284,7 +284,7 @@ HEADERS = {
 } | ({"Authorization": f"Bearer {GITHUB_TOKEN}"} if GITHUB_TOKEN else {})
 
 
-def get(app: Sphinx, url: str) -> t.Optional[requests.Response]:
+def get(app: Sphinx, url: str) -> requests.Response | None:
     """
     Get a response from the given ``url``.
     ``url`` is a string containing the URL to request via GET. ``app`` is the
@@ -305,7 +305,7 @@ def get(app: Sphinx, url: str) -> t.Optional[requests.Response]:
 
 def lookup_github_issue(
     app: Sphinx, tracker_config: TrackerConfig, issue_id: str
-) -> t.Optional[Issue]:
+) -> Issue | None:
     check_project_with_username(tracker_config)
 
     env = app.env

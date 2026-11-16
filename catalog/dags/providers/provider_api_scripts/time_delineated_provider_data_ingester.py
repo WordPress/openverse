@@ -1,6 +1,6 @@
 import logging
 from abc import abstractmethod
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 
@@ -135,7 +135,7 @@ class TimeDelineatedProviderDataIngester(ProviderDataIngester):
         """
         pairs_list: list[tuple[datetime, datetime]] = []
         # Get UTC timestamps for the start and end of the ingestion date
-        start_ts = datetime.strptime(self.date, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+        start_ts = datetime.strptime(self.date, "%Y-%m-%d").replace(tzinfo=UTC)
         end_ts = start_ts + timedelta(days=1)
 
         record_count = self._get_record_count(start_ts, end_ts, **kwargs)

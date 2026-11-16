@@ -714,16 +714,16 @@ df = pd.read_json("/home/madison/misc/aws_rekognition_subset.txt", lines=True)
 # Extract the labels from each row into mini-dataframes
 recs = []
 for _, row in df.iterrows():
-  iid = row.image_uuid
-  try:
-    # Normalize the labels into a table, then get only the name and confidence values
-    # Skip the record if it doesn't have labels
-    tags = pd.json_normalize(row.response["Labels"])[["Name", "Confidence"]]
-  except KeyError:
-    continue
-  # Add the image ID as an index
-  tags["image_uuid"] = iid
-  recs.append(tags)
+    iid = row.image_uuid
+    try:
+        # Normalize the labels into a table, then get only the name and confidence values
+        # Skip the record if it doesn't have labels
+        tags = pd.json_normalize(row.response["Labels"])[["Name", "Confidence"]]
+    except KeyError:
+        continue
+    # Add the image ID as an index
+    tags["image_uuid"] = iid
+    recs.append(tags)
 
 # Concatenate all dataframes together
 # This results in the columns: image_uuid, name, confidence

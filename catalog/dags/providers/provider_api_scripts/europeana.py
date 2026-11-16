@@ -12,7 +12,7 @@ Notes:                  <https://pro.europeana.eu/page/search>
 import argparse
 import functools
 import logging
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from airflow.models import Variable
 
@@ -243,7 +243,7 @@ class EuropeanaDataIngester(ProviderDataIngester):
 
     def _get_timestamp_query_param(self, date):
         date_obj = datetime.strptime(date, "%Y-%m-%d")
-        utc_date = date_obj.replace(tzinfo=timezone.utc)
+        utc_date = date_obj.replace(tzinfo=UTC)
         start_timestamp = utc_date.isoformat()
         end_timestamp = (utc_date + timedelta(days=1)).isoformat()
 

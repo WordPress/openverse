@@ -71,8 +71,9 @@ class FreesoundDataIngester(ProviderDataIngester):
         HTTPError,
         max_time=60 * 2,
         # Raise all other errors
-        giveup=lambda e: e.response.status_code
-        not in FreesoundDataIngester.flaky_error_codes,
+        giveup=lambda e: (
+            e.response.status_code not in FreesoundDataIngester.flaky_error_codes
+        ),
     )(ProviderDataIngester.get_response_json)
 
     def get_next_query_params(self, prev_query_params: dict | None) -> dict:

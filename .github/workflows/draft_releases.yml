@@ -52,7 +52,6 @@ jobs:
           version: ${{ steps.tag.outputs.date }}
           tag: ${{ steps.tag.outputs.git-tag }}
           name: ${{ steps.tag.outputs.git-tag }}
-          draft: true
           commitish: main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

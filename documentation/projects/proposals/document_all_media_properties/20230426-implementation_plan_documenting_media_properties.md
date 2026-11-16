@@ -130,12 +130,12 @@ information into this dictionary in the API portion of this project.
 
 ```python
 media_properties = {
-  "title": {
-     "sql_properties": {
-       "type": "character varying",
-       "sql_constraints": "(5000)",
-     },
-  }
+    "title": {
+        "sql_properties": {
+            "type": "character varying",
+            "sql_constraints": "(5000)",
+        },
+    }
 }
 ```
 

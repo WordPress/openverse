@@ -129,7 +129,7 @@ class LogTiming(aiohttp.TraceConfig):
             status = params.response.status
         elif isinstance(params.exception, aiohttp.ClientResponseError):
             status = params.exception.status
-        elif isinstance(params.exception, asyncio.TimeoutError):
+        elif isinstance(params.exception, TimeoutError):
             status = self.TIMEOUT_STATUS
         else:
             status = self.ERROR_STATUS

@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from itertools import repeat
 from unittest.mock import MagicMock, call, patch
 
@@ -77,8 +77,8 @@ def test_get_timestamp_pairs_returns_full_day_when_few_records_found():
     # timestamp pair representing the whole day
     expected_pairs_list = [
         (
-            datetime(2020, 4, 1, 0, 0, tzinfo=timezone.utc),
-            datetime(2020, 4, 2, 0, 0, tzinfo=timezone.utc),
+            datetime(2020, 4, 1, 0, 0, tzinfo=UTC),
+            datetime(2020, 4, 2, 0, 0, tzinfo=UTC),
         )
     ]
 
@@ -159,7 +159,7 @@ def test_ingest_records_calls_super_for_each_ts_pair():
         patch.object(ingester, "_get_timestamp_pairs") as ts_mock,
     ):
         # Make some mock timestamp pairs
-        start = datetime(2020, 4, 1, 11, 0, tzinfo=timezone.utc)
+        start = datetime(2020, 4, 1, 11, 0, tzinfo=UTC)
         ts_0 = (start, start + timedelta(hours=1))
         ts_1 = (start + timedelta(hours=1), start + timedelta(hours=2))
         ts_2 = (start + timedelta(hours=2), start + timedelta(hours=3))
@@ -192,8 +192,8 @@ def test_ingest_records_raises_error_if_the_total_count_has_been_exceeded():
     ):
         ts_mock.return_value = [
             (
-                datetime(2020, 4, 1, 11, 0, tzinfo=timezone.utc),
-                datetime(2020, 4, 1, 12, 0, tzinfo=timezone.utc),
+                datetime(2020, 4, 1, 11, 0, tzinfo=UTC),
+                datetime(2020, 4, 1, 12, 0, tzinfo=UTC),
             ),
         ]
 
@@ -240,8 +240,8 @@ def test_ingest_records_does_not_raise_when_should_raise_error_is_false():
     ):
         ts_mock.return_value = [
             (
-                datetime(2020, 4, 1, 11, 0, tzinfo=timezone.utc),
-                datetime(2020, 4, 1, 12, 0, tzinfo=timezone.utc),
+                datetime(2020, 4, 1, 11, 0, tzinfo=UTC),
+                datetime(2020, 4, 1, 12, 0, tzinfo=UTC),
             ),
         ]
 

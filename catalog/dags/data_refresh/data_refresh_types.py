@@ -8,7 +8,6 @@ This configuration information is used to generate the dynamic Data Refresh dags
 import os
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
-from typing import Optional
 
 from airflow.models import Variable
 
@@ -100,7 +99,7 @@ class DataRefreshConfig:
     filtered_index_dag_id: str = field(init=False)
     media_type: str
     table_mapping: TableMapping
-    additional_table_mappings: Optional[list[TableMapping]] = None
+    additional_table_mappings: list[TableMapping] | None = None
     start_date: datetime = datetime(2020, 1, 1)
     schedule: str | None = "0 0 * * 1"  # Mondays 00:00 UTC
     default_args: dict = field(default_factory=dict)

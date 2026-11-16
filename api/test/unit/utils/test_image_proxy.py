@@ -1,4 +1,3 @@
-import asyncio
 import contextlib
 from dataclasses import replace
 from urllib.parse import urlencode
@@ -337,7 +336,7 @@ MOCK_CONNECTION_KEY = ConnectionKey(
             "aiohttp.client_exceptions.ClientConnectionError",
         ),
         (
-            asyncio.TimeoutError("whoops"),
+            TimeoutError("whoops"),
             "builtins.TimeoutError",
         ),
         (

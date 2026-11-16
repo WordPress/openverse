@@ -1,5 +1,3 @@
-from typing import Union
-
 from django.conf import settings
 from rest_framework import status
 from rest_framework.decorators import action
@@ -31,10 +29,10 @@ from api.utils.throttle import (
 
 logger = structlog.get_logger(__name__)
 
-MediaListRequestSerializer = Union[
-    media_serializers.PaginatedRequestSerializer,
-    media_serializers.MediaSearchRequestSerializer,
-]
+MediaListRequestSerializer = (
+    media_serializers.PaginatedRequestSerializer
+    | media_serializers.MediaSearchRequestSerializer
+)
 
 
 class InvalidSource(APIException):

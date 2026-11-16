@@ -109,7 +109,7 @@ entirely and eschew the popularity data for these items.
 import argparse
 import logging
 from copy import deepcopy
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from types import MappingProxyType
 
 import lxml.html as html
@@ -646,7 +646,7 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
     @staticmethod
     def derive_timestamp_pair(date):
         date_obj = datetime.strptime(date, "%Y-%m-%d")
-        utc_date = date_obj.replace(tzinfo=timezone.utc)
+        utc_date = date_obj.replace(tzinfo=UTC)
         start_timestamp = str(int(utc_date.timestamp()))
         end_timestamp = str(int((utc_date + timedelta(days=1)).timestamp()))
         logger.info(
