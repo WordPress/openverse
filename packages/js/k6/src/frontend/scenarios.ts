@@ -1,12 +1,9 @@
 import { check } from "k6"
 
-import { http } from "../http.js"
-import {
-  getRandomQueryTerm,
-  SAMPLE_QUERY_TERMS,
-} from "../sample-query-terms.js"
+import { http } from "../http"
+import { getRandomQueryTerm, SAMPLE_QUERY_TERMS } from "../sample-query-terms"
 
-import { FRONTEND_URL, PROJECT_ID } from "./constants.js"
+import { FRONTEND_URL, PROJECT_ID } from "./constants"
 
 import type { Options, Scenario } from "k6/options"
 

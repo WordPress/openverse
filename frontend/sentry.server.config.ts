@@ -1,11 +1,11 @@
 import * as Sentry from "@sentry/nuxt"
-import dotenv from "dotenv"
+import { config } from "dotenv"
 
 import { sentryDataCollection } from "#shared/constants/sentry"
 
 // Necessary for loading environment variables before Nuxt is loaded
 // @see the section on server setup: https://nuxt.com/modules/sentry
-dotenv.config()
+config()
 
 Sentry.init({
   dsn: process.env.NUXT_PUBLIC_SENTRY_DSN,

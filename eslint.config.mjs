@@ -2,9 +2,9 @@ import { fileURLToPath } from "node:url"
 import path from "node:path"
 import fs from "node:fs"
 
-// eslint-disable-next-line import/no-unresolved
 import { config as defineConfig } from "typescript-eslint"
 import { convertIgnorePatternToMinimatch } from "@eslint/compat"
+
 import openverse from "@openverse/eslint-plugin"
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))

@@ -1,5 +1,5 @@
 import { RuleTester } from "@typescript-eslint/rule-tester"
-import jsoncParser from "jsonc-eslint-parser"
+import * as jsoncParser from "jsonc-eslint-parser"
 
 import { translationStrings } from "../../src/rules/translation-strings"
 

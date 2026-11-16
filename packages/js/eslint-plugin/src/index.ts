@@ -2,7 +2,7 @@ import * as tseslint from "typescript-eslint"
 import unicornPlugin from "eslint-plugin-unicorn"
 import playwrightPlugin from "eslint-plugin-playwright"
 import vitestPlugin from "@vitest/eslint-plugin"
-import jsoncPlugin from "eslint-plugin-jsonc"
+import { configs as jsoncConfigs } from "eslint-plugin-jsonc"
 import eslintCommentsConfigs from "@eslint-community/eslint-plugin-eslint-comments/configs"
 import prettierConfig from "eslint-config-prettier"
 import globals from "globals"
@@ -36,7 +36,7 @@ Object.assign(plugin.configs, {
         eslintCommentsConfigs.recommended,
         ...typescriptConfig,
         ...importConfig,
-        ...jsoncPlugin.configs["flat/recommended-with-jsonc"],
+        ...jsoncConfigs["flat/recommended-with-jsonc"],
         vitestPlugin.configs.recommended,
       ],
       languageOptions: {
@@ -56,9 +56,21 @@ Object.assign(plugin.configs, {
         "@openverse/no-unexplained-disabled-test": ["error"],
         "@openverse/translation-strings": ["error"],
         "no-console": "off",
-        "unicorn/filename-case": ["error", { case: "kebabCase" }],
+        "unicorn/filename-case": [
+          "error",
+          { case: "kebabCase", checkDirectories: false },
+        ],
         "unicorn/switch-case-braces": ["error"],
         curly: ["error", "all"],
+      },
+    },
+    {
+      // eslint-plugin-jsonc lints these with the `jsonc/x` language, which
+      // JS-only rules reject in ESLint 10.
+      name: "openverse:jsonc-language",
+      files: ["**/*.json", "**/*.json5", "**/*.jsonc"],
+      rules: {
+        "unicorn/switch-case-braces": "off",
       },
     },
 
@@ -104,7 +116,7 @@ Object.assign(plugin.configs, {
         ],
         "vitest/no-focused-tests": ["error"],
         "vitest/no-conditional-expect": ["error"],
-        "import/no-named-as-default-member": ["off"],
+        "import-x/no-named-as-default-member": ["off"],
         "@intlify/vue-i18n/no-raw-text": ["off"],
         // Superseded by `@openverse/no-unexplained-disabled-test`
         "vitest/no-disabled-test": ["off"],
@@ -186,6 +198,7 @@ Object.assign(plugin.configs, {
           // Allow things like `Component.stories.js` and `Component.types.js`
           {
             case: "pascalCase",
+            checkDirectories: false,
             ignore: [".eslintrc.js", ".*\\..*\\.js", ".*\\.json"],
           },
         ],

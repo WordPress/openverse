@@ -1,7 +1,8 @@
 import { SourceCode } from "eslint"
-import { JSONProperty } from "jsonc-eslint-parser/lib/parser/ast"
 
 import { OpenverseRule } from "../utils/rule-creator"
+
+import type { AST } from "jsonc-eslint-parser"
 
 type CaseFormat = "camelCaseWithDot" | "snake_case_with_dot"
 
@@ -88,7 +89,7 @@ export const keyNameCasing = OpenverseRule<
     }
 
     return {
-      JSONProperty(node: JSONProperty) {
+      JSONProperty(node: AST.JSONProperty) {
         const name =
           node.key.type === "JSONLiteral" && typeof node.key.value === "string"
             ? node.key.value

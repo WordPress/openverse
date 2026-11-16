@@ -294,6 +294,8 @@ export const downloadTranslations = async (debug) => {
  */
 export const writeEnglish = (countKeys = false) => {
   const enJson5 = readFileSync(enJson5File, "utf8")
+  // json5 is CommonJS, so `parse` is not available as a named ESM export
+  // eslint-disable-next-line import-x/no-named-as-default-member
   const fileContents = json5.parse(enJson5)
   writeJson(enJsonFile, fileContents)
   if (countKeys) {

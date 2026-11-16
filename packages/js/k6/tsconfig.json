@@ -10,7 +10,7 @@
 
     "paths": {
       // TypeScript can already do this, but we need explicit mappings here for
-      // the ESLint import/resolve rule to know that k6 is actually resolveable.
+      // the ESLint import-x/no-unresolved rule to know that k6 is actually resolveable.
       "k6": ["./node_modules/@types/k6/index.d.ts"],
       "k6/*": ["./node_modules/@types/k6/*"]
     },
