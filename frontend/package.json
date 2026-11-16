@@ -54,7 +54,7 @@
     "@nuxtjs/plausible": "^3.0.2",
     "@nuxtjs/robots": "^5.7.1",
     "@nuxtjs/sitemap": "^7.6.2",
-    "@pinia/nuxt": "^0.11.3",
+    "@pinia/nuxt": "^1.0.0",
     "@sentry/nuxt": "^11.10.0",
     "@tailwindcss/typography": "^0.5.20",
     "@tailwindcss/vite": "^4.3.3",
