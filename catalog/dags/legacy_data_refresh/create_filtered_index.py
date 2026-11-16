@@ -18,7 +18,7 @@ the data refresh DAGs to execute the filtered index steps.
 
 from datetime import timedelta
 
-from airflow.operators.empty import EmptyOperator
+from airflow.providers.standard.operators.empty import EmptyOperator
 from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
 

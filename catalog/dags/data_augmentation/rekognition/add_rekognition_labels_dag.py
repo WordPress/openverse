@@ -29,7 +29,7 @@ import logging
 from datetime import timedelta
 
 from airflow.decorators import dag
-from airflow.operators.trigger_dagrun import TriggerDagRunOperator
+from airflow.providers.standard.operators.trigger_dagrun import TriggerDagRunOperator
 
 from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
 from common.slack import notify_slack

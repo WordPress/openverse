@@ -3,7 +3,7 @@ from datetime import datetime
 from airflow.decorators import task, task_group
 from airflow.exceptions import AirflowSensorTimeout
 from airflow.models import DagModel, DagRun, DagTag
-from airflow.sensors.external_task import ExternalTaskSensor
+from airflow.providers.standard.sensors.external_task import ExternalTaskSensor
 from airflow.utils.session import provide_session
 from airflow.utils.state import State
 
@@ -23,9 +23,9 @@ def _get_most_recent_dag_run(dag_id) -> list[datetime] | datetime:
     CC BY-SA 4.0 by Stack Overflow user Nahid O.
     """
     dag_runs = DagRun.find(dag_id=dag_id)
-    dag_runs.sort(key=lambda x: x.execution_date, reverse=True)
+    dag_runs.sort(key=lambda x: x.logical_date, reverse=True)
     if dag_runs:
-        return dag_runs[0].execution_date
+        return dag_runs[0].logical_date
 
     # If there are no DAG runs, return an empty list to indicate that
     # there are no execution dates to check.

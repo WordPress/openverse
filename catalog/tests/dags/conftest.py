@@ -4,7 +4,7 @@ from unittest import mock
 import pytest
 from airflow import DAG
 from airflow.models.abstractoperator import AbstractOperator
-from airflow.operators.python import PythonOperator
+from airflow.providers.standard.operators.python import PythonOperator
 from requests import Response
 
 from common.constants import POSTGRES_CONN_ID, SQLInfo

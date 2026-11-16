@@ -70,13 +70,14 @@ import urllib.parse
 from string import Template
 
 from airflow import DAG
+from airflow.configuration import conf
 from airflow.decorators import task
 from airflow.exceptions import AirflowSkipException
 from airflow.models import Variable
 from airflow.models.mappedoperator import MappedOperator
 from airflow.models.param import Param
-from airflow.operators.empty import EmptyOperator
-from airflow.operators.python import PythonOperator
+from airflow.providers.standard.operators.empty import EmptyOperator
+from airflow.providers.standard.operators.python import PythonOperator
 from airflow.utils.state import State
 from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
@@ -102,7 +103,7 @@ OUTPUT_DIR_PATH = os.path.realpath(os.getenv("OUTPUT_DIR", "/tmp/"))
 _DATE_RANGE_INNER_TEMPLATE = "macros.ds_add(ds, -{} )"
 DATE_RANGE_ARG_TEMPLATE = "{{{{" + _DATE_RANGE_INNER_TEMPLATE + "}}}}"
 DATE_PARTITION_ARG_TEMPLATE = Template(
-    "$media_type/$provider_name/{{ date_partition_for_prefix(dag.schedule_interval, dag_run.logical_date, $reingestion_date ) }}"  # noqa
+    "$media_type/$provider_name/{{ date_partition_for_prefix('$schedule', dag_run.logical_date, $reingestion_date ) }}"  # noqa
 )
 
 
@@ -245,6 +246,7 @@ def create_ingestion_workflow(
                         "s3_prefix": DATE_PARTITION_ARG_TEMPLATE.substitute(
                             media_type=media_type,
                             provider_name=provider_name,
+                            schedule=provider_conf.schedule_string,
                             reingestion_date=_DATE_RANGE_INNER_TEMPLATE.format(
                                 day_shift
                             )
@@ -576,7 +578,6 @@ def _build_partitioned_ingest_workflows(
 def report_aggregate_reingestion_errors(
     provider_conf: ProviderReingestionWorkflow,
     dag_run=None,
-    conf=None,
 ):
     """
     Report ingestion errors that occurred during a reingestion workflow in

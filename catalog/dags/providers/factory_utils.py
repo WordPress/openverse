@@ -4,7 +4,6 @@ from collections.abc import Sequence
 from datetime import datetime
 
 from airflow.models import DagRun, TaskInstance
-from airflow.utils.dates import cron_presets
 
 from common.constants import MediaType
 from common.storage.media import MediaStore
@@ -84,10 +83,12 @@ def date_partition_for_prefix(
         - Daily -> `year=YYYY/month=MM/reingestion=YYYY-MM-DD`
         - None/yearly/monthly/weekly/other -> `year=YYYY/reingestion=YYYY-MM-DD`
     """
+    # Airflow 3 removes `airflow.utils.dates.cron_presets`, so the
+    # preset expansions are spelled out here
     hourly_airflow = "@hourly"
-    hourly_cron = cron_presets[hourly_airflow]
+    hourly_cron = "0 * * * *"
     daily_airflow = "@daily"
-    daily_cron = cron_presets[daily_airflow]
+    daily_cron = "0 0 * * *"
 
     # Always partition by year
     prefix = f"year={logical_date.year}"

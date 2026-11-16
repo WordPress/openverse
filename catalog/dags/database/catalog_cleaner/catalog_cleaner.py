@@ -22,7 +22,7 @@ from airflow.decorators import dag, task
 from airflow.models import Variable
 from airflow.models.abstractoperator import AbstractOperator
 from airflow.models.param import Param
-from airflow.operators.python import get_current_context
+from airflow.providers.standard.operators.python import get_current_context
 from airflow.utils.trigger_rule import TriggerRule
 
 from common import slack

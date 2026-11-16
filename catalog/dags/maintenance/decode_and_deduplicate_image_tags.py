@@ -13,7 +13,7 @@ from textwrap import dedent
 
 from airflow.decorators import dag, task
 from airflow.models.abstractoperator import AbstractOperator
-from airflow.operators.trigger_dagrun import TriggerDagRunOperator
+from airflow.providers.standard.operators.trigger_dagrun import TriggerDagRunOperator
 
 from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
 from common.sql import PostgresHook
