@@ -4,6 +4,7 @@ import breakpoints from "~~/test/playwright/utils/breakpoints"
 import {
   pathWithDir,
   preparePageForTests,
+  waitForVisibleImagesToLoad,
 } from "~~/test/playwright/utils/navigation"
 import { languageDirections, t } from "~~/test/playwright/utils/i18n"
 import {
@@ -76,6 +77,7 @@ test.describe("layout color is set correctly", () => {
       await page.waitForURL(/ar\/search/)
       await expect(getH1(page, "Cat")).toBeVisible()
       await expect(getLoadMoreButton(page, "rtl")).toBeEnabled()
+      await waitForVisibleImagesToLoad(page)
 
       expect(await page.screenshot()).toMatchSnapshot(
         "search-page-rtl-lg-light.png"

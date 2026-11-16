@@ -405,6 +405,29 @@ export const scrollDownAndUp = async (page: Page) => {
 }
 
 /**
+ * Wait until the image results in the viewport have loaded. Results use
+ * `loading="lazy"`, so images below the fold never load and are skipped.
+ */
+export const waitForVisibleImagesToLoad = async (page: Page) => {
+  await expect
+    .poll(() =>
+      page.evaluate(() => {
+        const images = Array.from(
+          document.querySelectorAll<HTMLImageElement>("figure img")
+        ).filter((img) => {
+          const { top, bottom } = img.getBoundingClientRect()
+          return bottom > 0 && top < window.innerHeight
+        })
+        return (
+          images.length > 0 &&
+          images.every((img) => img.complete && img.naturalWidth > 0)
+        )
+      })
+    )
+    .toBe(true)
+}
+
+/**
  * Adds '/ar' prefix to a rtl route, or a set locale. The path should start with '/'
  */
 export const pathWithDir = (
