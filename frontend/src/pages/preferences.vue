@@ -121,7 +121,7 @@ const captureException = () => {
             :id="flag.name"
             class="flex-row items-center"
             :checked="flag.state === ON"
-            :disabled="flag.status !== SWITCHABLE"
+            :disabled="flag.status !== SWITCHABLE || !doneHydrating"
             is-switch
             @change="handleChange"
           >

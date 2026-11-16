@@ -52,10 +52,10 @@ COMMANDS
         ov clean && ov init
 
     Warning: running `ov clean` will result in needing to fully rebuild the environment
-    including downloading tools handled by `ov setup-env` and pre-commit environments.
+    including downloading tools handled by `ov setup-env` and prek environments.
 
   ov hook HOOK
-    Run Git hooks through pre-commit inside the development toolkit container.
+    Run Git hooks through prek inside the development toolkit container.
 
   ov aliases [--help|-h]
     Display information about ov aliases. By default, lists all available aliases.
@@ -71,7 +71,7 @@ COMMANDS
     some of the following:
 
       - ov just
-      - ov pdm
+      - ov uv
       - ov pnpm
       - ov python
       - ov bash
@@ -112,7 +112,7 @@ doctor)
 
   case "$OSTYPE" in
   linux*)
-    # For some reason permissions can get mixed up in `/opt` and PDM will fail to create venvs
+    # For some reason permissions can get mixed up in `/opt` and uv will fail to create venvs
     # This is only relevant to Linux hosts because macOS hosts run the container as root regardless
     printf "   - Fixing file permissions in container's /opt\n"
     "$_self" sudo chmod -R 0777 /opt
@@ -132,8 +132,8 @@ clean)
   ;;
 
 hook)
-  # Arguments match the implementation of hooks installed by pre-commit
-  "$_self" pre-commit hook-impl \
+  # Arguments match the implementation of hooks installed by prek
+  "$_self" prek hook-impl \
     --config=.pre-commit-config.yaml \
     --hook-type="$2" \
     --hook-dir "$OPENVERSE_PROJECT"/.git/hooks \

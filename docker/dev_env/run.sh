@@ -14,8 +14,6 @@ shared_args=(
   -i
   --env "OPENVERSE_PROJECT=$OPENVERSE_PROJECT"
   --env "TERM=xterm-256color"
-  # Avoid overwriting `.venv`'s from the host
-  --env "PDM_VENV_IN_PROJECT=False"
   # Install global pipx packages separate from user packages
   # Prevents permissions issue with packages installed as root
   # when running packages.sh
@@ -29,7 +27,7 @@ run_args=(
   # Use host network so things like Sphinx and the frontend that run directly in `ov`
   # will have ports available on the host (and this way we don't have to manually map each one)
   --network host
-  # Bind the repo to the same exact location inside the container so that pre-commit
+  # Bind the repo to the same exact location inside the container so that prek
   # and others don't get confused about where files are supposed to be
   -v "$OPENVERSE_PROJECT:$OPENVERSE_PROJECT:rw,z"
   # Save the /opt directory of the container so we can reuse it each time
@@ -41,7 +39,7 @@ run_args=(
 # When running `ov` directly, `-t 0` will show that stdin is available, so
 # we should provision a TTY in the docker container (making it possible to
 # interact with the container directly)
-# However, when running in pre-commit (for example), there is no TTY, and
+# However, when running in prek (for example), there is no TTY, and
 # docker run will complain if `-t` requests a TTY when the execution
 # environment doesn't have one to attach.
 # In other words, only tell Docker to attach a TTY to the container when
@@ -104,25 +102,18 @@ if command -v pnpm &>/dev/null; then
   fi
 fi
 
-if command -v pdm &>/dev/null; then
-  if [ ! -f "$DEV_ENV"/.cache/pdm-cache-path ]; then
-    # These commands can be slow, so cache the response
-    # Should be safe, it's rare to change this
-    if [ "$(pdm config --quiet install.cache)" == "True" ]; then
-      pdm config --quiet cache_dir >"$DEV_ENV"/.cache/pdm-cache-path
-    else
-      echo "" >"$DEV_ENV"/.cache/pdm-cache-path
-    fi
+if command -v uv &>/dev/null; then
+  if [ ! -f "$DEV_ENV"/.cache/uv-cache-path ]; then
+    # Cache the response; it's rare for this to change
+    uv cache dir >"$DEV_ENV"/.cache/uv-cache-path
   fi
 
-  host_pdm_cache=$(cat "$DEV_ENV"/.cache/pdm-cache-path)
+  host_uv_cache=$(cat "$DEV_ENV"/.cache/uv-cache-path)
 
-  # Share the PDM cache with the container, if it's available locally
-  # --quiet so PDM doesn't repeatedly fill the console with update messages
-  # if they're enabled
-  if [ -n "$host_pdm_cache" ]; then
-    shared_args+=(--env "PDM_CACHE_DIR=$host_pdm_cache")
-    run_args+=(-v "$host_pdm_cache:$host_pdm_cache:rw,z")
+  # Share the uv cache with the container, if it's available locally
+  if [ -n "$host_uv_cache" ]; then
+    shared_args+=(--env "UV_CACHE_DIR=$host_uv_cache")
+    run_args+=(-v "$host_uv_cache:$host_uv_cache:rw,z")
   fi
 fi
 

@@ -65,13 +65,13 @@ includes: dict[str, Include] = {
         image="catalog_indexer_worker",
         target="indexer_worker",
         context="indexer_worker",
-        build_args="PDM_INSTALL_ARGS=--prod",
+        build_args="UV_SYNC_ARGS=--no-default-groups",
     ),
     "api": Include(
         image="api",
         target="api",
         build_contexts="packages=./packages/python",
-        build_args="PDM_INSTALL_ARGS=--prod",
+        build_args="UV_SYNC_ARGS=--no-editable --no-default-groups",
     ),
     "api_nginx": Include(
         image="api_nginx",

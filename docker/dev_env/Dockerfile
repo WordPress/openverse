@@ -14,8 +14,6 @@ FROM docker.io/library/fedora:41
 # permissions issues to contend with and as such run the container as root)
 ENV HOME="/opt"
 
-# location where PDM installs Python interpreters
-ENV PDM_PYTHONS="${HOME}/pdm/bin"
 # location where `n` installs Node.js versions
 ENV N_PREFIX="${HOME}/n"
 
@@ -23,12 +21,15 @@ ENV PIPX_GLOBAL_HOME=/pipx
 
 ENV PNPM_BIN="${HOME}/pnpm"
 
+# Keep in sync with `PREK_VERSION` in the root `justfile`
+ARG PREK_VERSION=0.5.10
+
 # Add tooling installed in custom locations to `PATH`.
-ENV PATH="${PNPM_BIN}:${N_PREFIX}/bin:${PDM_PYTHONS}:${HOME}/.local/bin:${PATH}"
+ENV PATH="${PNPM_BIN}:${N_PREFIX}/bin:${HOME}/.local/bin:${PATH}"
 
 # Dependency explanations:
 # - git: required by some python package; contributors should use git on their host
-# - g++: required by some pre-commit hooks for node-gyp
+# - g++: required by some prek hooks for node-gyp
 # - just: command runner
 # - jq: JSON processor
 # - which: locate a program file in `PATH`
@@ -47,8 +48,8 @@ ENV PATH="${PNPM_BIN}:${N_PREFIX}/bin:${PDM_PYTHONS}:${HOME}/.local/bin:${PATH}"
 #
 # pipx dependencies:
 # - httpie: CLI HTTP client
-# - pdm, pipenv: Python package managers
-# - pre-commit: Git pre-commit and pre-push hook manager
+# - pipenv, uv: Python package managers
+# - prek: Git pre-commit and pre-push hook manager
 # - pgcli: PostgreSQL CLI
 #
 # Node dependencies:
@@ -80,16 +81,21 @@ RUN mkdir -p $HOME/.local/bin \
   && dnf5 clean all \
   && pipx install --global \
     httpie \
-    pdm pipenv  \
+    pipenv uv \
     pgcli \
-    pre-commit \
+    prek==${PREK_VERSION} \
   && npm install -g \
     n \
     corepack@0.31.0 \
   && corepack enable
 
-# Avoid overwriting `.venv`'s from the host
-ENV PDM_VENV_IN_PROJECT="False"
+# Keep uv's environments apart from the host's `.venv`, and its cache and
+# Python builds in the persisted `/opt` volume. The cache and the bind-mounted
+# repository are on different filesystems, so uv copies instead of linking.
+ENV UV_PROJECT_ENVIRONMENT=".venv-ov"
+ENV UV_CACHE_DIR="${HOME}/uv/cache"
+ENV UV_PYTHON_INSTALL_DIR="${HOME}/uv/python"
+ENV UV_LINK_MODE="copy"
 
 # The fedora container's default entrypoint + command behaviour is to keep running
 # so we do not need to modify entrypoint and command to use the container as a

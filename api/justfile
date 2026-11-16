@@ -14,21 +14,21 @@ NO_COLOR := "\\033[0m"
 # Version #
 ###########
 
-# These commands use standard GNU tools instead of `pdm` because we do not
-# require PDM on the host machine for API development.
-export API_PDM_HASH := `grep 'content_hash' pdm.lock | awk -F'[:"]' '{print $3}' | cut -c1-8`
+# These commands use standard GNU tools instead of `uv` because we do not
+# require uv on the host machine for API development.
+export API_UV_HASH := `sha256sum uv.lock | cut -c1-8`
 export API_PY_VERSION := `grep 'requires-python' pyproject.toml | awk -F'"' '{print $2}' | sed 's/^==//g; s/\.\*$//g'`
-export PGCLI_VERSION := `grep -A 1 'name = "pgcli"' pdm.lock | grep 'version' | awk -F'"' '{print $2}'`
+export PGCLI_VERSION := `grep -A 1 'name = "pgcli"' uv.lock | grep 'version' | awk -F'"' '{print $2}'`
 
-# Print the PDM content hash as a unique identifier for the current set of packages
-@pdm-hash:
-    echo $API_PDM_HASH
+# Print the uv lockfile hash as a unique identifier for the current set of packages
+@uv-hash:
+    echo $API_UV_HASH
 
 # Print the Python version specified in `pyproject.toml`
 @py-version:
     echo $API_PY_VERSION
 
-# Print the pinned `pgcli` version from the PDM lockfile
+# Print the pinned `pgcli` version from the uv lockfile
 @pgcli-version:
     echo $PGCLI_VERSION
 
@@ -38,7 +38,7 @@ export PGCLI_VERSION := `grep -A 1 'name = "pgcli"' pdm.lock | grep 'version' | 
 
 # Install dependencies
 install *args:
-    pdm install {{ args }}
+    uv sync {{ args }}
 
 ######
 # Up #
@@ -107,7 +107,7 @@ pgcli db_user_pass="deploy" db_name="openledger": up
 # Run Django administrative commands locally
 [positional-arguments]
 dj-local *args:
-    pdm run python manage.py "$@"
+    uv run python manage.py "$@"
 
 # Run Django administrative commands inside the Docker container
 [positional-arguments]
@@ -171,7 +171,7 @@ test-ci: wait-up
 # Run API tests locally
 [positional-arguments]
 test-local *args:
-    pdm run pytest "$@"
+    uv run pytest "$@"
 
 # Run smoke test for the API docs
 doc-test: wait-up

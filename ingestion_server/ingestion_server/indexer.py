@@ -486,6 +486,10 @@ class TableIndexer:
                 "dest": {"index": destination_index},
             },
             slices="auto",
+            # The default 5m scroll keep-alive expires while slow bulk writes to the
+            # destination index hold up a slice, failing the whole reindex with
+            # "No search context found".
+            scroll="1h",
             wait_for_completion=True,
             # Temporary workaround to allow the action to complete.
             request_timeout=48 * 3600,

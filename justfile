@@ -6,6 +6,8 @@ set dotenv-load := true
 
 IS_CI := env_var_or_default("CI", "")
 DC_USER := env_var_or_default("DC_USER", "ov_user")
+# Keep in sync with `PREK_VERSION` in `docker/dev_env/Dockerfile`
+PREK_VERSION := "0.5.10"
 
 # Show all available recipes, also recurses inside nested justfiles
 @_default:
@@ -105,36 +107,23 @@ welcome-to-openverse:
      \___/ |__| |_____||__|__|  \_/  |_____||__|\_|  \___||_____|
     OPENVERSE
 
-# Setup pre-commit as a Git hook
+# Install prek and set it up as a Git hook
 precommit:
     #!/usr/bin/env bash
     set -eo pipefail
-    if [ -z "$SKIP_PRE_COMMIT" ] && [ ! -f ./pre-commit.pyz ]; then
-      echo "Getting latest release"
-      curl \
-        ${GITHUB_TOKEN:+ --header "Authorization: Bearer ${GITHUB_TOKEN}"} \
-        --output latest.json \
-        https://api.github.com/repos/pre-commit/pre-commit/releases/latest
-      cat latest.json
-      URL=$(grep -o 'https://.*\.pyz' -m 1 latest.json)
-      rm latest.json
-      echo "Downloading pre-commit from $URL"
-      curl \
-        --fail \
-        --location `# follow redirects, else cURL outputs a blank file` \
-        --output pre-commit.pyz \
-        ${GITHUB_TOKEN:+ --header "Authorization: Bearer ${GITHUB_TOKEN}"} \
-        "$URL"
-      echo "Installing pre-commit"
-      python3 pre-commit.pyz install -t pre-push -t pre-commit
-      echo "Done"
-    else
-      echo "Skipping pre-commit installation"
+    if [ -n "$SKIP_PRE_COMMIT" ]; then
+      echo "Skipping prek installation"
+      exit 0
     fi
+    if ! command -v prek >/dev/null; then
+      echo "Installing prek"
+      pipx install prek=={{ PREK_VERSION }}
+    fi
+    prek install -t pre-push -t pre-commit
 
-# Run pre-commit to lint and reformat files
+# Run prek to lint and reformat files
 lint hook="" *files="": precommit
-    python3 pre-commit.pyz run {{ hook }} {{ if files == "" { "--all-files" } else { "--files" } }}  {{ files }}
+    prek run {{ hook }} {{ if files == "" { "--all-files" } else { "--files" } }}  {{ files }}
 
 # Run codeowners validator locally. Only enable experimental hooks if there are no uncommitted changes.
 lint-codeowners checks="stable":
@@ -231,12 +220,13 @@ env:
 DOCKER_FILE := "-f docker-compose.yml"
 EXEC_DEFAULTS := if IS_CI == "" { "" } else { "-T" }
 
-export OV_PDM_VERSION := env_var_or_default("OV_PDM_VERSION", "2.21")
+# Keep in sync with the `Setup uv` step in `.github/actions/setup-env/action.yml`.
+export OV_UV_VERSION := env_var_or_default("OV_UV_VERSION", "0.13.5")
 export CATALOG_PY_VERSION := `just catalog/py-version`
 export CATALOG_AIRFLOW_VERSION := `just catalog/airflow-version`
 export INDEXER_WORKER_PY_VERSION := `just indexer_worker/py-version`
 export API_PY_VERSION := `just api/py-version`
-export API_PDM_HASH := `just api/pdm-hash`
+export API_UV_HASH := `just api/uv-hash`
 export INGESTION_PY_VERSION := `just ingestion_server/py-version`
 export FRONTEND_NODE_VERSION := `just frontend/node-version`
 export FRONTEND_PNPM_VERSION := `just frontend/pnpm-version`
@@ -247,7 +237,7 @@ export HOST_NETWORK_ADDRESS := if os() == "macos" { "host.docker.internal" } els
 versions:
     #!/usr/bin/env bash
     cat <<EOF
-    ov_pdm_version=$(echo $OV_PDM_VERSION)
+    ov_uv_version=$(echo $OV_UV_VERSION)
     catalog_py_version=$(just catalog/py-version)
     catalog_airflow_version=$(just catalog/airflow-version)
     api_py_version=$(just api/py-version)

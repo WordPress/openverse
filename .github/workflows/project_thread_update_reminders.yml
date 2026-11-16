@@ -11,9 +11,9 @@ jobs:
     # Prevent running this workflow on forks, it's unnecessary for external contributors
     if: github.repository_owner == 'WordPress'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Send reminders to update project threads
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           github-token: ${{ secrets.ACCESS_TOKEN }}
           script: |

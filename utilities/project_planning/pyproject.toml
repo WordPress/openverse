@@ -15,5 +15,5 @@ dependencies = [
 ]
 requires-python = "==3.12.*"
 
-[tool.pdm]
-distribution = false
+[tool.uv]
+package = false

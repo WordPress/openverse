@@ -61,6 +61,8 @@ export const openContentSettingsTab = async (
         : /مرش/
 
   await page.getByRole("tab", { name: tabName }).click()
+  // Keep the tab's hover style out of snapshots.
+  await page.mouse.move(0, 0)
 }
 
 /**

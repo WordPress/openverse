@@ -47,8 +47,8 @@ notice a difference.
 
 ## Request Flow
 
-The `openverse.org` DNS record is not proxied by Cloudflare, so browsers connect
-directly to the Nuxt server. The API hosts are proxied.
+Both `openverse.org` and the API hosts are proxied by Cloudflare. Browsers reach
+Nuxt through Cloudflare, and Nitro reaches the API through Cloudflare too.
 
 When a user loads a page, Nuxt renders it on the server (SSR) and sets a session
 cookie if the user doesn't have one. During SSR, the stores call the `/api`
@@ -78,10 +78,10 @@ The proxy routes are public and use the frontend's credentials, so without
 limits of their own, a script blocked by the anonymous API limits could use them
 instead.
 
-Cloudflare can't limit these routes while the `openverse.org` record isn't
-proxied. We will limit them in Nitro first, and put Cloudflare in front of
-`openverse.org` if usage stays too high. See
-[the follow-up work](#follow-up-work).
+Cloudflare already limits page loads on `openverse.org` by IP, and challenges
+some bot traffic. It can't tell apart the people who share an IP address, and
+its rules don't cover the `/api` routes. Nitro adds limits per session, with a
+per-IP ceiling, for both.
 
 ### Counters
 
@@ -125,7 +125,7 @@ reached, so we need an alert before that point.
 
 1. [Add the frontend feature flag](#add-the-frontend-feature-flag)
 2. [Give the frontend's API application its own rate limit](#give-the-frontends-api-application-its-own-rate-limit)
-3. [Add a route from Nitro to the API that Cloudflare can't challenge](#add-a-route-from-nitro-to-the-api-that-cloudflare-cant-challenge)
+3. [Sign Nitro's requests so that the API's Cloudflare rules skip them](#sign-nitros-requests-so-that-the-apis-cloudflare-rules-skip-them)
 4. [Add session to the init plugin](#add-session-to-the-init-plugin)
 5. [Add the server plugin to create the Openverse API client and add it to the event context](#add-the-server-plugin-to-initialize-the-openverse-api-client-and-add-it-to-the-event-context)
 6. [Set up Nuxt server proxy routes](#set-up-nuxt-server-proxy-routes)
@@ -170,20 +170,46 @@ backstop.
   unlock.
 - Add an alert for when usage gets close to the limit.
 
-### Add a route from Nitro to the API that Cloudflare can't challenge
+### Sign Nitro's requests so that the API's Cloudflare rules skip them
 
-The API hosts are proxied by Cloudflare, and the frontend reads the API address
-from `public.apiUrl`, so it may call the API through Cloudflare from a small set
-of IP addresses. The rate limiting rules on the API hosts could then count all
-users' requests against those addresses. The rules for repeated 400, 401, and
-403 responses and for `/v1/auth_tokens/token/` are the most likely to fire.
-Nitro can't solve a managed challenge, so this would break search for all users.
+Nitro calls the API through Cloudflare from the frontend tasks' few IP
+addresses. The API's Cloudflare rules count by IP, so they would count all
+users' requests together. The rules for repeated 400, 401, and 403 responses and
+for `/v1/auth_tokens/token/` are the most likely to fire. Nitro can't solve a
+managed challenge, so this would break search for all users.
 
-- Confirm the production value of `NUXT_PUBLIC_API_URL`.
-- Add a private `apiUrl` to `runtimeConfig` for Nitro, pointing at an internal
-  API address. If there's no internal route, exclude Nuxt's outbound IP
-  addresses from these rules using `ip.src`. This requires stable outbound
-  addresses.
+Nitro signs each request to the API, and Cloudflare skips its rate limiting and
+bot rules for requests with a valid signature. This uses the same scheme as the
+staging bypass for k6 load tests (`packages/js/k6/src/http.ts`):
+
+- Add `x-ov-cf-timestamp` (Unix seconds) and `x-ov-cf-mac` headers to the
+  requests from the Nitro API client. The MAC is an HMAC-SHA256, encoded as
+  unpadded base64url, of the request path and query string followed by the
+  timestamp.
+- Sign with a new `NUXT_API_REQUEST_SIGNING_SECRET`, separate from the session
+  secret and from the k6 secret.
+- In Cloudflare, add a `skip` rule for the API hosts that checks the signature
+  with `is_timed_hmac_valid_v0` and a short validity window (30 seconds), and
+  skips the `http_ratelimit`, `http_request_firewall_managed`, and
+  `http_request_sbfm` phases.
+
+Signed requests still use the frontend's credentials, so the API counts them
+against the frontend's rate limit. A leaked secret only lets someone skip the
+Cloudflare rules for the API, and rotating it takes effect on the next frontend
+deployment.
+
+We considered two other ways to keep Cloudflare from challenging Nitro:
+
+- **An internal route from Nitro to the API** (`apiUrlInternal`) skips
+  Cloudflare's cache, so every proxied request would reach Django and
+  Elasticsearch. `apiUrlInternal` stays as an override for local development.
+- **Excluding Nuxt's outbound IP addresses** with `ip.src` needs stable outbound
+  addresses. Fargate tasks get new public addresses on every deployment, so this
+  needs a NAT gateway with Elastic IPs.
+
+Before the flag is on in production, check that Cloudflare caches the responses
+to requests with the frontend's `Authorization` header. If it doesn't, the proxy
+adds load to the API compared to today's anonymous client-side requests.
 
 ### Add session to the `init` plugin
 
@@ -383,13 +409,11 @@ flag is on:
   `referrer: openverse.org` request header, which the frontend doesn't send. If
   something upstream adds this header, anyone can spoof it to avoid the
   anonymous limits. Remove these throttles when tightening the limits.
-- **Cloudflare in front of `openverse.org`:** If usage stays too high, proxy
-  this record and add rate limiting rules that count by IP with NAT support,
-  with a per-IP ceiling. Requests are then rejected before they reach Nuxt, and
-  a blocked user can solve a managed challenge. This requires restricting the
-  origin to Cloudflare's IP ranges, reading the client IP from Cloudflare, and
-  handling challenges on `fetch` requests. The zone has 2 free rate limiting
-  rules, on the Business plan.
+- **Cloudflare rules for the `/api` routes:** If usage stays too high, add a
+  per-IP Cloudflare rate limit for the `/api` routes on `openverse.org`, as an
+  outer ceiling above the Nitro limits. Requests are then rejected before they
+  reach Nuxt, and a blocked user can solve a managed challenge. This requires
+  handling challenges on `fetch` requests.
 
 ## Rejected Alternatives
 
@@ -404,10 +428,13 @@ flag is on:
 - **Limiting only by IP in Nitro** This would recreate the shared IP problem at
   the proxy. Sessions let a library's users have separate counters.
 
-- **Cloudflare in front of `openverse.org` as the first step** This would reject
-  abusive requests earlier and give blocked users a challenge they can solve,
-  but it moves all production traffic. We will do it if the Nitro limits aren't
-  enough. See the [follow-up work](#follow-up-work).
+- **Only Cloudflare rules for the `/api` routes** These would reject abusive
+  requests earlier and give blocked users a challenge they can solve, but they
+  count by IP. We will add them if the Nitro limits aren't enough. See the
+  [follow-up work](#follow-up-work).
+
+- **An internal route or an IP exclusion for Nitro's requests** See
+  [Sign Nitro's requests](#sign-nitros-requests-so-that-the-apis-cloudflare-rules-skip-them).
 
 ## Dependencies
 
@@ -415,8 +442,9 @@ flag is on:
 
   - `proxy_requests`
 
-- **Infrastructure**: An internal route from the frontend to the API, a new API
-  rate limit model, the `HMAC_SIGNING_SECRET` secret, and monitoring (Sentry).
+- **Infrastructure**: A Cloudflare `skip` rule for signed requests to the API, a
+  new API rate limit model and its throttle settings, the `HMAC_SIGNING_SECRET`
+  and `API_REQUEST_SIGNING_SECRET` secrets, and monitoring (Sentry).
 
 - **Tools & Packages**:
   - `ofetch`: This would be a great occasion to move away from `axios`. `ofetch`

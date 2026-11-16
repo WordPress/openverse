@@ -3,10 +3,15 @@ import re
 from django.conf import settings
 
 import schemathesis
-from schemathesis.checks import content_type_conformance
+from schemathesis import GenerationMode
+from schemathesis.checks import content_type_conformance, positive_data_acceptance
 
 
-schema = schemathesis.from_uri(f"{settings.CANONICAL_ORIGIN}/v1/schema/")
+schema = schemathesis.openapi.from_url(f"{settings.CANONICAL_ORIGIN}/v1/schema/")
+# Schemathesis 4 also generates schema-violating inputs by default; the API answers
+# those with 400s the schema does not document yet, so keep the positive-only
+# generation that version 3 used until the schema covers them.
+schema.config.generation.update(modes=[GenerationMode.POSITIVE])
 
 
 def status_code_aware_content_type_conformance(ctx, res, case):
@@ -44,14 +49,16 @@ TOKEN_TEST_ACCEPTABLE = re.compile(r"^Bearer \w+$")
 
 @schema.parametrize()
 def test_schema(case: schemathesis.Case):
-    if case.headers and not TOKEN_TEST_ACCEPTABLE.findall(
-        case.headers.get("Authorization")
-    ):
+    authorization = (case.headers or {}).get("Authorization")
+    if authorization is not None and not TOKEN_TEST_ACCEPTABLE.findall(authorization):
         # Do not use `pytest.skip` here, unfortunately it causes a deprecation warning
         # from schemathesis's implementation of `parameterize`.
         return
 
     case.call_and_validate(
-        excluded_checks=[content_type_conformance],
+        # `positive_data_acceptance` is new in Schemathesis 4 and flags endpoints that
+        # reject schema-compliant input, such as unknown `source` values; enabling it
+        # needs schema fixes first.
+        excluded_checks=[content_type_conformance, positive_data_acceptance],
         additional_checks=[status_code_aware_content_type_conformance],
     )

@@ -26,24 +26,21 @@ dependencies = [
     "sentry-sdk[falcon] ~=2.18",
 ]
 
-[tool.pdm]
-distribution = false
+[tool.uv]
+package = false
+default-groups = "all"
 
-[tool.pdm.dev-dependencies]
+[dependency-groups]
 dev = [
     "ipython~=9.1",
     "remote-pdb~=2.1",
 ]
 test = [
     "pook~=2.0",
-    "pytest~=8.3",
+    "pytest~=9.0",
     "pytest-order~=1.1",
     "pytest-sugar~=1.0",
 ]
-
-[build-system]
-requires = ["pdm-backend"]
-build-backend = "pdm.backend"
 
 [tool.pytest.ini_options]
 pythonpath = "."

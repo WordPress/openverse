@@ -20,8 +20,8 @@ To run Vale with Openverse's configuration, use the just recipe:
 ov just .vale/run
 ```
 
-Typically, it is unnecessary to run Vale directly, as pre-commit automatically
-runs Vale on each commit. You only need to run Vale directly when iterating on
+Typically, it is unnecessary to run Vale directly, as prek automatically runs
+Vale on each commit. You only need to run Vale directly when iterating on
 changes to Openverse's Vale configuration.
 
 Refer to the `_files` recipe [in the `justfile`](./justfile) to identify which

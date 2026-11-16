@@ -4,6 +4,11 @@
 # Automatically build image using Python version specified in `pyproject.toml`
 ARG API_PY_VERSION
 
+# Get the version from the main justfile
+ARG OV_UV_VERSION
+
+FROM ghcr.io/astral-sh/uv:${OV_UV_VERSION} AS uv
+
 ##################
 # Python builder #
 ##################
@@ -12,37 +17,39 @@ ARG API_PY_VERSION
 # Debian 12 (bookworm) and silently fails to install on newer releases.
 FROM docker.io/python:${API_PY_VERSION}-bookworm AS builder
 
-# Get the version from the main justfile
-ARG OV_PDM_VERSION
-
 # Container optimizations
 ENV PYTHONUNBUFFERED=1
 ENV PIP_NO_CACHE_DIR=1
 ENV PIP_NO_COLOR=1
+# Use the image's Python instead of downloading one
+ENV UV_PYTHON_DOWNLOADS=never
 
-# - Install system packages needed for building Python dependencies
-# - Create a virtualenv inside `/venv`
-# - Install PDM to install Python dependencies, with its own dependencies locked
-#   so a release of one of them (hishel 2.0.0 broke pdm) cannot break the build
+# Install system packages needed for building Python dependencies
 RUN apt-get update \
   && apt-get install -yqq --no-install-recommends python3-dev \
   && apt-get autoremove -y \
-  && rm -rf /var/lib/apt/lists/* \
-  && pip install --upgrade pip \
-  && pip install "pdm[locked]~=$OV_PDM_VERSION"
+  && rm -rf /var/lib/apt/lists/*
+
+COPY --from=uv /uv /bin/uv
 
 # Copy subpackages from additional build-context 'packages'
 # hadolint ignore=DL3022
 COPY --from=packages openverse-attribution /packages/python/openverse-attribution
 
-# Copy the Python project manifest and PDM lockfile into the container
-COPY pyproject.toml pdm.lock /
+# Mirror the repository layout, so that the `../packages` path to
+# openverse-attribution in `pyproject.toml` resolves, and keep the virtualenv
+# at `/.venv`, where the API stage expects it.
+WORKDIR /api
+ENV UV_PROJECT_ENVIRONMENT=/.venv
 
-# Pass additional arguments when installing Python packages with PDM
-ARG PDM_INSTALL_ARGS="--no-editable"
+# Copy the Python project manifest and uv lockfile into the container
+COPY pyproject.toml uv.lock /api/
 
-# Install Python dependencies into a new virtualenv
-RUN pdm install --check --frozen-lockfile $PDM_INSTALL_ARGS
+# Pass additional arguments when installing Python packages with uv
+ARG UV_SYNC_ARGS="--no-editable"
+
+# Install Python dependencies into a new virtualenv at `/.venv`
+RUN uv sync --locked $UV_SYNC_ARGS
 
 #######
 # API #

@@ -24,7 +24,7 @@ test("sources table can be sorted multiple times", async ({ page }) => {
   await page.goto("/sources")
 
   const totalItems = page
-    .getByRole("cell", { name: t("sources.providers.item") })
+    .getByRole("columnheader", { name: t("sources.providers.item") })
     .first()
   await totalItems.click()
   await totalItems.click()

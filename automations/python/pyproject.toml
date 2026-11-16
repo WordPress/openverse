@@ -17,10 +17,10 @@ dependencies = [
     "pyotp >= 2.9.0, < 3",
 ]
 
-[tool.pdm]
-distribution = false
+[tool.uv]
+package = false
 
-[tool.pdm.dev-dependencies]
+[dependency-groups]
 dev = [
     "ipython",
 ]

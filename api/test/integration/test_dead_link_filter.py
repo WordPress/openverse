@@ -1,6 +1,10 @@
 from unittest.mock import patch
+from urllib.parse import urlparse
 from uuid import uuid4
 
+from django.conf import settings
+
+import pook
 import pytest
 
 from api.constants import restricted_features
@@ -154,50 +158,98 @@ def search_factory(api_client):
     return _parameterized_search
 
 
-@pytest.fixture
-def search_without_dead_links(search_factory):
-    """Test with ``filter_dead`` parameter set to true."""
+def answer_link_checks(dead_urls):
+    """
+    Answer the dead link checks with ``pook`` instead of the providers.
 
-    def _search_without_dead_links(**kwargs):
-        return search_factory(filter_dead=True, **kwargs)
+    ``dead_urls`` respond with 404 and every other URL with 200. Requests to
+    Elasticsearch still go through.
 
-    return _search_without_dead_links
+    :return: the mock that answers the live URLs
+    """
+
+    for url in dead_urls:
+        pook.head(url).persist().reply(404)
+    live = pook.head(pook.regex(r"^https?://")).persist()
+    live.reply(200)
+
+    pook.enable_network(urlparse(settings.ES_ENDPOINT).hostname)
+    pook.on()
+    return live
 
 
 @pytest.mark.django_db
-def test_page_size_removing_dead_links(search_without_dead_links):
-    """
-    Test whether the number of results returned is equal to the requested page size.
+@pytest.mark.pook(start_active=False)
+def test_page_size_removing_dead_links(search_factory):
+    """Dead links are removed, and the page is backfilled to the requested size."""
 
-    We have about 500 dead links in the sample data and should have around
-    8 dead links in the first 100 results on a query composed of a single
-    wildcard operator.
-    """
+    results = search_factory(q="*", page_size=20, filter_dead=False)["results"]
+    dead_urls = {result["url"] for result in results[::4]}
+    live_ids = [result["id"] for result in results if result["url"] not in dead_urls]
 
-    data = search_without_dead_links(q="*", page_size=20)
-    assert len(data["results"]) == 20
+    answer_link_checks(dead_urls)
+    data = search_factory(q="*", page_size=20, filter_dead=True)
+
+    ids = [result["id"] for result in data["results"]]
+    assert len(ids) == 20
+    assert ids[: len(live_ids)] == live_ids
+    assert not dead_urls & {result["url"] for result in data["results"]}
 
 
 @pytest.mark.django_db
-def test_page_consistency_removing_dead_links(search_without_dead_links):
-    """Test that results in consecutive pages don't repeat when filtering dead links."""
+@pytest.mark.pook(start_active=False)
+def test_page_consistency_removing_dead_links(search_factory):
+    """Consecutive pages don't repeat or drop results when filtering dead links."""
 
     page_size = 5
     total_pages = int(restricted_features.MAX_RESULT_COUNT.anonymous / page_size)
 
+    dead_urls = set()
+    for page in range(1, total_pages * page_size // 20 + 1):
+        results = search_factory(q="*", page_size=20, page=page, filter_dead=False)[
+            "results"
+        ]
+        dead_urls |= {result["url"] for result in results[::4]}
+
+    answer_link_checks(dead_urls)
     page_results = []
     for page in range(1, total_pages + 1):
-        page_data = search_without_dead_links(q="*", page_size=page_size, page=page)
+        page_data = search_factory(
+            q="*", page_size=page_size, page=page, filter_dead=True
+        )
         page_results += page_data["results"]
 
-    def no_duplicates(xs):
-        s = set()
-        for x in xs:
-            if x in s:
-                return False
-            s.add(x)
-        return True
+    ids = [result["id"] for result in page_results]
+    assert len(ids) == total_pages * page_size
+    assert len(set(ids)) == len(ids)
+    assert not dead_urls & {result["url"] for result in page_results}
 
-    ids = list(map(lambda x: x["id"], page_results))
-    # No results should be repeated so we should have no duplicate ids
-    assert no_duplicates(ids)
+
+@pytest.mark.django_db
+@pytest.mark.pook(start_active=False)
+def test_related_filters_dead_links_by_default_setting(api_client, settings):
+    """
+    The related view checks links only when ``FILTER_DEAD_LINKS_BY_DEFAULT``
+    is enabled, as search does when ``filter_dead`` isn't passed.
+    """
+
+    item = api_client.get("/v1/images/", {"q": "dog"}).json()["results"][0]
+    path = f"/v1/images/{item['id']}/related/"
+
+    settings.FILTER_DEAD_LINKS_BY_DEFAULT = False
+    results = api_client.get(path).json()["results"]
+    assert len(results) == 10
+    dead_urls = {result["url"] for result in results[:3]}
+    live_ids = [result["id"] for result in results if result["url"] not in dead_urls]
+
+    live = answer_link_checks(dead_urls)
+    assert api_client.get(path).json()["results"] == results
+    assert live.calls == 0
+
+    settings.FILTER_DEAD_LINKS_BY_DEFAULT = True
+    filtered = api_client.get(path).json()["results"]
+
+    ids = [result["id"] for result in filtered]
+    assert len(ids) == 10
+    assert ids[: len(live_ids)] == live_ids
+    assert not dead_urls & {result["url"] for result in filtered}

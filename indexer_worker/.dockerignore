@@ -3,4 +3,4 @@
 !indexer_worker
 !gunicorn*
 !pyproject.toml
-!pdm.lock
+!uv.lock
