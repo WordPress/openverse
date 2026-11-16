@@ -15,7 +15,8 @@ runs:
         LINK_ISSUES_GITHUB_TOKEN: ${{ inputs.github_token }}
       run: |
         # Pass -W to fail CI if warnings exist
-        just documentation/build -W
+        # Pass -j to parallelise; furo's per-page sidebar render dominates build time
+        just documentation/build -W -j auto
 
     - name: Merge all docs
       shell: bash
