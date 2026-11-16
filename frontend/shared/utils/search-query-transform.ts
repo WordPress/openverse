@@ -1,4 +1,4 @@
-import isShallowEqual from "@wordpress/is-shallow-equal"
+import { isShallowEqual } from "@wordpress/is-shallow-equal"
 
 import {
   FilterCategory,
