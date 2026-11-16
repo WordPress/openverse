@@ -106,20 +106,20 @@ export function useFocusTrap(
 
       trap = createFocusTrap(el, {
         ...focusTrapOptions,
-        onActivate() {
+        onActivate(params) {
           hasFocus.value = true
 
           // Apply if user provided onActivate option
           if (options.onActivate) {
-            options.onActivate()
+            options.onActivate(params)
           }
         },
-        onDeactivate() {
+        onDeactivate(params) {
           hasFocus.value = false
 
           // Apply if user provided onDeactivate option
           if (options.onDeactivate) {
-            options.onDeactivate()
+            options.onDeactivate(params)
           }
         },
       })
