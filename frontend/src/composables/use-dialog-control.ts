@@ -1,14 +1,14 @@
 import {
   computed,
   ComputedRef,
+  MaybeRefOrGetter,
   reactive,
   ref,
   Ref,
   SetupContext,
+  toValue,
   watch,
 } from "vue"
-
-import { MaybeRefOrGetter, toValue } from "@vueuse/core"
 
 import { useBodyScrollLock } from "~/composables/use-body-scroll-lock"
 import { useDialogStack } from "~/composables/use-dialog-stack"
