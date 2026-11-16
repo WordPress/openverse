@@ -173,14 +173,17 @@ const postActivities = (activities) => {
 }
 
 // Entry point
+const hasStackLabel = (item) =>
+  item.labels.some((label) => label.name.startsWith("🧱 stack"))
+
 const reportData = []
 for (const repo of repos) {
   const closedIssues = (
     await octokit.rest.search.issuesAndPullRequests({ q: closedIssuesQ(repo) })
-  ).data.items
+  ).data.items.filter(hasStackLabel)
   const mergedPrs = (
     await octokit.rest.search.issuesAndPullRequests({ q: mergedPrsQ(repo) })
-  ).data.items
+  ).data.items.filter(hasStackLabel)
   if (closedIssues.length || mergedPrs.length)
     reportData.push({ repo, closedIssues, mergedPrs })
 }
