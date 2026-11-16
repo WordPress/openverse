@@ -86,7 +86,7 @@ RUN mkdir -p $HOME/.local/bin \
     prek==${PREK_VERSION} \
   && npm install -g \
     n \
-    corepack@0.31.0 \
+    corepack@0.35.0 \
   && corepack enable
 
 # Keep uv's environments apart from the host's `.venv`, and its cache and

@@ -35,6 +35,9 @@ repos:
       - id: check-merge-conflict
       - id: check-xml
       - id: check-yaml
+        # pnpm 11+ writes `pnpm-lock.yaml` as two YAML documents.
+        args:
+          - --allow-multiple-documents
       - id: end-of-file-fixer
         exclude: (frontend/test/tapes/.+\.json5|frontend/.*snapshots.*)
       - id: check-symlinks

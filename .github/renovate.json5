@@ -6,6 +6,12 @@
   ignoreScripts: false,
   packageRules: [
     {
+      // Match `minimumReleaseAge` in `pnpm-workspace.yaml`, so npm updates
+      // wait until pnpm will accept them instead of failing to install.
+      matchDatasources: ["npm"],
+      minimumReleaseAge: "7 days",
+    },
+    {
       groupName: "workflows",
       matchFileNames: [
         ".github/{actions,workflows}/**",
