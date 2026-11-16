@@ -71,8 +71,6 @@ export default defineNuxtConfig({
       sessionLimit: 120,
       noSessionLimit: 30,
       ipLimit: 1200,
-      // The number of proxies that append to `X-Forwarded-For`.
-      trustedProxies: 1,
     },
     public: {
       deploymentEnv: "local",

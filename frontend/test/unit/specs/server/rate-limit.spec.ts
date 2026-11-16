@@ -15,7 +15,6 @@ const config: RateLimitConfig = {
   sessionLimit: 3,
   noSessionLimit: 1,
   ipLimit: 5,
-  trustedProxies: 1,
 }
 
 const eventWithHeaders = (headers: Record<string, string>) =>
@@ -47,21 +46,17 @@ describe("getRateLimitedRequestKind", () => {
 })
 
 describe("getClientIp", () => {
-  it("uses the entry added by the trusted proxy", () => {
+  it("uses the address that Cloudflare sets", () => {
     const event = eventWithHeaders({
-      "x-forwarded-for": "1.1.1.1, 2.2.2.2, 3.3.3.3",
+      "cf-connecting-ip": "1.1.1.1",
+      "x-forwarded-for": "2.2.2.2, 1.1.1.1, 3.3.3.3",
     })
-    expect(getClientIp(event, 1)).toEqual("3.3.3.3")
-    expect(getClientIp(event, 2)).toEqual("2.2.2.2")
+    expect(getClientIp(event)).toEqual("1.1.1.1")
   })
 
-  it("does not go past the first entry", () => {
-    const event = eventWithHeaders({ "x-forwarded-for": "1.1.1.1" })
-    expect(getClientIp(event, 3)).toEqual("1.1.1.1")
-  })
-
-  it("falls back to the socket address without the header", () => {
-    expect(getClientIp(eventWithHeaders({}), 1)).toEqual("10.0.0.1")
+  it("ignores X-Forwarded-For without the Cloudflare header", () => {
+    const event = eventWithHeaders({ "x-forwarded-for": "2.2.2.2" })
+    expect(getClientIp(event)).toEqual("10.0.0.1")
   })
 })
 

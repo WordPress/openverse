@@ -9,7 +9,6 @@ export interface RateLimitConfig {
   sessionLimit: number
   noSessionLimit: number
   ipLimit: number
-  trustedProxies: number
 }
 
 export interface RateLimitCheck {
@@ -51,24 +50,15 @@ export const getRateLimitedRequestKind = (
 }
 
 /**
- * Returns the client IP address from the `X-Forwarded-For` entry added by the
- * closest trusted proxy, our load balancer. The earlier entries come from the
- * client and can be faked.
+ * Returns the client IP address that Cloudflare sets in `CF-Connecting-IP`.
+ * The load balancer only accepts requests from Cloudflare, so clients cannot
+ * set this header themselves. Without Cloudflare, for example locally, it
+ * falls back to the socket address.
  */
-export const getClientIp = (event: H3Event, trustedProxies: number) => {
-  const forwardedFor = getRequestHeader(event, "x-forwarded-for")
-  if (forwardedFor && trustedProxies > 0) {
-    const entries = forwardedFor
-      .split(",")
-      .map((entry) => entry.trim())
-      .filter(Boolean)
-    const entry = entries[Math.max(entries.length - trustedProxies, 0)]
-    if (entry) {
-      return entry
-    }
-  }
-  return getRequestIP(event) ?? "unknown"
-}
+export const getClientIp = (event: H3Event) =>
+  getRequestHeader(event, "cf-connecting-ip")?.trim() ||
+  getRequestIP(event) ||
+  "unknown"
 
 interface Window {
   count: number

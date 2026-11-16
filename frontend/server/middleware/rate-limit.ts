@@ -49,7 +49,6 @@ const toRateLimitConfig = (
   sessionLimit: Number(config.sessionLimit),
   noSessionLimit: Number(config.noSessionLimit),
   ipLimit: Number(config.ipLimit),
-  trustedProxies: Number(config.trustedProxies),
 })
 
 /**
@@ -77,7 +76,7 @@ export default defineEventHandler(async (event) => {
       runtimeConfig.public.deploymentEnv
     )
   )
-  const ip = getClientIp(event, config.trustedProxies)
+  const ip = getClientIp(event)
   const result = limiter.hit(
     getRateLimitChecks({ kind, sessionId, ip, config })
   )
