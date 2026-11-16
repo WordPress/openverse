@@ -1,24 +1,21 @@
 import tseslint from "typescript-eslint"
-import * as importPlugin from "eslint-plugin-import"
+import { flatConfigs } from "eslint-plugin-import-x"
 
 /**
- * ESLint `import` plugin configuration.
+ * ESLint `import-x` plugin configuration.
  */
 export default tseslint.config(
   {
     name: "import-config",
-    extends: [
-      importPlugin.flatConfigs.recommended,
-      importPlugin.flatConfigs.typescript,
-    ],
+    extends: [flatConfigs.recommended, flatConfigs.typescript],
     rules: {
       // `namespace` and `default` are handled by TypeScript
       // There's no need to rely on ESLint for this
       // https://github.com/import-js/eslint-plugin-import/issues/2878
-      "import/namespace": "off",
-      "import/default": "off",
-      "import/newline-after-import": ["error"],
-      "import/order": [
+      "import-x/namespace": "off",
+      "import-x/default": "off",
+      "import-x/newline-after-import": ["error"],
+      "import-x/order": [
         "error",
         {
           "newlines-between": "always",
@@ -110,7 +107,7 @@ export default tseslint.config(
           pathGroupsExcludedImportTypes: ["builtin"],
         },
       ],
-      "import/extensions": [
+      "import-x/extensions": [
         "error",
         "always",
         { js: "never", mjs: "never", ts: "never" },
@@ -121,10 +118,10 @@ export default tseslint.config(
     name: "import-config-frontend-tsconfig",
     files: ["frontend/**"],
     settings: {
-      "import/resolver": {
+      "import-x/resolver": {
         typescript: {
           project: "frontend/.nuxt/tsconfig.json",
-          extensions: [".js", ".ts", ".vue", ".png"],
+          extensions: [".js", ".ts", ".d.ts", ".vue", ".png"],
         },
       },
     },
@@ -133,7 +130,7 @@ export default tseslint.config(
     name: "import-config-packages-js-tsconfig",
     files: ["packages/js/**"],
     settings: {
-      "import/resolver": {
+      "import-x/resolver": {
         typescript: {
           project: "packages/js/*/tsconfig.json",
         },
@@ -162,15 +159,15 @@ export default tseslint.config(
        * with these rule changes commented out: now you will see the errors
        * present in CI.
        */
-      "import/extensions": "off",
-      "import/export": "off",
-      "import/no-unresolved": "off",
+      "import-x/extensions": "off",
+      "import-x/export": "off",
+      "import-x/no-unresolved": "off",
     },
   },
   {
     files: ["**/*.mjs"],
     rules: {
-      "import/extensions": "off",
+      "import-x/extensions": "off",
     },
   }
 )
