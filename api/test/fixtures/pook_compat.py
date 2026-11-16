@@ -10,8 +10,13 @@ def pook_aiohttp_stream_writer():
     Pass the ``stream_writer`` argument that aiohttp 3.14 made required.
 
     pook builds its mock ``ClientResponse`` without it, so every aiohttp
-    request matched by a pook mock fails with a ``TypeError``. Remove this
-    fixture once https://github.com/h2non/pook/issues/184 is released.
+    request matched by a pook mock fails with a ``TypeError``.
+
+    Revisit this fixture when pook releases a version after 2.1.6. The bug is
+    reported in https://github.com/h2non/pook/issues/184 and fixed, unreleased,
+    in https://github.com/h2non/pook/pull/183. Once pook passes
+    ``stream_writer`` itself, this fixture passes it twice and breaks every
+    mocked request, so delete it along with the pook bump.
     """
 
     original = pook_aiohttp.HTTPResponse
