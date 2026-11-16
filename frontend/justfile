@@ -14,7 +14,9 @@ NO_COLOR := "\\033[0m"
 # Version #
 ###########
 
-export FRONTEND_NODE_VERSION := `grep 'node": ">= ' ../package.json | awk -F'>= ' '{print $2}' | awk -F'.' '{print $1}'`
+# Fail loudly if `engines.node` loses its `>= ` lower bound (e.g. a Renovate
+# rewrite to `<27`); an empty version silently builds from `node:-alpine`.
+export FRONTEND_NODE_VERSION := `v=$(grep 'node": ">= ' ../package.json | awk -F'>= ' '{print $2}' | awk -F'.' '{print $1}'); [ -n "$v" ] || { echo 'error: engines.node in package.json must have a ">= X.Y.Z" lower bound.' >&2; exit 1; }; echo "$v"`
 export FRONTEND_PNPM_VERSION := `grep 'packageManager' ../package.json | awk -F'@' '{print $2}' | sed 's/",//g'`
 
 # Print the Node.js version specified in `package.json`
