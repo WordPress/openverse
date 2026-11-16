@@ -98,6 +98,7 @@ def test_get_successful_no_auth_key_default_args(mock_image_data):
         .header("User-Agent", UA_HEADER)
         .header("Accept", "image/*")
         .reply(200)
+        .header("Content-Type", "image/jpeg")
         .body(MOCK_BODY)
     )
 
@@ -114,6 +115,7 @@ def test_get_successful_original_svg_no_auth_key_default_args(mock_image_data):
         .header("User-Agent", UA_HEADER)
         .header("Accept", "image/*")
         .reply(200)
+        .header("Content-Type", "image/svg+xml")
         .body(SVG_BODY)
     )
 
@@ -125,6 +127,98 @@ def test_get_successful_original_svg_no_auth_key_default_args(mock_image_data):
 
     assert res.content == SVG_BODY.encode()
     assert res.status_code == 200
+
+
+TEST_SVG_MEDIA_INFO = replace(
+    TEST_MEDIA_INFO, image_url=TEST_IMAGE_URL.replace(".jpg", ".svg")
+)
+
+upstream_strategy_params = pytest.mark.parametrize(
+    "media_info, upstream_url",
+    [
+        pytest.param(TEST_MEDIA_INFO, PHOTON_URL_FOR_TEST_IMAGE, id="photon"),
+        pytest.param(TEST_SVG_MEDIA_INFO, TEST_SVG_MEDIA_INFO.image_url, id="original"),
+    ],
+)
+
+
+@pytest.mark.pook
+@upstream_strategy_params
+@pytest.mark.parametrize(
+    "upstream_content_type, expected_content_type",
+    [
+        ("image/jpeg", "image/jpeg"),
+        ("image/svg+xml", "image/svg+xml"),
+        ("Image/SVG+XML; charset=utf-8", "image/svg+xml"),
+    ],
+)
+def test_get_declares_bare_image_media_type(
+    media_info, upstream_url, upstream_content_type, expected_content_type
+):
+    (
+        pook.get(upstream_url)
+        .reply(200)
+        .header("Content-Type", upstream_content_type)
+        .body(MOCK_BODY)
+    )
+
+    res = photon_get(media_info)
+
+    assert res.headers["Content-Type"] == expected_content_type
+
+
+@pytest.mark.pook
+@upstream_strategy_params
+@pytest.mark.parametrize(
+    "upstream_content_type",
+    [
+        None,
+        "image/",
+        "text/html",
+        "text/xml; charset=utf-8",
+        "application/xhtml+xml",
+        "application/octet-stream",
+    ],
+)
+def test_get_requires_image_media_type_from_upstream(
+    media_info, upstream_url, upstream_content_type
+):
+    response = pook.get(upstream_url).reply(200).body(MOCK_BODY)
+    if upstream_content_type is not None:
+        response.header("Content-Type", upstream_content_type)
+
+    with (
+        capture_logs() as cap_logs,
+        pytest.raises(UpstreamThumbnailException, match="not an image"),
+    ):
+        photon_get(media_info)
+
+    assert {
+        "event": "thumbnail_upstream_not_image",
+        "log_level": "warning",
+        "url": upstream_url,
+        "provider": media_info.media_provider,
+        "content_type": upstream_content_type,
+    } in cap_logs
+
+
+@pytest.mark.pook
+@upstream_strategy_params
+def test_get_restricts_response_to_passive_rendering(media_info, upstream_url):
+    (
+        pook.get(upstream_url)
+        .reply(200)
+        .header("Content-Type", "image/svg+xml")
+        .body(SVG_BODY)
+    )
+
+    res = photon_get(media_info)
+
+    assert res.headers["Content-Security-Policy"] == (
+        "default-src 'none'; font-src data:; img-src data:; "
+        "style-src 'unsafe-inline'; sandbox"
+    )
+    assert res.headers["X-Content-Type-Options"] == "nosniff"
 
 
 @pytest.mark.pook
@@ -141,6 +235,7 @@ def test_get_successful_with_auth_key_default_args(mock_image_data, auth_key):
         .header("Accept", "image/*")
         .header("X-Photon-Authentication", auth_key)
         .reply(200)
+        .header("Content-Type", "image/jpeg")
         .body(MOCK_BODY)
     )
 
@@ -162,6 +257,7 @@ def test_get_successful_no_auth_key_not_compressed(mock_image_data):
         .header("User-Agent", UA_HEADER)
         .header("Accept", "image/*")
         .reply(200)
+        .header("Content-Type", "image/jpeg")
         .body(MOCK_BODY)
     )
 
@@ -183,6 +279,7 @@ def test_get_successful_no_auth_key_full_size(mock_image_data):
         .header("User-Agent", UA_HEADER)
         .header("Accept", "image/*")
         .reply(200)
+        .header("Content-Type", "image/jpeg")
         .body(MOCK_BODY)
     )
 
@@ -199,6 +296,7 @@ def test_get_successful_no_auth_key_full_size_not_compressed(mock_image_data):
         .header("User-Agent", UA_HEADER)
         .header("Accept", "image/*")
         .reply(200)
+        .header("Content-Type", "image/jpeg")
         .body(MOCK_BODY)
     )
 
@@ -224,6 +322,7 @@ def test_get_successful_no_auth_key_png_only(mock_image_data):
         .header("User-Agent", UA_HEADER)
         .header("Accept", "image/png")
         .reply(200)
+        .header("Content-Type", "image/jpeg")
         .body(MOCK_BODY)
     )
 
@@ -248,6 +347,7 @@ def test_get_successful_forward_query_params(mock_image_data):
         .header("User-Agent", UA_HEADER)
         .header("Accept", "image/*")
         .reply(200)
+        .header("Content-Type", "image/jpeg")
         .body(MOCK_BODY)
     )
 
@@ -292,6 +392,7 @@ def test_get_successful_records_response_code(
         .header("User-Agent", UA_HEADER)
         .header("Accept", "image/*")
         .reply(200)
+        .header("Content-Type", "image/jpeg")
         .body(MOCK_BODY)
     )
 
@@ -487,7 +588,12 @@ def test_caches_failures_with_successes_extending_tolerance(
             photon_get(TEST_MEDIA_INFO)
 
     def _make_successful_request():
-        (pook.get(PHOTON_URL_FOR_TEST_IMAGE).reply(200).body(MOCK_BODY))
+        (
+            pook.get(PHOTON_URL_FOR_TEST_IMAGE)
+            .reply(200)
+            .header("Content-Type", "image/jpeg")
+            .body(MOCK_BODY)
+        )
 
         res = photon_get(TEST_MEDIA_INFO)
         assert res.content == MOCK_BODY.encode()
@@ -530,6 +636,7 @@ def test_get_successful_https_image_url_sends_ssl_parameter(mock_image_data):
         .header("User-Agent", UA_HEADER)
         .header("Accept", "image/*")
         .reply(200)
+        .header("Content-Type", "image/jpeg")
         .body(MOCK_BODY)
     )
 
@@ -674,6 +781,7 @@ def test_wikimedia_thumbnail_default_params_small_image():
         .header("User-Agent", UA_HEADER)
         .header("Accept", "image/*")
         .reply(200)
+        .header("Content-Type", "image/jpeg")
         .body(MOCK_BODY)
     )
 
@@ -709,6 +817,7 @@ def test_wikimedia_thumbnail_default_params_large_image():
         .header("User-Agent", UA_HEADER)
         .header("Accept", "image/*")
         .reply(200)
+        .header("Content-Type", "image/jpeg")
         .body(MOCK_BODY)
     )
 
@@ -743,6 +852,7 @@ def test_wikimedia_thumbnail_default_params_unknown_width():
         .header("User-Agent", UA_HEADER)
         .header("Accept", "image/*")
         .reply(200)
+        .header("Content-Type", "image/jpeg")
         .body(MOCK_BODY)
     )
 
@@ -776,6 +886,7 @@ def test_wikimedia_thumbnail_full_size_params():
         .header("User-Agent", UA_HEADER)
         .header("Accept", "image/*")
         .reply(200)
+        .header("Content-Type", "image/jpeg")
         .body(MOCK_BODY)
     )
 
@@ -815,6 +926,7 @@ def test_wikimedia_thumbnail_uncompressed_params():
         .header("User-Agent", UA_HEADER)
         .header("Accept", "image/*")
         .reply(200)
+        .header("Content-Type", "image/jpeg")
         .body(MOCK_BODY)
     )
 
@@ -849,6 +961,7 @@ def test_wikimedia_thumbnail_uncompressed_full_size_params():
         .header("User-Agent", UA_HEADER)
         .header("Accept", "image/*")
         .reply(200)
+        .header("Content-Type", "image/jpeg")
         .body(MOCK_BODY)
     )
 
@@ -885,6 +998,7 @@ def test_wikimedia_thumbnail_unknown_url_format():
         .header("User-Agent", UA_HEADER)
         .header("Accept", "image/*")
         .reply(200)
+        .header("Content-Type", "image/jpeg")
         .body(MOCK_BODY)
     )
 

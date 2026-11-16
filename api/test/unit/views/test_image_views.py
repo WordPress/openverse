@@ -53,6 +53,7 @@ def test_thumbnail_uses_upstream_thumb_for_smk(
             pook.get(settings.PHOTON_ENDPOINT[:-1])
             .path(expected_thumb_url.replace("http://", "/"))
             .response(200)
+            .header("Content-Type", "image/jpeg")
         ).mock
 
         response = api_client.get(f"/v1/images/{image.identifier}/thumb/")

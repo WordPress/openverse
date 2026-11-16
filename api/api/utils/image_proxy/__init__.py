@@ -1,3 +1,4 @@
+import re
 from functools import wraps
 from typing import Literal
 from urllib.parse import urlparse
@@ -32,6 +33,17 @@ HEADERS = {
 
 PHOTON_TYPES = {"gif", "jpg", "jpeg", "png", "webp"}
 ORIGINAL_TYPES = {"svg"}
+
+# Upstream bytes and headers come from third parties, so the proxy picks its own
+# response headers: the body is always declared an image and rendered passively.
+IMAGE_MEDIA_TYPE = re.compile(r"image/[a-z0-9][a-z0-9.+-]*")
+RESPONSE_HEADERS = {
+    "Content-Security-Policy": (
+        "default-src 'none'; font-src data:; img-src data:; "
+        "style-src 'unsafe-inline'; sandbox"
+    ),
+    "X-Content-Type-Options": "nosniff",
+}
 
 PHOTON = "photon"
 ORIGINAL = "original"
@@ -86,6 +98,18 @@ def get_request_params_for_extension(
     raise UnsupportedMediaType(
         f"Image extension {ext} is not supported by the thumbnail proxy."
     )
+
+
+def _get_image_media_type(upstream_response: aiohttp.ClientResponse) -> str | None:
+    """
+    Return the upstream response's media type, without parameters.
+
+    Return ``None`` unless it is an ``image/*`` type.
+    """
+
+    content_type = upstream_response.headers.get("Content-Type", "")
+    media_type = content_type.split(";")[0].strip().lower()
+    return media_type if IMAGE_MEDIA_TYPE.fullmatch(media_type) else None
 
 
 @sync_to_async
@@ -267,7 +291,15 @@ async def get(
             upstream_response.raise_for_status()
 
             status_code = upstream_response.status
-            content_type = upstream_response.headers.get("Content-Type")
+            content_type = _get_image_media_type(upstream_response)
+            if content_type is None:
+                logger.warning(
+                    "thumbnail_upstream_not_image",
+                    url=upstream_url,
+                    provider=media_info.media_provider,
+                    content_type=upstream_response.headers.get("Content-Type"),
+                )
+                raise UpstreamThumbnailException("Upstream response is not an image.")
 
             content = await upstream_response.content.read()
 
@@ -275,6 +307,7 @@ async def get(
             content,
             status=status_code,
             content_type=content_type,
+            headers=RESPONSE_HEADERS,
         )
     except Exception as exc:
         exception_name = f"{exc.__class__.__module__}.{exc.__class__.__name__}"
