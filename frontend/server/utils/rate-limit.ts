@@ -1,3 +1,6 @@
+import { createHmac, randomBytes } from "node:crypto"
+import { isIPv6 } from "node:net"
+
 import { getRequestHeader, getRequestIP, type H3Event } from "h3"
 
 export type RateLimitCounter = "session" | "no-session" | "ip"
@@ -60,6 +63,49 @@ export const getClientIp = (event: H3Event) =>
   getRequestIP(event) ||
   "unknown"
 
+const expandIpv6 = (address: string) => {
+  const toGroups = (part: string) =>
+    part
+      ? part.split(":").flatMap((group) => {
+          if (!group.includes(".")) {
+            return [parseInt(group, 16)]
+          }
+          const [a, b, c, d] = group.split(".").map(Number)
+          return [(a << 8) | b, (c << 8) | d]
+        })
+      : []
+  const [head, tail] = address.split("::")
+  const headGroups = toGroups(head)
+  if (tail === undefined) {
+    return headGroups
+  }
+  const tailGroups = toGroups(tail)
+  const zeros = Array(8 - headGroups.length - tailGroups.length).fill(0)
+  return [...headGroups, ...zeros, ...tailGroups]
+}
+
+/**
+ * Returns the address that the per-IP limits count by. An IPv6 client usually
+ * gets a whole /64 network, so it is counted by its /64 prefix and cannot get
+ * around the limits by changing addresses inside it.
+ */
+export const getIpRateLimitKey = (ip: string) => {
+  const address = ip.split("%")[0]
+  if (!isIPv6(address)) {
+    return ip
+  }
+  const groups = expandIpv6(address)
+  if (
+    groups.slice(0, 6).every((group, i) => group === (i === 5 ? 0xffff : 0))
+  ) {
+    return `${groups[6] >> 8}.${groups[6] & 0xff}.${groups[7] >> 8}.${groups[7] & 0xff}`
+  }
+  return `${groups
+    .slice(0, 4)
+    .map((group) => group.toString(16))
+    .join(":")}::/64`
+}
+
 interface Window {
   count: number
   resetAt: number
@@ -67,7 +113,10 @@ interface Window {
 
 /**
  * In-memory fixed-window counters. They are per Nuxt task, so the limits are
- * approximate. Keys are kept only until their window ends.
+ * approximate. Session IDs and IP addresses are never stored: the counters
+ * are keyed by their HMAC with a random key that is generated for each
+ * limiter and never leaves the process. Expired counters are removed at the
+ * first request after the end of the next window.
  */
 export class RateLimiter {
   private windows = new Map<string, Window>()
@@ -77,6 +126,8 @@ export class RateLimiter {
     ip: 0,
   }
   private nextPruneAt = 0
+
+  private hashKey = randomBytes(32)
 
   constructor(
     private windowMs: number,
@@ -93,7 +144,9 @@ export class RateLimiter {
 
     let result: RateLimitResult | null = null
     for (const { counter, key, limit } of checks) {
-      const windowKey = `${counter}:${key}`
+      const windowKey = createHmac("sha256", this.hashKey)
+        .update(`${counter}:${key}`)
+        .digest("base64url")
       let window = this.windows.get(windowKey)
       if (!window || window.resetAt <= now) {
         window = { count: 0, resetAt: now + this.windowMs }
