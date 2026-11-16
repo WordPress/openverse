@@ -74,7 +74,7 @@
     "uuid": "^11.0.0"
   },
   "devDependencies": {
-    "@babel/parser": "^7.24.8",
+    "@babel/parser": "^8.0.0",
     "@intlify/core": "^11.4.16",
     "@intlify/core-base": "^11.4.16",
     "@intlify/shared": "^11.4.16",
