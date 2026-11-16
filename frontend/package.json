@@ -53,7 +53,7 @@
     "@floating-ui/dom": "^1.6.8",
     "@nuxtjs/plausible": "^3.0.2",
     "@nuxtjs/robots": "^7.0.0",
-    "@nuxtjs/sitemap": "^7.6.2",
+    "@nuxtjs/sitemap": "^9.0.0",
     "@pinia/nuxt": "^1.0.0",
     "@sentry/nuxt": "^11.10.0",
     "@tailwindcss/typography": "^0.5.20",
