@@ -13,6 +13,7 @@ import { logger } from "~~/server/utils/logger"
 import { isInternalRequest } from "~~/server/utils/proxy"
 import {
   getClientIp,
+  getIpRateLimitKey,
   getRateLimitChecks,
   getRateLimitedRequestKind,
   RateLimiter,
@@ -49,7 +50,6 @@ const toRateLimitConfig = (
   sessionLimit: Number(config.sessionLimit),
   noSessionLimit: Number(config.noSessionLimit),
   ipLimit: Number(config.ipLimit),
-  trustedProxies: Number(config.trustedProxies),
 })
 
 /**
@@ -77,7 +77,7 @@ export default defineEventHandler(async (event) => {
       runtimeConfig.public.deploymentEnv
     )
   )
-  const ip = getClientIp(event, config.trustedProxies)
+  const ip = getIpRateLimitKey(getClientIp(event))
   const result = limiter.hit(
     getRateLimitChecks({ kind, sessionId, ip, config })
   )

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
 import {
   getClientIp,
+  getIpRateLimitKey,
   getRateLimitChecks,
   getRateLimitedRequestKind,
   RateLimiter,
@@ -15,7 +16,6 @@ const config: RateLimitConfig = {
   sessionLimit: 3,
   noSessionLimit: 1,
   ipLimit: 5,
-  trustedProxies: 1,
 }
 
 const eventWithHeaders = (headers: Record<string, string>) =>
@@ -47,21 +47,34 @@ describe("getRateLimitedRequestKind", () => {
 })
 
 describe("getClientIp", () => {
-  it("uses the entry added by the trusted proxy", () => {
+  it("uses the address that Cloudflare sets", () => {
     const event = eventWithHeaders({
-      "x-forwarded-for": "1.1.1.1, 2.2.2.2, 3.3.3.3",
+      "cf-connecting-ip": "1.1.1.1",
+      "x-forwarded-for": "2.2.2.2, 1.1.1.1, 3.3.3.3",
     })
-    expect(getClientIp(event, 1)).toEqual("3.3.3.3")
-    expect(getClientIp(event, 2)).toEqual("2.2.2.2")
+    expect(getClientIp(event)).toEqual("1.1.1.1")
   })
 
-  it("does not go past the first entry", () => {
-    const event = eventWithHeaders({ "x-forwarded-for": "1.1.1.1" })
-    expect(getClientIp(event, 3)).toEqual("1.1.1.1")
+  it("ignores X-Forwarded-For without the Cloudflare header", () => {
+    const event = eventWithHeaders({ "x-forwarded-for": "2.2.2.2" })
+    expect(getClientIp(event)).toEqual("10.0.0.1")
   })
+})
 
-  it("falls back to the socket address without the header", () => {
-    expect(getClientIp(eventWithHeaders({}), 1)).toEqual("10.0.0.1")
+describe("getIpRateLimitKey", () => {
+  it.each`
+    ip                                    | expected
+    ${"203.0.113.7"}                      | ${"203.0.113.7"}
+    ${"2001:db8:85a3:12:8a2e:370:7334:1"} | ${"2001:db8:85a3:12::/64"}
+    ${"2001:DB8:85A3:0012::1"}            | ${"2001:db8:85a3:12::/64"}
+    ${"2001:db8::1"}                      | ${"2001:db8:0:0::/64"}
+    ${"1::2:3:4:5:6:7"}                   | ${"1:0:2:3::/64"}
+    ${"fe80::1%eth0"}                     | ${"fe80:0:0:0::/64"}
+    ${"::ffff:203.0.113.7"}               | ${"203.0.113.7"}
+    ${"64:ff9b::203.0.113.7"}             | ${"64:ff9b:0:0::/64"}
+    ${"unknown"}                          | ${"unknown"}
+  `("counts $ip as $expected", ({ ip, expected }) => {
+    expect(getIpRateLimitKey(ip)).toEqual(expected)
   })
 })
 
@@ -128,6 +141,18 @@ describe("RateLimiter", () => {
     now = 60_000
     expect(limiter.hit(checks)).toBeNull()
     expect(limiter.size).toEqual(2)
+  })
+
+  it("does not store session IDs or IP addresses", () => {
+    const limiter = new RateLimiter(60_000, () => 0)
+    limiter.hit(checks)
+    const stored = JSON.stringify([
+      ...(
+        limiter as unknown as { windows: Map<string, unknown> }
+      ).windows.keys(),
+    ])
+    expect(stored).not.toContain("s1")
+    expect(stored).not.toContain("1.1.1.1")
   })
 
   it("reports the limited requests by counter", () => {
