@@ -41,10 +41,7 @@
     },
     {
       groupName: "python dev dependencies",
-      matchDepTypes: [
-        "tool.pdm.dev-dependencies",
-        "project.optional-dependencies",
-      ],
+      matchDepTypes: ["dependency-groups", "project.optional-dependencies"],
       matchFileNames: [
         "api/**",
         "catalog/**",

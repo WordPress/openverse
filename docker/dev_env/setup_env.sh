@@ -22,18 +22,11 @@ if [[ -n $PNPM_HOME && ! -L $PNPM_BIN ]]; then
   ln -s "$PNPM_HOME" "$PNPM_BIN"
 fi
 
-pdm config python.install_root "/opt/pdm/python"
-pdm config venv.location "/opt/pdm/venvs"
-
-_python3s=(/opt/pdm/python/cpython@3.11.*/bin/python3)
-
-if [ ! -x "${_python3s[0]}" ]; then
+if ! PYTHON_311=$(uv python find 3.11 2>/dev/null); then
   printf "Installing the specific Python version required for pipenv environments\n"
-  pdm python install 3.11
-  _python3s=(/opt/pdm/python/cpython@3.11.*/bin/python3)
+  uv python install 3.11
+  PYTHON_311=$(uv python find 3.11)
 fi
-
-PYTHON_311=${_python3s[0]}
 export PYTHON_311
 
 if [ ! -x /usr/local/bin/python3.11 ]; then
@@ -44,8 +37,4 @@ if [ -z "$(command -v pipenv)" ]; then
   # Install pipenv with the specific python version required by environments
   # still using it, otherwise it gets confused about which dependencies to use
   pipx install pipenv --python "$PYTHON_311"
-fi
-
-if [ -n "$PDM_CACHE_DIR" ]; then
-  pdm config install.cache on
 fi

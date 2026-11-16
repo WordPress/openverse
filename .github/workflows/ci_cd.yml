@@ -109,7 +109,7 @@ jobs:
       - name: Setup CI env
         uses: ./.github/actions/setup-env
         with:
-          # PDM is needed to run Vale
+          # Python is needed to run pre-commit.
           setup_python: "true"
           # Node.js is needed by lint actions.
           install_recipe: "node-install"
@@ -199,7 +199,6 @@ jobs:
           build-contexts: ${{ matrix.build-contexts }}
           build-args: |
             SEMANTIC_VERSION=${{ needs.get-image-tag.outputs.image_tag }}
-            OV_PDM_VERSION=${{ steps.prepare-build-args.outputs.ov_pdm_version }}
             OV_UV_VERSION=${{ steps.prepare-build-args.outputs.ov_uv_version }}
             CATALOG_PY_VERSION=${{ steps.prepare-build-args.outputs.catalog_py_version }}
             CATALOG_AIRFLOW_VERSION=${{ steps.prepare-build-args.outputs.catalog_airflow_version }}
