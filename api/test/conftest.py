@@ -13,6 +13,7 @@ from test.fixtures.media_type_config import (
     image_media_type_config,
     media_type_config,
 )
+from test.fixtures.pook_compat import pook_aiohttp_stream_writer
 from test.fixtures.rest_framework import (
     access_token,
     anon_request,
@@ -39,4 +40,5 @@ __all__ = [
     "audio_media_type_config",
     "media_type_config",
     "cleanup_elasticsearch_test_documents",
+    "pook_aiohttp_stream_writer",
 ]

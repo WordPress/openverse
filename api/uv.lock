@@ -1054,7 +1054,7 @@ test = [
     { name = "factory-boy", specifier = ">=3.3,<4" },
     { name = "fakeredis", specifier = ">=2.26,<3" },
     { name = "freezegun", specifier = ">=1.5,<2" },
-    { name = "pook", specifier = ">=2.1,<3" },
+    { name = "pook", specifier = ">=2.1.5,<3" },
     { name = "pytest", specifier = ">=9,<10" },
     { name = "pytest-django", specifier = ">=4.9,<5" },
     { name = "pytest-pook", specifier = ">=1.0.0" },
@@ -1198,16 +1198,16 @@ wheels = [
 
 [[package]]
 name = "pook"
-version = "2.1.2"
+version = "2.1.6"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "furl" },
     { name = "jsonschema" },
     { name = "xmltodict" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/89/fa/0ad434d4b6fc7aa399f55bd0813b76cb18b19504b4b3b486a006a7d5f44f/pook-2.1.2.tar.gz", hash = "sha256:4acbb9d13ac18b807fd3a54b414a22a16b75db6e5048bc88461479da03c4ecbf", size = 32839, upload-time = "2024-11-20T23:45:38.309Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/dc/4b/6d9de78f36173fe14bd249487d0492d83d2ee83bb117691bb665d2351e59/pook-2.1.6.tar.gz", hash = "sha256:7cfcc98ffd1452d7174d0025fef7949549d8f2604a6f11de4d738647fa0ae9ec", size = 32452, upload-time = "2026-03-06T22:01:30.089Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/c4/bc/83928acd3cdfbd4ef686b6892c21b341497b07d42002e82d9d8f619b541c/pook-2.1.2-py3-none-any.whl", hash = "sha256:ea76784ee1440ee8dde08047c6a1f68be46a07d07a5180d068a047db5620ca1d", size = 46347, upload-time = "2024-11-20T23:45:35.651Z" },
+    { url = "https://files.pythonhosted.org/packages/f6/70/0dcd68592e4290f84eaf8f607e110ba724f8160d26ccfa2208a4f6d09b50/pook-2.1.6-py3-none-any.whl", hash = "sha256:e14e710118a9193cb0e08bce2908309b9e0aa1b213b4a151c235c1f549f6eb55", size = 45860, upload-time = "2026-03-06T22:01:28.556Z" },
 ]
 
 [[package]]
