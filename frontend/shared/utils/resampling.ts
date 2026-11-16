@@ -71,7 +71,7 @@ export const downsampleArray = (data: number[], threshold: number) => {
     const point_a_x = a
     const point_a_y = data[a]
 
-    max_area = area = -1
+    max_area = -1
 
     max_area_point = 0
     next_a = 0
@@ -94,6 +94,6 @@ export const downsampleArray = (data: number[], threshold: number) => {
     a = next_a
   }
 
-  sampled[sampled_index++] = data[dataLength - 1] // Always add the last point
+  sampled[sampled_index] = data[dataLength - 1] // Always add the last point
   return sampled
 }

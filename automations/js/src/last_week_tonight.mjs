@@ -8,7 +8,6 @@ import { resolve } from "path"
 
 import yaml from "js-yaml"
 import axios from "axios"
-// eslint-disable-next-line import/no-unresolved
 import { Octokit } from "@octokit/rest"
 
 import { escapeHtml } from "./utils/html.mjs"
@@ -36,7 +35,7 @@ if (!(pat && username && password)) process.exit(1)
 /* Read GitHub information from the data files */
 
 const githubDataFile = resolve("../data/github.yml") // resolved from `package.json`
-// eslint-disable-next-line import/no-named-as-default-member
+// eslint-disable-next-line import-x/no-named-as-default-member
 const githubInfo = yaml.load(readFileSync(githubDataFile))
 const org = githubInfo.org
 const repos = Object.values(githubInfo.repos)

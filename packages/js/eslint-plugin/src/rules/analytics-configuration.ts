@@ -201,9 +201,7 @@ export const analyticsConfiguration = OpenverseRule<Options, MessageIds>({
       "ExportNamedDeclaration > TSTypeAliasDeclaration > Identifier[name='Events']"(
         node: TSESTree.Identifier
       ): void {
-        const isAnalyticsFile = context
-          .getFilename()
-          .endsWith("types/analytics.ts")
+        const isAnalyticsFile = context.filename.endsWith("types/analytics.ts")
         if (!isAnalyticsFile) {
           return
         }

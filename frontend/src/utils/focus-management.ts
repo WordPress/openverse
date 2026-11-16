@@ -174,7 +174,7 @@ export function focusIn(container: HTMLElement | HTMLElement[], focus: number) {
 
   let offset = 0
   const total = elements.length
-  let next = undefined
+  let next
   do {
     // Guard against infinite loops
     if (offset >= total || offset + total <= 0) {

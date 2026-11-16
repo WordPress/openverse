@@ -3,6 +3,7 @@ import path from "node:path"
 
 import rootNock from "nock"
 import { afterEach, describe, test, expect, vi } from "vitest"
+
 import { createClient, ClientCredentials } from "@openverse/api-client"
 
 import { FAILURE_RETRY_DELAY } from "../src/auth"

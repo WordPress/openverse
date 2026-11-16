@@ -9,11 +9,11 @@
  * document and encourage best practices, like declaring types for these modules.
  */
 
-/* eslint-disable import/extensions, import/no-unresolved */
+/* eslint-disable import-x/extensions, import-x/no-unresolved */
 export {
   textSummary,
   type SummaryData,
 } from "https://jslib.k6.io/k6-summary/0.1.0/index.js"
 export { randomItem } from "https://jslib.k6.io/k6-utils/1.2.0/index.js"
 
-/* eslint-enable import/extensions, import/no-unresolved */
+/* eslint-enable import-x/extensions, import-x/no-unresolved */
