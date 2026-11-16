@@ -34,7 +34,7 @@ dependencies = [
     "psycopg[pool] >=3.2.3, <4",
     "python-decouple >=3.8, <4",
     "sentry-sdk >=2.19, <3",
-    "uvicorn[standard] >=0.34, <0.35",
+    "uvicorn[standard] >=0.54, <0.55",
     "openverse-attribution",
     "structlog-sentry >=2.2.1, <3",
 ]
