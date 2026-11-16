@@ -51,7 +51,7 @@ repos:
       - id: ruff-format # replaces Black
 
   - repo: https://github.com/koalaman/shellcheck-precommit
-    rev: v0.10.0
+    rev: v0.11.0
     hooks:
       - id: shellcheck
 
@@ -151,7 +151,7 @@ repos:
         files: (.vale/.*|.mdx?)$
 
   - repo: https://github.com/renovatebot/pre-commit-hooks
-    rev: 44.238.2
+    rev: 44.244.1
     hooks:
       - id: renovate-config-validator
         args:
@@ -160,7 +160,7 @@ repos:
           - .github/renovate.json5
 
   - repo: https://github.com/hadolint/hadolint
-    rev: v2.12.0
+    rev: v2.15.1
     hooks:
       - id: hadolint-docker
         # The upstream hook leaves the image tag floating at `latest`,
