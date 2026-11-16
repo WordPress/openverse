@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM postgres:13.16 AS db
+FROM postgres:17.12 AS db
 
 ARG PGCLI_VERSION
 
@@ -18,7 +18,7 @@ RUN echo "\set ON_ERROR_STOP on" >> /root/.psqlrc
 RUN apt-get update \
     && apt-get install -yqq --no-install-recommends \
       python3-boto3 \
-      postgresql-plpython3-13 \
+      postgresql-plpython3-17 \
       libpq-dev \
       pipx \
     && apt-get autoremove -y \

@@ -16,7 +16,7 @@
     "node": ">= 26.13.1 <27"
   },
   "devDependencies": {
-    "@eslint/compat": "^1.2.2",
+    "@eslint/compat": "^2.0.0",
     "@openverse/eslint-plugin": "workspace:*",
     "@types/node": "^26.0.0",
     "bindings": "1.5.0",
