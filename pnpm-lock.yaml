@@ -99,8 +99,8 @@ importers:
         specifier: ^12.0.0
         version: 12.0.0(typescript@5.9.3)
       '@wordpress/is-shallow-equal':
-        specifier: ^5.3.0
-        version: 5.3.0
+        specifier: ^6.0.0
+        version: 6.1.0
       async-mutex:
         specifier: ^0.5.0
         version: 0.5.0
@@ -3047,9 +3047,9 @@ packages:
   '@vueuse/shared@12.0.0':
     resolution: {integrity: sha512-3i6qtcq2PIio5i/vVYidkkcgvmTjCqrf26u+Fd4LhnbBmIT6FN8y6q/GJERp8lfcB9zVEfjdV0Br0443qZuJpw==}
 
-  '@wordpress/is-shallow-equal@5.3.0':
-    resolution: {integrity: sha512-sZ+fypqjYX0/DTAKsm1G9ND9Wn4d3Ju4lI7SLSmCKdUL5EPY3g/2LpKQKDqljh9m6Ex5NWp2XfU8UVXpkEfbMQ==}
-    engines: {node: '>=18.12.0', npm: '>=8.19.2'}
+  '@wordpress/is-shallow-equal@6.1.0':
+    resolution: {integrity: sha512-3zZw6SnVLPCfxHxHo7nlg6lRzKn7te/h4al2kdZ3GMWUAdtRsiJZKgiJcVCqNlJN7tbOyNXUepbVXyGJhrTE3Q==}
+    engines: {node: '>=22.13.0'}
 
   '@xhmikosr/archive-type@8.1.0':
     resolution: {integrity: sha512-EXOjEbnZFE5c/nFMf4FOrEURVanzHpnkPYmnmr78u02/8hAhE0FMq8p9TK1IM0/bFr5VcyBUY0gfLm8f7dKy+Q==}
@@ -10156,9 +10156,7 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  '@wordpress/is-shallow-equal@5.3.0':
-    dependencies:
-      '@babel/runtime': 7.24.5
+  '@wordpress/is-shallow-equal@6.1.0': {}
 
   '@xhmikosr/archive-type@8.1.0':
     dependencies:
