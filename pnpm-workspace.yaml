@@ -23,3 +23,6 @@ allowBuilds:
 
 overrides:
   "@opentelemetry/api": ~1.10.0
+minimumReleaseAgeExclude:
+  # Renovate security update: nuxt@4.6.4
+  - nuxt@4.6.4
