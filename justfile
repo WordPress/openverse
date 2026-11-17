@@ -251,7 +251,7 @@ versions:
 # Run `docker compose` configured with the correct files and environment
 [positional-arguments]
 dc *args:
-    @{{ if IS_CI != "" { "just env" } else { "true" } }}
+    @{{ if IS_CI != "" { "just env >&2" } else { "true" } }}
     env COMPOSE_PROFILES="{{ env_var_or_default("COMPOSE_PROFILES", "api,ingestion_server,frontend,catalog") }}" docker compose {{ DOCKER_FILE }} "$@"
 
 # Build all (or specified) services
