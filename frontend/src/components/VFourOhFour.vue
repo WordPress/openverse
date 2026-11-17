@@ -65,7 +65,6 @@ useHead({
         <h1 v-else class="mb-6 heading-5 lg:mb-10 lg:heading-2">
           {{ $t("404.title") }}
         </h1>
-        <p class="sr-only">{{ error }}</p>
         <p v-if="!isRateLimited" class="label-bold lg:heading-6">
           <i18n-t scope="global" keypath="404.main" tag="span">
             <template #link>
