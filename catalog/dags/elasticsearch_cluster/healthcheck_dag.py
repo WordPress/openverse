@@ -23,6 +23,8 @@ from typing import Literal
 from airflow.decorators import dag, task
 from airflow.exceptions import AirflowSkipException
 from airflow.providers.elasticsearch.hooks.elasticsearch import ElasticsearchPythonHook
+from airflow.models import Variable
+from airflow.utils.timezone import utcnow
 from elasticsearch import Elasticsearch
 
 from common.constants import DAG_DEFAULT_ARGS, ENVIRONMENTS, PRODUCTION, Environment
@@ -38,6 +40,9 @@ logger = logging.getLogger(__name__)
 _DAG_ID = "{env}_elasticsearch_cluster_healthcheck"
 ES_ICON = ":elasticsearch_bad:"
 ES_USERNAME = "{env} ES Cluster (via Airflow)"
+
+ALERT_COOLDOWN_HOURS = 2
+ALERT_TIMESTAMP_VAR = "es_last_alert_time_{env}"
 
 EXPECTED_NODE_COUNT = 6
 EXPECTED_DATA_NODE_COUNT = 3
@@ -106,6 +111,21 @@ def _compose_yellow_cluster_health(env: Environment, response_body: dict) -> str
     logger.info(f"Cluster health was yellow; {json.dumps(response_body)}")
     return message
 
+def _should_send_alert(env: str) -> bool:
+    """
+    Returns True if enough time has passed since the last alert or if no alert has ever been sent.
+    """
+    try:
+        last_alert_time_str = Variable.get(ALERT_TIMESTAMP_VAR.format(env=env))
+        last_alert_time = datetime.fromisoformat(last_alert_time_str)
+        now = utcnow()
+        delta = now - last_alert_time
+        return delta.total_seconds() > ALERT_COOLDOWN_HOURS * 3600
+    except KeyError:
+        # No alert sent yet
+        return True
+
+
 
 @task
 def ping_healthcheck(env: str, es_host: str) -> dict:
@@ -137,28 +157,35 @@ def compose_notification(
 
         return "notification", _compose_yellow_cluster_health(env, response_body)
 
-    raise AirflowSkipException(f"Cluster health is green; {json.dumps(response_body)}")
-
+    raise AirflowSkipException(f"Cluster health is green; {json.dumps(response_body)}")catalelasthealt
 
 @task
 def notify(env: str, message_type_and_string: tuple[MessageType, str]):
     message_type, message = message_type_and_string
 
-    message_kwargs = {
-        "dag_id": _DAG_ID.format(env=env),
-        "username": ES_USERNAME.format(env=env.title()),
-        "icon_emoji": ES_ICON,
-    }
-
     if message_type == "alert":
-        send_alert(dedent(message), **message_kwargs)
+        if _should_send_alert(env):
+            send_alert(dedent(message), dag_id=_DAG_ID.format(env=env))
+            Variable.set(ALERT_TIMESTAMP_VAR.format(env=env), utcnow().isoformat())
+        else:
+            raise AirflowSkipException(
+                f"Alert already sent within the past {ALERT_COOLDOWN_HOURS} hours. Skipping..."
+            )
     elif message_type == "notification":
-        send_message(dedent(message), **message_kwargs)
+        send_message(dedent(message), dag_id=_DAG_ID.format(env=env))
     else:
         raise ValueError(
             f"Invalid message_type. Expected 'alert' or 'notification', "
             f"received {message_type}"
         )
+
+@task
+def reset_alert_timestamp_if_healthy(env: str, response_body: dict):
+    if response_body["status"] == "green":
+        try:
+            Variable.delete(ALERT_TIMESTAMP_VAR.format(env=env))
+        except KeyError:
+            pass  # Nothing to delete
 
 
 _SHARED_DAG_ARGS = {
