@@ -12,6 +12,8 @@ Notes:                  <https://wordpress.org/photos/wp-json/wp/v2>
 
 import logging
 import re
+from html import unescape
+
 import lxml.html as html
 
 from common import constants
@@ -177,7 +179,7 @@ class WordPressDataIngester(ProviderDataIngester):
                 # containing certain emoji. Fall back to a regex-based tag
                 # strip, which operates on the original str and never
                 # re-encodes it, so emoji are preserved correctly.
-                title = re.sub(r"<[^<]+?>", "", title).strip()
+                title = unescape(re.sub(r"<[^<]+?>", "", title)).strip()
         return title
 
     @staticmethod

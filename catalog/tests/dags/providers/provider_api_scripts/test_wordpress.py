@@ -93,11 +93,20 @@ def test_get_title(ingester):
     expected_result = "Coffee Bean with bags"
     assert actual_result == expected_result
 
-def test_get_title_handles_emoji(ingester):
-    image_data = {"content": {"rendered": "<p>Tomato Basil \U0001F33F Soup</p>\n"}}
-    actual_result = ingester._get_title(image_data)
-    expected_result = "Tomato Basil \U0001F33F Soup"
-    assert actual_result == expected_result
+
+def test_get_title_falls_back_when_lxml_cannot_decode(ingester):
+    image_data = {
+        "content": {"rendered": "<p>Tomato &amp; Basil \U0001f33f Soup</p>\n"}
+    }
+    with patch(
+        "providers.provider_api_scripts.wordpress.html.fromstring",
+        side_effect=UnicodeDecodeError(
+            "utf-8", b"\xf3", 0, 1, "unexpected end of data"
+        ),
+    ):
+        actual_result = ingester._get_title(image_data)
+    assert actual_result == "Tomato & Basil \U0001f33f Soup"
+
 
 def test_get_file_info(ingester):
     image_details = (
