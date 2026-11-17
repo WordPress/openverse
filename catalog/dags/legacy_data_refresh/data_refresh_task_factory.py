@@ -56,7 +56,7 @@ from airflow.utils.state import TaskInstanceState
 from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
 
-from common import cloudwatch, ingestion_server
+from common import cloudwatch, dag_state, ingestion_server
 from common.constants import (
     AUDIO,
     DATA_REFRESH_POOL,
@@ -85,7 +85,7 @@ TEMP_TABLES = {
 
 
 @task(trigger_rule=TriggerRule.ONE_FAILED)
-def drop_temp_tables(media_type: str, ingest_trigger_task_id: str, ti=None):
+def drop_temp_tables(media_type: str, ingest_trigger_task_id: str, dag_run=None):
     """
     Drop the API DB temp tables a failed data refresh left behind.
 
@@ -98,8 +98,8 @@ def drop_temp_tables(media_type: str, ingest_trigger_task_id: str, ti=None):
     for example while waiting on other Elasticsearch DAGs, the tables may belong to
     a refresh that is still running.
     """
-    trigger_ti = ti.get_dagrun().get_task_instance(ingest_trigger_task_id)
-    if trigger_ti is None or trigger_ti.state != TaskInstanceState.SUCCESS:
+    trigger_state = dag_state.get_task_states(dag_run).get(ingest_trigger_task_id)
+    if trigger_state != TaskInstanceState.SUCCESS:
         raise AirflowSkipException(
             "This run did not trigger ingest_upstream, so it created no temp tables."
         )
