@@ -4,6 +4,8 @@ import pytest
 from airflow.models import DagBag
 
 from common.constants import ENVIRONMENTS, MEDIA_TYPES
+from common.sensors.constants import CONCURRENCY_TAG_DAG_IDS
+from common.sensors.single_run_external_dags_sensor import SingleRunExternalDAGsSensor
 from providers.provider_reingestion_workflows import (
     PROVIDER_REINGESTION_WORKFLOWS as REINGESTION_WORKFLOW_CONFIGS,
 )
@@ -118,3 +120,44 @@ def test_dag_uses_default_args():
     assert not failures, (
         f"The following DAGs do not have DAG_DEFAULT_ARGS defined: {failures}"
     )
+
+
+@pytest.fixture(scope="module")
+def all_dags():
+    return DagBag(dag_folder=DAG_FOLDER, include_examples=False).dags
+
+
+def test_concurrency_tag_dag_ids_match_dag_tags(all_dags):
+    # Concurrency checks read `CONCURRENCY_TAG_DAG_IDS` instead of the DAG tags, so
+    # the two must stay in sync
+    for tag, dag_ids in CONCURRENCY_TAG_DAG_IDS.items():
+        tagged = sorted(dag_id for dag_id, dag in all_dags.items() if tag in dag.tags)
+        assert sorted(dag_ids) == tagged, (
+            f"Update `CONCURRENCY_TAG_DAG_IDS[{tag!r}]` to match the DAGs with the tag"
+        )
+
+    all_tags = {tag for dag in all_dags.values() for tag in dag.tags}
+    unlisted = {tag for tag in all_tags if tag.endswith("_concurrency")} - set(
+        CONCURRENCY_TAG_DAG_IDS
+    )
+    assert not unlisted, f"Add these tags to `CONCURRENCY_TAG_DAG_IDS`: {unlisted}"
+
+
+def test_single_run_sensors_wait_on_existing_tasks(all_dags):
+    # The sensor looks for a task with its own task id in each external DAG
+    sensors = [
+        (dag_id, task)
+        for dag_id, dag in all_dags.items()
+        for task in dag.tasks
+        if isinstance(task, SingleRunExternalDAGsSensor)
+    ]
+    assert sensors
+
+    for dag_id, sensor in sensors:
+        for external_dag_id in sensor.external_dag_ids:
+            assert external_dag_id in all_dags, (
+                f"{dag_id}.{sensor.task_id} waits on a missing DAG {external_dag_id}"
+            )
+            assert all_dags[external_dag_id].has_task(sensor.task_id), (
+                f"{external_dag_id} has no {sensor.task_id} task for {dag_id} to wait on"
+            )

@@ -1,54 +1,22 @@
-from datetime import datetime
-
 from airflow.decorators import task, task_group
 from airflow.exceptions import AirflowSensorTimeout
-from airflow.models import DagModel, DagRun, DagTag
-from airflow.providers.standard.sensors.external_task import ExternalTaskSensor
-from airflow.utils.session import provide_session
-from airflow.utils.state import State
+from airflow.providers.standard.sensors.python import PythonSensor
 
 from common.constants import REFRESH_POKE_INTERVAL
+from common.dag_state import count_active_dag_runs
+from common.sensors.constants import CONCURRENCY_TAG_DAG_IDS
 
 
 THREE_DAYS = 60 * 60 * 24 * 3
 
 
-def _get_most_recent_dag_run(dag_id) -> list[datetime] | datetime:
-    """
-    Retrieve the most recent DAG run's execution date.
-
-    For use as ``execution_date_fn`` argument to ``ExternalTaskSensor``.
-
-    Adapted from <https://stackoverflow.com/a/74017474>
-    CC BY-SA 4.0 by Stack Overflow user Nahid O.
-    """
-    dag_runs = DagRun.find(dag_id=dag_id)
-    dag_runs.sort(key=lambda x: x.logical_date, reverse=True)
-    if dag_runs:
-        return dag_runs[0].logical_date
-
-    # If there are no DAG runs, return an empty list to indicate that
-    # there are no execution dates to check.
-    # This works because the sensor waits until the number
-    # of runs for the execution dates in the ``allowed_states`` matches the
-    # length of the list of execution dates to check. If there are no runs
-    # for this DAG, then the only possible number of required states
-    # we can have is 0. See ``ExternalTaskSensor::poke`` and
-    # ``ExternalTaskSensor::get_count``, especially the handling
-    # of ``dttm_filter`` for the relevant implementation details.
-    return []
-
-
 @task
-def get_dags_with_concurrency_tag(
-    tag: str, excluded_dag_ids: list[str], session=None, dag=None
-):
+def get_dags_with_concurrency_tag(tag: str, excluded_dag_ids: list[str], dag=None):
     """
     Get a list of DAG ids with the given tag. The id of the running DAG is excluded,
     as well as any ids in the `excluded_dag_ids` list.
     """
-    dags = session.query(DagModel).filter(DagModel.tags.any(DagTag.name == tag)).all()
-    dag_ids = [dag.dag_id for dag in dags]
+    dag_ids = CONCURRENCY_TAG_DAG_IDS.get(tag, [])
 
     running_dag_id = dag.dag_id
     if running_dag_id not in dag_ids:
@@ -56,7 +24,8 @@ def get_dags_with_concurrency_tag(
             f"The `{running_dag_id}` DAG tried preventing concurrency with the `{tag}`,"
             " tag, but does not have the tag itself. To ensure that other DAGs with this"
             f" tag will also avoid running concurrently with `{running_dag_id}`, it must"
-            f"have the `{tag}` tag applied."
+            f" have the `{tag}` tag applied and be listed under it in"
+            " `CONCURRENCY_TAG_DAG_IDS`."
         )
 
     # Return just the ids of DAGs to prevent concurrency with. This excludes the running dag id,
@@ -86,17 +55,12 @@ def wait_for_external_dag(
     if not task_id:
         task_id = f"wait_for_{external_dag_id}"
 
-    sensor = ExternalTaskSensor(
+    sensor = PythonSensor(
         task_id=task_id,
         poke_interval=REFRESH_POKE_INTERVAL,
-        external_dag_id=external_dag_id,
-        # Wait for the whole DAG, not just a part of it
-        external_task_id=None,
-        check_existence=False,
-        execution_date_fn=lambda _: _get_most_recent_dag_run(external_dag_id),
+        # Wait until no run of the external DAG is queued or running
+        python_callable=lambda: count_active_dag_runs(external_dag_id) == 0,
         mode="reschedule",
-        # Any "finished" state is sufficient for us to continue
-        allowed_states=[State.SUCCESS, State.FAILED],
         # execution_timeout for the task does not include time that the sensor
         # was up for reschedule but not actually running. `timeout` does
         timeout=timeout,
@@ -106,17 +70,14 @@ def wait_for_external_dag(
 
 
 @task_group(group_id="wait_for_external_dags")
-@provide_session
-def wait_for_external_dags_with_tag(
-    tag: str, excluded_dag_ids: list[str] = None, session=None
-):
+def wait_for_external_dags_with_tag(tag: str, excluded_dag_ids: list[str] = None):
     """
     Wait until all DAGs with the given `tag`, excluding those identified by the
     `excluded_dag_ids`, are no longer in the running state before continuing.
     """
     external_dag_ids = get_dags_with_concurrency_tag.override(
         task_id=f"get_dags_in_{tag}_group"
-    )(tag=tag, excluded_dag_ids=excluded_dag_ids or [], session=session)
+    )(tag=tag, excluded_dag_ids=excluded_dag_ids or [])
 
     wait_for_external_dag.expand(external_dag_id=external_dag_ids)
 
@@ -139,9 +100,8 @@ def prevent_concurrency_with_dag(external_dag_id: str, **context):
 
 
 @task_group(group_id="prevent_concurrency_with_dags")
-@provide_session
 def prevent_concurrency_with_dags_with_tag(
-    tag: str, excluded_dag_ids: list[str] = None, session=None
+    tag: str, excluded_dag_ids: list[str] = None
 ):
     """
     Prevent concurrency with any DAGs that have the given `tag`, excluding
@@ -151,7 +111,7 @@ def prevent_concurrency_with_dags_with_tag(
     """
     external_dag_ids = get_dags_with_concurrency_tag.override(
         task_id=f"get_dags_in_{tag}_group"
-    )(tag=tag, excluded_dag_ids=excluded_dag_ids or [], session=session)
+    )(tag=tag, excluded_dag_ids=excluded_dag_ids or [])
 
     prevent_concurrency_with_dag.expand(external_dag_id=external_dag_ids)
 

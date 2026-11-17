@@ -66,11 +66,9 @@ https://github.com/creativecommons/cccatalog/issues/334)
 import logging
 import os
 import re
-import urllib.parse
 from string import Template
 
 from airflow import DAG
-from airflow.configuration import conf
 from airflow.decorators import task
 from airflow.exceptions import AirflowSkipException
 from airflow.models import Variable
@@ -82,7 +80,7 @@ from airflow.utils.state import State
 from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
 
-from common import slack
+from common import dag_state, slack
 from common.constants import AWS_CONN_ID, DAG_DEFAULT_ARGS, XCOM_PULL_TEMPLATE
 from common.constants import POSTGRES_CONN_ID as DB_CONN_ID
 from common.loader import loader, reporting, s3, sql
@@ -585,33 +583,33 @@ def report_aggregate_reingestion_errors(
     """
     # Get the list of failed `pull_data` tasks
     media_type_name = _get_media_type_descriptor(provider_conf.media_types)
-    failed_pull_data_tasks = [
-        task
-        for task in dag_run.get_task_instances(state=State.FAILED)
-        if f"pull_{media_type_name}_data" in task.task_id
-    ]
+    failed_pull_data_task_ids = sorted(
+        task_id
+        for task_id, state in dag_state.get_task_states(dag_run).items()
+        if state == State.FAILED and f"pull_{media_type_name}_data" in task_id
+    )
 
-    base_url = conf.get("webserver", "BASE_URL")
-    dag_run_url = f"{base_url}/dags/{dag_run.dag_id}/grid?dag_run_id={urllib.parse.quote(dag_run.run_id)}"
-
-    if not failed_pull_data_tasks:
+    if not failed_pull_data_task_ids:
         raise AirflowSkipException
+
+    dag_run_url = dag_state.dag_run_url(dag_run.dag_id, dag_run.run_id)
 
     message = (
         (
-            f"Ingestion errors were encountered in {len(failed_pull_data_tasks)}"
+            f"Ingestion errors were encountered in {len(failed_pull_data_task_ids)}"
             f" ingestion days while running the `{provider_conf.dag_id}` DAG "
             f"(<{dag_run_url}|link>). See the"
             " logs for details"
         )
         + (
             " (showing only the first 5):\n"
-            if len(failed_pull_data_tasks) > 5
+            if len(failed_pull_data_task_ids) > 5
             else ":\n"
         )
         + "\n".join(
-            f"  - <{task.log_url}|{task.task_id}>"
-            for task in failed_pull_data_tasks[:5]
+            f"  - <{dag_state.task_log_url(dag_run.dag_id, dag_run.run_id, task_id)}"
+            f"|{task_id}>"
+            for task_id in failed_pull_data_task_ids[:5]
         )
     )
 

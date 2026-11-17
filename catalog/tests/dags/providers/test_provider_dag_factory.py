@@ -245,3 +245,74 @@ def test_create_report_load_completion_for_reingestion_dag():
 
         assert "date_range_start" not in report_task.op_kwargs
         assert "date_range_end" not in report_task.op_kwargs
+
+
+@pytest.fixture
+def reingestion_conf():
+    return ProviderReingestionWorkflow(
+        ingester_class=MockImageOnlyProviderDataIngester,
+    )
+
+
+def test_report_aggregate_reingestion_errors_skips_without_failures(
+    reingestion_conf,
+):
+    dag_run = mock.MagicMock(dag_id="some_dag", run_id="some_run")
+    task_states = {
+        "ingest_data.pull_image_data": "success",
+        "ingest_data_day_shift_1.load_image_data": "failed",
+    }
+    with (
+        mock.patch.object(
+            provider_dag_factory.dag_state,
+            "get_task_states",
+            return_value=task_states,
+        ),
+        mock.patch.object(provider_dag_factory.slack, "send_alert") as send_alert,
+    ):
+        with pytest.raises(AirflowSkipException):
+            provider_dag_factory.report_aggregate_reingestion_errors.function(
+                reingestion_conf, dag_run=dag_run
+            )
+
+    send_alert.assert_not_called()
+
+
+def test_report_aggregate_reingestion_errors_reports_failed_pull_tasks(
+    reingestion_conf,
+):
+    dag_run = mock.MagicMock(dag_id="some_dag", run_id="some_run")
+    task_states = {
+        f"ingest_data_day_shift_{day}.pull_image_data_day_shift_{day}": "failed"
+        for day in range(1, 8)
+    }
+    task_states["ingest_data.pull_image_data"] = "success"
+    with (
+        mock.patch.object(
+            provider_dag_factory.dag_state,
+            "get_task_states",
+            return_value=task_states,
+        ),
+        mock.patch.object(
+            provider_dag_factory.dag_state,
+            "dag_run_url",
+            return_value="https://airflow.test/run",
+        ),
+        mock.patch.object(
+            provider_dag_factory.dag_state,
+            "task_log_url",
+            side_effect=lambda dag_id, run_id, task_id: (
+                f"https://airflow.test/{task_id}"
+            ),
+        ),
+        mock.patch.object(provider_dag_factory.slack, "send_alert") as send_alert,
+    ):
+        provider_dag_factory.report_aggregate_reingestion_errors.function(
+            reingestion_conf, dag_run=dag_run
+        )
+
+    message = send_alert.call_args.args[0]
+    assert "encountered in 7 ingestion days" in message
+    assert "<https://airflow.test/run|link>" in message
+    assert "(showing only the first 5)" in message
+    assert message.count("  - <https://airflow.test/") == 5

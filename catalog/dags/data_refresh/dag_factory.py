@@ -77,7 +77,6 @@ def wait_for_conflicting_dags(
     SingleRunExternalDAGsSensor(
         task_id="wait_for_data_refresh",
         external_dag_ids=external_dag_ids,
-        check_existence=True,
         allow_concurrent_runs=allow_concurrent_data_refreshes,
         poke_interval=data_refresh_config.concurrency_check_poke_interval,
         mode="reschedule",
