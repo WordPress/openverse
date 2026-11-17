@@ -5,6 +5,9 @@ This module contains the Airflow tasks used for filtering, transforming, and aug
 data from the newly created temporary table in the downstream (API) database.
 Currently, this provides an entrypoint for filtering tags that do not meet a certain
 minimum accuracy, are malformed, or are from unvetted providers.
+
+The filtering runs as one `UPDATE` per batch of ids inside the API database, so no
+rows are loaded into the Airflow worker.
 """
 
 import logging
@@ -12,14 +15,10 @@ from textwrap import dedent
 
 from airflow.decorators import task, task_group
 from airflow.models.abstractoperator import AbstractOperator
-from airflow.providers.common.sql.hooks.handlers import (
-    fetch_all_handler,
-    fetch_one_handler,
-)
-from psycopg2.extras import Json
+from airflow.providers.common.sql.hooks.handlers import fetch_one_handler
 
 from common.constants import POSTGRES_API_CONN_IDS, Environment
-from common.sql import PGExecuteQueryOperator, PostgresHook
+from common.sql import RETURN_ROW_COUNT, PGExecuteQueryOperator, PostgresHook
 from data_refresh.data_refresh_types import DataRefreshConfig
 
 
@@ -59,17 +58,35 @@ TAG_MIN_CONFIDENCE = 0.90
 # Filter out tags that match the following providers (either because they haven't
 # been vetted or because they are known to be low-quality).
 FILTERED_TAG_PROVIDERS = {"rekognition"}
-# Select the data within a given batch
-QUERY_SELECTION = dedent("""
-    SELECT id, identifier, tags
-    FROM {temp_table}
-    WHERE id BETWEEN {batch_start} AND {batch_end}
-""")
-# Update the tags for a given ID
-QUERY_UPDATE = dedent("""
-    UPDATE {temp_table}
-    SET tags = {tags_fragment}
-    WHERE id = {_id}
+
+# True when a tag is malformed, below the confidence threshold, from a filtered
+# provider, or has a denylisted name. Every branch must be non-null, because
+# `NOT NULL` would drop a tag that should be kept.
+TAG_IS_FILTERED = """(
+    jsonb_typeof(tag -> 'name') IS DISTINCT FROM 'string'
+    OR CASE
+        WHEN jsonb_typeof(tag -> 'accuracy') IN ('number', 'string')
+            THEN (tag ->> 'accuracy')::numeric < %(min_confidence)s
+        ELSE false
+    END
+    OR coalesce(tag ->> 'provider' = ANY(%(filtered_providers)s), false)
+    OR lower(tag ->> 'name') = ANY(%(denylist)s)
+    OR lower(tag ->> 'name') LIKE ANY(%(contains_denylist)s)
+)"""
+TAG_ELEMENTS = """jsonb_array_elements(
+    CASE jsonb_typeof(tags) WHEN 'array' THEN tags ELSE '[]'::jsonb END
+) WITH ORDINALITY AS elements(tag, position)"""
+# Rewrite the tags of each record in the batch that has at least one tag to drop,
+# keeping the order of the remaining tags.
+QUERY_FILTER_TAGS = dedent(f"""
+    UPDATE {{temp_table}}
+    SET tags = (
+        SELECT coalesce(jsonb_agg(tag ORDER BY position), '[]'::jsonb)
+        FROM {TAG_ELEMENTS}
+        WHERE NOT {TAG_IS_FILTERED}
+    )
+    WHERE id BETWEEN %(batch_start)s AND %(batch_end)s
+        AND EXISTS (SELECT FROM {TAG_ELEMENTS} WHERE {TAG_IS_FILTERED})
 """)
 # Get an estimate of total rows based on the min and max auto-assigned ID
 QUERY_ROW_ESTIMATE = dedent("""
@@ -77,45 +94,20 @@ QUERY_ROW_ESTIMATE = dedent("""
 """)
 
 
-def _tag_denylisted(tag):
-    """Check if a tag is banned or contains a banned substring."""
-
-    if tag in TAG_DENYLIST:
-        return True
-    for denylisted_substring in TAG_CONTAINS_DENYLIST:
-        if denylisted_substring in tag:
-            return True
-    return False
+def _like_contains_pattern(term: str) -> str:
+    escaped = term.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+    return f"%{escaped}%"
 
 
-def generate_tag_updates(tags) -> list[dict] | None:
-    """Filter denylisted, low-accuracy, and unverified provider tags."""
-    update_required = False
-    tag_output = []
-    if not tags:
-        return None
-    for tag in tags:
-        should_filter = False
-        lower_tag = None
-        if (
-            # Malformed tag
-            not ("name" in tag and isinstance(tag["name"], str))
-            # Does not meet accuracy criteria
-            or ("accuracy" in tag and float(tag["accuracy"]) < TAG_MIN_CONFIDENCE)
-            # Provider must be excluded
-            or ("provider" in tag and tag["provider"] in FILTERED_TAG_PROVIDERS)
-        ):
-            should_filter = True
-        else:
-            lower_tag = tag["name"].lower()
-        if should_filter or _tag_denylisted(lower_tag):
-            update_required = True
-        else:
-            tag_output.append(tag)
-
-    if update_required:
-        return tag_output
-    return None
+def get_tag_filter_parameters() -> dict:
+    return {
+        "min_confidence": TAG_MIN_CONFIDENCE,
+        "filtered_providers": sorted(FILTERED_TAG_PROVIDERS),
+        "denylist": sorted(TAG_DENYLIST),
+        "contains_denylist": sorted(
+            _like_contains_pattern(term) for term in TAG_CONTAINS_DENYLIST
+        ),
+    }
 
 
 @task
@@ -124,7 +116,7 @@ def get_alter_batches(
 ) -> list[tuple[int, int]]:
     start, stop = id_bounds
     batch_size = batch_size or DEFAULT_BATCH_SIZE
-    return [(x, x + batch_size - 1) for x in range(start, stop, batch_size)]
+    return [(x, x + batch_size - 1) for x in range(start, stop + 1, batch_size)]
 
 
 @task(max_active_tis_per_dagrun=2)
@@ -143,36 +135,16 @@ def alter_data_batch(
             timeout if timeout else PostgresHook.get_execution_timeout(task)
         ),
     )
-    rows = postgres.run(
-        QUERY_SELECTION.format(
-            temp_table=temp_table, batch_start=batch_start, batch_end=batch_end
-        ),
-        handler=fetch_all_handler,
+    altered_count = postgres.run(
+        QUERY_FILTER_TAGS.format(temp_table=temp_table),
+        parameters={
+            "batch_start": batch_start,
+            "batch_end": batch_end,
+            **get_tag_filter_parameters(),
+        },
+        handler=RETURN_ROW_COUNT,
     )
-    worker_conn = postgres.get_conn()
-    logger.info("Data altering worker connected to database")
-    with worker_conn.cursor() as write_cur:
-        logger.info(f"Filtering {len(rows)} rows")
-
-        altered_count = 0
-        for row in rows:
-            _id, identifier, tags = row
-            tags_fragment = generate_tag_updates(tags)
-            if not tags_fragment:
-                continue
-            altered_count += 1
-            logger.debug(
-                f"Updated tags for {identifier}\n\t"
-                f"from '{tags}' \n\tto '{tags_fragment}'"
-            )
-            update_query = QUERY_UPDATE.format(
-                temp_table=temp_table, tags_fragment=Json(tags_fragment), _id=_id
-            )
-            logger.debug(f"Executing update query: \n\t{update_query}")
-            write_cur.execute(update_query)
-    logger.info("Worker committing changes...")
-    worker_conn.commit()
-    worker_conn.close()
+    logger.info(f"Filtered tags for {altered_count} records in batch {batch}")
     return altered_count
 
 

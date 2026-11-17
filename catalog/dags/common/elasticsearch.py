@@ -3,7 +3,7 @@ from datetime import timedelta
 from typing import Literal
 
 from airflow.decorators import task, task_group
-from airflow.exceptions import AirflowSkipException
+from airflow.exceptions import AirflowException, AirflowSkipException
 from airflow.models.connection import Connection
 from airflow.providers.elasticsearch.hooks.elasticsearch import ElasticsearchPythonHook
 from airflow.sensors.base import PokeReturnValue
@@ -132,6 +132,20 @@ def create_index(index_config, es_host: str):
     return new_index
 
 
+def raise_for_reindex_failure(response: dict) -> None:
+    """
+    Raise if a finished reindex task failed.
+
+    A reindex run with ``wait_for_completion=False`` still reports ``completed`` when
+    it fails, with the cause in ``error`` (for example, an expired scroll) or in
+    ``response.failures`` (rejected documents).
+    """
+    error = response.get("error")
+    failures = response.get("response", {}).get("failures")
+    if error or failures:
+        raise AirflowException(f"Reindex failed: {error or failures[:5]}")
+
+
 @task_group(group_id="trigger_and_wait_for_reindex")
 def trigger_and_wait_for_reindex(
     es_host: str,
@@ -168,6 +182,10 @@ def trigger_and_wait_for_reindex(
             max_docs=max_docs,
             # Parallelize indexing when not None
             slices=slices,
+            # The default 5m scroll keep-alive expires while slow bulk writes to the
+            # destination index hold up a slice, failing the whole reindex with
+            # "No search context found".
+            scroll="1h",
             # Do not hold the slot while awaiting completion
             wait_for_completion=False,
             # Whether to immediately refresh the index after completion to make
@@ -197,7 +215,10 @@ def trigger_and_wait_for_reindex(
         else:
             logger.info(f"Reindexed {count} documents.")
 
-        return PokeReturnValue(is_done=response.get("completed") is True)
+        is_done = response.get("completed") is True
+        if is_done:
+            raise_for_reindex_failure(response)
+        return PokeReturnValue(is_done=is_done)
 
     trigger_reindex_task = trigger_reindex(
         es_host,
