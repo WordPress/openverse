@@ -25,21 +25,21 @@ from data_refresh.remap_table_indices import (
             ],
             [
                 TableIndex(
-                    "image_provider_7d11f847",
-                    "temp_import_image_provider_7d11f847",
-                    "CREATE INDEX temp_import_image_provider_7d11f847 ON"
+                    index_name="image_provider_7d11f847",
+                    temp_index_name="temp_import_image_provider_7d11f847",
+                    index_def="CREATE INDEX temp_import_image_provider_7d11f847 ON"
                     " public.temp_import_image USING btree (provider)",
                 ),
                 TableIndex(
-                    "image_identifier_key",
-                    "temp_import_image_identifier_key",
-                    "CREATE UNIQUE INDEX temp_import_image_identifier_key ON"
+                    index_name="image_identifier_key",
+                    temp_index_name="temp_import_image_identifier_key",
+                    index_def="CREATE UNIQUE INDEX temp_import_image_identifier_key ON"
                     " public.temp_import_image USING btree (identifier)",
                 ),
                 TableIndex(
-                    "image_pkey",
-                    "temp_import_image_pkey",
-                    "CREATE UNIQUE INDEX temp_import_image_pkey ON"
+                    index_name="image_pkey",
+                    temp_index_name="temp_import_image_pkey",
+                    index_def="CREATE UNIQUE INDEX temp_import_image_pkey ON"
                     " public.temp_import_image USING btree (id)",
                 ),
             ],
@@ -65,9 +65,9 @@ def test_transform_index_defs(existing_index_defs, expected_index_defs):
         (
             [
                 TableIndex(
-                    "image_pkey",
-                    "temp_import_image_pkey",
-                    "CREATE UNIQUE INDEX temp_import_image_pk ON"
+                    index_name="image_pkey",
+                    temp_index_name="temp_import_image_pkey",
+                    index_def="CREATE UNIQUE INDEX temp_import_image_pk ON"
                     " public.temp_import_image USING btree (id)",
                 ),
             ],
@@ -77,9 +77,9 @@ def test_transform_index_defs(existing_index_defs, expected_index_defs):
         (
             [
                 TableIndex(
-                    "image_provider_7d11f847",
-                    "temp_import_image_provider_7d11f847",
-                    "CREATE INDEX temp_import_image_provider_7d11f847 ON"
+                    index_name="image_provider_7d11f847",
+                    temp_index_name="temp_import_image_provider_7d11f847",
+                    index_def="CREATE INDEX temp_import_image_provider_7d11f847 ON"
                     " public.temp_import_image USING btree (provider)",
                 ),
             ],
@@ -92,21 +92,21 @@ def test_transform_index_defs(existing_index_defs, expected_index_defs):
         (
             [
                 TableIndex(
-                    "image_provider_7d11f847",
-                    "temp_import_image_provider_7d11f847",
-                    "CREATE INDEX temp_import_image_provider_7d11f847 ON"
+                    index_name="image_provider_7d11f847",
+                    temp_index_name="temp_import_image_provider_7d11f847",
+                    index_def="CREATE INDEX temp_import_image_provider_7d11f847 ON"
                     " public.temp_import_image USING btree (provider)",
                 ),
                 TableIndex(
-                    "image_identifier_key",
-                    "temp_import_image_identifier_key",
-                    "CREATE UNIQUE INDEX temp_import_image_identifier_key ON"
+                    index_name="image_identifier_key",
+                    temp_index_name="temp_import_image_identifier_key",
+                    index_def="CREATE UNIQUE INDEX temp_import_image_identifier_key ON"
                     " public.temp_import_image USING btree (identifier)",
                 ),
                 TableIndex(
-                    "image_pkey",
-                    "temp_import_image_pkey",
-                    "CREATE UNIQUE INDEX temp_import_image_pk ON"
+                    index_name="image_pkey",
+                    temp_index_name="temp_import_image_pkey",
+                    index_def="CREATE UNIQUE INDEX temp_import_image_pk ON"
                     " public.temp_import_image USING btree (id)",
                 ),
             ],

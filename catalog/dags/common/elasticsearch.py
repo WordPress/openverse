@@ -127,7 +127,7 @@ def get_record_count_group_by_sources(es_host: str, index: str):
 def create_index(index_config, es_host: str):
     es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
 
-    new_index = es_conn.indices.create(**index_config)
+    new_index = es_conn.indices.create(**index_config).body
 
     return new_index
 
@@ -219,7 +219,7 @@ def trigger_and_wait_for_reindex(
 @task
 def refresh_index(es_host: str, index_name: str):
     es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
-    return es_conn.indices.refresh(index=index_name)
+    return es_conn.indices.refresh(index=index_name).body
 
 
 @task_group(group_id="point_alias")

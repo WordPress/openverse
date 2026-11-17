@@ -46,6 +46,14 @@ class RecordMetrics(NamedTuple):
 MediaTypeRecordMetrics = dict[str, RecordMetrics]
 
 
+def _as_record_metrics(counts: RecordMetrics | Sequence | None) -> RecordMetrics | None:
+    # XComs are stored as JSON, so a RecordMetrics pushed by the load task comes back
+    # as a plain tuple or list
+    if counts is None or isinstance(counts, RecordMetrics):
+        return counts
+    return RecordMetrics(*counts)
+
+
 def humanize_time_duration(seconds: float | int) -> str:
     if seconds == 0:
         return "inf"
@@ -79,12 +87,20 @@ def clean_record_counts(
     if isinstance(record_counts_by_media_type, list):
         return {
             media_type: sum(
-                (x[media_type] for x in record_counts_by_media_type),
+                (
+                    _as_record_metrics(x[media_type])
+                    for x in record_counts_by_media_type
+                ),
                 RecordMetrics(0, 0, 0, 0),
             )
             for media_type in media_types
         }
-    return record_counts_by_media_type
+    if not record_counts_by_media_type:
+        return record_counts_by_media_type
+    return {
+        media_type: _as_record_metrics(counts)
+        for media_type, counts in record_counts_by_media_type.items()
+    }
 
 
 def skip_report_completion(

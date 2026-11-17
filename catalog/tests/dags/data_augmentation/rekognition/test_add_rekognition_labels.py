@@ -72,7 +72,12 @@ def test_parse_and_insert_labels_parse(mock_variable, mock_insert_tags, mock_fil
     ]
     actual = add_rekognition_labels.parse_and_insert_labels.function(**DEFAULT_ARGS)
 
-    assert actual == ParseResults(3, 1, 1, ["this line should fail!"])
+    assert actual == ParseResults(
+        total_processed=3,
+        total_skipped=1,
+        total_failed=1,
+        failed_records_sample=["this line should fail!"],
+    )
     mock_insert_tags.assert_called_once()
     assert (
         # Check the first image UUID
@@ -126,7 +131,12 @@ def test_parse_and_insert_labels_buffer_config(
         **{**DEFAULT_ARGS, "in_memory_buffer_size": in_memory_buffer_size}
     )
 
-    assert actual == ParseResults(expected_processed, expected_skipped, 0, [])
+    assert actual == ParseResults(
+        total_processed=expected_processed,
+        total_skipped=expected_skipped,
+        total_failed=0,
+        failed_records_sample=[],
+    )
     assert mock_insert_tags.call_count == expected_insert_call_count
     assert mock_variable.set.call_count == expected_insert_call_count - 1
     mock_variable.delete.assert_called_once()

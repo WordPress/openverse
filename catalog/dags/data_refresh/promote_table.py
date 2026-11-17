@@ -35,7 +35,7 @@ def get_go_live_query(
     restore_index_names = ("\n        ").join(
         [
             queries.RENAME_INDEX_QUERY.format(
-                old_name=index.temp_index_name, new_name=index.index_name
+                old_name=index["temp_index_name"], new_name=index["index_name"]
             )
             for index in index_mapping
         ]
