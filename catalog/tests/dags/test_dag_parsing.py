@@ -161,3 +161,13 @@ def test_single_run_sensors_wait_on_existing_tasks(all_dags):
             assert all_dags[external_dag_id].has_task(sensor.task_id), (
                 f"{external_dag_id} has no {sensor.task_id} task for {dag_id} to wait on"
             )
+
+
+def test_concurrency_tagged_dags_have_one_active_run(all_dags):
+    # The concurrency sensors wait while any run of a tagged DAG is active, which
+    # matches waiting on its latest run only while each DAG runs one at a time
+    tagged_dag_ids = {
+        dag_id for dag_ids in CONCURRENCY_TAG_DAG_IDS.values() for dag_id in dag_ids
+    }
+    for dag_id in tagged_dag_ids:
+        assert all_dags[dag_id].max_active_runs == 1, dag_id

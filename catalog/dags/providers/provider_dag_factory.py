@@ -584,9 +584,16 @@ def report_aggregate_reingestion_errors(
     # Get the list of failed `pull_data` tasks
     media_type_name = _get_media_type_descriptor(provider_conf.media_types)
     failed_pull_data_task_ids = sorted(
-        task_id
-        for task_id, state in dag_state.get_task_states(dag_run).items()
-        if state == State.FAILED and f"pull_{media_type_name}_data" in task_id
+        (
+            task_id
+            for task_id, state in dag_state.get_task_states(dag_run).items()
+            if state == State.FAILED and f"pull_{media_type_name}_data" in task_id
+        ),
+        # Order by day shift, so that day_shift_2 comes before day_shift_10
+        key=lambda task_id: [
+            int(part) if part.isdigit() else part
+            for part in re.split(r"(\d+)", task_id)
+        ],
     )
 
     if not failed_pull_data_task_ids:

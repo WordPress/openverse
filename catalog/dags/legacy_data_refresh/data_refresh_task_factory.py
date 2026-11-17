@@ -150,6 +150,7 @@ def create_data_refresh_task_group(
         wait_for_data_refresh = SingleRunExternalDAGsSensor(
             task_id="wait_for_data_refresh",
             external_dag_ids=external_dag_ids,
+            check_existence=True,
             poke_interval=data_refresh.data_refresh_poke_interval,
             mode="reschedule",
             pool=DATA_REFRESH_POOL,

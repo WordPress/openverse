@@ -2,8 +2,11 @@ from datetime import timedelta
 from unittest import mock
 
 import pytest
+from airflow.exceptions import AirflowException
+from airflow.models import DagModel
 from airflow.models.dag import DAG
 from airflow.providers.standard.operators.empty import EmptyOperator
+from airflow.utils.session import create_session
 from airflow.utils.state import DagRunState, TaskInstanceState
 from airflow.utils.timezone import datetime
 from airflow.utils.types import DagRunType
@@ -200,3 +203,29 @@ def test_ui_urls(is_airflow_3, section, expected_run_url, expected_log_url):
         assert (
             dag_state.task_log_url("some_dag", run_id, "group.task") == expected_log_url
         )
+
+
+@pytest.mark.usefixtures("airflow_2", "clean_db")
+def test_assert_dag_exists_on_airflow_2(sample_dag_id_fixture):
+    with pytest.raises(AirflowException, match="does not exist"):
+        dag_state.assert_dag_exists(sample_dag_id_fixture)
+
+    with create_session() as session:
+        session.add(DagModel(dag_id=sample_dag_id_fixture))
+    try:
+        dag_state.assert_dag_exists(sample_dag_id_fixture)
+    finally:
+        with create_session() as session:
+            session.query(DagModel).filter(
+                DagModel.dag_id == sample_dag_id_fixture
+            ).delete()
+
+
+def test_assert_dag_exists_on_airflow_3(airflow_3_ti):
+    sdk_exceptions = pytest.importorskip("airflow.sdk.exceptions")
+    airflow_3_ti.get_dag.side_effect = sdk_exceptions.AirflowRuntimeError(
+        mock.MagicMock()
+    )
+
+    with pytest.raises(AirflowException, match="does not exist"):
+        dag_state.assert_dag_exists("missing_dag")

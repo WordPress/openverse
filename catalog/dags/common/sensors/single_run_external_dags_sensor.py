@@ -2,7 +2,7 @@ from collections.abc import Iterable
 
 from airflow.sensors.base import BaseSensorOperator
 
-from common.dag_state import count_running_dag_runs_past_task
+from common.dag_state import assert_dag_exists, count_running_dag_runs_past_task
 
 
 class SingleRunExternalDAGsSensor(BaseSensorOperator):
@@ -15,10 +15,12 @@ class SingleRunExternalDAGsSensor(BaseSensorOperator):
     successfully. It looks for a task with the same `task_id` in each of the
     provided external DAGs.
 
-    The DAG parsing tests check that each external DAG exists and has a task with
-    this sensor's `task_id`.
+    The DAG parsing tests check that each external DAG has a task with this sensor's
+    `task_id`.
 
     :param external_dag_ids: A list of dag_ids that you want to wait for
+    :param check_existence: Set to `True` to fail on the first poke if any of the
+    external DAGs is not deployed (default value: False).
     :param allow_concurrent_runs: Used to force the Sensor to pass, even
     if there are concurrent runs.
     """
@@ -27,12 +29,17 @@ class SingleRunExternalDAGsSensor(BaseSensorOperator):
         self,
         *,
         external_dag_ids: Iterable[str],
+        check_existence: bool = False,
         allow_concurrent_runs: bool = False,
         **kwargs,
     ):
         super().__init__(**kwargs)
         self.external_dag_ids = external_dag_ids
+        self.check_existence = check_existence
         self.allow_concurrent_runs = allow_concurrent_runs
+
+        # Used to ensure the existence check only runs on the first poke
+        self._has_checked_existence = False
 
     def poke(self, context):
         self.log.info(
@@ -46,6 +53,11 @@ class SingleRunExternalDAGsSensor(BaseSensorOperator):
                 " checking for running DAGs."
             )
             return True
+
+        if self.check_existence and not self._has_checked_existence:
+            for dag_id in self.external_dag_ids:
+                assert_dag_exists(dag_id)
+            self._has_checked_existence = True
 
         count_running = self.get_count()
 

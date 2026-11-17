@@ -12,6 +12,7 @@ from urllib.parse import quote
 
 from airflow import __version__ as airflow_version
 from airflow.configuration import conf
+from airflow.exceptions import AirflowException
 from airflow.providers.standard.operators.python import get_current_context
 from airflow.utils.state import DagRunState, TaskInstanceState
 from packaging.version import Version
@@ -28,6 +29,27 @@ RUN_ID_BATCH_SIZE = 20
 
 def _task_sdk_ti():
     return get_current_context()["ti"]
+
+
+def assert_dag_exists(dag_id: str) -> None:
+    """Raise an `AirflowException` if no DAG with `dag_id` is deployed."""
+    if IS_AIRFLOW_3:
+        from airflow.sdk.exceptions import AirflowRuntimeError
+
+        try:
+            _task_sdk_ti().get_dag(dag_id)
+        except AirflowRuntimeError as error:
+            raise AirflowException(
+                f"The external DAG {dag_id} does not exist."
+            ) from error
+        return
+
+    from airflow.models import DagModel
+    from airflow.utils.session import create_session
+
+    with create_session() as session:
+        if not session.query(DagModel).filter(DagModel.dag_id == dag_id).first():
+            raise AirflowException(f"The external DAG {dag_id} does not exist.")
 
 
 def count_active_dag_runs(dag_id: str) -> int:
@@ -118,12 +140,12 @@ def _base_url() -> str:
 def dag_run_url(dag_id: str, run_id: str) -> str:
     """Return the Airflow UI URL of a DAG run."""
     if IS_AIRFLOW_3:
-        return f"{_base_url()}/dags/{dag_id}/runs/{quote(run_id)}"
-    return f"{_base_url()}/dags/{dag_id}/grid?dag_run_id={quote(run_id)}"
+        return f"{_base_url()}/dags/{quote(dag_id)}/runs/{quote(run_id)}"
+    return f"{_base_url()}/dags/{quote(dag_id)}/grid?dag_run_id={quote(run_id)}"
 
 
 def task_log_url(dag_id: str, run_id: str, task_id: str) -> str:
     """Return the Airflow UI URL of a task instance's logs."""
     if IS_AIRFLOW_3:
-        return f"{_base_url()}/dags/{dag_id}/runs/{quote(run_id)}/tasks/{task_id}"
+        return f"{dag_run_url(dag_id, run_id)}/tasks/{quote(task_id)}"
     return f"{dag_run_url(dag_id, run_id)}&task_id={quote(task_id)}&tab=logs"

@@ -185,6 +185,7 @@ def test_trigger_reindexing_task_fails_unless_accepted(status_code, error):
     "response, expected",
     [
         pytest.param(_response(404), False, id="task-not-found-yet"),
+        pytest.param(_response(502), False, id="server-error"),
         pytest.param(
             _response(200, {"active": True, "error": False, "progress": 50}),
             False,
@@ -213,10 +214,25 @@ def test_wait_for_reindexing_task(response, expected):
             ValueError,
             id="reindex-error",
         ),
-        pytest.param(_response(500), requests.HTTPError, id="server-error"),
+        pytest.param(_response(403), requests.HTTPError, id="client-error"),
     ],
 )
 def test_wait_for_reindexing_task_raises_on_errors(response, error):
     with mock.patch("requests.get", return_value=response):
         with pytest.raises(error):
             wait_for_reindexing_task.function(status_url=f"{WORKER_URL}/task/abc")
+
+
+@pytest.mark.parametrize(
+    "error",
+    [
+        pytest.param(requests.ConnectionError("reset"), id="connection-error"),
+        pytest.param(requests.Timeout("timed out"), id="timeout"),
+    ],
+)
+def test_wait_for_reindexing_task_retries_on_network_errors(error):
+    with mock.patch("requests.get", side_effect=error):
+        assert (
+            wait_for_reindexing_task.function(status_url=f"{WORKER_URL}/task/abc")
+            is False
+        )

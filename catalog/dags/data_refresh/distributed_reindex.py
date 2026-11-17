@@ -275,10 +275,23 @@ def trigger_reindexing_task(worker_url: str, data: dict) -> str:
 
 @task.sensor(mode="reschedule")
 def wait_for_reindexing_task(status_url: str) -> bool:
-    """Wait for the reindexing task on the indexer worker to finish."""
-    response = requests.get(status_url, timeout=INDEXER_WORKER_REQUEST_TIMEOUT)
+    """
+    Wait for the reindexing task on the indexer worker to finish. Network errors and
+    server errors are logged and retried on the next poke, so that one dropped
+    request does not fail a reindex that takes many hours.
+    """
+    try:
+        response = requests.get(status_url, timeout=INDEXER_WORKER_REQUEST_TIMEOUT)
+    except (requests.ConnectionError, requests.Timeout) as error:
+        logger.warning(f"Could not reach the indexer worker, will retry: {error}")
+        return False
     # The worker may not know about the task yet
     if response.status_code == 404:
+        return False
+    if response.status_code >= 500:
+        logger.warning(
+            f"The indexer worker responded with {response.status_code}, will retry."
+        )
         return False
     response.raise_for_status()
     return response_check_wait_for_completion(response)

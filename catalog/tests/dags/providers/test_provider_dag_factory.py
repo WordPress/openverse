@@ -284,7 +284,7 @@ def test_report_aggregate_reingestion_errors_reports_failed_pull_tasks(
     dag_run = mock.MagicMock(dag_id="some_dag", run_id="some_run")
     task_states = {
         f"ingest_data_day_shift_{day}.pull_image_data_day_shift_{day}": "failed"
-        for day in range(1, 8)
+        for day in range(12, 0, -1)
     }
     task_states["ingest_data.pull_image_data"] = "success"
     with (
@@ -312,7 +312,12 @@ def test_report_aggregate_reingestion_errors_reports_failed_pull_tasks(
         )
 
     message = send_alert.call_args.args[0]
-    assert "encountered in 7 ingestion days" in message
+    assert "encountered in 12 ingestion days" in message
     assert "<https://airflow.test/run|link>" in message
     assert "(showing only the first 5)" in message
-    assert message.count("  - <https://airflow.test/") == 5
+    listed_days = [
+        line.rsplit("_", 1)[-1].rstrip(">")
+        for line in message.splitlines()
+        if line.startswith("  - <")
+    ]
+    assert listed_days == ["1", "2", "3", "4", "5"]
