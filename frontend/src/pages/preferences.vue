@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { definePageMeta, useNuxtApp } from "#imports"
+import { definePageMeta } from "#imports"
 import { computed } from "vue"
 
 import { SWITCHABLE, ON, OFF } from "#shared/constants/feature-flag"
@@ -52,10 +52,6 @@ const featureGroups = computed(() => {
 })
 
 const { doneHydrating } = useHydrating()
-
-const captureException = () => {
-  useNuxtApp().$captureException(new Error("Test Sentry Exception"))
-}
 </script>
 
 <template>
@@ -137,14 +133,5 @@ const captureException = () => {
 
     <h2>{{ $t("prefPage.storeState") }}</h2>
     <pre><code>{{ flags }}</code></pre>
-
-    <!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
-    <VButton
-      v-if="$config.public.sentry.environment === 'local'"
-      variant="bordered-gray"
-      size="medium"
-      @click="captureException"
-      >Capture Sentry Exception</VButton
-    ><!-- eslint-enable -->
   </VContentPage>
 </template>

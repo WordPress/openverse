@@ -47,8 +47,8 @@ the app is built and tagged, deploy production:
 
 ## Post-deployment steps
 
-1. Check for any Sentry errors in the maintainer's `#openverse-alerts` channel,
-   or in the Sentry UI.
+1. Check for any alarms in the maintainer's `#openverse-alerts` channel, and for
+   errors in the service's CloudWatch logs.
 1. Ensure that Airflow is accessible at <https://airflow.openverse.org>.
 1. If an Airflow version upgrade was deployed, ensure that the version is
    correct in the Airflow UI (bottom left of the footer on any page).

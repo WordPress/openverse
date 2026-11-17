@@ -456,7 +456,6 @@ def test_get_exception_handles_error(
     exc,
     exc_name,
     count_start,
-    sentry_capture_exception,
     setup_request_exception,
     is_cache_reachable,
     cache_name,
@@ -472,8 +471,6 @@ def test_get_exception_handles_error(
 
     with capture_logs() as cap_logs, pytest.raises(UpstreamThumbnailException):
         photon_get(TEST_MEDIA_INFO)
-
-    sentry_capture_exception.assert_not_called()
 
     if is_cache_reachable:
         assert cache.get(key) == str(count_start + 1).encode()
@@ -498,7 +495,6 @@ def test_get_http_exception_handles_error(
     status_code,
     text,
     count_start,
-    sentry_capture_exception,
     is_cache_reachable,
     cache_name,
     request,
@@ -513,8 +509,6 @@ def test_get_http_exception_handles_error(
     with capture_logs() as cap_logs, pytest.raises(UpstreamThumbnailException):
         pook.get(PHOTON_URL_FOR_TEST_IMAGE).reply(status_code, text)
         photon_get(TEST_MEDIA_INFO)
-
-    sentry_capture_exception.assert_not_called()
 
     if is_cache_reachable:
         assert cache.get(key) == str(count_start + 1).encode()

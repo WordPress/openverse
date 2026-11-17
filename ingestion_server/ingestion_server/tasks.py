@@ -6,8 +6,6 @@ from enum import Enum, auto
 from functools import wraps
 from multiprocessing import Value
 
-import sentry_sdk
-
 from ingestion_server import slack
 from ingestion_server.constants.media_types import MediaType
 from ingestion_server.es_helpers import elasticsearch_connect
@@ -161,47 +159,24 @@ class TaskTracker:
         return {"task_id": task_id} | self.serialize_task_info(task_id, task_info)
 
 
-def _with_sentry(fn):
+def _log_exceptions(fn):
     """
-    Wrap the decorated function for Sentry multiprocessing.
-
-    Convenience function to wrap ``perform_task`` in such a way
-    to extract the ``sentry_hub`` kwarg passed by ``api.py``, send
-    exceptions to Sentry, and fully flush the client's Sentry
-    queue before the worker exits.
-
-    We cannot use the convenient ``ThreadingIntegration`` because it
-    does not support ``multiprocessing``, only the legacy ``threading``
-    module (we use ``multiprocessing``)
+    Log, rather than raise, exceptions from the task so that they end up in
+    the worker's logs before the process exits.
     """
 
     @wraps(fn)
-    def fn_with_sentry(*args, **kwargs):
-        hub = kwargs.pop("sentry_hub")
-        with hub:
-            try:
-                result = fn(*args, **kwargs)
-            except Exception as exc:
-                result = None
-                logging.error(exc, exc_info=exc)
-                sentry_sdk.capture_exception(exc)
+    def fn_logging_exceptions(*args, **kwargs):
+        try:
+            return fn(*args, **kwargs)
+        except Exception as exc:
+            logging.error(exc, exc_info=exc)
+            return None
 
-        client = hub.client
-        if client is not None:
-            # Sentry does not send events right away (it handles messages async)
-            # and because the task finishing will shut down the worker thread
-            # we need to flush the client before exiting the function.
-            # ``client.flush`` will block until all messages in Sentry's queue are sent.
-            # We do this _outside_ the try/except so that _anything_ passed to sentry
-            # (like messages, etc) also get sent before the worker thread is closed.
-            client.flush(timeout=5)
-
-        return result
-
-    return fn_with_sentry
+    return fn_logging_exceptions
 
 
-@_with_sentry
+@_log_exceptions
 def perform_task(
     task_id: str,
     model: MediaType,

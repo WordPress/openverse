@@ -349,7 +349,6 @@ dependencies = [
     { name = "psycopg" },
     { name = "python-decouple" },
     { name = "pyyaml" },
-    { name = "sentry-sdk", extra = ["falcon"] },
     { name = "tldextract" },
 ]
 
@@ -379,7 +378,6 @@ requires-dist = [
     { name = "psycopg", specifier = ">=3.2.3,<4" },
     { name = "python-decouple", specifier = "~=3.8" },
     { name = "pyyaml", specifier = "~=6.0" },
-    { name = "sentry-sdk", extras = ["falcon"], specifier = "~=2.18" },
     { name = "tldextract", specifier = "~=5.0" },
 ]
 
@@ -670,24 +668,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/83/bc/fb0c1f76517e3380eb142af8a9d6b969c150cfca1324cea7d965d8c66571/s3transfer-0.10.1.tar.gz", hash = "sha256:5683916b4c724f799e600f41dd9e10a9ff19871bf87623cc8f491cb4f5fa0a19", size = 143308, upload-time = "2024-03-14T19:11:37.071Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/83/37/395cdb6ee92925fa211e55d8f07b9f93cf93f60d7d4ce5e66fd73f1ea986/s3transfer-0.10.1-py3-none-any.whl", hash = "sha256:ceb252b11bcf87080fb7850a224fb6e05c8a776bab8f2b64b7f25b969464839d", size = 82168, upload-time = "2024-03-14T19:11:04.538Z" },
-]
-
-[[package]]
-name = "sentry-sdk"
-version = "2.18.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "certifi" },
-    { name = "urllib3" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/24/cc/0d87cc8246f52d92228aa6718a24e1988a2893f4abe2f64ec5a8bcba4185/sentry_sdk-2.18.0.tar.gz", hash = "sha256:0dc21febd1ab35c648391c664df96f5f79fb0d92d7d4225cd9832e53a617cafd", size = 293615, upload-time = "2024-11-04T13:58:17.093Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/76/9b/2d512efdb0de203d1f0312fae53433c3009ba70b0078421d25baaedc960a/sentry_sdk-2.18.0-py2.py3-none-any.whl", hash = "sha256:ee70e27d1bbe4cd52a38e1bd28a5fadb9b17bc29d91b5f2b97ae29c0a7610442", size = 317514, upload-time = "2024-11-04T13:58:15.166Z" },
-]
-
-[package.optional-dependencies]
-falcon = [
-    { name = "falcon" },
 ]
 
 [[package]]

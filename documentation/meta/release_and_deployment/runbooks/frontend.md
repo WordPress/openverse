@@ -16,8 +16,8 @@ the deployment in the maintainers `#openverse-notifications` channel and in the
 
 ## Post-deployment steps
 
-1. Check for any Sentry errors in the maintainer's `#openverse-alerts` channel,
-   or in the Sentry UI.
+1. Check for any alarms in the maintainer's `#openverse-alerts` channel, and for
+   errors in the service's CloudWatch logs.
 1. Visit
    [https://openverse.org/version.json](https://openverse.org/version.json) and
    verify the SHA is the same as the value you deployed.

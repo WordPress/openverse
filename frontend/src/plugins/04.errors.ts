@@ -1,7 +1,6 @@
 import { defineNuxtPlugin } from "#imports"
 
 import { isAxiosError } from "axios"
-import * as Sentry from "@sentry/nuxt"
 
 import { ERR_UNKNOWN, ErrorCode, errorCodes } from "#shared/constants/errors"
 import type { SupportedSearchType } from "#shared/constants/media"
@@ -146,7 +145,7 @@ export function recordError(
      * 3. There isn't much we can do other than monitor for an anomalously high
      *    number of 404 responses from the frontend server that could indicate a frontend
      *    implementation or configuration error suddenly causing malformed
-     *    identifiers to be used. Neither Sentry nor Plausible are the right tool
+     *    identifiers to be used. Neither error logs nor Plausible are the right tool
      *    for that task. If the 404s are caused by an API issue, we'd see that in
      *    API response code monitoring, where we can more easily trace the cause
      */
@@ -156,10 +155,8 @@ export function recordError(
   if (import.meta.client && fetchingError.code === "ERR_NETWORK") {
     /**
      * Record network errors in Plausible so that we can evaluate potential
-     * regional or device configuration issues, for which Sentry is not
-     * as good a tool. Additionally, the number of these events are trivial
-     * for Plausible, but do actually affect our Sentry quota enough that it
-     * is worth diverting them.
+     * regional or device configuration issues, for which error logs are not
+     * as good a tool.
      */
     const { $sendCustomEvent } = nuxtApp
     $sendCustomEvent("NETWORK_ERROR", {
@@ -167,7 +164,7 @@ export function recordError(
       searchType: fetchingError.searchType,
     })
   } else {
-    Sentry.captureException(originalError, { extra: { fetchingError } })
+    nuxtApp.$captureException(originalError, { fetchingError })
   }
 }
 

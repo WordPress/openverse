@@ -85,7 +85,4 @@ COPY --chown=ov_user . /ingestion_server/
 # - 8002: Gunicorn server for `indexer_worker` Falcon app
 EXPOSE 8001 8002
 
-ARG SEMANTIC_VERSION
-ENV SENTRY_RELEASE=$SEMANTIC_VERSION
-
 CMD ["gunicorn", "--bind", "0.0.0.0:8001", "api:api"]

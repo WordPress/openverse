@@ -79,15 +79,6 @@ export default defineNuxtConfig({
       site: {
         trailingSlash: false,
       },
-      sentry: {
-        dsn: "",
-        environment: "local",
-        // Overridden by NUXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE
-        tracesSampleRate: 0.05,
-      },
-      // Release is a build time variable. However, due to the way Sentry is set up, setting it in app.config.ts
-      // does not work, so we set it here using `process.env` to bake in the value at build time.
-      sentryRelease: process.env.SEMANTIC_VERSION,
       plausible: {
         ignoredHostnames: ["localhost", "staging.openverse.org"],
         logIgnoredEvents: true,
@@ -113,7 +104,6 @@ export default defineNuxtConfig({
     "@nuxt/test-utils/module",
     "@nuxtjs/sitemap",
     "@nuxtjs/robots",
-    "@sentry/nuxt/module",
   ],
   routeRules: {
     "/photos/**": { redirect: { to: "/image/**", statusCode: 301 } },
@@ -172,21 +162,5 @@ export default defineNuxtConfig({
       // Keep query strings in hreflang links (v10 strips them), e.g. `/image/collection?tag=cat`.
       alternateLinkCanonicalQueries: false,
     },
-  },
-  sentry: {
-    telemetry: false,
-    org: "openverse",
-    project: "openverse-frontend",
-    /**
-     * This token is only used in the CI to upload source maps to Sentry when building the production
-     * image of the frontend.
-     */
-    authToken: process.env.SENTRY_AUTH_TOKEN,
-    release: {
-      name: process.env.SEMANTIC_VERSION,
-    },
-  },
-  sourcemap: {
-    client: "hidden",
   },
 })

@@ -38,7 +38,6 @@ include(
     # additional packages
     "oauth2.py",
     "rest_framework.py",
-    "sentry.py",
     "spectacular.py",
     "thumbnails.py",
     # Openverse-specific settings

@@ -116,7 +116,6 @@ RUN env \
 # Add the release version to the docker container
 ARG SEMANTIC_VERSION
 ENV SEMANTIC_VERSION=$SEMANTIC_VERSION
-ENV SENTRY_RELEASE=$SEMANTIC_VERSION
 
 # Exposes
 # - 8000: Dev server for API Django app
