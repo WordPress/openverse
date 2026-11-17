@@ -4,7 +4,9 @@ from psycopg_pool import PoolTimeout
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.logging import LoggingIntegration, ignore_logger
 
+from api.utils.sentry import make_sensitive_value_scrubber
 from conf.settings.base import ENVIRONMENT
+from conf.settings.databases import DATABASES
 from conf.settings.security import DEBUG
 
 
@@ -46,6 +48,11 @@ def _is_pool_timeout(exc: BaseException | None) -> bool:
     return False
 
 
+# Redact infrastructure hostnames (e.g. the database DNS name) that can leak
+# into events as free text, where key-based scrubbing never sees them.
+scrub_sensitive_values = make_sensitive_value_scrubber([DATABASES["default"]["HOST"]])
+
+
 def before_send(event, hint):
     """
     Drop events that only report infrastructure noise.
@@ -55,6 +62,8 @@ def before_send(event, hint):
     - uvloop's "Fatal error on SSL protocol" log: the remote end of an outbound
       HTTPS request closed the connection. The request itself succeeds, but
       asyncio logs this at ERROR, which ``SentryProcessor`` turns into an event.
+
+    Events that are kept have sensitive values scrubbed from them.
     """
     exc_info = hint.get("exc_info")
     if exc_info and _is_pool_timeout(exc_info[1]):
@@ -66,7 +75,7 @@ def before_send(event, hint):
     ):
         return None
 
-    return event
+    return scrub_sensitive_values(event, hint)
 
 
 INTEGRATIONS = [
@@ -88,6 +97,7 @@ if not DEBUG and SENTRY_DSN:
         before_send=before_send,
         send_default_pii=False,
         environment=ENVIRONMENT,
+        before_send_transaction=scrub_sensitive_values,
     )
 
     # ALLOW_HOSTS is correctly configured so ignore this to prevent

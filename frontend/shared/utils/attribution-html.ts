@@ -156,19 +156,29 @@ const extLink = (href: string, text: string) =>
   h("a", { rel: "noopener noreferrer", href: sanitizeHref(href) }, [text])
 
 /**
- * Generate a Dublin Core conforming XML attribution snippet.
+ * Generate a Dublin Core conforming XML attribution snippet. Elements whose
+ * values are not known are omitted.
  *
  * @param mediaItem - the media item being attributed
  * @returns the XML markup of the attribution
  */
-const xmlAttribution = (mediaItem: Record<string, string>) =>
-  `<attribution xmlns:dc="http://purl.org/dc/elements/1.1/">
-	<dc:creator>${mediaItem.creator}</dc:creator>
-	<dc:title>${mediaItem.title}</dc:title>
-	<dc:rights>${mediaItem.license_url}</dc:rights>
-	<dc:identifier>${mediaItem.foreign_landing_url}</dc:identifier>
-	<dc:type>${mediaItem.type}</dc:type>
-</attribution>`
+const xmlAttribution = (mediaItem: Record<string, string | undefined>) => {
+  const dcElements = {
+    creator: mediaItem.creator,
+    title: mediaItem.title,
+    rights: mediaItem.license_url,
+    identifier: mediaItem.foreign_landing_url,
+    type: mediaItem.type,
+  }
+  const lines = Object.entries(dcElements)
+    .filter((entry): entry is [string, string] => Boolean(entry[1]))
+    .map(([name, value]) => `\t<dc:${name}>${escapeHtml(value)}</dc:${name}>`)
+  return [
+    '<attribution xmlns:dc="http://purl.org/dc/elements/1.1/">',
+    ...lines,
+    "</attribution>",
+  ].join("\n")
+}
 
 /* Interfaces */
 
@@ -307,6 +317,7 @@ export const getAttribution = (
 
     const xmlAttributionParts = {
       ...restMediaItem,
+      title: mediaItem.originalTitle || tFn("genericTitle"),
       type: frontendMediaType === "audio" ? "Sound" : "StillImage",
     }
 
