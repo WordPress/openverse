@@ -165,6 +165,20 @@ describe("getAttribution", () => {
     expect(xml).toContain("<dc:title>This work</dc:title>")
   })
 
+  it("omits unknown elements from the XML attribution", () => {
+    const mediaItemNoCreator = {
+      ...mediaItem,
+      creator: undefined,
+      license_url: undefined,
+    }
+    const xml = getAttribution(mediaItemNoCreator, t, { isXml: true })
+
+    expect(xml).not.toContain("dc:creator")
+    expect(xml).not.toContain("dc:rights")
+    expect(xml).not.toContain("undefined")
+    expect(xml).toContain("<dc:title>Title</dc:title>")
+  })
+
   it("escapes special characters in XML attribution", () => {
     const mediaItemWithSpecialCharacters = {
       ...mediaItem,
