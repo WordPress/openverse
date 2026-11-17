@@ -1,8 +1,7 @@
 import logging
 from datetime import timedelta
 
-from airflow.decorators import task
-from airflow.models.abstractoperator import AbstractOperator
+from airflow.sdk import BaseOperator, task
 
 from common import slack
 from common.constants import POSTGRES_CONN_ID
@@ -21,7 +20,7 @@ logger = logging.getLogger(__name__)
 def run_sql(
     sql_template: str,
     postgres_conn_id: str = POSTGRES_CONN_ID,
-    task: AbstractOperator = None,
+    task: BaseOperator = None,
     timeout: timedelta = None,
     handler: callable = RETURN_ROW_COUNT,
     **kwargs,
@@ -48,7 +47,7 @@ def create_deleted_records(
     media_type: str,
     db_columns: list[Column] = None,
     deleted_db_columns: list[Column] = None,
-    task: AbstractOperator = None,
+    task: BaseOperator = None,
     postgres_conn_id: str = POSTGRES_CONN_ID,
 ):
     """

@@ -2,7 +2,7 @@ import logging
 import re
 from urllib.parse import parse_qs, urlparse
 
-from airflow.models import Variable
+from airflow.sdk import Variable
 
 from common.licenses import get_license_info
 from common.loader import provider_details as prov

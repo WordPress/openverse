@@ -11,9 +11,8 @@ audio records are dated after that transition, we only need to scan images.
 from datetime import datetime, timedelta
 from textwrap import dedent
 
-from airflow.decorators import dag, task
-from airflow.models.abstractoperator import AbstractOperator
 from airflow.providers.standard.operators.trigger_dagrun import TriggerDagRunOperator
+from airflow.sdk import BaseOperator, dag, task
 
 from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
 from common.sql import PostgresHook
@@ -30,7 +29,7 @@ HAS_RAW_ESCAPED_UNICODE = (
 @task
 def ensure_ov_unistr(
     postgres_conn_id: str = POSTGRES_CONN_ID,
-    task: AbstractOperator = None,
+    task: BaseOperator = None,
 ):
     """
     Create a naïve implementation of Postgres 14+ ``unistr``.

@@ -1,6 +1,6 @@
 from collections.abc import Iterable
 
-from airflow.sensors.base import BaseSensorOperator
+from airflow.sdk import BaseSensorOperator
 
 from common.dag_state import assert_dag_exists, count_running_dag_runs_past_task
 

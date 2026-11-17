@@ -6,7 +6,7 @@ from datetime import datetime
 from typing import TypedDict
 
 from airflow.exceptions import AirflowException
-from airflow.models import Variable
+from airflow.sdk import Variable
 
 from common.loader import provider_details as prov
 from common.requester import DelayedRequester
@@ -134,9 +134,7 @@ class ProviderDataIngester(ABC):
         # This can be used for testing purposes to ensure a provider script
         # processes some data but still returns quickly.
         # When set to 0, no limit is imposed.
-        self.limit = Variable.get(
-            "INGESTION_LIMIT", deserialize_json=True, default_var=0
-        )
+        self.limit = Variable.get("INGESTION_LIMIT", deserialize_json=True, default=0)
 
         # If a test limit is imposed, ensure that the `batch_limit` does not
         # exceed this.
@@ -191,15 +189,15 @@ class ProviderDataIngester(ABC):
         # runs of this DAG. Only errors matching the configuration will be skipped, and
         # reported in aggregate when ingestion has completed.
         self.skipped_ingestion_errors: list[SkippedIngestionError] = Variable.get(
-            "SKIPPED_INGESTION_ERRORS", default_var={}, deserialize_json=True
+            "SKIPPED_INGESTION_ERRORS", default={}, deserialize_json=True
         ).get(self.dag_id, [])
 
         self.ingestion_errors: list[IngestionError] = []  # Keep track of skipped errors
 
-        environment = Variable.get("ENVIRONMENT", default_var="local")
+        environment = Variable.get("ENVIRONMENT", default="local")
         self._should_verbose_log = (
             self.dag_id
-            in Variable.get("SHOULD_VERBOSE_LOG", default_var=[], deserialize_json=True)
+            in Variable.get("SHOULD_VERBOSE_LOG", default=[], deserialize_json=True)
             or environment == "local"
         )
 

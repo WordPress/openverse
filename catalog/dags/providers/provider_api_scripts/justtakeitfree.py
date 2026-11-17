@@ -12,7 +12,7 @@ This API requires an API key. For more details, see <https://github.com/WordPres
 
 import logging
 
-from airflow.models import Variable
+from airflow.sdk import Variable
 
 from common.licenses import get_license_info
 from common.loader import provider_details as prov

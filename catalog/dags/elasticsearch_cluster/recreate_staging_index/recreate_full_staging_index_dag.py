@@ -41,9 +41,8 @@ are already running.
 
 from datetime import datetime
 
-from airflow.decorators import dag
-from airflow.models.param import Param
-from airflow.utils.trigger_rule import TriggerRule
+from airflow.sdk import TriggerRule, dag
+from airflow.sdk.definitions.param import Param
 
 from common import ingestion_server, slack
 from common.constants import (

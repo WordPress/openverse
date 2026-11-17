@@ -68,17 +68,13 @@ import os
 import re
 from string import Template
 
-from airflow import DAG
-from airflow.decorators import task
-from airflow.exceptions import AirflowSkipException
-from airflow.models import Variable
-from airflow.models.mappedoperator import MappedOperator
-from airflow.models.param import Param
 from airflow.providers.standard.operators.empty import EmptyOperator
 from airflow.providers.standard.operators.python import PythonOperator
+from airflow.sdk import DAG, TaskGroup, TriggerRule, Variable, task
+from airflow.sdk.definitions.mappedoperator import MappedOperator
+from airflow.sdk.definitions.param import Param
+from airflow.sdk.exceptions import AirflowSkipException
 from airflow.utils.state import State
-from airflow.utils.task_group import TaskGroup
-from airflow.utils.trigger_rule import TriggerRule
 
 from common import dag_state, slack
 from common.constants import AWS_CONN_ID, DAG_DEFAULT_ARGS, XCOM_PULL_TEMPLATE
@@ -98,10 +94,13 @@ logger = logging.getLogger(__name__)
 
 OPENVERSE_BUCKET = os.getenv("OPENVERSE_BUCKET")
 OUTPUT_DIR_PATH = os.path.realpath(os.getenv("OUTPUT_DIR", "/tmp/"))
-_DATE_RANGE_INNER_TEMPLATE = "macros.ds_add(ds, -{} )"
+# Manually triggered runs can have no logical date or data interval, so these
+# templates fall back to the time the run was triggered for
+_RUN_DATE = "(dag_run.logical_date or dag_run.run_after)"
+_DATE_RANGE_INNER_TEMPLATE = "macros.ds_add(" + _RUN_DATE + " | ds, -{} )"
 DATE_RANGE_ARG_TEMPLATE = "{{{{" + _DATE_RANGE_INNER_TEMPLATE + "}}}}"
 DATE_PARTITION_ARG_TEMPLATE = Template(
-    "$media_type/$provider_name/{{ date_partition_for_prefix('$schedule', dag_run.logical_date, $reingestion_date ) }}"  # noqa
+    "$media_type/$provider_name/{{ date_partition_for_prefix('$schedule', dag_run.logical_date or dag_run.run_after, $reingestion_date ) }}"  # noqa
 )
 
 
@@ -357,8 +356,8 @@ def create_report_load_completion(
 
     if not is_reingestion_workflow:
         op_kwargs = op_kwargs | {
-            "date_range_start": "{{ data_interval_start | ds }}",
-            "date_range_end": "{{ data_interval_end | ds }}",
+            "date_range_start": "{{ (dag_run.data_interval_start or dag_run.run_after) | ds }}",
+            "date_range_end": "{{ (dag_run.data_interval_end or dag_run.run_after) | ds }}",
         }
 
     return PythonOperator(
@@ -383,7 +382,7 @@ def create_provider_api_workflow_dag(provider_conf: ProviderWorkflow):
     # catchup is turned on by default for dated DAGs to allow backfilling.
     # It can be overridden with the `CATCHUP_ENABLED` Airflow variable.
     catchup_enabled = provider_conf.dated and Variable.get(
-        "CATCHUP_ENABLED", default_var=True, deserialize_json=True
+        "CATCHUP_ENABLED", default=True, deserialize_json=True
     )
 
     dag = DAG(

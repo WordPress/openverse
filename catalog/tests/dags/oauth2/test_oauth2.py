@@ -1,7 +1,7 @@
 from unittest import mock
 
 import pytest
-from airflow.exceptions import AirflowSkipException
+from airflow.sdk.exceptions import AirflowSkipException
 
 from oauth2 import oauth2
 from tests.dags.conftest import FAKE_OAUTH_PROVIDER_NAME
@@ -19,7 +19,7 @@ def test_var_get():
         actual = oauth2._var_get("key")
         assert actual == expected
         assert MockVariable.get.call_args == mock.call(
-            "key", default_var={}, deserialize_json=True
+            "key", default={}, deserialize_json=True
         )
 
 

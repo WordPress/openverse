@@ -13,12 +13,11 @@ rows are loaded into the Airflow worker.
 import logging
 from textwrap import dedent
 
-from airflow.decorators import task, task_group
-from airflow.models.abstractoperator import AbstractOperator
 from airflow.providers.common.sql.hooks.handlers import (
     fetch_all_handler,
     fetch_one_handler,
 )
+from airflow.sdk import BaseOperator, task, task_group
 
 from common.constants import POSTGRES_API_CONN_IDS, Environment
 from common.sql import PGExecuteQueryOperator, PostgresHook
@@ -126,7 +125,7 @@ def alter_data_batch(
     batch: tuple[int, int],
     temp_table: str,
     postgres_conn_id: str,
-    task: AbstractOperator = None,
+    task: BaseOperator = None,
     timeout: float = None,
 ) -> int:
     logger.info(f"Starting data altering on batch: {batch}")

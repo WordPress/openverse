@@ -9,7 +9,7 @@ import os
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 
-from airflow.models import Variable
+from airflow.sdk import Variable
 
 from common.constants import (
     AUDIO,
@@ -140,7 +140,7 @@ DATA_REFRESH_CONFIGS = {
         # Larger batches for image data refresh to avoid overloading XCOMs
         alter_data_batch_size=Variable.get(
             "IMAGE_DATA_REFRESH_ALTER_BATCH_SIZE",
-            default_var=DATA_REFRESH_ALTER_BATCH_SIZE,
+            default=DATA_REFRESH_ALTER_BATCH_SIZE,
             deserialize_json=True,
         ),
         indexer_worker_timeout=timedelta(days=1),

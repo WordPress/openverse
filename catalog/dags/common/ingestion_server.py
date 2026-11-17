@@ -4,11 +4,10 @@ import uuid
 from datetime import timedelta
 from urllib.parse import urlparse
 
-from airflow.decorators import task
-from airflow.exceptions import AirflowSkipException
 from airflow.providers.http.operators.http import HttpOperator
 from airflow.providers.http.sensors.http import HttpSensor
-from airflow.utils.trigger_rule import TriggerRule
+from airflow.sdk import TriggerRule, task
+from airflow.sdk.exceptions import AirflowSkipException
 from requests import Response
 
 from common.constants import (

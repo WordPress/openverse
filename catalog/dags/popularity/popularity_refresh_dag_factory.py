@@ -26,9 +26,8 @@ https://docs.openverse.org/projects/proposals/popularity_optimizations/20230420-
 import logging
 from datetime import datetime
 
-from airflow import DAG
-from airflow.decorators import task
 from airflow.providers.standard.operators.trigger_dagrun import TriggerDagRunOperator
+from airflow.sdk import DAG, task
 
 from common import slack
 from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID

@@ -1,8 +1,8 @@
 import logging
+from unittest import mock
 
 import psycopg2
 import pytest
-from airflow.models import Variable
 
 from common.storage import columns as col
 from database.batched_update import constants
@@ -25,6 +25,31 @@ NOT_MATCHING_PROVIDER = "bar"
 OLD_TITLE = "old title"
 NEW_TITLE = "new title"
 LICENSE = "by"
+
+
+class FakeVariable:
+    """Stand-in for `airflow.sdk.Variable`, which only works inside a running task."""
+
+    values: dict = {}
+
+    @classmethod
+    def get(cls, key, default=None, deserialize_json=False):
+        return cls.values.get(key, default)
+
+    @classmethod
+    def set(cls, key, value, description=None, serialize_json=False):
+        cls.values[key] = value
+
+    @classmethod
+    def delete(cls, key):
+        cls.values.pop(key, None)
+
+
+@pytest.fixture(autouse=True)
+def fake_variable():
+    FakeVariable.values = {}
+    with mock.patch("database.batched_update.batched_update.Variable", FakeVariable):
+        yield FakeVariable
 
 
 @pytest.fixture
@@ -67,7 +92,7 @@ def postgres_with_image_and_temp_table(batch_start_var, image_table, temp_table)
 
     cur.execute(drop_table_query)
     # Drop the test airflow variable
-    Variable.delete(batch_start_var)
+    FakeVariable.delete(batch_start_var)
 
     cur.close()
     conn.commit()
@@ -271,7 +296,7 @@ def test_update_batches_resuming_from_batch_start(
 
     # Set the batch_start Airflow variable to 1, to skip the first
     # record
-    Variable.set(batch_start_var, 1)
+    FakeVariable.set(batch_start_var, 1)
 
     update_query = f"SET title='{NEW_TITLE}'"
     updated_count = update_batches.function(

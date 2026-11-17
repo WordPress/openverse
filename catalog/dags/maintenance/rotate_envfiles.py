@@ -19,12 +19,11 @@ import logging
 from collections import defaultdict
 from datetime import datetime
 
-from airflow.decorators import dag, task
-from airflow.exceptions import AirflowSkipException
-from airflow.models import DAG, Variable
 from airflow.providers.amazon.aws.hooks.ec2 import EC2Hook
 from airflow.providers.amazon.aws.hooks.ecs import EcsHook
 from airflow.providers.amazon.aws.hooks.s3 import S3Hook
+from airflow.sdk import DAG, Variable, dag, task
+from airflow.sdk.exceptions import AirflowSkipException
 
 from common.constants import AWS_CONN_ID, DAG_DEFAULT_ARGS
 from common.slack import notify_slack

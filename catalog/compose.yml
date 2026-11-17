@@ -51,15 +51,25 @@ services:
       - "8794" # Used for logs
     command: triggerer
 
-  # Dev changes for the webserver container
-  webserver:
+  # Parses the DAG files and serializes them for the scheduler
+  dag-processor:
+    <<: *airflow-common
+    depends_on:
+      - upstream_db
+      - s3
+      - scheduler
+    command: dag-processor
+
+  # Serves the UI, the REST API and the execution API that tasks use
+  api-server:
     <<: *airflow-common
     depends_on:
       - upstream_db
       - s3
       - scheduler
       - triggerer
-    command: webserver
+      - dag-processor
+    command: api-server
     ports:
       - "${AIRFLOW_PORT}:8080"
 

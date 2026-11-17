@@ -12,11 +12,10 @@ import logging
 from datetime import timedelta
 from textwrap import dedent
 
-from airflow.decorators import dag, task
-from airflow.exceptions import AirflowSkipException
-from airflow.models.abstractoperator import AbstractOperator
-from airflow.models.param import Param
 from airflow.providers.standard.operators.trigger_dagrun import TriggerDagRunOperator
+from airflow.sdk import BaseOperator, dag, task
+from airflow.sdk.definitions.param import Param
+from airflow.sdk.exceptions import AirflowSkipException
 from psycopg2._json import Json
 from tabulate import tabulate
 
@@ -39,7 +38,7 @@ def run_sql(
     handler: callable = None,
     autocommit: bool = False,
     postgres_conn_id: str = POSTGRES_CONN_ID,
-    dag_task: AbstractOperator = None,
+    dag_task: BaseOperator = None,
 ):
     postgres = PostgresHook(
         postgres_conn_id=postgres_conn_id,

@@ -2,8 +2,8 @@ import os
 from unittest import mock
 
 import pytest
-from airflow.exceptions import AirflowSkipException
 from airflow.models import TaskInstance
+from airflow.sdk.exceptions import AirflowSkipException
 
 from common.constants import AWS_CONN_ID
 from common.loader import s3

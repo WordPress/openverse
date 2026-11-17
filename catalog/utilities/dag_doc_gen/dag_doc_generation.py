@@ -80,6 +80,21 @@ REINGESTION_SPECIFIC_MAPPING = {
 DagMapping = dict[str, DAG]
 
 
+# The tags that identify a DAG's type, in order of precedence
+DAG_TYPES = (
+    "data_augmentation",
+    "data_normalization",
+    "database",
+    "data_refresh",
+    "elasticsearch",
+    "maintenance",
+    "oauth",
+    "popularity_refresh",
+    "provider",
+    "provider-reingestion",
+)
+
+
 class DagInfo(NamedTuple):
     dag_id: str
     schedule: str | None
@@ -95,7 +110,7 @@ def load_dags(dag_folder: str) -> DagMapping:
     Load and return the DAGs in the provided dag folder. Execution will stop if any DAGs
     could not be imported.
     """
-    dag_bag = DagBag(dag_folder=dag_folder, include_examples=False)
+    dag_bag = DagBag(dag_folder=dag_folder)
     if dag_bag.import_errors:
         raise ValueError(
             "DagBag could not load properly due to errors with the following DAGs: "
@@ -171,12 +186,16 @@ def get_dags_info(dags: DagMapping) -> list[DagInfo]:
         dated = (
             provider_workflow.dated if provider_workflow is not None else dag.catchup
         )
-        # Infer dag type from the first available tag
-        type_ = dag.tags[0] if dag.tags else "other"
+        # DAG tags are a set, so take the type from the first tag in DAG_TYPES that
+        # the DAG has, then from the first of its other tags
+        tags = dag.tags or []
+        type_ = next((tag for tag in DAG_TYPES if tag in tags), None) or (
+            sorted(tags)[0] if tags else "other"
+        )
         dags_info.append(
             DagInfo(
                 dag_id=dag_id,
-                schedule=dag.schedule_interval,
+                schedule=dag.schedule,
                 doc=doc,
                 type_=type_,
                 dated=dated,

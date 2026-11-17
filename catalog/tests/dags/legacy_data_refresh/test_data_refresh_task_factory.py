@@ -1,7 +1,7 @@
 from unittest import mock
 
 import pytest
-from airflow.exceptions import AirflowSkipException
+from airflow.sdk.exceptions import AirflowSkipException
 from airflow.utils.state import TaskInstanceState
 
 from common.constants import OPENLEDGER_API_CONN_ID

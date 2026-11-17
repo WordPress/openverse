@@ -131,7 +131,7 @@ ov just catalog/test --extended
 Edits to the source files or tests can be made on your local machine, then tests
 can be run in the container via the above command to see the effects.
 
-If you'd like, it's possible to login to the webserver container via:
+If you'd like, it's possible to login to the scheduler container via:
 
 ```shell
 ov just catalog/shell

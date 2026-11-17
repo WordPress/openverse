@@ -2,7 +2,7 @@ import logging
 
 import backoff
 import lxml.html as html
-from airflow.models import Variable
+from airflow.sdk import Variable
 from requests import HTTPError
 
 from common.licenses import LicenseInfo, get_license_info

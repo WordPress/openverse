@@ -2,8 +2,7 @@ from collections import namedtuple
 from datetime import datetime, timedelta
 from textwrap import dedent
 
-from airflow.decorators import task, task_group
-from airflow.models.abstractoperator import AbstractOperator
+from airflow.sdk import BaseOperator, task, task_group
 
 from common.constants import DAG_DEFAULT_ARGS, SQLInfo
 from common.sql import PostgresHook, single_value
@@ -83,7 +82,7 @@ def update_media_popularity_metrics(
     *,
     media_type: str,
     sql_info: SQLInfo = None,
-    task: AbstractOperator = None,
+    task: BaseOperator = None,
 ):
     postgres = PostgresHook(
         postgres_conn_id=postgres_conn_id,
@@ -128,7 +127,7 @@ def calculate_media_popularity_percentile_value(
     *,
     media_type: str,
     sql_info: SQLInfo = None,
-    task: AbstractOperator = None,
+    task: BaseOperator = None,
 ):
     postgres = PostgresHook(
         postgres_conn_id=postgres_conn_id,
@@ -159,7 +158,7 @@ def update_percentile_and_constants_values_for_provider(
     *,
     media_type: str,
     sql_info: SQLInfo = None,
-    task: AbstractOperator = None,
+    task: BaseOperator = None,
 ):
     if raw_percentile_value is None:
         # Occurs when a provider has a metric configured, but there are no records

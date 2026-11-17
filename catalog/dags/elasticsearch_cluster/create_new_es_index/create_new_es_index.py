@@ -1,6 +1,6 @@
 import logging
 
-from airflow.decorators import task
+from airflow.sdk import task
 
 from common.elasticsearch import remove_excluded_index_settings
 from elasticsearch_cluster.create_new_es_index.utils import merge_configurations

@@ -1,5 +1,5 @@
 import pytest
-from airflow.exceptions import AirflowSkipException
+from airflow.sdk.exceptions import AirflowSkipException
 
 from common.constants import PRODUCTION
 from elasticsearch_cluster.healthcheck_dag import compose_notification

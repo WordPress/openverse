@@ -31,11 +31,9 @@ import uuid
 from collections.abc import Sequence
 from itertools import product
 
-from airflow import DAG
-from airflow.decorators import task, task_group
-from airflow.models.param import Param
 from airflow.providers.standard.operators.python import PythonOperator
-from airflow.utils.trigger_rule import TriggerRule
+from airflow.sdk import DAG, TriggerRule, task, task_group
+from airflow.sdk.definitions.param import Param
 
 from common import cloudwatch
 from common import elasticsearch as es

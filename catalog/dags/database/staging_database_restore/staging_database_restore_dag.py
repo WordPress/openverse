@@ -25,10 +25,9 @@ import logging
 from datetime import datetime, timedelta
 from textwrap import dedent as d
 
-from airflow.decorators import dag
 from airflow.providers.amazon.aws.operators.rds import RdsDeleteDbInstanceOperator
 from airflow.providers.amazon.aws.sensors.rds import RdsSnapshotExistenceSensor
-from airflow.utils.trigger_rule import TriggerRule
+from airflow.sdk import TriggerRule, dag
 
 from common.constants import (
     AWS_RDS_CONN_ID,

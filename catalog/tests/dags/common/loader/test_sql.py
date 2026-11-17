@@ -8,7 +8,7 @@ from unittest import mock
 import psycopg2
 import pytest
 from flaky import flaky
-from psycopg2.errors import InvalidTextRepresentation
+from psycopg.errors import InvalidTextRepresentation
 
 from common.loader import sql
 from common.storage import columns as col

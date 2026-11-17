@@ -4,8 +4,8 @@ from types import SimpleNamespace
 from unittest import mock
 
 import pytest
-from airflow.exceptions import AirflowFailException, TaskDeferred
-from airflow.utils import timezone
+from airflow.sdk import timezone
+from airflow.sdk.exceptions import AirflowFailException, TaskDeferred
 
 from common import elasticsearch as es
 from common.elasticsearch import (

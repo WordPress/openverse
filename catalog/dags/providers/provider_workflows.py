@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from typing import NotRequired
 
-from airflow.models import Variable
+from airflow.sdk import Variable
 from typing_extensions import TypedDict
 
 from providers.provider_api_scripts.auckland_museum import AucklandMuseumDataIngester
@@ -217,7 +217,7 @@ class ProviderWorkflow:
 
         # Provider-specific configuration overrides
         self.overrides = Variable.get(
-            "CONFIGURATION_OVERRIDES", default_var={}, deserialize_json=True
+            "CONFIGURATION_OVERRIDES", default={}, deserialize_json=True
         ).get(self.dag_id, [])
 
         # Allow forcing the default to something other than `STANDARD_IA`
@@ -227,7 +227,7 @@ class ProviderWorkflow:
         # This intentionally applies to all providers, rather than the provider-specific
         # overrides above
         self.s3_tsv_storage_class = Variable.get(
-            "DEFAULT_S3_TSV_STORAGE_CLASS", default_var=self.s3_tsv_storage_class
+            "DEFAULT_S3_TSV_STORAGE_CLASS", default=self.s3_tsv_storage_class
         )
 
 

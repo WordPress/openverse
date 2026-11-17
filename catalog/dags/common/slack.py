@@ -55,10 +55,9 @@ from collections.abc import Callable
 from os.path import basename
 from typing import Any, NotRequired
 
-from airflow.decorators import task
 from airflow.exceptions import AirflowNotFoundException
-from airflow.models import DAG, Variable
 from airflow.providers.http.hooks.http import HttpHook
+from airflow.sdk import DAG, Variable, task
 from requests import Response
 from typing_extensions import TypedDict
 
@@ -251,7 +250,7 @@ def should_silence_message(
 
     # Get the configuration for silenced messages for this DAG
     silenced_notifications: list[SilencedSlackNotification] = Variable.get(
-        "SILENCED_SLACK_NOTIFICATIONS", default_var={}, deserialize_json=True
+        "SILENCED_SLACK_NOTIFICATIONS", default={}, deserialize_json=True
     ).get(dag_id, [])
 
     if not bool(silenced_notifications):
@@ -299,9 +298,9 @@ def should_send_message(
         return False
 
     # Exit early if we aren't on production or if force alert is not set
-    environment = Variable.get("ENVIRONMENT", default_var="local")
+    environment = Variable.get("ENVIRONMENT", default="local")
     force_message = Variable.get(
-        "SLACK_MESSAGE_OVERRIDE", default_var=False, deserialize_json=True
+        "SLACK_MESSAGE_OVERRIDE", default=False, deserialize_json=True
     )
 
     # prevent circular import
@@ -386,7 +385,8 @@ def on_failure_callback(context: dict) -> None:
     ti = context["task_instance"]
     dag_id = ti.dag_id
     task_id = ti.task_id
-    logical_date = context["logical_date"]
+    # Manually triggered runs can have no logical date
+    logical_date = context.get("logical_date") or context["dag_run"].run_after
     exception: Exception | None = context.get("exception")
     exception_message = ""
 

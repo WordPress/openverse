@@ -1,8 +1,8 @@
 import logging
 from textwrap import dedent
 
-from airflow.models.abstractoperator import AbstractOperator
-from psycopg2.errors import InvalidTextRepresentation
+from airflow.sdk import BaseOperator
+from psycopg.errors import InvalidTextRepresentation
 
 from common.constants import IMAGE, MediaType, SQLInfo
 from common.loader import provider_details as prov
@@ -103,7 +103,7 @@ def load_local_data_to_intermediate_table(
     tsv_file_name,
     identifier,
     max_rows_to_skip=10,
-    task: AbstractOperator = None,
+    task: BaseOperator = None,
 ):
     media_type = _extract_media_type(tsv_file_name)
     load_table = _get_load_table_name(identifier, media_type=media_type)
@@ -154,7 +154,7 @@ def load_s3_data_to_intermediate_table(
     s3_key,
     identifier,
     media_type=IMAGE,
-    task: AbstractOperator = None,
+    task: BaseOperator = None,
 ) -> int:
     load_table = _get_load_table_name(identifier, media_type=media_type)
     logger.info(f"Loading {s3_key} from S3 Bucket {bucket} into {load_table}")
@@ -186,7 +186,7 @@ def clean_intermediate_table_data(
     postgres_conn_id: str,
     identifier: str,
     media_type: MediaType = IMAGE,
-    task: AbstractOperator = None,
+    task: BaseOperator = None,
 ) -> tuple[int, int]:
     """
     Clean the data in the intermediate table.
@@ -266,7 +266,7 @@ def upsert_records_to_db_table(
     db_columns: list[Column],
     sql_info: SQLInfo,
     tsv_version: str = CURRENT_TSV_VERSION,
-    task: AbstractOperator = None,
+    task: BaseOperator = None,
 ):
     """
     Upsert newly ingested records from loading table into the main db table.

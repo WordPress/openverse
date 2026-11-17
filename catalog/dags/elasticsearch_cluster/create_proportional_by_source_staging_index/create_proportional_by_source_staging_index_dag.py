@@ -36,9 +36,8 @@ Because this DAG runs on the staging elasticsearch cluster, it does _not_ interf
 
 from datetime import datetime, timedelta
 
-from airflow.decorators import dag
-from airflow.models.param import Param
-from airflow.utils.trigger_rule import TriggerRule
+from airflow.sdk import TriggerRule, dag
+from airflow.sdk.definitions.param import Param
 
 from common import elasticsearch as es
 from common import slack

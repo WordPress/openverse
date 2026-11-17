@@ -30,7 +30,7 @@ ENV OUTPUT_DIR=/var/workflow_output/
 ENV AIRFLOW__CORE__DAGS_FOLDER=${DAGS_FOLDER}
 ENV AIRFLOW__CORE__LOAD_EXAMPLES=False
 ENV AIRFLOW__CORE__LOAD_DEFAULT_CONNECTIONS=False
-ENV AIRFLOW__WEBSERVER__EXPOSE_STACKTRACE=True
+ENV AIRFLOW__API__EXPOSE_STACKTRACE=True
 
 # TODO: Test if moving this to .env changes anything!
 ENV AIRFLOW__LOGGING__REMOTE_LOGGING=True
@@ -44,6 +44,8 @@ RUN apt-get update \
       build-essential \
       libpq-dev \
       libffi-dev \
+      # /etc/mime.types, which `mimetypes` reads to map file extensions
+      media-types \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 
@@ -66,12 +68,16 @@ ARG CATALOG_AIRFLOW_VERSION
 # https://airflow.apache.org/docs/apache-airflow/stable/installation/installing-from-pypi.html#constraints-files
 ARG CONSTRAINTS_FILE="https://raw.githubusercontent.com/apache/airflow/constraints-${CATALOG_AIRFLOW_VERSION}/constraints-${CATALOG_PY_VERSION}.txt"
 
-# The Airflow constraints pin certifi==2024.8.30, which still trusts the compromised
-# emSign CA, so override it after the constrained install
+# The Airflow constraints pin the 9.x Elasticsearch client, which Elasticsearch 8
+# rejects ("Accept version must be either version 8 or 7"), so install the 8.x client
+# after the constrained install. The provider accepts any client from 8.10.
 RUN pip install -r ${REQUIREMENTS_FILE} -c ${CONSTRAINTS_FILE} \
-    && echo "certifi==2026.10.19 --hash=sha256:42d35340cc5b9ba78e818ddbff0c5b1c2b779de448a340fd1b989f5fa8670e1b" > /tmp/certifi.txt \
-    && pip install --no-deps --require-hashes -r /tmp/certifi.txt \
-    && rm /tmp/certifi.txt
+    && printf '%s\n' \
+      "elasticsearch==8.19.3 --hash=sha256:fe1db2555811192e8a1be78b01234d0a49d32b185ea7eeeb6f059331dee32838" \
+      "elastic-transport==8.17.1 --hash=sha256:192718f498f1d10c5e9aa8b9cf32aed405e469a7f0e9d6a8923431dbb2c59fb8" \
+      > /tmp/elasticsearch.txt \
+    && pip install --no-deps --only-binary :all: --require-hashes -r /tmp/elasticsearch.txt \
+    && rm /tmp/elasticsearch.txt
 
 COPY entrypoint.sh /opt/airflow/entrypoint.sh
 COPY variables.tsv /opt/airflow/variables.tsv

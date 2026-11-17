@@ -61,7 +61,7 @@ while read -r var_string; do
   # only include Slack airflow connections and the Sensitive Terms connection
 done < <(env | grep "^AIRFLOW_CONN_SLACK*\|AIRFLOW_CONN_SENSITIVE_TERMS")
 
-if [[ $* == "webserver" ]]; then
+if [[ $* == "api-server" ]]; then
   # Wait for the database to initialize, will time out if not
   airflow db check-migrations
   # Set up Airflow Variable defaults with descriptions automatically

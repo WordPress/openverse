@@ -5,8 +5,8 @@ from unittest import mock
 import boto3
 import pendulum
 import pytest
-from airflow.exceptions import AirflowSkipException
 from airflow.models import TaskInstance
+from airflow.sdk.exceptions import AirflowSkipException
 from tests.dags.common.loader.test_s3 import (
     ACCESS_KEY,
     S3_LOCAL_ENDPOINT,

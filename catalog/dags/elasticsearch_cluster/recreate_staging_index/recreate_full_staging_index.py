@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from airflow.decorators import task, task_group
+from airflow.sdk import task, task_group
 
 from common import ingestion_server
 from legacy_data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS

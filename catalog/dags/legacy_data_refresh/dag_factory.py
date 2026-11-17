@@ -26,9 +26,8 @@ https://github.com/WordPress/openverse-catalog/issues/453)
 import logging
 from collections.abc import Sequence
 
-from airflow import DAG
 from airflow.providers.standard.operators.python import PythonOperator
-from airflow.utils.trigger_rule import TriggerRule
+from airflow.sdk import DAG, TriggerRule
 
 from common import elasticsearch as es
 from common.constants import (

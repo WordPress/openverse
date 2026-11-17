@@ -9,7 +9,7 @@ In this TaskGroup, indices and constraints from the original table are applied t
 import logging
 from dataclasses import asdict
 
-from airflow.decorators import task, task_group
+from airflow.sdk import task, task_group
 
 from common.constants import POSTGRES_API_CONN_IDS, Environment
 from common.sql import run_sql

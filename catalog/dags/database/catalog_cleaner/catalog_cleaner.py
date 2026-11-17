@@ -18,12 +18,9 @@ differences:
 import logging
 from datetime import timedelta
 
-from airflow.decorators import dag, task
-from airflow.models import Variable
-from airflow.models.abstractoperator import AbstractOperator
-from airflow.models.param import Param
 from airflow.providers.standard.operators.python import get_current_context
-from airflow.utils.trigger_rule import TriggerRule
+from airflow.sdk import BaseOperator, TriggerRule, Variable, dag, task
+from airflow.sdk.definitions.param import Param
 
 from common import slack
 from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
@@ -41,7 +38,7 @@ logger = logging.getLogger(__name__)
 
 
 @task
-def count_dirty_rows_and_notify(temp_table_name: str, task: AbstractOperator = None):
+def count_dirty_rows_and_notify(temp_table_name: str, task: BaseOperator = None):
     """Get the number of rows in the temp table before the updates."""
     count = run_sql.function(
         dry_run=False,
@@ -69,7 +66,7 @@ def update_batch(
     batch: tuple[int, int],
     temp_table_name: str,
     column: str,
-    task: AbstractOperator = None,
+    task: BaseOperator = None,
 ):
     batch_start, batch_end = batch
     logger.info(f"Going through row_id {batch_start:,} to {batch_end:,}.")
@@ -144,9 +141,9 @@ def notify_slack(text):
     },
 )
 def catalog_cleaner():
-    aws_region = Variable.get("AWS_DEFAULT_REGION", default_var="us-east-1")
+    aws_region = Variable.get("AWS_DEFAULT_REGION", default="us-east-1")
     max_concurrent_tasks = Variable.get(
-        "CLEANER_MAX_CONCURRENT_DB_UPDATE_TASKS", default_var=3, deserialize_json=True
+        "CLEANER_MAX_CONCURRENT_DB_UPDATE_TASKS", default=3, deserialize_json=True
     )
 
     column = "{{ params.column }}"

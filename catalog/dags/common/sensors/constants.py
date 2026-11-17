@@ -18,9 +18,9 @@ ES_CONCURRENCY_TAGS = {
     STAGING: STAGING_ES_CONCURRENCY_TAG,
 }
 
-# The DAGs that have each concurrency tag. Airflow 3 tasks cannot look tags up in the
-# metadata database, so they are listed here, and the DAG parsing tests check that
-# this matches the tags the DAGs actually have.
+# The DAGs that have each concurrency tag. Tasks cannot look tags up in the metadata
+# database, so they are listed here, and the DAG parsing tests check that this
+# matches the tags the DAGs actually have.
 CONCURRENCY_TAG_DAG_IDS = {
     PRODUCTION_ES_CONCURRENCY_TAG: [
         "audio_data_refresh",

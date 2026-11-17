@@ -1,7 +1,8 @@
 from unittest import mock
 
 import pytest
-from airflow.exceptions import AirflowException, AirflowSkipException
+from airflow.exceptions import AirflowException
+from airflow.sdk.exceptions import AirflowSkipException
 
 from maintenance.check_silenced_dags import (
     check_configuration,

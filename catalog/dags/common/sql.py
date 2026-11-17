@@ -1,15 +1,14 @@
 import logging
+from contextlib import closing
 from datetime import timedelta
 
-from airflow.decorators import task
-from airflow.models import BaseOperator
-from airflow.models.abstractoperator import AbstractOperator
-from airflow.models.mappedoperator import MappedOperator
 from airflow.providers.common.sql.hooks.handlers import fetch_one_handler
 from airflow.providers.common.sql.operators.sql import SQLExecuteQueryOperator
 from airflow.providers.postgres.hooks.postgres import (
     PostgresHook as UpstreamPostgresHook,
 )
+from airflow.sdk import BaseOperator, task
+from airflow.sdk.definitions.mappedoperator import MappedOperator
 
 from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
 
@@ -77,7 +76,22 @@ class PostgresHook(UpstreamPostgresHook):
         self.postgres_conn_id = postgres_conn_id
         if postgres_conn_id is None:
             self.postgres_conn_id = POSTGRES_CONN_ID
+        self._statement_timeout = self.default_statement_timeout
         super().__init__(self.postgres_conn_id, *args, **kwargs)
+
+    def get_conn(self):
+        """
+        Open a connection with the statement timeout already set. psycopg 3 returns
+        only the first result of a multi-statement query, so the timeout runs as its
+        own statement.
+        """
+        conn = super().get_conn()
+        if self._statement_timeout:
+            with closing(conn.cursor()) as cursor:
+                cursor.execute(self.get_pg_timeout_sql(self._statement_timeout))
+            # Commit so that the connection can still be switched to autocommit
+            conn.commit()
+        return conn
 
     def run(
         self,
@@ -89,15 +103,11 @@ class PostgresHook(UpstreamPostgresHook):
         *args,
         **kwargs,
     ):
-        statement_timeout = statement_timeout or self.default_statement_timeout
-
-        if statement_timeout:
-            timeout_sql = self.get_pg_timeout_sql(statement_timeout)
-            if isinstance(sql, list):
-                sql = [timeout_sql, *sql]
-            else:
-                sql = f"{timeout_sql} {sql}"
-        return super().run(sql, autocommit, parameters, handler)
+        self._statement_timeout = statement_timeout or self.default_statement_timeout
+        try:
+            return super().run(sql, autocommit, parameters, handler)
+        finally:
+            self._statement_timeout = self.default_statement_timeout
 
     @staticmethod
     def get_execution_timeout(task: BaseOperator | MappedOperator = None) -> float:
@@ -147,13 +157,6 @@ class PostgresHook(UpstreamPostgresHook):
     def get_pg_timeout_sql(statement_timeout: float) -> str:
         return f"SET statement_timeout TO '{statement_timeout}s';"
 
-    def run_statement_timeout(self):
-        """
-        Pass an empty SQL statement to the regular run command so that only the
-        timeout setting gets run.
-        """
-        self.run("")
-
 
 class PGExecuteQueryOperator(SQLExecuteQueryOperator):
     """
@@ -188,7 +191,7 @@ class PGExecuteQueryOperator(SQLExecuteQueryOperator):
 def run_sql(
     sql_template: str,
     postgres_conn_id: str = POSTGRES_CONN_ID,
-    task: AbstractOperator = None,
+    task: BaseOperator = None,
     timeout: float = None,
     handler: callable = RETURN_ROW_COUNT,
     **kwargs,

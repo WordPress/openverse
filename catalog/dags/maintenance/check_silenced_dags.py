@@ -25,9 +25,10 @@ The DAG runs weekly.
 import logging
 from datetime import datetime, timedelta
 
-from airflow.exceptions import AirflowException, AirflowSkipException
-from airflow.models import DAG, Variable
+from airflow.exceptions import AirflowException
 from airflow.providers.standard.operators.python import PythonOperator
+from airflow.sdk import DAG, Variable
+from airflow.sdk.exceptions import AirflowSkipException
 
 from common.constants import DAG_DEFAULT_ARGS
 from common.github import GitHubAPI
@@ -79,9 +80,7 @@ def get_dags_with_closed_issues(
 
 
 def check_configuration(github_pat: str, airflow_variable: str):
-    configuration = Variable.get(
-        airflow_variable, default_var={}, deserialize_json=True
-    )
+    configuration = Variable.get(airflow_variable, default={}, deserialize_json=True)
 
     dags_to_reenable = get_dags_with_closed_issues(github_pat, configuration)
 

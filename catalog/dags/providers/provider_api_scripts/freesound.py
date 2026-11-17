@@ -18,7 +18,7 @@ import logging
 from datetime import datetime
 
 import backoff
-from airflow.models import Variable
+from airflow.sdk import Variable
 from requests.exceptions import ConnectionError, HTTPError, SSLError
 
 from common.licenses.licenses import get_license_info

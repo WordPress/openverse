@@ -12,9 +12,7 @@ from providers.provider_workflows import ProviderWorkflow
 
 
 class DagMock(NamedTuple):
-    # schedule_interval used here because the Dag model does not actually have a
-    # schedule attribute
-    schedule_interval: str | None
+    schedule: str | None
     doc_md: str | None
     catchup: bool
     tags: list[str]
@@ -51,7 +49,10 @@ _MODULE = "utilities.dag_doc_gen.dag_doc_generation"
         (None, "other"),
         ([], "other"),
         (["foo"], "foo"),
-        (["foo", "bar"], "foo"),
+        # DAG tags are a set, so without a known type the first one in sorted order
+        # is used
+        (["foo", "bar"], "bar"),
+        (["foo", "provider", "data_refresh"], "data_refresh"),
     ],
 )
 @pytest.mark.parametrize(
@@ -95,7 +96,7 @@ def test_get_dags_info(
     catchup,
     expected_dated,
 ):
-    dag = DagMock(schedule_interval=schedule, doc_md=doc, catchup=catchup, tags=tags)
+    dag = DagMock(schedule=schedule, doc_md=doc, catchup=catchup, tags=tags)
     expected = DagInfo(
         dag_id=dag_id,
         schedule=schedule,

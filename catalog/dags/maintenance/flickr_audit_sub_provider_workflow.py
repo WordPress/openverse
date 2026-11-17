@@ -9,10 +9,9 @@ DAG. Report suggestions for new sub-providers to Slack.
 import logging
 from typing import NamedTuple
 
-from airflow import DAG
-from airflow.exceptions import AirflowSkipException
-from airflow.models import Variable
 from airflow.providers.standard.operators.python import PythonOperator
+from airflow.sdk import DAG, Variable
+from airflow.sdk.exceptions import AirflowSkipException
 
 from common.constants import DAG_DEFAULT_ARGS
 from common.loader import provider_details as prov

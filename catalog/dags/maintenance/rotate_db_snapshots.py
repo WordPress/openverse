@@ -18,10 +18,10 @@ Requires two variables:
 import logging
 from datetime import datetime
 
-from airflow.decorators import dag, task
 from airflow.providers.amazon.aws.hooks.rds import RdsHook
 from airflow.providers.amazon.aws.operators.rds import RdsCreateDbSnapshotOperator
 from airflow.providers.amazon.aws.sensors.rds import RdsSnapshotExistenceSensor
+from airflow.sdk import dag, task
 
 from common.constants import AWS_RDS_CONN_ID, DAG_DEFAULT_ARGS
 

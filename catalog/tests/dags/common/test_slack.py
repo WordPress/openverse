@@ -579,3 +579,28 @@ def test_on_failure_callback(
             assert bool(exception) ^ (
                 "Exception" not in run_mock.call_args.kwargs["data"]
             )
+
+
+def test_on_failure_callback_without_logical_date(http_hook_mock):
+    # Manually triggered runs can have no logical date
+    run_after = datetime(2026, 11, 17, 3, 41)
+    context = {
+        "task_instance": mock.Mock(),
+        "dag_run": mock.Mock(run_after=run_after),
+        "exception": ValueError("Whoops"),
+        "dag": mock.Mock(),
+    }
+    env_vars = {
+        "ENVIRONMENT": "production",
+        "SLACK_MESSAGE_OVERRIDE": False,
+        "SILENCED_SLACK_NOTIFICATIONS": {},
+    }
+
+    with mock.patch("common.slack.Variable") as MockVariable:
+        MockVariable.get.side_effect = lambda value, **kwargs: env_vars[value]
+        on_failure_callback(context)
+
+    assert (
+        "*Logical Date*: 2026-11-17T03:41:00Z"
+        in (http_hook_mock.run.call_args.kwargs["data"])
+    )

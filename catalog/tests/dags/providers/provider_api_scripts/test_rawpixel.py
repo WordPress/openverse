@@ -222,41 +222,43 @@ EXAMPLE_KEYWORDS = [
 
 @pytest.mark.parametrize(
     "keywords, expected",
-    zip(
-        EXAMPLE_KEYWORDS,
-        (
-            [
-                "flower",
-                "vintage",
-                "ornament",
-                "vintage illustrations",
-                "floral",
-                "vintage flowers",
-                "illustration",
-                "victorian",
-            ],
-            [
-                "orange",
-                "tiger",
-                "tiger face",
-                "bengal tiger",
-                "animal illustrations",
-                "clipart",
-                "face",
-                "wildlife",
-                "animal art",
-            ],
-            [
-                "dog",
-                "animal photos",
-                "animal",
-                "photo",
-                "hat dog",
-                "image",
-                "fashion dog",
-                "beagle",
-            ],
-        ),
+    list(
+        zip(
+            EXAMPLE_KEYWORDS,
+            (
+                [
+                    "flower",
+                    "vintage",
+                    "ornament",
+                    "vintage illustrations",
+                    "floral",
+                    "vintage flowers",
+                    "illustration",
+                    "victorian",
+                ],
+                [
+                    "orange",
+                    "tiger",
+                    "tiger face",
+                    "bengal tiger",
+                    "animal illustrations",
+                    "clipart",
+                    "face",
+                    "wildlife",
+                    "animal art",
+                ],
+                [
+                    "dog",
+                    "animal photos",
+                    "animal",
+                    "photo",
+                    "hat dog",
+                    "image",
+                    "fashion dog",
+                    "beagle",
+                ],
+            ),
+        )
     ),
 )
 def test_get_tags(keywords, expected):
@@ -266,14 +268,16 @@ def test_get_tags(keywords, expected):
 
 @pytest.mark.parametrize(
     "keywords, expected",
-    zip(
-        [*EXAMPLE_KEYWORDS, []],
-        [
-            ImageCategory.DIGITIZED_ARTWORK,
-            ImageCategory.ILLUSTRATION,
-            ImageCategory.PHOTOGRAPH,
-            None,
-        ],
+    list(
+        zip(
+            [*EXAMPLE_KEYWORDS, []],
+            [
+                ImageCategory.DIGITIZED_ARTWORK,
+                ImageCategory.ILLUSTRATION,
+                ImageCategory.PHOTOGRAPH,
+                None,
+            ],
+        )
     ),
 )
 def test_get_category(keywords, expected):

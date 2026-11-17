@@ -26,15 +26,14 @@ from pathlib import Path
 import pendulum
 import requests
 from airflow import XComArg
-from airflow.exceptions import AirflowNotFoundException, AirflowSkipException
-from airflow.models.abstractoperator import AbstractOperator
+from airflow.exceptions import AirflowNotFoundException
 from airflow.providers.amazon.aws.hooks.s3 import S3Hook
 from airflow.providers.standard.operators.python import (
     PythonOperator,
     ShortCircuitOperator,
 )
-from airflow.utils.task_group import TaskGroup
-from airflow.utils.trigger_rule import TriggerRule
+from airflow.sdk import BaseOperator, TaskGroup, TriggerRule
+from airflow.sdk.exceptions import AirflowSkipException
 
 from common.constants import AWS_CONN_ID, IMAGE, POSTGRES_CONN_ID, XCOM_PULL_TEMPLATE
 from common.loader import provider_details, reporting, sql
@@ -85,7 +84,7 @@ class INaturalistDataIngester(ProviderDataIngester):
     @staticmethod
     def get_batches(
         batch_length: int,  # must be a positive, non-zero integer
-        task: AbstractOperator,
+        task: BaseOperator,
     ):
         pg = PostgresHook(
             postgres_conn_id=POSTGRES_CONN_ID,
@@ -110,7 +109,7 @@ class INaturalistDataIngester(ProviderDataIngester):
         batch: tuple[int, int],
         intermediate_table: str,
         identifier: str,
-        task: AbstractOperator,
+        task: BaseOperator,
         sql_template_file_name="transformed_table.template.sql",
     ):
         """
@@ -275,7 +274,6 @@ class INaturalistDataIngester(ProviderDataIngester):
         )
         COUNT_SQL = "SELECT count(*) FROM inaturalist.{};"
         # upload vernacular names file to postgres
-        pg.run_statement_timeout()
         pg.copy_expert(COPY_SQL.format("col_vernacular"), OUTPUT_DIR / vernacular_file)
         vernacular_records = pg.get_records(COUNT_SQL.format("col_vernacular"))
         if vernacular_records[0][0] == 0:

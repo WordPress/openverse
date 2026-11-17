@@ -2,10 +2,10 @@ from datetime import timedelta
 from unittest import mock
 
 import pytest
-from airflow import DAG
-from airflow.exceptions import AirflowSkipException
 from airflow.models import DagRun
 from airflow.providers.standard.operators.empty import EmptyOperator
+from airflow.sdk import DAG
+from airflow.sdk.exceptions import AirflowSkipException
 from airflow.utils.state import TaskInstanceState
 from tests.conftest import mark_extended
 from tests.dags.providers.provider_api_scripts.resources.provider_data_ingester.mock_provider_data_ingester import (

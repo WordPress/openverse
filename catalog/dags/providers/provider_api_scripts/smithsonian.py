@@ -12,7 +12,7 @@ import logging
 
 import backoff
 from airflow.exceptions import AirflowException
-from airflow.models import Variable
+from airflow.sdk import Variable
 
 from common.licenses import LicenseInfo
 from common.loader import provider_details as prov

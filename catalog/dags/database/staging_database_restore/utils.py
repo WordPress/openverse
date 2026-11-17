@@ -1,7 +1,7 @@
 import functools
 
-from airflow.models import Variable
 from airflow.providers.amazon.aws.hooks.rds import RdsHook
+from airflow.sdk import Variable
 
 from common.constants import AWS_RDS_CONN_ID
 from common.github import GitHubAPI

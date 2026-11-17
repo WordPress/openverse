@@ -20,8 +20,7 @@ import logging
 from datetime import timedelta
 from urllib.parse import parse_qs, urlencode, urlsplit
 
-from airflow.decorators import task_group
-from airflow.models import Variable
+from airflow.sdk import Variable, task_group
 
 import common
 from common import constants
