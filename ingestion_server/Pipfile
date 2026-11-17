@@ -25,7 +25,6 @@ psycopg2 = "~=2.9"
 python-decouple = "~=3.8"
 PyYAML = "~=6.0"
 tldextract = "~=5.0"
-sentry-sdk = {extras = ["falcon"], version = "*"}
 
 [requires]
 python_version = "3.11"

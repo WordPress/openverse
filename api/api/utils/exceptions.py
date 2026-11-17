@@ -13,8 +13,8 @@ from api.utils.es_transport import SearchCapacityExceeded
 logger = structlog.get_logger(__name__)
 
 # Elasticsearch failing to answer is a backend outage the client can only wait
-# out, so it is reported as one. Answering here also keeps these out of Sentry,
-# which otherwise receives one 500 per timed-out search.
+# out, so it is reported as one. Answering here also keeps these out of the
+# error logs, which otherwise receive one 500 per timed-out search.
 SEARCH_BACKEND_FAILURES = {
     SearchCapacityExceeded: (
         status.HTTP_503_SERVICE_UNAVAILABLE,

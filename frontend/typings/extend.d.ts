@@ -3,8 +3,6 @@ import type {
   ComponentCustomProperties as _ComponentCustomProperties,
 } from "vue"
 
-import type { Sentry } from "@sentry/node"
-
 // Fix until the libraries are updated to correctly augment `vue`.
 // See https://nuxt.com/blog/v3-13#vue-typescript-changes
 declare module "@vue/runtime-core" {
@@ -14,15 +12,10 @@ declare module "@vue/runtime-core" {
   interface ComponentCustomOptions extends _ComponentCustomOptions {}
 }
 
-declare module "@sentry/nuxt" {
-  const Sentry: Sentry
-  export = Sentry
-}
-
 declare module "#app" {
   interface NuxtApp {
-    $captureException: Sentry["captureException"]
-    $captureMessage: Sentry["captureMessage"]
+    $captureException: (error: unknown, extra?: Record<string, unknown>) => void
+    $captureMessage: (message: string) => void
   }
 }
 

@@ -34,8 +34,8 @@ sure a data refresh isn't occurring.
 
 ## Post-deployment steps
 
-1. Check for any Sentry errors in the maintainer's `#openverse-alerts` channel,
-   or in the Sentry UI.
+1. Check for any alarms in the maintainer's `#openverse-alerts` channel, and for
+   errors in the service's CloudWatch logs.
 1. Review and Approve the automatically-generated changelog pull request in the
    repository.
 1. Push up a PR to the infrastructure repository with the Terraform changes you

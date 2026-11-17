@@ -22,7 +22,7 @@ _HEAD_TIMEOUT = aiohttp.ClientTimeout(settings.THUMBNAIL_EXTENSION_REQUEST_TIMEO
 
 
 # Used to filter network errors during extension checks that we believe
-# we should get errors (rather than warnings) for, e.g., a Sentry issue.
+# we should get errors (rather than warnings) for.
 # As such, this should exclude errors where we don't think we have the
 # ability to control the outcome, whether now or in the future.
 # Some things, like SSL errors and timeouts, may be used to inform liveness
@@ -83,7 +83,7 @@ async def get_image_extension(media_info: MediaInfo) -> str | None:
             # we'll skip generating this thumbnail. In the future, we might adjust
             # timeouts with per-provider granularity, but for now, we just have to
             # accept they will happen and are part of the set of non-actionable
-            # networking errors that we don't need to report as errors to Sentry.
+            # networking errors that we don't need to report as errors.
             if not isinstance(exc, TimeoutError):
                 if isinstance(exc, _NON_ACTIONABLE_NETWORK_EXCEPTIONS):
                     log = logger.warning

@@ -45,7 +45,7 @@ _ERROR_STATUS = -1
 
 
 # Used to filter network errors during liveness checks that we believe
-# we should get errors (rather than warnings) for, e.g., a Sentry issue.
+# we should get errors (rather than warnings) for.
 # As such, this should exclude errors where we don't think we have the
 # ability to control the outcome, whether now or in the future.
 # Some things, like SSL errors and timeouts, may be used for detecting
@@ -91,7 +91,7 @@ async def _head(
     except (TimeoutError, aiohttp.ClientError) as exception:
         # only log non-timeout exceptions. Timeouts are more or less expected
         # and we have means of visibility into them (e.g., querying for timings
-        # that exceed the timeout); they do _not_ need to be in the error log or go to Sentry
+        # that exceed the timeout); they do _not_ need to be in the error log
         # The timeout exception class aiohttp uses is a subclass of `ClientError` and `TimeoutError`,
         # so we have to explicitly check that the error is _not_ a timeout error, not that it
         # _is_ an aiohttp error. When it is a timeout error, it will be both `TimeoutError` and

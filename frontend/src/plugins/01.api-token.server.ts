@@ -2,7 +2,6 @@ import { defineNuxtPlugin, useRuntimeConfig } from "#imports"
 
 import { Mutex, MutexInterface } from "async-mutex"
 import axios from "axios"
-import * as Sentry from "@sentry/nuxt"
 
 import { debug, warn } from "~/utils/console"
 
@@ -99,7 +98,6 @@ const refreshApiAccessToken = async (
       (e as AxiosError).message
     }`
     warn((e as AxiosError).message)
-    Sentry.captureException(e)
   }
 }
 
@@ -166,7 +164,7 @@ export default defineNuxtPlugin(async () => {
   try {
     openverseApiToken = await getApiAccessToken()
   } catch (e) {
-    Sentry.captureException(e)
+    console.error(e)
   }
   return {
     provide: {

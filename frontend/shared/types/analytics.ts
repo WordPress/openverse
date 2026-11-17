@@ -471,8 +471,8 @@ export type Events = {
   }
   /**
    * Description: Recorded when a network error occurs. Recorded in Plausible,
-   * rather than Sentry, because we never have sufficient information in Sentry
-   * to identify patterns that could be relevant, like regional issues.
+   * rather than only logged, so that we can identify patterns that could be
+   * relevant, like regional issues.
    */
   NETWORK_ERROR: {
     /** The kind of request the network error occurred during */

@@ -16,8 +16,8 @@ the deployment in the maintainers `#openverse-notifications` channel and in the
 
 ## Post-deployment steps
 
-1. Check for any Sentry errors in the maintainer's `#openverse-alerts` channel,
-   or in the Sentry UI.
+1. Check for any alarms in the maintainer's `#openverse-alerts` channel, and for
+   errors in the service's CloudWatch logs.
 1. Review and Approve the automatically-generated changelog pull request in the
    repository.
 1. In the event of errors or problems,

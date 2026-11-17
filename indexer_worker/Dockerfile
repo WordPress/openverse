@@ -87,7 +87,4 @@ COPY --chown=ov_user . /indexer_worker/
 # Expose Gunicorn server to indexer worker Falcon app
 EXPOSE 8003
 
-ARG SEMANTIC_VERSION
-ENV SENTRY_RELEASE=$SEMANTIC_VERSION
-
 CMD ["gunicorn", "--bind", "0.0.0.0:8003", "api:api"]

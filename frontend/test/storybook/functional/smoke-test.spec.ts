@@ -21,7 +21,6 @@ type StoryProblems = {
 const ignoredProblems = [
   /\[Plausible] Ignoring event because website is running locally/,
   /Failed to load resource: net::ERR_CONNECTION_REFUSED/,
-  /Sentry DSN wasn't provided/,
   // Errors from the Storybook nuxt module
   // TypeError or Va
   /\[nuxt] error caught during app initialization \S*: Cannot read properties of undefined \(reading 'cdnURL'\)/,

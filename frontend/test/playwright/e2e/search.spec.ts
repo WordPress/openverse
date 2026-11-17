@@ -116,8 +116,8 @@ for (const renderMode of ["CSR", "SSR"] as const) {
   }) => {
     // This tests a _negative_, which isn't ideal, but seeing as we have tests for the error handling plugin, and the previous test,
     // `send errors to Plausible`, proves the plugin is being used (ignoring the possibility of conditionally calling the error
-    // handling function), so there shouldn't be any network error events. Everything would get sent to Sentry, but we don't have a
-    // way to assert Sentry requests in Playwright, so this approach will have to do.
+    // handling function), so there shouldn't be any network error events. Everything else is only logged, which we don't
+    // assert in Playwright, so this approach will have to do.
     const analyticsEvents = collectAnalyticsEvents(context)
     await context.route(
       (url) => {
