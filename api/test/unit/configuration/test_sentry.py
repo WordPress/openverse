@@ -5,6 +5,7 @@ from django.db.utils import OperationalError
 import pytest
 from psycopg_pool import PoolTimeout
 
+from api.utils.sentry import FILTERED, make_sensitive_value_scrubber
 from conf.settings.sentry import before_send
 
 
@@ -71,4 +72,14 @@ def test_drops_noise(event, raise_exc):
 def test_keeps_other_events(event, raise_exc):
     hint = {"exc_info": _exc_info(raise_exc)} if raise_exc else {}
 
-    assert before_send(event, hint) is event
+    assert before_send(event, hint) == event
+
+
+def test_scrubs_kept_events(monkeypatch):
+    monkeypatch.setattr(
+        "conf.settings.sentry.scrub_sensitive_values",
+        make_sensitive_value_scrubber(["db.internal.example.com"]),
+    )
+    event = {"message": "could not connect to db.internal.example.com"}
+
+    assert before_send(event, {}) == {"message": f"could not connect to {FILTERED}"}
