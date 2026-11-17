@@ -88,7 +88,7 @@ test("shows a 404 without raw error details for a missing image on CSR", async (
   page,
 }) => {
   const message = "No image with this diagnostic ID was found."
-  await page.route(/v1\/images\//, (route) =>
+  await page.route(/\/api\/image\//, (route) =>
     route.fulfill({ status: 404, json: { detail: message } })
   )
 
