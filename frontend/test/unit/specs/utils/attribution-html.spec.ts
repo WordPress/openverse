@@ -151,4 +151,46 @@ describe("getAttribution", () => {
     })
     expect(document.getElementsByTagName("img")).toHaveLength(0)
   })
+  it("returns XML attribution with the correct title", () => {
+    const xml = getAttribution(mediaItem, t, { isXml: true })
+
+    expect(xml).toContain("<dc:title>Title</dc:title>")
+    expect(xml).not.toContain("<dc:title>undefined</dc:title>")
+  })
+
+  it("uses the generic title in XML when the title is missing", () => {
+    const mediaItemNoTitle = { ...mediaItem, originalTitle: "" }
+    const xml = getAttribution(mediaItemNoTitle, t, { isXml: true })
+
+    expect(xml).toContain("<dc:title>This work</dc:title>")
+  })
+
+  it("omits unknown elements from the XML attribution", () => {
+    const mediaItemNoCreator = {
+      ...mediaItem,
+      creator: undefined,
+      license_url: undefined,
+    }
+    const xml = getAttribution(mediaItemNoCreator, t, { isXml: true })
+
+    expect(xml).not.toContain("dc:creator")
+    expect(xml).not.toContain("dc:rights")
+    expect(xml).not.toContain("undefined")
+    expect(xml).toContain("<dc:title>Title</dc:title>")
+  })
+
+  it("escapes special characters in XML attribution", () => {
+    const mediaItemWithSpecialCharacters = {
+      ...mediaItem,
+      originalTitle: "Cats & Dogs <Pets>",
+      creator: "A & B",
+    }
+
+    const xml = getAttribution(mediaItemWithSpecialCharacters, t, {
+      isXml: true,
+    })
+
+    expect(xml).toContain("<dc:title>Cats &amp; Dogs &lt;Pets&gt;</dc:title>")
+    expect(xml).toContain("<dc:creator>A &amp; B</dc:creator>")
+  })
 })
