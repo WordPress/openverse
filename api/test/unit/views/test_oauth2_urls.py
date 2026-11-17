@@ -9,9 +9,13 @@ import pytest
         "/v1/auth_tokens/.well-known/oauth-authorization-server",
         "/v1/auth_tokens/.well-known/oauth-protected-resource",
         "/v1/auth_tokens/register/some-client-id/",
+        "/v1/auth_tokens/.well-known/openid-configuration",
+        "/v1/auth_tokens/.well-known/jwks.json",
+        "/v1/auth_tokens/userinfo/",
+        "/v1/auth_tokens/logout/",
     ],
 )
-def test_toolkit_metadata_and_dcr_routes_are_not_mounted(api_client, path):
+def test_unused_toolkit_routes_are_not_mounted(api_client, path):
     res = api_client.get(path)
 
     assert res.status_code == 404
