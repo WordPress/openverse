@@ -1,9 +1,20 @@
 # Registers the FAB `ab_user` table that `task_instance_note` references; without it,
 # deleting task instances fails to resolve the foreign key.
+import json
+
 import airflow.providers.fab.auth_manager.models  # noqa: F401
 import pytest
 from airflow.models import DagRun, Pool, TaskInstance
+from airflow.utils.json import XComDecoder, XComEncoder
 from airflow.utils.session import create_session
+
+
+def xcom_round_trip(value):
+    """
+    Return `value` as a downstream task receives it, after Airflow stores it as a JSON
+    XCom. Tuples, including NamedTuples, come back as lists.
+    """
+    return json.loads(json.dumps(value, cls=XComEncoder), cls=XComDecoder)
 
 
 def pytest_addoption(parser):

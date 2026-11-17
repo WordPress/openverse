@@ -3,6 +3,7 @@ from unittest import mock
 
 import pytest
 import smart_open.s3
+from tests.conftest import xcom_round_trip
 
 from data_augmentation.rekognition import add_rekognition_labels, constants
 from data_augmentation.rekognition.label_mapping import LABEL_MAPPING
@@ -140,3 +141,21 @@ def test_parse_and_insert_labels_buffer_config(
     assert mock_insert_tags.call_count == expected_insert_call_count
     assert mock_variable.set.call_count == expected_insert_call_count - 1
     mock_variable.delete.assert_called_once()
+
+
+def test_notify_parse_complete_reads_results_from_xcom():
+    results = xcom_round_trip(
+        ParseResults(
+            total_processed=1200,
+            total_skipped=3,
+            total_failed=1,
+            failed_records_sample=["bad line"],
+        )
+    )
+
+    with mock.patch.object(add_rekognition_labels.slack, "send_message") as send:
+        add_rekognition_labels.notify_parse_complete.function(results)
+
+    message = send.call_args.args[0]
+    assert "*Total processed:* 1,200" in message
+    assert " - `bad line`" in message

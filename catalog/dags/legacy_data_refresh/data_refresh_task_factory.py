@@ -52,6 +52,7 @@ from airflow.decorators import task
 from airflow.exceptions import AirflowSkipException
 from airflow.models.baseoperator import chain
 from airflow.providers.standard.operators.python import PythonOperator
+from airflow.utils.state import TaskInstanceState
 from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
 
@@ -95,11 +96,10 @@ def drop_temp_tables(media_type: str, ingest_trigger_task_id: str, ti=None):
 
     Skips unless this run triggered ``ingest_upstream``: if the run failed earlier,
     for example while waiting on other Elasticsearch DAGs, the tables may belong to
-    a refresh that is still running. The trigger task pushes the status check URL to
-    XCom only after the ingestion server accepts the task, so a missing XCom means
-    this run did not trigger it.
+    a refresh that is still running.
     """
-    if not ti.xcom_pull(task_ids=ingest_trigger_task_id):
+    trigger_ti = ti.get_dagrun().get_task_instance(ingest_trigger_task_id)
+    if trigger_ti is None or trigger_ti.state != TaskInstanceState.SUCCESS:
         raise AirflowSkipException(
             "This run did not trigger ingest_upstream, so it created no temp tables."
         )
