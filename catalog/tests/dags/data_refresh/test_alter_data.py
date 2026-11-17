@@ -1,4 +1,5 @@
 import json
+import logging
 
 import psycopg2
 import pytest
@@ -13,12 +14,14 @@ from tests.test_utils import sql
 
 
 @pytest.fixture
-def temp_table(request):
-    table = f"temp_import_{abs(hash(request.node.name))}"
+def temp_table(identifier):
+    table = f"temp_import_{identifier}"
     conn = psycopg2.connect(sql.POSTGRES_TEST_URI)
     cur = conn.cursor()
     cur.execute(f"DROP TABLE IF EXISTS {table}")
-    cur.execute(f"CREATE TABLE {table} (id integer PRIMARY KEY, tags jsonb)")
+    cur.execute(
+        f"CREATE TABLE {table} (id integer PRIMARY KEY, identifier text, tags jsonb)"
+    )
     conn.commit()
 
     yield sql.PostgresRef(cursor=cur, connection=conn), table
@@ -32,8 +35,8 @@ def temp_table(request):
 def _insert(postgres, table, rows: dict[int, object]):
     for _id, tags in rows.items():
         postgres.cursor.execute(
-            f"INSERT INTO {table} (id, tags) VALUES (%s, %s)",
-            (_id, None if tags is None else json.dumps(tags)),
+            f"INSERT INTO {table} (id, identifier, tags) VALUES (%s, %s, %s)",
+            (_id, f"identifier-{_id}", None if tags is None else json.dumps(tags)),
         )
     postgres.connection.commit()
 
@@ -69,6 +72,16 @@ def _alter(table, batch):
             id="denylisted_and_contains_denylisted",
         ),
         pytest.param(
+            [
+                {"name": "undefined"},
+                {"name": "Creative Commons license"},
+                {"name": "public domain"},
+                {"name": "domain"},
+            ],
+            [{"name": "domain"}],
+            id="ingestion_denylists",
+        ),
+        pytest.param(
             [{"name": "By"}, {"name": "bypass"}, {"name": "CC-BY-NC"}],
             [{"name": "bypass"}],
             id="case_insensitive_exact_and_contains",
@@ -87,6 +100,20 @@ def _alter(table, batch):
                 {"name": "null_accuracy", "accuracy": None},
             ],
             id="low_accuracy",
+        ),
+        pytest.param(
+            [
+                {"name": "word_accuracy", "accuracy": "high"},
+                {"name": "comma_accuracy", "accuracy": "0,95"},
+                {"accuracy": "high"},
+                {"name": "padded_accuracy", "accuracy": " 0.95 "},
+                {"name": "exponent_accuracy", "accuracy": "9.5e-1"},
+            ],
+            [
+                {"name": "padded_accuracy", "accuracy": " 0.95 "},
+                {"name": "exponent_accuracy", "accuracy": "9.5e-1"},
+            ],
+            id="non_numeric_string_accuracy",
         ),
         pytest.param(
             [
@@ -144,6 +171,17 @@ def test_alter_data_batch_only_updates_rows_in_batch(temp_table):
     assert _tags_by_id(postgres, table) == {1: bad, 2: good, 3: good, 4: bad}
 
 
+def test_alter_data_batch_logs_altered_identifiers(temp_table, caplog):
+    postgres, table = temp_table
+    _insert(postgres, table, {1: [{"name": "cc0"}], 2: [{"name": "cat"}]})
+
+    with caplog.at_level(logging.DEBUG, logger="data_refresh.alter_data"):
+        _alter(table, (1, 2))
+
+    assert "Filtered tags for identifier-1" in caplog.text
+    assert "identifier-2" not in caplog.text
+
+
 @pytest.mark.parametrize(
     "id_bounds, batch_size, expected",
     [
@@ -152,6 +190,8 @@ def test_alter_data_batch_only_updates_rows_in_batch(temp_table):
         ((7, 7), 50, [(7, 56)]),
         # None respects default
         ((1, 100), None, [(1, DEFAULT_BATCH_SIZE)]),
+        # An empty table has no id bounds
+        ((None, None), 50, []),
     ],
 )
 def test_get_alter_batches(id_bounds, batch_size, expected):
