@@ -358,7 +358,8 @@ class WikimediaCommonsDataIngester(ProviderDataIngester):
 
     def get_audio_record_data(self, record_data, media_info):
         """Extend record_data with audio-specific fields."""
-        duration = int(float(media_info.get("duration", 0)) * 1000)
+        duration_raw = float(media_info.get("duration") or 0)
+        duration = int(duration_raw * 1000) if duration_raw > 0 else None
         record_data["duration"] = duration
         record_data["category"] = self.extract_audio_category(record_data)
 
