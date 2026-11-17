@@ -247,21 +247,13 @@ def get_instance_ip_address(
     return reservations[0].get("Instances", {})[0].get("PrivateIpAddress")
 
 
-@task(
-    # Instance creation tasks are skipped locally, but we still want this task to run.
-    trigger_rule=TriggerRule.NONE_FAILED
-)
-def get_worker_url(server: str) -> str:
-    """Return the base URL of the indexer worker API on the given server."""
-    return f"http://{server}:{INDEXER_WORKER_PORT}"
-
-
 @task
-def trigger_reindexing_task(worker_url: str, data: dict) -> str:
+def trigger_reindexing_task(server: str, data: dict) -> str:
     """
-    Start a reindexing task on the indexer worker and return the URL for checking
-    its status.
+    Start a reindexing task on the indexer worker on `server` and return the URL for
+    checking its status.
     """
+    worker_url = f"http://{server}:{INDEXER_WORKER_PORT}"
     response = requests.post(
         f"{worker_url}/task", data=data, timeout=INDEXER_WORKER_REQUEST_TIMEOUT
     )
@@ -363,10 +355,8 @@ def reindex(
         environment=environment, instance_id=instance_id
     )
 
-    worker_url = get_worker_url(server=instance_ip_address)
-
     status_url = trigger_reindexing_task(
-        worker_url=worker_url,
+        server=instance_ip_address,
         data={
             "model_name": data_refresh_config.media_type,
             "table_name": data_refresh_config.table_mapping.temp_table_name,
@@ -391,7 +381,7 @@ def reindex(
 
     status = assert_reindexing_success()
 
-    instance_id >> await_worker >> [instance_ip_address, worker_url]
+    instance_id >> await_worker >> instance_ip_address
     await_reindexing >> [terminate_instance, status]
 
 

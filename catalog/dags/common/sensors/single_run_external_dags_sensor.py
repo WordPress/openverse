@@ -59,16 +59,13 @@ class SingleRunExternalDAGsSensor(BaseSensorOperator):
                 assert_dag_exists(dag_id)
             self._has_checked_existence = True
 
-        count_running = self.get_count()
+        # A DAG is considered 'running' if the DAG itself is in the running state,
+        # and if its instance of the Sensor task has completed successfully. Stop
+        # at the first one, since a single running DAG is enough to wait.
+        for dag_id in self.external_dag_ids:
+            if count_running_dag_runs_past_task(dag_id, self.task_id):
+                self.log.info("DAG %s is in the running state", dag_id)
+                return False
 
-        self.log.info("%s DAGs are in the running state", count_running)
-        return count_running == 0
-
-    def get_count(self) -> int:
-        # Get the count of running DAGs. A DAG is considered 'running' if
-        # the DAG itself is in the running state, and if its instance of
-        # the Sensor task has completed successfully.
-        return sum(
-            count_running_dag_runs_past_task(dag_id, self.task_id)
-            for dag_id in self.external_dag_ids
-        )
+        self.log.info("None of the DAGs are in the running state")
+        return True

@@ -118,7 +118,7 @@ def test_succeeds_if_no_running_dags(
             "Poking for DAGs ['successful_dag', 'failed_dag', 'queued_dag'] ..."
             in caplog.text
         )
-        assert "0 DAGs are in the running state" in caplog.text
+        assert "None of the DAGs are in the running state" in caplog.text
 
 
 @pytest.mark.filterwarnings(
@@ -128,7 +128,7 @@ def test_succeeds_if_no_running_dags(
 @pytest.mark.parametrize(
     "allow_concurrent_runs, expected_message",
     [
-        (False, "1 DAGs are in the running state"),
+        (False, "DAG {dag_id_prefix}_running_dag is in the running state"),
         (
             True,
             "`allow_concurrent_runs` is enabled. Returning without checking for"
@@ -194,7 +194,9 @@ def test_retries_if_running_dags_with_completed_sensor_task(
             f"{sample_dag_id_fixture}_success_dag', '{sample_dag_id_fixture}_running_dag'] ..."
             in caplog.text
         )
-        assert expected_message in caplog.text
+        assert (
+            expected_message.format(dag_id_prefix=sample_dag_id_fixture) in caplog.text
+        )
 
 
 def test_check_existence_checks_each_external_dag_once():

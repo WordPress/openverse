@@ -8,7 +8,6 @@ from airflow.providers.amazon.aws.hooks.ec2 import EC2Hook
 from common.constants import PRODUCTION
 from data_refresh.constants import INDEXER_WORKER_REQUEST_TIMEOUT
 from data_refresh.distributed_reindex import (
-    get_worker_url,
     trigger_reindexing_task,
     wait_for_reindexing_task,
     wait_for_worker,
@@ -152,15 +151,11 @@ def _response(status_code, json_body=None):
     return response
 
 
-def test_get_worker_url():
-    assert get_worker_url.function(server="10.0.0.1") == WORKER_URL
-
-
 def test_trigger_reindexing_task_returns_status_url():
     data = {"model_name": "image", "start_id": 0, "end_id": 10}
     response = _response(202, {"status_check": "http://localhost:8003/task/abc-123"})
     with mock.patch("requests.post", return_value=response) as post:
-        actual = trigger_reindexing_task.function(worker_url=WORKER_URL, data=data)
+        actual = trigger_reindexing_task.function(server="10.0.0.1", data=data)
 
     post.assert_called_once_with(
         f"{WORKER_URL}/task", data=data, timeout=INDEXER_WORKER_REQUEST_TIMEOUT
@@ -178,7 +173,7 @@ def test_trigger_reindexing_task_returns_status_url():
 def test_trigger_reindexing_task_fails_unless_accepted(status_code, error):
     with mock.patch("requests.post", return_value=_response(status_code)):
         with pytest.raises(error):
-            trigger_reindexing_task.function(worker_url=WORKER_URL, data={})
+            trigger_reindexing_task.function(server="10.0.0.1", data={})
 
 
 @pytest.mark.parametrize(
