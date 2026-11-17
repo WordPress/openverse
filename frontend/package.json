@@ -65,7 +65,7 @@
     "focus-trap": "^7.5.4",
     "focus-visible": "^5.2.0",
     "pinia": "^3.0.4",
-    "postcss-focus-visible": "^10.0.0",
+    "postcss-focus-visible": "^11.0.0",
     "rfdc": "^1.4.1",
     "seeded-rand": "^4.0.0",
     "tailwindcss": "^4.3.3",
