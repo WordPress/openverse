@@ -15,10 +15,14 @@ from textwrap import dedent
 
 from airflow.decorators import task, task_group
 from airflow.models.abstractoperator import AbstractOperator
-from airflow.providers.common.sql.hooks.handlers import fetch_one_handler
+from airflow.providers.common.sql.hooks.handlers import (
+    fetch_all_handler,
+    fetch_one_handler,
+)
 
 from common.constants import POSTGRES_API_CONN_IDS, Environment
-from common.sql import RETURN_ROW_COUNT, PGExecuteQueryOperator, PostgresHook
+from common.sql import PGExecuteQueryOperator, PostgresHook
+from common.storage.media import TAG_CONTAINS_DENYLIST, TAG_DENYLIST
 from data_refresh.data_refresh_types import DataRefreshConfig
 
 
@@ -26,67 +30,61 @@ logger = logging.getLogger(__name__)
 
 
 DEFAULT_BATCH_SIZE = 100_000
-# Filter out tags that exactly match these terms. All terms should be lowercase.
-TAG_DENYLIST = {
-    "no person",
-    "squareformat",
-    "uploaded:by=flickrmobile",
-    "uploaded:by=instagram",
-    "flickriosapp:filter=flamingo",
-    "by",
-}
-
-# Filter out tags that contain the following terms. All entries should be
-# lowercase.
-TAG_CONTAINS_DENYLIST = {
-    "flickriosapp",
-    "uploaded",
-    ":",
-    "=",
-    "cc0",
-    "by-nc",
-    "by-nd",
-    "by-sa",
-    "by-nc-nd",
-    "by-nc-sa",
-    "pdm",
-}
-
 # Filter out low-confidence tags, which indicate that the machine-generated tag
 # may be inaccurate.
 TAG_MIN_CONFIDENCE = 0.90
 # Filter out tags that match the following providers (either because they haven't
 # been vetted or because they are known to be low-quality).
 FILTERED_TAG_PROVIDERS = {"rekognition"}
+# A string accuracy that `::numeric` accepts. Casting any other string would raise
+# and abort the whole batch.
+NUMERIC_PATTERN = r"^\s*[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?\s*$"
 
 # True when a tag is malformed, below the confidence threshold, from a filtered
 # provider, or has a denylisted name. Every branch must be non-null, because
-# `NOT NULL` would drop a tag that should be kept.
+# `NOT NULL` would drop a tag that should be kept. The accuracy cast sits inside
+# CASE, which, unlike OR, guarantees the guard is evaluated first. A string
+# accuracy that is not a number is treated as below the threshold.
 TAG_IS_FILTERED = """(
     jsonb_typeof(tag -> 'name') IS DISTINCT FROM 'string'
-    OR CASE
-        WHEN jsonb_typeof(tag -> 'accuracy') IN ('number', 'string')
-            THEN (tag ->> 'accuracy')::numeric < %(min_confidence)s
+    OR CASE jsonb_typeof(tag -> 'accuracy')
+        WHEN 'number' THEN (tag ->> 'accuracy')::numeric < %(min_confidence)s
+        WHEN 'string' THEN CASE
+            WHEN tag ->> 'accuracy' ~ %(numeric_pattern)s
+                THEN (tag ->> 'accuracy')::numeric < %(min_confidence)s
+            ELSE true
+        END
         ELSE false
     END
     OR coalesce(tag ->> 'provider' = ANY(%(filtered_providers)s), false)
     OR lower(tag ->> 'name') = ANY(%(denylist)s)
     OR lower(tag ->> 'name') LIKE ANY(%(contains_denylist)s)
 )"""
-TAG_ELEMENTS = """jsonb_array_elements(
-    CASE jsonb_typeof(tags) WHEN 'array' THEN tags ELSE '[]'::jsonb END
-) WITH ORDINALITY AS elements(tag, position)"""
 # Rewrite the tags of each record in the batch that has at least one tag to drop,
-# keeping the order of the remaining tags.
+# keeping the order of the remaining tags. Each tag is checked once.
 QUERY_FILTER_TAGS = dedent(f"""
-    UPDATE {{temp_table}}
-    SET tags = (
-        SELECT coalesce(jsonb_agg(tag ORDER BY position), '[]'::jsonb)
-        FROM {TAG_ELEMENTS}
-        WHERE NOT {TAG_IS_FILTERED}
-    )
-    WHERE id BETWEEN %(batch_start)s AND %(batch_end)s
-        AND EXISTS (SELECT FROM {TAG_ELEMENTS} WHERE {TAG_IS_FILTERED})
+    UPDATE {{temp_table}} AS target
+    SET tags = filtered.tags
+    FROM (
+        SELECT
+            id,
+            coalesce(
+                jsonb_agg(tag ORDER BY position) FILTER (WHERE NOT is_filtered),
+                '[]'::jsonb
+            ) AS tags
+        FROM (
+            SELECT id, tag, position, {TAG_IS_FILTERED} AS is_filtered
+            FROM {{temp_table}},
+                jsonb_array_elements(
+                    CASE jsonb_typeof(tags) WHEN 'array' THEN tags ELSE '[]'::jsonb END
+                ) WITH ORDINALITY AS elements(tag, position)
+            WHERE id BETWEEN %(batch_start)s AND %(batch_end)s
+        ) AS checked
+        GROUP BY id
+        HAVING bool_or(is_filtered)
+    ) AS filtered
+    WHERE target.id = filtered.id
+    RETURNING target.identifier
 """)
 # Get an estimate of total rows based on the min and max auto-assigned ID
 QUERY_ROW_ESTIMATE = dedent("""
@@ -102,6 +100,7 @@ def _like_contains_pattern(term: str) -> str:
 def get_tag_filter_parameters() -> dict:
     return {
         "min_confidence": TAG_MIN_CONFIDENCE,
+        "numeric_pattern": NUMERIC_PATTERN,
         "filtered_providers": sorted(FILTERED_TAG_PROVIDERS),
         "denylist": sorted(TAG_DENYLIST),
         "contains_denylist": sorted(
@@ -112,9 +111,12 @@ def get_tag_filter_parameters() -> dict:
 
 @task
 def get_alter_batches(
-    id_bounds: tuple[int, int], batch_size: int | None
+    id_bounds: tuple[int | None, int | None], batch_size: int | None
 ) -> list[tuple[int, int]]:
     start, stop = id_bounds
+    if start is None or stop is None:
+        logger.info("The table is empty, so there is no data to alter.")
+        return []
     batch_size = batch_size or DEFAULT_BATCH_SIZE
     return [(x, x + batch_size - 1) for x in range(start, stop + 1, batch_size)]
 
@@ -135,17 +137,20 @@ def alter_data_batch(
             timeout if timeout else PostgresHook.get_execution_timeout(task)
         ),
     )
-    altered_count = postgres.run(
+    altered = postgres.run(
         QUERY_FILTER_TAGS.format(temp_table=temp_table),
         parameters={
             "batch_start": batch_start,
             "batch_end": batch_end,
             **get_tag_filter_parameters(),
         },
-        handler=RETURN_ROW_COUNT,
+        handler=fetch_all_handler,
     )
-    logger.info(f"Filtered tags for {altered_count} records in batch {batch}")
-    return altered_count
+    if logger.isEnabledFor(logging.DEBUG):
+        for (identifier,) in altered:
+            logger.debug(f"Filtered tags for {identifier}")
+    logger.info(f"Filtered tags for {len(altered)} records in batch {batch}")
+    return len(altered)
 
 
 @task

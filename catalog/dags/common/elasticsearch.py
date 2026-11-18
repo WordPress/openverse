@@ -3,7 +3,7 @@ from datetime import timedelta
 from typing import Literal
 
 from airflow.decorators import task, task_group
-from airflow.exceptions import AirflowException, AirflowSkipException
+from airflow.exceptions import AirflowFailException, AirflowSkipException
 from airflow.models.connection import Connection
 from airflow.providers.elasticsearch.hooks.elasticsearch import ElasticsearchPythonHook
 from airflow.sensors.base import PokeReturnValue
@@ -137,13 +137,27 @@ def raise_for_reindex_failure(response: dict) -> None:
     Raise if a finished reindex task failed.
 
     A reindex run with ``wait_for_completion=False`` still reports ``completed`` when
-    it fails, with the cause in ``error`` (for example, an expired scroll) or in
-    ``response.failures`` (rejected documents).
+    it fails, with the cause in ``error`` (for example, an expired scroll),
+    ``response.failures`` (rejected documents), ``response.canceled`` (cancelled
+    through the tasks API) or ``response.timed_out``.
+
+    Raises ``AirflowFailException`` so the sensor does not retry: polling the same
+    finished ES task again cannot succeed. To recover, clear the whole
+    ``trigger_and_wait_for_reindex`` group so the reindex is triggered again.
     """
-    error = response.get("error")
-    failures = response.get("response", {}).get("failures")
-    if error or failures:
-        raise AirflowException(f"Reindex failed: {error or failures[:5]}")
+    body = response.get("response", {})
+    reasons = {
+        "error": response.get("error"),
+        "failures": (body.get("failures") or [])[:5],
+        "canceled": body.get("canceled"),
+        "timed_out": body.get("timed_out"),
+    }
+    reasons = {key: value for key, value in reasons.items() if value}
+    if reasons:
+        raise AirflowFailException(
+            f"Reindex failed: {reasons}. Clear the trigger_and_wait_for_reindex "
+            "task group to trigger the reindex again."
+        )
 
 
 @task_group(group_id="trigger_and_wait_for_reindex")
