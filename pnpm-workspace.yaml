@@ -13,13 +13,11 @@ enablePrePostScripts: true
 minimumReleaseAge: 10080
 
 # None of these need their build scripts: esbuild and @swc/core ship their
-# binaries as optional platform packages, core-js only prints a banner, and
-# nice-napi is an optional native addon for piscina.
+# binaries as optional platform packages, and core-js only prints a banner.
 allowBuilds:
   "@swc/core": false
   core-js: false
   esbuild: false
-  nice-napi: false
 
 overrides:
   "@opentelemetry/api": ~1.10.0
