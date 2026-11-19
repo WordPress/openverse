@@ -2,4 +2,4 @@
 # If you have a merge conflict in this file, it means you need to run:
 #     manage.py makemigrations --merge
 # in order to resolve the conflict between migrations.
-0073_alter_throttledapplication_authorization_grant_type_and_more
+0074_throttledapplication_cimd_expires_at_and_more
