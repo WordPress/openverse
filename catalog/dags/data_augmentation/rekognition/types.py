@@ -1,5 +1,5 @@
 # Type definitions for the sample data
-from typing import NamedTuple, TypedDict
+from typing import TypedDict
 
 from psycopg2.extras import Json
 
@@ -27,7 +27,7 @@ class MachineGeneratedTag(TypedDict):
     provider: str
 
 
-class ParseResults(NamedTuple):
+class ParseResults(TypedDict):
     total_processed: int
     total_skipped: int
     total_failed: int

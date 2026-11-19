@@ -146,11 +146,11 @@ def parse_and_insert_labels(
         Variable.delete(constants.CURRENT_POS_VAR_NAME)
 
     return types.ParseResults(
-        total_processed,
-        total_skipped,
-        len(failed_records),
+        total_processed=total_processed,
+        total_skipped=total_skipped,
+        total_failed=len(failed_records),
         # Only share a sample of the failed records
-        failed_records[:5],
+        failed_records_sample=failed_records[:5],
     )
 
 
@@ -158,13 +158,15 @@ def parse_and_insert_labels(
 def notify_parse_complete(results: types.ParseResults):
     message = f"""
 Rekognition label parsing complete :rocket:
-*Total processed:* {results.total_processed:,}
-*Total skipped:* {results.total_skipped:,}
-*Total failed:* {results.total_failed:,}
+*Total processed:* {results["total_processed"]:,}
+*Total skipped:* {results["total_skipped"]:,}
+*Total failed:* {results["total_failed"]:,}
 """
-    if results.failed_records_sample:
+    if results["failed_records_sample"]:
         message += "*Failed records sample*:\n"
-        message += "\n".join([f" - `{rec}`" for rec in results.failed_records_sample])
+        message += "\n".join(
+            [f" - `{rec}`" for rec in results["failed_records_sample"]]
+        )
 
     slack.send_message(
         message,

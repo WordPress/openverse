@@ -5,7 +5,7 @@ This file contains TaskGroups related to rmampping the table indices from the li
 """
 
 import logging
-from typing import NamedTuple
+from typing import TypedDict
 
 from airflow.decorators import task, task_group
 
@@ -16,7 +16,7 @@ from data_refresh import queries
 logger = logging.getLogger(__name__)
 
 
-class TableIndex(NamedTuple):
+class TableIndex(TypedDict):
     index_name: str
     temp_index_name: str
     index_def: str
@@ -56,7 +56,11 @@ def _transform_index_def(
     schema_name, table_name = tokens[table_name_idx].split(".", maxsplit=1)
     tokens[table_name_idx] = f"{schema_name}.{temp_table_name}"
 
-    return TableIndex(old_index_name, temp_index_name, " ".join(tokens))
+    return TableIndex(
+        index_name=old_index_name,
+        temp_index_name=temp_index_name,
+        index_def=" ".join(tokens),
+    )
 
 
 @task(map_index_template="{{ task.op_kwargs['table_name'] }}")
@@ -79,14 +83,14 @@ def create_table_indices(
 ):
     logger.info(f"Creating indices for `{table_name}`.'")
     for index_config in index_configs:
-        if "(id)" in index_config.index_def:
+        if "(id)" in index_config["index_def"]:
             # Skip the primary key index, as this already exists
-            logger.info(f"Skipping adding {index_config.index_name} index.")
+            logger.info(f"Skipping adding {index_config['index_name']} index.")
             continue
 
         # Create the index
         run_sql.function(
-            postgres_conn_id=postgres_conn_id, sql_template=index_config.index_def
+            postgres_conn_id=postgres_conn_id, sql_template=index_config["index_def"]
         )
 
     return index_configs

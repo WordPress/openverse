@@ -1,38 +1,51 @@
 from textwrap import dedent
+from unittest import mock
 
 import pytest
 
 from data_refresh.remap_table_constraints import (
     ConstraintInfo,
+    fetch_all_constraints,
     generate_constraints_for_table,
 )
+from tests.conftest import xcom_round_trip
 
 
 # Constraint that does not apply to or reference the table_name table
 INAPPLICABLE_CONSTRAINT = ConstraintInfo(
-    "image", "irrelevant_constraint", "CHECK (char_length(foo) = 5)"
+    table="image",
+    name="irrelevant_constraint",
+    statement="CHECK (char_length(foo) = 5)",
 )
 # Foreign key constraint that does not apply to or reference the table_name table
 INAPPLICABLE_FOREIGN_KEY_CONSTRAINT = ConstraintInfo(
-    "imagelist_images",
-    "imagelist_images_image_id_fkey",
-    "FOREIGN KEY (image_id) REFERENCES image(id) DEFERRABLE INITIALLY DEFERRED",
+    table="imagelist_images",
+    name="imagelist_images_image_id_fkey",
+    statement="FOREIGN KEY (image_id) REFERENCES image(id) DEFERRABLE INITIALLY DEFERRED",
 )
 # Primary key constraint; no alters should be generated
-PRIMARY_KEY_CONSTRAINT = ConstraintInfo("audio", "audio_pkey", "PRIMARY KEY (id)")
+PRIMARY_KEY_CONSTRAINT = ConstraintInfo(
+    table="audio",
+    name="audio_pkey",
+    statement="PRIMARY KEY (id)",
+)
 # Unique constraint; no alters should be generated
-UNIQUE_CONSTRAINT = ConstraintInfo("audio", "audio_url_key", "UNIQUE (url)")
+UNIQUE_CONSTRAINT = ConstraintInfo(
+    table="audio",
+    name="audio_url_key",
+    statement="UNIQUE (url)",
+)
 # Constraint that applies to the table_name and should have alters generated
 APPLICABLE_CONSTRAINT = ConstraintInfo(
-    "audio",
-    "example_check_constraint",
-    "CHECK (char_length(title) > 5)",
+    table="audio",
+    name="example_check_constraint",
+    statement="CHECK (char_length(title) > 5)",
 )
 # Foreign key constraint for which alters and drop_orphans should be generated
 APPLICABLE_FOREIGN_KEY_CONSTRAINT = ConstraintInfo(
-    "audiolist_audios",
-    "audiolist_audios_audio_id_fkey",
-    "FOREIGN KEY (audio_id) REFERENCES audio(id) DEFERRABLE INITIALLY DEFERRED",
+    table="audiolist_audios",
+    name="audiolist_audios_audio_id_fkey",
+    statement="FOREIGN KEY (audio_id) REFERENCES audio(id) DEFERRABLE INITIALLY DEFERRED",
 )
 
 EXPECTED_DROP_ORPHANS_STATEMENT = dedent(
@@ -113,3 +126,29 @@ def test_generate_constraints_for_table(all_constraints, expected_alter_statemen
         all_constraints, "audio", "temp_import_audio"
     )
     assert actual == expected_alter_statements
+
+
+def test_constraints_survive_xcom():
+    cursor = mock.MagicMock()
+    cursor.fetchall.return_value = [
+        (
+            constraint["table"],
+            constraint["name"],
+            constraint["statement"],
+        )
+        for constraint in [APPLICABLE_CONSTRAINT, PRIMARY_KEY_CONSTRAINT]
+    ]
+
+    all_constraints = xcom_round_trip(fetch_all_constraints(cursor))
+    actual = generate_constraints_for_table.function(
+        all_constraints=all_constraints,
+        table_name="audio",
+        temp_table_name="temp_import_audio",
+    )
+
+    assert actual == generate_constraints_for_table.function(
+        all_constraints=[APPLICABLE_CONSTRAINT],
+        table_name="audio",
+        temp_table_name="temp_import_audio",
+    )
+    assert actual

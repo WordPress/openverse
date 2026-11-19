@@ -6,7 +6,7 @@ This file contains TaskGroups related to remapping the table constraints from th
 """
 
 import logging
-from typing import NamedTuple
+from typing import TypedDict
 
 from airflow.decorators import task, task_group
 
@@ -17,16 +17,18 @@ from data_refresh import queries
 logger = logging.getLogger(__name__)
 
 
-class ConstraintInfo(NamedTuple):
+class ConstraintInfo(TypedDict):
     table: str
     name: str
     statement: str
 
 
-def fetch_all_tuples(cursor):
+def fetch_all_constraints(cursor):
     try:
         rows = cursor.fetchall()
-        return [ConstraintInfo(row[0], row[1], row[2]) for row in rows]
+        return [
+            ConstraintInfo(table=row[0], name=row[1], statement=row[2]) for row in rows
+        ]
     except Exception as e:
         raise ValueError("Unable to extract expected row data from cursor") from e
 
@@ -55,18 +57,18 @@ def _remap_constraint(
     # In all cases, drop the existing constraint
     alterations = [
         queries.DROP_CONSTRAINT_QUERY.format(
-            constraint_table=constraint.table, constraint_name=constraint.name
+            constraint_table=constraint["table"], constraint_name=constraint["name"]
         )
     ]
 
     # If the constraint was applied directly to the media table, then
     # we now apply it to the temp table instead
-    if constraint.table == table_name:
+    if constraint["table"] == table_name:
         alterations.append(
             queries.ADD_CONSTRAINT_QUERY.format(
-                constraint_name=constraint.name,
+                constraint_name=constraint["name"],
                 constraint_table=temp_table_name,
-                constraint_statement=constraint.statement,
+                constraint_statement=constraint["statement"],
             )
         )
 
@@ -74,7 +76,7 @@ def _remap_constraint(
     # we add it back to its original table, but altered to reference the temp table
     # instead.
     else:
-        tokens = constraint.statement.split(" ")
+        tokens = constraint["statement"].split(" ")
 
         # Point the constraint to the new table by replacing the referenced table name (always
         # appears after the word `REFERENCES`) with the temp table.
@@ -86,8 +88,8 @@ def _remap_constraint(
 
         alterations.append(
             queries.ADD_CONSTRAINT_QUERY.format(
-                constraint_table=constraint.table,
-                constraint_name=constraint.name,
+                constraint_table=constraint["table"],
+                constraint_name=constraint["name"],
                 constraint_statement=new_constraint_statement,
             )
         )
@@ -161,11 +163,11 @@ def generate_constraints_for_table(
         # which may reference it from another table (foreign key constraints).
         # Ignore PRIMARY KEY statements and UNIQUE statements, which are already
         # enforced via the table indices copied in an earlier task
-        is_fk = _is_foreign_key(constraint.statement, table_name)
+        is_fk = _is_foreign_key(constraint["statement"], table_name)
         if (
-            (constraint.table == table_name or is_fk)
-            and "PRIMARY KEY" not in constraint.statement
-            and "UNIQUE" not in constraint.statement
+            (constraint["table"] == table_name or is_fk)
+            and "PRIMARY KEY" not in constraint["statement"]
+            and "UNIQUE" not in constraint["statement"]
         ):
             # Generate the `ALTER TABLE...` statements needed to drop this constraint
             # from the live table and apply it to the temp table.
@@ -180,7 +182,7 @@ def generate_constraints_for_table(
             # to ensure no records persist which reference deleted media.
             if is_fk:
                 delete_orphans = _generate_delete_orphans(
-                    constraint.statement, constraint.table, temp_table_name
+                    constraint["statement"], constraint["table"], temp_table_name
                 )
                 drop_orphans.append(delete_orphans)
 
@@ -208,7 +210,7 @@ def remap_table_constraints_to_table(
     all_constraints = run_sql.override(task_id="get_all_existing_constraints")(
         postgres_conn_id=postgres_conn_id,
         sql_template=queries.SELECT_ALL_CONSTRAINTS_QUERY,
-        handler=fetch_all_tuples,
+        handler=fetch_all_constraints,
         map_index_template=table_name,
     )
 

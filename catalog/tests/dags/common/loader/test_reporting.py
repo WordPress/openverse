@@ -11,6 +11,7 @@ from common.loader.reporting import (
     report_completion,
     skip_report_completion,
 )
+from tests.conftest import xcom_round_trip
 
 
 @pytest.fixture(autouse=True)
@@ -390,8 +391,38 @@ def test_skip_report_completion(
             ["image", "audio"],
             {"image": RecordMetrics(5, 5, 5, 5), "audio": RecordMetrics(12, 5, 7, 2)},
         ),
+        # Single, as deserialized from a JSON XCom
+        (
+            {"image": [1, 2, 3, 4], "audio": None},
+            ["image", "audio"],
+            {"image": RecordMetrics(1, 2, 3, 4), "audio": None},
+        ),
+        # Multiple, as deserialized from JSON XComs
+        (
+            [
+                {"image": [1, 2, 3, 4], "audio": None},
+                {"image": [4, 3, 2, 1], "audio": [1, None, 0, 0]},
+            ],
+            ["image", "audio"],
+            {"image": RecordMetrics(5, 5, 5, 5), "audio": RecordMetrics(1, 0, 0, 0)},
+        ),
     ],
 )
 def test_clean_record_counts(record_counts_by_media_type, media_types, expected):
     actual = clean_record_counts(record_counts_by_media_type, media_types)
     assert actual == expected
+    for counts in (actual or {}).values():
+        assert counts is None or isinstance(counts, RecordMetrics)
+
+
+def test_clean_record_counts_reads_metrics_from_xcom():
+    single_run = xcom_round_trip({"image": RecordMetrics(10, 1, 2, 3)})
+    reingestion = xcom_round_trip([single_run, {"image": RecordMetrics(1, 0, 0, 0)}])
+
+    assert clean_record_counts(single_run, ["image"]) == {
+        "image": RecordMetrics(10, 1, 2, 3)
+    }
+    assert clean_record_counts(reingestion, ["image"]) == {
+        "image": RecordMetrics(11, 1, 2, 3)
+    }
+    assert clean_record_counts(single_run, ["image"])["image"].upserted == 10

@@ -44,6 +44,17 @@ class RecordMetrics(NamedTuple):
 
 
 MediaTypeRecordMetrics = dict[str, RecordMetrics]
+# The load task's RecordMetrics as a downstream task receives them. XComs are stored
+# as JSON, so each value comes back as a plain list (or a tuple, when the value didn't
+# go through an XCom).
+SerializedRecordMetrics = RecordMetrics | Sequence[int | None] | None
+SerializedMediaTypeRecordMetrics = dict[str, SerializedRecordMetrics]
+
+
+def _as_record_metrics(counts: SerializedRecordMetrics) -> RecordMetrics | None:
+    if counts is None or isinstance(counts, RecordMetrics):
+        return counts
+    return RecordMetrics(*counts)
 
 
 def humanize_time_duration(seconds: float | int) -> str:
@@ -72,19 +83,28 @@ def clean_duration(duration: float | list[float] | None) -> str | None:
 
 
 def clean_record_counts(
-    record_counts_by_media_type: MediaTypeRecordMetrics | list[MediaTypeRecordMetrics],
+    record_counts_by_media_type: SerializedMediaTypeRecordMetrics
+    | list[SerializedMediaTypeRecordMetrics],
     media_types: Sequence[str],
 ) -> MediaTypeRecordMetrics:
     # If a list of record_counts dicts is provided, sum all of the individual values
     if isinstance(record_counts_by_media_type, list):
         return {
             media_type: sum(
-                (x[media_type] for x in record_counts_by_media_type),
+                (
+                    _as_record_metrics(x[media_type])
+                    for x in record_counts_by_media_type
+                ),
                 RecordMetrics(0, 0, 0, 0),
             )
             for media_type in media_types
         }
-    return record_counts_by_media_type
+    if not record_counts_by_media_type:
+        return record_counts_by_media_type
+    return {
+        media_type: _as_record_metrics(counts)
+        for media_type, counts in record_counts_by_media_type.items()
+    }
 
 
 def skip_report_completion(
@@ -133,7 +153,8 @@ def report_completion(
     dag_id: str,
     media_types: Sequence[str],
     duration: float | str | list[float] | None,
-    record_counts_by_media_type: MediaTypeRecordMetrics | list[MediaTypeRecordMetrics],
+    record_counts_by_media_type: SerializedMediaTypeRecordMetrics
+    | list[SerializedMediaTypeRecordMetrics],
     dated: bool = False,
     date_range_start: str | None = None,
     date_range_end: str | None = None,
