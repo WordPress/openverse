@@ -35,7 +35,13 @@ from airflow.providers.standard.operators.python import (
 from airflow.sdk import BaseOperator, TaskGroup, TriggerRule
 from airflow.sdk.exceptions import AirflowSkipException
 
-from common.constants import AWS_CONN_ID, IMAGE, POSTGRES_CONN_ID, XCOM_PULL_TEMPLATE
+from common.constants import (
+    AWS_CONN_ID,
+    IMAGE,
+    POSTGRES_CONN_ID,
+    RUN_TS_NODASH_TEMPLATE,
+    XCOM_PULL_TEMPLATE,
+)
 from common.loader import provider_details, reporting, sql
 from common.sql import PGExecuteQueryOperator, PostgresHook
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
@@ -47,7 +53,7 @@ SCRIPT_DIR = Path(__file__).parents[1] / "provider_csv_load_scripts/inaturalist"
 SOURCE_FILE_NAMES = ["photos", "observations", "taxa", "observers"]
 LOADER_ARGS = {
     "postgres_conn_id": POSTGRES_CONN_ID,
-    "identifier": "{{ ts_nodash }}",
+    "identifier": RUN_TS_NODASH_TEMPLATE,
     "media_type": IMAGE,
 }
 OUTPUT_DIR = Path(os.getenv("OUTPUT_DIR", "/tmp/"))
@@ -126,13 +132,18 @@ class INaturalistDataIngester(ProviderDataIngester):
         sql_template = (SCRIPT_DIR / sql_template_file_name).read_text()
         batch_number = int(batch_start / (batch_end - batch_start + 1)) + 1
         logger.info(f"Starting at photo_id {batch_start}, on batch {batch_number}.")
-        # Load records to the intermediate table
-        (loaded_records, max_id_loaded) = pg.get_records(
+        # Load records to the intermediate table. The count runs as its own query,
+        # since psycopg 3 returns only the first result of a multi-statement query.
+        pg.run(
             sql_template.format(
                 intermediate_table=intermediate_table,
                 batch_start=batch_start,
                 batch_end=batch_end,
-            )
+            ),
+            handler=None,
+        )
+        (loaded_records, max_id_loaded) = pg.get_records(
+            f"SELECT count(*), max(foreign_identifier) FROM {intermediate_table};"
         )[0]
         logger.info(
             f"Inserted {loaded_records} into {intermediate_table}. "

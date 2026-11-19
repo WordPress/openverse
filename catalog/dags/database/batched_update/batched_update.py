@@ -130,7 +130,7 @@ def update_batches(
         batch_start = batch_end
 
         # Update the Airflow variable to the next value of batch_start.
-        Variable.set(batch_start_var, batch_end)
+        Variable.set(batch_start_var, batch_end, serialize_json=True)
 
         percent_complete = (min(batch_end, total_row_count) / total_row_count) * 100
         logger.info(

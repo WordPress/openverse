@@ -46,6 +46,7 @@ from common.constants import (
     DAG_DEFAULT_ARGS,
     MEDIA_TYPES,
     REFRESH_POKE_INTERVAL,
+    RUN_TS_NODASH_TEMPLATE,
     STAGING,
 )
 from common.sensors.constants import STAGING_ES_CONCURRENCY_TAG
@@ -122,7 +123,7 @@ def create_proportional_by_source_staging_index():
 
     destination_index_name = create_index.get_destination_index_name(
         media_type="{{ params.media_type }}",
-        current_datetime_str="{{ ts_nodash }}",
+        current_datetime_str=RUN_TS_NODASH_TEMPLATE,
         percentage_of_prod="{{ params.percentage_of_prod }}",
     )
 

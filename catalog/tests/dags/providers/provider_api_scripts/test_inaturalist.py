@@ -249,3 +249,37 @@ def test_bucket_exists():
     ).Bucket(inaturalist.INATURALIST_BUCKET)
 
     assert bucket.creation_date is not None
+
+
+@pytest.fixture
+def intermediate_table():
+    table = "test_inaturalist_load_transformed_data"
+    pg = PostgresHook()
+    pg.run(f"CREATE TABLE {table} (foreign_identifier text);", handler=None)
+    yield table
+    pg.run(f"DROP TABLE {table};", handler=None)
+
+
+def test_load_transformed_data_counts_loaded_records(intermediate_table, tmp_path):
+    (tmp_path / "template.sql").write_text(
+        "INSERT INTO {intermediate_table} (foreign_identifier)"
+        " SELECT g::text FROM generate_series({batch_start}, {batch_end}) g;"
+    )
+    with (
+        mock.patch.object(inaturalist, "SCRIPT_DIR", tmp_path),
+        mock.patch.object(
+            inaturalist.sql, "clean_intermediate_table_data", return_value=(0, 0)
+        ),
+        mock.patch.object(
+            inaturalist.sql, "upsert_records_to_db_table", return_value=3
+        ),
+    ):
+        result = INAT.load_transformed_data(
+            batch=(7, 9),
+            intermediate_table=intermediate_table,
+            identifier="test",
+            task=None,
+            sql_template_file_name="template.sql",
+        )
+
+    assert (result["loaded"], result["max_id_loaded"]) == (3, "9")

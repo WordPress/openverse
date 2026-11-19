@@ -71,7 +71,3 @@ INSERT INTO {intermediate_table}
                 AND PHOTO_DUPES.PHOTO_ID = PHOTOS.PHOTO_ID))
 )
 ;
-COMMIT;
-
-SELECT count(*) transformed_records, max(FOREIGN_IDENTIFIER) max_id_loaded
-FROM {intermediate_table} ;

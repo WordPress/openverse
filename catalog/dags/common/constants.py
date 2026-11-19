@@ -18,8 +18,6 @@ PRODUCTION = "production"
 Environment = Literal["staging", "production"]
 ENVIRONMENTS = [STAGING, PRODUCTION]
 
-CONTACT_EMAIL = os.getenv("CONTACT_EMAIL")
-
 DAG_DEFAULT_ARGS = {
     "owner": "data-eng-admin",
     "depends_on_past": False,
@@ -30,6 +28,12 @@ DAG_DEFAULT_ARGS = {
     "on_failure_callback": slack.on_failure_callback,
 }
 XCOM_PULL_TEMPLATE = "{{{{ ti.xcom_pull(task_ids='{}', key='{}') }}}}"
+
+# Runs triggered without a logical date have no `logical_date`, `ds`, `ts_nodash` or
+# data interval in the template context, so templates use the time the run was
+# triggered for instead
+RUN_DATE = "(dag_run.logical_date or dag_run.run_after)"
+RUN_TS_NODASH_TEMPLATE = "{{ " + RUN_DATE + " | ts_nodash }}"
 
 POSTGRES_CONN_ID = "postgres_openledger_upstream"
 OPENLEDGER_API_CONN_ID = "postgres_openledger_api"

@@ -15,6 +15,7 @@ from datetime import timedelta
 from textwrap import dedent
 
 from airflow.sdk import BaseOperator, Connection, Variable, task, task_group
+from airflow.sdk.exceptions import AirflowRuntimeError, ErrorType
 
 from common.constants import (
     POSTGRES_API_CONN_IDS,
@@ -97,7 +98,9 @@ def get_record_limit() -> int | None:
     try:
         # If a limit is explicitly configured, always use it.
         return Variable.get("DATA_REFRESH_LIMIT", deserialize_json=True)
-    except KeyError:
+    except AirflowRuntimeError as error:
+        if error.error.error != ErrorType.VARIABLE_NOT_FOUND:
+            raise
         # Defaults when no limit is explicitly configured.
         # Note `environment` differs from the target env of the data refresh DAG;
         # instead, it is the environment in which Airflow is running (local testing

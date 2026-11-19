@@ -31,6 +31,10 @@ ENV AIRFLOW__CORE__DAGS_FOLDER=${DAGS_FOLDER}
 ENV AIRFLOW__CORE__LOAD_EXAMPLES=False
 ENV AIRFLOW__CORE__LOAD_DEFAULT_CONNECTIONS=False
 ENV AIRFLOW__API__EXPOSE_STACKTRACE=True
+# Keep Airflow 2's data intervals for cron schedules: a daily run covers the day
+# before it runs, which the dated provider DAGs ingest. Airflow 3's default gives
+# the run the day it starts on instead.
+ENV AIRFLOW__SCHEDULER__CREATE_CRON_DATA_INTERVALS=True
 
 # TODO: Test if moving this to .env changes anything!
 ENV AIRFLOW__LOGGING__REMOTE_LOGGING=True

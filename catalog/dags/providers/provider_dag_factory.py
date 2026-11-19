@@ -10,8 +10,7 @@ The loading step takes the media data saved locally in TSV files, cleans it usin
 intermediate database table, and saves the cleaned-up data into the main database
 (also called upstream or Openledger).
 
-In production,"locally" means on AWS EC2 instance that runs the Apache Airflow
-webserver. Storing too much data there is dangerous, because if ingestion to the
+In production,"locally" means on AWS EC2 instance that runs Apache Airflow. Storing too much data there is dangerous, because if ingestion to the
 database breaks down, the disk of this server gets full, and breaks all
 Apache Airflow operations.
 
@@ -77,7 +76,13 @@ from airflow.sdk.exceptions import AirflowSkipException
 from airflow.utils.state import State
 
 from common import dag_state, slack
-from common.constants import AWS_CONN_ID, DAG_DEFAULT_ARGS, XCOM_PULL_TEMPLATE
+from common.constants import (
+    AWS_CONN_ID,
+    DAG_DEFAULT_ARGS,
+    RUN_DATE,
+    RUN_TS_NODASH_TEMPLATE,
+    XCOM_PULL_TEMPLATE,
+)
 from common.constants import POSTGRES_CONN_ID as DB_CONN_ID
 from common.loader import loader, reporting, s3, sql
 from providers.factory_utils import date_partition_for_prefix, pull_media_wrapper
@@ -94,13 +99,19 @@ logger = logging.getLogger(__name__)
 
 OPENVERSE_BUCKET = os.getenv("OPENVERSE_BUCKET")
 OUTPUT_DIR_PATH = os.path.realpath(os.getenv("OUTPUT_DIR", "/tmp/"))
-# Manually triggered runs can have no logical date or data interval, so these
-# templates fall back to the time the run was triggered for
-_RUN_DATE = "(dag_run.logical_date or dag_run.run_after)"
-_DATE_RANGE_INNER_TEMPLATE = "macros.ds_add(" + _RUN_DATE + " | ds, -{} )"
+_DATE_RANGE_INNER_TEMPLATE = "macros.ds_add(" + RUN_DATE + " | ds, -{} )"
 DATE_RANGE_ARG_TEMPLATE = "{{{{" + _DATE_RANGE_INNER_TEMPLATE + "}}}}"
 DATE_PARTITION_ARG_TEMPLATE = Template(
-    "$media_type/$provider_name/{{ date_partition_for_prefix('$schedule', dag_run.logical_date or dag_run.run_after, $reingestion_date ) }}"  # noqa
+    "$media_type/$provider_name/{{ date_partition_for_prefix('$schedule', "
+    + RUN_DATE
+    + ", $reingestion_date ) }}"
+)
+# Runs triggered without a logical date have no data interval either
+DATA_INTERVAL_START_TEMPLATE = (
+    "{{ (dag_run.data_interval_start or dag_run.run_after) | ds }}"
+)
+DATA_INTERVAL_END_TEMPLATE = (
+    "{{ (dag_run.data_interval_end or dag_run.run_after) | ds }}"
 )
 
 
@@ -181,7 +192,7 @@ def create_ingestion_workflow(
         media_type_name = _get_media_type_descriptor(provider_conf.media_types)
 
         # Unique identifier used to generate the load_table name
-        identifier = f"{{{{ ts_nodash }}}}_{provider_name}"
+        identifier = f"{RUN_TS_NODASH_TEMPLATE}_{provider_name}"
         if is_reingestion:
             identifier = f"{day_shift}_{identifier}"
 
@@ -356,8 +367,8 @@ def create_report_load_completion(
 
     if not is_reingestion_workflow:
         op_kwargs = op_kwargs | {
-            "date_range_start": "{{ (dag_run.data_interval_start or dag_run.run_after) | ds }}",
-            "date_range_end": "{{ (dag_run.data_interval_end or dag_run.run_after) | ds }}",
+            "date_range_start": DATA_INTERVAL_START_TEMPLATE,
+            "date_range_end": DATA_INTERVAL_END_TEMPLATE,
         }
 
     return PythonOperator(

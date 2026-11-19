@@ -1,4 +1,5 @@
 import logging
+from contextlib import closing
 from datetime import datetime, timedelta
 
 import pytest
@@ -6,7 +7,7 @@ from psycopg.errors import QueryCanceled
 
 from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
 from common.sql import PGExecuteQueryOperator, PostgresHook
-from tests.conftest import mark_extended
+from tests.conftest import mark_extended, run_dag_test
 
 
 logger = logging.getLogger(__name__)
@@ -148,4 +149,13 @@ def test_operator_passes_correct_timeout(execution_timeout, expected_result):
 # deprecated, but I haven't found a way to get it through with this function.
 @mark_extended
 def test_happy_paths_dag(mock_timeout_dag):
-    mock_timeout_dag.test()
+    run_dag_test(mock_timeout_dag)
+
+
+def test_PostgresHook_sets_statement_timeout_on_connection():
+    pg = PostgresHook(default_statement_timeout=10)
+
+    with closing(pg.get_conn()) as conn, closing(conn.cursor()) as cursor:
+        cursor.execute("show statement_timeout;")
+        assert cursor.fetchone() == ("10s",)
+    assert pg.run("show statement_timeout;", statement_timeout=5) == ("5s",)

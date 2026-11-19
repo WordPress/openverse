@@ -1,13 +1,18 @@
-from datetime import timedelta
+from datetime import UTC, datetime, timedelta
+from types import SimpleNamespace
 from unittest import mock
 
+import pendulum
 import pytest
 from airflow.models import DagRun
 from airflow.providers.standard.operators.empty import EmptyOperator
 from airflow.sdk import DAG
 from airflow.sdk.exceptions import AirflowSkipException
+from airflow.sdk.execution_time import macros
+from airflow.serialization.encoders import coerce_to_core_timetable
+from airflow.timetables.base import TimeRestriction
 from airflow.utils.state import TaskInstanceState
-from tests.conftest import mark_extended
+from tests.conftest import mark_extended, run_dag_test
 from tests.dags.providers.provider_api_scripts.resources.provider_data_ingester.mock_provider_data_ingester import (
     MockAudioOnlyProviderDataIngester,
     MockImageOnlyProviderDataIngester,
@@ -34,7 +39,7 @@ from providers.provider_workflows import ProviderWorkflow
         ),
     ],
 )
-def test_pull_data_behaves_as_expected(pull_data_function, expected_state, clean_db):
+def test_pull_data_behaves_as_expected(pull_data_function, expected_state):
     with mock.patch(
         "tests.dags.providers.provider_api_scripts.resources.provider_data_ingester.mock_provider_data_ingester.MockProviderDataIngester.ingest_records"
     ) as ingest_records_mock:
@@ -46,7 +51,7 @@ def test_pull_data_behaves_as_expected(pull_data_function, expected_state, clean
                 schedule_string="@once",
             )
         )
-        dag_run: DagRun = dag.test()
+        dag_run: DagRun = run_dag_test(dag)
 
     pull_data_instance = dag_run.get_task_instance("ingest_data.pull_mixed_data")
     assert dag_run.state == TaskInstanceState.SUCCESS
@@ -321,3 +326,76 @@ def test_report_aggregate_reingestion_errors_reports_failed_pull_tasks(
         if line.startswith("  - <")
     ]
     assert listed_days == ["1", "2", "3", "4", "5"]
+
+
+def test_templates_render_for_runs_without_logical_date():
+    # Runs triggered without a logical date get no `ds`, `ts_nodash` or data
+    # interval in the template context, so the templates must not rely on them
+    run_after = datetime(2026, 1, 2, 3, 4, 5, tzinfo=UTC)
+    dag = provider_dag_factory.create_provider_api_workflow_dag(
+        ProviderWorkflow(
+            ingester_class=MockImageOnlyProviderDataIngester,
+            dated=True,
+            schedule_string="@daily",
+        )
+    )
+    context = {
+        "dag": dag,
+        "dag_run": SimpleNamespace(
+            logical_date=None,
+            run_after=run_after,
+            data_interval_start=None,
+            data_interval_end=None,
+        ),
+        "macros": macros,
+        "params": {},
+        "ti": mock.MagicMock(),
+    }
+
+    rendered = {}
+    for task_id in [
+        "ingest_data.pull_image_data",
+        "ingest_data.load_image_data.create_loading_table",
+        "ingest_data.load_image_data.copy_to_s3",
+        "report_load_completion",
+    ]:
+        task = dag.get_task(task_id)
+        task.render_template_fields(context | {"task": task})
+        rendered[task_id] = task.op_kwargs
+
+    assert rendered["ingest_data.pull_image_data"]["args"][0] == "2026-01-02"
+    assert (
+        rendered["ingest_data.load_image_data.create_loading_table"]["identifier"]
+        == "20260102T030405_mock_provider_data_ingester"
+    )
+    assert rendered["ingest_data.load_image_data.copy_to_s3"]["s3_prefix"].endswith(
+        "year=2026/month=01"
+    )
+    report = rendered["report_load_completion"]
+    assert (report["date_range_start"], report["date_range_end"]) == (
+        "2026-01-02",
+        "2026-01-02",
+    )
+
+
+def test_daily_runs_cover_the_previous_day():
+    # Dated providers ingest the run's data interval, so a daily run has to cover the
+    # day before it runs, as in Airflow 2. Airflow 3 only does that with
+    # `[scheduler] create_cron_data_intervals`.
+    dag = provider_dag_factory.create_provider_api_workflow_dag(
+        ProviderWorkflow(
+            ingester_class=MockImageOnlyProviderDataIngester,
+            dated=True,
+            schedule_string="@daily",
+            start_date=pendulum.datetime(2026, 1, 1),
+        )
+    )
+    run = coerce_to_core_timetable(dag.timetable).next_dagrun_info(
+        last_automated_data_interval=None,
+        restriction=TimeRestriction(
+            earliest=pendulum.datetime(2026, 1, 1), latest=None, catchup=True
+        ),
+    )
+
+    assert run.logical_date == pendulum.datetime(2026, 1, 1)
+    assert run.data_interval.end == pendulum.datetime(2026, 1, 2)
