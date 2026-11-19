@@ -2,10 +2,21 @@ import logging
 from unittest import mock
 
 import pytest
+import requests
+from airflow.models.dag import DAG
 from airflow.providers.amazon.aws.hooks.ec2 import EC2Hook
+from airflow.utils.timezone import datetime
 
 from common.constants import PRODUCTION
-from data_refresh.distributed_reindex import wait_for_worker
+from data_refresh.constants import (
+    INDEXER_WORKER_REQUEST_TIMEOUT,
+    WAIT_FOR_REINDEXING_RETRIES,
+)
+from data_refresh.distributed_reindex import (
+    trigger_reindexing_task,
+    wait_for_reindexing_task,
+    wait_for_worker,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -132,3 +143,104 @@ def test_wait_for_worker(instance_status_response, should_pass, mock_ec2_hook):
     )
 
     assert poke_return_value.is_done == should_pass
+
+
+WORKER_URL = "http://10.0.0.1:8003"
+
+
+def _response(status_code, json_body=None):
+    response = mock.MagicMock(status_code=status_code)
+    response.json.return_value = json_body
+    if status_code >= 400:
+        response.raise_for_status.side_effect = requests.HTTPError(str(status_code))
+    return response
+
+
+def test_trigger_reindexing_task_returns_status_url():
+    data = {"model_name": "image", "start_id": 0, "end_id": 10}
+    response = _response(202, {"status_check": "http://localhost:8003/task/abc-123"})
+    with mock.patch("requests.post", return_value=response) as post:
+        actual = trigger_reindexing_task.function(server="10.0.0.1", data=data)
+
+    post.assert_called_once_with(
+        f"{WORKER_URL}/task", data=data, timeout=INDEXER_WORKER_REQUEST_TIMEOUT
+    )
+    assert actual == f"{WORKER_URL}/task/abc-123"
+
+
+@pytest.mark.parametrize(
+    "status_code, error",
+    [
+        pytest.param(200, ValueError, id="not-accepted"),
+        pytest.param(500, requests.HTTPError, id="server-error"),
+    ],
+)
+def test_trigger_reindexing_task_fails_unless_accepted(status_code, error):
+    with mock.patch("requests.post", return_value=_response(status_code)):
+        with pytest.raises(error):
+            trigger_reindexing_task.function(server="10.0.0.1", data={})
+
+
+@pytest.mark.parametrize(
+    "response, expected",
+    [
+        pytest.param(_response(404), False, id="task-not-found-yet"),
+        pytest.param(
+            _response(200, {"active": True, "error": False, "progress": 50}),
+            False,
+            id="active",
+        ),
+        pytest.param(
+            _response(200, {"active": False, "error": False, "progress": 100}),
+            True,
+            id="done",
+        ),
+    ],
+)
+def test_wait_for_reindexing_task(response, expected):
+    status_url = f"{WORKER_URL}/task/abc-123"
+    with mock.patch("requests.get", return_value=response) as get:
+        assert wait_for_reindexing_task.function(status_url=status_url) is expected
+
+    get.assert_called_once_with(status_url, timeout=INDEXER_WORKER_REQUEST_TIMEOUT)
+
+
+@pytest.mark.parametrize(
+    "response, error",
+    [
+        pytest.param(
+            _response(200, {"active": False, "error": True, "progress": 10}),
+            ValueError,
+            id="reindex-error",
+        ),
+        pytest.param(_response(403), requests.HTTPError, id="client-error"),
+        pytest.param(_response(502), requests.HTTPError, id="server-error"),
+    ],
+)
+def test_wait_for_reindexing_task_raises_on_errors(response, error):
+    with mock.patch("requests.get", return_value=response):
+        with pytest.raises(error):
+            wait_for_reindexing_task.function(status_url=f"{WORKER_URL}/task/abc")
+
+
+@pytest.mark.parametrize(
+    "error",
+    [
+        pytest.param(requests.ConnectionError("reset"), id="connection-error"),
+        pytest.param(requests.Timeout("timed out"), id="timeout"),
+        pytest.param(requests.exceptions.ChunkedEncodingError(), id="truncated"),
+    ],
+)
+def test_wait_for_reindexing_task_raises_on_network_errors(error):
+    with mock.patch("requests.get", side_effect=error):
+        with pytest.raises(type(error)):
+            wait_for_reindexing_task.function(status_url=f"{WORKER_URL}/task/abc")
+
+
+def test_reindexing_tasks_retry_only_the_status_check():
+    with DAG("test_reindexing_retries", schedule=None, start_date=datetime(2024, 1, 1)):
+        status_url = trigger_reindexing_task(server="10.0.0.1", data={})
+        wait = wait_for_reindexing_task(status_url=status_url)
+
+    assert status_url.operator.retries == 0
+    assert wait.operator.retries == WAIT_FOR_REINDEXING_RETRIES

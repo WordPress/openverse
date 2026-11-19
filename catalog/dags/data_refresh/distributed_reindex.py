@@ -10,10 +10,9 @@ import math
 from textwrap import dedent
 from urllib.parse import urlparse
 
-from airflow import settings
+import requests
 from airflow.decorators import task, task_group
 from airflow.exceptions import AirflowSkipException
-from airflow.models.connection import Connection
 from airflow.providers.amazon.aws.hooks.ec2 import EC2Hook
 from airflow.providers.common.sql.hooks.handlers import fetch_one_handler
 from airflow.providers.standard.operators.empty import EmptyOperator
@@ -28,10 +27,15 @@ from common.constants import (
     PRODUCTION,
     Environment,
 )
-from common.operators.http import TemplatedConnectionHttpOperator
-from common.sensors.http import TemplatedConnectionHttpSensor
 from common.sql import PGExecuteQueryOperator
-from data_refresh.constants import INDEXER_LAUNCH_TEMPLATES, INDEXER_WORKER_COUNTS
+from data_refresh.constants import (
+    INDEXER_LAUNCH_TEMPLATES,
+    INDEXER_WORKER_COUNTS,
+    INDEXER_WORKER_PORT,
+    INDEXER_WORKER_REQUEST_TIMEOUT,
+    WAIT_FOR_REINDEXING_RETRIES,
+    WAIT_FOR_REINDEXING_RETRY_DELAY,
+)
 from data_refresh.data_refresh_types import DataRefreshConfig
 
 
@@ -245,30 +249,43 @@ def get_instance_ip_address(
     return reservations[0].get("Instances", {})[0].get("PrivateIpAddress")
 
 
-@task(
-    # Instance creation tasks are skipped locally, but we still want this task to run.
-    trigger_rule=TriggerRule.NONE_FAILED
+# A retry after a timed-out request could start a second reindex of the same range
+@task(retries=0)
+def trigger_reindexing_task(server: str, data: dict) -> str:
+    """
+    Start a reindexing task on the indexer worker on `server` and return the URL for
+    checking its status.
+    """
+    worker_url = f"http://{server}:{INDEXER_WORKER_PORT}"
+    response = requests.post(
+        f"{worker_url}/task", data=data, timeout=INDEXER_WORKER_REQUEST_TIMEOUT
+    )
+    response.raise_for_status()
+    if response.status_code != 202:
+        raise ValueError(
+            f"The indexer worker responded with {response.status_code} instead of 202."
+        )
+    return f"{worker_url}{response_filter_status_check_endpoint(response)}"
+
+
+@task.sensor(
+    mode="reschedule",
+    retries=WAIT_FOR_REINDEXING_RETRIES,
+    retry_delay=WAIT_FOR_REINDEXING_RETRY_DELAY,
 )
-def create_connection(
-    environment: str,
-    instance_id: str,
-    media_type: str,
-    server: str,
-):
+def wait_for_reindexing_task(status_url: str) -> bool:
     """
-    Create an Airflow Connection for the given indexer worker and persist it. It will
-    later be dropped in a cleanup task.
+    Wait for the reindexing task on the indexer worker to finish. A failed status
+    request fails the try, and the task's own retries poll again. One dropped
+    request doesn't fail a reindex that takes many hours, but a worker that stays
+    unreachable fails it within minutes instead of at the sensor timeout.
     """
-    worker_conn_id = f"indexer_worker_{instance_id or media_type}"
-
-    # Create the Connection
-    logger.info(f"Creating connection with id {worker_conn_id}")
-    worker_conn = Connection(conn_id=worker_conn_id, uri=f"http://{server}:8003/")
-    session = settings.Session()
-    session.add(worker_conn)
-    session.commit()
-
-    return worker_conn_id
+    response = requests.get(status_url, timeout=INDEXER_WORKER_REQUEST_TIMEOUT)
+    # The worker may not know about the task yet
+    if response.status_code == 404:
+        return False
+    response.raise_for_status()
+    return response_check_wait_for_completion(response)
 
 
 @task
@@ -286,24 +303,14 @@ def terminate_indexer_worker(
     return ec2_hook.conn.terminate_instances(InstanceIds=[instance_id])
 
 
-@task(trigger_rule=TriggerRule.ALL_DONE)
-def drop_connection(worker_conn: str):
-    """Drop the Connection to the now terminated instance."""
-    conn = Connection.get_connection_from_secrets(worker_conn)
-
-    session = settings.Session()
-    session.delete(conn)
-    session.commit()
-
-
 def assert_reindexing_success() -> EmptyOperator:
     """
     Fail if the direct upstream tasks, which perform the actual reindexing,
     fail. Otherwise simply pass.
 
     This is necessary because we have some tasks after the reindex step
-    which always run even on reindexing failure (to drop the connection
-    and terminate the worker instance). However in the event of failures,
+    which always run even on reindexing failure (to terminate the worker
+    instance). However in the event of failures,
     we still need the last task in the TaskGroup to be marked as `Failed`
     or else subsequent tasks (like the promotion steps) will run. It is
     not possible to set individual tasks within a TaskGroup as
@@ -347,17 +354,8 @@ def reindex(
         environment=environment, instance_id=instance_id
     )
 
-    worker_conn = create_connection(
-        environment=environment,
-        instance_id=instance_id,
-        media_type=data_refresh_config.media_type,
+    status_url = trigger_reindexing_task(
         server=instance_ip_address,
-    )
-
-    trigger_reindexing_task = TemplatedConnectionHttpOperator(
-        task_id="trigger_reindexing_task",
-        http_conn_id=worker_conn,
-        endpoint="task",
         data={
             "model_name": data_refresh_config.media_type,
             "table_name": data_refresh_config.table_mapping.temp_table_name,
@@ -365,20 +363,12 @@ def reindex(
             "start_id": start_id,
             "end_id": end_id,
         },
-        response_check=lambda response: response.status_code == 202,
-        response_filter=response_filter_status_check_endpoint,
     )
 
-    wait_for_reindexing_task = TemplatedConnectionHttpSensor(
-        task_id="wait_for_reindexing_task",
-        http_conn_id=worker_conn,
-        endpoint=trigger_reindexing_task.output,
-        method="GET",
-        response_check=response_check_wait_for_completion,
-        mode="reschedule",
+    await_reindexing = wait_for_reindexing_task.override(
         poke_interval=data_refresh_config.reindex_poke_interval,
-        timeout=data_refresh_config.indexer_worker_timeout,
-    )
+        timeout=data_refresh_config.indexer_worker_timeout.total_seconds(),
+    )(status_url=status_url)
 
     terminate_instance = terminate_indexer_worker.override(
         # Terminate the instance even if there is an upstream failure
@@ -390,11 +380,8 @@ def reindex(
 
     status = assert_reindexing_success()
 
-    drop_conn = drop_connection(worker_conn=worker_conn)
-
-    instance_id >> await_worker >> [instance_ip_address, worker_conn]
-    worker_conn >> trigger_reindexing_task >> wait_for_reindexing_task
-    wait_for_reindexing_task >> [terminate_instance, drop_conn, status]
+    instance_id >> await_worker >> instance_ip_address
+    await_reindexing >> [terminate_instance, status]
 
 
 @task_group(

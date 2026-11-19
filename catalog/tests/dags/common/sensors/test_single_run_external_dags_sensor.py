@@ -2,7 +2,7 @@ import logging
 
 import pytest
 from airflow.exceptions import AirflowException
-from airflow.models import DagBag, Pool
+from airflow.models import Pool
 from airflow.models.dag import DAG
 from airflow.utils.state import State
 from airflow.utils.timezone import datetime
@@ -13,7 +13,6 @@ from common.sensors.single_run_external_dags_sensor import SingleRunExternalDAGs
 
 DEFAULT_DATE = datetime(2022, 1, 1)
 TEST_TASK_ID = "wait_task"
-DEV_NULL = "/dev/null"
 
 
 def run_sensor(sensor):
@@ -24,7 +23,6 @@ def create_task(dag, task_id, sample_pool_fixture):
     return SingleRunExternalDAGsSensor(
         task_id=task_id,
         external_dag_ids=[],
-        check_existence=True,
         dag=dag,
         pool=sample_pool_fixture,
         poke_interval=5,
@@ -68,92 +66,6 @@ def setup_pool(sample_pool_fixture):
         description="test pool",
         include_deferred=False,
     )
-
-
-@pytest.mark.usefixtures("clean_db")
-# This appears to be coming from Airflow internals during testing as a result of
-# loading the example DAGs:
-# /opt/airflow/.local/lib/python3.10/site-packages/airflow/example_dags/example_subdag_operator.py:43: RemovedInAirflow3Warning  # noqa: E501
-@pytest.mark.filterwarnings(
-    "ignore:This class is deprecated. Please use "
-    "`airflow.utils.task_group.TaskGroup`.:airflow.exceptions.RemovedInAirflow3Warning"
-)
-# This also appears to be coming from Airflow internals during testing as a result of
-# loading the example bash operator DAG:
-# /home/airflow/.local/lib/python3.10/site-packages/airflow/models/dag.py:3492: RemovedInAirflow3Warning  # noqa: E501
-@pytest.mark.filterwarnings(
-    "ignore:Param `schedule_interval` is deprecated and will be removed in a future release. "
-    "Please use `schedule` instead.:airflow.exceptions.RemovedInAirflow3Warning"
-)
-def test_fails_if_external_dag_does_not_exist(clean_db, setup_pool):
-    with pytest.raises(
-        AirflowException,
-        match="The external DAG nonexistent_dag_id does not exist.",
-    ):
-        dag = DAG(
-            "test_missing_dag_error",
-            schedule=None,
-            default_args={
-                "owner": "airflow",
-                "start_date": DEFAULT_DATE,
-            },
-        )
-        sensor = SingleRunExternalDAGsSensor(
-            task_id=TEST_TASK_ID,
-            external_dag_ids=[
-                "nonexistent_dag_id",
-            ],
-            check_existence=True,
-            poke_interval=5,
-            mode="reschedule",
-            dag=dag,
-        )
-
-        run_sensor(sensor)
-
-
-@pytest.mark.filterwarnings(
-    "ignore:This class is deprecated. Please use "
-    "`airflow.utils.task_group.TaskGroup`.:airflow.exceptions.RemovedInAirflow3Warning"
-)
-# This also appears to be coming from Airflow internals during testing as a result of
-# loading the example bash operator DAG:
-# /home/airflow/.local/lib/python3.10/site-packages/airflow/models/dag.py:3492: RemovedInAirflow3Warning  # noqa: E501
-@pytest.mark.filterwarnings(
-    "ignore:Param `schedule_interval` is deprecated and will be removed in a future release. "
-    "Please use `schedule` instead.:airflow.exceptions.RemovedInAirflow3Warning"
-)
-def test_fails_if_external_dag_missing_sensor_task(clean_db, setup_pool):
-    # Loads an example DAG which does not have a Sensor task.
-    dagbag = DagBag(dag_folder=DEV_NULL, include_examples=True)
-    bash_dag = dagbag.dags["example_bash_operator"]
-    bash_dag.sync_to_db()
-
-    error_msg = (
-        "The external DAG example_bash_operator does not have a task"
-        f" with id {TEST_TASK_ID}"
-    )
-    with pytest.raises(AirflowException, match=error_msg):
-        dag = DAG(
-            "test_missing_task_error",
-            schedule=None,
-            default_args={
-                "owner": "airflow",
-                "start_date": DEFAULT_DATE,
-            },
-        )
-        sensor = SingleRunExternalDAGsSensor(
-            task_id=TEST_TASK_ID,
-            external_dag_ids=[
-                "example_bash_operator",
-            ],
-            check_existence=True,
-            poke_interval=5,
-            mode="reschedule",
-            dag=dag,
-        )
-
-        run_sensor(sensor)
 
 
 @pytest.mark.filterwarnings(
@@ -205,7 +117,7 @@ def test_succeeds_if_no_running_dags(
             "Poking for DAGs ['successful_dag', 'failed_dag', 'queued_dag'] ..."
             in caplog.text
         )
-        assert "0 DAGs are in the running state" in caplog.text
+        assert "None of the DAGs are in the running state" in caplog.text
 
 
 @pytest.mark.filterwarnings(
@@ -215,7 +127,7 @@ def test_succeeds_if_no_running_dags(
 @pytest.mark.parametrize(
     "allow_concurrent_runs, expected_message",
     [
-        (False, "1 DAGs are in the running state"),
+        (False, "DAG {dag_id_prefix}_running_dag is in the running state"),
         (
             True,
             "`allow_concurrent_runs` is enabled. Returning without checking for"
@@ -281,4 +193,20 @@ def test_retries_if_running_dags_with_completed_sensor_task(
             f"{sample_dag_id_fixture}_success_dag', '{sample_dag_id_fixture}_running_dag'] ..."
             in caplog.text
         )
-        assert expected_message in caplog.text
+        assert (
+            expected_message.format(dag_id_prefix=sample_dag_id_fixture) in caplog.text
+        )
+
+
+def test_check_existence_fails_for_missing_dag():
+    sensor = SingleRunExternalDAGsSensor(
+        task_id=TEST_TASK_ID,
+        external_dag_ids=["nonexistent_dag_id"],
+        check_existence=True,
+        poke_interval=5,
+        mode="reschedule",
+    )
+    with pytest.raises(
+        AirflowException, match="The external DAG nonexistent_dag_id does not exist."
+    ):
+        sensor.poke(context={})

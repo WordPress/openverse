@@ -1,41 +1,30 @@
-from datetime import timedelta
+from unittest import mock
 
-from airflow.models.dag import DAG
-from airflow.utils.state import State
-from airflow.utils.timezone import datetime
-from airflow.utils.types import DagRunType
+import pytest
 
-from common.sensors.utils import _get_most_recent_dag_run
-
-
-TEST_DAG_ID = "data_refresh_dag_factory_test_dag"
-TEST_DAG = DAG(TEST_DAG_ID, schedule=None, default_args={"owner": "airflow"})
+from common.sensors.constants import (
+    PRODUCTION_ES_CONCURRENCY_TAG,
+    STAGING_DB_CONCURRENCY_TAG,
+)
+from common.sensors.utils import get_dags_with_concurrency_tag
 
 
-def _create_dagrun(start_date, sample_dag_id_fixture, conf={}):
-    return DAG(
-        sample_dag_id_fixture, schedule=None, default_args={"owner": "airflow"}
-    ).create_dagrun(
-        start_date=start_date,
-        execution_date=start_date,
-        data_interval=(start_date, start_date),
-        state=State.SUCCESS,
-        run_type=DagRunType.MANUAL,
-        conf=conf,
+def test_get_dags_with_concurrency_tag_excludes_running_and_excluded_dags():
+    dag = mock.MagicMock(dag_id="staging_database_restore")
+
+    actual = get_dags_with_concurrency_tag.function(
+        tag=STAGING_DB_CONCURRENCY_TAG,
+        excluded_dag_ids=["staging_audio_data_refresh"],
+        dag=dag,
     )
 
-
-def test_get_most_recent_dag_run_returns_most_recent_execution_date(
-    sample_dag_id_fixture, clean_db
-):
-    most_recent = datetime(2023, 5, 10)
-    for i in range(3):
-        _create_dagrun(most_recent - timedelta(days=i), sample_dag_id_fixture)
-    assert _get_most_recent_dag_run(sample_dag_id_fixture) == most_recent
+    assert actual == ["recreate_full_staging_index", "staging_image_data_refresh"]
 
 
-def test_get_most_recent_dag_run_returns_empty_list_when_no_runs(
-    sample_dag_id_fixture, clean_db
-):
-    # Relies on ``clean_db`` cleaning up DagRuns from other tests
-    assert _get_most_recent_dag_run(sample_dag_id_fixture) == []
+def test_get_dags_with_concurrency_tag_requires_the_running_dag_to_have_the_tag():
+    dag = mock.MagicMock(dag_id="staging_database_restore")
+
+    with pytest.raises(ValueError, match="does not have the tag itself"):
+        get_dags_with_concurrency_tag.function(
+            tag=PRODUCTION_ES_CONCURRENCY_TAG, excluded_dag_ids=[], dag=dag
+        )
