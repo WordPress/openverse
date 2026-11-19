@@ -8,6 +8,7 @@ url is constructed from the `license` and `license_version` columns.
 This is a maintenance DAG that should be run once.
 """
 
+import json
 import logging
 from datetime import timedelta
 from textwrap import dedent
@@ -16,7 +17,6 @@ from airflow.providers.standard.operators.trigger_dagrun import TriggerDagRunOpe
 from airflow.sdk import BaseOperator, dag, task
 from airflow.sdk.definitions.param import Param
 from airflow.sdk.exceptions import AirflowSkipException
-from psycopg2._json import Json
 from tabulate import tabulate
 
 from common import slack
@@ -120,6 +120,11 @@ No license groups found with records missing `license_url` in `meta_data`. The `
     return licenses
 
 
+def _jsonb_literal(value: dict) -> str:
+    """Return `value` as a quoted SQL string literal, to cast to `jsonb`."""
+    return "'" + json.dumps(value).replace("'", "''") + "'"
+
+
 def get_license_conf(license_info) -> dict:
     license_, license_version, license_url = license_info
     license_url_dict = {"license_url": license_url}
@@ -135,7 +140,7 @@ def get_license_conf(license_info) -> dict:
             f"AND meta_data->>'license_url' IS NULL"
         ),
         # Merge existing metadata with the new license_url
-        "update_query": f"SET updated_on = NOW(), meta_data = (meta_data || {Json(license_url_dict)}::jsonb)",
+        "update_query": f"SET updated_on = NOW(), meta_data = (meta_data || {_jsonb_literal(license_url_dict)}::jsonb)",
         "update_timeout": 259200,  # 3 days in seconds
         "dry_run": False,
         "resume_update": False,
