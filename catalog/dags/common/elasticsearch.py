@@ -1,12 +1,15 @@
+import json
 import logging
+import time
 from datetime import timedelta
 from typing import Literal
 
 from airflow.decorators import task, task_group
 from airflow.exceptions import AirflowFailException, AirflowSkipException
+from airflow.models import BaseOperator
 from airflow.models.connection import Connection
 from airflow.providers.elasticsearch.hooks.elasticsearch import ElasticsearchPythonHook
-from airflow.sensors.base import PokeReturnValue
+from airflow.providers.standard.triggers.temporal import TimeDeltaTrigger
 from elasticsearch.exceptions import NotFoundError
 
 from common.constants import REFRESH_POKE_INTERVAL
@@ -18,6 +21,19 @@ logger = logging.getLogger(__name__)
 # Index settings that should not be copied over from the base configuration when
 # creating a new index.
 EXCLUDED_INDEX_SETTINGS = {"provided_name", "creation_date", "uuid", "version"}
+
+# Reindex errors caused by an overloaded cluster rather than by the data: rejected
+# searches or writes, a tripped memory circuit breaker, or a scroll lost while
+# shards were busy. A reindex that fails only with these is restarted.
+OVERLOAD_REINDEX_ERRORS = (
+    "es_rejected_execution_exception",
+    "circuit_breaking_exception",
+    "search_context_missing_exception",
+    "No search context found",
+)
+REINDEX_MAX_RESTARTS = 5
+# Doubles on each restart: 10, 20, 40, 80 and 160 minutes
+REINDEX_RESTART_BACKOFF = timedelta(minutes=10)
 
 
 @task
@@ -124,26 +140,41 @@ def get_record_count_group_by_sources(es_host: str, index: str):
 
 
 @task
-def create_index(index_config, es_host: str):
+def create_index(index_config, es_host: str, exist_ok: bool = False):
+    """
+    Create the index described by ``index_config``.
+
+    With ``exist_ok``, an index of that name left by an earlier attempt is reused,
+    so that clearing a failed run continues filling it. An index that an alias
+    points to is in use, so it is never reused.
+    """
     es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
+    index_name = index_config["index"]
+
+    if exist_ok and es_conn.indices.exists(index=index_name):
+        if aliases := es_conn.indices.get_alias(index=index_name)[index_name].get(
+            "aliases"
+        ):
+            raise AirflowFailException(
+                f"Index {index_name} already exists and is aliased by "
+                f"{list(aliases)}, so it cannot be reused."
+            )
+        logger.info(f"Reusing the existing index {index_name}.")
+        return
 
     new_index = es_conn.indices.create(**index_config).body
 
     return new_index
 
 
-def raise_for_reindex_failure(response: dict) -> None:
+def get_reindex_failure_reasons(response: dict) -> dict:
     """
-    Raise if a finished reindex task failed.
+    Return why a finished reindex task failed, or an empty dict if it succeeded.
 
     A reindex run with ``wait_for_completion=False`` still reports ``completed`` when
     it fails, with the cause in ``error`` (for example, an expired scroll),
     ``response.failures`` (rejected documents), ``response.canceled`` (cancelled
     through the tasks API) or ``response.timed_out``.
-
-    Raises ``AirflowFailException`` so the sensor does not retry: polling the same
-    finished ES task again cannot succeed. To recover, clear the whole
-    ``trigger_and_wait_for_reindex`` group so the reindex is triggered again.
     """
     body = response.get("response", {})
     reasons = {
@@ -152,11 +183,238 @@ def raise_for_reindex_failure(response: dict) -> None:
         "canceled": body.get("canceled"),
         "timed_out": body.get("timed_out"),
     }
-    reasons = {key: value for key, value in reasons.items() if value}
-    if reasons:
+    return {key: value for key, value in reasons.items() if value}
+
+
+def raise_for_reindex_failure(response: dict) -> None:
+    """
+    Raise if a finished reindex task failed.
+
+    Raises ``AirflowFailException`` so the task does not retry: polling the same
+    finished ES task again cannot succeed. To recover, clear the whole
+    ``trigger_and_wait_for_reindex`` group so the reindex is triggered again.
+    """
+    if reasons := get_reindex_failure_reasons(response):
         raise AirflowFailException(
             f"Reindex failed: {reasons}. Clear the trigger_and_wait_for_reindex "
             "task group to trigger the reindex again."
+        )
+
+
+def _is_overload_failure(failure: dict) -> bool:
+    text = json.dumps(failure, default=str)
+    return '"status": 429' in text or any(
+        marker in text for marker in OVERLOAD_REINDEX_ERRORS
+    )
+
+
+def is_retryable_reindex_failure(response: dict) -> bool:
+    """
+    Whether a finished reindex failed only because the cluster was overloaded, so
+    restarting it later can succeed.
+
+    A reindex that was cancelled or timed out, or that has any other kind of
+    failure (such as a mapping error), is not retryable.
+    """
+    body = response.get("response", {})
+    if body.get("canceled") or body.get("timed_out"):
+        return False
+    failures = [response["error"]] if response.get("error") else []
+    failures += body.get("failures") or []
+    return bool(failures) and all(_is_overload_failure(f) for f in failures)
+
+
+def start_reindex(
+    es_conn,
+    destination_index: str,
+    source_index: str,
+    query: dict | None,
+    requests_per_second: int,
+    max_docs: int | None,
+    slices: int | Literal["auto"] | None,
+    refresh: bool,
+) -> str:
+    """Start a reindex without waiting for it, and return its ES task ID."""
+    source = {"index": source_index}
+    # An empty query is not accepted; only pass it
+    # if a query was actually supplied
+    if query:
+        source["query"] = query
+
+    response = es_conn.reindex(
+        source=source,
+        # Only create documents that are missing from the destination, so that a
+        # restarted reindex skips the ones an earlier attempt already copied.
+        dest={"index": destination_index, "op_type": "create"},
+        # Skipped documents are reported as version conflicts; count them
+        # instead of failing on them.
+        conflicts="proceed",
+        max_docs=max_docs,
+        # Parallelize indexing when not None
+        slices=slices,
+        # The default 5m scroll keep-alive expires while slow bulk writes to the
+        # destination index hold up a slice, failing the whole reindex with
+        # "No search context found".
+        scroll="1h",
+        # Do not hold the slot while awaiting completion
+        wait_for_completion=False,
+        # Whether to immediately refresh the index after completion to make
+        # the data available for search
+        refresh=refresh,
+        # Throttle
+        requests_per_second=requests_per_second,
+    )
+    return response["task"]
+
+
+class WaitForReindexOperator(BaseOperator):
+    """
+    Wait for a reindex started by ``trigger_reindex``, restarting it when it fails
+    because the cluster is overloaded.
+
+    It defers between checks, which frees the worker slot and carries the current
+    ES task ID from one check to the next. Each restart waits twice as long as the
+    one before, and only creates the documents that are still missing.
+    """
+
+    template_fields = ("es_host", "reindex")
+
+    def __init__(
+        self,
+        *,
+        es_host: str,
+        reindex: dict,
+        reindex_timeout: timedelta,
+        poke_interval: int = REFRESH_POKE_INTERVAL,
+        max_restarts: int = REINDEX_MAX_RESTARTS,
+        restart_backoff: timedelta = REINDEX_RESTART_BACKOFF,
+        **kwargs,
+    ):
+        super().__init__(**kwargs)
+        self.es_host = es_host
+        # The output of `trigger_reindex`: the ES task ID and the reindex arguments
+        self.reindex = reindex
+        self.reindex_timeout = reindex_timeout
+        self.poke_interval = poke_interval
+        self.max_restarts = max_restarts
+        self.restart_backoff = restart_backoff
+
+    def execute(self, context):
+        deadline = time.time() + self.reindex_timeout.total_seconds()
+        self.check_reindex(
+            context,
+            es_task_id=self.reindex["es_task_id"],
+            restarts=0,
+            created_before=0,
+            deadline=deadline,
+        )
+
+    def check_reindex(
+        self,
+        context,
+        event=None,
+        *,
+        es_task_id: str,
+        restarts: int,
+        created_before: int,
+        deadline: float,
+    ):
+        """
+        Check the reindex task, and defer until the next check, defer until a
+        restart, or finish.
+
+        ``created_before`` is the number of documents earlier attempts created.
+        """
+        es_conn = ElasticsearchPythonHook(hosts=[self.es_host]).get_conn
+        response = es_conn.tasks.get(task_id=es_task_id)
+        status = response.get("task", {}).get("status", {})
+        created = created_before + (status.get("created") or 0)
+        logger.info(
+            f"Reindex task {es_task_id}: {created} documents created so far, "
+            f"{status.get('version_conflicts') or 0} already present, "
+            f"{restarts} restarts."
+        )
+
+        if not response.get("completed"):
+            if time.time() > deadline:
+                raise AirflowFailException(
+                    f"Reindex did not finish within {self.reindex_timeout}."
+                )
+            self._defer(
+                "check_reindex",
+                timedelta(seconds=self.poke_interval),
+                es_task_id=es_task_id,
+                restarts=restarts,
+                created_before=created_before,
+                deadline=deadline,
+            )
+
+        if not get_reindex_failure_reasons(response):
+            expected_docs = self.reindex["kwargs"].get("max_docs")
+            if expected_docs and created != expected_docs:
+                logger.info(
+                    f"Reindexed {created} documents, but {expected_docs} were expected."
+                )
+            else:
+                logger.info(f"Reindexed {created} documents.")
+            return
+
+        if restarts < self.max_restarts and is_retryable_reindex_failure(response):
+            backoff = self.restart_backoff * 2**restarts
+            logger.warning(
+                "Reindex failed because the cluster is overloaded: "
+                f"{get_reindex_failure_reasons(response)}. Restarting in {backoff} "
+                f"(restart {restarts + 1} of {self.max_restarts})."
+            )
+            self._defer(
+                "restart_reindex",
+                backoff,
+                restarts=restarts + 1,
+                created_before=created,
+                deadline=deadline,
+            )
+
+        raise_for_reindex_failure(response)
+
+    def restart_reindex(
+        self,
+        context,
+        event=None,
+        *,
+        restarts: int,
+        created_before: int,
+        deadline: float,
+    ):
+        if time.time() > deadline:
+            raise AirflowFailException(
+                f"Reindex did not finish within {self.reindex_timeout}."
+            )
+
+        reindex_kwargs = dict(self.reindex["kwargs"])
+        if max_docs := reindex_kwargs.get("max_docs"):
+            # The earlier attempts already created some of the requested documents
+            reindex_kwargs["max_docs"] = max_docs - created_before
+            if reindex_kwargs["max_docs"] <= 0:
+                logger.info(f"Reindexed {created_before} documents.")
+                return
+
+        es_conn = ElasticsearchPythonHook(hosts=[self.es_host]).get_conn
+        es_task_id = start_reindex(es_conn, **reindex_kwargs)
+        logger.info(f"Restarted the reindex as task {es_task_id}.")
+        self._defer(
+            "check_reindex",
+            timedelta(seconds=self.poke_interval),
+            es_task_id=es_task_id,
+            restarts=restarts,
+            created_before=created_before,
+            deadline=deadline,
+        )
+
+    def _defer(self, method_name: str, delay: timedelta, **kwargs):
+        self.defer(
+            trigger=TimeDeltaTrigger(delay),
+            method_name=method_name,
+            kwargs=kwargs,
         )
 
 
@@ -170,7 +428,7 @@ def trigger_and_wait_for_reindex(
     query: dict | None = None,
     max_docs: int | None = None,
     refresh: bool = True,
-    slices: int | Literal["auto"] = "auto",
+    slices: int | Literal["auto"] | None = "auto",
     poke_interval: int = REFRESH_POKE_INTERVAL,
 ):
     @task
@@ -181,58 +439,21 @@ def trigger_and_wait_for_reindex(
         query: dict,
         requests_per_second: int,
         max_docs: int | None,
-        slices: int | Literal["auto"],
+        slices: int | Literal["auto"] | None,
     ):
+        reindex_kwargs = {
+            "destination_index": destination_index,
+            "source_index": source_index,
+            "query": query,
+            "requests_per_second": requests_per_second,
+            "max_docs": max_docs,
+            "slices": slices,
+            "refresh": refresh,
+        }
         es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
-        source = {"index": source_index}
-        # An empty query is not accepted; only pass it
-        # if a query was actually supplied
-        if query:
-            source["query"] = query
-
-        response = es_conn.reindex(
-            source=source,
-            dest={"index": destination_index},
-            max_docs=max_docs,
-            # Parallelize indexing when not None
-            slices=slices,
-            # The default 5m scroll keep-alive expires while slow bulk writes to the
-            # destination index hold up a slice, failing the whole reindex with
-            # "No search context found".
-            scroll="1h",
-            # Do not hold the slot while awaiting completion
-            wait_for_completion=False,
-            # Whether to immediately refresh the index after completion to make
-            # the data available for search
-            refresh=refresh,
-            # Throttle
-            requests_per_second=requests_per_second,
-        )
-        return response["task"]
-
-    @task.sensor(
-        poke_interval=REFRESH_POKE_INTERVAL, timeout=timeout, mode="reschedule"
-    )
-    def wait_for_reindex(
-        es_host: str, task_id: str, expected_docs: int | None = None
-    ) -> PokeReturnValue:
-        es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
-
-        response = es_conn.tasks.get(task_id=task_id)
-        logger.info(response)
-
-        count = response.get("task", {}).get("status", {}).get("total")
-        if expected_docs and count != expected_docs:
-            logger.info(
-                f"Reindexed {count} documents, but {expected_docs} were expected."
-            )
-        else:
-            logger.info(f"Reindexed {count} documents.")
-
-        is_done = response.get("completed") is True
-        if is_done:
-            raise_for_reindex_failure(response)
-        return PokeReturnValue(is_done=is_done)
+        es_task_id = start_reindex(es_conn, **reindex_kwargs)
+        # Return the rendered arguments too, so a restart uses the same ones
+        return {"es_task_id": es_task_id, "kwargs": reindex_kwargs}
 
     trigger_reindex_task = trigger_reindex(
         es_host,
@@ -244,11 +465,13 @@ def trigger_and_wait_for_reindex(
         slices,
     )
 
-    wait_for_reindex_task = wait_for_reindex.override(poke_interval=poke_interval)(
-        task_id=trigger_reindex_task, expected_docs=max_docs, es_host=es_host
+    WaitForReindexOperator(
+        task_id="wait_for_reindex",
+        es_host=es_host,
+        reindex=trigger_reindex_task,
+        reindex_timeout=timeout,
+        poke_interval=poke_interval,
     )
-
-    trigger_reindex_task >> wait_for_reindex_task
 
 
 @task

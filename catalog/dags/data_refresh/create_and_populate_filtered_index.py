@@ -65,6 +65,9 @@ def create_and_populate_filtered_index(
             "body": index_settings(media_type),
         },
         es_host=es_host,
+        # A cleared run fills the index a failed attempt left, skipping the
+        # documents already in it.
+        exist_ok=True,
     )
 
     sensitive_terms = HttpOperator(
@@ -81,6 +84,11 @@ def create_and_populate_filtered_index(
         source_index=origin_index_name,
         timeout=timeout,
         requests_per_second="{{ var.value.get('ES_INDEX_THROTTLING_RATE', 20_000) }}",
+        # The number of scrolls that read the origin index in parallel. "auto" uses
+        # one per shard. With fewer slices than shards, each slice still sends its
+        # searches to every shard, so ES_INDEX_THROTTLING_RATE is the more direct
+        # way to reduce load.
+        slices="{{ var.value.get('ES_FILTERED_INDEX_REINDEX_SLICES', 'auto') }}",
         query={
             "bool": {
                 "must_not": [

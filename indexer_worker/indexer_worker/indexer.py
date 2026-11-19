@@ -1,6 +1,5 @@
 import logging as log
 import time
-from collections import deque
 
 import elasticsearch
 from decouple import config
@@ -16,6 +15,14 @@ from indexer_worker.queries import get_reindex_query
 
 # The number of database records to load in memory at once.
 DB_BUFFER_SIZE = config("DB_BUFFER_SIZE", default=100000, cast=int)
+
+# Bulk statuses that mean the cluster is overloaded or briefly unavailable, so
+# the rejected docs are sent again after a backoff.
+RETRYABLE_BULK_STATUSES = {429, 502, 503, 504}
+# With the default backoff, 10 retries wait about 25 minutes in total.
+BULK_MAX_RETRIES = config("BULK_MAX_RETRIES", default=10, cast=int)
+BULK_INITIAL_BACKOFF = config("BULK_INITIAL_BACKOFF", default=5, cast=int)  # seconds
+BULK_MAX_BACKOFF = config("BULK_MAX_BACKOFF", default=300, cast=int)  # seconds
 
 
 def launch_reindex(
@@ -107,10 +114,7 @@ def reindex(
             # Bulk upload to Elasticsearch in parallel.
             log.info(f"Pushing {len(es_batch)} docs to Elasticsearch.")
             push_start_time = time.time()
-            try:
-                _bulk_upload(es_conn, es_batch)
-            except ValueError:
-                log.error("Failed to index chunk.")
+            _bulk_upload(es_conn, es_batch)
 
             upload_time = time.time() - push_start_time
             upload_rate = len(es_batch) / upload_time
@@ -154,26 +158,64 @@ def pg_chunk_to_es(pg_chunk, columns, model_name, target_index):
     return documents
 
 
+class BulkUploadError(Exception):
+    """Documents could not be indexed, so the worker must fail rather than skip them."""
+
+
 def _bulk_upload(es_conn, es_batch):
-    max_attempts = 4
-    attempts = 0
-    # Initial time to wait between indexing attempts
-    # Grows exponentially
-    cooloff = 5
-    while True:
-        try:
-            deque(helpers.parallel_bulk(es_conn, es_batch, chunk_size=400))
-        except elasticsearch.ApiError:
-            # Something went wrong during indexing.
+    """
+    Index ``es_batch``, retrying the documents Elasticsearch rejects while overloaded.
+
+    Only the rejected documents are sent again, with exponential backoff. Any other
+    document failure, or a rejection that outlasts every retry, raises
+    ``BulkUploadError`` so that no documents are silently left out of the index.
+    """
+    pending = es_batch
+    for attempt in range(BULK_MAX_RETRIES + 1):
+        if attempt:
+            backoff = min(BULK_MAX_BACKOFF, BULK_INITIAL_BACKOFF * 2 ** (attempt - 1))
             log.warning(
-                f"Elasticsearch rejected bulk query. We will retry in"
-                f" {cooloff}s. Attempt {attempts}. Details: ",
-                exc_info=True,
+                f"Elasticsearch rejected {len(pending)} docs. Retrying in {backoff}s "
+                f"(retry {attempt} of {BULK_MAX_RETRIES})."
             )
-            time.sleep(cooloff)
-            cooloff *= 2
-            if attempts >= max_attempts:
-                raise ValueError("Exceeded maximum bulk index retries")
-            attempts += 1
-            continue
-        break
+            time.sleep(backoff)
+
+        # Bulk responses return `_id` as a string
+        pending_by_id = {str(doc["_id"]): doc for doc in pending}
+        rejected = []
+        failed = []
+        try:
+            for ok, item in helpers.parallel_bulk(
+                es_conn,
+                pending,
+                chunk_size=400,
+                raise_on_error=False,
+                raise_on_exception=False,
+            ):
+                if ok:
+                    continue
+                info = next(iter(item.values()))
+                if info.get("status") in RETRYABLE_BULK_STATUSES:
+                    rejected.append(pending_by_id[str(info["_id"])])
+                else:
+                    failed.append(
+                        {key: info.get(key) for key in ("_id", "status", "error")}
+                    )
+        except elasticsearch.TransportError:
+            # The connection failed, so it is unknown which docs were indexed.
+            # Indexing a doc again is harmless, so retry all of them.
+            log.warning("Bulk request to Elasticsearch failed.", exc_info=True)
+            rejected = pending
+
+        if failed:
+            raise BulkUploadError(
+                f"{len(failed)} docs failed to index. First failures: {failed[:5]}"
+            )
+        if not rejected:
+            return
+        pending = rejected
+
+    raise BulkUploadError(
+        f"Elasticsearch still rejected {len(pending)} docs after "
+        f"{BULK_MAX_RETRIES} retries."
+    )
