@@ -44,11 +44,14 @@ class RecordMetrics(NamedTuple):
 
 
 MediaTypeRecordMetrics = dict[str, RecordMetrics]
+# The load task's RecordMetrics as a downstream task receives them. XComs are stored
+# as JSON, so each value comes back as a plain list (or a tuple, when the value didn't
+# go through an XCom).
+SerializedRecordMetrics = RecordMetrics | Sequence[int | None] | None
+SerializedMediaTypeRecordMetrics = dict[str, SerializedRecordMetrics]
 
 
-def _as_record_metrics(counts: RecordMetrics | Sequence | None) -> RecordMetrics | None:
-    # XComs are stored as JSON, so a RecordMetrics pushed by the load task comes back
-    # as a plain tuple or list
+def _as_record_metrics(counts: SerializedRecordMetrics) -> RecordMetrics | None:
     if counts is None or isinstance(counts, RecordMetrics):
         return counts
     return RecordMetrics(*counts)
@@ -80,7 +83,8 @@ def clean_duration(duration: float | list[float] | None) -> str | None:
 
 
 def clean_record_counts(
-    record_counts_by_media_type: MediaTypeRecordMetrics | list[MediaTypeRecordMetrics],
+    record_counts_by_media_type: SerializedMediaTypeRecordMetrics
+    | list[SerializedMediaTypeRecordMetrics],
     media_types: Sequence[str],
 ) -> MediaTypeRecordMetrics:
     # If a list of record_counts dicts is provided, sum all of the individual values
@@ -149,7 +153,8 @@ def report_completion(
     dag_id: str,
     media_types: Sequence[str],
     duration: float | str | list[float] | None,
-    record_counts_by_media_type: MediaTypeRecordMetrics | list[MediaTypeRecordMetrics],
+    record_counts_by_media_type: SerializedMediaTypeRecordMetrics
+    | list[SerializedMediaTypeRecordMetrics],
     dated: bool = False,
     date_range_start: str | None = None,
     date_range_end: str | None = None,

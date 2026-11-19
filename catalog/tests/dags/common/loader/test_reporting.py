@@ -393,7 +393,7 @@ def test_skip_report_completion(
         ),
         # Single, as deserialized from a JSON XCom
         (
-            {"image": (1, 2, 3, 4), "audio": None},
+            {"image": [1, 2, 3, 4], "audio": None},
             ["image", "audio"],
             {"image": RecordMetrics(1, 2, 3, 4), "audio": None},
         ),
@@ -401,7 +401,7 @@ def test_skip_report_completion(
         (
             [
                 {"image": [1, 2, 3, 4], "audio": None},
-                {"image": (4, 3, 2, 1), "audio": [1, None, 0, 0]},
+                {"image": [4, 3, 2, 1], "audio": [1, None, 0, 0]},
             ],
             ["image", "audio"],
             {"image": RecordMetrics(5, 5, 5, 5), "audio": RecordMetrics(1, 0, 0, 0)},

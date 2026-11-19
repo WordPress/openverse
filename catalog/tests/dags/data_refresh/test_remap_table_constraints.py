@@ -5,7 +5,7 @@ import pytest
 
 from data_refresh.remap_table_constraints import (
     ConstraintInfo,
-    fetch_all_tuples,
+    fetch_all_constraints,
     generate_constraints_for_table,
 )
 from tests.conftest import xcom_round_trip
@@ -139,7 +139,7 @@ def test_constraints_survive_xcom():
         for constraint in [APPLICABLE_CONSTRAINT, PRIMARY_KEY_CONSTRAINT]
     ]
 
-    all_constraints = xcom_round_trip(fetch_all_tuples(cursor))
+    all_constraints = xcom_round_trip(fetch_all_constraints(cursor))
     actual = generate_constraints_for_table.function(
         all_constraints=all_constraints,
         table_name="audio",

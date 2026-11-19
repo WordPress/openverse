@@ -23,7 +23,7 @@ class ConstraintInfo(TypedDict):
     statement: str
 
 
-def fetch_all_tuples(cursor):
+def fetch_all_constraints(cursor):
     try:
         rows = cursor.fetchall()
         return [
@@ -210,7 +210,7 @@ def remap_table_constraints_to_table(
     all_constraints = run_sql.override(task_id="get_all_existing_constraints")(
         postgres_conn_id=postgres_conn_id,
         sql_template=queries.SELECT_ALL_CONSTRAINTS_QUERY,
-        handler=fetch_all_tuples,
+        handler=fetch_all_constraints,
         map_index_template=table_name,
     )
 
