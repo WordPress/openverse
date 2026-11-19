@@ -187,7 +187,7 @@ def get_dags_info(dags: DagMapping) -> list[DagInfo]:
             provider_workflow.dated if provider_workflow is not None else dag.catchup
         )
         # DAG tags are a set, so take the type from the first tag in DAG_TYPES that
-        # the DAG has, then from the first of its other tags
+        # the DAG has, or else from its alphabetically first tag
         tags = dag.tags or []
         type_ = next((tag for tag in DAG_TYPES if tag in tags), None) or (
             sorted(tags)[0] if tags else "other"

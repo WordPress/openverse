@@ -18,8 +18,14 @@ differences:
 import logging
 from datetime import timedelta
 
-from airflow.providers.standard.operators.python import get_current_context
-from airflow.sdk import BaseOperator, TriggerRule, Variable, dag, task
+from airflow.sdk import (
+    BaseOperator,
+    TriggerRule,
+    Variable,
+    dag,
+    get_current_context,
+    task,
+)
 from airflow.sdk.definitions.param import Param
 
 from common import slack

@@ -20,7 +20,7 @@ ACTIVE_DAG_RUN_STATES = [DagRunState.QUEUED.value, DagRunState.RUNNING.value]
 # batches to keep the request URL short
 RUN_ID_BATCH_SIZE = 20
 
-# Airflow's own fallback when `[api] base_url` is not set
+# Used when `[api] base_url` is not set: the API server's default local address
 DEFAULT_BASE_URL = "http://localhost:8080"
 
 

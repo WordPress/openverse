@@ -23,11 +23,6 @@ from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
 logger = logging.getLogger(__name__)
 
 
-# Some functions, like inaturalist, use "copy_expert" to bulk load data to a table.
-# Right now, that is not using the timeout automagically.
-# https://airflow.apache.org/docs/apache-airflow-providers-postgres/stable/_api/airflow/providers/postgres/hooks/postgres/index.html#airflow.providers.postgres.hooks.postgres.PostgresHook.copy_expert # noqa
-
-
 RETURN_ROW_COUNT = lambda c: c.rowcount  # noqa: E731
 
 

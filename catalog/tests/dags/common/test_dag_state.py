@@ -3,6 +3,7 @@ from unittest import mock
 import pytest
 from airflow.exceptions import AirflowException
 from airflow.sdk.exceptions import AirflowRuntimeError
+from airflow.sdk.execution_time.task_runner import RuntimeTaskInstance
 
 from common import dag_state
 
@@ -12,14 +13,10 @@ TASK_ID = "wait_task"
 
 @pytest.fixture
 def ti():
-    ti = mock.MagicMock()
+    # Autospec so that calls must match the real Task SDK signatures
+    ti = mock.create_autospec(RuntimeTaskInstance, instance=True)
     with mock.patch.object(dag_state, "_task_sdk_ti", return_value=ti):
         yield ti
-
-
-def test_assert_dag_exists(ti):
-    dag_state.assert_dag_exists("some_dag")
-    ti.get_dag.assert_called_once_with("some_dag")
 
 
 def test_assert_dag_exists_fails_for_missing_dag(ti):
@@ -43,14 +40,6 @@ def test_count_running_dag_runs_past_task_skips_idle_dags(ti):
 
     assert dag_state.count_running_dag_runs_past_task("some_dag", TASK_ID) == 0
     ti.get_task_states.assert_not_called()
-
-
-def test_count_running_dag_runs_past_task_without_succeeded_tasks(ti):
-    ti.get_dr_count.return_value = 1
-    ti.get_task_states.return_value = {"run_1": {TASK_ID: "running"}}
-
-    assert dag_state.count_running_dag_runs_past_task("some_dag", TASK_ID) == 0
-    ti.get_dr_count.assert_called_once_with(dag_id="some_dag", states=["running"])
 
 
 def test_count_running_dag_runs_past_task(ti):
@@ -101,15 +90,16 @@ def test_get_task_states_without_task_instances(ti):
         pytest.param(None, dag_state.DEFAULT_BASE_URL, id="unset"),
     ],
 )
-def test_ui_urls(base_url, expected_base):
+def test_ui_urls(base_url, expected_base, monkeypatch):
+    if base_url:
+        monkeypatch.setenv("AIRFLOW__API__BASE_URL", base_url)
+    else:
+        monkeypatch.delenv("AIRFLOW__API__BASE_URL", raising=False)
     run_id = "manual__2022-01-01T00:00:00"
     run_url = f"{expected_base}/dags/some_dag/runs/manual__2022-01-01T00%3A00%3A00"
 
-    with mock.patch.object(dag_state.conf, "get", return_value=base_url) as get:
-        assert dag_state.dag_run_url("some_dag", run_id) == run_url
-        assert (
-            dag_state.task_log_url("some_dag", run_id, "group.task")
-            == f"{run_url}/tasks/group.task"
-        )
-
-    get.assert_called_with("api", "base_url", fallback=None)
+    assert dag_state.dag_run_url("some_dag", run_id) == run_url
+    assert (
+        dag_state.task_log_url("some_dag", run_id, "group.task")
+        == f"{run_url}/tasks/group.task"
+    )

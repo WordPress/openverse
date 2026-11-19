@@ -51,8 +51,9 @@ _MODULE = "utilities.dag_doc_gen.dag_doc_generation"
         (["foo"], "foo"),
         # DAG tags are a set, so without a known type the first one in sorted order
         # is used
-        (["foo", "bar"], "bar"),
-        (["foo", "provider", "data_refresh"], "data_refresh"),
+        ({"foo", "bar"}, "bar"),
+        # A known type comes before tags that sort earlier
+        ({"aaa", "provider"}, "provider"),
     ],
 )
 @pytest.mark.parametrize(

@@ -14,10 +14,10 @@ TEST_START_DATE = datetime(2022, 2, 1, 0, 0, 0)
 
 
 @pytest.fixture()
-def index_readiness_dag(sample_dag_id_fixture, clean_db):
+def index_readiness_dag():
     # Create a DAG that just has an index_readiness_check task
     with DAG(
-        dag_id=sample_dag_id_fixture, schedule=None, start_date=TEST_START_DATE
+        dag_id="test_index_readiness_dag", schedule=None, start_date=TEST_START_DATE
     ) as dag:
         ingestion_server.index_readiness_check(
             media_type="image", index_suffix="my_test_suffix", timeout=timedelta(days=1)
