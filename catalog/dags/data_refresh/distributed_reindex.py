@@ -33,6 +33,8 @@ from data_refresh.constants import (
     INDEXER_WORKER_COUNTS,
     INDEXER_WORKER_PORT,
     INDEXER_WORKER_REQUEST_TIMEOUT,
+    WAIT_FOR_REINDEXING_RETRIES,
+    WAIT_FOR_REINDEXING_RETRY_DELAY,
 )
 from data_refresh.data_refresh_types import DataRefreshConfig
 
@@ -247,7 +249,8 @@ def get_instance_ip_address(
     return reservations[0].get("Instances", {})[0].get("PrivateIpAddress")
 
 
-@task
+# A retry after a timed-out request could start a second reindex of the same range
+@task(retries=0)
 def trigger_reindexing_task(server: str, data: dict) -> str:
     """
     Start a reindexing task on the indexer worker on `server` and return the URL for
@@ -265,25 +268,21 @@ def trigger_reindexing_task(server: str, data: dict) -> str:
     return f"{worker_url}{response_filter_status_check_endpoint(response)}"
 
 
-@task.sensor(mode="reschedule")
+@task.sensor(
+    mode="reschedule",
+    retries=WAIT_FOR_REINDEXING_RETRIES,
+    retry_delay=WAIT_FOR_REINDEXING_RETRY_DELAY,
+)
 def wait_for_reindexing_task(status_url: str) -> bool:
     """
-    Wait for the reindexing task on the indexer worker to finish. Network errors and
-    server errors are logged and retried on the next poke, so that one dropped
-    request does not fail a reindex that takes many hours.
+    Wait for the reindexing task on the indexer worker to finish. A failed status
+    request fails the try, and the task's own retries poll again. One dropped
+    request doesn't fail a reindex that takes many hours, but a worker that stays
+    unreachable fails it within minutes instead of at the sensor timeout.
     """
-    try:
-        response = requests.get(status_url, timeout=INDEXER_WORKER_REQUEST_TIMEOUT)
-    except (requests.ConnectionError, requests.Timeout) as error:
-        logger.warning(f"Could not reach the indexer worker, will retry: {error}")
-        return False
+    response = requests.get(status_url, timeout=INDEXER_WORKER_REQUEST_TIMEOUT)
     # The worker may not know about the task yet
     if response.status_code == 404:
-        return False
-    if response.status_code >= 500:
-        logger.warning(
-            f"The indexer worker responded with {response.status_code}, will retry."
-        )
         return False
     response.raise_for_status()
     return response_check_wait_for_completion(response)
@@ -310,8 +309,8 @@ def assert_reindexing_success() -> EmptyOperator:
     fail. Otherwise simply pass.
 
     This is necessary because we have some tasks after the reindex step
-    which always run even on reindexing failure (to drop the connection
-    and terminate the worker instance). However in the event of failures,
+    which always run even on reindexing failure (to terminate the worker
+    instance). However in the event of failures,
     we still need the last task in the TaskGroup to be marked as `Failed`
     or else subsequent tasks (like the promotion steps) will run. It is
     not possible to set individual tasks within a TaskGroup as

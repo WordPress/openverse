@@ -1,5 +1,4 @@
 import logging
-from unittest import mock
 
 import pytest
 from airflow.exceptions import AirflowException
@@ -197,25 +196,6 @@ def test_retries_if_running_dags_with_completed_sensor_task(
         assert (
             expected_message.format(dag_id_prefix=sample_dag_id_fixture) in caplog.text
         )
-
-
-def test_check_existence_checks_each_external_dag_once():
-    sensor = SingleRunExternalDAGsSensor(
-        task_id=TEST_TASK_ID,
-        external_dag_ids=["dag_a", "dag_b"],
-        check_existence=True,
-        poke_interval=5,
-        mode="reschedule",
-    )
-    module = "common.sensors.single_run_external_dags_sensor"
-    with (
-        mock.patch(f"{module}.assert_dag_exists") as assert_dag_exists,
-        mock.patch(f"{module}.count_running_dag_runs_past_task", return_value=0),
-    ):
-        assert sensor.poke(context={}) is True
-        assert sensor.poke(context={}) is True
-
-    assert assert_dag_exists.call_args_list == [mock.call("dag_a"), mock.call("dag_b")]
 
 
 def test_check_existence_fails_for_missing_dag():

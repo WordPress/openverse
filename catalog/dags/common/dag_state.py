@@ -132,9 +132,13 @@ def get_task_states(dag_run) -> dict[str, str | None]:
     }
 
 
+DEFAULT_BASE_URL = "http://localhost:8080"
+
+
 def _base_url() -> str:
     section = "api" if IS_AIRFLOW_3 else "webserver"
-    return conf.get(section, "base_url").rstrip("/")
+    # `[api] base_url` has no default in Airflow 3, so `conf.get` raises without one
+    return conf.get(section, "base_url", fallback=DEFAULT_BASE_URL).rstrip("/")
 
 
 def dag_run_url(dag_id: str, run_id: str) -> str:

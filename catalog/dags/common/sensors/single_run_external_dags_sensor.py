@@ -19,8 +19,8 @@ class SingleRunExternalDAGsSensor(BaseSensorOperator):
     `task_id`.
 
     :param external_dag_ids: A list of dag_ids that you want to wait for
-    :param check_existence: Set to `True` to fail on the first poke if any of the
-    external DAGs is not deployed (default value: False).
+    :param check_existence: Set to `True` to fail if any of the external DAGs is not
+    deployed. The check runs on every poke (default value: False).
     :param allow_concurrent_runs: Used to force the Sensor to pass, even
     if there are concurrent runs.
     """
@@ -38,9 +38,6 @@ class SingleRunExternalDAGsSensor(BaseSensorOperator):
         self.check_existence = check_existence
         self.allow_concurrent_runs = allow_concurrent_runs
 
-        # Used to ensure the existence check only runs on the first poke
-        self._has_checked_existence = False
-
     def poke(self, context):
         self.log.info(
             "Poking for DAGs %s ...",
@@ -54,10 +51,9 @@ class SingleRunExternalDAGsSensor(BaseSensorOperator):
             )
             return True
 
-        if self.check_existence and not self._has_checked_existence:
+        if self.check_existence:
             for dag_id in self.external_dag_ids:
                 assert_dag_exists(dag_id)
-            self._has_checked_existence = True
 
         # A DAG is considered 'running' if the DAG itself is in the running state,
         # and if its instance of the Sensor task has completed successfully. Stop

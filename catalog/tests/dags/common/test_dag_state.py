@@ -191,7 +191,7 @@ def test_get_task_states_on_airflow_3(airflow_3_ti):
 def test_ui_urls(is_airflow_3, section, expected_run_url, expected_log_url):
     run_id = "manual__2022-01-01T00:00:00"
 
-    def get_conf(conf_section, key):
+    def get_conf(conf_section, key, fallback=None):
         assert (conf_section, key) == (section, "base_url")
         return "https://airflow.test/"
 
@@ -202,6 +202,20 @@ def test_ui_urls(is_airflow_3, section, expected_run_url, expected_log_url):
         assert dag_state.dag_run_url("some_dag", run_id) == expected_run_url
         assert (
             dag_state.task_log_url("some_dag", run_id, "group.task") == expected_log_url
+        )
+
+
+@pytest.mark.parametrize("is_airflow_3", [False, True])
+def test_ui_urls_fall_back_without_base_url(is_airflow_3):
+    def get_unset_conf(section, key, fallback=None):
+        return fallback
+
+    with (
+        mock.patch.object(dag_state, "IS_AIRFLOW_3", is_airflow_3),
+        mock.patch.object(dag_state.conf, "get", side_effect=get_unset_conf),
+    ):
+        assert dag_state.dag_run_url("some_dag", "run").startswith(
+            "http://localhost:8080/dags/some_dag/"
         )
 
 

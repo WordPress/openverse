@@ -42,7 +42,7 @@ def wait_for_external_dag(
 ):
     """
     Execute a Sensor task which will wait if the given external DAG is
-    running.
+    queued or running.
 
     To fully ensure that the waiting DAG and the external DAG do not run
     concurrently, the external DAG should have a `prevent_concurrency_with_dag`

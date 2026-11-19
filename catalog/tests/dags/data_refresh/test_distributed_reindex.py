@@ -3,10 +3,15 @@ from unittest import mock
 
 import pytest
 import requests
+from airflow.models.dag import DAG
 from airflow.providers.amazon.aws.hooks.ec2 import EC2Hook
+from airflow.utils.timezone import datetime
 
 from common.constants import PRODUCTION
-from data_refresh.constants import INDEXER_WORKER_REQUEST_TIMEOUT
+from data_refresh.constants import (
+    INDEXER_WORKER_REQUEST_TIMEOUT,
+    WAIT_FOR_REINDEXING_RETRIES,
+)
 from data_refresh.distributed_reindex import (
     trigger_reindexing_task,
     wait_for_reindexing_task,
@@ -180,7 +185,6 @@ def test_trigger_reindexing_task_fails_unless_accepted(status_code, error):
     "response, expected",
     [
         pytest.param(_response(404), False, id="task-not-found-yet"),
-        pytest.param(_response(502), False, id="server-error"),
         pytest.param(
             _response(200, {"active": True, "error": False, "progress": 50}),
             False,
@@ -210,6 +214,7 @@ def test_wait_for_reindexing_task(response, expected):
             id="reindex-error",
         ),
         pytest.param(_response(403), requests.HTTPError, id="client-error"),
+        pytest.param(_response(502), requests.HTTPError, id="server-error"),
     ],
 )
 def test_wait_for_reindexing_task_raises_on_errors(response, error):
@@ -223,11 +228,19 @@ def test_wait_for_reindexing_task_raises_on_errors(response, error):
     [
         pytest.param(requests.ConnectionError("reset"), id="connection-error"),
         pytest.param(requests.Timeout("timed out"), id="timeout"),
+        pytest.param(requests.exceptions.ChunkedEncodingError(), id="truncated"),
     ],
 )
-def test_wait_for_reindexing_task_retries_on_network_errors(error):
+def test_wait_for_reindexing_task_raises_on_network_errors(error):
     with mock.patch("requests.get", side_effect=error):
-        assert (
+        with pytest.raises(type(error)):
             wait_for_reindexing_task.function(status_url=f"{WORKER_URL}/task/abc")
-            is False
-        )
+
+
+def test_reindexing_tasks_retry_only_the_status_check():
+    with DAG("test_reindexing_retries", schedule=None, start_date=datetime(2024, 1, 1)):
+        status_url = trigger_reindexing_task(server="10.0.0.1", data={})
+        wait = wait_for_reindexing_task(status_url=status_url)
+
+    assert status_url.operator.retries == 0
+    assert wait.operator.retries == WAIT_FOR_REINDEXING_RETRIES
