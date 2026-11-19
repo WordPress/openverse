@@ -23,16 +23,19 @@ def run_dag_test(dag):
     Run `dag.test()` on a DAG defined in a test.
 
     `dag.test()` only serializes DAGs it finds by parsing the DAG bundle, so a DAG
-    built inside a test has to be written to the metadata database first.
+    built inside a test has to be written to the metadata database first, under a
+    bundle that is registered there. A fresh database, as on CI, has no bundles yet.
 
     `dag.test()` also writes every DAG in the bundle to the database, so two xdist
     workers running it at once collide on the `dag` table's primary key. A file lock
     runs one at a time.
     """
+    from airflow.dag_processing.bundles.manager import DagBundlesManager
     from airflow.dag_processing.dagbag import DagBag, sync_bag_to_db
 
     with open(Path(tempfile.gettempdir()) / "catalog-dag-test.lock", "w") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
+        DagBundlesManager().sync_bundles_to_db()
         dagbag = DagBag(collect_dags=False, bundle_name="dags-folder")
         dagbag.bag_dag(dag)
         sync_bag_to_db(dagbag, "dags-folder", None)
