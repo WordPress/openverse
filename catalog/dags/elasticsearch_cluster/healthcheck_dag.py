@@ -20,9 +20,9 @@ from datetime import datetime
 from textwrap import dedent, indent
 from typing import Literal
 
-from airflow.decorators import dag, task
-from airflow.exceptions import AirflowSkipException
 from airflow.providers.elasticsearch.hooks.elasticsearch import ElasticsearchPythonHook
+from airflow.sdk import dag, task
+from airflow.sdk.exceptions import AirflowSkipException
 from elasticsearch import Elasticsearch
 
 from common.constants import DAG_DEFAULT_ARGS, ENVIRONMENTS, PRODUCTION, Environment

@@ -3,9 +3,9 @@ from unittest import mock
 
 import pytest
 import requests
-from airflow.models.dag import DAG
 from airflow.providers.amazon.aws.hooks.ec2 import EC2Hook
-from airflow.utils.timezone import datetime
+from airflow.sdk import DAG
+from airflow.sdk.timezone import datetime
 
 from common.constants import PRODUCTION
 from data_refresh.constants import (

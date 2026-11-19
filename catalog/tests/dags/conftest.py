@@ -2,9 +2,8 @@ from datetime import datetime, timedelta
 from unittest import mock
 
 import pytest
-from airflow import DAG
-from airflow.models.abstractoperator import AbstractOperator
 from airflow.providers.standard.operators.python import PythonOperator
+from airflow.sdk import DAG, BaseOperator
 from requests import Response
 
 from common.constants import POSTGRES_CONN_ID, SQLInfo
@@ -74,7 +73,7 @@ def timed_pg_hook_sleeper(
 
 def mapped_select_pg_hook(
     select_val: int,
-    task: AbstractOperator,
+    task: BaseOperator,
 ):
     pg = PostgresHook(
         default_statement_timeout=PostgresHook.get_execution_timeout(task),

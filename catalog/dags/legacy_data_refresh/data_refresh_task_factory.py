@@ -48,13 +48,10 @@ https://github.com/WordPress/openverse-catalog/issues/353)
 import logging
 from collections.abc import Sequence
 
-from airflow.decorators import task
-from airflow.exceptions import AirflowSkipException
-from airflow.models.baseoperator import chain
 from airflow.providers.standard.operators.python import PythonOperator
+from airflow.sdk import TaskGroup, TriggerRule, chain, task
+from airflow.sdk.exceptions import AirflowSkipException
 from airflow.utils.state import TaskInstanceState
-from airflow.utils.task_group import TaskGroup
-from airflow.utils.trigger_rule import TriggerRule
 
 from common import cloudwatch, dag_state, ingestion_server
 from common.constants import (

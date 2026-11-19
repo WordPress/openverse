@@ -19,7 +19,7 @@ import logging
 from datetime import datetime
 from itertools import chain
 
-from airflow.exceptions import AirflowSkipException
+from airflow.sdk.exceptions import AirflowSkipException
 
 from common.licenses import LicenseInfo, get_license_info
 from common.loader import provider_details as prov

@@ -2,8 +2,8 @@
 
 from datetime import datetime
 
-from airflow.models import DAG
 from airflow.providers.standard.operators.python import PythonOperator
+from airflow.sdk import DAG
 
 import oauth2
 from common.constants import DAG_DEFAULT_ARGS

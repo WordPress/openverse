@@ -16,7 +16,7 @@ import logging
 from datetime import datetime, timedelta
 
 import lxml.html as html
-from airflow.models import Variable
+from airflow.sdk import Variable
 
 from common.licenses import LicenseInfo, get_license_info
 from common.loader import provider_details as prov

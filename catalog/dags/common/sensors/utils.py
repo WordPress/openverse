@@ -1,6 +1,6 @@
-from airflow.decorators import task, task_group
-from airflow.exceptions import AirflowSensorTimeout
 from airflow.providers.standard.sensors.python import PythonSensor
+from airflow.sdk import task, task_group
+from airflow.sdk.exceptions import AirflowSensorTimeout
 
 from common.constants import REFRESH_POKE_INTERVAL
 from common.dag_state import count_active_dag_runs

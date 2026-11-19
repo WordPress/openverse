@@ -54,8 +54,8 @@ critical for the creation of the filtered indexes.
 
 from datetime import datetime
 
-from airflow import DAG
-from airflow.models.param import Param
+from airflow.sdk import DAG
+from airflow.sdk.definitions.param import Param
 
 from common.constants import DAG_DEFAULT_ARGS
 from common.sensors.constants import PRODUCTION_ES_CONCURRENCY_TAG

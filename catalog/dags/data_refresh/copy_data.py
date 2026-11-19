@@ -14,10 +14,8 @@ from dataclasses import asdict
 from datetime import timedelta
 from textwrap import dedent
 
-from airflow.decorators import task, task_group
-from airflow.models import Variable
-from airflow.models.abstractoperator import AbstractOperator
-from airflow.models.connection import Connection
+from airflow.sdk import BaseOperator, Connection, Variable, task, task_group
+from airflow.sdk.exceptions import AirflowRuntimeError, ErrorType
 
 from common.constants import (
     POSTGRES_API_CONN_IDS,
@@ -41,10 +39,10 @@ def initialize_fdw(
     upstream_conn_id: str,
     downstream_conn_id: str,
     media_type: str,
-    task: AbstractOperator = None,
+    task: BaseOperator = None,
 ):
     """Create the FDW and prepare it for copying."""
-    upstream_connection = Connection.get_connection_from_secrets(upstream_conn_id)
+    upstream_connection = Connection.get(upstream_conn_id)
     fdw_name = f"upstream_{media_type}"
 
     run_sql.function(
@@ -100,12 +98,14 @@ def get_record_limit() -> int | None:
     try:
         # If a limit is explicitly configured, always use it.
         return Variable.get("DATA_REFRESH_LIMIT", deserialize_json=True)
-    except KeyError:
+    except AirflowRuntimeError as error:
+        if error.error.error != ErrorType.VARIABLE_NOT_FOUND:
+            raise
         # Defaults when no limit is explicitly configured.
         # Note `environment` differs from the target env of the data refresh DAG;
         # instead, it is the environment in which Airflow is running (local testing
         # vs the production catalog).
-        environment = Variable.get("ENVIRONMENT", default_var="local")
+        environment = Variable.get("ENVIRONMENT", default="local")
         if environment == PRODUCTION:
             # Never limit the record count in production.
             return None
@@ -159,7 +159,7 @@ def copy_data(
     upstream_table_name: str,
     deleted_table_name: str,
     columns: list[str],
-    task: AbstractOperator = None,
+    task: BaseOperator = None,
 ):
     """Copy data from the upstream table into the downstream temp table."""
     # If a limit is configured, add the appropriate conditions onto the

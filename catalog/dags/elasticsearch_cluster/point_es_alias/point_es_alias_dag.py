@@ -23,9 +23,8 @@ es-concurrency group for the DAG's environment is running. (E.g., the
 
 from datetime import datetime
 
-from airflow import DAG
-from airflow.models.param import Param
-from airflow.utils.trigger_rule import TriggerRule
+from airflow.sdk import DAG, TriggerRule
+from airflow.sdk.definitions.param import Param
 
 from common import elasticsearch as es
 from common import slack

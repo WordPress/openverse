@@ -2,12 +2,9 @@ import logging
 from datetime import timedelta
 from pprint import pformat
 
-from airflow.decorators import task, task_group
-from airflow.models import Variable
 from airflow.providers.amazon.aws.hooks.rds import RdsHook
 from airflow.providers.amazon.aws.sensors.rds import RdsDbSensor
-from airflow.utils.task_group import TaskGroup
-from airflow.utils.trigger_rule import TriggerRule
+from airflow.sdk import TaskGroup, TriggerRule, Variable, task, task_group
 
 from common import slack
 from common.constants import AWS_RDS_CONN_ID
@@ -45,9 +42,7 @@ def skip_restore(should_skip: bool = False) -> bool:
     """
     should_continue = not (
         should_skip
-        or Variable.get(
-            constants.SKIP_VARIABLE, default_var=False, deserialize_json=True
-        )
+        or Variable.get(constants.SKIP_VARIABLE, default=False, deserialize_json=True)
     )
     if not should_continue:
         notify_slack.function(

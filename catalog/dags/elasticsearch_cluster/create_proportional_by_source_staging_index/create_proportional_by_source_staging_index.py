@@ -1,7 +1,7 @@
 import logging
 
-from airflow.decorators import task
 from airflow.providers.elasticsearch.hooks.elasticsearch import ElasticsearchPythonHook
+from airflow.sdk import task
 
 from common.elasticsearch import remove_excluded_index_settings
 

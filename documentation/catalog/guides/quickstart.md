@@ -100,21 +100,25 @@ ov just catalog/up
 
 This results, among other things, in the following running containers:
 
-- `openverse_catalog_webserver_1`
-- `openverse_catalog_postgres_1`
-- `openverse_catalog_s3_1`
+- `openverse-api-server-1`
+- `openverse-scheduler-1`
+- `openverse-triggerer-1`
+- `openverse-dag-processor-1`
+- `openverse-upstream_db-1`
+- `openverse-s3-1`
 
 and some networking setup so that they can communicate. Note:
 
-- `openverse_catalog_webserver_1` is running the Apache Airflow daemon, and also
-  has a few development tools (e.g., `pytest`) installed.
-- `openverse_catalog_postgres_1` is running PostgreSQL, and is setup with some
+- The `api-server`, `scheduler`, `triggerer` and `dag-processor` containers run
+  the Apache Airflow services, and also have a few development tools (e.g.,
+  `pytest`) installed. The `api-server` serves the Airflow UI.
+- `openverse-upstream_db-1` is running PostgreSQL, and is setup with some
   databases and tables to emulate the production environment. It also provides a
   database for Airflow to store its running state.
 - The directory containing all modules files (including DAGs, dependencies, and
-  other tooling) will be mounted to the directory `/opt/airflow/catalog` in the
-  container `openverse_catalog_webserver_1`. On production, only the DAGs folder
-  will be mounted, e.g. `/opt/airflow/openverse/dags`.
+  other tooling) will be mounted to the directory `/opt/airflow/catalog` in each
+  of the Airflow containers. On production, only the DAGs folder will be
+  mounted, e.g. `/opt/airflow/openverse/dags`.
 
 Run `ov just ps` to see the list of running services and the localhost URLs for
 interacting with them.
@@ -131,7 +135,7 @@ ov just catalog/test --extended
 Edits to the source files or tests can be made on your local machine, then tests
 can be run in the container via the above command to see the effects.
 
-If you'd like, it's possible to login to the webserver container via:
+If you'd like, it's possible to login to the scheduler container via:
 
 ```shell
 ov just catalog/shell

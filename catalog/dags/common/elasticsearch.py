@@ -4,12 +4,10 @@ import time
 from datetime import timedelta
 from typing import Literal
 
-from airflow.decorators import task, task_group
-from airflow.exceptions import AirflowFailException, AirflowSkipException
-from airflow.models import BaseOperator
-from airflow.models.connection import Connection
 from airflow.providers.elasticsearch.hooks.elasticsearch import ElasticsearchPythonHook
 from airflow.providers.standard.triggers.temporal import TimeDeltaTrigger
+from airflow.sdk import BaseOperator, Connection, task, task_group
+from airflow.sdk.exceptions import AirflowFailException, AirflowSkipException
 from elasticsearch.exceptions import NotFoundError
 
 from common.constants import REFRESH_POKE_INTERVAL
@@ -38,9 +36,7 @@ REINDEX_RESTART_BACKOFF = timedelta(minutes=10)
 
 @task
 def get_es_host(environment: str):
-    es_conn = Connection.get_connection_from_secrets(
-        f"elasticsearch_http_{environment}"
-    )
+    es_conn = Connection.get(f"elasticsearch_http_{environment}")
     return es_conn.get_uri()
 
 

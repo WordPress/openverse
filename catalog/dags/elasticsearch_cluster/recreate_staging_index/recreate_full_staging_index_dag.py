@@ -41,15 +41,15 @@ are already running.
 
 from datetime import datetime
 
-from airflow.decorators import dag
-from airflow.models.param import Param
-from airflow.utils.trigger_rule import TriggerRule
+from airflow.sdk import TriggerRule, dag
+from airflow.sdk.definitions.param import Param
 
 from common import ingestion_server, slack
 from common.constants import (
     AUDIO,
     DAG_DEFAULT_ARGS,
     MEDIA_TYPES,
+    RUN_DATE,
     XCOM_PULL_TEMPLATE,
 )
 from common.sensors.constants import (
@@ -133,7 +133,7 @@ def recreate_full_staging_index():
     # Suffix the index with a current timestamp.
     new_index_suffix = ingestion_server.generate_index_suffix.override(
         trigger_rule=TriggerRule.NONE_FAILED
-    )("full-{{ ts_nodash.lower() }}")
+    )("full-{{ " + RUN_DATE + " | ts_nodash | lower }}")
 
     # Get the index currently aliased by the target_alias, in case it must be
     # deleted later.

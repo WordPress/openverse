@@ -15,10 +15,10 @@ import os
 from textwrap import dedent
 from urllib.parse import urljoin
 
-from airflow import DAG
 from airflow.exceptions import AirflowException
 from airflow.models import BaseOperator, TaskInstance
 from airflow.providers.standard.operators.python import PythonOperator
+from airflow.sdk import DAG
 
 from common import slack
 from common.constants import (

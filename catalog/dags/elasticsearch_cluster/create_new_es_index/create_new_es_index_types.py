@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from datetime import timedelta
 
-from airflow.models import Variable
+from airflow.sdk import Variable
 
 from common.constants import PRODUCTION, STAGING
 from common.sensors.constants import ES_CONCURRENCY_TAGS

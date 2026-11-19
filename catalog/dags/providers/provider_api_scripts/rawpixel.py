@@ -20,7 +20,7 @@ import logging
 import re
 from urllib.parse import urlencode
 
-from airflow.models import Variable
+from airflow.sdk import Variable
 
 from common import constants
 from common.licenses import get_license_info

@@ -28,7 +28,7 @@ is unavailable for the time period during which the PR should be reviewed.
 
 from datetime import datetime, timedelta
 
-from airflow.models import DAG
+from airflow.sdk import DAG
 
 from common.constants import DAG_DEFAULT_ARGS
 from maintenance.pr_review_reminders import pr_review_reminders

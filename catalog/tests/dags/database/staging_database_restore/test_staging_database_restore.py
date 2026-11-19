@@ -2,9 +2,8 @@ from datetime import datetime, timedelta
 from unittest import mock
 
 import pytest
-from airflow import DAG
 from airflow.providers.amazon.aws.hooks.rds import RdsHook
-from airflow.utils.trigger_rule import TriggerRule
+from airflow.sdk import DAG, TriggerRule
 from tests.dags.database.staging_database_restore.data import (
     DESCRIBE_DB_INSTANCES_RESPONSE,
 )

@@ -4,7 +4,7 @@ import logging
 from collections.abc import Sequence
 from typing import NamedTuple
 
-from airflow.exceptions import AirflowSkipException
+from airflow.sdk.exceptions import AirflowSkipException
 
 from common.slack import send_message
 

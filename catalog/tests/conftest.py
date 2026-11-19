@@ -1,12 +1,13 @@
+import fcntl
+import json
+import tempfile
+from pathlib import Path
+
 # Registers the FAB `ab_user` table that `task_instance_note` references; without it,
 # deleting task instances fails to resolve the foreign key.
-import json
-
 import airflow.providers.fab.auth_manager.models  # noqa: F401
 import pytest
-from airflow.models import DagRun, Pool, TaskInstance
 from airflow.utils.json import XComDecoder, XComEncoder
-from airflow.utils.session import create_session
 
 
 def xcom_round_trip(value):
@@ -15,6 +16,30 @@ def xcom_round_trip(value):
     XCom. Tuples, including NamedTuples, come back as lists.
     """
     return json.loads(json.dumps(value, cls=XComEncoder), cls=XComDecoder)
+
+
+def run_dag_test(dag):
+    """
+    Run `dag.test()` on a DAG defined in a test.
+
+    `dag.test()` only serializes DAGs it finds by parsing the DAG bundle, so a DAG
+    built inside a test has to be written to the metadata database first, under a
+    bundle that is registered there. A fresh database, as on CI, has no bundles yet.
+
+    `dag.test()` also writes every DAG in the bundle to the database, so two xdist
+    workers running it at once collide on the `dag` table's primary key. A file lock
+    runs one at a time.
+    """
+    from airflow.dag_processing.bundles.manager import DagBundlesManager
+    from airflow.dag_processing.dagbag import DagBag, sync_bag_to_db
+
+    with open(Path(tempfile.gettempdir()) / "catalog-dag-test.lock", "w") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        DagBundlesManager().sync_bundles_to_db()
+        dagbag = DagBag(collect_dags=False, bundle_name="dags-folder")
+        dagbag.bag_dag(dag)
+        sync_bag_to_db(dagbag, "dags-folder", None)
+        return dag.test()
 
 
 def pytest_addoption(parser):
@@ -40,36 +65,3 @@ def pytest_addoption(parser):
 # Use this decorator on tests which are expected to take a long time and would best be
 # run on CI only
 mark_extended = pytest.mark.skipif("not config.getoption('extended')")
-
-
-def _normalize_test_module_name(request) -> str:
-    # Extract the test name
-    name = request.module.__name__
-    # Replace periods with two underscores
-    return name.replace(".", "__")
-
-
-@pytest.fixture
-def sample_dag_id_fixture(request):
-    return f"{_normalize_test_module_name(request)}_dag"
-
-
-@pytest.fixture
-def sample_pool_fixture(request):
-    return f"{_normalize_test_module_name(request)}_pool"
-
-
-@pytest.fixture
-def clean_db(sample_dag_id_fixture, sample_pool_fixture):
-    with create_session() as session:
-        # synchronize_session='fetch' required here to refresh models
-        # https://stackoverflow.com/a/51222378 CC BY-SA 4.0
-        session.query(DagRun).filter(
-            DagRun.dag_id.startswith(sample_dag_id_fixture)
-        ).delete(synchronize_session="fetch")
-        session.query(TaskInstance).filter(
-            TaskInstance.dag_id.startswith(sample_dag_id_fixture)
-        ).delete(synchronize_session="fetch")
-        session.query(Pool).filter(Pool.pool.startswith(sample_pool_fixture)).delete(
-            synchronize_session="fetch"
-        )

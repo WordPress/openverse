@@ -2,8 +2,8 @@ import logging
 from collections.abc import Collection
 from typing import Any, NamedTuple
 
-from airflow.exceptions import AirflowSkipException
-from airflow.models import Variable
+from airflow.sdk import Variable
+from airflow.sdk.exceptions import AirflowSkipException
 from requests_oauthlib import OAuth2Session
 
 
@@ -32,7 +32,7 @@ OAUTH_PROVIDERS = [
 
 def _var_get(key: str) -> dict[str, Any]:
     """Shortcut for Variable retrieval with deserialization and dictionary default."""
-    return Variable.get(key, default_var={}, deserialize_json=True)
+    return Variable.get(key, default={}, deserialize_json=True)
 
 
 def _update_tokens(

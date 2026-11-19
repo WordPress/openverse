@@ -20,7 +20,7 @@ def test_staging_schedule():
     for dag in [
         dag for dag in dagbag.dags.values() if "staging_data_refresh" in dag.tags
     ]:
-        assert dag.schedule_interval is None, (
+        assert dag.schedule is None, (
             "Staging data refresh DAGs must be on a `None` schedule"
             " or risk breaking the load_sample_data script."
         )

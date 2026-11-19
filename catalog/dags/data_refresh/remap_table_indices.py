@@ -7,7 +7,7 @@ This file contains TaskGroups related to rmampping the table indices from the li
 import logging
 from typing import TypedDict
 
-from airflow.decorators import task, task_group
+from airflow.sdk import task, task_group
 
 from common.sql import fetch_all, run_sql
 from data_refresh import queries

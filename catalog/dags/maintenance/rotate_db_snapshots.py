@@ -18,12 +18,12 @@ Requires two variables:
 import logging
 from datetime import datetime
 
-from airflow.decorators import dag, task
 from airflow.providers.amazon.aws.hooks.rds import RdsHook
 from airflow.providers.amazon.aws.operators.rds import RdsCreateDbSnapshotOperator
 from airflow.providers.amazon.aws.sensors.rds import RdsSnapshotExistenceSensor
+from airflow.sdk import dag, task
 
-from common.constants import AWS_RDS_CONN_ID, DAG_DEFAULT_ARGS
+from common.constants import AWS_RDS_CONN_ID, DAG_DEFAULT_ARGS, RUN_TS_NODASH_TEMPLATE
 
 
 logger = logging.getLogger(__name__)
@@ -90,7 +90,7 @@ def delete_previous_snapshots(db_identifier: str, snapshots_to_retain: int):
     render_template_as_native_obj=True,
 )
 def rotate_db_snapshots():
-    snapshot_id = f"{AIRFLOW_MANAGED_SNAPSHOT_ID_PREFIX}-{{{{ ts_nodash }}}}"
+    snapshot_id = f"{AIRFLOW_MANAGED_SNAPSHOT_ID_PREFIX}-{RUN_TS_NODASH_TEMPLATE}"
     db_identifier = "{{ var.value.CATALOG_RDS_DB_IDENTIFIER }}"
 
     create_db_snapshot = RdsCreateDbSnapshotOperator(

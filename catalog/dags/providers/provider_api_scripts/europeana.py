@@ -14,7 +14,7 @@ import functools
 import logging
 from datetime import UTC, datetime, timedelta
 
-from airflow.models import Variable
+from airflow.sdk import Variable
 
 import common
 from common.licenses import LicenseInfo, get_license_info
@@ -219,7 +219,7 @@ class EuropeanaDataIngester(ProviderDataIngester):
         self.cursor = None
 
         self.base_request_body = {
-            "wskey": Variable.get("API_KEY_EUROPEANA", default_var=None),
+            "wskey": Variable.get("API_KEY_EUROPEANA", default=None),
             "profile": "rich",
             "reusability": ["open", "restricted"],
             "sort": ["europeana_id+desc", "timestamp_created+desc"],
@@ -236,9 +236,7 @@ class EuropeanaDataIngester(ProviderDataIngester):
             "cursor": "*",
         }
 
-        self.item_params = {
-            "wskey": Variable.get("API_KEY_EUROPEANA", default_var=None)
-        }
+        self.item_params = {"wskey": Variable.get("API_KEY_EUROPEANA", default=None)}
         self.record_builder = EuropeanaRecordBuilder()
 
     def _get_timestamp_query_param(self, date):

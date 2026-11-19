@@ -12,9 +12,9 @@ the Data Refresh DAGs locally or in a development environment.
 
 import logging
 
-from airflow.exceptions import AirflowSkipException
-from airflow.models import Variable
 from airflow.providers.amazon.aws.hooks.base_aws import AwsBaseHook
+from airflow.sdk import Variable
+from airflow.sdk.exceptions import AirflowSkipException
 from botocore.exceptions import ClientError
 
 from common.constants import AWS_CLOUDWATCH_CONN_ID

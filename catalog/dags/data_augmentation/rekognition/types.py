@@ -1,7 +1,7 @@
 # Type definitions for the sample data
 from typing import TypedDict
 
-from psycopg2.extras import Json
+from psycopg.types.json import Json
 
 
 TagsBuffer: type = list[tuple[str, Json]]

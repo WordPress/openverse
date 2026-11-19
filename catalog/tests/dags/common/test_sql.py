@@ -1,12 +1,13 @@
 import logging
+from contextlib import closing
 from datetime import datetime, timedelta
 
 import pytest
-from psycopg2.errors import QueryCanceled
+from psycopg.errors import QueryCanceled
 
 from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
 from common.sql import PGExecuteQueryOperator, PostgresHook
-from tests.conftest import mark_extended
+from tests.conftest import mark_extended, run_dag_test
 
 
 logger = logging.getLogger(__name__)
@@ -34,20 +35,20 @@ HAPPY_TIMEOUT_PARAMETERS = [
         pytest.param(
             ["select 1;", "select 2;"],
             None,
-            [None, (1,), (2,)],
+            [(1,), (2,)],
             id="select_list_none_timeout",
         ),
         pytest.param(
             ["select 1;", "select 2;"],
             0,
-            [None, (1,), (2,)],
+            [(1,), (2,)],
             id="select_list_zero_timeout",
         ),
         pytest.param("select 1;", 10, (1,), id="select_1_with_timeout"),
         pytest.param(
             ["select 1;", "select 2;"],
             10,
-            [None, (1,), (2,)],
+            [(1,), (2,)],
             id="select_list_with_timeout",
         ),
     ],
@@ -148,35 +149,13 @@ def test_operator_passes_correct_timeout(execution_timeout, expected_result):
 # deprecated, but I haven't found a way to get it through with this function.
 @mark_extended
 def test_happy_paths_dag(mock_timeout_dag):
-    mock_timeout_dag.test()
+    run_dag_test(mock_timeout_dag)
 
 
-@pytest.fixture(scope="session")
-def happy_dag_run(mock_timeout_dag):
-    exec_dt = datetime.now()
-    interval = timedelta(hours=1)
-    return mock_timeout_dag.create_dagrun(
-        run_id=f"happy_dag_testing_{exec_dt.strftime('%y%m%d%H%M%S')}",
-        state="queued",
-        execution_date=exec_dt,
-        data_interval=(exec_dt - (2 * interval), exec_dt - interval),
-    )
-
-
-# Same timeout setting test as above, but this time in the context of an instantiated
-# dag run.
-@pytest.mark.parametrize("task_id, expected_timeout", HAPPY_TIMEOUT_PARAMETERS)
-def test_use_task_not_task_instance(task_id, expected_timeout, happy_dag_run):
-    with pytest.raises(AttributeError):
-        execution_timeout = happy_dag_run.get_task_instance(task_id).execution_timeout
-    execution_timeout = PostgresHook.get_execution_timeout(
-        happy_dag_run.get_dag().get_task(task_id)
-    )
-    assert execution_timeout == expected_timeout
-
-
-def test_run_statement_timeout():
+def test_PostgresHook_sets_statement_timeout_on_connection():
     pg = PostgresHook(default_statement_timeout=10)
-    pg.run_statement_timeout()
-    actual = pg.run(sql="show statement_timeout;", statement_timeout=0)
-    assert actual == ("10s",)
+
+    with closing(pg.get_conn()) as conn, closing(conn.cursor()) as cursor:
+        cursor.execute("show statement_timeout;")
+        assert cursor.fetchone() == ("10s",)
+    assert pg.run("show statement_timeout;", statement_timeout=5) == ("5s",)

@@ -1,8 +1,12 @@
+import json
 import logging
+from unittest import mock
 
 import psycopg2
 import pytest
-from airflow.models import Variable
+from airflow.sdk.definitions._internal.types import NOTSET
+from airflow.sdk.exceptions import AirflowRuntimeError, ErrorType
+from airflow.sdk.execution_time.comms import ErrorResponse, PutVariable
 
 from common.storage import columns as col
 from database.batched_update import constants
@@ -25,6 +29,47 @@ NOT_MATCHING_PROVIDER = "bar"
 OLD_TITLE = "old title"
 NEW_TITLE = "new title"
 LICENSE = "by"
+
+
+class FakeVariable:
+    """
+    Stand-in for `airflow.sdk.Variable`, whose `set` only works inside a running task.
+
+    Like the real one, it stores values as strings, rejects non-string values unless
+    `serialize_json` is set, and raises for a missing key without a default.
+    """
+
+    values: dict[str, str] = {}
+
+    @classmethod
+    def get(cls, key, default=NOTSET, deserialize_json=False):
+        if key not in cls.values:
+            if default is NOTSET:
+                raise AirflowRuntimeError(
+                    ErrorResponse(error=ErrorType.VARIABLE_NOT_FOUND, detail={})
+                )
+            return default
+        value = cls.values[key]
+        return json.loads(value) if deserialize_json else value
+
+    @classmethod
+    def set(cls, key, value, description=None, serialize_json=False):
+        if serialize_json:
+            value = json.dumps(value)
+        cls.values[key] = PutVariable(
+            key=key, value=value, description=description
+        ).value
+
+    @classmethod
+    def delete(cls, key):
+        cls.values.pop(key, None)
+
+
+@pytest.fixture(autouse=True)
+def fake_variable():
+    FakeVariable.values = {}
+    with mock.patch("database.batched_update.batched_update.Variable", FakeVariable):
+        yield FakeVariable
 
 
 @pytest.fixture
@@ -67,7 +112,7 @@ def postgres_with_image_and_temp_table(batch_start_var, image_table, temp_table)
 
     cur.execute(drop_table_query)
     # Drop the test airflow variable
-    Variable.delete(batch_start_var)
+    FakeVariable.delete(batch_start_var)
 
     cur.close()
     conn.commit()
@@ -271,7 +316,7 @@ def test_update_batches_resuming_from_batch_start(
 
     # Set the batch_start Airflow variable to 1, to skip the first
     # record
-    Variable.set(batch_start_var, 1)
+    FakeVariable.set(batch_start_var, 1, serialize_json=True)
 
     update_query = f"SET title='{NEW_TITLE}'"
     updated_count = update_batches.function(

@@ -19,8 +19,7 @@ the data refresh DAGs to execute the filtered index steps.
 from datetime import timedelta
 
 from airflow.providers.standard.operators.empty import EmptyOperator
-from airflow.utils.task_group import TaskGroup
-from airflow.utils.trigger_rule import TriggerRule
+from airflow.sdk import TaskGroup, TriggerRule
 
 from common import ingestion_server
 from common.constants import XCOM_PULL_TEMPLATE

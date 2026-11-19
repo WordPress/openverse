@@ -8,7 +8,7 @@ This file contains TaskGroups related to remapping the table constraints from th
 import logging
 from typing import TypedDict
 
-from airflow.decorators import task, task_group
+from airflow.sdk import task, task_group
 
 from common.sql import run_sql
 from data_refresh import queries

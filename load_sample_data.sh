@@ -22,7 +22,7 @@ if [[ ! $has_sensitive_terms_airflow_conn ]]; then
   grep "AIRFLOW_CONN_SENSITIVE_TERMS" catalog/env.template >>catalog/.env
 
   echo "Restarting Airflow to populate the new connection variable"
-  just dc restart webserver scheduler triggerer
+  just dc restart api-server scheduler triggerer dag-processor
 fi
 
 while getopts 'c' OPTION; do

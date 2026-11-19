@@ -13,7 +13,7 @@ These DAGs are not on a schedule, and should only be run manually when new
 SQL code is deployed for the calculation.
 """
 
-from airflow import DAG
+from airflow.sdk import DAG
 
 from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
 from popularity import sql

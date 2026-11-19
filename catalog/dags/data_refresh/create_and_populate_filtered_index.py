@@ -12,9 +12,8 @@ import logging
 import uuid
 from datetime import timedelta
 
-from airflow.decorators import task, task_group
 from airflow.providers.http.operators.http import HttpOperator
-from airflow.utils.trigger_rule import TriggerRule
+from airflow.sdk import TriggerRule, task, task_group
 from requests import Response
 
 from common import elasticsearch as es

@@ -12,12 +12,12 @@ import logging
 from datetime import timedelta
 from textwrap import dedent
 
-from airflow.decorators import dag, task
-from airflow.exceptions import AirflowSkipException
-from airflow.models.abstractoperator import AbstractOperator
-from airflow.models.param import Param
 from airflow.providers.standard.operators.trigger_dagrun import TriggerDagRunOperator
-from psycopg2._json import Json
+from airflow.sdk import BaseOperator, dag, task
+from airflow.sdk.definitions.param import Param
+from airflow.sdk.exceptions import AirflowSkipException
+from psycopg.sql import Literal
+from psycopg.types.json import Jsonb
 from tabulate import tabulate
 
 from common import slack
@@ -39,7 +39,7 @@ def run_sql(
     handler: callable = None,
     autocommit: bool = False,
     postgres_conn_id: str = POSTGRES_CONN_ID,
-    dag_task: AbstractOperator = None,
+    dag_task: BaseOperator = None,
 ):
     postgres = PostgresHook(
         postgres_conn_id=postgres_conn_id,
@@ -136,7 +136,7 @@ def get_license_conf(license_info) -> dict:
             f"AND meta_data->>'license_url' IS NULL"
         ),
         # Merge existing metadata with the new license_url
-        "update_query": f"SET updated_on = NOW(), meta_data = (meta_data || {Json(license_url_dict)}::jsonb)",
+        "update_query": f"SET updated_on = NOW(), meta_data = (meta_data || {Literal(Jsonb(license_url_dict)).as_string()})",
         "update_timeout": 259200,  # 3 days in seconds
         "dry_run": False,
         "resume_update": False,

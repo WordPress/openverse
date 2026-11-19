@@ -36,9 +36,8 @@ Because this DAG runs on the staging elasticsearch cluster, it does _not_ interf
 
 from datetime import datetime, timedelta
 
-from airflow.decorators import dag
-from airflow.models.param import Param
-from airflow.utils.trigger_rule import TriggerRule
+from airflow.sdk import TriggerRule, dag
+from airflow.sdk.definitions.param import Param
 
 from common import elasticsearch as es
 from common import slack
@@ -47,6 +46,7 @@ from common.constants import (
     DAG_DEFAULT_ARGS,
     MEDIA_TYPES,
     REFRESH_POKE_INTERVAL,
+    RUN_TS_NODASH_TEMPLATE,
     STAGING,
 )
 from common.sensors.constants import STAGING_ES_CONCURRENCY_TAG
@@ -123,7 +123,7 @@ def create_proportional_by_source_staging_index():
 
     destination_index_name = create_index.get_destination_index_name(
         media_type="{{ params.media_type }}",
-        current_datetime_str="{{ ts_nodash }}",
+        current_datetime_str=RUN_TS_NODASH_TEMPLATE,
         percentage_of_prod="{{ params.percentage_of_prod }}",
     )
 

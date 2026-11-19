@@ -11,13 +11,11 @@ from textwrap import dedent
 from urllib.parse import urlparse
 
 import requests
-from airflow.decorators import task, task_group
-from airflow.exceptions import AirflowSkipException
 from airflow.providers.amazon.aws.hooks.ec2 import EC2Hook
 from airflow.providers.common.sql.hooks.handlers import fetch_one_handler
 from airflow.providers.standard.operators.empty import EmptyOperator
-from airflow.sensors.base import PokeReturnValue
-from airflow.utils.trigger_rule import TriggerRule
+from airflow.sdk import PokeReturnValue, TriggerRule, task, task_group
+from airflow.sdk.exceptions import AirflowSkipException
 from requests import Response
 
 from common import elasticsearch as es

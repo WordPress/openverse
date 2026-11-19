@@ -111,13 +111,12 @@ es-concurrency group for the DAG's environment is running. (E.g., the
 
 import logging
 
-from airflow import DAG
-from airflow.models.param import Param
-from airflow.utils.trigger_rule import TriggerRule
+from airflow.sdk import DAG, TriggerRule
+from airflow.sdk.definitions.param import Param
 
 from common import elasticsearch as es
 from common import slack
-from common.constants import AUDIO, DAG_DEFAULT_ARGS, MEDIA_TYPES
+from common.constants import AUDIO, DAG_DEFAULT_ARGS, MEDIA_TYPES, RUN_DATE
 from common.sensors.utils import prevent_concurrency_with_dags_with_tag
 from elasticsearch_cluster.create_new_es_index.create_new_es_index import (
     GET_CURRENT_INDEX_CONFIG_TASK_NAME,
@@ -235,7 +234,7 @@ def create_new_es_index_dag(dag_config: CreateNewIndex):
 
         index_name = get_index_name(
             media_type="{{ params.media_type }}",
-            index_suffix="{{ params.index_suffix or ts_nodash }}",
+            index_suffix="{{ params.index_suffix or " + RUN_DATE + " | ts_nodash }}",
         )
 
         check_override = check_override_config(override="{{ params.override_config }}")

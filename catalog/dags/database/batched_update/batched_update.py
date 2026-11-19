@@ -1,9 +1,7 @@
 import logging
 from datetime import timedelta
 
-from airflow.decorators import task
-from airflow.models import Variable
-from airflow.models.abstractoperator import AbstractOperator
+from airflow.sdk import BaseOperator, Variable, task
 
 from common import slack
 from common.constants import POSTGRES_CONN_ID
@@ -55,7 +53,7 @@ def run_sql(
     query_id: str,
     log_sql: bool = True,
     postgres_conn_id: str = POSTGRES_CONN_ID,
-    task: AbstractOperator = None,
+    task: BaseOperator = None,
     timeout: timedelta = None,
     handler: callable = RETURN_ROW_COUNT,
     **kwargs,
@@ -94,7 +92,7 @@ def update_batches(
     update_timeout: int,
     batch_start_var: str,
     postgres_conn_id: str = POSTGRES_CONN_ID,
-    task: AbstractOperator = None,
+    task: BaseOperator = None,
     **kwargs,
 ):
     if total_row_count == 0:
@@ -132,7 +130,7 @@ def update_batches(
         batch_start = batch_end
 
         # Update the Airflow variable to the next value of batch_start.
-        Variable.set(batch_start_var, batch_end)
+        Variable.set(batch_start_var, batch_end, serialize_json=True)
 
         percent_complete = (min(batch_end, total_row_count) / total_row_count) * 100
         logger.info(

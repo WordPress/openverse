@@ -2,11 +2,9 @@ import json
 import logging
 
 import smart_open
-from airflow.decorators import task
-from airflow.models import Variable
 from airflow.providers.amazon.aws.hooks.s3 import S3Hook
-from airflow.utils.trigger_rule import TriggerRule
-from psycopg2.extras import Json
+from airflow.sdk import TriggerRule, Variable, task
+from psycopg.types.json import Json
 
 from common import slack
 from common.constants import AWS_CONN_ID
@@ -26,7 +24,7 @@ def resume_insertion():
     Variable is present, assume that the DAG is resuming from an existing run,
     otherwise assume a fresh run.
     """
-    if Variable.get(constants.CURRENT_POS_VAR_NAME, default_var=None):
+    if Variable.get(constants.CURRENT_POS_VAR_NAME, default=None):
         # Skip table creation and indexing
         return constants.NOTIFY_RESUME_TASK_ID
     return constants.NOTIFY_START_TASK_ID
@@ -79,7 +77,7 @@ def parse_and_insert_labels(
     total_skipped = 0
     known_offset = Variable.get(
         constants.CURRENT_POS_VAR_NAME,
-        default_var=None,
+        default=None,
         deserialize_json=True,
     )
 

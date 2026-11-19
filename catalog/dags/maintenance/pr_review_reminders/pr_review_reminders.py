@@ -3,7 +3,7 @@ import logging
 from collections import defaultdict
 from dataclasses import dataclass
 
-from airflow.decorators import task
+from airflow.sdk import task
 from requests import HTTPError
 
 from common.github import GitHubAPI

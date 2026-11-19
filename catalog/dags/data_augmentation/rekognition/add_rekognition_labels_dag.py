@@ -28,8 +28,8 @@ This DAG is idempotent and can be run multiple times without issue.
 import logging
 from datetime import timedelta
 
-from airflow.decorators import dag
 from airflow.providers.standard.operators.trigger_dagrun import TriggerDagRunOperator
+from airflow.sdk import dag
 
 from common.constants import DAG_DEFAULT_ARGS, POSTGRES_CONN_ID
 from common.slack import notify_slack

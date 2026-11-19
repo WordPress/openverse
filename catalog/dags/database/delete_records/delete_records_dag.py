@@ -52,8 +52,8 @@ DAGs are not currently running.
 
 import logging
 
-from airflow.decorators import dag
-from airflow.models.param import Param
+from airflow.sdk import dag
+from airflow.sdk.definitions.param import Param
 
 from common.constants import AUDIO, DAG_DEFAULT_ARGS, MEDIA_TYPES
 from database.delete_records import constants
