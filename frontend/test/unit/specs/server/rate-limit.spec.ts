@@ -5,6 +5,7 @@ import {
   getRateLimitChecks,
   getRateLimitedRequestKind,
   RateLimiter,
+  type ExceededWindow,
   type RateLimitConfig,
 } from "~~/server/utils/rate-limit"
 
@@ -114,6 +115,8 @@ describe("RateLimiter", () => {
     }
     expect(limiter.hit(checks)).toEqual({
       counter: "session",
+      keyHash: expect.any(String),
+      limit: config.sessionLimit,
       retryAfterSeconds: 60,
       isFirstExceeded: true,
     })
@@ -146,25 +149,96 @@ describe("RateLimiter", () => {
   it("does not store session IDs or IP addresses", () => {
     const limiter = new RateLimiter(60_000, () => 0)
     limiter.hit(checks)
-    const stored = JSON.stringify([
-      ...(
-        limiter as unknown as { windows: Map<string, unknown> }
-      ).windows.keys(),
-    ])
+    const stored = JSON.stringify(
+      [...(limiter as unknown as { windows: Map<string, unknown> }).windows],
+      (_, value) => (value instanceof Set ? [...value] : value)
+    )
     expect(stored).not.toContain("s1")
     expect(stored).not.toContain("1.1.1.1")
   })
 
-  it("reports the limited requests by counter", () => {
-    const limiter = new RateLimiter(60_000, () => 0)
+  it("reports each exceeded window once, when it ends", () => {
+    let now = 0
+    const reported: ExceededWindow[] = []
+    const limiter = new RateLimiter(
+      60_000,
+      () => now,
+      (window) => reported.push(window)
+    )
     for (let i = 0; i < config.sessionLimit + 2; i++) {
       limiter.hit(checks)
     }
-    expect(limiter.takeLimitedCounts()).toEqual({
-      session: 2,
-      "no-session": 0,
-      ip: 0,
+    expect(reported).toEqual([])
+
+    now = 60_000
+    limiter.hit(checks)
+    expect(reported).toEqual([
+      {
+        counter: "session",
+        keyHash: expect.any(String),
+        limit: config.sessionLimit,
+        windowSeconds: 60,
+        requests: config.sessionLimit + 2,
+        limitedRequests: 2,
+      },
+    ])
+  })
+
+  it("does not report windows under the limit", () => {
+    let now = 0
+    const reported: ExceededWindow[] = []
+    const limiter = new RateLimiter(
+      60_000,
+      () => now,
+      (window) => reported.push(window)
+    )
+    limiter.hit(checks)
+    now = 120_000
+    limiter.hit(checks)
+    expect(reported).toEqual([])
+  })
+
+  it("reports how many sessions shared an exceeded IP window", () => {
+    let now = 0
+    const reported: ExceededWindow[] = []
+    const limiter = new RateLimiter(
+      60_000,
+      () => now,
+      (window) => reported.push(window)
+    )
+    const hitAs = (sessionId: string | null) =>
+      limiter.hit(
+        getRateLimitChecks({ kind: "page", sessionId, ip: "1.1.1.1", config })
+      )
+    for (const sessionId of ["a", "a", "b", "c", null, null]) {
+      hitAs(sessionId)
+    }
+    now = 60_000
+    hitAs("a")
+    expect(reported).toEqual([
+      expect.objectContaining({
+        counter: "ip",
+        requests: 6,
+        limitedRequests: 1,
+        sessions: 3,
+        noSessionRequests: 2,
+      }),
+    ])
+  })
+
+  it("uses the same key hash for the counters of one IP address", () => {
+    const limiter = new RateLimiter(60_000, () => 0)
+    const noSessionChecks = getRateLimitChecks({
+      kind: "api",
+      sessionId: null,
+      ip: "1.1.1.1",
+      config: { ...config, ipLimit: 0 },
     })
-    expect(limiter.takeLimitedCounts().session).toEqual(0)
+    const ipResult = limiter.hit(noSessionChecks)
+    expect(ipResult?.counter).toEqual("ip")
+    const noSessionResult = limiter.hit(noSessionChecks)
+    expect(noSessionResult?.counter).toEqual("no-session")
+    expect(noSessionResult?.keyHash).toEqual(ipResult?.keyHash)
+    expect(ipResult?.keyHash).not.toContain("1.1.1.1")
   })
 })

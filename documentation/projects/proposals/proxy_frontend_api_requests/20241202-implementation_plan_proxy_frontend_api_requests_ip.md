@@ -229,6 +229,11 @@ should:
   and `SameSite=Lax`, and have a short maximum age. With `SameSite=Strict`,
   users arriving from an external link wouldn't send the cookie and would get a
   new session.
+- be replaced with a new session once it is older than half its maximum age, by
+  any SSR page or rate-limited request, so that people who keep a tab open for
+  longer than the maximum age keep a session. A `/api` request without a valid
+  session also starts one. h3 checks a session's age from its creation time, so
+  renewing it means starting a new one.
 
 ### Add the server plugin to initialize the Openverse API client and add it to the event context
 
@@ -353,11 +358,14 @@ Add the [counters](#counters) to the `/api` routes and to the pages that call
 the API, using a server middleware. Use a `runtimeConfig` setting to switch
 between logging and enforcing, and start with logging.
 
-- Read the client IP from the `X-Forwarded-For` entry added by our load
-  balancer. Earlier entries come from the client and can be faked.
+- Read the client IP from the `CF-Connecting-IP` header. The load balancer only
+  accepts HTTPS from Cloudflare, so clients can't set it themselves.
 - Identify in-process SSR calls in a way that a client can't fake.
 - Do not log session values or IP addresses. Log which counter a request hit and
-  whether it would have been limited.
+  whether it would have been limited, as one JSON line, so that CloudWatch Logs
+  Insights can query the fields. When a window that went over its limit ends,
+  log how many requests it counted and, for the per-IP ceiling, how many
+  sessions shared the address.
 - When enforcing, return a 429 with a `Retry-After` header. The frontend must
   show a clear message for this response, including on SSR pages.
 
