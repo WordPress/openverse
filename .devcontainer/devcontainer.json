@@ -3,7 +3,7 @@
 {
   "name": "Openverse",
 
-  "image": "mcr.microsoft.com/devcontainers/base:0-debian",
+  "image": "mcr.microsoft.com/devcontainers/base:2-debian",
 
   // Features to add to the dev container.
   // More info: https://containers.dev/features
