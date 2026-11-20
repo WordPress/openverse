@@ -93,7 +93,7 @@
     "json5": "^2.2.3",
     "npm-run-all2": "^7.0.0",
     "nuxt": "^4.6.3",
-    "rimraf": "^6.0.1",
+    "rimraf": "^6.1.4",
     "talkback": "^4.2.0",
     "typescript": "5.9.3",
     "vitest": "^5.0.0",
