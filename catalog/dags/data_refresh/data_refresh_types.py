@@ -134,7 +134,7 @@ DATA_REFRESH_CONFIGS = {
             downstream_table_name=IMAGE,
             tertiary_column_query=queries.TIMESTAMP_COLUMN_SETUP_QUERY,
         ),
-        dag_timeout=timedelta(days=4),
+        dag_timeout=timedelta(days=6),
         copy_data_timeout=timedelta(hours=12),
         add_primary_key_timeout=timedelta(hours=12),
         # Larger batches for image data refresh to avoid overloading XCOMs
@@ -143,7 +143,7 @@ DATA_REFRESH_CONFIGS = {
             default=DATA_REFRESH_ALTER_BATCH_SIZE,
             deserialize_json=True,
         ),
-        indexer_worker_timeout=timedelta(days=1),
+        indexer_worker_timeout=timedelta(days=3),
         concurrency_check_poke_interval=int(
             os.getenv("DATA_REFRESH_POKE_INTERVAL", 60 * 5)
         ),
