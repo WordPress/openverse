@@ -12,3 +12,7 @@ requires-python = "==3.12.*"
 
 [tool.uv]
 package = false
+# argostranslate pins stanza==1.10.1, which is affected by GHSA-v5jw-96jm-7h2c.
+override-dependencies = [
+    "stanza >= 1.12.2",
+]
