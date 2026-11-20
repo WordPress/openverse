@@ -15,7 +15,7 @@
       // TODO: Automatically populate this.
       "version": "3.11"
     },
-    "ghcr.io/devcontainers/features/node:1": {
+    "ghcr.io/devcontainers/features/node:2": {
       // Match the Node.js version defined in `package.json`.
       // TODO: Automatically populate this.
       "version": "26.13.1"
