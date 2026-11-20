@@ -6,7 +6,9 @@ import { createEvent, sealSession, type H3Event, type SessionConfig } from "h3"
 
 import {
   ensureSession,
+  getRequestSession,
   getSessionConfig,
+  renewSession,
   SESSION_MAX_AGE_SECONDS,
   SESSION_NAME,
   SESSION_RENEW_AFTER_SECONDS,
@@ -82,6 +84,29 @@ describe("ensureSession", () => {
     expect(event.context.sessions?.[SESSION_NAME].id).not.toEqual("existing")
   })
 
+  it("gives requests that renew the same session the same new one", async () => {
+    const cookie = await sessionCookie(SESSION_RENEW_AFTER_SECONDS + 1)
+    const events = [makeEvent(cookie), makeEvent(cookie)]
+    await Promise.all(events.map((event) => ensureSession(event, config)))
+    const [first, second] = events.map(
+      (event) => event.context.sessions?.[SESSION_NAME].id
+    )
+    expect(first).toEqual(second)
+  })
+
+  it("renews different sessions to different ones", async () => {
+    const ids = await Promise.all(
+      ["one", "two"].map(async (id) => {
+        const event = makeEvent(
+          await sessionCookie(SESSION_RENEW_AFTER_SECONDS + 1, id)
+        )
+        await ensureSession(event, config)
+        return event.context.sessions?.[SESSION_NAME].id
+      })
+    )
+    expect(ids[0]).not.toEqual(ids[1])
+  })
+
   it.each`
     name         | cookie
     ${"expired"} | ${() => sessionCookie(SESSION_MAX_AGE_SECONDS + 1)}
@@ -102,6 +127,20 @@ describe("ensureSession", () => {
     const event = makeEvent()
     await ensureSession(event, config)
     await ensureSession(event, config)
+    expect(getSetCookies(event)).toHaveLength(1)
+  })
+})
+
+describe("getRequestSession", () => {
+  it("reads the session without starting one", async () => {
+    const event = makeEvent()
+    expect(await getRequestSession(event, config)).toEqual({
+      id: null,
+      state: "none",
+    })
+    expect(getSetCookies(event)).toEqual([])
+
+    await renewSession(event, config)
     expect(getSetCookies(event)).toHaveLength(1)
   })
 })
