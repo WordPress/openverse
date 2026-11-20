@@ -2,14 +2,10 @@ import { useRuntimeConfig } from "nitropack/runtime"
 import {
   createError,
   defineEventHandler,
-  getCookie,
+  getRequestHeader,
   getRequestURL,
   setResponseHeader,
-  unsealSession,
-  type H3Event,
-  type SessionConfig,
 } from "h3"
-import { logger } from "~~/server/utils/logger"
 import { isInternalRequest } from "~~/server/utils/proxy"
 import {
   getClientIp,
@@ -20,26 +16,20 @@ import {
   type RateLimitConfig,
 } from "~~/server/utils/rate-limit"
 
-import { getSessionConfig } from "#shared/utils/session"
+import { ensureSession, getSessionConfig } from "#shared/utils/session"
 
 let limiter: RateLimiter | null = null
-let nextSummaryAt = 0
 
-const readSessionId = async (event: H3Event, config: SessionConfig | null) => {
-  if (!config?.name) {
-    return null
-  }
-  const sealed = getCookie(event, config.name)
-  if (!sealed) {
-    return null
-  }
-  try {
-    const session = await unsealSession(event, config, sealed)
-    return typeof session.id === "string" && session.id ? session.id : null
-  } catch {
-    // An expired or forged session is the same as no session.
-    return null
-  }
+/**
+ * Writes one JSON line, so that CloudWatch Logs Insights reads its fields.
+ * The logger formats objects over several lines, and each line becomes a
+ * separate CloudWatch event. Writing to stdout directly also skips the
+ * prefixes that a wrapped `console` adds.
+ */
+const logRateLimit = (event: string, fields: Record<string, unknown>) => {
+  process.stdout.write(
+    `${JSON.stringify({ log: "rate-limit", event, ...fields })}\n`
+  )
 }
 
 const toRateLimitConfig = (
@@ -55,7 +45,8 @@ const toRateLimitConfig = (
 /**
  * Limits the proxy routes and the pages that call the API during SSR.
  * In `log` mode, it only logs the requests that would be limited. Session
- * values and IP addresses are never logged.
+ * values and IP addresses are never logged, only short hashes that change
+ * with every Nuxt process.
  *
  * In-process SSR requests to the proxy routes are not counted, because their
  * page load is already counted.
@@ -68,38 +59,39 @@ export default defineEventHandler(async (event) => {
 
   const runtimeConfig = useRuntimeConfig(event)
   const config = toRateLimitConfig(runtimeConfig.rateLimit)
-  limiter ??= new RateLimiter(config.windowSeconds * 1000)
-
-  const sessionId = await readSessionId(
-    event,
-    getSessionConfig(
-      runtimeConfig.hmacSigningSecret,
-      runtimeConfig.public.deploymentEnv
-    )
+  const enforce = config.mode === "enforce"
+  limiter ??= new RateLimiter(config.windowSeconds * 1000, Date.now, (window) =>
+    logRateLimit("window", { ...window, enforced: enforce })
   )
+
+  const sessionConfig = getSessionConfig(
+    runtimeConfig.hmacSigningSecret,
+    runtimeConfig.public.deploymentEnv
+  )
+  // Before the limits, so that a limited response also renews the session.
+  const session = sessionConfig
+    ? await ensureSession(event, sessionConfig)
+    : { id: null, state: "none" as const }
+
   const ip = getIpRateLimitKey(getClientIp(event))
   const result = limiter.hit(
-    getRateLimitChecks({ kind, sessionId, ip, config })
+    getRateLimitChecks({ kind, sessionId: session.id, ip, config })
   )
-
-  const now = Date.now()
-  if (now >= nextSummaryAt) {
-    nextSummaryAt = now + config.windowSeconds * 1000
-    const counts = limiter.takeLimitedCounts()
-    if (Object.values(counts).some(Boolean)) {
-      logger.info("Rate limited requests by counter", counts)
-    }
-  }
-
   if (!result) {
     return
   }
 
-  const enforce = config.mode === "enforce"
   if (result.isFirstExceeded) {
-    logger.warn("Rate limit exceeded", {
+    logRateLimit("exceeded", {
       counter: result.counter,
+      keyHash: result.keyHash,
+      limit: result.limit,
+      windowSeconds: config.windowSeconds,
       requestKind: kind,
+      session: session.state,
+      // Without any cookie, the browser may block cookies.
+      hasCookies: Boolean(getRequestHeader(event, "cookie")),
+      country: getRequestHeader(event, "cf-ipcountry") ?? null,
       enforced: enforce,
     })
   }

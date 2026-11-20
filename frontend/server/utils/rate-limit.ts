@@ -18,13 +18,39 @@ export interface RateLimitCheck {
   counter: RateLimitCounter
   key: string
   limit: number
+  /**
+   * The session that made the request, for the per-IP ceiling. The window
+   * counts how many sessions it saw, to tell a shared address apart from a
+   * single client.
+   */
+  sessionId?: string | null
 }
 
 export interface RateLimitResult {
   counter: RateLimitCounter
+  /**
+   * A short hash of the session ID or IP address, which is the same for all
+   * the log lines of one key in this process.
+   */
+  keyHash: string
+  limit: number
   retryAfterSeconds: number
   /** Whether this is the first request over the limit in the window. */
   isFirstExceeded: boolean
+}
+
+/** A window that went over its limit, reported when it ends. */
+export interface ExceededWindow {
+  counter: RateLimitCounter
+  keyHash: string
+  limit: number
+  windowSeconds: number
+  requests: number
+  limitedRequests: number
+  /** Only for the per-IP ceiling. */
+  sessions?: number
+  /** Only for the per-IP ceiling: requests that had no valid session. */
+  noSessionRequests?: number
 }
 
 const PROXY_ROUTE_PATTERN =
@@ -106,9 +132,20 @@ export const getIpRateLimitKey = (ip: string) => {
     .join(":")}::/64`
 }
 
+/**
+ * The most sessions a window keeps track of, so that a client that sends many
+ * session cookies can't use up the memory.
+ */
+const MAX_TRACKED_SESSIONS = 10_000
+
 interface Window {
+  counter: RateLimitCounter
+  keyHash: string
+  limit: number
   count: number
   resetAt: number
+  sessions?: Set<string>
+  noSessionRequests?: number
 }
 
 /**
@@ -117,22 +154,25 @@ interface Window {
  * are keyed by their HMAC with a random key that is generated for each
  * limiter and never leaves the process. Expired counters are removed at the
  * first request after the end of the next window.
+ *
+ * Each window that went over its limit is passed to `onExceededWindow` when
+ * it ends: when the key's next window starts, or when it's removed.
  */
 export class RateLimiter {
   private windows = new Map<string, Window>()
-  private limited: Record<RateLimitCounter, number> = {
-    session: 0,
-    "no-session": 0,
-    ip: 0,
-  }
   private nextPruneAt = 0
 
   private hashKey = randomBytes(32)
 
   constructor(
     private windowMs: number,
-    private now: () => number = Date.now
+    private now: () => number = Date.now,
+    private onExceededWindow: (window: ExceededWindow) => void = () => {}
   ) {}
+
+  private hash(value: string) {
+    return createHmac("sha256", this.hashKey).update(value).digest("base64url")
+  }
 
   /**
    * Counts the request in every check and returns the first exceeded limit,
@@ -143,20 +183,39 @@ export class RateLimiter {
     this.prune(now)
 
     let result: RateLimitResult | null = null
-    for (const { counter, key, limit } of checks) {
-      const windowKey = createHmac("sha256", this.hashKey)
-        .update(`${counter}:${key}`)
-        .digest("base64url")
+    for (const { counter, key, limit, sessionId } of checks) {
+      const keyHash = this.hash(key)
+      const windowKey = `${counter}:${keyHash}`
       let window = this.windows.get(windowKey)
       if (!window || window.resetAt <= now) {
-        window = { count: 0, resetAt: now + this.windowMs }
+        if (window) {
+          this.report(window)
+        }
+        window = {
+          counter,
+          keyHash: keyHash.slice(0, 12),
+          limit,
+          count: 0,
+          resetAt: now + this.windowMs,
+        }
         this.windows.set(windowKey, window)
       }
       window.count += 1
+      if (sessionId !== undefined) {
+        if (!sessionId) {
+          window.noSessionRequests = (window.noSessionRequests ?? 0) + 1
+        } else {
+          window.sessions ??= new Set()
+          if (window.sessions.size < MAX_TRACKED_SESSIONS) {
+            window.sessions.add(this.hash(sessionId))
+          }
+        }
+      }
       if (!result && window.count > limit) {
-        this.limited[counter] += 1
         result = {
           counter,
+          keyHash: window.keyHash,
+          limit,
           retryAfterSeconds: Math.max(
             Math.ceil((window.resetAt - now) / 1000),
             1
@@ -168,18 +227,27 @@ export class RateLimiter {
     return result
   }
 
-  /**
-   * Returns the number of limited requests by counter since the last call,
-   * and resets them.
-   */
-  takeLimitedCounts() {
-    const counts = { ...this.limited }
-    this.limited = { session: 0, "no-session": 0, ip: 0 }
-    return counts
-  }
-
   get size() {
     return this.windows.size
+  }
+
+  private report(window: Window) {
+    if (window.count <= window.limit) {
+      return
+    }
+    const trackedSessions = window.counter === "ip"
+    this.onExceededWindow({
+      counter: window.counter,
+      keyHash: window.keyHash,
+      limit: window.limit,
+      windowSeconds: this.windowMs / 1000,
+      requests: window.count,
+      limitedRequests: window.count - window.limit,
+      ...(trackedSessions && {
+        sessions: window.sessions?.size ?? 0,
+        noSessionRequests: window.noSessionRequests ?? 0,
+      }),
+    })
   }
 
   private prune(now: number) {
@@ -188,6 +256,7 @@ export class RateLimiter {
     }
     for (const [key, window] of this.windows) {
       if (window.resetAt <= now) {
+        this.report(window)
         this.windows.delete(key)
       }
     }
@@ -228,6 +297,6 @@ export const getRateLimitChecks = ({
       limit: config.noSessionLimit,
     })
   }
-  checks.push({ counter: "ip", key: ip, limit: config.ipLimit })
+  checks.push({ counter: "ip", key: ip, limit: config.ipLimit, sessionId })
   return checks
 }
