@@ -121,14 +121,12 @@ useHead({
 
     <i18n-t scope="global" keypath="externalSourcesPage.new.content" tag="p">
       <template #issue>
-        <VLink
-          aria-label="issue"
-          href="https://github.com/WordPress/openverse/issues"
-          >{{ $t("externalSourcesPage.new.issue") }}</VLink
-        >
+        <VLink href="https://github.com/WordPress/openverse/issues">{{
+          $t("externalSourcesPage.new.issue")
+        }}</VLink>
       </template>
       <template #email>
-        <VLink aria-label="email" href="mailto:openverse@wordpress.org">{{
+        <VLink href="mailto:openverse@wordpress.org">{{
           $t("externalSourcesPage.new.email")
         }}</VLink>
       </template>
