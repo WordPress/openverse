@@ -178,6 +178,7 @@ describe("RateLimiter", () => {
         keyHash: expect.any(String),
         limit: config.sessionLimit,
         windowSeconds: 60,
+        windowEnd: "1970-01-01T00:01:00.000Z",
         requests: config.sessionLimit + 2,
         limitedRequests: 2,
       },
@@ -224,6 +225,68 @@ describe("RateLimiter", () => {
         noSessionRequests: 2,
       }),
     ])
+  })
+
+  it("counts a request over several limits as limited by the first one", () => {
+    let now = 0
+    const reported: ExceededWindow[] = []
+    const limiter = new RateLimiter(
+      60_000,
+      () => now,
+      (window) => reported.push(window)
+    )
+    for (let i = 0; i < config.ipLimit + 2; i++) {
+      limiter.hit(checks)
+    }
+    now = 60_000
+    limiter.hit(checks)
+    expect(reported).toEqual([
+      expect.objectContaining({
+        counter: "session",
+        requests: config.ipLimit + 2,
+        limitedRequests: config.ipLimit + 2 - config.sessionLimit,
+      }),
+      expect.objectContaining({
+        counter: "ip",
+        requests: config.ipLimit + 2,
+        limitedRequests: 0,
+      }),
+    ])
+  })
+
+  it("reports the ended windows when pruned without a request", () => {
+    let now = 0
+    const reported: ExceededWindow[] = []
+    const limiter = new RateLimiter(
+      60_000,
+      () => now,
+      (window) => reported.push(window)
+    )
+    for (let i = 0; i <= config.sessionLimit; i++) {
+      limiter.hit(checks)
+    }
+    limiter.prune()
+    expect(reported).toEqual([])
+
+    now = 60_000
+    limiter.prune()
+    expect(reported.map(({ counter }) => counter)).toEqual(["session"])
+    expect(limiter.size).toEqual(0)
+  })
+
+  it("reports the open exceeded windows when flushed", () => {
+    const reported: ExceededWindow[] = []
+    const limiter = new RateLimiter(
+      60_000,
+      () => 0,
+      (window) => reported.push(window)
+    )
+    for (let i = 0; i <= config.sessionLimit; i++) {
+      limiter.hit(checks)
+    }
+    limiter.flush()
+    expect(reported.map(({ counter }) => counter)).toEqual(["session"])
+    expect(limiter.size).toEqual(0)
   })
 
   it("uses the same key hash for the counters of one IP address", () => {

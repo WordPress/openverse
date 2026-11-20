@@ -1,4 +1,4 @@
-import { useRuntimeConfig } from "nitropack/runtime"
+import { useNitroApp, useRuntimeConfig } from "nitropack/runtime"
 import {
   createError,
   defineEventHandler,
@@ -16,7 +16,11 @@ import {
   type RateLimitConfig,
 } from "~~/server/utils/rate-limit"
 
-import { ensureSession, getSessionConfig } from "#shared/utils/session"
+import {
+  getRequestSession,
+  getSessionConfig,
+  renewSession,
+} from "#shared/utils/session"
 
 let limiter: RateLimiter | null = null
 
@@ -30,6 +34,24 @@ const logRateLimit = (event: string, fields: Record<string, unknown>) => {
   process.stdout.write(
     `${JSON.stringify({ log: "rate-limit", event, ...fields })}\n`
   )
+}
+
+/**
+ * The exceeded windows are logged after they end. The timer logs them within
+ * one more window on a task that gets no more requests, and the `close` hook
+ * logs the open ones before the task stops.
+ */
+const createLimiter = (windowMs: number, enforced: boolean) => {
+  const created = new RateLimiter(windowMs, Date.now, (window) =>
+    logRateLimit("window", { ...window, enforced })
+  )
+  const timer = setInterval(() => created.prune(), windowMs)
+  timer.unref()
+  useNitroApp().hooks.hookOnce("close", () => {
+    clearInterval(timer)
+    created.flush()
+  })
+  return created
 }
 
 const toRateLimitConfig = (
@@ -60,23 +82,26 @@ export default defineEventHandler(async (event) => {
   const runtimeConfig = useRuntimeConfig(event)
   const config = toRateLimitConfig(runtimeConfig.rateLimit)
   const enforce = config.mode === "enforce"
-  limiter ??= new RateLimiter(config.windowSeconds * 1000, Date.now, (window) =>
-    logRateLimit("window", { ...window, enforced: enforce })
-  )
+  limiter ??= createLimiter(config.windowSeconds * 1000, enforce)
 
   const sessionConfig = getSessionConfig(
     runtimeConfig.hmacSigningSecret,
     runtimeConfig.public.deploymentEnv
   )
-  // Before the limits, so that a limited response also renews the session.
   const session = sessionConfig
-    ? await ensureSession(event, sessionConfig)
+    ? await getRequestSession(event, sessionConfig)
     : { id: null, state: "none" as const }
 
   const ip = getIpRateLimitKey(getClientIp(event))
   const result = limiter.hit(
     getRateLimitChecks({ kind, sessionId: session.id, ip, config })
   )
+  const isRejected = Boolean(result) && enforce
+  // A rejected request doesn't start a session, so that a flood of requests
+  // without a session costs nothing more than counting them.
+  if (sessionConfig && !isRejected) {
+    await renewSession(event, sessionConfig)
+  }
   if (!result) {
     return
   }

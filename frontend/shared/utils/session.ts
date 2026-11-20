@@ -64,24 +64,67 @@ export interface RequestSession {
   state: RequestSessionState
 }
 
-const readRequestSession = async (
+interface ReadSession extends RequestSession {
+  createdAt?: number
+}
+
+const requestSessions = new WeakMap<H3Event, Promise<ReadSession>>()
+const sessionRenewals = new WeakMap<H3Event, Promise<void>>()
+
+const unsealRequestSession = async (
   event: H3Event,
   config: SessionConfig
-): Promise<{ state: RequestSessionState; id?: string; createdAt?: number }> => {
+): Promise<ReadSession> => {
   const sealed = getCookie(event, SESSION_NAME)
   if (!sealed) {
-    return { state: "none" }
+    return { id: null, state: "none" }
   }
   try {
     // Checks the seal and that the session is younger than `maxAge`.
     const { id, createdAt } = await unsealSession(event, config, sealed)
     if (typeof id === "string" && id && typeof createdAt === "number") {
-      return { state: "valid", id, createdAt }
+      return { id, state: "valid", createdAt }
     }
   } catch {
     // An expired or forged session is the same as no session.
   }
-  return { state: "invalid" }
+  return { id: null, state: "invalid" }
+}
+
+const readSession = (event: H3Event, config: SessionConfig) => {
+  let session = requestSessions.get(event)
+  if (!session) {
+    session = unsealRequestSession(event, config)
+    requestSessions.set(event, session)
+  }
+  return session
+}
+
+/**
+ * Returns the session that the request came with, without changing it. The
+ * result is cached for each request.
+ */
+export const getRequestSession = async (
+  event: H3Event,
+  config: SessionConfig
+): Promise<RequestSession> => {
+  const { id, state } = await readSession(event, config)
+  return { id, state }
+}
+
+/**
+ * Returns the ID of the session that replaces `id`. Requests that a tab sends
+ * together with one old session each renew it, and the browser keeps only one
+ * of their cookies. Deriving the ID gives them all the same new session.
+ */
+const getRenewedSessionId = async (id: string) => {
+  const digest = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(id)
+  )
+  return Array.from(new Uint8Array(digest), (byte) =>
+    byte.toString(16).padStart(2, "0")
+  ).join("")
 }
 
 /**
@@ -89,43 +132,54 @@ const readRequestSession = async (
  * its creation time, which `updateSession` keeps, so renewing a session means
  * starting a new one with a new ID.
  */
-const startSession = async (event: H3Event, config: SessionConfig) => {
+const startSession = async (
+  event: H3Event,
+  config: SessionConfig,
+  id: string
+) => {
   event.context.sessions ??= Object.create(null)
   event.context.sessions![SESSION_NAME] = {
-    id: crypto.randomUUID(),
+    id,
     createdAt: Date.now(),
     data: {},
   }
   await updateSession(event, config)
 }
 
-const requestSessions = new WeakMap<H3Event, Promise<RequestSession>>()
+/**
+ * Starts a new session in the response if the request has no valid session,
+ * or if its session is older than `SESSION_RENEW_AFTER_SECONDS`. It sets the
+ * cookie at most once for each request.
+ */
+export const renewSession = (event: H3Event, config: SessionConfig) => {
+  let renewal = sessionRenewals.get(event)
+  if (!renewal) {
+    renewal = (async () => {
+      const { id, createdAt } = await readSession(event, config)
+      if (!id) {
+        await startSession(event, config, crypto.randomUUID())
+      } else if (
+        Date.now() >=
+        (createdAt ?? 0) + SESSION_RENEW_AFTER_SECONDS * 1000
+      ) {
+        await startSession(event, config, await getRenewedSessionId(id))
+      }
+    })()
+    sessionRenewals.set(event, renewal)
+  }
+  return renewal
+}
 
 /**
- * Returns the session that the request came with, and starts a new one in the
- * response if the request has no valid session, or if its session is older
- * than `SESSION_RENEW_AFTER_SECONDS`.
+ * Returns the session that the request came with, and renews it.
  *
  * The rate limits count the request by the session it came with, so dropping
  * the cookie to get a new session doesn't help a client avoid them. A client
  * can already get a new session by loading a page; the per-IP ceiling limits
  * all of them together.
- *
- * The result is cached for each request, so the rate limit middleware and the
- * SSR plugin set the cookie at most once.
  */
-export const ensureSession = (event: H3Event, config: SessionConfig) => {
-  let result = requestSessions.get(event)
-  if (!result) {
-    result = (async () => {
-      const { state, id, createdAt } = await readRequestSession(event, config)
-      const renewAt = (createdAt ?? 0) + SESSION_RENEW_AFTER_SECONDS * 1000
-      if (state !== "valid" || Date.now() >= renewAt) {
-        await startSession(event, config)
-      }
-      return { id: id ?? null, state }
-    })()
-    requestSessions.set(event, result)
-  }
-  return result
+export const ensureSession = async (event: H3Event, config: SessionConfig) => {
+  const session = await getRequestSession(event, config)
+  await renewSession(event, config)
+  return session
 }

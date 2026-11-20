@@ -232,8 +232,10 @@ should:
 - be replaced with a new session once it is older than half its maximum age, by
   any SSR page or rate-limited request, so that people who keep a tab open for
   longer than the maximum age keep a session. A `/api` request without a valid
-  session also starts one. h3 checks a session's age from its creation time, so
-  renewing it means starting a new one.
+  session also starts one, unless the limits reject it. h3 checks a session's
+  age from its creation time, so renewing it means starting a new one. The new
+  session's ID is derived from the old one, so that requests sent together renew
+  it to the same session.
 
 ### Add the server plugin to initialize the Openverse API client and add it to the event context
 
@@ -363,9 +365,9 @@ between logging and enforcing, and start with logging.
 - Identify in-process SSR calls in a way that a client can't fake.
 - Do not log session values or IP addresses. Log which counter a request hit and
   whether it would have been limited, as one JSON line, so that CloudWatch Logs
-  Insights can query the fields. When a window that went over its limit ends,
-  log how many requests it counted and, for the per-IP ceiling, how many
-  sessions shared the address.
+  Insights can query the fields. After a window that went over its limit ends,
+  log when it ended, how many requests it counted, how many of them this counter
+  limited and, for the per-IP ceiling, how many sessions shared the address.
 - When enforcing, return a 429 with a `Retry-After` header. The frontend must
   show a clear message for this response, including on SSR pages.
 

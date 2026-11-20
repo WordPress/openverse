@@ -45,7 +45,14 @@ export interface ExceededWindow {
   keyHash: string
   limit: number
   windowSeconds: number
+  /** When the window ended, because it is reported later than that. */
+  windowEnd: string
   requests: number
+  /**
+   * The requests that this counter limited. A request over several limits is
+   * counted only by the first one, so the sum over the windows is the number
+   * of limited requests.
+   */
   limitedRequests: number
   /** Only for the per-IP ceiling. */
   sessions?: number
@@ -143,6 +150,7 @@ interface Window {
   keyHash: string
   limit: number
   count: number
+  limited: number
   resetAt: number
   sessions?: Set<string>
   noSessionRequests?: number
@@ -155,8 +163,9 @@ interface Window {
  * limiter and never leaves the process. Expired counters are removed at the
  * first request after the end of the next window.
  *
- * Each window that went over its limit is passed to `onExceededWindow` when
- * it ends: when the key's next window starts, or when it's removed.
+ * Each window that went over its limit is passed to `onExceededWindow` after
+ * it ends: when the key's next window starts, or when it's removed by `prune`
+ * or `flush`.
  */
 export class RateLimiter {
   private windows = new Map<string, Window>()
@@ -180,7 +189,9 @@ export class RateLimiter {
    */
   hit(checks: RateLimitCheck[]): RateLimitResult | null {
     const now = this.now()
-    this.prune(now)
+    if (now >= this.nextPruneAt) {
+      this.prune()
+    }
 
     let result: RateLimitResult | null = null
     for (const { counter, key, limit, sessionId } of checks) {
@@ -196,6 +207,7 @@ export class RateLimiter {
           keyHash: keyHash.slice(0, 12),
           limit,
           count: 0,
+          limited: 0,
           resetAt: now + this.windowMs,
         }
         this.windows.set(windowKey, window)
@@ -212,6 +224,7 @@ export class RateLimiter {
         }
       }
       if (!result && window.count > limit) {
+        window.limited += 1
         result = {
           counter,
           keyHash: window.keyHash,
@@ -241,8 +254,9 @@ export class RateLimiter {
       keyHash: window.keyHash,
       limit: window.limit,
       windowSeconds: this.windowMs / 1000,
+      windowEnd: new Date(window.resetAt).toISOString(),
       requests: window.count,
-      limitedRequests: window.count - window.limit,
+      limitedRequests: window.limited,
       ...(trackedSessions && {
         sessions: window.sessions?.size ?? 0,
         noSessionRequests: window.noSessionRequests ?? 0,
@@ -250,10 +264,13 @@ export class RateLimiter {
     })
   }
 
-  private prune(now: number) {
-    if (now < this.nextPruneAt) {
-      return
-    }
+  /**
+   * Removes the windows that ended. `hit` does this at most once per window;
+   * calling it on a timer reports the exceeded windows of a task that gets no
+   * more requests.
+   */
+  prune() {
+    const now = this.now()
     for (const [key, window] of this.windows) {
       if (window.resetAt <= now) {
         this.report(window)
@@ -261,6 +278,17 @@ export class RateLimiter {
       }
     }
     this.nextPruneAt = now + this.windowMs
+  }
+
+  /**
+   * Removes all the windows, including the ones that have not ended, so that
+   * the exceeded ones are reported before the process stops.
+   */
+  flush() {
+    for (const window of this.windows.values()) {
+      this.report(window)
+    }
+    this.windows.clear()
   }
 }
 
