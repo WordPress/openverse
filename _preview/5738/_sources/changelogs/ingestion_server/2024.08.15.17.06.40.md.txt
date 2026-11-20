@@ -1,0 +1,13 @@
+# 2024.08.15.17.06.40
+
+## New Features
+
+- Preemptively filter out Rekognition tags
+  ([#4667](https://github.com/WordPress/openverse/pull/4667)) by @AetherUnbound
+
+## Improvements
+
+- Remove the url cleanup steps from data refresh
+  ([#4727](https://github.com/WordPress/openverse/pull/4727)) by @obulat
+- Drop Elasticsearch throttling on Ingestion Server
+  ([#4683](https://github.com/WordPress/openverse/pull/4683)) by @krysal

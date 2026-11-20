@@ -1,0 +1,8 @@
+# 2026.11.15.00.30.07
+
+## Internal Improvements
+
+- Move the indexer worker from pdm to uv
+  ([#5713](https://github.com/WordPress/openverse/pull/5713)) by @obulat
+- Fix the data refresh filtered index timeout and leftover temp tables
+  ([#5720](https://github.com/WordPress/openverse/pull/5720)) by @obulat

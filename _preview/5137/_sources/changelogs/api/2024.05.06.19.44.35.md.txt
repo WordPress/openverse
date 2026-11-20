@@ -1,0 +1,13 @@
+# 2024.05.06.19.44.35
+
+## New Features
+
+- Update `openverse-attribution` with new features and improvements
+  ([#4250](https://github.com/WordPress/openverse/pull/4250)) by @dhruvkb
+- Add management command to send api move announcement email
+  ([#4229](https://github.com/WordPress/openverse/pull/4229)) by @sarayourfriend
+
+## Internal Improvements
+
+- Update docker.io/nginx Docker tag to v1.26.0
+  ([#4248](https://github.com/WordPress/openverse/pull/4248)) by @openverse-bot

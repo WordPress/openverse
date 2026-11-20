@@ -1,0 +1,29 @@
+# 2025.04.11.13.47.15
+
+## Internal Improvements
+
+- Update dependency vite to v6.0.14 [SECURITY]
+  ([#5393](https://github.com/WordPress/openverse/pull/5393)) by @openverse-bot
+- Update dependency nuxt to v3.16.0 [SECURITY]
+  ([#5390](https://github.com/WordPress/openverse/pull/5390)) by @openverse-bot
+- Update dependency prettier to v3.5.3
+  ([#5400](https://github.com/WordPress/openverse/pull/5400)) by @openverse-bot
+- Update dependency nock to v14.0.3
+  ([#5395](https://github.com/WordPress/openverse/pull/5395)) by @openverse-bot
+- Update dependency nock to v14.0.1
+  ([#5382](https://github.com/WordPress/openverse/pull/5382)) by @openverse-bot
+- Update dependency @pinia/nuxt to ^0.10.0
+  ([#5385](https://github.com/WordPress/openverse/pull/5385)) by @openverse-bot
+- Update dependency axios to v1.8.2 [SECURITY]
+  ([#5387](https://github.com/WordPress/openverse/pull/5387)) by @openverse-bot
+- Update dependency @octokit/rest to v21.1.1
+  ([#5380](https://github.com/WordPress/openverse/pull/5380)) by @openverse-bot
+- Update dependency vue-i18n to v11.1.2 [SECURITY]
+  ([#5386](https://github.com/WordPress/openverse/pull/5386)) by @openverse-bot
+- Update docker.io/nginx Docker tag to v1.27.4
+  ([#5383](https://github.com/WordPress/openverse/pull/5383)) by @openverse-bot
+
+## Bug Fixes
+
+- Move Head, Meta, Body props to `useHead`
+  ([#5378](https://github.com/WordPress/openverse/pull/5378)) by @obulat

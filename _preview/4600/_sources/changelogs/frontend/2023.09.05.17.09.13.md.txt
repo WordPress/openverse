@@ -1,0 +1,10 @@
+# 2023.09.05.17.09.13
+
+## Bug Fixes
+
+- Add a null/undefined check to audio VGridSkeleton
+  ([#2988](https://github.com/WordPress/openverse/pull/2988)) by @obulat
+- Add null check for images in loading skeleton
+  ([#2948](https://github.com/WordPress/openverse/pull/2948)) by @akhilsrivatsa
+- Wrap usage of `useSensitiveMedia` with `computed`
+  ([#2982](https://github.com/WordPress/openverse/pull/2982)) by @dhruvkb

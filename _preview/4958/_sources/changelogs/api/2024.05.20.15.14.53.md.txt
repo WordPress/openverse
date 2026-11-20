@@ -1,0 +1,22 @@
+# 2024.05.20.15.14.53
+
+## Improvements
+
+- Use openverse.org domains for Openverse API in all documentation
+  ([#4323](https://github.com/WordPress/openverse/pull/4323)) by @sarayourfriend
+
+## Internal Improvements
+
+- Prevent exposing Django Admin features referencing media tables in prod
+  ([#4349](https://github.com/WordPress/openverse/pull/4349)) by @AetherUnbound
+- Remove unnecessary write-time validating URLTextField
+  ([#4322](https://github.com/WordPress/openverse/pull/4322)) by @sarayourfriend
+
+## Bug Fixes
+
+- Fix stray use of `console` logger to `console_structured`
+  ([#4351](https://github.com/WordPress/openverse/pull/4351)) by @dhruvkb
+- Use explicit through table for media/decision many-to-many field
+  ([#4310](https://github.com/WordPress/openverse/pull/4310)) by @AetherUnbound
+- Force all API loggers to be structured
+  ([#4331](https://github.com/WordPress/openverse/pull/4331)) by @sarayourfriend

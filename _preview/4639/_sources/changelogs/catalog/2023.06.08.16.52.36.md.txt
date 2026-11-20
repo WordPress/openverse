@@ -1,0 +1,37 @@
+# 2023.06.08.16.52.36
+
+## New Features
+
+- Staging database restore DAG: base restore
+  ([#2099](https://github.com/WordPress/openverse/pull/2099)) by @AetherUnbound
+- Calculate standardized popularity during ingestion load_data
+  ([#2098](https://github.com/WordPress/openverse/pull/2098)) by @stacimc
+- Add `standardized_popularity` to Catalog media tables
+  ([#2096](https://github.com/WordPress/openverse/pull/2096)) by @stacimc
+
+## Improvements
+
+- Add instructions for skipping the database restore DAG to docs
+  ([#2307](https://github.com/WordPress/openverse/pull/2307)) by @AetherUnbound
+- Replace `media_url` with `url` in provider scripts
+  ([#1891](https://github.com/WordPress/openverse/pull/1891)) by @obulat
+
+## Internal Improvements
+
+- Bump apache-airflow[amazon,http,postgres] from 2.6.0 to 2.6.1 in /catalog
+  ([#2277](https://github.com/WordPress/openverse/pull/2277)) by @dependabot
+- Bump tldextract from 3.4.1 to 3.4.4 in /catalog
+  ([#2278](https://github.com/WordPress/openverse/pull/2278)) by @dependabot
+- Add ON_ERROR_STOP option for psql operations in upstream_db
+  ([#2123](https://github.com/WordPress/openverse/pull/2123)) by @AetherUnbound
+
+## Bug Fixes
+
+- Add DAG to remove Flickr thumbnails
+  ([#2302](https://github.com/WordPress/openverse/pull/2302)) by @krysal
+- Drop and recreate matview in data refresh
+  ([#2006](https://github.com/WordPress/openverse/pull/2006)) by @stacimc
+- Fix various issues that existed in the rotate_db_snapshots DAG
+  ([#2158](https://github.com/WordPress/openverse/pull/2158)) by @sarayourfriend
+- Skip the create filtered index steps that expect an index to already exist
+  ([#2106](https://github.com/WordPress/openverse/pull/2106)) by @AetherUnbound

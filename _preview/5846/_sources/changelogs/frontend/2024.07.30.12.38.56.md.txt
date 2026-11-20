@@ -1,0 +1,6 @@
+# 2024.07.30.12.38.56
+
+## Improvements
+
+- Migrate to Nuxt 3 ([#4257](https://github.com/WordPress/openverse/pull/4257))
+  by @obulat

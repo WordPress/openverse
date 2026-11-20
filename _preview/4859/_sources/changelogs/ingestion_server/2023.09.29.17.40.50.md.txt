@@ -1,0 +1,11 @@
+# 2023.09.29.17.40.50
+
+## Improvements
+
+- Refactor popularity SQL
+  ([#2964](https://github.com/WordPress/openverse/pull/2964)) by @stacimc
+
+## Bug Fixes
+
+- Upgrade ES dependencies to match cluster version
+  ([#3029](https://github.com/WordPress/openverse/pull/3029)) by @sarayourfriend

@@ -1,0 +1,43 @@
+# 2024.02.12.23.34.43
+
+```{note}
+The actual release corresponding to this tag is
+https://github.com/WordPress/openverse/releases/tag/frontend-2024.02.12.23.34.43.
+
+As noted in the release's description, the actual changes are from
+https://github.com/WordPress/openverse/releases/tag/frontend-2024.02.12.22.53.23.
+
+A one-time issue caused by testing a new version of the release workflow caused
+this drift, and it shouldn't occur again (or for other apps).
+```
+
+## New Features
+
+- Add source and provider definition tooltips
+  ([#3407](https://github.com/WordPress/openverse/pull/3407)) by @obulat
+
+## Improvements
+
+- Change outdated links in about page for codebase and project board to current
+  links ([#3768](https://github.com/WordPress/openverse/pull/3768)) by
+  @enteragoodusername
+
+## Internal Improvements
+
+- Add SEARCH_RESPONSE_TIME analytics event to searches
+  ([#3632](https://github.com/WordPress/openverse/pull/3632)) by @adjeiv
+- Update dependency @types/node to v18.19.14
+  ([#3734](https://github.com/WordPress/openverse/pull/3734)) by @openverse-bot
+- Update @openverse/eslint-plugin
+  ([#3737](https://github.com/WordPress/openverse/pull/3737)) by @openverse-bot
+- Replace dependency npm-run-all with npm-run-all2 ^6.1.2 (edited by @obulat)
+  ([#3733](https://github.com/WordPress/openverse/pull/3733)) by @openverse-bot
+- Update dependency @playwright/test to v1.41.2
+  ([#3738](https://github.com/WordPress/openverse/pull/3738)) by @openverse-bot
+
+## Bug Fixes
+
+- Revert Add SEARCH_RESPONSE_TIME analytics event to searches (#3632)
+  ([#3779](https://github.com/WordPress/openverse/pull/3779)) by @obulat
+- Fix flaky Playwright tests
+  ([#3759](https://github.com/WordPress/openverse/pull/3759)) by @obulat

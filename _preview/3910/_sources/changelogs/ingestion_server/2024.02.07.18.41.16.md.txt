@@ -1,0 +1,13 @@
+# 2024.02.07.18.41.16
+
+## Internal Improvements
+
+- Update dependency elasticsearch to v8.12.0
+  ([#3739](https://github.com/WordPress/openverse/pull/3739)) by @openverse-bot
+- Update docker.io/redis Docker tag to v7.2.4
+  ([#3735](https://github.com/WordPress/openverse/pull/3735)) by @openverse-bot
+
+## Bug Fixes
+
+- Enable the isort rules for ruff and fix linting issues
+  ([#3698](https://github.com/WordPress/openverse/pull/3698)) by @stacimc

@@ -1,0 +1,57 @@
+# 2023.12.20.22.19.13
+
+## New Features
+
+- Add DAG for ccMixter
+  ([#3479](https://github.com/WordPress/openverse/pull/3479)) by @dhruvkb
+- Add DAG for creating staging indices
+  ([#3232](https://github.com/WordPress/openverse/pull/3232)) by @stacimc
+
+## Improvements
+
+- Add external dag sensor utilities
+  ([#3482](https://github.com/WordPress/openverse/pull/3482)) by @stacimc
+- Unify DAG creation/database cleaning fixtures for testing
+  ([#3361](https://github.com/WordPress/openverse/pull/3361)) by @ngken0995
+- Fix path to test resources
+  ([#3476](https://github.com/WordPress/openverse/pull/3476)) by @dhruvkb
+- Add Internet Archive Book Images subprovider
+  ([#3441](https://github.com/WordPress/openverse/pull/3441)) by @stacimc
+- Update sample data to remove invalid licenses
+  ([#3478](https://github.com/WordPress/openverse/pull/3478)) by @stacimc
+
+## Internal Improvements
+
+- Update dependency apache-airflow to v2.7.3 [SECURITY]
+  ([#3535](https://github.com/WordPress/openverse/pull/3535)) by @openverse-bot
+- Revert "Remove mysql from apt repository sources for catalog due to expired
+  key (#3527)" ([#3536](https://github.com/WordPress/openverse/pull/3536)) by
+  @AetherUnbound
+- Rename catalog requirements files to match Renovate pattern
+  ([#3521](https://github.com/WordPress/openverse/pull/3521)) by @AetherUnbound
+- Add Jamendo's audiodownload_allowed field to metadata
+  ([#3524](https://github.com/WordPress/openverse/pull/3524)) by @stacimc
+- Unify DAG creation/database cleaning fixtures for testing
+  ([#3361](https://github.com/WordPress/openverse/pull/3361)) by @ngken0995
+- Remove mysql from apt repository sources for catalog due to expired key
+  ([#3527](https://github.com/WordPress/openverse/pull/3527)) by @AetherUnbound
+- Update catalog pgcli version to 4.0.1
+  ([#3522](https://github.com/WordPress/openverse/pull/3522)) by @AetherUnbound
+- Fix path to test resources
+  ([#3476](https://github.com/WordPress/openverse/pull/3476)) by @dhruvkb
+
+## Bug Fixes
+
+- Handle multiple leading zeros in ccMixter's JSON response
+  ([#3551](https://github.com/WordPress/openverse/pull/3551)) by @dhruvkb
+- Remove stray commas in the codebase
+  ([#3545](https://github.com/WordPress/openverse/pull/3545)) by @dhruvkb
+- Remove outdated pre-monorepo info from `README.md`
+  ([#3529](https://github.com/WordPress/openverse/pull/3529)) by
+  @lucasferrazlima
+- Extend Europeana timeout to 1 week
+  ([#3453](https://github.com/WordPress/openverse/pull/3453)) by @stacimc
+- Encode spaces in urls for SMK
+  ([#3439](https://github.com/WordPress/openverse/pull/3439)) by @stacimc
+- Fix incorrectly parsed license url by-nc-nd for Flickr
+  ([#3440](https://github.com/WordPress/openverse/pull/3440)) by @stacimc

@@ -1,0 +1,31 @@
+# 2024.09.04.19.31.19
+
+## New Features
+
+- DAG for generating and inserting Rekognition labels
+  ([#4836](https://github.com/WordPress/openverse/pull/4836)) by @AetherUnbound
+- Add reviewed Rekognition labels to project appendix
+  ([#4795](https://github.com/WordPress/openverse/pull/4795)) by @AetherUnbound
+- Add distributed reindex steps
+  ([#4572](https://github.com/WordPress/openverse/pull/4572)) by @stacimc
+
+## Improvements
+
+- Add specifics of Rekognition tag filtering to implementation plan
+  ([#4784](https://github.com/WordPress/openverse/pull/4784)) by @AetherUnbound
+
+## Internal Improvements
+
+- Update dependency elasticsearch to v8.15.0
+  ([#4847](https://github.com/WordPress/openverse/pull/4847)) by @openverse-bot
+- fix: Reduce timeouts for batched update
+  ([#4818](https://github.com/WordPress/openverse/pull/4818)) by @ChinoUkaegbu
+- Update DAG parsing tests, add tests for ensuring new DAGs are added
+  ([#4797](https://github.com/WordPress/openverse/pull/4797)) by @AetherUnbound
+
+## Bug Fixes
+
+- Increase Science Museum backoff timeout from 2 minutes to 30 minutes
+  ([#4857](https://github.com/WordPress/openverse/pull/4857)) by @AetherUnbound
+- Added 90% ES CPU alarms to those disabled for the data refresh
+  ([#4858](https://github.com/WordPress/openverse/pull/4858)) by @coson-lu

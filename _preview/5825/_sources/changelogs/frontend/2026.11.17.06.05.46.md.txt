@@ -1,0 +1,8 @@
+# 2026.11.17.06.05.46
+
+## Internal Improvements
+
+- Update dependency @nuxtjs/sitemap to v9
+  ([#5802](https://github.com/WordPress/openverse/pull/5802)) by @openverse-bot
+- Update dependency nuxt to v4.6.4 [SECURITY]
+  ([#5810](https://github.com/WordPress/openverse/pull/5810)) by @openverse-bot

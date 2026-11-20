@@ -1,0 +1,21 @@
+# 2026.11.13.08.48.39
+
+## Internal Improvements
+
+- Install pdm with its dependencies locked so upstream releases cannot break
+  builds ([#5689](https://github.com/WordPress/openverse/pull/5689)) by @dhruvkb
+- Pin CI tooling to restore build, lint, and image loading
+  ([#5602](https://github.com/WordPress/openverse/pull/5602)) by @ekamran
+- Update dependency elasticsearch to v8.18.1
+  ([#5398](https://github.com/WordPress/openverse/pull/5398)) by @openverse-bot
+- Update dependency ipython to v9
+  ([#5403](https://github.com/WordPress/openverse/pull/5403)) by @openverse-bot
+- Update dependency gunicorn to v23 [SECURITY]
+  ([#5391](https://github.com/WordPress/openverse/pull/5391)) by @openverse-bot
+
+## Bug Fixes
+
+- Install pdm with its dependencies locked so upstream releases cannot break
+  builds ([#5689](https://github.com/WordPress/openverse/pull/5689)) by @dhruvkb
+- Pin CI tooling to restore build, lint, and image loading
+  ([#5602](https://github.com/WordPress/openverse/pull/5602)) by @ekamran
