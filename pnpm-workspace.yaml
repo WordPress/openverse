@@ -21,6 +21,12 @@ allowBuilds:
 
 overrides:
   "@opentelemetry/api": ~1.10.0
+  # Security overrides for transitive dependencies whose parents still pin
+  # vulnerable ranges. Remove each one once its parents allow a patched version.
+  "@tailwindcss/typography>postcss-selector-parser": ^6.1.5
+  "talkback>uuid": ^11.1.1
+  "glob@>=9 <14.0.2": ^14.0.2
+  "minimatch@>=7 <11.0.1": ^11.0.5
 minimumReleaseAgeExclude:
   # Renovate security update: nuxt@4.6.4
   - nuxt@4.6.4
