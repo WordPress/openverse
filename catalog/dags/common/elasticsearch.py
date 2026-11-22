@@ -8,7 +8,7 @@ from airflow.providers.elasticsearch.hooks.elasticsearch import ElasticsearchPyt
 from airflow.providers.standard.triggers.temporal import TimeDeltaTrigger
 from airflow.sdk import BaseOperator, Connection, task, task_group
 from airflow.sdk.exceptions import AirflowFailException, AirflowSkipException
-from elasticsearch.exceptions import NotFoundError
+from elasticsearch.exceptions import ApiError, NotFoundError
 
 from common.constants import REFRESH_POKE_INTERVAL
 
@@ -482,12 +482,54 @@ def enable_replicas(es_host: str, index_names: list[str]):
     Give each index one replica of every shard. Indices are built without replicas
     to speed up reindexing, but serving one without them leaves a single copy of
     the data and half the shards to spread searches over.
+
+    A replica is never allocated to the node that holds its primary, so a cluster
+    with a single data node, like the local one, keeps its indices without
+    replicas. They would otherwise never turn green.
     """
     es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
+    data_nodes = es_conn.cluster.health()["number_of_data_nodes"]
+    replicas = 1 if data_nodes > 1 else 0
+    if not replicas:
+        logger.info(
+            f"The cluster has {data_nodes} data node(s), so {index_names} are left "
+            "without replicas."
+        )
     return es_conn.indices.put_settings(
         index=",".join(index_names),
-        settings={"index": {"number_of_replicas": 1}},
+        settings={"index": {"number_of_replicas": replicas}},
     ).body
+
+
+def _log_unassigned_reason(es_conn, index_names: list[str]):
+    """Log why Elasticsearch has not allocated one of the unassigned shards."""
+    shards = es_conn.cat.shards(
+        index=",".join(index_names), h="index,shard,prirep,state", format="json"
+    )
+    shard = next((s for s in shards if s["state"] == "UNASSIGNED"), None)
+    if shard is None:
+        return
+    try:
+        explanation = es_conn.cluster.allocation_explain(
+            index=shard["index"],
+            shard=int(shard["shard"]),
+            primary=shard["prirep"] == "p",
+        )
+    except ApiError as err:
+        # The shard may have been assigned since it was listed.
+        logger.info(f"Could not explain the allocation of {shard}: {err}")
+        return
+    reasons = sorted(
+        {
+            decider["explanation"]
+            for node in explanation.get("node_allocation_decisions", [])
+            for decider in node.get("deciders", [])
+        }
+    )
+    logger.info(
+        f"Shard {shard['shard']} of {shard['index']} is unassigned "
+        f"({explanation.get('allocate_explanation')}): {reasons}"
+    )
 
 
 @task.sensor(mode="reschedule")
@@ -500,6 +542,8 @@ def wait_for_green_indices(es_host: str, index_names: list[str]) -> bool:
         f"{health['initializing_shards']} shards initializing, "
         f"{health['unassigned_shards']} unassigned."
     )
+    if health["unassigned_shards"]:
+        _log_unassigned_reason(es_conn, index_names)
     return health["status"] == "green"
 
 

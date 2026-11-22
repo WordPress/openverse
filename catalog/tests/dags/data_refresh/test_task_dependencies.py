@@ -97,3 +97,13 @@ def test_dependenceis_promote_filtered_index_task():
             "promote_tables.promote_table.promote",
         ],
     )
+
+
+def test_alarms_do_not_wait_for_replicas():
+    dag = DagBag().get_dag("staging_image_data_refresh")
+    upstream_tasks = dag.get_task(
+        "enable_sensitive_cloudwatch_alarms"
+    ).get_flat_relative_ids(upstream=True)
+
+    assert "create_and_populate_filtered_index.refresh_index" in upstream_tasks
+    assert "wait_for_green_indices" not in upstream_tasks

@@ -258,8 +258,8 @@ def create_data_refresh_dag(
             timeout=data_refresh_config.index_readiness_timeout.total_seconds(),
         )(es_host=es_host, index_names=new_indices)
 
-        # Re-enable Cloudwatch alarms once reindexing and replication are complete,
-        # even if they failed.
+        # Re-enable Cloudwatch alarms once reindexing is complete, even if it
+        # failed.
         enable_alarms = PythonOperator(
             task_id="enable_sensitive_cloudwatch_alarms",
             python_callable=cloudwatch.enable_or_disable_alarms,
@@ -327,8 +327,10 @@ def create_data_refresh_dag(
             >> replicas
             >> replicas_ready
         )
+        # The alarms only cover reindexing, so they don't wait for the replicas
+        filtered_index >> enable_alarms
         # Table promotion must not run if reindexing or replication failed
-        replicas_ready >> [enable_alarms, promote_table]
+        replicas_ready >> promote_table
         promote_table >> [promote_index, promote_filtered_index]
         promote_index >> after_record_count >> report_counts
 

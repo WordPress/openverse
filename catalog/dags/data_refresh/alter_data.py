@@ -9,7 +9,8 @@ minimum accuracy, are malformed, or are from unvetted providers.
 The filtering runs as one `UPDATE` per batch of ids inside the API database, so no
 rows are loaded into the Airflow worker. The id range is split into a fixed number
 of mapped tasks, each of which works through its share in batches, so the number of
-tasks doesn't grow with the table.
+tasks doesn't grow with the table. Each task records the batches it has committed in
+an Airflow variable, so a retry carries on from where the last attempt stopped.
 """
 
 import logging
@@ -20,7 +21,7 @@ from airflow.providers.common.sql.hooks.handlers import (
     fetch_all_handler,
     fetch_one_handler,
 )
-from airflow.sdk import BaseOperator, task, task_group
+from airflow.sdk import BaseOperator, Variable, task, task_group
 
 from common.constants import POSTGRES_API_CONN_IDS, Environment
 from common.sql import PGExecuteQueryOperator, PostgresHook
@@ -112,11 +113,25 @@ def get_tag_filter_parameters() -> dict:
     }
 
 
+def get_progress_variable(progress_prefix: str, map_index: int) -> str:
+    return f"{progress_prefix}_{map_index}"
+
+
 @task
 def get_alter_ranges(
-    id_bounds: tuple[int | None, int | None], range_count: int = ALTER_DATA_RANGE_COUNT
+    id_bounds: tuple[int | None, int | None],
+    progress_prefix: str,
+    range_count: int = ALTER_DATA_RANGE_COUNT,
 ) -> list[tuple[int, int]]:
-    """Split the ids into at most `range_count` contiguous, inclusive ranges."""
+    """
+    Split the ids into at most `range_count` contiguous, inclusive ranges.
+
+    This runs once for each copy of the temp table, so it also drops the progress
+    that `alter_data_range` recorded against an earlier copy.
+    """
+    for map_index in range(range_count):
+        Variable.delete(get_progress_variable(progress_prefix, map_index))
+
     start, stop = id_bounds
     if start is None or stop is None:
         logger.info("The table is empty, so there is no data to alter.")
@@ -140,12 +155,17 @@ def alter_data_range(
     batch_size: int | None,
     temp_table: str,
     postgres_conn_id: str,
+    progress_prefix: str,
+    ti=None,
     task: BaseOperator = None,
     timeout: float = None,
 ) -> int:
     """
     Filter the tags of the rows in `id_range`, one `UPDATE` and commit per batch,
     and return how many rows were altered.
+
+    The next id to alter and the running count are saved after each batch, so that
+    a retry neither repeats the committed batches nor loses their count.
     """
     postgres = PostgresHook(
         postgres_conn_id=postgres_conn_id,
@@ -153,9 +173,18 @@ def alter_data_range(
             timeout if timeout else PostgresHook.get_execution_timeout(task)
         ),
     )
-    total = 0
+    progress_variable = get_progress_variable(progress_prefix, ti.map_index)
+    progress = Variable.get(
+        progress_variable,
+        {"next_start": id_range[0], "altered": 0},
+        deserialize_json=True,
+    )
+    next_start, total = progress["next_start"], progress["altered"]
+    if next_start != id_range[0]:
+        logger.info(f"Resuming {id_range} at {next_start}: {total} records altered")
+
     for batch_start, batch_end in get_batches(
-        id_range, batch_size or DEFAULT_BATCH_SIZE
+        (next_start, id_range[1]), batch_size or DEFAULT_BATCH_SIZE
     ):
         altered = postgres.run(
             QUERY_FILTER_TAGS.format(temp_table=temp_table),
@@ -174,6 +203,13 @@ def alter_data_range(
             f"({batch_start}, {batch_end})"
         )
         total += len(altered)
+        Variable.set(
+            progress_variable,
+            {"next_start": batch_end + 1, "altered": total},
+            serialize_json=True,
+        )
+
+    Variable.delete(progress_variable)
     return total
 
 
@@ -201,7 +237,10 @@ def alter_table_data(
         return_last=True,
     )
 
-    ranges = get_alter_ranges(estimated_record_count.output)
+    progress_prefix = f"{postgres_conn_id}_{temp_table}_alter_data_progress"
+    ranges = get_alter_ranges(
+        estimated_record_count.output, progress_prefix=progress_prefix
+    )
 
     alter_data = (
         alter_data_range.override(
@@ -211,6 +250,7 @@ def alter_table_data(
             batch_size=data_refresh_config.alter_data_batch_size,
             temp_table=temp_table,
             postgres_conn_id=postgres_conn_id,
+            progress_prefix=progress_prefix,
         )
         .expand(id_range=ranges)
     )
