@@ -30,6 +30,27 @@ def response_filter_sensitive_terms_endpoint(response: Response) -> list[str]:
     return [term.decode("utf-8").strip() for term in response.iter_lines()]
 
 
+def sensitive_terms_clauses(sensitive_terms) -> list[dict]:
+    """
+    One `terms` query per field that may hold sensitive terms. The `.raw` subfields
+    use the standard analyzer, so a term matches one lowercased word of the field.
+    """
+    return [
+        {"terms": {f"{field}.raw": sensitive_terms}}
+        for field in ["tags.name", "title", "description"]
+    ]
+
+
+def get_sensitive_terms() -> HttpOperator:
+    return HttpOperator(
+        task_id="get_sensitive_terms",
+        http_conn_id=SENSITIVE_TERMS_CONN_ID,
+        method="GET",
+        response_check=lambda response: response.status_code == 200,
+        response_filter=response_filter_sensitive_terms_endpoint,
+    )
+
+
 @task(trigger_rule=TriggerRule.NONE_FAILED)
 def get_filtered_index_name(media_type: str, destination_index_name: str) -> str:
     # If a destination index name is explicitly passed, use it.
@@ -69,13 +90,7 @@ def create_and_populate_filtered_index(
         exist_ok=True,
     )
 
-    sensitive_terms = HttpOperator(
-        task_id="get_sensitive_terms",
-        http_conn_id=SENSITIVE_TERMS_CONN_ID,
-        method="GET",
-        response_check=lambda response: response.status_code == 200,
-        response_filter=response_filter_sensitive_terms_endpoint,
-    )
+    sensitive_terms = get_sensitive_terms()
 
     populate_filtered_index = es.trigger_and_wait_for_reindex(
         es_host=es_host,
@@ -88,15 +103,7 @@ def create_and_populate_filtered_index(
         # searches to every shard, so ES_INDEX_THROTTLING_RATE is the more direct
         # way to reduce load.
         slices="{{ var.value.get('ES_FILTERED_INDEX_REINDEX_SLICES', 'auto') }}",
-        query={
-            "bool": {
-                "must_not": [
-                    # Use `terms` query for exact matching against unanalyzed raw fields
-                    {"terms": {f"{field}.raw": sensitive_terms.output}}
-                    for field in ["tags.name", "title", "description"]
-                ]
-            }
-        },
+        query={"bool": {"must_not": sensitive_terms_clauses(sensitive_terms.output)}},
         refresh=False,
         poke_interval=poke_interval,
     )
@@ -105,3 +112,48 @@ def create_and_populate_filtered_index(
 
     # sensitive_terms >> populate_filtered_index
     create_filtered_index >> sensitive_terms >> populate_filtered_index >> refresh_index
+
+
+@task_group(group_id="filter_sensitive_documents")
+def filter_sensitive_documents(
+    es_host: str,
+    origin_index_name: str,
+    filtered_index_name: str,
+    timeout: timedelta,
+    poke_interval: int,
+):
+    """
+    Delete the documents with sensitive terms from a filtered index that the indexer
+    workers filled with a copy of every document in the origin index.
+
+    The filtered index must hold exactly the origin index's documents first. An
+    indexer worker that doesn't know about the filtered index leaves it empty, and
+    promoting that would hide every result from default searches.
+    """
+    sensitive_terms = get_sensitive_terms()
+
+    refresh_before = es.refresh_index.override(task_id="refresh_before_filtering")(
+        es_host=es_host, index_name=filtered_index_name
+    )
+
+    same_count = es.assert_same_document_count(
+        es_host=es_host, index=origin_index_name, other_index=filtered_index_name
+    )
+
+    delete_sensitive = es.trigger_and_wait_for_delete_by_query(
+        es_host=es_host,
+        index=filtered_index_name,
+        query={
+            "bool": {
+                "should": sensitive_terms_clauses(sensitive_terms.output),
+                "minimum_should_match": 1,
+            }
+        },
+        timeout=timeout,
+        requests_per_second="{{ var.value.get('ES_INDEX_THROTTLING_RATE', 20_000) }}",
+        poke_interval=poke_interval,
+    )
+
+    refresh_after = es.refresh_index(es_host=es_host, index_name=filtered_index_name)
+
+    sensitive_terms >> refresh_before >> same_count >> delete_sensitive >> refresh_after

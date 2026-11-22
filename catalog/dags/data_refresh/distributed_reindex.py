@@ -324,6 +324,7 @@ def assert_reindexing_success() -> EmptyOperator:
 def reindex(
     data_refresh_config: DataRefreshConfig,
     target_index: str,
+    filtered_target_index: str,
     launch_template_version_number: int | str,
     start_id: int,
     end_id: int,
@@ -358,6 +359,7 @@ def reindex(
             "model_name": data_refresh_config.media_type,
             "table_name": data_refresh_config.table_mapping.temp_table_name,
             "target_index": target_index,
+            "filtered_target_index": filtered_target_index,
             "start_id": start_id,
             "end_id": end_id,
         },
@@ -390,9 +392,13 @@ def perform_distributed_reindex(
     environment: str,
     target_environment: Environment,
     target_index: str,
+    filtered_target_index: str,
     data_refresh_config: DataRefreshConfig,
 ):
-    """Perform the distributed reindex on a fleet of remote indexer workers."""
+    """
+    Perform the distributed reindex on a fleet of remote indexer workers. Each
+    worker writes every document to both the target and the filtered target index.
+    """
     id_range = PGExecuteQueryOperator(
         task_id="get_record_id_range",
         conn_id=POSTGRES_API_CONN_IDS.get(target_environment),
@@ -422,6 +428,7 @@ def perform_distributed_reindex(
     perform_reindex = reindex.partial(
         data_refresh_config=data_refresh_config,
         target_index=target_index,
+        filtered_target_index=filtered_target_index,
         launch_template_version_number=launch_template_version_number,
         environment=environment,
         target_environment=target_environment,

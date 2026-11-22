@@ -6,9 +6,9 @@ This file generates our data refresh DAGs for each media type and environment us
 The data refresh has the following high level steps:
 
 * Copy Data: An FDW extension is used to connect the API database to the upstream (catalog) database. The entire contents of the upstream media table are copied into a new temp table in the API database. This temp table will later replace the main media table in the API.
-* Create Index: Create a new Elasticsearch index, matching the configuration of the existing media index.
-* Distributed Reindex: Convert each record from the new temp table to the format required by an Elasticsearch document, and then reindex them into the newly created index.
-* Create and Populate Filtered Index: Create a new Elasticsearch index matching the configuration of the existing filtered index, and then reindex documents into it from the new media index, applying appropriate filtering for sensitive terms.
+* Create Indices: Create a new Elasticsearch media index and a new filtered index, matching the configuration of the existing media index.
+* Distributed Reindex: Convert each record from the new temp table to the format required by an Elasticsearch document, and then write it to both new indices.
+* Filter Sensitive Documents: Check that both new indices hold the same documents, and then delete the documents with sensitive terms from the filtered index.
 * Enable Replicas: Give both new indices a replica of every shard, and wait for the replicas to be allocated.
 * Reapply Constraints: Recreate indices and constraints from the original API tables on the new temp tables.
 * Promote Table: Drop the old media table in the API and rename the temp table and its indices, which has the effect of promoting them/replacing the old table.
@@ -52,7 +52,7 @@ from common.sensors.utils import wait_for_external_dags_with_tag
 from data_refresh.alter_data import alter_table_data
 from data_refresh.copy_data import copy_upstream_tables
 from data_refresh.create_and_populate_filtered_index import (
-    create_and_populate_filtered_index,
+    filter_sensitive_documents,
     get_filtered_index_name,
 )
 from data_refresh.data_refresh_types import DATA_REFRESH_CONFIGS, DataRefreshConfig
@@ -207,11 +207,26 @@ def create_data_refresh_dag(
             index_suffix="{{ params.index_suffix }}",
         )
 
+        filtered_index_name = get_filtered_index_name(
+            media_type=data_refresh_config.media_type,
+            destination_index_name=f"{target_index_name}-filtered",
+        )
+
         # Create a new temporary index based off the configuration of the existing media index.
         # This will later replace the live index.
         target_index = es.create_index(
             index_config={
                 "index": target_index_name,
+                "body": index_settings(data_refresh_config.media_type),
+            },
+            es_host=es_host,
+        )
+
+        filtered_index_created = es.create_index.override(
+            task_id="create_filtered_index"
+        )(
+            index_config={
+                "index": filtered_index_name,
                 "body": index_settings(data_refresh_config.media_type),
             },
             es_host=es_host,
@@ -233,18 +248,12 @@ def create_data_refresh_dag(
             environment="{{ var.value.ENVIRONMENT }}",
             target_environment=target_environment,
             target_index=target_index_name,
+            filtered_target_index=filtered_index_name,
             data_refresh_config=data_refresh_config,
         )
 
-        filtered_index_name = get_filtered_index_name(
-            media_type=data_refresh_config.media_type,
-            destination_index_name=f"{target_index_name}-filtered",
-        )
-
-        # Create and populate the filtered index
-        filtered_index = create_and_populate_filtered_index(
+        filtered_index = filter_sensitive_documents(
             es_host=es_host,
-            media_type=data_refresh_config.media_type,
             origin_index_name=target_index_name,
             filtered_index_name=filtered_index_name,
             timeout=data_refresh_config.create_filtered_index_timeout,
@@ -319,10 +328,11 @@ def create_data_refresh_dag(
             >> copy_data
             >> alter_data
             >> target_index_name
+            >> filtered_index_name
             >> target_index
+            >> filtered_index_created
             >> disable_alarms
             >> reindex
-            >> filtered_index_name
             >> filtered_index
             >> replicas
             >> replicas_ready

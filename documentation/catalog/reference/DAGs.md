@@ -1342,15 +1342,13 @@ The data refresh has the following high level steps:
   upstream (catalog) database. The entire contents of the upstream media table
   are copied into a new temp table in the API database. This temp table will
   later replace the main media table in the API.
-- Create Index: Create a new Elasticsearch index, matching the configuration of
-  the existing media index.
+- Create Indices: Create a new Elasticsearch media index and a new filtered
+  index, matching the configuration of the existing media index.
 - Distributed Reindex: Convert each record from the new temp table to the format
-  required by an Elasticsearch document, and then reindex them into the newly
-  created index.
-- Create and Populate Filtered Index: Create a new Elasticsearch index matching
-  the configuration of the existing filtered index, and then reindex documents
-  into it from the new media index, applying appropriate filtering for sensitive
-  terms.
+  required by an Elasticsearch document, and then write it to both new indices.
+- Filter Sensitive Documents: Check that both new indices hold the same
+  documents, and then delete the documents with sensitive terms from the
+  filtered index.
 - Enable Replicas: Give both new indices a replica of every shard, and wait for
   the replicas to be allocated.
 - Reapply Constraints: Recreate indices and constraints from the original API
