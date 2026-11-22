@@ -302,3 +302,34 @@ def test_create_index_does_not_reuse_aliased_index(monkeypatch):
         es.create_index.function({"index": "image-new"}, "http://es:9200", True)
 
     es_conn.indices.create.assert_not_called()
+
+
+def test_enable_replicas(monkeypatch):
+    es_conn = mock.Mock()
+    _hook(monkeypatch, es_conn)
+
+    es.enable_replicas.function("http://es:9200", ["image-new", "image-new-filtered"])
+
+    es_conn.indices.put_settings.assert_called_once_with(
+        index="image-new,image-new-filtered",
+        settings={"index": {"number_of_replicas": 1}},
+    )
+
+
+@pytest.mark.parametrize(
+    "status, expected",
+    [("green", True), ("yellow", False), ("red", False)],
+)
+def test_wait_for_green_indices(monkeypatch, status, expected):
+    es_conn = mock.Mock()
+    es_conn.cluster.health.return_value = {
+        "status": status,
+        "initializing_shards": 0,
+        "unassigned_shards": 0,
+    }
+    _hook(monkeypatch, es_conn)
+
+    assert (
+        es.wait_for_green_indices.function("http://es:9200", ["image-new"]) is expected
+    )
+    es_conn.cluster.health.assert_called_once_with(index="image-new")

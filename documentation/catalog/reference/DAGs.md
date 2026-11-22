@@ -1351,6 +1351,8 @@ The data refresh has the following high level steps:
   the configuration of the existing filtered index, and then reindex documents
   into it from the new media index, applying appropriate filtering for sensitive
   terms.
+- Enable Replicas: Give both new indices a replica of every shard, and wait for
+  the replicas to be allocated.
 - Reapply Constraints: Recreate indices and constraints from the original API
   tables on the new temp tables.
 - Promote Table: Drop the old media table in the API and rename the temp table

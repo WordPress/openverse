@@ -476,6 +476,33 @@ def refresh_index(es_host: str, index_name: str):
     return es_conn.indices.refresh(index=index_name).body
 
 
+@task
+def enable_replicas(es_host: str, index_names: list[str]):
+    """
+    Give each index one replica of every shard. Indices are built without replicas
+    to speed up reindexing, but serving one without them leaves a single copy of
+    the data and half the shards to spread searches over.
+    """
+    es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
+    return es_conn.indices.put_settings(
+        index=",".join(index_names),
+        settings={"index": {"number_of_replicas": 1}},
+    ).body
+
+
+@task.sensor(mode="reschedule")
+def wait_for_green_indices(es_host: str, index_names: list[str]) -> bool:
+    """Wait until every shard of the indices, replicas included, is allocated."""
+    es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
+    health = es_conn.cluster.health(index=",".join(index_names))
+    logger.info(
+        f"{index_names} are {health['status']}: "
+        f"{health['initializing_shards']} shards initializing, "
+        f"{health['unassigned_shards']} unassigned."
+    )
+    return health["status"] == "green"
+
+
 @task_group(group_id="point_alias")
 def point_alias(
     es_host: str,

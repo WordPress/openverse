@@ -7,10 +7,13 @@ Currently, this provides an entrypoint for filtering tags that do not meet a cer
 minimum accuracy, are malformed, or are from unvetted providers.
 
 The filtering runs as one `UPDATE` per batch of ids inside the API database, so no
-rows are loaded into the Airflow worker.
+rows are loaded into the Airflow worker. The id range is split into a fixed number
+of mapped tasks, each of which works through its share in batches, so the number of
+tasks doesn't grow with the table.
 """
 
 import logging
+import math
 from textwrap import dedent
 
 from airflow.providers.common.sql.hooks.handlers import (
@@ -29,6 +32,7 @@ logger = logging.getLogger(__name__)
 
 
 DEFAULT_BATCH_SIZE = 100_000
+ALTER_DATA_RANGE_COUNT = 8
 # Filter out low-confidence tags, which indicate that the machine-generated tag
 # may be inaccurate.
 TAG_MIN_CONFIDENCE = 0.90
@@ -109,47 +113,68 @@ def get_tag_filter_parameters() -> dict:
 
 
 @task
-def get_alter_batches(
-    id_bounds: tuple[int | None, int | None], batch_size: int | None
+def get_alter_ranges(
+    id_bounds: tuple[int | None, int | None], range_count: int = ALTER_DATA_RANGE_COUNT
 ) -> list[tuple[int, int]]:
+    """Split the ids into at most `range_count` contiguous, inclusive ranges."""
     start, stop = id_bounds
     if start is None or stop is None:
         logger.info("The table is empty, so there is no data to alter.")
         return []
-    batch_size = batch_size or DEFAULT_BATCH_SIZE
-    return [(x, x + batch_size - 1) for x in range(start, stop + 1, batch_size)]
+    range_size = math.ceil((stop - start + 1) / range_count)
+    return [
+        (x, min(x + range_size - 1, stop)) for x in range(start, stop + 1, range_size)
+    ]
+
+
+def get_batches(id_range: tuple[int, int], batch_size: int) -> list[tuple[int, int]]:
+    start, stop = id_range
+    return [
+        (x, min(x + batch_size - 1, stop)) for x in range(start, stop + 1, batch_size)
+    ]
 
 
 @task(max_active_tis_per_dagrun=2)
-def alter_data_batch(
-    batch: tuple[int, int],
+def alter_data_range(
+    id_range: tuple[int, int],
+    batch_size: int | None,
     temp_table: str,
     postgres_conn_id: str,
     task: BaseOperator = None,
     timeout: float = None,
 ) -> int:
-    logger.info(f"Starting data altering on batch: {batch}")
-    batch_start, batch_end = batch
+    """
+    Filter the tags of the rows in `id_range`, one `UPDATE` and commit per batch,
+    and return how many rows were altered.
+    """
     postgres = PostgresHook(
         postgres_conn_id=postgres_conn_id,
         default_statement_timeout=(
             timeout if timeout else PostgresHook.get_execution_timeout(task)
         ),
     )
-    altered = postgres.run(
-        QUERY_FILTER_TAGS.format(temp_table=temp_table),
-        parameters={
-            "batch_start": batch_start,
-            "batch_end": batch_end,
-            **get_tag_filter_parameters(),
-        },
-        handler=fetch_all_handler,
-    )
-    if logger.isEnabledFor(logging.DEBUG):
-        for (identifier,) in altered:
-            logger.debug(f"Filtered tags for {identifier}")
-    logger.info(f"Filtered tags for {len(altered)} records in batch {batch}")
-    return len(altered)
+    total = 0
+    for batch_start, batch_end in get_batches(
+        id_range, batch_size or DEFAULT_BATCH_SIZE
+    ):
+        altered = postgres.run(
+            QUERY_FILTER_TAGS.format(temp_table=temp_table),
+            parameters={
+                "batch_start": batch_start,
+                "batch_end": batch_end,
+                **get_tag_filter_parameters(),
+            },
+            handler=fetch_all_handler,
+        )
+        if logger.isEnabledFor(logging.DEBUG):
+            for (identifier,) in altered:
+                logger.debug(f"Filtered tags for {identifier}")
+        logger.info(
+            f"Filtered tags for {len(altered)} records in batch "
+            f"({batch_start}, {batch_end})"
+        )
+        total += len(altered)
+    return total
 
 
 @task
@@ -176,14 +201,18 @@ def alter_table_data(
         return_last=True,
     )
 
-    batches = get_alter_batches(
-        estimated_record_count.output,
-        batch_size=data_refresh_config.alter_data_batch_size,
-    )
+    ranges = get_alter_ranges(estimated_record_count.output)
 
-    alter_data = alter_data_batch.partial(
-        temp_table=temp_table,
-        postgres_conn_id=postgres_conn_id,
-    ).expand(batch=batches)
+    alter_data = (
+        alter_data_range.override(
+            execution_timeout=data_refresh_config.alter_data_timeout,
+        )
+        .partial(
+            batch_size=data_refresh_config.alter_data_batch_size,
+            temp_table=temp_table,
+            postgres_conn_id=postgres_conn_id,
+        )
+        .expand(id_range=ranges)
+    )
 
     report(alter_data)

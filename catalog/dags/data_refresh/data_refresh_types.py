@@ -9,8 +9,6 @@ import os
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 
-from airflow.sdk import Variable
-
 from common.constants import (
     AUDIO,
     DATA_REFRESH_ALTER_BATCH_SIZE,
@@ -80,6 +78,8 @@ class DataRefreshConfig:
                                        add the primary key to the temp table
     alter_data_batch_size:             int number of records to process per batch in alter_data
                                        tasks
+    alter_data_timeout:                timedelta expressing the amount of time it may take to
+                                       alter one of the id ranges of the temp table
     indexer_worker_timeout:            timedelta expressing the amount of time it may take for
                                        any individual indexer worker to perform its portion of
                                        the distributed reindex
@@ -107,6 +107,7 @@ class DataRefreshConfig:
     copy_data_timeout: timedelta = timedelta(hours=1)
     add_primary_key_timeout: timedelta = timedelta(hours=1)
     alter_data_batch_size: int = DATA_REFRESH_ALTER_BATCH_SIZE
+    alter_data_timeout: timedelta = timedelta(hours=1)
     indexer_worker_timeout: timedelta = timedelta(hours=12)
     index_readiness_timeout: timedelta = timedelta(days=1)
     create_filtered_index_timeout: timedelta = timedelta(days=1)
@@ -137,12 +138,7 @@ DATA_REFRESH_CONFIGS = {
         dag_timeout=timedelta(days=6),
         copy_data_timeout=timedelta(hours=12),
         add_primary_key_timeout=timedelta(hours=12),
-        # Larger batches for image data refresh to avoid overloading XCOMs
-        alter_data_batch_size=Variable.get(
-            "IMAGE_DATA_REFRESH_ALTER_BATCH_SIZE",
-            default=DATA_REFRESH_ALTER_BATCH_SIZE,
-            deserialize_json=True,
-        ),
+        alter_data_timeout=timedelta(hours=12),
         indexer_worker_timeout=timedelta(days=3),
         concurrency_check_poke_interval=int(
             os.getenv("DATA_REFRESH_POKE_INTERVAL", 60 * 5)
