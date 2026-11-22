@@ -11,6 +11,7 @@ from elasticsearch.exceptions import ApiError
 from common import elasticsearch as es
 from common.elasticsearch import (
     REINDEX_RESTART_BACKOFF,
+    WaitForDeleteByQueryOperator,
     WaitForReindexOperator,
     is_retryable_reindex_failure,
     raise_for_reindex_failure,
@@ -380,3 +381,100 @@ def test_wait_for_green_indices_survives_a_failed_explanation(monkeypatch):
     _hook(monkeypatch, es_conn)
 
     assert not es.wait_for_green_indices.function("http://es:9200", ["image-new"])
+
+
+DELETE_KWARGS = {
+    "index": "image-new-filtered",
+    "query": {"bool": {"should": [], "minimum_should_match": 1}},
+    "requests_per_second": 20_000,
+    "slices": "auto",
+}
+
+
+def _delete_operator():
+    return WaitForDeleteByQueryOperator(
+        task_id="wait_for_delete_by_query",
+        es_host="http://es:9200",
+        reindex={"es_task_id": "node:1", "kwargs": DELETE_KWARGS},
+        reindex_timeout=timedelta(hours=1),
+        poke_interval=60,
+        max_restarts=2,
+    )
+
+
+def _delete_response(deleted, error=None):
+    response = {
+        "completed": True,
+        "task": {"status": {"deleted": deleted, "version_conflicts": 0}},
+        "response": {"failures": []},
+    }
+    if error:
+        response["error"] = error
+    return response
+
+
+def test_wait_for_delete_by_query_restarts_after_overload(monkeypatch):
+    es_conn = mock.Mock()
+    es_conn.tasks.get.return_value = _delete_response(4, error=REJECTED_SEARCH)
+    _hook(monkeypatch, es_conn)
+
+    with pytest.raises(TaskDeferred) as deferred:
+        _delete_operator().execute({})
+
+    assert deferred.value.method_name == "restart_reindex"
+    assert deferred.value.kwargs["created_before"] == 4
+
+
+def test_restart_delete_by_query_starts_a_new_delete(monkeypatch):
+    es_conn = mock.Mock()
+    es_conn.delete_by_query.return_value = {"task": "node:2"}
+    _hook(monkeypatch, es_conn)
+
+    with pytest.raises(TaskDeferred) as deferred:
+        _delete_operator().restart_reindex(
+            {}, restarts=1, created_before=4, deadline=time.time() + 60
+        )
+
+    es_conn.reindex.assert_not_called()
+    call = es_conn.delete_by_query.call_args.kwargs
+    assert call["index"] == "image-new-filtered"
+    assert call["query"] == DELETE_KWARGS["query"]
+    assert call["conflicts"] == "proceed"
+    assert call["wait_for_completion"] is False
+    assert deferred.value.kwargs["es_task_id"] == "node:2"
+
+
+def test_wait_for_delete_by_query_fails_with_its_group(monkeypatch):
+    es_conn = mock.Mock()
+    es_conn.tasks.get.return_value = _delete_response(0, error=MAPPING_ERROR)
+    _hook(monkeypatch, es_conn)
+
+    with pytest.raises(
+        AirflowFailException,
+        match="Delete by query failed.*trigger_and_wait_for_delete_by_query",
+    ):
+        _delete_operator().execute({})
+
+
+@pytest.mark.parametrize(
+    "counts, should_fail",
+    [((10, 10), False), ((10, 0), True), ((10, 9), True)],
+    ids=["same", "empty_filtered_index", "missing_documents"],
+)
+def test_assert_same_document_count(monkeypatch, counts, should_fail):
+    es_conn = mock.Mock()
+    es_conn.count.side_effect = [{"count": count} for count in counts]
+    _hook(monkeypatch, es_conn)
+
+    if should_fail:
+        with pytest.raises(AirflowFailException, match="documents, but"):
+            es.assert_same_document_count.function(
+                "http://es:9200", "image-new", "image-new-filtered"
+            )
+    else:
+        assert (
+            es.assert_same_document_count.function(
+                "http://es:9200", "image-new", "image-new-filtered"
+            )
+            == 10
+        )

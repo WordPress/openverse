@@ -182,18 +182,22 @@ def get_reindex_failure_reasons(response: dict) -> dict:
     return {key: value for key, value in reasons.items() if value}
 
 
-def raise_for_reindex_failure(response: dict) -> None:
+def raise_for_reindex_failure(
+    response: dict,
+    action: str = "Reindex",
+    group_id: str = "trigger_and_wait_for_reindex",
+) -> None:
     """
-    Raise if a finished reindex task failed.
+    Raise if a finished reindex (or delete by query) task failed.
 
     Raises ``AirflowFailException`` so the task does not retry: polling the same
-    finished ES task again cannot succeed. To recover, clear the whole
-    ``trigger_and_wait_for_reindex`` group so the reindex is triggered again.
+    finished ES task again cannot succeed. To recover, clear the whole ``group_id``
+    group so the task is triggered again.
     """
     if reasons := get_reindex_failure_reasons(response):
         raise AirflowFailException(
-            f"Reindex failed: {reasons}. Clear the trigger_and_wait_for_reindex "
-            "task group to trigger the reindex again."
+            f"{action} failed: {reasons}. Clear the {group_id} task group to "
+            "trigger it again."
         )
 
 
@@ -263,6 +267,27 @@ def start_reindex(
     return response["task"]
 
 
+def start_delete_by_query(
+    es_conn,
+    index: str,
+    query: dict,
+    requests_per_second: int,
+    slices: int | Literal["auto"] | None,
+) -> str:
+    """Start a delete by query without waiting for it, and return its ES task ID."""
+    response = es_conn.delete_by_query(
+        index=index,
+        query=query,
+        # A restarted delete finds only the documents an earlier attempt left
+        conflicts="proceed",
+        slices=slices,
+        scroll="1h",
+        wait_for_completion=False,
+        requests_per_second=requests_per_second,
+    )
+    return response["task"]
+
+
 class WaitForReindexOperator(BaseOperator):
     """
     Wait for a reindex started by ``trigger_reindex``, restarting it when it fails
@@ -274,6 +299,11 @@ class WaitForReindexOperator(BaseOperator):
     """
 
     template_fields = ("es_host", "reindex")
+    start = staticmethod(start_reindex)
+    action = "Reindex"
+    done = "Reindexed"
+    count_field = "created"
+    group_id_hint = "trigger_and_wait_for_reindex"
 
     def __init__(
         self,
@@ -324,9 +354,10 @@ class WaitForReindexOperator(BaseOperator):
         es_conn = ElasticsearchPythonHook(hosts=[self.es_host]).get_conn
         response = es_conn.tasks.get(task_id=es_task_id)
         status = response.get("task", {}).get("status", {})
-        created = created_before + (status.get("created") or 0)
+        created = created_before + (status.get(self.count_field) or 0)
         logger.info(
-            f"Reindex task {es_task_id}: {created} documents created so far, "
+            f"{self.action} task {es_task_id}: {created} documents "
+            f"{self.count_field} so far, "
             f"{status.get('version_conflicts') or 0} already present, "
             f"{restarts} restarts."
         )
@@ -334,7 +365,7 @@ class WaitForReindexOperator(BaseOperator):
         if not response.get("completed"):
             if time.time() > deadline:
                 raise AirflowFailException(
-                    f"Reindex did not finish within {self.reindex_timeout}."
+                    f"{self.action} did not finish within {self.reindex_timeout}."
                 )
             self._defer(
                 "check_reindex",
@@ -349,16 +380,17 @@ class WaitForReindexOperator(BaseOperator):
             expected_docs = self.reindex["kwargs"].get("max_docs")
             if expected_docs and created != expected_docs:
                 logger.info(
-                    f"Reindexed {created} documents, but {expected_docs} were expected."
+                    f"{self.done} {created} documents, but {expected_docs} were "
+                    "expected."
                 )
             else:
-                logger.info(f"Reindexed {created} documents.")
+                logger.info(f"{self.done} {created} documents.")
             return
 
         if restarts < self.max_restarts and is_retryable_reindex_failure(response):
             backoff = self.restart_backoff * 2**restarts
             logger.warning(
-                "Reindex failed because the cluster is overloaded: "
+                f"{self.action} failed because the cluster is overloaded: "
                 f"{get_reindex_failure_reasons(response)}. Restarting in {backoff} "
                 f"(restart {restarts + 1} of {self.max_restarts})."
             )
@@ -370,7 +402,7 @@ class WaitForReindexOperator(BaseOperator):
                 deadline=deadline,
             )
 
-        raise_for_reindex_failure(response)
+        raise_for_reindex_failure(response, self.action, self.group_id_hint)
 
     def restart_reindex(
         self,
@@ -383,7 +415,7 @@ class WaitForReindexOperator(BaseOperator):
     ):
         if time.time() > deadline:
             raise AirflowFailException(
-                f"Reindex did not finish within {self.reindex_timeout}."
+                f"{self.action} did not finish within {self.reindex_timeout}."
             )
 
         reindex_kwargs = dict(self.reindex["kwargs"])
@@ -391,12 +423,12 @@ class WaitForReindexOperator(BaseOperator):
             # The earlier attempts already created some of the requested documents
             reindex_kwargs["max_docs"] = max_docs - created_before
             if reindex_kwargs["max_docs"] <= 0:
-                logger.info(f"Reindexed {created_before} documents.")
+                logger.info(f"{self.done} {created_before} documents.")
                 return
 
         es_conn = ElasticsearchPythonHook(hosts=[self.es_host]).get_conn
-        es_task_id = start_reindex(es_conn, **reindex_kwargs)
-        logger.info(f"Restarted the reindex as task {es_task_id}.")
+        es_task_id = self.start(es_conn, **reindex_kwargs)
+        logger.info(f"Restarted the {self.action.lower()} as task {es_task_id}.")
         self._defer(
             "check_reindex",
             timedelta(seconds=self.poke_interval),
@@ -468,6 +500,77 @@ def trigger_and_wait_for_reindex(
         reindex_timeout=timeout,
         poke_interval=poke_interval,
     )
+
+
+class WaitForDeleteByQueryOperator(WaitForReindexOperator):
+    """
+    Wait for a delete by query started by ``trigger_delete_by_query``, restarting
+    it when it fails because the cluster is overloaded.
+    """
+
+    start = staticmethod(start_delete_by_query)
+    action = "Delete by query"
+    done = "Deleted"
+    count_field = "deleted"
+    group_id_hint = "trigger_and_wait_for_delete_by_query"
+
+
+@task_group(group_id="trigger_and_wait_for_delete_by_query")
+def trigger_and_wait_for_delete_by_query(
+    es_host: str,
+    index: str,
+    query: dict,
+    timeout: timedelta,
+    requests_per_second: int,
+    slices: int | Literal["auto"] | None = "auto",
+    poke_interval: int = REFRESH_POKE_INTERVAL,
+):
+    @task
+    def trigger_delete_by_query(
+        es_host: str,
+        index: str,
+        query: dict,
+        requests_per_second: int,
+        slices: int | Literal["auto"] | None,
+    ):
+        kwargs = {
+            "index": index,
+            "query": query,
+            "requests_per_second": requests_per_second,
+            "slices": slices,
+        }
+        es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
+        es_task_id = start_delete_by_query(es_conn, **kwargs)
+        # Return the rendered arguments too, so a restart uses the same ones
+        return {"es_task_id": es_task_id, "kwargs": kwargs}
+
+    trigger_task = trigger_delete_by_query(
+        es_host, index, query, requests_per_second, slices
+    )
+
+    WaitForDeleteByQueryOperator(
+        task_id="wait_for_delete_by_query",
+        es_host=es_host,
+        reindex=trigger_task,
+        reindex_timeout=timeout,
+        poke_interval=poke_interval,
+    )
+
+
+@task
+def assert_same_document_count(es_host: str, index: str, other_index: str) -> int:
+    """
+    Fail unless both indices hold the same number of documents, and return it.
+    Both counts only include refreshed documents.
+    """
+    es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
+    count = es_conn.count(index=index)["count"]
+    other_count = es_conn.count(index=other_index)["count"]
+    if count != other_count:
+        raise AirflowFailException(
+            f"{index} has {count} documents, but {other_index} has {other_count}."
+        )
+    return count
 
 
 @task

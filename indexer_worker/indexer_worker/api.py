@@ -55,6 +55,7 @@ class IndexingJobResource(BaseTaskResource):
         model_name = body.get("model_name")
         table_name = body.get("table_name")
         target_index = body.get("target_index")
+        filtered_target_index = body.get("filtered_target_index")
         start_id = body.get("start_id")
         end_id = body.get("end_id")
         log.info(f"Received indexing request for records {start_id}-{end_id}")
@@ -69,6 +70,7 @@ class IndexingJobResource(BaseTaskResource):
                 "model_name": model_name,
                 "table_name": table_name,
                 "target_index": target_index,
+                "filtered_target_index": filtered_target_index,
                 "start_id": int(start_id),
                 "end_id": int(end_id),
                 # Task tracking arguments
