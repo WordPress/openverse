@@ -33,6 +33,7 @@ def launch_reindex(
     end_id: int,
     progress: float,
     finish_time: int,
+    filtered_target_index: str | None = None,
 ):
     """
     Copy data from the given PostgreSQL table to the given Elasticsearch index.
@@ -46,9 +47,23 @@ def launch_reindex(
     end_id:       the index of the last record to be copied
     progress:     tracks the percentage of records that have been copied so far
     finish_time:  the time at which the task finishes
+
+    Optional Arguments:
+
+    filtered_target_index: the name of a second index that also gets every document.
+                           The data refresh deletes the sensitive documents from it
+                           afterwards to make the filtered index.
     """
     try:
-        reindex(model_name, table_name, target_index, start_id, end_id, progress)
+        reindex(
+            model_name,
+            table_name,
+            target_index,
+            start_id,
+            end_id,
+            progress,
+            filtered_target_index,
+        )
         finish_time.value = time.time()
     except Exception as err:
         exception_type = f"{err.__class__.__module__}.{err.__class__.__name__}"
@@ -67,6 +82,7 @@ def reindex(
     start_id: int,
     end_id: int,
     progress: float,
+    filtered_target_index: str | None = None,
 ):
     # Enable writing to Postgres so we can create a server-side cursor.
     pg_conn = database_connect()
@@ -109,6 +125,7 @@ def reindex(
                 columns=server_cur.description,
                 model_name=model_name,
                 target_index=target_index,
+                filtered_target_index=filtered_target_index,
             )
 
             # Bulk upload to Elasticsearch in parallel.
@@ -136,8 +153,13 @@ def reindex(
     pg_conn.close()
 
 
-def pg_chunk_to_es(pg_chunk, columns, model_name, target_index):
-    """Convert the given list of psycopg2 results to Elasticsearch documents."""
+def pg_chunk_to_es(
+    pg_chunk, columns, model_name, target_index, filtered_target_index=None
+):
+    """
+    Convert the given list of psycopg2 results to Elasticsearch documents, with a
+    copy of each for `filtered_target_index` if it is given.
+    """
 
     # Map column names to locations in the row tuple
     schema = {col[0]: idx for idx, col in enumerate(columns)}
@@ -154,6 +176,8 @@ def pg_chunk_to_es(pg_chunk, columns, model_name, target_index):
             if target_index:
                 converted["_index"] = target_index
             documents.append(converted)
+            if filtered_target_index:
+                documents.append({**converted, "_index": filtered_target_index})
 
     return documents
 
@@ -180,8 +204,9 @@ def _bulk_upload(es_conn, es_batch):
             )
             time.sleep(backoff)
 
-        # Bulk responses return `_id` as a string
-        pending_by_id = {str(doc["_id"]): doc for doc in pending}
+        # A doc is written to both the main and the filtered index with the same
+        # `_id`. Bulk responses return `_id` as a string.
+        pending_by_key = {(doc["_index"], str(doc["_id"])): doc for doc in pending}
         rejected = []
         failed = []
         try:
@@ -196,10 +221,13 @@ def _bulk_upload(es_conn, es_batch):
                     continue
                 info = next(iter(item.values()))
                 if info.get("status") in RETRYABLE_BULK_STATUSES:
-                    rejected.append(pending_by_id[str(info["_id"])])
+                    rejected.append(pending_by_key[(info["_index"], str(info["_id"]))])
                 else:
                     failed.append(
-                        {key: info.get(key) for key in ("_id", "status", "error")}
+                        {
+                            key: info.get(key)
+                            for key in ("_index", "_id", "status", "error")
+                        }
                     )
         except elasticsearch.TransportError:
             # The connection failed, so it is unknown which docs were indexed.

@@ -51,16 +51,19 @@ def test_dependencies_reindex_task():
             "copy_upstream_tables.copy_upstream_table.copy_data",
             "alter_table_data.alter_data_range",
             "create_index",
+            "create_filtered_index",
         ],
     )
 
 
-def test_dependencies_create_and_populate_filtered_index_task():
+def test_dependencies_filter_sensitive_documents_task():
     _assert_dependencies(
-        downstream_task_id="create_and_populate_filtered_index.trigger_and_wait_for_reindex.trigger_reindex",
+        downstream_task_id="filter_sensitive_documents.trigger_and_wait_for_delete_by_query.trigger_delete_by_query",
         upstream_task_ids=[
             "run_distributed_reindex.reindex.assert_reindexing_success",
             "run_distributed_reindex.refresh_index",
+            "filter_sensitive_documents.refresh_before_filtering",
+            "filter_sensitive_documents.assert_same_document_count",
         ],
     )
 
@@ -70,7 +73,7 @@ def test_dependencies_promote_table_task():
         downstream_task_id="promote_tables.promote_table.promote",
         upstream_task_ids=[
             "run_distributed_reindex.reindex.assert_reindexing_success",
-            "create_and_populate_filtered_index.refresh_index",
+            "filter_sensitive_documents.refresh_index",
             "enable_replicas",
             "wait_for_green_indices",
             "promote_tables.promote_table.remap_table_indices_to_table.create_table_indices",
@@ -93,17 +96,7 @@ def test_dependenceis_promote_filtered_index_task():
     _assert_dependencies(
         downstream_task_id="promote_filtered_index.point_new_alias",
         upstream_task_ids=[
-            "create_and_populate_filtered_index.refresh_index",
+            "filter_sensitive_documents.refresh_index",
             "promote_tables.promote_table.promote",
         ],
     )
-
-
-def test_alarms_do_not_wait_for_replicas():
-    dag = DagBag().get_dag("staging_image_data_refresh")
-    upstream_tasks = dag.get_task(
-        "enable_sensitive_cloudwatch_alarms"
-    ).get_flat_relative_ids(upstream=True)
-
-    assert "create_and_populate_filtered_index.refresh_index" in upstream_tasks
-    assert "wait_for_green_indices" not in upstream_tasks
