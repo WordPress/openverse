@@ -6,6 +6,7 @@ from unittest import mock
 import pytest
 from airflow.sdk import timezone
 from airflow.sdk.exceptions import AirflowFailException, TaskDeferred
+from elasticsearch.exceptions import ApiError
 
 from common import elasticsearch as es
 from common.elasticsearch import (
@@ -302,3 +303,80 @@ def test_create_index_does_not_reuse_aliased_index(monkeypatch):
         es.create_index.function({"index": "image-new"}, "http://es:9200", True)
 
     es_conn.indices.create.assert_not_called()
+
+
+@pytest.mark.parametrize("data_nodes, expected_replicas", [(1, 0), (2, 1), (3, 1)])
+def test_enable_replicas(monkeypatch, data_nodes, expected_replicas):
+    es_conn = mock.Mock()
+    es_conn.cluster.health.return_value = {"number_of_data_nodes": data_nodes}
+    _hook(monkeypatch, es_conn)
+
+    es.enable_replicas.function("http://es:9200", ["image-new", "image-new-filtered"])
+
+    es_conn.indices.put_settings.assert_called_once_with(
+        index="image-new,image-new-filtered",
+        settings={"index": {"number_of_replicas": expected_replicas}},
+    )
+
+
+@pytest.mark.parametrize(
+    "status, expected",
+    [("green", True), ("yellow", False), ("red", False)],
+)
+def test_wait_for_green_indices(monkeypatch, status, expected):
+    es_conn = mock.Mock()
+    es_conn.cluster.health.return_value = {
+        "status": status,
+        "initializing_shards": 0,
+        "unassigned_shards": 0,
+    }
+    _hook(monkeypatch, es_conn)
+
+    assert (
+        es.wait_for_green_indices.function("http://es:9200", ["image-new"]) is expected
+    )
+    es_conn.cluster.health.assert_called_once_with(index="image-new")
+    es_conn.cluster.allocation_explain.assert_not_called()
+
+
+def _unassigned_es_conn():
+    es_conn = mock.Mock()
+    es_conn.cluster.health.return_value = {
+        "status": "yellow",
+        "initializing_shards": 0,
+        "unassigned_shards": 1,
+    }
+    es_conn.cat.shards.return_value = [
+        {"index": "image-new", "shard": "0", "prirep": "p", "state": "STARTED"},
+        {"index": "image-new", "shard": "3", "prirep": "r", "state": "UNASSIGNED"},
+    ]
+    return es_conn
+
+
+def test_wait_for_green_indices_logs_why_a_shard_is_unassigned(monkeypatch, caplog):
+    es_conn = _unassigned_es_conn()
+    es_conn.cluster.allocation_explain.return_value = {
+        "allocate_explanation": "cannot allocate",
+        "node_allocation_decisions": [
+            {"deciders": [{"explanation": "the node is above the high watermark"}]}
+        ],
+    }
+    _hook(monkeypatch, es_conn)
+
+    with caplog.at_level("INFO", logger="common.elasticsearch"):
+        assert not es.wait_for_green_indices.function("http://es:9200", ["image-new"])
+
+    es_conn.cluster.allocation_explain.assert_called_once_with(
+        index="image-new", shard=3, primary=False
+    )
+    assert "the node is above the high watermark" in caplog.text
+
+
+def test_wait_for_green_indices_survives_a_failed_explanation(monkeypatch):
+    es_conn = _unassigned_es_conn()
+    es_conn.cluster.allocation_explain.side_effect = ApiError(
+        "no unassigned shard", mock.Mock(status=400), {}
+    )
+    _hook(monkeypatch, es_conn)
+
+    assert not es.wait_for_green_indices.function("http://es:9200", ["image-new"])

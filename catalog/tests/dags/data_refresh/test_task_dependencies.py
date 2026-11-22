@@ -39,7 +39,7 @@ def _assert_dependencies(downstream_task_id: str, upstream_task_ids: list[str]):
 
 def test_dependencies_alter_data_task():
     _assert_dependencies(
-        downstream_task_id="alter_table_data.alter_data_batch",
+        downstream_task_id="alter_table_data.alter_data_range",
         upstream_task_ids=["copy_upstream_tables.copy_upstream_table.copy_data"],
     )
 
@@ -49,7 +49,7 @@ def test_dependencies_reindex_task():
         downstream_task_id="run_distributed_reindex.reindex.trigger_reindexing_task",
         upstream_task_ids=[
             "copy_upstream_tables.copy_upstream_table.copy_data",
-            "alter_table_data.alter_data_batch",
+            "alter_table_data.alter_data_range",
             "create_index",
         ],
     )
@@ -71,6 +71,8 @@ def test_dependencies_promote_table_task():
         upstream_task_ids=[
             "run_distributed_reindex.reindex.assert_reindexing_success",
             "create_and_populate_filtered_index.refresh_index",
+            "enable_replicas",
+            "wait_for_green_indices",
             "promote_tables.promote_table.remap_table_indices_to_table.create_table_indices",
             "promote_tables.promote_table.remap_table_constraints_to_table.apply_constraints_to_table",
         ],
@@ -95,3 +97,13 @@ def test_dependenceis_promote_filtered_index_task():
             "promote_tables.promote_table.promote",
         ],
     )
+
+
+def test_alarms_do_not_wait_for_replicas():
+    dag = DagBag().get_dag("staging_image_data_refresh")
+    upstream_tasks = dag.get_task(
+        "enable_sensitive_cloudwatch_alarms"
+    ).get_flat_relative_ids(upstream=True)
+
+    assert "create_and_populate_filtered_index.refresh_index" in upstream_tasks
+    assert "wait_for_green_indices" not in upstream_tasks

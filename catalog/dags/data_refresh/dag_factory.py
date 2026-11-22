@@ -9,6 +9,7 @@ The data refresh has the following high level steps:
 * Create Index: Create a new Elasticsearch index, matching the configuration of the existing media index.
 * Distributed Reindex: Convert each record from the new temp table to the format required by an Elasticsearch document, and then reindex them into the newly created index.
 * Create and Populate Filtered Index: Create a new Elasticsearch index matching the configuration of the existing filtered index, and then reindex documents into it from the new media index, applying appropriate filtering for sensitive terms.
+* Enable Replicas: Give both new indices a replica of every shard, and wait for the replicas to be allocated.
 * Reapply Constraints: Recreate indices and constraints from the original API tables on the new temp tables.
 * Promote Table: Drop the old media table in the API and rename the temp table and its indices, which has the effect of promoting them/replacing the old table.
 * Promote Index: Promote the new Elasticsearch index by unlinking the given alias from the existing index and moving it to the new one. (Used for both the main and filtered indices.)
@@ -250,6 +251,13 @@ def create_data_refresh_dag(
             poke_interval=data_refresh_config.reindex_poke_interval,
         )
 
+        new_indices = [target_index_name, filtered_index_name]
+        replicas = es.enable_replicas(es_host=es_host, index_names=new_indices)
+        replicas_ready = es.wait_for_green_indices.override(
+            poke_interval=data_refresh_config.reindex_poke_interval,
+            timeout=data_refresh_config.index_readiness_timeout.total_seconds(),
+        )(es_host=es_host, index_names=new_indices)
+
         # Re-enable Cloudwatch alarms once reindexing is complete, even if it
         # failed.
         enable_alarms = PythonOperator(
@@ -316,10 +324,13 @@ def create_data_refresh_dag(
             >> reindex
             >> filtered_index_name
             >> filtered_index
+            >> replicas
+            >> replicas_ready
         )
-        # Note filtered_index must be directly upstream of promote_table to
-        # ensure that table promotion does not run if there was an error during reindexing
-        filtered_index >> [enable_alarms, promote_table]
+        # The alarms only cover reindexing, so they don't wait for the replicas
+        filtered_index >> enable_alarms
+        # Table promotion must not run if reindexing or replication failed
+        replicas_ready >> promote_table
         promote_table >> [promote_index, promote_filtered_index]
         promote_index >> after_record_count >> report_counts
 
