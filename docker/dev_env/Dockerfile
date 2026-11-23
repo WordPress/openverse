@@ -39,6 +39,7 @@ ENV PATH="${PNPM_BIN}:${N_PREFIX}/bin:${HOME}/.local/bin:${PATH}"
 # - python*: required by some Python libraries for compilation during installation
 # - pipx: Python CLI app installer
 # - libffi*: required for the Python package cffi
+# - libatomic: required by the Node.js binaries that `n` installs
 # - docker*: used to interact with host Docker socket
 # - unzip: used to extract zip files of visual regression patches from CI artifacts
 # - postgresql*: required to connect to PostgreSQL databases
@@ -71,6 +72,7 @@ RUN mkdir -p $HOME/.local/bin \
     python3.12 python3.12-devel \
     pipx \
     libffi-devel \
+    libatomic \
     docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin \
     unzip \
     postgresql postgresql-devel \
