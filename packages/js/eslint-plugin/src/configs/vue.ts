@@ -123,7 +123,7 @@ export default tseslint.config(
             "Creative Commons",
             "Europeana",
             "Europeana API",
-            "Smithsonian Institute",
+            "Smithsonian Institution",
             "Flickr",
             "Openverse",
             "WordPress",

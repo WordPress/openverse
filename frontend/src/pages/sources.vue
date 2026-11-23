@@ -41,7 +41,7 @@ useHead({ title: `${t("sources.title")} | Openverse` })
           <VLink href="https://www.flickr.com/">Flickr</VLink>
         </template>
         <template #smithsonian>
-          <VLink href="https://www.si.edu/">Smithsonian Institute</VLink>
+          <VLink href="https://www.si.edu/">Smithsonian Institution</VLink>
         </template>
       </i18n-t>
       {{ " " }}
@@ -57,7 +57,7 @@ useHead({ title: `${t("sources.title")} | Openverse` })
         <VLink href="https://www.europeana.eu/en">Europeana</VLink>
       </template>
       <template #linkApi>
-        <VLink href="https://pro.europeana.eu/page/apis"> Europeana API </VLink>
+        <VLink href="https://pro.europeana.eu/page/apis">Europeana API</VLink>
       </template>
     </i18n-t>
 
