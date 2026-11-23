@@ -4,7 +4,13 @@ from pathlib import Path
 import pook
 import pytest
 
-from api.utils.waveform import UA_STRING, download_audio, generate_waveform
+from api.utils.waveform import (
+    UA_STRING,
+    WaveformGenerationFailure,
+    download_audio,
+    generate_waveform,
+    process_waveform_output,
+)
 
 
 _MOCK_AUDIO_PATH = Path(__file__).parent / ".." / ".." / "factory"
@@ -44,3 +50,23 @@ def test_generate_waveform(audio, duration):
 
     json_out = generate_waveform(file_name, duration)
     assert len(json_out) > 0
+
+
+@pytest.mark.parametrize("duration", [0, -1, None])
+def test_generate_waveform_rejects_invalid_duration(duration):
+    file_name = str(_MOCK_AUDIO_PATH.joinpath("sample-audio.mp3"))
+
+    with pytest.raises(WaveformGenerationFailure):
+        generate_waveform(file_name, duration)
+
+
+def test_process_waveform_output_normalizes_peaks():
+    json_out = {"data": [-2, 2, -4, 4, -1, -1]}
+
+    assert process_waveform_output(json_out) == [0.5, 1.0, 0]
+
+
+def test_process_waveform_output_handles_silent_audio():
+    json_out = {"data": [0, 0, 0, 0, 0, 0]}
+
+    assert process_waveform_output(json_out) == [0, 0, 0]

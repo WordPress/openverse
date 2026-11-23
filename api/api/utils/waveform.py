@@ -100,6 +100,15 @@ def generate_waveform(file_name: str, duration: int):
 
     logger.debug("waveform_generation_started")
 
+    if duration is None or duration <= 0:
+        # ``duration`` is nullable on the model and is used as a divisor below.
+        logger.error(
+            "waveform_generation_invalid_duration",
+            file_name=file_name,
+            duration=duration,
+        )
+        raise WaveformGenerationFailure("Audio duration is missing or invalid.")
+
     # Determine the width of the waveform based on the duration of the audio.
     # The width varies to improve the appearance and "resolution" of the waveform.
     # It also prevents requesting to many points from short audio files.
@@ -163,7 +172,9 @@ def process_waveform_output(json_out):
         transformed_data.append(val)
         if val > max_val:
             max_val = val
-    transformed_data = [round(val / max_val, 5) for val in transformed_data]
+    if max_val > 0:
+        transformed_data = [round(val / max_val, 5) for val in transformed_data]
+    # Otherwise the audio is silent and every peak is already 0.
     logger.debug(
         f"finished transformation len(transformed_data)={len(transformed_data)}"
     )
