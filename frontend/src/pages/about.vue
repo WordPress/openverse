@@ -54,7 +54,7 @@ useHead({
           }}</VLink>
         </template>
         <template #working>
-          <VLink href="https://github.com/orgs/WordPress/projects/3">{{
+          <VLink href="https://github.com/orgs/WordPress/projects/75">{{
             $t("about.planning.working")
           }}</VLink>
         </template>
