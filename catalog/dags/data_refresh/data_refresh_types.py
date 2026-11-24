@@ -76,6 +76,9 @@ class DataRefreshConfig:
                                        copy the upstream table into the downstream DB
     add_primary_key_timeout:           timedelta expressing the amount of time it may take to
                                        add the primary key to the temp table
+    create_indices_timeout:            timedelta expressing the amount of time it may take to
+                                       create all the indices of a temp table, one after
+                                       another
     alter_data_batch_size:             int number of records to process per batch in alter_data
                                        tasks
     alter_data_timeout:                timedelta expressing the amount of time it may take to
@@ -106,6 +109,7 @@ class DataRefreshConfig:
     dag_timeout: timedelta = timedelta(days=1)
     copy_data_timeout: timedelta = timedelta(hours=1)
     add_primary_key_timeout: timedelta = timedelta(hours=1)
+    create_indices_timeout: timedelta = timedelta(hours=1)
     alter_data_batch_size: int = DATA_REFRESH_ALTER_BATCH_SIZE
     alter_data_timeout: timedelta = timedelta(hours=1)
     indexer_worker_timeout: timedelta = timedelta(hours=12)
@@ -138,6 +142,7 @@ DATA_REFRESH_CONFIGS = {
         dag_timeout=timedelta(days=6),
         copy_data_timeout=timedelta(hours=12),
         add_primary_key_timeout=timedelta(hours=12),
+        create_indices_timeout=timedelta(days=1),
         alter_data_timeout=timedelta(hours=12),
         indexer_worker_timeout=timedelta(days=3),
         concurrency_check_poke_interval=int(

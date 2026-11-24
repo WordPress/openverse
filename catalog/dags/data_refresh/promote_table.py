@@ -8,6 +8,7 @@ In this TaskGroup, indices and constraints from the original table are applied t
 
 import logging
 from dataclasses import asdict
+from datetime import timedelta
 
 from airflow.sdk import task, task_group
 
@@ -53,12 +54,14 @@ def promote_table(
     postgres_conn_id: str,
     downstream_table_name: str,
     temp_table_name: str,
+    create_indices_timeout: timedelta,
 ):
     # Recreate indices from the original table.
     remap_table_indices = remap_table_indices_to_table(
         postgres_conn_id=postgres_conn_id,
         table_name=downstream_table_name,
         temp_table_name=temp_table_name,
+        create_indices_timeout=create_indices_timeout,
     )
 
     # Recreate constraints from the original table.
@@ -96,4 +99,5 @@ def promote_tables(
 
     promote_table.partial(
         postgres_conn_id=downstream_conn_id,
+        create_indices_timeout=data_refresh_config.create_indices_timeout,
     ).expand_kwargs([asdict(tm) for tm in data_refresh_config.table_mappings])
