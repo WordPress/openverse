@@ -86,8 +86,8 @@ def test_transform_index_defs(existing_index_defs, expected_index_defs):
                 ),
             ],
             [
-                "CREATE INDEX temp_import_image_provider_7d11f847 ON"
-                " public.temp_import_image USING btree (provider)",
+                "CREATE INDEX IF NOT EXISTS temp_import_image_provider_7d11f847"
+                " ON public.temp_import_image USING btree (provider)",
             ],
         ),
         # If there are multiple indices, run_sql is called for all except the pk
@@ -113,10 +113,10 @@ def test_transform_index_defs(existing_index_defs, expected_index_defs):
                 ),
             ],
             [
-                "CREATE INDEX temp_import_image_provider_7d11f847 ON"
-                " public.temp_import_image USING btree (provider)",
-                "CREATE UNIQUE INDEX temp_import_image_identifier_key ON"
-                " public.temp_import_image USING btree (identifier)",
+                "CREATE INDEX IF NOT EXISTS temp_import_image_provider_7d11f847"
+                " ON public.temp_import_image USING btree (provider)",
+                "CREATE UNIQUE INDEX IF NOT EXISTS temp_import_image_identifier_key"
+                " ON public.temp_import_image USING btree (identifier)",
             ],
         ),
     ],
@@ -124,14 +124,18 @@ def test_transform_index_defs(existing_index_defs, expected_index_defs):
 def test_create_table_indices(index_configs, expected_sql):
     with patch("common.sql.run_sql.function") as run_sql_mock:
         create_table_indices.function(
-            postgres_conn_id="test_id", index_configs=index_configs, table_name="image"
+            postgres_conn_id="test_id",
+            index_configs=index_configs,
+            table_name="image",
+            statement_timeout=7200.0,
         )
 
         expected_calls = [
-            call(postgres_conn_id="test_id", sql_template=sql) for sql in expected_sql
+            call(postgres_conn_id="test_id", sql_template=sql, timeout=7200.0)
+            for sql in expected_sql
         ]
 
-        run_sql_mock.assert_has_calls(expected_calls)
+        assert run_sql_mock.call_args_list == expected_calls
 
 
 def test_index_configs_survive_xcom():
@@ -152,8 +156,9 @@ def test_index_configs_survive_xcom():
         )
     run_sql_mock.assert_called_once_with(
         postgres_conn_id="test_id",
-        sql_template="CREATE INDEX temp_import_image_provider_7d11f847 ON"
-        " public.temp_import_image USING btree (provider)",
+        sql_template="CREATE INDEX IF NOT EXISTS temp_import_image_provider_7d11f847"
+        " ON public.temp_import_image USING btree (provider)",
+        timeout=None,
     )
 
     go_live_query = get_go_live_query.function(

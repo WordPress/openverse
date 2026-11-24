@@ -5,6 +5,7 @@ This file contains TaskGroups related to rmampping the table indices from the li
 """
 
 import logging
+from datetime import timedelta
 from typing import TypedDict
 
 from airflow.sdk import task, task_group
@@ -79,8 +80,18 @@ def transform_index_defs(
 
 @task(map_index_template="{{ task.op_kwargs['table_name'] }}")
 def create_table_indices(
-    postgres_conn_id: str, table_name: str, index_configs: list[TableIndex]
+    postgres_conn_id: str,
+    table_name: str,
+    index_configs: list[TableIndex],
+    statement_timeout: float | None = None,
 ):
+    """
+    Create the indices on the temp table one at a time.
+
+    An index that already exists is skipped, so a retry resumes after the last
+    index that finished instead of failing on the first one. Each statement may run
+    for as long as `statement_timeout` seconds, rather than the one hour default.
+    """
     logger.info(f"Creating indices for `{table_name}`.'")
     for index_config in index_configs:
         if "(id)" in index_config["index_def"]:
@@ -90,7 +101,11 @@ def create_table_indices(
 
         # Create the index
         run_sql.function(
-            postgres_conn_id=postgres_conn_id, sql_template=index_config["index_def"]
+            postgres_conn_id=postgres_conn_id,
+            sql_template=index_config["index_def"].replace(
+                " INDEX ", " INDEX IF NOT EXISTS ", 1
+            ),
+            timeout=statement_timeout,
         )
 
     return index_configs
@@ -98,7 +113,10 @@ def create_table_indices(
 
 @task_group
 def remap_table_indices_to_table(
-    table_name: str, temp_table_name: str, postgres_conn_id: str
+    table_name: str,
+    temp_table_name: str,
+    postgres_conn_id: str,
+    create_indices_timeout: timedelta,
 ):
     """
     Apply all indices on the main media table to the temp table. Indices will be given
@@ -123,10 +141,11 @@ def remap_table_indices_to_table(
     )
 
     # Actually create the new indices on the temp table
-    indices = create_table_indices(
+    indices = create_table_indices.override(execution_timeout=create_indices_timeout)(
         postgres_conn_id=postgres_conn_id,
         table_name=table_name,
         index_configs=new_index_configs,
+        statement_timeout=create_indices_timeout.total_seconds(),
     )
 
     # Return the information for the newly created indices, so that they can later
