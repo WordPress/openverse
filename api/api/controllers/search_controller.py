@@ -28,6 +28,7 @@ from api.controllers.elasticsearch.helpers import (
 from api.utils import tallies
 from api.utils.check_dead_links import check_dead_links
 from api.utils.dead_link_mask import get_query_hash
+from api.utils.exceptions import IncompleteSourceCounts
 from api.utils.search_context import SearchContext
 
 
@@ -529,19 +530,36 @@ def execute_search(
     return page_count, result_count, results
 
 
+def _cache_get(key: str, description: str):
+    try:
+        return cache.get(key=key)
+    except ConnectionError:
+        logger.warning(f"Redis connect failed, cannot get cached {description}.")
+        return None
+
+
+def _cache_set(key: str, value, timeout: int | None, description: str):
+    try:
+        cache.set(key=key, timeout=timeout, value=value)
+    except ConnectionError:
+        logger.warning(f"Redis connect failed, cannot cache {description}.")
+
+
 def get_sources(index):
     """
     Given an index, find all available data sources and return their counts.
+
+    Counts from an aggregation that some shards failed to answer are too low by
+    the share of documents on those shards, so they are neither cached nor
+    returned. The last complete counts are returned instead, and if there are
+    none, ``IncompleteSourceCounts`` is raised.
 
     :param index: An Elasticsearch index, such as `'image'`.
     :return: A dictionary mapping sources to the count of their images.`
     """
     source_cache_name = "sources-" + index
-    try:
-        sources = cache.get(key=source_cache_name)
-    except ConnectionError:
-        logger.warning("Redis connect failed, cannot get cached sources.")
-        sources = None
+    complete_cache_name = f"{source_cache_name}-last-complete"
+    sources = _cache_get(source_cache_name, "sources")
 
     if not sources:
         # Don't increase `size` without reading this issue first:
@@ -566,19 +584,35 @@ def get_sources(index):
                 request_cache=True,
                 es_query="sources",
             )
-            buckets = results["aggregations"]["unique_sources"]["buckets"]
         except NotFoundError:
-            buckets = [{"key": "none_found", "doc_count": 0}]
-        sources = {bucket["key"]: bucket["doc_count"] for bucket in buckets}
+            results = {
+                "aggregations": {
+                    "unique_sources": {
+                        "buckets": [{"key": "none_found", "doc_count": 0}]
+                    }
+                }
+            }
 
-        try:
-            cache.set(
-                key=source_cache_name,
-                timeout=SOURCE_CACHE_TIMEOUT,
-                value=sources,
+        # The client's response object supports `in` and `[]` but not `.get`.
+        shards = results["_shards"] if "_shards" in results else {}
+        failed_shards = shards.get("failed", 0)
+        if failed_shards:
+            logger.warning(
+                "Some shards failed to count the sources.",
+                index=index,
+                shards=shards,
             )
-        except ConnectionError:
-            logger.warning("Redis connect failed, cannot cache sources.")
+            sources = _cache_get(complete_cache_name, "complete sources")
+            if not sources:
+                raise IncompleteSourceCounts(
+                    f"{failed_shards} shards of `{index}` failed to count the sources."
+                )
+        else:
+            buckets = results["aggregations"]["unique_sources"]["buckets"]
+            sources = {bucket["key"]: bucket["doc_count"] for bucket in buckets}
+            _cache_set(source_cache_name, sources, SOURCE_CACHE_TIMEOUT, "sources")
+            # Kept with no expiry, to answer while the shards keep failing.
+            _cache_set(complete_cache_name, sources, None, "complete sources")
 
     sources = {source: int(count) for source, count in sources.items()}
     return sources

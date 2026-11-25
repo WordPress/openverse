@@ -12,6 +12,14 @@ from api.utils.es_transport import SearchCapacityExceeded
 
 logger = structlog.get_logger(__name__)
 
+
+class IncompleteSourceCounts(RuntimeError):
+    """
+    Some shards failed to answer the source count aggregation, and no complete
+    counts are cached to fall back on.
+    """
+
+
 # Elasticsearch failing to answer is a backend outage the client can only wait
 # out, so it is reported as one. Answering here also keeps these out of the
 # error logs, which otherwise receive one 500 per timed-out search.
@@ -27,6 +35,10 @@ SEARCH_BACKEND_FAILURES = {
     ESConnectionError: (
         status.HTTP_503_SERVICE_UNAVAILABLE,
         "Search is temporarily unavailable, please retry shortly.",
+    ),
+    IncompleteSourceCounts: (
+        status.HTTP_503_SERVICE_UNAVAILABLE,
+        "Source counts are temporarily unavailable, please retry shortly.",
     ),
 }
 
