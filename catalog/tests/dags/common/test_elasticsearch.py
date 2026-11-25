@@ -463,7 +463,9 @@ def test_wait_for_delete_by_query_fails_with_its_group(monkeypatch):
 )
 def test_assert_same_document_count(monkeypatch, counts, should_fail):
     es_conn = mock.Mock()
-    es_conn.count.side_effect = [{"count": count} for count in counts]
+    es_conn.count.side_effect = [
+        {"count": count, "_shards": _shards()} for count in counts
+    ]
     _hook(monkeypatch, es_conn)
 
     if should_fail:
@@ -478,3 +480,83 @@ def test_assert_same_document_count(monkeypatch, counts, should_fail):
             )
             == 10
         )
+
+
+def _shards(failed: int = 0) -> dict:
+    failures = [{"shard": 3, "reason": {"type": "es_rejected_execution_exception"}}]
+    return {
+        "total": 18,
+        "successful": 18 - failed,
+        "skipped": 0,
+        "failed": failed,
+        **({"failures": failures * failed} if failed else {}),
+    }
+
+
+def test_assert_same_document_count_fails_on_failed_shards(monkeypatch):
+    es_conn = mock.Mock()
+    es_conn.count.side_effect = [
+        {"count": 10, "_shards": _shards()},
+        {"count": 9, "_shards": _shards(failed=1)},
+    ]
+    _hook(monkeypatch, es_conn)
+
+    with pytest.raises(es.IncompleteResponseError, match="1 of 18 shards failed"):
+        es.assert_same_document_count.function(
+            "http://es:9200", "image-new", "image-new-filtered"
+        )
+
+
+def _source_count_response(failed: int = 0, sum_other_doc_count: int = 0) -> dict:
+    return {
+        "_shards": _shards(failed),
+        "aggregations": {
+            "unique_sources": {
+                "sum_other_doc_count": sum_other_doc_count,
+                "buckets": [
+                    {"key": "flickr", "doc_count": 2500},
+                    {"key": "stocksnap", "doc_count": 100},
+                ],
+            }
+        },
+    }
+
+
+def test_get_record_count_group_by_sources(monkeypatch):
+    es_conn = mock.Mock()
+    es_conn.search.return_value = _source_count_response()
+    _hook(monkeypatch, es_conn)
+
+    counts = es.get_record_count_group_by_sources.function("http://es:9200", "image")
+
+    assert counts == {"flickr": 2500, "stocksnap": 100}
+    aggregation = es_conn.search.call_args.kwargs["body"]["aggs"]["unique_sources"]
+    assert aggregation["terms"]["size"] == es.SOURCE_COUNT_BUCKETS
+
+
+@pytest.mark.parametrize(
+    "response, error, match",
+    [
+        pytest.param(
+            _source_count_response(failed=3),
+            es.IncompleteResponseError,
+            "3 of 18 shards failed",
+            id="failed_shards",
+        ),
+        pytest.param(
+            _source_count_response(sum_other_doc_count=40),
+            AirflowFailException,
+            "40 documents were left out",
+            id="more_sources_than_buckets",
+        ),
+    ],
+)
+def test_get_record_count_group_by_sources_fails_on_incomplete_counts(
+    monkeypatch, response, error, match
+):
+    es_conn = mock.Mock()
+    es_conn.search.return_value = response
+    _hook(monkeypatch, es_conn)
+
+    with pytest.raises(error, match=match):
+        es.get_record_count_group_by_sources.function("http://es:9200", "image")

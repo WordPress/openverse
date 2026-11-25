@@ -15,6 +15,29 @@ from common.constants import REFRESH_POKE_INTERVAL
 
 logger = logging.getLogger(__name__)
 
+# More buckets than any media type has sources, so every source is counted.
+SOURCE_COUNT_BUCKETS = 1000
+
+
+class IncompleteResponseError(Exception):
+    """
+    Some shards failed to answer, so counts in the response are too low. A plain
+    exception, so that the task's retries ask again.
+    """
+
+
+def raise_for_failed_shards(response, action: str) -> None:
+    """
+    Raise if some shards failed to answer. Elasticsearch still answers with 200
+    and counts only the documents on the shards that did.
+    """
+    shards = response["_shards"]
+    if shards["failed"]:
+        raise IncompleteResponseError(
+            f"{action}: {shards['failed']} of {shards['total']} shards failed. "
+            f"First failures: {shards.get('failures', [])[:3]}"
+        )
+
 
 # Index settings that should not be copied over from the base configuration when
 # creating a new index.
@@ -114,7 +137,14 @@ def get_record_count_group_by_sources(es_host: str, index: str):
     Return a dict where the keys are the sources, and the values are the counts.
     Calls Elasticsearch to run an aggs query to do a count grouped by the field "source", and parses the result into a dict.
     """
-    body = {"aggs": {"unique_sources": {"terms": {"field": "source"}}}}
+    body = {
+        "size": 0,
+        "aggs": {
+            "unique_sources": {
+                "terms": {"field": "source", "size": SOURCE_COUNT_BUCKETS}
+            }
+        },
+    }
 
     # Unfornately the ElasticsearchPythonHook's search function doesn't work with aggs, because it returns the "hits" key only
     # See source code at https://airflow.apache.org/docs/apache-airflow-providers-elasticsearch/stable/_modules/airflow/providers/elasticsearch/hooks/elasticsearch.html#ElasticsearchPythonHook
@@ -126,13 +156,20 @@ def get_record_count_group_by_sources(es_host: str, index: str):
         logger.warning(f"Elasticsearch index: {index} does not exist. Error msg: {err}")
         return {}
 
-    # es_buckets object looks like: [{'key': 'flickr', 'doc_count': 2500}, {'key': 'stocksnap', 'doc_count': 2500}]
-    es_buckets = es_result["aggregations"]["unique_sources"]["buckets"]
-    result = {
-        source_count["key"]: source_count["doc_count"] for source_count in es_buckets
-    }
+    raise_for_failed_shards(es_result, f"Counting the sources of {index}")
+    aggregation = es_result["aggregations"]["unique_sources"]
+    if aggregation["sum_other_doc_count"]:
+        raise AirflowFailException(
+            f"{index} has more than {SOURCE_COUNT_BUCKETS} sources, so "
+            f"{aggregation['sum_other_doc_count']} documents were left out of the "
+            "counts. Raise SOURCE_COUNT_BUCKETS."
+        )
 
-    return result
+    # es_buckets object looks like: [{'key': 'flickr', 'doc_count': 2500}, {'key': 'stocksnap', 'doc_count': 2500}]
+    return {
+        source_count["key"]: source_count["doc_count"]
+        for source_count in aggregation["buckets"]
+    }
 
 
 @task
@@ -564,8 +601,12 @@ def assert_same_document_count(es_host: str, index: str, other_index: str) -> in
     Both counts only include refreshed documents.
     """
     es_conn = ElasticsearchPythonHook(hosts=[es_host]).get_conn
-    count = es_conn.count(index=index)["count"]
-    other_count = es_conn.count(index=other_index)["count"]
+    response = es_conn.count(index=index)
+    raise_for_failed_shards(response, f"Counting {index}")
+    count = response["count"]
+    other_response = es_conn.count(index=other_index)
+    raise_for_failed_shards(other_response, f"Counting {other_index}")
+    other_count = other_response["count"]
     if count != other_count:
         raise AirflowFailException(
             f"{index} has {count} documents, but {other_index} has {other_count}."
