@@ -12,6 +12,7 @@ import pytest
 from aiohttp import client_exceptions
 from aiohttp.client_reqrep import ConnectionKey
 from asgiref.sync import async_to_sync
+from redis.exceptions import ResponseError
 from structlog.testing import capture_logs
 
 from api.utils.image_proxy import (
@@ -710,10 +711,14 @@ def test_photon_get_raises_by_not_allowed_types(image_type):
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    "headers, expected_cache_val",
+    "headers, expected_cache_val, expected_ttl",
     [
-        ({"Content-Type": "image/tiff"}, b"tiff"),
-        ({"Content-Type": "unknown"}, b"unknown"),
+        ({"Content-Type": "image/tiff"}, b"tiff", extension._EXTENSION_CACHE_TTL),
+        (
+            {"Content-Type": "unknown"},
+            b"unknown",
+            extension._UNKNOWN_EXTENSION_CACHE_TTL,
+        ),
     ],
 )
 @cache_availability_params
@@ -721,6 +726,7 @@ def test_photon_get_raises_by_not_allowed_types(image_type):
 def test_photon_get_saves_image_type_to_cache(
     headers,
     expected_cache_val,
+    expected_ttl,
     is_cache_reachable,
     cache_name,
     request,
@@ -742,15 +748,41 @@ def test_photon_get_saves_image_type_to_cache(
     key = f"media:{image.identifier}:thumb_type"
     if is_cache_reachable:
         assert cache.get(key) == expected_cache_val
+        assert cache.ttl(key) == expected_ttl.total_seconds()
     else:
         messages = [record["event"] for record in cap_logs]
         assert all(
             message in messages
             for message in [
-                "Redis connect failed, cannot get cached image extension.",
-                "Redis connect failed, cannot cache image extension.",
+                "Redis error, cannot get cached image extension.",
+                "Redis error, cannot cache image extension.",
             ]
         )
+
+
+@pytest.mark.django_db
+@pytest.mark.pook(start_active=False)
+def test_photon_get_tolerates_full_cache(redis, monkeypatch):
+    image_url = TEST_IMAGE_URL.replace(".jpg", "")
+    image = ImageFactory.create(url=image_url)
+    media_info = MediaInfo(
+        media_identifier=image.identifier,
+        media_provider=image.provider,
+        image_url=image_url,
+    )
+
+    def raise_oom(*args, **kwargs):
+        raise ResponseError("OOM command not allowed when used memory > 'maxmemory'.")
+
+    monkeypatch.setattr(redis, "set", raise_oom)
+    pook.on()
+    pook.head(image_url, reply=200, response_headers={"Content-Type": "image/tiff"})
+    with capture_logs() as cap_logs, pytest.raises(UnsupportedMediaType):
+        photon_get(media_info)
+
+    messages = [record["event"] for record in cap_logs]
+    assert "Redis error, cannot cache image extension." in messages
+    assert "upstream_thumbnail_exception" not in messages
 
 
 @pytest.mark.django_db
