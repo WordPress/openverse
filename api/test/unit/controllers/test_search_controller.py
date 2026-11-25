@@ -10,6 +10,7 @@ from uuid import uuid4
 import pook
 import pytest
 from django_redis import get_redis_connection
+from elastic_transport import ObjectApiResponse
 from elasticsearch_dsl import Search
 from elasticsearch_dsl.query import Terms
 from structlog.testing import capture_logs
@@ -22,6 +23,7 @@ from api.controllers.search_controller import (
 )
 from api.utils import tallies
 from api.utils.dead_link_mask import get_query_hash, save_query_mask
+from api.utils.exceptions import IncompleteSourceCounts
 from api.utils.search_context import SearchContext
 from test.factory.es_http import (
     MOCK_DEAD_RESULT_URL_PREFIX,
@@ -916,3 +918,72 @@ def test_get_sources_returns_stats(is_cache_reachable, cache_name, request, capl
                 "Redis connect failed, cannot cache sources.",
             ]
         )
+
+
+def _source_counts_response(failed_shards: int) -> ObjectApiResponse:
+    body = {
+        "_shards": {
+            "total": 18,
+            "successful": 18 - failed_shards,
+            "skipped": 0,
+            "failed": failed_shards,
+        },
+        "aggregations": {
+            "unique_sources": {
+                "buckets": [
+                    {"key": "source_1", "doc_count": 1000 - 300 * bool(failed_shards)},
+                    {"key": "source_2", "doc_count": 500 - 150 * bool(failed_shards)},
+                ]
+            }
+        },
+    }
+    return ObjectApiResponse(body=body, meta=mock.Mock())
+
+
+def test_get_sources_caches_complete_counts(search_con_cache):
+    with patch(
+        "api.controllers.search_controller.get_raw_es_response",
+        return_value=_source_counts_response(failed_shards=0),
+    ):
+        search_controller.get_sources("image")
+
+    expected = {"source_1": 1000, "source_2": 500}
+    assert search_con_cache.get("sources-image") == expected
+    assert search_con_cache.get("sources-image-last-complete") == expected
+
+
+def test_get_sources_returns_last_complete_counts_when_shards_fail(search_con_cache):
+    search_con_cache.set(
+        "sources-image-last-complete", {"source_1": 900, "source_2": 400}
+    )
+
+    with patch(
+        "api.controllers.search_controller.get_raw_es_response",
+        return_value=_source_counts_response(failed_shards=3),
+    ):
+        assert search_controller.get_sources("image") == {
+            "source_1": 900,
+            "source_2": 400,
+        }
+
+    assert search_con_cache.get("sources-image") is None
+    assert search_con_cache.get("sources-image-last-complete") == {
+        "source_1": 900,
+        "source_2": 400,
+    }
+
+
+@cache_availability_params
+def test_get_sources_raises_when_shards_fail_without_complete_counts(
+    is_cache_reachable, cache_name, request
+):
+    request.getfixturevalue(cache_name)
+
+    with (
+        patch(
+            "api.controllers.search_controller.get_raw_es_response",
+            return_value=_source_counts_response(failed_shards=3),
+        ),
+        pytest.raises(IncompleteSourceCounts),
+    ):
+        search_controller.get_sources("image")

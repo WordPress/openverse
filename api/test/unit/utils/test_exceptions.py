@@ -5,7 +5,7 @@ from elastic_transport import ConnectionError as ESConnectionError
 from elastic_transport import ConnectionTimeout
 
 from api.utils.es_transport import SearchCapacityExceeded
-from api.utils.exceptions import exception_handler
+from api.utils.exceptions import IncompleteSourceCounts, exception_handler
 
 
 @pytest.mark.parametrize(
@@ -14,6 +14,7 @@ from api.utils.exceptions import exception_handler
         (SearchCapacityExceeded("no socket free"), 503),
         (ConnectionTimeout("Connection timed out"), 504),
         (ESConnectionError("connection refused"), 503),
+        (IncompleteSourceCounts("3 shards failed"), 503),
     ],
 )
 def test_search_backend_failures_are_not_server_errors(ex, status_code):
