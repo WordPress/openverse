@@ -148,3 +148,50 @@ def test_mset_and_expire_for_responses(is_cache_reachable, cache_name, request):
                 "Redis connect failed, cannot cache link liveness.",
             ]
         )
+
+
+@pook.on
+def test_unknown_status_log_names_the_checked_url():
+    query_hash = "test_unknown_status_log_names_the_checked_url"
+    results = [
+        Hit(create_mock_es_http_image_hit("live", "image", live=True)),
+        Hit(create_mock_es_http_image_hit("blocked", "image", live=True)),
+    ]
+    live_url, blocked_url = (result.url for result in results)
+    pook.head(live_url).reply(200)
+    pook.head(blocked_url).reply(429)
+
+    with capture_logs() as cap_logs:
+        check_dead_links(query_hash, 0, results)
+
+    # A 429 is not a dead link, so both results are kept
+    assert len(results) == 2
+    warnings = [log["event"] for log in cap_logs if log["log_level"] == "warning"]
+    assert len(warnings) == 1
+    assert f"url={blocked_url} " in warnings[0]
+    assert f"url={live_url} " not in warnings[0]
+
+
+@pook.on
+@pytest.mark.parametrize("index", ("image", "audio"))
+def test_dead_link_logs_name_the_index(index):
+    query_hash = f"test_dead_link_logs_name_the_index_{index}"
+    results = [
+        Hit(create_mock_es_http_image_hit("blocked", index, live=True)),
+        Hit(create_mock_es_http_image_hit("dead", index, live=False)),
+    ]
+    blocked, dead = results
+    pook.head(blocked.url).reply(429)
+    pook.head(dead.url).reply(404)
+
+    with capture_logs() as cap_logs:
+        check_dead_links(query_hash, 0, results)
+
+    assert results == [blocked]
+    events = {log["log_level"]: log["event"] for log in cap_logs}
+    # The messages are not specific to images, and name the index of the result
+    # so that it can be found in the matching table.
+    for level in ("warning", "info"):
+        assert "image" not in events[level].split(" index=")[0].lower()
+        assert f"index={index} " in events[level]
+    assert f"id={dead['identifier']} " in events["info"]

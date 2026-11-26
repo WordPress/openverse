@@ -135,7 +135,7 @@ async def _make_head_requests(
 
 def check_dead_links(query_hash: str, start_slice: int, results: list[Hit]) -> None:
     """
-    Make sure images exist before we display them.
+    Make sure media files exist before we display them.
 
     Treat redirects as broken links since most of the time the redirect leads to a
     generic "not found" placeholder.
@@ -205,17 +205,22 @@ def check_dead_links(query_hash: str, start_slice: int, results: list[Hit]) -> N
 
         provider = results[del_idx]["provider"]
         status_mapping = provider_status_mappings[provider]
+        # The results of every media type are checked here, so name the index
+        # the result came from, to tell which table it is in.
+        index = results[del_idx].meta.index
 
         if status in status_mapping.unknown:
             logger.warning(
-                "Image validation failed due to rate limiting or blocking. "
-                f"url={urls[idx]} "
+                "Link validation failed due to rate limiting or blocking. "
+                f"index={index} "
+                f"url={urls[del_idx]} "
                 f"status={status} "
                 f"provider={provider} "
             )
         elif status not in status_mapping.live:
             logger.info(
-                "Deleting broken image from results "
+                "Deleting broken result from results "
+                f"index={index} "
                 f"id={results[del_idx]['identifier']} "
                 f"status={status} "
                 f"provider={provider} "
