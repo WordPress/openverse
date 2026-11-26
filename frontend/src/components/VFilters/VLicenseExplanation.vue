@@ -32,7 +32,7 @@ defineProps<{
       class="text-sm"
     >
       <template #readMore>
-        <VLink :href="`${getLicenseUrl(license)}`">{{
+        <VLink :href="`${getLicenseUrl(license)}`" class="underline">{{
           $t("filters.licenseExplanation.more.readMore")
         }}</VLink>
       </template>

@@ -58,7 +58,7 @@ const handleShow = () => {
         keypath="sensitiveContent.singleResult.learnMore"
       >
         <template #link>
-          <VLink class="text-link hover:underline" href="/sensitive-content">{{
+          <VLink class="text-link underline" href="/sensitive-content">{{
             $t("sensitiveContent.singleResult.link")
           }}</VLink>
           {{ " " }}

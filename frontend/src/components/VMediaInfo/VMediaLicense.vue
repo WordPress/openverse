@@ -51,6 +51,7 @@ const sendVisitLicensePage = () => {
       >
         <template #link>
           <VLink
+            class="underline"
             :href="licenseUrl"
             :send-external-link-click-event="false"
             @click="sendVisitLicensePage"
@@ -72,6 +73,7 @@ const sendVisitLicensePage = () => {
       >
         <template #link>
           <VLink
+            class="underline"
             :aria-label="$t('mediaDetails.aria.attribution.tool')"
             :href="licenseUrl"
             :send-external-link-click-event="false"
