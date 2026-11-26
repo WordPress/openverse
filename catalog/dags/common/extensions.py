@@ -42,6 +42,13 @@ mimetypes.add_type("audio/midi", ".midi")
 mimetypes.add_type("audio/x-matroska", ".mka")
 mimetypes.add_type("audio/wav", ".wav")
 
+# Python 3.14 changed the default extension of some MIME types, for example
+# `audio/ogg` from `.oga` to `.ogg`. Pin the extensions that existing records
+# use, so that the filetype does not depend on the Python version.
+PREFERRED_EXTENSIONS = {
+    "audio/ogg": "oga",
+}
+
 
 class InvalidFiletypeError(Exception):
     def __init__(self, actual_filetype: str, expected_filetype: str, message: str = ""):
@@ -59,6 +66,8 @@ def get_extension_from_mimetype(mime_type: str | None) -> str | None:
     if not mime_type:
         return
     mime_type = MIME_TYPE_ALIASES.get(mime_type, mime_type)
+    if mime_type in PREFERRED_EXTENSIONS:
+        return PREFERRED_EXTENSIONS[mime_type]
     ext = mimetypes.guess_extension(mime_type)
     # Removes the leading dot if there is an extension
     return ext[1:] if ext else None
