@@ -15,11 +15,9 @@ Notes:                  <https://stocksnap.io/api/load-photos/date/desc/1>
 import json
 import logging
 
-import backoff
-from requests.exceptions import HTTPError
-
 from common.licenses import get_license_info
 from common.loader import provider_details as prov
+from common.retries import retry_on_http_status
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 
 
@@ -163,14 +161,7 @@ class StockSnapDataIngester(ProviderDataIngester):
     # Add a backoff on every request
     # for 5XX error codes.
     # See: https://github.com/WordPress/openverse/issues/4878
-    @backoff.on_exception(
-        backoff.expo,
-        HTTPError,
-        # 30 minutes
-        max_time=60 * 30,
-        # Only retry for 5xx errors
-        giveup=lambda e: e.response.status_code not in {502, 503, 504},
-    )
+    @retry_on_http_status(max_time=60 * 30)
     def _get_filesize(self, image_url):
         """Get the size of the image in bytes."""
         resp = self.delayed_requester.head(image_url)

@@ -1,12 +1,11 @@
 import logging
 
-import backoff
 import lxml.html as html
 from airflow.sdk import Variable
-from requests import HTTPError
 
 from common.licenses import LicenseInfo, get_license_info
 from common.loader import provider_details as prov
+from common.retries import retry_on_http_status
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 
 
@@ -26,13 +25,9 @@ class BrooklynMuseumDataIngester(ProviderDataIngester):
     # Brooklyn Museum's API tends to be flaky, so we add a backoff on every request
     # for 5XX error codes.
     # See: https://github.com/WordPress/openverse/issues/4712
-    get_response_json = backoff.on_exception(
-        backoff.expo,
-        HTTPError,
-        max_time=60 * 2,
-        # Only retry on 5XX errors
-        giveup=lambda e: e.response.status_code not in {502, 503, 504},
-    )(ProviderDataIngester.get_response_json)
+    get_response_json = retry_on_http_status(max_time=60 * 2)(
+        ProviderDataIngester.get_response_json
+    )
 
     def get_next_query_params(self, prev_query_params: dict | None) -> dict:
         if not prev_query_params:
