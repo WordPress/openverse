@@ -139,7 +139,7 @@ def main(output: Path, start_date: str | None, host: str, port: int | None):
         for date_idx, row in enumerate(gdf.index):
             for row_idx, col in enumerate(gdf.columns):
                 cumsum = gdf.loc[row].cumsum()
-                value = gdf[col][date_idx]
+                value = gdf[col].iloc[date_idx]
                 # If the value is too small, don't display it
                 if value < 1:
                     continue
@@ -155,7 +155,7 @@ def main(output: Path, start_date: str | None, host: str, port: int | None):
                     # plus half the current value
                     # e.g. for provider 2 in the previous example, 75 + (75/2)
                     # <current-cumsum> + <current-value> / 2
-                    cumsum[row_idx] - value / 2,
+                    cumsum.iloc[row_idx] - value / 2,
                     # The text is the current value, formatted to 2 decimal places
                     percent,
                     va="center",
