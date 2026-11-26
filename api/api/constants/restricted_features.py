@@ -46,9 +46,14 @@ class RestrictedFeature(typing.Generic[T]):
         return AUTHENTICATED, self.authenticated
 
     @classmethod
-    @property
-    def choices(cls):
-        return ((slug,) * 2 for slug in _RESTRICTED_FEATURES)
+    def choices(cls) -> list[tuple[str, str]]:
+        """
+        Return the registered features as Django choices.
+
+        Django accepts a callable for ``choices`` and evaluates it lazily, after
+        all features are registered.
+        """
+        return [(slug, slug) for slug in _RESTRICTED_FEATURES]
 
 
 MAX_PAGE_SIZE: RestrictedFeature[int] = RestrictedFeature(
