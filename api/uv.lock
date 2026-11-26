@@ -478,6 +478,23 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/c3/56/74dd7b45bbde6d24494220b98d6961cb1200b63a1800332b430daa2c4551/drf_spectacular-0.30.0-py3-none-any.whl", hash = "sha256:006cf5921ebe20a9bd24f7c846261ebbf78780be5961b0d6e87afaa82afd62ff", size = 111150, upload-time = "2026-07-06T11:29:45.12Z" },
 ]
 
+[package.optional-dependencies]
+sidecar = [
+    { name = "drf-spectacular-sidecar" },
+]
+
+[[package]]
+name = "drf-spectacular-sidecar"
+version = "2026.10.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/23/7f/e95c51746e66cae4b6ca35912ad2a211dee979647e9fce4f3b5aca780630/drf_spectacular_sidecar-2026.10.1.tar.gz", hash = "sha256:ec8d20b2594e8a10ebf22e5bab62ec313c7cf8793753a050290b209e16e81c9c", size = 2633804, upload-time = "2026-10-01T17:20:35.255Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/55/09/13509939a12e953759fa2f281b28dc14813c8c331addf3838fccdc71b364/drf_spectacular_sidecar-2026.10.1-py3-none-any.whl", hash = "sha256:fe1d005d8ac9b5d0472f2fe5deeb2e7d6dcffaa24118044f22578b4b8c4b31f2", size = 2656316, upload-time = "2026-10-01T17:20:33.813Z" },
+]
+
 [[package]]
 name = "elastic-transport"
 version = "8.13.0"
@@ -981,7 +998,7 @@ dependencies = [
     { name = "django-tqdm" },
     { name = "django-uuslug" },
     { name = "djangorestframework" },
-    { name = "drf-spectacular" },
+    { name = "drf-spectacular", extra = ["sidecar"] },
     { name = "elasticsearch" },
     { name = "elasticsearch-dsl" },
     { name = "future" },
@@ -1032,7 +1049,7 @@ requires-dist = [
     { name = "django-tqdm", specifier = ">=1.3.1,<2" },
     { name = "django-uuslug", specifier = ">=2.0.0,<3" },
     { name = "djangorestframework", specifier = ">=3.14.0,<4" },
-    { name = "drf-spectacular", specifier = ">=0.30,<0.31" },
+    { name = "drf-spectacular", extras = ["sidecar"], specifier = ">=0.30,<0.31" },
     { name = "elasticsearch", specifier = ">=8.13.0,<9" },
     { name = "elasticsearch-dsl", specifier = ">=8.12.0,<9" },
     { name = "future", specifier = ">=1,<1.1" },
