@@ -148,7 +148,9 @@ def _post_process_results(
                 # will prevent further query attempts
                 end = search_results.hits.total.value
 
-            s = s[start:end]
+            # Slicing a sliced ``Search`` slices within the previous window,
+            # so set the window directly to let it grow.
+            s = s.extra(from_=start, size=end - start)
             search_response = get_es_response(s, es_query="postprocess_search")
 
             return _post_process_results(
