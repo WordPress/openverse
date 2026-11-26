@@ -1,4 +1,4 @@
-# PYTHON=3.12
+# PYTHON=3.14
 
 # Note: Unpinned packages have their versions determined by the Airflow constraints file
 
