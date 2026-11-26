@@ -682,7 +682,7 @@ def test__get_extension_from_url(image_url, expected_ext):
         ("image/svg+xml", "svg"),
         ("audio/midi", "midi"),
         ("audio/mpeg", "mp3"),
-        ("audio/ogg", None),
+        ("audio/ogg", "ogg"),
         ("audio/opus", "opus"),
         ("audio/wav", None),
         ("video/webm", "webm"),
