@@ -6,6 +6,8 @@ from conf.settings.misc import API_VERSION
 
 if "drf_spectacular" not in INSTALLED_APPS:
     INSTALLED_APPS.append("drf_spectacular")
+if "drf_spectacular_sidecar" not in INSTALLED_APPS:
+    INSTALLED_APPS.append("drf_spectacular_sidecar")
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "Openverse API",
@@ -113,6 +115,9 @@ SPECTACULAR_SETTINGS = {
             "description": "These are endpoints pertaining to images.",
         },
     ],
+    "REDOC_DIST": "SIDECAR",
+    "SWAGGER_UI_DIST": "SIDECAR",
+    "SWAGGER_UI_FAVICON_HREF": "SIDECAR",
     "REDOC_UI_SETTINGS": {
         "theme": {
             "logo": {"gutter": "20px"},
