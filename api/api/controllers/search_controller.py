@@ -9,10 +9,10 @@ from django.core.cache import cache
 
 import structlog
 from decouple import config
+from elasticsearch.dsl import Q, Search
+from elasticsearch.dsl.query import EMPTY_QUERY
+from elasticsearch.dsl.response import Hit, Response
 from elasticsearch.exceptions import NotFoundError
-from elasticsearch_dsl import Q, Search
-from elasticsearch_dsl.query import EMPTY_QUERY
-from elasticsearch_dsl.response import Hit, Response
 from redis.exceptions import ConnectionError
 
 import api.models as models

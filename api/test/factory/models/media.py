@@ -5,7 +5,7 @@ from django.conf import settings
 import factory
 import pook
 from elasticsearch import Elasticsearch
-from elasticsearch_dsl.response import Hit
+from elasticsearch.dsl.response import Hit
 from factory.django import DjangoModelFactory
 
 from api.constants.licenses import ALL_LICENSES

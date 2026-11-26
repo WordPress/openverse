@@ -3,7 +3,7 @@ from typing import Self
 
 from django.conf import settings
 
-from elasticsearch_dsl import Q, Search
+from elasticsearch.dsl import Q, Search
 
 from api.constants.media_types import OriginIndex
 from api.controllers.elasticsearch.helpers import get_es_response

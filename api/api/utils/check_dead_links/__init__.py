@@ -8,7 +8,7 @@ import django_redis
 import structlog
 from asgiref.sync import async_to_sync
 from decouple import config
-from elasticsearch_dsl.response import Hit
+from elasticsearch.dsl.response import Hit
 from redis.exceptions import ConnectionError
 
 from api.utils.aiohttp import get_aiohttp_session

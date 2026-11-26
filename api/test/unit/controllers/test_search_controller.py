@@ -11,8 +11,8 @@ import pook
 import pytest
 from django_redis import get_redis_connection
 from elastic_transport import ObjectApiResponse
-from elasticsearch_dsl import Search
-from elasticsearch_dsl.query import Terms
+from elasticsearch.dsl import Search
+from elasticsearch.dsl.query import Terms
 from structlog.testing import capture_logs
 
 from api.controllers import search_controller

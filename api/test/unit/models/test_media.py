@@ -1,7 +1,7 @@
 from django.conf import settings
 
 import pytest
-from elasticsearch_dsl import Document
+from elasticsearch.dsl import Document
 
 from api.models import Audio, Image
 
