@@ -1,4 +1,5 @@
 import logging as log
+import sys
 import time
 
 import elasticsearch
@@ -23,6 +24,9 @@ RETRYABLE_BULK_STATUSES = {429, 502, 503, 504}
 BULK_MAX_RETRIES = config("BULK_MAX_RETRIES", default=10, cast=int)
 BULK_INITIAL_BACKOFF = config("BULK_INITIAL_BACKOFF", default=5, cast=int)  # seconds
 BULK_MAX_BACKOFF = config("BULK_MAX_BACKOFF", default=300, cast=int)  # seconds
+
+# Matches the `generic` formatter in `gunicorn.conf.py`.
+LOG_FORMAT = "[%(asctime)s - %(name)s - %(lineno)3d][%(levelname)s] %(message)s"
 
 
 def launch_reindex(
@@ -54,6 +58,10 @@ def launch_reindex(
                            The data refresh deletes the sensitive documents from it
                            afterwards to make the filtered index.
     """
+    # Python 3.14 starts this process with forkserver instead of fork, so it does
+    # not inherit gunicorn's logging configuration. `basicConfig` does nothing
+    # if the root logger already has handlers.
+    log.basicConfig(level=log.INFO, stream=sys.stdout, format=LOG_FORMAT)
     try:
         reindex(
             model_name,

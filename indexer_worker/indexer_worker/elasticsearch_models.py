@@ -7,7 +7,7 @@ of fields, must be reflected in the actual schema defined in the catalog.
 
 from enum import Enum, auto
 
-from elasticsearch_dsl import Document, Field, Integer
+from elasticsearch.dsl import Document, Field, Integer
 
 from indexer_worker.authority import get_authority_boost
 

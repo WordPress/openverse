@@ -8,20 +8,17 @@ authors = [
   {name = "Openverse Contributors", email = "openverse@wordpress.org"},
 ]
 
-requires-python = "==3.12.*"
+requires-python = "==3.14.*"
 dependencies = [
     "aws-requests-auth ~= 0.4",
     "boto3 ~= 1.28",
     "bottle ~= 0.12",
-    "elasticsearch ==8.18.1",
-    "elasticsearch-dsl ~= 8.9",
+    "elasticsearch ==8.19.3",
     "falcon ~=4.4",
     "filelock ~=4.2",
-    "gunicorn ~= 22.0",
-    "jsonschema ~= 4.19",
+    "gunicorn ~= 23.0",
     "psycopg >=3.2.3, <4",
     "python-decouple ~= 3.8",
-    "PyYAML ~= 6.0",
     "tldextract ~= 5.0",
 ]
 
