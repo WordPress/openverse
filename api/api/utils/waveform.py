@@ -19,6 +19,12 @@ logger = structlog.get_logger(__name__)
 TMP_DIR = pathlib.Path("/tmp").resolve()
 UA_STRING = settings.OUTBOUND_USER_AGENT_TEMPLATE.format(purpose="Waveform")
 
+# Python 3.14 maps `.wav` to `audio/vnd.wave` and no longer knows `audio/x-wav`.
+# Register the WAV MIME types that providers send, so that the extension does
+# not depend on the Python version.
+for _wav_type in ("audio/wav", "audio/x-wav", "audio/wave", "audio/vnd.wave"):
+    mimetypes.add_type(_wav_type, ".wav")
+
 
 class WaveformGenerationFailure(APIException):
     status_code = status.HTTP_424_FAILED_DEPENDENCY
@@ -70,7 +76,9 @@ def download_audio(url, identifier):
             res.raise_for_status()
             mimetype = res.headers["content-type"]
             logger.debug(f"mimetype={mimetype}")
-            ext = ext_from_url(url) or mimetypes.guess_extension(mimetype)
+            ext = ext_from_url(url) or mimetypes.guess_extension(
+                mimetype.split(";")[0].strip()
+            )
             if ext is None:
                 raise ValueError("Could not identify media extension")
             file_name = f"audio-{identifier}{ext}"
