@@ -1,81 +1,122 @@
-from unittest.mock import MagicMock, patch
-
 import pytest
 from requests import Response
-from requests.exceptions import ConnectionError, HTTPError
+from requests.exceptions import ConnectionError, HTTPError, SSLError
 
 from common.retries import retry_on_exceptions, retry_on_http_status
 
 
 @pytest.fixture(autouse=True)
-def no_sleep():
-    with patch("time.sleep") as sleep:
-        yield sleep
+def skip_waits(monkeypatch):
+    # The decorators wait for up to several seconds between attempts.
+    monkeypatch.setattr("time.sleep", lambda seconds: None)
 
 
-def _http_error(status_code: int) -> HTTPError:
+def http_error(status_code: int | None = None) -> HTTPError:
+    if status_code is None:
+        return HTTPError()
     response = Response()
     response.status_code = status_code
     return HTTPError(response=response)
 
 
-@pytest.mark.parametrize("status_code", [502, 503, 504])
-def test_retry_on_http_status_retries_server_errors(status_code):
-    func = MagicMock(side_effect=[_http_error(status_code), "ok"])
+class Flaky:
+    """Raise each of ``errors`` on successive calls, then return ``"ok"``."""
 
-    assert retry_on_http_status(max_time=60)(func)() == "ok"
-    assert func.call_count == 2
+    def __init__(self, *errors: BaseException):
+        self.errors = list(errors)
+        self.calls = 0
 
-
-@pytest.mark.parametrize("status_code", [400, 404, 500])
-def test_retry_on_http_status_raises_other_errors_immediately(status_code):
-    func = MagicMock(side_effect=_http_error(status_code))
-
-    with pytest.raises(HTTPError):
-        retry_on_http_status(max_time=60)(func)()
-    assert func.call_count == 1
+    def __call__(self):
+        self.calls += 1
+        if self.errors:
+            raise self.errors.pop(0)
+        return "ok"
 
 
-def test_retry_on_http_status_uses_custom_status_codes():
-    func = MagicMock(side_effect=[_http_error(400), "ok"])
+@pytest.mark.parametrize(
+    "decorator, errors",
+    [
+        pytest.param(retry_on_http_status(max_time=60), [http_error(502)], id="502"),
+        pytest.param(retry_on_http_status(max_time=60), [http_error(503)], id="503"),
+        pytest.param(
+            retry_on_http_status(max_time=60),
+            [http_error(504), http_error(503), http_error(502)],
+            id="several-server-errors",
+        ),
+        pytest.param(
+            retry_on_http_status(max_time=60, status_codes={400}),
+            [http_error(400)],
+            id="custom-status-code",
+        ),
+        pytest.param(
+            retry_on_exceptions(ValueError, max_tries=3),
+            [ValueError(), ValueError()],
+            id="exception-within-max-tries",
+        ),
+        pytest.param(
+            retry_on_exceptions((SSLError, ConnectionError), max_tries=3),
+            [SSLError(), ConnectionError()],
+            id="any-of-several-exceptions",
+        ),
+    ],
+)
+def test_retries_until_the_call_succeeds(decorator, errors):
+    func = Flaky(*errors)
 
-    assert retry_on_http_status(max_time=60, status_codes={400})(func)() == "ok"
+    assert decorator(func)() == "ok"
+    assert func.calls == len(errors) + 1
 
 
-def test_retry_on_http_status_raises_http_error_without_response():
-    func = MagicMock(side_effect=HTTPError())
+@pytest.mark.parametrize(
+    "decorator, error",
+    [
+        pytest.param(retry_on_http_status(max_time=60), http_error(400), id="400"),
+        pytest.param(retry_on_http_status(max_time=60), http_error(404), id="404"),
+        pytest.param(retry_on_http_status(max_time=60), http_error(500), id="500"),
+        pytest.param(
+            retry_on_http_status(max_time=60, status_codes={400}),
+            http_error(503),
+            id="status-code-not-in-custom-codes",
+        ),
+        pytest.param(
+            retry_on_http_status(max_time=60), http_error(), id="http-error-no-response"
+        ),
+        pytest.param(retry_on_http_status(max_time=60), ValueError(), id="not-http"),
+        pytest.param(
+            retry_on_exceptions(ValueError, max_tries=3),
+            KeyError(),
+            id="exception-not-listed",
+        ),
+    ],
+)
+def test_raises_other_errors_without_retrying(decorator, error):
+    func = Flaky(error)
 
-    with pytest.raises(HTTPError):
-        retry_on_http_status(max_time=60)(func)()
-    assert func.call_count == 1
+    with pytest.raises(type(error)) as exc_info:
+        decorator(func)()
+
+    assert exc_info.value is error
+    assert func.calls == 1
 
 
-def test_retry_on_http_status_reraises_last_error_after_max_time():
-    func = MagicMock(side_effect=_http_error(503))
+@pytest.mark.parametrize("max_tries", [1, 3])
+def test_retry_on_exceptions_raises_the_last_error_after_max_tries(max_tries):
+    errors = [ConnectionError(f"attempt {n}") for n in range(max_tries + 1)]
+    func = Flaky(*errors)
 
-    with pytest.raises(HTTPError):
+    with pytest.raises(ConnectionError) as exc_info:
+        retry_on_exceptions(ConnectionError, max_tries=max_tries)(func)()
+
+    assert exc_info.value is errors[max_tries - 1]
+    assert func.calls == max_tries
+
+
+def test_retry_on_http_status_raises_the_error_once_max_time_has_passed():
+    error = http_error(503)
+    func = Flaky(error, http_error(503))
+
+    with pytest.raises(HTTPError) as exc_info:
         retry_on_http_status(max_time=0)(func)()
-    assert func.call_count == 1
 
-
-def test_retry_on_exceptions_stops_after_max_tries():
-    func = MagicMock(side_effect=ConnectionError())
-
-    with pytest.raises(ConnectionError):
-        retry_on_exceptions((ConnectionError,), max_tries=3)(func)()
-    assert func.call_count == 3
-
-
-def test_retry_on_exceptions_does_not_retry_other_exceptions():
-    func = MagicMock(side_effect=KeyError())
-
-    with pytest.raises(KeyError):
-        retry_on_exceptions(ValueError, max_tries=3)(func)()
-    assert func.call_count == 1
-
-
-def test_retry_on_exceptions_returns_after_recovering(no_sleep):
-    func = MagicMock(side_effect=[ValueError(), ValueError(), "ok"])
-
-    assert retry_on_exceptions(ValueError, max_tries=3)(func)() == "ok"
-    assert no_sleep.call_count == 2
+    assert exc_info.value is error
+    assert func.calls == 1
