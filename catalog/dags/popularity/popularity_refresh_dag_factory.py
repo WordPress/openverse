@@ -24,7 +24,7 @@ https://docs.openverse.org/projects/proposals/popularity_optimizations/20230420-
 """
 
 import logging
-from datetime import datetime
+from datetime import UTC, datetime
 
 from airflow.providers.standard.operators.trigger_dagrun import TriggerDagRunOperator
 from airflow.sdk import DAG, task
@@ -54,7 +54,7 @@ def get_last_updated_time():
     Getting this cutoff time is pulled out into a separate task to ensure that it
     runs only when the `refresh_popularity_metrics_and_constants` task is complete.
     """
-    return datetime.utcnow()
+    return datetime.now(UTC)
 
 
 def create_popularity_refresh_dag(popularity_refresh: PopularityRefresh):

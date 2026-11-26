@@ -17,12 +17,12 @@ import functools
 import logging
 from datetime import datetime
 
-import backoff
 from airflow.sdk import Variable
 from requests.exceptions import ConnectionError, HTTPError, SSLError
 
 from common.licenses.licenses import get_license_info
 from common.loader import provider_details as prov
+from common.retries import retry_on_exceptions, retry_on_http_status
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 
 
@@ -66,14 +66,8 @@ class FreesoundDataIngester(ProviderDataIngester):
 
         super().__init__(*args, **kwargs)
 
-    get_response_json = backoff.on_exception(
-        backoff.expo,
-        HTTPError,
-        max_time=60 * 2,
-        # Raise all other errors
-        giveup=lambda e: (
-            e.response.status_code not in FreesoundDataIngester.flaky_error_codes
-        ),
+    get_response_json = retry_on_http_status(
+        max_time=60 * 2, status_codes=flaky_error_codes
     )(ProviderDataIngester.get_response_json)
 
     def get_next_query_params(self, prev_query_params: dict | None) -> dict:
@@ -180,7 +174,7 @@ class FreesoundDataIngester(ProviderDataIngester):
         else:
             return None, None, None
 
-    @backoff.on_exception(backoff.expo, flaky_exceptions, max_tries=3)
+    @retry_on_exceptions(flaky_exceptions, max_tries=3)
     def _get_audio_file_size(self, url):
         """Get the content length of a provided URL."""
         response = self.delayed_requester.head(url)

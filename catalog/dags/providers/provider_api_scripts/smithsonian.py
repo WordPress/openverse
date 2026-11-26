@@ -10,12 +10,12 @@ Notes:              <https://api.si.edu/openaccess/api/v1.0/search>
 
 import logging
 
-import backoff
 from airflow.exceptions import AirflowException
 from airflow.sdk import Variable
 
 from common.licenses import LicenseInfo
 from common.loader import provider_details as prov
+from common.retries import retry_on_exceptions
 from providers.provider_api_scripts.provider_data_ingester import ProviderDataIngester
 
 
@@ -174,7 +174,7 @@ class SmithsonianDataIngester(ProviderDataIngester):
             images += self._get_associated_images(image_list, shared_image_data)
         return images
 
-    @backoff.on_exception(backoff.expo, ValueError, max_tries=3)
+    @retry_on_exceptions(ValueError, max_tries=3)
     def _get_unit_codes_from_api(self) -> set:
         query_params = {"api_key": self.api_key, "q": "online_media_type:Images"}
         response_json = self.get_response_json(

@@ -32,8 +32,9 @@ MIME_TYPE_ALIASES = {
     "audio/mpeg3": "audio/mpeg",
     "audio/x-flac": "audio/flac",
     "audio/mid": "audio/midi",
-    "audio/wav": "audio/x-wav",
-    "audio/wave": "audio/x-wav",
+    "audio/x-wav": "audio/wav",
+    "audio/wave": "audio/wav",
+    "audio/vnd.wave": "audio/wav",
 }
 
 
@@ -41,6 +42,14 @@ mimetypes.add_type("audio/midi", ".mid")
 mimetypes.add_type("audio/midi", ".midi")
 mimetypes.add_type("audio/x-matroska", ".mka")
 mimetypes.add_type("audio/wav", ".wav")
+
+# The default extension of some MIME types depends on the Python version and on
+# `/etc/mime.types`: `audio/ogg` was `.oga` before Python 3.14 and is `.ogg`
+# from 3.14 on. Pin the extensions that existing records use, so that new
+# records match them.
+PREFERRED_EXTENSIONS = {
+    "audio/ogg": "ogg",
+}
 
 
 class InvalidFiletypeError(Exception):
@@ -59,6 +68,8 @@ def get_extension_from_mimetype(mime_type: str | None) -> str | None:
     if not mime_type:
         return
     mime_type = MIME_TYPE_ALIASES.get(mime_type, mime_type)
+    if mime_type in PREFERRED_EXTENSIONS:
+        return PREFERRED_EXTENSIONS[mime_type]
     ext = mimetypes.guess_extension(mime_type)
     # Removes the leading dot if there is an extension
     return ext[1:] if ext else None

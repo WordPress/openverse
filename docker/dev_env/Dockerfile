@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM docker.io/library/fedora:41
+FROM docker.io/library/fedora:45
 
 # We want to keep all important things in `/opt` as we will preserve the
 # `/opt` directory as a volume.
@@ -36,7 +36,9 @@ ENV PATH="${PNPM_BIN}:${N_PREFIX}/bin:${HOME}/.local/bin:${PATH}"
 # - tree: list files in a tree
 # - xdg-utils: added because Storybook wants to open in a browser
 # - nodejs, npm: language runtime (does not include Corepack)
-# - python*: required by some Python libraries for compilation during installation
+# - python*: required by some Python libraries for compilation during installation;
+#   keep in sync with `# PYTHON=` in `catalog/requirements-prod.txt`, because
+#   `just catalog/venv` runs `python<version>` from here
 # - pipx: Python CLI app installer
 # - libffi*: required for the Python package cffi
 # - libatomic: required by the Node.js binaries that `n` installs
@@ -69,7 +71,7 @@ RUN mkdir -p $HOME/.local/bin \
     tree \
     xdg-utils \
     nodejs npm \
-    python3.12 python3.12-devel \
+    python3.14 python3.14-devel \
     pipx \
     libffi-devel \
     libatomic \
