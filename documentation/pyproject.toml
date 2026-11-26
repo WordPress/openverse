@@ -18,15 +18,10 @@ package = false
 dev = [
   "furo >=2025.12.19, <2026",
   "myst-parser[linkify] >=5, <6",
-  # Sphinx 9.2 requires Python 3.13.
-  "sphinx >=9.1, <9.2",
+  "sphinx >=9.2, <9.3",
   "sphinxcontrib-mermaid >=2, <2.2",
   "sphinx-autobuild >=2025.8.25, <2026",
   "sphinx-copybutton >=0.5.2, <0.6",
   "sphinx-notfound-page >=1.0.0, <2",
   "sphinx-reredirects >=1.1, <1.2",
-  # FIXME: Should be removed when Python build issues are resolved,
-  # FIXME: since we don't explicitly use this library.
-  # FIXME: https://github.com/WordPress/openverse/issues/5146
-  "watchfiles>=0.24.0",
 ]
