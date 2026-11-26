@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest"
-
 import { replacePlaceholders } from "~~/i18n/scripts/translations.mjs"
 
 const replace = (json) =>
