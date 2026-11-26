@@ -8,7 +8,7 @@ authors = [
 dependencies = [
     "argostranslate >= 1.9.6, <2",
 ]
-requires-python = "==3.12.*"
+requires-python = "==3.14.*"
 
 [tool.uv]
 package = false
