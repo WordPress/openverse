@@ -17,11 +17,9 @@ dependencies = [
     "elasticsearch-dsl ~= 8.9",
     "falcon ~=4.4",
     "filelock ~=4.2",
-    "gunicorn ~= 22.0",
-    "jsonschema ~= 4.19",
+    "gunicorn ~= 23.0",
     "psycopg >=3.2.3, <4",
     "python-decouple ~= 3.8",
-    "PyYAML ~= 6.0",
     "tldextract ~= 5.0",
 ]
 
