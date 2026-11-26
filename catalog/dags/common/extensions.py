@@ -32,8 +32,9 @@ MIME_TYPE_ALIASES = {
     "audio/mpeg3": "audio/mpeg",
     "audio/x-flac": "audio/flac",
     "audio/mid": "audio/midi",
-    "audio/wav": "audio/x-wav",
-    "audio/wave": "audio/x-wav",
+    "audio/x-wav": "audio/wav",
+    "audio/wave": "audio/wav",
+    "audio/vnd.wave": "audio/wav",
 }
 
 

@@ -71,6 +71,8 @@ def test_extract_filetype_returns_for_supported_media_type(
         ("audio/opus", "opus"),
         ("audio/wav", "wav"),
         ("audio/x-wav", "wav"),
+        ("audio/wave", "wav"),
+        ("audio/vnd.wave", "wav"),
         ("audio/x-matroska", "mka"),
     ],
 )
