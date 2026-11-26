@@ -113,6 +113,9 @@ SPECTACULAR_SETTINGS = {
             "description": "These are endpoints pertaining to images.",
         },
     ],
+    # Pin Redoc 2 because Redoc 3 ships an ESM bundle incompatible with
+    # drf-spectacular's classic script tag (see WordPress/openverse#5855).
+    "REDOC_DIST": "https://cdn.jsdelivr.net/npm/redoc@2.5.4",
     "REDOC_UI_SETTINGS": {
         "theme": {
             "logo": {"gutter": "20px"},
