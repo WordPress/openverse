@@ -112,7 +112,7 @@ defineExpose({ resetForm })
         <template #source>
           <VLink
             :href="media.foreign_landing_url"
-            class="text-link hover:underline"
+            class="text-link underline"
             >{{ media.providerName }}</VLink
           >
         </template>

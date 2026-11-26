@@ -57,7 +57,7 @@ const { status, updateStatus, title } = useContentReport()
       <!-- Disable reason: We control the attribution HTML generation so this is safe and will not lead to XSS attacks -->
       <!-- eslint-disable vue/no-v-html -->
       <figcaption
-        class="block w-full text-left text-sr"
+        class="block w-full text-left text-sr [&_a]:underline"
         v-html="attributionMarkup"
       />
       <!-- eslint-enable vue/no-v-html -->

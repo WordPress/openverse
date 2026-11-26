@@ -73,7 +73,7 @@ const isDisabled = (name: string) =>
       class="label-regular"
     >
       <template #sensitive>
-        <VLink :href="sensitivityPath">{{
+        <VLink :href="sensitivityPath" class="underline">{{
           $t("filters.safeBrowsing.sensitive")
         }}</VLink>
       </template>

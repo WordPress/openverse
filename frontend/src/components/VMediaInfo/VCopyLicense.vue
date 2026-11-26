@@ -67,6 +67,7 @@ onBeforeUnmount(() => {
         <!-- eslint-disable vue/no-v-html -->
         <div
           ref="richRef"
+          class="[&_a]:underline"
           v-html="getAttributionMarkup({ includeIcons: false })"
         />
         <!-- eslint-enable vue/no-v-html -->
