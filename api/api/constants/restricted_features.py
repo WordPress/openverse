@@ -50,8 +50,8 @@ class RestrictedFeature(typing.Generic[T]):
         """
         Return the registered features as Django choices.
 
-        Django accepts a callable for ``choices`` and evaluates it lazily, after
-        all features are registered.
+        Call it after the features in this module are defined, so that the
+        choices match the literal list in the ``privileges`` migration.
         """
         return [(slug, slug) for slug in _RESTRICTED_FEATURES]
 
