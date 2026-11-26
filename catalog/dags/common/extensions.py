@@ -43,11 +43,12 @@ mimetypes.add_type("audio/midi", ".midi")
 mimetypes.add_type("audio/x-matroska", ".mka")
 mimetypes.add_type("audio/wav", ".wav")
 
-# Python 3.14 changed the default extension of some MIME types, for example
-# `audio/ogg` from `.oga` to `.ogg`. Pin the extensions that existing records
-# use, so that the filetype does not depend on the Python version.
+# The default extension of some MIME types depends on the Python version and on
+# `/etc/mime.types`: `audio/ogg` was `.oga` before Python 3.14 and is `.ogg`
+# from 3.14 on. Pin the extensions that existing records use, so that new
+# records match them.
 PREFERRED_EXTENSIONS = {
-    "audio/ogg": "oga",
+    "audio/ogg": "ogg",
 }
 
 
