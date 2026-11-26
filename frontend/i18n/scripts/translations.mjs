@@ -166,7 +166,12 @@ const extractZip = async (zipPath, debug) => {
  * @param {object} invalidKeys - object to store invalid values that contain extra `#` or `{}`, and number of replacements.
  * @return {any} the sanitised JSON object
  */
-const replacePlaceholders = (json, locale, deprecatedKeys, invalidKeys) => {
+export const replacePlaceholders = (
+  json,
+  locale,
+  deprecatedKeys,
+  invalidKeys
+) => {
   const recordProblems = (key, problems) => {
     problems.count++
     problems.keys[locale] = [...(problems.keys[locale] ?? []), key]
@@ -203,7 +208,7 @@ const replacePlaceholders = (json, locale, deprecatedKeys, invalidKeys) => {
     // Not all Openverse instances were replaced with 'Openverse'
     // Pot file generation wasn't updated, and {'Openverse'} wasn't replaced with
     // ###'Openverse'### before being sent to GlotPress
-    let replaced = cleaned.replace(/{'Openverse'}/g, "Openverse")
+    let replaced = cleaned.replace(/###'Openverse'###/g, "Openverse")
     replaced = replaced.replace(/###([a-zA-Z-]+?)###/g, replacer)
     // Irregular placeholders with more or fewer than 3 #s
     replaced = replaced.replace(/#{1,4}([a-zA-Z-]+?)#{1,4}/g, "{$1}")
