@@ -43,9 +43,9 @@ def database_connect(
     """
     while True:
         try:
-            conn = psycopg.connect(**dbconfig._asdict(), connect_timeout=timeout)
-            if autocommit:
-                conn.set_session(autocommit=True)
+            conn = psycopg.connect(
+                **dbconfig._asdict(), connect_timeout=timeout, autocommit=autocommit
+            )
         except psycopg.OperationalError as e:
             if not attempt_reconnect:
                 return None
