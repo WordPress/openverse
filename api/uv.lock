@@ -4,16 +4,16 @@ requires-python = "==3.14.*"
 
 [[package]]
 name = "adrf"
-version = "0.1.8"
+version = "0.1.14"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "async-property" },
     { name = "django" },
     { name = "djangorestframework" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/6c/52/947f6ebd75ffd2ae58c5397ac66d6ec85ff48343346dfa1ec8ea331bc6da/adrf-0.1.8.tar.gz", hash = "sha256:18844630dd9272c38cc3f761fce6bfb50f91c4f84dadf99846f86d4527f19c7f", size = 17128, upload-time = "2024-10-12T04:45:40.368Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ad/f3/2e4647d679c1c3cb8f7316eabc85d4fafe396318a5aa389f2ef14a2df103/adrf-0.1.14.tar.gz", hash = "sha256:c6ded6771a4a2a65c8dad3d3bf027cf0bb7b01025f8e9dff18c9a58920edeac6", size = 19256, upload-time = "2026-08-11T23:39:39.527Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/39/11/bd3912efe83b5daa6e42aa3098a13bb37d36ccdfecc284bf04bd9fe59073/adrf-0.1.8-py3-none-any.whl", hash = "sha256:3032b987085d75cfd59eb3d4dcd7138fc20085de1782b065603559ccec69531f", size = 20671, upload-time = "2024-10-12T04:45:38.779Z" },
+    { url = "https://files.pythonhosted.org/packages/38/30/9c482ba6256b0c4b57a4ad6a5da918f57064689d0d3d9595515707222ff9/adrf-0.1.14-py3-none-any.whl", hash = "sha256:dcf03cb6fbeb5d37dcb819740c17dd40db36481bbbb049f9fa8f39675747607b", size = 22763, upload-time = "2026-08-11T23:39:38.412Z" },
 ]
 
 [[package]]
@@ -1185,7 +1185,7 @@ test = [
 
 [package.metadata]
 requires-dist = [
-    { name = "adrf", specifier = ">=0.1.8,<0.2" },
+    { name = "adrf", specifier = ">=0.1.14,<0.2" },
     { name = "aiohttp", specifier = ">=3.11.11,<4" },
     { name = "aws-requests-auth", specifier = ">=0.4.3,<0.5" },
     { name = "deepdiff", specifier = ">=8.0.1,<9" },

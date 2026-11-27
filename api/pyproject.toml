@@ -10,7 +10,7 @@ authors = [
 
 requires-python = "==3.14.*"
 dependencies = [
-    "adrf >= 0.1.8, <0.2",
+    "adrf >= 0.1.14, <0.2",
     "aiohttp >=3.11.11, <4",
     "aws-requests-auth >=0.4.3, <0.5",
     "deepdiff >=8.0.1, <9",
