@@ -62,10 +62,15 @@ const toRateLimitConfig = (
   sessionLimit: Number(config.sessionLimit),
   noSessionLimit: Number(config.noSessionLimit),
   ipLimit: Number(config.ipLimit),
+  sessionPageLimit: Number(config.sessionPageLimit),
+  noSessionPageLimit: Number(config.noSessionPageLimit),
 })
 
 /**
  * Limits the proxy routes and the pages that call the API during SSR.
+ * Page loads without a session share one budget per Nuxt task, so that a
+ * crawler spread over many IP addresses can't make SSR call the API without
+ * a bound. Past it, they get a 503 before SSR starts.
  * In `log` mode, it only logs the requests that would be limited. Session
  * values and IP addresses are never logged, only short hashes that change
  * with every Nuxt process.
@@ -125,9 +130,12 @@ export default defineEventHandler(async (event) => {
   }
 
   setResponseHeader(event, "Retry-After", result.retryAfterSeconds)
+  // The shared budget limits the server, not the client, so it answers like
+  // an overloaded server. It rejects the request before SSR calls the API.
+  const overloaded = result.counter === "no-session-page"
   throw createError({
-    statusCode: 429,
-    statusMessage: "Too Many Requests",
+    statusCode: overloaded ? 503 : 429,
+    statusMessage: overloaded ? "Service Unavailable" : "Too Many Requests",
     data: { retryAfter: result.retryAfterSeconds },
   })
 })
