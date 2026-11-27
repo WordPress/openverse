@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Openverse \n"
 "Report-Msgid-Bugs-To: https://github.com/wordpress/openverse/issues \n"
-"POT-Creation-Date: 2026-11-13T08:07:43+00:00\n"
+"POT-Creation-Date: 2026-11-27T10:56:30+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -17,7 +17,7 @@ msgid "The content you’re looking for seems to have disappeared."
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/components/VFourOhFour.vue:70
+#: src/components/VFourOhFour.vue:69
 msgctxt "404.main"
 msgid "Go to ###link### or search for something similar from the field below."
 msgstr ""
@@ -478,60 +478,60 @@ msgid "Yes, please! Create an ###issue### in our GitHub repository or send us an
 msgstr ""
 
 #. Interpolated into externalSourcesPage.new.content: _{issue}_ part of \"Create an _{issue}_ in our GitHub repository or send us an email and tell us about the new sources you’d like to see included."
-#: src/pages/about.vue:127
+#: src/pages/about.vue:125
 msgctxt "externalSourcesPage.new.issue"
 msgid "issue"
 msgstr ""
 
 #. Interpolated into externalSourcesPage.new.content: _{email} part of \"Create an issue in our GitHub repository or send us an {email} and tell us about the new sources you’d like to see included."
-#: src/pages/about.vue:132
+#: src/pages/about.vue:130
 msgctxt "externalSourcesPage.new.email"
 msgid "email"
 msgstr ""
 
-#: src/pages/about.vue:137
+#: src/pages/about.vue:135
 msgctxt "externalSourcesPage.why.title"
 msgid "Why did you build this?"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/about.vue:139
+#: src/pages/about.vue:137
 msgctxt "externalSourcesPage.why.content"
 msgid "For many years, Creative Commons has offered its users a dedicated search portal for searching platforms that have CC licensing filters built in. In fact, this is still maintained at ###old###."
 msgstr ""
 
 #. externalSourcesPage.why.new.a-c are parts of a single statement
 #. Do not translate words between ### ###.
-#: src/pages/about.vue:148
+#: src/pages/about.vue:146
 msgctxt "externalSourcesPage.why.new.a"
 msgid "For users of the legacy CC Meta Search site, the \"External Sources\" feature on ###'Openverse'### will look familiar."
 msgstr ""
 
 #. externalSourcesPage.why.new.a-c are parts of a single statement
-#: src/pages/about.vue:149
+#: src/pages/about.vue:147
 msgctxt "externalSourcesPage.why.new.b"
 msgid "The goal was to ensure that the functionality is not lost, but is updated and embedded within our new search engine for openly licensed content."
 msgstr ""
 
 #. externalSourcesPage.why.new.a-c are parts of a single statement
-#: src/pages/about.vue:150
+#: src/pages/about.vue:148
 msgctxt "externalSourcesPage.why.new.c"
 msgid "Additionally, the \"External Sources\" feature builds on this functionality, allowing us to quickly add new external sources as we discover them, and support new content types in the future."
 msgstr ""
 
-#: src/pages/about.vue:159
+#: src/pages/about.vue:157
 msgctxt "externalSourcesPage.why.ariaLabel"
 msgid "feedback"
 msgstr ""
 
 #. Do not translate words between ### ###.
-#: src/pages/about.vue:152
+#: src/pages/about.vue:150
 msgctxt "externalSourcesPage.why.feedbackSuggestions"
 msgid "We hope you enjoy, and if you have suggestions for improvement, leave us ###feedback###."
 msgstr ""
 
 #. Interpolated into externalSourcesPage.why.feedbackSuggestions: _{feedback}_ part of \"We hope you enjoy, and if you have suggestions for improvement, leave us _{feedback}_"
-#: src/pages/about.vue:161
+#: src/pages/about.vue:159
 msgctxt "externalSourcesPage.why.feedbackLink"
 msgid "feedback"
 msgstr ""
@@ -751,7 +751,7 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/pages/sensitive-content.vue:58
 msgctxt "sensitive.description.content.f"
-msgid "###'Openverse'### recognises its responsibility as a tool used by people of a wide variety of ages, including young people in educational settings, and pays particular attention to minimizing accidental interaction with or exposure to sensitive content."
+msgid "###'Openverse'### recognizes its responsibility as a tool used by people of a wide variety of ages, including young people in educational settings, and pays particular attention to minimizing accidental interaction with or exposure to sensitive content."
 msgstr ""
 
 #. Interpolated into sensitive.description.content.c. Referencing https://make.wordpress.org/handbook/community-code-of-conduct/
@@ -783,7 +783,7 @@ msgstr ""
 #. Do not translate words between ### ###.
 #: src/pages/sensitive-content.vue:64
 msgctxt "sensitive.sensitivity.what.c"
-msgid "The designation does not, however, imply that ###'Openverse'### or its maintainers view the content as inappropriate for the platform in general and is likewise not an implication of moral or ethical judgement."
+msgid "The designation does not, however, imply that ###'Openverse'### or its maintainers view the content as inappropriate for the platform in general and is likewise not an implication of moral or ethical judgment."
 msgstr ""
 
 #. sensitive.sensitivity.what.a-d are parts of a single statement
@@ -924,7 +924,7 @@ msgstr ""
 #. sensitive.designations.sensitiveText.description.a-e are a single statement
 #: src/pages/sensitive-content.vue:169
 msgctxt "sensitive.designations.sensitiveText.description.d"
-msgid "The project recognises that this approach is imperfect and that some works may inadvertently receive a sensitivity designation without necessarily being sensitive."
+msgid "The project recognizes that this approach is imperfect and that some works may inadvertently receive a sensitivity designation without necessarily being sensitive."
 msgstr ""
 
 #. sensitive.designations.sensitiveText.description.a-e are a single statement
@@ -2518,7 +2518,7 @@ msgctxt "skipToContent"
 msgid "Skip to content"
 msgstr ""
 
-#: src/pages/preferences.vue:63
+#: src/pages/preferences.vue:59
 msgctxt "prefPage.title"
 msgid "Preferences"
 msgstr ""
@@ -2555,7 +2555,7 @@ msgctxt "prefPage.switchable.desc"
 msgid "You can toggle these features on or off as you like and your preferences will be saved in a cookie."
 msgstr ""
 
-#: src/pages/preferences.vue:138
+#: src/pages/preferences.vue:134
 msgctxt "prefPage.storeState"
 msgid "Store state"
 msgstr ""
