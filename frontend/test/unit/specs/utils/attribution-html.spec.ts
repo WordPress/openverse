@@ -118,6 +118,19 @@ describe("getAttribution", () => {
     expect(creatorLink).toBeTruthy()
   })
 
+  it("marks license icons as decorative with an empty alt", async () => {
+    // The license name is already in the link text, so the icons must not be
+    // announced as unnamed images (#5656).
+    const cc0MediaItem = { ...mediaItem, license: "cc0" as const }
+    document.body.innerHTML = getAttribution(cc0MediaItem, t)
+    const icons = Array.from(document.querySelectorAll("a img"))
+    expect(icons.map((img) => img.getAttribute("src"))).toEqual([
+      "https://mirrors.creativecommons.org/presskit/icons/cc.svg",
+      "https://mirrors.creativecommons.org/presskit/icons/zero.svg",
+    ])
+    icons.forEach((img) => expect(img.getAttribute("alt")).toBe(""))
+  })
+
   it("does not use anchors in plain-text mode", async () => {
     document.body.innerHTML = getAttribution(mediaItem, t)
     expect(document.getElementsByTagName("a")).not.toHaveLength(0)
