@@ -87,5 +87,13 @@
       matchManagers: ["docker-compose", "dockerfile"],
       enabled: false,
     },
+    {
+      // Stay on nginx's stable branch (even minor versions). Moving to a new
+      // stable branch each year follows the runbook in the infrastructure
+      // repository, docs/UPDATE-NGINX.md.
+      matchPackageNames: ["docker.io/nginx"],
+      allowedVersions: "/^1\\.\\d*[02468]\\.\\d+-alpine$/",
+      groupName: "nginx",
+    },
   ],
 }
