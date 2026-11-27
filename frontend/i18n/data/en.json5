@@ -221,7 +221,7 @@ _{link}_ part of "The translation for English locale is incomplete. Help us get 
   /** sensitive.description.content.a-f are parts of a single statement */
   "sensitive.description.content.e": "Everyone, regardless of background, should feel safe and included in {'Openverse'}, whether they are a contributor to the technical aspects of the {'Openverse'} services, a creator whose works are included in {'Openverse'}, or an {'Openverse'} user.",
   /** sensitive.description.content.a-f are parts of a single statement */
-  "sensitive.description.content.f": "{'Openverse'} recognises its responsibility as a tool used by people of a wide variety of ages, including young people in educational settings, and pays particular attention to minimizing accidental interaction with or exposure to sensitive content.",
+  "sensitive.description.content.f": "{'Openverse'} recognizes its responsibility as a tool used by people of a wide variety of ages, including young people in educational settings, and pays particular attention to minimizing accidental interaction with or exposure to sensitive content.",
   /**
    * Interpolated into sensitive.description.content.c.
    * Referencing https://make.wordpress.org/handbook/community-code-of-conduct/
@@ -238,7 +238,7 @@ _{link}_ part of "The translation for English locale is incomplete. Help us get 
   /** sensitive.sensitivity.what.a-d are parts of a single statement */
   "sensitive.sensitivity.what.b": 'This means that some content is designated "sensitive" that would not fall into a category of what is generally understood to be "mature" content (in other words, content specifically for an adult audience).',
   /** sensitive.sensitivity.what.a-d are parts of a single statement */
-  "sensitive.sensitivity.what.c": "The designation does not, however, imply that {'Openverse'} or its maintainers view the content as inappropriate for the platform in general and is likewise not an implication of moral or ethical judgement.",
+  "sensitive.sensitivity.what.c": "The designation does not, however, imply that {'Openverse'} or its maintainers view the content as inappropriate for the platform in general and is likewise not an implication of moral or ethical judgment.",
   /** sensitive.sensitivity.what.a-d are parts of a single statement */
   "sensitive.sensitivity.what.d": 'We consider "sensitive" content to be content that is offensive, disturbing, graphic, or otherwise inappropriate, with particular attention paid to young people.',
   /** Sensitive.sensitivity.how.a-c are parts of a single statement */
@@ -281,7 +281,7 @@ _{link}_ part of "The translation for English locale is incomplete. Help us get 
   /** sensitive.designations.sensitiveText.description.a-e are a single statement */
   "sensitive.designations.sensitiveText.description.c": "Examples of potentially sensitive text include but are not limited to text of a sexual, biological, violent, racist, or otherwise derogatory nature.",
   /** sensitive.designations.sensitiveText.description.a-e are a single statement */
-  "sensitive.designations.sensitiveText.description.d": "The project recognises that this approach is imperfect and that some works may inadvertently receive a sensitivity designation without necessarily being sensitive.",
+  "sensitive.designations.sensitiveText.description.d": "The project recognizes that this approach is imperfect and that some works may inadvertently receive a sensitivity designation without necessarily being sensitive.",
   /** sensitive.designations.sensitiveText.description.a-e are a single statement */
   "sensitive.designations.sensitiveText.description.e": "For more context on why we’ve chosen this approach despite that, refer to the {imperfect} of our project planning document related to this feature.",
   /**
