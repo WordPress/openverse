@@ -2,7 +2,9 @@ services:
   cache:
     profiles:
       - api
-    image: docker.io/redis:7.2.11
+    # Production runs ElastiCache Redis OSS 7.1, an AWS version with no matching
+    # upstream release, so this uses the supported 7.2 series.
+    image: docker.io/redis:7.2.17
     ports:
       - "50263:6379"
 
