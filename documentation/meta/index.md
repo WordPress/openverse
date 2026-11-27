@@ -3,6 +3,7 @@
 ```{toctree}
 :titlesonly:
 
+quickstart
 brand/index
 incidents/index
 project_boards/index
