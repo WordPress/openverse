@@ -6,15 +6,19 @@ from decouple import config
 REDIS_HOST = config("REDIS_HOST", default="localhost")
 REDIS_PORT = config("REDIS_PORT", default=6379, cast=int)
 REDIS_PASSWORD = config("REDIS_PASSWORD", default="")
+REDIS_USE_TLS = config("REDIS_USE_TLS", default=False, cast=bool)
 
 
 def _make_cache_config(dbnum: int, **overrides) -> dict:
+    scheme = "rediss" if REDIS_USE_TLS else "redis"
+    password = {"PASSWORD": REDIS_PASSWORD} if REDIS_PASSWORD else {}
     return {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/{dbnum}",
+        "LOCATION": f"{scheme}://{REDIS_HOST}:{REDIS_PORT}/{dbnum}",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
+        | password
         | overrides.pop("OPTIONS", {}),
     } | overrides
 
