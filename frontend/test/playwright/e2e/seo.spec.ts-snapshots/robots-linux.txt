@@ -77,5 +77,23 @@ Disallow: /ar
 Disallow: /es
 Disallow: /ru
 
+User-agent: OAI-SearchBot
+Disallow: /
+Disallow: /ar
+Disallow: /es
+Disallow: /ru
+
+User-agent: KeenableBot
+Disallow: /
+Disallow: /ar
+Disallow: /es
+Disallow: /ru
+
+User-agent: dotbot
+Disallow: /
+Disallow: /ar
+Disallow: /es
+Disallow: /ru
+
 Sitemap: http://localhost:8443/sitemap_index.xml
 # END nuxt-robots
