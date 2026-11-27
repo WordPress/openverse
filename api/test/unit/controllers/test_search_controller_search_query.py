@@ -1,5 +1,5 @@
 import pytest
-from elasticsearch_dsl import Q
+from elasticsearch.dsl import Q
 
 from api.constants.parameters import COLLECTION, TAG
 from api.controllers import search_controller

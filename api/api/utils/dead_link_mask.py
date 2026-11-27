@@ -1,7 +1,7 @@
 import django_redis
 import structlog
 from deepdiff import DeepHash
-from elasticsearch_dsl import Search
+from elasticsearch.dsl import Search
 from redis.exceptions import ConnectionError
 
 

@@ -1,14 +1,8 @@
 #!/usr/bin/env python
 """Django's command-line utility for administrative tasks."""
 
-import asyncio
 import os
 import sys
-
-import uvloop
-
-
-asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
 
 def main():

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from elasticsearch_dsl.response import Hit
+from elasticsearch.dsl.response import Hit
 
 from api.constants.field_order import field_position_map
 from api.constants.field_values import AUDIO_CATEGORIES, LENGTHS

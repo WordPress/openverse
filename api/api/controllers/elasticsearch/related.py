@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from elasticsearch_dsl import Search
-from elasticsearch_dsl.query import Match, Q, Term
-from elasticsearch_dsl.response import Hit
+from elasticsearch.dsl import Search
+from elasticsearch.dsl.query import Match, Q, Term
+from elasticsearch.dsl.response import Hit
 
 from api.controllers.elasticsearch.helpers import get_es_response, get_query_slice
 from api.controllers.search_controller import (

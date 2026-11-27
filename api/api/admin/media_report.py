@@ -18,7 +18,7 @@ from django.utils.safestring import mark_safe
 
 import structlog
 from elasticsearch import NotFoundError
-from elasticsearch_dsl import Search
+from elasticsearch.dsl import Search
 
 from api.constants.moderation import DecisionAction
 from api.models import (

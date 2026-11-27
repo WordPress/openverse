@@ -47,7 +47,7 @@ class ThrottledApplication(AbstractApplication):
 
     privileges = ArrayField(
         models.CharField(
-            choices=RestrictedFeature.choices,
+            choices=RestrictedFeature.choices(),
         ),
         default=list,
         help_text=(

@@ -4,7 +4,7 @@ from typing import Any
 import aiohttp
 import pook
 import pytest
-from elasticsearch_dsl.response import Hit
+from elasticsearch.dsl.response import Hit
 from structlog.testing import capture_logs
 
 from api.utils.check_dead_links import HEADERS, check_dead_links

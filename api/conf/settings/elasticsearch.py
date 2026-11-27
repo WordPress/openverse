@@ -2,7 +2,7 @@
 
 from decouple import config
 from elasticsearch import Elasticsearch
-from elasticsearch_dsl import connections
+from elasticsearch.dsl import connections
 
 from api.constants.media_types import MEDIA_TYPES
 from api.utils.es_transport import BoundedWaitUrllib3HttpNode

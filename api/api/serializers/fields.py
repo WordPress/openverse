@@ -24,7 +24,7 @@ class SchemableHyperlinkedIdentityField(serializers.HyperlinkedIdentityField):
 
         # Only rewrite URLs if a fixed scheme is provided
         if self.scheme is not None:
-            url = re.sub(r"^\w+://", f"{self.scheme}://", url, 1)
+            url = re.sub(r"^\w+://", f"{self.scheme}://", url, count=1)
 
         return url
 

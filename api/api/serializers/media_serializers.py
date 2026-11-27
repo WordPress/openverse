@@ -12,7 +12,7 @@ from rest_framework.request import Request
 
 from adrf.serializers import Serializer
 from drf_spectacular.utils import extend_schema_serializer
-from elasticsearch_dsl.response import Hit
+from elasticsearch.dsl.response import Hit
 from openverse_attribution.license import License
 
 from api.constants import restricted_features, sensitivity

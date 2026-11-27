@@ -10,7 +10,7 @@ from django.conf import settings
 
 import structlog
 from elasticsearch import BadRequestError, NotFoundError
-from elasticsearch_dsl import Search
+from elasticsearch.dsl import Search
 
 from api.utils.dead_link_mask import get_query_hash, get_query_mask
 

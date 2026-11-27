@@ -28,7 +28,7 @@ class ThrottledApplicationAdminForm(forms.ModelForm):
     # override default widget of multi-<select>, which is much more annoying to use
     # and easy to accidentally un-select an option. The multi-checkbox is much easier to use
     privileges = forms.MultipleChoiceField(
-        choices=RestrictedFeature.choices,
+        choices=RestrictedFeature.choices(),
         required=False,
         widget=forms.CheckboxSelectMultiple,
     )

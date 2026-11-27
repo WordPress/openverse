@@ -8,14 +8,14 @@ authors = [
     {name = "Openverse Contributors", email = "openverse@wordpress.org"},
 ]
 
-requires-python = "==3.12.*"
+requires-python = "==3.14.*"
 dependencies = [
     "adrf >= 0.1.8, <0.2",
     "aiohttp >=3.11.11, <4",
     "aws-requests-auth >=0.4.3, <0.5",
     "deepdiff >=8.0.1, <9",
     "django >=5.2.19, <6",
-    "django-asgi-lifespan >=0.4, <0.5",
+    "django-asgi-lifespan >=0.5.1, <0.6",
     "django-cors-headers >=4.3.1, <5",
     "django-migrations-git-conflicts >=1.0, <2",
     "django-oauth-toolkit >=3.4.1, <4",
@@ -26,9 +26,7 @@ dependencies = [
     "django-uuslug >=2.0.0, <3",
     "djangorestframework >=3.14.0, <4",
     "drf-spectacular[sidecar] >=0.30, <0.31",
-    "elasticsearch >=8.13.0, <9",
-    "elasticsearch-dsl >=8.12.0, <9",
-    "future >=1, <1.1",
+    "elasticsearch >=8.19.3, <9",
     "limit >=0.2.3, <0.3",
     "pillow >=13, <14",
     "psycopg[pool] >=3.2.3, <4",

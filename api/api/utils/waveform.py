@@ -19,6 +19,11 @@ logger = structlog.get_logger(__name__)
 TMP_DIR = pathlib.Path("/tmp").resolve()
 UA_STRING = settings.OUTBOUND_USER_AGENT_TEMPLATE.format(purpose="Waveform")
 
+# Python 3.14 maps `.wav` to `audio/vnd.wave` and no longer knows `audio/x-wav`.
+# Map the WAV MIME types that providers send here rather than with
+# `mimetypes.add_type`, which would change the table for the whole process.
+WAV_MIME_TYPES = frozenset({"audio/wav", "audio/x-wav", "audio/wave", "audio/vnd.wave"})
+
 
 class WaveformGenerationFailure(APIException):
     status_code = status.HTTP_424_FAILED_DEPENDENCY
@@ -52,6 +57,21 @@ def ext_from_url(url):
         return None
 
 
+def ext_from_mimetype(mimetype: str) -> str | None:
+    """
+    Get the file extension for the given content type, ignoring parameters
+    such as ``charset``.
+
+    :param mimetype: the value of the ``Content-Type`` header
+    :returns: the file extension or ``None``
+    """
+
+    mimetype = mimetype.split(";")[0].strip().lower()
+    if mimetype in WAV_MIME_TYPES:
+        return ".wav"
+    return mimetypes.guess_extension(mimetype)
+
+
 def download_audio(url, identifier):
     """
     Download the audio from the given URL to a location on the disk.
@@ -70,7 +90,7 @@ def download_audio(url, identifier):
             res.raise_for_status()
             mimetype = res.headers["content-type"]
             logger.debug(f"mimetype={mimetype}")
-            ext = ext_from_url(url) or mimetypes.guess_extension(mimetype)
+            ext = ext_from_url(url) or ext_from_mimetype(mimetype)
             if ext is None:
                 raise ValueError("Could not identify media extension")
             file_name = f"audio-{identifier}{ext}"

@@ -39,6 +39,30 @@ def test_download_audio_sends_ua_header(mock_request):
 
 
 @pytest.mark.parametrize(
+    "content_type, expected_ext",
+    [
+        ("audio/mpeg", ".mp3"),
+        ("audio/wav", ".wav"),
+        ("audio/x-wav", ".wav"),
+        ("audio/wave", ".wav"),
+        ("audio/vnd.wave", ".wav"),
+        ("audio/x-wav; charset=binary", ".wav"),
+    ],
+)
+def test_download_audio_uses_content_type_when_url_has_no_extension(
+    content_type, expected_ext
+):
+    with pook.use():
+        pook.get("http://example.org/audio").reply(200).headers(
+            {"Content-Type": content_type}
+        ).body(_MOCK_AUDIO_BYTES)
+
+        file_name = download_audio("http://example.org/audio", "abcd-1234")
+
+    assert file_name == f"audio-abcd-1234{expected_ext}"
+
+
+@pytest.mark.parametrize(
     "audio, duration",
     [
         ("sample-audio.mp3", 26000),
