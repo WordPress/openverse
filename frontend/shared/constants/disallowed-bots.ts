@@ -14,4 +14,7 @@ export const disallowedBots = [
   "Bytespider",
   "ImagesiftBot",
   "cohere-ai",
+  "OAI-SearchBot",
+  "KeenableBot",
+  "dotbot",
 ]
