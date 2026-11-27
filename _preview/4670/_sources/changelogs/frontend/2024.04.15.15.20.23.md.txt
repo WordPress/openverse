@@ -1,0 +1,6 @@
+# 2024.04.15.15.20.23
+
+## New Features
+
+- Set additional search views to enabled
+  ([#4117](https://github.com/WordPress/openverse/pull/4117)) by @obulat

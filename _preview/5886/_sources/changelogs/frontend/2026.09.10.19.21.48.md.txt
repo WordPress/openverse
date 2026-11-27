@@ -1,0 +1,6 @@
+# 2026.09.10.19.21.48
+
+## Internal Improvements
+
+- Route external link hrefs through a shared URL helper
+  ([#5615](https://github.com/WordPress/openverse/pull/5615)) by @obenland

@@ -1,0 +1,8 @@
+# 2026.11.05.12.27.17
+
+## Bug Fixes
+
+- Answer Elasticsearch timeouts and outages with 504/503 instead of 500
+  ([#5686](https://github.com/WordPress/openverse/pull/5686)) by @dhruvkb
+- Stop the shared aiohttp session from keeping a cookie jar
+  ([#5685](https://github.com/WordPress/openverse/pull/5685)) by @dhruvkb

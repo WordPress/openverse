@@ -1,0 +1,10 @@
+# 2026.11.14.03.56.17
+
+## Internal Improvements
+
+- Update Airflow to 2.11.1
+  ([#5640](https://github.com/WordPress/openverse/pull/5640)) by @obenland
+- Update dependency filelock to v4 [SECURITY]
+  ([#5666](https://github.com/WordPress/openverse/pull/5666)) by @openverse-bot
+- Update cgr.dev/chainguard/minio:latest Docker digest to 96b6cf3
+  ([#5667](https://github.com/WordPress/openverse/pull/5667)) by @openverse-bot

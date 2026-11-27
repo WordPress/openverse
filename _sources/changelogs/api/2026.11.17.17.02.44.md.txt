@@ -1,0 +1,8 @@
+# 2026.11.17.17.02.44
+
+## Internal Improvements
+
+- Remove Sentry from all services
+  ([#5824](https://github.com/WordPress/openverse/pull/5824)) by @dhruvkb
+- Scrub the database hostname from Sentry events
+  ([#5592](https://github.com/WordPress/openverse/pull/5592)) by @felipeatom

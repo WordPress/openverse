@@ -1,0 +1,18 @@
+# 2024.08.05.16.42.20
+
+## New Features
+
+- Update Django admin views for bulk moderation ergonomics
+  ([#4673](https://github.com/WordPress/openverse/pull/4673)) by @dhruvkb
+
+## Internal Improvements
+
+- Bump the minimum required PDM version for the API
+  ([#4697](https://github.com/WordPress/openverse/pull/4697)) by @AetherUnbound
+- Update dependency uvicorn to >=0.30, <0.31
+  ([#4694](https://github.com/WordPress/openverse/pull/4694)) by @openverse-bot
+
+## Bug Fixes
+
+- Fix waveform generation for short tracks
+  ([#4677](https://github.com/WordPress/openverse/pull/4677)) by @krysal

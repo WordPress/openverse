@@ -1,0 +1,16 @@
+# 2024.06.03.15.35.03
+
+## Improvements
+
+- Improve accessibility labels for filters tab and button
+  ([#4396](https://github.com/WordPress/openverse/pull/4396)) by @AetherUnbound
+
+## Internal Improvements
+
+- Update Node.js to v20.14.0
+  ([#4423](https://github.com/WordPress/openverse/pull/4423)) by @openverse-bot
+- Update pnpm to v9.1.4
+  ([#4420](https://github.com/WordPress/openverse/pull/4420)) by @openverse-bot
+
+- Add Nuxt 3 folders to gitignore
+  ([#4431](https://github.com/WordPress/openverse/pull/4431)) by @obulat

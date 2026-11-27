@@ -1,0 +1,18 @@
+# 2024.05.13.15.19.42
+
+## Improvements
+
+- Expand documentation on API media properties
+  ([#4225](https://github.com/WordPress/openverse/pull/4225)) by @AetherUnbound
+
+## Internal Improvements
+
+- Convert longer media `varchar` fields to `text` in the API
+  ([#4315](https://github.com/WordPress/openverse/pull/4315)) by @AetherUnbound
+- Remove sendapimoveannouncement management command
+  ([#4288](https://github.com/WordPress/openverse/pull/4288)) by @sarayourfriend
+
+## Bug Fixes
+
+- Ignore `django-structlog` middleware logs in Sentry
+  ([#4292](https://github.com/WordPress/openverse/pull/4292)) by @dhruvkb

@@ -1,0 +1,18 @@
+# 2026.11.16.16.49.53
+
+## Internal Improvements
+
+- Set the thumbnail proxy's response headers explicitly
+  ([#5808](https://github.com/WordPress/openverse/pull/5808)) by @obenland
+- Update dependency uvicorn to >=0.54, <0.55
+  ([#5787](https://github.com/WordPress/openverse/pull/5787)) by @openverse-bot
+- Stop sending DB pool timeouts and uvloop SSL close logs to Sentry
+  ([#5783](https://github.com/WordPress/openverse/pull/5783)) by @obulat
+- Run the local and CI API database on PostgreSQL 17
+  ([#5780](https://github.com/WordPress/openverse/pull/5780)) by @obulat
+- Fix lint failures from the ruff, codespell and actionlint upgrades
+  ([#5782](https://github.com/WordPress/openverse/pull/5782)) by @obulat
+- Update dependency aiohttp to v3.14.4 [SECURITY]
+  ([#5757](https://github.com/WordPress/openverse/pull/5757)) by @openverse-bot
+- Update dependency pytest to v9 [SECURITY]
+  ([#5776](https://github.com/WordPress/openverse/pull/5776)) by @openverse-bot

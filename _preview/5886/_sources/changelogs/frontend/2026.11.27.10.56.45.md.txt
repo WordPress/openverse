@@ -1,0 +1,20 @@
+# 2026.11.27.10.56.45
+
+## Improvements
+
+- Use US English spelling for recognizes and judgment in en.json5
+  ([#5882](https://github.com/WordPress/openverse/pull/5882)) by @divyansh-1615
+- Block OAI-SearchBot, KeenableBot and DotBot in robots.txt
+  ([#5874](https://github.com/WordPress/openverse/pull/5874)) by @obulat
+
+## Internal Improvements
+
+- Install native packages for both macOS and Linux
+  ([#5884](https://github.com/WordPress/openverse/pull/5884)) by @obulat
+
+## Bug Fixes
+
+- Proxy API requests in production and limit page loads by session
+  ([#5883](https://github.com/WordPress/openverse/pull/5883)) by @obulat
+- Update nginx to 1.30.8 and keep Renovate on stable nginx releases
+  ([#5875](https://github.com/WordPress/openverse/pull/5875)) by @obulat

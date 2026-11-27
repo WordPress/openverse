@@ -1,0 +1,19 @@
+# 2024.08.14.10.34.40
+
+This release was temporarily rolled back to include fixes from these PRs:
+
+- https://github.com/WordPress/openverse/pull/4704
+- https://github.com/WordPress/openverse/pull/4757
+
+## Improvements
+
+- Generate Wikimedia thumbnail URLs on the fly
+  ([#4736](https://github.com/WordPress/openverse/pull/4736)) by @sarayourfriend
+
+## Bug Fixes
+
+- Correct response handling for checking dead links
+  ([#4748](https://github.com/WordPress/openverse/pull/4748)) by @sarayourfriend
+- Revert "Decrease thumbnail upstream timeout and add timing logs for thumbnail
+  requests" ([#4746](https://github.com/WordPress/openverse/pull/4746)) by
+  @AetherUnbound

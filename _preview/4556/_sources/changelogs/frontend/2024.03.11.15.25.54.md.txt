@@ -1,0 +1,20 @@
+# 2024.03.11.15.25.54
+
+## Improvements
+
+- Use query parameters for additional search views in Nuxt
+  ([#3866](https://github.com/WordPress/openverse/pull/3866)) by @obulat
+- Update recent searches to match updated mockups
+  ([#3796](https://github.com/WordPress/openverse/pull/3796)) by @dhruvkb
+
+## Internal Improvements
+
+- Combine related media component using `VMediaCollection.vue`
+  ([#3831](https://github.com/WordPress/openverse/pull/3831)) by @obulat
+
+## Bug Fixes
+
+- Fix flaky content report form test
+  ([#3880](https://github.com/WordPress/openverse/pull/3880)) by @zackkrida
+- Fix prettier errors
+  ([#3879](https://github.com/WordPress/openverse/pull/3879)) by @obulat

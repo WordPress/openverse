@@ -1,0 +1,1101 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><link rel="next" title="2023-03-07 Implementation Plan: Analytics backend and visualisation service" href="20230307-backend_service.html" /><link rel="prev" title="Analytics" href="index.html" />
+
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/WordPress/openverse/master/brand/icon.svg"/><!-- Generated with Sphinx 6.2.1 and Furo 2023.03.27 -->
+        <title>2022-10-06 Implementation Plan: Frontend event tracking - Openverse documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../index.html"><div class="brand">Openverse  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo only-light" src="../../../_static/logo_light.svg" alt="Light Logo"/>
+    <img class="sidebar-logo only-dark" src="../../../_static/logo_dark.svg" alt="Dark Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../api/index.html">Django API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../api/guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/guides/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/guides/test.html">Testing guide</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../api/reference/index.html">Reference</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/reference/search_algorithm.html">Search Algorithm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/reference/authentication_and_throttling.html">Authentication and Throttling</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../catalog/index.html">Airflow catalog</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../changelogs/index.html">Changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../changelogs/api/index.html">API changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.05.19.22.08.07.html">2023.05.19.22.08.07</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.05.19.18.58.25.html">2023.05.19.18.58.25</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.05.19.17.16.50.html">2023.05.19.17.16.50</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.05.15.21.51.49.html">2023.05.15.21.51.49</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.05.02.21.26.28.html">2023.05.02.21.26.28</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.04.27.07.29.23.html">2023.04.27.07.29.23</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.04.23.23.22.14.html">2023.04.23.23.22.14</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.04.19.00.01.39.html">2023.04.19.00.01.39</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.04.18.15.27.15.html">2023.04.18.15.27.15</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.04.12.23.29.59.html">2023.04.12.23.29.59</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../changelogs/catalog/index.html">Catalog changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2023.05.16.22.14.49.html">2023.05.16.22.14.49</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/catalog/2023.04.27.02.43.13.html">2023.04.27.02.43.13</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../changelogs/frontend/index.html">Frontend changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.05.23.17.02.26.html">2023.05.23.17.02.26</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.05.22.15.55.57.html">2023.05.22.15.55.57</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.05.15.22.13.27.html">2023.05.15.22.13.27</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.05.02.19.17.32.html">2023.05.02.19.17.32</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/frontend/2023.04.23.23.07.51.html">2023.04.23.23.07.51</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../changelogs/ingestion_server/index.html">Ingestion server changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.05.17.22.57.37.html">2023.05.17.22.57.37</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/ingestion_server/2023.05.03.22.29.52.html">2023.05.03.22.29.52</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../frontend/index.html">Nuxt frontend</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../frontend/guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/guides/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/guides/develop.html">Development guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/guides/test.html">Running frontend tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/guides/analytics.html">Analytics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/guides/icons.html">SVG Icon Sprites in Openverse Frontend</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../frontend/reference/index.html">Reference</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/feature_flags.html">Feature flags</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/testing_guidelines.html">Testing Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/playwright_tests.html">Playwright tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/storybook_tests.html">Storybook tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/miscellaneous.html">Miscellaneous notes on the frontend</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../general/index.html">General development guidelines</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/contributing.html">Welcome</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/general_setup.html">General setup guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/run.html">Run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/test.html">Test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/publish.html">Publish</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/zero_downtime_database_management.html">Zero Downtime and Database Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/deployment.html">Deployments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/logging.html">Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/https.html">Testing HTTPS</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../ingestion_server/index.html">Ingestion server</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../ingestion_server/guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/guides/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/guides/test.html">Testing guide</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../meta/index.html">Managing the Openverse</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../meta/github_contribution_practices.html">GitHub contribution practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../meta/dev_flow.html">Development workflow</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/ci_cd/index.html">CI + CD workflow</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/ci_cd/actions.html">Actions</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../meta/ci_cd/jobs/index.html">Jobs</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/preparation.html">Preparation jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/frontend.html">Frontend jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/docker.html">Docker jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/catalog.html">Catalog jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/ingestion_server.html">Ingestion server jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/api.html">API jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/documentation.html">Documentation jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/deployment.html">Deployment jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/notification.html">Notification jobs</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/ci_cd/flow.html">Flow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/ci_cd/proof_of_functionality.html">Proof-of-functionality</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/ci_cd/artifacts.html">Artifacts</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/decision_making/index.html">Openverse Decision-Making Process</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/decision_making/process_description.html">Process description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/decision_making/how_to_use.html">How to follow the process in different settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/decision_making/additional_practices.html">Additional practices</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/documentation/index.html">Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/documentation/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/documentation/guidelines.html">Documentation Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/documentation/extensions.html">Sphinx extensions</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/traffic/index.html">Traffic Management</a><input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" role="switch" type="checkbox"/><label for="toctree-checkbox-20"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/traffic/runbooks/identifying-and-blocking-traffic-anomalies.html">Identifying and Blocking Traffic Anomalies in Cloudflare</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../../index.html">Projects</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" role="switch" type="checkbox"/><label for="toctree-checkbox-21"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../planning.html">Project Planning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../templates/implementation-plan.html">Implementation Plan Template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../templates/index.html">Project directory <code class="docutils literal notranslate"><span class="pre">index.md</span></code> template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../templates/project-proposal.html">Project Proposal Template</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../3d_model_support/index.html">3D Model Support</a><input class="toctree-checkbox" id="toctree-checkbox-22" name="toctree-checkbox-22" role="switch" type="checkbox"/><label for="toctree-checkbox-22"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../3d_model_support/20220221-project_proposal.html">2022-02-21 Project Proposal: 3D model support</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../additional_search_views/index.html">Additional Search Views</a><input class="toctree-checkbox" id="toctree-checkbox-23" name="toctree-checkbox-23" role="switch" type="checkbox"/><label for="toctree-checkbox-23"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../additional_search_views/20230424-project_proposal_additional_search_views.html">2023-04-24 Project Proposal: Additional search views</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current has-children"><a class="reference internal" href="index.html">Analytics</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-24" name="toctree-checkbox-24" role="switch" type="checkbox"/><label for="toctree-checkbox-24"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3 current current-page"><a class="current reference internal" href="#">2022-10-06 Implementation Plan: Frontend event tracking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="20230307-backend_service.html">2023-03-07 Implementation Plan: Analytics backend and visualisation service</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../core_user_interface_improvement/index.html">Core User Interface Improvements</a><input class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" role="switch" type="checkbox"/><label for="toctree-checkbox-25"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../core_user_interface_improvement/20230314-project_proposal_core_ui_improvement.html">2023-03-14 Project Proposal: Core UI Improvement</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../document_all_media_properties/index.html">Document all media properties</a><input class="toctree-checkbox" id="toctree-checkbox-26" name="toctree-checkbox-26" role="switch" type="checkbox"/><label for="toctree-checkbox-26"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../document_all_media_properties/20230307-project_proposal.html">2023-03-07 Project proposal for Document all media properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../document_all_media_properties/20230426-implementation_plan_documenting_media_properties.html">2023-04-26 Implementation Plan: Document all media properties in the catalog</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../document_all_media_properties/samples/index.html">Samples</a><input class="toctree-checkbox" id="toctree-checkbox-27" name="toctree-checkbox-27" role="switch" type="checkbox"/><label for="toctree-checkbox-27"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../document_all_media_properties/samples/openverse_media_properties.html">Openverse Media Properties</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../document_all_media_properties/samples/sample_media_properties.html">sample_media_properties.md</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../document_all_media_properties/samples/sample_postamble.html">sample_postamble.md</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../document_all_media_properties/samples/sample_preamble.html">sample_preamble.md</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../document_all_media_properties/samples/index.html">Samples</a><input class="toctree-checkbox" id="toctree-checkbox-28" name="toctree-checkbox-28" role="switch" type="checkbox"/><label for="toctree-checkbox-28"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../document_all_media_properties/samples/openverse_media_properties.html">Openverse Media Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../document_all_media_properties/samples/sample_media_properties.html">sample_media_properties.md</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../document_all_media_properties/samples/sample_postamble.html">sample_postamble.md</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../document_all_media_properties/samples/sample_preamble.html">sample_preamble.md</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../feature_flags/index.html">Feature Flags</a><input class="toctree-checkbox" id="toctree-checkbox-29" name="toctree-checkbox-29" role="switch" type="checkbox"/><label for="toctree-checkbox-29"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../feature_flags/20220309-project_proposal.html">2022-03-09 Project Proposal: Feature flags</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../frontend_ui_state_cookie/index.html">Frontend UI State Cookie</a><input class="toctree-checkbox" id="toctree-checkbox-30" name="toctree-checkbox-30" role="switch" type="checkbox"/><label for="toctree-checkbox-30"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../frontend_ui_state_cookie/20220218-project_proposal.html">2022-02-18 Project Propsal: Frontend UI State Cookie</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../monitoring/index.html">Monitoring</a><input class="toctree-checkbox" id="toctree-checkbox-31" name="toctree-checkbox-31" role="switch" type="checkbox"/><label for="toctree-checkbox-31"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../monitoring/20220307-project_proposal.html">2022-03-07 Project Proposal: Monitoring</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../monorepo/index.html">Monorepo</a><input class="toctree-checkbox" id="toctree-checkbox-32" name="toctree-checkbox-32" role="switch" type="checkbox"/><label for="toctree-checkbox-32"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../monorepo/20221124-project_proposal.html">2022-11-24 Project Proposal: Monorepo</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../popularity_optimizations/index.html">Popularity Calculation Optimizations</a><input class="toctree-checkbox" id="toctree-checkbox-33" name="toctree-checkbox-33" role="switch" type="checkbox"/><label for="toctree-checkbox-33"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../popularity_optimizations/20230406-project_proposal_popularity_optimizations.html">2023-04-06 Project Proposal: Popularity Calculation Optimizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../popularity_optimizations/20230420-implementation_plan_popularity_optimizations.html">Implementation Plan: Decoupling Popularity Calculations from the Data Refresh</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../search_relevancy_sandbox/index.html">Search Relevancy Sandbox</a><input class="toctree-checkbox" id="toctree-checkbox-34" name="toctree-checkbox-34" role="switch" type="checkbox"/><label for="toctree-checkbox-34"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../search_relevancy_sandbox/20230331-project_proposal_search_relevancy_sandbox.html">2023-03-31 Project Proposal: Search relevancy sandbox</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../search_relevancy_sandbox/20230406-implementation_plan_update_staging_database.html">2023-04-06 Implementation Plan: Update Staging Database</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../trust_and_safety/content_report_moderation/index.html">Sensitive Content Report Moderation Initial Practices</a><input class="toctree-checkbox" id="toctree-checkbox-35" name="toctree-checkbox-35" role="switch" type="checkbox"/><label for="toctree-checkbox-35"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/content_report_moderation/20230411-project_proposal_content_report_moderation.html">2023-04-11 Project Proposal: Sensitive content report moderation: initial practices</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/index.html">Detecting and Blurring Sensitive Textual Content</a><input class="toctree-checkbox" id="toctree-checkbox-36" name="toctree-checkbox-36" role="switch" type="checkbox"/><label for="toctree-checkbox-36"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/20230309-implementation_plan_sensitive_terms_list.html">2023-03-09 Implementation Plan: Sensitive Terms List</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/20230309-project_proposal_detecting_sensitive_textual_content.html">2023-03-09 Project Proposal: Detecting sensitive textual content and blurring all sensitive results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/20230330-implementation_plan_filtering_and_designating_results_with_sensitive_textual_content.html">2023-03-30 Implementation Plan: Filtering and designating results with sensitive textual content</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/20230506-implementation_plan_frontend_blurring_sensitive.html">2023-05-06 Implementation Plan: Fetching, blurring sensitive results</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../trust_and_safety/index.html">Trust and Safety</a><input class="toctree-checkbox" id="toctree-checkbox-37" name="toctree-checkbox-37" role="switch" type="checkbox"/><label for="toctree-checkbox-37"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/20230109-trust_and_safety_preliminary_overview_and_exploration.html">2023-01-09 Initial Overview and User Stories</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../trust_and_safety/content_report_moderation/index.html">Sensitive Content Report Moderation Initial Practices</a><input class="toctree-checkbox" id="toctree-checkbox-38" name="toctree-checkbox-38" role="switch" type="checkbox"/><label for="toctree-checkbox-38"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../trust_and_safety/content_report_moderation/20230411-project_proposal_content_report_moderation.html">2023-04-11 Project Proposal: Sensitive content report moderation: initial practices</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/index.html">Detecting and Blurring Sensitive Textual Content</a><input class="toctree-checkbox" id="toctree-checkbox-39" name="toctree-checkbox-39" role="switch" type="checkbox"/><label for="toctree-checkbox-39"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/20230309-implementation_plan_sensitive_terms_list.html">2023-03-09 Implementation Plan: Sensitive Terms List</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/20230309-project_proposal_detecting_sensitive_textual_content.html">2023-03-09 Project Proposal: Detecting sensitive textual content and blurring all sensitive results</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/20230330-implementation_plan_filtering_and_designating_results_with_sensitive_textual_content.html">2023-03-30 Implementation Plan: Filtering and designating results with sensitive textual content</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../trust_and_safety/detecting_sensitive_textual_content/20230506-implementation_plan_frontend_blurring_sensitive.html">2023-05-06 Implementation Plan: Fetching, blurring sensitive results</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../visual_regression_testing/index.html">Visual Regression Testing</a><input class="toctree-checkbox" id="toctree-checkbox-40" name="toctree-checkbox-40" role="switch" type="checkbox"/><label for="toctree-checkbox-40"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../visual_regression_testing/20220217-implementation_plan.html">2022-02-17 Implementation Plan: Visual regression testing</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../vuex_to_pina_conversion/index.html">Pinia Conversion</a><input class="toctree-checkbox" id="toctree-checkbox-41" name="toctree-checkbox-41" role="switch" type="checkbox"/><label for="toctree-checkbox-41"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../vuex_to_pina_conversion/20220223-project_proposal.html">2022-02-23 Project Proposal: Vuex to Pinia conversion</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../terms_of_service.html">Openverse API Terms of Service</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">External links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://openverse.org">Openverse</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/WordPress/openverse">GitHub</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/WordPress/openverse/edit/main/documentation/projects/proposals/analytics/20221006-implementation_plan_frontend.md" title="Edit this page">
+    <svg aria-hidden="true" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
+      <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
+    </svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="implementation-plan-frontend-event-tracking">
+<h1>2022-10-06 Implementation Plan: Frontend event tracking<a class="headerlink" href="#implementation-plan-frontend-event-tracking" title="Permalink to this heading">#</a></h1>
+<p><strong>Author</strong>: <a class="reference external" href="https://github.com/zackkrida">&#64;zackkrida</a></p>
+<p>A proposal to emit frontend events based on user interactions and page visits.</p>
+<section id="reviewers">
+<h2>Reviewers<a class="headerlink" href="#reviewers" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[x] <a class="reference external" href="https://github.com/krysal">&#64;krysal</a> - For API experience</p></li>
+<li><p>[x] <a class="reference external" href="https://github.com/dhruvkb">&#64;dhruvkb</a> - For frontend and DX experience</p></li>
+</ul>
+</section>
+<section id="rationale">
+<h2>Rationale<a class="headerlink" href="#rationale" title="Permalink to this heading">#</a></h2>
+<p>Openverse contributors have very little insight into the behaviors and interests
+of our users. We do not have any means of observing if they actually use the
+features we build in the intended manner, or at all.</p>
+<p>There are multiple ways to address this, like conducting user surveys or test
+sessions. One other way we would like to gather this information is through
+analytics, specifically logging events performed by users. I’ll share a full
+list of the events later in this proposal, but here are some examples:</p>
+<ul class="simple">
+<li><p>When a user clicks on a search result from the search results page</p></li>
+<li><p>When a user copies the attribution text</p></li>
+</ul>
+<p>By collecting this data, anonymized and with user consent (through opt-out), we
+can make better decisions about what to build and increase the overall
+usefulness of Openverse.</p>
+<section id="why-is-this-distinct-from-a-general-purpose-cross-repo-analytics-rfc">
+<h3>Why is this distinct from a general-purpose, cross-repo Analytics RFC?<a class="headerlink" href="#why-is-this-distinct-from-a-general-purpose-cross-repo-analytics-rfc" title="Permalink to this heading">#</a></h3>
+<p>This proposal only discusses front-end event collection. It does not discuss:</p>
+<ul class="simple">
+<li><p>Dashboards or tools for <em>analysing</em> collected data</p></li>
+<li><p>The ideal data warehouse for our frontend events</p></li>
+<li><p>Whether to use a SaaS product or self-host analytics software</p></li>
+</ul>
+<p>I suggest that our frontend events should be agnostic to any specific analytics
+platform. This means that our frontend events will be generalized to contain
+information we think is useful, and munged as necessary to conform to the needs
+of our analytics service. I see many benefits to doing this:</p>
+<ul class="simple">
+<li><p>It avoids vendor lock-in to a specific analytics platform</p></li>
+<li><p>It makes it much easier for users to audit exactly what values we’re
+collecting, by avoiding heavy and mysterious 3rd-party SDKs</p></li>
+<li><p>Makes us less likely to be blocked by ad and script blocking software</p></li>
+</ul>
+<p>There are many established conventions around frontend event collection. Using
+our own system should allow us to adopt most 3rd party platforms without locking
+us in. A quick example use case is the Google Analytics alternative
+<a class="reference external" href="https://plausible.io/">Plausible.io</a>, which includes an
+<a class="reference external" href="https://plausible.io/docs/events-api">events API</a>. Plausible accepts the
+following simple request shape to capture a pageview, for example:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-i<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://plausible.io/api/event<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36 OPR/71.0.3770.284&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;X-Forwarded-For: 127.0.0.1&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--data<span class="w"> </span><span class="s1">&#39;{&quot;name&quot;:&quot;pageview&quot;,&quot;url&quot;:&quot;http://dummy.site&quot;,&quot;domain&quot;:&quot;dummy.site&quot;,&quot;screen_width&quot;:1666}&#39;</span>
+</pre></div>
+</div>
+<p>There are many points in the code execution at which we could transform our
+custom events into ones supported by other platforms. By adopting and
+implementing our own custom solution, we can start collecting data as soon as
+possible without being blocked on time spent evaluating and implementing a full
+analytics system.</p>
+</section>
+</section>
+<section id="the-technical-details">
+<h2>The technical details<a class="headerlink" href="#the-technical-details" title="Permalink to this heading">#</a></h2>
+<p>We will create a system for collecting events on the frontend. Each event will
+have a unique name, collect some default data about the enviroment (timestamp,
+referer, and so on) and can have an optional data payload containing string and
+numerical values. I’d like to limit the payload shape to strings and numbers to
+keep it JSON serializable and simple. Allowing for complex nested objects might
+prove too complex to query in the future. I think this is a reasonable
+constraint but am open to alternatives.</p>
+<section id="sending-events">
+<h3>Sending events<a class="headerlink" href="#sending-events" title="Permalink to this heading">#</a></h3>
+<p>These events will be sent as <code class="docutils literal notranslate"><span class="pre">POST</span></code> requests to a server route on the frontend,
+which will then route them to our desired analytics service. In the future, it
+may make sense to move this server route to a standalone microservice, but for
+now a
+<a class="reference external" href="https://v3.nuxtjs.org/guide/directory-structure/server/#server-routes">Nuxt server route</a>
+or
+<a class="reference external" href="https://nuxtjs.org/docs/configuration-glossary/configuration-servermiddleware/">Server Middleware</a>
+(once we’re updated to Nuxt 3), should be sufficient to handle the analytics
+events. This endpoint is essentially a proxy between the frontend and our ‘true’
+analytics service that makes sure we’re always sending events server-side.</p>
+<section id="privacy">
+<h4>Privacy<a class="headerlink" href="#privacy" title="Permalink to this heading">#</a></h4>
+<p>Events will <em>only</em> be collected and sent under the following conditions:</p>
+<ul class="simple">
+<li><p>An <code class="docutils literal notranslate"><span class="pre">ANALYTICS_ENABLED</span></code> feature flag is set to <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p></li>
+<li><p>The user has not opted out of analytics by setting the <code class="docutils literal notranslate"><span class="pre">allowAnalytics</span></code> value
+in our UI cookie store to <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p></li>
+</ul>
+<p>Unless all conditions are met the <code class="docutils literal notranslate"><span class="pre">sendEvent</span></code> function will simply no-op.</p>
+<p>A previous version of this proposal suggested honoring the
+<code class="docutils literal notranslate"><span class="pre">navigator.doNotTrack</span></code> browser method, but upon inspection this was deprecated
+in 2018 and is no longer advised.</p>
+<p>This proposal will require the creation of some new user interface elements to
+toggle analytics tracking:</p>
+<ol class="arabic simple">
+<li><p>A small popup banner that shows up to users, which informs them that
+Openverse collects anonymized analytics information to make the service
+better. There are “dismiss” and “learn more” calls to action. “Learn more”
+directs users to:</p></li>
+<li><p>An analytics opt-out checkbox on the <code class="docutils literal notranslate"><span class="pre">/privacy</span></code> page. We also add information
+describing our analytics collection, and link to the relevant code in our
+GitHub repository.</p></li>
+</ol>
+</section>
+</section>
+<section id="events">
+<h3>Events<a class="headerlink" href="#events" title="Permalink to this heading">#</a></h3>
+<p>Below I’ve created a TypeScript type for all the proposed anlytics events, and a
+simple function for sending events. For each event you’ll see the payload
+alongside the default values which will be passed to <em>all</em> events.</p>
+<div class="highlight-ts notranslate"><div class="highlight"><pre><span></span><span class="c1">// src/utils/events.ts</span>
+
+<span class="c1">// This type is only for illustrative purposes and would be imported from elsewhere.</span>
+<span class="kr">type</span><span class="w"> </span><span class="nx">SearchType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;image&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;audio&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;all&quot;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * A list of all events allowed by our analytics server. For each event</span>
+<span class="cm"> * there is a description and a series of questions the event can help</span>
+<span class="cm"> * answer about our users and their behavior.</span>
+<span class="cm"> */</span>
+<span class="kr">type</span><span class="w"> </span><span class="nx">AnalyticsEvents</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * Description: A search performed by the user</span>
+<span class="cm">   * Questions:</span>
+<span class="cm">   *   - How many searches do we serve per day/month/year?</span>
+<span class="cm">   *   - What are the most popular searches in Openverse?</span>
+<span class="cm">   *   - Which media types are the most popular?</span>
+<span class="cm">   *   - Do most users search from the homepage, or internal searchbar?</span>
+<span class="cm">   */</span>
+<span class="w">  </span><span class="nx">SUBMIT_SEARCH</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/** The media type being searched */</span>
+<span class="w">    </span><span class="nx">mediaType</span><span class="o">:</span><span class="w"> </span><span class="kt">SearchType</span>
+<span class="w">    </span><span class="cm">/** The search term */</span>
+<span class="w">    </span><span class="nx">query</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="cm">/** Description: The user navigates to a page.</span>
+<span class="cm">   * Questions:</span>
+<span class="cm">   *   - Which content pages are the most popular?</span>
+<span class="cm">   *   - Are search result pages commonly shared?</span>
+<span class="cm">   *   - If so, which are most popular?</span>
+<span class="cm">   *   - What is the most common user path?</span>
+<span class="cm">   */</span>
+<span class="w">  </span><span class="nx">VIEW_PAGE</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/** The title of the page being navigated to (window.document.title)  */</span>
+<span class="w">    </span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">    </span><span class="cm">/** The path of the previous page */</span>
+<span class="w">    </span><span class="nx">previous</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">    </span><span class="cm">/** The path of the new page */</span>
+<span class="w">    </span><span class="nx">next</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * Description: Whenever the user sets a filter</span>
+<span class="cm">   * Questions:</span>
+<span class="cm">   *  - Do most users filter their searches?</span>
+<span class="cm">   *  - What % of users use filtering?</span>
+<span class="cm">   *  - Which filters are most popular? Least popular?</span>
+<span class="cm">   *  - Are any filters so commonly applied they should become defaults?</span>
+<span class="cm">   */</span>
+<span class="w">  </span><span class="nx">APPLY_FILTER</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/** The name of the filter (not the user-facing element label) */</span>
+<span class="w">    </span><span class="nx">key</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">    </span><span class="cm">/** The value of the filter  */</span>
+<span class="w">    </span><span class="nx">value</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kt">boolean</span>
+<span class="w">    </span><span class="cm">/** The media type being searched */</span>
+<span class="w">    </span><span class="nx">mediaType</span><span class="o">:</span><span class="w"> </span><span class="kt">SearchType</span>
+<span class="w">    </span><span class="cm">/** The search term */</span>
+<span class="w">    </span><span class="nx">query</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * Description: Whenever a user changes the content type</span>
+<span class="cm">   * Questions:</span>
+<span class="cm">   *   - Which content types are most popular?</span>
+<span class="cm">   *   - Is there interest in the non-supported content types?</span>
+<span class="cm">   *   - Do users switch content types? Where in their journeys?</span>
+<span class="cm">   */</span>
+<span class="w">  </span><span class="nx">CHANGE_CONTENT_TYPE</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/** The previously-set media type */</span>
+<span class="w">    </span><span class="nx">previous</span><span class="o">:</span><span class="w"> </span><span class="kt">SearchType</span>
+<span class="w">    </span><span class="cm">/** The new media type */</span>
+<span class="w">    </span><span class="nx">next</span><span class="o">:</span><span class="w"> </span><span class="kt">SearchType</span>
+<span class="w">    </span><span class="cm">/** The name of the Vue component used to switch content types. */</span>
+<span class="w">    </span><span class="nx">component</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * Description: Whenever the user scrolls to the end of the results page.</span>
+<span class="cm">   * Useful to evaluate how often users load more results or click</span>
+<span class="cm">   * on the external sources dropdown.</span>
+<span class="cm">   *</span>
+<span class="cm">   * This event is mainly used as part of a funnel leading to a</span>
+<span class="cm">   * `LOAD_MORE` or `VIEW_EXTERNAL_SOURCES` event.</span>
+<span class="cm">   *</span>
+<span class="cm">   * Questions:</span>
+<span class="cm">   *   - Do users use meta search after reaching the result end?</span>
+<span class="cm">   *   - Do users find a result before reaching the end of the results?</span>
+<span class="cm">   */</span>
+<span class="w">  </span><span class="nx">REACH_RESULT_END</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/** The media type being searched */</span>
+<span class="w">    </span><span class="nx">mediaType</span><span class="o">:</span><span class="w"> </span><span class="kt">SearchType</span>
+<span class="w">    </span><span class="cm">/** The search term */</span>
+<span class="w">    </span><span class="nx">query</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">    </span><span class="cm">/** The current page of results the user is on. */</span>
+<span class="w">    </span><span class="nx">resultPage</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * Whenever a search results in less than a full page</span>
+<span class="cm">   * of results or no results.</span>
+<span class="cm">   *</span>
+<span class="cm">   * Questions:</span>
+<span class="cm">   *   - How often do searches provide limited or no results?</span>
+<span class="cm">   *   - Do users visit external sources when results are insufficient?</span>
+<span class="cm">   *   - What do users do after a search has no results?</span>
+<span class="cm">   */</span>
+<span class="w">  </span><span class="nx">INSUFFICIENT_RESULTS</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/** The media type being searched */</span>
+<span class="w">    </span><span class="nx">mediaType</span><span class="o">:</span><span class="w"> </span><span class="kt">SearchType</span>
+<span class="w">    </span><span class="cm">/** The search term */</span>
+<span class="w">    </span><span class="nx">query</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">    </span><span class="cm">/** The number of results returned */</span>
+<span class="w">    </span><span class="nx">resultCount</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * Description: Whenever the user clicks the load more button</span>
+<span class="cm">   * Questions:</span>
+<span class="cm">   *   - On what page do users typically find a result?</span>
+<span class="cm">   *   - How often and how many pages of results do users load?</span>
+<span class="cm">   *   - Can we experiment with the types of results / result rankings</span>
+<span class="cm">   *     on certain pages, pages that users don&#39;t usually choose a result</span>
+<span class="cm">   *     from anyway?</span>
+<span class="cm">   */</span>
+<span class="w">  </span><span class="nx">LOAD_MORE_RESULTS</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/** The media type being searched */</span>
+<span class="w">    </span><span class="nx">mediaType</span><span class="o">:</span><span class="w"> </span><span class="kt">SearchType</span>
+<span class="w">    </span><span class="cm">/** The search term */</span>
+<span class="w">    </span><span class="nx">query</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">    </span><span class="cm">/** The current page of results the user is on. */</span>
+<span class="w">    </span><span class="nx">resultPage</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * Description: When a user opens the external sources popover.</span>
+<span class="cm">   * Questions:</span>
+<span class="cm">   *   - How often do users use this feature?</span>
+<span class="cm">   *   - Under what conditions to users use this feature? No results?</span>
+<span class="cm">   *     Many results, but none they actually select?</span>
+<span class="cm">   */</span>
+<span class="w">  </span><span class="nx">VIEW_EXTERNAL_SOURCES</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/** The media type being searched */</span>
+<span class="w">    </span><span class="nx">mediaType</span><span class="o">:</span><span class="w"> </span><span class="kt">SearchType</span>
+<span class="w">    </span><span class="cm">/** The search term */</span>
+<span class="w">    </span><span class="nx">query</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">    </span><span class="cm">/** The current page of results the user is on. */</span>
+<span class="w">    </span><span class="nx">resultPage</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * Description: When the user chooses an external source from the dropdown of external sources</span>
+<span class="cm">   * Questions:</span>
+<span class="cm">   *   - Which external sources are most popular? This could drive inclusion in Openverse.</span>
+<span class="cm">   *   - Are certain media types more popular externally?</span>
+<span class="cm">   */</span>
+<span class="w">  </span><span class="nx">SELECT_EXTERNAL_SOURCE</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/** The name of the external source */</span>
+<span class="w">    </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">    </span><span class="cm">/** The full URL of the source */</span>
+<span class="w">    </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">    </span><span class="cm">/** The media type being searched */</span>
+<span class="w">    </span><span class="nx">mediaType</span><span class="o">:</span><span class="w"> </span><span class="kt">SearchType</span>
+<span class="w">    </span><span class="cm">/** The search term */</span>
+<span class="w">    </span><span class="nx">query</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * Description: The user opens the menu which lists pages.</span>
+<span class="cm">   * Questions:</span>
+<span class="cm">   *   - How often is this menu used?</span>
+<span class="cm">   *   - Is this menu visible enough?</span>
+<span class="cm">   */</span>
+<span class="w">  </span><span class="nx">OPEN_PAGES_MENU</span><span class="o">:</span><span class="w"> </span><span class="p">{}</span>
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * Description: The user clicks to a link outside of Openverse.</span>
+<span class="cm">   * Questions:</span>
+<span class="cm">   *   - What types of external content do users seek?</span>
+<span class="cm">   *   - Are there external resources we should make more visible?</span>
+<span class="cm">   *   - Is there content we might want to add to Openverse directly?</span>
+<span class="cm">   */</span>
+<span class="w">  </span><span class="nx">EXTERNAL_LINK_CLICK</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/** The url of the external link */</span>
+<span class="w">    </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * The name of the Vue component used to switch content types.</span>
+<span class="cm">     * @todo: We need to determine the best way of creating a string</span>
+<span class="cm">     * representation of a vue component, which allows us to know</span>
+<span class="cm">     * which ui element was clicked. Perhaps we could use unique data-test-ids</span>
+<span class="cm">     * or another unique identifier for this?</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="nx">component</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * Description: Whenever the user selects a result from the search results page.</span>
+<span class="cm">   * Questions:</span>
+<span class="cm">   *   - Which results are most popular for given searches?</span>
+<span class="cm">   *   - How often do searches lead to clicking a result?</span>
+<span class="cm">   *   - Are there popular searches that do not result in result selection?</span>
+<span class="cm">   */</span>
+<span class="w">  </span><span class="nx">SELECT_SEARCH_RESULT</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/** The unique ID of the media */</span>
+<span class="w">    </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">    </span><span class="cm">/** If the result is a related result, provide the ID of the &#39;original&#39; result */</span>
+<span class="w">    </span><span class="nx">relatedTo</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="cm">/** The media type being searched */</span>
+<span class="w">    </span><span class="nx">mediaType</span><span class="o">:</span><span class="w"> </span><span class="kt">SearchType</span>
+<span class="w">    </span><span class="cm">/** The slug (not the prettified name) of the provider */</span>
+<span class="w">    </span><span class="nx">provider</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">    </span><span class="cm">/** The search term */</span>
+<span class="w">    </span><span class="nx">query</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * Description: The user clicks the CTA button to the external source to use the image</span>
+<span class="cm">   * Questions:</span>
+<span class="cm">   *   - How often do users go to the source after viewing a result?</span>
+<span class="cm">   */</span>
+<span class="w">  </span><span class="nx">GET_MEDIA</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/** The unique ID of the media */</span>
+<span class="w">    </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">    </span><span class="cm">/** The slug (not the prettified name) of the provider */</span>
+<span class="w">    </span><span class="nx">provider</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">    </span><span class="cm">/** The media type being searched */</span>
+<span class="w">    </span><span class="nx">mediaType</span><span class="o">:</span><span class="w"> </span><span class="kt">SearchType</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * Description: The user clicks one of the buttons to copy the media attribution</span>
+<span class="cm">   * Questions:</span>
+<span class="cm">   *   - How often do users use our attribution tool?</span>
+<span class="cm">   *   - Which format is the most popular?</span>
+<span class="cm">   */</span>
+<span class="w">  </span><span class="nx">COPY_ATTRIBUTION</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/** The unique ID of the media */</span>
+<span class="w">    </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">    </span><span class="cm">/** The format of the copied attribution */</span>
+<span class="w">    </span><span class="nx">format</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;plain&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;rich&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;html&quot;</span>
+<span class="w">    </span><span class="cm">/** The media type being searched */</span>
+<span class="w">    </span><span class="nx">mediaType</span><span class="o">:</span><span class="w"> </span><span class="kt">SearchType</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * Description: The user reports a piece of media through our form</span>
+<span class="cm">   * Questions:</span>
+<span class="cm">   *   - How often do we get reports?</span>
+<span class="cm">   *   - Which types of reports are more common?</span>
+<span class="cm">   *   - Do we see an uptick in reports when a certain provider</span>
+<span class="cm">   *     is added/updated/refreshed?</span>
+<span class="cm">   */</span>
+<span class="w">  </span><span class="nx">REPORT_MEDIA</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/** The unique ID of the media */</span>
+<span class="w">    </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">    </span><span class="cm">/** The slug (not the prettified name) of the provider */</span>
+<span class="w">    </span><span class="nx">provider</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">    </span><span class="cm">/** The media type being searched */</span>
+<span class="w">    </span><span class="nx">mediaType</span><span class="o">:</span><span class="w"> </span><span class="kt">SearchType</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="cm">/** Description: The user plays, pauses, or seeks an audio track.</span>
+<span class="cm">   * @todo: This potentially requires throttling.</span>
+<span class="cm">   *</span>
+<span class="cm">   * Questions:</span>
+<span class="cm">   *   - Do users interact with media frequently?</span>
+<span class="cm">   *   - Is it more common to playback audio on single results</span>
+<span class="cm">   *     or search pages?</span>
+<span class="cm">   *   - How many audio plays do we get?</span>
+<span class="cm">   */</span>
+<span class="w">  </span><span class="nx">AUDIO_INTERACTION</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/** The unique ID of the media */</span>
+<span class="w">    </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">    </span><span class="nx">event</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;seek&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;play&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;pause&quot;</span>
+<span class="w">    </span><span class="cm">/** The slug (not the prettified name) of the provider */</span>
+<span class="w">    </span><span class="nx">provider</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">    </span><span class="cm">/** The name of the Vue component used on the interaction, e.g. the global or main player. */</span>
+<span class="w">    </span><span class="nx">component</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * Description: The user visits a CC license description page on CC.org</span>
+<span class="cm">   * Questions:</span>
+<span class="cm">   *   - How often are external licenses viewed?</span>
+<span class="cm">   */</span>
+<span class="w">  </span><span class="nx">VISIT_LICENSE_PAGE</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/** The slug of the license the user clicked on */</span>
+<span class="w">    </span><span class="nx">license</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * Description: The user visits a creator&#39;s link in the single result UI</span>
+<span class="cm">   * Questions:</span>
+<span class="cm">   *   - Are creator links clicked much? Does Openverse increase visibility</span>
+<span class="cm">   *     of included creator&#39;s profiles?</span>
+<span class="cm">   */</span>
+<span class="w">  </span><span class="nx">VISIT_CREATOR_LINK</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/** The unique ID of the media */</span>
+<span class="w">    </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">    </span><span class="cm">/** The permalink to the creator&#39;s profile */</span>
+<span class="w">    </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * Description: The user right clicks a single image result, most likely to download it.</span>
+<span class="cm">   * Questions:</span>
+<span class="cm">   *   - Do users right click images often? Does this suggest downloading them directly,</span>
+<span class="cm">   *     when not paired with a `GET_MEDIA` event?</span>
+<span class="cm">   */</span>
+<span class="w">  </span><span class="nx">RIGHT_CLICK_IMAGE</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/** The unique ID of the media */</span>
+<span class="w">    </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">    </span><span class="cm">/** The media type being searched */</span>
+<span class="w">    </span><span class="nx">mediaType</span><span class="o">:</span><span class="w"> </span><span class="kt">SearchType</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * Description: The user uses the &#39;back to search&#39; link on a single result</span>
+<span class="cm">   * Questions:</span>
+<span class="cm">   *   - Are these links used much? Are they necessary?</span>
+<span class="cm">   */</span>
+<span class="w">  </span><span class="nx">BACK_TO_SEARCH</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/** The unique ID of the media */</span>
+<span class="w">    </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">    </span><span class="cm">/** The media type being searched */</span>
+<span class="w">    </span><span class="nx">mediaType</span><span class="o">:</span><span class="w"> </span><span class="kt">SearchType</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * Description: The visibility of the filter sidebar on desktop is toggled</span>
+<span class="cm">   * Questions:</span>
+<span class="cm">   *   - Do a majority users prefer the sidebar visible or hidden?</span>
+<span class="cm">   */</span>
+<span class="w">  </span><span class="nx">TOGGLE_FILTERS</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/** The media type being searched */</span>
+<span class="w">    </span><span class="nx">mediaType</span><span class="o">:</span><span class="w"> </span><span class="kt">SearchType</span>
+<span class="w">    </span><span class="cm">/** The state of the filter sidebar after the user interaction. */</span>
+<span class="w">    </span><span class="nx">state</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;open&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;closed&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="kr">type</span><span class="w"> </span><span class="nx">AnalyticsEventTypes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">keyof</span><span class="w"> </span><span class="nx">AnalyticsEvents</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="default-values-and-sample-implementation-of-event-sending-code">
+<h2>Default values and sample implementation of event sending code<a class="headerlink" href="#default-values-and-sample-implementation-of-event-sending-code" title="Permalink to this heading">#</a></h2>
+<p>This is a sample implementation of what our event sending code can look like.
+With the power of TypeScript we can make sure to only send valid events with
+proper payloads.</p>
+<p>Pay careful attention to the <code class="docutils literal notranslate"><span class="pre">defaults</span></code> object. This is the default payload that
+will send with every single event. These are properties that are universally
+useful to any event, like the current page the user is on, and also properties
+that allow for tracking unique user sessions.</p>
+<div class="highlight-ts notranslate"><div class="highlight"><pre><span></span><span class="cm">/**</span>
+<span class="cm"> * Send an event to our analytics endpoint. Should be a no-op</span>
+<span class="cm"> * if the user has opted-out of analytics.</span>
+<span class="cm"> */</span>
+<span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">sendEvent</span><span class="o">&lt;</span><span class="nx">T</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">AnalyticsEventTypes</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">  </span><span class="nx">key</span><span class="o">:</span><span class="w"> </span><span class="kt">T</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">payload?</span><span class="o">:</span><span class="w"> </span><span class="kt">AnalyticsEvents</span><span class="p">[</span><span class="nx">T</span><span class="p">]</span>
+<span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">any</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * The default values to send with every analytics event.</span>
+<span class="cm">   * Any sensitive or personally-identifying information</span>
+<span class="cm">   * sent here is *not* stored, rather used to derive</span>
+<span class="cm">   * anonymized session, device, and browser statistics.</span>
+<span class="cm">   *</span>
+<span class="cm">   * The items not stored directly include: width, height,</span>
+<span class="cm">   * ipAddress, and userAgent</span>
+<span class="cm">   */</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">defaults</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">timestamp</span><span class="o">:</span><span class="w"> </span><span class="kt">Date.now</span><span class="p">(),</span>
+<span class="w">    </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="kt">window.location.pathname</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">referrer</span><span class="o">:</span><span class="w"> </span><span class="kt">document.referrer</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">language</span><span class="o">:</span><span class="w"> </span><span class="kt">i18n.locale</span><span class="p">,</span><span class="w"> </span><span class="c1">// collected from the global Nuxt i18n object</span>
+<span class="w">    </span><span class="c1">// These fields are not stored directly, rather used to derive anonymized values</span>
+<span class="w">    </span><span class="nx">width</span><span class="o">:</span><span class="w"> </span><span class="kt">window.innerWidth</span><span class="p">,</span><span class="w"> </span><span class="c1">// The width of the user&#39;s device</span>
+<span class="w">    </span><span class="nx">height</span><span class="o">:</span><span class="w"> </span><span class="kt">window.innerHeight</span><span class="p">,</span><span class="w"> </span><span class="c1">// The height of the user&#39;s device</span>
+<span class="w">    </span><span class="nx">ipAddress</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">// Should be read from the X-Forwarded-For header server-side, will need to be stored securely during the user&#39;s session</span>
+<span class="w">    </span><span class="nx">userAgent</span><span class="o">:</span><span class="w"> </span><span class="kt">navigator.userAgent</span><span class="p">,</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * Actually send the event here, with some additional values.</span>
+<span class="cm">   * I would have prefered to use `navigator.sendBeacon` here</span>
+<span class="cm">   * but it is blocked by most ad blockers.</span>
+<span class="cm">   *</span>
+<span class="cm">   * We might not want to call our api route &quot;analytics&quot; to</span>
+<span class="cm">   * further avoid blocking by adblockers, but I&#39;ll use that</span>
+<span class="cm">   * name for clarity here.</span>
+<span class="cm">   */</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="sb">`/analytics`</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">headers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;Content-Type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;application/json&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nx">body</span><span class="o">:</span><span class="w"> </span><span class="kt">JSON.stringify</span><span class="p">({</span><span class="w"> </span><span class="p">...</span><span class="nx">defaults</span><span class="p">,</span><span class="w"> </span><span class="p">...</span><span class="nx">payload</span><span class="w"> </span><span class="p">}),</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="implementation-plan">
+<h3>Implementation Plan<a class="headerlink" href="#implementation-plan" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>[ ] Create “Event Tracking” GitHub milestone in the frontend repository</p></li>
+<li><p>[ ] Design: design a privacy and analytics opt-out checkbox on the Privacy
+page. Also a pop-up banner to be shown to users letting them know
+Openverse uses analytics (can use the existing audio notice for this)</p></li>
+<li><p>[ ] Create the <code class="docutils literal notranslate"><span class="pre">ANALYTICS_ENABLED</span></code> feature flag which defaults to
+<code class="docutils literal notranslate"><span class="pre">off</span></code>/<code class="docutils literal notranslate"><span class="pre">false</span></code>.</p></li>
+<li><p>[ ] Create a PR which adds an <code class="docutils literal notranslate"><span class="pre">allowAnalytics</span></code> value to our UI cookie store;
+implements the checkbox on the privacy page; and shows a ‘Openverse
+collects analytics information…’ banner to first-time (new session)
+users.</p></li>
+<li><p>[ ] Create an issue for the creation of the <code class="docutils literal notranslate"><span class="pre">sendEvent</span></code> function and the api
+route to post analytics events to. The api route will post events to an
+<code class="docutils literal notranslate"><span class="pre">ANALYTICS_ENDPOINT</span></code> environment variable. If that variable is unset
+and/or the <code class="docutils literal notranslate"><span class="pre">ANALYTICS_ENABLED</span></code> flag is off, the analytics events will not
+send.</p></li>
+<li><p>[ ] Create each event in the sample implementation. Each event will need a
+detailed description of the payload and trigger (the actual user
+interaction that fires off the event). Events will need to account for
+accessibility concerns. Will keyboard users’ actions trigger the events
+the same way as mouse users?</p></li>
+<li><p>[ ] Future: Create a PR to turn <code class="docutils literal notranslate"><span class="pre">ANALYTICS_ENABLED</span></code> to <code class="docutils literal notranslate"><span class="pre">on</span></code>/<code class="docutils literal notranslate"><span class="pre">true</span></code>, set the
+<code class="docutils literal notranslate"><span class="pre">ANALYTICS_ENDPOINT</span></code> environment variable, and do any munging of data
+necessary for the decided on analytics service.</p></li>
+</ul>
+</section>
+</section>
+<section id="concerns-pitfalls">
+<h2>Concerns / Pitfalls<a class="headerlink" href="#concerns-pitfalls" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Related to content safety, this is an area where we are surfacing user
+information in the form of text, or even malicious URLs, to Openverse
+developers. These searches could include explicit or sensitive material. We’re
+also potentially surfacing explicit image results to anyone working with this
+data.</p></li>
+<li><p>We’re building something here that is commonly drop-in when 3rd party tools
+are used. At least for page views; custom events still require custom work. Is
+this a poor use of time?</p></li>
+<li><p>I think it’s great to build this decoupled from a specific back-end, but if we
+never actually implement a backend this would largely be a wasted effort.</p></li>
+</ul>
+<section id="prior-art">
+<h3>Prior Art<a class="headerlink" href="#prior-art" title="Permalink to this heading">#</a></h3>
+<p><a class="reference external" href="https://snowplow.io/">Snowplow</a> is “the world’s largest developer-first engine
+for collecting behavioral data”. This is a heavy, complicated, and powerful
+analytics platform for
+<a class="reference external" href="https://docs.snowplow.io/docs/collecting-data/collecting-from-own-applications/snowplow-tracker-protocol/example-requests/">collecting</a>,
+<a class="reference external" href="https://docs.snowplow.io/docs/enriching-your-data/available-enrichments/">enriching</a>,
+and
+<a class="reference external" href="https://docs.snowplow.io/docs/modeling-your-data/what-is-data-modeling/">modeling</a>
+data. This is about as robust as an open-source user behavior tracking platform
+can be.</p>
+<p><a class="reference external" href="https://plausible.io/">Plausible</a> is a simple, lightweight, and self-hostable
+Google Analytics alternative. Our implementation here would be easily
+compatiable with Plausible’s self-hosted or cloud offerings.</p>
+<p><a class="reference external" href="https://umami.is/">Umami</a> is quite similar to Plausible. Their codebase
+contains
+<a class="reference external" href="https://github.com/umami-software/umami/pull/1272">valuable discussions</a>, for
+example why one might use <code class="docutils literal notranslate"><span class="pre">fetch</span></code> instead of <code class="docutils literal notranslate"><span class="pre">navigator.sendBeacon</span></code> to send
+analytics events even though the later was <em>designed</em> for analytis use cases.</p>
+</section>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="20230307-backend_service.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">2023-03-07 Implementation Plan: Analytics backend and visualisation service</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="index.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Analytics</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/WordPress/openverse" aria-label="GitHub"><svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">2022-10-06 Implementation Plan: Frontend event tracking</a><ul>
+<li><a class="reference internal" href="#reviewers">Reviewers</a></li>
+<li><a class="reference internal" href="#rationale">Rationale</a><ul>
+<li><a class="reference internal" href="#why-is-this-distinct-from-a-general-purpose-cross-repo-analytics-rfc">Why is this distinct from a general-purpose, cross-repo Analytics RFC?</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#the-technical-details">The technical details</a><ul>
+<li><a class="reference internal" href="#sending-events">Sending events</a><ul>
+<li><a class="reference internal" href="#privacy">Privacy</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#events">Events</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#default-values-and-sample-implementation-of-event-sending-code">Default values and sample implementation of event sending code</a><ul>
+<li><a class="reference internal" href="#implementation-plan">Implementation Plan</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#concerns-pitfalls">Concerns / Pitfalls</a><ul>
+<li><a class="reference internal" href="#prior-art">Prior Art</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/scripts/furo.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    </body>
+</html>

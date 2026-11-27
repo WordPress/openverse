@@ -1,0 +1,11 @@
+# 2023.12.06.19.13.35
+
+## New Features
+
+- Add DAG for creating staging indices
+  ([#3232](https://github.com/WordPress/openverse/pull/3232)) by @stacimc
+
+## Internal Improvements
+
+- Unpin glibc ([#3359](https://github.com/WordPress/openverse/pull/3359)) by
+  @dhruvkb

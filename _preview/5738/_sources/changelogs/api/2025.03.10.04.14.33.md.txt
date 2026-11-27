@@ -1,0 +1,6 @@
+# 2025.03.10.04.14.33
+
+## Internal Improvements
+
+- Update docker.io/nginx Docker tag to v1.27.4
+  ([#5383](https://github.com/WordPress/openverse/pull/5383)) by @openverse-bot

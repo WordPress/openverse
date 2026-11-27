@@ -1,0 +1,972 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><link rel="next" title="Pinia Conversion" href="../vuex_to_pina_conversion/index.html" /><link rel="prev" title="Visual Regression Testing" href="index.html" />
+
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/WordPress/openverse/master/brand/icon.svg"/><!-- Generated with Sphinx 6.1.3 and Furo 2023.03.27 -->
+        <title>Implementation Plan - 2022-02-17 - Openverse documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../index.html"><div class="brand">Openverse  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo only-light" src="../../../_static/logo_light.svg" alt="Light Logo"/>
+    <img class="sidebar-logo only-dark" src="../../../_static/logo_dark.svg" alt="Dark Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../api/index.html">Django API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../api/guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/guides/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/guides/test.html">Testing guide</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../api/reference/index.html">Reference</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/reference/authentication_and_throttling.html">Authentication and Throttling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/reference/search_algorithm.html">Search Algorithm</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../catalog/index.html">Airflow catalog</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../changelogs/index.html">Changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../changelogs/api/index.html">API changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.04.23.23.22.14.html">2023.04.23.23.22.14</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.04.19.00.01.39.html">2023.04.19.00.01.39</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../changelogs/api/2023.04.18.15.27.15.html">2023.04.18.15.27.15</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../changelogs/frontend/index.html">Frontend changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../changelogs/ingestion_server/index.html">Ingestion server changelogs</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../frontend/index.html">Nuxt frontend</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../frontend/guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/guides/analytics.html">Analytics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/guides/develop.html">Development guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/guides/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/guides/test.html">Running frontend tests</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../frontend/reference/index.html">Reference</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/feature_flags.html">Feature flags</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/miscellaneous.html">Miscellaneous notes on the frontend</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/playwright_tests.html">Playwright tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/storybook_tests.html">Storybook tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../frontend/reference/testing_guidelines.html">Testing Guidelines</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../general/index.html">General development guidelines</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/deployment.html">Deployments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/general_setup.html">General setup guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/https.html">Testing HTTPS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/logging.html">Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/publish.html">Publish</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/run.html">Run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/test.html">Test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../general/zero-downtime-database-management.html">Zero Downtime and Database Management</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../ingestion_server/index.html">Ingestion server</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../ingestion_server/guides/index.html">Guides</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/guides/quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../ingestion_server/guides/test.html">Testing guide</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../meta/index.html">Managing the Openverse</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../meta/dev_flow.html">Development workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../meta/github_contribution_practices.html">GitHub contribution practices</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/ci_cd/index.html">CI + CD workflow</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/ci_cd/actions.html">Actions</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../meta/ci_cd/jobs/index.html">Jobs</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/preparation.html">Preparation jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/frontend.html">Frontend jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/docker_preparation.html">Docker jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/docker_publishing.html">Docker publishing jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/catalog.html">Catalog jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/ingestion_server.html">Ingestion server jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/api.html">API jobs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../meta/ci_cd/jobs/documentation.html">Documentation jobs</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/ci_cd/flow.html">Flow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/ci_cd/proof_of_functionality.html">Proof-of-functionality</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/decision_making/index.html">Openverse Decision-Making Process</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/decision_making/additional_practices.html">Additional practices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/decision_making/how_to_use.html">How to follow the process in different settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/decision_making/process_description.html">Process description</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../meta/documentation/index.html">Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/documentation/guidelines.html">Documentation Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../meta/documentation/quickstart.html">Quickstart guide</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../../index.html">Projects</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" role="switch" type="checkbox"/><label for="toctree-checkbox-20"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../planning.html">Project Planning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../templates/implementation-plan.html">Implementation Plan Template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../templates/project-proposal.html">Project Proposal Template</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../3d_model_support/index.html">3D Model Support</a><input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" role="switch" type="checkbox"/><label for="toctree-checkbox-21"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../3d_model_support/20220221-project_proposal.html">Project Proposal - 2022-02-21</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../analytics/index.html">Analytics</a><input class="toctree-checkbox" id="toctree-checkbox-22" name="toctree-checkbox-22" role="switch" type="checkbox"/><label for="toctree-checkbox-22"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../analytics/20221006-implementation_plan_frontend.html">Implentation Plan: Frontend event tracking - 2022-10-06</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../analytics/20230307-backend_service.html">Implementation Plan: Analytics backend and visualisation service - 2023-03-07</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../core_user_interface_improvement/index.html">Core User Interface Improvements</a><input class="toctree-checkbox" id="toctree-checkbox-23" name="toctree-checkbox-23" role="switch" type="checkbox"/><label for="toctree-checkbox-23"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../core_user_interface_improvement/20230314-project_proposal_core_ui_improvement.html">Project Proposal - 2023-03-14</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../detecting_sensitive_textual_content/index.html">Detecting and Blurring Sensitive Textual Content</a><input class="toctree-checkbox" id="toctree-checkbox-24" name="toctree-checkbox-24" role="switch" type="checkbox"/><label for="toctree-checkbox-24"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../detecting_sensitive_textual_content/20230308-implementation_plan_filtering_and_designating_results_with_sensitive_textual_content.html">2023-03-08 Implementation Plan: Filtering and designating results with sensitive textual content</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../detecting_sensitive_textual_content/20230309-implementation_plan_sensitive_terms_list.html">2023-03-09 Implementation Plan: Sensitive Terms List</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../detecting_sensitive_textual_content/20230309-project_proposal_detecting_sensitive_textual_content.html">2023-03-09 Project Proposal</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../document_all_media_properties/index.html">Document all media properties</a><input class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" role="switch" type="checkbox"/><label for="toctree-checkbox-25"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../document_all_media_properties/20230307-project_proposal.html">Due date:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../document_all_media_properties/20230307-project_proposal.html#assigned-reviewers">Assigned reviewers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../document_all_media_properties/20230307-project_proposal.html#description">Description</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../feature_flags/index.html">Feature Flags</a><input class="toctree-checkbox" id="toctree-checkbox-26" name="toctree-checkbox-26" role="switch" type="checkbox"/><label for="toctree-checkbox-26"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../feature_flags/20220309-project_proposal.html">Project Proposal - 2022-03-09</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../frontend_ui_state_cookie/index.html">Frontend UI State Cookie</a><input class="toctree-checkbox" id="toctree-checkbox-27" name="toctree-checkbox-27" role="switch" type="checkbox"/><label for="toctree-checkbox-27"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../frontend_ui_state_cookie/20220218-project_proposal.html">2022-02-18 Project Propsal: Frontend UI State Cookie</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../monitoring/index.html">Monitoring</a><input class="toctree-checkbox" id="toctree-checkbox-28" name="toctree-checkbox-28" role="switch" type="checkbox"/><label for="toctree-checkbox-28"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../monitoring/20220307-project_proposal.html">Project Proposal - 2022-03-07</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../monorepo/index.html">Monorepo</a><input class="toctree-checkbox" id="toctree-checkbox-29" name="toctree-checkbox-29" role="switch" type="checkbox"/><label for="toctree-checkbox-29"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../monorepo/20221124-project_proposal.html">Project Proposal - 2022-11-24</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../search_relevancy_sandbox/index.html">Search Relevancy Sandbox</a><input class="toctree-checkbox" id="toctree-checkbox-30" name="toctree-checkbox-30" role="switch" type="checkbox"/><label for="toctree-checkbox-30"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../search_relevancy_sandbox/20230331-project_proposal_search_relevancy_sandbox.html">Project Proposal - 2023-03-31</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../trust_and_safety/index.html">Trust &amp; Safety</a><input class="toctree-checkbox" id="toctree-checkbox-31" name="toctree-checkbox-31" role="switch" type="checkbox"/><label for="toctree-checkbox-31"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../trust_and_safety/20230109-trust_and_safety_preliminary_overview_and_exploration.html">2023-01-09 Project Proposal</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current has-children"><a class="reference internal" href="index.html">Visual Regression Testing</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-32" name="toctree-checkbox-32" role="switch" type="checkbox"/><label for="toctree-checkbox-32"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3 current current-page"><a class="current reference internal" href="#">Implementation Plan - 2022-02-17</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../vuex_to_pina_conversion/index.html">Pinia Conversion</a><input class="toctree-checkbox" id="toctree-checkbox-33" name="toctree-checkbox-33" role="switch" type="checkbox"/><label for="toctree-checkbox-33"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../vuex_to_pina_conversion/20220223-project_proposal.html">Project Proposal - 2022-02-23</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../terms_of_service.html">Openverse API Terms of Service</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">External links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://openverse.org">Openverse</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/WordPress/openverse">GitHub</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/WordPress/openverse/edit/main/documentation/projects/proposals/visual_regression_testing/20220217-implementation_plan.md" title="Edit this page">
+    <svg aria-hidden="true" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
+      <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
+    </svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="implementation-plan-2022-02-17">
+<h1>Implementation Plan - 2022-02-17<a class="headerlink" href="#implementation-plan-2022-02-17" title="Permalink to this heading">#</a></h1>
+<p>A proposal to integrate visual regression testing into the Openverse frontend’s
+automated testing suite.</p>
+<section id="reviewers">
+<h2>Reviewers<a class="headerlink" href="#reviewers" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>[x] &#64;obulat</p></li>
+<li><p>[x] &#64;AetherUnbound</p></li>
+</ul>
+</section>
+<section id="milestone">
+<h2>Milestone<a class="headerlink" href="#milestone" title="Permalink to this heading">#</a></h2>
+<p>https://github.com/WordPress/openverse-frontend/milestone/7</p>
+</section>
+<section id="exploratory-code">
+<h2>Exploratory code<a class="headerlink" href="#exploratory-code" title="Permalink to this heading">#</a></h2>
+<p>https://github.com/WordPress/openverse-frontend/pull/899</p>
+</section>
+<section id="background">
+<h2>Background<a class="headerlink" href="#background" title="Permalink to this heading">#</a></h2>
+<section id="what-is-visual-regression-testing">
+<h3>What is “visual regression testing”?<a class="headerlink" href="#what-is-visual-regression-testing" title="Permalink to this heading">#</a></h3>
+<p>Visual regression testing is a testing strategy that diffs two screenshots
+reports a failure if there are significant differences between the two.</p>
+<p>Playwright is capable of generating and diffing screenshots of the running
+application via the
+<a class="reference external" href="https://playwright.dev/docs/screenshots">screenshot function</a> available on the
+<code class="docutils literal notranslate"><span class="pre">Page</span></code> and <code class="docutils literal notranslate"><span class="pre">Locator</span></code> objects. These can be used with <code class="docutils literal notranslate"><span class="pre">toMatchSnapshot</span></code> like so:</p>
+<div class="highlight-ts notranslate"><div class="highlight"><pre><span></span><span class="nx">expect</span><span class="p">(</span><span class="k">await</span><span class="w"> </span><span class="nx">page</span><span class="p">.</span><span class="nx">screenshot</span><span class="p">()).</span><span class="nx">toMatchSnapshot</span><span class="p">({</span>
+<span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;fullpage&quot;</span><span class="p">,</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+<p>Playwright uses the popular <a class="reference external" href="https://github.com/mapbox/pixelmatch">pixelmatch</a>
+library to diff the screenshots. Example diffs
+<a class="reference external" href="https://github.com/mapbox/pixelmatch#example-output">can be found here</a>.
+Playwright on its own does not appear capable of outputting the visual-diff
+image. An alternative to this is covered below.</p>
+</section>
+<section id="rationale-for-this-style-of-testing">
+<h3>Rationale for this style of testing<a class="headerlink" href="#rationale-for-this-style-of-testing" title="Permalink to this heading">#</a></h3>
+<p>A lot of the recent regressions that we’ve experienced on the frontend <em>on
+critical paths</em> have been visual style regressions. It’s difficult, but not
+impossible, to write “sensible” unit tests against the applied styles. Testing
+Library offers the
+<a class="reference external" href="https://github.com/testing-library/jest-dom#tohavestyle"><code class="docutils literal notranslate"><span class="pre">toHaveStyle</span></code></a> matcher
+and we <em>could</em> start utilizing this more, but it would require tedious manual
+changes to tests that <em>most of the time</em> would just be 1-1 confirmations of the
+applied Tailwind classes. It also doesn’t necessarily test components in
+composition very well and it would be tedious to write individual specific style
+tests for each of the scenarios any given widespread component is used in
+(<code class="docutils literal notranslate"><span class="pre">VButton</span></code>, for example, is used everywhere).</p>
+<p>Visual regression testing could be a way of accomplishing more robust tests
+without the tedious practice of hand-writing tests for specific styles.</p>
+</section>
+<section id="existing-tooling">
+<h3>Existing tooling<a class="headerlink" href="#existing-tooling" title="Permalink to this heading">#</a></h3>
+<p>We already utilize Playwright for our end-to-end tests. Provided we wrote the
+requisite tests to generate the screenshots, we could stop here and already have
+visual regression testing.</p>
+<p>However, we also need a way of easily reviewing the diffed images. Luckily,
+<a class="reference external" href="https://docs.github.com/en/repositories/working-with-files/using-files/working-with-non-code-files#viewing-differences">GitHub already has this functionality built into it’s PR diff previews</a>.
+This means when an existing screenshot is replaced we’d be able to review and
+approve this change as a normal part of our PR review process, just like we
+review code.</p>
+</section>
+<section id="alternative-additional-tooling">
+<h3>Alternative/additional tooling<a class="headerlink" href="#alternative-additional-tooling" title="Permalink to this heading">#</a></h3>
+<p>Everything in the previous section is basically the “bare minimum” of what we’d
+need to start utilizing visual regression testing. We could stop there and
+already be able to take advantage of this technology. However, there are
+additionally a whole world of visual regression testing tools. In this section I
+cover one popular external diff reviewing tool (which I ultimately recommend
+against, for now) and an enhanced image snapshot matcher.</p>
+<section id="percy">
+<h4>Percy<a class="headerlink" href="#percy" title="Permalink to this heading">#</a></h4>
+<p><a class="reference external" href="https://percy.io/">Percy</a> seems to be far and away the most powerful tool for
+reviewing image diffs. It is owned by BrowserStack. While BrowserStack has a
+generous open source sponsorship (that we should definitely eventually utilize
+to run e2e tests and even potentially generate snapshots on real mobile
+devices), they do not appear to extend this offering to Percy<a class="footnote-reference brackets" href="#id3" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
+<p>Percy also requires you to specifically upload the files through a GitHub action
+which would require managing additional secrets. It would also restrict
+reviewers to those with access to Percy which would unnecessarily exclude casual
+contributors.</p>
+<p>Percy definitely looks very cool and I would recommend creating a BrowserStack
+account and checking out the Percy demo project. It’s fun to poke around in and
+the UI mostly works very nicely.</p>
+<p>However, if I’m being honest, when taking into account the fact that GitHub
+already has image diffing built into the PR review process, Percy seems like an
+unnecessary additional complication to the baseline of visual regression
+testing. Maybe it’s something that we would come to realize the value of down
+the line, but it does not seem to me to be a requirement for the initial phase
+of visual regression testing.</p>
+</section>
+<section id="alternative-image-snapshot-libraries">
+<h4>Alternative image snapshot libraries<a class="headerlink" href="#alternative-image-snapshot-libraries" title="Permalink to this heading">#</a></h4>
+<p>Playwrights’s built in image snapshot-diffing capability works fine for the most
+part. In fact, it basically does everything you need short of one very useful
+feature: it throws away the actual generated diff.</p>
+<p><a class="reference external" href="https://github.com/americanexpress/jest-image-snapshot">Amex’s <code class="docutils literal notranslate"><span class="pre">jest-image-snapshot</span></code></a>
+fixes this. In addition to failing when snapshots do not match, it will also
+write the diff image that includes the “hot spots” where the visual differences
+exist. It also automatically generates the snapshot name, which Playwright’s
+matcher doesn’t seem to be capable of (this is usually a standard feature of
+Jest snapshot matchers otherwise).</p>
+<p><code class="docutils literal notranslate"><span class="pre">jest-image-snapshot</span></code> is also significantly more configurable than Playwright’s
+matcher. Playwright’s matcher has a single option, <code class="docutils literal notranslate"><span class="pre">threshold</span></code> which it passes
+directly to <code class="docutils literal notranslate"><span class="pre">pixelmatch</span></code>. Amex’s library has a
+<a class="reference external" href="https://github.com/americanexpress/jest-image-snapshot#%EF%B8%8F-api">ton of potentially useful options for configuring snapshots on an individual basis or project wide</a>
+and also still uses <code class="docutils literal notranslate"><span class="pre">pixelmatch</span></code> in the background anyway.</p>
+<p><strong>Important caveat to this section!</strong></p>
+<p>I ended up trying out <code class="docutils literal notranslate"><span class="pre">jest-image-snapshot</span></code> in
+https://github.com/WordPress/openverse-frontend/pull/899 but running the matcher
+fails on some error about <code class="docutils literal notranslate"><span class="pre">_counters</span></code> being undefined. It looks like Playwright,
+while it uses the jest <code class="docutils literal notranslate"><span class="pre">expect</span></code> library, does not support the same matcher
+context as Jest proper does. To use <code class="docutils literal notranslate"><span class="pre">jest-image-snapshot</span></code> we might have to
+switch to <code class="docutils literal notranslate"><span class="pre">jest-playwright</span></code> which would be less than ideal as it’s
+<a class="reference external" href="https://playwright.dev/docs/test-runners#jest--jasmine">recommended against by the Playwright project</a>
+(though for what reason exactly I’m really not sure).</p>
+<p>We can still <em>try</em> to find a workaround for this, but if it ends up being too
+much trouble I’d say just leave it out of the final roadmap for this feature and
+we can use the built-in Playwright tool. Playwright will output the before and
+after images for failed snapshot comparisons into a <code class="docutils literal notranslate"><span class="pre">test-results</span></code> folder at the
+top level of the project, so I figure the worst case scenario is that we could
+write a little script to walk through that directory and run <code class="docutils literal notranslate"><span class="pre">pixelmatch</span></code> on
+them to get the diff image.</p>
+</section>
+</section>
+</section>
+<section id="repository-size-considerations">
+<h2>Repository size considerations<a class="headerlink" href="#repository-size-considerations" title="Permalink to this heading">#</a></h2>
+<p>Storing many images in a Git repository can be problematic. Between using more
+of our contributor’s bandwidth in uploading and downloading images to just
+generally butting up against the limit of GitHub’s repository size limit.</p>
+<p>The repository size limit I don’t think we’ll ever need to worry about. GitHub
+has a
+<a class="reference external" href="https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github#repository-size-limits">repository size limit</a>
+of 100GB. Playwright screenshots are small (in the kilobytes) so it would take a
+very long time and tons and tons of screenshots to start getting close to the
+repo size limit.</p>
+<p>However, if we’re not careful we could significantly increase the size of our
+repository which would adversely effect contributors by eating their bandwidth
+when pushing or pull contributions. There are some strategies we could use if
+this becomes a problem. For example we could use git’s <code class="docutils literal notranslate"><span class="pre">clean</span></code> and <code class="docutils literal notranslate"><span class="pre">smudge</span></code>
+features to losslessly compress and decompress the snapshot images
+automatically, though I’m not sure how well that would work<a class="footnote-reference brackets" href="#id4" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. Before we
+invested too much in that, however, we’d want to ensure that more typical,
+though lossy,
+<a class="reference external" href="https://stackoverflow.com/questions/2116778/reduce-git-repository-size#2116892">git repository size reduction</a>
+isn’t a better option.</p>
+<p>Ultimately I think the best option would be to regularly (once a day) run a
+scheduled maintenance task to remove any historical snapshots older than a month
+that are not currently used by the main branch. That would mean we would always
+have a <em>reasonable</em> historical view of snapshots that change frequently and I
+frankly doubt snapshot history extending more than a month back would be very
+useful anyway.</p>
+</section>
+<section id="cross-platform-rendering">
+<h2>Cross platform rendering<a class="headerlink" href="#cross-platform-rendering" title="Permalink to this heading">#</a></h2>
+<p>Browsers will sometimes render minute differences between platforms, even with
+the exact same webpage. This means that contributors running Linux might
+generate different screenshots from those running macOS and again from those
+running Windows, even if they’re all using the same browser and version.</p>
+<p>To avoid this, other visual regression testing libraries like BackstopJS support
+running tests inside a docker container and using the browser inside the
+container. We can do the same with Playwright (it’s just not as easy).</p>
+<p>I was about to figure out “a way” of doing it. Here’s what I came up with:</p>
+<ol class="arabic simple">
+<li><p>Create a <code class="docutils literal notranslate"><span class="pre">./bin/visual-regression.js</span></code> file with the following:</p></li>
+</ol>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="cm">/**</span>
+<span class="cm"> * Run this as a node script so that we can retrieve the `process.cwd`</span>
+<span class="cm"> * which isn&#39;t possible to evaluate cross-platform inside an package.json script</span>
+<span class="cm"> *</span>
+<span class="cm"> * We can also automatically sync the local playwright version</span>
+<span class="cm"> * with the docker image version. This ensures that the browser</span>
+<span class="cm"> * versions expected by the `playwright` binary installed locally</span>
+<span class="cm"> * matches the versions pre-installed in the container.</span>
+<span class="cm"> */</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">spawnSync</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;child_process&quot;</span><span class="p">)</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">fs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;fs&quot;</span><span class="p">)</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">)</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">yaml</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;yaml&quot;</span><span class="p">)</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">pnpmLock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">yaml</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span>
+<span class="w">  </span><span class="nb">String</span><span class="p">(</span><span class="nx">fs</span><span class="p">.</span><span class="nx">readFileSync</span><span class="p">(</span><span class="nx">path</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">cwd</span><span class="p">(),</span><span class="w"> </span><span class="s2">&quot;pnpm-lock.yaml&quot;</span><span class="p">)))</span>
+<span class="p">)</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">playwrightVersion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">pnpmLock</span><span class="p">.</span><span class="nx">devDependencies</span><span class="p">[</span><span class="s2">&quot;@playwright/test&quot;</span><span class="p">]</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">args</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="s2">&quot;run&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;--rm&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;-it&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;--mount&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="sb">`type=bind,source=</span><span class="si">${</span><span class="nx">process</span><span class="p">.</span><span class="nx">cwd</span><span class="p">()</span><span class="si">}</span><span class="sb">,target=/src`</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;--add-host=host.docker.internal:host-gateway&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">// This is necessary to make `host.docker.internal` work on Linux. Does it break the command for other OSs?</span>
+<span class="w">  </span><span class="sb">`mcr.microsoft.com/playwright:v</span><span class="si">${</span><span class="nx">playwrightVersion</span><span class="si">}</span><span class="sb">-focal`</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;/src/bin/visual-regression.sh&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="s2">&quot;-u&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">args</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s2">&quot;-u&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="nx">spawnSync</span><span class="p">(</span><span class="s2">&quot;docker&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">args</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">stdio</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;inherit&quot;</span><span class="p">,</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Create a <code class="docutils literal notranslate"><span class="pre">./bin/visual-regression.sh</span></code> file containing the following (don’t
+forget to <code class="docutils literal notranslate"><span class="pre">chmod</span> <span class="pre">+x</span></code> it):</p></li>
+</ol>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="c1"># This script is meant to run inside the playwright docker container, hence the assumed `/src` directory</span>
+<span class="nb">cd</span><span class="w"> </span>/src
+
+<span class="c1"># Use npm to avoid having to install pnpm inside the container, it doesn&#39;t matter in this case</span>
+npm<span class="w"> </span>run<span class="w"> </span>test:visual-regression:local<span class="w"> </span>--<span class="w"> </span><span class="nv">$1</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Add two new package.json scripts:</p></li>
+</ol>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;test:visual-regression&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;node ./bin/visual-regression.js&quot;</span><span class="p">,</span>
+<span class="nt">&quot;test:visual-regression:local&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;playwright test -c ./test/visual-regression&quot;</span>
+</pre></div>
+</div>
+<p>All of this together should successfully allow us to run the snapshot tests
+inside a docker container.</p>
+<p>For local debugging purposes, <code class="docutils literal notranslate"><span class="pre">pnpm</span> <span class="pre">test:visual-regression:local</span> <span class="pre">--debug</span></code> can be
+used to run the snapshot tests headed in a browser on the host OS. This is
+useful for debugging the playwright scripts before they actually take a
+screenshot. Just keep in mind that the final screenshots submitting in a PR need
+to come from the docker container.</p>
+</section>
+<section id="additional-cross-platform-considerations">
+<h2>Additional cross-platform considerations<a class="headerlink" href="#additional-cross-platform-considerations" title="Permalink to this heading">#</a></h2>
+<p>Some versions of Windows
+<a class="reference external" href="https://www.freecodecamp.org/news/how-to-run-docker-on-windows-10-home-edition/">do not allow installing Docker</a>;
+additionally, Docker may not be available on someone’s machine for licensing
+reasons and alternatives like containerd and Podman are not yet wide-spread
+enough to be reliably available on contributor machines.</p>
+<p>For that reason, it’d be good to consider ways for making sure snapshots are
+able to be updated without Docker being available locally (props to &#64;obulat for
+mentioning this potential roadblock for contributors). I’d like to propose a new
+GitHub workflow that runs if the <code class="docutils literal notranslate"><span class="pre">ci:visual-regression</span></code> script fails.</p>
+<p>The workflow would create a new branch based on the PR with the changes using
+the pattern <code class="docutils literal notranslate"><span class="pre">&lt;pr</span> <span class="pre">branch</span> <span class="pre">name&gt;__vr-snapshot-update</span></code>, run
+<code class="docutils literal notranslate"><span class="pre">ci:visual-regression:update</span></code> (we’d need a new script for this to pass the <code class="docutils literal notranslate"><span class="pre">--u</span></code>
+flag to our script specifically instead of to the e2e <code class="docutils literal notranslate"><span class="pre">run-server-and-test</span></code>
+utility), commit the changes in the new branch and open a PR targeting the
+parent PR with the changes.</p>
+<p>This PR could then be merged directly into the parent PR after the snapshot
+changes are reviewed.</p>
+<p>Additionally, subsequent pushes to the parent PR that include changes to the
+snapshots would re-use the same branch name and just force push; there’d only
+ever be a single commit in the companion branch this way and we wouldn’t have to
+worry about a muddied commit history. Ideally this will simplify the
+implementation of the workflow rather than complicate it.</p>
+<p>Likewise, if we end up needing to run <code class="docutils literal notranslate"><span class="pre">pixelmatch</span></code> directly to generate the diff
+output, it’d be nice if we could just add those diff outputs as a comment in the
+parent PR whenever snapshot images are updated.</p>
+</section>
+<section id="test-variants">
+<h2>Test variants<a class="headerlink" href="#test-variants" title="Permalink to this heading">#</a></h2>
+<p>Most tests should be written against two parameters: language direction and
+breakpoint.</p>
+<p>For language direction, the best way to do this is to just test in the default
+locale which is LTR and to test in Arabic (<code class="docutils literal notranslate"><span class="pre">ar</span></code>) which is RTL.</p>
+<p>For breakpoints, it will be tedious to have to add the iteration for each test
+case, so I’ve written a utility that we can use to make this easier. This
+utility can also be used for our regular end-to-end tests:</p>
+<div class="highlight-ts notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">test</span><span class="p">,</span><span class="w"> </span><span class="nx">PlaywrightTestArgs</span><span class="p">,</span><span class="w"> </span><span class="nx">TestInfo</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@playwright/test&quot;</span>
+
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Breakpoints</span><span class="p">,</span><span class="w"> </span><span class="nx">SCREEN_SIZES</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;../../../src/constants/screens&quot;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">testEachBreakpoint</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">testCb</span><span class="o">:</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="nx">breakpoint</span><span class="o">:</span><span class="w"> </span><span class="kt">Breakpoints</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">args</span><span class="o">:</span><span class="w"> </span><span class="kt">PlaywrightTestArgs</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">testInfo</span><span class="o">:</span><span class="w"> </span><span class="kt">TestInfo</span>
+<span class="w">  </span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="ow">void</span><span class="o">&gt;</span>
+<span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">SCREEN_SIZES</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">screenWidth</span><span class="p">,</span><span class="w"> </span><span class="nx">breakpoint</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">test</span><span class="p">.</span><span class="nx">describe</span><span class="p">(</span>
+<span class="w">      </span><span class="sb">`screen at breakpoint </span><span class="si">${</span><span class="nx">breakpoint</span><span class="si">}</span><span class="sb"> with width </span><span class="si">${</span><span class="nx">screenWidth</span><span class="si">}</span><span class="sb">`</span><span class="p">,</span>
+<span class="w">      </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">test</span><span class="p">(</span><span class="nx">title</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">({</span><span class="w"> </span><span class="nx">page</span><span class="p">,</span><span class="w"> </span><span class="nx">context</span><span class="p">,</span><span class="w"> </span><span class="nx">request</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="nx">testInfo</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="k">await</span><span class="w"> </span><span class="nx">page</span><span class="p">.</span><span class="nx">setViewportSize</span><span class="p">({</span><span class="w"> </span><span class="nx">width</span><span class="o">:</span><span class="w"> </span><span class="kt">screenWidth</span><span class="p">,</span><span class="w"> </span><span class="nx">height</span><span class="o">:</span><span class="w"> </span><span class="kt">700</span><span class="w"> </span><span class="p">})</span>
+<span class="w">          </span><span class="k">await</span><span class="w"> </span><span class="nx">testCb</span><span class="p">(</span><span class="nx">breakpoint</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">page</span><span class="p">,</span><span class="w"> </span><span class="nx">context</span><span class="p">,</span><span class="w"> </span><span class="nx">request</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="nx">testInfo</span><span class="p">)</span>
+<span class="w">        </span><span class="p">})</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>It’s then used in the test like so:</p>
+<div class="highlight-ts notranslate"><div class="highlight"><pre><span></span><span class="nx">test</span><span class="p">.</span><span class="nx">describe</span><span class="p">(</span><span class="s2">&quot;homepage snapshots&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// Repeat below for `rtl`</span>
+<span class="w">  </span><span class="nx">test</span><span class="p">.</span><span class="nx">describe</span><span class="p">(</span><span class="s2">&quot;ltr&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">test</span><span class="p">.</span><span class="nx">beforeEach</span><span class="p">(</span><span class="k">async</span><span class="w"> </span><span class="p">({</span><span class="w"> </span><span class="nx">page</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">await</span><span class="w"> </span><span class="nx">page</span><span class="p">.</span><span class="kr">goto</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">})</span>
+
+<span class="w">    </span><span class="nx">testEachBreakpoint</span><span class="p">(</span><span class="s2">&quot;full page&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">breakpoint</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">page</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">await</span><span class="w"> </span><span class="nx">deleteImageCarousel</span><span class="p">(</span><span class="nx">page</span><span class="p">)</span>
+
+<span class="w">      </span><span class="nx">expect</span><span class="p">(</span><span class="k">await</span><span class="w"> </span><span class="nx">page</span><span class="p">.</span><span class="nx">screenshot</span><span class="p">()).</span><span class="nx">toMatchSnapshot</span><span class="p">({</span>
+<span class="w">        </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="sb">`index-ltr-</span><span class="si">${</span><span class="nx">breakpoint</span><span class="si">}</span><span class="sb">`</span><span class="p">,</span>
+<span class="w">      </span><span class="p">})</span>
+<span class="w">    </span><span class="p">})</span>
+<span class="w">  </span><span class="p">})</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+</section>
+<section id="recommended-tooling">
+<h2>Recommended tooling<a class="headerlink" href="#recommended-tooling" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Continue using Playwright to manipulate the browser and use it’s <code class="docutils literal notranslate"><span class="pre">screenshot</span></code>
+function to generate screenshots.</p></li>
+<li><p><em>Try</em> to use <code class="docutils literal notranslate"><span class="pre">jest-image-snapshot</span></code> to save and diff screenshots.</p></li>
+<li><p>Run snapshot tests inside a docker container to avoid cross-platform rendering
+differences.</p></li>
+<li><p>Write a GitHub action to be run
+<a class="reference external" href="https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#onschedule">once daily using the <code class="docutils literal notranslate"><span class="pre">on.schedule</span></code> feature</a>
+to automatically remove snapshots from the repository history older than a
+month old.</p></li>
+<li><p>Use GitHub’s PR review UI to review visual diffs of snapshots.</p></li>
+<li><p>Write Playwright scripts using TypeScript</p>
+<ul>
+<li><p>Note: TypeScript linting and general infrastructure has already been set up
+in https://github.com/WordPress/openverse-frontend/issues/921 and
+https://github.com/WordPress/openverse-frontend/pull/917.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="implementation-plan">
+<h2>Implementation plan<a class="headerlink" href="#implementation-plan" title="Permalink to this heading">#</a></h2>
+<p>Once the final version of this RFC is approved, a milestone with issues for each
+individual checkbox listed below will be created.</p>
+<ul>
+<li><p>[ ] Configure local visual regression testing:</p>
+<ul class="simple">
+<li><p>Create a <code class="docutils literal notranslate"><span class="pre">playwright.config.ts</span></code> file in the new directory with the following
+code:</p></li>
+</ul>
+<div class="highlight-ts notranslate"><div class="highlight"><pre><span></span><span class="c1">// /test/visual-regression/playwright.config.ts</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">PlaywrightTestConfig</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@playwright/test&quot;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">testDir</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;.&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">use</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">baseURL</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;http://localhost:8443&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">timeout</span><span class="o">:</span><span class="w"> </span><span class="kt">60</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">1000</span><span class="p">,</span>
+<span class="p">}</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">PlaywrightTestConfig</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Add the two <code class="docutils literal notranslate"><span class="pre">bin/visual-regression.{sh,js}</span></code> files described in the “Cross
+platform rendering” section above.</p></li>
+<li><p>Add three new scripts to the root <code class="docutils literal notranslate"><span class="pre">package.json</span></code> (<strong>Note: in light of
+https://github.com/WordPress/openverse-frontend/pull/881 these scripts will
+also need to be updated to use talkback to mock API calls during e2e!</strong>):</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;test:visual-regression&quot;</span><span class="p">:</span> <span class="s2">&quot;node ./bin/visual-regression.js&quot;</span><span class="p">,</span>
+<span class="s2">&quot;test:visual-regression:local&quot;</span><span class="p">:</span> <span class="s2">&quot;playwright test -c test/visual-regression&quot;</span><span class="p">,</span>
+<span class="s2">&quot;ci:visual-regression&quot;</span><span class="p">:</span> <span class="s2">&quot;start-server-and-test run-server http://localhost:8443 test:visual-regression&quot;</span>
+</pre></div>
+</div>
+<ul>
+<li><p>Install and configure <code class="docutils literal notranslate"><span class="pre">jest-image-snapshot</span></code> and
+<code class="docutils literal notranslate"><span class="pre">&#64;types/jest-image-snapshot</span></code>:</p>
+<ul class="simple">
+<li><p>Note: It may be necessary to add additional TypeScript typings in the root
+level <code class="docutils literal notranslate"><span class="pre">typings</span></code> folder for TypeScript to know that <code class="docutils literal notranslate"><span class="pre">expect()</span></code> includes the
+<code class="docutils literal notranslate"><span class="pre">toMatchImageSnapshot</span></code> function. Follow the existing examples extending
+<code class="docutils literal notranslate"><span class="pre">&#64;types/nuxt</span></code> to extend the <code class="docutils literal notranslate"><span class="pre">&#64;playwright/test</span></code> library’s <code class="docutils literal notranslate"><span class="pre">Matchers</span></code>
+interface.</p></li>
+<li><p>Additional note: As mentioned in the section about <code class="docutils literal notranslate"><span class="pre">jest-image-snapshot</span></code>
+above it may not be possible to get this library to play nicely with
+Playwright’s specific <code class="docutils literal notranslate"><span class="pre">expect.extend</span></code> context. I’d say time box trying to
+get this to work to an hour or so and then just move on to the next thing.
+There’s an additional task at the end of this list for writing the
+<code class="docutils literal notranslate"><span class="pre">pixelmatch</span></code> diff generator script in case we need it.</p></li>
+<li><p><strong>Extra important note:</strong> This library might not work with Playwright, in
+which case we’ll just leave this out; there’s a contingency plan for this
+case below.</p></li>
+</ul>
+</li>
+<li><p>Write basic tests for the homepage; a full-page snapshot for <code class="docutils literal notranslate"><span class="pre">ltr</span></code> and <code class="docutils literal notranslate"><span class="pre">rtl</span></code>
+versions of the page using <code class="docutils literal notranslate"><span class="pre">testEachBreakpoint</span></code> should do just as a start
+and proof-of-concept.</p>
+<ul class="simple">
+<li><p>Note: It will be necessary to remove the featured images from the page
+before taking the snapshot or the diff will fail 2/3 of the time due to
+them being different. The following code can be used to accomplish this:</p></li>
+</ul>
+<div class="highlight-ts notranslate"><div class="highlight"><pre><span></span><span class="kd">const</span><span class="w"> </span><span class="nx">deleteImageCarousel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">page</span><span class="o">:</span><span class="w"> </span><span class="kt">Page</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">element</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">page</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;[data-testid=&quot;image-carousel&quot;]&#39;</span><span class="p">)</span>
+<span class="w">  </span><span class="k">await</span><span class="w"> </span><span class="nx">element</span><span class="p">.</span><span class="nx">evaluate</span><span class="p">((</span><span class="nx">node</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">node</span><span class="p">.</span><span class="nx">remove</span><span class="p">())</span>
+<span class="w">  </span><span class="nx">element</span><span class="p">.</span><span class="nx">dispose</span><span class="p">()</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>Create a <code class="docutils literal notranslate"><span class="pre">README.md</span></code> in the <code class="docutils literal notranslate"><span class="pre">visual-regression</span></code> directory with basic
+instructions for how to run and write visual regression tests. In particular
+mention our usage of <code class="docutils literal notranslate"><span class="pre">jest-image-snapshot</span></code> instead of the built in snapshot
+matcher.</p></li>
+</ul>
+</li>
+<li><p>[ ] Complete https://github.com/WordPress/openverse-frontend/issues/890 if it
+isn’t already done.</p></li>
+<li><p>[ ] Configure CI to run visual regression tests.</p>
+<ul class="simple">
+<li><p>Write a new workflow to run the visual regression tests. You should be able
+to copy the existing e2e workflow and replace the call to <code class="docutils literal notranslate"><span class="pre">ci:e2e</span></code> to
+<code class="docutils literal notranslate"><span class="pre">ci:visual-regression</span></code>.</p></li>
+</ul>
+</li>
+<li><p>[ ] Configure Storybook visual regression tests.</p>
+<ul class="simple">
+<li><p>Copy the existing <code class="docutils literal notranslate"><span class="pre">visual-regression</span></code> folder’s configuration and create a
+new test folder called <code class="docutils literal notranslate"><span class="pre">storybook-visual-regression</span></code>.</p></li>
+<li><p>Create corresponding local and CI scripts in <code class="docutils literal notranslate"><span class="pre">package.json</span></code> to run these
+tests, using <code class="docutils literal notranslate"><span class="pre">storybook</span></code> instead of <code class="docutils literal notranslate"><span class="pre">run-server</span></code> and use the correct port
+for Storybook</p></li>
+<li><p>Write basic state and variation tests for each button variant (or some other
+straight component with similar easy to configure props).</p></li>
+<li><p>This will also establish a pattern for writing e2e tests against Storybook.</p></li>
+<li><p>Copy the visual regression test CI and swap the appropriate scripts to run
+the Storybook ones instead.</p>
+<ul>
+<li><p>If possible, create a shared action that can be re-used between all the
+Playwright based test workflows.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>[ ] Write a script to generate <code class="docutils literal notranslate"><span class="pre">pixelmatch</span></code> diffs from failed test results in
+the <code class="docutils literal notranslate"><span class="pre">test-results</span></code> folder created my Playwright.</p>
+<ul class="simple">
+<li><p><strong>Contingent on <code class="docutils literal notranslate"><span class="pre">jest-image-snapshot</span></code> not being able to be used</strong></p></li>
+</ul>
+</li>
+<li><p>[ ] Write a new GitHub workflow to generate supplemental PRs with updated
+snapshots whenever there are outdated snapshots.</p></li>
+<li><p>[ ] Write a new GitHub workflow to generate the snapshot diffs and upload them
+as a comment in the PR with snapshot changes.</p></li>
+<li><p>[ ] Create a scheduled GitHub action to clean the repository history of
+snapshot images older than a month in age outside of the <code class="docutils literal notranslate"><span class="pre">main</span></code> branch.</p>
+<ul class="simple">
+<li><p>I tried searching for prior art here and there isn’t much aside from how to
+completely remove a directory or file from history (usually because
+something illegal or secret was committed). I think <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">filter-branch</span></code> is
+perfect for this though:</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>filter-branch<span class="w"> </span>--prune-empty<span class="w"> </span>--tree-filter<span class="w"> </span><span class="s1">&#39;./bin/clean_historical_snapshots.sh&#39;</span><span class="w"> </span>HEAD
+</pre></div>
+</div>
+<p>But the devil’s the details… The implementation of
+<code class="docutils literal notranslate"><span class="pre">clean_historical_snapshots.sh</span></code> will take some care and frankly there will
+need to be some stateful file hashes written to a temporary directory to be
+used by the script to skip current snapshots from deletion. We’ll also want to
+establish a pattern for the snapshot directory names that can be easily
+followed for this purpose.</p>
+<ul class="simple">
+<li><p><strong>Low priority, can be delayed up to a month or longer; really it can be
+delayed until we notice a problem with the repository size.</strong></p></li>
+</ul>
+</li>
+</ul>
+<hr />
+<hr class="footnotes docutils" />
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id3" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>I could be wrong about this. I tried searching around for it but couldn’t
+find it and it was not included in the default set of allowances we got with
+out initial application as an OSS project.</p>
+</aside>
+<aside class="footnote brackets" id="id4" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p>There’s very little information about this online so I suspect it’s a
+<em>non-problem</em> for the most part.</p>
+</aside>
+</aside>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="../vuex_to_pina_conversion/index.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Pinia Conversion</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="index.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Visual Regression Testing</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/WordPress/openverse" aria-label="GitHub"><svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Implementation Plan - 2022-02-17</a><ul>
+<li><a class="reference internal" href="#reviewers">Reviewers</a></li>
+<li><a class="reference internal" href="#milestone">Milestone</a></li>
+<li><a class="reference internal" href="#exploratory-code">Exploratory code</a></li>
+<li><a class="reference internal" href="#background">Background</a><ul>
+<li><a class="reference internal" href="#what-is-visual-regression-testing">What is “visual regression testing”?</a></li>
+<li><a class="reference internal" href="#rationale-for-this-style-of-testing">Rationale for this style of testing</a></li>
+<li><a class="reference internal" href="#existing-tooling">Existing tooling</a></li>
+<li><a class="reference internal" href="#alternative-additional-tooling">Alternative/additional tooling</a><ul>
+<li><a class="reference internal" href="#percy">Percy</a></li>
+<li><a class="reference internal" href="#alternative-image-snapshot-libraries">Alternative image snapshot libraries</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#repository-size-considerations">Repository size considerations</a></li>
+<li><a class="reference internal" href="#cross-platform-rendering">Cross platform rendering</a></li>
+<li><a class="reference internal" href="#additional-cross-platform-considerations">Additional cross-platform considerations</a></li>
+<li><a class="reference internal" href="#test-variants">Test variants</a></li>
+<li><a class="reference internal" href="#recommended-tooling">Recommended tooling</a></li>
+<li><a class="reference internal" href="#implementation-plan">Implementation plan</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/scripts/furo.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    </body>
+</html>

@@ -1,0 +1,26 @@
+# 2026.11.15.02.59.47
+
+## Improvements
+
+- Fix missing main landmarks on search and collection pages
+  ([#5673](https://github.com/WordPress/openverse/pull/5673)) by @AshishJii
+
+## Internal Improvements
+
+- Update @openverse/eslint-plugin
+  ([#5750](https://github.com/WordPress/openverse/pull/5750)) by @openverse-bot
+- Update Playwright to 1.64.1
+  ([#5717](https://github.com/WordPress/openverse/pull/5717)) by @obulat
+- Update dependency @actions/github to v9
+  ([#5704](https://github.com/WordPress/openverse/pull/5704)) by @openverse-bot
+- Cache the GlotPress translations download in CI
+  ([#5719](https://github.com/WordPress/openverse/pull/5719)) by @obulat
+- Update dependency @actions/core to v3
+  ([#5703](https://github.com/WordPress/openverse/pull/5703)) by @openverse-bot
+- Update vitest monorepo to v5
+  ([#5708](https://github.com/WordPress/openverse/pull/5708)) by @openverse-bot
+
+## Bug Fixes
+
+- Disable the preferences switches until the page hydrates
+  ([#5759](https://github.com/WordPress/openverse/pull/5759)) by @obulat

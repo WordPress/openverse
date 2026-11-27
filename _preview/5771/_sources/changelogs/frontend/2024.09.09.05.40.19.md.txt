@@ -1,0 +1,21 @@
+# 2024.09.09.05.40.19
+
+## New Features
+
+- Add the UI toggle for changing theme
+  ([#4840](https://github.com/WordPress/openverse/pull/4840)) by @dhruvkb
+
+## Improvements
+
+- Update appearance of sensitive image thumbnails
+  ([#4831](https://github.com/WordPress/openverse/pull/4831)) by @dhruvkb
+
+## Internal Improvements
+
+- Update Nuxt to v3.13.1
+  ([#4869](https://github.com/WordPress/openverse/pull/4869)) by @obulat
+
+## Bug Fixes
+
+- Ensure correct API usage for frontend related media requests
+  ([#4891](https://github.com/WordPress/openverse/pull/4891)) by @sarayourfriend

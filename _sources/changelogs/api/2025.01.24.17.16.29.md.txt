@@ -1,0 +1,11 @@
+# 2025.01.24.17.16.29
+
+## Internal Improvements
+
+- Exclude health checks from Sentry profiles sampling
+  ([#5345](https://github.com/WordPress/openverse/pull/5345)) by @krysal
+
+## Bug Fixes
+
+- Remove the watermarking code and endpoint
+  ([#5353](https://github.com/WordPress/openverse/pull/5353)) by @dhruvkb

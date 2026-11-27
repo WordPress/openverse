@@ -1,0 +1,17 @@
+# 2025.01.29.17.31.09
+
+## Improvements
+
+- Making docker user names consistent
+  ([#5238](https://github.com/WordPress/openverse/pull/5238)) by @tejaswarathe
+
+## Internal Improvements
+
+- chore(deps): update dependency elasticsearch to v8.16.0
+  ([#5225](https://github.com/WordPress/openverse/pull/5225)) by @openverse-bot
+- chore(deps): update dependency pytest-sugar to v1
+  ([#5233](https://github.com/WordPress/openverse/pull/5233)) by @openverse-bot
+- chore(deps): update dependency pook to v2.1.2
+  ([#5231](https://github.com/WordPress/openverse/pull/5231)) by @openverse-bot
+- chore(deps): update dependency pytest to v8
+  ([#5232](https://github.com/WordPress/openverse/pull/5232)) by @openverse-bot

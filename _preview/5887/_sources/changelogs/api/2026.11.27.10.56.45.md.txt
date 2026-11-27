@@ -1,0 +1,29 @@
+# 2026.11.27.10.56.45
+
+## Internal Improvements
+
+- Update the local Postgres and Redis to the versions closest to production
+  ([#5878](https://github.com/WordPress/openverse/pull/5878)) by @obulat
+- Keep the CI test caches out of the read-only API checkout
+  ([#5880](https://github.com/WordPress/openverse/pull/5880)) by @obulat
+- Update anyio to 4.16.0
+  ([#5881](https://github.com/WordPress/openverse/pull/5881)) by @obulat
+- Update adrf to 0.1.14
+  ([#5879](https://github.com/WordPress/openverse/pull/5879)) by @obulat
+- Move the API and openverse-attribution to Python 3.14
+  ([#5867](https://github.com/WordPress/openverse/pull/5867)) by @obulat
+
+## Bug Fixes
+
+- Run Elasticsearch 8.19.26 in local development and CI
+  ([#5877](https://github.com/WordPress/openverse/pull/5877)) by @obulat
+- Move the API image from Debian 12 to Debian 13 (trixie)
+  ([#5876](https://github.com/WordPress/openverse/pull/5876)) by @obulat
+- Update nginx to 1.30.8 and keep Renovate on stable nginx releases
+  ([#5875](https://github.com/WordPress/openverse/pull/5875)) by @obulat
+- Serve Redoc and Swagger UI via drf-spectacular-sidecar
+  ([#5862](https://github.com/WordPress/openverse/pull/5862)) by @playlikeboy
+- Log the right URL and the index in dead link validation messages
+  ([#5850](https://github.com/WordPress/openverse/pull/5850)) by @playlikeboy
+- Handle silent audio and missing durations in waveform generation
+  ([#5852](https://github.com/WordPress/openverse/pull/5852)) by @anandrajaram21

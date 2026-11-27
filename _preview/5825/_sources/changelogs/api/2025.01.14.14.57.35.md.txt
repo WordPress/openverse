@@ -1,0 +1,11 @@
+# 2025.01.14.14.57.35
+
+## Internal Improvements
+
+- Update dependency uvicorn to >=0.34, <0.35
+  ([#5333](https://github.com/WordPress/openverse/pull/5333)) by @openverse-bot
+
+## Bug Fixes
+
+- Close old db connections after getting thumbnails
+  ([#5335](https://github.com/WordPress/openverse/pull/5335)) by @krysal

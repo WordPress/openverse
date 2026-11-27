@@ -1,0 +1,17 @@
+# 2026.10.13.16.37.55
+
+## Improvements
+
+- Clarify API key registration fields
+  ([#5585](https://github.com/WordPress/openverse/pull/5585)) by @ekamran
+
+## Internal Improvements
+
+- Update dependency requests to v2.33.0 [SECURITY]
+  ([#5636](https://github.com/WordPress/openverse/pull/5636)) by @openverse-bot
+- Build admin read-only field links from DOM nodes
+  ([#5627](https://github.com/WordPress/openverse/pull/5627)) by @obenland
+- Update docker.io/mccutchen/go-httpbin Docker tag to v2.18.3
+  ([#5452](https://github.com/WordPress/openverse/pull/5452)) by @openverse-bot
+- Update docker.io/nginx Docker tag to v1.28.0
+  ([#5438](https://github.com/WordPress/openverse/pull/5438)) by @openverse-bot

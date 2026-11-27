@@ -1,0 +1,24 @@
+# 2024.03.25.15.22.24
+
+## Improvements
+
+- Update payload of collection search analytics events
+  ([#3957](https://github.com/WordPress/openverse/pull/3957)) by @zackkrida
+- Cleanup tag display for long lists of tags
+  ([#3808](https://github.com/WordPress/openverse/pull/3808)) by @obulat
+
+## Internal Improvements
+
+- Use the `VMediaCollection` for search and collection results
+  ([#3835](https://github.com/WordPress/openverse/pull/3835)) by @obulat
+- Update pinia and vue-demi
+  ([#3952](https://github.com/WordPress/openverse/pull/3952)) by @obulat
+
+## Bug Fixes
+
+- Adds locale to the locale kebab-case warnings
+  ([#3951](https://github.com/WordPress/openverse/pull/3951)) by @obulat
+- Centralise frontend error reporting (and suppress unactionable Sentry errors)
+  ([#3850](https://github.com/WordPress/openverse/pull/3850)) by @sarayourfriend
+- Fix the skip-to-content link reloading the results
+  ([#3942](https://github.com/WordPress/openverse/pull/3942)) by @obulat

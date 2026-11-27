@@ -1,0 +1,20 @@
+# 2024.04.09.03.50.11
+
+## New Features
+
+- Show the additional search views documentation on the API docs site
+  ([#4056](https://github.com/WordPress/openverse/pull/4056)) by @obulat
+- Create the moderation decision model
+  ([#3989](https://github.com/WordPress/openverse/pull/3989)) by @dhruvkb
+
+## Improvements
+
+- Add warning to search response when source parameter has mixed validity
+  ([#4031](https://github.com/WordPress/openverse/pull/4031)) by @sarayourfriend
+- Remove provision for missing fields on `Hit`
+  ([#4027](https://github.com/WordPress/openverse/pull/4027)) by @dhruvkb
+
+## Internal Improvements
+
+- Remove potentially problematic `do_not_wait_for`
+  ([#4032](https://github.com/WordPress/openverse/pull/4032)) by @sarayourfriend

@@ -1,0 +1,17 @@
+# 2024.02.05.20.34.01
+
+## Internal Improvements
+
+- Update dependency elasticsearch to v8.12.0
+  ([#3739](https://github.com/WordPress/openverse/pull/3739)) by @openverse-bot
+- Update docker.io/redis Docker tag to v7.2.4
+  ([#3735](https://github.com/WordPress/openverse/pull/3735)) by @openverse-bot
+- Remove sentry exception capture for thumbnail errors
+  ([#3709](https://github.com/WordPress/openverse/pull/3709)) by @AetherUnbound
+- Bump aiohttp from 3.9.1 to 3.9.2 in /api
+  ([#3720](https://github.com/WordPress/openverse/pull/3720)) by @dependabot
+
+## Bug Fixes
+
+- Fix tag casing match in new tag view
+  ([#3688](https://github.com/WordPress/openverse/pull/3688)) by @obulat

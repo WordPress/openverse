@@ -1,0 +1,23 @@
+# 2023.09.05.18.56.18
+
+## Improvements
+
+- Add 10k throttle to filtered index reindex query
+  ([#2975](https://github.com/WordPress/openverse/pull/2975)) by @sarayourfriend
+- remove pycodestyle from ingestion server pipfile
+  ([#2962](https://github.com/WordPress/openverse/pull/2962)) by @rwidom
+- Remove popularity constants view
+  ([#2883](https://github.com/WordPress/openverse/pull/2883)) by @stacimc
+
+## Internal Improvements
+
+- Increase timeout of filtered index creation action
+  ([#2985](https://github.com/WordPress/openverse/pull/2985)) by @krysal
+- Update postgres Docker tag to v13.10
+  ([#2945](https://github.com/WordPress/openverse/pull/2945)) by @renovate
+- Bump boto3 from 1.28.34 to 1.28.39 in /ingestion_server
+  ([#2950](https://github.com/WordPress/openverse/pull/2950)) by @dependabot
+- Bump sentry-sdk from 1.29.2 to 1.30.0 in /ingestion_server
+  ([#2952](https://github.com/WordPress/openverse/pull/2952)) by @dependabot
+- Add `catalog/init` just command
+  ([#2915](https://github.com/WordPress/openverse/pull/2915)) by @krysal

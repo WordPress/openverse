@@ -1,0 +1,15 @@
+# 2024.11.08.08.05.37
+
+## Internal Improvements
+
+- Update dependency sentry-sdk to v2
+  ([#5144](https://github.com/WordPress/openverse/pull/5144)) by @openverse-bot
+- Update dependency future to v1
+  ([#5142](https://github.com/WordPress/openverse/pull/5142)) by @openverse-bot
+- Update dependency deepdiff to v8
+  ([#5141](https://github.com/WordPress/openverse/pull/5141)) by @openverse-bot
+
+## Bug Fixes
+
+- Pin watchfiles dependency in documentation for rust compatibility
+  ([#5150](https://github.com/WordPress/openverse/pull/5150)) by @AetherUnbound

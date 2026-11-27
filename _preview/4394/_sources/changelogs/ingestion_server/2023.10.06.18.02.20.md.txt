@@ -1,0 +1,23 @@
+# 2023.10.06.18.02.20
+
+## Internal Improvements
+
+- Bump boto3 from 1.28.48 to 1.28.58 in /ingestion_server
+  ([#3130](https://github.com/WordPress/openverse/pull/3130)) by @dependabot
+- Bump psycopg2 from 2.9.8 to 2.9.9 in /ingestion_server
+  ([#3132](https://github.com/WordPress/openverse/pull/3132)) by @dependabot
+- Bump urllib3 from 1.26.16 to 1.26.17 in /ingestion_server
+  ([#3124](https://github.com/WordPress/openverse/pull/3124)) by @dependabot
+- Bump ipython from 8.15.0 to 8.16.1 in /ingestion_server
+  ([#3110](https://github.com/WordPress/openverse/pull/3110)) by @dependabot
+- Bump jsonschema from 4.19.0 to 4.19.1 in /ingestion_server
+  ([#3098](https://github.com/WordPress/openverse/pull/3098)) by @dependabot
+- Bump elasticsearch from 8.8.2 to 8.10.0 in /ingestion_server
+  ([#3095](https://github.com/WordPress/openverse/pull/3095)) by @dependabot
+- Bump psycopg2 from 2.9.7 to 2.9.8 in /ingestion_server
+  ([#3097](https://github.com/WordPress/openverse/pull/3097)) by @dependabot
+
+## Bug Fixes
+
+- Update glibc ([#3154](https://github.com/WordPress/openverse/pull/3154)) by
+  @stacimc

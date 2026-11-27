@@ -1,0 +1,16 @@
+# 2023.07.06.14.52.49
+
+## Improvements
+
+- Fix types in Vue components and add all of them to `tsconfig`
+  ([#2555](https://github.com/WordPress/openverse/pull/2555)) by @obulat
+
+## Internal Improvements
+
+- Copy `en.json5` to `en.json` in frontend dev script
+  ([#2537](https://github.com/WordPress/openverse/pull/2537)) by @sarayourfriend
+
+## Bug Fixes
+
+- Refactor `head` in single result pages
+  ([#2565](https://github.com/WordPress/openverse/pull/2565)) by @obulat

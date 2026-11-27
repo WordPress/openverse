@@ -1,0 +1,6 @@
+# 2024.02.20.22.54.08
+
+## Bug Fixes
+
+- Use correct `BASE_URL` for the API by default
+  ([#3804](https://github.com/WordPress/openverse/pull/3804)) by @AetherUnbound
