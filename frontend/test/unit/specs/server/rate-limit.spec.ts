@@ -17,6 +17,8 @@ const config: RateLimitConfig = {
   sessionLimit: 3,
   noSessionLimit: 1,
   ipLimit: 5,
+  sessionPageLimit: 2,
+  noSessionPageLimit: 3,
 }
 
 const eventWithHeaders = (headers: Record<string, string>) =>
@@ -84,8 +86,8 @@ describe("getRateLimitChecks", () => {
     kind      | sessionId | expected
     ${"api"}  | ${"s1"}   | ${["session", "ip"]}
     ${"api"}  | ${null}   | ${["no-session", "ip"]}
-    ${"page"} | ${"s1"}   | ${["session", "ip"]}
-    ${"page"} | ${null}   | ${["ip"]}
+    ${"page"} | ${"s1"}   | ${["session", "session-page", "ip"]}
+    ${"page"} | ${null}   | ${["no-session-page", "ip"]}
   `(
     "counts $kind requests with session $sessionId by $expected",
     ({ kind, sessionId, expected }) => {

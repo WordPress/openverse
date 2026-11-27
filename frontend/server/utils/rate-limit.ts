@@ -3,7 +3,12 @@ import { isIPv6 } from "node:net"
 
 import { getRequestHeader, getRequestIP, type H3Event } from "h3"
 
-export type RateLimitCounter = "session" | "no-session" | "ip"
+export type RateLimitCounter =
+  | "session"
+  | "session-page"
+  | "no-session"
+  | "no-session-page"
+  | "ip"
 export type RateLimitedRequestKind = "api" | "page"
 
 export interface RateLimitConfig {
@@ -12,6 +17,13 @@ export interface RateLimitConfig {
   sessionLimit: number
   noSessionLimit: number
   ipLimit: number
+  /** Server-rendered page loads per session. */
+  sessionPageLimit: number
+  /**
+   * Page loads without a session that one Nuxt task renders in a window,
+   * from all clients together.
+   */
+  noSessionPageLimit: number
 }
 
 export interface RateLimitCheck {
@@ -293,11 +305,21 @@ export class RateLimiter {
 }
 
 /**
+ * The key of the counter that all the page loads without a session share.
+ */
+const NO_SESSION_PAGE_KEY = "all"
+
+/**
  * Returns the counters that a request is counted by.
  * - A request with a session counts toward its session limit.
+ * - A page load with a session also counts toward its low page limit, because
+ *   after the first page, people navigate without loading pages from the
+ *   server.
  * - An `/api` request without a session counts toward the low per-IP limit.
- * - A page load without a session counts only toward the per-IP ceiling,
- *   because every new visitor arrives this way.
+ * - A page load without a session counts toward a budget that all such page
+ *   loads share, because every new visitor arrives this way, and a crawler
+ *   that spreads its requests over many IP addresses stays under any per-IP
+ *   limit.
  * - Every request counts toward the per-IP ceiling.
  */
 export const getRateLimitChecks = ({
@@ -318,11 +340,24 @@ export const getRateLimitChecks = ({
       key: sessionId,
       limit: config.sessionLimit,
     })
+    if (kind === "page") {
+      checks.push({
+        counter: "session-page",
+        key: sessionId,
+        limit: config.sessionPageLimit,
+      })
+    }
   } else if (kind === "api") {
     checks.push({
       counter: "no-session",
       key: ip,
       limit: config.noSessionLimit,
+    })
+  } else {
+    checks.push({
+      counter: "no-session-page",
+      key: NO_SESSION_PAGE_KEY,
+      limit: config.noSessionPageLimit,
     })
   }
   checks.push({ counter: "ip", key: ip, limit: config.ipLimit, sessionId })

@@ -71,6 +71,12 @@ export default defineNuxtConfig({
       sessionLimit: 120,
       noSessionLimit: 30,
       ipLimit: 1200,
+      // Server-rendered page loads per session. After the first page, people
+      // navigate in the browser, so few of their pages load from the server.
+      sessionPageLimit: 20,
+      // Page loads without a session that one Nuxt task renders per window,
+      // from all clients together. Every new visitor's first page counts here.
+      noSessionPageLimit: 600,
     },
     public: {
       deploymentEnv: "local",

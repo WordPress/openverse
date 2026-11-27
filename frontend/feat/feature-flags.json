@@ -43,7 +43,7 @@
     "proxy_requests": {
       "status": {
         "staging": "switchable",
-        "production": "disabled"
+        "production": "enabled"
       },
       "description": "Proxy frontend requests through Nuxt server",
       "defaultState": "off",
