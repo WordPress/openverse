@@ -98,9 +98,11 @@ const buildEventPayload = (
     return
   }
 
-  const responseDatetime = new Date(responseHeaders["date"])
-  if (responseDatetime < requestDatetime) {
-    // response returned was from the local cache
+  // The `Date` header has whole seconds, so compare with the second the
+  // request was sent in. An earlier date means the browser's cache answered.
+  const requestSecond = Math.floor(requestDatetime.getTime() / 1000) * 1000
+  const responseTime = new Date(responseHeaders["date"]).getTime()
+  if (responseTime < requestSecond) {
     return
   }
 
@@ -109,9 +111,7 @@ const buildEventPayload = (
     return
   }
 
-  const elapsedSeconds = Math.floor(
-    (responseDatetime.getTime() - requestDatetime.getTime()) / 1000
-  )
+  const elapsedSeconds = (responseTime - requestSecond) / 1000
 
   const responseUrl =
     response.request?.responseURL ?? response.request?.res?.responseUrl

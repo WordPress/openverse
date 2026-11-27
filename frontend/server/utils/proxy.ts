@@ -141,8 +141,11 @@ export const buildEventPayload = (
     return
   }
 
-  const responseDatetime = new Date(date)
-  if (responseDatetime < requestDatetime) {
+  // The `Date` header has whole seconds, so compare with the second the
+  // request was sent in. Otherwise every response within that second is dropped.
+  const requestSecond = Math.floor(requestDatetime.getTime() / 1000) * 1000
+  const responseTime = new Date(date).getTime()
+  if (responseTime < requestSecond) {
     return
   }
 
@@ -150,9 +153,7 @@ export const buildEventPayload = (
   return {
     cfCacheStatus,
     cfRayIATA,
-    elapsedTime: Math.floor(
-      (responseDatetime.getTime() - requestDatetime.getTime()) / 1000
-    ),
+    elapsedTime: (responseTime - requestSecond) / 1000,
     queryString: search ? `?${search}` : "",
     mediaType,
   }
