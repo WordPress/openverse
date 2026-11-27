@@ -165,8 +165,14 @@ test-ci: wait-up
     # The order is important here: the unit tests drop the database in the end,
     # and when ran concurrently with the integration tests, the integration
     # tests' database is dropped.
-    just test -k unit
-    just test -k "not unit"
+    just _test-ci -k unit
+    just _test-ci -k "not unit"
+
+# The CI checkout mounted at /api is not writable by ov_user, so turn off
+# pytest's cache and keep Hypothesis's example database in /tmp.
+[positional-arguments]
+_test-ci *args:
+    env DC_USER="ov_user" just ../exec -e HYPOTHESIS_STORAGE_DIRECTORY=/tmp/hypothesis web pytest -p no:cacheprovider "$@"
 
 # Run API tests locally
 [positional-arguments]
