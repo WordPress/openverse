@@ -13,9 +13,9 @@ FROM ghcr.io/astral-sh/uv:${OV_UV_VERSION} AS uv
 # Python builder #
 ##################
 
-# Pin the Debian release: the audiowaveform .deb below is built for
-# Debian 12 (bookworm) and silently fails to install on newer releases.
-FROM docker.io/python:${API_PY_VERSION}-bookworm AS builder
+# Pin the Debian release: the audiowaveform .deb below is built for one Debian
+# release (the `-13` in its name is Debian 13, trixie). Change both together.
+FROM docker.io/python:${API_PY_VERSION}-trixie AS builder
 
 # Container optimizations
 ENV PYTHONUNBUFFERED=1
@@ -55,7 +55,7 @@ RUN uv sync --locked $UV_SYNC_ARGS
 # API #
 #######
 
-FROM docker.io/python:${API_PY_VERSION}-slim-bookworm AS api
+FROM docker.io/python:${API_PY_VERSION}-slim-trixie AS api
 
 LABEL org.opencontainers.image.source="https://github.com/WordPress/openverse"
 
@@ -73,20 +73,22 @@ WORKDIR /api
 COPY --from=builder /.venv /.venv
 
 ARG BUILDARCH
-ARG AUDIOWAVEFORM_RELEASE=1.10.1
-ARG AUDIOWAVEFORM_DEB=audiowaveform_${AUDIOWAVEFORM_RELEASE}-1-12_${BUILDARCH}.deb
+ARG AUDIOWAVEFORM_RELEASE=1.10.2
+ARG AUDIOWAVEFORM_DEB=audiowaveform_${AUDIOWAVEFORM_RELEASE}-1-13_${BUILDARCH}.deb
 
 # - Install system packages needed for running Python dependencies
 # - Create directory for dumping API logs
 # - apt --fix-broken install required to install missing dependencies for audiowaveform and audiowaveform itself
 #   dpkg -i marks the dependencies for installation, apt-get installs them
-#   we need to ignore error output from dpkg -i for this reason
+#   we need to ignore error output from dpkg -i for this reason, so run
+#   audiowaveform afterwards to fail the build if it wasn't installed
 RUN apt-get update \
   && apt-get install -yqq --no-install-recommends \
     curl \
     postgresql-client \
   && curl -sLO https://github.com/bbc/audiowaveform/releases/download/${AUDIOWAVEFORM_RELEASE}/${AUDIOWAVEFORM_DEB} \
   && (dpkg -i ${AUDIOWAVEFORM_DEB} || apt-get --fix-broken -y --no-install-recommends install) \
+  && audiowaveform --version \
   && apt-get autoremove -y \
   && rm -rf /var/lib/apt/lists/* ${AUDIOWAVEFORM_DEB} \
   && mkdir -p /var/log/openverse_api/openverse_api.log
