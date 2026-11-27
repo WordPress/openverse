@@ -3,11 +3,12 @@ import uuid
 from unittest.mock import MagicMock, patch
 
 import pytest
+import uuid
 
 from api.constants import sensitivity
 from api.serializers.audio_serializers import AudioSearchRequestSerializer
 from api.serializers.image_serializers import ImageSearchRequestSerializer
-from api.serializers.media_serializers import MediaSearchRequestSerializer
+from api.serializers.media_serializers import MediaSearchRequestSerializer, MediaReportRequestSerializer
 
 
 @pytest.fixture
@@ -240,3 +241,37 @@ def test_report_serializer_accepts_mature_reason(media_type_config):
     serializer.is_valid(raise_exception=True)
 
     assert serializer.validated_data["reason"] == "mature"
+
+
+
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "reported_data, expected_is_valid",
+    [
+        ({"reason": "mature"}, True),
+        ({"reason": "other"}, False),
+        ({"reason": "other", "description": "less than 20 ch"}, False),
+        ({"reason": "other", "description": "I think its absolutely more than 20 ch and long enough"}, True),
+        ({"reason": "sensitive", }, True),
+        
+
+    ]
+)
+def test_media_report_request_serializer_validation(media_type_config, reported_data, expected_is_valid):
+    media = media_type_config.model_factory.create()
+
+    reported_data_with_id = reported_data.copy()
+    reported_data_with_id["identifier"] = media.identifier
+
+    serializer = media_type_config.report_serializer(data=reported_data_with_id)
+
+    if not serializer.is_valid() and expected_is_valid:
+        print(serializer.errors)
+
+    assert serializer.is_valid() == expected_is_valid
+
+    if expected_is_valid and reported_data.get("reason") == "sensitive":
+        assert getattr(serializer, "validated_data", None) is not None
+        assert serializer.validated_data["reason"] == "mature" # type: ignore
