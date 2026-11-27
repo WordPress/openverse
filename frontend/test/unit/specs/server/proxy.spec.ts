@@ -59,6 +59,22 @@ describe("buildEventPayload", () => {
     })
   })
 
+  it("keeps a response from the same second as the request", () => {
+    const headers = new Headers({
+      date: "Fri, 13 Nov 2026 10:00:00 GMT",
+      "cf-cache-status": "HIT",
+      "cf-ray": "8d1e2f3a4b5c6d7e-IAD",
+    })
+    expect(
+      buildEventPayload(
+        headers,
+        new Date("2026-11-13T10:00:00.600Z"),
+        "image",
+        {}
+      )
+    ).toMatchObject({ cfCacheStatus: "HIT", elapsedTime: 0 })
+  })
+
   it("returns undefined without the Cloudflare headers", () => {
     const headers = new Headers({ date: "Fri, 13 Nov 2026 10:00:02 GMT" })
     expect(
