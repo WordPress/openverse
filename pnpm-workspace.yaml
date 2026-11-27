@@ -6,6 +6,13 @@ packages:
 shamefullyHoist: true
 enablePrePostScripts: true
 
+# The host and the `ov` container (Linux) share `node_modules`, so install the
+# native packages, like rolldown's bindings, for both.
+supportedArchitectures:
+  os: [current, darwin, linux]
+  cpu: [current]
+  libc: [current, glibc]
+
 # Newly published versions are not resolved until they are 7 days old, to
 # give the community time to catch compromised releases. Keep it in sync with
 # the npm `minimumReleaseAge` in `.github/renovate.json5`. To take an urgent security fix earlier, add its exact version
