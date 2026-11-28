@@ -23,6 +23,8 @@ jobs:
       packages: write
       # Needed to open the changelog PR
       pull-requests: write
+      # Needed to read the CI + CD runs of the released commits
+      actions: read
     env:
       # Do not split this into multiple lines, it will not work:
       # https://github.com/WordPress/openverse/pull/3789#pullrequestreview-1876525552
@@ -43,6 +45,75 @@ jobs:
             echo "date=$release_date";
             echo "image-tag=rel-$release_date";
           } >> "$GITHUB_OUTPUT"
+
+      # A release tags and deploys whatever image is `latest`. Published right
+      # after a merge, it would deploy the previous image, so wait for CI + CD
+      # to publish this app's image for the released commits. Images are built
+      # from the whole tree, so the newest run that published the app's image
+      # covers every commit before it. A cancelled or failed run after that one
+      # never published its commit's changes to the app.
+      - name: Wait for CI + CD to publish the app's image
+        timeout-minutes: 75
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          previous_tag=$(git tag --list "$APP_NAME-*" --sort=-creatordate | grep -vxF "$GITHUB_REF_NAME" | head -n 1 || true)
+          if [[ -n "$previous_tag" ]]; then
+            range="$previous_tag..$GITHUB_SHA"
+          else
+            range="$GITHUB_SHA"
+          fi
+
+          # The paths whose changes go into the app's image
+          pathspecs=()
+          while read -r pattern; do
+            pathspecs+=(":(glob)$pattern")
+          done < <(yq -r ".${APP_NAME}[]" .github/filters.yml)
+
+          deadline=$((SECONDS + 3600))
+          while true; do
+            pending=()
+            broken=()
+            # Newest commit first
+            for sha in $(git rev-list "$range"); do
+              # The newest run of the commit, so that a re-run replaces a cancelled one
+              run=$(gh run list --workflow ci_cd.yml --branch main --commit "$sha" --limit 1 \
+                --json databaseId,status,conclusion,url \
+                --jq '.[0] // empty | "\(.databaseId) \(.status) \(.conclusion // "none") \(.url)"')
+              [[ -z "$run" ]] && continue
+              read -r id status conclusion url <<<"$run"
+
+              if [[ "$status" != "completed" ]]; then
+                pending+=("$url")
+                continue
+              fi
+              published=$(gh run view "$id" --json jobs \
+                --jq "[.jobs[] | select(.name == \"Publish Docker images ($APP_NAME)\" and .conclusion == \"success\")] | length")
+              if (( published > 0 )); then
+                break
+              fi
+              if [[ "$conclusion" != "success" && "$conclusion" != "skipped" ]] &&
+                [[ -n "$(git diff-tree --no-commit-id --name-only -r "$sha" -- "${pathspecs[@]}")" ]]; then
+                broken+=("$conclusion $url")
+              fi
+            done
+
+            if (( ${#pending[@]} == 0 )); then
+              if (( ${#broken[@]} > 0 )); then
+                echo "::error::CI + CD runs that changed $APP_NAME after its last published image were cancelled or failed, so \`latest\` may be missing their changes. Re-run the newest of them, then re-run this workflow."
+                printf '%s\n' "${broken[@]}"
+                exit 1
+              fi
+              break
+            fi
+            if (( SECONDS > deadline )); then
+              echo "::error::CI + CD runs of the released commits did not finish within an hour."
+              printf '%s\n' "${pending[@]}"
+              exit 1
+            fi
+            printf 'Waiting for %s\n' "${pending[@]}"
+            sleep 60
+          done
 
       - name: Log in to GitHub Docker Registry
         uses: docker/login-action@v4
