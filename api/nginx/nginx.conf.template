@@ -7,6 +7,13 @@
 
 error_log /var/log/nginx/error.log;
 
+# The first 6 characters of the bearer token tell clients apart in the logs
+# without making the token usable by anyone who can read them.
+map $http_authorization $token_prefix {
+    "~*^Bearer\s+(?<prefix>.{6})" $prefix;
+    default "";
+}
+
 log_format json_combined escape=json
     '{'
     '"time_local":"$time_local",'
@@ -21,7 +28,7 @@ log_format json_combined escape=json
     '"http_referrer":"$http_referer",'
     '"http_user_agent":"$http_user_agent",'
     '"http_x_forwarded_for":"$http_x_forwarded_for",'
-    '"http_authorization":"$http_authorization",'
+    '"token_prefix":"$token_prefix",'
     '"request_id":"$sent_http_x_request_id"'
     '}';
 
