@@ -20,10 +20,13 @@ on:
         default: false
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  # Don't continue building images for a PR if the PR is updated quickly
-  # For other workflows, allow them to complete and just block on them. This
-  # ensures deployments in particular to happen in series rather than parallel.
+  # A pull request's new commit cancels the run of its previous one. Every
+  # other run gets a group of its own, because GitHub keeps only one pending
+  # run per group and cancels the others, and a cancelled run on `main` never
+  # publishes its commit's images or docs. Runs can then finish out of order, so
+  # the jobs that publish or deploy only move forward: see `publish-images`,
+  # `deploy-frontend`, `deploy-api` and `emit-docs`.
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.sha }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
@@ -192,6 +195,9 @@ jobs:
           cache-to: type=gha,scope=${{ matrix.image }}
           outputs: type=docker,dest=/tmp/${{ matrix.image }}.tar
           build-contexts: ${{ matrix.build-contexts }}
+          # `publish-images` and the staging deploys read the commit from `latest`
+          labels: |
+            org.opencontainers.image.revision=${{ github.sha }}
           build-args: |
             SEMANTIC_VERSION=${{ needs.get-image-tag.outputs.image_tag }}
             OV_UV_VERSION=${{ steps.prepare-build-args.outputs.ov_uv_version }}
@@ -1157,11 +1163,28 @@ jobs:
         with:
           path: automation-checkout
 
-      - name: Copy existing previews
+      # Runs on `main` can finish out of order, so don't replace the docs with
+      # those of an older commit. `_revision` holds the commit that `main`'s
+      # docs were built from.
+      - name: Check that the published docs are older
+        id: docs
         if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          published=$(cat gh-pages/_revision 2>/dev/null || true)
+          if [[ -n "$published" && "$published" != "$GITHUB_SHA" ]] &&
+            [[ "$(gh api "repos/$GITHUB_REPOSITORY/compare/$published...$GITHUB_SHA" --jq .status || true)" == "behind" ]]; then
+            echo "::notice::The docs are already built from the newer commit $published."
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Copy existing previews
+        if: github.event_name == 'push' && steps.docs.outputs.publish != 'false'
         run: |
           mv /tmp/docs /tmp/gh-pages
           mv gh-pages/_preview /tmp/gh-pages/_preview
+          echo "$GITHUB_SHA" > /tmp/gh-pages/_revision
 
       - name: Replace preview of current PR
         if: github.event_name == 'pull_request'
@@ -1180,6 +1203,7 @@ jobs:
         run: python get_folder_differences.py
 
       - name: Deploy
+        if: steps.docs.outputs.publish != 'false'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -1258,12 +1282,27 @@ jobs:
           setup_images: ${{ matrix.image }}
 
       - name: Load and tag image `${{ matrix.image }}` (latest & sha)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IMAGE: ghcr.io/wordpress/openverse-${{ matrix.image }}
+          IMAGE_TAG: ${{ needs.get-image-tag.outputs.image_tag }}
         run: |
-          docker tag openverse-${{ matrix.image }} \
-            ghcr.io/wordpress/openverse-${{ matrix.image }}:latest
-          docker tag openverse-${{ matrix.image }} \
-            ghcr.io/wordpress/openverse-${{ matrix.image }}:${{ needs.get-image-tag.outputs.image_tag }}
-          docker push --all-tags ghcr.io/wordpress/openverse-${{ matrix.image }}
+          docker tag "openverse-${{ matrix.image }}" "$IMAGE:$IMAGE_TAG"
+          docker push "$IMAGE:$IMAGE_TAG"
+
+          # Runs on `main` can finish out of order, so don't move `latest` back
+          # to an older commit. Images from before the revision label have none,
+          # and an image dispatched from a branch has diverged from `main`.
+          if [[ "$GITHUB_EVENT_NAME" == "push" ]]; then
+            latest=$(docker buildx imagetools inspect "$IMAGE:latest" --format '{{ json .Image }}' \
+              | jq -r '.config.Labels["org.opencontainers.image.revision"] // empty' || true)
+            if [[ -n "$latest" && "$latest" != "$GITHUB_SHA" ]] &&
+              [[ "$(gh api "repos/$GITHUB_REPOSITORY/compare/$latest...$GITHUB_SHA" --jq .status || true)" == "behind" ]]; then
+              echo "::notice::\`latest\` is already built from $latest, which is newer than this commit."
+              exit 0
+            fi
+          fi
+          docker buildx imagetools create "$IMAGE:$IMAGE_TAG" --tag "$IMAGE:latest"
 
   ##############
   # Deployment #
@@ -1301,7 +1340,22 @@ jobs:
         working-directory: automations/python/workflows
         run: python get_commit_message.py
 
+      # Runs on `main` can finish out of order. Only the run whose commit
+      # `latest` was built from deploys, so staging never goes back to an
+      # older commit.
+      - name: Check that `latest` is this commit
+        id: latest
+        if: github.event_name == 'push'
+        run: |
+          latest=$(docker buildx imagetools inspect ghcr.io/wordpress/openverse-frontend:latest --format '{{ json .Image }}' \
+            | jq -r '.config.Labels["org.opencontainers.image.revision"] // empty')
+          if [[ -n "$latest" && "$latest" != "$GITHUB_SHA" ]]; then
+            echo "::notice::\`latest\` is built from the newer commit $latest, so this run doesn't deploy."
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Deploy staging frontend
+        if: steps.latest.outputs.deploy != 'false'
         uses: felixp8/dispatch-and-wait@v0.1.0
         with:
           owner: WordPress
@@ -1318,6 +1372,7 @@ jobs:
           max_time: 1800 # allow up to 30 minutes for a deployment
 
       - name: Trigger staging Playwright smoketests
+        if: steps.latest.outputs.deploy != 'false'
         uses: convictional/trigger-workflow-and-wait@v1.6.5
         with:
           owner: WordPress
@@ -1334,6 +1389,7 @@ jobs:
             }
 
       - name: Trigger staging k6 load test
+        if: steps.latest.outputs.deploy != 'false'
         uses: convictional/trigger-workflow-and-wait@v1.6.5
         with:
           owner: WordPress
@@ -1379,7 +1435,22 @@ jobs:
         working-directory: automations/python/workflows
         run: python get_commit_message.py
 
+      # Runs on `main` can finish out of order. Only the run whose commit
+      # `latest` was built from deploys, so staging never goes back to an
+      # older commit.
+      - name: Check that `latest` is this commit
+        id: latest
+        if: github.event_name == 'push'
+        run: |
+          latest=$(docker buildx imagetools inspect ghcr.io/wordpress/openverse-api:latest --format '{{ json .Image }}' \
+            | jq -r '.config.Labels["org.opencontainers.image.revision"] // empty')
+          if [[ -n "$latest" && "$latest" != "$GITHUB_SHA" ]]; then
+            echo "::notice::\`latest\` is built from the newer commit $latest, so this run doesn't deploy."
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Deploy staging API
+        if: steps.latest.outputs.deploy != 'false'
         uses: felixp8/dispatch-and-wait@v0.1.0
         with:
           owner: WordPress
